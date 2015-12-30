@@ -4,6 +4,8 @@
 
 <%-- plugins --%>
 <script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/tisl.home.js"></script>
+<script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/enquire.min.js"></script>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/Imager.min.js"></script>
@@ -147,8 +149,6 @@
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.myrecommendation.js"></script>
 </c:if>	
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.signinflyout.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/tisl.home.js"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.search.js"></script>
 
 
