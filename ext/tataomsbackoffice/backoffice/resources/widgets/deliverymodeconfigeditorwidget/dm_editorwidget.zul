@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+
+	<grid id="gridForm" style="300px">
+
+		<rows>
+			<row>
+				Delivery Mode
+				<label id="deliverymode"></label>
+			</row>
+
+			<row>
+				Cut Off Time
+				<timebox id="cutofftime" cols="5" format="short"
+					constraint="no empty">
+				</timebox>
+				<label
+					style="margin-left:-120px; position:absolute;margin-top:-10px"
+					value="(hh:mm)">
+				</label>
+			</row>
+
+			<row>
+				DFM TAT
+				<hlayout>
+					<spinner id="dfmtathr" cols="02" maxlength="3"
+						context="int" constraint="no negative,min 0 max 130" />
+					Hr
+					<spinner id="dfmtatmin" cols="02" maxlength="2"
+						constraint="no negative,min 0 max 59" />
+					Min
+				</hlayout>
+			</row>
+
+			<row>
+				Seller Response TAT
+				<hlayout>
+					<spinner id="sellerresponsetathr" maxlength="3"
+						cols="02" constraint="no negative,min 0 max 130" />
+					Hr
+					<spinner id="sellerresponsetatmin" maxlength="2"
+						cols="02" constraint="no negative,min 0 max 59" />
+					Min
+				</hlayout>
+			</row>
+			<row>
+				HOTC TAT
+				<hlayout>
+					<spinner id="hotctathr" cols="02" maxlength="3"
+						constraint="no negative,min 0 max 130" />
+					Hr
+					<spinner id="hotctatmin" cols="02" maxlength="2"
+						constraint="no negative,min 0 max 59" />
+					Min
+				</hlayout>
+			</row>
+
+			<row>
+				SHIPMENT TAT
+				<hlayout>
+					<spinner id="shipmenttathr" cols="02" maxlength="3"
+						constraint="no negative,min 0 max 130" />
+					Hr
+					<spinner id="shipmenttatmin" cols="02" maxlength="2"
+						constraint="no negative,min 0 max 59" />
+					Min
+				</hlayout>
+			</row>
+
+			<row>
+				<cell></cell>
+				<cell>
+					<button label="SAVE" id="update"></button>
+				</cell>
+				<cell></cell>
+
+			</row>
+		</rows>
+	</grid>
+
+
+</widget>

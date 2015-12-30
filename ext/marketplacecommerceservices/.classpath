@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/platform"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="src"/>
+	<classpathentry kind="src" output="eclipsebin/web/classes" path="web/src"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="testsrc"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="gensrc"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/acceleratorservices"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/solrfacetsearch"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/commercefacades"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/commerceservices"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/promotions"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/wishlist"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceclientservices"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceJuspayServices"/>
+	<classpathentry kind="lib" path="/marketplaceJuspayServices/lib/json-simple-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/json-simple-1.1.jar"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

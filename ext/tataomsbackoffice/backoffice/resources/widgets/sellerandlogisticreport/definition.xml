@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+  
+<widget-definition id="com.hybris.oms.tata.pincodeservice.Pincodewidget" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://hybris.com/cockpitng/widget-definition">
+     
+<name>inventorybyussid</name>
+    <description>inventory by ussid.</description>
+ 
+    <view src="service_report.zul" /> 
+    <keywords>
+        <!-- keyword tag is used to define a category under which the widget is visible, when adding it to your application in application orchestrator  -->
+        <keyword>pincode servicibility</keyword>
+    </keywords>
+ <controller class="com.hybris.oms.tata.pincodeservice.PincodeServiceReportController"/>
+</widget-definition>

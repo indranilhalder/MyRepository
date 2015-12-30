@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- ~ [y] hybris Platform ~ ~ Copyright 
+	(c) 2000-2015 hybris AG ~ All rights reserved. ~ ~ This software is the confidential 
+	and proprietary information of hybris ~ ("Confidential Information"). You 
+	shall not disclose such Confidential ~ Information and shall use it only 
+	in accordance with the terms of the ~ license agreement you entered into 
+	with hybris. -->
+
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widgets.xsd">
+
+
+
+
+	<!-- Added by sana //importing the omsbackoffice widgets and commerce search  -->
+
+
+<import resource="/tata-omsbackoffice-oms-perspective-widgets.xml"/>
+<import resource="/tata-omsbackoffice-oms-return-perspective-widgets.xml"/>
+<import resource="/tata-omsbackoffice-oms-admin-perspective-widgets.xml"/>
+
+<import resource="/tata-commercesearchbackoffice-backoffice-widgets.xml"/>
+
+
+	<widget-extension widgetId="backofficeMainSlot" >
+	
+	<widget id="tataBUCperspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+			slotId="perspectives" title="Tata BUC" template="false" >
+
+			<widget id="tataomsexplorerTree" widgetDefinitionId="com.hybris.cockpitng.widgets.common.explorertree"
+				slotId="leftSlot" template="false">
+
+				<setting key="config.context.component" value="tata-oms-explorer-tree"
+					type="String" />
+				<virtual-sockets />
+			</widget>
+
+			<widget id="tataomsPerspectiveContainer" widgetDefinitionId="com.hybris.backoffice.perspectiveContainer"
+				slotId="centerSlot" template="false">
+
+
+				<!-- Added for Deliverymode config -->
+				<widget id="deliverymodeconfigcontainer" widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="deliverymodeconfig-listview"
+						widgetDefinitionId="com.hybris.oms.tata.deliverymodeconfig.listwidget"
+						slotId="center" title="Lostics Contacts" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<widget id="deliverymodeconfig-editor"
+						widgetDefinitionId="com.hybris.oms.tata.deliverymodeconfig.editorwidget"
+						slotId="bottom" template="false">
+
+					</widget>
+
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">33%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">50%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String">Edit Area</setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Delivery Mode Configuration</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+				<!-- Added for logisticDataUpload -->
+				<widget id="logisticDataUpload" widgetDefinitionId="com.hybris.oms.logisticdatauploadwidget"
+					slotId="perspectives" template="true">
+					<virtual-sockets />
+				</widget>
+
+				<!-- Added for logistics Calendar -->
+				<widget id="logisticcollapsibleContainer" widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="logistic-calendar-listview" widgetDefinitionId="com.hybris.oms.widgets.crudlistwidget"
+						slotId="center" title="Lostic Tree" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<widget id="logistic-calendar-editor-perspective"
+						widgetDefinitionId="com.hybris.oms.logisticsEditor" slotId="bottom"
+						template="false">
+
+					</widget>
+
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">33%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">50%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String">Edit Area</setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Calendar</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+
+					<virtual-sockets />
+				</widget>
+
+
+				<!-- Added for logistics Contacts -->
+				<widget id="logisticcontacts" widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="logistic-contacts-listview"
+						widgetDefinitionId="com.hybris.oms.widgets.logisticscontactslistwidget"
+						slotId="center" title="Lostics Contacts" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<widget id="logistic-contacts-editor-perspective"
+						widgetDefinitionId="com.hybris.oms.logisticsContactsEditor"
+						slotId="bottom" template="false">
+
+					</widget>
+
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">33%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">50%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String">Edit Area</setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Logistics Contacts</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+
+				<!-- Added for Inventory By USSID -->
+				<widget id="inventorybyussid" widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="inventory-by-ussid-listview" widgetDefinitionId="com.hybris.oms.tata.inventory.listwidget"
+						slotId="bottom" title="Lostics Contacts" template="false">
+						<virtual-sockets />
+
+					</widget>
+					<widget id="inventory-by-ussid-searchwidget"
+						widgetDefinitionId="com.hybris.oms.tata.inventorybyussid" slotId="center"
+						template="false">
+
+					</widget>
+
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String">Result</setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Search BY USSID</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+
+
+				<!-- Added for Inventory By ORDERID -->
+				<widget id="ordersbyorderid" widgetDefinitionId="com.hybris.oms.tata.orders.OrderLinesListController"
+					slotId="perspectives" template="true">
+				</widget>
+
+
+				<!-- Added for Pincode report -->
+				<widget id="container_pincode_report" widgetDefinitionId="com.hybris.oms.tata.pincodeservice.Pincodewidget"
+					slotId="perspectives" template="true">
+
+				</widget>
+
+				<!-- Added for Pin code serviceability and LogisticsReport -->
+				<widget id="container_pincode_logistics_report"
+					widgetDefinitionId="com.hybris.cockpitng.collapsiblecontainer"
+					slotId="perspectives" template="true">
+
+					<widget id="pincode_logistics_report_datepic"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.datepicwidget"
+						slotId="center" template="false">
+
+					</widget>
+
+					<widget id="pincode_logistics_report_listview"
+						widgetDefinitionId="com.hybris.oms.tata.pincodelogistics.listwidget"
+						slotId="bottom" title="Orders list" template="false">
+						<virtual-sockets />
+
+					</widget>
+
+
+
+					<setting key="widgetStyleAttribute" type="String"></setting>
+					<setting key="allowLockingCenterPanel" type="Boolean">true</setting>
+					<setting key="bottomPanelCollapsed" type="Boolean">false</setting>
+					<setting key="topHeight" type="String">14%</setting>
+					<setting key="centerCaption" type="String">Editor</setting>
+					<setting key="bottomPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="centerHeight" type="String">14%</setting>
+					<setting key="topPanelInitiallyLocked" type="Boolean">false</setting>
+					<setting key="thirdSectionDisabled" type="Boolean">true</setting>
+					<setting key="allowLockingBottomPanel" type="Boolean">true</setting>
+					<setting key="bottomCaption" type="String"></setting>
+					<setting key="centerPanelCollapsed" type="Boolean">false</setting>
+					<setting key="widgetStyleClass" type="String"></setting>
+					<setting key="topCaption" type="String">Seller And Logistics Performance Report
+					</setting>
+					<setting key="centerPanelInitiallyLocked" type="Boolean">false
+					</setting>
+					<setting key="topPanelCollapsed" type="Boolean">true</setting>
+					<setting key="allowLockingTopPanel" type="Boolean">true</setting>
+					<virtual-sockets />
+				</widget>
+
+
+				<virtual-sockets />
+			</widget>
+
+
+			<setting key="eastClosed" type="Boolean">true</setting>
+			<setting key="perspectiveImageUrl" value="cng/images/TUL_OMS_icon.png"
+				type="String" />
+		</widget>
+
+
+	</widget-extension>
+	 <widget-extension widgetId="tataBUCperspective">
+	<move widgetId="backofficeMainSlot" targetWidgetId="backofficeMainSlot" targetSlotId="perspectives" position="0"/>
+	</widget-extension>
+	
+	<widget-connection inputId="input" outputId="nodeSelected"
+		sourceWidgetId="tataomsbackoffice-explorer-tree" targetWidgetId="tataomsbackoffice-tree-node-adapter" />
+	<widget-connection inputId="genericInput" outputId="true"
+		sourceWidgetId="tataomsbackoffice-tree-node-adapter" targetWidgetId="tataomsbackoffice-typecode-extractor" />
+	<widget-connection inputId="genericInput" outputId="true"
+		sourceWidgetId="tataomsbackoffice-tree-node-adapter" targetWidgetId="tataomsbackoffice-search-enabler" />
+	<widget-connection inputId="genericInput" outputId="false"
+		sourceWidgetId="tataomsbackoffice-tree-node-adapter" targetWidgetId="tataomsbackoffice-search-disabler" />
+	<widget-connection inputId="type" outputId="genericOutput"
+		sourceWidgetId="tataomsbackoffice-typecode-extractor" targetWidgetId="tataomsbackoffice-search-logic" />
+	<widget-connection inputId="enabled" outputId="genericOutput"
+		sourceWidgetId="tataomsbackoffice-search-enabler" targetWidgetId="tataomsbackoffice-text-search" />
+	<widget-connection inputId="enabled" outputId="genericOutput"
+		sourceWidgetId="tataomsbackoffice-search-disabler" targetWidgetId="tataomsbackoffice-text-search" />
+	<widget-connection inputId="searchtext" outputId="query"
+		sourceWidgetId="tataomsbackoffice-text-search" targetWidgetId="tataomsbackoffice-search-logic" />
+	<widget-connection inputId="pageable" outputId="pageable"
+		sourceWidgetId="tataomsbackoffice-search-logic" targetWidgetId="tataomsbackoffice-simple-list" />
+
+	<!-- Socket connections for exploreretree -->
+	<widget-connection sourceWidgetId="tataomsexplorerTree"
+		outputId="nodeSelected" targetWidgetId="tataomsPerspectiveContainer"
+		inputId="selectPerspective" />
+
+	<!--Socket connections for deliverymodeconfig -->
+	<widget-connection sourceWidgetId="deliverymodeconfig-listview"
+		outputId="editorObject" inputId="editorObject" targetWidgetId="deliverymodeconfig-editor" />
+	<widget-connection sourceWidgetId="deliverymodeconfig-editor"
+		outputId="editorStatus" inputId="editorStatus" targetWidgetId="deliverymodeconfig-listview" />
+
+	<!-- Socket connections for Logistics calendar -->
+
+	<widget-connection sourceWidgetId="logistic-calendar-listview"
+		outputId="createlogisticscalendar" inputId="isactivecreate"
+		targetWidgetId="logistic-calendar-editor-perspective" />
+
+	<widget-connection sourceWidgetId="logistic-calendar-listview"
+		outputId="editlogisticscalendar" inputId="isactiveedit"
+		targetWidgetId="logistic-calendar-editor-perspective" />
+
+	<widget-connection sourceWidgetId="logistic-calendar-listview"
+		outputId="deletelogisticscalendar" inputId="calendar_disble_contact_editor"
+		targetWidgetId="logistic-calendar-editor-perspective" />
+
+	<widget-connection sourceWidgetId="logistic-calendar-editor-perspective"
+		outputId="refreshlogisticslist" inputId="listitemlogisticscalendar"
+		targetWidgetId="logistic-calendar-listview" />
+
+	<widget-connection sourceWidgetId="logistic-calendar-editor-perspective"
+		outputId="refreshlogisticslist_edit" inputId="listitemlogisticscalendar_edit"
+		targetWidgetId="logistic-calendar-listview" />
+
+
+
+	<!-- Socket connections for Logistics contacts -->
+	<widget-connection sourceWidgetId="logistic-contacts-listview"
+		outputId="createlogisticscontact" inputId="isactivecreate_contact"
+		targetWidgetId="logistic-contacts-editor-perspective" />
+
+	<widget-connection sourceWidgetId="logistic-contacts-listview"
+		outputId="editlogisticscontact" inputId="isactiveedit_contact"
+		targetWidgetId="logistic-contacts-editor-perspective" />
+
+	<widget-connection sourceWidgetId="logistic-contacts-editor-perspective"
+		outputId="refreshlogisticscontactlist" inputId="listitemlogisticscontact"
+		targetWidgetId="logistic-contacts-listview" />
+
+	<widget-connection sourceWidgetId="logistic-contacts-editor-perspective"
+		outputId="refreshlogisticscontactlist_edit" inputId="listitemlogisticscontact_edit"
+		targetWidgetId="logistic-contacts-listview" />
+
+	<widget-connection sourceWidgetId="logistic-contacts-listview"
+		outputId="deletelogisticscalendar" inputId="contact_disble_contact_editor"
+		targetWidgetId="logistic-contacts-editor-perspective" />
+
+
+	<!-- SocketConnection For InventorySearchByUSSID -->
+	<widget-connection sourceWidgetId="inventory-by-ussid-searchwidget"
+		outputId="searchedText" inputId="ussid" targetWidgetId="inventory-by-ussid-listview" />
+	<!-- socketConnections for Pincode Logistics Reports -->	
+	<widget-connection sourceWidgetId="pincode_logistics_report_datepic" outputId="startendDates" targetWidgetId="pincode_logistics_report_listview"  inputId="startendDates" />
+		
+    <widget-connection sourceWidgetId="tataBUCperspective" outputId="possiblePerspectives" targetWidgetId="backofficePerspectiveChooser" inputId="possiblePerspectives"/>
+    <widget-connection sourceWidgetId="backofficePerspectiveChooser" outputId="selectPerspective" targetWidgetId="tataBUCperspective" inputId="selectPerspective"/>
+
+</widgets>
+ 

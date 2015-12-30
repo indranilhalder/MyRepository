@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+ 
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+ 
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+ 
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:int="http://www.springframework.org/schema/integration"
+   xmlns:file="http://www.springframework.org/schema/integration/file"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+ 
+ <!-- General setup -->
+    <bean id="baseDirectoryMarketplaceStock" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-stock" />
+    </bean>
+ 
+    <!-- 1) Scan for files -->
+    <file:inbound-channel-adapter id="batchFilesMarketplaceStock" directory="#{baseDirectoryMarketplaceStock}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    <file:outbound-gateway request-channel="batchFilesMarketplaceStock" reply-channel="batchFilesMarketplaceStockProc"
+        directory="#{baseDirectoryMarketplaceStock}/processing" delete-source-files="true" />
+
+ 
+  <!-- 3) transform csv to impex file -->
+ <int:service-activator input-channel="batchFilesMarketplaceStockProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplaceStockHeaderSetupTask" method="execute" />
+ 
+ 	<bean id="MarketplaceStockHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceStock" />
+    </bean>   
+ 
+    
+      <!-- Transformer converters mappings -->
+    
+    <!-- Transformer for Stock Import -->    
+        
+    <bean id="batchMplstockConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mplstock"
+    p:converter-ref="batchMplstockConverter"/>
+    
+    <!-- Transformer for Product Approval on stock Import -->    
+    
+<!--     <bean id="batchMplprice_stock_approvalConverterMapping" -->
+<!--     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" -->
+<!--     p:mapping="mplstock" -->
+<!--     p:converter-ref="batchMplprice_stock_approvalConverter"/> -->
+    
+   
+ 	  <!-- Converters -->
+ 	
+ 	<!-- Converter for Stock Import -->
+ 	  
+		<bean id="batchMplstockConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+					$productCatalogName=Marketplace Product Catalog
+					$vendor=TATA
+					$warehouse=mpl_warehouse
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+             	$approved=approvalstatus(code)[default='approved']
+             INSERT_UPDATE StockLevel;available;warehouse(code)[unique=true];inStockStatus(code);maxPreOrder;maxStockLevelHistoryCount;overSelling;preOrder;productCode[unique=false];reserved;sellerArticleSKU[unique=true]
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{+2};{+3};{+4};{+5};{+6};{+7};{8};{+9}</value>
+        </property>
+        </bean>
+       
+        
+        <!-- Converter for  Product Approval on stock Import -->
+        
+<!--         <bean id="batchMplprice_stock_approvalConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter"> -->
+<!--         <property name="header"> -->
+<!--             <value>#{defaultImpexProductHeader} -->
+<!--             	$productCatalog=mplProductCatalog -->
+<!-- 					$productCatalogName=Marketplace Product Catalog -->
+<!-- 					$vendor=TATA -->
+<!-- 					$warehouse=mpl_warehouse -->
+<!-- 					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] -->
+<!--              	$approved=approvalstatus(code)[default='approved'] -->
+<!--              	UPDATE Product;code[unique=true];$approved;$catalogVersion -->
+<!--             </value> -->
+<!--         </property> -->
+<!--         <property name="impexRow"> -->
+<!--             <value>;{+7}</value> -->
+<!--         </property> -->
+<!--         </bean> -->
+            </beans>

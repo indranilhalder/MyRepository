@@ -1,0 +1,412 @@
+
+#
+# Import the Solr configuration for the store
+#
+$prefix=mpl
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id),version);
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Marketplace Solr Index
+$searchIndexNamePrefix=$prefix
+$solrIndexedType=$prefixProductType
+$indexBaseSite=$prefix
+$indexLanguages=en
+$indexCurrencies=INR
+$priceRangeINR=$prefixPriceRangeINR
+$classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
+$classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
+
+
+#
+# Setup the Solr server, indexer, and search configs
+#
+
+# Create the solr server configuration
+INSERT_UPDATE SolrServerConfig;name[unique=true];mode(code);embeddedMaster;useMasterNodeExclusivelyForIndexing[default=false]
+;$serverConfigName;standalone;true;true
+
+# Create the solr indexer configuration
+INSERT_UPDATE SolrIndexConfig;name[unique=true];batchSize;numberOfThreads;indexMode(code);optimizeMode(code);ignoreErrors[default=false]
+;$indexConfigName;1000;24;DIRECT;AFTER_FULL_INDEX;true;
+
+# Create the faceted search configuration
+INSERT_UPDATE SolrSearchConfig;description[unique=true];pageSize
+;$searchConfigName;24
+
+#
+# Setup the indexed types, their properties, and the update queries
+#
+
+# Declare the indexed type Product
+INSERT_UPDATE SolrIndexedType;identifier[unique=true];type(code);variant;sorts(&sortRefID)
+;$solrIndexedType;Product;false;sortRef1,sortRef2,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8
+
+INSERT_UPDATE SolrFacetSearchConfig;name[unique=true];description;indexNamePrefix;languages(isocode);currencies(isocode);solrServerConfig(name);solrSearchConfig(description);solrIndexConfig(name);solrIndexedTypes(identifier);enabledLanguageFallbackMechanism;$catalogVersions
+;$facetSearchConfigName;$facetSearchConfigDescription;$searchIndexNamePrefix;$indexLanguages;$indexCurrencies;$serverConfigName;$searchConfigName;$indexConfigName;$solrIndexedType;true;$productCatalog:Online,$productCatalog:Staged
+
+UPDATE BaseSite;uid[unique=true];solrFacetSearchConfiguration(name)
+;$indexBaseSite;$facetSearchConfigName
+
+# Define price range set
+INSERT_UPDATE SolrValueRangeSet;name[unique=true];qualifier;type;solrValueRanges(&rangeValueRefID)
+;mplElectronicsPriceRangeINR;INR-ELECTRONICS;double;mplRangeRefElectronicsINR1,mplRangeRefElectronicsINR2,mplRangeRefElectronicsINR3,mplRangeRefElectronicsINR4,mplRangeRefElectronicsINR5,mplRangeRefElectronicsINR6,mplRangeRefElectronicsINR7,mplRangeRefElectronicsINR8,mplRangeRefElectronicsINR9
+;mplApparelPriceRangeINR;INR-APPAREL;double;mplRangeRefApparelINR1,mplRangeRefApparelINR2,mplRangeRefApparelINR3,mplRangeRefApparelINR4,mplRangeRefApparelINR5,mplRangeRefApparelINR6,mplRangeRefApparelINR7
+;mplFacetAvgRating;;double;avgRatingRef1,avgRatingRef2,avgRatingRef3,avgRatingRef4,avgRatingRef5
+
+
+# Define price ranges
+INSERT_UPDATE SolrValueRange;&rangeValueRefID;solrValueRangeSet(name)[unique=true];name[unique=true];from;to
+;mplRangeRefElectronicsINR1;mplElectronicsPriceRangeINR;	₹0-₹1,000;   		0			; 1000
+;mplRangeRefElectronicsINR2;mplElectronicsPriceRangeINR;    ₹1,001-₹2,000;  		1000.01		; 2000
+;mplRangeRefElectronicsINR3;mplElectronicsPriceRangeINR;   	₹2,001-₹5,000; 		2000.01		; 5000
+;mplRangeRefElectronicsINR4;mplElectronicsPriceRangeINR;   	₹5,001-₹10,000; 		5000.01		; 10000
+;mplRangeRefElectronicsINR5;mplElectronicsPriceRangeINR;	₹10,001-₹20,000; 	10000.01	; 20000
+;mplRangeRefElectronicsINR6;mplElectronicsPriceRangeINR;    ₹20,001-₹30,000;   	20000.01	; 30000
+;mplRangeRefElectronicsINR7;mplElectronicsPriceRangeINR;    ₹30,001-₹40,000;  	30000.01	; 40000
+;mplRangeRefElectronicsINR8;mplElectronicsPriceRangeINR;   	₹40,001-₹50,000; 	40000.01	; 50000
+;mplRangeRefElectronicsINR9;mplElectronicsPriceRangeINR;   	₹50,001 and Above; 	50000.01	; 99999999
+
+;mplRangeRefApparelINR1;mplApparelPriceRangeINR;	₹0-₹500;   			0			; 500
+;mplRangeRefApparelINR2;mplApparelPriceRangeINR;    ₹501-₹1,000;  		500.01		; 1000
+;mplRangeRefApparelINR3;mplApparelPriceRangeINR;   	₹1,001-₹1,500; 		1000.01		; 1500
+;mplRangeRefApparelINR4;mplApparelPriceRangeINR;   	₹1,501-₹2,000; 		1500.01		; 2000
+;mplRangeRefApparelINR5;mplApparelPriceRangeINR;	₹2,001-₹2,500; 		2000.01		; 2500
+;mplRangeRefApparelINR6;mplApparelPriceRangeINR;    ₹2,501-₹3,000;   	2500.01		; 3000
+;mplRangeRefApparelINR7;mplApparelPriceRangeINR;    ₹3,001 and Above;  	3000.01		; 999999
+
+;avgRatingRef1;mplFacetAvgRating;1;0.5;1.49
+;avgRatingRef2;mplFacetAvgRating;2;1.5;2.49
+;avgRatingRef3;mplFacetAvgRating;3;2.5;3.49
+;avgRatingRef4;mplFacetAvgRating;4;3.5;4.49
+;avgRatingRef5;mplFacetAvgRating;5;4.5;5
+
+
+# Non-facet properties
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;boost
+;$solrIndexedType; itemtype               ;string ;            ;    ;    ;    ;    ;    ;
+;$solrIndexedType; code                   ;string ;            ;    ;    ;    ;true;    ;springELValueProvider;code;90
+;$solrIndexedType; name                   ;text   ;sortabletext;    ;true;    ;true;true;springELValueProvider;getTitle();50
+;$solrIndexedType; description            ;text   ;            ;    ;true;    ;    ;    ;;
+;$solrIndexedType; summary                ;text   ;            ;    ;true;    ;    ;    ;;
+;$solrIndexedType; keywords               ;text   ;            ;    ;true;    ;true;    ;productKeywordsValueProvider;;20
+;$solrIndexedType; url                    ;string ;            ;    ;true;    ;    ;    ;mplProductUrlValueProvider;
+;$solrIndexedType; stockLevelStatus       ;string ;            ;    ;    ;    ;    ;    ;mplStockLevelStatusValueProvider;
+;$solrIndexedType; baseProductColourGroup ;string ;            ;    ;    ;    ;    ;    ;mplProductColourGroupValueProvider;
+;$solrIndexedType; priceValue             ;double ;            ;true;    ;    ;    ;    ;mplPriceValueProvider;
+;$solrIndexedType; swatchColor    		  ;string ;            ;	;    ;true;    ;    ;mplSwatchColorValueProvider;
+;$solrIndexedType; displaySize    		  ;string ;            ;	;    ;true;    ;    ;mplSwatchSizeValueProvider;
+;$solrIndexedType; mplAvgRating    		  ;double ;            ;	;    ;    ;    ;    ;mplAverageRatingValueProvider;
+;$solrIndexedType; ratingCount    		  ;int    ;            ;	;    ;    ;    ;    ;mplRatingCountValueProvider;
+;$solrIndexedType; productCategoryType    ;string ;            ;    ;    ;    ;    ;    ;mplProductCategoryTypeValueProvider;
+;$solrIndexedType; mrpPriceValue          ;double ;            ;true;    ;    ;    ;    ;mplMrpPriceValueProvider;
+;$solrIndexedType; isOffersExisting       ;boolean;            ;    ;    ;    ;	   ;	;mplIsOffersExistingValueProvider;
+;$solrIndexedType; searchCapacity   	  ;string ;            ;	;    ;true;    ;    ;mplCapacityValueProvider;
+;$solrIndexedType; mobileBrandName        ;string ;            ;	;    ;    ;    ;    ;mplMobileBrandNameValueProvider;
+;$solrIndexedType; isProductNew           ;boolean;            ;    ;    ;    ;	   ;	;mplIsProductNewValueProvider;
+;$solrIndexedType; ussID  		 		  ;string ;            ;	;    ;	  ;    ;    ;mplUssIDValueProvider;
+;$solrIndexedType; img-252Wx374H          ;string ;            ;    ;    ;    ;    ;    ;searchImageHovervalueProvider;
+;$solrIndexedType; immediateCategory      ;string ;            ;    ;    ;    ;    ;    ;mplCompareProductValueProvider;
+;$solrIndexedType; onlineExclusive        ;boolean;            ;    ;    ;    ;	   ;	;mplOnlineExclusiveValueProvider;
+;$solrIndexedType; leastSizeProduct       ;string ;            ;    ;    ;    ;    ;    ;mplLeastSizeProductValueProvider;
+;$solrIndexedType; newTitle    		  ;string ;            ;	;    ;true;    ; true   ;mplNewTitleValueProvider;
+
+
+#Added for Cart
+
+;$solrIndexedType; isVariant              ;boolean;            ;    ;    ;    ;    ;    ;mplIsVariantValueProvider;
+;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
+
+									
+# Category fields
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];categoryField[default=true];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;boost;facet[default=false]
+;$solrIndexedType; categoryName     	  ;text   ;true		   ;	;	 ;true;			;mplCategoryNameValueProvider;10; 
+;$solrIndexedType; brandName        	  ;text   ;true		   ;	;	 ;true;			;mplBrandCategoryNameValueProvider;10;
+
+
+# Category facets
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);localized[default=false];multiValue[default=true];facet[default=true];facetType(code);facetSort(code);priority;visible;categoryField[default=true];fieldValueProvider;facetDisplayNameProvider;topValuesProvider;customFacetSortProvider
+;$solrIndexedType; allCategories 		  ;string ;		;	 ;	;Refine		  ;Alpha;-9999;false;	    ;mplCategoryCodeValueProvider;
+;$solrIndexedType; categoryPath  	      ;string ;		;	 ;	;Refine		  ;Alpha;-9999;false;false	;categoryPathValueProvider;
+;$solrIndexedType; category      	      ;string ;true	;	 ;	;MultiSelectOr;Alpha; 6000;true ;		;mplCategoryCodeValueProviderForCategoryFacet;categoryFacetDisplayNameProvider;defaultTopValuesProvider
+;$solrIndexedType; departmentHierarchy    ;string ;		;	 ;	;Refine		  ;Alpha;-9999;false;false	;mplDepartmentHierarchyValueProvider;
+;$solrIndexedType; departments  	      ;string ;		;	 ;	;Refine		  ;Alpha;-9999;false;false	;mplDepartmentsValueProvider;
+
+# Category facets
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];localized[default=false];multiValue[default=true];facet[default=true];facetType(code);facetSort(code);priority;visible;categoryField[default=true];fieldValueProvider;facetDisplayNameProvider;topValuesProvider;customFacetSortProvider
+;$solrIndexedType; brand         		  ;string ;true	;true;; ;MultiSelectOr;Alpha; 5000;true	;		;mplBrandCategoryCodeValueProvider;categoryFacetDisplayNameProvider;defaultTopValuesProvider;facetNameSortProviderAscending
+
+# Other facet properties
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;facetDisplayNameProvider;customFacetSortProvider;topValuesProvider;rangeSets(name)
+;$solrIndexedType; price        		  ;double ; 	;	 ;true ;     ;     ;     ;MultiSelectOr ;Alpha ; 4000;true;     ;     ;mplPriceValueProvider 				;										;							;defaultTopValuesProvider	;mplElectronicsPriceRangeINR,mplApparelPriceRangeINR
+;$solrIndexedType; allPromotions		  ;string ;true ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplPromotionCodeValueProvider		;mplPromotionFacetDisplayNameProvider	;                         	;
+;$solrIndexedType; allMobilePromotions	  ;string ; 	;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplMobilePromotionCodeValueProvider	;mplPromotionFacetDisplayNameProvider	;                         	;
+;$solrIndexedType; size               	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSizeFacetValueProvider            ;                						;sizeAttributeSortProvider  ;
+;$solrIndexedType; rating 				  ;double ;  	;    ;     ;true ;     ;true ;MultiSelectOr ;Alpha ; 2000;true;     ;  	  ;mplAverageRatingFacetValueProvider	;										;							;							;mplFacetAvgRating
+;$solrIndexedType; deptType               ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplProductCategoryTypeValueProvider  ;                						;                           ;
+;$solrIndexedType; capacity               ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplCapacityFacetValueProvider        ;                						;                           ;
+;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;
+;$solrIndexedType; deliveryMode           ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplDeliveryModeValueProvider         ;    									;                           ;
+;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;facet[default=true]
+;$solrIndexedType; snsCategory            ;string ;     ;    ;     ;true ;true ;	 ;mplSnscategoryValueProvider;
+;$solrIndexedType; micrositeSnsCategory   ;string ;     ;    ;     ;true ;true ;	 ;mplMicrositeSnscategoryValueProvider;
+
+# Create the queries that will be used to extract data for Solr
+INSERT_UPDATE SolrIndexerQuery;solrIndexedType(identifier)[unique=true];identifier[unique=true];type(code);injectCurrentDate[default=true];injectCurrentTime[default=true];injectLastIndexTime[default=true];query;user(uid)
+;$solrIndexedType;$searchIndexNamePrefix-fullQuery;full;;;false;"
+ SELECT distinct{p.PK} FROM {Product AS p 
+						LEFT JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} 
+						LEFT JOIN Category AS c ON {c2p.source}={c.PK} } 
+						WHERE {c.code} LIKE 'MSH%' 
+						AND EXISTS ( 
+										{{ SELECT * FROM {BuyBox AS bbox} 
+													WHERE {bbox.product}={p.code} 
+													AND {bbox.delisted} != 1 
+													AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+										}} 
+									) 
+						AND {p.varianttype} IS NULL   
+";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-updateQuery;update;;;;"
+SELECT DISTINCT tbl.pk, tbl.code FROM (
+	{{
+		SELECT DISTINCT {p:PK} AS pk, {p:code} AS code
+		FROM {Product AS p 			
+				LEFT JOIN CustomerReview AS cr 	ON {cr:product}={p:PK} 
+				LEFT JOIN CategoryProductRelation AS c2p ON {p.PK}={c2p.target} 
+				LEFT JOIN Category AS c ON {c2p.source}={c.PK}			  
+			 }
+		WHERE {c.code} LIKE 'MSH%' AND {p:varianttype} IS NULL 
+		AND (
+			 {p:modifiedtime} >= ?lastIndexTime OR 
+			 {cr:modifiedtime} >= ?lastIndexTime OR
+             {c2p:modifiedtime} >= ?lastIndexTime
+			 )
+	}}
+	UNION
+	{{
+		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:code} IN (
+			{{
+				SELECT DISTINCT {bbox:product} FROM {BuyBox AS bbox} WHERE {bbox:modifiedtime} >= ?lastIndexTime
+																	 AND {bbox.delisted} != 1 
+																	 AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+			}}
+		)
+	}}
+	UNION
+	{{
+		SELECT {p:PK}  AS pk, {p:code} AS code FROM {Product AS p} WHERE {p:PK} IN (
+			{{
+				SELECT DISTINCT {ppromorel.source} from {ProductPromotion as ppromo},{ ProductPromotionRelation as ppromorel} 
+																	 WHERE {ppromo:modifiedtime} >= ?lastIndexTime
+																	 AND {ppromo.PK} = {ppromorel.target}
+			}}
+		)
+	}}
+	
+) tbl 
+where tbl.code IN ( 
+					{{ SELECT {bbox.product} FROM {BuyBox AS bbox} 
+								WHERE {bbox.delisted} != 1 
+								AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+					}} 
+				)
+
+ ORDER BY tbl.code
+";anonymous
+;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"
+  SELECT distinct{p.code} FROM {Product AS p} 
+						WHERE {p.code} IN ( 
+										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
+													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
+													AND ({bbox.product}={p.code} 
+													AND ({bbox.delisted} = 1 OR (sysdate not between {bbox.sellerstartdate} and {bbox.sellerenddate})))
+													AND {bbox.product} NOT IN (
+													{{
+														SELECT distinct{bbox.product} FROM {BuyBox AS bbox} 
+															WHERE {bbox.delisted} != 1 
+															AND (sysdate between {bbox.sellerstartdate} and {bbox.sellerenddate})
+													}})
+										}} 
+									) 
+						AND {p.varianttype} IS NULL	     
+";anonymous
+
+# Define the available sorts
+INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
+;sortRef1;$solrIndexedType;relevance;true;
+;sortRef2;$solrIndexedType;topRated;false;
+;sortRef3;$solrIndexedType;name-asc;false;
+;sortRef4;$solrIndexedType;name-desc;false;
+;sortRef5;$solrIndexedType;price-asc;false;
+;sortRef6;$solrIndexedType;price-desc;false;
+;sortRef7;$solrIndexedType;isOffersExisting;false;
+;sortRef8;$solrIndexedType;isProductNew;false;Newest
+
+
+# Define the sort fields
+INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fieldName[unique=true];ascending[unique=true];sortpos
+;$solrIndexedType:relevance;inStockFlag;false;0
+;$solrIndexedType:relevance;score;false;1
+;$solrIndexedType:topRated;inStockFlag;false;0
+;$solrIndexedType:topRated;mplAvgRating;false;1
+;$solrIndexedType:name-asc;inStockFlag;false;0
+;$solrIndexedType:name-asc;name;true;1
+;$solrIndexedType:name-desc;inStockFlag;false;0
+;$solrIndexedType:name-desc;name;false;1
+;$solrIndexedType:price-asc;inStockFlag;false;0
+;$solrIndexedType:price-asc;priceValue;true;1
+;$solrIndexedType:price-desc;inStockFlag;false;0
+;$solrIndexedType:price-desc;priceValue;false;1
+;$solrIndexedType:isOffersExisting;inStockFlag;false;0
+;$solrIndexedType:isOffersExisting;isOffersExisting;false;1
+;$solrIndexedType:isProductNew;inStockFlag;false;0
+;$solrIndexedType:isProductNew;isProductNew;false;1
+
+
+#Colour facet attribute for colour family facet
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider			;facetDisplayNameProvider			;customFacetSortProvider;topValuesProvider		 ;rangeSets(name);$classificationAttributeAssignments;
+								 ;$solrIndexedType						  ;colour           				;string    ;true                ;    			    ;     				        ;     				    ;true;     				;MultiSelectOr;Alpha 		 	;2500	;true;; ;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider;;defaultTopValuesProvider;;colorfamilyapparel:apparelCC,colorelectronics:appliancesgf,colorelectronics:audioandhometheatresystemsgf,colorelectronics:actioncamcordersgf,colorelectronics:camerasgf,colorelectronics:computersandlaptopsgf,colorelectronics:gaminggf,colorelectronics:headphonesandspeakersgf,colorelectronics:health&groominggf,colorelectronics:small&kitchenappliancesgf,colorelectronics:smartphonesgf,colorelectronics:tabletscef,colorelectronics:tvandentertainmentgf,colorelectronics:wearabletechgf
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=false];facetType(code);facetSort(code);priority;visible		;fieldValueProvider  ;facetDisplayNameProvider  ;customFacetSortProvider;rangeSets(name);$classAttributeAssignment;
+								 ;$solrIndexedType                        ;Occasion							;string		;					; 					;true						;true 					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyCodeValueProvider;mplOccasionDisplayNameProvider;;;occasion:apparelCC;
+								 ;$solrIndexedType                        ;age	   							;string		;					; 					;true						;true					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyCodeValueProvider;mplAgeBandDisplayNameProvider ;;;ageband:apparelCC;
+
+#Classification attribute indexing for facets			
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=true];facet[default=false];facetType(code);facetSort(code);priority;visible;fieldValueProvider						;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;$classificationAttributeAssignments;
+								 ;$solrIndexedType                        ;pattern							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;menpattern:menpatternCC,womenbrapattern:womenbrapatternCC
+								 ;$solrIndexedType                        ;sleeve							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;womensleeve:womensleeveCC,mensleeve:mensleeveCC
+								 ;$solrIndexedType                        ;setContents						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;mensetcontents:mensetcontentsCC,womensetcontents:womensetcontentsCC
+								 ;$solrIndexedType                        ;length   						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dresslength:dresslengthCC
+								 ;$solrIndexedType                        ;fit								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;fitbottomwearmen:fitbottomwearmenCC,fittopwearmen:fittopwearmenCC,womenbottomwearfit:womenbottomwearfitCC,womentopwearfit:womentopwearfitCC
+								 ;$solrIndexedType                        ;collar   						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;mencasualtopwearcollarneck:mencasualtopwearcollarneckCC,menethinicwearcollarneck:menethinicwearcollarneckCC,menformalsetsuitcollarneck:menformalsetsuitcollarneckCC,menformaltopwearcollarneck:menformaltopwearcollarneckCC,meninnerwearcollarneck:meninnerwearcollarneckCC,womencasualdressjumperneckcollar:womencasualdressjumperneckcollarCC,womencasualtopwearneckcollar:womencasualtopwearneckcollarCC,womenethinicsetneckcollar:womenethinicsetneckcollarCC,womenethinictopwearneckcollar:womenethinictopwearneckcollarCC,womenformalsetdressneckcollar:womenformalsetdressneckcollarCC,womenformalsetsuitneckcollar:womenformalsetsuitneckcollarCC,womenformaltopwearneckcollar:womenformaltopwearneckcollarCC
+								 ;$solrIndexedType                        ;withBlouse						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;withblouse:withblouseCC
+								 ;$solrIndexedType                        ;Wiring							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;wiring:wiringCC
+								 ;$solrIndexedType                        ;waistRise						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;waistrise:waistriseCC
+								 ;$solrIndexedType                        ;briefType						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;brieftype:brieftypeCC
+								 ;$solrIndexedType                        ;sockUsage						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;sockusage:sockusageCC
+								 ;$solrIndexedType                        ;sleepwearCoverage				;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;sleepwearcoverage:sleepwearcoverageCC
+								 ;$solrIndexedType                        ;setItems							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;setitems:setitemsCC
+								 ;$solrIndexedType                        ;padding							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;padding:paddingCC
+								 ;$solrIndexedType                        ;material							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;material:cameraaccessoriesaf
+								 ;$solrIndexedType                        ;dressShape						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dressshape:dressshapeCC
+								 ;$solrIndexedType                        ;denimTreatments					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;denimtreatments:denimtreatmentsCC
+								 ;$solrIndexedType                        ;cut								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;cut:cutCC
+								 ;$solrIndexedType                        ;braCoverage						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;bracoverage:bracoverageCC
+								 ;$solrIndexedType                        ;displayFeatures					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;displayfeatures:iphonedf,displayfeatures:smartphonesdf,displayfeatures:ipaddf,displayfeatures:kindledf,displayfeatures:tabletsdf
+								 ;$solrIndexedType                        ;memorySmartphone					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;memorysmartphone:iphonems,memorysmartphone:smartphonesms
+								 ;$solrIndexedType                        ;operatingSystemIphone			;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;operatingsystemiphone:iphonegf
+								 ;$solrIndexedType                        ;cameraFeatures					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;camerafeatures:smartphonesca,camerafeatures:ipadca,camerafeatures:tabletsca
+								 ;$solrIndexedType                        ;maximumISO						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;maximumiso:camerasgf
+								 ;$solrIndexedType                        ;megapixel						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;megapixel:actioncamcordersgf,megapixel:camerasgf
+								 ;$solrIndexedType                        ;connectivityCameraAccessories	;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;connectivitycameraaccessories:actioncamcordersconncamacc,connectivitycameraaccessories:accessoriesconncamacc,connectivitycameraaccessories:flash&batteryconncamacc,connectivitycameraaccessories:lensesconncamacc,connectivitycameraaccessories:photoframesconncamacc,connectivitycameraaccessories:selfiesticksconncamacc,connectivitycameraaccessories:tripodsconncamacc
+								 ;$solrIndexedType                        ;audioFeatures					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;audiofeatures:hometheatresystemsgf,audiofeatures:soundbarsgf,audiofeatures:speakersgf,audiofeatures:dvdplayergf,audiofeatures:ledtvgf
+								 ;$solrIndexedType                        ;bag								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;bag:vacuumcleaneraf
+								 ;$solrIndexedType                        ;blades							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;blades:mixers&foodprocessorsgf
+								 ;$solrIndexedType                        ;caseOrCover						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;caseorcover:casesandcoversaf,caseorcover:powerbanksaf
+								 ;$solrIndexedType                        ;channels							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;channels:hometheatresystemsgf,channels:speakersgf
+								 ;$solrIndexedType                        ;components						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;components:hometheatresystemsaf
+								 ;$solrIndexedType                        ;coolingTechnology				;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;coolingtechnology:refrigeratorsaf
+								 ;$solrIndexedType                        ;cordless							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;cordedbycordless:vacuumcleaneraf,cordlength:vacuumcleanertf,cordlesskettle:kettlesgf
+								 ;$solrIndexedType                        ;cpuSpeed							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;cpuspeed:laptopstf
+								 ;$solrIndexedType                        ;dialShape						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dialshape:activitytrackergf
+								 ;$solrIndexedType                        ;displayScreen					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;displayscreen:ipodandmp3playersdf
+								 ;$solrIndexedType                        ;displaySizeCC					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;displaysize:actioncamcordersdf,displaysize:camerasdf
+								 ;$solrIndexedType                        ;hDMIPorts						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;hdmiports:ledtvaf
+								 ;$solrIndexedType                        ;maximumShutterSpeed				;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;maximumshutterspeed:camerastf
+								 ;$solrIndexedType                        ;numberOfBurners					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;numberofburners:cooktopsgf
+								 ;$solrIndexedType                        ;numberofSpeakers					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;numberofspeakers:compactshelfsystemsgf,numberofspeakers:homeaudioaccessoriesgf,numberofspeakers:hometheatregf,numberofspeakers:speakersgf,numberofspeakers:speakersgf4
+								 ;$solrIndexedType                        ;opticaldrive						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;opticaldrive:laptopstf
+								 ;$solrIndexedType                        ;primaryCamera					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;primarycamera:iphoneca,primarycamera:smartphonesca,primarycamera:ipadca,primarycamera:tabletsca
+								 ;$solrIndexedType                        ;rAM								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;ram:desktopsms,ram:laptopsm,ram:smartphonesms,ram:tabletsms
+								 ;$solrIndexedType                        ;security							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;securitynetworking:networkingtf
+								 ;$solrIndexedType                        ;sensorSize						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;sensorsapple:ipadtf,sensorsiphone:iphonetf,sensorsize:camerastf
+								 ;$solrIndexedType                        ;sensorType						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;sensortype:actioncamcordersaf,sensortype:camerasaf
+								 ;$solrIndexedType                        ;shopbyFamilySize					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;shopbyfamilysize:washinganddryingtf
+								 ;$solrIndexedType                        ;simCard							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;simcard:ipadgf
+								 ;$solrIndexedType                        ;sIMType							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;simtype:tabletsgf,simtype:simtypecc
+								 ;$solrIndexedType                        ;stabilizerRequired				;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;stabilizerrequired:refrigeratorsgf
+								 ;$solrIndexedType                        ;strapColor						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;strapcolor:watchesgf,strapcolor:activitytrackercc
+								 ;$solrIndexedType                        ;surroundSound					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;surroundsound:compactshelfsystemsgf,surroundsound:hometheatregf,surroundsound:soundbarsgf
+								 ;$solrIndexedType                        ;touchScreen						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;touchscreen:computersandlaptopsdf
+								 ;$solrIndexedType                        ;uSBInputs						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;usbinputs:soundbarsaf,usbinputs:desktopsaf,usbinputs:laptopsaf,usbinputs:tabletsaf,usbinputs:dvdplayeraf,usbinputs:ledtvaf
+								 ;$solrIndexedType                        ;uvTypes							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;uvtypes:waterpurifiersgf
+								 ;$solrIndexedType                        ;videoRecording					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;videorecording:iphoneca,videorecording:smartphonesca,videorecording:tabletsca
+								 ;$solrIndexedType                        ;wireless							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;wireless:headphoneandspeakercc,wireless:projectorsaf
+								 ;$solrIndexedType                        ;wirelessSubwooferconnect			;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;wirelesssubwooferconnect:soundbarsgf				 
+								 ;$solrIndexedType                        ;aspectRatio						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;aspectratiocameras:camerastf,aspectratioprojector:projectorstf
+								 ;$solrIndexedType                        ;battery							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;batterylaptop:laptopstf
+								 ;$solrIndexedType                        ;batteryCapacity					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;batterylife:ipadba,batterylife:kindleba
+								 ;$solrIndexedType                        ;bluetooth						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;bluetoothcompatible:healthcareaf,bluetoothheadphone:headphonesandheadsetsaf,bluetoothipad:ipadaf
+								 ;$solrIndexedType                        ;bodyMaterial						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;interiormaterial:microwavestf
+								 ;$solrIndexedType                        ;cableLength						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;cablelengthhealth:healthcaretf,cablelengthhomethreatre:hometheatresystemstf
+								 ;$solrIndexedType                        ;cameraSpecifications				;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;backcameraspecifics:ipadbackcameraspecifics
+								 ;$solrIndexedType                        ;cameraType						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;camerafeatures:smartphonesca,camerafeatures:ipadca,camerafeatures:tabletsca
+								 ;$solrIndexedType                        ;capacityCC						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;capacityairconditioner:airconditionersgf,capacitycameraaccessories:accessoriesms,capacitycameraaccessories:bagsms,capacitycameraaccessories:flash&batteryms,capacitycomputerstorage:laptopss,capacitycomputerstorage:storagems,capacityfryerscooktops:fryers&cooktopsgf,capacityipad:ipadms,capacityipodmp3:ipodandmp3playersgf,capacitykettlescoffeemakers:kettles&coffeemakersgf,capacitykindle:fryers&cooktopsgf,capacitykindle:coffeemakersgf,capacitykindle:espressomachinesgf,capacitykindle:kindlegf,capacitymicrowave:microwavesgf,capacitymixersfoodprocessors:mixers&foodprocessorsgf,capacitymixersfoodprocessors:mixers&foodprocessorsgf,capacitypurifiers:purifiersgf,capacityrefrigerators:refrigeratorsgf,capacityvacuumcleaner:vacuumcleanergf,capacitywashingdrying:washinganddryinggf
+								 ;$solrIndexedType                        ;connectivity						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;connectivitycamera:camerastf,connectivitycameraaccessories:actioncamcordersconncamacc,connectivitycameraaccessories:accessoriesconncamacc,connectivitycameraaccessories:flash&batteryconncamacc,connectivitycameraaccessories:lensesconncamacc,connectivitycameraaccessories:photoframesconncamacc,connectivitycameraaccessories:selfiesticksconncamacc,connectivitycameraaccessories:tripodsconncamacc,connectivitycomplaptop:laptopstf,connectivitycomplaptop:networkingtf,connectivityfeatures:smartphonestf,connectivityfeatures:ledtvtf,connectivityheadphonespeaker:speakerstf,connectivitysmartphone:smartphonesaf,connectivitysmartphone:iphoneca,connectivitytabletgeneral:tabletsna,connectivitytabletipad:ipadtf,connectivitytabletkindle:kindletf,connectivitywearabletech:wearabletechtf
+								 ;$solrIndexedType                        ;connectivityAudioHts				;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;connectivityaudiohts:audioandhometheatresystemstf
+								 ;$solrIndexedType                        ;control							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;controls:fryers&cooktopstf,controltype:microwavestf
+								 ;$solrIndexedType                        ;cookingType						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;cookingmodes:fryers&cooktopsgf,cookingmodes:microwavesgf
+								 ;$solrIndexedType                        ;dialColour						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dialcolor:activitytrackergf,dialcolor:watchesgf
+								 ;$solrIndexedType                        ;display							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;displayfeatures:iphonedf,displayfeatures:smartphonesdf,displayfeatures:ipaddf,displayfeatures:kindledf,displayfeatures:tabletsdf,displaytypehealthgrooming:health&groomingdf,displayproduct:apparelCC
+								 ;$solrIndexedType                        ;energyRating						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;energyefficiencyratio:airconditionerstf
+								 ;$solrIndexedType                        ;features							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;featureapparel:apparelCC,feature1:electronicsdepthproduct,feature2:electronicsfeature1,feature3:electronicsfeature2,feature4:electronicsfeature3
+								 ;$solrIndexedType                        ;filters							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;filter:purifiersgf,filterfeatures:airconditionerstf
+								 ;$solrIndexedType                        ;focalLength						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;focallengthbinocularstelescopes:binocularsandtelescopestf,focallengthcamcorders:actioncamcorderstf,focallengthcameraaccessories:accessoriestf,focallengthcameraaccessories:lensestf,focallengthcameras:camerastf
+								 ;$solrIndexedType                        ;function							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;functionsairconditioners:airconditionersgf,functionsfryerscooktops:fryers&cooktopsaf,functionsmixerfoodprocessors:washinganddryinggf,functionsmixerfoodprocessors:mixers&foodprocessorsgf
+								 ;$solrIndexedType                        ;internalStorage					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;capacitycomputerstorage:laptopss,capacitycomputerstorage:storagems
+								 ;$solrIndexedType                        ;jars								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;noofjars:mixers&foodprocessorsgf
+								 ;$solrIndexedType                        ;memory							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;memoryaudiohts:ipodandmp3playersms,memorysmartphone:iphonems,memorysmartphone:smartphonesms,memorytablet:smartphonesms,memorytablet:tabletsms
+								 ;$solrIndexedType                        ;operatingSystem					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;operatingsysgamingaccessories:gamingaccessoriesgf,operatingsystemiphone:iphonegf,operatingsystemlaptops:desktopsgf,operatingsystemlaptops:laptopsgf,operatingsystemlaptops:networkinggf,operatingsystemlaptops:peripheralsandsoftwaregf,operatingsystemlaptops:aio'sgf,operatingsystemlaptops:lasersgf,operatingsystemlaptops:storagegf,operatingsystempcgames:softwaregf,operatingsystemsmartphones:smartphonesgf3,operatingsystemtablets:tabletsna
+								 ;$solrIndexedType                        ;powerConsumption					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;powerconsumpairconditioners:airconditionerstf,powerconsumpaudiohomethreatre:hometheatresystemstf,powerconsumpkettlecoffeemakers:kettles&coffeemakerstf,powerconsumptiondesktops:desktopsaf,powerconsumptionfryerscooktops:fryers&cooktopstf,powerconsumptionmicrowaves:microwavestf,powerconsumptionpersonalcare:personalcaretf,powerconsumptionpurifiers:purifiersaf,powerconsumptionstorage:storagetf,powerconsumptiontvaccessories:adapterstf,powerconsumptiontvaccessories:mediaplayerstf,powerconsumptiontvaccessories:remotestf,powerconsumptiontvaccessories:standingandmountingsolutionstf,powerconsumptiontvaccessories:surgeprotectorsandpowertf,powerconsuptioncamcorders:poweractioncamcorderstf
+								 ;$solrIndexedType                        ;processor						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;processorapple:imacgf,processorapple:ipadgf,processorlaptopdesktop:aio'sgf,processorlaptopdesktop:buildmypcgf,processorlaptopdesktop:gamingpf,processorlaptopdesktop:laptopsgf,processorsmartphone:smartphonesgf3,processortablet:tabletsna
+								 ;$solrIndexedType                        ;projectionType					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;projection:projectorstf
+								 ;$solrIndexedType                        ;protocols						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;supportedprotocols:networkingtf
+								 ;$solrIndexedType                        ;ramType							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;ram:desktopsms,ram:laptopsm,ram:smartphonesms,ram:tabletsms
+								 ;$solrIndexedType                        ;resolution						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;resolutionactioncamcorders:resolutionactioncamcorderstf,resolutionactivitytracker:activitytrackerdf,resolutionbinocularstelescopes:binocularsandtelescopestf,resolutioncomputerslaptops:desktopstf,resolutionipad:ipaddf,resolutioniphone:iphonedf,resolutionkindle:kindledf,resolutionsecuritycameras:securitycamerastf,resolutiontvprojectors:projectorsdf
+								 ;$solrIndexedType                        ;screen							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;screenactioncamcorders:actioncamcorderstf,screenactivitytracker:activitytrackeraf,screencameras:camerasgf,screendesktops:desktopsdf,screenresolution:ledtvdf
+								 ;$solrIndexedType                        ;screenSize						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;screensizeaio:aio'sdf,screensizeaio:lasersdf,screensizecamcorder:actioncamcorderstf,screensizedesktops:desktopsdf,screensizekindle:kindledf,screensizelaptops:laptopsdf,screensizeledtv:ledtvdf,screensizesmartphone:iphonedf,screensizesmartphone:smartphonesdf
+								 ;$solrIndexedType                        ;simSize							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;simsizeiphone:iphonegf,simsizesmartphones:smartphonesgf3
+								 ;$solrIndexedType                        ;speakers							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;speakersdesktops:desktopsaf
+								 ;$solrIndexedType                        ;speed							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;cpuspeed:laptopstf,maximumshutterspeed:camerastf,printspeed:printingtf,speednetworking:networkingtf
+								 ;$solrIndexedType                        ;ratingsStar						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;ratings:airconditionersgf,ratings:refrigeratorsgf
+								 ;$solrIndexedType                        ;suitableFor						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;suitableforcamera:actioncamcordersaf,suitableforcamera:binocularsandtelescopesaf,suitableforcamera:accessoriesaf,suitableforcamera:bagsaf,suitableforcomputerlaptop:softwareaf,suitableforhealthgrm:health&groomingaf,suitableforhts:ipodandmp3playersaf,suitableforsmartphone:smartphoneaccessoriesaf,suitablefortventrmnt:projectorsaf
+								 ;$solrIndexedType                        ;type								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;typecamerabinotelescope:camerasgf,typecamerasecurity:securitycamerasgf,typeearheadphone:headphonesandheadsetsgf,typehealthcare:healthcaregf,typehealthcare:personalcaregf,typehts:hometheatresystemsgf,typemixer:mixers&foodprocessorsgf,typenetworking:networkinggf,typeofassistivetechnology:healthcaretypeofasstech,typeperipheralsoftware:peripheralsandsoftwaregf,typepersonalcare:healthcaregf,typepersonalcare:personalcaregf,typepurifier:waterpurifiersgf,typestorage:laptopsgf,typetvacc:tvaccessoriesgf,typevacuumcleaner:vacuumcleanergf
+								 ;$solrIndexedType                        ;usbPorts							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;usbinputs:soundbarsaf,usbinputs:desktopsaf,usbinputs:laptopsaf,usbinputs:tabletsaf,usbinputs:dvdplayeraf,usbinputs:ledtvaf
+								 ;$solrIndexedType                        ;videoFormat						;string		;					; 					;true						;						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;videoformatledtv:ledtvtf,videoformatprojectors:projectorstf,videoformatshts:hometheatretf,videoformatstventermnt:dvdplayertf,videoformatstventermnt:ledtvtf,videoformatstventermnt:hometheatreprojectortf,videoformatstventermnt:portableprojectorstf,videoformatstventermnt:projectortf,videoplaybackformats:dvdplayermm
+								 ;$solrIndexedType                        ;warranty							;string		;					; 					;true						;						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;warrantydescription:electronicswa,warrantysummary:electronicswa
+								 ;$solrIndexedType                        ;weight							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;weight:electronicsdm
+
+#For Exclude OutofStock facet
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true]	;name[unique=true]	;type(code)	; genericFacet[default=false] ;sortableType(code)	;currency[default=false];localized[default=false]	;multiValue[default=false]	;facet[default=false]	;facetType(code)	;facetSort(code);priority	;visible		;fieldValueProvider							;facetDisplayNameProvider;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;
+				 ;$solrIndexedType				;inStockFlag		;boolean	;	true ;		;			;				;				;true			;MultiSelectOr		;Alpha		;0		;true			;mplProductInStockFlagValueProvider			;mplInStockFacetDisplayNameProvider ;						;				;							;
+				 
+				 
+				 
+				 
+				 
+##Conceirge Search 
+INSERT_UPDATE HelpMeShopOccasion;code[unique=true];displayName;filterName
+;partyclubwear;Going for Party;Party Wear;
+;eveningwear;Going for an Outing;Evening Wear;
+;ethnicwear;Going for Traditional Occasion;Ethnic Wear;
+;workwear;Going for Work;Work Wear;
+;casualwear;Going for a Casual day out;Casual Wear;
+;collegelook;Going for College;College Look;
+;weddingwear;Going for wedding;Wedding Wear;	
+
+
+
+## Solr Boost Rules
+$solrIndexedTypeIdentifier=mplProductType
+$solrIndexedType=solrIndexedType(identifier[default=$solrIndexedTypeIdentifier])
+
+INSERT_UPDATE GlobalSolrSearchProfile;code;indexedType(identifier)[unique=true];
+;mpl-globalcatalog-srch-profile;$solrIndexedTypeIdentifier;
+
+INSERT_UPDATE SolrBoostRule;solrIndexedProperty(name, $solrIndexedType)[unique=true];operator(code)[unique=true];propertyValue[unique=true];boostFactor;solrSearchProfiles(code)[unique=true]
+;inStockFlag;EQUAL_TO;true;100;mpl-globalcatalog-srch-profile

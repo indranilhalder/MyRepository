@@ -1,0 +1,831 @@
+﻿$productCatalog=mplProductCatalog
+$classificationCatalog=pcmClassification
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$languages=ja,en,de,zh
+$uidGroup=admingroup,marketplaceGroup,ETAILREAD
+# Product catalog
+INSERT_UPDATE Catalog;id[unique=true]
+;$productCatalog
+#Primary hierarchy Electronics - SOURCE Catalog;;;;;;;;;
+$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
+$catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
+;;;;;;;;;
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
+;MPH1;Primary;;mplProductCatalog:Staged;$uidGroup 
+;MPH11;Apparel;MPH1;mplProductCatalog:Staged;$uidGroup
+;MPH1110;Women's Apparel;MPH11;mplProductCatalog:Staged;$uidGroup
+;MPH1111;Men's Apparel;MPH11;mplProductCatalog:Staged;$uidGroup
+;MPH1112;Kids Apparel;MPH11;mplProductCatalog:Staged;$uidGroup
+;MPH1111100100;Formal shirt;MPH1111100;mplProductCatalog:Staged;$uidGroup
+;MPH1111100101;Formal trousers;MPH1111100;mplProductCatalog:Staged;$uidGroup
+;MPH1111100102;Formal suits;MPH1111100;mplProductCatalog:Staged;$uidGroup
+;MPH1111100103;Formal coats & jackets;MPH1111100;mplProductCatalog:Staged;$uidGroup
+;MPH1111101100;T-Shirts;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111101101;casual shirts;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111101102;Jeans;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111101103;Casual trousers;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111101104;Shorts;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111101105;Sweatshirts and hoodies;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111101106;Sweaters;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111101107;Casual jackets and blazers;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111101108;Track pants;MPH1111101;mplProductCatalog:Staged;$uidGroup
+;MPH1111102100;Sports tshirt;MPH1111102;mplProductCatalog:Staged;$uidGroup
+;MPH1111102101;Sports shorts;MPH1111102;mplProductCatalog:Staged;$uidGroup
+;MPH1111102102;Sports sets;MPH1111102;mplProductCatalog:Staged;$uidGroup
+;MPH1111102103;Sports jackets;MPH1111102;mplProductCatalog:Staged;$uidGroup
+;MPH1111102104;Track pants;MPH1111102;mplProductCatalog:Staged;$uidGroup
+;MPH1111102105;Swimwear;MPH1111102;mplProductCatalog:Staged;$uidGroup
+;MPH1111105100;Socks;MPH1111105;mplProductCatalog:Staged;$uidGroup
+;MPH1110100100;Sarees;MPH1110100;mplProductCatalog:Staged;$uidGroup
+;MPH1110100101;Kurta & kurtis;MPH1110100;mplProductCatalog:Staged;$uidGroup
+;MPH1110100102;Suit Sets;MPH1110100;mplProductCatalog:Staged;$uidGroup
+;MPH1110100103;Dress material;MPH1110100;mplProductCatalog:Staged;$uidGroup
+;MPH1110100104;Ethnic bottom ;MPH1110100;mplProductCatalog:Staged;$uidGroup
+;MPH1110100105;Duppatta;MPH1110100;mplProductCatalog:Staged;$uidGroup
+;MPH1110101100;Tops and tees;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101101;casual shirts;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101102;Jeans;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101103;Casual trousers;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101104;Shorts;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101105;Sweatshirts and hoodies;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101106;Sweaters;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101107;Casual jackets and blazers;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101108;Track pants;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101109;Casual dresses;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101110;Shrugs and cardigans;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101111;Skirts;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101112;Capris;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101113;Leggings & Jeggings;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110101114;Jump suits;MPH1110101;mplProductCatalog:Staged;$uidGroup
+;MPH1110102100;Formal shirt;MPH1110102;mplProductCatalog:Staged;$uidGroup
+;MPH1110102101;Formal trousers;MPH1110102;mplProductCatalog:Staged;$uidGroup
+;MPH1110102102;Formal suits;MPH1110102;mplProductCatalog:Staged;$uidGroup
+;MPH1110102103;Formal coats jackets;MPH1110102;mplProductCatalog:Staged;$uidGroup
+;MPH1110102104;Formal dress;MPH1110102;mplProductCatalog:Staged;$uidGroup
+;MPH1110103100;Maternity Day Wear;MPH1110103;mplProductCatalog:Staged;$uidGroup
+;MPH1110103101;Maternity Lingerie;MPH1110103;mplProductCatalog:Staged;$uidGroup
+;MPH1110103102;Maternity Sleepwear;MPH1110103;mplProductCatalog:Staged;$uidGroup
+;MPH1110103103;Maternity Accessories;MPH1110103;mplProductCatalog:Staged;$uidGroup
+;MPH1110104100;Sports tshirt;MPH1110104;mplProductCatalog:Staged;$uidGroup
+;MPH1110104101;Sports shorts;MPH1110104;mplProductCatalog:Staged;$uidGroup
+;MPH1110104102;Sports sets;MPH1110104;mplProductCatalog:Staged;$uidGroup
+;MPH1110104103;Sports jackets;MPH1110104;mplProductCatalog:Staged;$uidGroup
+;MPH1110104104;Track pants;MPH1110104;mplProductCatalog:Staged;$uidGroup
+;MPH1110104105;Swimwear;MPH1110104;mplProductCatalog:Staged;$uidGroup
+;MPH1110104106;Sports innerwear;MPH1110104;mplProductCatalog:Staged;$uidGroup
+;MPH1110105100;Bras & Bra Sets;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105101;Camisoles & Camisole Sets;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105102;Lingerie Sets;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105103;Corsets & Bustier;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105104;Sleepwear & Robes;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105105;Gowns;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105106;Panties;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105107;Intimate wear;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105108;Stockings &Tights;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110105109;Shapewear;MPH1110105;mplProductCatalog:Staged;$uidGroup
+;MPH1110106100;Socks;MPH1110106;mplProductCatalog:Staged;$uidGroup
+;MPH1112100100;Tshirts;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100101;Shirts;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100102;Sets;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100103;Shorts;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100104;Jeans & pants;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100105;Ethnic;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100106;Winter;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100107;Innerwear and nightwear;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100108;Swimwear;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112100109;Accessories;MPH1112100;mplProductCatalog:Staged;$uidGroup
+;MPH1112101100;Tees and tops;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101101;Sets;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101102;Cargos and shorts;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101103;Jeans & pants;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101104;Ethnic;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101105;Winter;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101106;Innerwear and nightwear;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101107;Swimwear;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101108;Dresses;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101109;Leggings and Jeggings;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101110;jumpsuits;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101111;Accessories;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112101112;Skirts;MPH1112101;mplProductCatalog:Staged;$uidGroup
+;MPH1112100;Boys;MPH1112;mplProductCatalog:Staged;$uidGroup
+;MPH1112101;Girls;MPH1112;mplProductCatalog:Staged;$uidGroup
+;MPH1112102;Infants;MPH1112;mplProductCatalog:Staged;$uidGroup
+;MPH1111100;Mens formal;MPH1111;mplProductCatalog:Staged;$uidGroup
+;MPH1111101;Mens casual;MPH1111;mplProductCatalog:Staged;$uidGroup
+;MPH1111102;Mens Sports;MPH1111;mplProductCatalog:Staged;$uidGroup
+;MPH1111103;Mens Ethnic;MPH1111;mplProductCatalog:Staged;$uidGroup
+;MPH1111104;Mens Innerwear and sleepwear;MPH1111;mplProductCatalog:Staged;$uidGroup
+;MPH1111105;Socks;MPH1111;mplProductCatalog:Staged;$uidGroup
+;MPH1110100;Women's Ethnic;MPH1110;mplProductCatalog:Staged;$uidGroup
+;MPH1110101;Women's Western Wear;MPH1110;mplProductCatalog:Staged;$uidGroup
+;MPH1110102;Women Formal;MPH1110;mplProductCatalog:Staged;$uidGroup
+;MPH1110103;Women Maternity;MPH1110;mplProductCatalog:Staged;$uidGroup
+;MPH1110104;Women's Sports;MPH1110;mplProductCatalog:Staged;$uidGroup
+;MPH1110105;Women's Lingerie;MPH1110;mplProductCatalog:Staged;$uidGroup
+;MPH1110106;Socks;MPH1110;mplProductCatalog:Staged;$uidGroup
+;MPH1111103100;Kurta & kurtis;MPH1111103;mplProductCatalog:Staged;$uidGroup
+;MPH1111103101;Kurta set with bottom;MPH1111103;mplProductCatalog:Staged;$uidGroup
+;MPH1111103102;Bottomwear;MPH1111103;mplProductCatalog:Staged;$uidGroup
+;MPH1111103103;Ethnic suits;MPH1111103;mplProductCatalog:Staged;$uidGroup
+;MPH1111103104;Ethnic headgear;MPH1111103;mplProductCatalog:Staged;$uidGroup
+;MPH1111104100;Briefs;MPH1111104;mplProductCatalog:Staged;$uidGroup
+;MPH1111104101;Trunks;MPH1111104;mplProductCatalog:Staged;$uidGroup
+;MPH1111104102;Boxers;MPH1111104;mplProductCatalog:Staged;$uidGroup
+;MPH1111104103;Vests;MPH1111104;mplProductCatalog:Staged;$uidGroup
+;MPH1111104104;Sleepwear;MPH1111104;mplProductCatalog:Staged;$uidGroup
+;MPH1111104105;Swimwear;MPH1111104;mplProductCatalog:Staged;$uidGroup
+;MPH1112102100;Top and bottom sets;MPH1112102;mplProductCatalog:Staged;$uidGroup
+;MPH1112102101;Rompers and body suits;MPH1112102;mplProductCatalog:Staged;$uidGroup
+;MPH1112102102;Tees and tops;MPH1112102;mplProductCatalog:Staged;$uidGroup
+;MPH1112102103;Accessories;MPH1112102;mplProductCatalog:Staged;$uidGroup
+
+;MPH12;Electronics;MPH1;mplProductCatalog:Staged;$uidGroup
+;MPH1210;Appliances;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1211;Audio and Home Theatre Systems;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1212;Cameras;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1213;Computers and laptops;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1214;Gaming;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1215;Head Phones and Speakers;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1216;Health & Grooming;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1217;Small & Kitchen Appliances;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1218;Smart Phones;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1219;Tablets;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1220;TV and Entertainment;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1221;Wearable Tech;MPH12;mplProductCatalog:Staged;$uidGroup
+;MPH1210100;Air Conditioners;MPH1210;mplProductCatalog:Staged;$uidGroup
+;MPH1210101;Refrigerators;MPH1210;mplProductCatalog:Staged;$uidGroup
+;MPH1210102;Washing and Drying;MPH1210;mplProductCatalog:Staged;$uidGroup
+;MPH1211100;Home Theatre Systems;MPH1211;mplProductCatalog:Staged;$uidGroup
+;MPH1211101;IPOD and MP3 Players;MPH1211;mplProductCatalog:Staged;$uidGroup
+;MPH1211102;Sound Bars;MPH1211;mplProductCatalog:Staged;$uidGroup
+;MPH1212100;Action Camcorders;MPH1212;mplProductCatalog:Staged;$uidGroup
+;MPH1212101;Binoculars and Telescopes;MPH1212;mplProductCatalog:Staged;$uidGroup
+;MPH1212102;Camera Accessories;MPH1212;mplProductCatalog:Staged;$uidGroup
+;MPH1212103;Cameras;MPH1212;mplProductCatalog:Staged;$uidGroup
+;MPH1212104;Security Cameras;MPH1212;mplProductCatalog:Staged;$uidGroup
+;MPH1213100;Desktops;MPH1213;mplProductCatalog:Staged;$uidGroup
+;MPH1213101;Laptops;MPH1213;mplProductCatalog:Staged;$uidGroup
+;MPH1213102;Networking;MPH1213;mplProductCatalog:Staged;$uidGroup
+;MPH1213103;Peripherals and Software;MPH1213;mplProductCatalog:Staged;$uidGroup
+;MPH1213104;Printing;MPH1213;mplProductCatalog:Staged;$uidGroup
+;MPH1213105;Storage;MPH1213;mplProductCatalog:Staged;$uidGroup
+;MPH1214100;Gaming Accessories;MPH1214;mplProductCatalog:Staged;$uidGroup
+;MPH1214101;Software;MPH1214;mplProductCatalog:Staged;$uidGroup
+;MPH1215100;Headphones and headsets;MPH1215;mplProductCatalog:Staged;$uidGroup
+;MPH1215101;Speakers;MPH1215;mplProductCatalog:Staged;$uidGroup
+;MPH1216100;Health Care;MPH1216;mplProductCatalog:Staged;$uidGroup
+;MPH1216101;Personal Care;MPH1216;mplProductCatalog:Staged;$uidGroup
+;MPH1216102;Purifiers;MPH1216;mplProductCatalog:Staged;$uidGroup
+;MPH1217100;Fryers & Cooktops;MPH1217;mplProductCatalog:Staged;$uidGroup
+;MPH1217101;Kettles & Coffee Makers;MPH1217;mplProductCatalog:Staged;$uidGroup
+;MPH1217102;Microwaves;MPH1217;mplProductCatalog:Staged;$uidGroup
+;MPH1217103;Mixers & Food Processors;MPH1217;mplProductCatalog:Staged;$uidGroup
+;MPH1217104;Vacuum cleaner;MPH1217;mplProductCatalog:Staged;$uidGroup
+;MPH1218100;IPHONE;MPH1218;mplProductCatalog:Staged;$uidGroup
+;MPH1218101;Smart Phone Accessories;MPH1218;mplProductCatalog:Staged;$uidGroup
+;MPH1218102;Smart Phones;MPH1218;mplProductCatalog:Staged;$uidGroup
+;MPH1219100;IPAD;MPH1219;mplProductCatalog:Staged;$uidGroup
+;MPH1219101;IPAD Accessories;MPH1219;mplProductCatalog:Staged;$uidGroup
+;MPH1219102;Kindle;MPH1219;mplProductCatalog:Staged;$uidGroup
+;MPH1219103;Tablet Accessories;MPH1219;mplProductCatalog:Staged;$uidGroup
+;MPH1219104;Tablets;MPH1219;mplProductCatalog:Staged;$uidGroup
+;MPH1220100;DVD Player;MPH1220;mplProductCatalog:Staged;$uidGroup
+;MPH1220101;LED TV;MPH1220;mplProductCatalog:Staged;$uidGroup
+;MPH1220102;Projectors;MPH1220;mplProductCatalog:Staged;$uidGroup
+;MPH1220103;TV Accessories;MPH1220;mplProductCatalog:Staged;$uidGroup
+;MPH1221100;Activity Tracker;MPH1221;mplProductCatalog:Staged;$uidGroup
+;MPH1221101;Pet Tracker;MPH1221;mplProductCatalog:Staged;$uidGroup
+;MPH1221102;Watches;MPH1221;mplProductCatalog:Staged;$uidGroup
+;MPH1210100100;Cassette;MPH1210100;mplProductCatalog:Staged;$uidGroup
+;MPH1210100101;Coolers;MPH1210100;mplProductCatalog:Staged;$uidGroup
+;MPH1210100102;Cube;MPH1210100;mplProductCatalog:Staged;$uidGroup
+;MPH1210100103;Portable;MPH1210100;mplProductCatalog:Staged;$uidGroup
+;MPH1210100104;Split;MPH1210100;mplProductCatalog:Staged;$uidGroup
+;MPH1210100105;Tower;MPH1210100;mplProductCatalog:Staged;$uidGroup
+;MPH1210100106;Window;MPH1210100;mplProductCatalog:Staged;$uidGroup
+;MPH1210101100;Double Door;MPH1210101;mplProductCatalog:Staged;$uidGroup
+;MPH1210101101;Side by Side;MPH1210101;mplProductCatalog:Staged;$uidGroup
+;MPH1210101102;Single Door;MPH1210101;mplProductCatalog:Staged;$uidGroup
+;MPH1210101103;Triple Door;MPH1210101;mplProductCatalog:Staged;$uidGroup
+;MPH1210101104;Wine Coolers;MPH1210101;mplProductCatalog:Staged;$uidGroup
+;MPH1210102100;Dryers;MPH1210102;mplProductCatalog:Staged;$uidGroup
+;MPH1210102101;Washer Dryer;MPH1210102;mplProductCatalog:Staged;$uidGroup
+;MPH1210102102;Washing machine;MPH1210102;mplProductCatalog:Staged;$uidGroup
+;MPH1211100100;Compact Shelf Systems;MPH1211100;mplProductCatalog:Staged;$uidGroup
+;MPH1211100101;Home Audio Accessories;MPH1211100;mplProductCatalog:Staged;$uidGroup
+;MPH1211100102;Home Theatre;MPH1211100;mplProductCatalog:Staged;$uidGroup
+;MPH1211100103;Microphones;MPH1211100;mplProductCatalog:Staged;$uidGroup
+;MPH1211100104;Receivers & AMP;MPH1211100;mplProductCatalog:Staged;$uidGroup
+;MPH1211100105;Speakers;MPH1211100;mplProductCatalog:Staged;$uidGroup
+;MPH1211101100;IPOD;MPH1211101;mplProductCatalog:Staged;$uidGroup
+;MPH1211101101;MP3 Players;MPH1211101;mplProductCatalog:Staged;$uidGroup
+;MPH1211102100;Sound Bars;MPH1211102;mplProductCatalog:Staged;$uidGroup
+;MPH1212100100;Action Camcorder accessories;MPH1212100;mplProductCatalog:Staged;$uidGroup
+;MPH1212100101;Action Camcorders;MPH1212100;mplProductCatalog:Staged;$uidGroup
+;MPH1212101100;Binoculars;MPH1212101;mplProductCatalog:Staged;$uidGroup
+;MPH1212101101;Telescopes;MPH1212101;mplProductCatalog:Staged;$uidGroup
+;MPH1212102100;Accessories;MPH1212102;mplProductCatalog:Staged;$uidGroup
+;MPH1212102101;Bags;MPH1212102;mplProductCatalog:Staged;$uidGroup
+;MPH1212102102;Flash & Battery;MPH1212102;mplProductCatalog:Staged;$uidGroup
+;MPH1212102103;Lenses;MPH1212102;mplProductCatalog:Staged;$uidGroup
+;MPH1212102104;Photo Frames;MPH1212102;mplProductCatalog:Staged;$uidGroup
+;MPH1212102105;Selfie Sticks;MPH1212102;mplProductCatalog:Staged;$uidGroup
+;MPH1212102106;Tripods;MPH1212102;mplProductCatalog:Staged;$uidGroup
+;MPH1212103100;DSLR;MPH1212103;mplProductCatalog:Staged;$uidGroup
+;MPH1212103101;Instant Cameras;MPH1212103;mplProductCatalog:Staged;$uidGroup
+;MPH1212103102;Point and Shoot;MPH1212103;mplProductCatalog:Staged;$uidGroup
+;MPH1212104100;Bullet Cameras;MPH1212104;mplProductCatalog:Staged;$uidGroup
+;MPH1212104101;Dome Cameras;MPH1212104;mplProductCatalog:Staged;$uidGroup
+;MPH1212104102;Pen Cameras;MPH1212104;mplProductCatalog:Staged;$uidGroup
+;MPH1212104103;Surveillance;MPH1212104;mplProductCatalog:Staged;$uidGroup
+;MPH1213100100;AIO's;MPH1213100;mplProductCatalog:Staged;$uidGroup
+;MPH1213100101;Build My PC;MPH1213100;mplProductCatalog:Staged;$uidGroup
+;MPH1213100102;GAMING;MPH1213100;mplProductCatalog:Staged;$uidGroup
+;MPH1213100103;iMac;MPH1213100;mplProductCatalog:Staged;$uidGroup
+;MPH1213100104;Monitors;MPH1213100;mplProductCatalog:Staged;$uidGroup
+;MPH1213101100;2-in-1's (hybrid);MPH1213101;mplProductCatalog:Staged;$uidGroup
+;MPH1213101101;Laptops;MPH1213101;mplProductCatalog:Staged;$uidGroup
+;MPH1213102100;Data Cards;MPH1213102;mplProductCatalog:Staged;$uidGroup
+;MPH1213102101;Mifi;MPH1213102;mplProductCatalog:Staged;$uidGroup
+;MPH1213102102;Routers and Modem;MPH1213102;mplProductCatalog:Staged;$uidGroup
+;MPH1213103100;Keyboards and Mice;MPH1213103;mplProductCatalog:Staged;$uidGroup
+;MPH1213103101;Peripherals;MPH1213103;mplProductCatalog:Staged;$uidGroup
+;MPH1213103102;Software;MPH1213103;mplProductCatalog:Staged;$uidGroup
+;MPH1213103103;Webcams;MPH1213103;mplProductCatalog:Staged;$uidGroup
+;MPH1213104100;AIO's;MPH1213104;mplProductCatalog:Staged;$uidGroup
+;MPH1213104101;Cartridges and Toners;MPH1213104;mplProductCatalog:Staged;$uidGroup
+;MPH1213104102;Lasers;MPH1213104;mplProductCatalog:Staged;$uidGroup
+;MPH1213104103;Paper;MPH1213104;mplProductCatalog:Staged;$uidGroup
+;MPH1213105100;Cloud Storage;MPH1213105;mplProductCatalog:Staged;$uidGroup
+;MPH1213105101;Hard Disks;MPH1213105;mplProductCatalog:Staged;$uidGroup
+;MPH1213105102;Pen drives;MPH1213105;mplProductCatalog:Staged;$uidGroup
+;MPH1213105103;SSD;MPH1213105;mplProductCatalog:Staged;$uidGroup
+;MPH1214100100;Mice;MPH1214100;mplProductCatalog:Staged;$uidGroup
+;MPH1214100101;PADS;MPH1214100;mplProductCatalog:Staged;$uidGroup
+;MPH1214101100;PC Games;MPH1214101;mplProductCatalog:Staged;$uidGroup
+;MPH1215100100;In the Ear;MPH1215100;mplProductCatalog:Staged;$uidGroup
+;MPH1215100101;On the Ear;MPH1215100;mplProductCatalog:Staged;$uidGroup
+;MPH1215100102;Over the Ear;MPH1215100;mplProductCatalog:Staged;$uidGroup
+;MPH1215101100;Bluetooth Speakers;MPH1215101;mplProductCatalog:Staged;$uidGroup
+;MPH1215101101;Boom Box;MPH1215101;mplProductCatalog:Staged;$uidGroup
+;MPH1215101102;Computer Speakers;MPH1215101;mplProductCatalog:Staged;$uidGroup
+;MPH1215101103;Docks;MPH1215101;mplProductCatalog:Staged;$uidGroup
+;MPH1216100100;Assistive Technology;MPH1216100;mplProductCatalog:Staged;$uidGroup
+;MPH1216101100;Epilators;MPH1216101;mplProductCatalog:Staged;$uidGroup
+;MPH1216101101;Hair Dryers;MPH1216101;mplProductCatalog:Staged;$uidGroup
+;MPH1216101102;Hair Straighteners;MPH1216101;mplProductCatalog:Staged;$uidGroup
+;MPH1216101103;Hair Stylers;MPH1216101;mplProductCatalog:Staged;$uidGroup
+;MPH1216101104;Oral Care;MPH1216101;mplProductCatalog:Staged;$uidGroup
+;MPH1216101105;Shavers & Trimmers;MPH1216101;mplProductCatalog:Staged;$uidGroup
+;MPH1216102100;Air Purifiers;MPH1216102;mplProductCatalog:Staged;$uidGroup
+;MPH1216102101;Water Purifiers;MPH1216102;mplProductCatalog:Staged;$uidGroup
+;MPH1217100100;Air Fryers;MPH1217100;mplProductCatalog:Staged;$uidGroup
+;MPH1217100101;Cookers;MPH1217100;mplProductCatalog:Staged;$uidGroup
+;MPH1217100102;Cooktops;MPH1217100;mplProductCatalog:Staged;$uidGroup
+;MPH1217100103;Deep Fryers;MPH1217100;mplProductCatalog:Staged;$uidGroup
+;MPH1217100104;Food Makers;MPH1217100;mplProductCatalog:Staged;$uidGroup
+;MPH1217100105;Toasters;MPH1217100;mplProductCatalog:Staged;$uidGroup
+;MPH1217101100;Coffee Makers;MPH1217101;mplProductCatalog:Staged;$uidGroup
+;MPH1217101101;Espresso Machines;MPH1217101;mplProductCatalog:Staged;$uidGroup
+;MPH1217101102;Kettles;MPH1217101;mplProductCatalog:Staged;$uidGroup
+;MPH1217102100;Convection;MPH1217102;mplProductCatalog:Staged;$uidGroup
+;MPH1217102101;Grill;MPH1217102;mplProductCatalog:Staged;$uidGroup
+;MPH1217102102;OTG;MPH1217102;mplProductCatalog:Staged;$uidGroup
+;MPH1217102103;Solo;MPH1217102;mplProductCatalog:Staged;$uidGroup
+;MPH1217103100;Blenders & Juicers;MPH1217103;mplProductCatalog:Staged;$uidGroup
+;MPH1217103101;Choppers;MPH1217103;mplProductCatalog:Staged;$uidGroup
+;MPH1217103102;Mixers & Grinders;MPH1217103;mplProductCatalog:Staged;$uidGroup
+;MPH1217104100;Canister;MPH1217104;mplProductCatalog:Staged;$uidGroup
+;MPH1217104101;Car Vaccum & Washers;MPH1217104;mplProductCatalog:Staged;$uidGroup
+;MPH1217104102;Car Vacuum & Washers;MPH1217104;mplProductCatalog:Staged;$uidGroup
+;MPH1217104103;Carpet Cleaners;MPH1217104;mplProductCatalog:Staged;$uidGroup
+;MPH1217104104;Hand Held Vacuum;MPH1217104;mplProductCatalog:Staged;$uidGroup
+;MPH1217104105;Robot Vacuum cleaner;MPH1217104;mplProductCatalog:Staged;$uidGroup
+;MPH1217104106;Steam Mops;MPH1217104;mplProductCatalog:Staged;$uidGroup
+;MPH1218100100;IPHONE 5C;MPH1218100;mplProductCatalog:Staged;$uidGroup
+;MPH1218100101;IPHONE 5S;MPH1218100;mplProductCatalog:Staged;$uidGroup
+;MPH1218100102;IPHONE 6;MPH1218100;mplProductCatalog:Staged;$uidGroup
+;MPH1218100103;IPHONE 6 Plus;MPH1218100;mplProductCatalog:Staged;$uidGroup
+;MPH1218101100;Adapter and Chargers;MPH1218101;mplProductCatalog:Staged;$uidGroup
+;MPH1218101101;Cases and Covers;MPH1218101;mplProductCatalog:Staged;$uidGroup
+;MPH1218101102;Memory Cards;MPH1218101;mplProductCatalog:Staged;$uidGroup
+;MPH1218101103;Power Banks;MPH1218101;mplProductCatalog:Staged;$uidGroup
+;MPH1218101104;Screen Protectors;MPH1218101;mplProductCatalog:Staged;$uidGroup
+;MPH1218101105;Smart Phone Accessories;MPH1218101;mplProductCatalog:Staged;$uidGroup
+;MPH1218102100;Smart Phones;MPH1218102;mplProductCatalog:Staged;$uidGroup
+;MPH1219100100;iPadÂ Air;MPH1219100;mplProductCatalog:Staged;$uidGroup
+;MPH1219100101;iPadÂ AirÂ 2;MPH1219100;mplProductCatalog:Staged;$uidGroup
+;MPH1219100102;iPadÂ mini;MPH1219100;mplProductCatalog:Staged;$uidGroup
+;MPH1219100103;iPadÂ miniÂ 2;MPH1219100;mplProductCatalog:Staged;$uidGroup
+;MPH1219100104;iPadÂ miniÂ 3;MPH1219100;mplProductCatalog:Staged;$uidGroup
+;MPH1219101100;Apple Protection Plan;MPH1219101;mplProductCatalog:Staged;$uidGroup
+;MPH1219102100;Kindle;MPH1219102;mplProductCatalog:Staged;$uidGroup
+;MPH1219102101;Kindle Paperwhite;MPH1219102;mplProductCatalog:Staged;$uidGroup
+;MPH1219102102;Kindle Voyage;MPH1219102;mplProductCatalog:Staged;$uidGroup
+;MPH1219103100;Keyboards;MPH1219103;mplProductCatalog:Staged;$uidGroup
+;MPH1219103101;Stands;MPH1219103;mplProductCatalog:Staged;$uidGroup
+;MPH1219104100;7 inch;MPH1219104;mplProductCatalog:Staged;$uidGroup
+;MPH1220100100;Blue Ray DVD players;MPH1220100;mplProductCatalog:Staged;$uidGroup
+;MPH1220100101;DVD Players;MPH1220100;mplProductCatalog:Staged;$uidGroup
+;MPH1220101100;Full HD;MPH1220101;mplProductCatalog:Staged;$uidGroup
+;MPH1220101101;HD Ready;MPH1220101;mplProductCatalog:Staged;$uidGroup
+;MPH1220101102;Smart;MPH1220101;mplProductCatalog:Staged;$uidGroup
+;MPH1220101103;Ultra HD (4K);MPH1220101;mplProductCatalog:Staged;$uidGroup
+;MPH1220102100;Home Theatre Projector;MPH1220102;mplProductCatalog:Staged;$uidGroup
+;MPH1220102101;Portable Projectors;MPH1220102;mplProductCatalog:Staged;$uidGroup
+;MPH1220102102;Projector;MPH1220102;mplProductCatalog:Staged;$uidGroup
+;MPH1220102103;Projector Screens;MPH1220102;mplProductCatalog:Staged;$uidGroup
+;MPH1220103100;Adapters;MPH1220103;mplProductCatalog:Staged;$uidGroup
+;MPH1220103101;Cables & Connectors;MPH1220103;mplProductCatalog:Staged;$uidGroup
+;MPH1220103102;Cleaning & Protectors;MPH1220103;mplProductCatalog:Staged;$uidGroup
+;MPH1220103103;Media Players;MPH1220103;mplProductCatalog:Staged;$uidGroup
+;MPH1220103104;Remotes;MPH1220103;mplProductCatalog:Staged;$uidGroup
+;MPH1220103105;Standing and Mounting Solutions;MPH1220103;mplProductCatalog:Staged;$uidGroup
+;MPH1220103106;Surge Protectors and Power;MPH1220103;mplProductCatalog:Staged;$uidGroup
+;MPH1221100100;Fitness Tracker;MPH1221100;mplProductCatalog:Staged;$uidGroup
+;MPH1221100101;Pedometers;MPH1221100;mplProductCatalog:Staged;$uidGroup
+;MPH1221101100;Pet Tracker;MPH1221101;mplProductCatalog:Staged;$uidGroup
+;MPH1221102100;Watches;MPH1221102;mplProductCatalog:Staged;$uidGroup
+;;
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
+;MBH1;Brand;;mplProductCatalog:Staged;admingroup
+;;;;;
+;MBH11;Apparel;MBH1;mplProductCatalog:Staged;admingroup
+;MBH12;Electronics;MBH1;mplProductCatalog:Staged;admingroup
+;;;;;
+;MBH11A00000;Others;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00001;Global Desi;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00002;Biba;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00003;Fusion Beats;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00004;Westside;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00005;Aurelia;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00006;W;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00007;Fab India;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00008;Cottonworld;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00009;Ethnicity;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00010;Private Label;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00011;Melange (Lifestyle);MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00012;Akruti;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00013;Haute Curry;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00014;109 F;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00015;AND;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00016;UCB;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00017;Chemistry;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00018;Vero Moda;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00019;Only;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00020;Pepe;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00021;Forever 21;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00022;Wills;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00023;Allen Solly;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00024;Van Heusen;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00025;Levis;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00026;Reserved;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00027;New Look;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00028;Tommy Basics;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00029;Mango Basics;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00030;Lee ;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00031;Lee Cooper;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00032;Enamor;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00033;Triumph;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00034;La Senza;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00035;Jockey;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00036;Hanes;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00037;Fruit of the loom;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00038;Amante;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00039;Ink fruit;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00040;Jashn;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00041;Soch;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00042;Biba SKD;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00043;Label;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00044;Satya Paul;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00045;Seven East;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00046;Gilli;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00047;FCUK;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00048;Zara;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00049;Mango;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00050;Forever New;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00051;Calvin Klein Jeans;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00052;Tommy Hilfiger;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00053;Jack Wills;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00054;J.Crew;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00055;Guess Jeans;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00056;Promod;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00057;Marks & Spencer;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00058;Hunken Moller;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00059;Calvin Klein;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00060;International brands;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00061;Victoria Secret;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00062;Anita Dongre;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00063;Sabyasachi;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00064;Ritu Kumar;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00065;Rohit Bal;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00066;Kimaya?;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00067;Sandro;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00068;Maje;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00069;Ted Baker;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00070;The Kooples;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00071;Zadig & Voltaire;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00072;Burberry;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00073;Versace;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00074;Park Avenue;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00075;Wills Lifestyle;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00076;Parks;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00077;Arrow;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00078;Louis Philippe;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00079;Zodiac;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00080;Blackberrys;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00081;John Players;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00082;Jack & Jones;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00083;Farenheit;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00084;Ceilo;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00085;Provogue;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00086;Being Human;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00087;Freecultr;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00088;US Polo;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00089;LP Young;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00090;VH Sport;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00091;Addidas;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00092;Nike;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00093;Arrow Sport;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00094;Colorplus;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00095;Blackberry Casual;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00096;Arrow New York;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00097;Indian Terrian;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00098;V Dot;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00099;Reebok;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00100;Spykar;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00101;Killer;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00102;Lawman;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00103;Basics;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00104;US Polo Denim;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00105;Wrangler;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00106;LP Denim;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00107;Chromozome;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00108;JnJ;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00109;Banana Republic;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00110;Sisely;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00111;Tommy;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00112;CK;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00113;Lacoste;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00114;Nautica;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00115;Super dry;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00116;J Crew;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00117;GANT;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00118;Gas;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00119;Diesel;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00120;Scotch & Soda;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00121;Tommy Jeans;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00122;Gstar;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00123;Manyavar;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00124;Benetton;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00125;Armani;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00126;Prada;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00127;Cavali;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00128;Brooks Brothers;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00129;Ralph Lauren;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00130;Rocky S;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00131;Fendi;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00132;Canali;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00133;Hugo Boss;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00134;Kenzo;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00135;True Religion;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00136;7 For Mankind;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00137;AG Denim;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00138;Oakley;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00139;Manish Malhotra;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00140;Rajesh Pratap;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00141;Raghavendra Rathod;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00142;Converse;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00143;Nauti Nati;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00144;Gini & Jony;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00145;Disney;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00146;Allen Solly Kids;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00147;Drop;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00148;Juniors;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00149;Barbie;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00150;Peppermint;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00151;Mom n me/Baby Oye;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00152;Firstcry;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00153;Bodycare;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00154;Ruff;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00155;Next;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00156;Elle;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00157;Next Kids;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00158;Mothercare;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00159;Claries;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00160;Accesorize;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00161;Buberry Kids;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00162;Gucci kids;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00163;Prada Kids;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00164;Diesel Kids;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00165;Ira Soleil;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00166;Latin Quarters;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00167;Pretty Secrets;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00168;Puma;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00169;Jordan;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00170;London Fogg;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00171;Firetrap;MBH11;mplProductCatalog:Staged;admingroup
+;MBH11A00172;Ben Sherman;MBH11;mplProductCatalog:Staged;admingroup
+;MBH12E00000;Others;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00001;Voltas;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00002;SONY;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00003;HP;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00004;XBOX;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00005;BOSE;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00006;Philips;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00007;LG;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00008;APPLE;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00009;FITBIT;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00010;CANON;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00011;DELL;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00012;PLAYSTATION;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00013;JBL;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00014;Eureka forbes;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00015;XIAOMI;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00016;SAMSUNG;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00017;PANASONIC;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00018;LENOVO;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00019;Morphy Richards;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00020;Siemens;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00021;DENON;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00022;NIKON;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00023;Beats by Dr.Dre;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00024;Black & Decker;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00025;HTC;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00026;Bosch;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00027;ONKYO;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00028;GO PRO;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00029;SANDISK;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00030;Sennheiser;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00031;Aquagaurd;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00032;Microsoft;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00033;TOMTOM;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00034;Gorenje;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00035;Seagate;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00036;Pureit;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00037;Gionee;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00038;JABRA;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00039;IFB;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00040;Logitech;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00041;Braun;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00042;GARMIN;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00043;Godrej;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00044;ACER;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00045;Hitachi;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00046;TARGUS;MBH12;mplProductCatalog:Staged;admingroup
+;MBH12E00047;Whirlpool;MBH12;mplProductCatalog:Staged;admingroup
+;;;;;
+;;;;;
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid);
+;MSH1;Sales;;mplProductCatalog:Staged;$uidGroup
+;MSH10;Women;MSH1;mplProductCatalog:Staged;$uidGroup
+;MSH1010;What's New!;MSH10;mplProductCatalog:Staged;$uidGroup
+
+;MSH1010100;Apparel;MSH1010;mplProductCatalog:Staged;$uidGroup
+;MSH1010101;Footwear;MSH1010;mplProductCatalog:Staged;$uidGroup
+;MSH1010102;Jewellery;MSH1010;mplProductCatalog:Staged;$uidGroup
+;MSH1010103;Watches;MSH1010;mplProductCatalog:Staged;$uidGroup
+;MSH1010104;Eyewear;MSH1010;mplProductCatalog:Staged;$uidGroup
+;MSH1010105;Accessories;MSH1010;mplProductCatalog:Staged;$uidGroup
+
+;MSH1011;Apparel;MSH10;mplProductCatalog:Staged;$uidGroup
+
+;MSH1011100;Dresses;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011101;Tops and T-shirts;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011102;Shirts;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011103;Trousers;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011104;Skirts;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011105;Denim and Jeans;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011106;Bottoms;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011107;Coats and Jackets;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011108;Jumpsuits;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011109;Shorts;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011110;Cardigan and Knitwear;MSH1011;mplProductCatalog:Staged;$uidGroup
+;MSH1011111;Work wear;MSH1011;mplProductCatalog:Staged;$uidGroup
+
+;MSH1012;Ethnic Wear;MSH10;mplProductCatalog:Staged;$uidGroup
+
+;MSH1012100;Kurtas and Kurtis;MSH1012;mplProductCatalog:Staged;$uidGroup
+;MSH1012101;Suits Sets;MSH1012;mplProductCatalog:Staged;$uidGroup
+;MSH1012102;Sarees;MSH1012;mplProductCatalog:Staged;$uidGroup
+;MSH1012103;Bottomwear;MSH1012;mplProductCatalog:Staged;$uidGroup
+;MSH1012104;Dress Materials;MSH1012;mplProductCatalog:Staged;$uidGroup
+
+;MSH1013;Swimwear and Beachwear;MSH10;mplProductCatalog:Staged;$uidGroup
+
+;MSH1013100;One-piece;MSH1013;mplProductCatalog:Staged;$uidGroup
+;MSH1013101;Two-piece;MSH1013;mplProductCatalog:Staged;$uidGroup
+;MSH1013102;Kaftans and Sarongs;MSH1013;mplProductCatalog:Staged;$uidGroup
+;MSH1013103;Beach dresses;MSH1013;mplProductCatalog:Staged;$uidGroup
+;MSH1013104;Shorts;MSH1013;mplProductCatalog:Staged;$uidGroup
+;MSH1013105;Beach Accessories;MSH1013;mplProductCatalog:Staged;$uidGroup
+
+;MSH1014;Lingerie and Sleepwear;MSH10;mplProductCatalog:Staged;$uidGroup
+
+;MSH1014100;Bras;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014101;Briefs;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014102;Multipacks;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014103;Camisoles and Chamises;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014104;Corsetry;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014105;Stockings and Tights;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014106;Robes;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014107;Shapewear;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014108;Nighties;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014109;Pyjama Sets;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014110;Short Shirts;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014111;Boyfriend T-shirts;MSH1014;mplProductCatalog:Staged;$uidGroup
+;MSH1014112;Socks;MSH1014;mplProductCatalog:Staged;$uidGroup
+
+;MSH1015;Shop by Look;MSH10;mplProductCatalog:Staged;$uidGroup
+
+;MSH1015100;Evening and Party Wear;MSH1015;mplProductCatalog:Staged;$uidGroup
+;MSH1015101;Traditional and Festive;MSH1015;mplProductCatalog:Staged;$uidGroup
+;MSH1015102;Work Wear;MSH1015;mplProductCatalog:Staged;$uidGroup
+;MSH1015103;Casual Day Out;MSH1015;mplProductCatalog:Staged;$uidGroup
+;MSH1015104;Wedding and Bridal;MSH1015;mplProductCatalog:Staged;$uidGroup
+
+;MSH11;Men;MSH1;mplProductCatalog:Staged;$uidGroup
+
+;MSH1110;What's New!;MSH11;mplProductCatalog:Staged;$uidGroup
+;MSH1110100;Apparel;MSH1110;mplProductCatalog:Staged;$uidGroup
+;MSH1110101;Footwear;MSH1110;mplProductCatalog:Staged;$uidGroup
+;MSH1110102;Jewellery;MSH1110;mplProductCatalog:Staged;$uidGroup
+;MSH1110103;Watches;MSH1110;mplProductCatalog:Staged;$uidGroup
+;MSH1110104;Eyewear;MSH1110;mplProductCatalog:Staged;$uidGroup
+;MSH1110105;Accessories;MSH1110;mplProductCatalog:Staged;$uidGroup
+
+;MSH1111;Apparel;MSH11;mplProductCatalog:Staged;$uidGroup
+;MSH1111100;T-shirts and Polos;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111101;Casual and Evening Wear Shirts;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111102;Hoodies and Sweatshirts;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111103;Jackets and Coats;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111104;Cardigans;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111105;Denim and Jeans;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111106;Trousers and Chinos;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111107;Shorts;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111108;Bottoms;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111109;Sports wear;MSH1111;mplProductCatalog:Staged;$uidGroup
+;MSH1111110;Multipacks;MSH1111;mplProductCatalog:Staged;$uidGroup
+
+;MSH1112;Ethnic Wear;MSH11;mplProductCatalog:Staged;$uidGroup
+
+;MSH1112100;Sherwani;MSH1112;mplProductCatalog:Staged;$uidGroup
+;MSH1112101;Kurta sets;MSH1112;mplProductCatalog:Staged;$uidGroup
+;MSH1112102;Kurtas;MSH1112;mplProductCatalog:Staged;$uidGroup
+;MSH1112103;Shirts;MSH1112;mplProductCatalog:Staged;$uidGroup
+;MSH1112104;Indo-western;MSH1112;mplProductCatalog:Staged;$uidGroup
+;MSH1112105;Waistcoats and Jackets;MSH1112;mplProductCatalog:Staged;$uidGroup
+;MSH1112106;Bottomwear;MSH1112;mplProductCatalog:Staged;$uidGroup
+;MSH1112107;Accessories;MSH1112;mplProductCatalog:Staged;$uidGroup
+
+;MSH1113;Work Wear;MSH11;mplProductCatalog:Staged;$uidGroup
+
+;MSH1113100;Shirts;MSH1113;mplProductCatalog:Staged;$uidGroup
+;MSH1113101;Trousers;MSH1113;mplProductCatalog:Staged;$uidGroup
+;MSH1113102;Jackets and Blazers;MSH1113;mplProductCatalog:Staged;$uidGroup
+;MSH1113103;Full suits;MSH1113;mplProductCatalog:Staged;$uidGroup
+
+;MSH1114;Inner and Sleep Wear;MSH11;mplProductCatalog:Staged;$uidGroup
+
+;MSH1114100;Trunks;MSH1114;mplProductCatalog:Staged;$uidGroup
+;MSH1114101;Boxers;MSH1114;mplProductCatalog:Staged;$uidGroup
+;MSH1114102;Briefs;MSH1114;mplProductCatalog:Staged;$uidGroup
+;MSH1114103;Vests;MSH1114;mplProductCatalog:Staged;$uidGroup
+;MSH1114104;Night Suits;MSH1114;mplProductCatalog:Staged;$uidGroup
+;MSH1114105;Pyjamas and Lounge Pants;MSH1114;mplProductCatalog:Staged;$uidGroup
+;MSH1114106;Track Pants;MSH1114;mplProductCatalog:Staged;$uidGroup
+;MSH1114107;Socks;MSH1114;mplProductCatalog:Staged;$uidGroup
+;MSH1114108;Multipacks;MSH1114;mplProductCatalog:Staged;$uidGroup
+
+;MSH1115;Shop by Look;MSH11;mplProductCatalog:Staged;$uidGroup
+;MSH1115100;Evening and Party Wear;MSH1115;mplProductCatalog:Staged;$uidGroup
+;MSH1115101;Traditional and Festive;MSH1115;mplProductCatalog:Staged;$uidGroup
+;MSH1115102;Work Wear;MSH1115;mplProductCatalog:Staged;$uidGroup
+;MSH1115103;Casual Day Out;MSH1115;mplProductCatalog:Staged;$uidGroup
+;MSH1115104;College Look;MSH1115;mplProductCatalog:Staged;$uidGroup
+;MSH1115105;Wedding and Reception;MSH1115;mplProductCatalog:Staged;$uidGroup
+
+;MSH12;Electronics;MSH1;mplProductCatalog:Staged;$uidGroup
+
+;MSH1210;Smartphones;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1210100;Smartphones;MSH1210;mplProductCatalog:Staged;$uidGroup
+;MSH1210101;Smartphone accessories;MSH1210;mplProductCatalog:Staged;$uidGroup
+;MSH1210102;iPhone;MSH1210;mplProductCatalog:Staged;$uidGroup
+;MSH1210103;iPhone Accessories;MSH1210;mplProductCatalog:Staged;$uidGroup
+;MSH1210104;Landlines;MSH1210;mplProductCatalog:Staged;$uidGroup
+
+;MSH1211;Tablets;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1211100;Tablet;MSH1211;mplProductCatalog:Staged;$uidGroup
+;MSH1211101;iPad;MSH1211;mplProductCatalog:Staged;$uidGroup
+;MSH1211102;Tablet Accessories;MSH1211;mplProductCatalog:Staged;$uidGroup
+;MSH1211103;iPad Accessories;MSH1211;mplProductCatalog:Staged;$uidGroup
+;MSH1211104;E-readers;MSH1211;mplProductCatalog:Staged;$uidGroup
+
+;MSH1212;Computers;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1212100;Laptops;MSH1212;mplProductCatalog:Staged;$uidGroup
+;MSH1212101;Desktops;MSH1212;mplProductCatalog:Staged;$uidGroup
+;MSH1212102;2-in-1''s;MSH1212;mplProductCatalog:Staged;$uidGroup
+;MSH1212103;Printing;MSH1212;mplProductCatalog:Staged;$uidGroup
+;MSH1212104;Storage;MSH1212;mplProductCatalog:Staged;$uidGroup
+;MSH1212105;Networking;MSH1212;mplProductCatalog:Staged;$uidGroup
+;MSH1212106;Peripherals;MSH1212;mplProductCatalog:Staged;$uidGroup
+
+;MSH1213;Health and Grooming;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1213100;Purifiers;MSH1213;mplProductCatalog:Staged;$uidGroup
+;MSH1213101;Personal Care;MSH1213;mplProductCatalog:Staged;$uidGroup
+;MSH1213102;Health care devices;MSH1213;mplProductCatalog:Staged;$uidGroup
+
+;MSH1214;Appliances;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1214100;Refridgerator;MSH1214;mplProductCatalog:Staged;$uidGroup
+;MSH1214101;Washing and Drying;MSH1214;mplProductCatalog:Staged;$uidGroup
+;MSH1214102;Airconditioners and Coolers;MSH1214;mplProductCatalog:Staged;$uidGroup
+
+;MSH1215;Small and Kitchen Applicances;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1215100;Microwave;MSH1215;mplProductCatalog:Staged;$uidGroup
+;MSH1215101;Vacuum cleaners;MSH1215;mplProductCatalog:Staged;$uidGroup
+;MSH1215102;Irons;MSH1215;mplProductCatalog:Staged;$uidGroup
+;MSH1215103;Mixers/ Food Processors;MSH1215;mplProductCatalog:Staged;$uidGroup
+;MSH1215104;Kettles/ Coffee Makers;MSH1215;mplProductCatalog:Staged;$uidGroup
+;MSH1215105;Fans/ Heaters;MSH1215;mplProductCatalog:Staged;$uidGroup
+;MSH1215106;Air Fryers;MSH1215;mplProductCatalog:Staged;$uidGroup
+
+;MSH1216;TV and Entertainment;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1216100;TV;MSH1216;mplProductCatalog:Staged;$uidGroup
+;MSH1216101;TV Accessories;MSH1216;mplProductCatalog:Staged;$uidGroup
+;MSH1216102;Projectors;MSH1216;mplProductCatalog:Staged;$uidGroup
+;MSH1216103;DVD Players;MSH1216;mplProductCatalog:Staged;$uidGroup
+
+;MSH1217;Audio and Home Theatre;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1217100;IPOD and MP3 Players;MSH1217;mplProductCatalog:Staged;$uidGroup
+;MSH1217101;Docks and Portable Speaker;MSH1217;mplProductCatalog:Staged;$uidGroup
+;MSH1217102;Home Theatre System;MSH1217;mplProductCatalog:Staged;$uidGroup
+;MSH1217103;Soundbars;MSH1217;mplProductCatalog:Staged;$uidGroup
+
+;MSH1218;Headphones and Speakers;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1218100;Earphones;MSH1218;mplProductCatalog:Staged;$uidGroup
+;MSH1218101;Headsets;MSH1218;mplProductCatalog:Staged;$uidGroup
+;MSH1218102;Bluetooth Speakers;MSH1218;mplProductCatalog:Staged;$uidGroup
+
+;MSH1219;Wearable Technology;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1219100;Watches;MSH1219;mplProductCatalog:Staged;$uidGroup
+;MSH1219101;Pet Tracking Devices;MSH1219;mplProductCatalog:Staged;$uidGroup
+;MSH1219102;Activity Tracker;MSH1219;mplProductCatalog:Staged;$uidGroup
+
+;MSH1220;Cameras;MSH12;mplProductCatalog:Staged;$uidGroup
+
+;MSH1220100;Cameras;MSH1220;mplProductCatalog:Staged;$uidGroup
+;MSH1220101;Camera accessories;MSH1220;mplProductCatalog:Staged;$uidGroup
+;MSH1220102;Binoculars and Telescopes;MSH1220;mplProductCatalog:Staged;$uidGroup
+;MSH1220103;Security Cameras;MSH1220;mplProductCatalog:Staged;$uidGroup
+;MSH1220104;Action Camcorders;MSH1220;mplProductCatalog:Staged;$uidGroup
+
+;MSH1221;Gaming;MSH12;mplProductCatalog:Staged;$uidGroup
+;MSH1221100;Gaming Consoles;MSH1221;mplProductCatalog:Staged;$uidGroup
+;MSH1221101;Software;MSH1221;mplProductCatalog:Staged;$uidGroup
+;MSH1221102;Accessories;MSH1221;mplProductCatalog:Staged;$uidGroup
+
+
+####### Categories only For Microsite :::: SART
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
+;SSH1;SSH1;;mplProductCatalog:Staged;$uidGroup 
+;SSH1000;Westside;SSH1;mplProductCatalog:Staged;$uidGroup 
+;SSH1001;Men;SSH1000;mplProductCatalog:Staged;$uidGroup
+;SSH10011;Mens Shirt;SSH1001;mplProductCatalog:Staged;$uidGroup
+;SSH100111;Mens Formal Shirt;SSH10011;mplProductCatalog:Staged;$uidGroup
+;SSH100112;Mens Casual Shirt;SSH10011;mplProductCatalog:Staged;$uidGroup
+;SSH100113;Mens T Shirt;SSH10011;mplProductCatalog:Staged;$uidGroup
+;SSH1002;Women;SSH1000;mplProductCatalog:Staged;$uidGroup
+;SSH10021;Womens Sarees;SSH1002;mplProductCatalog:Staged;$uidGroup
+;SSH10022;Womens  Accessories;SSH1002;mplProductCatalog:Staged;$uidGroup
+;SSH1003;Kids;SSH1000;mplProductCatalog:Staged;$uidGroup
+
+;SSH1100;Croma;SSH1;mplProductCatalog:Staged;$uidGroup
+;SSH1101;TV;SSH1100;mplProductCatalog:Staged;$uidGroup
+;SSH11011;Samsung;SSH1101;mplProductCatalog:Staged;$uidGroup
+;SSH110111;Sony;SSH1101;mplProductCatalog:Staged;$uidGroup
+;SSH110112;Uv;SSH1101;mplProductCatalog:Staged;$uidGroup
+;SSH110113;Panasonic;SSH1101;mplProductCatalog:Staged;$uidGroup
+;SSH1102;Computers;SSH1100;mplProductCatalog:Staged;$uidGroup
+;SSH11021;Desktop;SSH1102;mplProductCatalog:Staged;$uidGroup
+;SSH11022;Laptop;SSH1102;mplProductCatalog:Staged;$uidGroup
+;SSH1103;Mobile;SSH1100;mplProductCatalog:Staged;$uidGroup 
+
+;SSH1200;Tanishq;SSH1;mplProductCatalog:Staged;$uidGroup
+;SSH1101;Silver;SSH1200;mplProductCatalog:Staged;$uidGroup
+;SSH1101;Gold;SSH1200;mplProductCatalog:Staged;$uidGroup
+;SSH1101;Platinum;SSH1200;mplProductCatalog:Staged;$uidGroup 
+
+####### Categories only For Microsite :::: END

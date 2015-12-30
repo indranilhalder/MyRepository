@@ -1,0 +1,61 @@
+<html>
+	<head>
+	</head>
+	<body bgcolor="#e4e7e8">
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#e4e7e8">
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td align="center" valign="top">
+				<table width="610" border="6" align="center" cellpadding="0" cellspacing="0" bordercolor="#ebedee">
+					<tr>
+						<td align="center" valign="top" bgcolor="#FFFFFF">
+							<table width="570" cellpadding="0" cellspacing="0" border="0" align="center">
+								<tr>
+									<td valign="middle">&nbsp;</td>
+								</tr>
+							
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif"><b>Hi Customer Care Executive,</b></font></p>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Please find the below request from a customer needing assistance on the below issue:</font></p>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Issue:  ${ctx.issueDetails}</font></p>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Issue Type:  ${ctx.issueType}</font></p>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Customer Email ID:  ${ctx.fromEmail}</font></p>
+										#if ($ctx.orderCode)
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Order ID:  ${ctx.orderCode}</font></p>
+										#end
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Details : ${ctx.customerMessage}</font></p>
+										#if ($ctx.fileName)
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">${ctx.fileName} is attached for your reference</font></p>
+										#end
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								
+								<tr>
+									<td height="30" align="right" valign="middle" bgcolor="#51585c">
+										
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>

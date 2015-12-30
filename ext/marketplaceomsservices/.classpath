@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/platform"/>
+	<classpathentry exported="true" kind="src" path="/hmc"/>
+	<classpathentry exported="true" kind="src" path="/addonsupport"/>
+	<classpathentry exported="true" kind="lib" path="resources"/>
+	<classpathentry kind="lib" path="lib/ondemandcommonserver.jar"/>
+	<classpathentry kind="lib" path="lib/jersey-bundle-1.19.jar"/>
+	<classpathentry kind="lib" path="lib/oms-api-5.5.1.11.jar"/>
+	<classpathentry kind="lib" path="lib/oms-core-api-5.5.1.0-RC4.jar"/>
+	<classpathentry kind="lib" path="lib/oms-core-rest-client-5.5.1.0-RC4.jar"/>
+	<classpathentry kind="lib" path="lib/oms-rest-client-5.5.1.11.jar"/>
+	<classpathentry kind="lib" path="lib/omsordersserver.jar"/>
+	<classpathentry kind="lib" path="lib/oms-domain-objects-5.5.1.11.jar"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="src"/>
+	<classpathentry kind="src" output="eclipsebin/hmc/classes" path="hmc/src"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="testsrc"/>
+	<classpathentry kind="src" output="eclipsebin/classes" path="gensrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/corepluscommons"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/marketplacecommerceservices"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceclientservices"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+</classpath>

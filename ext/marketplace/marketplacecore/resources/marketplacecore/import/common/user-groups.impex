@@ -1,0 +1,52 @@
+
+# Import Customers
+#
+$regulargroup=regulargroup
+$customergroup=customergroup
+
+$passwordEncoding=md5
+$defaultPassword=
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+
+$passwordEncoding1=sha256
+$defaultPassword1=
+$setPassword1=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding1:$defaultPassword1']
+
+INSERT_UPDATE Employee;UID[unique=true];$setPassword1;description;name;groups(uid);sessionLanguage(isocode)
+;admin1;nimda;admin;Admin User;admingroup,employeegroup;en; 
+
+# Create Customer Group
+INSERT_UPDATE Usergroup;uid[unique=true];groups(uid)[mode=append]
+;$regulargroup;customergroup
+;marketplaceGroup;employeegroup
+;ETAILREAD;employeegroup
+;promoAlertSentGroup;employeegroup
+
+# Customers
+INSERT_UPDATE Customer;originalUid[unique=true];uid[unique=true];title(code);name;description;sessionLanguage(isocode);sessionCurrency(isocode);groups(uid);$setPassword;&userId;defaultPaymentAddress(&addId);defaultShipmentAddress(&addId)
+
+# Customer addresses
+INSERT_UPDATE Address;&addId;owner(&userId)[unique=true];streetname[unique=true];postalcode[unique=true];duplicate[unique=true];town;country(isocode);billingAddress;contactAddress;shippingAddress;unloadingAddress;firstname;lastname;email;gender(code);middlename;phone1;title(code);url;company;fax;department
+
+# Create Employee Group
+INSERT_UPDATE Usergroup;uid[unique=true];groups(uid)[mode=append]
+;promotionusergroup;employeegroup
+#Payment User Group
+;paymentusergroup;employeegroup
+
+#Employee
+INSERT_UPDATE Employee;UID[unique=true];$setPassword;description;name;groups(uid);sessionLanguage(isocode)
+;promouser;1234;promo user is entitled to create promotions;Promotion User;promotionusergroup;en; 
+
+
+
+INSERT_UPDATE UserGroup;UID[unique=true];hmcLoginDisabled;
+;readonlygroup;false;
+
+$START_USERRIGHTS;;;;;;;;;
+
+Type;UID;MemberOfGroups;Password;Target;read;change;create;remove;change_perm
+UserGroup;readonlygroup;;;;;;;;
+;;;;Item;+;-;-;-
+
+$END_USERRIGHTS;;;;;

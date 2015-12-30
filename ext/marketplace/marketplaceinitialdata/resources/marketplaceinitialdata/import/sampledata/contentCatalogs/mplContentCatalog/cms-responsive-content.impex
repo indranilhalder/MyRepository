@@ -1,0 +1,800 @@
+# 
+# ImpEx for Responsive Tata marketplace Site CMS Content 
+# 
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+# 
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog 
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV) ;
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+
+INSERT_UPDATE SearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;SearchBox;Search Box;SearchBox
+
+INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;searchBoxCategories(code, $productCV)
+;;MplEnhancedSearchBox;Marketplace Enhanced  Search Box Component;MplEnhancedSearchBox;2;3;3;MSH11,MSH10
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;SearchBoxSlot;MplEnhancedSearchBox
+
+####### For Microsite :::: Site Logo Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;$picture;&componentRef
+;;MicrositeLogoComponent;Microsite Logo Component;;MicrositeLogoComponent
+
+####### For Microsite ::::  Creating Microsite specific SearchBoxComponent  and assign it to a template #########
+INSERT_UPDATE MplMicrositeEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;searchBoxCategories(code, $productCV)
+;;MplMicrositeEnhancedSearchBox-westside;Westside MicroSite Search Box Component;MplMicrositeEnhancedSearchBox-westside;2;3;1;
+;;MplMicrositeEnhancedSearchBox-croma;Croma MicroSite Search Box Component;MplMicrositeEnhancedSearchBox-croma;2;3;1;
+
+####### For Microsite ::::   MicrositeSelectBrandCollectionComponent should be created next to SelectBrandCollectionComponent in cms-content.impex
+INSERT_UPDATE MicrositeSelectBrandCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;brandCollection(&componentRef);
+;;MicrositeShopBrandNavigationComponent;Microsite Shop By Brand;MicrositeShopBrandNavigationComponent;;
+
+####### For Microsite ::::
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;cmsComponents(&componentRef)
+;;MicroSiteLogoSlot;MicroSite Logo Slot;MicrositeLogoComponent
+;;MicroSiteNavigationSlot;MicroSite Navigation Slot;MicrositeShopBrandNavigationComponent
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ApparelMicrositePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;ApparelMicrositeLogo-MicrositePage1;MicroSiteLogo;;MicroSiteLogoSlot;true
+;;ApparelMicrositeNavigationSlotForTemplate;MicrositeNavigationBar;;MicroSiteNavigationSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ElectronicsMicrositePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;ElectronicsMicrositeLogo-MicrositePage1;MicroSiteLogo;;MicroSiteLogoSlot;true
+;;ElectronicsMicrositeNavigationSlotForTemplate;MicrositeNavigationBar;;MicroSiteNavigationSlot;true
+
+#######  Microsite ::::  END #########
+
+INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;showLanguageCurrency
+;;FooterComponent;6;true
+
+###  Home page splash Slot 1  #######
+
+#Added the homepage banner
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef;
+;;TMPGoodsHompageBannerComponent;TMP Default Homepage Banner Component;1;TMPGoodsHompageBannerComponent
+
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
+;;TMPApparelHomepageBannerComponent;TMP Apparel Homepage Banner Component;2;TMPApparelHomepageBannerComponent
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
+;;TMPJwelleryHomepageBannerComponent;TMP Jwellery Homepage Banner Component;3;TMPJwelleryHomepageBannerComponent
+
+
+
+INSERT_UPDATE MplSequentialBannerComponent;$contentCV[unique=true];uid[unique=true];name;bannersList(&componentRef);&componentRef
+;;TMPSequentialHomepageBannerComponent;Sequential Homepage Banner;TMPGoodsHompageBannerComponent,TMPApparelHomepageBannerComponent,TMPJwelleryHomepageBannerComponent;TMPSequentialHomepageBannerComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section1-TMPHomepage;true;Homepage Banner Slot;TMPSequentialHomepageBannerComponent
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-TMPHomepage;Section1;;Section1-TMPHomepage;;;
+
+
+
+
+#CMSMediaParagraphComponent changes starts
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
+;;AuthenticExclusiveMediaParagraphComponent;Authentic And Exclusive Media Paragraph Component;AuthenticExclusiveMediaParagraphComponent;"<span>Authentic & Exclusive</span><span>Shop Our Brands</span>";AuthenticExclusive.png;"/store/mpl/en/authenticAndExclusive";
+;;BestCollectionMediaParagraphComponent;Best Collection Media Paragraph Component;BestCollectionMediaParagraphComponent;"<span>Best Collections</span><span>Shop Our Collections</span>";BestCollection.png;"#";
+;;CustomerFirstMediaParagraphComponent;Customer First Media Paragraph Component;CustomerFirstMediaParagraphComponent;"<span>Customer First</span><span>Learn About Our Service</span>";CustomerFirst.png;"/store/mpl/en/contact";
+;;DeliveryOnTimeMediaParagraphComponent;Delivery On Time Media Paragraph Component;DeliveryOnTimeMediaParagraphComponent;"<span>Delivery On-time</span><span>Track Your Order</span>";DeliveryOnTime.png;"/store/mpl/en/trackorders";
+#;;EveryWhereMediaParagraphComponent;EveryWhere Media Paragraph Component;EveryWhereMediaParagraphComponent;
+;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<div>Call Us,24/7</div><div><a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a></div>";callus.png
+;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<div>Chat with us</div><a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available Now</a>";chatwidus.png
+
+# Changes for help and service page
+;;CallUsMediaParagraphHSComponent;Call Us Media Paragraph Component;CallUsMediaParagraphHSComponent;"<a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'><span>CALL US, 24/7</span><span class='link'>1-800-123-4567<span></a>";callus-getintouch.png
+;;ChatWithUsMediaParagraphHSComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphHSComponent;"<a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'><span>CHAT WITH US</span><span class='link'>Available Now</span></a>";chatwidus-getintouch.png
+
+
+
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;AuthenticExclusive.png;$siteResource/images/banners/homepage/responsive/AuthenticExclusive.png;AuthenticExclusive.png;"Homepage Authentic and Exclusive Banner";
+;;BestCollection.png;$siteResource/images/banners/homepage/responsive/BestCollection.png;BestCollection.png;"Homepage Best Collection Banner";
+;;CustomerFirst.png;$siteResource/images/banners/homepage/responsive/CustomerFirst.png;CustomerFirst.png;"Homepage Customer First Banner";
+;;DeliveryOnTime.png;$siteResource/images/banners/homepage/responsive/DeliveryOnTime.png;DeliveryOnTime.png;"Homepage Delivery On-Time Banner";
+#;;Everywhere.png;$siteResource/images/banners/homepage/responsive/Everywhere.png;Everywhere.png;"Homepage Everywhere Banner";
+;;callus.png;$siteResource/images/banners/homepage/responsive/callus.png;callus.png;"Call us";
+;;chatwidus.png;$siteResource/images/banners/homepage/responsive/chatwidus.png;chatwidus.png;"Chat With Us";
+
+# changes for help and service page
+;;callus-getintouch.png;$siteResource/images/banners/homepage/callus-getintouch.png;callus-getintouch.png;"Call us";
+;;chatwidus-getintouch.png;$siteResource/images/banners/homepage/chatwidus-getintouch.png;chatwidus-getintouch.png;"Chat With Us";
+
+
+#Component Attached with the Authentic And Exclusive Page
+
+INSERT_UPDATE MplBrandLogoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;displayType(code);;
+;;AuthenticAndExclusiveBrandsComponent;Authentic And Exclusive Brands;AuthenticAndExclusiveBrandsComponent;BRAND_LOGO_IMAGE;;
+
+
+
+#content slot for Authentic And Exclusive Page
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1-authenticAndExclusive;Section1 slot for  Authentic And Exclusive Brands Page;true;AuthenticAndExclusiveBrandsComponent;;;
+
+# ContentSlotForPage for Authentic And Exclusive Page
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='authenticAndExclusive'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-authenticAndExclusive;Section1;;Section1-authenticAndExclusive;;;
+
+
+# CMSParagraphComponent 
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;HelpServicePageComponent;Help & Service Page component;HelpServicePageComponent;;;;
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1-helpservices;Section1 slot for Help & Service Page;true;ChatWithUsMediaParagraphHSComponent,CallUsMediaParagraphHSComponent,HelpServicePageComponent;
+
+
+
+#### Changes for Abouts Us
+
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+;;AboutUsBannerComponent;About Us Banner Component;AboutUsBannerComponent;/ 
+
+
+
+#ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1-aboutus;Section1 slot for About Us Page;true;AboutUsBannerComponent;
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
+;;TataBusinessEthicsMediaParagraphComponent;Tata  Business  Ethics  Media  Paragraph Component;TataBusinessEthicsMediaParagraphComponent;"<h3>Tata Business Ethics</h3>
+<span>Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna
+aliqua. </span>";Tata business ethics.png;;
+
+
+;;TataTrustMediaParagraphComponent; Tata Trust Media Paragraph Component;TataTrustMediaParagraphComponent;"<h3>Tata Trust</h3>
+<span>Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna
+aliqua.</span>";tata trust.png;;
+
+
+;;WorkingWithUsMediaParagraphComponent; Working With Us Media Paragraph Component;WorkingWithUsMediaParagraphComponent;"<h3>Working with Us</h3>
+<span>Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna
+aliqua.</span>";write to us.png;;
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;Tata business ethics.png;$siteResource/images/banners/homepage/responsive/Tata business ethics.png;Tata business ethics.png;" About us page Image";
+;;tata trust.png;$siteResource/images/banners/homepage/responsive/tata trust.png;tata trust.png;" About us Image Tata Trust";
+;;write to us.png;$siteResource/images/banners/homepage/responsive/write to us.png;write to us.png;"About us Image write to us";
+
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section3-aboutus;Section3 slot for About Us Page;true;TataBusinessEthicsMediaParagraphComponent,TataTrustMediaParagraphComponent,WorkingWithUsMediaParagraphComponent;
+
+
+
+
+
+
+
+###  Home page and help and service slot 2A  ####
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section2ASlot-Homepage;true;Small Icons Slot 1;AuthenticExclusiveMediaParagraphComponent,BestCollectionMediaParagraphComponent
+;;Section2ASlot-helpservices;true;;AuthenticExclusiveMediaParagraphComponent,BestCollectionMediaParagraphComponent
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2A-UKHomepage;Section2A;;Section2ASlot-Homepage;;;
+
+#### Home Pge and Help and Service slot 2B #######
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section2BSlot-Homepage;true;Small Icons Section 2;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent
+;;Section2BSlot-helpservices;true;;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2B-ApparelUKHomepage;Section2B;;Section2BSlot-Homepage;;;
+
+#CMSMediaParagraphComponent changes ends
+###  Home page slot 2A  ####
+#INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+#;;ApparelUKHompageWomenStreetBannerComponent;ApparelUK Homepage Women Dress Banner Component;Categories/Apparel/Womenswear/c/1130;ApparelUKHompageWomenStreetBannerComponent
+
+#INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+#;;ApparelUKHompageMenStreetBannerComponent;ApparelUK Homepage Men Shirt Banner Component;Categories/Apparel/Menswear/c/1110;ApparelUKHompageMenStreetBannerComponent
+
+#INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+#;;Section2ASlot-ApparelUKHomepage;true;ApparelUKHompageWomenStreetBannerComponent,ApparelUKHompageMenStreetBannerComponent
+
+#INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+#;;Section2A-ApparelUKHomepage;Section2A;;Section2ASlot-ApparelUKHomepage;;;
+
+#### Home section 2B #######
+#INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+#;;ApparelUKHompageStreetYouthBannerComponent;ApparelUK Homepage Youth Shorts Banner Component;Categories/Apparel/Womenswear/c/1140;ApparelUKHompageStreetYouthBannerComponent
+
+#INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+#;;ApparelUKHompageBrandsBannerComponent;ApparelUK Homepage Brands Banner Component Child;Brands/c/brands;ApparelUKHompageBrandsBannerComponent
+
+#INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+#;;Section2BSlot-Homepage;true;ApparelUKHompageStreetYouthBannerComponent,ApparelUKHompageBrandsBannerComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+#;;Section2B-ApparelUKHomepage;Section2B;;Section2BSlot-Homepage;;;
+
+## Home section 3
+#Brands You Love Component
+INSERT_UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;BrandList(subBrandName);imageSize(code);;
+#;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;WestSide,Chroma,Tanishq;large;;
+#;;SmallBrandsComponent;Small Brands Component;SmallBrandsComponent;Nuon,Ascot,L.O.V,bombay,gia,soda;thumbnail;;
+#Category carousel for Products you care
+INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
+#;;TMPHomepageCategoryCarousel;Products You Care Component;MPH1111100100,MPH1111100101,MPH1111100102,MPH1111100103;TMPHomepageCategoryCarousel;thumbnail;
+# Product Carousel for Handpicked Collections
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
+#;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections Component;987654321,987654322,987654323;allVisible;false;TMPHomepageHandpickedProductCarouselComponent
+# Product Carousel for Now trending products
+INSERT_UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef
+#;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending Product Carousel;MPH1111100100,MPH1111100101,MPH1112100108;TMPHomepageNowTrendingProductCarouselComponent
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+#;;HandpickedCollectionsParagraphComponent;Handpicked Collections Paragraph Component;HandpickedCollectionsParagraphComponent;;;;
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+#;;Section3Slot-Homepage;BrandsYouLoveComponent,SmallBrandsComponent,TMPHomepageCategoryCarousel
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+#;;Section3Slot-Homepage;Section3;;Section3Slot-Homepage;;;
+
+#### Section 4
+
+#Banners for Handpicked Collections
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+#;;HandpickedCollectionBanner1;Handpicked Collection Banner 1 Component;HandpickedCollectionBanner1;/ 
+#;;HandpickedCollectionBanner2;Handpicked Collection Banner 2 Component;HandpickedCollectionBanner2;/ 
+#;;HandpickedCollectionBanner3;Handpicked Collection Banner 3 Component;HandpickedCollectionBanner3;/ 
+#;;HandpickedCollectionBanner4;Handpicked Collection Banner 4 Component;HandpickedCollectionBanner4;collection/chef
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+#;;Section4ASlot-Homepage;true;HandpickedCollectionsParagraphComponent,HandpickedCollectionBanner1,HandpickedCollectionBanner2
+#;;Section4BSlot-Homepage;true;HandpickedCollectionBanner3,HandpickedCollectionBanner4
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+#;;Section4ASlot-Homepage;Section4A;;Section4ASlot-Homepage;;;
+#;;Section4BSlot-Homepage;Section4B;;Section4BSlot-Homepage;;;
+#### Section 5
+## Home section 2C
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;DeliveryTextParagraphComponent;Delivery Text Paragraph Component;DeliveryTextParagraphComponent;;;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section5Slot-Homepage;true;DeliveryTextParagraphComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section5Slot-Homepage;Section5;;Section5Slot-Homepage;;;
+
+#################    HOME PAGE END     #################
+
+################ WOMEN CATEGORY LANDING PAGE ################
+
+
+#Category Carousel
+INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
+;;TMPWomenMainCategoriesCarouselComponent;Women Main Categories Carousel Component;MSH1010,MSH1011,MSH1112;TMPWomenMainCategoriesCarouselComponent;large
+;;TMPWomenSecondaryCategoriesCarouselComponent;Women Secondary Categories Carousel Component;MSH1014,MSH1010101,MSH1010102,MPH1221102;TMPWomenSecondaryCategoriesCarouselComponent;thumbnail
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;BeInspiredParagraphComponent;Be Inspired Paragraph Component;BeInspiredParagraphComponent;;;;
+;;ShopByCollectionLinkComponent;Shop By Collection Link Component Component;ShopByCollectionLinkComponent;;;;
+;;NewLaunchedComponent;New Launched  Component;NewLaunchedComponent;;;;
+;;DiscoverTheLatestComponent;Discover The Latest  Component;DiscoverTheLatestComponent;;;;
+
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
+;;WomenCategoryVideoComponent;Women Category Video Component;WomenCategoryVideoComponent;https://www.youtube.com/embed/vOPL2uqcOHE;;"Lorem ipsum dolor sit amet, consectetur adipiscing
+elit. Scelerisque erat elit, vel tempus odio elementum non. Cras iaculis ante eu elit tincidunt pretium sit.<a class='shop_link' href='/'>Shop the Collection</a>";
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;title;description;
+;;LatestLookBanner1;Latest Look Banner 1;LatestLookBanner1;/;Pretty in Petals;;
+;;LatestLookBanner2;Latest Look Banner 2;LatestLookBanner2;/;
+;;LatestLookBanner3;Latest Look Banner 3;LatestLookBanner3;/;;
+;;Pic3Component;Pic 3 Component;Pic3Component;/;;""
+;;Pic4Component;Pic 4 Component;Pic4Component;/;;"<a href='#'>CREATE YOUR LOOK NOW</a>"
+;;Pic5Component;Pic 5 Component;Pic5Component;/;;""
+;;SmartPhoneGuideComponent;Smartphone Buying Guide Component;SmartPhoneGuideComponent;/;;"<h3><span>Smartphone</span> Buying Guide</h3>  <a href='/'>FIND YOUR MATCH NOW</a>"
+;;BackgroundImages1;Background Images1 Component;BackgroundImages1;;;""
+;;BackgroundImages2;Background Images2 Component;BackgroundImages2;;;""
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section1-Women;true;Category Banner Slot;TMPApparelHomepageBannerComponent
+;;Section2A-Women;true;Category Carousel Slot;TMPWomenMainCategoriesCarouselComponent,TMPWomenSecondaryCategoriesCarouselComponent
+;;Section2B-Women;true;Beinspired Row 1 Slot;BeInspiredParagraphComponent,LatestLookBanner1,WomenCategoryVideoComponent
+;;Section2C-Women;true;Background Image Slot;BackgroundImages1,BackgroundImages2
+;;Section3-Women;true;Beinspired Row 2 Slot;LatestLookBanner2,LatestLookBanner3
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Women'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-Women;Section1;;Section1-Women;;;
+;;Section2A-Women;Section2A;;Section2A-Women;;;
+;;Section2B-Women;Section2B;;Section2B-Women;;;
+;;Section2C-Women;Section2C;;Section2C-Women;;;
+;;Section3-Women;Section3;;Section3-Women;;;
+
+#############################################################
+
+################ ELECTRONICS CATEGORY LANDING PAGE ################
+
+#Banner
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;
+;;TMPElectronicsCategoryBannerComponent;Electronics Category Page Banner Component;TMPElectronicsCategoryBannerComponent
+
+#Category Carousel
+INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
+;;TMPElectronicsMainHottestProductsCarouselComponent;Electronics Main Hottest Product Carousel Component;MSH1210,MSH1211,MSH1212;TMPElectronicsMainHottestProductsCarouselComponent;large
+;;TMPElectronicsSecondaryHottestProductsCarouselComponent;Electronics Secondary Hottest Product Carousel Component;MSH1216,MSH1215,MSH1220,MSH1221;TMPElectronicsSecondaryHottestProductsCarouselComponent;thumbnail
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;TechTrendsettersParagraphComponent;Tech Trendsetters Paragraph Component;TechTrendsettersParagraphComponent;;;;
+;;TrySomethingNewComponent;Try Something New Component;TrySomethingNewComponent;;;;
+
+
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
+;;ElectroncsCategoryVideoComponent;Electronics Category Video Component;ElectroncsCategoryVideoComponent;https://www.youtube.com/embed/FglqN1jd1tM;;"The latest, greatest, and most life changing electronics across all categories collected and curated for you!<a class='shop_link' href='/'>SHOP THE COLLECTION</a>";
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;title;description;
+;;TechTrendSettersBanner1;Tech Trendsetters Banner 1;TechTrendSettersBanner1;/;Marketplace Spotlight;;
+;;TechTrendSettersBanner2;Tech Trendsetters Banner 2;TechTrendSettersBanner2;/;
+;;TechTrendSettersBanner3;Tech Trendsetters Banner 3;TechTrendSettersBanner3;/;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section1-Electronics;true;Category Banner Slot;TMPElectronicsCategoryBannerComponent
+;;Section2A-Electronics;true;Category Carousel Slot;TMPElectronicsMainHottestProductsCarouselComponent,TMPElectronicsSecondaryHottestProductsCarouselComponent
+;;Section2B-Electronics;true;Techtrendsetters Row 1 Slot;TechTrendsettersParagraphComponent,TechTrendSettersBanner1,ElectroncsCategoryVideoComponent
+;;Section2C-Electronics;true;Background Image Slot;BackgroundImages1,BackgroundImages2
+;;Section3-Electronics;true;Techtrendsetters Row 2 Slot;TechTrendSettersBanner2,TechTrendSettersBanner3
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Electronics'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-Electronics;Section1;;Section1-Electronics;;;
+;;Section2A-Electronics;Section2A;;Section2A-Electronics;;;
+;;Section2B-Electronics;Section2B;;Section2B-Electronics;;;
+;;Section2C-Electronics;Section2C;;Section2C-Electronics;;;
+;;Section3-Electronics;Section3;;Section3-Electronics;;;
+
+#############################################################
+
+############################# SHOP BY LOOK ##################
+#paragraphs
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;Section1AParagraphComponent;Section 1A paragraph component;Section1AParagraphComponent;;;;
+
+#banner
+#Banner
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;
+;;TMPElectronicsCategoryBannerComponent;Electronics Category Page Banner Component;TMPElectronicsCategoryBannerComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section1A-Paragraph;true;Section1AParagraphComponent
+;;Section1C-Banner;true;TMPElectronicsCategoryBannerComponent
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='Electronics'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1A-Paragraph;Section1A;;Section1A-Paragraph;;;
+;;Section1C-Banner;Section1C;;Section1C-Banner;;;
+
+#############################################################
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid, $contentCV)
+;;TopContentSlot-cartPage;Top Content Slot for Cart Page;true;CartComponent
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];masterTemplate(uid,$contentCV);
+;;SnowCategoryPage;ProductGridPageTemplate;
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];masterTemplate(uid,$contentCV);
+;;StreetCategoryPage;ProductGridPageTemplate;
+
+# Site Logo
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
+;;/images/theme/logo-hybris-demo.png;logo-hybris-demo.png;$siteResource/images/theme/logo-hybris-demo.png;image/png;Tata Marketplace;
+
+
+################## WESTSIDE BRAND LANDING PAGE #############################
+
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
+;;TMPWestsideBannerComponent;TMP Westside Homepage Banner Component;2;TMPWestsideBannerComponent
+;;WestsideBigBannerComponent; Westside Big Banner Component;2;WestsideBigBannerComponent
+;;ChromaBigBannerComponent;Chroma Big Banner Component;2;ChromaBigBannerComponent
+
+
+INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
+;;TMPWestsidepageCategoryCarousel;Products For The Whole Family componenrt;MSH10,MSH11,SSH1003,MSH12;TMPWestsidepageCategoryCarousel;thumbnail
+
+
+
+INSERT_UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;Promotion(code);seller(id);;
+;;SpringFlingPromotionComponent;Spring Fling Component;SpringFlingPromotionComponent;;123654;;
+
+
+### PREMIER BRAND COMPONENT ON BRAND LANDING PAGE ###
+
+INSERT_UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;BrandList(subBrandName);imageSize(code);text;;
+;;PremierBrandComponent1;Premier Brands1;PremierBrandComponent1;Nuon,Ascot,L.O.V;large;;;
+;;PremierBrandComponent2;Premier Brands2;PremierBrandComponent2;bombay,eta,gia,soda,westsport,yandf;thumbnail;;
+
+
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
+;;BrandLandingVideoComponent;Brand Landing Video Component;BrandLandingVideoComponent;https://www.youtube.com/embed/vOPL2uqcOHE;Pretty in Petals;;
+;;ChromaVideoComponent;Chroma Video Component;ChromaVideoComponent;https://www.youtube.com/embed/vOPL2uqcOHE;;The New Samsung Galaxy S7;
+
+
+INSERT_UPDATE MplBrandLogoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;displayType(code);;
+;;PremierBrandComponent3;Premier Brands1;PremierBrandComponent3;BRAND_LOGO_IMAGE;;
+;;PremierBrandComponent4;Premier Brands2;PremierBrandComponent4;BRAND_IMAGE;;
+
+
+# ContentSlot for brand landing page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1-westside;Slot for westside banner;true;TMPWestsideBannerComponent;;;
+;;Section4Slot-westside; slot for carousal;true;TMPWestsidepageCategoryCarousel;;;
+;;Section5Slot-westside;slot for Spring fling component;true;SpringFlingPromotionComponent;;;
+;;Section6Slot-westside; slot for Premier brand component ;true;PremierBrandComponent3,PremierBrandComponent4;;;
+;;Section2ASlot-westside;slot for try something new ;true;TrySomethingNewComponent
+;;Section2BSlot-westside; slot for lov banner ;true;WestsideBigBannerComponent
+;;Section3Slot-westside; slot for collection;true;BrandLandingVideoComponent,Pic4Component;;;
+
+# ContentSlotForPage for brand landing page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='westside'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1Slot-westside;Section1;;Section1-westside;;;
+;;Section4Slot-westside;Section4;;Section4Slot-westside;;;
+;;Section5Slot-westside;Section5;;Section5Slot-westside;;;
+;;Section6Slot-westside;Section6;;Section6Slot-westside;;;
+;;Section2A-westside;Section2A;;Section2ASlot-westside;;;
+;;Section2B-westside;Section2B;;Section2BSlot-westside;;;
+;;Section3Slot-westside;Section3;;Section3Slot-westside;;
+
+
+
+### CREATING PREMIER BRAND LINKS AND IMAGES TO BE DISPLAYED ON BRAND LANDING PAGE ###
+
+
+INSERT_UPDATE CMSSubbrand;subBrandName[unique=true];subBrandUrl;subBrandImage(code,$contentCV)
+;Nuon;;Nuon.jpg
+;Ascot;;Ascot.png
+;L.O.V;;Lov.jpg
+;bombay;;bombay.png
+;eta;;eta.png
+;gia;;gia.png
+;soda;;soda.png
+;westsport;;westsport.png
+;yandf;;yandf.png
+
+##WESTSPORT BRAND LANDING PAGE#####################
+
+#INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;SequenceNumber;&componentRef
+#;;WestsportBannerComponent;westsport  Banner Component;/;;WestsportBannerComponent
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
+;;TMPWestsportBannerComponent;westsport  Banner Component;2;TMPWestsportBannerComponent
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;PatternedParagraphComponent;Patterned and Paragraph Component;PatternedParagraphComponent;;;;
+;;LifeChangingTechnologyComponent;Life Changing Technologies Component;LifeChangingTechnologyComponent;;;;
+
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;SequenceNumber;&componentRef
+;;WestsportImageComponent;westsport  Image Component;/;;WestsportImageComponent
+;;WestsportImageComponent2;westsport  Image Component 2;/;;WestsportImageComponent2
+
+INSERT_UPDATE ProductGridComponent;$contentCV[unique=true];uid[unique=true];name;actions(uid,$contentCV);&componentRef
+;;ProductGridComponent;Product Grid Component;ListAddToCartAction;ProductGridComponent
+
+INSERT_UPDATE ProductRefinementComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;RefinementFacetComponent;Product Refinement Facet Component;RefinementFacetComponent
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1-westsport;Section1 slot for westsport Brand Landing Page;true;TMPWestsportBannerComponent;;;
+;;Section2ASlot-westsport;Section 2A Slot for Westsport Image;true;PatternedParagraphComponent,WestsportImageComponent,WestsportImageComponent2;;;
+;;Section2BSlot-westsport;Section 2B Slot for Product grid;true;RefinementFacetComponent;;;
+;;Section2C-westsport;Background Image Slot;true;BackgroundImages1,BackgroundImages2
+;;Section3Slot-westsport;Section 3 Slot for Product grid;true;ProductGridComponent;;;
+
+# ContentSlotForPage for brand landing page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='westsport'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1Slot-westsport;Section1;;Section1-westsport;;;
+;;Section2ASlot-westsport;Section2A;;Section2ASlot-westsport;;;
+;;Section2BSlot-westsport;Section2B;;Section2BSlot-westsport;;;
+;;Section2C-westsport;Section2C;;Section2C-westsport;;;
+;;Section3Slot-westsport;Section3;;Section3Slot-westsport;;;
+
+##WESTSPORT BRAND LANDING PAGE: END#####################
+
+
+
+########################## END OF WESTSIDE BRAND LANDING PAGE ##################
+
+####BRAND LANDING PAGE-ELECTRONICS##############
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;SequenceNumber;&componentRef
+#;;ChromaBannerComponent;chroma Banner Component;/;;ChromaBannerComponent
+;;lookbookComponent;look book  Component;/;;lookbookComponent
+#;;SmartPhoneBuyingGuideComponent;Smartphone Component;/;;SmartPhoneBuyingGuideComponent
+#;;NikkonComponent;Nikkon Component;/;;NikkonComponent
+
+
+
+
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+;;NikkonCarouselComponentBanner;Nikkon Carousal Component ;NikkonCarouselComponentBanner;/
+;;NikkonCarousal1;Nikkon Carousal Component1 ;NikkonCarousal1;/
+
+
+
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef
+;;NikkonCarouselComponent1;Nikkon Carousel;NikkonCarouselComponentBanner,NikkonCarousal1;NikkonCarouselComponent1
+
+
+
+INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
+;;TMPChromaCarouselComponent;Chroma Carousel Component;MSH1210100,MSH1212,MSH1216101,MSH1220100;TMPChromaCarouselComponent;thumbnail
+
+INSERT_UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;BrandList(subBrandName);imageSize(code);text;;
+;;TopBrandComponent1;Top Brands;TopBrandComponent1;samsung,apple,canon;large;Calling all youth. Find your style;;
+;;TopBrandComponent2;Top Brands;TopBrandComponent2;ge,asus,hp,sony,whirpool,dell;thumbnail;;
+
+
+
+INSERT_UPDATE MplBrandLogoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;displayType(code);;
+;;TopBrandComponent3;Top Brands 1;TopBrandComponent3;BRAND_LOGO_IMAGE;;
+;;TopBrandComponent4;Top Brands 2;TopBrandComponent4;BRAND_IMAGE;;
+
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1-chroma;Section1 slot for Chroma Brand Landing Page;true;ChromaBigBannerComponent;;;
+;;Section4Slot-chroma; slot for chroma carousal;true;TMPChromaCarouselComponent;;;
+;;Section5Slot-chroma;slot for Top Brands;true;TopBrandComponent3,TopBrandComponent4;;;
+;;Section2ASlot-chroma;Slot for Nikkon Carousal;true;NikkonCarouselComponent1;
+;;Section2BSlot-chroma; Slot for Discover the latest section;true;DiscoverTheLatestComponent,lookbookComponent,LifeChangingTechnologyComponent;
+;;Section3Slot-chroma;Slot for Collection;true;ChromaVideoComponent,SmartPhoneGuideComponent;;;
+
+
+
+# ContentSlotForPage for brand landing page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='chroma'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1Slot-chroma;Section1;;Section1-chroma;;;
+;;Section4Slot-chroma;Section4;;Section4Slot-chroma;;;
+;;Section5Slot-chroma;Section5;;Section5Slot-chroma;;;
+;;Section2ASlot-chroma;Section2A;;Section2ASlot-chroma;;;
+;;Section2BSlot-chroma;Section2B;;Section2BSlot-chroma;;;
+;;Section3Slot-chroma;Section3;;Section3Slot-chroma;;;
+
+
+### CREATING TOP BRAND LINKS AND IMAGES TO BE DISPLAYED ON BRAND LANDING PAGE ###
+
+
+
+
+INSERT_UPDATE CMSSubbrand;subBrandName[unique=true];subBrandUrl;subBrandImage(code,$contentCV)
+;samsung;;samsung logo.jpg
+;apple;;apple.png
+;canon;;canon.jpg
+;ge;;ge.png
+;asus;;asus.jpg
+;hp;;hp.jpg
+;sony;;sony.jpg
+;whirpool;;whirpool.jpg
+;dell;;dell.png
+
+###CONTACT US PAGE###
+
+# CMSParagraphComponent
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;contactUsHeaderComponent;Contact Us Header Paragraph;contactUsHeaderComponent;;;;
+;;SupportOfficeComponent;Support Office Paragraph;SupportOfficeComponent;;;;
+;;CorporateOfficeComponent;Corporate Office Paragraph;CorporateOfficeComponent;;;;
+;;HelplineComponent;Help Line Paragraph;HelplineComponent;;;;
+;;NeedAssistanceComponent;Need Assistance Component;NeedAssistanceComponent;;;;
+
+
+#CMSMediaParagraphComponent changes starts
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture
+;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'><span>CALL US, 24/7</span><span class='link'>1-800-123-4567<span></a>";callus.png
+;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'><span>CHAT WITH US</span><span class='link'>Available Now</span></a>";chatwidus.png
+;;FrequentlyAskedMediaParagraphComponent;FAQ Media Paragraph Component;FrequentlyAskedMediaParagraphComponent;"<a href='/store/mpl/en/faq'><span>FAQ</span><span class='link'><span class='link'>Frequently Asked Questions</span></a>";FAQ.png
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;callus.png;$siteResource/images/banners/homepage/callus.png;callus.png;"Call us";
+;;FAQ.png;$siteResource/images/banners/homepage/FAQ.png;FAQ.png;"Frequent  Questions";
+;;chatwidus.png;$siteResource/images/banners/homepage/chatwidus.png;chatwidus.png;"Chat With Us";
+
+# ContentSlot
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1-contact;Section1 slot for Contact Us Page;true;contactUsHeaderComponent;;;
+;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
+;;Section3-contact;Section3 slot for Contact Us Page;true;NeedAssistanceComponent;;;
+;;Section4A-contact;Section4A slot for Contact Us Page;true;SupportOfficeComponent;;;
+;;Section4B-contact;Section4B slot for Contact Us Page;true;CorporateOfficeComponent;;;
+;;Section4C-contact;Section4C slot for Contact Us Page;true;HelplineComponent;;;
+
+#ContentSlotforPage for Contact Us Page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='contact'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1Slot-contact;Section1;;Section1-contact;;;
+;;Section2Slot-contact;Section2;;Section2-contact;;;
+;;Section3-contact;Section3;;Section3-contact;;;
+;;Section4A-contact;Section4A;;Section4A-contact;;;
+;;Section4B-contact;Section4B;;Section4B-contact;;;
+;;Section4C-contact;Section4C;;Section4C-contact;;;
+
+
+
+####### For Microsite :::: START
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;westsideSellerMicrosite;Westside Sellers Microsite Page;ApparelMicrositePageTemplate;/m/westside
+;;cromaSellerMicrosite;Croma Sellers Microsite Page;ElectronicsMicrositePageTemplate;/m/croma
+
+# Create Micro Site Logo and other banners for each seller
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
+;;/images/microsite/westside-logo.png;westside-logo.png;$siteResource/images/microsite/westside-logo.png;image/jpg;;
+;;/images/microsite/croma-logo.png;croma-logo.png;$siteResource/images/microsite/croma-logo.png;image/jpg;;
+
+
+# Site Logo Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef
+;;WestsideMicrositeLogoComponent;/images/microsite/westside-logo.png;WestsideMicrositeLogoComponent
+;;CromaMicrositeLogoComponent;/images/microsite/croma-logo.png;CromaMicrositeLogoComponent
+
+
+# ContentSlot for apparel seller's page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;MicroSiteLogoSlot-WestsideLogo;Microsite Logo Slot;true;WestsideMicrositeLogoComponent;;;
+;;MicroSiteSearchBoxSlot-Westside;MicroSite SearchBox Slot;true;MplMicrositeEnhancedSearchBox-westside
+;;BrandIntroductionContentSlot-Westside;Brand Banner Slot;true;TMPWestsideBannerComponent
+;;CategoryGridContentSlot-Westside;Category Grid Slot;true;TMPWestsidepageCategoryCarousel
+;;PromotionalSpaceSlot-Westside;Promotional Space Slot;true;SpringFlingPromotionComponent
+;;SubBrandGridContentSlotA-Westside;SubBrand Grid Big Slot;true;PremierBrandComponent1
+;;SubBrandGridContentSlotB-Westside;SubBrand Grid Thumbnail Slot;true;PremierBrandComponent2
+;;ContentGridContentSlotA-Westside;Content Grid Slot A;true;TrySomethingNewComponent,WestsideBigBannerComponent
+;;ContentGridContentSlotB-Westside;Content Grid Slot B;true;Pic4Component
+;;ContentGridContentSlotC-Westside;Content Grid Slot C;true;BrandLandingVideoComponent
+
+# ContentSlot for electronics seller's page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;MicroSiteLogoSlot-CromaLogo;Microsite Logo Slot;true;CromaMicrositeLogoComponent;;;
+;;MicroSiteSearchBoxSlot-Croma;MicroSite SearchBox Slot;true;MplMicrositeEnhancedSearchBox-croma
+;;BrandIntroductionContentSlot-Croma;Brand Banner Slot;true;ChromaBigBannerComponent
+;;CategoryGridContentSlot-Croma;Category Grid Slot;true;TMPChromaCarouselComponent
+;;SubBrandGridContentSlotA-Croma;SubBrand Grid Big Slot;true;TopBrandComponent1
+;;SubBrandGridContentSlotB-Croma;SubBrand Grid Thumbnail Slot;true;TopBrandComponent2
+;;ProductHighlightContentSlot-Croma;Product Highlight Slot;true;NikkonCarouselComponent1
+;;ContentGridContentSlotA-Croma;Content Grid Slot A;true;DiscoverTheLatestComponent,lookbookComponent,LifeChangingTechnologyComponent
+;;ContentGridContentSlotB-Croma;Content Grid Slot B;true;SmartPhoneGuideComponent
+;;ContentGridContentSlotC-Croma;Content Grid Slot C;true;ChromaVideoComponent
+
+# ContentSlotForPage
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='westsideSellerMicrosite'];contentSlot(uid,$contentCV)[unique=true];;;
+;;MicroSiteLogo-Westside;MicroSiteLogo;;MicroSiteLogoSlot-WestsideLogo;;;
+;;MicrositeSearchBox-Westside;MicrositeSearchBox;;MicroSiteSearchBoxSlot-Westside;;;
+;;BrandIntroductionPageSlot-Westside;BrandBannerSlot;;BrandIntroductionContentSlot-Westside;;;
+;;CategoryGridPageSlot-Westside;CategoryGridSlot;;CategoryGridContentSlot-Westside;;;
+;;SubBrandGridPageSlotA-Westside;SubBrandGridBigSlot;;SubBrandGridContentSlotA-Westside;;;
+;;SubBrandGridPageSlotB-Westside;SubBrandGridThumbnailSlot;;SubBrandGridContentSlotB-Westside;;;
+;;PromotionalSpacePageSlot-Westside;PromotionalSpaceSlot;;PromotionalSpaceSlot-Westside;;;
+;;ContentGridPageSlotA-Westside;ContentGridSlotA;;ContentGridContentSlotA-Westside;;;
+;;ContentGridPageSlotB-Westside;ContentGridSlotB;;ContentGridContentSlotB-Westside;;;
+;;ContentGridPageSlotC-Westside;ContentGridSlotC;;ContentGridContentSlotC-Westside;;;
+
+
+# ContentSlotForPage
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='cromaSellerMicrosite'];contentSlot(uid,$contentCV)[unique=true];;;
+;;MicroSiteLogo-Croma;MicroSiteLogo;;MicroSiteLogoSlot-CromaLogo;;;
+;;MicrositeSearchBox-Croma;MicrositeSearchBox;;MicroSiteSearchBoxSlot-Croma;;;
+;;BrandIntroductionPageSlot-Croma;BrandBannerSlot;;BrandIntroductionContentSlot-Croma;;;
+;;CategoryGridPageSlot-Croma;CategoryGridSlot;;CategoryGridContentSlot-Croma;;;
+;;SubBrandGridPageSlotA-Croma;SubBrandGridBigSlot;;SubBrandGridContentSlotA-Croma;;;
+;;SubBrandGridPageSlotB-Croma;SubBrandGridThumbnailSlot;;SubBrandGridContentSlotB-Croma;;;
+;;ProductHighlightPageSlot-Croma;ProductHighlightSlot;;ProductHighlightContentSlot-Croma;;;
+;;ContentGridPageSlotA-Croma;ContentGridSlotA;;ContentGridContentSlotA-Croma;;;
+;;ContentGridPageSlotB-Croma;ContentGridSlotB;;ContentGridContentSlotB-Croma;;;
+;;ContentGridPageSlotC-Croma;ContentGridSlotC;;ContentGridContentSlotC-Croma;;;
+
+####### For Microsite :::: END
+
+
+#############SHOP THE LOOK################
+
+# Site Logo Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture;&componentRef
+;;1CBannerComponent;lookbook1.jpeg;1CBannerComponent
+;;2ABannerComponent;lookbook2.jpeg;2ABannerComponent
+;;3CBannerComponent;lookbook3.jpeg;3CBannerComponent
+;;4ABannerComponent;lookbook4.jpeg;4ABannerComponent
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;category(code, $productCV);target(code)[default='sameWindow'];&componentRef
+;;MplShopByLookNext;Next Link;/;;;MplShopByLookNext
+;;MplShopByLookPrevious;Previous Link;/;;;MplShopByLookPrevious
+
+INSERT_UPDATE MplShopByLookProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);title;&componentRef;
+;;ShopTheLookCarousel1;Shop the look carousel;987654321,987654322,987654323,987654324;;ShopTheLookCarousel1
+
+INSERT_UPDATE MplShopByLookProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);title;&componentRef;
+;;ShopTheLookCarousel2;Shop the look carousel;987654321,987654322,987654323;;ShopTheLookCarousel2
+
+INSERT_UPDATE MplShopByLookProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);title;&componentRef;
+;;ShopTheLookCarousel3;Shop the look carousel;987654321,987654322;;ShopTheLookCarousel3
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;ShopTheLookParagraphComponent1;Shop the look paragraph 1;ShopTheLookParagraphComponent1
+;;ShopTheLookParagraphComponent2;Shop the look paragraph 2;ShopTheLookParagraphComponent2
+;;ShopTheLookParagraphComponent3;Shop the look paragraph 3;ShopTheLookParagraphComponent3
+;;ShopTheLookParagraphComponent4;Shop the look paragraph 4;ShopTheLookParagraphComponent4
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;Section1C-Chef;Section1C slot for Chef Page;true;1CBannerComponent;;;
+;;Section2A-Chef;Section2A slot for Chef Page;true;2ABannerComponent;;;
+;;Section3C-Chef;Section3C slot for Chef Page;true;3CBannerComponent;;;
+;;Section4A-Chef;Section4A slot for Chef Page;true;4ABannerComponent;;;
+;;Section2C-Chef;Section2C slot for Chef Page;true;ShopTheLookCarousel1;;;
+;;Section3B-Chef;Section3B slot for Chef Page;true;ShopTheLookCarousel2;;;
+;;Section4C-Chef;Section4C slot for Chef Page;true;ShopTheLookCarousel3;;;
+;;Section1A-Chef;Section1A slot for Chef Page;true;ShopTheLookParagraphComponent1;;;
+;;Section2B-Chef;Section2B slot for Chef Page;true;ShopTheLookParagraphComponent2;;;
+;;Section3A-Chef;Section3A slot for Chef Page;true;ShopTheLookParagraphComponent3;;;
+;;Section4B-Chef;Section4B slot for Chef Page;true;ShopTheLookParagraphComponent4;;;
+;;Section5A-Chef;Section5A slot for Chef Page;true;MplShopByLookNext;;;
+;;Section5B-Chef;Section5B slot for Chef Page;true;MplShopByLookPrevious;;;
+
+
+#ContentSlotforPage for Contact Us Page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='chef'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1C-Chef;Section1C;;Section1C-Chef;;;
+;;Section2C-Chef;Section2C;;Section2C-Chef;;;
+;;Section3B-Chef;Section3B;;Section3B-Chef;;;
+;;Section3C-Chef;Section3C;;Section3C-Chef;;;
+;;Section4C-Chef;Section4C;;Section4C-Chef;;;
+;;Section1A-Chef;Section1A;;Section1A-Chef;;;
+;;Section2A-Chef;Section2A;;Section2A-Chef;;;
+;;Section2B-Chef;Section2B;;Section2B-Chef;;;
+;;Section3A-Chef;Section3A;;Section3A-Chef;;;
+;;Section4A-Chef;Section4A;;Section4A-Chef;;;
+;;Section4B-Chef;Section4B;;Section4B-Chef;;;
+;;Section5A-Chef;Section5A;;Section5A-Chef;;;
+;;Section5B-Chef;Section5B;;Section5B-Chef;;;
+
+##########################################
+
+####################################Marketplace Overview Page###################################
+#Changes for marketplace overview
+#CMSMediaParagraphComponent changes starts
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
+;;MarketplacePreferencesMediaParagraphComponent;Marketplace Preferences Media Paragraph Component;MarketplacePreferencesMediaParagraphComponent;;marketplacePreference.jpg;;
+;;PersonalInformationMediaParagraphComponent;Personal Information Media Paragraph Component;PersonalInformationMediaParagraphComponent;;personalInformation.jpg;;
+;;SavedCardsMediaParagraphComponent;Saved Cards Media Paragraph Component;SavedCardsMediaParagraphComponent;;savedCards.jpg;;
+;;MyRecommendationsMediaParagraphComponent;My Recommendations Media Paragraph Component;MyRecommendationsMediaParagraphComponent;;myRecommendations.jpg;;
+;;InviteFriendsMediaParagraphComponent;Invite Friends Paragraph Component;InviteFriendsMediaParagraphComponent;;inviteFriends.jpg;;
+;;OrderHistoryMediaParagraphComponent;Order History Paragraph Component;OrderHistoryMediaParagraphComponent;;orderHistory.jpg;;
+;;SavedAddressesMediaParagraphComponent;Saved Addresses Paragraph Component;SavedAddressesMediaParagraphComponent;;savedAddresses.jpg;;
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;BodyContent-Overview;Body Content for Overview Page;true;MarketplacePreferencesMediaParagraphComponent,PersonalInformationMediaParagraphComponent,OrderHistoryMediaParagraphComponent,SavedCardsMediaParagraphComponent,SavedAddressesMediaParagraphComponent,MyRecommendationsMediaParagraphComponent,InviteFriendsMediaParagraphComponent;;;
+
+
+
+#ContentSlotforPage for Overview  Page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='overview'];contentSlot(uid,$contentCV)[unique=true];;;
+;;BodyContent-Overview;BodyContent;;BodyContent-Overview;;;
+

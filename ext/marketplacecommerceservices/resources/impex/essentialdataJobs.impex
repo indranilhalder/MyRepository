@@ -1,0 +1,35 @@
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;customerDetailsPopulateCronJob;customerDetailsPopulateJob;false;de
+;salesOrderPaymentInfoPopulateJob;salesOrderPaymentInfoJob;false;de
+
+;salesOrderCanRetInfoPopulateJob;salesOrderCancelPaymentInfoJob;false;de
+;merchantMasterPopulateCronJob;merchantmaster;false;de
+###For COD Blacklist Report Job####
+#;blacklistReportCreationJob;blacklistReportJob;false;de
+
+
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+; customerDetailsPopulateCronJob; 0 0 0 * * ?
+; salesOrderPaymentInfoPopulateJob; 0 0 0 * * ?
+#; merchantMasterPopulateCronJob; 0 0 0 * * ?
+#; promoReportCreationJob; 0 0 0 * * ?
+#; salesReportCreationJob; 0 0 0 * * ?
+#; salesOrderCanRetInfoPopulateJob; 0 0 0 * * ?
+
+
+
+INSERT_UPDATE BulkPromotionCreationJob;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
+;promotionBulkCreationJob;promotionCreationJob;en;promotion;csv;
+
+###For Promotional Report Job####
+INSERT_UPDATE PromotionalReportCreationJob;code[unique=true];job(code);sessionLanguage(isocode);startDate;endDate;
+;promoReportCreationJob;promotionalReportJob;en;;;
+
+###For Sales Report Job####
+INSERT_UPDATE SalesReportCreationJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
+;salesReportCreationJob;salesReportJob;en;2015-07-01;2015-07-31;
+
+###For Order Refund Report Job####
+INSERT_UPDATE OrderRefundReportJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
+;orderRefundReportCronJob;orderRefundReportJob;en;2015-07-01;2015-08-31;

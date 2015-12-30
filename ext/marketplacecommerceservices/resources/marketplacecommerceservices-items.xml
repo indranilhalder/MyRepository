@@ -1,0 +1,2315 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2013 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+<!-- ATTENTION: This is just an example file. You have to edit it according 
+	to your needs. -->
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="items.xsd">
+
+	<collectiontypes>
+		<!-- <collectiontype code="brandList" elementtype="java.lang.String"
+			autocreate="true" generate="false" type="list" /> -->
+		<collectiontype code="ChannelList" elementtype="SalesApplication"
+			autocreate="true" generate="false" type="list" />
+		<collectiontype code="bankList" elementtype="java.lang.String"
+			autocreate="true" generate="false" type="list" />
+		<collectiontype code="DeliveryModeDetailsCollection"
+			elementtype="DeliveryMode" autocreate="true" generate="false" type="list" />
+		<collectiontype code="RestrictionPaymentModeCollection"
+			elementtype="PaymentType" autocreate="true" generate="false" type="list" />
+		<collectiontype code="EtailSellerCollection"
+			elementtype="SellerInformation" autocreate="true" generate="false"
+			type="list" />
+		<collectiontype code="RestrictionBankCollection"
+			elementtype="Bank" autocreate="true" generate="false" type="list" />
+			<collectiontype code="updatedDetailsList" elementtype="java.lang.String"
+			autocreate="true" generate="false" type="list" />
+		<collectiontype code="EtailSellerMasterCollection"
+			elementtype="SellerMaster" autocreate="true" generate="false"
+			type="list" />
+	</collectiontypes>
+
+	<enumtypes>
+		<enumtype code="sellerAssociationStatusEnum" autocreate="true"
+			generate="true" dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
+		<enumtype code="PromoCustomerType" autocreate="true"
+			generate="true" dynamic="false">
+			<value code="Registered" />
+			<value code="FirstTimeUser" />
+			<value code="ReturningUser" />
+		</enumtype>
+		<enumtype code="onlineExclusiveEnum" autocreate="true"
+			generate="true" dynamic="false">
+			<value code="Yes" />
+			<value code="No" />
+		</enumtype>
+		<enumtype generate="true" code="oTPTypeEnum" autocreate="true"
+			dynamic="true">
+			<value code="Forgot_Password" />
+			<value code="COD" />
+			<value code="Easy_Checkout" />
+			<value code="C2C" />
+		</enumtype>
+		<enumtype code="orderStatus" autocreate="false" generate="true"
+			dynamic="true">
+			<value code="PLACED" />
+			<value code="CONFIRMED" />
+			<value code="PACKED" />
+			<value code="DISPATCHED_FROM_WAREHOUSE" />
+			<value code="SHIPPED_BY_LOGISTIC_PARTNER" />
+			<value code="IN_TRANSIT_BY_LP" />
+			<value code="DELIVERED_BY_LP" />
+		</enumtype>
+		
+		<enumtype code="discTypesEnum" autocreate="true"
+			generate="true" dynamic="false">
+			<value code="Percentage" />
+			<value code="Amount" />
+			<value code="Free" />
+		</enumtype>
+	</enumtypes>
+	
+	<maptypes>
+		<maptype code="multipleFreeGiftMap"
+               argumenttype="java.lang.String"
+               returntype="Product"
+               autocreate="true"
+               generate="true"/>
+              
+       <!--    Added For BOGO Promotion TISST-13948     -->
+         <maptype code="bogoPromoDataMap"
+               argumenttype="AbstractOrderEntry"
+               returntype="java.lang.Double"
+               autocreate="true"
+               generate="true"/>
+   </maptypes>
+
+	<relations>
+		<!-- Relation between Basestore and PaymentType -->
+		<relation code="BaseStorePaymentTypeRelation" generate="true"
+			localized="false" autocreate="true">
+			<sourceElement qualifier="baseStore" type="BaseStore"
+				cardinality="one" />
+			<targetElement qualifier="paymentTypes" type="PaymentType"
+				cardinality="many" />
+		</relation>
+		<relation localized="false" code="SellerShippingInfoRelation">
+			<sourceElement type="SellerInformation" cardinality="one"
+				qualifier="sellerInformation"></sourceElement>
+			<targetElement type="SellerShippingInfo" cardinality="many"
+				qualifier="sellerShippingInfoRelator"></targetElement>
+		</relation>
+	</relations>
+
+	<itemtypes>
+		<!-- <itemtype generate="true" code="MyProduct" jaloclass="com.tisl.mpl.jalo.MyProduct" 
+			extends="Product" autocreate="true" > <attributes> <attribute qualifier="myExampleInitialStringField" 
+			type="java.lang.String"> <description>My Example Initial String Value</description> 
+			<modifiers initial="true"/> <persistence type="property"/> </attribute> <attribute 
+			qualifier="myExampleBooleanField" type="java.lang.Boolean"> <description>Example 
+			Initial Boolean Field</description> <persistence type="property"/> </attribute> 
+			<attribute qualifier="media" type="Media"> <persistence type="property"/> 
+			</attribute> </attributes> </itemtype> -->
+
+		<!-- Free Gift Action for promotions -->
+		<itemtype code="CustomPromotionOrderAddFreeGiftAction"
+			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomPromotionOrderAddFreeGiftAction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="freeProduct" autocreate="true" type="Product">
+					<description>The product given away as a gift</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="productUSSID" autocreate="true"
+					type="java.lang.String">
+					<description>The product given away as a gift</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="freeGiftQuantity" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>The Quantity of Free Gift</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="freeGiftInfoMap" type="multipleFreeGiftMap" autocreate="true" >
+	               <persistence type="property"/>
+	               <modifiers read="true" write="true" search="true" optional="true" initial="true"/>
+             </attribute>
+             <attribute qualifier="isBuyAGetPromo" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Flag to check whether is Buy A get B Free Promotion</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+			</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Custom PromotionOrderAdjustTotalAction class for apportioned value 
+			for order level promotions -->
+		<itemtype code="CustomPromotionOrderAdjustTotalAction"
+			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomPromotionOrderAdjustTotalAction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="amount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>The amount to adjust the cart total by.</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>		
+
+		<!-- Custom PromotionOrderEntryAdjustAction class for apportioned value 
+			for Product level promotions -->
+		<itemtype code="CustomPromotionOrderEntryAdjustAction"
+			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomPromotionOrderEntryAdjustAction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="amount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>The amount to adjust the order entry by.</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryProduct" autocreate="true"
+					type="Product">
+					<description>The product of the order entry to adjust</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryQuantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity of the order entry to adjust</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<!-- since 4.4, see PRO-75 -->
+				<attribute qualifier="orderEntryNumber" autocreate="true"
+					type="java.lang.Integer">
+					<description>The entry number in the order</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+
+		<!-- Starter-Store Promotion: Excluded Products and Minimum Category Amount -->
+		<itemtype code="ProductPromotion" extends="AbstractPromotion"
+			jaloclass="de.hybris.platform.promotions.jalo.ProductPromotion"
+			autocreate="false" generate="false">
+			<attributes>
+				<attribute qualifier="minimumAmount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>Minimum Amount purchased on certain Categories.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="excludedProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>List of products to be excluded</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Starter Store : Channel Specific -->
+		<itemtype code="AbstractPromotion" extends="GenericItem"
+			jaloclass="de.hybris.platform.promotions.jalo.AbstractPromotion"
+			autocreate="false" generate="false">
+			<attributes>
+				<attribute qualifier="channel" autocreate="true" type="ChannelList">
+					<description>channel</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="false" initial="false" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		<itemtype code="StoreFrontCustomerProcess" extends="StoreFrontProcess"
+			autocreate="false" generate="false"
+			jaloclass="de.hybris.platform.commerceservices.jalo.process.StoreFrontCustomerProcess">
+			<attributes>
+				<attribute qualifier="password" type="java.lang.String">
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="customerProfileList" type="updatedDetailsList">
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail For Buy A and B get y percentage or Amount off -->
+		<itemtype code="BuyAandBPrecentageDiscount" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAandBPrecentageDiscount" autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute qualifier="secondProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>The B products that the promotion should not be applied to</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="secondCategories"
+					type="CategoryCollection">
+					<description>the categories the given voucher is valid for.</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="maxDiscount" autocreate="true"
+					type="java.lang.Double">
+					<description>maxDiscount discount in specific currencies.</description>
+					<defaultvalue>Double.valueOf(0)</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<!-- Tata Etail For Buy A and B get C free -->
+		<itemtype code="BuyAandBgetC" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAandBgetC" autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute qualifier="secondProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>The B products that the promotion should not be applied to</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="secondCategories"
+					type="CategoryCollection">
+					<description>the categories the given voucher is valid for.</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="giftProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>List of Gift Products</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<!-- <attribute qualifier="giftProduct" autocreate="true" type="Product"> 
+					<description>The partner product.</description> <modifiers read="true" write="true" 
+					search="true" optional="true" /> <persistence type="property" /> </attribute> -->
+			</attributes>
+		</itemtype>
+
+
+		<!-- Tata Etail For Buy A get B and get x percentage/amount off -->
+		<itemtype code="BuyABFreePrecentageDiscount" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyABFreePrecentageDiscount" autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="quantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity.</description>
+					<defaultvalue>Long.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>				
+				<attribute qualifier="giftProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>List of Gift Products</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="maxDiscountVal"
+					type="java.lang.Double">
+					<description>The Maximum Value to be deducted</description>
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail :BOGOF promotion -->
+		<itemtype code="CustomProductBOGOFPromotion" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.CustomProductBOGOFPromotion" autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute qualifier="qualifyingCount" autocreate="true"
+					type="java.lang.Integer">
+					<defaultvalue>Integer.valueOf(2)</defaultvalue>
+					<description>The number of products required in the cart to activate the promotion. (For standard BOGOF this is 2).</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="freeCount" autocreate="true"
+					type="java.lang.Integer">
+					<defaultvalue>Integer.valueOf(1)</defaultvalue>
+					<description>The number of products within the cart to give away free. (For standard BOGOF this is 1).</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<!-- Tata Etail For Buy X Items of product A get product B for free -->
+		<itemtype code="BuyXItemsofproductAgetproductBforfree"
+			extends="ProductPromotion" jaloclass="com.tisl.mpl.jalo.BuyXItemsofproductAgetproductBforfree"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="giftProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>List of Gift Products</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<!-- <attribute qualifier="giftProduct" autocreate="true" type="Product"> 
+					<description>The partner product.</description> <modifiers read="true" write="true" 
+					search="true" optional="true" /> <persistence type="property" /> </attribute> -->
+				<attribute qualifier="qualifyingCount" autocreate="true"
+					type="java.lang.Integer">
+					<defaultvalue>Integer.valueOf(1)</defaultvalue>
+					<description>The number of base products required to qualify for the free gift.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail Starter Store- Promotion starts -->
+
+		<itemtype code="BuyAPercentageDiscount" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAPercentageDiscount" autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.
+					</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have
+						potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.
+					</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount
+						or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="quantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity.</description>
+					<defaultvalue>Long.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="maxDiscountVal"
+					type="java.lang.Double">
+					<description>The Maximum Value to be deducted</description>
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail OrderThreshold Percentage/amount -->
+		<itemtype code="CartOrderThresholdDiscountPromotion" extends="OrderPromotion"
+			jaloclass="com.tisl.mpl.jalo.CartOrderThresholdDiscountPromotion"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="thresholdTotals" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>The cart total value threshold in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute autocreate="true" qualifier="maxDiscountVal"
+					type="java.lang.Double">
+					<description>The Maximum Value to be deducted</description>
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail CustomOrderThresholdFreeGiftPromotion -->
+		<itemtype code="CustomOrderThresholdFreeGiftPromotion"
+			extends="OrderPromotion" jaloclass="com.tisl.mpl.jalo.CustomOrderThresholdFreeGiftPromotion"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="thresholdTotals" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>The cart total value threshold in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute qualifier="giftProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>List of Gift Products</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<!-- Tata Etail For Buy A and B get y percentage or Amount Cashback -->
+		<itemtype code="BuyAandBGetPrecentageDiscountCashback"
+			extends="ProductPromotion" jaloclass="com.tisl.mpl.jalo.BuyAandBGetPrecentageDiscountCashback"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="secondProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>The B products that the promotion should not be applied to</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="secondCategories"
+					type="CategoryCollection">
+					<description>the categories the given voucher is valid for.</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>				
+				<attribute qualifier="maxDiscount" autocreate="true"
+					type="java.lang.Double">
+					<description>maxDiscount discount in specific currencies.</description>
+					<defaultvalue>Double.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>				
+			</attributes>
+		</itemtype>
+
+
+		<!-- Tata Etail For Buy A get y percentage or Amount Cashback -->
+		<itemtype code="BuyAGetPrecentageDiscountCashback" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAGetPrecentageDiscountCashback"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="quantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity.</description>
+					<defaultvalue>Long.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="maxDiscount" autocreate="true"
+					type="java.lang.Double">
+					<description>maxDiscount discount in specific currencies.</description>
+					<defaultvalue>Double.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>				
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail For CartOrderThresholdDiscountCashback -->
+		<itemtype code="CartOrderThresholdDiscountCashback" extends="OrderPromotion"
+			jaloclass="com.tisl.mpl.jalo.CartOrderThresholdDiscountCashback"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="thresholdTotals" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>The cart total value threshold in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="BankList" autocreate="true"
+					generate="true" type="bankList">
+					<description>Bank info</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype>
+							<value>HYBRIS.LONG_STRING</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<!-- Tata Etail change - Customer Specific Restriction For Promotions -->
+		<!-- <itemtype code="CustomerSpecificPromotionRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.CustomerSpecificPromotionRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute type="PromoCustomerType" qualifier="PromoCustomerType">
+					<persistence type="property" />
+					<defaultvalue>em().getEnumerationValue("PromoCustomerType","Registered")</defaultvalue>
+				</attribute>
+
+				<attribute qualifier="customerType" autocreate="true"
+					type="PromoCustomerType">
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype> -->
+		
+		<!-- Tata Etail change - PaymentModeSpecificPromotionRestriction For Promotions -->
+		<itemtype code="PaymentModeSpecificPromotionRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.PaymentModeSpecificPromotionRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute autocreate="true" qualifier="paymentModes"
+					type="RestrictionPaymentModeCollection">
+					<description>List of Payment Modes</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="banks"
+					type="RestrictionBankCollection">
+					<description>List of Banks</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail change - DeliveryModeRestriction For Promotions -->
+		<itemtype code="DeliveryModePromotionRestriction" extends="AbstractPromotionRestriction"
+			jaloclass="com.tisl.mpl.jalo.DeliveryModePromotionRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute autocreate="true" qualifier="deliveryModeDetailsList"
+					type="DeliveryModeDetailsCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Include Manufacture restriction for Promotion -->
+		<itemtype code="ManufacturersRestriction" extends="AbstractPromotionRestriction"
+			jaloclass="com.tisl.mpl.jalo.ManufacturesRestriction" autocreate="true"
+			generate="true">
+			<attributes>				
+				<attribute autocreate="true" qualifier="manufacturers"
+					type="CategoryCollection">
+					<description>List of brands/Manufacturer</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+				<attribute qualifier="minimumManufactureAmount"
+					autocreate="true" type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>Minimum Amount purchased on certain Manufacture.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Exclude Manufacture restriction for Promotion -->
+		<itemtype code="ExcludeManufacturersRestriction" extends="AbstractPromotionRestriction"
+			jaloclass="com.tisl.mpl.jalo.ExcludeManufacturesRestriction"
+			autocreate="true" generate="true">
+			<attributes>				
+				<attribute autocreate="true" qualifier="manufacturers"
+					type="CategoryCollection">
+					<description>List of excluded brands/Manufacturer</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+			</attributes>
+		</itemtype>		
+
+		<!-- Tata Etail Seller Information -->
+		<itemtype code="SellerInformation" autocreate="true"
+			generate="true" jaloclass="com.tisl.mpl.jalo.SellerInformation">
+			<deployment table="MplSellerInfo" typecode="5465" />
+			<custom-properties>
+				<property name="catalogItemType">
+					<value>java.lang.Boolean.TRUE</value>
+				</property>
+				<property name="catalogVersionAttributeQualifier">
+					<value>"catalogVersion"</value>
+				</property>
+				<property name="uniqueKeyAttributeQualifier">
+					<value>"sellerID,sellerName,pk"</value>
+				</property>
+			</custom-properties>
+			<attributes>
+				<attribute type="java.lang.String" qualifier="sellerID">
+					<modifiers read="true" write="true" optional="false"
+						unique="true" />
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(20)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute type="onlineExclusiveEnum" qualifier="onlineExclusive">
+					<description>This attribute will signfy if the USSID is Online Exclusive</description>
+					<modifiers read="true" write="true" optional="true"
+						unique="false" />
+					<persistence type='property'>
+					<columntype database='oracle'>
+						<value>VARCHAR2(50)</value>
+					</columntype>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="sellerName">
+					<modifiers read="true" write="true" optional="true"
+						unique="true" />
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(250)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="sellerArticleSKU">
+					<modifiers read="true" write="true" optional="true"
+						unique="true" />
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(50)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="USSID">
+				<description>Represent the USSID</description>
+					<modifiers read="true" write="true" optional="true"
+						unique="true" />
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(50)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="SellerSKU">
+				<description>Represent the seller Sku</description>
+					<modifiers read="true" write="true" optional="true"
+						unique="true" />
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(50)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="sellerType">
+					<description>Represent the seller type for the seller for the given USSID</description>
+					<modifiers read="true" write="true" optional="true"
+						unique="true" />
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(50)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<!-- Attribute added in MDD v_1.6 -->
+				<attribute type="sellerAssociationStatusEnum" qualifier="sellerAssociationStatus">
+					<description>This attribute will signfy the status of the seller product assciation. This will be used for delisting process</description>
+					<modifiers read="true" write="true" optional="true"
+						unique="false" />
+					<persistence type='property'>
+					<columntype database='oracle'>
+						<value>VARCHAR2(50)</value>
+					</columntype>
+					</persistence>
+				</attribute>
+				
+				<attribute type="java.lang.String" qualifier="blockOMS">
+					<description>Delisting USSID</description>
+					<modifiers read="true" write="true" optional="true"
+						unique="true" />
+					<persistence type='property'>
+						<columntype database='oracle'>
+							<value>VARCHAR2(20)</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute type="java.util.Date" qualifier="delistDate">
+						<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+					</attribute>
+				
+				<attribute type="java.util.Date" qualifier="startDate">
+						<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="endDate">
+						<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="inwardDate">
+						<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+					</attribute>
+				<!--End Attribute added in MDD v_1.6 -->
+				<attribute type="CatalogVersion" qualifier="catalogVersion">
+					<modifiers read="true" write="true" optional="false"
+						unique="true" />
+					<persistence type="property"></persistence>
+				</attribute>
+
+			</attributes>
+			<indexes>
+				<index name="sellerIDIDX" unique="false">
+					<key attribute="sellerID" />
+				</index>
+				<index name="sellerNameIDX" unique="false">
+					<key attribute="sellerName" />
+				</index>
+			</indexes>
+		</itemtype>
+
+		<!-- Tata Etail change - Seller Based Restriction -->
+		<itemtype code="EtailSellerSpecificRestriction" extends="AbstractPromotionRestriction"
+			jaloclass="com.tisl.mpl.jalo.EtailSellerSpecificRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute autocreate="true" qualifier="sellerDetailsList"
+					type="EtailSellerCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="sellerMasterList"
+					type="EtailSellerMasterCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Tata Etail change - Exclude Seller Based Restriction -->
+		<itemtype code="EtailExcludeSellerSpecificRestriction"
+			extends="AbstractPromotionRestriction" jaloclass="com.tisl.mpl.jalo.EtailExcludeSellerSpecificRestriction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute autocreate="true" qualifier="sellerDetailsList"
+					type="EtailSellerCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="sellerMasterList"
+					type="EtailSellerMasterCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="AbstractOrderEntry" autocreate="false"
+			generate="false">
+			<attributes>
+				<attribute qualifier="selectedUSSID" type="java.lang.String">
+					<modifiers read="true" write="true" search="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- Item Types for Payment -->
+		<itemtype code="PaymentType" autocreate="true" generate="true"
+		jaloclass="com.tisl.mpl.jalo.PaymentType">
+		 <deployment table="MplPymntType" typecode="12018" />
+			<attributes>
+				<attribute qualifier="mode" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers optional="false" unique="true" />
+				</attribute>
+				<attribute qualifier="isAvailable" type="java.lang.Boolean">
+					<persistence type="property" />
+					<modifiers optional="false" unique="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="Bank" autocreate="true" generate="true"
+		jaloclass="com.tisl.mpl.jalo.Bank">
+		 <deployment table="MplBank" typecode="12019" />
+			<attributes>
+				<attribute qualifier="bankName" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers optional="false" unique="true" />
+				</attribute>
+				<attribute qualifier="bankCode" type="java.lang.String">
+					<persistence type="property" />
+					<modifiers optional="false" unique="true" />
+				</attribute>
+				<attribute qualifier="bankLogo" type="Media">
+					<persistence type="property" />
+					<modifiers optional="true" unique="false" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- Item Types for Payment Ends -->
+	<itemtype code="SellerShippingInfo" autocreate="true" generate="true" jaloclass="com.tisl.mpl.jalo.SellerShippingInfo">
+				<deployment table="MplSellerShipInfo" typecode="5469" />
+				<attributes>
+					<attribute type="java.lang.String" qualifier="deliveryType">
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property'>
+							<columntype database='oracle'>
+								<value>VARCHAR2(20)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				<attribute qualifier='shippingCharges' type="java.lang.Double">
+						<description>Represent the Mrp of the product</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(10)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<!-- Etail-For Customer Ftech Job -->
+			<itemtype code="MplConfiguration" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.MplConfiguration">
+				 <deployment table="MplConfiguration" typecode="12020" />
+				<attributes>
+					<attribute type="java.util.Date" qualifier="mplConfigDate">
+						<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+					</attribute>
+					<attribute qualifier="mplConfigCode" autocreate="true"
+					type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="false" unique="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="mplConfigVal" autocreate="true"
+					type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="true"  />
+					<persistence type="property" />
+				</attribute>
+				</attributes>
+			</itemtype>
+			<!-- Tata Unistore : Seller and Brand Threshold based Promotion-->
+		<itemtype code="BuyAAboveXGetPercentageOrAmountOff" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAAboveXGetPercentageOrAmountOff" autocreate="true"
+			generate="true">
+			<attributes>
+			<attribute qualifier="thresholdTotals" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>The value beyond which if added to cart Promotion applies</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+			</attribute>
+			<attribute qualifier="percentageOrAmount" autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is having amount or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0D)</defaultvalue>
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+			</attribute>
+			<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.
+					</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have
+						potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- CustomBOGOPromoOrderEntryAdjustAction class for apportioned value 
+			for BOGO -->
+		<itemtype code="CustomBOGOPromoOrderEntryAdjustAction"
+			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomBOGOPromoOrderEntryAdjustAction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="amount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>The amount to adjust the order entry by.</description>
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryProduct" autocreate="true"
+					type="Product">
+					<description>The product of the order entry to adjust</description>
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryQuantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity of the order entry to adjust</description>
+					<modifiers read="true" write="true" optional="true"/>
+					<persistence type="property" />
+				</attribute>
+
+				<!-- since 4.4, see PRO-75 -->
+				<attribute qualifier="orderEntryNumber" autocreate="true"
+					type="java.lang.Integer">
+					<description>The entry number in the order</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="cutomBogoPromoDataMap" type="bogoPromoDataMap" autocreate="true" >
+	               <persistence type="property"/>
+                   <modifiers read="true" write="true" search="true" optional="true" initial="true"/>
+	            </attribute>
+
+			</attributes>
+		</itemtype>
+		
+			<!-- Tata Etail- Bulk Promotion Creation Job -->
+			<itemtype code="BulkPromotionCreationJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.BulkPromotionCreationJob">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="fileNamePrefix">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="fileExtension">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<!-- Tata Etail- Delisting Job -->
+			<itemtype code="DelistingJobHelper" extends="CronJob"
+				autocreate="true" generate="true">
+				<attributes>
+					<attribute type="java.lang.String" qualifier="fileNamePrefix">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="fileExtension">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<!-- ADDED FOR SHIPPING CHARGES PROMOTIONS -->
+		<itemtype code="BuyAGetPromotionOnShippingCharges" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAGetPromotionOnShippingCharges" autocreate="true"
+			generate="true">
+			<attributes>
+			    <attribute qualifier="quantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity.</description>
+					<defaultvalue>Long.valueOf(1)</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+			    <attribute
+					qualifier="tShip"
+					autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate if this promotion is enabled.</description>
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute
+					qualifier="sShip"
+					autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate if this promotion is enabled.</description>
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+			     <attribute qualifier="discTypesOnShippingCharges" autocreate="true"
+					type="discTypesEnum">
+					<description>Flag to indicate that the promotion is having amount
+						or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>	
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.
+					</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have
+						potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>							
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="BuyAandBGetPromotionOnShippingCharges" extends="ProductPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAandBGetPromotionOnShippingCharges" autocreate="true"
+			generate="true">
+			<attributes>
+			<attribute qualifier="secondProducts" autocreate="true"
+					generate="true" type="ProductCollection">
+					<description>The B products that the promotion should not be applied to</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="secondCategories"
+					type="CategoryCollection">
+					<description>the categories the given voucher is valid for.</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+			    <attribute
+					qualifier="tShip"
+					autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate if this promotion is enabled.</description>
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute
+					qualifier="sShip"
+					autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate if this promotion is enabled.</description>
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+			     <attribute qualifier="discTypesOnShippingCharges" autocreate="true"
+					type="discTypesEnum">
+					<description>Flag to indicate that the promotion is having amount
+						or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>	
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.
+					</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have
+						potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>							
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="BuyAboveXGetPromotionOnShippingCharges" extends="OrderPromotion"
+			jaloclass="com.tisl.mpl.jalo.BuyAboveXGetPromotionOnShippingCharges" autocreate="true"
+			generate="true">
+			<attributes>
+			<attribute qualifier="thresholdTotals" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>The cart total value threshold in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+			    <attribute
+					qualifier="tShip"
+					autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate if this promotion is enabled.</description>
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+				<attribute
+					qualifier="sShip"
+					autocreate="true"
+					type="java.lang.Boolean">
+					<description>Flag to indicate if this promotion is enabled.</description>
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>
+			     <attribute qualifier="discTypesOnShippingCharges" autocreate="true"
+					type="discTypesEnum">
+					<description>Flag to indicate that the promotion is having amount
+						or percentage discount.</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+				</attribute>	
+				<attribute qualifier="percentageDiscount" autocreate="true"
+					type="java.lang.Double">
+					<!-- <defaultvalue>Double.valueOf(10.0D)</defaultvalue> -->
+					<description>Percentage discount.</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="discountPrices" autocreate="true"
+					type="PromotionPriceRowCollectionType">
+					<description>Fixed price for discount in specific currencies.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						initial="false" optional="true" partof="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="deliveryModeDetailsList"
+					type="DeliveryModeDetailsCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="messageFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion has fired.
+					</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+					<description>The message to show when the promotion could have
+						potentially fire.</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>							
+			</attributes>
+		</itemtype>
+		
+		
+		
+		<!-- CustomShippingChargesPromotionAdjustAction class for apportioned value 
+			for BOGO -->
+		<itemtype code="CustomShippingChargesPromotionAdjustAction"
+			extends="AbstractPromotionAction" jaloclass="com.tisl.mpl.jalo.CustomShippingChargesPromotionAdjustAction"
+			autocreate="true" generate="true">
+			<attributes>
+				<attribute qualifier="amount" autocreate="true"
+					type="java.lang.Double">
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<description>The amount to adjust the order entry by.</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryProduct" autocreate="true"
+					type="Product">
+					<description>The product of the order entry to adjust</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="orderEntryQuantity" autocreate="true"
+					type="java.lang.Long">
+					<description>The quantity of the order entry to adjust</description>
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<!-- since 4.4, see PRO-75 -->
+				<attribute qualifier="orderEntryNumber" autocreate="true"
+					type="java.lang.Integer">
+					<description>The entry number in the order</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- Tata Etail-Promotion Creation Mail-->
+		<itemtype code="PromotionCreationMailProcess" extends="StoreFrontProcess"
+			autocreate="true" generate="true"
+			jaloclass="com.tisl.mpl.jalo.PromotionCreationMailProcess">
+			<description>Represents customer related store front business process.</description>
+			<attributes>
+				<attribute qualifier="promoCode" type="java.lang.String">
+					<persistence type="property" />
+					<description>Customer Model</description>
+				</attribute>
+				<attribute qualifier="promotionType" type="java.lang.String">
+					<persistence type="property" />
+					<description>Voucher Model</description>
+				</attribute>
+				<attribute qualifier="startDate" type="java.util.Date">
+					<persistence type="property" />
+					<description>Voucher Model</description>
+				</attribute>
+				<attribute qualifier="endDate" type="java.util.Date">
+					<persistence type="property" />
+					<description>Voucher Model</description>
+				</attribute>
+				<attribute qualifier="user" type="java.lang.String">
+					<persistence type="property" />
+					<description>Customer Model</description>
+				</attribute>
+				<attribute autocreate="true" qualifier="recipientEmail"
+					type="java.lang.String">
+					<description>List of Recipient emails</description>
+					<persistence type="property" />
+					<modifiers search="false" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<!-- Tata Etail- Promotional Report Creation Job -->
+			<itemtype code="PromotionalReportCreationJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.PromotionalReportCreationJob">
+				<attributes>
+					<attribute type="java.util.Date" qualifier="startDate" autocreate="true">
+						<modifiers read="true" write="true" search="true" optional="true" initial="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="endDate" autocreate="true">
+						<modifiers read="true" write="true" search="true" optional="true" initial="true"/>
+						<persistence type="property" />
+					</attribute>					
+				</attributes>
+			</itemtype>			
+			
+			<!-- Tata Etail- Sales Data Creation Job -->
+			<itemtype code="SalesReportCreationJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.SalesReportCreationJob">
+				<attributes>
+					<attribute type="java.util.Date" qualifier="startDate">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="endDate">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="category">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute> 
+					<attribute type="java.lang.String" qualifier="quantity">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute> 
+					<attribute type="java.lang.String" qualifier="sellerId">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute> 
+					<attribute type="java.lang.String" qualifier="orderStatus">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute> 
+				</attributes>
+			</itemtype>
+			
+			<!-- Tata Etail- Refund Data Creation Job -->
+			<itemtype code="OrderRefundReportJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.OrderRefundReportJob">
+				<attributes>
+					<attribute type="java.util.Date" qualifier="startDate">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="endDate">
+						<modifiers optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="paymentMethod">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="refundStatus">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="refundRef">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+						<attribute type="java.lang.String" qualifier="reason">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+						<attribute type="java.lang.String" qualifier="sellerId">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+				</attributes>
+			</itemtype>
+			
+			<!-- Tata Etail- Seller Structure for Microsite -->
+			<itemtype code="SellerSalesCategory" autocreate="true"
+				generate="true">
+				<deployment table="MplSellerStructure" typecode="12059"/>
+				<attributes>
+					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" unique="false" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="sellerRootCategoryId">
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="active">
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					</attributes>
+			</itemtype>
+			
+			
+			<!-- Tata Etail- OrderSattusCode  Job -->
+			<itemtype code="OrderStatusCodeMaster" autocreate="true"
+				generate="true">
+				<deployment table="OrderStatusCodeMaster" typecode="12057"/>
+				<attributes>
+					<attribute autocreate="true" qualifier="id" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" unique="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="statusCode">
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="responseStatus">
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="statusMessage">
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="stage">
+						<modifiers read="true" write="true" optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="enable" type="java.lang.Boolean">
+						<description>Flag to indicate to active teh dot.</description>
+						<defaultvalue>Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="display" type="java.lang.Boolean">
+						<description>Flag to indicate that it need to displayed.</description>
+						<defaultvalue>Boolean.TRUE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="colorCode" type="java.lang.String">
+						<description>Flag to indicate the color of the dot.</description>
+						<modifiers read="true" write="true" search="true"/>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="dotId" type="java.lang.String">
+						<description>Flag to indicate the color of the dot.</description>
+						<modifiers read="true" write="true" search="true" optional="false"  />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			
+			<!-- Tata Etail- Seller Master Model Creation -->
+			<itemtype code="SellerMaster" autocreate="true" generate="true" jaloclass="com.tisl.mpl.jalo.SellerMaster">
+				<deployment table="MplSellerMstr" typecode="12045" />
+				<attributes>
+					<attribute autocreate="true" qualifier="id" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" unique="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="firstname" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="midname" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="lastname" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="legalName" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="type" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="CompanyCode"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="AccountGroup"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Search1" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Search2" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Title" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Language" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Customer" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="TAN" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="LST" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="CST" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="ServiceTAXNo"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="PAN" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="PANValidThru"
+						type="java.util.Date">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="SettlementPeriod"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="PayoutPeriod"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredAddress1"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredAddress2"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredAddCountry"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredAddState"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredAddCity"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredAddPin"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredEmail"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredPhone"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredMobile"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="RegisteredFAX"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>	
+	</itemtypes>
+	
+</items>

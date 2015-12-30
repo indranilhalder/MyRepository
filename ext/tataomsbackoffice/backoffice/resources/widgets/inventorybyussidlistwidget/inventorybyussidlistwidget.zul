@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+<style>
+.label_css {font-size:12px; Padding:
+			10px 20px 0px 20px;color:#ffffff;}
+.label_hl{
+background-color:#29404f;
+
+}
+</style>
+
+	<listbox id="listView" rows="10"  emptyMessage="No result found in the result"
+		mold="paging" pagingPosition="top" pageSize="10">
+		<listhead>
+			<listheader label="SLAVE"></listheader>
+			<listheader label="ATS"></listheader>
+			<listheader label="ON HAND"></listheader>
+			<listheader label="RESERVED"></listheader>
+			<listheader label="ALLOCATED"></listheader>
+		</listhead>
+	</listbox>
+	
+	<hlayout   sclass="label_hl" id="v_total">
+	 <label sclass="label_css" id="pendingAssignment" value=""/>  
+	 <label sclass="label_css" id="totalAts" value=""/> 
+	</hlayout>
+
+</widget>

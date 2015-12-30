@@ -1,0 +1,277 @@
+#selectMode {
+	/* 	border: 3px solid #555555; */
+	/* 	padding: 10px 10px 10px 10px; */
+	margin: 0px 10px 10px 10px;
+	/* 	height: 60px; */
+}
+
+#selectMode button {
+	width: 100%;
+	margin-bottom: 5px;
+	text-transform: capitalize;
+	background-image: none !important;
+	background: rgb(237, 243, 244);
+	border-radius: 0;
+	padding: 8px 12px !important;
+}
+
+#netbanking, #submitButtons, #paymentDetails, #radioForEMI, #otpNUM,
+	#codMessage, #otpValidationMessage, #form-actions,
+	#wrongOtpValidationMessage, #expiredOtpValidationMessage,
+	#customerBlackListMessage, #emptyOTPMessage, 
+	#savedCVVError, #enterOTP, #OTPGenerationErrorMessage, #resendOTPMessage, 
+	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
+	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage {
+	display: none;
+}
+
+#EMITermTable {
+	padding: 2px;
+}
+
+#EMITermTable th {
+	padding: 2px;
+}
+
+#EMITermTable td {
+	padding: 2px;
+}
+
+#sendOTPNumber {
+	display: none;
+	vertical-align: middle;
+}
+
+#convCharge {
+	display: none;
+}
+
+#convChargeFieldId {
+	display: none;
+}
+
+#promotionApplied {
+	display: none;
+}
+
+#fulfillmentMessage {
+	display: none;
+}
+
+#codItemEligibilityMessage {
+	display: none;
+}
+
+#convChargeFieldId span {
+	float: right;
+}
+
+#totalPriceConvChargeId span {
+	float: right;
+}
+
+#COD {
+	display: none;
+}
+
+#submitButtons {
+	display: none;
+}
+
+#emi {
+	display: none;
+}
+
+#submitPaymentFormCODButton {
+	display: none;
+}
+
+#card {
+	display: none;
+}
+
+#paymentFormButton {
+	display: none;
+}
+
+#savedCard {
+	display: block;
+}
+
+#newCard {
+	display: none;
+}
+
+#savedCreditCard {
+	display: none;
+}
+
+#savedDebitCard {
+	display: none;
+}
+
+#dcHeader {
+	display: none;
+}
+
+#ccHeader {
+	display: none;
+}
+
+.cvvHelp_hide {
+	display: none;
+}
+
+.cvvHelp {
+	display: block;
+}
+
+.form-inline .form-control.security_code_hide {
+	display: none;
+}
+
+.control-label {
+	font-weight: 600;
+	margin-bottom: 5px;
+}
+
+#cvvHelpText {
+	display: none;
+	width: auto;
+	text-decoration: none;
+	font-family: tahoma;
+	box-shadow: inset 2px 2px 2px 0px #dddddd;
+	border: none;
+}
+
+#card .form-group input, #otpNUMField, #otpMobileNUMField, #mobilePrefix
+	{
+	border-radius: 0;
+	border: 1px solid #dbeafa;
+}
+
+#mobilePrefix {
+	padding: 14px 7px;
+	border-radius:0px;
+}
+input#otpMobileNUMField
+{
+	height:25px;
+	border-radius:0px;
+	border:1px solid #dbeafa;
+}
+input#otpMobileNUMField:focus {
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	box-shadow:none;
+}	
+
+#card .form-group select, #bankNameForEMI {
+	border-radius: 0;
+	border: 1px solid #dbeafa;
+}
+
+.controls {
+	padding-left: 0 !important;
+}
+
+#cardNo {
+	margin-right: 10px;
+}
+
+.security_code {
+	width: 100%;
+}
+
+#cvvHelp {
+	float: right;
+}
+
+.card_exp_year, .card_exp_month {
+	width: 48%
+}
+
+.make_payment, #paymentFormButton button {
+	background-color: rgb(255, 28, 71) !important;
+	
+	border-radius: 0 !important;
+	/* padding: 15px !important; */
+	background-image: none !important;
+	/* 	width: 50% !important; */
+	margin: auto;
+	opacity: 0.9;
+	transition: background 0.3s;
+}
+
+.make_payment:hover, #paymentFormButton button:hover {
+	background-color: rgb(232, 0, 44) !important;
+}
+
+#billingAddress input[type="text"] {
+	box-shadow: none !important;
+	font-size: 12px;
+}
+
+@media ( min-width :1024px) and ( max-width : 1366px) {
+	#submitPaymentFormCODButton {
+		width: 100% !important;
+	}
+	@media ( min-width :1014px) and ( max-width : 1023px) {
+		#selectMode button {
+			width: 24%; 
+		}
+	}
+	@media ( min-width :640px) and ( max-width : 1013px) {
+		#selectMode button {
+			width: 48%;
+		}
+	}
+	@media ( min-width :876px) and ( max-width : 1023px) {
+		.make_payment, #paymentFormButton button {
+			width: 50% !important;
+		}
+	}
+	@media ( min-width :640px) and ( max-width : 875px) {
+		.make_payment, #paymentFormButton button {
+			width: 70% !important;
+		}
+	}
+	@media ( min-width :1024px) and ( max-width : 1134px) {
+		.make_payment, #paymentFormButton button {
+			width: 70% !important;
+		}
+	}
+	@media ( min-width :640px) and ( max-width : 1023px) {
+		#submitPaymentFormCODButton {
+			width: 50% !important;
+		}
+	}
+	.credit-card-group, .debit-card-group {
+		clear: both;
+		float: none;
+	}
+}
+
+#juspayconnErrorDiv:after {
+	content: "";
+	display: block;
+	clear: both;
+} 
+#juspayconnErrorDiv button {
+	float: left;
+}
+#juspayconnErrorDiv button.close {
+	right: -7px;
+}
+#juspayconnErrorDiv span {
+	margin: 0px 15px;
+    line-height: 48px;
+}
+#sendOTPButton {
+	position: relative;
+}
+
+button.make_payment[disabled] {
+    opacity: 0.6 !important;
+    cursor: not-allowed;
+}

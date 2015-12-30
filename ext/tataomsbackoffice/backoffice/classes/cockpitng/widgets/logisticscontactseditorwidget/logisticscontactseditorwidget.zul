@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+ 
+<widget xmlns="http://www.zkoss.org/2005/zul"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:h="http://www.w3.org/1999/xhtml"
+		xmlns:w="http://www.zkoss.org/2005/zk/client"
+		xmlns:zk="http://www.zkoss.org/2005/zk"
+		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+ 		height="100%">
+ 		
+<grid id="create_grid" visible="false" class="grid_logistic" >
+		<rows>
+			<row>
+			<label sclass="prop_label" value="Logistics Id">
+				</label>
+				<textbox id="logisticsId"   >
+				</textbox>
+				<label id="lId"></label>
+			</row>
+			
+			<row>
+				<checkbox id="isActive" label="Active" />
+			</row>
+			
+			<row>
+				<label sclass="prop_label" value="Name">
+				</label>
+				<textbox id="logisticsName"  />
+				<label id="lName"></label>
+			</row>
+	
+			<row>
+				<label sclass="prop_label"
+					value="Address   ">
+				</label>
+				<textbox id="address"  draggable="true"
+					 cols="30" rows="5"/>
+					 <label id="lAddress"></label>
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="Contact Name">
+				</label>
+				<textbox id="contactName" />
+				<label id="lCName"></label>
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="Contact Phone No">
+				</label>
+				
+				<textbox id="phoneNo"  maxlength="10">
+		<attribute   w:name="doKeyDown_" ><![CDATA[
+			function (evt) {
+				var keyCode = event.keyCode;
+				if( keyCode == 8 // back space
+					|| keyCode == 13 // enter
+					|| keyCode == 16 // enter
+					|| (keyCode >= 35 && keyCode <= 40) // home, end, arrows
+					|| keyCode == 46) { // Delete
+					this.$doKeyDown_(evt);
+				} else if ( !evt.shiftKey &&  // only do without shift key
+					(keyCode >= 48 && keyCode <= 57)
+					|| (keyCode >= 96 && keyCode <= 105)) {// number range
+					this.$doKeyDown_(evt);
+				} else {
+					evt.stop();
+					return;
+				}
+			}
+		]]></attribute>
+	</textbox>
+	<label id="lPNum"></label>
+			</row>
+			
+			<row>
+				<label sclass="prop_label"
+					value="Logistics Email" >
+				</label>
+				<textbox id="email"></textbox>
+				<label style="color:red;margin-left:-100px;position:absolute" id="lEmail"></label>
+			</row>
+			
+			<row>
+				<label sclass="prop_label" value="Fax No">
+				</label>
+				<textbox id="faxNo" maxlength="10">
+				<attribute   w:name="doKeyDown_" ><![CDATA[
+			function (evt) {
+				var keyCode = event.keyCode;
+				if( keyCode == 8 // back space
+					|| keyCode == 13 // enter
+					|| keyCode == 16 // enter
+					|| (keyCode >= 35 && keyCode <= 40) // home, end, arrows
+					|| keyCode == 46) { // Delete
+					this.$doKeyDown_(evt);
+				} else if ( !evt.shiftKey &&  // only do without shift key
+					(keyCode >= 48 && keyCode <= 57)
+					|| (keyCode >= 96 && keyCode <= 105)) {// number range
+					this.$doKeyDown_(evt);
+				} else {
+					evt.stop();
+					return;
+				}
+			}
+		]]></attribute>
+		</textbox>
+<label id="lFax"></label>
+			</row>
+			
+			
+			<row>
+				<div></div>
+				<button label="Add" id="addSave" ></button>
+			</row>
+			
+		</rows>
+
+	</grid>
+	
+	<grid  id="edit_grid" visible="false">     
+	<rows>
+			<row>
+				<label sclass="prop_label" value="Logistics Id">
+				</label>
+				<textbox id="logisticsId_edit" readonly="true" />
+
+			</row>
+			<row>
+				<checkbox id="isActive_edit" label="Active" />
+			</row>
+			
+			<row>
+				<label sclass="prop_label" value="Name">
+				</label>
+				<textbox id="logisticsName_edit"  />
+
+			</row>
+			
+
+			<row>
+				<label sclass="prop_label"
+					value="Address   ">
+				</label>
+				<textbox id="address_edit"  
+					 cols="30" rows="5"/>
+
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="Contact Name">
+				</label>
+				<textbox id="contactName_edit"  />
+
+
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="Contact Phone No">
+				</label>
+				<textbox id="phoneNo_edit"  maxlength="10"   >
+				<attribute   w:name="doKeyDown_" ><![CDATA[
+			function (evt) {
+				var keyCode = event.keyCode;
+				if( keyCode == 8 // back space
+					|| keyCode == 13 // enter
+					|| keyCode == 16 // enter
+					|| (keyCode >= 35 && keyCode <= 40) // home, end, arrows
+					|| keyCode == 46) { // Delete
+					this.$doKeyDown_(evt);
+				} else if ( !evt.shiftKey &&  // only do without shift key
+					(keyCode >= 48 && keyCode <= 57)
+					|| (keyCode >= 96 && keyCode <= 105)) {// number range
+					this.$doKeyDown_(evt);
+				} else {
+					evt.stop();
+					return;
+				}
+			}
+		]]></attribute>
+				</textbox>
+
+			</row>
+			<row>
+				<label sclass="prop_label"
+					value="Logistics Email">
+				</label>
+				<textbox  id="email_edit"  />
+				<label style="color:red;margin-left:-100px;position:absolute" id="lEmail_edit"></label>
+			</row>
+			<row>
+				<label sclass="prop_label" value="Fax No">
+				</label>
+				<textbox id="faxNo_edit"  maxlength="10">
+				<attribute   w:name="doKeyDown_" ><![CDATA[
+			function (evt) {
+				var keyCode = event.keyCode;
+				if( keyCode == 8 // back space
+					|| keyCode == 13 // enter
+					|| keyCode == 16 // enter
+					|| (keyCode >= 35 && keyCode <= 40) // home, end, arrows
+					|| keyCode == 46) { // Delete
+					this.$doKeyDown_(evt);
+				} else if ( !evt.shiftKey &&  // only do without shift key
+					(keyCode >= 48 && keyCode <= 57)
+					|| (keyCode >= 96 && keyCode <= 105)) {// number range
+					this.$doKeyDown_(evt);
+				} else {
+					evt.stop();
+					return;
+				}
+			}
+		]]></attribute>
+				</textbox>
+
+			</row>
+			<row>
+				<div></div>
+				<button label="Update and Save" id="updateSave"></button>
+			</row>
+			
+		</rows>
+
+ </grid>
+
+</widget>
+ 
+ 

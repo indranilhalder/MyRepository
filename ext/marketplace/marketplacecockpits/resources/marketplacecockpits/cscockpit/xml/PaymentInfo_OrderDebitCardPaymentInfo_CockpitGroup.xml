@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view unassigned-group-name="Other">
+	<group name="General">
+		<property qualifier="DebitCardPaymentInfo.ccOwner" visible="true" />
+		<!-- <property qualifier="DebitCardPaymentInfo.number" visible="true"/> -->
+		<custom
+			class="com.tisl.mpl.cockpits.services.config.impl.DebitCardNumberColumn"
+			name="Debit Card Number" visible="true">
+		</custom>
+		<property qualifier="DebitCardPaymentInfo.type" visible="true" />
+		<property qualifier="DebitCardPaymentInfo.validFromMonth"
+			visible="true" />
+		<property qualifier="DebitCardPaymentInfo.validFromYear"
+			visible="true" />
+		<property qualifier="DebitCardPaymentInfo.validToMonth"
+			visible="true" />
+		<property qualifier="DebitCardPaymentInfo.validToYear"
+			visible="true" />
+	</group>
+</list-view>

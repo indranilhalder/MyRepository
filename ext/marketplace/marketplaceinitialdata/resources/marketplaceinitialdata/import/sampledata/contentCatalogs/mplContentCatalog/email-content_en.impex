@@ -1,0 +1,582 @@
+
+# 
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+
+#Registration Email
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/banner-free-delivery.jpg;banner-free-delivery.jpg;$siteResource/images/theme/banner-free-delivery.jpg;;
+;;/images/theme/Registration-banner.jpg;Registration-banner.jpg;$siteResource/images/theme/Registration-banner.jpg;;
+;;/images/theme/img3.jpg;img3.jpg;$siteResource/images/theme/img3.jpg;;
+;;/images/theme/letsgoshopping1.jpg;letsgoshopping1.jpg;$siteResource/images/theme/letsgoshopping1.jpg;;
+;;/images/theme/letsgoshopping2.jpg;letsgoshopping2.jpg;$siteResource/images/theme/letsgoshopping2.jpg;;
+;;/images/theme/fantastic1.jpg;fantastic1.jpg;$siteResource/images/theme/fantastic1.jpg;;
+;;/images/theme/fantastic2.jpg;fantastic2.jpg;$siteResource/images/theme/fantastic2.jpg;;
+;;/images/theme/img6.jpg;img6.jpg;$siteResource/images/theme/img6.jpg;;
+;;/images/theme/slashImg.jpg;slashImg.jpg;$siteResource/images/theme/slashImg.jpg;;
+;;/images/theme/fast.jpg;fast.jpg;$siteResource/images/theme/fast.jpg;;
+;;/images/theme/handpick.jpg;handpick.jpg;$siteResource/images/theme/handpick.jpg;;
+;;/images/theme/exp.jpg;exp.jpg;$siteResource/images/theme/exp.jpg;;
+;;/images/theme/brand.jpg;brand.jpg;$siteResource/images/theme/brand.jpg;;
+;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/fb.jpg;;
+;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/gplus.jpg;;
+;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
+
+
+# CMS Image Components for Registration  
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailBannerFreeDeliveryImage;/images/theme/banner-free-delivery.jpg;
+;;EmailBannerRegistrationImage;/images/theme/Registration-banner.jpg;
+;;EmailImag3Image;/images/theme/img3.jpg;
+;;EmailLetsGoShopping1Image;/images/theme/letsgoshopping1.jpg;
+;;EmailLetsGoShopping2Image;/images/theme/letsgoshopping2.jpg;
+;;Emailfantastic1Image;/images/theme/fantastic1.jpg;
+;;Emailfantastic2Image;/images/theme/fantastic2.jpg;
+;;EmailImag6Image;/images/theme/img6.jpg;
+;;EmailslashImgTwoImage;/images/theme/slashImg.jpg;
+;;EmailfastSImage;/images/theme/fast.jpg;
+;;EmailhandpickImage;/images/theme/handpick.jpg;
+;;EmailexpImage;/images/theme/exp.jpg;
+;;EmailbrandImage;/images/theme/brand.jpg;
+;;EmailfbImage;/images/theme/fb.jpg;
+;;EmailgplusImage;/images/theme/gplus.jpg;
+;;EmailsmileyImage;/images/theme/smileyimg.jpg;
+
+
+# Registration Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailBottomRegSlot;EmailBannerFreeDeliveryImage
+;;EmailSiteLogoRegSlot;EmailBannerRegistrationImage
+;;Emailletsgoshopping1RegSlot;EmailLetsGoShopping1Image
+;;Emailletsgoshopping2RegSlot;EmailLetsGoShopping2Image
+;;Emailfantastic1RegSlot;Emailfantastic1Image
+;;Emailfantastic2RegSlot;Emailfantastic2Image
+;;EmailbrandRegSlot;EmailbrandImage
+;;EmailexpRegSlot;EmailexpImage
+;;EmailslashImgThreeRegSlot;EmailslashImgTwoImage
+;;EmailslashImgTwoRegSlot;EmailslashImgTwoImage
+;;EmailslashImgOneRegSlot;EmailslashImgTwoImage
+;;EmailfastRegSlot;EmailfastSImage
+;;EmailhandpickRegSlot;EmailhandpickImage
+;;EmailfbRegSlot;EmailfbImage
+;;EmailgplusRegSlot;EmailgplusImage
+;;EmailsmileyimgRegSlot;EmailsmileyImage
+
+
+#Order Confirmation Email
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/OrderConfirmationBanner1.jpg;OrderConfirmationBanner1.jpg;$siteResource/images/theme/OrderConfirmationBanner1.jpg;;
+;;/images/theme/OrderConfirmationBanner2.jpg;OrderConfirmationBanner2.jpg;$siteResource/images/theme/OrderConfirmationBanner2.jpg;;
+;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
+;;/images/theme/Track1.jpg;Track1.jpg;$siteResource/images/theme/Track1.jpg;;
+;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/Track2.jpg;;
+;;/images/theme/ConfDescription.jpg;ConfDescription.jpg;$siteResource/images/theme/ConfDescription.jpg;;
+;;/images/theme/OrderReferenceNumberOne.jpg;OrderReferenceNumberOne.jpg;$siteResource/images/theme/OrderReferenceNumberOne.jpg;;
+;;/images/theme/OrderReferenceNumberTwo.jpg;OrderReferenceNumberTwo.jpg;$siteResource/images/theme/OrderReferenceNumberTwo.jpg;;
+;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/Tip.jpg;;
+;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/fb.jpg;;
+;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/gplus.jpg;;
+;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;OrderConfirmationBanner1Image;/images/theme/OrderConfirmationBanner1.jpg;
+;;OrderConfirmationBanner2Image;/images/theme/OrderConfirmationBanner2.jpg;
+;;Track1Image;/images/theme/Track1.jpg;
+;;Track2Image;/images/theme/Track2.jpg;
+;;DeliveryPersonImage;/images/theme/DeliveryPerson.jpg;
+;;DescriptionConfImage;/images/theme/ConfDescription.jpg;
+;;OrderRefNumbOneConfImage;/images/theme/OrderReferenceNumberOne.jpg;
+;;OrderRefNumbTwoConfImage;/images/theme/OrderReferenceNumberTwo.jpg;
+;;TipImage;/images/theme/Tip.jpg;
+;;EmailfbImage;/images/theme/fb.jpg;
+;;EmailgplusImage;/images/theme/gplus.jpg;
+;;EmailsmileyImage;/images/theme/smileyimg.jpg;
+
+
+## reset password changes
+;;EmailForgotPasswordHeaderImage;/images/theme/forgot_password_header.jpg;
+;;EmailForgotPasswordMiddlebannerImage;/images/theme/forgot_password_middlebanner.jpg;
+;;EmailForgotPasswordMinibannerImage;/images/theme/forgot_password_minibanner.jpg;
+;;EmailForgotPasswordMiniRightBanner;/images/theme/forgot_password_mini_right_banner.jpg;
+;;EmailForgotPasswordMiniLeftBanner;/images/theme/forgot_password_mini_left_banner.jpg;
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoConfSlot;OrderConfirmationBanner1Image
+;;EmailTrackOrderOneConfSlot;Track1Image
+;;EmailTrackOrderTwoConfSlot;Track2Image
+;;EmailDeliveryPersonConfSlot;DeliveryPersonImage
+;;EmailConfBanner2ConfSlot;OrderConfirmationBanner2Image
+;;EmailDescriptionConfSlot;DescriptionConfImage
+;;EmailOrderRefNoOneConfSlot;OrderRefNumbOneConfImage
+;;EmailOrderRefNoTwoConfSlot;OrderRefNumbTwoConfImage
+;;EmailTipConfSlot;TipImage
+;;EmailsmileyimgConfSlot;EmailsmileyImage
+;;EmailfbConfSlot;EmailfbImage
+;;EmailgplusConfSlot;EmailgplusImage
+
+
+
+# Order Delivery Email
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/DeliveryConfirmationBanner.jpg;DeliveryConfirmationBanner.jpg;$siteResource/images/theme/DeliveryConfirmationBanner.jpg;;
+;;/images/theme/OrderReferenceNumberOne.jpg;OrderReferenceNumberOne.jpg;$siteResource/images/theme/OrderReferenceNumberOne.jpg;;
+;;/images/theme/OrderReferenceNumberTwo.jpg;OrderReferenceNumberTwo.jpg;$siteResource/images/theme/OrderReferenceNumberTwo.jpg;;
+;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/Tip.jpg;;
+;;/images/theme/Description.jpg;Description.jpg;$siteResource/images/theme/Description.jpg;;
+;;/images/theme/DeliveryConfirmationBannerTwo.jpg;DeliveryConfirmationBannerTwo.jpg;$siteResource/images/theme/DeliveryConfirmationBannerTwo.jpg;;
+;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/fb.jpg;;
+;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/gplus.jpg;;
+;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
+
+
+# CMS Image Components for Delivery
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;DeliveryConfirmationBannerImage;/images/theme/DeliveryConfirmationBanner.jpg;
+;;OrderRefNumbOneDlvrImage;/images/theme/OrderReferenceNumberOne.jpg;
+;;OrderRefNumbTwoDlvrImage;/images/theme/OrderReferenceNumberTwo.jpg;
+;;TipImage;/images/theme/Tip.jpg;
+;;DescriptionDlvryImage;/images/theme/Description.jpg;
+;;DeliveryConfirmationBannerTwoImage;/images/theme/DeliveryConfirmationBannerTwo.jpg;
+;;EmailfbImage;/images/theme/fb.jpg;
+;;EmailgplusImage;/images/theme/gplus.jpg;
+;;EmailsmileyImage;/images/theme/smileyimg.jpg;
+
+
+# Order Delivery Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoDlvrySlot;DeliveryConfirmationBannerImage
+;;EmailOrderReferenceNumberOneDlvrySlot;OrderRefNumbOneDlvrImage
+;;EmailOrderReferenceNumberTwoDlvrySlot;OrderRefNumbTwoDlvrImage
+;;EmailTipDlvrySlot;TipImage
+;;EmailDescriptionDlvrySlot;DescriptionDlvryImage
+;;EmailOrderDeliveryConfirmationBannerTwoDlvrySlot;DeliveryConfirmationBannerTwoImage
+;;EmailsmileyimgDlvrySlot;EmailsmileyImage
+;;EmailfbDlvrySlot;EmailfbImage
+;;EmailgplusDlvrySlot;EmailgplusImage
+
+
+# HOTC Email
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/HOTCBannerone.jpg;HOTCBannerone.jpg;$siteResource/images/theme/HOTCBannerone.jpg;;
+;;/images/theme/HOTCBannertwo.jpg;HOTCBannertwo.jpg;$siteResource/images/theme/HOTCBannertwo.jpg;;
+;;/images/theme/DescriptionHOTC.jpg;DescriptionHOTC.jpg;$siteResource/images/theme/DescriptionHOTC.jpg;;
+;;/images/theme/OrderReferenceNumberOne.jpg;OrderReferenceNumberOne.jpg;$siteResource/images/theme/OrderReferenceNumberOne.jpg;;
+;;/images/theme/OrderReferenceNumberTwo.jpg;OrderReferenceNumberTwo.jpg;$siteResource/images/theme/OrderReferenceNumberTwo.jpg;;
+;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/Tip.jpg;;
+;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/fb.jpg;;
+;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/gplus.jpg;;
+;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
+;;/images/theme/Track1.jpg;Track1.jpg;$siteResource/images/theme/Track1.jpg;;
+;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/Track2.jpg;;
+;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
+
+##entries for reset passwod
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/forgot_password_header.jpg;forgot_password_header.jpg;$siteResource/images/theme/forgot_password_header.jpg;;
+;;/images/theme/forgot_password_middlebanner.jpg;forgot_password_middlebanner.jpg;$siteResource/images/theme/forgot_password_middlebanner.jpg;;
+;;/images/theme/forgot_password_minibanner.jpg;forgot_password_minibanner.jpg;$siteResource/images/theme/forgot_password_minibanner.jpg;;
+;;/images/theme/fast.jpg;fast.jpg;$siteResource/images/theme/fast.jpg;;
+;;/images/theme/forgot_password_mini_left_banner.jpg;forgot_password_mini_left_banner.jpg;$siteResource/images/theme/forgot_password_mini_left_banner.jpg;;
+;;/images/theme/forgot_password_mini_right_banner.jpg;forgot_password_mini_right_banner.jpg;$siteResource/images/theme/forgot_password_mini_right_banner.jpg;;
+
+
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailSiteLogoHOTCImage;/images/theme/HOTCBannerone.jpg;;
+;;EmailShippingConfirmationBannerTwoHOTCImage;/images/theme/HOTCBannertwo.jpg;;
+;;DescriptionHOTCImage;/images/theme/Description.jpg;;
+;;OrderRefNumbOneHOTCImage;/images/theme/OrderReferenceNumberOne.jpg;
+;;OrderRefNumbTwoHOTCImage;/images/theme/OrderReferenceNumberTwo.jpg;
+;;TipImage;/images/theme/Tip.jpg;
+;;EmailfbImage;/images/theme/fb.jpg;
+;;EmailgplusImage;/images/theme/gplus.jpg;
+;;EmailsmileyImage;/images/theme/smileyimg.jpg;
+;;Track1HOTCImage;/images/theme/Track1.jpg;
+;;Track2HOTCImage;/images/theme/Track2.jpg;
+;;DeliveryPersonImage;/images/theme/DeliveryPerson.jpg;
+
+
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoHOTCSlot;EmailSiteLogoHOTCImage
+;;EmailOrderReferenceNumber1HOTCSlot;OrderRefNumbOneHOTCImage
+;;EmailOrderReferenceNumber2HOTCSlot;OrderRefNumbTwoHOTCImage
+;;EmailTrackOrder1HOTCSlot;Track1HOTCImage
+;;EmailTrackOrder2HOTCSlot;Track2HOTCImage
+;;EmailDeliveryPerson1HOTCSlot;DeliveryPersonImage
+;;EmailTipHOTCSlot;TipImage
+;;EmailDescriptionHOTCSlot;DescriptionHOTCImage
+;;EmailShippingConfirmationBannerTwoHOTCSlot;EmailShippingConfirmationBannerTwoHOTCImage
+;;EmailsmileyimgHOTCSlot;EmailsmileyImage
+;;EmailfbHOTCSlot;EmailfbImage
+;;EmailgplusHOTCSlot;EmailgplusImage
+
+
+#Order Rejected High Risk Email
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/order-rejected-banner.jpg;order-rejected-banner.jpg;$siteResource/images/theme/order-rejected-banner.jpg;;
+;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/Tip.jpg;;
+;;/images/theme/order-rejected-desc.jpg;order-rejected-desc.jpg;$siteResource/images/theme/order-rejected-desc.jpg;;
+;;/images/theme/order-rejected-bottom.jpg;order-rejected-bottom.jpg;$siteResource/images/theme/order-rejected-bottom.jpg;;
+;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/fb.jpg;;
+;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/gplus.jpg;;
+;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
+
+
+# CMS Image Components for Order Rejected High Risk Email  
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailBannerOrderRejectedImage;/images/theme/order-rejected-banner.jpg;
+;;TipImage;/images/theme/Tip.jpg;
+;;EmailOrderRejectedDescImage;/images/theme/order-rejected-desc.jpg;
+;;EmailBottomOrderRejectedImage;/images/theme/order-rejected-bottom.jpg;
+;;EmailfbImage;/images/theme/fb.jpg;
+;;EmailgplusImage;/images/theme/gplus.jpg;
+;;EmailsmileyImage;/images/theme/smileyimg.jpg;
+
+
+# Order Rejected High Risk Email Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoOrderRejectSlot;EmailBannerOrderRejectedImage
+;;EmailTipOrderRejectSlot;TipImage
+;;EmailDescriptionOrderRejectSlot;EmailOrderRejectedDescImage
+;;EmailOrderRejectBottomOrderRejectSlot;EmailBottomOrderRejectedImage
+;;EmailfbOrderRejectSlot;EmailfbImage
+;;EmailgplusOrderRejectSlot;EmailgplusImage
+;;EmailsmileyimgOrderRejectSlot;EmailsmileyImage
+
+
+# Forget Password Email
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
+;;/images/theme/forgorpasswordfirstbanner.jpg;forgorpasswordfirstbanner.jpg;$siteResource/images/theme/forgorpasswordfirstbanner.jpg;;
+;;/images/theme/ChangePwdImageTwo.jpg;ChangePwdImageOne.jpg;$siteResource/images/theme/ChangePwdImageOne.jpg;;
+;;/images/theme/ChangePwdImageOne.jpg;ChangePwdImageTwo.jpg;$siteResource/images/theme/ChangePwdImageTwo.jpg;;
+;;/images/theme/ForgetPwdDescription.jpg;ForgetPwdDescription.jpg;$siteResource/images/theme/ForgetPwdDescription.jpg;;
+;;/images/theme/ForgetPasswordbannertwo.jpg;ForgetPasswordbannertwo.jpg;$siteResource/images/theme/ForgetPasswordbannertwo.jpg;;
+
+
+# CMS Image Components for Forget Password
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;ForgetPwdConfirmationBannerImage;/images/theme/forgorpasswordfirstbanner.jpg;
+;;ForgetPwChangePwdImageOne;/images/theme/ChangePwdImageOne.jpg;
+;;ForgetPwChangePwdImageTwo;/images/theme/ChangePwdImageTwo.jpg;
+;;ForgetPwTipImage;/images/theme/Tip.jpg;
+;;DescriptionForgetPwdImage;/images/theme/ForgetPwdDescription.jpg;
+;;ForgetPwdannerTwoImage;/images/theme/ForgetPasswordbannertwo.jpg;
+;;ForgetPwEmailfbImage;/images/theme/fb.jpg;
+;;ForgetPwEmailgplusImage;/images/theme/gplus.jpg;
+;;ForgetPwEmailsmileyImage;/images/theme/smileyimg.jpg;
+
+
+# Order Forget Password Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailForgotPwdSiteLogoSlot;ForgetPwdConfirmationBannerImage
+;;EmailChangePasswordOneSlot;ForgetPwChangePwdImageOne
+;;EmailChangePasswordTwoSlot;ForgetPwChangePwdImageTwo
+;;EmailForgorPwdTipSlot;ForgetPwTipImage
+;;EmailForgotPwdDescriptionSlot;DescriptionForgetPwdImage
+;;EmailForgotPwdBannerTwoSlot;ForgetPwdannerTwoImage
+;;EmailForgotPwdsmileyimgSlot;ForgetPwEmailsmileyImage
+;;EmailForgotPwdfbSlot;ForgetPwEmailfbImage
+;;EmailForgotPwdgplusSlot;ForgetPwEmailgplusImage
+
+
+
+
+#Registration through call center
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/RegistrationBannerImage.jpg;RegistrationBannerImage.jpg;$siteResource/images/theme/RegistrationBannerImage.jpg;;
+;;/images/theme/img12.jpg;img12.jpg;$siteResource/images/theme/img12.jpg;;
+;;/images/theme/tipImage.jpg;tipImage.jpg;$siteResource/images/theme/tipImage.jpg;;
+;;/images/theme/tipImageContent.jpg;tipImageContent.jpg;$siteResource/images/theme/tipImageContent.jpg;;
+;;/images/theme/shoppingGenie.jpg;shoppingGenie.jpg;$siteResource/images/theme/shoppingGenie.jpg;;
+;;/images/theme/togetherFun.jpg;togetherFun.jpg;$siteResource/images/theme/togetherFun.jpg;;
+
+
+
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;SiteLogoImageForRegistration;/images/theme/RegistrationBannerImage.jpg;
+;;togetherFunImage;/images/theme/togetherFun.jpg;
+;;Tip;/images/theme/tipImage.jpg;
+;;tipImageContent;/images/theme/tipImageContent.jpg
+;;shoppingGenie;/images/theme/shoppingGenie.jpg
+;;slotBeforeTogetherFunImage;/images/theme/img12.jpg
+
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoRegInCsSlot;SiteLogoImageForRegistration
+;;EmailSlotBeforeTogetherFunInCsSlot;slotBeforeTogetherFunImage
+;;EmailTogetherFunInCsSlot;togetherFunImage
+;;EmailhandpickRegInCsSlot;EmailhandpickImage
+;;EmailslashImgOneRegInCsSlot;EmailslashImgTwoImage
+;;EmailbrandRegInCsSlot;EmailbrandImage
+;;EmailslashImgTwoRegInCsSlot;EmailslashImgTwoImage
+;;EmailexpRegInCsSlot;EmailexpImage
+;;EmailslashImgThreeRegInCsSlot;EmailslashImgTwoImage
+;;EmailfastRegInCsSlot;EmailfastSImage
+;;EmailTipImageInCsSlot;Tip
+;;EmailTipImageContentInCsSlot;tipImageContent
+;;EmailShoppingGenieImageInCsSlot;shoppingGenie
+;;EmailsmileyimgRegInCsSlot;EmailsmileyImage
+;;EmailfbRegInCsSlot;EmailfbImage
+;;EmailgplusRegInCsSlot;EmailgplusImage
+
+
+
+
+#invite friends 
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/Invite-banner.jpg;Registration-banner.jpg;$siteResource/images/theme/Invite-banner.jpg;;
+;;/images/theme/tipcontent.jpg;tipcontent.jpg;$siteResource/images/theme/tipcontent.jpg;;
+;;/images/theme/bestfriend1.jpg;bestfriend1.jpg;$siteResource/images/theme/bestfriend1.jpg;;
+;;/images/theme/bestfriend2.jpg;bestfriend2.jpg;$siteResource/images/theme/bestfriend2.jpg;;
+
+
+
+# CMS Image Components for Friends Invite
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailBannerInviteImage;/images/theme/Invite-banner.jpg;
+;;EmailgTipContentImage;/images/theme/tipcontent.jpg;
+;;EmailBestFriend1Image;/images/theme/bestfriend1.jpg;
+;;EmailBestFriend2Image;/images/theme/bestfriend2.jpg;
+;;EmailTipImage;/images/theme/Tip.jpg;
+
+##entries for reset passwod
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailForgotPasswordHeaderSlot;EmailForgotPasswordHeaderImage
+;;EmailForgotPasswordMiddlebannerSlot;EmailForgotPasswordMiddlebannerImage
+;;EmailForgotPasswordMinibannerSlot;EmailForgotPasswordMinibannerImage
+;;EmailfbRegSlot;EmailfbImage
+;;EmailgplusRegSlot;EmailgplusImage
+;;EmailsmileyimgRegSlot;EmailsmileyImage
+;;EmailForgotPasswordMiniLeftBannerSlot;EmailForgotPasswordMiniLeftBanner
+;;EmailForgotPasswordMiniRightBannerSlot;EmailForgotPasswordMiniRightBanner
+;;EmailResetPwdTipSlot;TipImage
+
+
+# Friends Invite Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoInviteSlot;EmailBannerInviteImage
+;;Emailfantastic1InviteSlot;Emailfantastic1Image
+;;Emailfantastic2InviteSlot;Emailfantastic2Image
+;;EmailbrandInviteSlot;EmailbrandImage
+;;EmailexpInviteSlot;EmailexpImage
+;;EmailslashImgThreeInviteSlot;EmailslashImgTwoImage
+;;EmailslashImgTwoInviteSlot;EmailslashImgTwoImage
+;;EmailslashImgOneInviteSlot;EmailslashImgTwoImage
+;;EmailfastInviteSlot;EmailfastSImage
+;;EmailhandpickInviteSlot;EmailhandpickImage
+;;EmailTipInviteSlot;EmailTipImage
+;;EmailTipContentInviteSlot;EmailgTipContentImage
+;;EmailBestFriend1InviteSlot;EmailBestFriend1Image
+;;EmailBestFriend2InviteSlot;EmailBestFriend2Image
+;;EmailsmileyimgInviteSlot;EmailsmileyImage
+;;EmailfbInviteSlot;EmailfbImage
+;;EmailgplusInviteSlot;EmailgplusImage
+
+
+
+
+#Resend Invoice
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/InvoiceSiteLogo.jpg;InvoiceSiteLogo.jpg;$siteResource/images/theme/InvoiceSiteLogo.jpg;;
+;;/images/theme/InvoiceDescription.jpg;InvoiceDescription.jpg;$siteResource/images/theme/InvoiceDescription.jpg;;
+;;/images/theme/InvoiceBanner2.jpg;InvoiceBanner2.jpg;$siteResource/images/theme/InvoiceBanner2.jpg;;
+
+
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;InvoiceSiteLogoImage;/images/theme/InvoiceSiteLogo.jpg;
+;;InvoiceDescriptionImage;/images/theme/InvoiceDescription.jpg;
+;;InvoiceBanner2Image;/images/theme/InvoiceBanner2.jpg;
+
+
+ 
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteInvoiceLogoSlot;InvoiceSiteLogoImage
+;;EmailInvoiceLetsGOSHopping1Slot;EmailLetsGoShopping1Image
+;;EmailInvoiceLetsGOSHopping2Slot;EmailLetsGoShopping2Image
+;;EmailInvoiceTipSlot;EmailTipImage
+;;EmailInvoiceInvoiceDescriptionSlot;InvoiceDescriptionImage
+;;EmailInvoiceBanner2Slot;InvoiceBanner2Image
+;;EmailInvoiceSmileySlot;EmailsmileyImage
+;;EmailInvoiceFbSlot;EmailfbImage
+;;EmailInvoiceGplusSlot;EmailgplusImage
+
+
+
+
+## Order On Hold
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/OnHoldBanner1.jpg;OnHoldBanner1.jpg;$siteResource/images/theme/OnHoldBanner1.jpg;;
+;;/images/theme/OnHoldBanner2.jpg;OnHoldBanner2.jpg;$siteResource/images/theme/OnHoldBanner2.jpg;;
+;;/images/theme/OnHoldDescription.jpg;OnHoldDescription.jpg;$siteResource/images/theme/OnHoldDescription.jpg;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailOnHoldBanner1Image;/images/theme/OnHoldBanner1.jpg;;
+;;EmailOnHoldBanner2Image;/images/theme/OnHoldBanner2.jpg;;
+;;EmailOnHOldDescriptionImage;/images/theme/OnHoldDescription.jpg;;
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoOnHoldSlot;EmailOnHoldBanner1Image
+;;EmailTipOnHoLdSlot;TipImage
+;;EmailDescriptionOnHoldSlot;EmailOnHOldDescriptionImage
+;;EmailOnHoldBannerTwoSlot;EmailOnHoldBanner2Image
+;;Emailsmileyimglot;EmailsmileyImage
+;;EmailfbSlot;EmailfbImage
+;;EmailgplusSlot;EmailgplusImage
+
+
+#Customer Profile Update Email
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/ProfileUpdateSIteLogo.jpg;ProfileUpdateSIteLogo.jpg;$siteResource/images/theme/ProfileUpdateSIteLogo.jpg;;
+;;/images/theme/ProfileUpdateDescription.jpg;ProfileUpdateDescription.jpg;$siteResource/images/theme/ProfileUpdateDescription.jpg;;
+;;/images/theme/ProfileUpdateBanner.jpg;ProfileUpdateBanner.jpg;$siteResource/images/theme/ProfileUpdateBanner.jpg;;
+
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;ProfileUpdateSIteLogoImage;/images/theme/ProfileUpdateSIteLogo.jpg;
+;;ProfileUpdateDescriptionImage;/images/theme/ProfileUpdateDescription.jpg;
+;;ProfileUpdateBannerImage;/images/theme/ProfileUpdateBanner.jpg;
+
+ 
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoCUSlot;ProfileUpdateSIteLogoImage
+;;EmailTipCUSlot;TipImage
+;;EmailDescriptionCUSlot;ProfileUpdateDescriptionImage
+;;EmailConfBannerCUSlot;ProfileUpdateBannerImage
+;;EmailsmileyimgCUSlot;EmailsmileyImage
+;;EmailfbCUSlot;EmailfbImage
+;;EmailgplusCUSlot;EmailgplusImage
+
+
+
+#PDP Email Template
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/pdp_Header.jpg;pdp_Header.jpg;$siteResource/images/theme/pdp_Header.jpg;;
+;;/images/theme/pdp_rightBanner.jpg;pdp_rightBanner.jpg;$siteResource/images/theme/pdp_rightBanner.jpg;;
+;;/images/theme/pdp_app.jpg;pdp_app.jpg;$siteResource/images/theme/pdp_app.jpg;;
+
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailPDPHeaderImage;/images/theme/pdp_Header.jpg;
+;;EmailPDPRightBannerImage;/images/theme/pdp_rightBanner.jpg;	
+;;EmailPDPAppImage;/images/theme/pdp_app.jpg;
+
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailPDPHeaderImageSlot;EmailPDPHeaderImage
+;;EmailPDPRightBannerImageSlot;EmailPDPRightBannerImage
+;;EmailPDPTipsImageSlot;EmailTipImage
+;;EmailPDPAppImageSlot;EmailPDPAppImage
+;;EmailPDPGPlusImageSlot;EmailgplusImage
+;;EmailPDPFbImageSlot;EmailfbImage
+
+
+
+#Order Confirmation Risk
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/OrderConfirmBannerRisk.jpg;OrderConfirmBannerRisk.jpg;$siteResource/images/theme/OrderConfirmBannerRisk.jpg;;
+;;/images/theme/OrderConfirmBannertwo.jpg;OrderConfirmBannertwo.jpg;$siteResource/images/theme/OrderConfirmBannertwo.jpg;;
+
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;OrderConfirmConfirmationBannerImage;/images/theme/OrderConfirmBannerRisk.jpg;
+;;OrderConfirmBannerTwoImage;/images/theme/OrderConfirmBannertwo.jpg;
+
+
+# Order Order Confirmation Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailConfirmOrderSiteLogoSlot;OrderConfirmConfirmationBannerImage
+;;EmailOrderRefOneSlot;OrderRefNumbOneHOTCImage
+;;EmailOrderRefTwoSlot;OrderRefNumbTwoHOTCImage
+;;EmailForgorPwdTipSlot;DeliveryPersonImage
+;;EmailTrackOrderOneSlot;Track1HOTCImage
+;;EmailTrackOrderTwoSlot;Track2HOTCImage
+;;EmailForgorPwdTipSlot;TipImage
+;;EmailOrderConfirmSlot;TipImage
+;;EmailOrderConfirmBannerTwoSlot;OrderConfirmBannerTwoImage
+;;EmailOrderConfirmsmileyimgSlot;EmailsmileyImage
+;;EmailOrderConfirmPwdfbSlot;EmailfbImage
+;;EmailOrderConfirmgplusSlot;EmailgplusImage
+
+#Order Refund Email
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/OrderRefundSiteLogoImage.jpg;OrderRefundSiteLogoImage.jpg;$siteResource/images/theme/OrderRefundSiteLogoImage.jpg;;
+
+
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailSiteLogoRefundImage;/images/theme/OrderRefundSiteLogoImage.jpg;;
+;;EmailRefundBannerImage;/images/theme/RefundBannerImage.jpg;;
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoRefundSlot;EmailSiteLogoRefundImage
+;;EmailTipRefundSlot;TipImage
+;;EmailRefundBannerSlot;EmailRefundBannerImage
+;;EmailDescriptionRefundSlot;DescriptionConfImage
+;;EmailsmileyimgRefundSlot;EmailsmileyImage
+;;EmailfbRefundSlot;EmailfbImage
+;;EmailgplusRefundSlot;EmailgplusImage

@@ -1,0 +1,40 @@
+<div>
+	<table width="100%" cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;">
+		<tbody>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="CategoryHero"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="CategorySection1Position"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="CategorySection2Position"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="CategorySection3Position"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="CategorySection4Position"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" class="structureViewSection">
+					<cockpit code="CategorySection5Position"/>
+				</td>
+			</tr>
+						
+		</tbody>
+	</table>
+	<div style="width:100%; border-top: 2px solid #bbb" class="cmsContentEditor">
+		<cockpit code="editor" />
+	</div>
+</div>

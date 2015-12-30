@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+--><extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+	<extension abstractclassprefix="Generated" classprefix="MarketplaceFulfilmentProcess" managername="MarketplaceFulfilmentProcessManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="marketplacefulfilmentprocess">
+
+
+		<requires-extension name="acceleratorservices"/>
+		<requires-extension name="ticketsystem"/>
+		<requires-extension name="marketplaceomsservices"/>
+		<requires-extension name="marketplaceclientservices"/>
+		<requires-extension name="marketplacecommerceservices"/>
+<!-- 		<requires-extension name="marketplacefacades"/> -->
+		
+
+		<coremodule generated="true" manager="com.tisl.mpl.fulfilmentprocess.jalo.MarketplaceFulfilmentProcessManager" packageroot="com.tisl.mpl.fulfilmentprocess"/>
+
+		<meta key="extgen-template-extension" value="true"/>
+		
+
+	</extension>
+
+</extensioninfo>

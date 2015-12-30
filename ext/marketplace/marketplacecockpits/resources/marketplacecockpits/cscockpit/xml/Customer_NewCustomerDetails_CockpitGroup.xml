@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor>
+	<group qualifier="General">
+		<label key="cockpit.config.label.PersonalDetails" />		
+		<property qualifier="Customer.firstName" visible="false"/>
+		<property qualifier="Customer.middleName" visible="false"/>
+		<property qualifier="Customer.lastName" visible="false"/>
+		<property qualifier="Customer.nickName" visible="false"/>
+		<property qualifier="Customer.mobileNumber" visible="false"/>
+		<property qualifier="Customer.originalUID" visible="false"/>
+		<property qualifier="Customer.commPreference" visible="false"/>
+		<property qualifier="Customer.dateOfBirth" visible="false"/>
+		<property qualifier="Customer.dateOfAnniversary" visible="false"/>
+		<property qualifier="Customer.gender" visible="false"/>
+		
+				
+		<!-- mandatory -->
+		<property qualifier="User.loginDisabled" visible="false"/>
+		<property qualifier="User.ldapaccount" visible="false"/>
+	</group>
+</editor>

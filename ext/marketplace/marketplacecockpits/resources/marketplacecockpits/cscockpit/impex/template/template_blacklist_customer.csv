@@ -1,0 +1,12 @@
+# Default  template to mark black list customer so that it is possible for admin(business) user to  blacklist the customer
+# Notice that this is a template and you need to fill the data in the file and save it with some other name 
+# To upload and run this impex using hmc follow the below steps
+# Step 1 Go to hmc->system --> Tools -->import
+# upload your template impex file with required data
+# select  option  'Header definitions and data'  under Additional referenced files contain: field 
+# Click Start  button
+
+# BlackList customer on certain parameter(s) 
+#Sample Data At least one paramter should be there to blacklist
+#;<customerId>;<emailID>;<phoneNumber>;<ipAddress>;<isBlacklisted>;<customerName>;
+INSERT_UPDATE BlackList;customerId(uid)[unique=true,allownull=true];emailID[unique=true,allownull=true];phoneNumber[unique=true,allownull=true];ipAddress[unique=true,allownull=true];isBlacklisted[default=false,allownull=true];customerName[allownull=true]

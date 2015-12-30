@@ -1,0 +1,148 @@
+#
+# essentialdata cscockpit  
+#
+# Import DEAFULT PRIORITY
+#
+#% impex.setLocale(Locale.ENGLISH)
+
+$lang='en'
+
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+insert_update SavedQuery;code[unique=true,allownull=true];Name[lang=$lang];query[allownull=true];resultType(code)[allownull=true];params(key,value(code))[map-delimiter=|]
+;find_template_deactivate_activate_user;Template for Deactivate/Activate user;"SELECT {im:pk} FROM {impexMedia AS im} WHERE ({im:code} = 'template_deactivate_activate_user' )";ImpExMedia;;
+;find_template_amend_user;Template to amend user;"SELECT {im:pk} FROM {impexMedia AS im} WHERE ({im:code} = 'template_amend_user' )";ImpExMedia;;
+;find_template_create_user;Template to create user;"SELECT {im:pk} FROM {impexMedia AS im} WHERE ({im:code} = 'template_create_user' )";ImpExMedia;;
+;find_template_blacklist_customer;Template to blacklist customer;"SELECT {im:pk} FROM {impexMedia AS im} WHERE ({im:code} = 'template_blacklist_customer' )";ImpExMedia;;
+;find_template_remove_blacklist_customer;Template to Remove blacklist customer;"SELECT {im:pk} FROM {impexMedia AS im} WHERE ({im:code} = 'template_remove_blacklist_customer' )";ImpExMedia;;
+
+
+#import template 
+#
+# Load impex media
+#
+INSERT_UPDATE ImpExMedia;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+
+;template_deactivate_activate_user;text/plain;template_deactivate_user.impex;$jarResource/impex/template/template_deactivate_user.impex
+;template_amend_user;text/plain;template_amend_user.impex;$jarResource/impex/template/template_amend_user.impex
+;template_create_user;text/plain;template_create_user.impex;$jarResource/impex/template/template_create_user.impex
+;template_blacklist_customer;text/plain;template_blacklist_customer.csv;$jarResource/impex/template/template_blacklist_customer.csv
+;template_remove_blacklist_customer;text/plain;template_remove_blacklist_customer.csv;$jarResource/impex/template/template_remove_blacklist_customer.csv
+
+
+# New Groups refundcsagentgroup, replacecsagentgroup, cancelcsagentgroup
+INSERT_UPDATE UserGroup;UID[unique=true];groups(uid)[mode=replace];locname[lang=en]
+;refundcsagentgroup;;"Refund Customer Service Agent Group"
+;replacecsagentgroup;;"Replace Customer Service Agent Group"
+;cancelcsagentgroup;;"Cancel Customer Service Agent Group"
+;refunddelcsagentgroup;;"Refund Delivery Customer Service Agent Group"
+;sendinvcsagentgroup;;"Send invoice Customer Service Agent Group"
+;fraudcsagentgroup;;"Fruad Agent Customer Service Agent Group"
+;rejectreturncsagentgroup;;"reject returnCustomer Service Agent Group"
+
+
+
+
+
+UPDATE UserGroup;UID[unique=true];groups(uid)[mode=append];locname[lang=en]
+;csagentgroup;refundcsagentgroup,replacecsagentgroup,cancelcsagentgroup,sendinvcsagentgroup,refunddelcsagentgroup,fraudcsagentgroup,rejectreturncsagentgroup;"Customer Service Agent Group"
+
+
+
+#Global code master entries
+INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];description[optional=true]
+;ChangeOfMind;01; Do not want the product -  change of mind
+;CheaperProductOtherPlace;02;Found the product cheaper on another website
+;IncorrectProductSpecifications;03;Product specifications are incorrect
+;EstimatedShippingTooLong;04;Estimated shipping time is taking too long
+;BookedDuplicateOrder;05; Booked a duplicate order
+;SecurityRisk;06; 
+;DeliveryTimeNotMet;07; 
+;InventoryNotAvailable;08; 
+;LostInTransit;09; 
+;LogisticalIssues;10;
+;SellerRequest;11; 
+
+;DamagedProduct;01;The product I received was damaged
+;FaultyProduct;02;The product delivered is faulty
+;UnsatisfactoryQuality;03;I'm not happy with the product quality
+;ReceivedWrongItem;04;I was sent the wrong product
+;PartMissing;05;The product is missing a part
+;LateDelivery;06;Missed agreed delivery date (Arrived too late)
+;LooksDifferent;07;Looks different to image on site (Doesn't like it)
+;DoesNotFit;08;Does not fit (Too Small / Too Large)
+
+
+;HOME-DELIVERY;HD;
+;EXPRESS-DELIVERY;ED;
+;CLICK-COLLECT;CC;
+;AIR;AIR;
+;SURFACE-GROUND;SUR;
+;BILLING-ADDRESS;BA;
+;DELIVERY-ADDRESS;DA;
+;SUCCESS;S;
+;FAILURE;F;
+;SURFACE;SUR;
+;BOTH;BTH;
+;FEDEX;FD;
+;BLUEDART;BD;
+;GOJAVAS;GJ;
+;GATI;GT;
+;INDIA POST;IP;
+;SSHIP;SSHIP;
+;TSHIP;TSHIP;
+;STORE;SLV_TYPE_STORE;
+;WAREHOUSE;SLV_TYPE_WAREHOUSE;
+;BACK TO SOURCE;S;
+;WALLET;W;
+;BOTH;B;
+;NOT APPLICABLE;N;
+;CREDIT CARD;CC;
+;DEBIT CARD;DC;
+;EMI;EM; 
+;NETBANKING;NB; 
+;COD;CD; 
+;WALLET;CB;
+;NEW;01;
+;RETURN;02;
+;EXCHANGE;03;
+;REPLACEMENT;04;
+;CANCELLATION;05;
+;GOOD WILL;06;
+;WEB;01;
+;MOBILE;02;
+;KIOSK;03;
+;CALLCENTER;04;
+;WEBMOBILE;05;
+;SUCCESS;S;
+;FAILURE;F;
+;PAYMENT_SUCCESSFUL;PYMTSCSS;
+;RMS_VERIFICATION_PENDING;PYMTVRFN;
+;CLOSED_ON_CANCELLATION;CLONCANC;
+;REFUND_INITIATED;REFUINIT;
+;REFUND_IN_PROGRESS;REFINPRO;
+;ORDER_CANCELLED;CNLREFND;
+;RETURN_INITIATED;RETUINIT;
+;RETURN_COMPLETED;REFCLOSE;
+;RETURN_REJECTED;RETREJEC
+
+
+#REJECTION REASON WITH PREFIX
+;QC_FAILED;QC_FAILED_01;Product Mismatch (Customer issue) - Different Product returned then ordered
+;QC_FAILED;QC_FAILED_02;Product Damage (Customer issue) - Stain / Dirt / scratch marks
+;QC_FAILED;QC_FAILED_03;Product Damage (Customer issue) - Product used by customer
+;QC_FAILED;QC_FAILED_04;Product Damage (Customer issue) - Missing part in a set
+;QC_FAILED;QC_FAILED_05;Product Manufacturing Defect - Quality issue / Faulty product  
+;QC_FAILED;QC_FAILED_06;Product Carrier Damage -  In-transit damage by Logistic partner 
+;QC_FAILED;QC_FAILED_07;Product WH Damage - Damage in Warehouse during Storage / Handling
+;QC_FAILED;QC_FAILED_08;Product Warranty issue
+;QC_FAILED;QC_FAILED_09;Other issue/s   (___________________________________)
+
+
+#Search Resyrictions for filtering reasons not required.
+INSERT_UPDATE SearchRestriction;code[unique=true];query;principal(UID);restrictedType(code);active;generate[default=FALSE]
+#;CancelReason_Restriction;({code} NOT IN ('OutOfStock','LateDelivery','Warehouse', 'CustomerRequest','Other','NA'));employeegroup;CancelReason;true;
+#;RefundReason_Restriction;({code} NOT IN ('PriceMatch','LostInTransit','ManufacturingFault', 'WrongDescription','MissedLinkDeal','MispickWrongItemDelivered','MispickItemMissing','SiteError','GoodWill'));employeegroup;RefundReason;true;
+;CancelReason_Restriction;({code} NOT IN ('OutOfStock','LateDelivery','Warehouse','CustomerRequest','Other','NA','04','02','01','05','03','Booked a duplicate order','Estimated shipping time is taking too long','Do not want the product - change of mind','Found the product cheaper on another website','Product specifications are incorrect','Lower price at other place','I changed my mind','I found a better deal on another website	','I placed my order twice by mistake','The product specifications are wrong','Partner seller request','My delivery is taking too long','Security risk with the Order','Can’t meet the committed delivery time','Order lost in transit','Inventory not available / Quality Fails','Due to unavoidable logistical issues'));employeegroup;CancelReason;true;
+;RefundReason_Restriction;({code} NOT IN ('DamagedInTransit','PriceMatch','LostInTransit','ManufacturingFault','WrongDescription','MissedLinkDeal','MispickWrongItemDelivered','MispickItemMissing','SiteError','GoodWill','Faulty Product','Does not fit (Too Small / Too Large)','Missing part of the product','Received wrong item','Looks different to image on site (Doesn''t like it)','Product arrived Damaged','Quality unsatisfactory','Missed agreed delivery date (Arrived too late)','Lower price at other place'));employeegroup;RefundReason;true;
+
