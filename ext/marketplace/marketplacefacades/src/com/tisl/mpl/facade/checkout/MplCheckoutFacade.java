@@ -7,7 +7,9 @@ import de.hybris.platform.acceleratorfacades.order.AcceleratorCheckoutFacade.Exp
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
@@ -164,7 +166,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 */
 	Map<String, List<MarketplaceDeliveryModeData>> repopulateTshipDeliveryCost(
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final CartData cartData)
-			throws EtailNonBusinessExceptions;
+					throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is used for fetching order details for code
@@ -194,17 +196,19 @@ public interface MplCheckoutFacade extends CheckoutFacade
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	void saveDeliveryMethForFreebie(CartModel cartModel, Map<String, MplZoneDeliveryModeValueModel> freebieModelMap,
 			Map<String, Long> freebieParentQtyMap) throws EtailNonBusinessExceptions;
+
+	public PriceData createPrice(final AbstractOrderModel source, final Double val);
 }

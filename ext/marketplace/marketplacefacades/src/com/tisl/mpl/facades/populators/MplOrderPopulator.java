@@ -17,10 +17,13 @@ import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.DebitCardPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.EMIPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
+import de.hybris.platform.util.DiscountValue;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -62,6 +65,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		addPaymentDetails(source, target);
 		addPrincipalInformation(source, target);
 		addConvinienceCharges(source, target);
+		addVoucherDiscount(source, target);
 
 		if (CollectionUtils.isNotEmpty(source.getAllPromotionResults()))
 		{
@@ -76,7 +80,8 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 
 					if (promotionResultModel.getCertainty().floatValue() == 1.0F
 							&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
+									|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 					{
 						isShippingPromoApplied = true;
 						break;
@@ -252,6 +257,58 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 			target.setTotalDiscounts(cartTotalDiscount);
 		}
 
+	}
+
+
+	@Override
+	protected double getOrderDiscountsAmount(final AbstractOrderModel source)
+	{
+		double discounts = 0.0d;
+		final List<DiscountValue> discountList = source.getGlobalDiscountValues(); // discounts on the cart itself
+		final List<DiscountModel> voucherList = source.getDiscounts();
+		if (CollectionUtils.isNotEmpty(discountList))
+		{
+			for (final DiscountValue discount : discountList)
+			{
+				if (CollectionUtils.isNotEmpty(voucherList) && !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+				{
+					final double value = discount.getAppliedValue();
+					if (value > 0.0d)
+					{
+						discounts += value;
+					}
+				}
+			}
+		}
+
+		return discounts;
+	}
+
+
+
+	private void addVoucherDiscount(final OrderModel source, final OrderData target)
+	{
+		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
+		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
+		double discounts = 0.0d;
+		final List<DiscountValue> discountList = source.getGlobalDiscountValues(); // discounts on the cart itself
+		final List<DiscountModel> voucherList = source.getDiscounts();
+		if (CollectionUtils.isNotEmpty(discountList))
+		{
+			for (final DiscountValue discount : discountList)
+			{
+				if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+				{
+					final double value = discount.getAppliedValue();
+					if (value > 0.0d)
+					{
+						discounts += value;
+					}
+				}
+			}
+		}
+
+		target.setCouponDiscount(createPrice(source, Double.valueOf(discounts)));
 	}
 
 }

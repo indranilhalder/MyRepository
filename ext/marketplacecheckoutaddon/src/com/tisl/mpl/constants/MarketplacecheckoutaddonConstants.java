@@ -224,6 +224,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String JUSPAYREDIRECTKEY = "payment.juspay.redirect";
 	public static final String CELLNO = "cellNo";
 
+	//Coupon
+	public static final String MPLCOUPONURL = "/checkout/multi/coupon";
+
 	private MarketplacecheckoutaddonConstants()
 	{
 		//empty to avoid instantiating this constant class

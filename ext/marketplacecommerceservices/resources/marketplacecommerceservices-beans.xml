@@ -197,6 +197,7 @@
 		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="type" type="String"/>
 		<property name="customerData" type="de.hybris.platform.commercefacades.user.data.CustomerData"/>
+		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 	</bean>
 		
 	

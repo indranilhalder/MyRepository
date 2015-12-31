@@ -11,6 +11,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
@@ -24,6 +25,11 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.voucher.VoucherModelService;
+import de.hybris.platform.voucher.VoucherService;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -116,6 +122,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private RMSVerificationNotificationService rMSVerificationNotificationService;
 
+	@Autowired
+	private VoucherModelService voucherModelService;
+
+	@Autowired
+	private VoucherService voucherService;
+
 
 	/*
 	 * (non-Javadoc)
@@ -138,7 +150,21 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				updateFraudModel(orderModel);
 
+			}
 
+			if (null != orderModel)
+			{
+				final Collection<DiscountModel> voucherColl = voucherService.getAppliedVouchers(orderModel);
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>();
+				if (CollectionUtils.isNotEmpty(voucherColl))
+				{
+					voucherList.addAll(voucherColl);
+				}
+				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
+				final VoucherInvalidationModel voucherInvalidationModel = voucherModelService.createVoucherInvalidation(
+						(VoucherModel) voucherList.get(0), promotionVoucherModel.getVoucherCode(), orderModel);
+
+				getModelService().save(voucherInvalidationModel);
 			}
 		}
 

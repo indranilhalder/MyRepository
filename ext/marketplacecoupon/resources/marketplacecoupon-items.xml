@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<!--
+	ATTENTION: This is just an example file. You have to edit it according to your needs.
+-->
+
+<items 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:noNamespaceSchemaLocation="items.xsd">
+
+	<collectiontypes>
+		<collectiontype code="brandListCollection" elementtype="java.lang.String"
+			autocreate="true" generate="false" type="list" />
+	    <collectiontype code="DeliveryModeDataCollection" elementtype="DeliveryMode"
+			autocreate="true" generate="false" type="list" /> 
+		<collectiontype code="PaymentModeDataCollection" elementtype="PaymentMode"
+			autocreate="true" generate="false" type="list" />
+		<collectiontype code="BankDataCollection" elementtype="Bank" 
+			autocreate="true" generate="false" type="list" />
+		<collectiontype code="SellerDataCollection" elementtype="SellerMaster" 
+			autocreate="true" generate="false" />
+		<collectiontype code="ChannelDataCollection" elementtype="SalesApplication"
+			autocreate="true" generate="false" type="list" /> 
+	</collectiontypes>
+	
+	<enumtypes>
+        <!-- Event Type Enum -->
+        <enumtype code="eventTypeEnum" autocreate="true" generate="true">
+            <value code="anniversary"/>
+            <value code="birthday"/>
+            <value code="purchaseAmount"/>
+            <value code="firstTimeReg"/>
+			<value code="cartNotShopped"/>
+			<value code="cartAbanPmtPage"/>
+			<value code="cartAbanCartPage"/>
+        </enumtype>
+    </enumtypes>
+
+	<itemtypes>
+
+<!-- Tata Etail change - Coupon starts -->
+		
+		<!-- Tata Etail-DeliveryModeRestriction -->
+		<itemtype generate="true" code="DeliveryModeRestriction"
+			jaloclass="com.tisl.mpl.jalo.DeliveryModeRestriction" extends="Restriction"
+			autocreate="true">
+			<attributes>
+				<attribute autocreate="true" qualifier="deliveryModeDetailsList"
+					type="DeliveryModeDataCollection">
+					<modifiers read="true" write="true" search="false"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<itemtype generate="true" code="PaymentModeRestriction"
+			jaloclass="com.tisl.mpl.jalo.PaymentModeRestriction" extends="Restriction"
+			autocreate="true">
+
+			<attributes>
+				<attribute autocreate="true" qualifier="paymentModes"
+					type="PaymentModeDataCollection">
+					<description>List of Payment Modes</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="banks"
+					type="BankDataCollection">
+					<description>List of Banks</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+
+		</itemtype>
+		
+		<!-- Tata Etail-Mail Sending Process Model -->
+			<itemtype code="EventBasedCouponMailProcess" extends="StoreFrontProcess" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.EventBasedCouponMailProcess">
+				<description>Represents customer related store front business process.</description>
+				<attributes>
+					<attribute qualifier="customer" type="Customer">
+						<persistence type="property" />
+						<description>Customer Model</description>
+					</attribute>
+					<attribute qualifier="voucher" type="Voucher">
+						<persistence type="property" />
+						<description>Voucher Model</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+
+          <itemtype code="EventCouponCreationJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.EventCouponCreationJob">				
+				<attributes>
+				   <attribute qualifier="voucherCode" type="java.lang.String">					
+					<description>
+						Specifies the user defined voucher code
+					</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="true" optional="true"/>
+				   </attribute>	
+                   <attribute autocreate="true" qualifier="currency" type="Currency" generate="true">
+                    <persistence type="property"/>
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                  </attribute>
+                  <attribute qualifier="discountValue" autocreate="true"  generate="true" type="java.lang.Double">
+                    <defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+                    <persistence type="property"/>
+					<modifiers read="true" write="true" optional="false" />
+				  </attribute>
+				  <attribute qualifier="eventType" autocreate="true"
+					type="eventTypeEnum">
+					<description>Define Event Types</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+                  </attribute>
+                  <attribute qualifier="couponStartDate" autocreate="true"
+					type="java.util.Date">
+					<description>Defines the start date of coupon.</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+                  </attribute>
+                  <attribute qualifier="couponEndDate" autocreate="true"
+					type="java.util.Date">
+					<description>Defines the expiry date of coupon.</description>					
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+                  </attribute>                  
+                  <attribute qualifier="eventStartDate" autocreate="true"
+					type="java.util.Date">
+					<description>Defines the start date of event.</description>					
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+                  </attribute>
+                  <attribute qualifier="eventEndDate" autocreate="true"
+					type="java.util.Date">
+					<description>Defines the end date of event.</description>					
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" />
+                  </attribute>   				
+				<attribute qualifier="cartAbanIsGreater" type="java.lang.Boolean">
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<description>
+						Specifies whether cart value is greater or less that threshold amount
+					</description>
+					<persistence type="property"/>
+					<modifiers search="false" optional="true"/>
+				   </attribute>
+				   <attribute qualifier="orderThresholdVal" autocreate="true"  generate="true" type="java.lang.Double">
+				   <defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+				   <persistence type="property"/>
+					<modifiers read="true" write="true" optional="true" />
+				  </attribute>
+				  <attribute qualifier="noOfDays" type="java.lang.Integer" autocreate="true"  generate="true">
+				    <defaultvalue>Integer.valueOf(0)</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="true" search="false" />
+				</attribute>
+				<attribute qualifier="redemptionLmtPerUser" type="java.lang.Integer">
+				    <defaultvalue>Integer.valueOf(0)</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" search="false" />
+				</attribute>
+				<attribute qualifier="redemptionQtyLimit" type="java.lang.Integer">
+				    <defaultvalue>Integer.valueOf(0)</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false" search="false" />
+				</attribute>
+				
+			   </attributes>
+          </itemtype>
+          
+          <!-- Channel Restriction for Voucher -->
+		<itemtype generate="true" code="ChannelRestriction"
+			jaloclass="com.tisl.mpl.jalo.ChannelRestriction" extends="Restriction"
+			autocreate="true">
+			<attributes>
+				<attribute qualifier="channel" autocreate="true" type="ChannelDataCollection">
+					<description>channel</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="false" initial="false" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<!-- Seller Restriction for Voucher -->
+		<itemtype generate="true" code="SellerRestriction"
+			jaloclass="com.tisl.mpl.jalo.SellerRestriction" extends="ProductRestriction"
+			autocreate="true">
+			<attributes>
+				<attribute qualifier="seller" autocreate="true" type="SellerDataCollection">
+					<description>List of Seller</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="false" initial="false" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="SemiClosedRestriction"
+			extends="Restriction"
+			jaloclass="com.tisl.mpl.jalo.SemiClosedRestriction"
+			autocreate="true"
+			generate="true">
+			<attributes>
+				<attribute qualifier="users" type="PrincipalCollection">
+					<description>the principals the given voucher is valid for.</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" search="false" initial="false" optional="false"/>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+	</itemtypes>
+</items>

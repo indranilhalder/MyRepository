@@ -1469,4 +1469,9 @@
 	<bean id="mplPromotionDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPromotionDaoImpl">
 	</bean> -->
+	
+	
+	<bean id="findOrderDiscountValuesStrategy"
+		class="com.tisl.mpl.order.impl.MplFindOrderDiscountValuesStrategy"
+		parent="abstractBusinessService"/>
 </beans>

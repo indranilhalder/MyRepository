@@ -1,7 +1,7 @@
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
-//var promoAvailable=$("#promoAvailable").val();
-//var bankAvailable=$("#bankAvailable").val();
+var couponApplied=false;
+var bankNameSelected;
 
 //Display forms based on mode button click
 $("#viewPaymentCredit").click(function(){
@@ -2314,6 +2314,8 @@ function setBankForSavedCard(bankName){
 //			$("#no-click").remove();
 //		}
 //	});	
+	
+	bankNameSelected=bankName;
 	applyPromotion(bankName);	
 
 }
@@ -3439,3 +3441,93 @@ function clearDisable()
 	$("#no-click").remove();
 	$(".make_payment").removeAttr('disabled');
 }
+
+
+//Coupon
+$("#couponSubmitButton").click(function(){
+	if($("#couponFieldId").val()==""){
+		$("#couponError").css("display","block");	
+		document.getElementById("couponError").innerHTML="Please enter a Coupon Code";
+	}
+	else{
+		var couponCode=$("#couponFieldId").val();
+		var paymentMode=$("#paymentMode").val();
+		$.ajax({
+	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
+	 		type: "GET",
+	 		cache: false,
+	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected},
+	 		success : function(response) {
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			if(response.redeemErrorMsg!=null){
+	 				$("#couponError").css("display","block");	
+	 				document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 			}
+	 			else{
+		 			if(response.couponRedeemed==true){
+		 				couponApplied=true;
+		 			}
+		 			if(couponApplied==true){
+		 				$("#couponApplied").css("display","block");
+		 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
+		 				//$("#couponFieldId").attr('disabled','disabled');
+		 				$('#couponFieldId').attr('readonly', true);
+		 			}
+	 			}
+	 		},
+	 		error : function(resp) {
+	 		}
+	 	});	 
+	}
+});
+
+$("#couponFieldId").focus(function(){
+	$("#couponError").css("display","none");	
+});
+
+
+$(".remove-coupon-button").click(function(){
+	var couponCode=$("#couponFieldId").val();
+	$.ajax({
+ 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
+ 		type: "GET",
+ 		cache: false,
+ 		data: { 'couponCode' : couponCode },
+ 		success : function(response) {
+ 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+ 			//alert(response.totalPrice.formattedValue);
+ 			if(response.couponReleased==true){
+ 				couponApplied=true;
+ 			}
+ 			if(couponApplied==true){
+ 				$("#couponApplied").css("display","none");
+ 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
+ 				//$("#couponFieldId").attr('disabled','enabled');
+ 				$('#couponFieldId').attr('readonly', false);
+ 				var selection = $("#voucherDisplaySelection").val();
+ 				$("#couponFieldId").val(selection);
+ 				//$("#couponFieldId").val("");
+ 				$("#couponMessage").html("Voucher "+couponCode+" has been removed");
+ 				setTimeout(function(){ $("#couponMessage").html(""); }, 2000);
+ 			}
+ 		},
+ 		error : function(resp) {
+ 		}
+ 	});	 
+});
+
+
+$(document).ready(function(){
+	if($('#couponFieldId').prop('readonly') == false)
+	{
+		var selection = $("#voucherDisplaySelection").val();
+		$("#couponFieldId").val(selection);
+	}
+});
+$("#voucherDisplaySelection").change(function(){
+	if($('#couponFieldId').prop('readonly') == false)
+	{
+		var selection = $(this).val();
+		$("#couponFieldId").val(selection);
+	}
+});

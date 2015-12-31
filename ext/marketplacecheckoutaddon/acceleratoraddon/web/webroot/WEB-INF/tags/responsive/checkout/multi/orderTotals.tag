@@ -67,6 +67,12 @@
 
 	</li> 
      
+    <li id="couponApplied" >
+	<button class="remove-coupon-button"></button>
+		<spring:theme code="basket.page.totals.coupons"/>
+		<span id="couponValue" style="float: right"> </span>
+
+	</li>
     
     
 	<li class="total" id="total">
