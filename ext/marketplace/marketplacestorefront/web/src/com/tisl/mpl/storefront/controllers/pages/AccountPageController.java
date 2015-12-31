@@ -579,7 +579,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final int pageSizeInoh = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
 			final int pageSize = Integer.valueOf(configurationService.getConfiguration()
-					.getString(MessageConstants.ORDER_HISTORY_PAGEBLEDATA_COUNT, "10").trim());
+					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE, "10").trim());
 			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 
 			//final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade().getPagedParentOrderHistoryForStatuses(pageableData);
