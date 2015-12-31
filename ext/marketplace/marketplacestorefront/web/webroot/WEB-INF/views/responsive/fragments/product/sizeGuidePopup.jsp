@@ -45,7 +45,7 @@
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
 										<li>${sizeGuideValue.dimensionValue}
 											<c:choose>
-											<c:when test="${fn:containsIgnoreCase(sizeGuideValue.dimensionUnit , 'inch')}">"</c:when> 
+											<c:when test="${fn:containsIgnoreCase(sizeGuideValue.dimensionUnit , 'inch')}"> "</c:when> 
 											<c:otherwise>${sizeGuideValue.dimensionUnit}</c:otherwise>
 											</c:choose>
 										</li>
