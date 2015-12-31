@@ -117,7 +117,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#doRefund(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -127,7 +127,6 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	{
 		try
 		{
-
 			String auditid = null;
 			//Find the correct juspay orderid(auditid) model for sucess //AT
 
@@ -157,16 +156,6 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 			if (CollectionUtils.isNotEmpty(mplPaymentAuditModels) && auditid != null && !isCODOrder(order))
 			{
-				//				final PaymentService paymentService = new PaymentService()
-				//						.withEnvironment(Environment.SANDBOX)
-				//						.withKey(
-				//								configurationService.getConfiguration().getString(
-				//										MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-				//						.withMerchantId(
-				//								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID));
-
-
-
 				mplPaymentAuditModel = mplPaymentAuditModels.get(0);
 				final MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
 				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
@@ -182,12 +171,22 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 						.withMerchantId(
 								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
+
 				final RefundRequest refundRequest = new RefundRequest();
-
-				//adjusting .01 amt in caese of aprtioned  rounding off  TISEE-6279
-				final double adjustedRefundAmt = validateRefundAmount(refundAmount, order);
-
-				refundRequest.setAmount(Double.valueOf(adjustedRefundAmt));
+				double adjustedRefundAmt = 0.0;
+				if (order.getType().equalsIgnoreCase("PARENT"))
+				{
+					// In case of held order is rejection from EBS , total order amount needs to be refunded
+					//TISSIT-1781
+					adjustedRefundAmt = refundAmount;
+					refundRequest.setAmount(Double.valueOf(adjustedRefundAmt));
+				}
+				else
+				{
+					//adjusting .01 amt in caese of aprtioned  rounding off  TISEE-6279
+					adjustedRefundAmt = validateRefundAmount(refundAmount, order);
+					refundRequest.setAmount(Double.valueOf(adjustedRefundAmt));
+				}
 
 				refundRequest.setOrderId(mplPaymentAuditModel.getAuditId());
 				final Random random = new Random(System.nanoTime());
@@ -572,7 +571,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#attachPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, de.hybris.platform.payment.model.PaymentTransactionModel)
@@ -628,7 +627,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#createPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, java.lang.String, java.math.BigDecimal,
@@ -671,7 +670,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeRefundOMSCall(de.hybris.platform.core
 	 * .model.order.OrderEntryModel, java.lang.Double)
@@ -742,7 +741,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeOMSStatusUpdate(de.hybris.platform
 	 * .core.model.order.AbstractOrderEntryModel)
@@ -774,7 +773,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#validateRefundAmount(double,
 	 * de.hybris.platform.core.model.order.OrderModel)
 	 */
