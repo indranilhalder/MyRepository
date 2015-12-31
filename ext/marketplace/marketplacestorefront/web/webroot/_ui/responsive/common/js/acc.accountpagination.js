@@ -1,5 +1,19 @@
 $(document).ready(function (){
 	//var divItem = "";
+	var pageIndex = $('#pageIndex').val();
+	var pagableSize = $('#pagableSize').val();
+	var pageNo = parseInt(pageIndex)+1;
+	var endCount = pageNo*pagableSize;
+	var startCount = endCount-pagableSize+1;
+	var totalNumberOfResults = $('#totalNumberOfResults').val();
+	if(endCount>totalNumberOfResults){
+		endCount = totalNumberOfResults;
+	}
+	var displayOrder = startCount+"-"+endCount+ " of " + totalNumberOfResults + " Orders";
+	$("#displayPaginationCountUp").html(displayOrder);
+	$("#ofPagination").html(displayOrder);
+	//	alert("pageIndex : "+pageIndex+"\n"+"pagableSize : "+pagableSize+"\n"+"pageNo : "+pageNo+"\n"+"endCount : "+endCount+"\n"+"startCount : "+startCount);
+	//	alert(startCount+"-"+endCount+ " of " + totalItemNew + " Orders");
 
 	for (var i = 1; i <= 2; i++) {
 		if (i == 1) {
@@ -47,7 +61,7 @@ $(document).ready(function (){
 	}
 	var divOrder = "";
 	divOrder = initStr + " of " + totalItem + " Order" + endStr;
-	$("#ofPagination").html(divOrder);
+//	$("#ofPagination").html(divOrder);
 	$("#ofPaginationUp").html(divOrder);
 
 	dispPageLimit(0, pagelimitAcc);
@@ -74,7 +88,7 @@ function pageNavigation(num) {
 	}
 	var divOrder = "";
 	divOrder = start + "-" + end + " of " + totalItem + " Orders";
-	$("#ofPagination").html(divOrder);
+//	$("#ofPagination").html(divOrder);
 	$("#ofPaginationUp").html(divOrder);
 	dispPageLimit(startIndex, endIndex);
 }
