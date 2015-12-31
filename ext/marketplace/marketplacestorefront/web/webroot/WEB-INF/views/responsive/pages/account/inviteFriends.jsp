@@ -58,7 +58,7 @@
 				</ul>
 				<ul>
 					<li><h3><spring:theme code="text.inviteFriends.share"/></h3></li>
-					<li><a class="active" href="/store/mpl/en/my-account/friendsInvite"><spring:theme code="text.inviteFriends.invite.friends"/></a></li>
+					<li><a class="active" href="/store/mpl/en/my-account/friendsInvite"><spring:theme code="header.flyout.invite"/></a></li>
 								
 				</ul>
 				
