@@ -138,7 +138,8 @@ function displayCODForm()
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
 	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
-	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");	
+	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");	
+	/*$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");*//*modified for pprd testing*/
 	//setCellNo();
 	if(codEligible=="BLACKLISTED")
 	{
