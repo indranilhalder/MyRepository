@@ -7,6 +7,9 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/desktop/formElement"%>
 
+<span id="googleClientid" style="display:none">${googleClientid}</span>
+<span id="facebookAppid" style="display:none">${facebookAppid}</span>
+
 <spring:url value="/my-account" var="accountUrl" />
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -152,12 +155,12 @@
 									data-layout="button"></div> -->
 							<!-- <g:plus action="share" style="width:174px !important;"></g:plus> -->
 							
-							<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=1531353817178445&amp;description='+$('#sharepretext').text()+' '+' &amp;redirect_uri=http://www.facebook.com/')"></a>   
+							<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+' &amp;redirect_uri=http://www.facebook.com/')"></a>   
 							
 							
 							<span id="myBtn" class="demo g-interactivepost"
 	                            data-contenturl=""
-	                            data-clientid="740568174295-jfu61liejihi96t9ttmv6tg622m9g228.apps.googleusercontent.com"
+	                            data-clientid='${googleClientid}'
 	                            data-cookiepolicy="single_host_origin"
 	                            data-prefilltext="<spring:theme code="shareInvite.pretext"/>"
 	                            data-calltoactionlabel="INVITE"

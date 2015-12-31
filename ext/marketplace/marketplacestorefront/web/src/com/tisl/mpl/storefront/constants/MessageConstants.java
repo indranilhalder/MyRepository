@@ -173,5 +173,6 @@ public final class MessageConstants
 	//Gigya Rating Review
 	public static final String GIGYA_RR_URL = "gigya.rating.url".intern();
 	public static final String BOGO_CANCEL = "cancel.bogo.message".intern();
+	public static final String ORDER_HISTORY_PAGEBLEDATA_COUNT = "orderHistory.pagebleData.count";
 
 }
