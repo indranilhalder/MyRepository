@@ -355,34 +355,3 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MBH11;Apparel;MBH1;mplProductCatalog:Staged;admingroup
 ;MBH12;Electronics;MBH1;mplProductCatalog:Staged;admingroup
 
-####### Categories only For Microsite :::: SART
-INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
-;SSH1;SSH1;;mplProductCatalog:Staged;$uidGroup 
-;SSH1000;Westside;SSH1;mplProductCatalog:Staged;$uidGroup 
-;SSH1001;Men;SSH1000;mplProductCatalog:Staged;$uidGroup
-;SSH10011;Mens Shirt;SSH1001;mplProductCatalog:Staged;$uidGroup
-;SSH100111;Mens Formal Shirt;SSH10011;mplProductCatalog:Staged;$uidGroup
-;SSH100112;Mens Casual Shirt;SSH10011;mplProductCatalog:Staged;$uidGroup
-;SSH100113;Mens T Shirt;SSH10011;mplProductCatalog:Staged;$uidGroup
-;SSH1002;Women;SSH1000;mplProductCatalog:Staged;$uidGroup
-;SSH10021;Womens Sarees;SSH1002;mplProductCatalog:Staged;$uidGroup
-;SSH10022;Womens  Accessories;SSH1002;mplProductCatalog:Staged;$uidGroup
-;SSH1003;Kids;SSH1000;mplProductCatalog:Staged;$uidGroup
-
-;SSH1100;Croma;SSH1;mplProductCatalog:Staged;$uidGroup
-;SSH1101;TV;SSH1100;mplProductCatalog:Staged;$uidGroup
-;SSH11011;Samsung;SSH1101;mplProductCatalog:Staged;$uidGroup
-;SSH110111;Sony;SSH1101;mplProductCatalog:Staged;$uidGroup
-;SSH110112;Uv;SSH1101;mplProductCatalog:Staged;$uidGroup
-;SSH110113;Panasonic;SSH1101;mplProductCatalog:Staged;$uidGroup
-;SSH1102;Computers;SSH1100;mplProductCatalog:Staged;$uidGroup
-;SSH11021;Desktop;SSH1102;mplProductCatalog:Staged;$uidGroup
-;SSH11022;Laptop;SSH1102;mplProductCatalog:Staged;$uidGroup
-;SSH1103;Mobile;SSH1100;mplProductCatalog:Staged;$uidGroup 
-
-;SSH1200;Tanishq;SSH1;mplProductCatalog:Staged;$uidGroup
-;SSH1101;Silver;SSH1200;mplProductCatalog:Staged;$uidGroup
-;SSH1101;Gold;SSH1200;mplProductCatalog:Staged;$uidGroup
-;SSH1101;Platinum;SSH1200;mplProductCatalog:Staged;$uidGroup 
-
-####### Categories only For Microsite :::: END
