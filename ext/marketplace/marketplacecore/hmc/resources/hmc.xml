@@ -2893,6 +2893,12 @@
 				</listview>
 			</result>
 		</organizer>
+		<defaultreference searchattribute="id" mode="replace">
+			<itemlayout>
+				 <attribute name="id" />
+			     <attribute name="firstname" />
+			</itemlayout>
+		</defaultreference>
 	</type>
 	
 	<type name="MplBlackListingJob" mode="append">
@@ -2911,5 +2917,69 @@
 			</result>
 		</organizer>
 	</type>
-	
+	  <!-- seller priority starts -->
+  <explorertree>
+		<group name="sellerpriority" description="group.MplSellerPriority.description">
+			<typeref type="MplSellerPriority" description="seller.priority.sellerpriority" />
+		</group>
+ </explorertree>
+
+<type name="MplSellerPriority"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="SellerId" />
+				<condition attribute="CategoryId" />
+				<condition attribute="ListingId" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="SellerId" width="300"></attribute>
+						<attribute name="CategoryId" width="300"></attribute>
+						<attribute name="ListingId" width="300"></attribute>
+						<attribute name="isActive" />
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="SellerId" width="300" />
+						<attribute name="CategoryId" width="200" />
+						<attribute name="ListingId" width="300"></attribute>
+						<attribute name="isActive" />
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="SellerId" width="300" />
+						<attribute name="CategoryId" width="200" />
+						<attribute name="ListingId" width="300"></attribute>
+						<attribute name="isActive" />
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="seller.priority.sellerpriority.tab" position="0">
+				  <section name="seller.priority.sellerpriority.section">
+						<listlayout>
+							<attribute name="SellerId"/>
+						</listlayout>
+					</section>
+					<section name="seller.priority.sellerprioritylevel.section">
+						<listlayout>
+						    <attribute name="CategoryId"/>
+						    <attribute name="ListingId"/>
+						    <attribute name="isActive" />
+							<attribute name="priorityStartDate" />
+							<attribute name="priorityEndDate" />
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
+
+
+<!--  seller priority ends -->
 </configuration>

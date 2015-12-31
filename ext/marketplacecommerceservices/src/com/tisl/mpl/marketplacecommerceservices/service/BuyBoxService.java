@@ -23,6 +23,8 @@ public interface BuyBoxService
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
+	List<BuyBoxModel> buyboxForSizeGuide(String productCode, String sellerId);
+
 	Integer getBuyboxInventoryForSearch(String productCode, String productType) throws EtailNonBusinessExceptions;
 
 	//sellers display
