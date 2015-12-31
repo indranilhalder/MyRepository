@@ -25,6 +25,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String COUPONVALUE = "couponValue".intern();
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 
+	public static final String CRONJOB_TITLE = "The CronJob";
+
 
 	private MarketplacecouponConstants()
 	{

@@ -89,6 +89,30 @@
 	</bean>
 	<bean id="mplCouponService" class="com.tisl.mpl.coupon.service.impl.MplCouponServiceImpl">
 	</bean>
+	
+	<alias name="customerDetailsService" alias="customerDetailsService" />
+	<bean id="customerDetailsService"
+		class="com.tisl.mpl.coupon.service.impl.DefaultCustomerDetailsImpl">
+		<property name="customerDetailsDao" ref="customerDetailsDao" />
+	</bean>
+
+	<alias name="cronJobDataService" alias="cronJobDataService" />
+	<bean id="cronJobDataService"
+		class="com.tisl.mpl.coupon.service.impl.CronJobDataServiceImpl">
+	</bean>
+
+	<bean id="customerDetailsDao"
+		class="com.tisl.mpl.coupon.dao.impl.DefaultCustomerDetailsDao" />
+	
+	<alias name="defaultCustomerDetailsFacade" alias="customerDetailsFacade" />
+	<bean id="defaultCustomerDetailsFacade"
+		class="com.tisl.mpl.coupon.facade.impl.DefaultCustomerDetailsFacade">
+	</bean>
+	
+	<bean id="couponEventJob" class="com.tisl.mpl.coupon.facade.job.CouponEventJob" autowire="byName"/>
+     
+     <!-- Coupon Helper Class -->
+	<bean id="mplCouponHelper" class="com.tisl.mpl.helper.MplCouponHelper" />
 
 	
 			
