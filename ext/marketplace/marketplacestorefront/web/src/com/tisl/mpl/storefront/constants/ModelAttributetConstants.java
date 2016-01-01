@@ -174,7 +174,25 @@ public final class ModelAttributetConstants
 	public static final String BASE_URL = "baseUrl";
 
 
-
+	//review page
+	public static final String CATEGORY_ID = "categoryID";
+	public static final String CATEGORY_ID_VAL = "";
+	public static final String STREAM_ID = "streamID";
+	public static final String STREAM_ID_VAL = "";
+	public static final String COMMENT_ID = "commentID";
+	public static final String COMMENT_ID_VAL = "";
+	public static final String COMMENT_TEXT = "commentText";
+	public static final String COMMENT_TEXT_VAL = "";
+	public static final String COMMENT_TITLE = "commentTitle";
+	public static final String COMMENT_TITLE_VAL = "";
+	public static final String RATINGS = "ratings";
+	public static final String RATINGS_VAL = "";
+	public static final String COMMENTS = "comments";
+	public static final String START_INDEX = "startIndex";
+	public static final String END_INDEX = "endIndex";
+	public static final String PURCHASED_PRODUCT = "productDataModifyMap";
+	public static final String TOTAL_PAGES = "totalPages";
+	public static final String COMMENT_LIST_SIZE = "commentsListSize";
 	//	pdp changes
 	public static final String CLOTHING = "Clothing";
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
@@ -293,6 +311,7 @@ public final class ModelAttributetConstants
 	public static final String GENDER = "gender";
 	public static final String FIRST_NAME = "first_name";
 	public static final String ZERO_VAL = "0";
+	public static final String ONE_VAL = "1";
 	public static final String HASH_VAL = "#";
 	public static final String ORDER_NUMBER_SYNTAX = "Order {0}";
 	public static final String ANONYMOUS = "anonymous";
