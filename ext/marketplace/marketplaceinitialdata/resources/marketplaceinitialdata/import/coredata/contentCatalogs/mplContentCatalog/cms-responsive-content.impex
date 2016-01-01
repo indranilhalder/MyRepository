@@ -1,3 +1,4 @@
+
 #
 # Import CMS content for the site
 #
@@ -28,6 +29,7 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 
 # changes for account overview
 ;;AccountOverviewPageTemplate; Overview  Page Template;account/accountLayoutPage;ContentPage
+
 ;;AccountProfilePageTemplate;Profile Page Template;account/accountProfilePage;ContentPage
 ;;AccountUpdatePasswordPageTemplate;Update Password Page Template;account/accountChangePasswordPage;ContentPage
 ;;AccountAddressBookPageTemplate;Address Book Page Template;account/accountAddressBookPage;ContentPage
@@ -43,10 +45,13 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;AccountReturnSubmitPageTemplate;Return Submit Page Template;my-account/returnSubmit;ContentPage
 ;;AccountReturnSuccessPageTemplate;Return Success Page Template;my-account/returnSuccess;ContentPage
 ;;AccountMplPreferencePageTemplate;Account MplPreference Page Template;my-account/accountMarketPreference;ContentPage
+##for review
+;;ReviewPageTemplate;Review Page Template;account/reviewPage;ContentPage
 ########## For Lets Get Personal ##########
 ;;AccountMyInterestPageTemplate;Account My Interest Page Template;my-account/myInterest;ContentPage
 ;;AccountMyStyleProfilePageTemplate;Account My Style Profile Page Template;my-account/myStyleProfile;ContentPage
 ;;AccountInviteFriendsPageTemplate;Account Invite Friends Page Template;my-account/inviteFriends;ContentPage
+;;AccountCouponDetailsPageTemplate;Coupon Details Page Template;account/accountCouponDetailsPage;ContentPage
 ####################  START Content Slot Names ####################
 
 
@@ -78,11 +83,28 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 ;;AccountMyStyleProfilePageTemplate;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountInviteFriendsPageTemplate;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 
+;;AccountCouponDetailsPageTemplate;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
+;;ReviewPageTemplate;$jarResourceCms/structure-view/structure_reviewPage.vm
 
 
 
 
-# changes for account overview page
+
+# Coupons Detail Page Template
+# Template used for Order Detail page
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;TopContent;;;wide
+;SideContent;;;narrow
+;BodyContent;;;wide
+;BottomContent;;;wide
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
 
 # Overview Page Template
 # Template used for Overview page
@@ -250,6 +272,21 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
 
+#review Page Template
+# Template used for review Page page
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ReviewPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;TopContent;;;wide
+;SideContent;;;narrow
+;ProductsToReview;;;wide
+;ProductReviewsWritten;;;wide
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
 # Order History Page Template
 # Template used for Order History page
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountUpdateEmailPageTemplate'];validComponentTypes(code);compTypeGroup(code)
@@ -385,6 +422,18 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ####################  START ContentSlotsForTemplates	####################
 
 
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountCouponDetailsPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountCouponDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountCouponDetailsPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountCouponDetailsPage;MiniCart;;MiniCartSlot;true
+;;Footer-AccountCouponDetailsPage;Footer;;FooterSlot;true
+;;HeaderLinks-AccountCouponDetailsPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountCouponDetailsPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountCouponDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountCouponDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+
 # changes for overview page
 
 
@@ -478,6 +527,16 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-AccountOrderHistoryPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountOrderHistoryPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ReviewPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-reviewPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-reviewPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-reviewPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-reviewPage;MiniCart;;MiniCartSlot;true
+;;Footer-reviewPage;Footer;;FooterSlot;true
+;;HeaderLinks-reviewPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-reviewPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-reviewPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-reviewPage;BottomHeaderSlot;;BottomHeaderSlot;true
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountUpdateEmailPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;SiteLogo-AccountUpdateEmailPage;SiteLogo;;SiteLogoSlot;true
 ;;HomepageLink-AccountUpdateEmailPage;HomepageNavLink;;HomepageNavLinkSlot;true
@@ -619,6 +678,7 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;myInterest;Return My Interest Page;AccountMyInterestPageTemplate;myInterest
 ;;myStyleProfile;Return My Style Profile Page;AccountMyStyleProfilePageTemplate;myStyleProfile
 ;;inviteFriends;Return Invite Friends Page;AccountInviteFriendsPageTemplate;inviteFriends
+;;coupons;Coupon Details Page;AccountCouponDetailsPageTemplate;coupons
 
 ################################################################################################################################################
 ########## END OF RESPONSIVE TEMPORARY STATIC TEMPLATE DEFINITIONS 															####################

@@ -636,4 +636,18 @@ public final class ModelAttributetConstants
 	public static final String TRACKINGURL = "trackingurl";
 
 
+	//for Coupons
+	public static final String OPEN_VOUCHER_DISPLAY_LIST = "openVoucherDisplayList";
+	public static final String CLOSED_VOUCHER_DISPLAY_LIST = "closedVoucherDisplayList";
+	public static final String COUPON_ORDER_DATA_DTO_LIST = "couponOrderDataDTOList";
+	public static final String TOTAL_SAVED_SUM = "totalSavedSum";
+	public static final String COUPONS_REDEEMED_COUNT = "couponsRedeemedCount";
+	public static final String TOTAL_PAGES_COUPONS = "totalPages";
+	public static final String COUPONS_LIST_SIZE = "commentsListSize";
+	public static final String START_INDEX_COUPONS = "startIndex";
+	public static final String END_INDEX_COUPONS = "endIndex";
+	public static final String ONE_VAL_COUPONS = "1";
+
+
+
 }

@@ -1,4 +1,4 @@
-﻿$productCatalog=mplProductCatalog
+$productCatalog=mplProductCatalog
 $classificationCatalog=pcmClassification
 $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
 $languages=ja,en,de,zh
@@ -829,3 +829,327 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;SSH1101;Platinum;SSH1200;mplProductCatalog:Staged;$uidGroup 
 
 ####### Categories only For Microsite :::: END
+
+
+#### Footwear Categories Start ########
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
+;MPH13;Footwear;MPH1;mplProductCatalog:Staged;$uidGroup
+;MPH1310;Kids;MPH13;mplProductCatalog:Staged;$uidGroup
+;MPH1311;Men;MPH13;mplProductCatalog:Staged;$uidGroup
+;MPH1312;Women;MPH13;mplProductCatalog:Staged;$uidGroup
+;MPH1313;Infants;MPH13;mplProductCatalog:Staged;$uidGroup
+;MPH1314;Accessories;MPH13;mplProductCatalog:Staged;$uidGroup
+;MPH1310100;Boys Party;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310101;Boys Casual;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310102;Boys Sports;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310103;Boys School;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310104;Boys Home & Beach Wear;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310105;Boys Ethnic;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310106;Boys Rain;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310107;Girls Party;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310108;Girls Casual;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310109;Girls Sports;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310110;Girls School;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310111;Girls Home & Beach Wear;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310112;Girls Rain;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1310113;Girls Ethnic;MPH1310;mplProductCatalog:Staged;$uidGroup
+;MPH1311100;Formal;MPH1311;mplProductCatalog:Staged;$uidGroup
+;MPH1311101;Casual;MPH1311;mplProductCatalog:Staged;$uidGroup
+;MPH1311102;Home & Beach Wear;MPH1311;mplProductCatalog:Staged;$uidGroup
+;MPH1311103;Sports;MPH1311;mplProductCatalog:Staged;$uidGroup
+;MPH1311104;Ethnic;MPH1311;mplProductCatalog:Staged;$uidGroup
+;MPH1311105;Rain;MPH1311;mplProductCatalog:Staged;$uidGroup
+;MPH1311106;Safety;MPH1311;mplProductCatalog:Staged;$uidGroup
+;MPH1312100;Formal;MPH1312;mplProductCatalog:Staged;$uidGroup
+;MPH1312101;Casual;MPH1312;mplProductCatalog:Staged;$uidGroup
+;MPH1312102;Home & Beach Wear;MPH1312;mplProductCatalog:Staged;$uidGroup
+;MPH1312103;Sports;MPH1312;mplProductCatalog:Staged;$uidGroup
+;MPH1312104;Comfort;MPH1312;mplProductCatalog:Staged;$uidGroup
+;MPH1312105;Ethnic;MPH1312;mplProductCatalog:Staged;$uidGroup
+;MPH1312106;Rain;MPH1312;mplProductCatalog:Staged;$uidGroup
+;MPH1313100;Boys Fashion;MPH1313;mplProductCatalog:Staged;$uidGroup
+;MPH1313101;Boys Ethnic;MPH1313;mplProductCatalog:Staged;$uidGroup
+;MPH1313102;Boys Home & Beach Wear;MPH1313;mplProductCatalog:Staged;$uidGroup
+;MPH1313103;Girls Fashion;MPH1313;mplProductCatalog:Staged;$uidGroup
+;MPH1313104;Girls Home & Beach Wear;MPH1313;mplProductCatalog:Staged;$uidGroup
+;MPH1313105;Girls Ethnic;MPH1313;mplProductCatalog:Staged;$uidGroup
+;MPH1314100;Shoe Accessories;MPH1314;mplProductCatalog:Staged;$uidGroup
+;MPH1314101;Shoe Care;MPH1314;mplProductCatalog:Staged;$uidGroup
+;MPH1310100100;Shoe Lace - up;MPH1310100;mplProductCatalog:Staged;$uidGroup
+;MPH1310100101;Shoe Velcro;MPH1310100;mplProductCatalog:Staged;$uidGroup
+;MPH1310100102;Shoe Slip-on;MPH1310100;mplProductCatalog:Staged;$uidGroup
+;MPH1310100103;Sandal;MPH1310100;mplProductCatalog:Staged;$uidGroup
+;MPH1310100104;Boot;MPH1310100;mplProductCatalog:Staged;$uidGroup
+;MPH1310100105;Others;MPH1310100;mplProductCatalog:Staged;$uidGroup
+;MPH1310101100;Shoe Lace - up;MPH1310101;mplProductCatalog:Staged;$uidGroup
+;MPH1310101101;Shoe Velcro;MPH1310101;mplProductCatalog:Staged;$uidGroup
+;MPH1310101102;Shoe Slip-on;MPH1310101;mplProductCatalog:Staged;$uidGroup
+;MPH1310101103;Sandal;MPH1310101;mplProductCatalog:Staged;$uidGroup
+;MPH1310101104;Boot;MPH1310101;mplProductCatalog:Staged;$uidGroup
+;MPH1310101105;Sneaker;MPH1310101;mplProductCatalog:Staged;$uidGroup
+;MPH1310101106;Others;MPH1310101;mplProductCatalog:Staged;$uidGroup
+;MPH1310102100;Running;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102101;Training;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102102;Tennis;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102103;Cricket;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102104;Football;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102105;Indoor Court;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102106;Basketball;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102107;Skateboarding;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102108;Golf;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102109;Outdoor ;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102110;Hockey;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310102111;Others;MPH1310102;mplProductCatalog:Staged;$uidGroup
+;MPH1310103100;Shoe Lace - up;MPH1310103;mplProductCatalog:Staged;$uidGroup
+;MPH1310103101;Shoe Velcro;MPH1310103;mplProductCatalog:Staged;$uidGroup
+;MPH1310103102;Others;MPH1310103;mplProductCatalog:Staged;$uidGroup
+;MPH1310104100;Sandal;MPH1310104;mplProductCatalog:Staged;$uidGroup
+;MPH1310104101;Clog;MPH1310104;mplProductCatalog:Staged;$uidGroup
+;MPH1310104102;Flip Flop;MPH1310104;mplProductCatalog:Staged;$uidGroup
+;MPH1310104103;Shoe;MPH1310104;mplProductCatalog:Staged;$uidGroup
+;MPH1310105100;Shoe Slip-on;MPH1310105;mplProductCatalog:Staged;$uidGroup
+;MPH1310105101;Sandal;MPH1310105;mplProductCatalog:Staged;$uidGroup
+;MPH1310105102;Others;MPH1310105;mplProductCatalog:Staged;$uidGroup
+;MPH1310106100;Sandal;MPH1310106;mplProductCatalog:Staged;$uidGroup
+;MPH1310106101;Shoe;MPH1310106;mplProductCatalog:Staged;$uidGroup
+;MPH1310106102;Boot;MPH1310106;mplProductCatalog:Staged;$uidGroup
+;MPH1310107100;Shoe Lace - up;MPH1310107;mplProductCatalog:Staged;$uidGroup
+;MPH1310107101;Shoe Velcro;MPH1310107;mplProductCatalog:Staged;$uidGroup
+;MPH1310107102;Shoe Slip-on;MPH1310107;mplProductCatalog:Staged;$uidGroup
+;MPH1310107103;Sandal;MPH1310107;mplProductCatalog:Staged;$uidGroup
+;MPH1310107104;Boot;MPH1310107;mplProductCatalog:Staged;$uidGroup
+;MPH1310107105;Others;MPH1310107;mplProductCatalog:Staged;$uidGroup
+;MPH1310108100;Shoe Lace - up;MPH1310108;mplProductCatalog:Staged;$uidGroup
+;MPH1310108101;Shoe Velcro;MPH1310108;mplProductCatalog:Staged;$uidGroup
+;MPH1310108102;Shoe Slip-on;MPH1310108;mplProductCatalog:Staged;$uidGroup
+;MPH1310108103;Sandal;MPH1310108;mplProductCatalog:Staged;$uidGroup
+;MPH1310108104;Boot;MPH1310108;mplProductCatalog:Staged;$uidGroup
+;MPH1310108105;Sneaker;MPH1310108;mplProductCatalog:Staged;$uidGroup
+;MPH1310108106;Others;MPH1310108;mplProductCatalog:Staged;$uidGroup
+;MPH1310109100;Running;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109101;Training;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109102;Tennis;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109103;Cricket;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109104;Football;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109105;Indoor Court;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109106;Basketball;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109107;Skateboarding;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109108;Golf;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109109;Outdoor ;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109110;Hockey;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310109111;Others;MPH1310109;mplProductCatalog:Staged;$uidGroup
+;MPH1310110100;Shoe Lace - up;MPH1310110;mplProductCatalog:Staged;$uidGroup
+;MPH1310110101;Shoe Velcro;MPH1310110;mplProductCatalog:Staged;$uidGroup
+;MPH1310110102;Others;MPH1310110;mplProductCatalog:Staged;$uidGroup
+;MPH1310111100;Sandal;MPH1310111;mplProductCatalog:Staged;$uidGroup
+;MPH1310111101;Clog;MPH1310111;mplProductCatalog:Staged;$uidGroup
+;MPH1310111102;Flip Flop;MPH1310111;mplProductCatalog:Staged;$uidGroup
+;MPH1310111103;Shoe;MPH1310111;mplProductCatalog:Staged;$uidGroup
+;MPH1310112100;Sandal;MPH1310112;mplProductCatalog:Staged;$uidGroup
+;MPH1310112101;Shoe;MPH1310112;mplProductCatalog:Staged;$uidGroup
+;MPH1310112102;Boot;MPH1310112;mplProductCatalog:Staged;$uidGroup
+;MPH1310113100;Sandal;MPH1310113;mplProductCatalog:Staged;$uidGroup
+;MPH1310113101;Shoe Slip-on;MPH1310113;mplProductCatalog:Staged;$uidGroup
+;MPH1310113102;Others;MPH1310113;mplProductCatalog:Staged;$uidGroup
+;MPH1311100100;Sandal;MPH1311100;mplProductCatalog:Staged;$uidGroup
+;MPH1311100101;Shoe Lace - up;MPH1311100;mplProductCatalog:Staged;$uidGroup
+;MPH1311100102;Shoe Slip-on;MPH1311100;mplProductCatalog:Staged;$uidGroup
+;MPH1311100103;Boot;MPH1311100;mplProductCatalog:Staged;$uidGroup
+;MPH1311100104;Others;MPH1311100;mplProductCatalog:Staged;$uidGroup
+;MPH1311101100;Sandal;MPH1311101;mplProductCatalog:Staged;$uidGroup
+;MPH1311101101;Shoe Lace - up;MPH1311101;mplProductCatalog:Staged;$uidGroup
+;MPH1311101102;Shoe Slip-on;MPH1311101;mplProductCatalog:Staged;$uidGroup
+;MPH1311101103;Boot;MPH1311101;mplProductCatalog:Staged;$uidGroup
+;MPH1311101104;Sneaker;MPH1311101;mplProductCatalog:Staged;$uidGroup
+;MPH1311101105;Others;MPH1311101;mplProductCatalog:Staged;$uidGroup
+;MPH1311102100;Sandal;MPH1311102;mplProductCatalog:Staged;$uidGroup
+;MPH1311102101;Clog;MPH1311102;mplProductCatalog:Staged;$uidGroup
+;MPH1311102102;Flip Flop;MPH1311102;mplProductCatalog:Staged;$uidGroup
+;MPH1311102103;Shoe;MPH1311102;mplProductCatalog:Staged;$uidGroup
+;MPH1311103100;Running;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103101;Training;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103102;Tennis;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103103;Cricket;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103104;Football;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103105;Indoor Court;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103106;Basketball;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103107;Skateboarding;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103108;Golf;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103109;Outdoor ;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103110;Hockey;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311103111;Others;MPH1311103;mplProductCatalog:Staged;$uidGroup
+;MPH1311104100;Shoe Slip-on;MPH1311104;mplProductCatalog:Staged;$uidGroup
+;MPH1311104101;Sandal;MPH1311104;mplProductCatalog:Staged;$uidGroup
+;MPH1311104102;Others;MPH1311104;mplProductCatalog:Staged;$uidGroup
+;MPH1311105100;Sandal;MPH1311105;mplProductCatalog:Staged;$uidGroup
+;MPH1311105101;Shoe;MPH1311105;mplProductCatalog:Staged;$uidGroup
+;MPH1311105102;Boot;MPH1311105;mplProductCatalog:Staged;$uidGroup
+;MPH1311106100;Shoe Lace - up;MPH1311106;mplProductCatalog:Staged;$uidGroup
+;MPH1311106101;Shoe Slip-on;MPH1311106;mplProductCatalog:Staged;$uidGroup
+;MPH1311106102;Boot;MPH1311106;mplProductCatalog:Staged;$uidGroup
+;MPH1312100100;Sandal;MPH1312100;mplProductCatalog:Staged;$uidGroup
+;MPH1312100101;Shoe;MPH1312100;mplProductCatalog:Staged;$uidGroup
+;MPH1312100102;Boot;MPH1312100;mplProductCatalog:Staged;$uidGroup
+;MPH1312101100;Sandal;MPH1312101;mplProductCatalog:Staged;$uidGroup
+;MPH1312101101;Shoe;MPH1312101;mplProductCatalog:Staged;$uidGroup
+;MPH1312101102;Boot;MPH1312101;mplProductCatalog:Staged;$uidGroup
+;MPH1312101103;Sneaker;MPH1312101;mplProductCatalog:Staged;$uidGroup
+;MPH1312101104;Others;MPH1312101;mplProductCatalog:Staged;$uidGroup
+;MPH1312102100;Sandal;MPH1312102;mplProductCatalog:Staged;$uidGroup
+;MPH1312102101;Clog;MPH1312102;mplProductCatalog:Staged;$uidGroup
+;MPH1312102102;Flip Flop;MPH1312102;mplProductCatalog:Staged;$uidGroup
+;MPH1312102103;Shoe;MPH1312102;mplProductCatalog:Staged;$uidGroup
+;MPH1312103100;Running;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103101;Training;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103102;Tennis;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103103;Cricket;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103104;Football;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103105;Indoor Court;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103106;Basketball;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103107;Skateboarding;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103108;Golf;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103109;Outdoor ;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103110;Hockey;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312103111;Others;MPH1312103;mplProductCatalog:Staged;$uidGroup
+;MPH1312104100;Sandal;MPH1312104;mplProductCatalog:Staged;$uidGroup
+;MPH1312104101;Shoe;MPH1312104;mplProductCatalog:Staged;$uidGroup
+;MPH1312104102;Boot;MPH1312104;mplProductCatalog:Staged;$uidGroup
+;MPH1312105100;Sandal;MPH1312105;mplProductCatalog:Staged;$uidGroup
+;MPH1312105101;Shoe Slip-on;MPH1312105;mplProductCatalog:Staged;$uidGroup
+;MPH1312105102;Others;MPH1312105;mplProductCatalog:Staged;$uidGroup
+;MPH1312106100;Sandal;MPH1312106;mplProductCatalog:Staged;$uidGroup
+;MPH1312106101;Shoe;MPH1312106;mplProductCatalog:Staged;$uidGroup
+;MPH1312106102;Boot;MPH1312106;mplProductCatalog:Staged;$uidGroup
+;MPH1313100100;Shoe Lace - up;MPH1313100;mplProductCatalog:Staged;$uidGroup
+;MPH1313100101;Shoe Velcro;MPH1313100;mplProductCatalog:Staged;$uidGroup
+;MPH1313100102;Shoe Slip-on;MPH1313100;mplProductCatalog:Staged;$uidGroup
+;MPH1313100103;Sandal;MPH1313100;mplProductCatalog:Staged;$uidGroup
+;MPH1313100104;Boot;MPH1313100;mplProductCatalog:Staged;$uidGroup
+;MPH1313100105;Others;MPH1313100;mplProductCatalog:Staged;$uidGroup
+;MPH1313101100;Shoe Slip-on;MPH1313101;mplProductCatalog:Staged;$uidGroup
+;MPH1313101101;Sandal;MPH1313101;mplProductCatalog:Staged;$uidGroup
+;MPH1313101102;Others;MPH1313101;mplProductCatalog:Staged;$uidGroup
+;MPH1313102100;Sandal;MPH1313102;mplProductCatalog:Staged;$uidGroup
+;MPH1313102101;Clog;MPH1313102;mplProductCatalog:Staged;$uidGroup
+;MPH1313102102;Flip Flop;MPH1313102;mplProductCatalog:Staged;$uidGroup
+;MPH1313102103;Shoe;MPH1313102;mplProductCatalog:Staged;$uidGroup
+;MPH1313103100;Shoe Lace - up;MPH1313103;mplProductCatalog:Staged;$uidGroup
+;MPH1313103101;Shoe Velcro;MPH1313103;mplProductCatalog:Staged;$uidGroup
+;MPH1313103102;Shoe Slip-on;MPH1313103;mplProductCatalog:Staged;$uidGroup
+;MPH1313103103;Sandal;MPH1313103;mplProductCatalog:Staged;$uidGroup
+;MPH1313103104;Boot;MPH1313103;mplProductCatalog:Staged;$uidGroup
+;MPH1313103105;Others;MPH1313103;mplProductCatalog:Staged;$uidGroup
+;MPH1313104100;Sandal;MPH1313104;mplProductCatalog:Staged;$uidGroup
+;MPH1313104101;Clog;MPH1313104;mplProductCatalog:Staged;$uidGroup
+;MPH1313104102;Flip Flop;MPH1313104;mplProductCatalog:Staged;$uidGroup
+;MPH1313104103;Shoe;MPH1313104;mplProductCatalog:Staged;$uidGroup
+;MPH1313105100;Shoe Slip-on;MPH1313105;mplProductCatalog:Staged;$uidGroup
+;MPH1313105101;Sandal;MPH1313105;mplProductCatalog:Staged;$uidGroup
+;MPH1313105102;Others;MPH1313105;mplProductCatalog:Staged;$uidGroup
+;MPH1314100100;Shoe Horn;MPH1314100;mplProductCatalog:Staged;$uidGroup
+;MPH1314100101;Lace;MPH1314100;mplProductCatalog:Staged;$uidGroup
+;MPH1314100102;Insole;MPH1314100;mplProductCatalog:Staged;$uidGroup
+;MPH1314100103;Shoe Tree;MPH1314100;mplProductCatalog:Staged;$uidGroup
+;MPH1314100104;Others;MPH1314100;mplProductCatalog:Staged;$uidGroup
+;MPH1314101100;Brush;MPH1314101;mplProductCatalog:Staged;$uidGroup
+;MPH1314101101;Polish;MPH1314101;mplProductCatalog:Staged;$uidGroup
+;MPH1314101102;Shampoo;MPH1314101;mplProductCatalog:Staged;$uidGroup
+;MPH1314101103;Shoe Fragrance;MPH1314101;mplProductCatalog:Staged;$uidGroup
+;MPH1314101104;Others;MPH1314101;mplProductCatalog:Staged;$uidGroup
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
+;MSH13;Footwear;MSH1;mplProductCatalog:Staged;$uidGroup
+;MSH1310;Women;MSH13;mplProductCatalog:Staged;$uidGroup
+;MSH1311;Men;MSH13;mplProductCatalog:Staged;$uidGroup
+;MSH1312;Girls;MSH13;mplProductCatalog:Staged;$uidGroup
+;MSH1313;Boys;MSH13;mplProductCatalog:Staged;$uidGroup
+;MSH1314;Infants;MSH13;mplProductCatalog:Staged;$uidGroup
+;MSH1315;Brand;MSH13;mplProductCatalog:Staged;$uidGroup
+;MSH1316;What's New;MSH13;mplProductCatalog:Staged;$uidGroup
+;MSH1317;Popular Colours;MSH13;mplProductCatalog:Staged;$uidGroup
+;MSH1318;Accessories;MSH13;mplProductCatalog:Staged;$uidGroup
+
+;MSH1310100;Flat;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310101;Stiletto;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310102;Wedge;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310103;Pump & Peeptoes;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310104;Ballerina;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310105;Sandal;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310106;Ethnic;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310107;Boot;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310108;Sports & Sneakers;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310109;Home & Beach Wear;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310110;Flip Flop;MSH1310;mplProductCatalog:Staged;$uidGroup
+;MSH1310111;View All;MSH1310;mplProductCatalog:Staged;$uidGroup
+
+
+;MSH1311100;Formal;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311101;Casual;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311102;Oxford;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311103;Loafer;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311104;Boat Shoe;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311105;Boot;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311106;Sandal;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311107;Sports & Sneakers;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311108;Outdoor;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311109;Home & Beach Wear;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311110;Flip Flop;MSH1311;mplProductCatalog:Staged;$uidGroup
+;MSH1311111;View All;MSH1311;mplProductCatalog:Staged;$uidGroup
+
+
+
+;MSH1312100;Flat;MSH1312;mplProductCatalog:Staged;$uidGroup
+;MSH1312101;Ballerina;MSH1312;mplProductCatalog:Staged;$uidGroup
+;MSH1312102;Boot;MSH1312;mplProductCatalog:Staged;$uidGroup
+;MSH1312103;Sandal & Clogs;MSH1312;mplProductCatalog:Staged;$uidGroup
+;MSH1312104;Sports & Sneakers;MSH1312;mplProductCatalog:Staged;$uidGroup
+;MSH1312105;Home & Beach Wear;MSH1312;mplProductCatalog:Staged;$uidGroup
+;MSH1312106;Flip Flop;MSH1312;mplProductCatalog:Staged;$uidGroup
+;MSH1312107;View All;MSH1312;mplProductCatalog:Staged;$uidGroup
+
+
+;MSH1313100;Party;MSH1313;mplProductCatalog:Staged;$uidGroup
+;MSH1313101;Casual;MSH1313;mplProductCatalog:Staged;$uidGroup
+;MSH1313102;Loafer;MSH1313;mplProductCatalog:Staged;$uidGroup
+;MSH1313103;Boot;MSH1313;mplProductCatalog:Staged;$uidGroup
+;MSH1313104;Sandal & Clogs;MSH1313;mplProductCatalog:Staged;$uidGroup
+;MSH1313105;Sports & Sneakers;MSH1313;mplProductCatalog:Staged;$uidGroup
+;MSH1313106;Home & Beach Wear;MSH1313;mplProductCatalog:Staged;$uidGroup
+;MSH1313107;Flip Flop;MSH1313;mplProductCatalog:Staged;$uidGroup
+;MSH1313108;View All;MSH1313;mplProductCatalog:Staged;$uidGroup
+
+
+;MSH1314100;Fashion;MSH1314;mplProductCatalog:Staged;$uidGroup
+;MSH1314101;Ethnic;MSH1314;mplProductCatalog:Staged;$uidGroup
+;MSH1314102;Sandal & Clogs;MSH1314;mplProductCatalog:Staged;$uidGroup
+;MSH1314103;View All;MSH1314;mplProductCatalog:Staged;$uidGroup
+
+
+;MSH1315100;Men;MSH1315;mplProductCatalog:Staged;$uidGroup
+;MSH1315101;Women;MSH1315;mplProductCatalog:Staged;$uidGroup
+;MSH1315102;Kids Boys;MSH1315;mplProductCatalog:Staged;$uidGroup
+;MSH1315103;Kids Girls;MSH1315;mplProductCatalog:Staged;$uidGroup
+
+;MSH1316100;Men;MSH1316;mplProductCatalog:Staged;$uidGroup
+;MSH1316101;Women;MSH1316;mplProductCatalog:Staged;$uidGroup
+;MSH1316102;Kids Boys;MSH1316;mplProductCatalog:Staged;$uidGroup
+;MSH1316103;Kids Girls;MSH1316;mplProductCatalog:Staged;$uidGroup
+
+;MSH1317100;Black Footwear;MSH1317;mplProductCatalog:Staged;$uidGroup
+;MSH1317101;Brown Footwear;MSH1317;mplProductCatalog:Staged;$uidGroup
+;MSH1317102;Blue Footwear;MSH1317;mplProductCatalog:Staged;$uidGroup
+;MSH1317103;Red Footwear;MSH1317;mplProductCatalog:Staged;$uidGroup
+;MSH1317104;White Footwear;MSH1317;mplProductCatalog:Staged;$uidGroup
+;MSH1317105;Beige Footwear;MSH1317;mplProductCatalog:Staged;$uidGroup
+
+;MSH1318100;Shoe accessories;MSH1318;mplProductCatalog:Staged;$uidGroup
+;MSH1318101;Shoe care ;MSH1318;mplProductCatalog:Staged;$uidGroup
+;MSH1318102;View All;MSH1318;mplProductCatalog:Staged;$uidGroup
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
+;MBH1;Brand;;mplProductCatalog:Staged;admingroup
+;;;;;
+;MBH13;Footwear;MBH1;mplProductCatalog:Staged;admingroup
+;MBH13A00001;Nike;MBH13;mplProductCatalog:Staged;admingroup
+#### Footwear Categories End ########

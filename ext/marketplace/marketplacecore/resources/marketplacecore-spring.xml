@@ -1254,6 +1254,9 @@
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="classificationService" ref="classificationService" />
 	</bean>
-	
+	 <!--  pdp seller priority cron job -->
+    <bean id="updateSellerPriorityCronJob" parent="abstractJobPerformable" class="com.tisl.mpl.core.cronjob.priority.UpdateSellerPriorityCronJob" autowire="byName">
+    </bean>
+	   <!--  pdp seller priority cron job ends -->
 </beans>
 

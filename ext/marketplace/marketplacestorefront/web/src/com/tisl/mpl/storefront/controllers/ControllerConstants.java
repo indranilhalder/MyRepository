@@ -140,6 +140,7 @@ public interface ControllerConstants
 				String AccountPaymentInfoPage = "pages/account/accountPaymentInfoPage";
 				String AccountRegisterPage = "pages/account/accountRegisterPage";
 				String ChangePassword = "/my-account/update-password";
+
 			}
 
 			interface Oauth2callback
@@ -178,6 +179,7 @@ public interface ControllerConstants
 				String AccountMyInterestPage = "pages/account/myInterest";
 				String AccountMyStyleProfilePage = "pages/account/myStyleProfile";
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
+				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
 			}
 
 
@@ -322,6 +324,7 @@ public interface ControllerConstants
 				public static final String REVIEWS_PATH_VARIABLE_PATTERN = "{numberOfReviews:.*}";
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
+				public static final String BUYBOZFORSIZEGUIDEAJAX = "buyboxDataForSizeGuide";
 			}
 		}
 	}

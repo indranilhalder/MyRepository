@@ -32,4 +32,6 @@ public interface BuyBoxFacade
 
 	public BuyBoxModel getpriceForUssid(String ussid);
 
+	public BuyBoxData buyboxForSizeGuide(final String productCode, final String sellerId) throws EtailNonBusinessExceptions;
+
 }
