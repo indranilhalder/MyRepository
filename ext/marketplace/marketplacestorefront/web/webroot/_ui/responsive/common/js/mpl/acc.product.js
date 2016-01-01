@@ -151,6 +151,7 @@ ACC.product = {
 				}
 				event.preventDefault();
 				return false;
+		});
 				
 		$(document).on('click','#addToCartFormId .js-add-to-cart',function(event){
 			ACC.product.sendAddToBag("addToCartFormId");
@@ -526,7 +527,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 	
 	//SizeGuide 
 	sendAddToBagSizeGuide: function(formId){
-		alert("Size Guide sendAddToBagSizeGuide 3 "+formId);
+		//alert("Size Guide sendAddToBagSizeGuide 3 "+formId);
 		
 		var input_name="qty";
 		var stock_id="stock";
@@ -536,8 +537,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 
-		alert("dataString: "+dataString+" quantity: "+quantity+" stock: "+stock);
-		//alert("Please select a zize: "+$("#variant,#sizevariant option:selected").val());
+		//alert("dataString: "+dataString+" quantity: "+quantity+" stock: "+stock);
 //		if( $("#variant,#sizevariant option:selected").val()=="#")
 //	   	  {
 //		    $("#"+formId+"Title").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
@@ -557,7 +557,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 		        $('#ajax-loader').show();
 		    },
 			success : function(data) {
-				alert("data: "+data);
+				//alert("data: "+data);
 				
 				if(data.indexOf("cnt:") >= 0){
 				$("#"+formId+"TitleSuccess").html("");
@@ -635,7 +635,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 		        $('#ajax-loader').hide();
 		    },
 			error : function(resp) {
-				alert("Add to Bag unsuccessful: "+resp.responseText);
+				//alert("Add to Bag unsuccessful: "+resp.responseText);
 			}
 		});
 	},

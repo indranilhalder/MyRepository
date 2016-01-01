@@ -351,18 +351,18 @@
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
 	<c:if test="${product.purchasable}">
 	
-	<input type="text" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" />
+	<input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" />
 		
-	<input type="text" maxlength="3" size="1" id="sizeStock" name="stock" value="" />
+	<input type="hidden" maxlength="3" size="1" id="sizeStock" name="stock" value="" />
 
   	<!-- <input type="hidden" maxlength="3" size="1" id="pinCodeChecked"
 		name="pinCodeChecked" value="false"> -->
 	</c:if>
-	<input type="text" name="productCodePost" id="productCode"
+	<input type="hidden" name="productCodePost" id="productCode"
 		value="${product.code}" /> 
-	<input type="text" name="wishlistNamePost" id="wishlistNamePost"
+	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost"
 		value="N" />
-	<input type="text" maxlength="3" size=""  name="ussid" id="sellerSelArticleSKUVal"
+	<input type="hidden" maxlength="3" size=""  name="ussid" id="sellerSelArticleSKUVal"
 		value="" />
 	<span id="inventory" style="display: none"><p class="in]y">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
