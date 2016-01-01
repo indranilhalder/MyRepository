@@ -160,11 +160,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				{
 					voucherList.addAll(voucherColl);
 				}
-				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
-				final VoucherInvalidationModel voucherInvalidationModel = voucherModelService.createVoucherInvalidation(
-						(VoucherModel) voucherList.get(0), promotionVoucherModel.getVoucherCode(), orderModel);
+				if (CollectionUtils.isNotEmpty(voucherList))
+				{
+					final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
+					final VoucherInvalidationModel voucherInvalidationModel = voucherModelService.createVoucherInvalidation(
+							(VoucherModel) voucherList.get(0), promotionVoucherModel.getVoucherCode(), orderModel);
+					getModelService().save(voucherInvalidationModel);
+				}
 
-				getModelService().save(voucherInvalidationModel);
+
 			}
 		}
 
