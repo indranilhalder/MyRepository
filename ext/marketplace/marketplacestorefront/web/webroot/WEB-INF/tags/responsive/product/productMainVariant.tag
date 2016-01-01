@@ -270,5 +270,5 @@ $("#variant").change(function() {
 </div>
 </c:otherwise>
 </c:choose>
-<input type="text" maxlength="10" size="1" id="sellerSelId" name="sellerId" value="" />
+<input type="hidden" maxlength="10" size="1" id="sellerSelId" name="sellerId" value="" />
 <!-- logic for displaying color and size variant ends -->
