@@ -151,6 +151,7 @@ ACC.product = {
 				}
 				event.preventDefault();
 				return false;
+		});
 				
 		$(document).on('click','#addToCartFormId .js-add-to-cart',function(event){
 			ACC.product.sendAddToBag("addToCartFormId");
