@@ -933,7 +933,7 @@ UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];conte
 <p>Pick your favourites - brands, categories  & more - here!</p>
 <a href='/store/mpl/en/my-account/marketplace-preference'>VIEW MARKETPLACE PREFERENCES</a>"
 
-;;PersonalInformationMediaParagraphComponent;"<h3>ALL YOUR DETAILS</h3>
+;;PersonalInformationMediaParagraphComponent;"<h3>ALL ABOUT YOU</h3>
 <p>Pick a name, change your password and all that jazz.</p>
 <a href='/store/mpl/en/my-account/update-profile'>VIEW PERSONAL INFO</a>"
 

@@ -151,9 +151,14 @@ public class MplKeywordNameValueProvider extends AbstractPropertyFieldValueProvi
 
 					if (colorElectronics != null && modelNumber != null)
 					{
-						titlewithouColor = title.replaceAll(colorElectronics, "");
-						titleWithColor = titlewithouColor.replaceAll(modelNumber, modelNumber + " " + colorElectronics);
+						titlewithouColor = title.replaceAll("(?i)" + colorElectronics, "");
+						titleWithColor = titlewithouColor.replaceAll("(?i)" + modelNumber, modelNumber + " " + colorElectronics);
 						finalTitle = titleWithColor + " " + "360641361234";
+					}
+					else
+					{
+
+						finalTitle = title;
 					}
 				}
 				else
