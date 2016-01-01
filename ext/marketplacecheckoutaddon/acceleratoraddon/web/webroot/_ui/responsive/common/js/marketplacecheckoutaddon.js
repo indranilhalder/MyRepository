@@ -837,7 +837,7 @@ function displayFormForCC(){
 			$("#card li.header ul").append($("#emi li.newCard"));
 			$("#card li.header ul").append($("#emi li.savedCard"));
 			var bankName=$('.card_bank').val();
-			if($(".card_bank").val()=="AMEX")
+			if($(".card_brand").val()=="AMEX")
 			{
 				$(".security_code").attr('maxlength','4');
 			}
