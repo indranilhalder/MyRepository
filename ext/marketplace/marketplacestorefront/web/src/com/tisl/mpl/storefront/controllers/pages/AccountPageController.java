@@ -51,6 +51,7 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.commercefacades.user.data.TitleData;
 import de.hybris.platform.commercefacades.user.exceptions.PasswordMismatchException;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
@@ -72,6 +73,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.Config;
+import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -131,7 +133,11 @@ import com.tisl.mpl.core.model.MarketplacePreferenceModel;
 import com.tisl.mpl.core.model.MyRecommendationsBrandsModel;
 import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
+import com.tisl.mpl.data.AllVoucherListData;
+import com.tisl.mpl.data.CouponHistoryData;
+import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.ExistingWishlistData;
 import com.tisl.mpl.data.FriendsInviteData;
@@ -141,6 +147,7 @@ import com.tisl.mpl.data.RemoveWishlistData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.data.SendTicketRequestData;
+import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -229,6 +236,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String PAYMENT_DETAILS_CMS_PAGE = "payment-details";
 	private static final String ORDER_HISTORY_CMS_PAGE = "orders";
 	private static final String ORDER_DETAIL_CMS_PAGE = "order";
+	private static final String ACCOUNT_CMS_COUPONS = "coupons";
 	private static final String WISHLIST_CMS_PAGE = "wishlist";
 	private static final String PRODUCT_CODE_PATH_VARIABLE_PATTERN = "/{productCode:.*}";
 	private static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
@@ -317,6 +325,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private ConfigurationService configurationService;
 	@Autowired
 	private MplCustomerProfileFacade mplCustomerProfileFacade;
+	@Autowired
+	private MplCouponFacade mplCouponFacade;
 	@Autowired
 	private MplEnumerationHelper mplEnumerationHelper;
 	@Autowired
@@ -1037,6 +1047,172 @@ public class AccountPageController extends AbstractMplSearchPageController
 		return getViewForPage(model);
 	}
 
+
+
+	/**
+	 * /**
+	 *
+	 * @description This method returns the coupon details page
+	 *
+	 * @param model
+	 * @return String
+	 * @throws CMSItemNotFoundException
+	 * @throws VoucherOperationException
+	 * @throws JSONException
+	 * @throws NullPointerException
+	 * @throws MalformedURLException
+	 */
+
+
+	@SuppressWarnings("boxing")
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_COUPONS, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String getCoupons(
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL_COUPONS) final int page,
+			final Model model) throws CMSItemNotFoundException, VoucherOperationException
+	{
+		try
+		{
+			/* for getting the logged in user */
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
+			/* getting all voucher in a list */
+
+			final ArrayList<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
+			List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
+			List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
+			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
+			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
+			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
+			final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 12);
+
+			/* initializing the indexes for pagination */
+			int start = 0;
+			int end = 0;
+			int couponhistoryListSize = 0;
+			int startIndex = 0;
+			int endIndex = 0;
+			int pageMultMaxSize = 0;
+
+			/* setting voucher list data */
+			final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList);
+			if (null != allVoucherListData)
+
+			/* all type of voucher is shown in open voucher and personalised vouchers is shown as closed voucher */
+
+			{
+				openVoucherDataList = allVoucherListData.getOpenVoucherList();
+				closedVoucherDataList = allVoucherListData.getClosedVoucherList();
+			}
+
+			/* getting all voucher transactions along with the order placed in a DTO */
+			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
+			couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
+
+			if (!couponHistoryDTOList.isEmpty())
+			{
+				couponhistoryListSize = couponHistoryDTOList.size();
+				/* Pagination starts */
+				LOG.debug("Step 0-************************Pagination Starts********************");
+				LOG.debug("Step 1-************************Inside couponHistoryDTOList NOT EMPTY");
+
+				final double pages = Math.ceil(couponhistoryListSize / pageSize);
+				final int totalPages = (int) pages;
+				model.addAttribute(ModelAttributetConstants.TOTAL_PAGES_COUPONS, Integer.valueOf(totalPages));
+				model.addAttribute(ModelAttributetConstants.COUPONS_LIST_SIZE, Integer.valueOf(couponhistoryListSize));
+				if (page != 0)
+				{
+					start = (int) ((page - 1) * pageSize);
+					end = (int) (start + pageSize);
+				}
+				else
+				{
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (start > couponhistoryListSize)
+				{
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (end > couponhistoryListSize)
+				{
+					LOG.debug("Step 2-************************Inside end > couponhistoryListSize NOT EMPTY");
+					couponHistoryDTOListModified = couponHistoryDTOList.subList(start, couponhistoryListSize);
+				}
+				else
+				{
+					LOG.debug("Step 3-************************Inside couponhistoryListSize > end NOT EMPTY");
+					couponHistoryDTOListModified = couponHistoryDTOList.subList(start, end);
+				}
+			}
+			if (page > 1)
+			{
+				pageMultMaxSize = (page * (int) pageSize);
+				startIndex = ((page - 1) * (int) pageSize) + 1;
+
+				if (startIndex == couponhistoryListSize)
+				{
+					endIndex = ((page - 1) * (int) pageSize) + couponhistoryListSize - startIndex + 1;
+				}
+				else if (couponhistoryListSize > pageMultMaxSize)
+				{
+					endIndex = pageMultMaxSize;
+				}
+				else
+				{
+
+					endIndex = couponhistoryListSize;
+				}
+			}
+			else
+			{
+				if (couponhistoryListSize > pageSize)
+				{
+					LOG.debug("Step 3-************************Inside couponhistoryListSize > pageSize NOT EMPTY and page < 1 ");
+					startIndex = 1;
+					endIndex = (int) pageSize;
+				}
+				else
+				{
+					startIndex = 1;
+					endIndex = couponhistoryListSize;
+				}
+			}
+
+
+
+			model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
+			model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
+
+			model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistoryDTOListModified);
+			model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, couponHistoryStoreDTO.getSavedSum());
+			model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, couponHistoryStoreDTO.getCouponsRedeemedCount());
+			model.addAttribute(ModelAttributetConstants.START_INDEX_COUPONS, Integer.valueOf(startIndex));
+			model.addAttribute(ModelAttributetConstants.END_INDEX_COUPONS, Integer.valueOf(endIndex));
+
+
+			storeCmsPageInModel(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
+			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
+			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
+					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_COUPONDETAILS));
+			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+			return ControllerConstants.Views.Pages.Account.AccountCouponsPage;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+	}
+
 	/**
 	 * This method returns the return/refund request page
 	 *
@@ -1124,6 +1300,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
+
+
 
 
 	/**

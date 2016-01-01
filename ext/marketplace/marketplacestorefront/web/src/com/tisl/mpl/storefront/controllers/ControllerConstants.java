@@ -140,6 +140,7 @@ public interface ControllerConstants
 				String AccountPaymentInfoPage = "pages/account/accountPaymentInfoPage";
 				String AccountRegisterPage = "pages/account/accountRegisterPage";
 				String ChangePassword = "/my-account/update-password";
+
 			}
 
 			interface Oauth2callback
@@ -178,6 +179,7 @@ public interface ControllerConstants
 				String AccountMyInterestPage = "pages/account/myInterest";
 				String AccountMyStyleProfilePage = "pages/account/myStyleProfile";
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
+				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
 			}
 
 

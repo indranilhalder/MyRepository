@@ -54,6 +54,13 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 
 #Apparel Category Landing Page Template
 ;;ApparelCategoryLandingPageTemplate;Apparel Category Landing Page Template;layout/apparelCategoryLandingPage;CategoryPage,ContentPage
+
+#Footwear Category Landing Page Template
+;;FootwearCategoryLandingPageTemplate;Footwear Category Landing Page Template;layout/footwearCategoryLandingPage;CategoryPage,ContentPage
+
+#Shoe Brand Landing Page Template
+;;ShoeBrandLandingPageTemplate;Shoe Brand  Landing Page Template;layout/ShoeBrandLandingLayoutPage;ContentPage
+
 #Electronics Category Landing Page Template
 ;;ElectronicsCategoryLandingPageTemplate;Electronics Category Landing Page Template;layout/electronicsCategoryLandingPage;CategoryPage,ContentPage
 ;;ContentPage1Template;Content Page 1 Template;layout/contentLayout1Page;ContentPage
@@ -96,6 +103,12 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 
 #Apparel Category Landing Page Template
 ;;ApparelCategoryLandingPageTemplate      ;$jarResourceCms/structure-view/structure_apparelCategoryLandingPageTemplate.vm
+#Footwear Category Landing Page Template
+;;FootwearCategoryLandingPageTemplate      ;$jarResourceCms/structure-view/structure_footwearCategoryLandingPageTemplate.vm
+#Shoe Brand Landing Page Template
+;;ShoeBrandLandingPageTemplate ;$jarResourceCms/structure-view/structure_shoeBrandLayoutPageTemplate.vm
+
+
 #Electronics Category Landing Page Template
 ;;ElectronicsCategoryLandingPageTemplate      ;$jarResourceCms/structure-view/structure_electronicsCategoryLandingPageTemplate.vm
 ;;ContentPage1Template      ;$jarResourceCms/structure-view/structure_contentPage1Template.vm
@@ -461,6 +474,28 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ####SMALLER BRAND LANDING PAGE TEMPLATE: END######
 
 
+####SHOE BRAND LANDING PAGE TEMPLATE:START######
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ShoeBrandLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;Section1;;SimpleBannerComponent,SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent;
+;Section2;;MplCategoryCarouselComponent;
+;Section3A;;CMSParagraphComponent,SimpleResponsiveBannerComponent,SimpleBannerComponent,BannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent;
+;Section3B;;ProductRefinementComponent;
+;Section3C;;SimpleBannerComponent
+;Section4;;ProductGridComponent;
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+;PlaceholderContentSlot;;;
+
+####SHOE BRAND LANDING PAGE TEMPLATE: END######
+
+
 ##Content slot for Brand landing page template: START
 
 
@@ -498,6 +533,27 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section2B;;SimpleBannerComponent,CMSParagraphComponent,VideoComponent;
 ;Section2C;;SimpleBannerComponent
 ;Section3;;SimpleBannerComponent,VideoComponent;
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+  
+#Footwear Category Landing page Template
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='FootwearCategoryLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;NavigationBar;;;navigation
+;Section1;;SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent,SimpleBannerComponent;
+;Section2;;MplCategoryCarouselComponent;
+;Section3A;;MplFootwearComponent,SimpleBannerComponent;
+;Section3A1;;MplFootwearComponent;
+;Section4A;;MplFootwearComponent;
+;Section4A1;;MplFootwearComponent,SimpleBannerComponent;
+;Section5A1;;MplFootwearComponent;
+;Section6A;;MplCategoryCarouselComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
@@ -750,6 +806,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;
 ;PlaceholderContentSlot;;;
+;MplFootwearComponent;;;
 
 #### For Microsite ::::  Creating ContentSlotName For Electronics Microsite Page template
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ElectronicsMicrositePageTemplate'];validComponentTypes(code);compTypeGroup(code)
@@ -777,7 +834,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;
 ;PlaceholderContentSlot;;;
-
+;MplFootwearComponent;;;
 
 
 # Create Content Slots
@@ -1019,6 +1076,24 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-ApparelCategoryLandingPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-ApparelCategoryLandingPage;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;PlaceholderContentSlot-ApparelCategoryLandingPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+
+
+# Bind Content Slots to Footwear Category Landing Page Template
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='FootwearCategoryLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-FootwearCategoryLandingPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-FootwearCategoryLandingPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-FootwearCategoryLandingPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-FootwearCategoryLandingPage;MiniCart;;MiniCartSlot;true
+;;Footer-FootwearCategoryLandingPage;Footer;;FooterSlot;true
+;;HeaderLinks-FootwearCategoryLandingPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-FootwearCategoryLandingPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-FootwearCategoryLandingPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-FootwearCategoryLandingPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-FootwearCategoryLandingPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+
 
 # Bind Content Slots to Electronics Category Landing Page Template
 
@@ -1265,6 +1340,26 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 #### CONTENT SLOT FOR BRAND LANDING PAGE TEMPLATE  END  #####
 
+
+
+#### CONTENT SLOT FOR SHOE BRAND LANDING PAGE TEMPLATE   #####
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShoeBrandLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-ShoeBrandLandingPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-ShoeBrandLandingPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-ShoeBrandLandingPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-ShoeBrandLandingPage;MiniCart;;MiniCartSlot;true
+;;Footer-ShoeBrandLandingPage;Footer;;FooterSlot;true
+;;HeaderLinks-ShoeBrandLandingPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-ShoeBrandLandingPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-ShoeBrandLandingPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-ShoeBrandLandingPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-ShoeBrandLandingPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+#### CONTENT SLOT FOR BRAND LANDING PAGE TEMPLATE  END  #####
+
+
+
 ### CONTENT SLOT FOR CONTACT US PAGE TEMPLATE ###
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;SiteLogo-ContactUsPage;SiteLogo;;SiteLogoSlot;true
@@ -1368,11 +1463,13 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;marketplacePreference;Account Marketplace Preference;AccountPageTemplate;marketplacePreference
 ;;sellerListing;Seller Listing;ProductGridPageTemplate;sellerListing
 ;;offerPageListing;Offer Page Listing;ProductGridPageTemplate;offerListing
+
 ########## For Lets Get Personal ##########
 ;;myInterest;My Interest Page;AccountPageTemplate;myInterest
 ;;myStyleProfile;My Style Profile Page;AccountPageTemplate;myStyleProfile
 ;;inviteFriends;Invite Friends Page;AccountPageTemplate;inviteFriends
 ;;returnSuccess;Return Success Page;AccountPageTemplate;returnSuccess
+;;coupons;Account Coupns Page;AccountPageTemplate;coupons
 
 #Landing Page for apparel Categories which will contain static contents
 
@@ -1384,7 +1481,10 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;Electronics;Electronics Category Landing Page;ElectronicsCategoryLandingPageTemplate;Electronics;MSH12
 
- 
+ #Landing Page for footwear Categories which will contain static contents
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;footwear;Footwear Category Landing Page;FootwearCategoryLandingPageTemplate;footwear;MSH13
 
 # Simple Content Pages
 
@@ -1482,13 +1582,18 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 #;;westside;Seller Apparel Page;SellerApparelPageTemplate;/westside;
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;associatedSeller(id);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-;;westside;Westside Landing Page;SellerApparelPageTemplate;wesiside;123654
+;;westside;Westside Landing Page;SellerApparelPageTemplate;wesiside;
 
 #INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 #;;westsport;Brand Page;BrandPageTemplate;/westsport;
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;westsport;Westsport Page;BrandPageTemplate;westsport;MBH12E00002
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;shoe;Shoe Page;ShoeBrandLandingPageTemplate;shoe;MBH13A00001
+
 
 #Electronics Brand Landing Page
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
@@ -1527,6 +1632,12 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ##### Shop The Look #####
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;chef;Gift For The Chef;ShopTheCollectionTemplate;/gift-for-chef;
+
+
+##review #####
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;reviews;Review Page;ReviewPageTemplate;/reviews;
+
 
 ### Shop The Collection Content Slot Update ###
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShopTheCollectionTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite

@@ -151,6 +151,7 @@ public final class MessageConstants
 	public static final String LOGIN_PAGE_TITLE = "Sign In or Register";
 	public static final String TEXT_ACCOUNT_PREFERENCE_SAVE_SUCCESS = "text.account.preference.save.success";
 	public static final String TEXT_ACCOUNT_PREFERENCE_SAVE_FAILURE = "text.account.preference.save.failure";
+	public static final String TEXT_ACCOUNT_COUPONDETAILS = "text.account.couponsDetails";
 
 	//Rating Review
 	public static final String USE_GIGYA = "gigya.use".intern();
@@ -173,5 +174,8 @@ public final class MessageConstants
 	//Gigya Rating Review
 	public static final String GIGYA_RR_URL = "gigya.rating.url".intern();
 	public static final String BOGO_CANCEL = "cancel.bogo.message".intern();
+
+	//coupons
+	public static final String PAZE_SIZE_COUPONS = "mpl.account.coupon.pazesize";
 
 }

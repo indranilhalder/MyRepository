@@ -26,6 +26,7 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_ORDER = "/order/";
 	public static final String LINK_INVOICE = "/order/requestInvoice";
 	public static final String LINK_PROFILE = "/profile";
+	public static final String LINK_COUPONS = "/coupons";
 
 	public static final String LINK_UPDATE_EMAIL = "/update-email";
 	public static final String LINK_UPDATE_PROFILE = "/update-profile";
