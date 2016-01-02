@@ -947,7 +947,7 @@ UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];conte
 
 ;;InviteFriendsMediaParagraphComponent;"<h3>INVITE YOUR FRIENDS</h3>
 <p>Why shop solo when you can do it with your friends?  Get your crew here.</p>
-<a href='/store/mpl/en/my-account/myInterest'>INVITE FRIENDS TO THE MARKETPLACE</a>"
+<a href='/store/mpl/en/my-account/friendsInvite'>INVITE FRIENDS TO THE MARKETPLACE</a>"
 
 ;;OrderHistoryMediaParagraphComponent;"<h3>ORDER HISTORY</h3>
 <p>When will that package arrive? And other such pressing questions.</p>
