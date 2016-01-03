@@ -42,7 +42,7 @@ INSERT_UPDATE SolrSearchConfig;description[unique=true];pageSize
 
 # Declare the indexed type Product
 INSERT_UPDATE SolrIndexedType;identifier[unique=true];type(code);variant;sorts(&sortRefID)
-;$solrIndexedType;Product;false;sortRef1,sortRef2,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8
+;$solrIndexedType;Product;false;sortRef1,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8
 
 INSERT_UPDATE SolrFacetSearchConfig;name[unique=true];description;indexNamePrefix;languages(isocode);currencies(isocode);solrServerConfig(name);solrSearchConfig(description);solrIndexConfig(name);solrIndexedTypes(identifier);enabledLanguageFallbackMechanism;$catalogVersions
 ;$facetSearchConfigName;$facetSearchConfigDescription;$searchIndexNamePrefix;$indexLanguages;$indexCurrencies;$serverConfigName;$searchConfigName;$indexConfigName;$solrIndexedType;true;$productCatalog:Online,$productCatalog:Staged
@@ -239,7 +239,6 @@ where tbl.code IN (
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
 ;sortRef1;$solrIndexedType;relevance;true;
-;sortRef2;$solrIndexedType;topRated;false;
 ;sortRef3;$solrIndexedType;name-asc;false;
 ;sortRef4;$solrIndexedType;name-desc;false;
 ;sortRef5;$solrIndexedType;price-asc;false;
@@ -252,8 +251,6 @@ INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[uniq
 INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fieldName[unique=true];ascending[unique=true];sortpos
 ;$solrIndexedType:relevance;inStockFlag;false;0
 ;$solrIndexedType:relevance;score;false;1
-;$solrIndexedType:topRated;inStockFlag;false;0
-;$solrIndexedType:topRated;mplAvgRating;false;1
 ;$solrIndexedType:name-asc;inStockFlag;false;0
 ;$solrIndexedType:name-asc;name;true;1
 ;$solrIndexedType:name-desc;inStockFlag;false;0
