@@ -49,7 +49,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType         ;age          			           ;"Age"
  ;$solrIndexedType         ;capacityCC        		           ;"Capacity"
  ;$solrIndexedType         ;displayFeatures                    ;"Display Features"
- ;$solrIndexedType         ;memorySmartphone                   ;"Memory"
+ ;$solrIndexedType         ;memorySmartphone                   ;"Smartphone Memory"
  ;$solrIndexedType         ;operatingSystemIphone              ;"Operating System"
  ;$solrIndexedType         ;cameraFeatures                     ;"Camera Features" 
  ;$solrIndexedType         ;maximumISO          	           ;"Maximum ISO"  

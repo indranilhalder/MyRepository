@@ -585,7 +585,21 @@ addToBagFromWl: function(ussid, addedToCart) {
 		        var listItemText = $(li).text().toUpperCase(), searchText = that.value.toUpperCase();
 		        return ~listItemText.indexOf(searchText);
 		    });
-		    
+		    if(($matchingListElements).size() > 0) {
+			    $(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+	
+				$(this).parents(".js-facet").find(".js-more-facet-values").hide();
+				$(this).parents(".js-facet").find(".js-less-facet-values").show();
+		    }
+		    if(that.value.toUpperCase() == ''){
+		    	$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+
+				$(this).parents(".js-facet").find(".js-more-facet-values").show();
+				$(this).parents(".js-facet").find(".js-less-facet-values").hide();
+		    }
+			    
 		    $allListElements.hide();
 		    $(".brand .js-facet-top-values").hide();
 			$(".brand .js-facet-list.js-facet-list-hidden").show();
