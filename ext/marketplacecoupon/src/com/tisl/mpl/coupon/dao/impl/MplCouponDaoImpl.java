@@ -17,7 +17,7 @@ import com.tisl.mpl.coupon.dao.MplCouponDao;
 
 
 /**
- * @author 752131
+ * @author TCS
  *
  */
 public class MplCouponDaoImpl implements MplCouponDao
@@ -32,6 +32,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 		final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		LOG.debug("Query::::::::" + query.toString());
 
 		return getFlexibleSearchService().<VoucherModel> search(query).getResult();
 	}

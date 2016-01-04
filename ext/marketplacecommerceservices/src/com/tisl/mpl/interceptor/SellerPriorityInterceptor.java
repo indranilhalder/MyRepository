@@ -27,19 +27,12 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 public class SellerPriorityInterceptor implements ValidateInterceptor
 {
 
-	/**
-	 *
-	 */
-	private static final String ERROR_SAME_SKU_AND_CATEGORY = "There is already an entry active for the same listing id and category id";
-	/**
-	 *
-	 */
+
 	private static final String ERROR_SAME_CATEGORY = "There is already an entry active for the same category id";
 	/**
 	 *
 	 */
 	private static final String ERROR_SAME_SKU = "There is already an entry for the same product id";
-	private static final String ERROR_AUTHORISED_USER = "You are not authorised user";
 	private static final String SELLERIDBLANK = "seller Id cannot be blank";
 	private static final String CATANDLISTBLANK = "Category Id and Product Id both cannot be blank";
 	private static final String STARTDATEBLANK = "start date cannot be blank";
@@ -128,7 +121,7 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 						{
 							LOG.debug("no modification *********** categoryId : " + priorityValue.getCategoryId()
 									+ " **************   listingId" + priorityValue.getListingId());
-							if (null!=priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue())
+							if (null != priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue())
 							{
 								if (null != priorityValue.getCategoryId())
 								{

@@ -123,7 +123,7 @@ $("#variant").change(function() {
 					</c:otherwise>
 				</c:choose>
 
-				<c:if test="${product.rootCategory!='Clothing'}">
+				<c:if test="${product.rootCategory=='Electronics'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
 				<c:if test="${not empty notApparel}">
