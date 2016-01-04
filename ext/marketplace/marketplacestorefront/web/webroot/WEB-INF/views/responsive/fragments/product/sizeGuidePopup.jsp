@@ -6,7 +6,11 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+<c:set var="cod_y"><spring:theme code='cod.eligible.yes'/></c:set>
+<c:set var="stock_y"><spring:theme code='quickview.allOOStock'/></c:set>
 
+
+${product.code}
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
 
@@ -96,10 +100,10 @@
 								var="variantUrl" />
 						
 								<c:choose><c:when test="${empty selectedSize}">
-													 <a href="${variantUrl}" data-target="#popUpModalNew">
+													 <a href="${variantUrl}" data-target="#popUpModal" data-toggle="modal">
 												</c:when>
 												<c:otherwise>
-													 <a href="${variantUrl}?selectedSize=true" data-target="#popUpModalNew">
+													 <a href="${variantUrl}?selectedSize=true" data-target="#popUpModals" data-toggle="modal">
 												</c:otherwise>
 											</c:choose>
 											
@@ -264,7 +268,7 @@
 	
 	
 		<select id="variant" class="variant-select" onchange="getComboA(this)">
-			<option value="#"><spring:theme code="text.select.size" /></option>
+			<%-- <option value="#" data-target="#popUpModalNew"><spring:theme code="text.select.size" /></option> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
 					<c:choose>
@@ -276,10 +280,10 @@
 								var="link" />
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
-											<option  value="${link}" data-target="#popUpModalNew" selected>${entry.value}</option>
+											<option  value="${link}" data-target="#popUpModal" selected="selected">${entry.value}</option>
 										</c:when>
 										<c:otherwise>
-											<option value="${link}" data-target="#popUpModalNew">${entry.value}</option>
+											<option value="${link}" data-target="#popUpModal">${entry.value}</option>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -345,26 +349,24 @@
 	</c:choose>	
 </div>
 
-<div id="addToCartFormTitle" class="addToCartTitle">
+<div id="addToCartFormSizeTitle" class="addToCartTitle">
 	<spring:theme code="product.addtocart.success" />
 </div>
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
+		<span id="addToCartFormSizeTitleSuccess" class="addToCartTitle">
+		</span>
 	<c:if test="${product.purchasable}">
 	
 	<input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" />
-		
-	<input type="hidden" maxlength="3" size="1" id="sizeStock" name="stock" value="" />
-
   	<!-- <input type="hidden" maxlength="3" size="1" id="pinCodeChecked"
 		name="pinCodeChecked" value="false"> -->
 	</c:if>
-	<input type="hidden" name="productCodePost" id="productCode"
-		value="${product.code}" /> 
-	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost"
-		value="N" />
+	<input type="hidden" maxlength="3" size="1" id="sizeStock" name="stock" value="" />
+	<input type="hidden" name="productCodePost" id="productCode" value="${product.code}" /> 
+	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost" value="N" />
 	<input type="hidden" maxlength="3" size=""  name="ussid" id="sellerSelArticleSKUVal"
 		value="" />
-	<span id="inventory" style="display: none"><p class="in]y">
+	<%-- <span id="inventory" style="display: none"><p class="in]y">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 		</p></span>
 	<span id="noinventory" style="display: none"><p class="noinventory">
@@ -383,7 +385,7 @@
 	</span>
 	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 	<span id="addToCartButtonId">
-	<span id="addToCartFormTitleSuccess"></span>
+	<span id="addToCartFormSizeTitleSuccess"></span>
 	<button style="display: block;"
 			id="addToCartButton" type="button"
 			class="btn-block js-add-to-cart">
@@ -394,10 +396,24 @@
 			class="btn-block">
 		<spring:theme code="basket.add.to.basket" />
 	</button>
-	</span>
+	</span> --%>
+	
+	
+	<c:choose>
+			<c:when test="${allOOStock==stock_y}">
+			</c:when>
+			<c:otherwise>			
+					<button id="addToCartButton" type="${buttonType}"
+						class="btn-block js-add-to-cart">
+						<spring:theme code="basket.add.to.basket" />
+					</button>
+				
+			</c:otherwise>
+		</c:choose>
+	
+	
 </form:form>
 
- 
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
@@ -417,20 +433,54 @@ $(document).ready(function(){
 	    ev.preventDefault();
 	    var target = $(this).attr("href");
 	    console.log(target);
-		$("#popUpModal").modal('hide');
+	   // alert(target);
+ 	    //$("#popUpModal").modal('hide');
 	    // load the url and show modal on success
 	    $("#popUpModal .modal-content").load(target, function() { 
 	         $("#popUpModal").modal("show"); 
-	    });
+	    }); 
 	});
 	
+	var code='${product.code}';
+	if( $("#variant,#sizevariant option:selected").val()=="#"){
+		$("#selectedSizeVariant").val("");
+	}
+	else{
+		$("#selectedSizeVariant").val(code);
+	}
+	
+    $("#addToCartButton").click(function(){  	
+     $("#selectSizeId").hide();
+   	 var stock=$("#sizeStock").val();
+   	 var quantity= $("#sizeQty").val();
+   	if( $("#variant,#sizevariant option:selected").val()=="#")
+ 	  {
+ 		$("#addToCartFormSizeTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		$("#addToCartFormSizeTitle").show();
+ 	 return false;
+ 	  }	
+	
+    }); 
+	
+/* 	
+    $("#addToCartButton").click(function(){  	
+        $("#selectSizeId").hide();
+      	 var stock=$("#sizeStock").val();
+      	 var quantity= $("#sizeQty").val();
+      	if( $("#variant,#sizevariant option:selected").val()=="#")
+    	  {
+    		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+   		$("#addToCartFormTitle").show();
+    	 return false;
+    	  }	
+    });  */
 });
 
 function getComboA(sel){
 	var value = sel.value; 
 	console.log(value);
 	/* winpops=window.open(popUrl,"","width=400,height=338,resizable,") */
-	$("#popUpModal").modal('hide');
+//	$("#popUpModalNew").modal('hide');
     // load the url and show modal on success
     $("#popUpModal .modal-content").load(value, function() { 
          $("#popUpModal").modal("show"); 
