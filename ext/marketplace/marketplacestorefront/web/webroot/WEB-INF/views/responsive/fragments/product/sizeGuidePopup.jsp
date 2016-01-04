@@ -441,7 +441,7 @@ $(document).ready(function(){
 	    }); 
 	});
 	
-	var code='${product.code}';
+/* 	var code='${product.code}';
 	if( $("#variant,#sizevariant option:selected").val()=="#"){
 		$("#selectedSizeVariant").val("");
 	}
@@ -460,7 +460,7 @@ $(document).ready(function(){
  	 return false;
  	  }	
 	
-    }); 
+    }); */ 
 	
 /* 	
     $("#addToCartButton").click(function(){  	
