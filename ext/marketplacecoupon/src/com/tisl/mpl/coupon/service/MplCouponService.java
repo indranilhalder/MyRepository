@@ -5,7 +5,6 @@ package com.tisl.mpl.coupon.service;
 
 import de.hybris.platform.voucher.model.VoucherModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.tisl.mpl.data.VoucherDisplayData;
@@ -27,6 +26,6 @@ public interface MplCouponService
 	 * @param voucherDataList
 	 * @return ArrayList<VoucherDisplayData>
 	 */
-	ArrayList<VoucherDisplayData> getSortedVoucher(ArrayList<VoucherDisplayData> voucherDataList);
+	List<VoucherDisplayData> getSortedVoucher(List<VoucherDisplayData> voucherDataList);
 
 }
