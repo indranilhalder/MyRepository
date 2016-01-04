@@ -181,8 +181,8 @@ public class CouponEventJob extends AbstractJobPerformable<EventCouponCreationJo
 		}
 		catch (final Exception e)
 		{
-			System.out.println("**********Error*************");
-			e.printStackTrace();
+			LOG.error("**********Error*************" + e.getMessage());
+			//e.printStackTrace();
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 	}
