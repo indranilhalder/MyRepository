@@ -10,7 +10,6 @@
 <c:set var="stock_y"><spring:theme code='quickview.allOOStock'/></c:set>
 
 
-${product.code}
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
 
@@ -340,16 +339,7 @@ ${product.code}
 				</select>
 			</div>
 			<!-- <a href="#" class="button red">Add To Bag</a> -->
-		</div>
-	</div>
-	</c:when>
-	<c:otherwise>
-		<p><spring:theme code="product.variants.size.guide.notavail"/></p>
-	</c:otherwise>
-	</c:choose>	
-</div>
-
-<div id="addToCartFormSizeTitle" class="addToCartTitle">
+			<div id="addToCartFormSizeTitle" class="addToCartTitle">
 	<spring:theme code="product.addtocart.success" />
 </div>
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
@@ -418,6 +408,16 @@ ${product.code}
 <span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span> 
+			
+		</div>
+	</div>
+	</c:when>
+	<c:otherwise>
+		<p><spring:theme code="product.variants.size.guide.notavail"/></p>
+	</c:otherwise>
+	</c:choose>	
+</div>
+
 
 
 
