@@ -6549,6 +6549,18 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="FeedbackCronJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.FeedbackCronJob">
+				<attributes>
+					<attribute type="java.util.Date" qualifier="lastExecutionTime">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+				
+				</attributes>
+			</itemtype>
 		</typegroup>
 		<!--End of CRM Ticket Detail -->
 	</itemtypes>
