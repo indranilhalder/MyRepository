@@ -119,12 +119,14 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 			if (!productCode.contains("'"))
 			{
-				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product} IN ('" + productCode
+				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product} IN ('"
+						+ productCode
 						+ "')  AND ( {bb.delisted}  IS NULL OR {bb.delisted} =0)  and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     ORDER BY {bb.product} ASC, {bb.weightage} DESC";
 			}
 			else
 			{
-				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product} IN (" + productCode
+				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product} IN ("
+						+ productCode
 						+ ")  AND ({bb.delisted}  IS NULL OR {bb.delisted} =0  ) and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})   ORDER BY {bb.product} ASC, {bb.weightage} DESC";
 			}
 
@@ -173,17 +175,17 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 			if (productType.equalsIgnoreCase("simple"))
 			{
-				inventoryQuery.append(
-						"{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 )and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  ");
+				inventoryQuery
+						.append("{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 )and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  ");
 			}
 			if (productType.equalsIgnoreCase("variant"))
 			{
-				inventoryQuery.append(
-						"{bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod} where {pprod.baseProduct} IN (	{{"
+				inventoryQuery
+						.append("{bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod} where {pprod.baseProduct} IN (	{{"
 
-				+ " 	select distinct{p.baseProduct} from {PcmProductVariant as p} where {p.code} = ?product"
+								+ " 	select distinct{p.baseProduct} from {PcmProductVariant as p} where {p.code} = ?product"
 
-				+ " 	}})}})");
+								+ " 	}})}})");
 			}
 
 			final FlexibleSearchQuery instockQuery = new FlexibleSearchQuery(inventoryQuery.toString());
@@ -372,8 +374,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		final Set<Map<BuyBoxModel, RichAttributeModel>> buyboxdataset = new LinkedHashSet<Map<BuyBoxModel, RichAttributeModel>>();
 		try
 		{
-			final String queryString = "select {b.pk},{rich.pk} from {" + BuyBoxModel._TYPECODE + " as b JOIN "
-					+ SellerInformationModel._TYPECODE + " as seller ON {b.sellerArticleSKU}={seller.sellerArticleSKU} "
+			final String queryString = "select {b.pk},{rich.pk} from {"
+					+ BuyBoxModel._TYPECODE
+					+ " as b JOIN "
+					+ SellerInformationModel._TYPECODE
+					+ " as seller ON {b.sellerArticleSKU}={seller.sellerArticleSKU} "
 					+ " JOIN CatalogVersion as cat ON {cat.pk}={seller.catalogversion} "
 					+ " JOIN RichAttribute as rich  ON {seller.pk}={rich.sellerInfo} } "
 					+ " where {cat.version}='Online' and {b.product} = ?productCode and( {b.delisted}  IS NULL or {b.delisted}=0 )  and (sysdate between {b.sellerstartdate} and {b.sellerenddate})     order by {b.weightage} desc,{b.available} desc";
@@ -507,9 +512,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			final String queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
 			+ WHERE_CLASS + BuyBoxModel.PRODUCT + "}=?product" + " AND  {bb:" + BuyBoxModel.SELLERID + "}=?sellerid" + " AND ( {bb:"
-					+ BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED + "}=0)    AND   {bb:" + BuyBoxModel.AVAILABLE
-					+ "} > 0 AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE
-					+ "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0";
+					+ BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED + "}=0) AND (sysdate between  {bb:"
+					+ BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE + "}) AND {bb:" + BuyBoxModel.PRICE
+					+ "} > 0";
 
 			log.debug("Query" + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
