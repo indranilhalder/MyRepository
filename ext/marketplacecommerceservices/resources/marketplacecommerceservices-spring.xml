@@ -396,6 +396,23 @@
 	</bean>
 	<!-- Blacklist Service and DAO Implementation ends -->
 
+
+	<!-- SellerReport Service and Service Implementation  -->
+	
+	<bean id="mplSellerPriorityReportService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplSellerPriorityReportServiceImpl">
+	</bean>
+	<!-- SellerReport Service and Service Implementation  ends -->
+	
+	<!-- SellerReport Service and DAO Implementation -->
+		
+	<bean id="mplSellerPriorityReportDAO"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerPriorityReportDAOImpl">
+	</bean>
+	
+	<!-- SellerReport Service and DAO Implementation  ends -->
+	
+	
 	<alias alias="cODPaymentService" name="mplCODPaymentServiceImpl" />
 	<bean id="mplCODPaymentServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.CODPaymentServiceImpl">
@@ -1460,6 +1477,26 @@
 			</list>
 		</property>
 	</bean>
+	
+	<!-- pdp seller priority interceptor starts -->
+	<bean id="sellerPriorityInterceptor" class="com.tisl.mpl.interceptor.SellerPriorityInterceptor">
+	</bean>
+
+	<bean id="SellerPriorityInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="sellerPriorityInterceptor" />
+		<property name="typeCode" value="MplSellerPriority" />
+	</bean>
+  
+	<!--pdp seller priority interceptor ends -->
+	<!-- pdp seller priority starts -->
+	<bean id="mplSellerPriorityDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerPriorityDaoImpl">
+	</bean>
+	<bean id="mplSellerPriorityService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplSellerPriorityServiceImpl">
+	</bean>
+	<!-- pdp seller priority ends -->
+	
+	
 	<!-- End -->
 	
 	<!-- <bean id="mplPromotionService"

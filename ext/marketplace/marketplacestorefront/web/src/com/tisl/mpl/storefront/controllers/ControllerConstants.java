@@ -297,6 +297,7 @@ public interface ControllerConstants
 				String ReviewsTab = "fragments/product/reviewsTab";
 				String StorePickupSearchResults = "fragments/product/storePickupSearchResults";
 				String SELLER_ID = "sellerId";
+				String PINCODE_SERVICABILITY = "isPinCodeServicable";
 				public static final String MIN_PRICE = "minPrice";
 				public static final String FULFILLMENT = "fulfillment";
 				public static final String OTHERS_SELLERS_COUNT = "othersSellersCount";
@@ -324,6 +325,7 @@ public interface ControllerConstants
 				public static final String REVIEWS_PATH_VARIABLE_PATTERN = "{numberOfReviews:.*}";
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
+				public static final String BUYBOZFORSIZEGUIDEAJAX = "buyboxDataForSizeGuide";
 			}
 		}
 	}

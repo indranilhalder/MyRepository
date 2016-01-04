@@ -123,7 +123,7 @@ $("#variant").change(function() {
 					</c:otherwise>
 				</c:choose>
 
-				<c:if test="${product.rootCategory!='Clothing'}">
+				<c:if test="${product.rootCategory=='Electronics'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
 				<c:if test="${not empty notApparel}">
@@ -270,4 +270,5 @@ $("#variant").change(function() {
 </div>
 </c:otherwise>
 </c:choose>
+<input type="hidden" maxlength="10" size="1" id="sellerSelId" name="sellerId" value="" />
 <!-- logic for displaying color and size variant ends -->

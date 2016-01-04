@@ -6323,6 +6323,149 @@
 		</typegroup>
 		<!-- Order Tracking Start -->
 
+<!-- Seller Priority Job -->
+		<typegroup name="MplSellerPriorityListing">
+			<itemtype code="MplSellerPriorityJob" extends="CronJob"
+				autocreate="true" generate="true" jaloclass="com.tisl.mpl.jalo.MplSellerPriorityJob">
+				<deployment table="MplSellerPriorityJob" typecode="15722" />
+				<attributes>
+					<attribute type="java.util.Date" qualifier="startDate">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="endDate">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			
+			<!-- pdp seller priority changes start-->
+			<itemtype code="MplSellerPriority" extends="GenericItem" generate="true"
+				autocreate="true" >
+				<deployment table="MplPriorityDetails" typecode="14004" />
+			<attributes>
+			   <attribute autocreate="true" qualifier="ListingId"
+					type="Product">
+					<description>product</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true" unique="true"
+							optional="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="CategoryId"
+					type="Category">
+					<description>category level priority</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true" unique="true"
+							optional="true" />
+				</attribute>
+				 <attribute autocreate="true" qualifier="SellerId"
+					type="SellerMaster">
+					<description>priority seller</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true" unique="true"
+							optional="false" />
+				</attribute> 
+				<attribute autocreate="true"  qualifier="priorityStartDate" type="java.util.Date">
+						<description>priority start date</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+				<attribute autocreate="true"  qualifier="priorityEndDate" type="java.util.Date">
+						<description>priority end date</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="isActive" type="java.lang.Boolean">
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="false"/>
+				</attribute>
+				
+				<!-- <attribute qualifier="isActive" 
+						type="java.lang.Boolean">
+						<description>To determine the validity period of the record</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+					</attribute> -->
+
+			</attributes>
+			</itemtype>
+			
+			<itemtype code="MplSellerPriorityLevel" extends="GenericItem" generate="true"
+				autocreate="true" >
+				<deployment table="MplPriorityLevelDetails" typecode="14005" />
+			<attributes>
+			   <attribute autocreate="true" qualifier="ussid"
+					type="java.lang.String">
+					<description>ussids</description>
+					<persistence type="property" />
+					<modifiers unique="true"  read="true" write="true" search="true"
+							optional="false" />
+				</attribute>
+				<attribute autocreate="true" qualifier="L1Priority"
+					type="java.lang.Integer">
+					<description>L1 level priority for category</description>
+					<persistence type="property" />
+					<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					<modifiers read="true" write="true" search="true"
+							optional="true" />
+				</attribute>
+				 <attribute autocreate="true" qualifier="L2Priority"
+					type="java.lang.Integer">
+					<description>L2 level priority for category</description>
+					<persistence type="property" />
+					<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					<modifiers read="true" write="true" search="true"
+							optional="true" />
+				</attribute> 
+				<attribute autocreate="true"  qualifier="L3Priority" type="java.lang.Integer">
+						<description>L3 level priority for category</description>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+				<attribute autocreate="true"  qualifier="L4Priority" type="java.lang.Integer">
+						<description>L4 level priority for category</description>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+				<attribute autocreate="true"  qualifier="ProductPriority" type="java.lang.Integer">
+						<description>Product level priority</description>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="isValidPriority" type="java.lang.Boolean">
+						<description>determines whether a priority is inactive or expired </description>
+						<persistence type="property" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers optional="true" unique="false" />
+				    </attribute>
+			</attributes>
+			</itemtype>
+		<!-- 	seller priority cron job -->
+			<itemtype code="UpdateSellerPriorityJob" extends="CronJob" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.UpdateSellerPriorityJob">
+				<deployment table="UpdateSellerPriority" typecode="14006" />
+			</itemtype>
+			<!--pdp seller priority changes end-->
+			
+		</typegroup>
+		
+		
+		<!-- Seller Priority Job -->
+		
 		<!-- Etail-For Black Listing Job -->
 		<typegroup name="MplBlackListing">
 			<itemtype code="MplBlackListingJob" extends="CronJob"

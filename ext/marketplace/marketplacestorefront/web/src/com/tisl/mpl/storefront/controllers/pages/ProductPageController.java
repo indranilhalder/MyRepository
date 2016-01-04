@@ -341,6 +341,15 @@ public class ProductPageController extends AbstractPageController
 
 			LOG.info("***************headerMap" + headerMap);
 
+			final ProductModel productModel = productService.getProductForCode(productCode);
+
+			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+					ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+
+
+			populateProductData(productData, model);
+
 			model.addAttribute(ModelAttributetConstants.HEADER_SIZE_GUIDE, headerMap);
 			model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
 			//model.addAttribute(ModelAttributetConstants.PRODUCT_NAME, productName);
@@ -352,6 +361,82 @@ public class ProductPageController extends AbstractPageController
 		return ControllerConstants.Views.Fragments.Product.SizeGuidePopup;
 
 
+	}
+
+
+
+
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
+	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId) throws JSONException,
+			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+	{
+		final JSONObject buyboxJson = new JSONObject();
+		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
+		try
+		{
+			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
+			if (buyboxdata != null)
+			{
+
+
+
+				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
+						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+				{
+					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
+							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+					{
+						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
+						{
+							if (response.getIsServicable().equalsIgnoreCase("Y"))
+							{
+								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
+							}
+							buyboxJson
+									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
+
+						}
+					}
+
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
+				}
+
+				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice().getValue());
+				}
+				// populate json with price,ussid,sellername and other details
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getValue());
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getValue());
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
+				//	buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
+			}
+			else
+			{
+
+				LOG.debug("***************************Inproper BuyBox data********************");
+				buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_SELLERS);
+
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		return buyboxJson;
 	}
 
 	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList)
@@ -407,6 +492,7 @@ public class ProductPageController extends AbstractPageController
 			{
 				sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
 				response = pinCodeFacade.getResonseForPinCode(productCode, pin, populatePinCodeServiceData(productCode));
+				sessionService.setAttribute(ModelAttributetConstants.PINCODE_DETAILS, response);
 			}
 
 		}
@@ -910,7 +996,8 @@ public class ProductPageController extends AbstractPageController
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
-							if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())))
 							{
 
 								if (null != properitsValue && featureValueData.getValue() != null
@@ -941,7 +1028,8 @@ public class ProductPageController extends AbstractPageController
 				}
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
-			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			}
@@ -959,7 +1047,6 @@ public class ProductPageController extends AbstractPageController
 		}
 
 	}
-
 
 	/**
 	 * @description Populating product data
