@@ -112,6 +112,7 @@
 							<spring:theme text="Order History" />
 						</h1>
 						<c:if test="${not empty searchPageData.results}">
+						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
 							<input type="hidden" id="pageIndex" value="${pageIndex}" />
 							<input type="hidden" id="pagableSize" value="${pageSize}" />
 							<input type="hidden" id="totalNumberOfResults"
@@ -131,6 +132,8 @@
 
 							</ul>
 						</c:if> --%>
+						
+						<!-- TISPRO-48 ---- call mpl-pagination.tag for pagination -->
 						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
 							supportShowAll="${isShowAllAllowed}"
 							searchPageData="${searchPageData}"
@@ -591,6 +594,7 @@
 								</ul>
 							</c:if>
 							</div> --%>
+							<!-- TISPRO-48 ---- call mpl-pagination.tag for pagination -->
 							<nav:mpl-pagination top="false"
 								supportShowPaged="${isShowPageAllowed}"
 								supportShowAll="${isShowAllAllowed}"
