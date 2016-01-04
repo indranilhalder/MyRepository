@@ -230,9 +230,9 @@
 			</attributes>
 		</itemtype>
 		
-		<itemtype code="couponMailJob" extends="CronJob"
+		<itemtype code="CouponMailJob" extends="CronJob"
 				autocreate="true" generate="true"
-				jaloclass="com.tisl.mpl.jalo.couponMailJob">				
+				jaloclass="com.tisl.mpl.jalo.CouponMailJob">				
 				<attributes>
 				   <attribute qualifier="voucherCode" type="java.lang.String">					
 						<description>
