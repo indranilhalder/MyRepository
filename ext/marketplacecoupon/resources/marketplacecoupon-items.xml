@@ -230,5 +230,26 @@
 			</attributes>
 		</itemtype>
 		
+		<itemtype code="couponMailJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.couponMailJob">				
+				<attributes>
+				   <attribute qualifier="voucherCode" type="java.lang.String">					
+						<description>
+							Specifies the user defined voucher code
+						</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="true"/>
+				   </attribute>	
+				   <attribute qualifier="targetCustomer" type="User">					
+						<description>
+							Specifies the user defined voucher code
+						</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="true"/>
+				   </attribute>					
+			   </attributes>
+          </itemtype>
+		
 	</itemtypes>
 </items>
