@@ -1086,7 +1086,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			/* getting all voucher in a list */
 
-			final ArrayList<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
+			final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
 			List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();

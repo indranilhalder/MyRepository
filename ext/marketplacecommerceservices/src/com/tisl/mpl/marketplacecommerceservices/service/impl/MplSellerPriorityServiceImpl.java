@@ -42,7 +42,6 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	@Autowired
 	private ModelService modelService;
 	private static final Logger log = Logger.getLogger(MplSellerPriorityServiceImpl.class.getName());
-	private static final String PRODUCT_PRIORITY = "7";
 
 	/**
 	 * updating intermediate priority tables and setting priority levels against ussid to be read from buybox
@@ -76,7 +75,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 					ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
 					priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, sellerPriority.getIsActive().booleanValue(),
 							priorityMap));
-					final int productPriorityLevel = Integer.parseInt(PRODUCT_PRIORITY);
+					final int productPriorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
 					ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
 							sellerPriority.getSellerId())));
 
@@ -99,7 +98,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 					//if only listing id level priority exist
 					else if (null != sellerPriority.getListingId())
 					{
-						priorityLevel = Integer.parseInt(PRODUCT_PRIORITY);
+						priorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
 						if (getUssidFromSkuId(sellerPriority.getListingId(), sellerPriority.getSellerId()) != null)
 						{
 							ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
@@ -385,7 +384,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	}
 
 	/**
-	 * update invalid priorities for a ussid
+	 * update priorities for a ussid,when the priority for the ussid is no longer valid
 	 *
 	 * @param priorityLevel
 	 * @param sellerPriorityLevel
