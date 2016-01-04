@@ -384,7 +384,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	}
 
 	/**
-	 * update invalid priorities for a ussid
+	 * update priorities for a ussid,when the priority for the ussid is no longer valid
 	 *
 	 * @param priorityLevel
 	 * @param sellerPriorityLevel
