@@ -9,7 +9,6 @@ import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.impl.DefaultVoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -56,11 +55,8 @@ public class DefaultCustomerDetailsFacade implements CustomerDetailsFacade
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-	@Resource(name = "voucherModelService")
-	private VoucherModelService voucherModelService;
-
 	@Resource(name = "voucherService")
-	DefaultVoucherService voucherService;
+	private DefaultVoucherService voucherService;
 
 	private static String voucherCode;
 

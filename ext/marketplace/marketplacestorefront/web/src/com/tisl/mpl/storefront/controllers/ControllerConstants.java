@@ -297,6 +297,7 @@ public interface ControllerConstants
 				String ReviewsTab = "fragments/product/reviewsTab";
 				String StorePickupSearchResults = "fragments/product/storePickupSearchResults";
 				String SELLER_ID = "sellerId";
+				String PINCODE_SERVICABILITY = "isPinCodeServicable";
 				public static final String MIN_PRICE = "minPrice";
 				public static final String FULFILLMENT = "fulfillment";
 				public static final String OTHERS_SELLERS_COUNT = "othersSellersCount";

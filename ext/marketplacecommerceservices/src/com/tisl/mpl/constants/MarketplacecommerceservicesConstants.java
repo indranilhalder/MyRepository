@@ -52,7 +52,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CHANNEL_MOBILE = "MOBILE";
 	public static final String CHANNEL_CALLCENTER = "CALLCENTER";
 	public static final String Already_Have_Wishlists = "You already have the following whishlists:";
-
+	public static final String PRODUCT_PRIORITY = "7";
 	public static final String CART_DELISTED_STATUS = "Cart Delisted Status :";
 
 	//SONAR FIX

@@ -227,9 +227,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 */
 	@Override
-	public ArrayList<VoucherModel> getAllCoupons()
+	public List<VoucherModel> getAllCoupons()
 	{
-		final ArrayList<VoucherModel> voucherList = new ArrayList<VoucherModel>();
+		final List<VoucherModel> voucherList = new ArrayList<VoucherModel>();
 		final List<VoucherModel> voucherColl = getMplCouponService().getVoucher();
 		if (CollectionUtils.isNotEmpty(voucherColl))
 		{
@@ -249,10 +249,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 */
 	@Override
-	public ArrayList<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer,
-			final ArrayList<VoucherModel> voucherList)
+	public List<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer,
+			final List<VoucherModel> voucherList)
 	{
-		ArrayList<VoucherDisplayData> voucherDataList = new ArrayList<VoucherDisplayData>();
+		List<VoucherDisplayData> voucherDataList = new ArrayList<VoucherDisplayData>();
 
 		final List<AbstractOrderEntryModel> entryList = cart.getEntries();
 		double baseTotals = 0.0;
@@ -266,14 +266,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			for (final VoucherModel voucherModel : voucherList)
 			{
-				if (voucherModel instanceof PromotionVoucherModel)
+				if (voucherModel instanceof PromotionVoucherModel
+						&& checkVoucherCanBeRedeemed(voucherModel, ((PromotionVoucherModel) voucherModel).getVoucherCode()))
 				{
-					if (checkVoucherCanBeRedeemed(voucherModel, ((PromotionVoucherModel) voucherModel).getVoucherCode()))
-					{
-						voucherDataList = calculateVoucherDisplay(voucherModel, voucherDataList, baseTotals, baseTotalsInclDel);
-						//break;
-					}
-
+					voucherDataList = calculateVoucherDisplay(voucherModel, voucherDataList, baseTotals, baseTotalsInclDel);
 				}
 			}
 		}
@@ -300,8 +296,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param baseTotalsInclDel
 	 * @return ArrayList<VoucherDisplayData>
 	 */
-	private ArrayList<VoucherDisplayData> calculateVoucherDisplay(final VoucherModel voucherModel,
-			final ArrayList<VoucherDisplayData> voucherDataList, final double baseTotals, final double baseTotalsInclDel)
+	private List<VoucherDisplayData> calculateVoucherDisplay(final VoucherModel voucherModel,
+			final List<VoucherDisplayData> voucherDataList, final double baseTotals, final double baseTotalsInclDel)
 	{
 		double voucherDiscount = 0.0;
 		if (voucherModel.getAbsolute().booleanValue())
@@ -540,7 +536,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			}
 			catch (final VoucherOperationException e)
 			{
-				e.printStackTrace();
+				LOG.error("Error while releasing voucher with message " + e.getMessage());
 			}
 
 			recalculateCartForCoupon(cart);
@@ -557,7 +553,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 */
 	@Override
-	public AllVoucherListData getAllVoucherList(final CustomerModel customer, final ArrayList<VoucherModel> voucherList)
+	public AllVoucherListData getAllVoucherList(final CustomerModel customer, final List<VoucherModel> voucherList)
 	{
 		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, YYYY");
 		final List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
