@@ -180,7 +180,7 @@ tr.d0 td {
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>
-		<c:when test="${productCategoryType==electronics||productCategoryType=='Footwear'}">
+		<c:when test="${productCategoryType==electronics}">
 			<div class="trending"  id="ia_products_bought_together"></div>
 			<div class="trending"  id="ia_products_similar"></div>
 		</c:when>
@@ -200,7 +200,7 @@ tr.d0 td {
 <!--- END:MSD ---> 
 	
 <c:choose>
-<c:when test="${product.rootCategory==electronics}">
+<c:when test="${product.rootCategory==electronics||productCategoryType=='Footwear'}">
 <product:productDetailsClassifications product="${product}"/>
 </c:when>
 <c:otherwise>
