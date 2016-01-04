@@ -307,11 +307,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			double totalPriceForSubTotal = 0D;
 			double totalProductDiscount = 0D;
 			double totalConvChargeForCOD = 0D;
+			double totalCouponDiscount = 0D;
 			for (final AbstractOrderEntryModel entryModelList : sellerOrderList.getEntries())
 			{
 				if (entryModelList.getTotalProductLevelDisc() != null && entryModelList.getTotalProductLevelDisc().doubleValue() > 0D)
 				{
 					totalProductDiscount += entryModelList.getTotalProductLevelDisc().doubleValue();
+				}
+
+				if (entryModelList.getCouponValue() != null && entryModelList.getCouponValue().doubleValue() > 0D)
+				{
+					totalCouponDiscount += entryModelList.getCouponValue().doubleValue();
 				}
 
 
@@ -352,9 +358,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					LOG.debug("Cart level discount is either NULL or Zero");
 				}
 				LOG.info("Total Cart Level Discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + totalCartLevelDiscount);
-				sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount));
-				//sellerOrderList.set
-
+				sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
 
 
 				if (entryModelList.getCurrDelCharge() != null && entryModelList.getCurrDelCharge().doubleValue() > 0D)
@@ -368,7 +372,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 				sellerOrderList.setDeliveryCost(Double.valueOf(totalDeliveryPrice));
 				totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
-						- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount);
+						- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
 				sellerOrderList.setTotalPrice(Double.valueOf(totalPrice));
 				sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice));
 				sellerOrderList.setConvenienceCharges(Double.valueOf(totalConvChargeForCOD));
@@ -479,12 +483,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	/**
 	 * @param subOrderModel
 	 * @param promoCode
-	 * @param qualifyingCount
-	 * @return
+	 * @return int
 	 */
 	private int getSetQualifyingCount(final OrderModel subOrderModel, final String promoCode)
 	{
-		// YTODO Auto-generated method stub
 		int setQualifyingCount = 0;
 		int qualifyingCount = 0;
 		for (final AbstractOrderEntryModel subEntry : subOrderModel.getParentReference().getEntries())
@@ -516,7 +518,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	private int getPromoFreeCount(final OrderModel subOrderModel, final String promoCode)
 	{
-		// YTODO Auto-generated method stub
 		int promotionFreeCount = 0;
 		for (final PromotionResultModel allPromotion : subOrderModel.getAllPromotionResults())
 		{
@@ -713,7 +714,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@SuppressWarnings("javadoc")
 	private String getParentUssid(final List<String> associatedItems, final OrderModel subOrderModel)
 	{
-		// YTODO Auto-generated method stub
 		String parentUssid = associatedItems.get(0);
 		int count = 0;
 		for (final String ussid : associatedItems)
@@ -872,6 +872,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			final double price = abstractOrderEntryModel.getTotalSalePrice().doubleValue() / quantity;
 
+			final double couponDiscount = abstractOrderEntryModel.getCouponValue().doubleValue();
+			double couponApportionValue = 0;
+			if (couponDiscount > 0)
+			{
+				couponApportionValue = couponDiscount / quantity;
+			}
+
 
 			// Looping through the order Model for single line single quantity at entry level
 
@@ -885,6 +892,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					cartApportionValue = cartvalue / quantity;
 				}
 				double bogoCartApportion = cartApportionValue;
+				double bogoCouponApportion = couponApportionValue;
 				if (!StringUtil.isEmpty(abstractOrderEntryModel.getProductPromoCode())
 						&& !StringUtil.isEmpty(abstractOrderEntryModel.getQualifyingCount().toString()))
 				{
@@ -901,15 +909,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						final int bogoCount = abstractOrderEntryModel.getFreeCount().intValue();
 						bogoCartApportion = (cartApportionValue * qualifyingCount)
 								/ (qualifyingCount - abstractOrderEntryModel.getFreeCount().intValue());
+						bogoCouponApportion = (couponApportionValue * qualifyingCount)
+								/ (qualifyingCount - abstractOrderEntryModel.getFreeCount().intValue());
 						bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue() * qualifyingCount;
 						qualifyingCount = qualifyingCount - bogoCount;
 						createOrderLine(abstractOrderEntryModel, bogoCount, clonedSubOrder, cartApportionValue, productApportionvalue,
-								price, true, qualifyingCount, deliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge);
+								price, true, qualifyingCount, deliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge,
+								couponApportionValue, 0);
 						productApportionvalue = 0;
 					}
 					createOrderLine(abstractOrderEntryModel, qualifyingCount, clonedSubOrder, cartApportionValue,
 							productApportionvalue, price, false, 0, deliveryCharge, cachedSellerInfoMap, bogoCODPrice, bogoCartApportion,
-							prevDelCharge);
+							prevDelCharge, bogoCouponApportion, bogoCouponApportion);
 
 
 				}
@@ -948,14 +959,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 
 				createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, cartApportionValue, 0, price, false, 0,
-						deliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge);
+						deliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge, couponApportionValue, 0);
 
 			}
 			else
 			{
 				createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, 0, 0,
 						abstractOrderEntryModel.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge, cachedSellerInfoMap,
-						0, 0, prevDelCharge);
+						0, 0, prevDelCharge, couponApportionValue, 0);
 
 			}
 
@@ -979,10 +990,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue, final double price,
 			final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying, final Double deliveryCharge,
 			final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice, final double bogoCartApportion,
-			final Double prevDelCharge)
+			final Double prevDelCharge, final double couponApportionValue, final double bogoCouponApportion)
 
 	{
-		// YTODO Auto-generated method stub
 
 		final BuyBoxModel buyBoxInfo = getBuyBoxService().getpriceForUssid(abstractOrderEntryModel.getSelectedUSSID());
 		for (int qty = 0; qty < quantity; qty++)
@@ -1050,9 +1060,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 				orderEntryModel.setTotalProductLevelDisc(Double.valueOf(productApportionvalue));
 			}
+			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getCouponCode()))
+			{
+				orderEntryModel.setCouponCode(abstractOrderEntryModel.getCouponCode());
+			}
 			final DecimalFormat df = new DecimalFormat("#.##");
 			final double netSellingPrice = Double.parseDouble(df.format(price - productApportionvalue));
-			final double netAmountAfterAllDisc = Double.parseDouble(df.format(price - cartApportionValue - productApportionvalue));
+			final double netAmountAfterAllDisc = Double
+					.parseDouble(df.format(price - cartApportionValue - productApportionvalue - couponApportionValue));
+			orderEntryModel.setCouponValue(Double.valueOf(couponApportionValue));
 			orderEntryModel.setNetSellingPrice(Double.valueOf(netSellingPrice));
 			orderEntryModel.setTotalPrice(Double.valueOf(netSellingPrice));
 			orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(netAmountAfterAllDisc));
@@ -1075,6 +1091,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setIsBOGOapplied(Boolean.TRUE);
 				orderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
 				orderEntryModel.setCartLevelDisc(Double.valueOf(0));
+				orderEntryModel.setCouponValue(Double.valueOf(0));
 				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(0.01));
 				//orderEntryModel.setBasePrice(Double.valueOf(0.01));
 				orderEntryModel.setTotalPrice(Double.valueOf(0.01));
@@ -1086,8 +1103,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setConvenienceChargeApportion(
 						Double.valueOf(bogoCODPrice / orderEntryModel.getQualifyingCount().doubleValue()));
 				orderEntryModel.setCartLevelDisc(Double.valueOf(bogoCartApportion));
-				orderEntryModel.setNetAmountAfterAllDisc(
-						Double.valueOf(Double.parseDouble(df.format(price - bogoCartApportion - productApportionvalue))));
+				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(
+						Double.parseDouble(df.format(price - bogoCartApportion - productApportionvalue - bogoCouponApportion))));
 				orderEntryModel.setCurrDelCharge(deliveryCharge);
 			}
 		}
