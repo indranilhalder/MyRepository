@@ -633,6 +633,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 				var currentBrand = "";
 				if(i==0) {
 					selectQueryParams = selectQueryParams + url;
+					//get searchcategory value to append with brand checkall url
 					if(url.indexOf(':category:') != -1){
 						var urlAry = url.split(':');
 						for (var j = 2; j <  urlAry.length; j = j + 2) { 
@@ -643,8 +644,11 @@ addToBagFromWl: function(ussid, addedToCart) {
 					}
 				}
 				else{
-					currentBrand = arr[arr.length-2]+":"+arr[arr.length-1];
-					selectQueryParams = selectQueryParams + ":"+currentBrand;
+					//condition to avoid duplicate brand
+					if(selectQueryParams.indexOf(arr[arr.length-1]) == -1) {
+						currentBrand = arr[arr.length-2]+":"+arr[arr.length-1];
+						selectQueryParams = selectQueryParams + ":"+currentBrand;
+					}
 				}
 				i = i + 1;
 				window.location.href = "?q="+selectQueryParams+"&searchCategory="+searchCategory+"&selectAllBrand=true";
