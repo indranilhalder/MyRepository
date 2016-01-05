@@ -241,12 +241,12 @@
 						<persistence type="property"/>
 						<modifiers read="true" write="true" search="true" optional="true"/>
 				   </attribute>	
-				   <attribute qualifier="targetCustomer" type="User">					
+				   <attribute qualifier="targetCustomer" type="PrincipalCollection">					
 						<description>
 							Specifies the user defined voucher code
 						</description>
 						<persistence type="property"/>
-						<modifiers read="true" write="true" search="true" optional="true"/>
+						<modifiers read="true" write="true" search="false" initial="false" optional="false"/>
 				   </attribute>					
 			   </attributes>
           </itemtype>

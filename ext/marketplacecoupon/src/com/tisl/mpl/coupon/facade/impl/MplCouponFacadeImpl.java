@@ -266,8 +266,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 		voucherDataList = getMplCouponService().getSortedVoucher(voucherDataList);
 
-		final int couponCount = Integer.valueOf(
-				getConfigurationService().getConfiguration().getString("coupon.display.topCount", "5")).intValue();
+		final int couponCount = Integer.parseInt(getConfigurationService().getConfiguration().getString("coupon.display.topCount",
+				"5"));
 
 		if (voucherDataList.size() > couponCount)
 
@@ -950,7 +950,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				}
 				else
 				{
-					currNetAmtAftrAllDisc = Double.valueOf(MarketplacecouponConstants.ZEROPOINTZEROONE).doubleValue();
+					currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecouponConstants.ZEROPOINTZEROONE);
 				}
 
 			}
@@ -963,7 +963,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				}
 				else
 				{
-					currNetAmtAftrAllDisc = Double.valueOf(MarketplacecouponConstants.ZEROPOINTZEROONE).doubleValue();
+					currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecouponConstants.ZEROPOINTZEROONE);
 				}
 
 			}
