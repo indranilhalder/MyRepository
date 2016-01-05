@@ -63,8 +63,8 @@
 								class="account-userTitle account-userTitle-custom"><spring:theme
 									code="header.hi.blank" arguments="${userName}" htmlEscape="true" />!</a>
 						</c:if> --%>
-						<a class="headeruserdetails" href="<c:url value="/my-account"/>"
-												class="account-userTitle account-userTitle-custom"></a>
+						<a href="<c:url value="/my-account"/>"
+												class="headeruserdetails account-userTitle account-userTitle-custom"></a>
 						<span id="mobile-menu-toggle"></span>
 					</ycommerce:testId>
 						<ul class="dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout" role="menu">

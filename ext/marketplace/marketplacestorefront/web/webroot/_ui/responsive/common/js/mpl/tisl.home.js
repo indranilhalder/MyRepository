@@ -13,13 +13,16 @@ $(function() {
 			}
 			else {
 				var firstName = data.userFirstName;
-				console.log(firstName);
 				if (firstName == null || firstName.trim() == '') {
 					$("a.headeruserdetails").html("Hi!");
 				} else {
 					$("a.headeruserdetails").html("Hi, " + firstName + "!");
 				}
 			}
+			$("input[name='CSRFToken']").each(function(){
+				console.log("old value ---"+this.value + "---new value--"+data.dts);
+		        this.value = data.dts;          
+		    });
 		}
 	});
 });
@@ -84,7 +87,7 @@ $(".A-ZBrands").on("mouseover touchend", function(e) {
 				type: 'GET',
 				success: function (html)
 				{
-					console.log(html)
+					//console.log(html)
 					if ($("div#appendedAtoZBrands") == null || $("div#appendedAtoZBrands").length == 0) {
 						$("li#atozbrandsdiplay").append(html);
 					}

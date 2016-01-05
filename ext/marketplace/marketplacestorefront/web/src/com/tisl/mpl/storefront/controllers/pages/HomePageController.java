@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
+import com.tisl.mpl.storefront.util.CSRFTokenManager;
 
 
 /**
@@ -76,6 +78,8 @@ public class HomePageController extends AbstractPageController
 	private MplCustomerProfileFacade mplCustomerProfileFacade;
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+
+	private static final String userFirstName = "userFirstName";
 
 	/**
 	 * @description this is called to load home page
@@ -163,35 +167,44 @@ public class HomePageController extends AbstractPageController
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/setheader", method = RequestMethod.GET)
-	public Map<String, Object> setHeaderData()
+	public Map<String, Object> setHeaderData(final HttpSession session)
 	{
 
 		final Map<String, Object> header = new HashMap<String, Object>();
 		final CartData cartData = cartFacade.getMiniCart();
 		header.put("cartcount", String.valueOf(cartData.getTotalItems()));
 
+		header.put("dts", CSRFTokenManager.getTokenForSession(session));
+
 		//customer name in the header
-
-
 		if (!userFacade.isAnonymousUser())
 		{
 			header.put("loggedInStatus", true);
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-			String firstName = currentCustomer.getFirstName();
-			if (StringUtils.contains(firstName, '@'))
+			final Object sessionFirstName = session.getAttribute(userFirstName);
+			if (sessionFirstName == null)
 			{
-				firstName = null;
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+				String firstName = currentCustomer.getFirstName();
+				if (StringUtils.contains(firstName, '@'))
+				{
+					firstName = StringUtils.EMPTY;
+				}
+				else if (StringUtils.length(firstName) > 25)
+				{
+					firstName = StringUtils.substring(firstName, 0, 25);
+				}
+				header.put(userFirstName, firstName);
+				session.setAttribute(userFirstName, firstName);
 			}
-			else if (StringUtils.length(firstName) > 25)
+			else
 			{
-				firstName = StringUtils.substring(firstName, 0, 25);
+				header.put(userFirstName, sessionFirstName);
 			}
-			header.put("userFirstName", firstName);
 		}
 		else
 		{
 			header.put("loggedInStatus", false);
-			header.put("userFirstName", null);
+			header.put(userFirstName, null);
 		}
 
 		return header;
