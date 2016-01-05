@@ -1058,17 +1058,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 	/**
-	 * /**
 	 *
-	 * @description This method returns the coupon details page
-	 *
+	 * @description This method returns the account management coupon details page along with offers & discounts with
+	 *              coupon codes, transaction history and a user guide on how coupons are redeemed
 	 * @param model
+	 * @param page
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 * @throws VoucherOperationException
-	 * @throws JSONException
 	 * @throws NullPointerException
-	 * @throws MalformedURLException
 	 */
 
 
@@ -1106,7 +1104,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList);
 			if (null != allVoucherListData)
 
-			/* all type of voucher is shown in open voucher and personalised vouchers is shown as closed voucher */
+			/* all type of voucher is shown in open voucher and personalized vouchers are shown as closed voucher */
 
 			{
 				openVoucherDataList = allVoucherListData.getOpenVoucherList();
@@ -1115,7 +1113,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			/* getting all voucher transactions along with the order placed in a DTO */
 			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
-			couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
+
+			if (null != couponHistoryStoreDTO)
+			{
+				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
+			}
+
 
 			if (!couponHistoryDTOList.isEmpty())
 			{

@@ -275,8 +275,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 		voucherDataList = getMplCouponService().getSortedVoucher(voucherDataList);
 
-		final int couponCount = Integer
-				.valueOf(getConfigurationService().getConfiguration().getString("coupon.display.topCount", "5")).intValue();
+		final int couponCount = Integer.valueOf(
+				getConfigurationService().getConfiguration().getString("coupon.display.topCount", "5")).intValue();
 
 		if (voucherDataList.size() > couponCount)
 
@@ -342,8 +342,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws CalculationException
 	 */
 	@Override
-	public boolean applyVoucher(final String voucherCode, final CartModel cartModel)
-			throws VoucherOperationException, CalculationException
+	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
+			CalculationException
 	{
 		boolean checkFlag = false;
 		if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
@@ -467,8 +467,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
 	 */
-	protected void checkCartAfterApply(final VoucherModel lastVoucher, final CartModel cartModel)
-			throws ModelSavingException, VoucherOperationException, CalculationException
+	protected void checkCartAfterApply(final VoucherModel lastVoucher, final CartModel cartModel) throws ModelSavingException,
+			VoucherOperationException, CalculationException
 	{
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
 		final double cartSubTotal = cartModel.getSubtotal().doubleValue();
@@ -500,8 +500,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
 				{
-					discountValue = new DiscountValue(discount.getCode(), (cartSubTotal - promoCalcValue - 0.01),
-							lastVoucher.getAbsolute().booleanValue(), discount.getCurrencyIsoCode());
+					discountValue = new DiscountValue(discount.getCode(), (cartSubTotal - promoCalcValue - 0.01), lastVoucher
+							.getAbsolute().booleanValue(), discount.getCurrencyIsoCode());
 					discountList.remove(discount);
 					break;
 				}
@@ -841,17 +841,19 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			final Calendar endCalendar = Calendar.getInstance();
 			final Calendar startCalendar = Calendar.getInstance();
+			final SimpleDateFormat dateFormatforMONTH = new java.text.SimpleDateFormat("MM");
+
 
 			endCalendar.setTime(new Date());
 			startCalendar.setTime(orderCreationDate);
 
 			final int endYear = endCalendar.get(Calendar.YEAR);
-			final int endMonth = endCalendar.get(Calendar.MONTH);
+			final int endMonth = Integer.parseInt(dateFormatforMONTH.format(endCalendar.getTime()));
 			final int endDay = endCalendar.get(Calendar.DAY_OF_MONTH);
 
 
 			final int startYear = startCalendar.get(Calendar.YEAR);
-			final int startMonth = startCalendar.get(Calendar.MONTH);
+			final int startMonth = Integer.parseInt(dateFormatforMONTH.format(startCalendar.getTime()));
 			final int startDay = startCalendar.get(Calendar.DAY_OF_MONTH);
 
 			final DateTime startDate = new DateTime().withDate(startYear, startMonth, startDay);
@@ -961,14 +963,13 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			//
 			//			}
 
-			if ((null != entry.getProperty(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)
-					&& !((String) entry.getProperty(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
-					|| (null != entry.getProperty(MarketplacecommerceservicesConstants.CARTPROMOCODE)
-							&& !((String) entry.getProperty(MarketplacecommerceservicesConstants.CARTPROMOCODE)).isEmpty()))
+			if ((null != entry.getProperty(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) && !((String) entry
+					.getProperty(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
+					|| (null != entry.getProperty(MarketplacecommerceservicesConstants.CARTPROMOCODE) && !((String) entry
+							.getProperty(MarketplacecommerceservicesConstants.CARTPROMOCODE)).isEmpty()))
 			{
-				final double netAmtAftrAllDisc = entry.getProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC) != null
-						? ((Double) entry.getProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC)).doubleValue()
-						: 0.00D;
+				final double netAmtAftrAllDisc = entry.getProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC) != null ? ((Double) entry
+						.getProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC)).doubleValue() : 0.00D;
 
 				if (netAmtAftrAllDisc > entryLevelApportionedPrice)
 				{
