@@ -113,6 +113,8 @@
      
      <!-- Coupon Helper Class -->
 	<bean id="mplCouponHelper" class="com.tisl.mpl.helper.MplCouponHelper" />
+	
+	<bean id="couponMailJob" class="com.tisl.mpl.coupon.facade.job.CouponMailJob" autowire="byName"/>
 
 	
 			
