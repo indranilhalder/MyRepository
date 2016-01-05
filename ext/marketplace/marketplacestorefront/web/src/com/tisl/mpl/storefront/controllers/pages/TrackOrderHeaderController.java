@@ -51,6 +51,7 @@ public class TrackOrderHeaderController
 		if (!userService.isAnonymousUser(currentCustomer))
 		{
 
+
 			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
 			final String customerUID = currentCustomer.getUid();
 			if (null != customerUID)

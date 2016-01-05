@@ -4,9 +4,11 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +47,8 @@ public class NotificationDaoImpl implements NotificationDao
 	}
 
 	/*
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#getNotificationDetail(com.tisl.mpl.core.model.
 	 * NotificationModel)
 	 */
@@ -61,13 +63,13 @@ public class NotificationDaoImpl implements NotificationDao
 			String notificationCount;
 			if (isDesktop)
 			{
-				notificationCount = getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.NOTIFICATION_COUNT);
+				notificationCount = getConfigurationService().getConfiguration().getString(
+						MarketplacecommerceservicesConstants.NOTIFICATION_COUNT);
 			}
 			else
 			{
-				notificationCount = getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.NOTIFICATION_COUNT_MOBILE);
+				notificationCount = getConfigurationService().getConfiguration().getString(
+						MarketplacecommerceservicesConstants.NOTIFICATION_COUNT_MOBILE);
 			}
 
 			if (notificationCount != null && customerUID != null)
@@ -105,7 +107,7 @@ public class NotificationDaoImpl implements NotificationDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#checkCustomerFacingEntry(com.tisl.mpl.core.model
 	 * .OrderStatusNotificationModel)
@@ -118,7 +120,9 @@ public class NotificationDaoImpl implements NotificationDao
 		if (customerId != null && orderId != null && transactionId != null && customerStatus != null)
 		{
 			final String queryString = //
-			SELECT_CLASS + OrderStatusNotificationModel.PK + "}" //
+			SELECT_CLASS
+					+ OrderStatusNotificationModel.PK
+					+ "}" //
 					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND" + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND" + C_CLASS
@@ -148,7 +152,9 @@ public class NotificationDaoImpl implements NotificationDao
 		if (customerId != null && orderId != null && shopperStatus != null)
 		{
 			final String queryString = //
-			SELECT_CLASS + OrderStatusNotificationModel.PK + "}" //
+			SELECT_CLASS
+					+ OrderStatusNotificationModel.PK
+					+ "}" //
 					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND " + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND " + C_CLASS
@@ -156,7 +162,9 @@ public class NotificationDaoImpl implements NotificationDao
 					+ OrderStatusNotificationModel.CUSTOMERSTATUS + "}=?shopperStatus";
 
 			final String queryString2 = //
-			SELECT_CLASS + OrderStatusNotificationModel.PK + "}" //
+			SELECT_CLASS
+					+ OrderStatusNotificationModel.PK
+					+ "}" //
 					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND" + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND" + C_CLASS
@@ -200,10 +208,13 @@ public class NotificationDaoImpl implements NotificationDao
 	{
 		List<OrderStatusNotificationModel> orderList = new ArrayList<>();
 		final String queryString = //
-		SELECT_CLASS + OrderStatusNotificationModel.PK + "}" //
+		SELECT_CLASS
+				+ OrderStatusNotificationModel.PK
+				+ "}" //
 				+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
-				+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND " + C_CLASS + OrderStatusNotificationModel.ORDERNUMBER
-				+ "}=?ordercode AND " + C_CLASS + OrderStatusNotificationModel.TRANSACTIONID + "}=?transactionId AND " + C_CLASS
+				+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND " + C_CLASS
+				+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND " + C_CLASS
+				+ OrderStatusNotificationModel.TRANSACTIONID + "}=?transactionId AND " + C_CLASS
 				+ OrderStatusNotificationModel.ORDERSTATUS + "}=?orderStatus";
 
 
@@ -217,6 +228,36 @@ public class NotificationDaoImpl implements NotificationDao
 
 		orderList = flexibleSearchService.<OrderStatusNotificationModel> search(query).getResult();
 		return orderList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#findVoucher()
+	 */
+	@Override
+	public List<VoucherModel> findVoucher()
+	{
+		final String queryString = MarketplacecommerceservicesConstants.VOUCHERWITHINDATEQUERY;
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+		return flexibleSearchService.<VoucherModel> search(query).getResult();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#getPromotion()
+	 */
+	@Override
+	public List<AbstractPromotionModel> getPromotion()
+	{
+		List<AbstractPromotionModel> promotionList = new ArrayList<>();
+		final String queryString = MarketplacecommerceservicesConstants.GETPROMOTIONS;
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		promotionList = flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+		return promotionList;
 	}
 
 

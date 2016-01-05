@@ -133,7 +133,7 @@
 					</c:otherwise>
 				</c:choose>
 
-				<c:if test="${product.rootCategory!='Clothing'}">
+				<c:if test="${product.rootCategory=='Electronics'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
 				<c:if test="${not empty notApparel}">
@@ -393,11 +393,15 @@
 			<c:when test="${allOOStock==stock_y}">
 			</c:when>
 			<c:otherwise>			
-					<button id="addToCartButton" type="${buttonType}"
+					<button id="addToCartButton"   type="${buttonType}"
 						class="btn-block js-add-to-cart">
 						<spring:theme code="basket.add.to.basket" />
 					</button>
-				
+				  <%--   <button
+			        id="addToCartButton-wrong" type="button"
+			        class="btn-block">
+		            <spring:theme code="basket.add.to.basket" />
+	                </button> --%>
 			</c:otherwise>
 		</c:choose>
 	
@@ -423,7 +427,7 @@
 
 <script>
 $(document).ready(function(){
-	buyboxDetailsForSizeGuide(${product.code});
+	buyboxDetailsForSizeGuide('${product.code}');
 	var numLi= $(".modal.size-guide .sizes .tables li.header > ul").children().length;
 	
 	var sizeWidth= 88/(numLi-1) + "%";
