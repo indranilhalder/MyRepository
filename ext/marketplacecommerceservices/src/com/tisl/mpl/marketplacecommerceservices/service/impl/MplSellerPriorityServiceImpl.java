@@ -80,7 +80,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							sellerPriority.getSellerId())));
 
 					priorityMap.putAll(getPriorityLevelData(ussidList, productPriorityLevel, isValid, priorityMap));
-					log.debug(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
+					log.info(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
 							.append("prioritylevel").append(priorityLevel).toString());
 				}
 				else
@@ -92,7 +92,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						final int count = 1;
 						priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
 						ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
-						log.debug(new StringBuilder("###########ussid for category level").append(ussidList).append("prioritylevel")
+						log.info(new StringBuilder("###########ussid for category level").append(ussidList).append("prioritylevel")
 								.append(priorityLevel).toString());
 					}
 					//if only listing id level priority exist
@@ -103,7 +103,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						{
 							ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
 									sellerPriority.getSellerId())));
-							log.debug(new StringBuilder("***************ussid for product level").append(ussidList)
+							log.info(new StringBuilder("***************ussid for product level").append(ussidList)
 									.append("prioritylevel").append(priorityLevel).toString());
 						}
 					}
@@ -254,12 +254,6 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							break;
 						}
 					}
-
-					//				if (p.getSellerInformationRelator().contains(sellerInformationModel))
-					//				{
-					//					product.add(p);
-					//				}
-
 				}
 			}
 			for (final CategoryModel subCategories : category.getCategories())
