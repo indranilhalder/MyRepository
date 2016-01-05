@@ -90,6 +90,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -164,6 +165,7 @@ import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
+import com.tisl.mpl.facades.account.reviews.impl.DefaultMplReviewFacade;
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
@@ -186,6 +188,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MyWishListInHeaderComponentModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.service.MplGigyaReviewCommentService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -206,6 +209,7 @@ import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 
 
 /**
@@ -247,7 +251,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String MARKETPLACE_PREFERENCE = "marketplacePreference";
 	private static final String MY_INTEREST = "myInterest";
 	private static final String MY_STYLE_PROFILE = "myStyleProfile";
-
+	private static final String REVIEW_CMS_PAGE = "reviews";
 	private static final Logger LOG = Logger.getLogger(AccountPageController.class);
 	private String dateDOB = MarketplacecommerceservicesConstants.EMPTY;
 	private String dateDOAnn = MarketplacecommerceservicesConstants.EMPTY;
@@ -257,6 +261,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String ERROR_MSG = "errorMsg";
 	private static final String ERROR_OCCURED = "errorOccured";
 	private static final String UTF = "UTF-8";
+	public static final String ERROR_RESP = "gigys response error.";
 
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
@@ -365,7 +370,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private BuyBoxFacade buyBoxFacade;
 	@Autowired
 	private ProductDetailsHelper productDetailsHelper;
-
+	@Autowired
+	private MplGigyaReviewCommentService gigyaCommentService;
+	@Autowired
+	private DefaultMplReviewFacade mplReviewrFacade;
 
 	@Autowired
 	private MyStyleProfileFacade myStyleProfileFacade;
@@ -1078,7 +1086,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			/* getting all voucher in a list */
 
-			final ArrayList<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
+			final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
 			List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
@@ -6078,6 +6086,257 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		this.mplOrderFacade = mplOrderFacade;
 	}
+
+	/**
+	 * @Description: Fetching Reviews given by user
+	 * @param page
+	 *           ,show,sort,sortcode,model
+	 * @return String
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unused")
+	@RequestMapping(value = "/reviews", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String review(
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL) final int page,
+			final Model model) throws Exception
+	{
+		final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE, 5);
+		final Map<String, ProductData> productDataMap = new HashMap<String, ProductData>();
+		final Map<String, ProductData> productDataModifyMap = new HashMap<String, ProductData>();
+		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
+		final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
+		final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
+				ProductOption.VARIANT_FULL, ProductOption.CATEGORIES);
+		ProductData productData = new ProductData();
+		List<GigyaProductReviewWsDTO> commentsWithProductDataModified = new ArrayList<GigyaProductReviewWsDTO>();
+		int startIndex = 0;
+		int endIndex = 0;
+		int commentListSize = 0;
+		try
+		{
+			if (CollectionUtils.isNotEmpty(orderModels))
+			{
+				for (final OrderModel order : orderModels)
+				{
+					for (final OrderModel sellerOrder : order.getChildOrders())
+					{
+						for (final AbstractOrderEntryModel entry : sellerOrder.getEntries())
+						{
+							final ProductModel productmodel = entry.getProduct();
+							try
+							{
+								if (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS) != null)
+								{
+									productData = (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS));
+								}
+							}
+							catch (final Exception exception)
+							{
+								LOG.error("Review  exception: " + exception);
+								throw new EtailNonBusinessExceptions(exception);
+							}
+							productDataMap.put(productData.getCode(), productData);
+							/*
+							 * if (productDataMap.size() == 10) { break; }
+							 */
+
+							LOG.debug("************************ " + productDataMap);
+						}
+					}
+				}
+			}
+
+			if (!productDataMap.isEmpty())
+			{
+				final Iterator productDataMapIterator = productDataMap.entrySet().iterator();
+				while (productDataMapIterator.hasNext())
+				{
+					final Map.Entry productEntry = (Map.Entry) productDataMapIterator.next();
+					final ProductData productDataValue = (ProductData) productEntry.getValue();
+					final boolean isCommented = gigyaCommentService.getReviewsByCategoryProductId(productDataValue.getRootCategory(),
+							productDataValue.getCode(), customerModel.getUid());
+					if (isCommented == false)
+					{
+						productDataModifyMap.put(productDataValue.getCode(), productDataValue);
+						if (productDataModifyMap.size() == 10)
+						{
+							break;
+						}
+					}
+
+				}
+			}
+			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
+					.getReviewsByUID(customerModel.getUid());
+			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
+
+			/* pagination logic */
+
+			if (!commentsWithProductDataModified.isEmpty())
+			{
+				int start = 0;
+				int end = 0;
+				final int commentsListSize = commentsWithProductDataModified.size();
+				commentListSize = commentsListSize;
+				final double pages = Math.ceil(commentsListSize / pageSize);
+				final int totalPages = (int) pages;
+				model.addAttribute(ModelAttributetConstants.TOTAL_PAGES, Integer.valueOf(totalPages));
+				model.addAttribute(ModelAttributetConstants.COMMENT_LIST_SIZE, Integer.valueOf(commentsListSize));
+				if (page != 0)
+				{
+					start = (int) ((page - 1) * pageSize);
+					end = (int) (start + pageSize);
+				}
+				else
+				{
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (start > commentsListSize)
+				{
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (end > commentsListSize)
+				{
+					commentsWithProductDataModified = commentsWithProductDataModified.subList(start, commentsListSize);
+				}
+				else
+				{
+
+					commentsWithProductDataModified = commentsWithProductDataModified.subList(start, end);
+				}
+			}
+			if (page > 1)
+			{
+				startIndex = ((page - 1) * (int) pageSize) + 1;
+				endIndex = ((page - 1) * (int) pageSize) + (int) pageSize;
+			}
+
+			else
+			{
+				if (commentListSize > pageSize)
+				{
+					startIndex = 1;
+					endIndex = (int) pageSize;
+				}
+				else
+				{
+					startIndex = 1;
+					endIndex = commentListSize;
+				}
+			}
+			if (endIndex >= commentListSize)
+			{
+				endIndex = commentListSize;
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		storeCmsPageInModel(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
+		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
+				accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_REVIEWS));
+		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+		model.addAttribute(ModelAttributetConstants.COMMENTS, commentsWithProductDataModified);
+		model.addAttribute(ModelAttributetConstants.START_INDEX, Integer.valueOf(startIndex));
+		model.addAttribute(ModelAttributetConstants.END_INDEX, Integer.valueOf(endIndex));
+		model.addAttribute(ModelAttributetConstants.PURCHASED_PRODUCT, productDataModifyMap);
+		return getViewForPage(model);
+
+	}
+
+	/**
+	 * @Description: Deleting and updating Reviews given by user
+	 * @param categoryID
+	 *           ,streamID,commentID,commentText,commentTitle,ratings,model
+	 * @return Map
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unused")
+	@RequestMapping(value = "/review/{operation}", method = RequestMethod.GET)
+	@RequireHardLogIn
+	@ResponseBody
+	public Map<String, String> modifyReview(
+			@PathVariable("operation") final String operation,
+			@RequestParam(value = ModelAttributetConstants.CATEGORY_ID, defaultValue = ModelAttributetConstants.CATEGORY_ID_VAL) final String categoryID,
+			@RequestParam(value = ModelAttributetConstants.STREAM_ID, defaultValue = ModelAttributetConstants.STREAM_ID_VAL) final String streamID,
+			@RequestParam(value = ModelAttributetConstants.COMMENT_ID, defaultValue = ModelAttributetConstants.COMMENT_ID_VAL) final String commentID,
+			@RequestParam(value = ModelAttributetConstants.COMMENT_TEXT, defaultValue = ModelAttributetConstants.COMMENT_TEXT_VAL) final String commentText,
+			@RequestParam(value = ModelAttributetConstants.COMMENT_TITLE, defaultValue = ModelAttributetConstants.COMMENT_TITLE_VAL) final String commentTitle,
+			@RequestParam(value = ModelAttributetConstants.RATINGS, defaultValue = ModelAttributetConstants.RATINGS_VAL) final String ratings,
+			final Model model) throws Exception
+	{
+		/**
+		 * Edit comment service call
+		 */
+		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
+		final Map<String, String> jsonMap = new HashMap<String, String>();
+
+		try
+		{
+			if (null != operation && operation.equals("edit"))
+			{
+				final String gigyaEditResponse = gigyaCommentService.editComment(categoryID, streamID, commentID, commentText,
+						commentTitle, ratings, customerModel.getUid());
+
+				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
+				{
+					jsonMap.put("status", "success");
+					return jsonMap;
+				}
+				else
+				{
+					jsonMap.put("status", "failed");
+					return jsonMap;
+				}
+			}
+
+			if (null != operation && operation.equals("delete"))
+			{
+				final String gigyaEditResponse = gigyaCommentService.deleteComment(categoryID, streamID, commentID);
+
+				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
+				{
+					jsonMap.put("status", "success");
+					return jsonMap;
+				}
+				else
+				{
+					jsonMap.put("status", "failed");
+					return jsonMap;
+				}
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+			callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
+		}
+		return null;
+	}
+
+
+
 
 
 }

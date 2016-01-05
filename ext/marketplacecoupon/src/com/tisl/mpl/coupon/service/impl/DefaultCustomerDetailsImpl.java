@@ -21,7 +21,7 @@ import com.tisl.mpl.coupon.service.CustomerDetailsService;
 public class DefaultCustomerDetailsImpl implements CustomerDetailsService
 {
 
-	CustomerDetailsDao customerDetailsDao;
+	private CustomerDetailsDao customerDetailsDao;
 
 
 	/**
@@ -60,6 +60,7 @@ public class DefaultCustomerDetailsImpl implements CustomerDetailsService
 	@Override
 	public List<VoucherModel> getVoucher()
 	{
+		LOG.debug("Inside get Voucher in DefaultCustomerDetailsImpl");
 		return customerDetailsDao.findVoucher();
 	}
 

@@ -200,7 +200,7 @@ tr.d0 td {
 <!--- END:MSD ---> 
 	
 <c:choose>
-<c:when test="${product.rootCategory==electronics}">
+<c:when test="${product.rootCategory==electronics||productCategoryType=='Footwear'}">
 <product:productDetailsClassifications product="${product}"/>
 </c:when>
 <c:otherwise>

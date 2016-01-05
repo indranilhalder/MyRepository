@@ -89,15 +89,13 @@ public class CronJobDataServiceImpl implements CronJobDataService
 					//final Date sysDate = new Date();
 					final Date lastOrderDate = latestOrder.getDate();
 
-					if (CouponUtilityMethods.doDateValidation(startDate, endDate, lastOrderDate))
+					if (CouponUtilityMethods.doDateValidation(startDate, endDate, lastOrderDate)
+							&& null != latestOrder.getTotalPrice())
 					{
-						if (null != latestOrder.getTotalPrice())
+						final Double amount = latestOrder.getTotalPrice();
+						if (amount.doubleValue() > specifiedAmount.doubleValue())
 						{
-							final Double amount = latestOrder.getTotalPrice();
-							if (amount.doubleValue() > specifiedAmount.doubleValue())
-							{
-								flag = true;
-							}
+							flag = true;
 						}
 					}
 				}
@@ -124,16 +122,11 @@ public class CronJobDataServiceImpl implements CronJobDataService
 		{
 			final Date userCreationTime = oCusModel.getCreationtime();
 
-			if (CouponUtilityMethods.doDateValidation(restrictionStartDate, restrictionEndDate, userCreationTime))
+			if (CouponUtilityMethods.doDateValidation(restrictionStartDate, restrictionEndDate, userCreationTime)
+					&& oCusModel.getOrders() != null && oCusModel.getOrders().isEmpty() && (noOfDays == 0
+							|| CouponUtilityMethods.noOfDaysCalculatorBetweenDates(userCreationTime, currentDate) >= noOfDays))
 			{
-				if (oCusModel.getOrders() != null && oCusModel.getOrders().isEmpty())
-				{
-					if (noOfDays == 0
-							|| CouponUtilityMethods.noOfDaysCalculatorBetweenDates(userCreationTime, currentDate) >= noOfDays)
-					{
-						flag = true;
-					}
-				}
+				flag = true;
 			}
 		}
 		return flag;
