@@ -168,18 +168,35 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 		final List<String> ussidList = new ArrayList<String>();
 		try
 		{
-			if (!(category.getCategories().isEmpty()))
+			if (!(category.getProducts().isEmpty()))
 			{
-				for (final CategoryModel cat : category.getCategories())
+				for (final ProductModel productList : category.getProducts())
 				{
-					final List<String> ussids = findUssidsByRecursion(cat, sellerMasterModel);
-					ussidList.addAll(ussids);
+					for (final SellerInformationModel seller : productList.getSellerInformationRelator())
+					{
+						if (seller.getSellerID().equals(sellerMasterModel.getId()))
+						{
+							ussidList.add(seller.getSellerArticleSKU());
+							break;
+						}
+					}
 				}
 			}
 			else
 			{
-				final List<String> ussids = findUssidsByRecursion(category, sellerMasterModel);
-				ussidList.addAll(ussids);
+				if (!(category.getCategories().isEmpty()))
+				{
+					for (final CategoryModel cat : category.getCategories())
+					{
+						final List<String> ussids = findUssidsByRecursion(cat, sellerMasterModel);
+						ussidList.addAll(ussids);
+					}
+				}
+				else
+				{
+					final List<String> ussids = findUssidsByRecursion(category, sellerMasterModel);
+					ussidList.addAll(ussids);
+				}
 			}
 		}
 		catch (final Exception e)
@@ -244,12 +261,16 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 		{
 			if (!(category.getProducts().isEmpty()))
 			{
-				for (final ProductModel p : category.getProducts())
+				for (final ProductModel products : category.getProducts())
 				{
-					for (final SellerInformationModel seller : p.getSellerInformationRelator())
+					for (final SellerInformationModel seller : products.getSellerInformationRelator())
 					{
 						if (seller.getSellerID().equals(sellerMasterModel.getId()))
 						{
+
+							System.out.println("***************#######ussid for product in category" + ussidList + "product" + products
+									+ "category" + category.getCode());
+
 							ussidList.add(seller.getSellerArticleSKU());
 							break;
 						}
