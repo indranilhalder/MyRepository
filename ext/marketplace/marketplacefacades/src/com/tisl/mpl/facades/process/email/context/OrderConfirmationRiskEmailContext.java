@@ -16,6 +16,8 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 
 import java.util.List;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 
 /**
  * @author TCS
@@ -47,6 +49,7 @@ public class OrderConfirmationRiskEmailContext extends AbstractEmailContext<Orde
 	private static final String SPACE = " ";
 	private static final String CUSTOMER = "Customer";
 	private static final String COMMA = ",";
+	public static final String TRACK_ORDER_URL = "trackOrderUrl";
 
 
 
@@ -68,6 +71,10 @@ public class OrderConfirmationRiskEmailContext extends AbstractEmailContext<Orde
 		orderCode = orderProcessModel.getOrder().getCode();
 
 		childOrders = orderProcessModel.getOrder().getChildOrders();
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderProcessModel.getOrder().getCode();
+		put(TRACK_ORDER_URL, trackOrderUrl);
 
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
