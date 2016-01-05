@@ -555,7 +555,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Override
 	public AllVoucherListData getAllVoucherList(final CustomerModel customer, final List<VoucherModel> voucherList)
 	{
-		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, YYYY");
+		final SimpleDateFormat sdf = new SimpleDateFormat(MarketplacecommerceservicesConstants.COUPONS_DATE_FORMAT);
 		final List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 		final List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 		final AllVoucherListData allVoucherListData = new AllVoucherListData();
