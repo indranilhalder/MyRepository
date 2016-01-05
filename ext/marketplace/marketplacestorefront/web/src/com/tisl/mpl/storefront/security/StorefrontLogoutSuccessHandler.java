@@ -97,9 +97,12 @@ public class StorefrontLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandle
 
 		if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
 		{
+			if(authentication != null)
+			{
 			if (authentication.getName() != null)
 			{
 				productDetailsHelper.ratingReviewLogout(authentication.getName());
+			}
 			}
 		}
 		getGuidCookieStrategy().deleteCookie(request, response);
