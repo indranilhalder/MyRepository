@@ -546,7 +546,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Override
 	public AllVoucherListData getAllVoucherList(final CustomerModel customer, final List<VoucherModel> voucherList)
 	{
-		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, YYYY");
+		final SimpleDateFormat sdf = new SimpleDateFormat(MarketplacecommerceservicesConstants.COUPONS_DATE_FORMAT);
 		final List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 		final List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 		final AllVoucherListData allVoucherListData = new AllVoucherListData();
@@ -832,17 +832,19 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			final Calendar endCalendar = Calendar.getInstance();
 			final Calendar startCalendar = Calendar.getInstance();
+			final SimpleDateFormat dateFormatforMONTH = new java.text.SimpleDateFormat("MM");
+
 
 			endCalendar.setTime(new Date());
 			startCalendar.setTime(orderCreationDate);
 
 			final int endYear = endCalendar.get(Calendar.YEAR);
-			final int endMonth = endCalendar.get(Calendar.MONTH);
+			final int endMonth = Integer.parseInt(dateFormatforMONTH.format(endCalendar.getTime()));
 			final int endDay = endCalendar.get(Calendar.DAY_OF_MONTH);
 
 
 			final int startYear = startCalendar.get(Calendar.YEAR);
-			final int startMonth = startCalendar.get(Calendar.MONTH);
+			final int startMonth = Integer.parseInt(dateFormatforMONTH.format(startCalendar.getTime()));
 			final int startDay = startCalendar.get(Calendar.DAY_OF_MONTH);
 
 			final DateTime startDate = new DateTime().withDate(startYear, startMonth, startDay);
