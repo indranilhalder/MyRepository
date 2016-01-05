@@ -83,48 +83,175 @@
 
 	<c:forEach items="${notificationMessagelist}" var="notifylist">
 		<c:choose>
+		
 
-			<c:when test="${empty notifylist.transactionID}">
+			<c:when test="${empty notifylist.transactionID and notifylist.orderNumber ne null}">
 
 				<c:set var="orderId" value="${notifylist.orderNumber}" />
 				<c:set var="cstatus"
 					value="${notifylist.notificationCustomerStatus}" />
 
-
 				<li id="${notifylist.orderNumber}"
+				  data-name="${notifylist.transactionID }"
 					data-order="${notifylist.transactionID}"
-					data-status="${notifylist.notificationCustomerStatus}"><a
-					href="/store/mpl/en/my-account/order/?orderCode=${notifylist.orderNumber}">${fn:replace(cstatus, "@", orderId)}
+					 data-status="${notifylist.notificationCustomerStatus}"> 
+					<a href="/store/mpl/en/my-account/order/?orderCode=${notifylist.orderNumber}">${fn:replace(cstatus, "@", orderId)}
 				</a>
 					<div id="track_footer" style="float: right;">
 						<h4>
-							<c:set var="now" value="${notifylist.notificationCreationDate}" />
-							<fmt:formatDate type="date" value="${now}" />
+							<c:set var="notify" value="${notifylist.notificationCreationDate}" />
+							
+									<jsp:useBean id="now1" class="java.util.Date" scope="request"/>
+						<fmt:parseNumber
+			    			value="${ now1.time / (1000*60*60*24) }"
+			    			integerOnly="true" var="nowDays" scope="request"/>
+			
+						<fmt:parseNumber
+			    			value="${ notify.time / (1000*60*60*24) }"
+			    			integerOnly="true" var="otherDays" scope="page"/>
+
+						<c:set value="${nowDays - otherDays}" var="dateDiff"/>
+   			
+   						<c:choose>
+			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
+			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
+			    			<c:otherwise>
+			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    			</c:otherwise>	
+			 			</c:choose>
 						</h4>
 
 					</div></li>
-
-
+	
 			</c:when>
+		
 			<c:otherwise>
+			<c:if test="${ notifylist.couponCode eq null and notifylist.promotionIdentifier eq null }">
+		
 				<c:set var="orderId" value="${notifylist.orderNumber}" />
 				<c:set var="cstatus"
 					value="${notifylist.notificationCustomerStatus}" />
 
 				<li id="${notifylist.orderNumber}"
+				 data-name="${notifylist.transactionID }"
 					data-order="${notifylist.transactionID}"
 					data-status="${notifylist.notificationCustomerStatus}"><a
 					href="/store/mpl/en/my-account/order/?orderCode=${notifylist.orderNumber}">${fn:replace(cstatus, "@", orderId)}</a>
 					<div id="track_footer" style="float: right;">
 						<h4>
-							<c:set var="now" value="${notifylist.notificationCreationDate}" />
-							<fmt:formatDate type="date" value="${now}" />
+						
+							<c:set var="notify" value="${notifylist.notificationCreationDate}" />
+									<jsp:useBean id="now2" class="java.util.Date" scope="request"/>
+						<fmt:parseNumber
+			    			value="${ now2.time / (1000*60*60*24) }"
+			    			integerOnly="true" var="nowDays" scope="request"/>
+			
+						<fmt:parseNumber
+			    			value="${ notify.time / (1000*60*60*24) }"
+			    			integerOnly="true" var="otherDays" scope="page"/>
+
+						<c:set value="${nowDays - otherDays}" var="dateDiff"/>
+   			
+   						<c:choose>
+			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
+			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
+			    			<c:otherwise>
+			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    			</c:otherwise>	
+			 			</c:choose>
+					
+   						
 						</h4>
 
 					</div></li>
+              </c:if>
+              
+             <c:if test= "${ notifylist.couponCode  ne null}">
+		
+					<c:set var="coupon" value="${notifylist.couponCode}" />
+					
+				<c:set var="couponStatus"
+					value="${notifylist.notificationCustomerStatus}" />
+		       
+		         
+				<li id="${notifylist.couponCode}"
+					 data-status="${couponStatus}"> 
+					<a href="/store/mpl/en/my-account/coupons">${fn:replace(couponStatus, "@", coupon)}
+				</a>
+				<div id="track_footer" style="float: right;">
+						<h4>
+							<c:set var="notify" value="${notifylist.notificationCreationDate}" />
+						
+							<jsp:useBean id="now" class="java.util.Date" scope="request"/>
+							
+								
+						<fmt:parseNumber
+			    			value="${ now.time / (1000*60*60*24) }"
+			    			integerOnly="true" var="nowDays" scope="request"/>
+			
+						<fmt:parseNumber
+			    			value="${ notify.time / (1000*60*60*24) }"
+			    			integerOnly="true" var="otherDays" scope="page"/>
 
+
+						<c:set value="${nowDays - otherDays}" var="dateDiff"/>
+						
+					
+   			
+   						<c:choose>
+			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
+			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
+			    			<c:otherwise>
+			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    			</c:otherwise>	
+			 			</c:choose>
+				
+						</h4>
+
+					</div>
+					</li>
+					
+			</c:if>
+			
+			<c:if test = "${notifylist.promotionIdentifier ne null }">
+			<c:set var="identifier" value="${notifylist.promotionIdentifier}" />
+			<input type="hidden" id="promotionIdentifier" value="${identifier}"/>
+			<c:set var ="description" value="${notifylist.promotionDescription }" />
+			<c:set var="promotionStatus"
+					value="${notifylist.notificationCustomerStatus}" />
+					
+							<li id="${notifylist.promotionIdentifier}"
+					 data-status="${promotionStatus}"> 
+					<a href="#">${fn:replace(promotionStatus, "@", description)}
+				</a>
+				<div id="track_footer" style="float: right;">
+						<h4>
+							<c:set var="notify" value="${notifylist.notificationCreationDate}" />
+							<jsp:useBean id="now3" class="java.util.Date" scope="request"/>
+						<fmt:parseNumber
+			    			value="${ now3.time / (1000*60*60*24) }"
+			    			integerOnly="true" var="nowDays" scope="request"/>
+			
+						<fmt:parseNumber
+			    			value="${ notify.time / (1000*60*60*24) }"
+			    			integerOnly="true" var="otherDays" scope="page"/>
+
+						<c:set value="${nowDays - otherDays}" var="dateDiff"/>
+   			
+   						<c:choose>
+			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
+			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
+			    			<c:otherwise>
+			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    			</c:otherwise>	
+			 			</c:choose>
+				
+						</h4>
+
+					</div>
+					</li>
+			</c:if>
 			</c:otherwise>
 		</c:choose>
-
 	</c:forEach>
 </c:if>
