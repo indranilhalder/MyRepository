@@ -220,6 +220,22 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 									.randomUUID().toString());
 			mplJusPayRefundService.attachPaymentTransactionModel(
 					orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+			
+			// TISSIT-1784 Code addition started
+			for (OrderEntryModel orderEntry : orderEntryModel) {
+				// Calling OMS for Refund Initiated
+				mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_INITIATED);
+
+				// Making RTM entry to be picked up by webhook job	
+				RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
+				refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+				refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+				refundTransactionMappingModel.setCreationtime(new Date());
+				refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+				getModelService().save(refundTransactionMappingModel);
+			}
+			// TISSIT-1784 Code addition ended
+			
 		}
 		String result = paymentTransactionModel.getStatus() + ","
 				+ paymentTransactionModel.getCode() + "," + totalRefundAmount;

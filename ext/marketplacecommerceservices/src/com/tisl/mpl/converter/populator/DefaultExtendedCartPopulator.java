@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
@@ -20,6 +21,7 @@ import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.result.PromotionOrderResults;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.util.DiscountValue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -80,8 +82,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 						if (promotionResultModel.getCertainty().floatValue() == 1.0F
 								&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
-										|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+										|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 						{
 							isShippingPromoApplied = true;
 							break;
@@ -260,6 +261,28 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 	}
 
+	// TISSIT-1786
+	@Override
+	protected double getOrderDiscountsAmount(final AbstractOrderModel source)
+	{
+		double discounts = 0.0d;
+		final List<DiscountValue> discountList = source.getGlobalDiscountValues(); // discounts on the cart itself
+		if (discountList != null && !discountList.isEmpty())
+		{
+			for (final DiscountValue discount : discountList)
+			{
+				final double value = discount.getValue();
+				if (value > 0.0d)
+				{
+					discounts += value;
+				}
+			}
+		}
+
+		return discounts;
+
+	}
+
 	private void addDeliveryModePromotion(final CartModel source, final CartData target)
 	{
 		Double discountedPrice = Double.valueOf(target.getTotalDiscounts().getValue().doubleValue());
@@ -334,4 +357,3 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 	}
 
 }
-

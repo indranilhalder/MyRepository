@@ -92,7 +92,7 @@ public abstract class AbstractMplSearchPageController extends AbstractPageContro
 
 	protected void populateModel(final Model model, final SearchPageData<?> searchPageData, final ShowMode showMode)
 	{
-		final int numberPagesShown = getSiteConfigService().getInt(PAGINATION_NUMBER_OF_RESULTS_COUNT, 10);
+		final int numberPagesShown = getSiteConfigService().getInt(PAGINATION_NUMBER_OF_RESULTS_COUNT, 5);
 
 		model.addAttribute("numberPagesShown", Integer.valueOf(numberPagesShown));
 		model.addAttribute("searchPageData", searchPageData);
