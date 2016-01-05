@@ -12901,7 +12901,8 @@ div.pdp .reviews .toolbar select.white {
 }		
 .modal.size-guide .sizes .details .attributes {		
     width: 80%;		
-    margin: 20px auto;		
+   /*  margin: 20px auto; */
+       margin: 20px 30px 20px 140px;		
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .details .attributes {		
@@ -12989,7 +12990,7 @@ div.pdp .reviews .toolbar select.white {
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .details .color-swatch {		
-        width: 40%;		
+        width: 35%;		
         margin-bottom: 0;		
     }		
 }		
@@ -28675,6 +28676,13 @@ header .content .bottom.active nav > ul > li:first-child > ul {
 header .content .bottom.active nav > ul > li:first-child + li > ul {
     left: 330px;
 }}
+.modal.size-guide .sizes .details .attributes #addToCartSizeGuide{
+	float: left;
+    width: 15%;
+}
+.modal.size-guide .sizes .details .attributes #addToCartButton{
+height:30px;
+}
 
 /*--------------maincss-----------*/
 .row
