@@ -1,0 +1,630 @@
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+# Site Logo Component
+UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+
+# CMS Link Components
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
+;;AccountAddressBookLink;"Address Book"
+;;AccountHomeLink;"My Account"
+;;AccountManageAddressLink;"Manage your delivery addresses"
+;;AccountManagePaymentDetailsLink;"Manage your payment details"
+;;AccountOrderHistoryLink;"Order History"
+;;AccountPaymentDetailsLink;"My Saved Cards"
+;;AccountPersonalDetailsLink;"Update personal details"
+;;AccountProfileLink;"Profile"
+;;AccountUpdatePasswordLink;"Change your password"
+;;AccountViewOrderHistoryLink;"View order history"
+;;AccountWishlistLink;"My Wishlist"   
+;;AboutUsLink;"About Us" 
+;;CareersLink;"Careers" 
+;;SellWithUSLink;"Sell With Us" 
+;;StoreLocatorLink;"Store Locator" 
+;;ContactUsLink;"Contact Us" 
+;;FrequentlyAskedQuestionsLink;"Frequently Asked Questions" 
+;;TrackOrdersLink;"Track Orders" 
+;;ShippingLink;"Shipping" 
+;;CancellationLink;"Cancellation" 
+;;ReturnsLink;"Returns" 
+;;MyAccountLink;"My Account" 
+;;MyOrdersLink;"My Orders" 
+;;MyShoppingBagLink;"My Shopping Bag" 
+;;MyWishlistLink;"My Wishlist" 
+#;;MyRewardsLink;"My Rewards" 
+;;HomepageNavLink;"Home"
+;;TwitterLink;"Twitter"
+;;PaymentLink;"Payment"
+;;helpservicesLink;"Help & Services"
+
+
+# Lightbox Banner for Mini Cart (banner is not localizable so we must create a separate banner per language)
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];&imageRef;folder(qualifier)[default='images'];altText
+
+UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+
+
+# CMS Mini Cart Component
+UPDATE MiniCartComponent;$contentCV[unique=true];uid[unique=true];name;title[lang=$lang]
+
+# CMS Tab Paragraph Components
+UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang];content[lang=$lang]
+
+# CMS Footer Component
+UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];notice[lang=$lang]
+;;FooterComponent;"&#169; 2015 Tata Marketplace | All rights reserved"
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
+;;TitleForSellWithUsComponent;"Sell With Us"
+;;TitleForShippingPageComponent;"Shipping"
+;;TitleForCancellationPageComponent;"Cancellation"
+;;TitleForTrackOrderPageComponent;"Track Order"
+;;TitleForReturnsPageComponent;"Returns"
+;;TitleForFrequentlyAskedPageComponent;"Frequently Asked Question"
+;;TitleForTnCPaymentPageComponent;"Terms and Conditions"
+;;ShippingPageComponent;"Excellent  SHIPPING service Of  is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible. <!DOCTYPE html>
+<html>
+
+
+<body>
+
+<table>
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+<h2>Frequently asked shipping questions:</h2>
+
+
+ <ul class='faq'> 
+
+<div id='collapsible-panels'> 
+
+<h5 class='questions'><a href=''>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href=''>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+ 
+
+ </ul>
+
+</body>
+</html>"
+;;TrackOrderPageComponent;" Excellent  TRACK ORDER service is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible. <!DOCTYPE html>
+<html>
+
+<head>
+</head>	
+<body>
+<h3>Frequently Asked TRACK ORDERS Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+
+</body>
+</html>"
+;;CancellationPageComponent;" CANCELLATION process is  in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible. <!DOCTYPE html>
+<html>
+
+<head>
+</head>	
+<body>
+<h3>Frequently Asked CANCELLATION Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+
+</body>
+</html>"
+;;ReturnsPageComponent;" RETURNS service of  is  in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible. <!DOCTYPE html>
+<html>
+
+<head>
+</head>	
+<body>
+<h3>Frequently Asked RETURNS Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href=''>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href=''>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+ 
+ 
+
+
+</body>
+</html>"
+;;HelpServicePageComponent;"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam"
+;;SellWithUsPageComponent;" Excellent  SELL WITH US  is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible. <!DOCTYPE html>
+<html>
+<head>
+</head>	
+<body>
+
+<table>
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+ 
+  <tr>
+    <td>Home Delivery</td>
+    <td >Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td >300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+<h3>Frequently SELL WITH US Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+
+</body>
+</html>"
+;;AboutUsComponent;" <div class='copy-block'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris egestas posuere arcu eu volutpat. Phasellus magna dolor, facilisis ut
+sollicitudin eu, viverra eu magna. Sed fermentum, nisi sed rhoncus feugiat, metus magna dapibus dolor, accumsan egestas elit erat quis
+mauris. Nunc rhoncus, urna a pellentesque viverra, dui lorem dignissim quam, id eleifend purus eros ut nunc. Suspendisse tempus efficitur
+lorem, ut consequat nibh mattis malesuada. Praesent et turpis euismod, commodo metus eget, placerat nulla. Nullam non nunc at est
+ultrices maximus. Aenean maximus dolor eu lorem tincidunt luctus.</p>
+<p>Nunc interdum erat nec fermentum consequat. Nam condimentum justo ac finibus eleifend. Aliquam mi purus, pretium ac diam eu, tempus
+lobortis ante. Nullam iaculis consequat risus quis cursus. In sit amet hendrerit purus. Fusce condimentum elit efficitur, auctor nulla non,
+ultricies augue. Maecenas finibus dapibus augue et hendrerit. ` sit amet enim at lacus lacinia porttitor. Etiam vel commodo dui, ut convallis
+turpis. Nunc placerat augue turpis.</p>
+<p>More about us at <a href ='http://www.tata.co.in'>www.tata.co.in</a></p></div>"
+
+
+;;ContactAddress; "<ul class='contact-us'>
+  <li>
+    <h2>Contact Us</h2>
+  </li>
+  <li>
+    <p>Tata Sons</p>
+    <p>Bombay House</p>
+    <p>24, Homi Mody Street</p>
+    <p>Mumbai 400 001</p>
+    <p>India</p>
+  </li>
+  <li>
+    <p>Phone: +91 (22) 66665 8282</p>
+  </li>
+  <li>
+    <a href=''>Media Enquires</a>
+    <a href=''>Press Releases</a>
+  </li>
+</ul>"
+
+
+;;TataBusinessEthicsComponent;"TATA BUSINESS ETHICS
+Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna
+aliqua."
+
+
+;;TataTrustComponent;"TATA TRUST
+Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna
+aliqua."
+
+
+;;WorkingWithUsComponent;"WORKING WITH US
+Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna
+aliqua."
+
+;;TitleForCareersPageComponent;"Careers"
+;;TitleForHelpServiceFAQPageComponent;"Frequently Asked Question"
+;;TitleForHelpServiceOrderPageComponent;"Orders"
+;;TitleForRCPageComponent;"Cancellation & Returns"
+
+;;CareersPageComponent;" CAREERS  is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible. <!DOCTYPE html>
+<html>
+
+<head>
+</head>	
+<body>
+
+<table>
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+<h3>Frequently Asked CAREERS Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+
+</body>
+</html>"
+
+
+
+
+
+
+
+;;TnCPaymentPageComponent;" <!DOCTYPE html>
+<html>
+<body>
+
+<table>
+
+<tbody><tr>
+	<th>Modes</th>
+	<th>Price</th>
+</tr>	
+
+  <tr>
+    <td>Net Banking</td>
+    <td>Free</td>		
+
+  </tr>
+  <tr>
+    <td>Credit Card</td>
+    <td>Free</td>		
+
+  </tr>
+
+  <tr>
+  <td>Debit Card</td>
+  <td>300</td>
+  </tr>
+
+  <tr>
+  <td>EMI</td>
+  <td>150</td>
+  </tr>
+
+</tbody></table>
+
+
+<h2>Frequently Asked  Questions:</h2>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the availability of a Payment mode?</a></h5>
+<div style='display: none;'><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the availability of a Payment mode?</a></h5>
+<div style='display: none;'><p>Answer to Question two goes here.</p></div>  
+</div>
+
+</body>
+</html> "
+
+;;FrequentlyAskedPageComponent;" Frequently Asked Questions <!DOCTYPE html>
+<html>
+
+<head>
+</head>	
+<body>
+
+<table >
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+<h3>Frequently Asked Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+
+</body>
+</html>"
+;;HowToDocumentsComponent;"How To Documents <!DOCTYPE html>
+<html>
+
+<head>
+</head>	
+<body>
+
+<table>
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+<h3>HOW TO DOCUMENTS Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+
+</body>
+</html>"
+
+;;HelpServiceFAQPageComponent;"<!DOCTYPE html>
+<html>
+<body>
+
+<div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+ </div>
+
+<a href='faq'>See ALL Frequently Asked Question</a>
+
+
+ </body>
+ </html>"
+ ;;HelpServiceOrderPageComponent;"<!DOCTYPE html>
+<html>
+<body>
+
+<div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+ </div>
+
+<a href='trackorders'>See ALL Frequently Asked Question</a>
+
+
+ </body>
+ </html>"
+ ;;HelpServiceRCPageComponent;"<!DOCTYPE html>
+<html>
+<body>
+
+<div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+ </div>
+
+<a href='cancellation'>See ALL Frequently Asked Question For Cancellation</a>
+
+
+ <a href='returns'>See ALL Frequently Asked Question For Returns</a>
+
+
+ </body>
+ </html>"
+;;contactUsHeaderComponent;"
+<h2>Contact Us</h2>
+<span class='copy'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquamerat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation.</span>"
+
+;;SupportOfficeComponent;"<h1>Support Office</h1>
+      <div>
+        <p><span>Tata Marketplace</span></p>
+        <p>Unit No. 701 &amp; 702, 7th Floor,</p>
+        <p>Kaledonia, Sahar Road,</p>
+        <p>Andheri East, Mumbai 400 069</p>
+      </div>
+      <div>
+        <p>Tel : 022 - 6761 3600</p>
+        <p>Fax : 022 - 6710 1903</p>
+      </div>"
+
+
+
+;;CorporateOfficeComponent;"<h1>Corporate Address</h1>
+      <div>
+        <p><span>Tata Marketplace</span></p>
+        <p>Tata Marketplace</p>
+        <p>Unit No. 701 &amp; 702, 7th Floor,</p>
+        <p>Kaledonia, Sahar Road,</p>
+        <p>Andheri East, Mumbai 400 069</p>
+      </div>
+      <div>
+        <p>Tel : 022 - 6761 3600</p>
+        <p>Fax : 022 - 6710 1903</p>
+      </div>"
+
+;;HelplineComponent;"<h1>Helpline</h1>
+      <div>
+        <p>Call us at <span>1 800-258-3636</span> (Toll Free)</p>
+      </div>
+      <div>
+        <p>For Internation Customers:</p>
+        <p><span>040-67226870</span></p>
+        <p>(ISD Charges Applicable)</p>
+      </div>
+      <div>
+        <p>Email us on</p>
+        <p><span>customersupport@marketplace.com</span></p>
+      </div>"
+;;FeedbackTextComponent;"Send us some love or direct your anger this way. We want to know how we can serve you better. Help us improve by selecting the feedback areas under which you'd like us to be in touch."
+;;ErrorParagraphComponent;"Oops something went wrong!!! Please try after sometime"
+
+# Content Pages
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+ ;;nonBusinessErrorFound;"Tata MarketPlace"
+ ;;businessErrorFound;"Tata MarketPlace"
+ ;;notFound;"Tata MarketPlace"

@@ -1,0 +1,291 @@
+
+# Import essential data for the Accelerator
+#
+# Includes:
+# * Languages
+# * Currencies
+# * Titles
+# * Vendors
+# * Warehouses
+# * Supported Credit/Debit cards
+# * User Groups
+# * DistanceUnits for Storelocator
+# * MediaFolders
+# * MediaFormats
+# * Tax & Tax Groups
+# * Jobs
+
+$lang=en
+
+
+# Languages
+INSERT_UPDATE Language;isocode[unique=true];fallbackLanguages(isocode);active[default=true]
+;en;;;
+;de;en;;
+;ja;en;;
+;zh;en;;
+
+# Currencies
+INSERT_UPDATE Currency;isocode[unique=true];conversion;digits;symbol
+;GBP;1;2;Ãƒâ€šÃ‚Â£
+;EUR;1;2;ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
+;USD;1,4;2;$
+;JPY;120;0;Ãƒâ€šÃ‚Â¥
+;INR;1;2;₹
+
+# SiteMap Language Currencies
+INSERT_UPDATE SiteMapLanguageCurrency;&siteMapLanguageCurrency;language(isoCode)[unique=true];currency(isocode)[unique=true];
+;enUsd;en;USD
+;enJpy;en;JPY
+;enGbp;en;GBP
+;enEur;en;EUR
+;jaUsd;ja;USD
+;jaJpy;ja;JPY
+;jaGbp;ja;GBP
+;jaEur;ja;EUR
+;deUsd;de;USD
+;deJpy;de;JPY
+;deGbp;de;GBP
+;deEur;de;EUR
+;zhUsd;zh;USD
+;zhJpy;zh;JPY
+;zhGbp;zh;GBP
+;zhEur;zh;EUR
+;enInr;en;INR
+
+# Vendor
+INSERT_UPDATE Vendor;code[unique=true];name
+;default;Default Vendor
+
+# Warehouse
+INSERT_UPDATE Warehouse;code[unique=true];name;vendor(code)[default=default];default[default=true]
+;default;Default Warehouse;
+;warehouse_s;Warehouse South;
+;warehouse_e;Warehouse East;
+;warehouse_w;Warehouse West;
+;warehouse_n;Warehouse North;
+
+# Disable preview for email pages
+UPDATE CMSPageType;code[unique=true];previewDisabled
+;EmailPage;true
+
+# Titles
+INSERT_UPDATE Title;code[unique=true]
+;mr
+;mrs
+;miss
+;ms
+;dr
+;rev
+
+# Media Folders
+INSERT_UPDATE MediaFolder;qualifier[unique=true];path[unique=true]
+;images;images
+;email-body;email-body
+;email-attachments;email-attachments
+
+# Media formats
+INSERT_UPDATE MediaFormat;qualifier[unique=true]
+;1200Wx1200H
+;515Wx515H
+;365Wx246H
+;300Wx300H
+;160Wx46H
+;96Wx96H
+;65Wx65H
+;30Wx30H
+;mobile
+;tablet
+;desktop
+;widescreen
+
+# Media formats
+INSERT_UPDATE MediaFormat;qualifier[unique=true];name
+;324Wx324H;324Wx324H
+;157Wx157H;157Wx157H
+;257Wx257H;257Wx257H
+;666Wx756H;666Wx756H
+;432Wx439H;432Wx439H
+;135Wx60H;135Wx60H
+;206Wx206H;206Wx206H
+;666Wx607H;666Wx607H
+;288Wx288H;666Wx607H
+;340Wx160H;340Wx160H
+;160Wx46H;160Wx46H
+
+# Tax & Tax Groups
+INSERT_UPDATE UserTaxGroup;code[unique=true]
+;de-taxes
+;jp-taxes
+;uk-taxes
+;us-taxes
+;ca-taxes
+
+INSERT_UPDATE ProductTaxGroup;code[unique=true]
+;jp-vat-full
+;eu-vat-full
+;eu-vat-half
+;us-sales-tax-full
+;ca-sales-tax-full
+
+INSERT_UPDATE Tax;code[unique=true];value;currency(isocode)
+;de-vat-full;19
+;de-vat-half;7
+;jp-vat-full;5
+;uk-vat-full;20
+;uk-vat-half;5
+;us-sales-tax-full;0
+;ca-sales-tax-full;0
+
+INSERT_UPDATE ServicelayerJob;code[unique=true];springId[unique=true]
+;cartRemovalJob;cartRemovalJob
+;siteMapMediaJob;siteMapMediaJob
+
+# Deactivate Frontend Restriction on category by default for perfomance purposes
+UPDATE SearchRestriction;code[unique=true];active[default=false]
+;Frontend_RestrictedCategory
+
+# example of assigning the rights to the user group
+
+$passwordEncoding=md5
+$defaultPassword=1234
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+
+
+INSERT_UPDATE Employee;UID[unique=true];$setPassword;description;name;groups(uid);sessionLanguage(isocode)
+;syncmanager;;Sync manager;;;en; 
+
+$catalog-id=mplProductCatalog
+$syncJobCode=sync $catalog-id:Staged->Online
+$sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
+$targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
+INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,Brand,SeoContent,RichAttribute;syncmanager
+INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
+;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
+
+INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
+;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
+                                         
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MplNowTrendingProductCarouselComponent
+;wide;MplCategoryCarouselComponent
+;wide;MplSequentialBannerComponent
+;narrow;FooterComponent
+#Adding Brand Component,BrandCollectionComponent and DepartmentCollectionComponent in the navigation group
+;navigation;BrandComponent
+;navigation;BrandCollectionComponent
+;navigation;DepartmentCollectionComponent
+;headerlinks;CMSLinkComponent
+;headerlinks;CMSParagraphComponent
+;headerlinks;HelpMeShopSearchComponent
+
+##For buy box
+#INSERT_UPDATE BuyboxUpdateLog;last_run_time;proc_name[unique=true]
+#;;buybox_weightage
+#;;buybox_price_update 
+
+
+
+
+INSERT_UPDATE mediaStatusEnum;code[unique=true];name[lang=en]
+;pcm_new;New;
+;pcm_import;Import;
+;pcm_failure;Failure;
+;pcm_updated;Updated;
+;pcm_updatedui;Updated UI;
+;pcm_unchanged;Unchanged;
+;pcm_updatedpcm;Updated Pcm;
+;pcm_mediaupdated;Media Updated;
+;pcm_updatedservice;Updated Service;
+;pcm_imageprocessingcompleted;Image Processing Completed;
+
+INSERT_UPDATE productType;code[unique=true];name[lang=en]
+;pcm_simple;Simple;
+;pcm_base;Base;
+;pcm_variant;Variant;
+
+INSERT_UPDATE productStatusEnum;code[unique=true];name[lang=en]
+;pcm_approved;Approved;
+;pcm_rejected;Rejected;
+;pcm_accepted;Accepted;
+;pcm_duplicationcheckcompleted;Duplication Check Completed;
+;pcm_productupdated;Product Updated;
+;pcm_richattributeupdated;RichAttribute Updated;
+;pcm_ginsizecolorupdated;GIN Size Color Updated;
+;pcm_sellerinformationupdated;Seller Information Updated;
+;pcm_ginupdated;GIN Updated
+
+INSERT_UPDATE imageTypeEnum;code[unique=true];name[lang=en]
+;pcm_jpeg;jpeg;
+;pcm_png;png;
+
+INSERT_UPDATE videosTypeEnum;code[unique=true];name[lang=en]
+;pcm_avi;avi;
+;pcm_mp4;mp4;
+
+INSERT_UPDATE warrantyTypeEnum;code[unique=true];name[lang=en]
+;seller;Seller;
+;brand;Brand;
+
+INSERT_UPDATE isPromotionsAllowedEnum;code[unique=true];name[lang=en]
+;allow;Allow;
+;disallow;DisAllow;
+
+INSERT_UPDATE homeDeliveryEnum;code[unique=true];name[lang=en]
+;yes;Yes;
+;no;No;
+
+INSERT_UPDATE expressDeliveryEnum;code[unique=true];name[lang=en]
+;yes;Yes;
+;no;No;
+
+INSERT_UPDATE clickAndCollectEnum;code[unique=true];name[lang=en]
+;yes;Yes;
+;no;No;
+
+INSERT_UPDATE typeOfItem1Enum;code[unique=true];name[lang=en]
+;large;Large;
+;precious;Precious;
+;fragile;Fragile;
+;bulky;Bulky;
+;digital;Digital;
+
+INSERT_UPDATE typeOfItem2Enum;code[unique=true];name[lang=en]
+;premium;Premium;
+;semipremium;SemiPremium;
+;budget;Budget;
+
+INSERT_UPDATE shippingModeEnum;code[unique=true];name[lang=en]
+;surface;Surface;
+;air;Air;
+
+INSERT_UPDATE paymentModesEnum;code[unique=true];name[lang=en]
+;cod;COD;
+;prepaid;Prepaid;
+;both;Both;
+
+INSERT_UPDATE deliveryFulfillModesEnum;code[unique=true];name[lang=en]
+;tship;TShip;
+;sship;SShip;
+
+INSERT_UPDATE sellerAssociationStatusEnum;code[unique=true];name[lang=en]
+;yes;Yes;
+;no;No;
+
+
+INSERT_UPDATE onlineExclusiveEnum;code[unique=true];name[lang=en]
+;Yes;Yes;
+;No;No;
+
+INSERT_UPDATE globalIdentifierType;code[unique=true];name[lang=en]
+;ean;EAN
+;upc;UPC
+;isbn;ISBN
+;isbn10;ISBN10
+;isbn13;ISBN13
+;apn;APN
+;alternateEAN;AlternateEAN
+;internalWMPID;InternalWMPID
+

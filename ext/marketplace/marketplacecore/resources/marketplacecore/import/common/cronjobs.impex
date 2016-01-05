@@ -1,0 +1,26 @@
+# ImpEx for Importing Products
+
+# Macros / Replacement Parameter definitions
+$productCatalog=mplProductCatalog
+$catalogVersion=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;sendFeedBackCronJob;sendFeedBackJob;false;en
+ 
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+#% afterEach: impex.getLastImportedItem().setActivationTime(new Date());
+; sendFeedBackCronJob; 0 0 0 * * ?
+
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;passwordExpiredCronJob;passwordExpiredJob;false;en
+ 
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+#% afterEach: impex.getLastImportedItem().setActivationTime(new Date());
+; passwordExpiredCronJob; 0 0 0,0 ? * SUN-SAT
+
+#Ticket Creation Cronjob
+INSERT_UPDATE CRMTicketCreationJob;code[unique=true];job(code);sessionLanguage(isocode);
+;ticketCreateCronjob;ticketCreateCronjob;en;;;
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+;ticketCreateCronjob; 0 0/5 * * * ? *

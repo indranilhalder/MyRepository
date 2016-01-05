@@ -1,0 +1,20 @@
+# ImPex for Importing Product Media into Electronics Store
+
+# Macros / Replacement Parameter definitions
+$productCatalog=mplProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$thumbnail=thumbnail(code, $catalogVersion)
+$picture=picture(code, $catalogVersion)
+$thumbnails=thumbnails(code, $catalogVersion)
+$detail=detail(code, $catalogVersion)
+$normal=normal(code, $catalogVersion)
+$others=others(code, $catalogVersion)
+$data_sheet=data_sheet(code, $catalogVersion)
+$medias=medias(code, $catalogVersion)
+$galleryImages=galleryImages(qualifier, $catalogVersion)
+$siteResource=jar:com.tisl.mpl.initialdata.constants.MarketplaceInitialDataConstants&/marketplaceinitialdata/import/sampledata/productCatalogs/$productCatalog
+$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
+$URI=http:
+$mediaType=mediaType(code)[default='Image']
+
+

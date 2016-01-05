@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+
+<widget-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd"
+	id="com.hybris.oms.widgets.crudlistwidget">
+	<name>List Widget With LogisticsCalendar Operation</name>
+	<view src="logisticscalenderwidget.zul" />
+	<sockets>
+    
+       <input id="incomingList" type="java.util.List"/>
+       <input id="listitemlogisticscalendar" type="java.lang.Boolean"/>
+       <input id="listitemlogisticscalendar_edit" type="java.lang.Boolean"/>
+       <output id="createlogisticscalendar" type="java.lang.Boolean"/>
+       <output id="editlogisticscalendar" type="java.lang.Object"/>
+       <output id="deletelogisticscalendar" type="java.lang.Object"/>
+      
+    </sockets>
+	
+	<controller class="com.hybris.oms.tata.logisticscalender.LogisticsCalendarWidgetController" />
+</widget-definition>

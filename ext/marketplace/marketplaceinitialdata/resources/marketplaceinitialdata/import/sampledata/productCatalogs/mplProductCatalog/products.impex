@@ -1,0 +1,86 @@
+$productCatalog=mplProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$supercategories=supercategories(code, $catalogVersion)
+$baseProduct=baseProduct(code,$catalogVersion)
+$approved=approvalstatus(code)[default='approved']
+$unit=unit(code)[default='pieces']
+$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+$variantType=variantType(code)[default='PcmProductVariant']
+$lang=en
+$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$myRecommendationProductCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+
+$passwordEncoding=md5
+$defaultPassword=1234
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+
+INSERT_UPDATE Employee;UID[unique=true];$setPassword;description;name;groups(uid);sessionLanguage(isocode)
+;syncmanager;;Sync manager;;;en; 
+
+$catalog-id=mplProductCatalog
+$syncJobCode=sync $catalog-id:Staged->Online
+$sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
+$targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
+INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,RichAttribute,Brand,SeoContent,SizeGuide;syncmanager
+INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
+;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
+$inCurrency=INR
+                      
+
+                                         
+$productCatalog=mplProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$supercategories=supercategories(code, $catalogVersion)
+$baseProduct=baseProduct(code,$catalogVersion)
+$approved=approvalstatus(code)[default='approved']
+$unit=unit(code)[default='pieces']
+$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+$variantType=variantType(code)[default='PcmProductVariant']
+$lang=en
+$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
+
+
+$passwordEncoding=md5
+$defaultPassword=1234
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+
+INSERT_UPDATE Employee;UID[unique=true];$setPassword;description;name;groups(uid);sessionLanguage(isocode)
+;syncmanager;;Sync manager;;;en; 
+
+$catalog-id=mplProductCatalog
+$syncJobCode=sync $catalog-id:Staged->Online
+$sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
+$targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
+INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,RichAttribute,Brand,SeoContent,SizeGuide;syncmanager
+INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
+;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
+$inCurrency=INR
+
+INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
+;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
+
+# MPL SHOP BY LOOK   
+INSERT_UPDATE MplShopByLook;collectionCategory(code,$catalogVersion);collectionId[unique=true];collectionName;collectionDescription;startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd];productCollections(code,$catalogVersion);gender;targetAgeGroup;occasion;topLeft;topRight;bottomLeft;bottomRight
+;MPH1110;chef;Seasonal Collection;Seasonal Collection description;2015-07-17;2099-08-20;987654321,987654322;;50;;;;;
+                                         
+# START UP FOR MY RECOMMENDATION
+#MyRecomendationsBrand
+INSERT_UPDATE MyRecommendationsBrands;configuredBrands(code,$myRecommendationProductCV)[unique=true];subCategories(code,$myRecommendationProductCV);
+;MBH11A00004;MSH1114105,MSH1114106;
+;MBH11A00106;MSH1114106,MSH1012100;
+;MBH11A00002;MSH1114106;
+;MBH12E00008;MSH1210102,MSH1210103;
+;MBH12E00016;MSH1210;
+;MBH12E00007;MSH1216,MSH1216101,MSH1214100;
+
+INSERT_UPDATE MyRecommendationsConfiguration;genderData(code);configuredCategory(code,$myRecommendationProductCV)[unique=true];configuredBrandsNew(configuredBrands(code,$myRecommendationProductCV));
+;ALL;MSH1011;MBH11A00004,MBH11A00106,MBH11A00002;
+;ALL;MSH12;MBH12E00008,MBH12E00016,MBH12E00007;                                        
+                                      

@@ -1,0 +1,87 @@
+<div>
+	<table width="100%" cellspacing="0" style="margin:0;padding:0;table-layout:auto;border:1px solid #1E4EBF;">
+		<tbody>
+			<tr>
+				<td colspan="2" height="125px" width="35%" rowspan="2" class="structureViewSection">
+					<cockpit code="InviteSiteLogo" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" height="89px" class="structureViewSection">
+					<div>Header</div>
+				</td>
+			</tr>
+			<tr>
+				<td height="170px" colspan="6" class="structureViewSection">
+					<cockpit code="InviteTopContent" />
+				</td>
+			</tr>
+			<tr>
+				<td height="300px" colspan="6" class="structureViewSection">
+				</td>
+			</tr>
+			<tr>
+				<td height="170px" colspan="6" class="structureViewSection">
+					<cockpit code="InviteBottomContent" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Invitefantastic1" />
+				</td>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Invitefantastic2" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" width="25%" height="249px" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Invitehandpick" />
+					<cockpit code="InviteslashImgOne" />
+				</td>
+				<td colspan="2" height="249px" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Invitebrand" />
+					<cockpit code="InviteslashImgTwo" />
+				</td>
+				<td width="30%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Inviteexp" />
+					<cockpit code="InviteslashImgThree" />
+				</td>
+				<td width="40%" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Invitefast" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Invitesmileyimg" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Invitetip" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="tipcontent" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="bestfriend1" />
+				</td>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="bestfriend2" />
+				</td>
+			</tr>
+			<tr>
+				<td height="270px" colspan="6" class="structureViewSection">
+					<cockpit code="Invitefb" />
+					<cockpit code="Invitegplus" />
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="width:100%; border-top: 2px solid #bbb" class="cmsContentEditor">
+		<cockpit code="editor" />
+	</div>
+</div>

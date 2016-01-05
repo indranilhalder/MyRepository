@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="items.xsd">
+	<collectiontypes>
+		<collectiontype elementtype="BaseSite" code="BaseSiteCollection" autocreate="true"/>
+	</collectiontypes>
+
+	<itemtypes>
+		<itemtype code="ProductExpressUpdateCleanerCronJob" autocreate="true" generate="true" extends="CronJob"
+					 jaloclass="com.tisl.mpl.jalo.expressupdate.cron.ProductExpressUpdateCleanerCronJob">
+			<attributes>
+				<attribute qualifier="queueTimeLimit" type="java.lang.Integer">
+					<persistence type="property"/>
+					<description>Only elements older than specified value (in minutes) will be removed from the queue</description>
+					<defaultvalue>Integer.valueOf(1440)</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="OrderStatusUpdateCleanerCronJob" autocreate="true" generate="true" extends="CronJob"
+					 jaloclass="com.tisl.mpl.jalo.expressupdate.cron.OrderStatusUpdateCleanerCronJob">
+			<attributes>
+				<attribute qualifier="queueTimeLimit" type="java.lang.Integer">
+					<persistence type="property"/>
+					<description>Only elements older than specified value (in minutes) will be removed from the queue</description>
+					<defaultvalue>Integer.valueOf(1440)</defaultvalue>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="OldCartRemovalCronJob" autocreate="true"
+					 generate="true" extends="CronJob"
+					 jaloclass="com.tisl.mpl.jalo.OldCartRemovalCronJob">
+			<attributes>
+				<attribute type="BaseSiteCollection" qualifier="sites">
+					<modifiers/>
+					<persistence type="property"/>
+					<description>BaseSites for which old carts should be removed</description>
+				</attribute>
+				<attribute type="java.lang.Integer" qualifier="cartRemovalAge">
+					<modifiers/>
+					<persistence type="property"/>
+					<defaultvalue>Integer.valueOf(2419200)</defaultvalue>
+					<description>After specified number of seconds carts will be cleaned up. Default is 28 days.</description>
+				</attribute>
+				<attribute type="java.lang.Integer" qualifier="anonymousCartRemovalAge">
+					<modifiers/>
+					<persistence type="property"/>
+					<defaultvalue>Integer.valueOf(1209600)</defaultvalue>
+					<description>After specified number of seconds carts will be cleaned up. Default is 14 days.</description>
+				</attribute>
+			</attributes>
+		</itemtype>
+		<!-- Priority -->
+		<itemtype code="UserAccess" autocreate="true" generate="true">
+				<attributes>
+					<attribute autocreate="true" qualifier="emailID"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="deviceModel"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="osType"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="osVersion"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute qualifier="timestamp" type="java.util.Date">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="UserInstallerAccess" autocreate="true" generate="true">
+				<attributes>
+					<attribute autocreate="true" qualifier="userName"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="company"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="emailID"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute qualifier="timestamp" type="java.util.Date">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+<!-- Priority -->
+<itemtype code="restrictionsetup" autocreate="true"
+					 generate="true">
+					 	
+		<attributes>
+					
+					<attribute autocreate="true" qualifier="pincode"
+						type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="shipmentMode"
+						type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="deliveryMode"
+						type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true" optional="true"
+							 />
+					</attribute>
+					<attribute autocreate="true" qualifier="primaryCatID" type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true" optional="true"
+							 />
+					</attribute>
+					<attribute autocreate="true" qualifier="listingID"
+						type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="USSID"
+						type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="codRestricted"
+						type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="prepaidRestricted"
+						type="java.lang.String">
+						<persistence type="property">
+						</persistence> 
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+			</attributes>
+		</itemtype>
+ 
+ 	<itemtype code="SellerTypeGlobalCodes" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="globalcode"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>					
+			</attributes>
+	</itemtype>
+
+	<itemtype code="State" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="countrykey"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="region"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>					
+			</attributes>
+	</itemtype>
+<itemtype code="MerchantMasterTable" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="MerchantCode"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="MerchantDesc"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>				
+			</attributes>
+	</itemtype>
+<!-- Ticket create interface  -->
+
+<itemtype code="ReturnCategoryCode" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="returnCategory"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="Code"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>				
+			</attributes>
+	</itemtype>
+	<itemtype code="TicketTypeCode" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="ticketType"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="code"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>				
+			</attributes>
+	</itemtype>
+	<itemtype code="RefundType" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="refundedTo"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="code"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>				
+			</attributes>
+	</itemtype>
+	<itemtype code="CustomerCancellationCode" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="cancellReason"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="code"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>				
+			</attributes>
+	</itemtype>
+	</itemtypes>
+</items>

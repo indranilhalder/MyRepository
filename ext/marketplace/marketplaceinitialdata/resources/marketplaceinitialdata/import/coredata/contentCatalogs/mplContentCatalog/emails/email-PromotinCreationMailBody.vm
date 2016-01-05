@@ -1,0 +1,60 @@
+<html>
+	<head>
+	</head>
+	<body bgcolor="#e4e7e8">
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#e4e7e8">
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td align="center" valign="top">
+				<table width="610" border="6" align="center" cellpadding="0" cellspacing="0" bordercolor="#ebedee">
+					<tr>
+						<td align="center" valign="top" bgcolor="#FFFFFF">
+							<table width="570" cellpadding="0" cellspacing="0" border="0" align="center">
+								<tr>
+									<td valign="middle">&nbsp;</td>
+								</tr>
+							
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif"><b>Hi </b>,</font></p>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Following promotion has been created by : ${ctx.user} on ${ctx.currentDate} </font></p>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif"> with the following details:</font></p>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif"> Code: ${ctx.promoCode}.</font></p>
+										<br>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Promotion Type: ${ctx.promotionType}.</font></p>
+										<br>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">Start Date: ${ctx.startDate}.</font></p>
+										<br>
+										<p><font color="#666666" size="2" face="Arial, Helvetica, sans-serif">End Date: ${ctx.endDate}.</font></p>
+										<br>										
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								
+								<tr>
+									<td height="30" align="right" valign="middle" bgcolor="#51585c">
+										<font color="#FFFFFF" size="2" face="Arial, Helvetica, sans-serif"><a href="${ctx.baseUrl}"><font color="#FFFFFF">Help</font></a> | <a href="http://www.hybris.com/hybris/en/Contact.html"><font color="#FFFFFF">Contact Us</font></a> | <a href="${ctx.baseUrl}"><font color="#FFFFFF">Terms &amp; Conditions</font></a> &nbsp;&nbsp;</font>
+									</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>

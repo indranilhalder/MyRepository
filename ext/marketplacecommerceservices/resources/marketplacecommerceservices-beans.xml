@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<!--
+	ATTENTION: This is just an example file. You have to edit it according to your needs.
+-->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+
+<bean class="de.hybris.platform.commercefacades.order.data.OrderEntryData">
+<property name="selectedSellerInformation" type="de.hybris.platform.commercefacades.product.data.SellerInformationData"/>
+<property name="deliveryModeSet" type="java.util.Set&lt;de.hybris.platform.commercefacades.order.data.DeliveryModeData>"/>
+</bean>
+
+
+	<bean class="de.hybris.platform.commercefacades.user.data.AddressData">
+	<property name="addressType" type="String"/>
+	<property name="state" type="String"/>
+	<property name="line3" type="String"/>
+	<property name="locality" type="String"/>
+	
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.data.AddressTypeData">
+		<property name="name" type="String"/>
+		<property name="code" type="String"/>
+	</bean>
+	
+	<!-- bean for addressListData -->
+	<bean class="com.tisl.mpl.data.AddressListData">
+		<property name="addressList" type="String"/>
+		</bean>
+		
+	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
+		<property name="doubleValue" type="Double"/>
+	</bean>
+
+	<!-- <bean class="com.tisl.mpl.data.SellerInfoDetailsData">
+		<property name="priceData" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="sellerDetail" type="de.hybris.platform.commerceservices.model.SellerModel"/>
+		<property name="name" type="String"/>
+		<property name="sellingPrice" type="double"/>
+		<property name="weitage" type="double"/>
+	</bean> -->
+	<bean class="com.tisl.mpl.data.WishlistData">
+		<property name="productCode" type="String"/>
+		<property name="particularWishlistName" type="String"/>
+		<property name="ussidEntries" type="java.util.List&lt;String>"/>
+		<property name="ussid" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.NewWishlistData">
+		<property name="newWishlistName" type="String"/>
+		<property name="newWishlistDescription" type="String"/>
+		<property name="productCode" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.ExistingWishlistData">
+		<property name="existingWishlistName" type="String"/>	
+		<property name="productCode" type="String"/>
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.data.ParticularWishlistData1">
+		<property name="particularWishlistName" type="String"/>			
+		<property name="productCode" type="String"/>
+	</bean>
+	
+		
+	<bean class="com.tisl.mpl.data.RemoveWishlistData">
+		<property name="removeParticularWishlistName" type="String"/>		
+		<property name="productCode" type="String"/>
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.data.EditWishlistNameData">
+		<property name="particularWishlistName" type="String"/>		
+		<property name="newWishlistName" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.GenderOrTitleData">
+		<property name="code" type="String"/>
+		<property name="name" type="String"/>
+	</bean>
+	<bean class="com.tisl.mpl.data.ReasonOrEventData">
+		<property name="code" type="String"/>
+		<property name="displayName" type="String"/>
+		<property name="filterName" type="String"/>
+	</bean>
+	<bean class="com.tisl.mpl.data.TypeOfProductData">
+		<property name="code" type="String"/>
+		<property name="name" type="String"/>
+	</bean>
+	<bean class="com.tisl.mpl.data.SendSMSRequestData">
+		<property name="recipientPhoneNumber" type="String"/>
+		<property name="content" type="String"/>
+		<property name="status" type="String"/>
+	    <property name="senderID" type="String"/>
+		<property name="message" type="String"/>
+		
+		
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.SendEmailRequestData">
+		<property name="senderEmail" type="String"/>
+		<property name="recipientEmail" type="String"/>
+		<property name="ccEmail" type="String"/>
+		<property name="bccEmail" type="String"/>
+		<property name="replyTo" type="String"/>
+		<property name="subject" type="String"/>
+		<property name="content" type="String"/>
+		<property name="user" type="String"/>
+		<property name="senderName" type="String"/>
+		<property name="status" type="String"/>
+	</bean>	
+<bean class="com.tisl.mpl.data.NotificationData">
+		<property name="customerID" type="String"/>
+		<property name="transactionID" type="String"/>
+		<property name="orderNumber" type="String"/>
+		<property name="orderDetails" type="String"/>
+		<property name="notificationOrderStatus" type="String"/>
+		<property name="notificationCustomerStatus" type="String"/>
+		<property name="notificationCreationDate" type="java.util.Date"/>
+		<property name="notificationSent" type="Boolean"/>
+		<property name="notificationRead" type="Boolean"/>
+		<property name="couponCode" type="String"/>
+		<property name="promotionIdentifier" type="String"/>
+		<property name="promotionDescription" type="String"/>
+</bean>	
+	<!-- EMITermRateData for EMI -->
+	<bean class="com.tisl.mpl.data.EMITermRateData">
+		<property name="term" type="String"/>
+		<property name="interestRate" type="String"/>
+		<property name="monthlyInstallment" type="String"/>
+		<property name="interestPayable" type="String"/>
+	</bean>
+	
+	<!-- Request data for PAYU -->
+	<bean class="com.tisl.mpl.data.PAYURequestData">
+		<property name="amount" type="Double"/>
+		<property name="firstName" type="String"/>
+		<property name="lastName" type="String"/>
+		<property name="email" type="String"/>
+		<property name="phone" type="String"/>
+		<property name="productInfo" type="String"/>
+		<property name="successUri" type="String"/>
+		<property name="failureUri" type="String"/>
+		<property name="cancelUri" type="String"/>
+		<property name="address1" type="String"/>
+		<property name="address2" type="String"/>
+		<property name="city" type="String"/>
+		<property name="state" type="String"/>
+		<property name="country" type="String"/>
+		<property name="zipcode" type="String"/>
+		<property name="pg" type="String"/>
+		<property name="bank" type="String"/>
+		<property name="udf1" type="String"/>
+		<property name="udf2" type="String"/>
+		<property name="udf3" type="String"/>
+		<property name="udf4" type="String"/>
+		<property name="udf5" type="String"/>
+		<property name="merchant_key" type="String"/>
+		<property name="txnid" type="String"/>
+		<property name="hash" type="String"/>
+	</bean>
+	
+	<!-- Response data for PAYU -->
+	<bean class="com.tisl.mpl.data.PAYUResponseData">
+		<property name="mihpayid" type="String"/>
+		<property name="mode" type="String"/>
+		<property name="status" type="String"/>
+		<property name="key" type="String"/>
+		<property name="txnid" type="String"/>
+		<property name="amount" type="String"/>
+		<property name="bankCode" type="String"/>
+		<property name="bank_ref_num" type="String"/>
+		<property name="error" type="String"/>
+	</bean>	
+	
+	
+	<!-- Convenience Charge for COD -->
+	<bean class="de.hybris.platform.commercefacades.order.data.CartData">
+		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+	</bean>
+	<bean class="de.hybris.platform.commercefacades.order.data.OrderData">
+		<property name="convenienceChargeForCOD" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="type" type="String"/>
+		<property name="customerData" type="de.hybris.platform.commercefacades.user.data.CustomerData"/>
+		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+	</bean>
+		
+	
+	<bean class="de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData&lt;STATE, RESULT, CATEGORY>" extends="de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData&lt;STATE, RESULT>">
+		<description>POJO containing the result page for product or category search.</description>
+		<property name="allBrand" type="java.util.List&lt;CATEGORY>"/>
+		<property name="allSeller" type="java.util.List&lt;String>"/>
+		<property name="snsCategories" type="java.util.List&lt;CATEGORY>"/>
+		<property name="micrositeSnsCategories" type="java.util.List&lt;CATEGORY>"/>
+		<property name="departmentHierarchyData" type="com.tisl.mpl.data.MplDepartmentHierarchyData"/>
+		<property name="deptType" type="String"/>
+		<property name="departments" type="java.util.List&lt;String>"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.FriendsInviteData">
+		<property name="customerEmail" type="String"/>
+		<property name="friendsEmail" type="String"/>
+		<property name="affiliateId" type="String"/>
+		<property name="inviteSent" type="boolean"/>
+		<property name="isRegistered" type="boolean"/>
+        <property name="inviteBaseUrl" type="String"/>
+		<property name="friendsEmailList" type="java.util.List&lt;String>"/>
+	</bean>
+	
+	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
+	<property name="ussid" type="String">
+			<description>The Selected Entries USSID</description>
+	</property>
+	</bean>
+		
+	<!--End: Added for Order Data XML -->
+	<!-- Added for Cart Soft Reservation -->
+	<bean class="com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData">
+		<property name="USSID" type="String"/>
+		<property name="parentUSSID" type="String"/>
+		<property name="isAFreebie" type="String"/>
+		<property name="storeId" type="String"/>
+		<property name="fulfillmentType" type="String"/>
+		<property name="deliveryMode" type="String"/>
+		<property name="quantity" type="Integer"/>
+	</bean>
+	<!--END: Added for Cart Soft Reservation -->
+	
+	<bean class="de.hybris.platform.commerceservices.service.data.CommerceOrderResult">
+		<property name="orders" type="java.util.List&lt;de.hybris.platform.core.model.order.OrderModel>"/>
+	</bean>
+	
+	
+	<bean class="com.tisl.mpl.data.SendTicketRequestData">
+		<property name="customerID" type="String"/>
+		<property name="orderId" type="String"/>
+		<property name="subOrderId" type="String"/>
+		<property name="ticketType" type="String"/>
+		<property name="refundType" type="String"/>
+		<property name="returnCategory" type="String"/>
+		<property name="lineItemDataList" type="java.util.List&lt;com.tisl.mpl.data.SendTicketLineItemData>"/>
+		<property name="emailId" type="String"/>
+		<property name="actionType" type="String"/>
+		<property name="ticketStatus" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
+		<property name="lineItemId" type="String"/>
+		<property name="returnReasonCode" type="String"/>
+		<property name="cancelReasonCode" type="String"/>
+	</bean>
+	
+	<!-- OTP response Data-->
+	<bean class="com.tisl.mpl.data.OTPResponseData">
+		<property name="OTPValid" type="Boolean"/>
+		<property name="invalidErrorMessage" type="String"/>
+	</bean>
+	<!-- OTP response Data Ends-->
+	
+	<!-- Saved Card Data-->
+	<bean class="com.tisl.mpl.data.SavedCardData">
+		<property name="cardEndingDigits" type="String"/>
+		<property name="nameOnCard" type="String"/>
+		<property name="expiryMonth" type="String"/>
+		<property name="expiryYear" type="String"/>
+		<property name="cardReferenceNumber" type="String"/>
+		<property name="cardToken" type="String"/>
+		<property name="cardFingerprint" type="String"/>
+		<property name="cardISIN" type="String"/>
+		<property name="cardType" type="String"/>
+		<property name="juspayCardType" type="String"/>
+		<property name="cardIssuer" type="String"/>
+		<property name="cardBrand" type="String"/>
+		<property name="nickname" type="String"/>
+		<property name="expired" type="String"/>
+		<property name="firstName" type="String"/>
+		<property name="lastName" type="String"/>
+		<property name="addressLine1" type="String"/>
+		<property name="addressLine2" type="String"/>
+		<property name="addressLine3" type="String"/>
+		<property name="country" type="String"/>
+		<property name="state" type="String"/>
+		<property name="city" type="String"/>
+		<property name="pincode" type="String"/>
+		<property name="isDomestic" type="Boolean"/>
+	</bean>
+	<!-- Saved Card Data Ends-->
+		<!-- Saved Card Data Ends-->
+		<!-- Added for Order Return and Replacement -->
+	<bean class="com.tisl.mpl.mplcommerceservices.service.data.RefundInfo">
+		<property name="refundedBy" type="String"/>
+		<property name="refundedAmt" type="float"/>
+		<property name="refundedBankTrxID" type="String"/>
+		<property name="refundType" type="String"/>
+		<property name="refundedBankTrxStatus" type="String"/>
+		<property name="refundTriggeredDate" type="java.util.Date"/>
+	</bean>
+	<!--END: Added for Order Return and Replacement-->
+	
+	<!-- Blacklist Report Headers Data-->
+	<bean class="com.tisl.mpl.data.BlacklistReportData">
+		<property name="customerId" type="String"/>
+		<property name="name" type="String"/>
+		<property name="email" type="String"/>
+		<property name="ipaddress" type="String"/>
+		<property name="phoneNo" type="String"/>
+		<property name="date" type="String"/>
+	</bean>
+	<!-- Blacklist Report Headers Data Ends -->
+	
+	<!-- Department Hierarchy Tree Data -->
+	<bean class="com.tisl.mpl.data.MplDepartmentHierarchyData">
+		<property name="hierarchyList" type="java.util.List&lt;String>"/>
+	</bean>
+	<!-- Department Hierarchy Tree Data Ends -->
+	
+	
+	<bean class="de.hybris.platform.commerceservices.search.facetdata.FacetData&lt;STATE>" extends="de.hybris.platform.commerceservices.search.facetdata.FacetData&lt;STATE>">
+		<property name="genericFilter" type="boolean"/>
+		
+	</bean>
+	
+	<!-- For Promotional Report Generation-->
+	<bean class="com.tisl.mpl.data.PromotionalReportData">
+		<property name="user" type="String"/>
+		<property name="promoCode" type="String"/>
+		<!-- <property name="creationTime" type="java.util.Date"/>
+		<property name="modifiedTime" type="java.util.Date"/> -->
+		<property name="timestamp" type="java.util.Date"/>
+		<property name="modificationType" type="String"/>
+		<property name="startDate" type="java.util.Date"/>
+		<property name="endDate" type="java.util.Date"/>
+		<property name="modifiedAttributesList" type="java.util.List&lt;String>"/>
+	</bean>
+	
+	<!-- MplPaymentInfoData -->
+	<bean class="com.tisl.mpl.data.MplPaymentInfoData" extends="de.hybris.platform.acceleratorservices.payment.data.PaymentInfoData">
+		<property name="emiInfo" type="com.tisl.mpl.data.EMITermRateData"/>
+		<property name="billingAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
+		<property name="bank" type="String"/>
+	</bean>
+	<!-- MplPaymentInfoData Ends-->
+	
+	<!-- MplPaymentInfoData in AbstractOrderData-->
+	<bean class="de.hybris.platform.commercefacades.order.data.AbstractOrderData" >
+		<property name="mplPaymentInfo" type="com.tisl.mpl.data.MplPaymentInfoData"/>
+	</bean>
+	<!-- MplPaymentInfoData in AbstractOrderData Ends-->
+	
+	<!-- Sales Report Headers Data-->
+	<bean class="com.tisl.mpl.data.SalesReportData">
+		<property name="orderNo" type="String"/>
+		<property name="orderDate" type="String"/>
+		<property name="listingId" type="String"/>
+		<property name="USSID" type="String"/>
+		<property name="sellerName" type="String"/>
+		<property name="sellerSKUId" type="String"/>
+		<property name="customerName" type="String"/>
+		<property name="transactionRefId" type="String"/>
+		<property name="transactionRefNo" type="String"/>
+		<property name="brand" type="String"/>
+		<property name="productPrice" type="String"/>
+		<property name="quantity" type="String"/>
+		<property name="itemCategory" type="String"/>
+		<property name="itemSubCategory" type="String"/>
+		<property name="paymentMethod" type="String"/>
+		<property name="bankName" type="String"/>
+		<property name="tenure" type="String"/>
+		<property name="shippingAddress" type="String"/>
+		<property name="shippingState" type="String"/>
+		<property name="shippingCity" type="String"/>
+		<property name="shippingzipcode" type="String"/>
+		<property name="phNumber" type="String"/>
+		<property name="productType" type="String"/>
+		<property name="customerRegisterDate" type="String"/>
+		<property name="transactionRefNumber" type="String"/>
+		<property name="ipAdddress" type="String"/>
+		<property name="totalPrice" type="String"/>
+		<property name="email" type="String"/>
+		<property name="riskScore" type="String"/>
+		<property name="mrpPrice" type="String"/>
+		<property name="mopPrice" type="String"/>
+		<property name="deliveryType" type="String"/>
+		<property name="orderStatus" type="String"/>
+	</bean>
+	<!-- Sales Report Headers Data Ends -->
+	
+	<!-- Attribute to handle the order cancel status for My Account -->
+	<bean class="de.hybris.platform.commercefacades.order.data.OrderEntryData">
+		<property name="itemCancellationStatus" type="boolean"/>
+		<property name="showInvoiceStatus" type="boolean"/>
+		<property name="itemReturnStatus" type="boolean"/>
+		<property name="orderLineId" type="String"/>
+		<property name="transactionId" type="String"/>
+		<property name="isBOGOapplied" type="boolean"/>
+		<property name="giveAway" type="boolean"/>
+		<property name="associatedItems" type="java.util.List&lt;String>"/>
+		<property name="currDelCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="cartLevelDisc" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="productLevelDisc" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="amountAfterAllDisc" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="netSellingPrice" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="totalSalePrice" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<property name="cartLevelPercentage" type="String"/>
+		<property name="prodLevelPercentage" type="String"/>
+		<property name="freeCount" type="Integer"/>
+		<property name="qualifyingCount" type="Integer"/>
+		
+	</bean>
+	<!-- Attribute to handle the order cancel status for My Account ends -->
+	
+	<!-- DTO for Order Line for cancel in OMS -->
+    <bean class="com.tisl.mpl.data.OrderLineData">
+		<property name="orderId" type="String"/>
+		<property name="transactionId" type="String"/>
+		<property name="returnCancelFlag" type="String"/>
+		<property name="requestID" type="String"/>
+		<property name="reasonCode" type="String"/>
+		<property name="returnCancelRemarks" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.HelpmeShopData">
+	<property name ="genders" type="java.util.List&lt;com.tisl.mpl.data.HelpmeShopGenderData>"/>
+	<property name ="occasions" type="java.util.List&lt;com.tisl.mpl.data.ReasonOrEventData>"/>
+	<property name ="age" type="java.util.List&lt;com.tisl.mpl.data.HelpmeShopAgeData>"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.HelpmeShopCategoryData">
+	<property name ="categoryName" type="java.util.List&lt;java.lang.String>"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.HelpmeShopGenderData">
+	<property name ="code" type="String"/>
+	<property name ="gender" type = "String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.data.HelpmeShopAgeData">
+	<property name ="age" type="String"/>
+	<property name ="ageBand" type = "String" />
+	<property name ="gender" type = "String" />
+	</bean>
+	
+    <!-- DTO for Order Line for cancel in OMS Ends-->
+    
+    <!-- DTO for reverse Logistics Response--> 
+    <bean class="com.tisl.mpl.data.ReturnLogisticsResponseData">
+		<property name ="orderId" type="String"/>
+		<property name ="transactionId" type="String" />
+		<property name ="isReturnLogisticsAvailable" type="String" />
+		<property name ="responseMessage" type="String" />
+		<property name ="responseDescription" type="String" />
+	</bean>
+    <!-- DTO for reverse Logistics Response Ends --> 
+    <!-- Order Refund Report Headers Data-->
+	<bean class="com.tisl.mpl.data.OrderRefundData">
+		<!--  Orderno,OrderDate,SellerSKUId,SellerName,CustomerName,CustomerRegisterDate,Status,PaymentMethod,RefundRef,ReasonCode -->
+		<property name="orderNo" type="String"/>
+		<property name="orderDate" type="String"/>
+		<property name="sellerSKUId" type="String"/>
+		<property name="sellerName" type="String"/>
+		<property name="customerName" type="String"/>
+		<property name="customerRegisterDate" type="String"/>
+		<property name="status" type="String"/>
+		<property name="paymentMethod" type="String"/>
+		<property name="refundRef" type="String"/>
+		<property name="reasonCode" type="String"/>
+		
+	</bean>	
+<bean class="com.tisl.mpl.data.ReturnLogisticsResponseDetails">
+      <property name="ReturnLogisticsResponseDataList" type="java.util.List&lt;com.tisl.mpl.data.ReturnLogisticsResponseData>" />
+        </bean>
+        
+        <!-- Data class to hold Netbanking bank details -->
+    <bean class="com.tisl.mpl.data.MplNetbankingData">
+		<property name ="bankName" type="String"/>
+		<property name ="bankCode" type="String" />
+		<property name ="bankLogoUrl" type="String" />
+	</bean> 
+	
+
+	<!-- Data class to hold Bin and bank details -->
+	 <bean class="com.tisl.mpl.data.BinData">
+		<property name ="bankName" type="String"/>
+		<property name ="cardType" type="String" />
+		<property name ="isValid" type="boolean" />
+	</bean> 
+	<!-- Data class to hold Bin and bank details Ends-->
+	
+	 <!-- Data class for Payment Specific Promotions -->
+	  
+	<bean class="com.tisl.mpl.data.PotentialPromoData">
+    	<property name="promoMessage" type="String" />
+    	<!-- cart potential message -->
+    	<property name="promoPotMessage" type="String" />
+    	<property name="promoStartDate" type="java.util.Date" />
+    	<property name="promoEndDate" type="java.util.Date" />
+    	<property name="promoPotProducts" type="java.util.List&lt;de.hybris.platform.core.model.product.ProductModel>" />
+    	<property name="promoPotCategories" type="java.util.List&lt;de.hybris.platform.category.model.CategoryModel>" />
+    	<property name="promoType" type="String" />
+    	<property name="promoDesc" type="String" />
+    	
+    	<!-- cart potential message  -->
+   	</bean>
+    
+    <bean class="com.tisl.mpl.data.CashBackFiredPromoData">
+    	<property name="promoMessage" type="String" />
+    </bean>
+    
+    <bean class="com.tisl.mpl.data.FiredPromoData">
+    	<property name="promoMessage" type="String" />
+    </bean>
+	  
+	<bean class="com.tisl.mpl.data.MplPromotionData">
+     	<property name="promoTypeIdentifier" type="String" />
+    	<property name="discountPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="isPercentage" type="String" />
+    	<property name="percentagePromotion" type="String" />
+    	<property name="firedPromoDiscount" type="String" />
+    	<property name="eligiblePromoMsg" type="String" />
+    	<property name="error" type="String" />
+    	<property name="potentialPromotion" type="com.tisl.mpl.data.PotentialPromoData"/>
+    	<property name="cashBackFiredPromotion" type="com.tisl.mpl.data.CashBackFiredPromoData"/>
+		<property name="firedPromotion" type="com.tisl.mpl.data.FiredPromoData"/>
+    </bean> 
+    
+    <bean class="com.tisl.mpl.data.MplPromoPriceData">
+    	<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="mplPromo" type="java.util.List&lt;com.tisl.mpl.data.MplPromotionData>" />
+    	<property name="currency" type="String" />
+    	<property name="totalDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="ussidPriceDetails" type="String" />
+    	<property name="errorMsgForEMI" type="String" />
+    	<property name="totalExcConv" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="convCharge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    </bean> 
+	
+	<!-- Data class for Payment Specific Promotions Ends-->
+	
+	
+	<bean class="com.tisl.mpl.data.CODData">
+    	<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="convCharge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="cellNo" type="String" />
+    </bean>
+    
+    <bean class="com.tisl.mpl.data.EMIBankList">
+    	<property name="bankName" type="String" />
+    	<property name="bankCode" type="String" />
+    </bean>
+    
+     <!-- Data class for Webhook Report -->
+     <bean class="com.tisl.mpl.data.MplWebhookReportData">
+    	<property name="orderId" type="String" />
+    	<property name="auditId" type="String" />
+    	<property name="amount" type="String" />
+    	<property name="status" type="String" />
+    	<property name="responseDate" type="java.util.Date" />
+    	<property name="refundReqId" type="String" />
+    	<property name="refundType" type="String" />
+    	<property name="refundTime" type="java.util.Date" />
+    </bean>
+    <!-- Data class for Webhook Report Ends -->
+    
+     <bean class="de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData">
+		<property name="sellerID" type="String"/>
+		<property name="offerID" type="String"/>
+		<property name="offerCategoryID" type="String"/>
+	</bean>
+	
+	<bean class="de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData&lt;STATE, RESULT>" extends="de.hybris.platform.commerceservices.search.facetdata.FacetSearchPageData&lt;STATE, RESULT>">
+		<property name="sellerID" type="String"/>
+		<property name="offerID" type="String"/>
+		<property name="offerCategoryID" type="String"/>
+	</bean>
+	
+	<!-- <bean class="de.hybris.platform.commercefacades.user.data.CustomerData" extends="de.hybris.platform.commercefacades.user.data.PrincipalData">
+		<property name="email" type="String"/>
+		<property name="contactNumber" type="String"/>
+	</bean> -->
+	
+	<!-- Seller Priority Report Headers Data-->
+	<bean class="com.tisl.mpl.data.SellerPriorityReportData">
+		<property name="modifiedTime" type="String"/>
+		<property name="changedBy" type="String"/>
+		<property name="sellerId" type="String"/>
+		<property name="categoryId" type="String"/>
+		<property name="productId" type="String"/>
+		<property name="OldStartDate" type="String"/>
+		<property name="modifiedStartDate" type="String"/>
+		<property name="oldEndDate" type="String"/>
+		<property name="modifiedEndDate" type="String"/>
+		<property name="isActive" type="String"/>
+		<property name="modifiedActiveFlag" type="String"/>
+		<property name="newlyCreated" type="String"/>
+	</bean>
+	<!-- Seller Priority Report Headers Data Ends -->
+	
+</beans>
+

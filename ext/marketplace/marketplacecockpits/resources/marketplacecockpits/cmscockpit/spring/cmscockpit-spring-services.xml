@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd 
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-autowire="byName">
+
+	<alias alias="navigationNodeTreeService" name="defaultNavigationNodeTreeService" />
+	<bean id="defaultNavigationNodeTreeService"
+		class="de.hybris.platform.cmscockpit.services.impl.DefaultNavigationNodeTreeService"
+		scope="tenant">
+		<property name="typeService" ref="cockpitTypeService" />
+		<property name="cmsNavigationService" ref="cmsNavigationService" />
+	</bean>
+
+	<alias alias="cmsSearchProvider" name="defaultCmsSearchProvider" />
+	<bean id="defaultCmsSearchProvider"
+		class="de.hybris.platform.cmscockpit.services.impl.CmsSearchProvider"
+		scope="tenant">
+		<property name="cockpitTypeService" ref="cockpitTypeService" />
+	</bean>
+
+	<alias alias="contentEditorConfigurationFactory" name="defaultContentEditorConfigurationFactory" />
+	<bean id="defaultContentEditorConfigurationFactory"
+		class="de.hybris.platform.cmscockpit.services.config.impl.ContentEditorConfigurationFactory"
+		scope="tenant" parent="jaxbBasedUIComponentConfigurationFactory">
+		<property name="jaxbClass"
+			value="de.hybris.platform.cmscockpit.services.config.jaxb.contenteditor.ContentEditor" />
+		<property name="schemaResource" value="classpath:/cmscockpit/content-editor.xsd" />
+	</bean>
+
+	<alias alias="contentElementConfigurationFactory" name="defaultContentElementConfigurationFactory" />
+	<bean id="defaultContentElementConfigurationFactory"
+		class="de.hybris.platform.cmscockpit.services.config.impl.ContentElementConfigurationFactory"
+		scope="tenant" parent="jaxbBasedUIComponentConfigurationFactory">
+		<property name="jaxbClass"
+			value="de.hybris.platform.cmscockpit.services.config.jaxb.contentelement.ContentElements" />
+		<property name="schemaResource" value="classpath:/cmscockpit/content-element.xsd" />
+	</bean>
+
+	<alias alias="loginService" name="defaultLoginService" />
+	<bean id="defaultLoginService"
+		class="de.hybris.platform.cmscockpit.services.login.impl.LoginServiceImpl"
+		scope="tenant" />
+
+	<alias alias="synchronizationService" name="defaultCMSSynchronizationService" />
+	<alias alias="defaultSynchronizationService" name="defaultCMSSynchronizationService" />
+	<bean id="defaultCMSSynchronizationService"
+		class="de.hybris.platform.cmscockpit.sync.CMSSynchronizationService"
+		scope="tenant" autowire="byName">
+		<property name="relatedReferencesTypesMap">
+			<map>
+				<entry key="AbstractPage">
+					<list>
+						<value>AbstractPage.restrictions</value>
+						<value>AbstractPage.contentSlots</value>
+						<value>ContentSlotForPage.contentSlot</value>
+						<value>ContentSlot.cmsComponents</value>
+						<value>AbstractCMSComponentContainer.simpleCMSComponents</value>
+						<value>AbstractCMSComponentContainer.currentCMSComponents</value>
+						<value>RotatingImagesComponent.banners</value>
+						<value>AbstractCMSComponent.restrictions</value>
+						<value>abstractMediaContainerComponent.media</value>
+						<value>FooterComponent.navigationNodes</value>
+						<value>AbstractPage.masterTemplate</value>
+						<value>PageTemplate.contentSlots</value>
+						<value>ContentSlotForTemplate.contentSlot</value>
+						<value>BrandCollectionComponent.brandCollection</value>
+						<value>MplSequentialBannerComponent.bannersList</value>
+						<value>MplAdvancedCategoryCarouselComponent.categories</value>
+					</list>
+				</entry>
+				<entry key="AbstractCMSComponent">
+					<list>
+						<value>AbstractCMSComponentContainer.simpleCMSComponents</value>
+						<value>AbstractCMSComponentContainer.currentCMSComponents</value>
+						<value>RotatingImagesComponent.banners</value>
+						<value>AbstractCMSComponent.restrictions</value>
+						<value>abstractMediaContainerComponent.media</value>
+						<value>MediaContainer.medias</value>
+						<value>NavigationBarCollectionComponent.components</value>
+						<value>NavigationBarComponent.navigationNode</value>
+						<value>NavigationBarComponent.link</value>
+					</list>
+				</entry>
+				<entry key="CMSNavigationNode">
+					<list>
+						<value>CMSNavigationNode.children</value>
+						<value>CMSNavigationNode.entries</value>
+						<value>CMSNavigationNode.links</value>
+						<value>CMSNavigationEntry.item</value>
+						<value>CMSLinkComponent</value>
+					</list>
+				</entry>
+				<entry key="ContentSlot">
+					<list>
+						<value>ContentSlot.cmsComponents</value>
+						<value>abstractMediaContainerComponent.media</value>
+						<value>NavigationBarCollectionComponent.components</value>
+						<value>NavigationBarComponent.navigationNode</value>
+						<value>NavigationBarComponent.link</value>
+					</list>
+				</entry>
+				<entry key="MediaContainer">
+					<list>
+						<value>MediaContainer.medias</value>
+					</list>
+				</entry>
+				<entry key="FooterComponent">
+					<list>
+						<value>FooterComponent.navigationNodes</value>
+					</list>
+				</entry>
+				<entry key="BrandCollectionComponent">
+					<list>
+						<value>BrandCollectionComponent.brandCollection</value>
+					</list>
+				</entry>
+				<entry key="MplSequentialBannerComponent">
+					<list>
+						<value>MplSequentialBannerComponent.bannersList</value>
+					</list>
+				</entry>
+				<entry key="MplAdvancedCategoryCarouselComponent">
+					<list>
+						<value>MplAdvancedCategoryCarouselComponent.categories</value>
+					</list>
+				</entry>
+			</map>
+		</property>
+		<property name="searchRestrictionsDisabled" value="true" />
+	</bean>
+
+</beans>
+
+

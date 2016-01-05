@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+
+	<grid id="createGrid" visible="false" class="grid_logistic">
+		<rows>
+			<row>
+				<label sclass="prop_label" value="Logistics Id"></label>
+				<textbox id="logisticsId"></textbox>
+				<label id="lId"></label>
+			</row>
+
+			<row>
+				<checkbox id="isActive" label="Active" />
+			</row>
+
+			<row>
+				<label sclass="prop_label" value="Name"></label>
+				<textbox id="logisticsName" />
+				<label id="lName"></label>
+			</row>
+
+			<row>
+				<label sclass="prop_label" value="Address   "></label>
+				<textbox id="address" draggable="true" cols="30"
+					rows="5" />
+				<label id="lAddress"></label>
+			</row>
+			<row>
+				<label sclass="prop_label" value="Contact Name"></label>
+				<textbox id="contactName" />
+				<label id="lCName"></label>
+			</row>
+			<row>
+				<label sclass="prop_label" value="Contact Phone No">
+				</label>
+				<textbox id="phoneNo" maxlength="11"></textbox>
+				<label id="lPNum"
+					style="color:red;margin-left:-100px;position:absolute">
+				</label>
+			</row>
+
+			<row>
+				<label sclass="prop_label" value="Logistics Email">
+				</label>
+				<textbox id="email"></textbox>
+				<label
+					style="color:red;margin-left:-100px;position:absolute"
+					id="lEmail">
+				</label>
+			</row>
+
+			<row>
+				<label sclass="prop_label" value="Fax No"></label>
+				<textbox id="faxNo" maxlength="11"></textbox>
+				<label
+					style="color:red;margin-left:-100px;position:absolute" id="lFax">
+				</label>
+			</row>
+
+
+			<row>
+				<div></div>
+				<button label="Add" id="addSave"></button>
+			</row>
+
+		</rows>
+
+	</grid>
+
+	<grid id="editGrid" visible="false">
+		<rows>
+			<row>
+				<label sclass="prop_label" value="Logistics Id"></label>
+				<textbox id="logisticsIdEdit" readonly="true" />
+
+			</row>
+			<row>
+				<checkbox id="isActiveEdit" label="Active" />
+			</row>
+
+			<row>
+				<label sclass="prop_label" value="Name"></label>
+				<textbox id="logisticsNameEdit" />
+
+			</row>
+
+
+			<row>
+				<label sclass="prop_label" value="Address   "></label>
+				<textbox id="addressEdit" cols="30" rows="5" />
+
+			</row>
+			<row>
+				<label sclass="prop_label" value="Contact Name"></label>
+				<textbox id="contactNameEdit" />
+
+
+			</row>
+			<row>
+				<label sclass="prop_label" value="Contact Phone No">
+				</label>
+				<textbox id="phoneNoEdit" maxlength="11">
+
+				</textbox>
+				<label id="lPNumEdit"
+					style="color:red;margin-left:-100px;position:absolute">
+				</label>
+			</row>
+			<row>
+				<label sclass="prop_label" value="Logistics Email">
+				</label>
+				<textbox id="emailEdit" />
+				<label
+					style="color:red;margin-left:-100px;position:absolute"
+					id="lemailEdit">
+				</label>
+			</row>
+			<row>
+				<label sclass="prop_label" value="Fax No"></label>
+				<textbox id="faxNoEdit" maxlength="11">
+
+				</textbox>
+				<label
+					style="color:red;margin-left:-100px;position:absolute"
+					id="lFaxEdit">
+				</label>
+			</row>
+			<row>
+				<div></div>
+				<button label="Update and Save" id="updateSave"></button>
+			</row>
+
+		</rows>
+
+	</grid>
+
+</widget>
+
+

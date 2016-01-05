@@ -1,0 +1,4 @@
+INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfigDate
+;customerDetailsPopulateCronJob
+;salesOrderPaymentInfoPopulateJob
+;salesOrderCanRetInfoPopulateJob

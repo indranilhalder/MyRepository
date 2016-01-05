@@ -1,0 +1,55 @@
+<!DOCTYPE>
+<html>
+   <head>
+      <meta http-equiv='Content-Type' content='text/html;charset=ISO-8859-1' />
+      <title>mpl Email Template</title>
+   </head>
+   <body style="margin-left: auto; margin-right: auto; background-color:#ffffff; font-family:Arial, Helvetica, sans-serif; font-size:12px;">
+      <table width="618" border="0" cellspacing="0" cellpadding="0" align="center">
+         <tr style="background-color:#1b429a;">
+            <td>
+               <table align="center" width="600" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff;">
+                  <tr>
+                     <td align="left" valign="top">
+                        <h3 style="padding: 20px 40px 20px 40px; font-size: 24px; color: #1b429a;">Your have requested for an update</h3>
+                        <p style="padding: 0px 40px 0px 40px;" >Dear <b>${ctx.displayName},</b></p>
+                        <br />
+                        <p style="padding: 0px 40px 0px 40px;" >
+                          <br />  
+                          #if($ctx.encodedPassword)
+                           Please log in with the updated password <b>${ctx.encodedPassword}</b>
+                          #else
+                          Please log in with the updated email <b>${ctx.displayName}</b>
+                          #end
+                         </p>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td>
+                        <table width="600" border="0" cellspacing="0" cellpadding="0">
+                           <tr>
+                              <td>
+                                 <p style="padding: 0px 40px 30px 40px;">
+                                    <b>Yours sincerely,<br /> <br />
+                                    mpl</b>
+                                 </p>
+                              </td>
+                             </tr>
+                        </table>
+                     </td>
+                  </tr>
+               </table>
+            </td>
+         </tr>
+         <tr style="background-color:#1b429a;">
+            <td valign="top">
+               <p style="font-size: 9px; padding-left: 40px; padding-right: 40px; color: #ffffff;"><b>This email was sent to:</b> <a href="mailto:$ctx.email" style="color: #1ab7ea;">$ctx.email</a><br />
+                  We are sending you this in connection with a product or service you have purchased from mpl. <br />
+                  We are always happy to hear what you think about our products and services. However, because this is a service email, we will not be able to respond if you reply to it. If you have any queries, please contact <a href="mailto:talktous@mpl.com" style="color: #1ab7ea;">talktous@mpl.com</a>
+               </p>
+            </td>
+         </tr>
+
+      </table>
+   </body>
+</html>

@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<alias alias="csProductUrlStrategy" name="acceleratorCsProductUrlStrategy" />
+	<bean id="acceleratorCsProductUrlStrategy"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.strategies.impl.AcceleratorProductUrlStrategy"
+		parent="defaultBaseCsProductUrlStrategy">
+		<property name="siteBaseUrlResolutionService" ref="siteBaseUrlResolutionService" />
+	</bean>
+	
+	<alias alias="mplFindDeliveryFulfillModeStrategy" name="mplDefaultFindDeliveryFulfillModeStrategy"/>
+	<bean id="mplDefaultFindDeliveryFulfillModeStrategy" class="com.tisl.mpl.cockpits.cscockpit.strategies.impl.MplDefaultFindDeliveryFulfillModeStrategy" scope="session"/>
+	
+	
+	<alias alias="csCustomerOrdersStrategy" name="mplDefaultCsCustomerOrdersStrategy"/>
+	<bean id="mplDefaultCsCustomerOrdersStrategy" class="com.tisl.mpl.cockpits.cscockpit.strategies.impl.MplDefaultCustomerOrdersStrategy" scope="session"/>
+	<!-- TISST-13375 set chennal-->
+	<alias alias="csBasketStrategy" name="mplDefaultCsBasketStrategy"/>
+		<bean id="mplDefaultCsBasketStrategy" parent ="defaultCsBasketStrategy" class="com.tisl.mpl.cockpits.cscockpit.strategies.impl.MplDefaultBasketStrategy" scope="session">
+	
+	</bean>
+	<!-- new customer widget -->
+	<alias alias="csCustomerCreateWidgetRenderer" name="marketplaceCsCustomerCreateWidgetRenderer" />
+	<bean id="marketplaceCsCustomerCreateWidgetRenderer" parent="defaultCsCustomerCreateWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCustomerCreateWidgetRenderer">
+	</bean>
+
+	<!-- new customer widget controller -->
+	<alias alias="csCustomerCreateController" name="marketplaceCsCustomerCreateController" />
+	<bean id="marketplaceCsCustomerCreateController" parent="defaultCsCustomerCreateController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceCustomerCreateController">
+	</bean>
+	<!-- Customer Search Widget renderer -->
+	<alias alias="csCustomerSearchWidgetRenderer" name="marketplaceCsCustomerSearchWidgetRenderer" />
+	<bean id="marketplaceCsCustomerSearchWidgetRenderer" scope="prototype"
+		parent="defaultCsCustomerSearchWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCustomerSearchWidgetRenderer" />
+
+	<!--edit customer widget -->
+	<alias alias="csCustomerEditWidgetRenderer" name="marketplaceCsCustomerEditWidgetRenderer" />
+	<bean id="marketplaceCsCustomerEditWidgetRenderer" parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCustomerEditDetailsWidgetRenderer">
+		<property name="editorConfigurationCode" value="editCustomerDetails" />
+		<property name="footerRenderer">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.ConfigurableItemWidgetDetailRenderer"
+				parent="abstractWidgetDetailRenderer">
+				<property name="configurationCode" value="customerReadonlyDetails" />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- Customer create addresses -->
+	<alias alias="csShippingAddressCreateWidgetRenderer" name="marketplaceCsShippingAddressCreateWidgetRenderer" />
+	<bean id="marketplaceCsShippingAddressCreateWidgetRenderer"
+		parent="defaultCsAddressCreateWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceDeliveryAddressWidgetRenderer">
+	</bean>
+
+	<alias alias="csShippingAddressWidgetRenderer" name="mplCsShippingAddressWidgetRenderer" />
+	<bean id="mplCsShippingAddressWidgetRenderer" parent="defaultCsShippingAddressWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceShippingAddressWidgetRenderer">
+
+	</bean>
+
+	<!-- Customer edit addresses -->
+	<!-- <alias alias="csCustomerEditAddressWidgetRenderer" name="marketplaceCustomerEditAddressWidgetRenderer" />
+	<bean id="marketplaceCustomerEditAddressWidgetRenderer" parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCustomerAddressesWidgetRenderer">
+		<property name="listConfigurationCode" value="customerAddressList" />
+		<property name="listEditorConfigurationCode" value="customerAddressListEditor" />
+		<property name="listConfigurationType" value="Address" />
+		<property name="lazyLoadingEnabled" value="false" />
+		<property name="popupWidgetHelper" ref="popupWidgetHelper" />
+		<property name="addressModelLabelProvider" ref="addressModelLabelProvider" />
+		<property name="itemRemovalAppender">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.controllers.dispatcher.impl.RemoveAddressAppender"
+				parent="csBaseAppender" />
+		</property>
+	</bean> -->
+
+	<!-- For Payment Mode COD -->
+	<alias alias="csCheckoutPaymentWidgetRenderer" name="defaultCsCheckoutPaymentCustomizedWidgetRenderer" />
+	<bean id="defaultCsCheckoutPaymentCustomizedWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCheckoutPaymentWidgetRenderer">
+		<property name="popupWidgetHelper" ref="popupWidgetHelper" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="sessionService" ref="sessionService" />
+		<property name="listConfigurationCode" value="creditCardsList" />
+		<property name="listConfigurationType" value="CreditCardPaymentInfo" />
+		<property name="detailRenderer">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.ConfigurableItemWidgetDetailRenderer"
+				parent="abstractWidgetDetailRenderer">
+				<property name="configurationCode" value="paymentInfo" />
+			</bean>
+		</property>
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="cODPaymentService" ref="cODPaymentService" />
+		<property name="oTPGenericService" ref="otpGenericService" />
+	</bean>
+
+	<!-- csCallContextWidgetRenderer TIS 309 -->
+	<alias alias="csCallContextWidgetRenderer" name="marketplaceDefaultCsCallContextWidgetRenderer" />
+	<bean id="marketplaceDefaultCsCallContextWidgetRenderer" parent="defaultCsCallContextWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCallContextWidgetRenderer">
+		<property ref="popupWindowCreator" name="popupWindowCreator" />
+	</bean>
+	<!-- call context controller -->
+	<alias alias="csCustomerController" name="marketplaceDefaultCsCallContextController" />
+	<alias alias="csCallContextController" name="marketplaceDefaultCsCallContextController" />
+	<bean id="marketplaceDefaultCsCallContextController" parent="csBaseWidgetController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceDefaultCallContextController"
+		scope="session">
+		<property name="basketController" ref="csBasketController" />
+		<property name="customerOrdersStrategy" ref="csCustomerOrdersStrategy" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="userService" ref="userService" />
+		<property name="ticketStrategy" ref="csTicketStrategy" />
+		<lookup-method name="lookupBrowserToSwitchOnEndCall"
+			bean="csBasketBrowser" />
+		<property name="widgetToFocusOnEndCall" value="basketCartWidget" />
+		<property name="impersonationService" ref="impersonationService" />
+		<property name="widgetHelper" ref="widgetHelper" />
+		<property name="baseSiteService" ref="baseSiteService" />
+		<property name="commerceCommonI18NService" ref="commerceCommonI18NService" />
+		<property name="newItemService" ref="newItemService" />
+		<property name="customerAccountService" ref="customerAccountService" />
+	</bean>
+	<!-- csCallContextController TIS 309 end -->
+
+	<!-- For Order Search -->
+	<alias alias="csOrderSearchWidgetRenderer" name="marketPlaceDefaultOrderSearchRenderer" />
+	<bean id="marketPlaceDefaultOrderSearchRenderer" parent="defaultCsOrderSearchWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceDefaultOrderSearchWidgetRenderer" />
+
+	<!-- ##################################### TIS-261 ###################################################### -->
+	<alias alias="csBasketResultWidgetRenderer" name="marketPlaceBasketResultWidgetRenderer" />
+	<bean id="marketPlaceBasketResultWidgetRenderer" parent="defaultCsBasketResultWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceBasketResultWidgetRenderer">
+		<property name="lazyLoadingEnabled" value="false" />
+		<property name="detailRenderer">
+			<bean
+				class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceProductSearchProductDetailRenderer">
+				<property name="urlStrategy" ref="csProductUrlStrategy" />
+				<property name="configurationCode" value="productDetails" />
+			</bean>
+		</property>
+		<property name="itemAppender">
+			<bean
+				class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.dispatcher.impl.MarketPlaceBasketAppender"
+				parent="csBaseAppender">
+				<property name="widgetController" ref="csBasketController" />
+			</bean>
+		</property>
+	</bean>
+
+	<alias alias="csBasketController" name="defaultMarketplaceBasketController" />
+	<bean id="defaultMarketplaceBasketController" scope="session"
+		parent="defaultCsBasketController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceBasketControllerImpl">
+		<property name="buyBoxFacade" ref="buyBoxFacade" />
+	</bean>
+
+	<!-- #################################################################################################### -->
+	<!-- ##################################### TIS-262 ###################################################### -->
+	<!-- Product controller -->
+	<alias alias="csProductSearchController" name="marketPlaceProductSearchController" />
+	<bean id="marketPlaceProductSearchController" scope="session"
+		parent="defaultCsProductSearchController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl">
+	</bean>
+
+	<!-- basket result widget -->
+	<alias alias="csBasketResultWidgetConfig" name="marketPlaceCsBasketResultWidgetConfig" />
+	<bean id="marketPlaceCsBasketResultWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.basket.result" />
+		<property name="widgetRenderer" ref="csBasketResultWidgetRenderer" />
+		<property name="widgetController" ref="csProductSearchController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetModel">
+			<bean
+				class="com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.MarketplaceSearchResultWidgetModel" />
+		</property>
+		<property name="widgetAdapter">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.adapters.BasketResultAdapter">
+				<property name="cockpitTypeService" ref="cockpitTypeService" />
+			</bean>
+		</property>
+	</bean>
+	<!-- ################################################################################################## -->
+
+
+	<!-- ######################### TIS-250##################################################### -->
+	<alias alias="csOrderDetailsWidgetRenderer" name="defaultCsOrderDetailsWidgetRenderer" />
+	<bean id="defaultCsOrderDetailsWidgetRenderer" parent="abstractWidgetRenderer"
+		class="de.hybris.platform.cscockpit.widgets.renderers.impl.OrderDetailsWidgetRenderer">
+		<property name="detailRenderer">
+			<bean
+				class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceOrderDetailsListRenderer"
+				parent="abstractWidgetDetailRenderer">
+				<property name="enumerationService" ref="enumerationService" />
+				<property name="customerModelLabelProvider" ref="customerModelLabelProvider" />
+				<property name="configurationCode" value="orderDetailsList" />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- ################################################################################################# -->
+	<!-- ######################################## TIS-240 ################################################ -->
+	<alias alias="csAssociatedOrderDetailItemsWidgetConfig" name="marketplaceAssociatedOrderItemsWidgetConfig" />
+	<bean id="marketplaceAssociatedOrderItemsWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.associatedOrders" />
+		<property name="widgetRenderer" ref="csAssociatedOrderDetailItemsWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetModel" ref="csOrderItemWidgetModel" />
+		<property name="widgetAdapter" ref="csOrderDetailsWidgetAdapter" />
+	</bean>
+
+	<alias alias="csAssociatedOrderDetailItemsWidgetRenderer"
+		name="marketPlaceAssociatedOrderDetailItemsWidgetRenderer" />
+	<bean id="marketPlaceAssociatedOrderDetailItemsWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceAssociatedOrderDetailsRenderer">
+		<property name="listConfigurationCode" value="cartList" />
+		<property name="listConfigurationType" value="AbstractOrderEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="sessionService" ref="sessionService" />
+		<property name="lazyLoadingEnabled" value="false" />
+		<property name="formatFactory" ref="formatFactory" />
+	</bean>
+
+	<alias alias="csAssociatedOrderController" name="marketPlaceCsAssociatedOrderController" />
+	<bean id="marketPlaceCsAssociatedOrderController" scope="session"
+		parent="csOrderController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceDefaultOrderController" />
+
+	<bean id="marketPlaceOrderSearchServices"
+		class="com.tisl.mpl.cockpits.cscockpit.services.impl.DefaultMarketPlaceOrderSearchServices" />
+	<bean id="marketPlaceOrderSearchDao"
+		class="com.tisl.mpl.cockpits.cscockpit.dao.impl.DefaultMarketPlaceOrderSearchDao" />
+	<!-- ################################################################################################# -->
+	<!-- ######################################## TIS-267 ################################################ -->
+	<alias alias="csBasketCartWidgetRenderer" name="marketplaceBasketCartWidgetRenderer" />
+	<bean id="marketplaceBasketCartWidgetRenderer" parent="defaultCsBasketCartWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceBasketCartWidgetRenderer">
+	</bean>
+
+	<alias alias="csCheckoutCartWidgetRenderer" name="marketplaceCheckoutCartWidgetRenderer" />
+	<bean id="marketplaceCheckoutCartWidgetRenderer" parent="defaultCsCheckoutCartWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceCheckoutCartWidgetRenderer">
+		<!-- overriding properties -->
+		<property name="displayActionsPerLineItem" value="true" />
+		<property name="displayPerLineDeliveryModeSelector" value="true" />
+		<property name="displayPerLineDeliveryDateSelector" value="false" />
+		<property name="displayPerLineDeliveryAddressSelector" value="false" />
+	</bean>
+
+	<alias alias="csCheckoutController" name="marketplaceCheckoutController" />
+	<bean id="marketplaceCheckoutController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceCheckoutControllerImpl"
+		scope="session" parent="defaultCsCheckoutController">
+		<property name="basketController" ref="csBasketController" />
+		<property name="csCheckoutService" ref="csCheckoutService" />
+		<property name="csCardPaymentService" ref="csCardPaymentService" />
+		<property name="commerceCartService" ref="commerceCartService" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="impersonationService" ref="impersonationService" />
+		<property name="namedDeliveryDateStrategy" ref="namedDeliveryDateStrategy" />
+	</bean>
+	<!-- ################################################################################################# -->
+	<!-- ####################################TIS-255###################################################### -->
+	<alias alias="csOrderActionsWidgetRenderer" name="marketPlaceDefaultCsOrderActionsWidgetRenderer" />
+	<bean id="marketPlaceDefaultCsOrderActionsWidgetRenderer" parent="defaultCsOrderActionsWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceOrderManagementActionsWidgetRenderer">
+		<property name="popupWidgetHelper" ref="popupWidgetHelper" />
+	</bean>
+
+	<!-- new Invoice request widget -->
+	<alias alias="csInvoiceRequestCreateWidgetConfig" name="defaultCsInvoiceRequestCreateWidgetConfig" />
+	<bean id="defaultCsInvoiceRequestCreateWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.requestinvoice.create" />
+		<property name="widgetRenderer" ref="csInvoiceRequestCreateWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csInvoiceWidgetFrame" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel" />
+		</property>
+	</bean>
+
+	<alias alias="csInvoiceRequestCreateWidgetRenderer"
+		name="marketPlacedefaultCsInvoiceRequestCreateWidgetRenderer" />
+	<bean id="marketPlacedefaultCsInvoiceRequestCreateWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceInvoiceRequestWidgetRenderer"
+		scope="request">
+
+		<property name="listConfigurationCode" value="invoiceEntryList" />
+		<property name="listConfigurationType" value="AbstractOrderEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+	</bean>
+	<!-- ################################################################################################# -->
+	
+	
+		<!--  ##################################### Make Manual Refund #####################################-->
+
+<alias alias="csMakeManualRefundCreateWidgetConfig" name="defaultCsMakeManualRefundCreateWidgetConfig" />
+	<bean id="defaultCsMakeManualRefundCreateWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.refund.manualRefund.create" />
+		<property name="widgetRenderer" ref="csManualRefundCreateWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csInvoiceWidgetFrame" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel" />
+		</property>
+	</bean>
+	
+	<alias alias="csManualRefundCreateWidgetRenderer" name="marketPlacedefaultCsMakeManualRefundCreateWidgetRenderer" />
+	<bean id="marketPlacedefaultCsMakeManualRefundCreateWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceMakeManualRefundWidgetRenderer"
+		scope="request">
+
+		<property name="listConfigurationCode" value="mplReturnRequestListDetail" />
+		<property name="listConfigurationType" value="RefundEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+	</bean>
+			
+<!-- ##################################### Make Manual Refund End ##################################### -->
+
+	<!-- ##################################TIS-349 START################################################## -->
+	<alias alias="csCancellationController" name="marketPlaceDefaultCsCancellationController" />
+	<bean id="marketPlaceDefaultCsCancellationController" parent="defaultCsCancellationController"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceDefaultCancellationController"
+		scope="session">
+		<property name="orderManagementActionsWidgetController" ref="csOrderManagementActionsWidgetController" />
+		<property name="orderCancelService" ref="orderCancelService" />
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<!-- 
+	<bean id="marketPlaceDefaultOrderCancelRecordsHandler"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.helpers.impl.MarketplaceDefaultOrderCancelRecordsHandler"
+		parent="defaultOrderCancelRecordsHandler" scope="tenant">
+		
+	</bean> -->
+
+	<alias alias="csPartialOrderCancellationWidgetRenderer"
+		name="marketPlaceDefaultCsPartialOrderCancellationWidgetRenderer" />
+	<bean id="marketPlaceDefaultCsPartialOrderCancellationWidgetRenderer"
+		parent="defaultCsPartialOrderCancellationWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlacePartialOrderCancellationWidgetRenderer">
+		<property name="popupWidgetHelper" ref="popupWidgetHelper" />
+		<property name="enumerationService" ref="enumerationService" />
+		<property name="productInfoConfigurationCode" value="cancellableOrderEntryProductList" />
+	</bean>
+	
+	<alias alias="orderCancelService" name="marketPlacedefaultOrderCancelService"/>
+	<bean id="marketPlacedefaultOrderCancelService" parent="defaultOrderCancelService" >
+	<property name="requestExecutorsMap">
+			<map>
+				<entry key="PENDINGORHOLDINGAREA" value-ref="immediateCancelRequestExecutor"/>
+				<entry key="SENTTOWAREHOUSE" value-ref="immediateCancelRequestExecutor"/>
+				<entry key="SHIPPING" value-ref="immediateCancelRequestExecutor"/>
+				<entry key="PARTIALLYSHIPPED" value-ref="immediateCancelRequestExecutor"/>
+			</map>
+		</property>
+	</bean>      
+	<!-- ################################################################################################# -->
+	
+	<alias alias="csReplacementRequestCreateWidgetRenderer" name="mplCsReplacementRequestCreateWidgetRenderer" />
+	<bean id="mplCsReplacementRequestCreateWidgetRenderer" parent="defaultCsReplacementRequestCreateWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceReturnRequestCreateWidgetRenderer">
+		<property name="productInfoConfigurationCode" value="returnsOrderEntryList"/>
+		<property name="listConfigurationCode" value="replacementEntryList"/>
+		<property name="listEditorConfigurationCode" value="replacementEntryEdit"/>
+		<property name="listConfigurationType" value="ReplacementEntry"/>
+		<property name="popupWidgetHelper" ref="popupWidgetHelper"/>		
+	</bean>	
+	
+	<alias alias="csRefundRequestCreateWidgetRenderer" name="mplCsRefundRequestCreateWidgetRenderer"/>
+	<bean id="mplCsRefundRequestCreateWidgetRenderer" parent="defaultCsRefundRequestCreateWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceReturnRequestCreateWidgetRenderer">
+		<property name="productInfoConfigurationCode" value="returnsOrderEntryList"/>
+		<property name="listConfigurationCode" value="refundEntryList"/>
+		<property name="listEditorConfigurationCode" value="refundEntryEdit"/>
+		<property name="listConfigurationType" value="RefundEntry"/>
+		<property name="popupWidgetHelper" ref="popupWidgetHelper"/>
+	</bean>
+	
+	<alias alias="csReturnsController" name="mpldefaultCsReturnsController"/>
+	<bean id="mpldefaultCsReturnsController" parent="defaultCsReturnsController" class="com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketPlaceDefaultReturnsController" scope="session">
+		<property name="orderManagementActionsWidgetController" ref="csOrderManagementActionsWidgetController"/>
+		<property name="commonI18NService" ref="commonI18NService"/>
+		<property name="impersonationService" ref="impersonationService"/>
+		<property name="refundService" ref="refundService"/>
+		<property name="returnService" ref="returnService"/>
+	</bean>
+	
+	<!-- ################################ TIS-357 START ########################################################## -->
+	<!-- new Refund Request request widget -->
+	<alias alias="csReturnRequestCreateWidgetConfig" name="defaultCsReturnRequestCreateWidgetConfig" />
+	<bean id="defaultCsReturnRequestCreateWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.requestreturn.create" />
+		<property name="widgetRenderer" ref="csReturnRequestCreateWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csReturnWidgetFrame" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel" />
+		</property>
+	</bean>
+	
+	<alias alias="csReturnRequestCreateWidgetRenderer"	name="marketPlacedefaultCsReturnRequestCreateWidgetRenderer" />
+	<bean id="marketPlacedefaultCsReturnRequestCreateWidgetRenderer" parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceReturnRequestWidgetRenderer" scope="request">
+		<property name="listConfigurationCode" value="orderRefundRequestListDetail" />
+		<property name="listConfigurationType" value="RefundEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+	</bean>
+	
+	<!-- ################################ TIS-357 END ########################################################## -->
+	
+	<alias alias="csOrderDetailOrderItemsWidgetRenderer" name="defaultCsOrderDetailOrderItemsWidgetRenderer"/>
+	<bean id="defaultCsOrderDetailOrderItemsWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceOrderDetailsOrderItemsWidgetRenderer">
+		<property name="listConfigurationCode" value="mplcartList"/>
+		<property name="listConfigurationType" value="AbstractOrderEntry"/>
+		<property name="commonI18NService" ref="commonI18NService"/>
+		<property name="sessionService" ref="sessionService"/>
+		<property name="lazyLoadingEnabled" value="false"/>
+		<property name="detailRenderer">
+			<bean class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.ProductSearchProductDetailRenderer">
+				<property name="urlStrategy" ref="csProductUrlStrategy"/>
+				<property name="configurationCode" value="productDetails"/>
+			</bean>
+		</property>
+		<property name="formatFactory" ref="formatFactory"/>
+	</bean>	
+	
+	<alias alias="csOrderConsignmentsWidgetRenderer" name="marketPlacedefaultCsOrderConsignmentsWidgetRenderer"/>
+	<bean id="marketPlacedefaultCsOrderConsignmentsWidgetRenderer" parent="defaultCsOrderConsignmentsWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceConfigurableCsMasterDetailListboxWidgetRenderer">
+		<property name="listConfigurationCode" value="consignmentList"/>
+		<property name="listConfigurationType" value="Consignment"/>
+		<property name="detailRenderer">
+			<bean class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.OrderConsignmentsWidgetDetailRenderer" parent="abstractWidgetDetailRenderer">
+				<property name="listConfigurationCode" value="consignmentList"/>
+				<property name="listConfigurationType" value="ConsignmentEntry"/>
+			</bean>
+		</property>
+	</bean>
+	
+	<alias alias="csOrderReverseConsignmentsWidgetConfig" name="defaultCsOrderReverseConsignmentsWidgetConfig" />
+	<bean id="defaultCsOrderReverseConsignmentsWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.reverseconsignments" />
+		<property name="widgetRenderer" ref="csReverseOrderConsignmentsWidgetRenderer" />
+		<property name="widgetController" ref="csOrderController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass"
+			value="defaultWidgetFrame csOrderConsignmentsWidgetConfig" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.models.impl.DefaultMasterDetailListWidgetModel" />
+		</property>
+		<property name="widgetAdapter">
+			<bean
+				class="com.tisl.mpl.cockpits.cscockpit.widgets.adapter.impl.OrderReverseConsignmentsListWidgetAdapter">
+				<property name="cockpitTypeService" ref="cockpitTypeService" />
+			</bean>
+		</property>
+	</bean>
+
+	<alias alias="csReverseOrderConsignmentsWidgetRenderer" name="defaultReverseCsOrderConsignmentsWidgetRenderer" />
+	<bean id="defaultReverseCsOrderConsignmentsWidgetRenderer" parent="marketPlacedefaultCsOrderConsignmentsWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceReverseConsignmentListBoxWidgetRenderer">
+		<property name="listConfigurationCode" value="reverseConsignmentList" />
+		<property name="listConfigurationType" value="Consignment" />
+		<property name="detailRenderer">
+			<bean
+				class="de.hybris.platform.cscockpit.widgets.renderers.details.impl.OrderConsignmentsWidgetDetailRenderer"
+				parent="abstractWidgetDetailRenderer">
+				<property name="listConfigurationCode" value="consignmentList" />
+				<property name="listConfigurationType" value="ConsignmentEntry" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- payment address widget -->
+
+	<alias alias="csPaymentAddressWidgetRenderer" name="marketPlacePaymentAddressWidgetRenderer"/>
+	<bean id="marketPlacePaymentAddressWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlacePaymentAddressWidgetRenderer">
+		<property name="popupWidgetHelper" ref="popupWidgetHelper"/>
+	</bean>
+	
+	<alias alias="csBasketTotalsWidgetRenderer" name="marketPlaceBasketTotalsWidgetRenderer"/>
+	<bean id="marketPlaceBasketTotalsWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceBasketTotalsWidgetRenderer">
+		<property name="formatFactory" ref="formatFactory"/>
+		<property name="sessionService" ref="sessionService"/>
+		<property name="commonI18NService" ref="commonI18NService"/>
+	</bean>	
+	
+	<!-- Order Total  -->
+	<alias alias="csOrderDetailOrderTotalsWidgetRenderer" name="mplDefaultCsOrderDetailOrderTotalsWidgetRenderer"/>
+	<bean id="mplDefaultCsOrderDetailOrderTotalsWidgetRenderer" parent="defaultCsOrderDetailOrderTotalsWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplOrderDetailsOrderTotalsWidgetRenderer">
+	</bean>
+	
+	<alias alias="csCustomerOrdersWidgetRenderer" name="mplDefaultCsCustomerOrdersWidgetRenderer"/>
+	<bean id="mplDefaultCsCustomerOrdersWidgetRenderer" parent="defaultCsCustomerOrdersWidgetRenderer" >
+		<property name="listConfigurationType" value="Order"/>
+	</bean>
+	
+	<alias alias="csRefundDeliveryChargeWidgetConfig" name="defaultCsRefundDeliveryChargeWidgetConfig" />
+	<bean id="defaultCsRefundDeliveryChargeWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.refund.refundDeliveryCharge.create" />
+		<property name="widgetRenderer" ref="csRefundDeliveryChargeWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget" />
+		<property name="widgetSclass" value="defaultWidgetFrame csInvoiceWidgetFrame" />
+		<property name="widgetModel">
+			<bean
+				class="de.hybris.platform.cockpit.widgets.models.impl.DefaultListWidgetModel" />
+		</property>
+	</bean>
+	
+	<alias alias="csRefundDeliveryChargeWidgetRenderer" name="marketPlacedefaultCsRefundDeliveryChargeWidgetRenderer" />
+	<bean id="marketPlacedefaultCsRefundDeliveryChargeWidgetRenderer"
+		parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceRefundDeliveryChargeWidgetRenderer"
+		scope="request">
+		<property name="listConfigurationCode" value="orderRefundDeliveryChargeListDetail" />
+		<property name="listConfigurationType" value="AbstractOrderEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+	</bean>
+		
+	<alias alias="csFraudReportWidgetRenderer" name="mplDefaultCsFraudReportWidgetRenderer"/>
+	<bean id="mplDefaultCsFraudReportWidgetRenderer" parent="defaultCsFraudReportWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MplFraudReportWidgetRenderer"/>
+	
+	
+	<alias alias="csRefundConfirmationWidgetRenderer" name="mplDefaultCsRefundConfirmationWidgetRenderer"/>
+	<bean id="mplDefaultCsRefundConfirmationWidgetRenderer" parent="defaultCsRefundConfirmationWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceRefundConfirmationWidgetRenderer">
+		<property name="listConfigurationCode" value="returnsOrderEntryList"/>
+		<property name="listConfigurationType" value="AbstractOrderEntry"/>
+		<property name="commonI18NService" ref="commonI18NService"/>
+		<property name="sessionService" ref="sessionService"/>
+		<property name="popupWidgetHelper" ref="popupWidgetHelper"/>
+		<property name="formatFactory" ref="formatFactory"/>
+	</bean>
+	
+</beans>

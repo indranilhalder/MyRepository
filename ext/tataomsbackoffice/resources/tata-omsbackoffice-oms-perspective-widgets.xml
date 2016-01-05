@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widgets>
+
+	<widget-extension widgetId="backofficeMainSlot">
+	
+	
+<!-- Added by sana to remove i.e. overriding the original widget.xml coming from oms ext-->
+  <remove widgetId="omsBackofficePerspective"/>
+
+		<widget id="omsBackofficePerspective" widgetDefinitionId="com.hybris.cockpitng.borderlayout"
+		        slotId="perspectives" title="OMS" template="false" access="omsadmin">
+			<widget id="omsExplorerTree" widgetDefinitionId="com.hybris.cockpitng.widgets.common.explorertree"
+			        slotId="leftSlot" template="false">
+				<widget id="explorerTreeUnsavedStateHandler"
+				        widgetDefinitionId="com.hybris.oms.widgets.unsavedstatehandler"
+				        slotId="cockpitWidgetChildrenInvisible" template="false">
+					<setting key="socketDataType_$T" value="com.hybris.backoffice.navigation.NavigationNode"
+					         type="String"/>
+					<setting key="widgetStyleAttribute" value="" type="String"/>
+					<setting key="widgetStyleClass" value="" type="String"/>
+					<virtual-sockets/>
+				</widget>
+				<widget id="ec840b2c-c979-4e94-b388-aced5e3e0310"
+				        widgetDefinitionId="com.hybris.cockpitng.conditionevaluator"
+				        slotId="cockpitWidgetChildrenInvisible" template="false">
+					<setting key="expression" value="#root?.isChanged()" type="String"/>
+					<setting key="socketDataType_$T" value="java.lang.Object" type="String"/>
+					<setting key="widgetStyleAttribute" value="" type="String"/>
+					<setting key="widgetStyleClass" value="" type="String"/>
+					<virtual-sockets/>
+				</widget>
+				<widget id="omsPerspectiveSelector" widgetDefinitionId="com.hybris.cockpitng.widgets.common.multiplexer"
+				        slotId="cockpitWidgetChildrenInvisible" template="false">
+					<setting key="widgetStyleAttribute" value="" type="String"/>
+					<setting key="widgetStyleClass" value="" type="String"/>
+					<setting key="usersSelected_expression" value="#root.getId().equalsIgnoreCase('node.id.User')"
+					         type="String"/>
+					<setting key="omsSelected_expression" value="#root.getId().startsWith('node.id.oms.')"
+					         type="String"/>
+					<setting key="importsSelected_expression"
+					         value="#root.getId().equalsIgnoreCase('node.id.import.importrun')" type="String"/>
+					<virtual-sockets>
+						<output id="omsSelected" type="com.hybris.backoffice.navigation.NavigationNode"
+						        visibility="external"/>
+						<output id="usersSelected" type="com.hybris.backoffice.navigation.NavigationNode"
+						        visibility="external"/>
+						<output id="importsSelected" type="com.hybris.backoffice.navigation.NavigationNode"
+						        visibility="external"/>
+					</virtual-sockets>
+				</widget>
+				<setting key="shortcutSectionRowHeight" value="28" type="Integer"/>
+				<setting key="explorerTreeConfigCtx" value="explorer-tree" type="String"/>
+				<setting key="widgetStyleAttribute" value="min-height: 30px; height:100%" type="String"/>
+				<setting key="refreshBtnVisiblility" value="false" type="Boolean"/>
+				<setting key="cacheTreemodel" value="false" type="Boolean"/>
+				<setting key="searchVisible" value="false" type="Boolean"/>
+				<setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+				<setting key="searchAsYouType" value="true" type="Boolean"/>
+				<setting key="shortcutSectionScrollAfter" value="8" type="Integer"/>
+				<setting key="shortcutSectionInitHeight" value="50" type="Integer"/>
+				<setting key="navigationVisible" value="false" type="Boolean"/>
+				<setting key="widgetStyleClass" value="" type="String"/>
+				<setting key="config.context.component" value="oms-explorer-tree" type="String"/>
+				<setting key="shortcutSectionMaxHeight" value="274" type="Integer"/>
+				<setting key="dropAreaVisible" value="false" type="Boolean"/>
+				<virtual-sockets/>
+			</widget>
+			<widget id="omsPerspectiveContainer" widgetDefinitionId="com.hybris.backoffice.perspectiveContainer"
+			        slotId="centerSlot" template="false">
+				<widget id="omsPerspectiveWrapper" widgetDefinitionId="com.hybris.cockpitng.perspectivewrapper"
+				        slotId="perspectives" title="OMS" template="true">
+					<widget id="omsDefaultPerspective"
+					        widgetDefinitionId="com.hybris.cockpitng.widgets.common.multilayout" slotId="content"
+					        title="OMS Perspective" template="false">
+						<widget id="omsPerspectiveControllingWidget"
+						        widgetDefinitionId="com.hybris.cockpitng.omsnavigation"
+						        slotId="cockpitWidgetChildrenInvisible" template="false">
+							<setting key="widgetStyleAttribute" value="" type="String"/>
+							<setting key="widgetStyleClass" value="" type="String"/>
+							<virtual-sockets/>
+						</widget>
+						<widget id="omsMainList" widgetDefinitionId="com.hybris.cockpitng.widgets.common.listview"
+						        slotId="secSlot" template="false">
+							<widget id="editorAreaMultiplexer"
+							        widgetDefinitionId="com.hybris.cockpitng.widgets.common.multiplexer"
+							        slotId="cockpitWidgetChildrenInvisible" template="false">
+								<setting key="activateShipmentEditor_expression"
+								         value="#root instanceof T(com.hybris.oms.ui.api.shipment.ShipmentDetail)"
+								         type="String"/>
+								<setting key="activateStandardEditor_expression"
+								         value="(#root instanceof T(com.hybris.oms.domain.inventory.Location)) or (#root instanceof T(com.hybris.cockpitng.uiadapter.impl.UIObject)) or (#root instanceof T(com.hybris.oms.domain.inventory.Bin))"
+								         type="String"/>
+								<setting key="widgetStyleAttribute" value="" type="String"/>
+								<setting key="default_output" value="default_output" type="String"/>
+								<setting key="widgetStyleClass" value="" type="String"/>
+								<setting key="activateOrderDetails_expression"
+								         value="#root instanceof T(com.hybris.oms.ui.api.order.UIOrderDetails)"
+								         type="String"/>
+								<virtual-sockets>
+									<output id="activateOrderDetails" type="com.hybris.oms.ui.api.order.UIOrderDetails"
+									        visibility="external"/>
+									<output id="activateStandardEditor" type="java.lang.Object" visibility="external"/>
+									<output id="default_output" type="java.lang.Object" visibility="external"/>
+									<output id="activateShipmentEditor"
+									        type="com.hybris.oms.ui.api.shipment.ShipmentDetail" visibility="external"/>
+								</virtual-sockets>
+							</widget>
+							<widget id="mainListUnsavedStateHandler"
+							        widgetDefinitionId="com.hybris.oms.widgets.unsavedstatehandler"
+							        slotId="cockpitWidgetChildrenInvisible" template="false">
+								<setting key="socketDataType_$T" value="java.lang.Object" type="String"/>
+								<setting key="widgetStyleAttribute" value="" type="String"/>
+								<setting key="widgetStyleClass" value="" type="String"/>
+								<virtual-sockets/>
+							</widget>
+							<widget id="binEditorCreationPopup"
+							        widgetDefinitionId="com.hybris.cockpitng.widgets.common.beaneditor"
+							        slotId="cockpitWidgetChildrenInvisible" title="bin.creation" template="true">
+								<instance-settings socketEventRoutingMode="LAST_USED">
+									<create onInit="false" reuseExisting="true">
+										<incoming-events>
+											<socket-event id="toCreate"/>
+										</incoming-events>
+									</create>
+									<close>
+										<outgoing-events>
+											<socket-event id="com.hybris.oms.actions.cancelCreationAction.success"/>
+											<socket-event id="com.hybris.oms.actions.createBin.success"/>
+										</outgoing-events>
+									</close>
+									<select onInit="false">
+										<incoming-events>
+											<socket-event id="toCreate"/>
+										</incoming-events>
+									</select>
+								</instance-settings>
+								<setting key="headerVisible" value="false" type="Boolean"/>
+								<setting key="handleUnsaved" value="false" type="Boolean"/>
+								<setting key="_height" value="340px" type="String"/>
+								<setting key="_width" value="430px" type="String"/>
+								<setting key="widgetStyleAttribute" value="" type="String"/>
+								<setting key="widgetStyleClass" value="" type="String"/>
+								<setting key="type" value="" type="String"/>
+								<virtual-sockets>
+									<output id="com.hybris.oms.actions.cancelCreationAction.success"
+									        type="java.lang.Object" visibility="external"/>
+									<output id="com.hybris.oms.actions.createBin.success" type="java.lang.Object"
+									        visibility="external"/>
+								</virtual-sockets>
+							</widget>
+							<setting key="treeActionsVisible" value="true" type="Boolean"/>
+							<setting key="socketDataType_$T" value="" type="String"/>
+							<setting key="widgetStyleAttribute" value="" type="String"/>
+							<setting key="treeSelectableRows" value="false" type="Boolean"/>
+							<setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+							<setting key="titleVisible" value="true" type="Boolean"/>
+							<setting key="treeViewInitiallyExpanded" value="false" type="Boolean"/>
+							<setting key="fixedPageSize" value="false" type="Boolean"/>
+							<setting key="maxPageSize" value="100" type="Integer"/>
+							<setting key="configurationContext" value="listView" type="String"/>
+							<setting key="availableModes" value="list" type="String"/>
+							<setting key="pagingVisible" value="true" type="Boolean"/>
+							<setting key="sortableListHeader" value="true" type="Boolean"/>
+							<setting key="widgetStyleClass" value="" type="String"/>
+							<setting key="listHeaderVisible" value="true" type="Boolean"/>
+							<virtual-sockets>
+								<output id="com.hybris.oms.actions.create.location.success" type="java.lang.Object"
+								        visibility="external"/>
+								<output id="com.hybris.oms.actions.createPopupBin.success" type="java.lang.Object"
+								        visibility="external"/>
+							</virtual-sockets>
+						</widget>
+						<widget id="f8bf3832-724e-47e0-bbad-f5c295cad257"
+						        widgetDefinitionId="com.hybris.cockpitng.defaulttabwidget" slotId="thrdSlot"
+						        template="false">
+							<widget id="emptyEditor" widgetDefinitionId="com.hybris.oms.widgets.emptyselectioninfo"
+							        slotId="children"
+							        template="true">
+								<instance-settings socketEventRoutingMode="LAST_USED">
+									<create onInit="true" reuseExisting="true">
+										<all-incoming-events/>
+									</create>
+									<close/>
+									<select onInit="true">
+										<all-incoming-events/>
+									</select>
+								</instance-settings>
+								<setting key="widgetStyleAttribute" value="" type="String"/>
+								<setting key="widgetStyleClass" value="" type="String"/>
+								<virtual-sockets>
+									<input id="default_input" type="java.lang.Object" visibility="external"/>
+								</virtual-sockets>
+							</widget>
+							<widget id="standardBeanEditor"
+							        widgetDefinitionId="com.hybris.cockpitng.widgets.common.beaneditor" slotId="children"
+							        template="true">
+								<instance-settings socketEventRoutingMode="LAST_USED">
+									<create onInit="false" reuseExisting="true">
+										<all-incoming-events/>
+									</create>
+									<close/>
+									<select onInit="false">
+										<all-incoming-events/>
+									</select>
+								</instance-settings>
+								<setting key="headerVisible" value="true" type="Boolean"/>
+								<setting key="handleUnsaved" value="false" type="Boolean"/>
+								<setting key="mold" value="edit" type="String"/>
+								<setting key="widgetStyleAttribute" value="" type="String"/>
+								<setting key="widgetStyleClass" value="" type="String"/>
+								<setting key="type" value="" type="String"/>
+								<virtual-sockets>
+									<output id="com.hybris.oms.actions.forwardToBinList.selectBinsNode"
+									        type="com.hybris.backoffice.navigation.NavigationNode"
+									        visibility="external"/>
+									<output id="com.hybris.oms.actions.forwardToBinList.initBinSearch"
+									        type="com.hybris.cockpitng.widgets.common.searchwidget.query.SearchQuery"
+									        visibility="external"/>
+								</virtual-sockets>
+							</widget>
+							<widget id="ff6fc326-92e0-4d51-89c4-b58f1a6a9cf5"
+							        widgetDefinitionId="com.hybris.cockpitng.widgets.orderdetails.orderdetailscontainer"
+							        template="true" slotId="children">
+								<widget id="3fb3aa83-5a38-413d-899a-740718074009"
+								        widgetDefinitionId="com.hybris.cockpitng.defaulttabwidget" slotId="container"
+								        template="false">
+									<widget id="7af115b9-d772-41ea-85df-68e54f192667"
+									        widgetDefinitionId="com.hybris.cockpitng.widgets.common.listview"
+									        title="title.line.details" slotId="children" template="false">
+										<setting key="treeActionsVisible" value="false" type="Boolean"/>
+										<setting key="treeSelectableRows" value="false" type="Boolean"/>
+										<setting key="widgetStyleAttribute" value="" type="String"/>
+										<setting key="titleVisible" value="false" type="Boolean"/>
+										<setting key="treeViewInitiallyExpanded" value="true" type="Boolean"/>
+										<setting key="fixedPageSize" value="false" type="Boolean"/>
+										<setting key="maxPageSize" value="100" type="Integer"/>
+										<setting key="configurationContext" value="listViewOrderShipments"
+										         type="String"/>
+										<setting key="availableModes" value="tree" type="String"/>
+										<setting key="pagingVisible" value="false" type="Boolean"/>
+										<setting key="sortableListHeader" value="false" type="Boolean"/>
+										<setting key="widgetStyleClass" value="" type="String"/>
+										<setting key="listHeaderVisible" value="false" type="Boolean"/>
+										<virtual-sockets/>
+									</widget>
+									<widget id="947bf468-f768-4ae2-b196-0224128701c8"
+									        widgetDefinitionId="com.hybris.oms.widgets.orderdetails" title=""
+									        template="false" slotId="children">
+										<setting key="widgetStyleAttribute" value="" type="String"/>
+										<setting key="widgetStyleClass" value="" type="String"/>
+										<virtual-sockets/>
+									</widget>
+									<widget id="495c945e-ecb9-48d8-af74-4d122b02e879"
+									        widgetDefinitionId="com.hybris.oms.adapters.ordertoresultpageshipment"
+									        slotId="cockpitWidgetChildrenInvisible" template="false">
+										<setting key="widgetStyleAttribute" value="" type="String"/>
+										<setting key="widgetStyleClass" value="" type="String"/>
+										<virtual-sockets/>
+									</widget>
+									<setting key="widgetStyleAttribute" value="background: #EDEDED" type="String"/>
+									<setting key="widgetStyleClass" value="" type="String"/>
+									<setting key="type" value="tab" type="String"/>
+									<virtual-sockets/>
+								</widget>
+								<instance-settings socketEventRoutingMode="LAST_USED">
+									<create onInit="false" reuseExisting="true">
+										<all-incoming-events/>
+									</create>
+									<close/>
+									<select onInit="false">
+										<all-incoming-events/>
+									</select>
+								</instance-settings>
+								<setting key="widgetStyleAttribute" value="" type="String"/>
+								<setting key="widgetStyleClass" value="" type="String"/>
+								<setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+								<virtual-sockets/>
+							</widget>
+							<widget id="6e8f7f7f-2cc5-4604-ba4a-4ef9f9c216de"
+							        widgetDefinitionId="com.hybris.oms.widgets.shipmenteditorGroup" slotId="children"
+							        template="true">
+								<instance-settings socketEventRoutingMode="LAST_USED">
+									<create onInit="false" reuseExisting="true">
+										<incoming-events>
+											<socket-event id="toEditInput"/>
+										</incoming-events>
+									</create>
+									<close/>
+									<select onInit="false">
+										<incoming-events>
+											<socket-event id="toEditInput"/>
+										</incoming-events>
+									</select>
+								</instance-settings>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/configurationContext"
+								         value="listView" type="String"/>
+								<setting key="socketDataType_$T" value="java.lang.Boolean" type="String"/>
+								<setting key="/25aa4b3f-f0e0-425a-9f40-7d43f4be788f/type" value="" type="String"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/fixedPageSize" value="false"
+								         type="Boolean"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/sortableListHeader" value="false"
+								         type="Boolean"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/maxPageSize" value="100"
+								         type="Integer"/>
+								<setting key="/18983a93-4be5-4561-9008-5699a9cbbbe1/expression"
+								         value="#root?.isChanged()" type="String"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/availableModes" value="list"
+								         type="String"/>
+								<setting key="/25aa4b3f-f0e0-425a-9f40-7d43f4be788f/handleUnsaved" value="false"
+								         type="Boolean"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/listHeaderVisible" value="false"
+								         type="Boolean"/>
+								<setting key="/6a5425dc-afcf-4fbc-b76d-6f7fd4146bfd/expression" value="!#root.isEmpty()"
+								         type="String"/>
+								<setting key="/com.hybris.oms.widgets.shipmenteditorGroup/handleUnsaved" value="false"
+								         type="Boolean"/>
+								<setting key="/152cf3f3-9348-48ef-a28e-1e686118c22a/type" value="tab-nomanual"
+								         type="String"/>
+								<setting key="/4adc9bff-8293-4846-b640-b805085a5b9c/expression" value="T(Boolean).FALSE"
+								         type="String"/>
+								<setting key="/c571edfa-c138-4f23-a0b1-ade12f3b30db/expression" value="shipment"
+								         type="String"/>
+								<setting key="/d275ec54-877e-4fb1-8a66-f6124db3ae46/expression" value="order"
+								         type="String"/>
+								<setting key="/25aa4b3f-f0e0-425a-9f40-7d43f4be788f/headerVisible" value="false"
+								         type="Boolean"/>
+								<setting key="widgetStyleAttribute" value="" type="String"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/treeActionsVisible" value="false"
+								         type="Boolean"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/pagingVisible" value="false"
+								         type="Boolean"/>
+								<setting key="/ba7c206f-dd62-4108-8618-f51130b47426/view.zul" value="" type="String"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/titleVisible" value="false"
+								         type="Boolean"/>
+								<setting key="widgetStyleClass" value="" type="String"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/treeSelectableRows" value="false"
+								         type="Boolean"/>
+								<setting key="/ba7c206f-dd62-4108-8618-f51130b47426/controller.groovy"
+								         value="package com.hybris.cockpitng.exampleGroovyWidget;&#xA;&#xA;import com.hybris.cockpitng.annotations.SocketEvent;&#xA;import com.hybris.cockpitng.util.DefaultWidgetController;&#xA;import org.zkoss.zk.ui.select.annotation.WireVariable;&#xA;&#xA;public class GroovyController extends DefaultWidgetController&#xA;{&#xA;    @SocketEvent(socketId = &quot;listUpdated&quot;)&#xA;    public void listUpdated(Object object)&#xA;    {&#xA;        sendOutput(&quot;clearChanges&quot;, null);&#xA;        sendOutput(&quot;refreshAndActivate&quot;, object);&#xA;    }&#xA;}&#xA;"
+								         type="String"/>
+								<setting key="/edc87d09-e997-47e5-85b6-064f04a98180/treeViewInitiallyExpanded"
+								         value="false" type="Boolean"/>
+								<virtual-sockets/>
+							</widget>
+							<setting key="widgetStyleAttribute" value="background: #EDEDED" type="String"/>
+							<setting key="widgetStyleClass" value="" type="String"/>
+							<setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+							<setting key="type" value="flow" type="String"/>
+							<virtual-sockets/>
+						</widget>
+						<widget id="c528177b-46b9-4122-be98-c3add0a1b340"
+						        widgetDefinitionId="com.hybris.cockpitng.omssearchwidgetadapter"
+						        slotId="cockpitWidgetChildrenInvisible" template="false">
+							<setting key="widgetStyleAttribute" value="" type="String"/>
+							<setting key="widgetStyleClass" value="" type="String"/>
+							<virtual-sockets/>
+						</widget>
+						<widget id="ece7f993-729c-4879-aee6-ed5d39994181"
+						        widgetDefinitionId="com.hybris.cockpitng.searchwidget" slotId="firstSlot"
+						        template="false">
+							<widget id="72ce137e-bc4e-4860-960c-e11c1ee0903c"
+							        widgetDefinitionId="com.hybris.cockpitng.omssearchwidgetlogic"
+							        slotId="cockpitWidgetChildrenInvisible" template="false">
+								<setting key="widgetStyleAttribute" value="" type="String"/>
+								<setting key="widgetStyleClass" value="" type="String"/>
+								<virtual-sockets/>
+							</widget>
+							<setting key="widgetStyleAttribute" value="" type="String"/>
+							<setting key="fireSearchAfterNLetter" value="3" type="Integer"/>
+							<setting key="widgetStyleClass" value="" type="String"/>
+							<setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+							<virtual-sockets/>
+						</widget>
+						<setting key="widgetStyleAttribute" value="" type="String"/>
+						<setting key="#cp_invisibleContainer_visible" value="false" type="String"/>
+						<setting key="northSplittable" value="false" type="Boolean"/>
+						<setting key="northExpandedHeight" value="230px" type="String"/>
+						<setting key="north2ExpandedHeight" value="40%" type="String"/>
+						<setting key="toolbarDisabled" value="true" type="Boolean"/>
+						<setting key="centerCollapsedHeight" value="45%" type="String"/>
+						<setting key="centerExpandedHeight" value="45%" type="String"/>
+						<setting key="northCollapsedHeightInPx" value="108" type="Integer"/>
+						<setting key="adminModeSclass" value="cng-adminmode" type="String"/>
+						<setting key="widgetStyleClass" value="" type="String"/>
+						<setting key="popupTitle" value="Edit" type="String"/>
+						<setting key="hideSplitterWhenCollapsed" value="true" type="Boolean"/>
+						<virtual-sockets>
+							<input id="activate" type="java.lang.Object" visibility="external"/>
+						</virtual-sockets>
+					</widget>
+					<instance-settings socketEventRoutingMode="LAST_USED">
+						<create onInit="false" reuseExisting="true">
+							<all-incoming-events/>
+						</create>
+						<close/>
+						<select onInit="false">
+							<all-incoming-events/>
+						</select>
+					</instance-settings>
+					<setting key="socketDataType_$T" value="com.hybris.backoffice.navigation.NavigationNode"
+					         type="String"/>
+					<setting key="widgetStyleAttribute" value="" type="String"/>
+					<setting key="widgetStyleClass" value="" type="String"/>
+					<virtual-sockets/>
+				</widget>
+				<setting key="southDisabled" value="true" type="Boolean"/>
+				<setting key="autoCloseInactive" value="false" type="Boolean"/>
+				<setting key="opaqueBG" value="true" type="Boolean"/>
+				<setting key="widgetStyleAttribute" value="" type="String"/>
+				<setting key="eastWidth" value="0px" type="String"/>
+				<setting key="widgetStyleClass" value="" type="String"/>
+				<setting key="northHeight" value="0px" type="String"/>
+				<setting key="#cp_invisibleContainer_visible" value="true" type="String"/>
+				<setting key="westWidth" value="300px" type="String"/>
+				<setting key="eastDisabled" value="true" type="String"/>
+				<virtual-sockets/>
+			</widget>
+            <widget id="referenceSelectorOMS" widgetDefinitionId="com.hybris.cockpitng.widgets.common.referenceselector.oms" slotId="cockpitWidgetChildrenInvisible" title="add.location" template="true">
+                <instance-settings socketEventRoutingMode="LAST_USED">
+                    <create onInit="false" reuseExisting="true">
+                        <incoming-events>
+                            <socket-event id="referenceValueRequestInput"/>
+                        </incoming-events>
+                    </create>
+                    <close>
+                        <outgoing-events>
+                            <socket-event id="referenceValuesOutput"/>
+                            <socket-event id="closeOutput"/>
+                        </outgoing-events>
+                    </close>
+                    <select onInit="false">
+                        <incoming-events>
+                            <socket-event id="referenceValueRequestInput"/>
+                        </incoming-events>
+                    </select>
+                </instance-settings>
+                <setting key="/06c6714f-0574-4077-a825-e3bc3ec12d6a/rightSwitchBtnVisible" type="Boolean">false</setting>
+                <setting key="/06c6714f-0574-4077-a825-e3bc3ec12d6a/leftToolbarVisible" type="Boolean">true</setting>
+                <setting key="/06c6714f-0574-4077-a825-e3bc3ec12d6a/rightToolbarVisible" type="Boolean">true</setting>
+                <setting key="widgetStyleAttribute" type="String"></setting>
+                <setting key="widgetStyleClass" type="String"></setting>
+                <setting key="_height" type="String">480px</setting>
+                <setting key="_width" type="String">570px</setting>
+                <setting key="/06c6714f-0574-4077-a825-e3bc3ec12d6a/leftSwitchBtnVisible" type="Boolean">false</setting>
+                <virtual-sockets/>
+            </widget>
+			<setting key="opaqueBG" value="true" type="Boolean"/>
+			<setting key="southHeight" value="50px" type="String"/>
+			<setting key="widgetStyleAttribute" value="" type="String"/>
+			<setting key="#cp_invisibleContainer_visible" value="false" type="String"/>
+			<setting key="northHeight" value="0px" type="String"/>
+			<setting key="westBorder" value="normal" type="String"/>
+			<setting key="northBorder" value="none" type="String"/>
+			<setting key="eastDisabled" value="true" type="Boolean"/>
+			<setting key="southBorder" value="none" type="String"/>
+			<setting key="southDisabled" value="true" type="Boolean"/>
+			<setting key="eastBorder" value="none" type="String"/>
+			<setting key="northDisabled" value="true" type="Boolean"/>
+			<setting key="westCollapsible" value="true" type="Boolean"/>
+			<setting key="eastWidth" value="25%" type="String"/>
+			<setting key="widgetStyleClass" value="oms-backoffice-perspective" type="String"/>
+			<setting key="southCollapsible" value="true" type="Boolean"/>
+			<setting key="northCollapsible" value="true" type="Boolean"/>
+			<setting key="border" value="none" type="String"/>
+			<setting key="westWidth" value="300px" type="String"/>
+			<setting key="perspectiveImageUrl" value="cng/images/oms-icon.png" type="String"/>
+			<setting key="centerBorder" value="none" type="String"/>
+			<setting key="westDisabled" value="false" type="Boolean"/>
+			<setting key="eastCollapsible" value="true" type="Boolean"/>
+			<virtual-sockets/>
+		</widget>
+
+	</widget-extension>
+
+	<widget-connection sourceWidgetId="standardBeanEditor"
+	                   outputId="com.hybris.oms.actions.forwardToBinList.selectBinsNode"
+	                   targetWidgetId="omsExplorerTree" inputId="nodeSelected"/>
+	<widget-connection sourceWidgetId="explorerTreeUnsavedStateHandler" outputId="previousItem"
+	                   targetWidgetId="omsExplorerTree" inputId="nodeSelected"/>
+	<widget-connection sourceWidgetId="omsExplorerTree" outputId="nodeSelected"
+	                   targetWidgetId="explorerTreeUnsavedStateHandler" inputId="itemSelected"/>
+	<widget-connection sourceWidgetId="ec840b2c-c979-4e94-b388-aced5e3e0310" outputId="true"
+	                   targetWidgetId="explorerTreeUnsavedStateHandler" inputId="setUnsavedChanges"/>
+	<widget-connection sourceWidgetId="ec840b2c-c979-4e94-b388-aced5e3e0310" outputId="false"
+	                   targetWidgetId="explorerTreeUnsavedStateHandler" inputId="clearUnsavedChanges"/>
+	<widget-connection sourceWidgetId="mainListUnsavedStateHandler" outputId="unsavedChangesCleared"
+	                   targetWidgetId="explorerTreeUnsavedStateHandler" inputId="clearUnsavedChanges"/>
+	<widget-connection sourceWidgetId="6e8f7f7f-2cc5-4604-ba4a-4ef9f9c216de" outputId="hasUnsavedChanges"
+	                   targetWidgetId="explorerTreeUnsavedStateHandler" inputId="hasUnsavedChanges"/>
+	<widget-connection sourceWidgetId="explorerTreeUnsavedStateHandler" outputId="unsavedChangesCleared"
+	                   targetWidgetId="mainListUnsavedStateHandler" inputId="clearUnsavedChanges"/>
+	<widget-connection sourceWidgetId="explorerTreeUnsavedStateHandler" outputId="itemSelected"
+	                   targetWidgetId="omsPerspectiveSelector" inputId="element"/>
+	<widget-connection sourceWidgetId="standardBeanEditor" outputId="changedObject"
+	                   targetWidgetId="ec840b2c-c979-4e94-b388-aced5e3e0310" inputId="input"/>
+	<widget-connection sourceWidgetId="ec840b2c-c979-4e94-b388-aced5e3e0310" outputId="true"
+	                   targetWidgetId="mainListUnsavedStateHandler" inputId="setUnsavedChanges"/>
+	<widget-connection sourceWidgetId="ec840b2c-c979-4e94-b388-aced5e3e0310" outputId="false"
+	                   targetWidgetId="mainListUnsavedStateHandler" inputId="clearUnsavedChanges"/>
+	<widget-connection sourceWidgetId="omsPerspectiveSelector" outputId="omsSelected"
+	                   targetWidgetId="omsPerspectiveWrapper" inputId="activate"/>
+	<widget-connection sourceWidgetId="omsPerspectiveWrapper" outputId="initialize"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="nodeSelected"/>
+	<widget-connection sourceWidgetId="ece7f993-729c-4879-aee6-ed5d39994181" outputId="headerClicked"
+	                   targetWidgetId="omsDefaultPerspective" inputId="toggleNorth"/>
+	<widget-connection sourceWidgetId="omsMainList" outputId="updated" targetWidgetId="omsPerspectiveControllingWidget"
+	                   inputId="refreshAndActivateItem"/>
+	<widget-connection sourceWidgetId="omsMainList" outputId="created" targetWidgetId="omsPerspectiveControllingWidget"
+	                   inputId="refreshAndActivateItem"/>
+	<widget-connection sourceWidgetId="omsMainList" outputId="deleted" targetWidgetId="omsPerspectiveControllingWidget"
+	                   inputId="refreshAndCloseItem"/>
+	<widget-connection sourceWidgetId="binEditorCreationPopup" outputId="created"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="refreshAndActivateItem"/>
+	<widget-connection sourceWidgetId="mainListUnsavedStateHandler" outputId="unsavedChangesCleared"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="refresh"/>
+	<widget-connection sourceWidgetId="6e8f7f7f-2cc5-4604-ba4a-4ef9f9c216de" outputId="savedItem"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="refreshAndActivateItem"/>
+	<widget-connection sourceWidgetId="6e8f7f7f-2cc5-4604-ba4a-4ef9f9c216de" outputId="deletedItem"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="refreshAndCloseItem"/>
+	<widget-connection sourceWidgetId="mainListUnsavedStateHandler" outputId="itemSelected"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="activateItem"/>
+	<widget-connection sourceWidgetId="standardBeanEditor" outputId="updated"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="refreshAndActivateItem"/>
+	<widget-connection sourceWidgetId="standardBeanEditor" outputId="created"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="refreshAndActivateItem"/>
+	<widget-connection sourceWidgetId="standardBeanEditor" outputId="deleted"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="refreshAndCloseItem"/>
+	<widget-connection sourceWidgetId="ff6fc326-92e0-4d51-89c4-b58f1a6a9cf5" outputId="updated"
+	                   targetWidgetId="omsPerspectiveControllingWidget" inputId="refreshAndActivateItem"/>
+	<widget-connection sourceWidgetId="omsPerspectiveControllingWidget" outputId="refresh"
+	                   targetWidgetId="72ce137e-bc4e-4860-960c-e11c1ee0903c" inputId="refresh"/>
+	<widget-connection sourceWidgetId="omsPerspectiveControllingWidget" outputId="activateItem"
+	                   targetWidgetId="editorAreaMultiplexer" inputId="element"/>
+	<widget-connection sourceWidgetId="omsPerspectiveControllingWidget" outputId="selectItem"
+	                   targetWidgetId="omsMainList" inputId="selectItem"/>
+	<widget-connection sourceWidgetId="omsPerspectiveControllingWidget" outputId="clear"
+	                   targetWidgetId="omsMainList" inputId="resultPage"/>
+	<widget-connection sourceWidgetId="omsPerspectiveControllingWidget" outputId="initialize"
+	                   targetWidgetId="c528177b-46b9-4122-be98-c3add0a1b340" inputId="nodeSelected"/>
+	<widget-connection sourceWidgetId="ece7f993-729c-4879-aee6-ed5d39994181" outputId="result"
+	                   targetWidgetId="omsMainList" inputId="resultPage"/>
+	<widget-connection sourceWidgetId="72ce137e-bc4e-4860-960c-e11c1ee0903c" outputId="result"
+	                   targetWidgetId="omsMainList" inputId="resultPage"/>
+	<widget-connection sourceWidgetId="mainListUnsavedStateHandler" outputId="previousItem" targetWidgetId="omsMainList"
+	                   inputId="selectItem"/>
+	<widget-connection sourceWidgetId="omsMainList" outputId="pagingState"
+	                   targetWidgetId="ece7f993-729c-4879-aee6-ed5d39994181" inputId="pagingState"/>
+	<widget-connection sourceWidgetId="omsMainList" outputId="com.hybris.oms.actions.create.location.success"
+	                   targetWidgetId="standardBeanEditor" inputId="toCreate"/>
+	<widget-connection sourceWidgetId="omsMainList" outputId="selectedItem" targetWidgetId="mainListUnsavedStateHandler"
+	                   inputId="itemSelected"/>
+	<widget-connection sourceWidgetId="omsMainList" outputId="com.hybris.oms.actions.createPopupBin.success"
+	                   targetWidgetId="binEditorCreationPopup" inputId="toCreate"/>
+	<widget-connection sourceWidgetId="editorAreaMultiplexer" outputId="activateStandardEditor"
+	                   targetWidgetId="standardBeanEditor" inputId="toEdit"/>
+	<widget-connection sourceWidgetId="editorAreaMultiplexer" outputId="default_output" targetWidgetId="emptyEditor"
+	                   inputId="default_input"/>
+	<widget-connection sourceWidgetId="editorAreaMultiplexer" outputId="activateOrderDetails"
+	                   targetWidgetId="ff6fc326-92e0-4d51-89c4-b58f1a6a9cf5" inputId="in"/>
+	<widget-connection sourceWidgetId="editorAreaMultiplexer" outputId="activateShipmentEditor"
+	                   targetWidgetId="6e8f7f7f-2cc5-4604-ba4a-4ef9f9c216de" inputId="toEditInput"/>
+	<widget-connection sourceWidgetId="6e8f7f7f-2cc5-4604-ba4a-4ef9f9c216de" outputId="hasUnsavedChanges"
+	                   targetWidgetId="mainListUnsavedStateHandler" inputId="hasUnsavedChanges"/>
+	<widget-connection sourceWidgetId="standardBeanEditor" outputId="com.hybris.oms.actions.createPopupBin.success"
+	                   targetWidgetId="binEditorCreationPopup" inputId="toCreate"/>
+	<widget-connection sourceWidgetId="standardBeanEditor"
+	                   outputId="com.hybris.oms.actions.forwardToBinList.initBinSearch"
+	                   targetWidgetId="ece7f993-729c-4879-aee6-ed5d39994181" inputId="initialSearchQuery"/>
+	<widget-connection sourceWidgetId="ff6fc326-92e0-4d51-89c4-b58f1a6a9cf5" outputId="out"
+	                   targetWidgetId="947bf468-f768-4ae2-b196-0224128701c8" inputId="order"/>
+	<widget-connection sourceWidgetId="ff6fc326-92e0-4d51-89c4-b58f1a6a9cf5" outputId="out"
+	                   targetWidgetId="495c945e-ecb9-48d8-af74-4d122b02e879" inputId="element"/>
+	<widget-connection sourceWidgetId="495c945e-ecb9-48d8-af74-4d122b02e879" outputId="result"
+	                   targetWidgetId="7af115b9-d772-41ea-85df-68e54f192667" inputId="resultPage"/>
+	<widget-connection sourceWidgetId="c528177b-46b9-4122-be98-c3add0a1b340" outputId="initialSearchQuery"
+	                   targetWidgetId="ece7f993-729c-4879-aee6-ed5d39994181" inputId="initialSearchQuery"/>
+	<widget-connection sourceWidgetId="referenceSelectorOMS" outputId="referenceValuesOutput"
+	                   targetWidgetId="ece7f993-729c-4879-aee6-ed5d39994181" inputId="referenceValues"/>
+	<widget-connection sourceWidgetId="ece7f993-729c-4879-aee6-ed5d39994181" outputId="searchQuery"
+	                   targetWidgetId="72ce137e-bc4e-4860-960c-e11c1ee0903c" inputId="searchQuery"/>
+	<widget-connection sourceWidgetId="ece7f993-729c-4879-aee6-ed5d39994181" outputId="referenceValueRequest"
+	                   targetWidgetId="referenceSelectorOMS" inputId="referenceValueRequestInput"/>
+</widgets>
+

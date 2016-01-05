@@ -1,0 +1,986 @@
+
+# 
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+;;TMPHomepageCategoryCarousel;The products you care about.;
+;;TMPWomenMainCategoriesCarouselComponent;We all have a story to tell
+;;TMPElectronicsMainHottestProductsCarouselComponent;The hottest products
+;;TMPWestsidepageCategoryCarousel;Products For The Whole Family
+;;TMPChromaCarouselComponent;We carry over 6,000 products across all categories
+;;TMPFootwearMainCategoriesCarouselComponent;Shop the newest styles
+;;TMPShoeMainCategoriesCarouselComponent;Get the Right Shoe for You
+;;TMPOccasionFootwearMainCategoriesCarouselComponent;Shoes for every occasion
+
+
+UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+#;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
+
+UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending
+
+UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];title
+;;PremierBrandComponent1;Our Premier Brands
+;;TopBrandComponent1;Top brands
+;;BrandsYouLoveComponent;The brands you love
+
+UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];title
+;;SpringFlingPromotionComponent;Spring Fling
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;BeInspiredParagraphComponent;"<div class='feature-collections'><h1>Be Inspired</h1><h2>Shop The Latest Looks</h2></div>"
+;;TechTrendsettersParagraphComponent;"<div class='feature-collections'><h1>Tech trendsetters</h1><h2>Shop The Latest Technology</h2></div>"
+;;PatternedParagraphComponent;"<h3>Patterned and Polished
+<span>Lorem ipsum dolor sit amet,
+consectetur adipiscing elit.
+<a href='#'>SHOP THE COLLECTION</a></span></h3>"
+;;LifeChangingTechnologyComponent;"<div><h2>12 Life Changing Technologies</h2>
+<p>Our seamless online and in-store experiences allow you to shop, make returns, and earn rewards on all your purchases across brands online or in-store.</p>
+<a href='#'>SHOP THE COLLECTION</a></div>"
+
+;;NikeTrackFieldCollectionParagraphComponent;"<h3>Nike Track & Field Collection
+<span>Nulla vitae elit libero, a pharetra augue.Sed posuere consectetur est at lobortis. Vivamus sagittis lacus vel augue laoreet rutrum autor.
+<a href='#'>SHOP THE COLLECTION</a></span></h3>"
+;;LifeChangingTechnologyComponent;"<div><h2>12 Life Changing Technologies</h2>
+<p>Our seamless online and in-store experiences allow you to shop, make returns, and earn rewards on all your purchases across brands online or in-store.</p>
+<a href='#'>SHOP THE COLLECTION</a></div>"
+
+;;HandpickedCollectionsParagraphComponent;"<div class='feature-collections'><h1>Be Inspired</h1><h2>Shop Handpicked Collections</h2></div>"
+;;DeliveryTextParagraphComponent;"<div class='promise'>
+  Delivering the <span>best</span> the world has to offer.</div>"
+;;ShopByCollectionLinkComponent;"<p style='text-align:center;'><a href='#'>SHOP BY COLLECTION</a></p>"
+;;NewLaunchedComponent;"<p style='text-align:left;'><b><h2>Newly Launched Nikkon COOLPIX</h2></b></p>"
+;;DiscoverTheLatestComponent;"<h1>Discover the latest</h1>"
+ ;;TrySomethingNewComponent;"<h1 class='brand-trySomethingNew'>Try something new.</h1>"
+;;NeedAssistanceComponent;"<div class='tab-wrapper'>
+<div class='customer-care-tabs'>
+  <h1>Write to Us</h1>
+  <div class='nav-wrapper'>
+    <ul class='nav'>
+              <li class='active' id='needAssistance'>Need assistance with existing order</li>
+              <li class='' id='newComplain'>New complaint or feedback?</li>
+          </ul>
+  </div>
+  <ul class='tabs'>
+          <li class='active'>
+<div class='customer-care-tab'>
+  <ul>
+    <li class='first'>
+      <h2>1. Select An Item You Need Assistance With:</h2>
+      <div class='nav-wrapper'>
+        <ul class='nav'>
+                      <li class='active'>Order Delivery</li>
+                      <li >Offer Redemption</li>
+                      <li >Order Payment / Refund</li>
+                      <li >Problems with item Recieved / Return</li>
+                      <li >eBooks related</li>
+                      <li >Change Order</li>
+                      <li >Shipping &amp; Packaging</li>
+                  </ul>
+      </div>
+      <ul class='tabs'>
+                  <li class='active'>
+            <span class='toggle'>Order Delivery</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Offer Redemption</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Order Payment / Refund</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Problems with item Recieved / Return</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>eBooks related</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Change Order</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Shipping &amp; Packaging</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+              </ul>
+    </li>
+    <li class='second'></li>
+  </ul>
+</div>
+</li>
+          <li>
+<div class='customer-care-tab'>
+  <ul>
+    <li class='first'>
+      <h2>1. Select An Item You Need Assistance With:</h2>
+      <div class='nav-wrapper'>
+        <ul class='nav'>
+                      <li class='active'>Order Delivery</li>
+                      <li>Offer Redemption</li>
+                      <li>Order Payment / Refund</li>
+                      <li>Problems with item Recieved / Return</li>
+                      <li>eBooks related</li>
+                      <li>Change Order</li>
+                      <li>Shipping &amp; Packaging</li>
+                  </ul>
+      </div>
+      <ul class='tabs'>
+                  <li class='active'>
+            <span class='toggle'>Order Delivery</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Offer Redemption</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Order Payment / Refund</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Problems with item Recieved / Return</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>eBooks related</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Change Order</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+                  <li>
+            <span class='toggle'>Shipping &amp; Packaging</span>
+            <ul class='faq'>
+  <li class='question'>
+    <a href='' class='toggle'>I want to know my order status</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>My Order is delayed</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Is it possible to deliver my Order on a given date/time?</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I'm unable to track my shipment</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I have only received some items in my order</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I require a copy of my invoice</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I am unable to avail the displayed offer</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>I haven't yet received my Cashback</a>
+  </li>
+  <li class='question'>
+    <a href='' class='toggle'>Other</a>
+  </li>
+</ul>          </li>
+              </ul>
+    </li>
+    <li class='second'></li>
+  </ul>
+</div>
+</li>
+      </ul>
+</div>";
+
+
+
+
+UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;LatestLookBanner1;women_beinspired_banner.PNG
+;;LatestLookBanner2;women_beinspired_banner2.PNG
+;;LatestLookBanner3;women_beinspired_banner3.PNG
+;;Pic3Component;women_beinspired_banner2.PNG
+;;Pic4Component;women_beinspired_banner3.PNG
+;;Pic5Component;women_beinspired_banner.PNG
+;;SmartPhoneGuideComponent;apple_iphone.jpg
+;;AboutUsBannerComponent;aboutus.png
+;;BackgroundImages1;water_color_copy_2.png
+;;BackgroundImages2;water_color_copy_1.png
+;;WomenSingleImgComponent;WomenSingleFootwear.JPG
+;;MenSingleImgComponent;MenSingleFootwear.JPG
+;;KidsFirstImgComponent;KidFootwearFirst.JPG
+;;KidsSecondImgComponent;KidsFootwearSecond.JPG
+
+
+
+#Electronics
+;;TechTrendSettersBanner1;techtrendSetters_banner1.jpg
+;;TechTrendSettersBanner2;techtrendSetters_banner2.jpg
+;;TechTrendSettersBanner3;techtrendSetters_banner3.jpg
+
+UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];title;description
+;;HandpickedCollectionBanner1;handpickedCollection_banner1.jpg;"Gifts for the Chef";
+;;HandpickedCollectionBanner2;handpickedCollection_banner2.jpg;;"Rooted in the vintage inspiration,Wilfred embodies the essence of modern luxury with particular attention to quality, fit,craftsmanship and detail.<a class='shop_link' href='/'>SHOP THE COLLECTION </a>"
+;;HandpickedCollectionBanner3;handpickedCollection_banner3.jpg;
+;;HandpickedCollectionBanner4;women_beinspired_banner3.PNG;
+
+UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;NikkonCarouselComponentBanner;nikkon.png
+;;NikkonCarousal1;lookbook.png
+
+###  Home page splash   #######
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+#;mobile;Appa_480x320_Season_EN_01_480W.jpg;$siteResource/images/banners/homepage/responsive/Appa_480x320_Season_EN_01_480W.jpg;Appa_480x320_Season_EN_01_480W.jpg;"Start to the New Season";
+#;tablet;Appa_770x350_Season_EN_01_770W.jpg;$siteResource/images/banners/homepage/responsive/Appa_770x350_Season_EN_01_770W.jpg;Appa_770x350_Season_EN_01_770W.jpg;"Start to the New Season";
+#;desktop;Appa_960x400_Season_EN_01_960W.jpg;$siteResource/images/banners/homepage/responsive/Appa_960x400_Season_EN_01_960W.jpg;Appa_960x400_Season_EN_01_960W.jpg;"Start to the New Season";
+#;widescreen;Appa_1400x600_Season_EN_01_1400W.jpg;$siteResource/images/banners/homepage/responsive/Appa_1400x600_Season_EN_01_1400W.jpg;Appa_1400x600_Season_EN_01_1400W.jpg;"Start to the New Season";
+# Added the Multiple Homepage Banners for TMP only for desktop and widescreen resolution
+;;TMP_1400x600_DefaultHomepageBanner_EN_01_14000W.png;$siteResource/images/banners/homepage/responsive/TMP_Homepage_Banner_1400x600.png;TMP_Homepage_Banner_1400x600.png;"Homepage Banner";
+#Sequential Homepage banner medias
+;;TMP_1400x600_WestsideHomepageBanner_EN_01_14000W.png;$siteResource/images/banners/homepage/responsive/TMP_WestsideHomepageBanner_1400x600.png;TMP_WestsideHomepageBanner_1400x600.png;"Westside Banner";
+;;TMP_1400x600_ApparelHomepageBanner_EN_01_14000W.png;$siteResource/images/banners/homepage/responsive/TMP_ApparelHomepageBanner_1400x600.png;TMP_ApparelHomepageBanner_1400x600.png;"Apparel Banner";
+;;TMP_1400x600_JwelleryHomepageBanner_EN_01_14000W.png;$siteResource/images/banners/homepage/responsive/TMP_JwelleryHomepageBanner_1400x600.png;TMP_JwelleryHomepageBanner_1400x600.png;"Jwellery Banner";
+;;lovbanner.png;$siteResource/images/banners/homepage/responsive/lovbanner.png;lovbanner.png;"LOV Banner";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+#;apparel-uk-homepage-spalsh-en;Appa_480x320_Season_EN_01_480W.jpg,Appa_770x350_Season_EN_01_770W.jpg,Appa_960x400_Season_EN_01_960W.jpg,Appa_1400x600_Season_EN_01_1400W.jpg
+
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+#;;ApparelUKHompageSplashBannerComponent;apparel-uk-homepage-spalsh-en
+# Added the responsive banners for homepage
+
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;TMPGoodsHompageBannerComponent;TMP_1400x600_DefaultHomepageBanner_EN_01_14000W.png;"
+                  <span class='major-promo-header-italic'>One Destination for</span>
+                  <span class='major-promo-header-bold'>Everything</span>
+                  <span class='major-promo-header-normal'>You Love</span>
+                  <span class='major-promo-description'>The best shopping experience possible, tailored to your style.</span>
+                <a href='#' class='button'>Take the quiz and get started!</a>";"<span class='minor-promo-header-italic'>Spectacular</span>
+                  <span class='minor-promo-header-bold'>Summer Fashion For All</span>
+                <a href='#'>Shop Summer Collection</a>";"<span class='minor-promo-header-italic'>The minimalist</span>
+                <span class='minor-promo-header-bold'>Discover sleek, Pared-Down Style</span>
+                <a href='#'>Shop The Edit</a>";
+;;TMPWestsideBannerComponent;TMP_1400x600_WestsideHomepageBanner_EN_01_14000W.png;"<span class='major-promo-header-italic'>Exclusively at tata Marketplace</span>
+                  <span class='major-promo-description'>Everything at Westside is exclusively designed for men, women, children, artifacts.</span>
+                          <a href='http://localhost:9001/store/mpl/en/search/?q=shirt%3Arelevance%3Aseller%3AWESTSIDE&text=shirt' class='button'>SHOP ONLINE EXCLUSIVES</a>";
+;;TMPApparelHomepageBannerComponent;TMP_1400x600_ApparelHomepageBanner_EN_01_14000W.png;"<span class='major-promo-header-italic'>Women's</span>";
+;;TMPJwelleryHomepageBannerComponent;TMP_1400x600_JwelleryHomepageBanner_EN_01_14000W.png;"<span class='major-promo-header-italic'>Exclusively at tata Marketplace</span> <a href='#' class='button'>Shop Online Exclusives</a>";"<span class='minor-promo-header-italic'>Spectacular Collections</span>"
+;;WestsideBigBannerComponent;lovbanner.png;"<span>Katrina Kaif's L.O.V style picks </span> <a href='#' class='button'>SHOP THE COLLECTION</a>";
+;;ChromaBigBannerComponent;chromabanner.png;"<span  class='major-promo-header-italic'>Chroma Electronics Megastore</span><span class='major-promo-description'>Exclusively at tata Marketplace</span>
+                    <a href='#' class='button'>SHOP WHAT'S NEW</a>"	
+
+;;;;TMPWestsportBannerComponent;westsportbanner.png;"<a href='' class='button'>SHOP BELOW</a>";
+   ;;TMPFootwearHomepageBannerComponent;footwearBanner.JPG;"<span class='major-promo-header-italic'>SHOP ONLINE EXCLUSIVES</span>";
+;;TMPShoeHomepageBannerComponent;ShoeBanner.jpeg;<span  class='major-promo-header-italic'>NIKE</span><span class='major-promo-description'>Exclusively at tata Marketplace</span> <span class='major-promo-description'>Become unstoppable with our latest collection of running,training,and everyday wear.</span> <a href='#' class='button'>SHOP WHAT'S NEW</a>"	               
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+#;mobile;Appa_480x110_Save_EN_01_480W.jpg;$siteResource/images/banners/homepage/responsive/Appa_480x110_Save_EN_01_480W.jpg;Appa_480x110_Save_EN_01_480W.jpg;"70% off winter clothing";
+#;tablet;Appa_770x50_Save_EN_01_770W.jpg;$siteResource/images/banners/homepage/responsive/Appa_770x50_Save_EN_01_770W.jpg;Appa_770x50_Save_EN_01_770W.jpg;"70% off winter clothing";
+#;desktop;Appa_960x50_Save_EN_01_960W.jpg;$siteResource/images/banners/homepage/responsive/Appa_960x50_Save_EN_01_960W.jpg;Appa_960x50_Save_EN_01_960W.jpg;"70% off winter clothing";
+#;widescreen;Appa_1400x50_Save_EN_01_1400W.jpg;$siteResource/images/banners/homepage/responsive/Appa_1400x50_Save_EN_01_1400W.jpg;Appa_1400x50_Save_EN_01_1400W.jpg;"70% off winter clothing";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+#;apparel-uk-homepage-save-en;Appa_480x110_Save_EN_01_480W.jpg,Appa_770x50_Save_EN_01_770W.jpg,Appa_960x50_Save_EN_01_960W.jpg,Appa_1400x50_Save_EN_01_1400W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+#;;AppareUKHompageSaveBannerComponent;apparel-uk-homepage-save-en;
+
+
+
+###  Home page slot 2A  ####
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;tablet;Appa_200x240_Women_EN_01_200W.jpg;$siteResource/images/banners/homepage/responsive/Appa_200x240_Women_EN_01_200W.jpg;Appa_200x240_Women_EN_01_200W.jpg;"Women";
+;desktop;Appa_240x290_Women_EN_01_240W.jpg;$siteResource/images/banners/homepage/responsive/Appa_240x290_Women_EN_01_240W.jpg;Appa_240x290_Women_EN_01_240W.jpg;"Women";
+;widescreen;Appa_350x430_Women_EN_01_350W.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Women_EN_01_350W.jpg;Appa_350x430_Women_EN_01_350W.jpg;"Women";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;apparel-uk-homepage-women-street-en;Appa_200x240_Women_EN_01_200W.jpg,Appa_240x290_Women_EN_01_240W.jpg,Appa_350x430_Women_EN_01_350W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;ApparelUKHompageWomenStreetBannerComponent;apparel-uk-homepage-women-street-en
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;tablet;Appa_200x240_Men_EN_01_200W.jpg;$siteResource/images/banners/homepage/responsive/Appa_200x240_Men_EN_01_200W.jpg;Appa_200x240_Men_EN_01_200W.jpg;"Men";
+;desktop;Appa_240x290_Men_EN_01_240W.jpg;$siteResource/images/banners/homepage/responsive/Appa_240x290_Men_EN_01_240W.jpg;Appa_240x290_Men_EN_01_240W.jpg;"Men";
+;widescreen;Appa_350x430_Men_EN_01_350W.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Men_EN_01_350W.jpg;Appa_350x430_Men_EN_01_350W.jpg;"Men";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;apparel-uk-homepage-men-en;Appa_200x240_Men_EN_01_200W.jpg,Appa_240x290_Men_EN_01_240W.jpg,Appa_350x430_Men_EN_01_350W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;ApparelUKHompageMenStreetBannerComponent;apparel-uk-homepage-men-en
+
+#### Home section 2B #######
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;tablet;Appa_200x240_Youth_EN_01_200W.jpg;$siteResource/images/banners/homepage/responsive/Appa_200x240_Youth_EN_01_200W.jpg;Appa_200x240_Youth_EN_01_200W.jpg;"Youth";
+;desktop;Appa_240x290_Youth_EN_01_240W.jpg;$siteResource/images/banners/homepage/responsive/Appa_240x290_Youth_EN_01_240W.jpg;Appa_240x290_Youth_EN_01_240W.jpg;"Youth";
+;widescreen;Appa_350x430_Youth_EN_01_350W.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Youth_EN_01_350W.jpg;Appa_350x430_Youth_EN_01_350W.jpg;"Youth";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;apparel-uk-homepage-youth-en;Appa_200x240_Youth_EN_01_200W.jpg,Appa_240x290_Youth_EN_01_240W.jpg,Appa_350x430_Youth_EN_01_350W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;ApparelUKHompageStreetYouthBannerComponent;apparel-uk-homepage-youth-en
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;tablet;Appa_200x240_Brands_EN_01_200W.jpg;$siteResource/images/banners/homepage/responsive/Appa_200x240_Brands_EN_01_200W.jpg;Appa_200x240_Brands_EN_01_200W.jpg;"Our brand range";
+;desktop;Appa_240x290_Brands_EN_01_240W.jpg;$siteResource/images/banners/homepage/responsive/Appa_240x290_Brands_EN_01_240W.jpg;Appa_240x290_Brands_EN_01_240W.jpg;"Our brand range";
+;widescreen;Appa_350x430_Brands_EN_01_350W.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Brands_EN_01_350W.jpg;Appa_350x430_Brands_EN_01_350W.jpg;"Our brand range";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;apparel-uk-homepage-brands-en;Appa_200x240_Brands_EN_01_200W.jpg,Appa_240x290_Brands_EN_01_240W.jpg,Appa_350x430_Brands_EN_01_350W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;ApparelUKHompageBrandsBannerComponent;apparel-uk-homepage-brands-en
+
+### Section 4
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;;handpickedCollection_banner1.jpg;$siteResource/images/banners/homepage/handpickedCollection_banner1.JPG;handpickedCollection_banner1.jpg;"Shop the Collection!";
+;;handpickedCollection_banner2.jpg;$siteResource/images/banners/homepage/handpickedCollection_banner2.jpg;handpickedCollection_banner2.jpg;"Shop the Collection!";
+;;handpickedCollection_banner3.jpg;$siteResource/images/banners/homepage/handpickedCollection_banner3.jpg;handpickedCollection_banner3.jpg;"Shop the Collection!";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+#;apparel-uk-homepage-sm-discount-en;Appa_200x200_HomeSmallDiscount_EN_01_200W.jpg,Appa_240x240_HomeSmallDiscount_EN_01_240W.jpg,Appa_350x350_HomeSmallDiscount_EN_01_350W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+#;;ApparelUKHompageSmDiscountBannerComponent;apparel-uk-homepage-sm-discount-en
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;tablet;Appa_200x200_HomeShop_EN_01_200W.jpg;$siteResource/images/banners/homepage/responsive/Appa_200x200_HomeShop_EN_01_200W.jpg;Appa_200x200_HomeShop_EN_01_200W.jpg;"30 days right of return";
+;desktop;Appa_240x240_HomeShop_EN_01_240W.jpg;$siteResource/images/banners/homepage/responsive/Appa_240x240_HomeShop_EN_01_240W.jpg;Appa_240x240_HomeShop_EN_01_240W.jpg;"30 days right of return";
+;widescreen;Appa_350x350_HomeShop_EN_01_350W.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x350_HomeShop_EN_01_350W.jpg;Appa_350x350_HomeShop_EN_01_350W.jpg;"30 days right of return";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;apparel-uk-homepage-shop-en;Appa_200x200_HomeShop_EN_01_200W.jpg,Appa_240x240_HomeShop_EN_01_240W.jpg,Appa_350x350_HomeShop_EN_01_350W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;ApparelUKHompageShopBannerComponent;apparel-uk-homepage-shop-en
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;tablet;Appa_200x200_HomeShipment_EN_01_200W.jpg;$siteResource/images/banners/homepage/responsive/Appa_200x200_HomeShipment_EN_01_200W.jpg;Appa_200x200_HomeShipment_EN_01_200W.jpg;"Order up to 4 o clock, Delivery within 24h";
+;desktop;Appa_240x240_HomeShipment_EN_01_240W.jpg;$siteResource/images/banners/homepage/responsive/Appa_240x240_HomeShipment_EN_01_240W.jpg;Appa_240x240_HomeShipment_EN_01_240W.jpg;"Order up to 4 o clock, Delivery within 24h";
+;widescreen;Appa_350x350_HomeShipment_EN_01_350W.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x350_HomeShipment_EN_01_350W.jpg;Appa_350x350_HomeShipment_EN_01_350W.jpg;"Order up to 4 o clock, Delivery within 24h";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;apparel-uk-homepage-shipment-en;Appa_200x200_HomeShipment_EN_01_200W.jpg,Appa_240x240_HomeShipment_EN_01_240W.jpg,Appa_350x350_HomeShipment_EN_01_350W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;ApparelUKHompageShipmentBannerComponent;apparel-uk-homepage-shipment-en
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;tablet;Appa_200x200_HomeService_EN_01_200W.jpg;$siteResource/images/banners/homepage/responsive/Appa_200x200_HomeService_EN_01_200W.jpg;Appa_200x200_HomeService_EN_01_200W.jpg;"Best customer service!";
+;desktop;Appa_240x240_HomeService_EN_01_240W.jpg;$siteResource/images/banners/homepage/responsive/Appa_240x240_HomeService_EN_01_240W.jpg;Appa_240x240_HomeService_EN_01_240W.jpg;"Best customer service!";
+;widescreen;Appa_350x350_HomeService_EN_01_350W.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x350_HomeService_EN_01_350W.jpg;Appa_350x350_HomeService_EN_01_350W.jpg;"Best customer service!";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;apparel-uk-homepage-service-en;Appa_200x200_HomeService_EN_01_200W.jpg,Appa_240x240_HomeService_EN_01_240W.jpg,Appa_350x350_HomeService_EN_01_350W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;ApparelUKHompageServiceBannerComponent;apparel-uk-homepage-service-en
+
+#### Section 5
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;mobile;Appa_480x110_FreeDel_EN_01_480W.jpg;$siteResource/images/banners/homepage/responsive/Appa_480x110_FreeDel_EN_01_480W.jpg;Appa_480x110_FreeDel_EN_01_480W.jpg;"Free shipping and returns!";
+;tablet;Appa_770x80_FreeDel_EN_01_770W.jpg;$siteResource/images/banners/homepage/responsive/Appa_770x80_FreeDel_EN_01_770W.jpg;Appa_770x80_FreeDel_EN_01_770W.jpg;"Free shipping and returns!";
+;desktop;Appa_960x80_FreeDel_EN_01_960W.jpg;$siteResource/images/banners/homepage/responsive/Appa_960x80_FreeDel_EN_01_960W.jpg;Appa_960x80_FreeDel_EN_01_960W.jpg;"Free shipping and returns!";
+;widescreen;Appa_1400x80_FreeDel_EN_01_1400W.jpg;$siteResource/images/banners/homepage/responsive/Appa_1400x80_FreeDel_EN_01_1400W.jpg;Appa_1400x80_FreeDel_EN_01_1400W.jpg;"Free shipping and returns!";
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;apparel-uk-homepage-discount-en;Appa_480x110_FreeDel_EN_01_480W.jpg,Appa_770x80_FreeDel_EN_01_770W.jpg,Appa_960x80_FreeDel_EN_01_960W.jpg,Appa_1400x80_FreeDel_EN_01_1400W.jpg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;ApparelUKHompageFreeDelBannerComponent;apparel-uk-homepage-discount-en
+
+# CMS Paragraph Component (Contact information)
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang];
+#;;faqTextParagraph;"<div class=""global-alerts""><div class=""alert alert-info"" role=""alert""><strong>Information: </strong>Page Under Construction - Not Completely Functional</div></div><a name=""00""></a><div class=""textpage textpage-faqs""><div class=""item_container"">		<h2><a name=""a00""></a>Returns and refunds</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>		<div class=""item_container"">		<h2><a name=""b00""></a>Delivery information</h2>		<a class=""faq-menulink"" href=""#b01"">Delivery Options</a>		<a class=""faq-menulink"" href=""#b02"">Delivery times &amp; charges</a>		<a class=""faq-menulink"" href=""#b03"">Order tracking information</a>		<a class=""faq-menulink"" href=""#b04"">Courier status information</a>			<h3><a name=""b01""></a>Delivery Options</h3>		<p>			The delivery options available to you are shown in the Checkout area under Delivery Method.<br><br>			Based on your deliver address, these options may not all be available:			</p><ul>			<li>					<b>Home Delivery</b> - Free UK standard delivery on all orders over L50 within 4 working days (*exceptions may apply)				</li>				<li>					<b>Standard delivery</b> -  1 to 2 business days				</li>				<li>					<b>Other delivery method</b>  &ndash; 3 to 5 business days				</li>				<li>				<b>International delivery</b> &ndash; 7 to 10 business days (not all countries are available)				</li>			</ul>		<p></p>		<h3><a name=""b02""></a>Delivery times &amp; charges</h3>		<p>			We deliver the majority of our orders within 4 working days* for L3.99 or FREE on orders over L50 (*exceptions apply, see table below).			</p><ul>				<li>					Deliveries to UK addresses are made Monday to Friday between 9am to 6pm, excluding Bank Holidays. 				</li>				<li>					Deliveries to the Scottish Highlands and Islands, offshore locations and Northern Ireland may take a little longer.<br>					For delivery to ROI addresses please visit our Irish website at hybris.com				</li>				<li>					Multiple items may be delivered in more than one parcel and at different times.				</li>			</ul>		<p></p>	<h3><a name=""b03""></a>Order tracking information</h3>		<p>			We will send you email updates through every stage of your order. In each email your current order's status will be shown. Each order status is explained in the table below. We deliver most parcels via our courier. You can track these parcels by clicking on the parcel reference link on your email. Once you have clicked on the link you will be directed to the courier website. For information on courier statuses please <a href=""#b04"">click here</a>.		</p>		<table width=""100%"" cellspacing=""0"" cellpadding=""0"" border=""0"">			<tbody>				<tr>					<th>Status</th>					<th>Description</th>				</tr>				<!--ROW 1-->				<tr>					<td class=""blue3"">						<strong>Processing</strong><br>					</td>					<td class=""grey3"">						Your order is being processed.<br>					</td>				</tr>				<!--ROW 2-->	<tr>					<td class=""blue3"">						<strong>Despatched</strong><br>					</td>					<td class=""grey3"">						Your order has been despatched to the courier.<br><br>    For heavy and large products your order is ready to be despatched by our carrier. The carrier will contact you to arrange a suitable date for delivery.<br><br>For Collect from store orders you will receive a further order status update when your item(s) are ready to collect (see below for more information on collect from store statuses)<br><br>					</td>				</tr>				<!--ROW 3-->				<tr>					<td class=""blue3"">						<strong>Cancelled<br>Unable to fulfill<br> payment reversal</strong><br>					</td>					<td class=""grey3"">						Your order has been cancelled due to stock availability, no payment has been taken.<br><br>					</td>				</tr>				<!--ROW 4-->				<tr>					<td class=""blue3"">						<strong>Cancelled<br>Unable to fulfil<br>Payment refunded</strong><br>				</td>					<td class=""grey3"">						Your order has been cancelled due to stock availability. We have processed a refund to your payment card.<br><br>					</td>				</tr>				<!--ROW 5-->				<tr>					<td class=""blue3"">						<strong>Return received</strong><br>					</td>					<td class=""grey3"">Your return has been received. However, due to goods being addressed to the incorrect warehouse there may be a short delay in your refund being processes while the goods are being re-directed.<br><br>					</td>				</tr>				<!--ROW 6-->				<tr>					<td class=""blue3"">						<strong>Order ready for collection</strong><br>					</td>					<td class=""grey3"">						Your order is ready for collection at your chosen store.<br><br><strong><i>Please note:</i></strong> You must collect your order within 14 days of receiving your notification email.<br><br>					</td>				</tr>				<!--ROW 7-->				<tr>					<td class=""blue3"">						<strong>Collected</strong><br>					</td>					<td class=""grey3"">					Your order has been collected.<br><br>					</td>				</tr>				<!--ROW 8-->				<tr>					<td class=""blue3"">						<strong>Return in progress</strong><br>					</td>					<td class=""grey3"">						We are processing your return.<br><br>					</td>				</tr>				<!--ROW 9-->				<tr>					<td class=""blue3"">						<strong>Return refund complete</strong><br>					</td>					<td class=""grey3"">						We have processed your return.<br><br><strong><i>Please note:</i></strong>  Some banks may take longer than others to process refunds.<br><br>					</td>				</tr>			</tbody>		</table>		<p></p>		<h3><a name=""b04""></a>Courier status information</h3>		<p></p>		<table width=""100%"" cellspacing=""0"" cellpadding=""0"" border=""0"">			<tbody>				<tr>					<th>Status</th>					<th>Description</th>				</tr>			<!--ROW 1-->				<tr>					<td class=""blue3"">						<strong>Order generated</strong><br>					</td>					<td class=""grey3"">						Your order is ready for delivery and has entered into the courier system.<br>					</td>				</tr>				<!--ROW 2-->				<tr>					<td class=""blue3"">						<strong>Receipt at depot </strong><br>					</td>					<td class=""grey3"">					Your parcel has been received at the depot. <br><br>					</td>				</tr>				<!--ROW 3-->				<tr>					<td class=""blue3"">						<strong>Processed at depot</strong><br>					</td>					<td class=""grey3"">						Your parcel has processed through the depot operation and is ready for onward despatch to the courier.<br><br>					</td>				</tr>				<!--ROW 4-->				<tr>					<td class=""blue3"">						<strong>Out for delivery to courier</strong><br>					</td>					<td class=""grey3"">						Your parcel has left the depot for delivery to courier.<br><br>					</td>				</tr>				<!--ROW 5-->				<tr>					<td class=""blue3"">						<strong>Courier to re-attempt</strong><br>					</td>					<td class=""grey3"">						The courier has attempted to deliver your parcel and will try again. You will receive a card to confirm delivery has been attempted.<br><br>					</td>				</tr>			<!--ROW 6-->				<tr>					<td class=""blue3"">						<strong>Delivered to</strong><br>					</td>					<td class=""grey3"">						Your parcel has been delivered.<br><br>					</td>				</tr>			</tbody>		</table>		<p></p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>		<div class=""item_container"">		<h2><a name=""c00""></a>Registration</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>	<div class=""item_container"">		<h2><a name=""d00""></a>Your online account</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>	<div class=""item_container"">		<h2><a name=""e00""></a>Orders</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>	<div class=""item_container"">		<h2><a name=""f00""></a>Promotions and discounts</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>	<div class=""item_container"">		<h2><a name=""g00""></a>Product and general informations</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>	<div class=""item_container"">		<h2><a name=""h00""></a>Store information</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>	<div class=""item_container"">		<h2><a name=""i00""></a>Business contacts</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>		<div class=""item_container"">		<h2><a name=""j00""></a>Buying guides</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>		<div class=""item_container"">		<h2><a name=""k00""></a>Size guides</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div>		<div class=""item_container"">		<h2><a name=""l00""></a>Privacy and security</h2>		<p>Text</p>		<a class=""pagetop-link"" href=""#00"">back to top</a>	</div></div>";
+
+# Site Logo Component
+UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;SiteLogoComponent;/images/theme/logo-hybris-demo.png
+
+#Footer Image Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];;
+;;GoogleImageComponent;gplus.png;
+;;FacebookImageComponent;facebook.png
+#;;TwitterImageComponent;twitter.png
+#;;PinterestImageComponent;pinterest.png
+
+
+# Media Content
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+;desktop;Westside.jpg;$siteResource/images/banners/site/westside.JPG;Westside.JPG;"Westside";
+;desktop;Titan.jpg;$siteResource/images/banners/site/titan.JPG;Titan.JPG;"Titan";
+;desktop;Tanishq.jpg;$siteResource/images/banners/site/tanishq.JPG;Tanishq.JPG;"Tanishq";
+;desktop;Chroma.jpg;$siteResource/images/banners/site/chroma.JPG;Chroma.JPG;"Chroma";
+;desktop;Landmark.jpg;$siteResource/images/banners/site/landmark.JPG;Landmark.jpg;"Landmark";
+;desktop;Kids.jpg;$siteResource/images/banners/site/Kids.JPG;Kids.JPG;"Shop kids";
+;;gplus.png;$siteResource/images/banners/homepage/gplus.png;gplus.png;"Google Plus";
+;;facebook.png;$siteResource/images/banners/homepage/facebook.png;facebook.png;"Facebook";
+#;;twitter.png;$siteResource/images/banners/homepage/twitter.png;twitter.png;"Twitter";
+#;;pinterest.png;$siteResource/images/banners/homepage/pinterest.png;pinterest.png;"Pinterest";
+;;westside1.jpg;$siteResource/images/banners/site/westside1.jpg;westside1.jpg;"Westside";
+;;logo_westside.jpg;$siteResource/images/banners/site/logo_westside.jpg;logo_westside.jpg;"Westside";
+;;croma.jpg;$siteResource/images/banners/site/croma.jpg;croma.jpg;"croma";
+;;logo_croma.jpg;$siteResource/images/banners/site/logo_croma.jpg;logo_croma.jpg;"logo_croma";
+;;nuon.jpg;$siteResource/images/banners/site/nuon.jpg;nuon.jpg;"nuon";
+;;logo_Nuon.jpg;$siteResource/images/banners/site/logo_Nuon.jpg;logo_Nuon.jpg;"logo_Nuon";
+;;ascot.jpg;$siteResource/images/banners/site/ascot.jpg;ascot.jpg;"ascot";
+;;logob-ascot.jpg;$siteResource/images/banners/site/logob-ascot.jpg;logob-ascot.jpg;"logob-ascot";
+
+#Media Image for Be Inspired section of women category landing page
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;women_beinspired_banner.PNG;$siteResource/images/banners/category_banners/women_beinspired_banner.PNG;women_beinspired_banner.PNG;"Shop the Collection"
+;;women_beinspired_banner2.PNG;$siteResource/images/banners/category_banners/women_beinspired_banner2.PNG;women_beinspired_banner2.PNG;"Shop the Collection"
+;;women_beinspired_banner3.PNG;$siteResource/images/banners/category_banners/women_beinspired_banner3.PNG;women_beinspired_banner3.PNG;"Shop the Collection"
+#Media Image for Electronics category landing page
+;;electronics_category_banner.png;$siteResource/images/banners/category_banners/TMP_ElectronicsBanner_1400x600.png;TMP_ElectronicsBanner_1400x600.png;"Electronics Banner"
+
+
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;TMPElectronicsCategoryBannerComponent;electronics_category_banner.png;"<span style='color:black;' class='major-promo-header-italic'>Electronics</span>";
+
+#Media Image for Tech Trendsetters section of Electronics category landing page
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;techtrendSetters_banner1.jpg;$siteResource/images/banners/category_banners/techtrendSetters_banner1.jpg;techtrendSetters_banner1.jpg;"Shop the Collection"
+;;techtrendSetters_banner2.jpg;$siteResource/images/banners/category_banners/techtrendSetters_banner2.jpg;techtrendSetters_banner2.jpg;"Shop the Collection"
+;;techtrendSetters_banner3.jpg;$siteResource/images/banners/category_banners/techtrendSetters_banner3.jpg;techtrendSetters_banner3.jpg;"Shop the Collection"
+#media images for Shop The Look Banner 
+;;lookbook1.jpeg;$siteResource/images/banners/homepage/responsive/lookbook1.jpeg;lookbook1.jpeg;"Look Book 1";
+;;lookbook2.jpeg;$siteResource/images/banners/homepage/responsive/lookbook2.jpeg;lookbook2.jpeg;"Look Book 2";
+;;lookbook3.jpeg;$siteResource/images/banners/homepage/responsive/lookbook3.jpeg;lookbook3.jpeg;"Look Book 3";
+;;lookbook4.jpeg;$siteResource/images/banners/homepage/responsive/lookbook4.jpeg;lookbook4.jpeg;"Look Book 4";
+
+####   SMALL BRAND  IMAGE  ####
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;;aboutus.png;$siteResource/images/banners/homepage/responsive/aboutus.png;aboutus.png;"About Us Banner"
+;;Nuon.jpg;$siteResource/images/banners/homepage/responsive/Nuon.jpg;Nuon.jpg;"Nuon Banner";
+;;Ascot.png;$siteResource/images/banners/homepage/responsive/Ascot.png;Ascot.png;"Ascot Banner";
+;;Lov.jpg;$siteResource/images/banners/homepage/responsive/Lov.jpg;Lov.jpg;"Lov Banner";
+;;bombay.png;$siteResource/images/banners/homepage/responsive/bombay.png;bombay.png;"Bombay Banner";
+;;eta.png;$siteResource/images/banners/homepage/responsive/eta.png;eta.png;"Eta Banner";
+;;gia.png;$siteResource/images/banners/homepage/responsive/gia.png;gia.png;"Gia Banner";
+;;soda.png;$siteResource/images/banners/homepage/responsive/soda.png;soda.png;"Soda Banner";
+;widescreen;westsport.png;$siteResource/images/banners/homepage/responsive/westsport.png;westsport.png;"Westsoprt Banner";
+;;yandf.png;$siteResource/images/banners/homepage/responsive/yandf.png;yandf.png;"yandf Banner";
+;widescreen;lovbrandbanner.png;$siteResource/images/banners/homepage/responsive/lovbrandbanner.png;lovbrandbanner.png;"lov Brandbanner";
+;widescreen;MixnMatch.jpg;$siteResource/images/banners/homepage/responsive/MixnMatch.jpg;MixnMatch.jpg;"MixnMatch Brandbanner";
+;widescreen;westsportbanner.png;$siteResource/images/banners/homepage/responsive/westsportbanner.png;westsportbanner.png;"Westsport banner";
+;widescreen;westsportImage.png;$siteResource/images/banners/homepage/responsive/westsportImage.png;westsportImage.png;"Westsport Image";
+;widescreen;westsportImage2.png;$siteResource/images/banners/homepage/responsive/westsportImage2.png;westsportImage2.png;"Westsport Image2";
+;widescreen;chromabanner.png;$siteResource/images/banners/homepage/responsive/chromabanner.png;chromabanner.png;"Chromma Banner";
+;widescreen;samsung logo.jpg;$siteResource/images/banners/homepage/responsive/samsung logo.jpg;samsung logo.jpg;"samsung logo";
+;widescreen;apple.png;$siteResource/images/banners/homepage/responsive/apple.png;apple.png;"apple";
+;widescreen;canon.jpg;$siteResource/images/banners/homepage/responsive/canon.jpg;canon.jpg;"canon";
+;widescreen;ge.png;$siteResource/images/banners/homepage/responsive/ge.png;ge.png;"ge";
+;widescreen;asus.jpg;$siteResource/images/banners/homepage/responsive/asus.jpg;asus.jpg;"asus";
+;widescreen;hp.jpg;$siteResource/images/banners/homepage/responsive/hp.jpg;hp.jpg;"hp ";
+;widescreen;sony.jpg;$siteResource/images/banners/homepage/responsive/sony.jpg;sony.jpg;"sony ";
+;widescreen;whirpool.jpg;$siteResource/images/banners/homepage/responsive/whirpool.jpg;whirpool.jpg;"whirpool ";
+;widescreen;dell.png;$siteResource/images/banners/homepage/responsive/dell.png;dell.png;"dell ";
+;desktop;lookbook.png;$siteResource/images/banners/homepage/responsive/lookbook.png;lookbook.png;"lookbook ";
+;widescreen;apple_iphone.jpg;$siteResource/images/banners/homepage/responsive/apple_iphone.jpg;apple_iphone.jpg;"smartphoneGuide ";
+;widescreen;pic1.png;$siteResource/images/banners/homepage/responsive/pic1.png;pic1.png;"pic1 ";
+;widescreen;pic2.png;$siteResource/images/banners/homepage/responsive/pic2.png;pic2.png;"pic2 ";
+;desktop;nikkon.png;$siteResource/images/banners/homepage/responsive/nikkon.png;nikkon.png;"camera ";
+;;water_color_copy_1.png;$siteResource/images/banners/homepage/responsive/water_color_copy_1.png;water_color_copy_1.png;"Background Images2"
+;;water_color_copy_2.png;$siteResource/images/banners/homepage/responsive/water_color_copy_2.png;water_color_copy_2.png;"Background Images1"
+;;marketplacePreference.jpg;$siteResource/images/banners/site/marketplacePreference.jpg;marketplacePreference.jpg;"Marketplace Preferences"
+;;personalInformation.jpg;$siteResource/images/banners/site/personalInformation.jpg;personalInformation.jpg;"Personal Information"
+;;orderHistory.jpg;$siteResource/images/banners/site/orderHistory.jpg;orderHistory.jpg;"Order History"
+;;savedCards.jpg;$siteResource/images/banners/site/savedCards.jpg;savedCards.jpg;"Saved Cards"
+;;myRecommendations.jpg;$siteResource/images/banners/site/myRecommendations.jpg;myRecommendations.jpg;"My Recommendations"
+;;inviteFriends.jpg;$siteResource/images/banners/site/inviteFriends.jpg;inviteFriends.jpg;"Invite Friends"
+;;savedAddresses.jpg;$siteResource/images/banners/site/savedAddresses.jpg;savedAddresses.jpg;"Saved Addresses"
+;;footwearBanner.JPG;$siteResource/images/banners/homepage/responsive/footwearBanner.JPG;footwearBanner.JPG;"Footwear Banner";
+;widescreen;ShoeBanner.jpeg;$siteResource/images/banners/homepage/responsive/ShoeBanner.jpeg;ShoeBanner.jpeg;"Shoe banner";
+;widescreen;ShoeRectangle_1.jpeg;$siteResource/images/banners/homepage/responsive/ShoeRectangle_1.jpeg;ShoeRectangle_1.jpeg;"Shoe Image";
+;widescreen;ShoeRectangle_2.jpeg;$siteResource/images/banners/homepage/responsive/ShoeRectangle_2.jpeg;ShoeRectangle_2.jpeg;"Shoe Image2";
+
+;;WomenSingleFootwear.JPG;$siteResource/images/banners/category_banners/WomenSingleFootwear.JPG;WomenSingleFootwear.JPG;"Shop the Collection"
+;;MenSingleFootwear.JPG;$siteResource/images/banners/category_banners/MenSingleFootwear.JPG;MenSingleFootwear.JPG;"Shop the Collection"
+;;KidFootwearFirst.JPG;$siteResource/images/banners/category_banners/KidFootwearFirst.JPG;KidFootwearFirst.JPG;"Shop the Collection"
+;;KidsFootwearSecond.JPG;$siteResource/images/banners/category_banners/KidsFootwearSecond.JPG;KidsFootwearSecond.JPG;"Shop the Collection"
+
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;nuon-brand-en;Nuon.jpg
+;Ascot-brand-en;Ascot.png
+;Lov-brand-en;Lov.jpg
+;bombay-brand-en;bombay.png
+;eta-brand-en;eta.png
+;gia-brand-en;gia.png
+;soda-brand-en;soda.png
+;westsport-brand-en;westsport.png
+;yandf-brand-en;yandf.png
+;lov-banner-en;lovbrandbanner.png
+;MixnMatch-banner-en;MixnMatch.jpg
+;westsport-banner-en;westsportbanner.png
+;westsport-image-en;westsportImage.png
+;westsport-image2-en;westsportImage2.png
+;chroma-banner-en;chromabanner.png
+;samsung-banner-en;samsung logo.jpg
+;apple-banner-en;apple.png
+;canon-banner-en;canon.jpg
+;ge-banner-en;ge.png
+;asus-banner-en;asus.jpg
+;hp-banner-en;hp.jpg
+;sony-banner-en;sony.jpg
+;whirpool-banner-en;whirpool.jpg
+;dell-banner-en;dell.png
+;lookbook-banner-en;lookbook.png
+;smartphone-guide-en;apple_iphone.jpg
+;pic1-image-en;pic1.png
+;pic2-image-en;pic2.png
+;nikkon-image-en;nikkon.png
+;aboutus-image-en;aboutus.png
+;nikkon-banner-en;nikkon.png
+
+;shoe-banner-en;ShoeBanner.jpeg
+;shoe-image1-en;ShoeRectangle_1.jpeg
+;shoe-image2-en;ShoeRectangle_2.jpeg
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
+;;LovBrandBannerComponent;lov-banner-en
+;;MixnMatchBannerComponent;MixnMatch-banner-en
+;;WestsportBannerComponent;westsport-banner-en
+;;WestsportImageComponent;westsport-image-en
+;;WestsportImageComponent2;westsport-image2-en
+;;ChromaBannerComponent;chroma-banner-en
+;;lookbookComponent;lookbook-banner-en
+;;Pic1Component;pic1-image-en
+;;Pic2Component;pic2-image-en
+#;;NikkonComponent;nikkon-image-en
+
+;;ShoeHomepageBannerComponent;shoe-banner-en
+;;ShoeImage1Component;shoe-image1-en
+;;ShoeImage2Component;shoe-image2-en
+
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;ShopTheLookParagraphComponent1;"
+    <h1>Seasonal Collections</h1>
+    <h2>Exclusive to Tata</h2>
+          <p>Nulla facilisi. Sed placerat euismod felis, ac aliquet risus eleifend et. Nunc venenatis, ex sed molestie lobortis, est nunc cursus turpis, ac condimentum nibh risus et ligula. Vivamus cursus convallis tristique. Aliquam vel nisl eros. Donec varius neque ac lacus ornare hendrerit. Phasellus eu sapien mattis, ultricies leo sit amet, ultrices augue. Donec eu est ante. Quisque placerat faucibus turpis vel commodo. Utvitae congue enim.</p>
+          <p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.  Cras mattis consectetur purus sit amet fermentum.</p>
+          <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.</p>
+      "
+;;ShopTheLookParagraphComponent2;"
+     <h1>Casual Wear</h1>
+     <p>Nulla facilisi. Sed placerat euismod felis, ac aliquet risus eleifend et. Nunc venenatis, ex sed molestie lobortis, est nunc cursus turpis, ac condimentum nibh risus et ligula. Vivamus cursus convallis tristique. Aliquam.</p>     
+     "     
+;;ShopTheLookParagraphComponent3;"
+     <h1>The Perfect Look</h1>
+     <p>Nulla facilisi. Sed placerat euismod felis, ac aliquet risus eleifend et. Nunc venenatis, ex sed molestie lobortis, est nunc cursus turpis, ac condimentum nibh risus et ligula. Vivamus cursus convallis tristique. Aliquam.</p>     
+     " 
+;;ShopTheLookParagraphComponent4;"
+     <h1>Dress Down</h1>
+     <p>Nulla facilisi. Sed placerat euismod felis, ac aliquet risus eleifend et. Nunc venenatis, ex sed molestie lobortis, est nunc cursus turpis, ac condimentum nibh risus et ligula. Vivamus cursus convallis tristique. Aliquam.</p>     
+     "      
+# CMS Link Components for Shop By Look
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
+;;MplShopByLookNext;"Spring Fever"
+;;MplShopByLookPrevious;"Sunshine Yellow"
+
+#Changes for Overview Page
+
+UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];content
+
+;;MarketplacePreferencesMediaParagraphComponent;"<h3>AS YOU LIKE IT</h3>
+<p>Pick your favourites - brands, categories  & more - here!</p>
+<a href='/store/mpl/en/my-account/marketplace-preference'>VIEW MARKETPLACE PREFERENCES</a>"
+
+;;PersonalInformationMediaParagraphComponent;"<h3>ALL YOUR DETAILS</h3>
+<p>Pick a name, change your password and all that jazz.</p>
+<a href='/store/mpl/en/my-account/update-profile'>VIEW PERSONAL INFO</a>"
+
+;;SavedCardsMediaParagraphComponent;"<h3>SAVED CARDS</h3>
+<p>Manage and delete your credit/debit card details here.</p>
+<a href='/store/mpl/en/my-account/payment-details'>VIEW PAYMENT INFO</a>"
+
+;;MyRecommendationsMediaParagraphComponent;"<h3>MY RECOMMENDATIONS</h3>
+<p>Let's get personal</p>
+<a href='/store/mpl/en/my-account/myInterest'>VIEW RECOMMENDATIONS</a>"
+
+;;InviteFriendsMediaParagraphComponent;"<h3>INVITE YOUR FRIENDS</h3>
+<p>Why shop solo when you can do it with your friends?  Get your crew here.</p>
+<a href='/store/mpl/en/my-account/myInterest'>INVITE FRIENDS TO THE MARKETPLACE</a>"
+
+;;OrderHistoryMediaParagraphComponent;"<h3>ORDER HISTORY</h3>
+<p>When will that package arrive? And other such pressing questions.</p>
+<a href='/store/mpl/en/my-account/orders'>VIEW ORDER HISTORY</a>"
+
+;;SavedAddressesMediaParagraphComponent;"<h3>MY ADDRESS</h3>
+<p>Where do we send that package? And other such address details. </p>
+<a href='/store/mpl/en/my-account/address-book'>VIEW SAVED ADDRESSES</a>"

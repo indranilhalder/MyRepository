@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd ">
+
+	<bean id="baseDirectoryMarketplaceManualRefund" class="java.lang.String">
+		<constructor-arg
+			value="#{baseDirectory}/${tenantId}/marketplace-ManualRefund" />
+	</bean>
+
+	<file:inbound-channel-adapter id="batchFilesMarketplaceManualRefund"
+		directory="#{baseDirectoryMarketplaceManualRefund}" filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator">
+		<int:poller fixed-rate="1000" />
+	</file:inbound-channel-adapter>
+
+	<file:outbound-gateway id="batchFilesMarketplaceManualRefundOutPut"
+		request-channel="batchFilesMarketplaceManualRefund" reply-channel="batchFilesMarketplaceManualRefundProc"
+		directory="#{baseDirectoryMarketplaceManualRefund}/processing"
+		delete-source-files="true" filename-generator-expression="'internal_' + payload.name" />
+
+	<int:service-activator input-channel="batchFilesMarketplaceManualRefundProc"
+		output-channel="batchFilesHeaderInit" ref="MarketplaceManualRefundHeaderSetupTask"
+		method="execute" />
+
+	<bean id="MarketplaceManualRefundHeaderSetupTask"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+		<property name="catalog" value="mplProductCatalog" />
+		<property name="net" value="false" />
+		<property name="storeBaseDirectory" ref="baseDirectoryMarketplaceManualRefund" />
+	</bean>
+
+	<bean id="batchManualRefundConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_manual_refund" p:converter-ref="batchManualRefundAttributeConverter" />
+
+	<bean id="batchManualRefundConverterFollowOnMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_manual_refund" p:converter-ref="batchManualRefundAttributeConverterFollowOn" />
+		
+	<bean id="batchManualRefundOrderConverterFollowOnMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="internal_manual_refund" p:converter-ref="batchManualRefundOrderAttributeConverterFollowOn" />
+
+	<bean id="batchManualRefundAttributeConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>insert_update PaymentTransaction;code[unique=true];order(Order.code,Order.versionID[default=]);transactionId;</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+0};{+1};{+3}</value>
+		</property>
+	</bean>
+
+	<bean id="batchManualRefundAttributeConverterFollowOn"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>insert_update PaymentTransactionEntry;code[unique=true];paymentTransaction(code);time[dateformat=dd.MM.yyyy];currency(isocode)[default='INR'];type(code[default='MANUAL_REFUND']);paymentMode(mode);requestId;amount;transactionStatus[default='RETURN_COMPLETED'];transactionStatusDetails;</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+2};{+0};{+4};{5};{6};{+7};{8};{+9};{10};{11}</value>
+		</property>
+	</bean>
+	
+	<bean id="batchManualRefundOrderAttributeConverterFollowOn"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>Update Consignment;code[unique=true];status(code)[default='RETURN_COMPLETED'];</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+3};{10}</value>
+		</property>
+	</bean>
+
+</beans>

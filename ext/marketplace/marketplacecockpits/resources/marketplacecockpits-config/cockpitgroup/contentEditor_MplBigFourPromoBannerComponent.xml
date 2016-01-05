@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="content-editor.xsd" hideEmpty="true"
+	hideReadOnly="true" groupCollections="true">
+	<template>
+	<![CDATA[
+		<table width="100%" style="margin:0px;padding:0px" class="structViewCnt">
+			<tbody>
+				<tr>
+					<td><cockpit code="property" value="MplBigFourPromoBannerComponent.promoText1"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplBigFourPromoBannerComponent.promoText2"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplBigFourPromoBannerComponent.promoText3"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplBigFourPromoBannerComponent.promoText4"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplBigFourPromoBannerComponent.bannerImage"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplBigFourPromoBannerComponent.urlLink"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
+				<tr>
+					<td><cockpit code="property" value="MplBigFourPromoBannerComponent.SequenceNumber"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
+				
+			</tbody>
+		</table>
+	]]>
+	</template>
+	<custom-editors>
+		<property qualifier="MplBigFourPromoBannerComponent.PromoText1"
+			editorCode="wysiwyg">
+			<parameter>
+				<name>inline</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>fckToolbarConfiguration</name>
+				<value>
+					[['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+				</value>
+			</parameter>
+			<parameter>
+				<name>editorWidth</name>
+				<value>650px</value>
+			</parameter>
+			<parameter>
+				<name>editorHeight</name>
+				<value>200px</value>
+			</parameter>
+			<parameter>
+				<name>labelWidth</name>
+				<value>80px</value>
+			</parameter>
+		</property>
+
+		<property qualifier="MplBigFourPromoBannerComponent.PromoText2"
+			editorCode="wysiwyg">
+			<parameter>
+				<name>inline</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>fckToolbarConfiguration</name>
+				<value>
+					[['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+				</value>
+			</parameter>
+			<parameter>
+				<name>editorWidth</name>
+				<value>650px</value>
+			</parameter>
+			<parameter>
+				<name>editorHeight</name>
+				<value>200px</value>
+			</parameter>
+			<parameter>
+				<name>labelWidth</name>
+				<value>80px</value>
+			</parameter>
+		</property>
+
+		<property qualifier="MplBigFourPromoBannerComponent.PromoText3"
+			editorCode="wysiwyg">
+			<parameter>
+				<name>inline</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>fckToolbarConfiguration</name>
+				<value>
+					[['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+				</value>
+			</parameter>
+			<parameter>
+				<name>editorWidth</name>
+				<value>650px</value>
+			</parameter>
+			<parameter>
+				<name>editorHeight</name>
+				<value>200px</value>
+			</parameter>
+			<parameter>
+				<name>labelWidth</name>
+				<value>80px</value>
+			</parameter>
+		</property>
+
+		<property qualifier="MplBigFourPromoBannerComponent.PromoText4"
+			editorCode="wysiwyg">
+			<parameter>
+				<name>inline</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>fckToolbarConfiguration</name>
+				<value>
+					[['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+				</value>
+			</parameter>
+			<parameter>
+				<name>editorWidth</name>
+				<value>650px</value>
+			</parameter>
+			<parameter>
+				<name>editorHeight</name>
+				<value>200px</value>
+			</parameter>
+			<parameter>
+				<name>labelWidth</name>
+				<value>80px</value>
+			</parameter>
+		</property>
+
+		<property qualifier="MplBigFourPromoBannerComponent.bannerImage"
+			editorCode="simpleMediaReferenceSelector">
+			<parameter>
+				<name>mimeTypes</name>
+				<value>image/jpeg;image/gif;image/png</value>
+			</parameter>
+			<parameter>
+				<name>allowCreate</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>restrictToCreateTypes</name>
+				<value>Media</value>
+			</parameter>
+			<parameter>
+				<name>imageHeight</name>
+				<value>80px</value>
+			</parameter>
+			<parameter>
+				<name>celumMediaFormat</name>
+				<value>picture</value>
+			</parameter>
+			<parameter>
+				<name>predefinedValuesStrategy</name>
+				<value>imageMediaPredefinedValuesStrategy</value>
+			</parameter>
+		</property>
+	</custom-editors>
+</content-editor>
+

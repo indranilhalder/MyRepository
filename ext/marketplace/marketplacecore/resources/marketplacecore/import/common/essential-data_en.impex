@@ -1,0 +1,198 @@
+#
+# Import essential data for the Accelerator
+#
+
+# Language
+$lang=en
+
+# Languages
+UPDATE Language;isocode[unique=true];name[lang=$lang]
+ ;de;"German"
+ ;en;"English"
+ ;ja;"Japanese"
+ ;zh;"Chinese"
+
+# Currencies
+UPDATE Currency;isocode[unique=true];name[lang=$lang]
+ ;EUR;"Euro"
+ ;GBP;"Pound"
+ ;JPY;"Japanese Yen"
+ ;USD;"US Dollar"
+ ;INR;"Rupees"
+
+# Titles
+UPDATE Title;code[unique=true];name[lang=$lang]
+ ;dr;"Dr."
+ ;miss;"Miss"
+ ;mr;"Mr."
+ ;mrs;"Mrs."
+ ;ms;"Ms."
+ ;rev;"Rev."
+
+# Credit / Debit Cards
+UPDATE CreditCardType;code[unique=true];name[lang=$lang]
+ ;amex;"American Express"
+ ;diners;"Diner's Club"
+ ;maestro;"Maestro"
+ ;master;"Mastercard"
+ ;mastercard_eurocard;"Mastercard/Eurocard"
+ ;switch;"Switch"
+ ;visa;"Visa"
+
+# DistanceUnits for Storelocator 
+UPDATE DistanceUnit;code[unique=true];name[lang=$lang]
+ ;km;"km"
+ ;miles;"miles"
+
+# MediaFormats
+UPDATE MediaFormat;qualifier[unique=true];name[lang=$lang];
+ ;1200Wx1200H;"1200Wx1200H"
+ ;300Wx300H;"300Wx300H"
+ ;30Wx30H;"30Wx30H"
+ ;365Wx246H;"365Wx246H"
+ ;515Wx515H;"515Wx515H"
+ ;65Wx65H;"65Wx65H"
+ ;96Wx96H;"96Wx96H"
+
+# Product Tax Groups
+UPDATE ProductTaxGroup;code[unique=true];name[lang=$lang]
+ ;ca-sales-tax-full;"CA Sales Tax"
+ ;eu-vat-full;"EU Full Tax rate"
+ ;eu-vat-half;"EU Half Tax rate"
+ ;jp-vat-full;"JP Consumption Tax"
+ ;us-sales-tax-full;"US Sales Tax"
+
+# User Tax Groups
+UPDATE UserTaxGroup;code[unique=true];name[lang=$lang]
+ ;ca-taxes;"CA Taxes"
+ ;de-taxes;"DE Taxes"
+ ;jp-taxes;"JP Taxes"
+ ;uk-taxes;"UK Taxes"
+ ;us-taxes;"US Taxes"
+
+# Tax
+UPDATE Tax;code[unique=true];name[lang=$lang]
+ ;ca-sales-tax-full;"Sales Tax"
+ ;de-vat-full;"DE VAT full"
+ ;de-vat-half;"DE VAT half"
+ ;jp-vat-full;"Consumption Tax"
+ ;uk-vat-full;"UK VAT full"
+ ;uk-vat-half;"UK VAT half"
+ ;us-sales-tax-full;"Sales Tax"
+
+# Consginment statuses
+UPDATE ConsignmentStatus;code[unique=true];name[lang=$lang]
+ ;CANCELLED;"Cancelled"
+ ;PICKPACK;"Pickpack"
+ ;PICKUP_COMPLETE;"Pickup complete"
+ ;READY;"Ready"
+ ;READY_FOR_PICKUP;"Ready for pickup"
+ ;SHIPPED;"Shipped"
+ ;WAITING;"Waiting"
+ 
+ # State
+INSERT_UPDATE State;countrykey;region[unique=true];description
+;IN;01;Andhra Pradesh
+;IN;02;Arunachal Pradesh
+;IN;03;Assam
+;IN;04;Bihar
+;IN;05;Goa
+;IN;06;Gujarat
+;IN;07;Haryana
+;IN;08;Himachal Pradesh
+;IN;09;Jammu and Kashmir
+;IN;10;Karnataka
+;IN;11;Kerala
+;IN;12;Madhya Pradesh
+;IN;13;Maharashtra
+;IN;14;Manipur
+;IN;15;Meghalaya
+;IN;16;Mizoram
+;IN;17;Nagaland
+;IN;18;Orissa
+;IN;19;Punjab
+;IN;20;Rajasthan
+;IN;21;Sikkim
+;IN;22;Tamil Nadu
+;IN;23;Tripura
+;IN;24;Uttar Pradesh
+;IN;25;West Bengal
+;IN;26;Andaman and Nico.In.
+;IN;27;Chandigarh
+;IN;28;Dadra and Nagar Hav.
+;IN;29;Daman and Diu
+;IN;30;Delhi
+;IN;31;Lakshadweep
+;IN;32;Pondicherry
+;IN;33;Chhattisgarh
+;IN;34;Jharkhand
+;IN;35;Uttaranchal
+;IN;36;Telangana
+
+
+ # Merchant Master
+INSERT_UPDATE MerchantMasterTable;MerchantCode[unique=true];MerchantDesc
+;4;CITI
+;2;HDFC
+;12;PAYU
+
+
+ # Return Reason
+INSERT_UPDATE ReturnReason;reasonCode[unique=true];reasonDescription
+;01;The product I received was damaged
+;02;The product delivered is faulty
+;03;I'm not happy with the product quality
+;04;I was sent the wrong product
+;05;The product is missing a part
+;06;My order took too long to reach me
+;07;The product doesn't look like what I saw on the website
+;08;What I ordered doesn't fit me well
+
+ # Order Status Code
+INSERT_UPDATE OrderStatusCode;statusCode[unique=true];statusDescription
+;ORDALLOC;Order allocated
+;ORDACCEP;Order accepted
+;ORDREJEC;Order rejected
+;PICKINPR;Pick in-process
+;PICKHOLD;Pick hold
+;PICKCONF;Pick confirmed
+;PILIGENE;Pick list generated
+;SCANNED;Scanned
+;AWBASSIG;AWB Assigned
+;PRISHLAB;Print shipping label
+;INVOGENE;Invoice generated
+;PRIINVOI;Print invoice
+;MANIPEND;Manifesto pending
+;RETOSHIP;Ready to ship
+;LPSWITCH;Logistic partner switch
+;HOTCOURI;Handed over to courier
+;RENEARHB;Reached nearest hub
+;DELIVERD;Delivered
+;ORDCANCL;Order cancelled
+;CLONCANC;Closed on cancellation
+;REFUINIT;Refund initiated
+;REFINPRO;Refund in process
+;REFCLOSE;Refund closed
+;RETTOORG;Return to Origin
+;RETUINIT;Return Initiated
+;SRECTORI;Shipment received at Origin
+;RETUCANC;Return cancelled
+;RETUCLOS;Return closed
+;REDIINIT;Re-dispatch initiated
+;CLRETORI;Closed on return to origin
+
+ # Cancellation Reason Code
+INSERT_UPDATE CancellationReason;reasonCode[unique=true];reasonDescription
+;01;I changed my mind
+;02;I found a better deal on another website
+;03;The product specifications are wrong
+;04;My delivery is taking too long
+;05;I placed my order twice by mistake
+
+remove CancellationReason;reasonCode[unique=true]
+;06
+;07
+;08
+;09
+;10
+;11

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<wizard-config showPrefilledValues="false" selectMode="true" createMode="true" displaySubtypes="true">
+    <displayed-properties>
+        <group qualifier="General" visible="true" initially-opened="true">
+            <label lang="en">General</label>
+            <label lang="de">General</label>
+            <property qualifier="CMSItem.name"/>
+        </group>
+        <group qualifier="Properties" visible="true" initially-opened="true">
+            <label lang="en">Properties</label>
+            <label lang="de">Eigenschaften</label>
+            <property qualifier="CMSParagraphComponent.content" editorCode="wysiwyg" />
+            <property qualifier="CMSMediaParagraphComponent.media" editorCode="simpleMediaReferenceSelector" />            	           
+        </group>
+    </displayed-properties>
+</wizard-config>

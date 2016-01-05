@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+
+	<button id="createItem" image="${wr}/images/add-tool-plus.png"></button>
+	<button id="editItem" image="${wr}/images/update-tool-pencil.png"></button>
+	<button id="deleteItem" style="height:30px"
+		image="${wr}/images/delete-icon.png">
+	</button>
+	<listbox  id="listview" rows="6" emptyMessage="No result found in the result"
+		mold="paging" pagingPosition="top" pageSize="6">
+		<listhead sizable="true">
+			<listheader width="200px" label="ID"></listheader>
+			<listheader width="200px" label="START TIME"></listheader>
+			<listheader width="200px" label="END TIME"></listheader>
+			<listheader label="WORKING DAYS"></listheader>
+		</listhead>
+	</listbox>
+
+</widget>

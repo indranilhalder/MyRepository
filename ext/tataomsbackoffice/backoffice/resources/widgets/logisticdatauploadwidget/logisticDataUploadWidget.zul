@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+ 
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+	<style>
+	.uploadContainer{margin:250px auto 0;background:#fff;padding:15px;}
+	.uploadContainer .z-div {width:100%;text-algin:center;}
+	.uploadContainer .z-div input{width:280px;}
+	.uploadContainer .z-div button{margin:0px 130px 0 5px;}
+	.heading {font-weight:bold;display:block;font-size:16px;margin-bottom:15px;text-align:left;}
+	.error_class{ color:red;}
+	</style>
+	<div class="uploadContainer">
+	   <hlayout>
+		 <vlayout>
+		 <label sclass="heading" value="Bulk Upload (Home Delivery)"></label>
+	    <div>
+	    	<textbox id="homeExcelFileName"  disabled="true"/>
+	         <button sclass="uploadTxtbox" label="upload" upload="true,maxsize=302400" id="home_uploadzip"   ></button> 
+	    </div>
+	    <label id="homeEmptyFileError" sclass="error_class" value="" > </label>
+	   </vlayout>
+	   <vlayout>
+	   <label  sclass="heading" value="Bulk Upload (Express Delivery)"></label>
+	    <div>
+	    	<textbox id="expressExcelFileName"  disabled="true"/>
+	         <button sclass="uploadTxtbox" label="upload" upload="true,maxsize=302400" id="express_uploadzip"   ></button> 
+	    </div>
+	     <label id="expressEmptyFileError" sclass="error_class" value="" > </label>
+    </vlayout>
+	   </hlayout>
+	   </div>
+</widget>

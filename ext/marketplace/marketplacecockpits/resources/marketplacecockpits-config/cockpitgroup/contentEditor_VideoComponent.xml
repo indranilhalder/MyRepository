@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="content-editor.xsd"
+                hideEmpty="true" hideReadOnly="true" groupCollections="true">
+	<template>
+	<![CDATA[
+		<table width="100%" style="margin:0px;padding:0px" class="structViewCnt">
+			<tbody>
+				<tr>
+					<td><cockpit code="property" value="VideoComponent.videoUrl"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="VideoComponent.video"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="VideoComponent.videoTitle"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="VideoComponent.videoDescription"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
+			</tbody>
+		</table>
+	]]>
+	</template>
+	<custom-editors>
+		<property qualifier="VideoComponent.videoDescription" editorCode="wysiwyg">
+			<parameter>
+				<name>inline</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>fckToolbarConfiguration</name>
+				<value>
+					[['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+				</value>
+			</parameter>
+			<parameter>
+				<name>editorWidth</name>
+				<value>650px</value>
+			</parameter>
+			<parameter>
+				<name>editorHeight</name>
+				<value>300px</value>
+			</parameter>
+			<parameter>
+				<name>labelWidth</name>
+				<value>80px</value>
+			</parameter>
+		</property>
+		
+		
+		<property qualifier="VideoComponent.videoTitle" editorCode="wysiwyg">
+			<parameter>
+				<name>inline</name>
+				<value>true</value>
+			</parameter>
+			<parameter>
+				<name>fckToolbarConfiguration</name>
+				<value>
+					[['Bold', 'Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','-','Outdent','Indent','-','Table','Link','Unlink'],'/',['FontName','FontSize','TextColor','-','Source']]
+				</value>
+			</parameter>
+			<parameter>
+				<name>editorWidth</name>
+				<value>650px</value>
+			</parameter>
+			<parameter>
+				<name>editorHeight</name>
+				<value>300px</value>
+			</parameter>
+			<parameter>
+				<name>labelWidth</name>
+				<value>80px</value>
+			</parameter>
+		</property>
+		
+	
+	</custom-editors>
+</content-editor>

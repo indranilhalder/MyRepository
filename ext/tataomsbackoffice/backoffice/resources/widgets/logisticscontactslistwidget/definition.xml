@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybris.
+  -->
+
+<widget-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.hybris.com/schema/cockpitng/widget-definition.xsd"
+	id="com.hybris.oms.widgets.logisticscontactslistwidget">
+	<name>List Widget With Logisticscontact Operation</name>
+	<view src="logisticscontactswidget.zul" />
+	<sockets>
+    
+       <input id="incomingList_contact" type="java.util.List"/>
+       <input id="listitemlogisticscontact" type="java.lang.Boolean"/>
+       <input id="listitemlogisticscontact_edit" type="java.lang.Boolean"/>
+       <output id="editlogisticscontact" type="java.lang.Object"/>
+       <output id="createlogisticscontact" type="java.lang.Boolean"/>
+        <output id="deletelogisticscalendar" type="java.lang.Object"/>
+      
+    </sockets>
+	
+	<controller class="com.hybris.oms.tata.logisticscontacts.LogisticsContactsWidgetController" /> 
+</widget-definition>

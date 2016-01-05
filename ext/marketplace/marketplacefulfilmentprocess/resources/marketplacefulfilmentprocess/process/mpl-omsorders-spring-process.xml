@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ [y] hybris Platform
+  ~
+  ~ Copyright (c) 2000-2015 hybris AG
+  ~ All rights reserved.
+  ~
+  ~ This software is the confidential and proprietary information of hybris
+  ~ ("Confidential Information"). You shall not disclose such Confidential
+  ~ Information and shall use it only in accordance with the terms of the
+  ~ license agreement you entered into with hybri
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Change for EBS -->
+	<alias name="defaultMplOmsCheckOrderAction" alias="omsCheckOrderAction"/>
+	<bean id="defaultMplOmsCheckOrderAction"
+		  class="com.tisl.mpl.fulfilmentprocess.actions.order.CheckOrderAction" scope="tenant"
+		  parent="abstractAction">
+		<!-- <property name="checkOrderService" ref="omsCheckOrderService"/> -->
+		<property name="checkOrderService" ref="defaultMplCheckOrderService"/>
+	</bean>
+
+<!-- Change for EBS -->
+	<alias name="defaultMplOmsCheckTransactionReviewStatusAction" alias="omsCheckTransactionReviewStatusAction"/>
+	<bean id="defaultMplOmsCheckTransactionReviewStatusAction"
+		  class="com.tisl.mpl.fulfilmentprocess.actions.order.CheckTransactionReviewStatusAction"
+		  scope="tenant" parent="abstractAction">
+		<property name="ticketBusinessService" ref="ticketBusinessService"/>
+	</bean>
+
+	<!-- <alias name="defaultOmsCreateOmsOrderAction" alias="omsCreateOmsOrderAction"/>
+	<bean name="defaultOmsCreateOmsOrderAction"
+		  class="com.tisl.mpl.integration.oms.order.process.action.CreateOmsOrderAction" parent="abstractAction"
+		  scope="tenant">
+		<property name="omsOrderService" ref="omsOrderService"/>
+		<property name="maxRetryCount" value="${hybris.omsorders.maxRetryCount}"/>
+		<property name="retryDelay" value="${hybris.omsorders.retryDelay}"/>
+		<property name="catalogVersionService" ref="catalogVersionService"/>
+		<property name="impersonationService" ref="impersonationService"/>
+	</bean> -->
+	
+	
+	
+	
+	
+	
+	<alias name="defaultOmsOrderService2" alias="omsOrderService" />
+	<bean name="defaultOmsOrderService2"
+		class="com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService"
+		scope="tenant">
+		<property name="hystrixCommandConfig" ref="orderServiceCommandConfig" />
+		<property name="ondemandHystrixCommandFactory" ref="ondemandHystrixCommandFactory" />
+		<property name="orderConverter" ref="omsOrderConverter" />
+		<property name="orderRestClient" ref="omsOrderRestClient" />
+		<property name="ticketBusinessService" ref="ticketBusinessService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
+	
+	
+	<alias name="customOmsCreateOmsOrderAction" alias="customOmsCreateOmsOrderAction"/>
+	<bean name="customOmsCreateOmsOrderAction" class="com.tisl.mpl.integration.oms.order.process.action.CustomCreateOmsOrderAction" parent="abstractAction"
+		  scope="tenant">
+		<property name="omsOrderService" ref="omsOrderService"/>
+		<property name="maxRetryCount" value="${hybris.omsorders.maxRetryCount}"/>
+		<property name="retryDelay" value="${hybris.omsorders.retryDelay}"/>
+		<property name="catalogVersionService" ref="catalogVersionService"/>
+		<property name="impersonationService" ref="impersonationService"/>
+	</bean>
+	
+	
+	
+	
+	<!-- populators and converters -->
+	<alias name="defaultOmsOrderConverter" alias="omsOrderConverter" />
+	<bean id="defaultOmsOrderConverter" parent="abstractPopulatingConverter"
+		scope="tenant">
+		<lookup-method name="createTarget" bean="order" />
+		<property name="populators">
+			<list>
+				<ref bean="omsOrderPopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultOmsOrderPopulator" alias="omsOrderPopulator" />
+	<bean id="defaultOmsOrderPopulator"
+		class="com.tisl.mpl.integration.oms.order.populators.CustomOmsOrderPopulator"
+		scope="tenant">
+		<property name="orderLineConverter" ref="omsOrderLineConverter" />
+		<property name="paymentInfoConverter" ref="omsPaymentInfoConverter" />
+		<property name="addressConverter" ref="omsAddressConverter" />
+		<property name="customerNameStrategy" ref="customerNameStrategy" /> 
+		<property name="customerEmailResolutionService" ref="customerEmailResolutionService" />
+<!-- 		<property name="ondemandPromotionService" ref="onDemandPromotionService" /> -->
+		<property name="ondemandTaxCalculationService" ref="ondemandTaxCalculationService" />
+<!-- 		<property name="ondemandDeliveryAddressStrategy" ref="ondemandDeliveryAddressStrategy" /> -->
+<!-- 		<property name="shippingAttributeStrategy" ref="shippingAttributeStrategy" /> -->
+<!-- 		<property name="impersonationService" ref="impersonationService" /> -->
+<!-- 		<property name="commerceCommonI18NService" ref="commerceCommonI18NService" /> -->
+<!-- 		<property name="commonI18NService" ref="commonI18NService" /> -->
+		<property name="omsZoneDeliveryModeValueStrategy" ref="omsZoneDeliveryModeValueStrategy" />
+		<property name="taxCodeStrategy" ref="taxCodeStrategy" />
+<!-- 		<property name="useBaseStoreForSourcing" value="${oms.useBaseStoreForSourcing}" /> -->
+	</bean>
+
+	<alias name="defaultOmsOrderLineConverter" alias="omsOrderLineConverter" />
+	<bean id="defaultOmsOrderLineConverter" parent="abstractPopulatingConverter"
+		scope="tenant">
+		<lookup-method name="createTarget" bean="orderLine" />
+		<property name="populators">
+			<list>
+				<ref bean="omsOrderLinePopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultOmsOrderLinePopulator" alias="omsOrderLinePopulator" />
+	<bean id="defaultOmsOrderLinePopulator"
+		class="com.tisl.mpl.integration.oms.order.populators.CustomOmsOrderLinePopulator"
+		scope="tenant">
+		<property name="taxCodeStrategy" ref="taxCodeStrategy" />
+		<property name="productAttributeStrategy" ref="omsProductAttributeStrategy" />
+		<property name="orderEntryNoteStrategy" ref="orderEntryNoteStrategy" />
+		<property name="ondemandTaxCalculationService" ref="ondemandTaxCalculationService" />
+		<property name="mplSellerInformationService" ref="mplSellerInformationService" />
+		
+	</bean>
+
+	<alias name="defaultOmsPaymentInfoConverter" alias="omsPaymentInfoConverter" />
+	<bean id="defaultOmsPaymentInfoConverter" parent="abstractPopulatingConverter"
+		scope="tenant">
+		<lookup-method name="createTarget" bean="paymentInfo" />
+		<property name="populators">
+			<list>
+				<ref bean="omsPaymentInfoPopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultOmsPaymentInfoPopulator" alias="omsPaymentInfoPopulator" />
+	<bean id="defaultOmsPaymentInfoPopulator"
+		class="de.hybris.platform.integration.oms.order.populators.OmsPaymentInfoPopulator"
+		scope="tenant">
+		<property name="addressConverter" ref="omsAddressConverter" />
+	</bean>
+
+	<alias name="defaultOmsAddressConverter" alias="omsAddressConverter" />
+	<bean id="defaultOmsAddressConverter" parent="abstractPopulatingConverter"
+		scope="tenant">
+		<lookup-method name="createTarget" bean="omsAddress" />
+		<property name="populators">
+			<list>
+				<ref bean="omsAddressPopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultOmsAddressPopulator" alias="omsAddressPopulator" />
+	<bean id="defaultOmsAddressPopulator"
+		class="com.tisl.mpl.integration.oms.order.populators.CustomOmsAddressPopulator"
+		scope="tenant">
+		<property name="customerNameStrategy" ref="customerNameStrategy" />
+	</bean>	
+	
+	
+	
+	
+	
+
+	<alias name="defaultOmsSendOrderPlacedNotificationAction" alias="omsSendOrderPlacedNotificationAction"/>
+	<bean id="defaultOmsSendOrderPlacedNotificationAction"
+		  class="com.tisl.mpl.fulfilmentprocess.actions.order.SendOrderPlacedNotificationAction"
+		  scope="tenant" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<alias name="defaultOmsCancelWholeOrderAction" alias="omsCancelWholeOrderAction"/>
+	<bean id="defaultOmsCancelWholeOrderAction"
+		  class="com.tisl.mpl.integration.oms.order.process.action.CustomCancelWholeOrderAction" scope="tenant"
+		  parent="abstractAction">
+		<property name="paymentService" ref="paymentService"/>
+	</bean>
+
+
+	<alias name="defaultOmsOrderSourcingCheckAction" alias="omsOrderSourcingCheckAction"/>
+	<bean id="defaultOmsOrderSourcingCheckAction"
+		  class="de.hybris.platform.integration.oms.order.process.action.OmsOrderSourcingCheckAction"
+		  scope="tenant" parent="abstractAction">
+		<property name="modelService" ref="modelService"/>
+		<property name="taskService" ref="taskService"/>
+		<property name="delay" value="${omsorders.orderSourcingCheck.delay}"/>
+	</bean>
+	
+	<!-- <alias name="defaultOmsOlqSyncAdapter" alias="omsOlqSyncAdapter" />
+	<bean id="defaultOmsOlqSyncAdapter"
+		class="com.tisl.mpl.integration.oms.adapter.CustomOmsOLQSyncAdapter"
+		scope="tenant">
+		<property name="omsOLQReverseConverter" ref="omsOLQReverseConverter" />
+		<property name="modelService" ref="modelService" />
+	</bean>	 -->
+	
+		 <alias name="defaultOmsOrderSyncAdapter" alias="defaultOmsOrderSyncAdapter" />
+	<bean id="defaultOmsOrderSyncAdapter"
+		class="com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter"
+		scope="tenant">
+		<property name="omsShipmentSyncAdapter" ref="omsShipmentSyncAdapter" />
+		<property name="modelService" ref="modelService" />
+		<property name="orderSyncDao" ref="orderSyncDao" />
+	</bean>
+	
+	<alias name="defaultOrderStatusMappingStrategy" alias="orderStatusMappingStrategy" />
+	<bean id="defaultOrderStatusMappingStrategy"
+		class="com.tisl.mpl.integration.oms.mapping.CustomOrderStatusMappingStrategy">
+		<property name="consignmentStatusMappingStrategy" ref="consignmentStatusMappingStrategy" />
+	</bean>
+	<alias name="defaultOrderSyncDao" alias="orderSyncDao" />
+	<bean name="defaultOrderSyncDao"
+		class="com.tisl.mpl.oms.dao.impl.CustomSyncQueryDao"
+		scope="tenant">
+		<constructor-arg value="Order" />
+	</bean>
+			
+</beans>
+
+

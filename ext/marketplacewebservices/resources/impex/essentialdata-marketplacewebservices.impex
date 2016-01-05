@@ -1,0 +1,32 @@
+INSERT_UPDATE UserGroup;uid[unique=true];locname[lang=de];locname[lang=en];groups(uid)
+;customermanagergroup;Kunden Manager-Gruppe;Customer Manager Group;employeegroup
+
+
+# Return Category Table
+INSERT_UPDATE ReturnCategoryCode;code[unique=true];returnCategory
+;RSP;Schedule Return Pickup
+;RSS;Return Self Ship
+
+
+# Ticket Type Code Table
+INSERT_UPDATE TicketTypeCode;code[unique=true];ticketType
+;C;Cancellation
+;R;Return
+;E;Replacement
+
+
+# Refund type Code Table
+INSERT_UPDATE RefundType;code[unique=true];refundedTo
+;W;Wallet
+;S;Back To Source
+;B;Both
+;N;Not Applicable
+
+
+# Customer Cancellation Code Table
+INSERT_UPDATE CustomerCancellationCode;code[unique=true];cancellReason
+;01;Do not want the product - change of mind
+;02;Found the product cheaper on another website
+;03;Product specifications are incorrect
+;04;Estimated shipping time is taking too long
+;05;Booked a duplicate order

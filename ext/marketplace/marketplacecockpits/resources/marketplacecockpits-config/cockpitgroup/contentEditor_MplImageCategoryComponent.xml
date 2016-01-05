@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="content-editor.xsd"
+                hideEmpty="true" hideReadOnly="true" groupCollections="true">
+	<template>
+	<![CDATA[
+		<table width="100%" style="margin:0px;padding:0px" class="structViewCnt">
+			<tbody>
+				<tr>
+					<td><cockpit code="property" value="MplImageCategoryComponent.image"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplImageCategoryComponent.isImageFromPCM"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplImageCategoryComponent.category"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplImageCategoryComponent.filterBySellerName"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
+					<td><cockpit code="property" value="MplImageCategoryComponent.filterByBrandName"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				
+				
+			</tbody>
+		</table>
+	]]>
+	</template>
+	
+</content-editor>

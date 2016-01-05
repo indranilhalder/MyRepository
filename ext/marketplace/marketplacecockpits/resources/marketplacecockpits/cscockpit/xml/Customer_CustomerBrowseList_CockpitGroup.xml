@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view unassigned-group-name="Other">
+	<group name="General">
+		<property qualifier="Customer.customerID" visible="false"/>
+		<custom class="de.hybris.platform.cscockpit.services.config.impl.CustomerNameColumn" name="Name" visible="false" sortable="true">
+			<label key="config.general.name" />
+		</custom>
+		<property qualifier="Customer.defaultShipmentAddress" visible="false"/>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerIdColumn" name="Id" visible="true">
+			<label key="config.general.Id" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerFirstNameColumn" name="FirstName" visible="true" sortable="true">
+			<label key="config.general.firstName" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerLastNameColumn" name="LastName" visible="true">
+			<label key="config.general.lastName" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerEmailColumn" name="Email" visible="true">
+			<label key="config.general.email" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerPhoneColumn" name="Phone" visible="true">
+			<label key="config.general.Phone" />
+		</custom>
+	</group>
+</list-view>

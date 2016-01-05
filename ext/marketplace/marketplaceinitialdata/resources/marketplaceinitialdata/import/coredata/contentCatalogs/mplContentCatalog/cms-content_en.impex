@@ -1,0 +1,117 @@
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+# Language
+$lang=en
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl-BannerComponent-template;"CMSBannerComponent Template";$emailResource/email-bannerComponentTemplate.vm
+ ;mpl-CMSImageComponent-template;"CMSImageComponent Template";$emailResource/email-cmsImageComponentTemplate.vm
+ ;mpl-CMSLinkComponent-template;"CMSLinkComponent Template";$emailResource/email-cmsLinkComponentTemplate.vm
+ ;mpl-CMSParagraphComponent-template;"CMSParagraphComponent Template";$emailResource/email-cmsParagraphComponentTemplate.vm
+ ;mpl-SimpleBannerComponent-template;"CMSSimpleBannerComponent Template";$emailResource/email-bannerComponentTemplate.vm
+ ;mpl_Email_Customer_Registration_Body;"Customer Registration Email Body";$emailResource/email-customerRegistrationBody.vm
+ ;mpl_Email_Customer_Registration_Subject;"Customer Registration Email Subject";$emailResource/email-customerRegistrationSubject.vm
+ ;mpl_Email_Delivery_Sent_Body;"Delivery Sent Email Body";$emailResource/email-deliverySentBody.vm
+ ;mpl_Email_Delivery_Sent_Subject;"Delivery Sent Email Subject";$emailResource/email-deliverySentSubject.vm
+ ;mpl_Email_Forgotten_Password_Body;"Forgotten Password Email Body";$emailResource/email-forgottenPasswordBody.vm
+ ;mpl_Email_Forgotten_Password_Subject;"Forgotten Password Email Subject";$emailResource/email-forgottenPasswordSubject.vm
+ ;mpl_Email_NotPickedUpConsignment_Canceled_Body;"Not Picked Up Consignment Canceled Email Body";$emailResource/email-notPickedUpConsignmentCanceledBody.vm
+ ;mpl_Email_NotPickedUpConsignment_Canceled_Subject;"Not Picked Up Consignment Canceled Email Subject";$emailResource/email-notPickedUpConsignmentCanceledSubject.vm
+ ;mpl_Email_Order_Cancelled_Body;"Order Cancelled Email Body";$emailResource/email-orderCancelledBody.vm
+ ;mpl_Email_Order_Cancelled_Subject;"Order Cancelled Email Subject";$emailResource/email-orderCancelledSubject.vm
+ ;mpl_Email_Order_Collection_Reminder_Body;"Order Collection Reminder Body";$emailResource/email-orderCollectionReminderBody.vm
+ ;mpl_Email_Order_Collection_Reminder_Subject;"Order Collection Reminder Subject";$emailResource/email-orderCollectionReminderSubject.vm
+ ;mpl_Email_Order_Confirmation_Body;"Order Confirmation Email Body";$emailResource/email-orderConfirmationBody.vm
+ ;mpl_Email_Order_Confirmation_Subject;"Order Confirmation Email Subject";$emailResource/email-orderConfirmationSubject.vm
+ ;mpl_Email_Order_Move_To_CS_Body;"Order Move To CS Body";$emailResource/email-orderMoveToCsBody.vm
+ ;mpl_Email_Order_Move_To_CS_Subject;"Order Move To CS Subject";$emailResource/email-orderMoveToCsSubject.vm
+ ;mpl_Email_Order_Partially_Canceled_Body;"Order Partially Canceled Email Body";$emailResource/email-orderPartiallyCanceledBody.vm
+ ;mpl_Email_Order_Partially_Canceled_Subject;"Order Partially Canceled Email Subject";$emailResource/email-orderPartiallyCanceledSubject.vm
+ ;mpl_Email_Order_Partially_Refunded_Body;"Order Partially Refunded Email Body";$emailResource/email-orderPartiallyRefundedBody.vm
+ ;mpl_Email_Order_Partially_Refunded_Subject;"Order Partially Refunded Email Subject";$emailResource/email-orderPartiallyRefundedSubject.vm
+ ;mpl_Email_Order_Refund_Body;"Order Refund Email Body";$emailResource/email-orderRefundBody.vm
+ ;mpl_Email_Order_Refund_Subject;"Order Refund Email Subject";$emailResource/email-orderRefundSubject.vm
+ ;mpl_Email_Ready_For_Pickup_Body;"Ready For Pickup Email Body";$emailResource/email-readyForPickupBody.vm
+ ;mpl_Email_Ready_For_Pickup_Subject;"Ready For Pickup Email Subject";$emailResource/email-readyForPickupSubject.vm
+  ;mpl_Email_FriendsInvite_Body;"Friends Invite Email Body";$emailResource/email-friendsInviteBody.vm
+ ;mpl_Email_FriendsInvite_Subject;"Friends Invite Email Subject";$emailResource/email-friendsInviteSubject.vm
+ ;mpl_Email_SendInvoice_Body;"Send Invoice Email Body";$emailResource/email-sendInvoiceBody.vm
+ ;mpl_Email_SendInvoice_Subject;"Send Invoice Email Subject";$emailResource/email-sendInvoiceSubject.vm
+ ;mpl_Email_SendUpdate_Body;"Send Update Email Body";$emailResource/email-sendUpdateBody.vm
+ ;mpl_Email_SendUpdate_Subject;"Send Update Email Subject";$emailResource/email-sendUpdateSubject.vm
+ ;mpl_Email_SendUpdate_Body;"Send Update Email Body";$emailResource/email-sendUpdateBody.vm
+ ;mpl_Email_SendUpdate_Subject;"Send Update Email Subject";$emailResource/email-sendUpdateSubject.vm
+ ;mpl_Email_SendUpdate_Subject;"Send Update Email Subject";$emailResource/email-sendUpdateSubject.vm
+ ;mpl_Email_CustomerProfileUpdate_Subject;"Customer Profile Update Email Subject";$emailResource/email-customerProfileUpdateBody.vm
+ ;mpl_Email_CustomerProfileUpdate_Body;"Customer Profile Update Email Body";$emailResource/email-customerProfileUpdateSubject.vm
+ ;mpl_Email_ChangePassword_Subject;"Change Password Email Subject";$emailResource/email-changePasswordSubject.vm
+ ;mpl_Email_ChangePassword_Body;"Change Password Email Body";$emailResource/email-changePasswordBody.vm
+ ;mpl_Email_SubmitRequest_Subject;"Contact us request subject";$emailResource/email-submitRequestSubject.vm
+ ;mpl_Email_SubmitRequest_Body;"Contact us request  Body";$emailResource/email-submitRequestBody.vm
+ ;mpl_Email_OrderPlacedFeedback_Subject;"Order Placed Feedback subject";$emailResource/email-orderPlacedFeedbackSubject.vm
+ ;mpl_Email_OrderPlacedFeedback_Body;"Order Placed Feedback Body";$emailResource/email-orderPlacedFeedbackBody.vm
+ #Shipping Confirmation Event
+ ;mpl_Email_ShippingConfirmation_Subject;"Shipping Confirmation Subject";$emailResource/email-shippingConfirmationBody.vm
+ ;mpl_Email_ShippingConfirmation_Body;"Shipping Confirmation Body";$emailResource/email-shippingConfirmationSubject.vm
+ #;mpl_Email_Order_On_Hold_Subject;"Order On Hold subject";$emailResource/email-orderConfHighMediumRiskSubject.vm
+ #;mpl_Email_Order_On_Hold_Body;"Order On Hold Body";$emailResource/email-orderConfHighMediumRiskBody.vm
+
+ #Shipment out for delivery
+#;mpl_Email_OutForDelivery_Subject;"Out Of Delivery Subject";$emailResource/email-outForDeliverySubject.vm
+#;mpl_Email_OutForDelivery_Body;"Out Of Delivery Body";$emailResource/email-outForDeliveryBody.vm
+
+ ;mpl_Email_Order_Delivery_Subject;"Order Delivery subject";$emailResource/email-orderDeliveryEmailSubject.vm
+ ;mpl_Email_Order_Delivery_Body;"Order Delivery Body";$emailResource/email-orderDeliveryEmailBody.vm
+ ###########PDP Email
+ ;mpl_Email_PDP_Subject;"PDP Email Subject";$emailResource/email-PDPSubject.vm
+ ###########PDP Email
+ ;mpl_Email_PDP_Body;"Send Invoice Email Body";$emailResource/email-PDPBody.vm
+
+
+# Email Pages
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+ ;;CustomerRegistrationEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;DeliverySentEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;ForgottenPasswordEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;OrderCancelledEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;OrderCollectionReminderEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;OrderConfirmationEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;OrderMoveToCsEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;OrderPartiallyCanceledEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;OrderPartiallyRefundedEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;OrderRefundEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;ReadyForPickupEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;FriendsInviteEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;SendInvoiceEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;SendUpdateEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;CustomerProfileUpdateEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;ChangePasswordEmail;"customerservices@tataunistore.in";"Customer Services Team"
+#;;OrderOnHoldEmail;"customerservices@tataunistore.in";"Customer Services Team"
+
+#;;OutForDeliveryEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ;;ShippingConfirmationEmail;"customerservices@tataunistore.in";"Customer Services Team"
+
+ ;;OrderDeliveryEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ 
+ ###### Tata Etail-Promotion Creation Mail #########
+  ###########PDP Email
+ ;;PDPEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ 
+ #UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+ #;;promotinCreationMail;"customerservices@tataunistore.in";"Customer Services Team"
+
+ #UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+ #;mpl_Promotin_Creation_Mail_Body;"Promotion Creation Mail Body";$emailResource/email-PromotinCreationMailBody.vm
+# ;mpl_Promotin_Creation_Mail_Subject;"Event Based Coupon Mail Subject";$emailResource/email-PromotinCreationMailSubject.vm

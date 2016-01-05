@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor>
+	<group qualifier="General" visible="true" initially-opened="true">
+		<label key="cockpit.config.label.General" />
+		<property qualifier="Address.firstname" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.CommonCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.lastname" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.CommonCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.line1" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.MinLengthCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.line2" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.MinLengthCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.addressLine3" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.MinLengthCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.postalcode" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.PostalCodeCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.phone1" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.MobileNumberCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.addressType" visible="true" editor="csUniqueText">
+		<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.AddressTypeCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.town" visible="true" editor="csUniqueText">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.MinLengthCockpitValidator</value>
+			</parameter>
+		</property>
+		<property qualifier="Address.district" visible="true" editor="mplStateEditor">
+			<parameter>
+				<name>cockpitValidatorClass</name>
+				<value>com.tisl.mpl.cockpits.cscockpit.validators.impl.CommonCockpitValidator</value>
+			</parameter>
+		</property>
+		<!-- mandatory -->
+		<property qualifier="Address.unloadingAddress" visible="false" />
+		<property qualifier="Address.billingAddress" visible="false" />
+		<property qualifier="Address.shippingAddress" visible="false" />
+		<property qualifier="Address.contactAddress" visible="false" />
+		<property qualifier="Item.owner" visible="false" />
+	</group>
+</editor>

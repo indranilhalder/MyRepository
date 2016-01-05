@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+ 
+<widget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.zkoss.org/2005/zul">
+	
+	
+
+
+<div>
+<style>
+	.search-area{
+	width:250px;
+	height:31px;
+	}
+	.search-button{
+	Padding: 0px 0px 0px 0px;
+	border:0px;
+
+	}
+	
+	.search-label{
+	color :#A6A6A7;
+	font-size:15px;
+	Padding: 10px 20px 0px 0px;
+	
+	}
+	
+	</style>
+	<hbox>
+	<label sclass="search-label" value="USSID"></label>
+	<textbox id="searchText" sclass="search-area" />
+	<button id="searchButton" sclass="search-button" image="${wr}/images/search-icon.PNG"  />
+		
+	</hbox>
+</div>
+
+
+	       
+	    
+
+</widget>

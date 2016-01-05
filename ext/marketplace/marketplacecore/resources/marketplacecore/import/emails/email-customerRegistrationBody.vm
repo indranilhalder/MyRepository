@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<title>Registration</title>
+	</head>
+	<body bgcolor="#ffffff">
+	
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+		<tr style="height:50px;">
+			<td>&emsp;</td>
+		</tr>
+		<tr>
+			<td align="center" valign="top">
+				<table width="900" border="6" align="center" cellpadding="0" cellspacing="0" bordercolor="#CED8F6">
+					<tr>
+						<td align="center" valign="top" bgcolor="#ffffff">
+							<table width="850" cellpadding="0" cellspacing="0" border="0" align="center">
+								<tr style="height:30px;">
+									<td valign="middle">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Hi #if ($ctx.isFirstName) ${ctx.firstName}#end,</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">We've created a new Tata Mall account for you. A Tata Mall Account gives you a personalized shopping experience.</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Your account details are:</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Email id for login: (Email ID: #if ($ctx.isEmailId) ${ctx.emailId}#end )</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Password: ${ctx.customerPassword}</font></p>
+										
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif"><b>Tata Mall Account benefits</b></font></p>
+										
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif">&#165;&nbsp;Enjoy a faster checkout.</p>
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif">&#165;&nbsp;Track orders online</p>	
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif">&#165;&nbsp;Print/email invoices</p>
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif">&#165;&nbsp;Add items to your wishlist and share them with friends and family</p>
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif">&#165;&nbsp;Save your contact details so that you don't have to retype every time you book</p>
+										<p><font color="#11309F" size="2" face="Arial, Helvetica, sans-serif">&#165;&nbsp;And more...</p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										
+										
+										
+										
+				
+										
+					
+										
+										
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										
+                                        <p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Yours Truly,</font></p>
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Tata Mall Team</font></p>										
+										
+										<p>
+											<table width="40%">
+												<tr><td>---------------------------------------------------</td></tr>
+												<tr><td><font color="#000" size="2" face="Arial, Helvetica, sans-serif">Tata Mall.... The Joy of Shopping</font></td></tr>
+												<tr>
+													<td>
+														<font color="#000" size="2" face="Arial, Helvetica, sans-serif">
+															<a href="mailto:www.tatamall.com" style="color: #11309F;">www.tatamall.com </a>
+														</font>
+													</td>
+												</tr>
+												<tr><td>---------------------------------------------------</td></tr>
+											</table>
+										</p>
+										
+										<p><font color="#000" size="2" face="Arial, Helvetica, sans-serif">&nbsp;</font></p>
+										
+										<p><font color="#848484" size="2" face="Arial, Helvetica, sans-serif">
+											This email can't receive replies. For more information, visit Tata Mall's 
+											<a href="mailto:talktous@mpl.com" style="color: #11309F;">talktous@mpl.com</a> or write to us at
+											<a href="mailto:support@tatamall.com" style="color: #11309F;">support@tatamall.com</a>.
+										</font></p>
+									</td>
+								</tr>
+								<tr>	
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>

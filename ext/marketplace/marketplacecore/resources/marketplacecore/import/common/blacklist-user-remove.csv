@@ -1,0 +1,13 @@
+
+# Import Blacklist
+#
+
+#The impex for blocking custoemrs for COD payment mode. We can provide customer id, email id,phone number and ip address for blocking a customer. 
+#At least one field is required for blocking a customer.
+
+# Update BlockList
+REMOVE BlackList;customerId(uid)[unique=true,allownull=true];emailID[unique=true,allownull=true];phoneNumber[unique=true,allownull=true];ipAddress[unique=true,allownull=true];isBlacklisted[default=false,allownull=true];customerName[allownull=true]
+#;acceptanceuser@test.com;;;;;;
+#;;w@gmal.com;;;;;
+#;;;5;;;;
+#;;;;245;;;

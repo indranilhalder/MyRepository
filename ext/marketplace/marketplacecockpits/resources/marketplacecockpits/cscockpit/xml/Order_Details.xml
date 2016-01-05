@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view unassigned-group-name="Other">
+	<group name="General">
+		<!-- <property qualifier="Order.parentReference" visible="true"/> -->
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.OrderingReferenceNumberColumn" name="Order Reference Number" visible="true">			
+		</custom>		
+		<property qualifier="AbstractOrder.code" visible="true"/>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.OrderingDateColumn" name="Order date / time" visible="true">
+			<label key="cscockpit.widget.order.details.orderingdate" />
+		</custom>		
+		<property qualifier="AbstractOrder.status" visible="true"/>		
+		<property qualifier="Order.salesApplication" visible="true"/>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerFirstNameColumn" name="First Name" visible="true">
+			<label key="cscockpit.widget.order.search.firstName" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerLastNameColumn" name="Last Name" visible="true">
+			<label key="cscockpit.widget.order.search.lastName" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerEmailColum" name="Email" visible="true">
+			<label key="cscockpit.widget.order.details.email" />
+		</custom>
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.CustomerPhoneColum" name="Mobile" visible="true">
+			<label key="cscockpit.widget.order.details.Phone" />
+		</custom>	
+		
+		<custom class="com.tisl.mpl.cockpits.services.config.impl.SellersNameColumn" name="Seller Name" visible="true">
+			<label key="cscockpit.widget.order.details.sellerName" />
+		</custom>		
+			
+		<!-- <property qualifier="AbstractOrder.deliveryMode.name" visible="true"/> -->		
+	</group>
+</list-view>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-view unassigned-group-name="Other">
+	<group name="General">
+
+		<!-- Uncomment to prefix the line with the entry number -->
+		<!-- <property qualifier="AbstractOrderEntry.entryNumber" visible="true"/> -->
+		
+		
+		 <property qualifier="AbstractOrderEntry.product.code" visible="true"/>
+		 <!-- 
+		<property qualifier="AbstractOrderEntry.product.manufacturerName" visible="true"/>
+ -->
+		<custom class="de.hybris.platform.cscockpit.services.config.impl.ProductNameColumn" name="Product" visible="true">
+			<label key="config.general.product" />
+		</custom>
+		<group name="Ean">
+			<label key="cscockpit.OrderEntry.selectedUSSID" />
+			<group name="line">
+				<property qualifier="AbstractOrderEntry.selectedUSSID" visible="true"/>
+			</group>
+		</group>
+		
+		<group name="Ean">
+			<label key="cscockpit.OrderEntry.selectedUSSID" />
+			<group name="line">
+				<property qualifier="AbstractOrderEntry.sellerinfo" visible="true"/>
+			</group>
+		</group>
+		
+	</group>
+</list-view>

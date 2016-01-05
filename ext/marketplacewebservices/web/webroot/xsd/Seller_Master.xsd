@@ -1,0 +1,100 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Seller">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="isupdate"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="id"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="firstname"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="midname"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="lastname"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="type"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="legalName"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CompanyCode"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="AccountGroup"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Search1"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Search2"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Title"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Language"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Customer"/>
+        <xs:element name="corporateAddress" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CorporateAddress1"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="CorporateAddress2"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CorporateAddCountry"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CorporateAddState"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CorporateAddCity"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:int" name="CorporateAddPin"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CorporateEmail"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:long" name="CorporatePhone"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:long" name="CorporateMobile"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="registerAddress" maxOccurs="1" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+        	<xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="RegisteredAddress1"/>
+	        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="RegisteredAddress2"/>
+	        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="RegisteredAddCountry"/>
+	        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="RegisteredAddState"/>
+	        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="RegisteredAddCity"/>
+	        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="RegisteredAddPin"/>
+	        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="RegisteredEmail"/>
+	        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="RegisteredPhone"/>
+	        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="RegisteredMobile"/>
+	        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="RegisteredFAX"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>        
+	<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TAN"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="LST"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="CST"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ServiceTAXNo"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PAN"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="PANValidThru"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="SettlementPeriod"/>
+        <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="PayoutPeriod"/>
+     <xs:element name="WthhldTAX" maxOccurs="unbounded" minOccurs="1">
+        <xs:complexType>
+           <xs:sequence>
+        	   <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="WthhldTAXCntry"/>
+        	   <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="WthhldTAXTyp"/>
+      	   <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="WthhldTAXCode"/>
+             <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="liable"/>
+             <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ReceiptType"/>
+             <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ExemptionNo"/>
+             <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ExemptionRate"/>
+             <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ExemptionReason"/>
+             <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="ExemptionFromDate"/>
+             <xs:element maxOccurs="1" minOccurs="0" type="xs:date" name="ExemptionToDate"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element> 
+        <xs:element maxOccurs="unbounded" minOccurs="1" name="PaymentInfo">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="BankCountry"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="BankState"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="BankCity"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="BankAddress"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="BankName"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="BankType"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="IFSCCode"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="BranchName"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="AccHolderName"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="AccNo"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="RecoAcc"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="MinorityIndicator"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="CheckDuplInv"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="PaymentMethodID"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PaymentBlock"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="AlternatePayee"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="HouseBank"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

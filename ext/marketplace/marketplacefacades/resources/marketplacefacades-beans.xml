@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="beans.xsd">
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.VariantOptionData">
+		<property name="colour" type="String" />
+		<property name="colourCode" type="String" />
+		<property name="sizeLink" type="java.util.Map&lt;String,String>" />
+		<property name="defaultUrl" type="String" />
+		<property name="capacity" type="String" />
+		<property name="variantData"
+			type="java.util.Map&lt;String,java.util.List&lt;String>>" />
+		<property name="image"
+			type="de.hybris.platform.commercefacades.product.data.ImageData" />
+	</bean>
+	<!-- placeholder for pincode responses -->
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.PinCodeResponseDetailsData">
+		<property name="validResponses" type="java.util.List&lt;PinCodeResponseData>" />
+		<property name="allResponses" type="java.util.List&lt;PinCodeResponseData>" />
+	</bean>
+
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.PinCodeResponseData">
+		<property name="ussid" type="String" />
+		<property name="validDeliveryModes" type="java.util.List&lt;DeliveryDetailsData>" />
+		<property name="isServicable" type="String" />
+		<property name="cod" type="String" />
+		<property name="pinCode" type="String" />
+		<property name="fulfilmentType" type="String" />
+		<property name="transportMode" type="String" />
+		<property name="stockCount" type="Integer" />
+		<property name="isPrepaidEligible" type="String" />
+		<property name="isCODLimitFailed" type="String" />
+		<property name="deliveryDate" type="String" />
+	</bean>
+
+	<!-- placeholder for delivery related details -->
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.DeliveryDetailsData">
+		<property name="type" type="String" />
+		<property name="inventory" type="String" />
+		<property name="isCODLimitFailed" type="java.lang.Boolean" />
+		<property name="isPrepaidEligible" type="java.lang.Boolean" />
+		<property name="isPincodeServiceable" type="java.lang.Boolean" />
+		<property name="isCOD" type="java.lang.Boolean" />
+		<property name="deliveryDate" type="String" />
+	</bean>
+
+
+	<!-- buybox data -->
+	<bean class="com.tisl.mpl.facades.product.data.BuyBoxData">
+		<property name="specialPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="price"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="sellerName" type="String" />
+		<property name="sellerArticleSKU" type="String" />
+		<property name="sellerId" type="String" />
+		<property name="numberofsellers" type="Integer" />
+		<property name="available" type="Integer"></property>
+		<property name="minPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData"></property>
+		<property name="mrp"
+			type="de.hybris.platform.commercefacades.product.data.PriceData"></property>
+		<property name="mrpPriceValue"
+			type="de.hybris.platform.commercefacades.product.data.PriceData"></property>
+		<property name="allOOStock" type="String" />
+<property name="sellerAssociationstatus" type="String" />
+		<!-- <property name="deliveryModes" type="String" />
+		<property name="isCod" type="String" />
+		 -->
+		
+	</bean>
+      <bean class="com.tisl.mpl.facades.product.RichAttributeData">
+        <property name="deliveryModes" type="String" />
+		<property name="isCod" type="String" />
+		<property name="fulfillment" type="String" />
+		<property name="newProduct" type="String" />
+		<property name="onlineExclusive" type="boolean" /> 
+		<property name="leadTimeForHomeDelivery" type="Integer"/>
+		<property name="returnWindow" type="String"/>
+       </bean>
+
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.PincodeServiceData">
+
+		<property name="ussid" type="String" />
+		<property name="sellerId" type="String" />
+		<property name="price" type="Double" />
+		<property name="mopPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="isCOD" type="String" />
+		<property name="fullFillmentType" type="String"></property>
+		<property name="transportMode" type="String"></property>
+		<property name="deliveryModes"
+			type="java.util.List&lt;com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData>"></property>
+		<property name="isDeliveryDateRequired" type="String"></property>
+		<property name="productCode" type="String"></property>
+		<property name="cartId" type="String"></property>
+	</bean>
+
+
+
+	<bean class="de.hybris.platform.commercefacades.product.data.ProductData">
+		<property name="genders"
+			type="java.util.List&lt;com.tisl.mpl.facades.product.data.GenderData>" />
+		<!-- pdp changes begins -->
+		<property name="listingId" type="String"></property>
+		<property name="mrp" type="String"></property>
+		<property name="seller"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.SellerInformationData>"></property>
+		<property name="brand"
+			type="de.hybris.platform.commercefacades.product.data.BrandData"></property>
+		<!-- Populating delivery mode in product data start -->
+		<property name="deliveryMod"
+			type="java.util.List&lt;com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData>"></property>
+		<!-- Populating delivery mode in product data end -->
+		<property name="rootCategory" type="String"></property>
+		<!-- <property name="buyBoxSeller" type="de.hybris.platform.commercefacades.product.data.SellerInformationData"></property> 
+			<property name="otherSellers" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.SellerInformationData>"></property> -->
+		<property name="productMRP"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="productMOP"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="swatchColor" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="displaySize" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="deliveryFulfillMode" type="String"></property>
+		<property name="paymentMode" type="String"></property>
+		<property name="size" type="String"></property>
+		<property name="colour" type="String"></property>
+		<property name="colourHexCode" type="String"></property>
+		<property name="buyBoxSellers"
+			type="java.util.Map&lt;Long,de.hybris.platform.commercefacades.product.data.SellerInformationData>" />
+		<property name="articleDescription" type="String"></property>
+		<property name="ratingCount" type="Integer"></property>
+		<!-- <property name="mplAverageRating" type="Double"></property> -->
+		<property name="productCategoryType" type="String"></property>
+		<property name="mplOneStar" type="Integer"></property>
+		<property name="mplOneStarFill" type="Float"></property>
+		<property name="mplTwoStar" type="Integer"></property>
+		<property name="mplTwoStarFill" type="Float"></property>
+		<property name="mplThreeStar" type="Integer"></property>
+		<property name="mplThreeStarFill" type="Float"></property>
+		<property name="mplFourStar" type="Integer"></property>
+		<property name="mplFourStarFill" type="Float"></property>
+		<property name="mplFiveStar" type="Integer"></property>
+		<property name="mplFiveStarFill" type="Float"></property>
+		<property name="capacity" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="seoMetaTitle" type="String"/>
+		<property name="seoMetaDescription" type="String"/>
+		<property name="inStockFlag" type="Boolean"/>
+		<property name="isVariant" type="Boolean"/>
+		<property name="mobileBrandName" type="String"/>
+		<property name="isProductNew" type="Boolean" />
+		<property name="isOfferExisting" type="Boolean" />
+		<property name="ussID" type="String" />
+		<property name="immediateCategory" type="String" />
+		<property name="isOnlineExclusive" type="Boolean" />
+		<property name="leastSizeProduct" type="String" />
+		<property name="productTitle" type="String" />
+		<!-- pdp changes ends -->
+	</bean>
+
+	<!-- pdp changes begins -->
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.SellerInformationData">
+		<property name="ussid" type="String" />
+		<property name="sellername" type="String" />
+		<property name="buyBoxWeightage" type="Double" />
+		<property name="availableStock" type="Integer" />
+		<property name="mopPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="spPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="mrpPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="sellerID" type="String"></property>
+		<property name="isCod" type="String" />
+		<property name="deliveryModes"
+			type="java.util.List&lt;com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData>" />
+		<property name="shippingMode" type="String" />
+		<property name="fullfillment" type="String" />
+		<property name="returnPolicy" type="String" />
+		<property name="replacement" type="String" />
+		<property name="cancelPolicy" type="String" />
+		<property name="exchangePolicy" type="String" />
+		<property name="leadTimeForHomeDelivery" type="Integer"/>
+		<property name="sellerAssociationstatus" type="String" />
+	</bean>
+
+
+
+	<bean class="de.hybris.platform.commercefacades.product.data.BrandData">
+		<property name="brandname" type="String" />
+		<property name="brandtype" type="String" />
+
+	</bean>
+
+
+	<!-- PDP changes for Promotion begin -->
+
+	<bean class="de.hybris.platform.commercefacades.product.data.PromotionData">
+		<property name="giftProduct"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ProductData>"></property>
+		<property name="channels" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="allowedSellers" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
+
+	<!-- PDP changes for Promotion end -->
+	<!-- pdp changes ends -->
+
+	<bean class="com.tisl.mpl.facades.product.data.GenderData">
+		<property name="code" type="String" />
+		<property name="name" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.ExtRegisterData"
+		extends="de.hybris.platform.commercefacades.user.data.RegisterData">
+		<property name="affiliateId" type="String" />
+		<property name="socialLogin" type="boolean" />
+		<property name="socialMediaType" type="String" />
+		<property name="uid" type="String"></property>
+		<property name="signature" type="String"></property>
+		<property name="timestamp" type="String"></property>
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.TrackOrderData">
+		<property name="orderTrackingNo" type="String" />
+		<property name="emailId" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.MplCustomerProfileData"
+		extends="de.hybris.platform.commercefacades.user.data.PrincipalData">
+		<property name="defaultBillingAddress"
+			type="de.hybris.platform.commercefacades.user.data.AddressData" />
+		<property name="defaultShippingAddress"
+			type="de.hybris.platform.commercefacades.user.data.AddressData" />
+		<property name="titleCode" type="String" />
+		<property name="firstName" type="String" />
+		<property name="lastName" type="String" />
+		<property name="nickName" type="String" />
+		<property name="currency"
+			type="de.hybris.platform.commercefacades.storesession.data.CurrencyData" />
+		<property name="language"
+			type="de.hybris.platform.commercefacades.storesession.data.LanguageData" />
+		<property name="displayUid" type="String" />
+
+		<property name="middleName" type="String" />
+		<property name="dateOfBirth" type="String" />
+		<property name="dateOfAnniversary" type="String" />
+		<property name="mobileNumber" type="String" />
+		<property name="gender" type="String" />
+		<property name="encodedPassword" type="String" />
+		<property name="emailId" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.CommPrefData">
+		<property name="name" type="String" />
+		<property name="code" type="String" />
+		<property name="status" type="Boolean" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.FrequencyData">
+		<property name="name" type="String" />
+		<property name="code" type="String" />
+		<property name="status" type="Boolean" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.product.data.CategoryData">
+		<property name="name" type="String" />
+		<property name="code" type="String" />
+		<property name="status" type="Boolean" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.product.data.SendInvoiceData">
+		<property name="customerEmail" type="String" />
+		<property name="invoiceUrl" type="String" />
+		<property name="ordercode" type="String" />
+		<property name="lineItemId" type="String" />
+		<property name="transactionId" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.payment.mode.data.PaymentModeData">
+		<property name="name" type="String" />
+		<property name="code" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.DayData">
+		<property name="code" type="String" />
+		<property name="name" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.product.data.MonthData">
+		<property name="code" type="String" />
+		<property name="name" type="String" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.product.data.YearData">
+		<property name="code" type="String" />
+		<property name="name" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.data.OrderDataForXML">
+		<property name="OrderRefNo" type="String" />
+		<property name="OrderType" type="String" />
+		<!-- <property name="SubmissionDateTime" type="java.util.Date"/> -->
+		<property name="OrderDate" type="java.util.Date" />
+		<property name="Channel" type="String" />
+		<property name="SubOrder"
+			type="java.util.List&lt;com.tisl.mpl.facades.data.OrderDataSubOrderForXML>" />
+		<property name="CustomerAddress"
+			type="java.util.List&lt;com.tisl.mpl.facades.data.CustomerDataForOrderXML>" />
+		<property name="PaymentDetails"
+			type="java.util.List&lt;com.tisl.mpl.facades.data.PaymentDetails>" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.OrderDataSubOrderForXML">
+		<property name="OrderNo" type="String" />
+		<property name="Transaction"
+			type="java.util.List&lt;com.tisl.mpl.facades.data.OrderDataTransactionForXML>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.data.CustomerDataForOrderXML">
+		<property name="CustomerID" type="String" />
+		<property name="EmailID" type="String" />
+		<property name="FirstName" type="String" />
+		<property name="LastName" type="String" />
+		<property name="PhoneNumber" type="String" />
+		<property name="Address1" type="String" />
+		<property name="Address2" type="String" />
+		<property name="Address3" type="String" />
+		<property name="Country" type="String" />
+		<property name="City" type="String" />
+		<property name="State" type="String" />
+		<property name="Pincode" type="String" />
+		<property name="defaultFlag" type="String" />
+		<property name="AddressTag" type="String" />
+	</bean>
+
+	<bean class="de.hybris.platform.commercefacades.order.data.OrderData"
+		extends="de.hybris.platform.commercefacades.order.data.AbstractOrderData">
+		<property name="sellerOrderList"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.data.OrderDataTransactionForXML">
+		<property name="TransactionId" type="String" />
+		<property name="SellerID" type="String" />
+		<property name="ListingID" type="String" />
+		<property name="USSID" type="String" />
+		<property name="Price" type="long" />
+		<property name="ApportionedPrice" type="long" />
+		<property name="ApportionedCODPrice" type="long" />
+		<property name="PromotionCode" type="String" />
+		<property name="IsaGift" type="Boolean" />
+		<!-- <property name="DeliveryMode" type="String"/> -->
+		<property name="ShippingCharge" type="long" />
+		<property name="slaveID" type="String" />
+		<property name="isCOD" type="boolean" />
+		<property name="isReturnable" type="boolean" />
+		<property name="productSize" type="String" />
+		<property name="transportMode" type="String" />
+		<property name="fulfillmentType" type="String" />
+		<property name="CustomerAddress"
+			type="java.util.List&lt;com.tisl.mpl.facades.data.CustomerDataForOrderXML>" />
+		<property name="ProductDetails"
+			type="java.util.List&lt;com.tisl.mpl.facades.data.ProductDataForOrderXML>" />
+	</bean>
+
+
+
+
+	<bean class="com.tisl.mpl.facades.data.ProductDataForOrderXML">
+		<property name="cancellationAllowed" type="String" />
+		<property name="returnsAllowed" type="String" />
+		<property name="replacementAllowed" type="String" />
+		<property name="exchangeAllowed" type="String" />
+		<property name="productName" type="String" />
+	</bean>
+
+
+
+	<bean class="com.tisl.mpl.facades.data.PaymentDetails">
+		<property name="paymentCost" type="long" />
+		<property name="paymentMode" type="String" />
+		<property name="paymentStatus" type="String" />
+		<property name="paymentInfo" type="String" />
+		<property name="paymentDate" type="java.util.Date" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.MediaStatusData">
+		<property name="code" type="String" />
+		<property name="type" type="String" />
+	</bean>
+
+	<bean class="de.hybris.platform.commercefacades.product.data.ImageData">
+		<property name="qualifier" type="String" />
+		<property name="mediaStatus" type="com.tisl.mpl.facades.data.MediaStatusData" />
+		<property name="mediaPriority" type="Integer" />
+		<property name="mediaType" type="com.tisl.mpl.facades.data.MediaTypeData" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.MediaTypeData">
+		<property name="code" type="String" />
+		<property name="type" type="String" />
+	</bean>
+
+	<bean
+		class="de.hybris.platform.commercefacades.product.data.WishlistProductData">
+		<property name="productData"
+			type="de.hybris.platform.commercefacades.product.data.ProductData" />
+		<property name="sellerInfoData"
+			type="de.hybris.platform.commercefacades.product.data.SellerInformationData" />
+		<property name="wishlistAddedDate" type="String" />
+		<property name="wishlistProductSize" type="String" />
+		<property name="isOutOfStock" type="String" />
+		<property name="productCategory" type="String" />
+		<property name="price" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.StateData">
+		<property name="countryKey" type="String" />
+		<property name="code" type="String" />
+		<property name="name" type="String" />
+	</bean>
+
+	<!-- SizeGuide data -->
+	<bean class="com.tisl.mpl.facades.product.data.SizeGuideData">
+		<property name="dimension" type="String" />
+		<property name="dimensionValue" type="String" />
+		<property name="dimensionSize" type="String" />
+		<property name="dimensionUnit" type="String" />
+		<property name="imageURL" type="String" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData">
+		<property name="code" type="String" />
+		<property name="name" type="String" />
+		<property name="description" type="String" />
+		<property name="sellerArticleSKU" type="String" />
+		<property name="deliveryCost"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModesData">
+		<property name="marketplaceDeliveryModes"
+			type="java.util.List&lt;? extends MarketplaceDeliveryModeData>" />
+	</bean>
+
+	<bean class="de.hybris.platform.commercefacades.order.data.OrderEntryData">
+		<property name="deliveryModes"
+			type="java.util.List&lt;com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData>"></property>
+		<property name="brandName" type="String"></property>
+		<property name="consignmentTracking" type="String"></property>
+		<property name="customerOrderStatusDisplay" type="String"></property>
+		<property name="mplDeliveryMode"
+			type="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData"></property>
+		<property name="consignment"
+			type="de.hybris.platform.commercefacades.order.data.ConsignmentData"></property>
+	    <property name="selectedUssid"
+			type="String"></property>
+			 <property name="expectedDeliveryDate"
+			type="java.util.Date"></property>
+			 <property name="actualDeliveryDate"
+			type="java.util.Date"></property>
+		<property name="imeiDetails"
+			type="de.hybris.platform.commercefacades.order.data.ImeiDetailData"></property>
+	</bean>
+	
+	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">
+		<property name="serialNum" type="String"></property>
+		<property name="identifiers" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
+	
+
+	<bean class="de.hybris.platform.solrfacetsearch.config.IndexedProperty">
+		<property name="boost" type="Integer" />
+		<property name="classificationAttributeAssignments"
+			type="java.util.List&lt;de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel>" />
+		<property name="genericFacet" type="boolean" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">
+		<property name="code" type="String" />
+		<property name="name" type="String" />
+	</bean>
+	<bean class="de.hybris.platform.commercefacades.product.data.CategoryData">
+		<property name="subCategories"
+			type="java.util.Collection&lt;de.hybris.platform.commercefacades.product.data.CategoryData>" />
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.product.data.ReturnReasonData">
+		<property name="returnKey" type="String" />
+		<property name="code" type="String" />
+		<property name="reasonDescription" type="String" />
+	</bean>
+
+	<!-- seller changes for pdp -->
+	<enum class="de.hybris.platform.commercefacades.product.ProductOption">
+		<value>SELLER</value>
+		<!-- <value>IMAGES</value> -->
+	</enum>
+	<bean class="com.tisl.mpl.facades.cms.data.HeroComponentData">
+		<property name="backgroundImage" type="String" />
+		<property name="logoImage" type="String" />
+		<property name="description" type="String" />
+		<property name="title" type="String" />
+		<property name="link" type="String" />
+		<property name="targetCode" type="String" />
+		<property name="linkText" type="String" />
+		<property name="targetType" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.SmallBrandComponentData">
+	<property name="leftImage" type="String" />
+	<property name="rightImage" type="String" />
+	<property name="description" type="String" />
+	<property name="link" type="String" />
+	<property name="targetCode" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.SmallBrandPageData">
+	<property name="section" type="com.tisl.mpl.facades.cms.data.SmallBrandComponentData"/>
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.cms.data.ComponentData">
+		<property name="image" type="String" />
+		<property name="description" type="String" />
+		<property name="additionalDescription" type="String" />
+		<property name="link" type="String" />
+		<property name="targetCode" type="String" />
+		<property name="leftImage" type="String" />
+		<property name="rightImage" type="String" />
+		<property name="title" type="String" />
+		<property name="youtubeUrl" type="String" />
+		<property name="imageTitle" type="String" />
+		<property name="subTitle" type="String" />
+		<property name="logoImage" type="String" />
+		<property name="categoryImage" type="String" />
+		<property name="targetType" type="String" />
+	</bean>
+    
+	<bean class="com.tisl.mpl.facades.cms.data.SectionData">
+		<property name="title" type="String" />
+		<property name="components"
+			type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ComponentData>" />
+			<property name="sequence" type="Integer" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.cms.data.PageData">
+		<property name="rootCategory" type="String" />
+		<property name="categoryType" type="String" />
+		<property name="pageType" type="String" />
+		<property name="heroSection"
+			type="com.tisl.mpl.facades.cms.data.HeroComponentData" />
+			<property name="promotionSection"
+			type="com.tisl.mpl.facades.cms.data.PromotionComponentData" />
+		<property name="sections"
+			type="java.util.List&lt;com.tisl.mpl.facades.cms.data.SectionData>" />
+		<property name = "smallBrand" type = "com.tisl.mpl.facades.cms.data.SmallBrandPageData"></property>
+		<property name = "heroProducts" type = "com.tisl.mpl.facades.cms.data.HeroProductData"></property>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.HeroProductData">
+	<property name="status" type="String" />
+	<property name="error" type="String" />
+	<property name="products" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.CollectionProductData>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.PromotionComponentData">
+	<property name="title" type="String" />
+	<property name="description" type="String" />
+	<property name="targetCode" type="String" />
+	<property name="products" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.CollectionProductData>" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.MplPreferenceData">
+		<property name="myInterest" type="String" />
+		<property name="selectedCategory" type="java.util.List" />
+		<property name="selectedBrand" type="java.util.List" />
+		<property name="selectedFrequency" type="String" />
+		<property name="feedbackUserReview" type="boolean" />
+		<property name="feedbackCustomerSurveys" type="boolean" />
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.MplPreferencePopulationData">
+		<property name="preferredCategory" type="java.util.List" />
+		<property name="preferredBrand" type="java.util.List" />
+		<property name="feedbackAreaList" type="java.util.List" />
+		<property name="interestList" type="java.util.List" />
+		<property name="frequencyList" type="java.util.List" />
+	</bean>
+	
+	
+	
+	 <!-- This DTO would be used only by Cockpit to show the product detail pop up -->
+    <bean class="com.tisl.mpl.facades.product.data.ProductDetailPopupDTO">		
+	    <property name="ussId" type="String"/>
+	    <property name="validDeliveryModes" type="java.util.List&lt;String>"/>
+	    <property name="paymentMode" type="java.util.List&lt;String>"/>
+	    <property name="fulfillmentMode" type="String"/>
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.HomePageComponentData">
+    	<property name="sequence" type="Integer"/>
+    	<property name="image" type="String"></property>
+    	<property name="targetCode" type="String"></property>
+    	<property name="targetType" type="String"></property>
+    	<property name="contentId" type="String"></property>
+    </bean>
+    
+    <bean class="com.tisl.mpl.facades.cms.data.HomePageData">
+    	<property name="components" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.HomePageComponentData>"/>
+    </bean>    
+
+    <bean class="com.tisl.mpl.facades.cms.data.CollectionPageData">
+		<property name="heroSection"
+			type="com.tisl.mpl.facades.cms.data.CollectionHeroComponentData" />
+		<property name="sections"
+			type="java.util.List&lt;com.tisl.mpl.facades.cms.data.CollectionSectionData>" />
+		<property name="previousCollection"
+			type="com.tisl.mpl.facades.cms.data.LinkedCollectionsData" />
+		<property name="nextCollection"
+			type="com.tisl.mpl.facades.cms.data.LinkedCollectionsData" />
+		<property name="status" type="String" />
+		<property name="shareURL" type="String" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.LinkedCollectionsData">
+		<property name="name"
+			type="String" />
+		<property name="targetCollection"
+			type="String" />
+	</bean>
+	
+	
+	 <bean class="com.tisl.mpl.facades.cms.data.CollectionSectionData">
+		<property name="components"
+			type="com.tisl.mpl.facades.cms.data.CollectionComponentData" />
+			<property name="sequence" type="Integer" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.CollectionHeroComponentData">
+		<property name="backgroundImage" type="String" />
+		<property name="description1" type="String" />
+		<property name="description2" type="String" />
+		<property name="description3" type="String" />
+		<property name="title" type="String" />
+		<property name="subTitle" type="String" />
+		<property name="targetCode" type="String" />
+		<property name="linkText" type="String" />
+	</bean>
+	
+	 <bean class="com.tisl.mpl.facades.cms.data.CollectionComponentData">
+	 <property name="title" type="String" />
+	  <property name="image" type="String" />
+	   <property name="decription" type="String" />
+		<property name="products"
+			type="java.util.List&lt;com.tisl.mpl.facades.cms.data.CollectionProductData>" />
+	</bean>
+	 <bean class="com.tisl.mpl.facades.cms.data.CollectionProductData">
+	 <property name="brand" type="String" />
+	  <property name="productName" type="String" />
+	   <property name="productCode" type="String" />
+	  <property name="url" type="String" />
+	  <property name="rating" type="String" />
+	  <property name="sellingPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	   <property name="offerPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="variantOptions"
+			type="java.util.List&lt;com.tisl.mpl.facades.cms.data.VariantOptions>" />
+		<property name="productTag"
+			type="com.tisl.mpl.facades.product.data.ProductTagDto" />
+			<property name="isOfferExisting" type="Boolean" />
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.cms.data.VariantOptions">
+		<property name="code" type="String" />
+		<property name="colorcode" type="String" />
+		<property name="colorname" type="String" />
+	</bean>
+     <bean class="com.tisl.mpl.facades.product.data.MyStyleProfileData">
+		<property name="categoryCodeList" type="java.util.List&lt;java.lang.String>"></property>
+    </bean>
+    
+     <bean class="com.tisl.mpl.facades.product.data.ProductCompareData">
+      <property name="comparisions" type="java.util.List&lt;com.tisl.mpl.facades.product.data.CompareData>" />
+      <property name="basicAttributes" type="java.util.Map&lt;String,com.tisl.mpl.facades.product.data.ProductBasicCompareData>"></property>
+      <property name="status" type="String"></property>
+     </bean>
+     
+      <bean class="com.tisl.mpl.facades.product.data.ProductBasicCompareData">
+      <property name="product1Value" type="String" />
+       <property name="product2Value" type="String" />
+      </bean>
+    
+      <bean class="com.tisl.mpl.facades.product.data.CompareData">
+      <property name="key" type="String" />
+       <property name="value" type="java.util.List&lt;com.tisl.mpl.facades.product.data.CompareValueData>" />
+     </bean> 
+     <!-- <bean class="com.tisl.mpl.facades.product.data.CompareData">
+      <property name="key" type="String" />
+       <property name="value" type="java.util.List&lt;com.tisl.mpl.facades.product.data.CompareKeyValueData>" />
+     </bean>
+      <bean class="com.tisl.mpl.facades.product.data.CompareKeyValueData">
+         <property name="value" type="java.util.List&lt;com.tisl.mpl.facades.product.data.CompareValueData>" />
+     </bean> -->
+     <bean class="com.tisl.mpl.facades.product.data.CompareValueData">
+      <property name="subKey" type="String" />
+       <property name="product1Value" type="String" />
+       <property name="product2Value" type="String" />
+     </bean> 
+     
+     
+     	<bean
+		class="com.tisl.mpl.facades.product.data.ProductTagDto">
+			<property name="newProduct" type="java.lang.Boolean" />
+			<property name="onlineExclusive" type="java.lang.Boolean" />
+		</bean>
+		
+		<bean class="com.tisl.mpl.facades.product.data.ReturnReasonDetails">
+      <property name="ReturnReasonDetailsList" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ReturnReasonData>" />
+      
+     </bean>
+     
+     <bean class="com.tisl.mpl.facades.data.MplFavBrandCategoryData">
+		<property name="name" type="String" />
+		<property name="code" type="String" />
+		<property name="logo" type="java.util.List&lt;de.hybris.platform.core.model.media.MediaModel>"/>
+		<property name="isSelected" type="boolean" />
+	</bean> 
+	<bean class="com.tisl.mpl.facades.data.StatusRecordData">
+		<property name="date" type="String" />
+		<property name="time" type="String" />
+		<property name="location" type="String"/>
+		<property name="statusDescription" type="String" />
+	</bean>	
+	<bean class="com.tisl.mpl.facades.data.AWBResponseData">
+		<property name="shipmentStatus" type="String" />
+		<property name="responseCode" type="String" />
+		<property name="statusRecords" type="java.util.List&lt;com.tisl.mpl.facades.data.StatusRecordData>"/>
+		<property name="isSelected" type="boolean" />
+		<property name="isEnabled" type="boolean" />
+		<property name="id" type="String" />
+		<property name="dotId" type="String" />
+		<property name="colorCode" type="String" />
+		
+	</bean>
+	
+	<bean class="com.tisl.mpl.facades.data.StatusResponseData">
+		<property name="statusRecords" type="java.util.List&lt;com.tisl.mpl.facades.data.StatusRecordData>"/>
+	</bean>
+	
+	<bean class="de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData">
+		<property name="sns" type="boolean"/>
+	</bean>
+
+	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
+		<property name="sns" type="boolean"/>
+	</bean>
+</beans>
+

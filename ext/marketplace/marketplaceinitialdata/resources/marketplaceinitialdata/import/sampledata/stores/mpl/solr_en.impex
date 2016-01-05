@@ -1,0 +1,46 @@
+#
+# Import the Solr configuration for the store
+#
+$prefix=mpl
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id),version);
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Marketplace Solr Index
+$searchIndexNamePrefix=$prefix
+$solrIndexedType=$prefixProductType
+$indexBaseSite=$prefix
+$indexLanguages=en,de
+$indexCurrencies=INR
+
+# Language
+$lang=en
+
+# Solr Indexed Property
+UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
+ ;$solrIndexedType;inStockFlag;"Availability"
+ ;$solrIndexedType;allPromotions;"On Sale"
+ ;$solrIndexedType;allMobilePromotions;"On Mobile Sale"
+ ;$solrIndexedType;price;"Price"
+ ;$solrIndexedType;deliveryMode;"DeliveryMode"
+ ;$solrIndexedType;colour;"Colour"
+ ;$solrIndexedType;size;"Size"
+ ;$solrIndexedType;rating;"Rating"
+ ;$solrIndexedType;capacity;"Capacity"
+ ;$solrIndexedType;Occasion;"Occasion"
+
+ 
+ 
+ 
+# Define the available sorts
+UPDATE SolrSort;indexedType(identifier)[unique=true];code[unique=true];name[lang=$lang]
+;$solrIndexedType;relevance;Relevance
+;$solrIndexedType;topRated;Top Rated
+;$solrIndexedType;name-asc;Name Ascending
+;$solrIndexedType;name-desc;Name Descending
+;$solrIndexedType;price-asc;Price Ascending
+;$solrIndexedType;price-desc;Price Descending
+;$solrIndexedType;isOffersExisting;Discount
+;$solrIndexedType;isProductNew;Newest

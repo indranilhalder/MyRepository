@@ -1,0 +1,20 @@
+# Default user bulk upload insert user details template so that it is possible for admin(business) user to insert details of the hybris user
+# Notice that this is a template and you need to fill the data 
+# Notice that if login id is not match then impex will fail to run
+# To run this impex using hmc follow the below steps
+# Step 1 Go to system --> Tools -->import
+# upload your template impex file with required data
+# select  option  'Header definitions and data'  under Additional referenced files contain: field 
+# Click Start  button
+
+# insert user details 
+INSERT employee;uid[unique=true];name;groups(uid)[mode=append];email;encodedPassword;
+#;12345;Customer Service Agent;admingroup;test@test.com;;
+
+# insert phonenumber
+INSERT PhoneNumber;format(code);country(isocode);number[unique=true];
+#;LOCAL;IN;9811005000;
+
+# insert user phonenumber
+INSERT UserPhoneNumber;phoneNumber(number)[unique=true];user(uid);type(code);default;
+#;9811005000;12345;MOBILE;true;

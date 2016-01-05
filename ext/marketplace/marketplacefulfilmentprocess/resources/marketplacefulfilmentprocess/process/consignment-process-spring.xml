@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+           
+    <context:annotation-config/>
+
+	<!-- Consignment Process Actions -->
+
+	<bean id="sendConsignmentToWarehouseAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.SendConsignmentToWarehouseAction"  parent="abstractAction">
+		<property name="process2WarehouseAdapter" ref="process2WarehouseAdapter"/>
+	</bean>
+
+	<bean id="waitBeforeTransmissionAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.WaitBeforeTransmissionAction"  parent="abstractAction"/>
+
+	<bean id="receiveConsignmentStatusAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.ReceiveConsignmentStatusAction"  parent="abstractAction"/>
+
+	<bean id="confirmConsignmentPickupAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.ConfirmConsignmentPickupAction"  parent="abstractAction"/>
+
+	<bean id="sendDeliveryMessageAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.SendDeliveryMessageAction"  parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="sendReadyForPickupMessageAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.SendReadyForPickupMessageAction"  parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+	
+	<bean id="sendPickedUpMessageAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.SendPickedUpMessageAction"  parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+
+	<bean id="cancelConsignmentAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.CancelConsignmentAction"  parent="abstractAction"/>
+
+	<bean id="sendCancelMessageAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.SendCancelMessageAction"  parent="abstractAction"/>
+
+	<bean id="subprocessEndAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.SubprocessEndAction"  parent="abstractAction">
+		<property name="businessProcessService" ref="businessProcessService"/>
+	</bean>
+
+	<bean id="allowShipmentAction" class="com.tisl.mpl.fulfilmentprocess.actions.consignment.AllowShipmentAction"  parent="abstractAction">
+		<property name="process2WarehouseAdapter" ref="process2WarehouseAdapter"/>
+	</bean>
+
+<alias name="defaultOmsShipmentSyncAdapter" alias="omsShipmentSyncAdapter" />
+	<bean id="defaultOmsShipmentSyncAdapter"
+		class="com.tisl.mpl.integration.oms.adapter.CustomOmsShipmentSyncAdapter"
+		scope="tenant">
+		<property name="consignmentStatusMappingStrategy" ref="consignmentStatusMappingStrategy" />
+		<property name="omsShipmentReverseConverter" ref="omsShipmentReverseConverter" />
+		<property name="modelService" ref="modelService" />
+		<property name="consignmentProcessNotifier" ref="consignmentProcessNotifier" />
+		<property name="checkInvoice" ref="checkInvoice" />
+		<property name="timeService" ref="timeService" />
+		<property name="orderStatusMapping" ref="orderStatusMapping" />
+		<property name="configurationService" ref="configurationService" />
+		
+	</bean>
+	
+	
+	<alias name="defaultConsignmentStatusMappingStrategy" alias="consignmentStatusMappingStrategy" />
+	<bean id="defaultConsignmentStatusMappingStrategy"
+		class="com.tisl.mpl.integration.oms.mapping.CustomConsignmentStatusMappingStrategy">
+		<property name="consignmentStatusMapping" ref="consignmentStatusMapping" />
+        <property name="pickupOverrideStatusMapping" ref="pickupOverrideConsignmentStatusMapping" />
+	</bean>
+	
+	<alias name="defaultConsignmentStatusMapping" alias="consignmentStatusMapping" />
+	<util:map id="defaultConsignmentStatusMapping" map-class="java.util.HashMap"
+		value-type="de.hybris.platform.basecommerce.enums.ConsignmentStatus">
+		<entry key="ORDPNASG" value="PENDING_SELLER_ASSIGNMENT" />
+		<entry key="ORDALLOC" value="ORDER_ALLOCATED" />
+		<entry key="ORDACCEP" value="ORDER_ACCEPTED" />
+		<entry key="ORDREJEC" value="ORDER_REJECTED" />
+		<entry key="PICKINPR" value="PICK_IN_PROGRESS" />
+		<entry key="PILIGENE" value="PICK_LIST_GENERATED" />		
+		<entry key="PICKHOLD" value="PICK_HOLD" />
+		<entry key="PICKCONF" value="PICK_CONFIRMED" />
+		<entry key="SCANNED" value="PACKED" />
+		<entry key="AWBASSIG" value="AWB_ASSIGNED" />
+		<entry key="PRISHLAB" value="PRINT_SHIPPING_LABEL" />
+		<entry key="INVOGENE" value="INVOICE_GENERATED" />
+		<entry key="PRIINVOI" value="PRINT_INVOICE" />
+		<entry key="MANIPEND" value="MANIFESTO_PENDING" />
+		<entry key="RETOSHIP" value="READY_TO_SHIP" />
+		<entry key="LPSWITCH" value="LOGISTIC_PARTNER_SWITCH" />
+		<entry key="HOTCOURI" value="HOTC" />
+		<entry key="RENEARHB" value="REACHED_NEAREST_HUB" />
+		<entry key="DELIVERD" value="DELIVERED" />
+		<entry key="UNDLVERD" value="UNDELIVERED" />
+		<entry key="RETTOORG" value="RETURN_TO_ORIGIN" />
+		<entry key="LOSTINTT" value="LOST_IN_TRANSIT" />
+		<entry key="RETUINIT" value="RETURN_INITIATED" />
+		<entry key="REVRSAWB" value="REVERSE_AWB_ASSIGNED" />
+		<entry key="SRECTORI" value="RETURN_RECEIVED" />
+		<entry key="RETUCLOS" value="RETURN_CLOSED" />
+		<entry key="RETUCANC" value="RETURN_CANCELLED" />
+		<entry key="REDIINIT" value="REDISPATCH_INITIATED" />
+		<entry key="CLRETORI" value="CLOSED_ON_RETURN_TO_ORIGIN" />
+		<entry key="REFUINIT" value="REFUND_INITIATED" />
+		<entry key="REFCLOSE" value="RETURN_COMPLETED" />
+		<entry key="REFINPRO" value="REFUND_IN_PROGRESS" />
+		<entry key="RETREJEC" value="RETURN_REJECTED" />
+		<entry key="QCFAILED" value="QC_FAILED" />
+		<entry key="ORDCANCL" value="CANCELLATION_INITIATED" />
+		<entry key="CLONCANC" value="CLOSED_ON_CANCELLATION" />
+		<entry key="OTFRDLVY" value="OUT_FOR_DELIVERY" />
+		<entry key="CODCWRND" value="COD_CLOSED_WITHOUT_REFUND" />
+		<entry key="CNLREFND" value="ORDER_CANCELLED" />					
+	</util:map>
+	
+	<alias name="defaultOrderStatusMapping" alias="orderStatusMapping" />
+	<util:map id="defaultOrderStatusMapping" map-class="java.util.HashMap"
+		value-type="de.hybris.platform.core.enums.OrderStatus">
+		<entry key="PORDALLO" value="PARTIALLY_ALLOCATED" />
+		<entry key="PORDACCE" value="PARTIALLY_SELLER_ACCEPTED" />
+		<entry key="PORDREJE" value="PARTIALLY_SELLER_DECLINED" />
+		<entry key="PPICKINP" value="PARTIALLY_PICK_IN_PROGRESS" />
+		<entry key="PPICKHOL" value="PARTIALLY_PICK_HOLD" />
+		<entry key="PPICKCON" value="PARTIALLY_PICK_CONFIRMED" />
+		<entry key="PPILIGEN" value="PARTIALLY_PICK_LIST_GENERATED" />
+		<entry key="PSCANNED" value="PARTIALLY_PACKED" />
+		<entry key="PAWBASSI" value="PARTIALLY_AWB_ASSIGNED" />
+		<entry key="PPRISHLA" value="PARTIALLY_PRINT_SHIPPING_LABEL" />
+		<entry key="PINVOGEN" value="PARTIALLY_INVOICE_GENERATED" />
+		<entry key="PPRIINVO" value="PARTIALLY_PRINT_INVOICE" />
+		<entry key="PMANIPEN" value="PARTIALLY_MANIFESTO_PENDING" />
+		<entry key="PRETOSHI" value="PARTIALLY_READY_TO_SHIP" />
+		<entry key="PLPSWITC" value="PARTIALLY_LOGISTIC_PARTNER_SWITCH" />
+		<entry key="PHOTCOUR" value="PARTIALLY_HOTC" />
+		<entry key="PRENEARH" value="PARTIALLY_REACHED_NEAREST_HUB" />
+		<entry key="POTFRDVY" value="PARTIALLY_OUT_FOR_DELIVERY" />
+		<entry key="PDELIVER" value="PARTIALLY_DELIVERED" />
+		<entry key="PUNDELRD" value="PARTIALLY_UNDELIVERED" />
+		<entry key="PRETTOOR" value="PARTIALLY_RETURN_TO_ORIGIN" />
+		<entry key="PLOSTINT" value="PARTIALLY_LOST_IN_TRANSIT" />
+		<entry key="PRETUINI" value="PARTIALLY_RETURN_INITIATED" />
+		<entry key="PREVRSAW" value="PARTIALLY_REVERSE_AWB_ASSIGNED" />
+		<entry key="PSRECTOR" value="PARTIALLY_RETURN_RECEIVED" />
+		<entry key="PRETUCLO" value="PARTIALLY_RETURN_CLOSED" />
+		<entry key="PQCFAILE" value="PARTIALLY_QC_FAILED" />
+		<entry key="PREDIINI" value="PARTIALLY_REDISPATCH_INITIATED" />
+		<entry key="PREFUINI" value="PARTIALLY_REFUND_INITIATED" />
+		<entry key="PREFINPR" value="PARTIALLY_REFUND_IN_PROGRESS" />
+		<entry key="PREFCLOS" value="PARTIALLY_RETURN_COMPLETED" />
+		<entry key="PRETREJE" value="PARTIALLY_RETURN_REJECTED" />
+		<entry key="PORCNIN" value="PARTIALLY_CANCELATION_INITIATED" />
+		<entry key="PCLRETOR" value="PARTIALLY_CLOSED_ON_RETURN_TO_ORIGIN" />
+		<entry key="PCODCWRN" value="PARTIALLY_COD_CLOSED_WO_REFUND" />
+		<entry key="PCNLREFN" value="PARTIALLY_ORDER_CANCELLED" />
+		<entry key="PCLONCAN" value="PARTIALLY_CLOSED_ON_CANCELLATION" />
+		<entry key="ORDPNASG" value="PENDING_SELLER_ASSIGNMENT" />
+		<entry key="ORDALLOC" value="ORDER_ALLOCATED" />
+		<entry key="ORDACCEP" value="ORDER_ACCEPTED" />
+		<entry key="ORDREJEC" value="ORDER_REJECTED" />
+		<entry key="PILIGENE" value="PICK_IN_PROGRESS" />
+		<entry key="PICKINPR" value="PICK_LIST_GENERATED" />		
+		<entry key="PICKHOLD" value="PICK_HOLD" />
+		<entry key="PICKCONF" value="PICK_CONFIRMED" />
+		<entry key="SCANNED" value="PACKED" />
+		<entry key="AWBASSIG" value="AWB_ASSIGNED" />
+		<entry key="PRISHLAB" value="PRINT_SHIPPING_LABEL" />
+		<entry key="INVOGENE" value="INVOICE_GENERATED" />
+		<entry key="PRIINVOI" value="PRINT_INVOICE" />
+		<entry key="MANIPEND" value="MANIFESTO_PENDING" />
+		<entry key="RETOSHIP" value="READY_TO_SHIP" />
+		<entry key="LPSWITCH" value="LOGISTIC_PARTNER_SWITCH" />
+		<entry key="HOTCOURI" value="HOTC" />
+		<entry key="RENEARHB" value="REACHED_NEAREST_HUB" />
+		<entry key="DELIVERD" value="DELIVERED" />
+		<entry key="UNDLVERD" value="UNDELIVERED" />
+		<entry key="RETTOORG" value="RETURN_TO_ORIGIN" />
+		<entry key="LOSTINTT" value="LOST_IN_TRANSIT" />
+		<entry key="RETUINIT" value="RETURN_INITIATED" />
+		<entry key="REVRSAWB" value="REVERSE_AWB_ASSIGNED" />
+		<entry key="SRECTORI" value="RETURN_RECEIVED" />
+		<entry key="RETUCLOS" value="RETURN_CLOSED" />
+		<entry key="RETUCANC" value="RETURN_CANCELLED" />
+		<entry key="REDIINIT" value="REDISPATCH_INITIATED" />
+		<entry key="CLRETORI" value="CLOSED_ON_RETURN_TO_ORIGIN" />
+		<entry key="REFUINIT" value="REFUND_INITIATED" />
+		<entry key="REFCLOSE" value="RETURN_COMPLETED" />
+		<entry key="REFINPRO" value="REFUND_IN_PROGRESS" />
+		<entry key="RETREJEC" value="RETURN_REJECTED" />
+		<entry key="QCFAILED" value="QC_FAILED" />
+		<entry key="ORDCANCL" value="CANCELLATION_INITIATED" />
+		<entry key="CLONCANC" value="CLOSED_ON_CANCELLATION" />
+		<entry key="OTFRDLVY" value="OUT_FOR_DELIVERY" />
+		<entry key="CODCWRND" value="COD_CLOSED_WITHOUT_REFUND" />
+		<entry key="CNLREFND" value="ORDER_CANCELLED" />
+		<entry key="PYMTSCSS" value="PAYMENT_SUCCESSFUL" />
+		<entry key="PYMTFELD" value="PAYMENT_FAILED" />
+		<entry key="PYMTVRFN" value="RMS_VERIFICATION_PENDING" />
+		<entry key="RMSFAIL" value="RMS_VERIFICATION_FAILED" />
+		<entry key="PRETUCAN" value="PARTIALLY_RETURN_CANCELLED" />					
+	</util:map>
+</beans>

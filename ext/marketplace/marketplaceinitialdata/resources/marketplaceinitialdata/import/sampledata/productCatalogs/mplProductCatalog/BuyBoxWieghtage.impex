@@ -1,0 +1,4 @@
+$productCatalog=mplProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$catalogVersionOnline=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+INSERT_UPDATE BuyBox;product(code,$catalogVersion);price;sellerArticleSKU[unique=true];mrp;specialPrice;available;weightage;sellerId;sellerName;sellerType

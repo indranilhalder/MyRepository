@@ -1,0 +1,14 @@
+#UTF-8:
+# ImpEx for Importing Product Reviews into Electronics Store (English)
+ 
+# Macros / Replacement Parameter definitions
+$productCatalog=electronicsProductCatalog
+$productCatalogName=Electronics Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+
+# Language
+$lang=en
+
+INSERT_UPDATE CustomerReview;product(code,$catalogVersion)[unique=true];user(uid)[unique=true];alias;approvalStatus(code);blocked;comment;headline;language(isocode);rating
+
+INSERT_UPDATE CustomerReview;product(code,$catalogVersion)[unique=true];user(uid)[default=anonymous,unique=true];alias;approvalStatus(code);blocked;comment;headline;language(isocode);rating

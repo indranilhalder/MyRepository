@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="sendSMS" name="orderUndeliveredSmsProcess"
+		processClass="com.tisl.mpl.core.model.OrderUpdateSmsProcessModel" onError="error">
+	
+	<action id="sendSMS" bean="sendSMS">
+		<transition name="OK" to="removeSentSMS"/>
+		<transition name="NOK" to="failed"/>
+	</action>
+	<action id="removeSentSMS" bean="removeSentSMS">
+		<transition name="OK" to="success"/>
+		<transition name="NOK" to="error"/>
+	</action>
+
+	<end id="error" state="ERROR">Something went wrong.</end>
+	<end id="failed" state="FAILED">Could not send UNDELIVERED SMS.</end>
+	<end id="success" state="SUCCEEDED">Sent UNDELIVERED SMS.</end>
+
+</process>
