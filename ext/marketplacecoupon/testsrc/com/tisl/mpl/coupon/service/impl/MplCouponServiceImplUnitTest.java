@@ -23,6 +23,7 @@ import com.tisl.mpl.coupon.dao.MplCouponDao;
  *
  */
 @SuppressWarnings("deprecation")
+//@UnitTest
 public class MplCouponServiceImplUnitTest
 {
 	private MplCouponServiceImpl mplCouponServiceImpl;
