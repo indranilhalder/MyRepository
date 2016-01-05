@@ -4,12 +4,16 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
+import com.tisl.mpl.data.AllVoucherListData;
 import com.tisl.mpl.data.NotificationData;
 
 
@@ -37,5 +41,15 @@ public interface NotificationService
 	void triggerEmailAndSmsOnOrderConfirmation(OrderModel order, String trackorderurl) throws JAXBException;
 
 	void sendMobileNotifications(final OrderModel orderDetails);
+
+
+	List<VoucherModel> getVoucher();
+
+	List<AbstractPromotionModel> getPromotion();
+
+	List<NotificationData> getSortedNotificationData(List<NotificationData> notificationDataList);
+
+	AllVoucherListData getAllVoucherList(CustomerModel currentCustomer, List<VoucherModel> voucherList);
+
 
 }

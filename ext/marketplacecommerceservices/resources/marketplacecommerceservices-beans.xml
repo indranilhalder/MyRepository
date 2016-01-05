@@ -135,6 +135,9 @@
 		<property name="notificationCreationDate" type="java.util.Date"/>
 		<property name="notificationSent" type="Boolean"/>
 		<property name="notificationRead" type="Boolean"/>
+		<property name="couponCode" type="String"/>
+		<property name="promotionIdentifier" type="String"/>
+		<property name="promotionDescription" type="String"/>
 </bean>	
 	<!-- EMITermRateData for EMI -->
 	<bean class="com.tisl.mpl.data.EMITermRateData">

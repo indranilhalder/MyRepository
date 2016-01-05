@@ -5,7 +5,6 @@ package com.tisl.mpl.coupon.service.impl;
 
 import de.hybris.platform.voucher.model.VoucherModel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,8 +43,9 @@ public class MplCouponServiceImpl implements MplCouponService
 	 * @return ArrayList<VoucherDisplayData>
 	 */
 	@Override
-	public ArrayList<VoucherDisplayData> getSortedVoucher(final ArrayList<VoucherDisplayData> voucherDataList)
+	public List<VoucherDisplayData> getSortedVoucher(final List<VoucherDisplayData> voucherDataList)
 	{
+		LOG.debug("Inside Sorted Voucher Service Impl");
 		Collections.sort(voucherDataList, new VoucherDiscountComparator());
 		return voucherDataList;
 	}

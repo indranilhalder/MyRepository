@@ -666,6 +666,8 @@ public final class ModelAttributetConstants
 	public static final String START_INDEX_COUPONS = "startIndex";
 	public static final String END_INDEX_COUPONS = "endIndex";
 	public static final String ONE_VAL_COUPONS = "1";
+	public static final String FOOTWEAR = "Footwear";
+	public static final String PINCODE_DETAILS = "pincodeData";
 
 
 

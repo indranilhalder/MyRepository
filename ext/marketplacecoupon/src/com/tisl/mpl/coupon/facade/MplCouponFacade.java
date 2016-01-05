@@ -10,7 +10,7 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.voucher.model.VoucherModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.tisl.mpl.data.AllVoucherListData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
@@ -37,7 +37,7 @@ public interface MplCouponFacade
 	/**
 	 * @return ArrayList<VoucherModel>
 	 */
-	ArrayList<VoucherModel> getAllCoupons();
+	List<VoucherModel> getAllCoupons();
 
 
 	/**
@@ -46,7 +46,7 @@ public interface MplCouponFacade
 	 * @param voucherList
 	 * @return ArrayList<VoucherDisplayData>
 	 */
-	ArrayList<VoucherDisplayData> displayTopCoupons(CartModel cart, CustomerModel customer, ArrayList<VoucherModel> voucherList);
+	List<VoucherDisplayData> displayTopCoupons(CartModel cart, CustomerModel customer, List<VoucherModel> voucherList);
 
 
 	/**
@@ -80,7 +80,7 @@ public interface MplCouponFacade
 	 * @param voucherList
 	 * @return AllVoucherListData
 	 */
-	AllVoucherListData getAllVoucherList(CustomerModel customer, ArrayList<VoucherModel> voucherList);
+	AllVoucherListData getAllVoucherList(CustomerModel customer, List<VoucherModel> voucherList);
 
 	/**
 	 * @param customer

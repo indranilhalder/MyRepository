@@ -52,7 +52,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CHANNEL_MOBILE = "MOBILE";
 	public static final String CHANNEL_CALLCENTER = "CALLCENTER";
 	public static final String Already_Have_Wishlists = "You already have the following whishlists:";
-
+	public static final String PRODUCT_PRIORITY = "7";
 	public static final String CART_DELISTED_STATUS = "Cart Delisted Status :";
 
 	//SONAR FIX
@@ -1283,6 +1283,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CARTQUERY = "select {c:pk} from {Cart As c} where {c.guid}=?guid".intern();
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
+
+	public static final String VOUCHERWITHINDATEQUERY = "select {d.voucher} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
+
+	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate} and {immutableKeyHash} is null";
 
 	private MarketplacecommerceservicesConstants()
 	{
