@@ -47,6 +47,11 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	@Autowired
 	private ProductFacade productFacade;
 
+	public static final String TRUE_STATUS = "true";
+	public static final String PROXY_SET_STATEMNT = "******************** PROXY SET ";
+	public static final String PROXY_HOST_STATEMNT = "******************** PROXY HOST ";
+	public static final String PROXY_PORT_STATEMNT = "******************** PROXY PORT ";
+
 	/**
 	 * @return the productFacade
 	 */
@@ -124,7 +129,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, productId);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
 		{
 			if (null != proxyHost && null != proxyPort)
 			{
@@ -135,9 +140,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			}
 		}
 
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 
 		final GSResponse gsResponse = gsRequest.send();
 		if (gsResponse.getErrorCode() == 0)
@@ -145,14 +150,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			try
 			{
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
-				if ((gsObj.getInt("commentCount") == 0))
-				{
-					return false;
-				}
-				else
-				{
-					return true;
-				}
+				return (gsObj.getInt("commentCount") == 0) ? false : true;//sonar fix for avoiding unnecessary boolean returns
+
 			}
 			catch (final Exception e)
 			{
@@ -185,7 +184,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
 		{
 			if (null != proxyHost && null != proxyPort)
 			{
@@ -195,9 +194,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				gsRequest.setProxy(proxy);
 			}
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		final List<GigyaProductReviewWsDTO> customerReviewList = new ArrayList<GigyaProductReviewWsDTO>();
 		try
 		{
@@ -223,7 +222,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						reviewDTO.setOverAllRating(String.valueOf(overAllRatingInt));
 					}
 
-					if (checkItemKey(ratings, "Quality") == true)
+					if (checkItemKey(ratings, "Quality")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
 						double qualityInt = ratings.getDouble("Quality");
 						qualityInt = (qualityInt / 5) * 100;
@@ -235,9 +234,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						reviewDTO.setQualityRating(String.valueOf(0));
 					}
 
-					if (category.equals("Clothing"))
+					//	if (category.equals("Clothing"))
+					if ("Clothing".equalsIgnoreCase(category)) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
-						if (checkItemKey(ratings, "Fit") == true)
+						if (checkItemKey(ratings, "Fit"))
 						{
 							double fitInt = ratings.getDouble("Fit");
 							fitInt = (fitInt / 5) * 100;
@@ -251,7 +251,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					}
 					else
 					{
-						if (checkItemKey(ratings, "Ease of use") == true)
+						if (checkItemKey(ratings, "Ease of use")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 						{
 							double easeOfUseInt = ratings.getDouble("Ease of use");
 							easeOfUseInt = (easeOfUseInt / 5) * 100;
@@ -264,7 +264,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						}
 					}
 
-					if (checkItemKey(ratings, "Value for Money") == true)
+					if (checkItemKey(ratings, "Value for Money")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
 
 						double valueForMoneyInt = ratings.getDouble("Value for Money");
@@ -291,9 +291,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						final ProductModel productModel = productService.getProductForCode(gsCommentObject.getString("streamId"));
 
-						productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-								ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-								ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+						productData = productFacade.getProductForOptions(productModel,
+								Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+										ProductOption.GALLERY, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
+										ProductOption.VARIANT_FULL));
 					}
 
 					reviewDTO.setProductData(productData);
@@ -338,7 +339,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequestAllowEdit.setParam("categorySettings", "{userEditComment : true}");
 		Proxy proxy = null;
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
 		{
 			if (null != proxyHost && null != proxyPort)
 			{
@@ -348,9 +349,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				gsRequestAllowEdit.setProxy(proxy);
 			}
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		try
 		{
 			final GSResponse allowEdit = gsRequestAllowEdit.send();
@@ -417,7 +418,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.COMMENT_ID, commentID);
 
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
 		{
 			if (null != proxyHost && null != proxyPort)
 			{
@@ -427,9 +428,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				gsRequest.setProxy(proxy);
 			}
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		try
 		{
 			final GSResponse gsResponse = gsRequest.send();
@@ -481,18 +482,18 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			}
 			else if (dayDiff == 1)
 			{
-				formatedDate = String.valueOf(dayDiff) + " " + "day ago";
+				formatedDate = dayDiff + " " + "day ago";
 			}
 			else if (dayDiff > 1 && dayDiff < 30)
 			{
 				LOG.debug(">>>>>>>>>date diffrence>>>>>>" + dayDiff + " " + "day ago");
-				formatedDate = String.valueOf(dayDiff) + " " + "days ago";
+				formatedDate = dayDiff + " " + "days ago";
 			}
 
 			else if (dayDiff == 30 || dayDiff == 31)
 			{
 				final int monthDiff = thisMonth - cMonth;
-				formatedDate = String.valueOf(monthDiff) + " " + " month ago";
+				formatedDate = monthDiff + " " + " month ago";
 			}
 		}
 		catch (final Exception e)
