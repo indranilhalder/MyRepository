@@ -17,6 +17,8 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
+import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
+
 import de.hybris.platform.cockpit.widgets.Widget;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.BasketController;
@@ -63,8 +65,7 @@ public class MarketplaceCouponWidgetRenderer extends AbstractCsWidgetRenderer<Wi
 				handleReleaseVoucherBtnEvent(widget);
 			}
 		});
-		Collection<String> appliedVoucherCodeList =null;
-		//=((EzibuyBasketController)widget.getWidgetController()).getAppliedVoucherCodesList(); 
+		Collection<String> appliedVoucherCodeList =((MarketPlaceBasketController)widget.getWidgetController()).getAppliedVoucherCodesList(); 
 		boolean relaseFlag = CollectionUtils.isEmpty(appliedVoucherCodeList);
 		if(relaseFlag)
 		{
@@ -78,15 +79,14 @@ public class MarketplaceCouponWidgetRenderer extends AbstractCsWidgetRenderer<Wi
 	}
 	private void handleReleaseVoucherBtnEvent(
 			Widget<BasketCartWidgetModel, BasketController> widget) throws Exception {
-		//((EzibuyBasketController)widget.getWidgetController()).releaseVoucher();
+		((MarketPlaceBasketController)widget.getWidgetController()).releaseVoucher();
 		Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 		widget.getWidgetController().dispatchEvent(null,null, data);
 	}
 	private void handleApplyBtnEvent(
 			Widget<BasketCartWidgetModel, BasketController> widget,
 			Textbox txtbox) throws Exception {
-		String successMessage = "";
-		//((EzibuyBasketController)widget.getWidgetController()).applyVoucher(txtbox.getValue());
+		String successMessage = ((MarketPlaceBasketController)widget.getWidgetController()).applyVoucher(txtbox.getValue());
 		if(StringUtils.isNotEmpty(successMessage))
 		{
 			try {
