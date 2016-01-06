@@ -38,6 +38,12 @@
 	<!-- For Infinite Analytics End -->
 
 
+
+<!-- For Best Seller Infinite Analytics Start -->
+<div class="trending" id="ia_products_best_selling"></div>
+	<!-- For Infinite Analytics End -->
+
+
 		<div class="listing wrapper">
 			<div class="left-block">
 				<cms:pageSlot position="Section3B" var="feature">

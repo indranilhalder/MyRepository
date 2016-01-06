@@ -6158,11 +6158,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 								throw new EtailNonBusinessExceptions(exception);
 							}
 							productDataMap.put(productData.getCode(), productData);
-							/*
-							 * if (productDataMap.size() == 10) { break; }
-							 */
 
-							LOG.debug("************************ " + productDataMap);
+							LOG.debug("**********ProductDataMap************** " + productDataMap);
 						}
 					}
 				}
