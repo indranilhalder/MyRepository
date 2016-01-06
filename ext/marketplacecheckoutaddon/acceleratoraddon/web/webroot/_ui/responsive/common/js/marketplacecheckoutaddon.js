@@ -3449,6 +3449,10 @@ $("#couponSubmitButton").click(function(){
 		$("#couponError").css("display","block");	
 		document.getElementById("couponError").innerHTML="Please enter a Coupon Code";
 	}
+	else if($("#couponFieldId").val()!="" && $('#couponFieldId').prop('readonly') == true)
+	{
+		document.getElementById("couponError").innerHTML="Coupon is already applied";
+	}
 	else{
 		var couponCode=$("#couponFieldId").val();
 		var paymentMode=$("#paymentMode").val();
@@ -3500,7 +3504,7 @@ $(".remove-coupon-button").click(function(){
  				couponApplied=true;
  			}
  			if(couponApplied==true){
- 				$("#couponApplied").css("display","none");
+ 				$("#couponApplied, #couponError").css("display","none");
  				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
  				//$("#couponFieldId").attr('disabled','enabled');
  				$('#couponFieldId').attr('readonly', false);
