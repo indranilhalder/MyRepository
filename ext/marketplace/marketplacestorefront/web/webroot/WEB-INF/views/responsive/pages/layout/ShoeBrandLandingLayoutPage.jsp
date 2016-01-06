@@ -31,6 +31,12 @@
 		</ul>
 		</div>
 		</div>
+ 
+
+<!-- For Best Seller Infinite Analytics Start -->
+<div class="trending" id="ia_products_best_selling"></div>
+	<!-- For Infinite Analytics End -->
+
 
 		<div class="listing wrapper">
 			<div class="left-block">
@@ -54,9 +60,11 @@
 			</div>
 	
 
- <!-- For Infinite Analytics Start -->
+ <!-- For your recently viewed items Infinite Analytics Start -->
 	<div class="trending"  id="ia_products_recent"></div>
 <!-- For Infinite Analytics End -->
+
+
 	</template:page>
 </div>
 

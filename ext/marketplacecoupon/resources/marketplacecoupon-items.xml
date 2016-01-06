@@ -230,5 +230,39 @@
 			</attributes>
 		</itemtype>
 		
+		<itemtype code="CouponMailJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.CouponMailJob">				
+				<attributes>
+				   <attribute qualifier="voucherCode" type="java.lang.String">					
+						<description>
+							Specifies the user defined voucher code
+						</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="true"/>
+				   </attribute>	
+				   <attribute qualifier="targetCustomer" type="PrincipalCollection">					
+						<description>
+							Specifies the user defined voucher code
+						</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="false" initial="false" optional="false"/>
+				   </attribute>					
+			   </attributes>
+          </itemtype>
+          
+          <itemtype code="VoucherInvalidation" autocreate="false" generate="false">
+			<attributes>
+				<attribute qualifier="savedAmount" type="java.lang.Double">
+					<description>the code used redeeming the voucher.</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="true"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
 	</itemtypes>
 </items>

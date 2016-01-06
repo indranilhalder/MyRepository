@@ -82,6 +82,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EXCEPTION_IS = "Exception is : ";
 	public static final String DMY_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DMY_DATE_FORMAT_INT = "yyyyMMdd";
+	public static final String COUPONS_DATE_FORMAT = "MMM dd, YYYY";
 	public static final String TRUE = "true";
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
@@ -569,6 +570,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CSV_FILE_HEADER = "date,customerId,emailId,ipAddress,name,phoneNo";
 	public static final String FILE_LOCATION = "cod.blacklist.report.path";
 	public static final String REPORT = "report";
+	public static final String SELLERPRIORITYREPORT = "sellerPriorityReport";
 
 	public static final String ORDER_NOT_CONFIRMED = "Order Not Confirmed";
 	public static final String INVALIDORDERID = "Please Enter valid Order number";

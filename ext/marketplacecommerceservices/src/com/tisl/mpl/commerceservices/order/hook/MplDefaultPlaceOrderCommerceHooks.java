@@ -25,6 +25,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -43,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
+import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -67,8 +70,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificat
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
-
-import net.sourceforge.pmd.util.StringUtil;
 
 
 
@@ -165,6 +166,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
 					final VoucherInvalidationModel voucherInvalidationModel = voucherModelService.createVoucherInvalidation(
 							(VoucherModel) voucherList.get(0), promotionVoucherModel.getVoucherCode(), orderModel);
+					for (final DiscountValue discount : orderModel.getGlobalDiscountValues())
+					{
+						if (discount.getCode().equalsIgnoreCase(promotionVoucherModel.getCode()))
+						{
+							voucherInvalidationModel.setSavedAmount(Double.valueOf(discount.getAppliedValue()));
+							break;
+						}
+					}
 					getModelService().save(voucherInvalidationModel);
 				}
 
@@ -454,8 +463,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							if ((commaSeparetedParentTransId == null || commaSeparetedParentTransId.isEmpty())
 									&& !ussidTransIDForNonBOGOMap.isEmpty())
 							{
-								commaSeparetedParentTransId = getParentTransId(parentUssId, setQualifyingCount,
-										ussidTransIDForNonBOGOMap);
+								commaSeparetedParentTransId = getParentTransId(parentUssId, setQualifyingCount, ussidTransIDForNonBOGOMap);
 							}
 							if (StringUtils.isNotEmpty(commaSeparetedParentTransId))
 							{
@@ -646,10 +654,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					}
 					else
 					{
-						LOG.debug((StringUtils.isEmpty(selectedUssid)
-								? "Ussid  null or empty for entry number" + subOrderEntryModel.getEntryNumber() : ""));
-						LOG.debug((StringUtils.isEmpty(transactionId)
-								? "transactionId  null or empty for entry number" + subOrderEntryModel.getEntryNumber() : ""));
+						LOG.debug((StringUtils.isEmpty(selectedUssid) ? "Ussid  null or empty for entry number"
+								+ subOrderEntryModel.getEntryNumber() : ""));
+						LOG.debug((StringUtils.isEmpty(transactionId) ? "transactionId  null or empty for entry number"
+								+ subOrderEntryModel.getEntryNumber() : ""));
 					}
 				}
 			}
@@ -778,12 +786,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final Map<String, SellerInformationModel> cachedSellerInfoMap)
 	{
 		final Map<String, List<AbstractOrderEntryModel>> sellerEntryMap = new HashMap<String, List<AbstractOrderEntryModel>>();
-		final Collection<AbstractOrderEntryModel> entryModelList = getCloneAbstractOrderStrategy()
-				.cloneEntries(getAbstractOrderEntryTypeService().getAbstractOrderEntryType(orderModel), orderModel);
+		final Collection<AbstractOrderEntryModel> entryModelList = getCloneAbstractOrderStrategy().cloneEntries(
+				getAbstractOrderEntryTypeService().getAbstractOrderEntryType(orderModel), orderModel);
 		for (final AbstractOrderEntryModel abstractOrderEntryModel : entryModelList)
 		{
-			final SellerInformationModel sellerEntry = getMplSellerInformationService()
-					.getSellerDetail(abstractOrderEntryModel.getSelectedUSSID());
+			final SellerInformationModel sellerEntry = getMplSellerInformationService().getSellerDetail(
+					abstractOrderEntryModel.getSelectedUSSID());
 			cachedSellerInfoMap.put(abstractOrderEntryModel.getSelectedUSSID(), sellerEntry);
 
 			if (StringUtils.isNotEmpty(sellerEntry.getSellerID()))
@@ -843,30 +851,26 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			LOG.debug(">> Order spliting : before apportoning delivery cost " + deliveryCharge);
 			if (abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
 			{
-				deliveryCharge = deliveryCharge.doubleValue() > 0.0
-						? Double.valueOf(deliveryCharge.doubleValue() / abstractOrderEntryModel.getQualifyingCount().doubleValue())
-						: deliveryCharge;
+				deliveryCharge = deliveryCharge.doubleValue() > 0.0 ? Double.valueOf(deliveryCharge.doubleValue()
+						/ abstractOrderEntryModel.getQualifyingCount().doubleValue()) : deliveryCharge;
 			}
 			else
 			{
-				deliveryCharge = deliveryCharge.doubleValue() > 0.0
-						? Double.valueOf(deliveryCharge.doubleValue() / abstractOrderEntryModel.getQuantity().intValue())
-						: deliveryCharge;
+				deliveryCharge = deliveryCharge.doubleValue() > 0.0 ? Double.valueOf(deliveryCharge.doubleValue()
+						/ abstractOrderEntryModel.getQuantity().intValue()) : deliveryCharge;
 			}
 			LOG.debug(">> Order spliting : after apportoning  delivery cost  " + deliveryCharge);
 			//TISEE-5298 -- Prev Delivery Charge
 			prevDelCharge = abstractOrderEntryModel.getPrevDelCharge();
 			if (abstractOrderEntryModel.getIsBOGOapplied().booleanValue())
 			{
-				prevDelCharge = prevDelCharge.doubleValue() > 0.0
-						? Double.valueOf(prevDelCharge.doubleValue() / abstractOrderEntryModel.getQualifyingCount().doubleValue())
-						: prevDelCharge;
+				prevDelCharge = prevDelCharge.doubleValue() > 0.0 ? Double.valueOf(prevDelCharge.doubleValue()
+						/ abstractOrderEntryModel.getQualifyingCount().doubleValue()) : prevDelCharge;
 			}
 			else
 			{
-				prevDelCharge = prevDelCharge.doubleValue() > 0.0
-						? Double.valueOf(prevDelCharge.doubleValue() / abstractOrderEntryModel.getQuantity().intValue())
-						: prevDelCharge;
+				prevDelCharge = prevDelCharge.doubleValue() > 0.0 ? Double.valueOf(prevDelCharge.doubleValue()
+						/ abstractOrderEntryModel.getQuantity().intValue()) : prevDelCharge;
 			}
 			LOG.debug(">> Order spliting : after apportoning  delivery cost before Promotion " + prevDelCharge);
 
@@ -919,17 +923,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						productApportionvalue = 0;
 					}
 					createOrderLine(abstractOrderEntryModel, qualifyingCount, clonedSubOrder, cartApportionValue,
-							productApportionvalue, price, false, 0, deliveryCharge, cachedSellerInfoMap, bogoCODPrice, bogoCartApportion,
-							prevDelCharge, bogoCouponApportion, bogoCouponApportion);
+							productApportionvalue, price, false, 0, deliveryCharge, cachedSellerInfoMap, bogoCODPrice,
+							bogoCartApportion, prevDelCharge, bogoCouponApportion, bogoCouponApportion);
 
 
 				}
 				for (final PromotionResultModel promotion : clonedSubOrder.getAllPromotionResults())
 				{
-					if (promotion.getCertainty().floatValue() == 1f && ((promotion.getPromotion() instanceof ProductPromotionModel
-							&& abstractOrderEntryModel.getProductPromoCode() != null
-							&& abstractOrderEntryModel.getProductPromoCode().equalsIgnoreCase(promotion.getPromotion().getCode()))
-							|| promotion.getPromotion() instanceof OrderPromotionModel))
+					if (promotion.getCertainty().floatValue() == 1f
+							&& ((promotion.getPromotion() instanceof ProductPromotionModel
+									&& abstractOrderEntryModel.getProductPromoCode() != null && abstractOrderEntryModel
+									.getProductPromoCode().equalsIgnoreCase(promotion.getPromotion().getCode())) || promotion
+										.getPromotion() instanceof OrderPromotionModel))
 					{
 						for (final PromotionOrderEntryConsumedModel promotionOrder : promotion.getConsumedEntries())
 						{
@@ -964,9 +969,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, 0, 0,
-						abstractOrderEntryModel.getTotalPrice().doubleValue() / quantity, false, 0, deliveryCharge, cachedSellerInfoMap,
-						0, 0, prevDelCharge, couponApportionValue, 0);
+				createOrderLine(abstractOrderEntryModel, quantity, clonedSubOrder, 0, 0, abstractOrderEntryModel.getTotalPrice()
+						.doubleValue() / quantity, false, 0, deliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge,
+						couponApportionValue, 0);
 
 			}
 
@@ -987,10 +992,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	@SuppressWarnings("javadoc")
 	private void createOrderLine(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
-			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue, final double price,
-			final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying, final Double deliveryCharge,
-			final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice, final double bogoCartApportion,
-			final Double prevDelCharge, final double couponApportionValue, final double bogoCouponApportion)
+			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue,
+			final double price, final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying,
+			final Double deliveryCharge, final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
+			final double bogoCartApportion, final Double prevDelCharge, final double couponApportionValue,
+			final double bogoCouponApportion)
 
 	{
 
@@ -1066,8 +1072,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			final DecimalFormat df = new DecimalFormat("#.##");
 			final double netSellingPrice = Double.parseDouble(df.format(price - productApportionvalue));
-			final double netAmountAfterAllDisc = Double
-					.parseDouble(df.format(price - cartApportionValue - productApportionvalue - couponApportionValue));
+			final double netAmountAfterAllDisc = Double.parseDouble(df.format(price - cartApportionValue - productApportionvalue
+					- couponApportionValue));
 			orderEntryModel.setCouponValue(Double.valueOf(couponApportionValue));
 			orderEntryModel.setNetSellingPrice(Double.valueOf(netSellingPrice));
 			orderEntryModel.setTotalPrice(Double.valueOf(netSellingPrice));
@@ -1100,11 +1106,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (!isbogo && CollectionUtils.isNotEmpty(orderEntryModel.getAssociatedItems())
 					&& !orderEntryModel.getGiveAway().booleanValue())
 			{
-				orderEntryModel.setConvenienceChargeApportion(
-						Double.valueOf(bogoCODPrice / orderEntryModel.getQualifyingCount().doubleValue()));
+				orderEntryModel.setConvenienceChargeApportion(Double.valueOf(bogoCODPrice
+						/ orderEntryModel.getQualifyingCount().doubleValue()));
 				orderEntryModel.setCartLevelDisc(Double.valueOf(bogoCartApportion));
-				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(
-						Double.parseDouble(df.format(price - bogoCartApportion - productApportionvalue - bogoCouponApportion))));
+				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(Double.parseDouble(df.format(price - bogoCartApportion
+						- productApportionvalue - bogoCouponApportion))));
 				orderEntryModel.setCurrDelCharge(deliveryCharge);
 			}
 		}

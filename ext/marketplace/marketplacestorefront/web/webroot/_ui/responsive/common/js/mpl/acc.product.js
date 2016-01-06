@@ -146,8 +146,8 @@ ACC.product = {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
 				
 				}else{
-					$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-					$("#addToCartFormQuickTitle").show().fadeOut(6000);
+					$("#addToCartFormSizeTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+					$("#addToCartFormSizeTitle").show().fadeOut(6000);
 				}
 				event.preventDefault();
 				return false;
@@ -538,15 +538,15 @@ addToBagFromWl: function(ussid, addedToCart) {
 		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 
 		//alert("dataString: "+dataString+" quantity: "+quantity+" stock: "+stock);
-//		if( $("#variant,#sizevariant option:selected").val()=="#")
-//	   	  {
-//		    $("#"+formId+"Title").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-//		    $("#"+formId+"Title").show();
-//		    
-//		    alert("Please select a zize: "+$("#variant,#sizevariant option:selected").val());
-//	   		
-//	   	 return false;
-//	   	  }	 
+	/*	if( $("#variant,#sizevariant option:selected").val()=="#")
+	   	  {
+		    $("#"+formId+"Title").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		    $("#"+formId+"Title").show();
+		    
+		    alert("Please select a zize: "+$("#variant,#sizevariant option:selected").val());
+	   		
+	   	 return false;
+	   	  }	*/ 
 		  
 		$.ajax({
 			url : ACC.config.encodedContextPath + "/cart/add",
@@ -568,6 +568,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
 				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
 
+				alert("data: "+$("#"+formId+" "+".addToCartSerpTitle"));
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
