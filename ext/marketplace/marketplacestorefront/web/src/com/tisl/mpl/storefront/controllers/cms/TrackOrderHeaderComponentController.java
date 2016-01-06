@@ -40,37 +40,42 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 
 
 
+
+	@SuppressWarnings("boxing")
 	@Override
 	protected void fillModel(final HttpServletRequest request, final Model model, final TrackOrderHeaderComponentModel component)
 	{
 		//do nothing
 
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-
-		List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
-		final String customerUID = currentCustomer.getUid();
-		if (null != customerUID)
+		if (!userService.isAnonymousUser(currentCustomer))
 		{
-			notificationMessagelist = notificationFacade.getNotificationDetail(customerUID, true);
-
-
-			if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
+			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
+			final String customerUID = currentCustomer.getUid();
+			if (null != customerUID)
 			{
+				notificationMessagelist = notificationFacade.getNotificationDetail(customerUID, true);
 
 
-				int notificationCount = Integer.valueOf(0);
-				for (final NotificationData single : notificationMessagelist)
+				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 				{
-					if (single.getNotificationRead() != null && single.getNotificationRead() == false)
+
+
+					int notificationCount = Integer.valueOf(0);
+					for (final NotificationData single : notificationMessagelist)
 					{
-						notificationCount++;
+						if (single.getNotificationRead() != null && !single.getNotificationRead())
+						{
+							notificationCount++;
+						}
+
 					}
 
+
+					model.addAttribute("notificationCount", notificationCount);
+					model.addAttribute("isSignedInUser", "yes");
+
 				}
-
-
-				model.addAttribute("notificationCount", notificationCount);
-
 			}
 		}
 
