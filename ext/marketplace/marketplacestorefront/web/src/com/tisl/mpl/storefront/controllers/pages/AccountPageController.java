@@ -6140,11 +6140,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 								throw new EtailNonBusinessExceptions(exception);
 							}
 							productDataMap.put(productData.getCode(), productData);
-							/*
-							 * if (productDataMap.size() == 10) { break; }
-							 */
 
-							LOG.debug("************************ " + productDataMap);
+							LOG.debug("**********ProductDataMap************** " + productDataMap);
 						}
 					}
 				}
@@ -6159,7 +6156,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					final ProductData productDataValue = (ProductData) productEntry.getValue();
 					final boolean isCommented = gigyaCommentService.getReviewsByCategoryProductId(productDataValue.getRootCategory(),
 							productDataValue.getCode(), customerModel.getUid());
-					if (isCommented == false)
+					if (!isCommented)
 					{
 						productDataModifyMap.put(productDataValue.getCode(), productDataValue);
 						if (productDataModifyMap.size() == 10)

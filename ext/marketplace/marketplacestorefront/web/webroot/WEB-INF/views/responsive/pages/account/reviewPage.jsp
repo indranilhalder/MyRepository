@@ -500,7 +500,7 @@
   							 <%-- <product:productListerGridItem product="${comment.productData}" /> --%>
   							 <product:review product="${comment.productData}" />
   							<format:price priceData="${comment.productData.productMOP}"/>
-  								<div class="reactions" id="reactionsDiv"></div>
+  								
 						</ul>
 						</div>
 						<div class="review">
@@ -1067,39 +1067,5 @@ rating(arrayrating);
 			});
 			}
 		
-		<!-- recommendation -->
-		var reactions=[
-		{
-		        text: 'Recommend',
-		        ID: 'Recommend',
-		        iconImgUp:'http://cdn.gigya.com/gs/i/reactions/icons/Recommend_Icon_Up.png',
-		        iconImgOver:'http://cdn.gigya.com/gs/i/reactions/icons/Recommend_Icon_Down.png',
-		        tooltip:'I recommend this item',
-		        feedMessage: 'I recommend this!',
-		        headerText:'You recommend this post,'
-		}
-		,{
-		        text: 'LOL',
-		        ID: 'lol',
-		        feedMessage: 'I LOL this!',
-		        headerText:'This post made you LOL,'
-		}];
-		 
-		var defaultUserAction = new gigya.socialize.UserAction();
-		 
-		defaultUserAction.setTitle("This is the post title");
-		defaultUserAction.setLinkBack("http://www.gigya.com");
-		 
-		var params =
-		{
-		        barID: 'myID',
-		        containerID:'reactionsDiv',
-		        reactions:reactions,
-		        userAction:defaultUserAction,
-		        bodyText:'Share it with your friends',
-		        onReactionClicked : function(a){alert("Reaction Clicked!");}
-		};
-		 
-		// Show the Reactions buttons bar
-		gigya.socialize.showReactionsBarUI(params);
+		
 </script>
