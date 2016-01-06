@@ -40,6 +40,8 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 
 
 
+
+	@SuppressWarnings("boxing")
 	@Override
 	protected void fillModel(final HttpServletRequest request, final Model model, final TrackOrderHeaderComponentModel component)
 	{
@@ -61,7 +63,7 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 				int notificationCount = Integer.valueOf(0);
 				for (final NotificationData single : notificationMessagelist)
 				{
-					if (single.getNotificationRead() != null && single.getNotificationRead() == false)
+					if (single.getNotificationRead() != null && !single.getNotificationRead())
 					{
 						notificationCount++;
 					}
