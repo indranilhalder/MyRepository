@@ -1,5 +1,6 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.controllers;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -110,5 +111,8 @@ public interface MarketPlaceBasketController extends BasketController {
 
 
 	void releaseVoucher();
+
+
+	Collection<String> getAppliedVoucherCodesList();
  
 }

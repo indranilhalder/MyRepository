@@ -860,4 +860,11 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 		}
 	}
+	@Override
+	public Collection<String> getAppliedVoucherCodesList()
+	{
+		final CartModel cartModel = getCartModel();
+		Collection<String> voucherList = voucherService.getAppliedVoucherCodes(cartModel);
+		return voucherList;
+	}
 }
