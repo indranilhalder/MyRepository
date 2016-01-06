@@ -5,7 +5,6 @@ package com.tisl.mpl.facades.account.register.impl;
 
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -44,8 +43,6 @@ public class NotificationFacadeImpl implements NotificationFacade
 	@Autowired
 	private Converter<VoucherDisplayData, NotificationData> trackOrderCouponConverter;
 	@Autowired
-	private Converter<AbstractPromotionModel, NotificationData> trackOrderPromotionConverter;
-	@Autowired
 	private UserService userService;
 	@Autowired
 	private ConfigurationService configurationService;
@@ -80,23 +77,6 @@ public class NotificationFacadeImpl implements NotificationFacade
 		this.trackOrderCouponConverter = trackOrderCouponConverter;
 	}
 
-	/**
-	 * @return the trackOrderPromotionConverter
-	 */
-	public Converter<AbstractPromotionModel, NotificationData> getTrackOrderPromotionConverter()
-	{
-		return trackOrderPromotionConverter;
-	}
-
-	/**
-	 * @param trackOrderPromotionConverter
-	 *           the trackOrderPromotionConverter to set
-	 */
-	public void setTrackOrderPromotionConverter(
-			final Converter<AbstractPromotionModel, NotificationData> trackOrderPromotionConverter)
-	{
-		this.trackOrderPromotionConverter = trackOrderPromotionConverter;
-	}
 
 	/**
 	 * @return the notificationService
@@ -162,25 +142,10 @@ public class NotificationFacadeImpl implements NotificationFacade
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		final List<OrderStatusNotificationModel> notificationModel = notificationService.getNotificationDetails(customerUID,
 				isDesktop);
-		final List<AbstractPromotionModel> promotionList = notificationService.getPromotion();
+		//	final List<AbstractPromotionModel> promotionList = notificationService.getPromotion();
 		final List<VoucherModel> voucherList = getAllCoupons();
 		final AllVoucherListData allVoucherList = notificationService.getAllVoucherList(currentCustomer, voucherList);
 
-
-
-		/*
-		 * if (null != promotionList) { for (final AbstractPromotionModel promotion : promotionList) { final
-		 * PromotionNotificationModel trackOrderPromotion = new PromotionNotificationModel();
-		 * 
-		 * trackOrderPromotion.setPromotionIdentifier(promotion.getCode());
-		 * trackOrderPromotion.setPromotionDescription(promotion.getDescription());
-		 * trackOrderPromotion.setPromotionStartDate(promotion.getStartDate());
-		 * trackOrderPromotion.setPromotionStatus("Promotion @ is available"); modelService.save(trackOrderPromotion);
-		 * 
-		 * promotionModel.add(trackOrderPromotion); }
-		 * 
-		 * }
-		 */
 
 		List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 		List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
@@ -242,13 +207,6 @@ public class NotificationFacadeImpl implements NotificationFacade
 		{
 			final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
 			notificationDataList.add(dataForVoucher);
-		}
-
-
-		for (final AbstractPromotionModel promotion : promotionList)
-		{
-			final NotificationData promotionData = trackOrderPromotionConverter.convert(promotion);
-			notificationDataList.add(promotionData);
 		}
 
 
