@@ -101,9 +101,9 @@
 								<c:choose><c:when test="${empty selectedSize}">
 													 <a href="${variantUrl}" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
 												</c:when>
-												<%-- <c:otherwise>
-													 <a href="${variantUrl}?selectedSize=true" data-target="#popUpModals" data-toggle="modal">
-												</c:otherwise> --%>
+												<c:otherwise>
+													 <a href="${variantUrl}?selectedSize=true" data-target="#popUpModals" data-productcode="${variantOption.code}" data-toggle="modal">
+												</c:otherwise>
 											</c:choose>
 											
 								 <c:forEach
@@ -159,10 +159,27 @@
 				
 				
 				
-					<c:if test="${noVariant!=true&&notApparel!=true}">
-	<label>Size:</label> 
+	<c:if test="${noVariant!=true&&notApparel!=true}">
 	
+					
+	<label>Size:</label> ${selectedSize=='selected'}
+			<%-- <c:choose>
+			<c:when test="${selectedSize=='selected'}"> 
+				<input type="hidden" name="sizeSelectedSizeGuide" id="sizeSelectedSizeGuide"	value="no"/>
+			</c:when> 
+			<c:otherwise>
+				<input type="hidden" name="sizeSelectedSizeGuide" id="sizeSelectedSizeGuide"	value="yes"/>
+			</c:otherwise>
+		</c:choose> --%>		
 	
+	<%-- 		<c:choose>
+		    <c:when test="${selectedSize!=null}"> 
+			<span class="selected">${product.size}</span>
+			</c:when>
+			<c:otherwise>
+			<span class="selected">Size:</span>
+			</c:otherwise>
+			</c:choose> --%>
 	
 	
 		<select id="variant" class="variant-select">
@@ -238,12 +255,12 @@
 				</select>
 			</div>
 			<!-- <a href="#" class="button red">Add To Bag</a> -->
-			<div id="addToCartFormSizeTitle" class="addToCartTitle">
-	<spring:theme code="product.addtocart.success" />
-</div>
+<!-- <div id="addToCartSizeGuideTitleSuccess" >
+	
+</div -->
+<span id="addToCartSizeGuideTitleSuccess"></span>
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
-		<span id="addToCartFormSizeTitleSuccess" class="addToCartTitle">
-		</span>
+		
 	<c:if test="${product.purchasable}">
 	
 	<input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" />
@@ -253,28 +270,28 @@
 	<input type="hidden" maxlength="3" size="1" id="sizeStock" name="stock" value="" />
 	<input type="hidden" name="productCodePost" id="productCode" value="${product.code}" /> 
 	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost" value="N" />
-	<input type="hidden" maxlength="3" size=""  name="ussid" id="sellerSelArticleSKUVal"
-		value="" />
-	<%-- <span id="inventory" style="display: none"><p class="in]y">
+	<input type="hidden" maxlength="3" size=""  name="ussid" id="sellerSelArticleSKUVal" value="" />
+	
+<%-- 	<span id="inventory" style="display: none"><p class="in]y">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 		</p></span>
 	<span id="noinventory" style="display: none"><p class="noinventory">
 			<font color="#ff1c47">You are about to exceede maximum inventory</font>
-		</p></span>
-    <span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
+		</p></span> --%>
+    <span id="addToCartSizeGuidenoInventorySize" style="display: none" class="no_inventory"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 		</p></span>
-	<span id="addToCartFormexcedeInventory" style="display: none"><p class="inventory">
+	<span id="addToCartSizeGuideexcedeInventorySize" style="display: none"><p class="inventory">
 			<font color="#ff1c47">Please decrease the quantity</font>
 		</p></span>
 
 	<span id="outOfStockId" style="display: none"  class="out_of_stock">
 		<spring:theme code="product.product.outOfStock" />
-		<input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
+		<%-- <input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
 	</span>
 	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 	<span id="addToCartButtonId">
-	<span id="addToCartFormSizeTitleSuccess"></span>
+	<!-- <span id="addToCartFormSizeTitleSuccess"></span> -->
 	<button style="display: block;"
 			id="addToCartButton" type="button"
 			class="btn-block js-add-to-cart">
@@ -285,10 +302,10 @@
 			class="btn-block">
 		<spring:theme code="basket.add.to.basket" />
 	</button>
-	</span> --%>
+	</span>
 	
 	
-	<c:choose>
+<%-- 	<c:choose>
 			<c:when test="${allOOStock==stock_y}">
 			</c:when>
 			<c:otherwise>			
@@ -296,13 +313,13 @@
 						class="btn-block js-add-to-cart">
 						<spring:theme code="basket.add.to.basket" />
 					</button>
-				  <%--   <button
+				    <button
 			        id="addToCartButton-wrong" type="button"
 			        class="btn-block">
 		            <spring:theme code="basket.add.to.basket" />
-	                </button> --%>
+	                </button>
 			</c:otherwise>
-		</c:choose>
+		</c:choose> --%>
 	
 	
 </form:form>

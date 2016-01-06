@@ -142,13 +142,13 @@ ACC.product = {
 		$(document).on('click','#addToCartSizeGuide .js-add-to-cart',function(event){
 			
 			 $("#sizeQty").val($("#sizeGuideQty").val());
-				if($("#sizeSelected").val()!='no'){
+			/*	if($("#sizeSelectedSizeGuide").val()!='no'){*/
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
 				
-				}else{
-					$("#addToCartFormSizeTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			/*	}else{
+					$("#addToCartFormSizeTitle").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
 					$("#addToCartFormSizeTitle").show().fadeOut(6000);
-				}
+				}*/
 				event.preventDefault();
 				return false;
 		});
@@ -558,7 +558,6 @@ addToBagFromWl: function(ussid, addedToCart) {
 		    },
 			success : function(data) {
 				//alert("data: "+data);
-				
 				if(data.indexOf("cnt:") >= 0){
 				$("#"+formId+"TitleSuccess").html("");
 				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
@@ -568,7 +567,8 @@ addToBagFromWl: function(ussid, addedToCart) {
 				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
 				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
 
-				alert("data: "+$("#"+formId+" "+".addToCartSerpTitle"));
+				//alert("data form id: "+$("#"+formId+" "+".addToCartSerpTitle"));
+				
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
@@ -583,13 +583,13 @@ addToBagFromWl: function(ussid, addedToCart) {
 					$("#"+formId+"Title").show().fadeOut(5000);
 				}
 				else if(data=="outofinventory"){
-					 $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
-					 $("#"+formId+"noInventory").show().fadeOut(6000);
+					 $("#"+formId+"noInventorySize").html("<font color='#ff1c47'>" + $('#addToCartSizeGuidenoInventorySize').text() + "</font>");
+					 $("#"+formId+"noInventorySize").show().fadeOut(6000);
 			   	     return false;
 				}
 				else if(data=="willexceedeinventory"){
-					 $("#"+formId+"excedeInventory").html("<font color='#ff1c47'>" + $('#addToCartFormexcedeInventory').text() + "</font>");
-					 $("#"+formId+"excedeInventory").show().fadeOut(6000);
+					 $("#"+formId+"excedeInventorySize").html("<font color='#ff1c47'>" + $('#addToCartSizeGuideexcedeInventorySize').text() + "</font>");
+					 $("#"+formId+"excedeInventorySize").show().fadeOut(6000);
 			   		 return false;
 				}
 				else{
