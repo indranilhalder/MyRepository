@@ -104,5 +104,11 @@ public interface MarketPlaceBasketController extends BasketController {
 
 	boolean validateWithOMS(TypedObject cartEntry, TypedObject deliveryMode)
 			throws ValidationException;
+
+
+	String applyVoucher(String voucherCode);
+
+
+	void releaseVoucher();
  
 }
