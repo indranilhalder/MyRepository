@@ -47,6 +47,11 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	@Autowired
 	private ProductFacade productFacade;
 
+	public static final String TRUE_STATUS = "true";
+	public static final String PROXY_SET_STATEMNT = "******************** PROXY SET ";
+	public static final String PROXY_HOST_STATEMNT = "******************** PROXY HOST ";
+	public static final String PROXY_PORT_STATEMNT = "******************** PROXY PORT ";
+
 	/**
 	 * @return the productFacade
 	 */
@@ -124,7 +129,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, productId);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
 		{
 			if (null != proxyHost && null != proxyPort)
 			{
@@ -135,9 +140,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			}
 		}
 
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 
 		final GSResponse gsResponse = gsRequest.send();
 		if (gsResponse.getErrorCode() == 0)
@@ -179,7 +184,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
 		{
 			if (null != proxyHost && null != proxyPort)
 			{
@@ -189,9 +194,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				gsRequest.setProxy(proxy);
 			}
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		final List<GigyaProductReviewWsDTO> customerReviewList = new ArrayList<GigyaProductReviewWsDTO>();
 		try
 		{
@@ -334,7 +339,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequestAllowEdit.setParam("categorySettings", "{userEditComment : true}");
 		Proxy proxy = null;
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
 		{
 			if (null != proxyHost && null != proxyPort)
 			{
@@ -344,9 +349,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				gsRequestAllowEdit.setProxy(proxy);
 			}
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		try
 		{
 			final GSResponse allowEdit = gsRequestAllowEdit.send();
@@ -413,7 +418,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.COMMENT_ID, commentID);
 
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
 		{
 			if (null != proxyHost && null != proxyPort)
 			{
@@ -423,9 +428,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				gsRequest.setProxy(proxy);
 			}
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		try
 		{
 			final GSResponse gsResponse = gsRequest.send();
