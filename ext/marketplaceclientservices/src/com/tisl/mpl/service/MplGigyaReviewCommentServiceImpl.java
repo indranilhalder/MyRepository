@@ -229,7 +229,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						reviewDTO.setQualityRating(String.valueOf(0));
 					}
 
-					if (category.equals("Clothing")) //removing unneccessary comparison of boolean objects(Sonar Fix)
+					//	if (category.equals("Clothing"))
+					if ("Clothing".equalsIgnoreCase(category)) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
 						if (checkItemKey(ratings, "Fit"))
 						{
