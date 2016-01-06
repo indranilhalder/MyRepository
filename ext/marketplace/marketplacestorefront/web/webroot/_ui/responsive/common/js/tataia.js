@@ -1043,10 +1043,10 @@ function updatePage(response, widgetMode) {
       /*Select Price Filter*/
       jQuery(".price li label").on('click', function() {
         /*Follow the checkmark which isn't visible as an html element*/
-        if(priceRanges.indexOf(this.innerText) > -1) {
-          priceRanges.splice(priceRanges.indexOf(this.innerText), 1);
+        if(priceRanges.indexOf(this.textContent) > -1) {
+          priceRanges.splice(priceRanges.indexOf(this.textContent), 1);
         } else {
-          priceRanges.push(this.innerText);
+          priceRanges.push(this.textContent);
         }
         pageData = getFilteredRecommendations(widgetElement, respData, priceRanges, saleOptions, response.request_id);          
         if(pageData[0] != undefined || pageData[0] != null){
@@ -1068,10 +1068,10 @@ function updatePage(response, widgetMode) {
       /*Select sale filter*/
       jQuery(".on-sale li label").on('click', function() {
         /*Follow the checkmark which isn't visible as an html element*/
-        if(saleOptions.indexOf(this.innerText) > -1) {
-          saleOptions.splice(saleOptions.indexOf(this.innerText), 1);
+        if(saleOptions.indexOf(this.textContent) > -1) {
+          saleOptions.splice(saleOptions.indexOf(this.textContent), 1);
         } else {
-          saleOptions.push(this.innerText);
+          saleOptions.push(this.textContent);
         }
         pageData = getFilteredRecommendations(widgetElement, respData, priceRanges, saleOptions, response.request_id);          
          if(pageData[0] != undefined){       
