@@ -51,5 +51,4 @@ public class MplCouponServiceImplUnitTest
 		Assert.assertEquals(actual, voucherList);
 	}
 
-
 }

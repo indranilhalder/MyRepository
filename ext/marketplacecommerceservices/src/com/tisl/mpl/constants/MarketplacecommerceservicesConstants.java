@@ -570,6 +570,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CSV_FILE_HEADER = "date,customerId,emailId,ipAddress,name,phoneNo";
 	public static final String FILE_LOCATION = "cod.blacklist.report.path";
 	public static final String REPORT = "report";
+	public static final String SELLERPRIORITYREPORT = "sellerPriorityReport";
 
 	public static final String ORDER_NOT_CONFIRMED = "Order Not Confirmed";
 	public static final String INVALIDORDERID = "Please Enter valid Order number";

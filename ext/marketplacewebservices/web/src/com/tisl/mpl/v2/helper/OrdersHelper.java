@@ -61,7 +61,7 @@ public class OrdersHelper extends AbstractHelper
 	private ConfigurationService configurationService;
 
 	public static final String MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY = "orderHistory.max.page.limit.count.display";
-	private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT = "orderHistory.pagination.number.results.count";
+
 
 	@Cacheable(value = MarketplacewebservicesConstants.ORDERCACHE, key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,'DTO',#statuses,#currentPage,#pageSize,#sort,#fields)")
 	public OrderHistoryListWsDTO searchOrderHistory(final String statuses, final int currentPage, final int pageSize,
@@ -82,8 +82,8 @@ public class OrdersHelper extends AbstractHelper
 		if (statuses != null)
 		{
 			final Set<OrderStatus> statusSet = extractOrderStatuses(statuses);
-			orderHistoriesData = createOrderHistoriesData(orderFacade.getPagedOrderHistoryForStatuses(pageableData,
-					statusSet.toArray(new OrderStatus[statusSet.size()])));
+			orderHistoriesData = createOrderHistoriesData(
+					orderFacade.getPagedOrderHistoryForStatuses(pageableData, statusSet.toArray(new OrderStatus[statusSet.size()])));
 		}
 		else
 		{
@@ -112,8 +112,8 @@ public class OrdersHelper extends AbstractHelper
 
 		final PageableData pageableData = createPageableData(currentPage, pageSize, sort);
 		//showing all orders
-		final int MAX_PAGE_LIMIT = Integer.parseInt(configurationService.getConfiguration().getString(
-				MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY, "500"));
+		final int MAX_PAGE_LIMIT = Integer
+				.parseInt(configurationService.getConfiguration().getString(MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY, "500"));
 		pageableData.setPageSize(MAX_PAGE_LIMIT);
 		//	final CustomerModel customer = mplPaymentWebFacade.getCustomer(userId);
 
