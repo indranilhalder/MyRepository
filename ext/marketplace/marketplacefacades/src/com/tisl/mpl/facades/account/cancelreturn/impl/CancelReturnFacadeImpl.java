@@ -1211,14 +1211,16 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
 							.getOrderEntriesModificationEntries())
 					{
-						final OrderEntryModel orderEntry = modificationEntry.getOriginalOrderEntry();
+						final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
 						refundedAmount += orderEntry.getNetAmountAfterAllDisc().doubleValue()
 								+ orderEntry.getCurrDelCharge().doubleValue();
 
-						if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
-						{
-							mplJusPayRefundService.makeOMSStatusUpdate(orderEntry, ConsignmentStatus.CLOSED_ON_CANCELLATION);
-						}
+						//if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
+						//{
+						//mplJusPayRefundService.makeOMSStatusUpdate(orderEntry, ConsignmentStatus.CLOSED_ON_CANCELLATION);
+						//TISSIT-1790
+						mplJusPayRefundService.makeOMSStatusUpdate(orderEntry, ConsignmentStatus.REFUND_IN_PROGRESS);
+						//}
 					}
 
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord
