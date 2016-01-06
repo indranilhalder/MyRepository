@@ -24034,6 +24034,7 @@ body #account-invite .right-account>div form .mytextarea {
 
 .owl-carousel .owl-controls .owl-buttons .disabled{
 	opacity:0.5;
+	display: none !important;
 }
 .owl-carousel .owl-controls .owl-buttons .disabled:after{
 	border-color:gray;
@@ -31765,7 +31766,7 @@ main {
 	{
 	cursor: pointer;
 	position: absolute !important;
-	top: 50% !important;
+	top: 39% !important;
 	display: table;
 	width: 60px;
 	height: 125px;
