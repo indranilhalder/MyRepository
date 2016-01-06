@@ -131,6 +131,45 @@ ACC.productDetail = {
 				window.location.href = url;
 			}
 		});
+		
+		// Sise Guide Select Color
+		   
+		$(document).on("click.size-guide", 'a[data-target=#popUpModal]',
+			function() {
+			   var target = $(this).attr("href");
+			   console.log(target);
+			   var productcode= $(this).attr("data-productcode");
+			   console.log(productcode);
+		 	   //$("#popUpModal").modal('hide');
+			   $('body').on('hidden.bs.modal', '#popUpModal', function () {
+					  $(this).removeData('bs.modal');
+					});
+
+			   // load the url and show modal on success
+			   $("#popUpModal .modal-content").load(target, function() { 
+			         $("#popUpModal").modal("show"); 
+					   buyboxDetailsForSizeGuide(productcode);
+			    }); 
+		});
+		//End
+		
+		// Sise Guide Select Size
+		$(document).on("change", '.variant-select',function(){
+			console.log($(this).find('option:selected').data('productcode1'));
+//			var value = $("#variant .dsa").attr("value");
+			var value = $(this).find('option:selected').data('producturl');
+			
+			console.log(value);
+			var productcode = $(this).find('option:selected').data('productcode1')
+			console.log(productcode);
+			
+		    // load the url and show modal on success
+		    $("#popUpModal .modal-content").load(value, function() { 
+		         $("#popUpModal").modal("show");
+		     	buyboxDetailsForSizeGuide(productcode);
+		    });
+		});
+		//End
 
 	},
 
@@ -146,7 +185,6 @@ ACC.productDetail = {
 		if (currentStyle != null) {
 			styleSpan.text(": " + currentStyle);
 		}
-
 	},
 
 	bindCurrentSize : function() {
@@ -1461,7 +1499,7 @@ function buyboxDetailsForSizeGuide(productCode){
 	var sellerID= $("#sellerSelId").val();
 	var productCode = productCode;//$("#product").val();
 	
-	//alert(sellerID +" "+productCode);
+	console.log(sellerID +" "+productCode);
 	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
 	
@@ -1506,3 +1544,20 @@ function buyboxDetailsForSizeGuide(productCode){
 			}
 		});
 }
+
+//$(document).on("click.size-guide", 'a[data-target=#popUpModal]',
+/*function getComboA(sel){
+	var value = sel.value;
+	console.log(value);
+	var productcode = $(this).find('option:selected').data('productcode1')
+	console.log(productcode +" 1");
+	alert(value +" 1");
+	alert(productcode+" 1");
+    // load the url and show modal on success
+    $("#popUpModal .modal-content").load(value, function() { 
+         $("#popUpModal").modal("show");
+     	alert(value +" 2");
+    	alert(productcode+" 2");
+     	buyboxDetailsForSizeGuide(productcode);
+    });
+}*/
