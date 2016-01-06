@@ -260,6 +260,17 @@ public class MarketPlaceDefaultCancellationController extends
 						}
 					} else {
 						LOG.error("Refund Failed");
+						//TISSIT-1790 Code addition started
+						
+						for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
+								.getOrderEntriesModificationEntries()) {
+							OrderEntryModel orderEntry = modificationEntry
+									.getOrderEntry();
+							if (orderEntry != null) {
+								mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_IN_PROGRESS);
+							}
+						}
+						//TISSIT-1790 Code addition ended
 						paymentTransactionModel = mplJusPayRefundService
 								.createPaymentTransactionModel(
 										orderCancelRecord.getOriginalVersion()
