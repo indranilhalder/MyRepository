@@ -120,10 +120,10 @@ div.blockMsg {
     color: #fff;
     margin-left:20px;
 }
-div.blockUI.blockOverlay{
+/* div.blockUI.blockOverlay{
 	opacity : .09 !important;
 	top : 100px !important;
-}
+} */
 </style> 
 
 <!--- END:MSD --->
