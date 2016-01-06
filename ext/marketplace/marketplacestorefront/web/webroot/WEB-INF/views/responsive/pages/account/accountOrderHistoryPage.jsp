@@ -55,6 +55,8 @@
 					<option value=/store/mpl/en/my-account/address-book
 						data-href="account-addresses.php"><spring:theme
 							code="header.flyout.address" /></option>
+							<option value=/store/mpl/en/my-account/reviews
+						data-href="account-addresses.php"><spring:theme code="header.flyout.review" /></option>
 				</optgroup>
 
 				<optgroup label="Share">
@@ -91,6 +93,8 @@
 								code="header.flyout.cards" /></a></li>
 					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 								code="header.flyout.address" /></a></li>
+								<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li>
 					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
 				</ul>

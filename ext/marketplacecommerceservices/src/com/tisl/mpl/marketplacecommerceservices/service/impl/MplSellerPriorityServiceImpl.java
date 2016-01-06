@@ -80,7 +80,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							sellerPriority.getSellerId())));
 
 					priorityMap.putAll(getPriorityLevelData(ussidList, productPriorityLevel, isValid, priorityMap));
-					log.debug(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
+					log.info(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
 							.append("prioritylevel").append(priorityLevel).toString());
 				}
 				else
@@ -92,7 +92,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						final int count = 1;
 						priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
 						ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
-						log.debug(new StringBuilder("###########ussid for category level").append(ussidList).append("prioritylevel")
+						log.info(new StringBuilder("###########ussid for category level").append(ussidList).append("prioritylevel")
 								.append(priorityLevel).toString());
 					}
 					//if only listing id level priority exist
@@ -103,7 +103,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						{
 							ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
 									sellerPriority.getSellerId())));
-							log.debug(new StringBuilder("***************ussid for product level").append(ussidList)
+							log.info(new StringBuilder("***************ussid for product level").append(ussidList)
 									.append("prioritylevel").append(priorityLevel).toString());
 						}
 					}
@@ -168,18 +168,35 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 		final List<String> ussidList = new ArrayList<String>();
 		try
 		{
-			if (!(category.getCategories().isEmpty()))
+			if (!(category.getProducts().isEmpty()))
 			{
-				for (final CategoryModel cat : category.getCategories())
+				for (final ProductModel productList : category.getProducts())
 				{
-					final List<String> ussids = findUssidsByRecursion(cat, sellerMasterModel);
-					ussidList.addAll(ussids);
+					for (final SellerInformationModel seller : productList.getSellerInformationRelator())
+					{
+						if (seller.getSellerID().equals(sellerMasterModel.getId()))
+						{
+							ussidList.add(seller.getSellerArticleSKU());
+							break;
+						}
+					}
 				}
 			}
 			else
 			{
-				final List<String> ussids = findUssidsByRecursion(category, sellerMasterModel);
-				ussidList.addAll(ussids);
+				if (!(category.getCategories().isEmpty()))
+				{
+					for (final CategoryModel cat : category.getCategories())
+					{
+						final List<String> ussids = findUssidsByRecursion(cat, sellerMasterModel);
+						ussidList.addAll(ussids);
+					}
+				}
+				else
+				{
+					final List<String> ussids = findUssidsByRecursion(category, sellerMasterModel);
+					ussidList.addAll(ussids);
+				}
 			}
 		}
 		catch (final Exception e)
@@ -244,22 +261,20 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 		{
 			if (!(category.getProducts().isEmpty()))
 			{
-				for (final ProductModel p : category.getProducts())
+				for (final ProductModel products : category.getProducts())
 				{
-					for (final SellerInformationModel seller : p.getSellerInformationRelator())
+					for (final SellerInformationModel seller : products.getSellerInformationRelator())
 					{
 						if (seller.getSellerID().equals(sellerMasterModel.getId()))
 						{
+
+							System.out.println("***************#######ussid for product in category" + ussidList + "product" + products
+									+ "category" + category.getCode());
+
 							ussidList.add(seller.getSellerArticleSKU());
 							break;
 						}
 					}
-
-					//				if (p.getSellerInformationRelator().contains(sellerInformationModel))
-					//				{
-					//					product.add(p);
-					//				}
-
 				}
 			}
 			for (final CategoryModel subCategories : category.getCategories())

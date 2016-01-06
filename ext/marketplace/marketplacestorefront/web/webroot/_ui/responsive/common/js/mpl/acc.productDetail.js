@@ -1526,7 +1526,12 @@ function buyboxDetailsForSizeGuide(productCode){
 				else{
 					$("#specialSelPrice").html(mopPrice);
 				}
-				
+				if(data['isPinCodeServicable']=='N'){
+					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
+				}
+				else{
+					$("#addToCartSizeGuide #addToCartButton").removeAttr('disabled');
+				}
 				$("#sellerSelName").html(sellerName);
 				$("#sellerIdSizeGuide").html(sellerID);
 				$("#mopSelPrice").html(mopPrice);

@@ -15,10 +15,13 @@
 
 
 	<li class="track trackOrder">
-	<a id="tracklink" href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /></a>
+	<a id="tracklink" href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /><c:if test="${isSignedInUser eq 'yes' }">&nbsp;(<span >${notificationCount}</span>)</c:if></a>
 		 <span id="mobile-menu-toggle"></span>
 		<ul class="trackorder-dropdown"></ul>
 		</li>
+		
+	
+		
 			
 
 

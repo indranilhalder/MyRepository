@@ -3376,7 +3376,34 @@
 				</attributes>
 			</itemtype>
 
+ <!-- For Footwear Category Landing Page By Brand -->
 
+           <itemtype code="MplFootwearComponent" generate="true"
+				extends="SimpleCMSComponent" autocreate="true"
+				jaloclass="com.tisl.mpl.core.jalo.FootwearComponent">
+				<description>Footwear for Women Men and kid Component</description>
+				<attributes>
+					<attribute qualifier="categoryCode" type="CategoryCollection"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<description>Category Code </description>
+						<persistence type="property" />
+					</attribute>
+					<attribute type="sizeEnum" qualifier="imageSize"
+						autocreate="true" generate="true">
+						<description>Size of the Image of the categories</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					<attribute qualifier="title" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is a header that will be shown above the banner</description>
+					</attribute>
+					
+				</attributes>
+			</itemtype>
 
 			<!-- Changes for Shop By Brand -->
 			<itemtype code="BrandCollectionComponent" generate="true"
@@ -5080,6 +5107,11 @@
 				</attributes>
 			</itemtype>
 		</typegroup>
+		
+
+		
+		
+		
 		<!-- For Microsite -->
 		<typegroup name="Microsite">
 			<itemtype code="MplMicrositeEnhancedSearchBoxComponent"

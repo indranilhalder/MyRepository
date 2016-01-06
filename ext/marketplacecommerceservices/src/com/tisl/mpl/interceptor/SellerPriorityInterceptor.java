@@ -6,7 +6,6 @@ package com.tisl.mpl.interceptor;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.ValidateInterceptor;
-import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
@@ -41,8 +39,6 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 	private static final String CATIDPRODIDNONEDITABLE = "cannot modify category id or product id";
 	@Resource(name = "mplSellerPriorityDao")
 	private MplSellerPriorityDao mplSellerPriorityDao;
-	@Autowired
-	private UserService userService;
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(SellerPriorityInterceptor.class.getName());
