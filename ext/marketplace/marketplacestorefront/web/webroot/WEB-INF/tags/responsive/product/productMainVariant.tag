@@ -261,7 +261,7 @@ $("#variant").change(function() {
 		</select>
 		<!-- Size guide Pop-up -->
 		<a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal"> <spring:theme
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}"> <spring:theme
 				code="product.variants.size.guide" />
 		</a>
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->

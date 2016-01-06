@@ -6,6 +6,9 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+<c:set var="cod_y"><spring:theme code='cod.eligible.yes'/></c:set>
+<c:set var="stock_y"><spring:theme code='quickview.allOOStock'/></c:set>
+
 
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
@@ -96,11 +99,11 @@
 								var="variantUrl" />
 						
 								<c:choose><c:when test="${empty selectedSize}">
-													 <a href="${variantUrl}" data-target="#popUpModalNew">
+													 <a href="${variantUrl}" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
 												</c:when>
-												<c:otherwise>
-													 <a href="${variantUrl}?selectedSize=true" data-target="#popUpModalNew">
-												</c:otherwise>
+												<%-- <c:otherwise>
+													 <a href="${variantUrl}?selectedSize=true" data-target="#popUpModals" data-toggle="modal">
+												</c:otherwise> --%>
 											</c:choose>
 											
 								 <c:forEach
@@ -130,7 +133,7 @@
 					</c:otherwise>
 				</c:choose>
 
-				<c:if test="${product.rootCategory!='Clothing'}">
+				<c:if test="${product.rootCategory=='Electronics'}">
 					<c:set var="notApparel" value="true" />
 				</c:if>
 				<c:if test="${not empty notApparel}">
@@ -154,107 +157,6 @@
 			<div class="size">
 				
 				
-<%-- 				
-<c:if test="${noVariant!=true&&notApparel!=true}">
-	<form:form action="/" id="sizevariantForm" method="post">
-		<input type="hidden" maxlength="10" size="1" id="sellerSelArticleSKUVal"
-			name="sellerSelArticleSKUVal" value="" />
-		<product:sellerForm></product:sellerForm>
-		<div class="selectSize">
-			<p>
-				<b><spring:theme code="product.variant.size"></spring:theme></b>
-			</p>
-			<select id="sizevariant" class="form-control variant-select"
-				onchange="getComboA(this)">
-				<c:choose>
-					<c:when test="${defaultSelectedSize==''}">
-						<option value="#" selected="selected"><spring:theme code="text.select.size" /></option>
-					</c:when>
-					<c:otherwise>
-						<option value="#"><spring:theme code="text.select.size" /></option>
-					</c:otherwise>
-				</c:choose>
-
-				<!-- <option value="#">select size</option> -->
-				<c:forEach items="${product.variantOptions}" var="variantOption">
-
-					<c:url value="/p/${variantOption.code}/viewSellers"
-						var="variantUrl" />
-						<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
-								var="variantUrl" />
-					<c:forEach items="${variantOption.colourCode}" var="color">
-						<c:choose>
-							<c:when test="${not empty currentColor}">
-								<c:if test="${currentColor eq color}">
-									<c:set var="currentColor" value="${color}" />
-									<c:forEach var="entry" items="${variantOption.sizeLink}">
-										<c:url value="${entry.key}" var="link" />
-										<a href="${link}">${entry.value}</a>
-
-										<c:choose>
-											<c:when test="${defaultSelectedSize eq variantOption.code}">
-												<option value="${variantUrl}?selectedSize=true" selected>${entry.value}</option>
-
-											</c:when>
-											<c:when
-												test="${(product.code eq variantOption.code)&&(selectedSize!=null)}">
-												<option value="${variantUrl}?selectedSize=true" selected>${entry.value}</option>
-
-											</c:when>
-											<c:otherwise>
-												<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
-													var="variantUrl" />
-												<option value="${variantUrl}?selectedSize=true">
-													${entry.value}</option>
-											</c:otherwise>
-										</c:choose>
-									</c:forEach>
-								</c:if>
-							</c:when>
-							<c:otherwise>
-								<c:forEach var="entry" items="${variantOption.sizeLink}">
-									<c:url value="${entry.key}" var="link" />
-									<c:if test="${entry.key eq product.url}">
-										<c:set var="currentColor" value="${color}" />
-										<c:set var="currentColor" value="${variantOption.colourCode}" />
-									</c:if>
-										<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
-											var="variantUrl" />
-									<c:forEach items="${product.variantOptions}"
-										var="variantOption">
-										<c:forEach items="${variantOption.colourCode}" var="color">
-											<c:if test="${currentColor eq color}">
-												<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
-													var="variantUrl" />
-												<c:forEach var="entry" items="${variantOption.sizeLink}">
-													<c:url value="${entry.key}" var="link" />
-
-													<c:choose>
-														<c:when test="${(product.code eq variantOption.code)}">
-
-															<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
-																var="variantUrl" />
-															<option value="${variantUrl}" selected>
-																${entry.value}</option>
-														</c:when>
-														<c:otherwise>
-															<option value="${variantUrl}">${entry.value}</option>
-
-														</c:otherwise>
-													</c:choose>
-												</c:forEach>
-											</c:if>
-										</c:forEach>
-									</c:forEach>
-								</c:forEach>
-							</c:otherwise>
-						</c:choose>
-					</c:forEach>
-				</c:forEach>
-			</select>
-		</div>
-	</form:form>
-</c:if> --%>
 				
 				
 					<c:if test="${noVariant!=true&&notApparel!=true}">
@@ -263,8 +165,8 @@
 	
 	
 	
-		<select id="variant" class="variant-select" onchange="getComboA(this)">
-			<option value="#"><spring:theme code="text.select.size" /></option>
+		<select id="variant" class="variant-select">
+			<%-- <option value="#" data-target="#popUpModalNew"><spring:theme code="text.select.size" /></option> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
 					<c:choose>
@@ -274,12 +176,13 @@
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
 								var="link" />
+								<c:set var="code" value="${variantOption.code}"/>
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
-											<option  value="${link}" data-target="#popUpModalNew" selected>${entry.value}</option>
+											<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option>
 										</c:when>
 										<c:otherwise>
-											<option value="${link}" data-target="#popUpModalNew">${entry.value}</option>
+											<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -298,14 +201,13 @@
 										<c:if test="${currentColor eq color}">
 
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
-											<c:url value="/p/sizeGuide?productCode=${entry.key}" var="link" />
-												<c:url value="${entry.key}" var="link" />
+											<c:url value="/p/sizeGuide?productCode=${variantOption.code}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
-														<option value="${link}" selected>${entry.value}</option>
+														<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option>
 													</c:when>
 													<c:otherwise>
-														<option value="${link}">${entry.value}</option>
+														<option data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option>
 													</c:otherwise>
 												</c:choose>
 											</c:forEach>
@@ -336,35 +238,24 @@
 				</select>
 			</div>
 			<!-- <a href="#" class="button red">Add To Bag</a> -->
-		</div>
-	</div>
-	</c:when>
-	<c:otherwise>
-		<p><spring:theme code="product.variants.size.guide.notavail"/></p>
-	</c:otherwise>
-	</c:choose>	
-</div>
-
-<div id="addToCartFormTitle" class="addToCartTitle">
+			<div id="addToCartFormSizeTitle" class="addToCartTitle">
 	<spring:theme code="product.addtocart.success" />
 </div>
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
+		<span id="addToCartFormSizeTitleSuccess" class="addToCartTitle">
+		</span>
 	<c:if test="${product.purchasable}">
 	
 	<input type="hidden" maxlength="3" size="1" id="sizeQty" name="qty" class="qty js-qty-selector-input" value="2" />
-		
-	<input type="hidden" maxlength="3" size="1" id="sizeStock" name="stock" value="" />
-
   	<!-- <input type="hidden" maxlength="3" size="1" id="pinCodeChecked"
 		name="pinCodeChecked" value="false"> -->
 	</c:if>
-	<input type="hidden" name="productCodePost" id="productCode"
-		value="${product.code}" /> 
-	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost"
-		value="N" />
+	<input type="hidden" maxlength="3" size="1" id="sizeStock" name="stock" value="" />
+	<input type="hidden" name="productCodePost" id="productCode" value="${product.code}" /> 
+	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost" value="N" />
 	<input type="hidden" maxlength="3" size=""  name="ussid" id="sellerSelArticleSKUVal"
 		value="" />
-	<span id="inventory" style="display: none"><p class="in]y">
+	<%-- <span id="inventory" style="display: none"><p class="in]y">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 		</p></span>
 	<span id="noinventory" style="display: none"><p class="noinventory">
@@ -383,7 +274,7 @@
 	</span>
 	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 	<span id="addToCartButtonId">
-	<span id="addToCartFormTitleSuccess"></span>
+	<span id="addToCartFormSizeTitleSuccess"></span>
 	<button style="display: block;"
 			id="addToCartButton" type="button"
 			class="btn-block js-add-to-cart">
@@ -394,47 +285,46 @@
 			class="btn-block">
 		<spring:theme code="basket.add.to.basket" />
 	</button>
-	</span>
+	</span> --%>
+	
+	
+	<c:choose>
+			<c:when test="${allOOStock==stock_y}">
+			</c:when>
+			<c:otherwise>			
+					<button id="addToCartButton"   type="${buttonType}"
+						class="btn-block js-add-to-cart">
+						<spring:theme code="basket.add.to.basket" />
+					</button>
+				  <%--   <button
+			        id="addToCartButton-wrong" type="button"
+			        class="btn-block">
+		            <spring:theme code="basket.add.to.basket" />
+	                </button> --%>
+			</c:otherwise>
+		</c:choose>
+	
+	
 </form:form>
 
- 
 <span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span> 
-
-
-
+			
+		</div>
+	</div>
+	</c:when>
+	<c:otherwise>
+		<p><spring:theme code="product.variants.size.guide.notavail"/></p>
+	</c:otherwise>
+	</c:choose>	
+</div>
 <script>
 $(document).ready(function(){
-	buyboxDetailsForSizeGuide(${product.code});
 	var numLi= $(".modal.size-guide .sizes .tables li.header > ul").children().length;
-	
 	var sizeWidth= 88/(numLi-1) + "%";
-	
 	$(".modal.size-guide .sizes .tables li > ul > li").css("width",sizeWidth);
-	$("a[data-target=#popUpModal]").click(function(ev) {
-	    ev.preventDefault();
-	    var target = $(this).attr("href");
-	    console.log(target);
-		$("#popUpModal").modal('hide');
-	    // load the url and show modal on success
-	    $("#popUpModal .modal-content").load(target, function() { 
-	         $("#popUpModal").modal("show"); 
-	    });
-	});
-	
+	//buyboxDetailsForSizeGuide('${product.code}');
 });
-
-function getComboA(sel){
-	var value = sel.value; 
-	console.log(value);
-	/* winpops=window.open(popUrl,"","width=400,height=338,resizable,") */
-	$("#popUpModal").modal('hide');
-    // load the url and show modal on success
-    $("#popUpModal .modal-content").load(value, function() { 
-         $("#popUpModal").modal("show"); 
-    });
-}
 </script> 	
-			

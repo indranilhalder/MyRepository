@@ -1083,6 +1083,23 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="defaultTrackOrderPopulator"
 			class="com.tisl.mpl.facades.populators.CustomNotificationPopulator">
 	</bean>
+	
+	<alias name="defaultTrackOrderCouponConverter" alias="trackOrderCouponConverter"/>
+	<bean id="defaultTrackOrderCouponConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.data.NotificationData"/>
+		<property name="populators">
+			<list>
+				<ref bean="trackOrderCouponPopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultTrackOrderCouponPopulator" alias="trackOrderCouponPopulator"/>
+	<bean id="defaultTrackOrderCouponPopulator"
+			class="com.tisl.mpl.facades.populators.CustomNotificationCouponPopulator">
+	</bean>
+	
+	
 	<!-- Track Order Populator End-->
 	<bean id="mobileSubBrandComponentConverter" parent="abstractPopulatingConverter">
 			<property name="populators">

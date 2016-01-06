@@ -23,6 +23,10 @@ UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];tit
 ;;TMPElectronicsMainHottestProductsCarouselComponent;The hottest products
 ;;TMPWestsidepageCategoryCarousel;Products For The Whole Family
 ;;TMPChromaCarouselComponent;We carry over 6,000 products across all categories
+;;TMPFootwearMainCategoriesCarouselComponent;Shop the newest styles
+;;TMPShoeMainCategoriesCarouselComponent;Get the Right Shoe for You
+;;TMPOccasionFootwearMainCategoriesCarouselComponent;Shoes for every occasion
+
 
 UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 #;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
@@ -49,6 +53,12 @@ consectetur adipiscing elit.
 <p>Our seamless online and in-store experiences allow you to shop, make returns, and earn rewards on all your purchases across brands online or in-store.</p>
 <a href='#'>SHOP THE COLLECTION</a></div>"
 
+;;NikeTrackFieldCollectionParagraphComponent;"<h3>Nike Track & Field Collection
+<span>Nulla vitae elit libero, a pharetra augue.Sed posuere consectetur est at lobortis. Vivamus sagittis lacus vel augue laoreet rutrum autor.
+<a href='#'>SHOP THE COLLECTION</a></span></h3>"
+;;LifeChangingTechnologyComponent;"<div><h2>12 Life Changing Technologies</h2>
+<p>Our seamless online and in-store experiences allow you to shop, make returns, and earn rewards on all your purchases across brands online or in-store.</p>
+<a href='#'>SHOP THE COLLECTION</a></div>"
 
 ;;HandpickedCollectionsParagraphComponent;"<div class='feature-collections'><h1>Be Inspired</h1><h2>Shop Handpicked Collections</h2></div>"
 ;;DeliveryTextParagraphComponent;"<div class='promise'>
@@ -564,7 +574,10 @@ UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[l
 ;;AboutUsBannerComponent;aboutus.png
 ;;BackgroundImages1;water_color_copy_2.png
 ;;BackgroundImages2;water_color_copy_1.png
-
+;;WomenSingleImgComponent;WomenSingleFootwear.JPG
+;;MenSingleImgComponent;MenSingleFootwear.JPG
+;;KidsFirstImgComponent;KidFootwearFirst.JPG
+;;KidsSecondImgComponent;KidsFootwearSecond.JPG
 
 
 
@@ -626,7 +639,8 @@ UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];banne
                     <a href='#' class='button'>SHOP WHAT'S NEW</a>"	
 
 ;;;;TMPWestsportBannerComponent;westsportbanner.png;"<a href='' class='button'>SHOP BELOW</a>";
-                  
+   ;;TMPFootwearHomepageBannerComponent;footwearBanner.JPG;"<span class='major-promo-header-italic'>SHOP ONLINE EXCLUSIVES</span>";
+;;TMPShoeHomepageBannerComponent;ShoeBanner.jpeg;<span  class='major-promo-header-italic'>NIKE</span><span class='major-promo-description'>Exclusively at tata Marketplace</span> <span class='major-promo-description'>Become unstoppable with our latest collection of running,training,and everyday wear.</span> <a href='#' class='button'>SHOP WHAT'S NEW</a>"	               
 
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
@@ -849,6 +863,16 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;;myRecommendations.jpg;$siteResource/images/banners/site/myRecommendations.jpg;myRecommendations.jpg;"My Recommendations"
 ;;inviteFriends.jpg;$siteResource/images/banners/site/inviteFriends.jpg;inviteFriends.jpg;"Invite Friends"
 ;;savedAddresses.jpg;$siteResource/images/banners/site/savedAddresses.jpg;savedAddresses.jpg;"Saved Addresses"
+;;footwearBanner.JPG;$siteResource/images/banners/homepage/responsive/footwearBanner.JPG;footwearBanner.JPG;"Footwear Banner";
+;widescreen;ShoeBanner.jpeg;$siteResource/images/banners/homepage/responsive/ShoeBanner.jpeg;ShoeBanner.jpeg;"Shoe banner";
+;widescreen;ShoeRectangle_1.jpeg;$siteResource/images/banners/homepage/responsive/ShoeRectangle_1.jpeg;ShoeRectangle_1.jpeg;"Shoe Image";
+;widescreen;ShoeRectangle_2.jpeg;$siteResource/images/banners/homepage/responsive/ShoeRectangle_2.jpeg;ShoeRectangle_2.jpeg;"Shoe Image2";
+
+;;WomenSingleFootwear.JPG;$siteResource/images/banners/category_banners/WomenSingleFootwear.JPG;WomenSingleFootwear.JPG;"Shop the Collection"
+;;MenSingleFootwear.JPG;$siteResource/images/banners/category_banners/MenSingleFootwear.JPG;MenSingleFootwear.JPG;"Shop the Collection"
+;;KidFootwearFirst.JPG;$siteResource/images/banners/category_banners/KidFootwearFirst.JPG;KidFootwearFirst.JPG;"Shop the Collection"
+;;KidsFootwearSecond.JPG;$siteResource/images/banners/category_banners/KidsFootwearSecond.JPG;KidsFootwearSecond.JPG;"Shop the Collection"
+
 
 INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
 ;nuon-brand-en;Nuon.jpg
@@ -883,7 +907,9 @@ INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=tr
 ;aboutus-image-en;aboutus.png
 ;nikkon-banner-en;nikkon.png
 
-
+;shoe-banner-en;ShoeBanner.jpeg
+;shoe-image1-en;ShoeRectangle_1.jpeg
+;shoe-image2-en;ShoeRectangle_2.jpeg
 
 INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
 ;;LovBrandBannerComponent;lov-banner-en
@@ -897,7 +923,9 @@ INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique
 ;;Pic2Component;pic2-image-en
 #;;NikkonComponent;nikkon-image-en
 
-
+;;ShoeHomepageBannerComponent;shoe-banner-en
+;;ShoeImage1Component;shoe-image1-en
+;;ShoeImage2Component;shoe-image2-en
 
 
 UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
