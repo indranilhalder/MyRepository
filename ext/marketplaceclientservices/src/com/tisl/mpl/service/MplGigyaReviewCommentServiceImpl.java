@@ -145,14 +145,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			try
 			{
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
-				if ((gsObj.getInt("commentCount") == 0))
-				{
-					return false;
-				}
-				else
-				{
-					return true;
-				}
+				return (gsObj.getInt("commentCount") == 0) ? false : true;//sonar fix for avoiding unnecessary boolean returns
+
 			}
 			catch (final Exception e)
 			{
@@ -223,7 +217,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						reviewDTO.setOverAllRating(String.valueOf(overAllRatingInt));
 					}
 
-					if (checkItemKey(ratings, "Quality") == true)
+					if (checkItemKey(ratings, "Quality")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
 						double qualityInt = ratings.getDouble("Quality");
 						qualityInt = (qualityInt / 5) * 100;
@@ -235,9 +229,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						reviewDTO.setQualityRating(String.valueOf(0));
 					}
 
-					if (category.equals("Clothing"))
+					if (category.equals("Clothing")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
-						if (checkItemKey(ratings, "Fit") == true)
+						if (checkItemKey(ratings, "Fit"))
 						{
 							double fitInt = ratings.getDouble("Fit");
 							fitInt = (fitInt / 5) * 100;
@@ -251,7 +245,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					}
 					else
 					{
-						if (checkItemKey(ratings, "Ease of use") == true)
+						if (checkItemKey(ratings, "Ease of use")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 						{
 							double easeOfUseInt = ratings.getDouble("Ease of use");
 							easeOfUseInt = (easeOfUseInt / 5) * 100;
@@ -264,7 +258,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						}
 					}
 
-					if (checkItemKey(ratings, "Value for Money") == true)
+					if (checkItemKey(ratings, "Value for Money")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
 
 						double valueForMoneyInt = ratings.getDouble("Value for Money");
@@ -291,9 +285,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						final ProductModel productModel = productService.getProductForCode(gsCommentObject.getString("streamId"));
 
-						productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-								ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-								ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+						productData = productFacade.getProductForOptions(productModel,
+								Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+										ProductOption.GALLERY, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
+										ProductOption.VARIANT_FULL));
 					}
 
 					reviewDTO.setProductData(productData);
@@ -481,18 +476,18 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			}
 			else if (dayDiff == 1)
 			{
-				formatedDate = String.valueOf(dayDiff) + " " + "day ago";
+				formatedDate = dayDiff + " " + "day ago";
 			}
 			else if (dayDiff > 1 && dayDiff < 30)
 			{
 				LOG.debug(">>>>>>>>>date diffrence>>>>>>" + dayDiff + " " + "day ago");
-				formatedDate = String.valueOf(dayDiff) + " " + "days ago";
+				formatedDate = dayDiff + " " + "days ago";
 			}
 
 			else if (dayDiff == 30 || dayDiff == 31)
 			{
 				final int monthDiff = thisMonth - cMonth;
-				formatedDate = String.valueOf(monthDiff) + " " + " month ago";
+				formatedDate = monthDiff + " " + " month ago";
 			}
 		}
 		catch (final Exception e)
