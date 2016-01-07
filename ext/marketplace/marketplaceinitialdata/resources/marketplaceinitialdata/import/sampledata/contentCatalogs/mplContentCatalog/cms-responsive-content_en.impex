@@ -639,7 +639,7 @@ UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];banne
                     <a href='#' class='button'>SHOP WHAT'S NEW</a>"	
 
 ;;;;TMPWestsportBannerComponent;westsportbanner.png;"<a href='' class='button'>SHOP BELOW</a>";
-   ;;TMPFootwearHomepageBannerComponent;footwearBanner.JPG;"<span class='major-promo-header-italic'>SHOP ONLINE EXCLUSIVES</span>";
+  ;;TMPFootwearHomepageBannerComponent;footwearBanner.JPG;"<span  class='major-promo-header-italic'>Footwear </span> <span class='major-promo-description'>Exclusively at tata Marketplace</span> <a href='#' class='button'>SHOP NOW</a>";
 ;;TMPShoeHomepageBannerComponent;ShoeBanner.jpeg;<span  class='major-promo-header-italic'>NIKE</span><span class='major-promo-description'>Exclusively at tata Marketplace</span> <span class='major-promo-description'>Become unstoppable with our latest collection of running,training,and everyday wear.</span> <a href='#' class='button'>SHOP WHAT'S NEW</a>"	               
 
 
