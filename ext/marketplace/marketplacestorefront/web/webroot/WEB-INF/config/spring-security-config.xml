@@ -88,7 +88,7 @@
 		<security:intercept-url pattern="/checkout/multi/billingaddressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')" requires-channel="http" />
 		<security:intercept-url pattern="/my-account*" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
 		<security:intercept-url pattern="/my-account/**" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
-	        <security:intercept-url pattern="*/viewSellers" requires-channel="http"/>
+	        
 		<!-- <security:intercept-url pattern="/**" requires-channel="http" /> --> <!-- Everything should be secure -->
 		<security:intercept-url pattern="/login" requires-channel="http" />
 		<security:intercept-url pattern="/login/checkout" requires-channel="http" />
