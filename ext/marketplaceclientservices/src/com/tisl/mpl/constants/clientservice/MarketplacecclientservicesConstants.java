@@ -152,6 +152,7 @@ public class MarketplacecclientservicesConstants
 	//Gigya Social Login
 	public static final String METHOD_NOTIFY_REGISTRATION = "gigya.notifyregistration.method".intern();
 	public static final String LAST_NAME = "lastName";
+	public static final String GIGYA_METHOD_LINK_ACCOUNTS = "gigya.linkaccount.method".intern();
 	//account page review
 	public static final String PROXY_HOST = "http.proxyHost";
 	public static final String PROXY_PORT = "http.proxyPort";
