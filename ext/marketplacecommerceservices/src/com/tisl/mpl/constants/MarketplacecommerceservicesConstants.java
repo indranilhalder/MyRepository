@@ -435,7 +435,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ADDRESS_DATA = "addressData";
 	public static final String ADDRESTYPE_EQUALS_ADDADDRESS = "addrestype=addaddress";
 	public static final String MODEL_SAVING_EXCEPTION = "ModelSavingException";
-	public static final String CLIENTID = "siteadmin";
+	public static final String CLIENTID = "config.clientId";
 	public static final int NAME = 40;
 	public static final String MOBILENUMBERLENGTH = "Please Enter valid 10 digit phone number";
 	public static final int MOBLENGTH = 10;
