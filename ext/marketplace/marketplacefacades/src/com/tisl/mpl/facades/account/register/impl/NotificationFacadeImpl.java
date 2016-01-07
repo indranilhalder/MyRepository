@@ -5,7 +5,6 @@ package com.tisl.mpl.facades.account.register.impl;
 
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
-import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -43,11 +43,10 @@ public class NotificationFacadeImpl implements NotificationFacade
 	@Autowired
 	private Converter<VoucherDisplayData, NotificationData> trackOrderCouponConverter;
 	@Autowired
-	private Converter<AbstractPromotionModel, NotificationData> trackOrderPromotionConverter;
-	@Autowired
 	private UserService userService;
 	@Autowired
 	private ConfigurationService configurationService;
+	protected static final Logger LOG = Logger.getLogger(NotificationFacadeImpl.class);
 
 	public ConfigurationService getConfigurationService()
 	{
@@ -78,23 +77,6 @@ public class NotificationFacadeImpl implements NotificationFacade
 		this.trackOrderCouponConverter = trackOrderCouponConverter;
 	}
 
-	/**
-	 * @return the trackOrderPromotionConverter
-	 */
-	public Converter<AbstractPromotionModel, NotificationData> getTrackOrderPromotionConverter()
-	{
-		return trackOrderPromotionConverter;
-	}
-
-	/**
-	 * @param trackOrderPromotionConverter
-	 *           the trackOrderPromotionConverter to set
-	 */
-	public void setTrackOrderPromotionConverter(
-			final Converter<AbstractPromotionModel, NotificationData> trackOrderPromotionConverter)
-	{
-		this.trackOrderPromotionConverter = trackOrderPromotionConverter;
-	}
 
 	/**
 	 * @return the notificationService
@@ -160,25 +142,10 @@ public class NotificationFacadeImpl implements NotificationFacade
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		final List<OrderStatusNotificationModel> notificationModel = notificationService.getNotificationDetails(customerUID,
 				isDesktop);
-		final List<AbstractPromotionModel> promotionList = notificationService.getPromotion();
+		//	final List<AbstractPromotionModel> promotionList = notificationService.getPromotion();
 		final List<VoucherModel> voucherList = getAllCoupons();
 		final AllVoucherListData allVoucherList = notificationService.getAllVoucherList(currentCustomer, voucherList);
 
-
-
-		/*
-		 * if (null != promotionList) { for (final AbstractPromotionModel promotion : promotionList) { final
-		 * PromotionNotificationModel trackOrderPromotion = new PromotionNotificationModel();
-		 *
-		 * trackOrderPromotion.setPromotionIdentifier(promotion.getCode());
-		 * trackOrderPromotion.setPromotionDescription(promotion.getDescription());
-		 * trackOrderPromotion.setPromotionStartDate(promotion.getStartDate());
-		 * trackOrderPromotion.setPromotionStatus("Promotion @ is available"); modelService.save(trackOrderPromotion);
-		 *
-		 * promotionModel.add(trackOrderPromotion); }
-		 *
-		 * }
-		 */
 
 		List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 		List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
@@ -192,27 +159,27 @@ public class NotificationFacadeImpl implements NotificationFacade
 			/*
 			 * if (null != openVoucherDataList) { for (final VoucherDisplayData v : openVoucherDataList) { final
 			 * CouponNotificationModel trackOrderCoupon = new CouponNotificationModel();
-			 *
+			 * 
 			 * trackOrderCoupon.setCouponCode(v.getVoucherCode());
 			 * trackOrderCoupon.setCouponStartDate(v.getVoucherCreationDate());
 			 * trackOrderCoupon.setCouponStatus("Coupon @ is available"); modelService.save(trackOrderCoupon);
 			 * couponList.add(trackOrderCoupon);
-			 *
+			 * 
 			 * }
-			 *
-			 *
+			 * 
+			 * 
 			 * }
 			 */
 
 			/*
 			 * if (null != closedVoucherDataList) { for (final VoucherDisplayData v : closedVoucherDataList) { final
 			 * CouponNotificationModel trackOrderCoupon = new CouponNotificationModel();
-			 *
+			 * 
 			 * trackOrderCoupon.setCouponCode(v.getVoucherCode());
 			 * trackOrderCoupon.setCouponStartDate(v.getVoucherCreationDate());
 			 * trackOrderCoupon.setCouponStatus("Coupon @ is available"); modelService.save(trackOrderCoupon);
 			 * couponList.add(trackOrderCoupon);
-			 *
+			 * 
 			 * }
 			 */
 		}
@@ -243,35 +210,39 @@ public class NotificationFacadeImpl implements NotificationFacade
 		}
 
 
-		for (final AbstractPromotionModel promotion : promotionList)
-		{
-			final NotificationData promotionData = trackOrderPromotionConverter.convert(promotion);
-			notificationDataList.add(promotionData);
-		}
-
-
 		notificationDataList = notificationService.getSortedNotificationData(notificationDataList);
 
 
-		int couponCount = 0;
+		String couponCount = null;
 		if (isDesktop)
 		{
 
 
-			couponCount = Integer.valueOf(
-					getConfigurationService().getConfiguration().getString("notification.display.topCount", "5")).intValue();
+			couponCount = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.NOTIFICATION_COUNT);
 
 		}
 		else
 		{
-			couponCount = Integer.valueOf(
-					getConfigurationService().getConfiguration().getString("notification.display.topCountMobile", "5")).intValue();
+			couponCount = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.NOTIFICATION_COUNT_MOBILE);
 
 		}
+		int count = 0;
 
-		if (notificationDataList.size() > couponCount)
+		try
 		{
-			notificationDataList.subList(couponCount, notificationDataList.size()).clear();
+			count = Integer.parseInt(couponCount);
+		}
+
+		catch (final NumberFormatException e)
+		{
+			LOG.debug("Number format exception occured while parsing");
+		}
+
+		if (notificationDataList.size() > count)
+		{
+			notificationDataList.subList(count, notificationDataList.size()).clear();
 		}
 
 		return notificationDataList;

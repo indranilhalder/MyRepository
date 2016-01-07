@@ -70,7 +70,6 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
-import com.tisl.mpl.model.SemiClosedRestrictionModel;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 
 
@@ -562,7 +561,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					boolean dateRestrExists = false;
 					boolean userRestrExists = false;
-					boolean semiClosedRestrExists = false;
+					final boolean semiClosedRestrExists = false;
 
 					DateRestrictionModel dateRestrObj = null;
 					UserRestrictionModel userRestrObj = null;
@@ -583,11 +582,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							userRestrExists = true;
 							userRestrObj = (UserRestrictionModel) restrictionModel;
 						}
-						if (restrictionModel instanceof SemiClosedRestrictionModel)
-						{
-							semiClosedRestrExists = true;
-							//semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel;
-						}
+						//TODO: Semi Closed Restriction-----Commented as functionality out of scope of R2.1   Uncomment when in scope
+						//						if (restrictionModel instanceof SemiClosedRestrictionModel)
+						//						{
+						//							semiClosedRestrExists = true;
+						//							//semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel;
+						//						}
+
+
+
 						//							if (restrictionModel instanceof SemiClosedRestrictionModel)
 						//							{
 						//								semiClosedRestrExists = false;

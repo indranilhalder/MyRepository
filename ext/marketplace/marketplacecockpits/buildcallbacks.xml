@@ -134,6 +134,13 @@
 					</copy>
 
 					<echo level="info" message="marketplacecockpits - Copying custom zul to cscockpit..." />
+					<!--Coupon Dev-->
+					<copy todir="${ext.cscockpit.path}/web/webroot/cscockpit/templates">
+						<fileset dir="${ext.marketplacecockpits.path}/resources/marketplacecockpits/cscockpit/zul/templates">
+							<include name="**/**.*" />
+						</fileset>
+					</copy>
+						
 					<copy todir="${ext.cscockpit.path}/web/webroot/cockpit/dialog">
 						<fileset dir="${ext.marketplacecockpits.path}/resources/marketplacecockpits/cscockpit/zul">
 							<include name="**/**.*" />

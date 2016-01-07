@@ -172,8 +172,7 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			// Modified / Created Entry details
 			final MplSellerPriorityModel sellerModData = (MplSellerPriorityModel) savedVal.getModifiedItem();
 
-			LOG.debug(
-					"SellerID: " + sellerModData.getSellerId() + " Active/Deactive: " + sellerModData.getIsActive().booleanValue());
+			LOG.debug("SellerID: " + sellerModData.getSellerId() + " Active/Deactive: " + sellerModData.getIsActive().booleanValue());
 
 			// Modified / Created SellerID
 			if (null != sellerModData.getSellerId())
@@ -331,9 +330,8 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 		}
 
 		FileWriter fileWriter = null;
-		final File rootFolder1 = new File(
-				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.FILE_LOCATION),
-				MarketplacecommerceservicesConstants.REPORT);
+		final File rootFolder1 = new File(configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.FILE_LOCATION), MarketplacecommerceservicesConstants.SELLERPRIORITYREPORT);
 		try
 		{
 			fileWriter = new FileWriter(rootFolder1);
