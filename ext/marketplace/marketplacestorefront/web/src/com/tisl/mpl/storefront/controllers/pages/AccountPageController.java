@@ -262,7 +262,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String ERROR_OCCURED = "errorOccured";
 	private static final String UTF = "UTF-8";
 	public static final String ERROR_RESP = "gigys response error.";
-
+	public static final String UNUSED = "unused";
+	public static final String STATUS = "status";
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -1574,7 +1575,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_CANCEL_SUCCESS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody String cancelSuccess(final String orderCode, @SuppressWarnings("unused") final String transactionId,
+	public @ResponseBody String cancelSuccess(final String orderCode, @SuppressWarnings(UNUSED) final String transactionId,
 			final String reasonCode, final String ticketTypeCode, final String ussid, final Model model)
 					throws CMSItemNotFoundException
 	{
@@ -5369,7 +5370,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_SUBCATEGORIES, method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, CategoryData>> getBrandSubCategory(
-			@SuppressWarnings("unused") @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
+			@SuppressWarnings(UNUSED) @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
 			@RequestParam(value = "subCategoryData") final String subCategoryData,
 			@RequestParam(value = "selectedCategory") final String selectedCategory, final Model model)
 					throws CMSItemNotFoundException, NullPointerException, JSONException
@@ -6115,7 +6116,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return String
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	@RequestMapping(value = "/reviews", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String review(
@@ -6158,11 +6159,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 								throw new EtailNonBusinessExceptions(exception);
 							}
 							productDataMap.put(productData.getCode(), productData);
-							/*
-							 * if (productDataMap.size() == 10) { break; }
-							 */
 
-							LOG.debug("************************ " + productDataMap);
+							LOG.debug("**********ProductDataMap************** " + productDataMap);
 						}
 					}
 				}
@@ -6285,7 +6283,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return Map
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	@RequestMapping(value = "/review/{operation}", method = RequestMethod.GET)
 	@RequireHardLogIn
 	@ResponseBody
@@ -6313,12 +6311,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
 				{
-					jsonMap.put("status", "success");
+					jsonMap.put(STATUS, "success");
 					return jsonMap;
 				}
 				else
 				{
-					jsonMap.put("status", "failed");
+					jsonMap.put(STATUS, "failed");
 					return jsonMap;
 				}
 			}
@@ -6329,12 +6327,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
 				{
-					jsonMap.put("status", "success");
+					jsonMap.put(STATUS, "success");
 					return jsonMap;
 				}
 				else
 				{
-					jsonMap.put("status", "failed");
+					jsonMap.put(STATUS, "failed");
 					return jsonMap;
 				}
 			}
