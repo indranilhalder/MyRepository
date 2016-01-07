@@ -663,6 +663,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		final Map<OrderData, VoucherData> orderVoucherDataMap = new HashMap<OrderData, VoucherData>();
 		final Map<Date, OrderData> orderDateMap = new TreeMap<Date, OrderData>(Collections.reverseOrder());
+
+		final Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
 		final CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 		VoucherData voucherData = new VoucherData();
 		double savedSum = 0.0;
@@ -691,6 +693,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					Collection<VoucherInvalidationModel> voucherInvalidations = new ArrayList<VoucherInvalidationModel>();
 					voucher = (VoucherModel) discount;
 					voucherInvalidations = voucher.getInvalidations();
+
 					try
 					{
 						voucherData = getDefaultVoucherFacade().getVoucher(((PromotionVoucherModel) voucher).getVoucherCode());//type casting to PromotionVoucherModel
@@ -711,25 +714,20 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							{
 								orderDateMap.put(orderDetailsData.getCreated(), orderDetailsData);//mapping order with date such that the latest order is on top
 
-								for (final VoucherInvalidationModel voucherInv : voucherInvalidations)
+								if (voucherCodeInvalidationMap.isEmpty())
 								{
-
-									if (orderDetailsData.getCode().equals(voucherInv.getCode()))
+									voucherCodeInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);
+								}
+								else
+								{
+									if (!(voucherCodeInvalidationMap.containsKey(voucherData.getVoucherCode())))
 									{
-										amountList.add(String.valueOf(voucherInv.getSavedAmount())); //calculating the amount saved through vouchers
+										voucherCodeInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);
 									}
-
 								}
 
 							}
 
-
-							for (final String amount : amountList)
-							{
-								LOG.debug("Step 4-************************Inside amountList");
-
-								savedSum += Double.parseDouble(amount);
-							}
 
 						}
 					}
@@ -781,6 +779,44 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				}
 			}
 		}
+
+		if (!voucherCodeInvalidationMap.isEmpty())
+		{
+			final Iterator voucherCodeInvalidationIterator = voucherCodeInvalidationMap.entrySet().iterator();
+			while (voucherCodeInvalidationIterator.hasNext())
+			{
+				LOG.debug("************************voucherCodeInvalidationMap ITERATE********************");
+				final Map.Entry voucherCodeInvalidationEntry = (Map.Entry) voucherCodeInvalidationIterator.next();
+				final String voucherCode = (String) voucherCodeInvalidationEntry.getKey();
+				final Collection<VoucherInvalidationModel> voucherInvalidationsCol = (Collection<VoucherInvalidationModel>) voucherCodeInvalidationEntry
+						.getValue();
+
+				if (null != voucherCode)
+				{
+					for (final VoucherInvalidationModel voucherInv : voucherInvalidationsCol)
+					{
+
+						if (null != voucherInv.getSavedAmount())
+						{
+							amountList.add(String.valueOf(voucherInv.getSavedAmount())); //calculating the amount saved through vouchers
+						}
+
+					}
+				}
+			}
+		}
+
+
+		if (!amountList.isEmpty())
+		{
+			for (final String amount : amountList)
+			{
+				LOG.debug("Step 4-************************Inside amountList");
+
+				savedSum += Double.parseDouble(amount);
+			}
+		}
+
 
 		// calculating no. of unique coupon codes that has been redeemed by the customer
 
