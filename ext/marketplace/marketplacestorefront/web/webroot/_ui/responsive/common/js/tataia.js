@@ -309,10 +309,17 @@ function getFilteredRecommendations(widgetElement, respData, priceRanges, sale, 
     if(priceRanges.length === 0) { //no price filter
       priceSatisfied = true;  
     }
-    for (var i=0; i<priceRanges.length; i++) {
+    for (var i=0; i<priceRanges.length; i++) {    	
       var prices = priceRanges[i].split(' - ');
+      if(priceRanges[i].indexOf('And') > -1){
+    	var  pricess = priceRanges[i].replace('And','-');
+    	prices = pricess.split(' - ');
+  	}
       var min = parseInt(prices[0].substr(1));
       var max = parseInt(prices[1].substr(1));
+      if(isNaN(max)){
+    	  max = '100000000';
+      }
       if(min <= parseInt(this.price) && parseInt(this.price) <= max) {
         priceSatisfied = true;
         break; //condition met, stop searching
@@ -552,6 +559,20 @@ function makeProductHtml(widgetElement, obj, rid) {
 	  is_new_product = true;
 	  }
   }
+  
+  if(obj.colors!= undefined){
+		jQuery.each(obj.colors, function (icount, itemColor) {	
+			if(itemColor == 'Pewter'){
+				obj.colors[icount] = '#8E9294';
+			}else if(itemColor == 'Peach'){
+				obj.colors[icount] = '#FFDAB9';
+			}else if(itemColor == 'Multi'){
+				obj.colors[icount] = '/store/_ui/responsive/common/images/multi.jpg';
+			}else if(itemColor == 'Metallic'){
+				obj.colors[icount] = '#37FDFC';
+			}
+	  });
+}
 
 	  var IAurl = obj.url + '/store/mpl/en/p/'+obj.site_product_id+'/?iaclick=true&req=' + rid; /*iaclick=true for tracking our clicks vs. other services, pass request id to track clicks*/
 	  if(spid.length > 0) { /*pass if product page or if this is applicable for whatever other reason*/
@@ -838,6 +859,7 @@ function updatePage(response, widgetMode) {
         html += '<li class="price"><h4 class="active">price</h4>';
         html += '<ul class="checkbox-menu price">';
         html += '<li><input type="checkbox" id="0-500"> <label for="0-500">₹0 - ₹500</label></li><li><input type="checkbox" id="500-1000"> <label for="500-1000">₹500 - ₹1000</label></li><li><input type="checkbox" id="1000-2000"> <label for="1000-2000">₹1000 - ₹2000</label></li><li><input type="checkbox" id="2000-3000"> <label for="2000-3000">₹2000 - ₹3000</label></li><li><input type="checkbox" id="3000-4000"> <label for="3000-4000">₹3000 - ₹4000</label></li><li><input type="checkbox" id="4000-5000"> <label for="4000-5000">₹4000 - ₹5000</label></li>';
+        html += '<li><input type="checkbox" id="5000-10000"> <label for="5000-10000">₹5000 - ₹10000</label></li><li><input type="checkbox" id="10000-25000"> <label for="10000-25000">₹10000 - ₹25000</label></li><li><input type="checkbox" id="25000-50000"> <label for="25000-50000">₹25000 - ₹50000</label></li><li><input type="checkbox" id="And>50000"> <label for="And>50000">₹50000 And Above</label></li>';
         html += '</ul></li><li class="on sale"><h4 class="active">Sale</h4><ul class="checkbox-menu on-sale">';
         html += '<li><input type="checkbox" id="sale-filter"><label for="sale-filter">On Sale</label></li></ul></li></div></ul></div>';
         html += '<div class="right-block">';
