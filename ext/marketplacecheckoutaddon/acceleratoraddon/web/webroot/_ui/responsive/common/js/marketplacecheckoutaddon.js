@@ -3451,6 +3451,7 @@ $("#couponSubmitButton").click(function(){
 	}
 	else if($("#couponFieldId").val()!="" && $('#couponFieldId').prop('readonly') == true)
 	{
+		$("#couponError").css("display","block");	
 		document.getElementById("couponError").innerHTML="Coupon is already applied";
 	}
 	else{
