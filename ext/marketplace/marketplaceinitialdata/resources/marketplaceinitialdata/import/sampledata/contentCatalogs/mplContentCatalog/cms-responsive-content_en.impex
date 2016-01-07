@@ -639,10 +639,10 @@ UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];banne
                     <a href='#' class='button'>SHOP WHAT'S NEW</a>"	
 
 ;;;;TMPWestsportBannerComponent;westsportbanner.png;"<a href='' class='button'>SHOP BELOW</a>";
-   ;;TMPFootwearHomepageBannerComponent;footwearBanner.JPG;"<span class='major-promo-header-italic'>SHOP ONLINE EXCLUSIVES</span>";
+  ;;TMPFootwearHomepageBannerComponent;footwearBanner.JPG;"<span  class='major-promo-header-italic'>Footwear </span> <span class='major-promo-description'>Exclusively at tata Marketplace</span> <a href='#' class='button'>SHOP NOW</a>";
 ;;TMPShoeHomepageBannerComponent;ShoeBanner.jpeg;<span  class='major-promo-header-italic'>NIKE</span><span class='major-promo-description'>Exclusively at tata Marketplace</span> <span class='major-promo-description'>Become unstoppable with our latest collection of running,training,and everyday wear.</span> <a href='#' class='button'>SHOP WHAT'S NEW</a>"	               
 
-
+   
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
 #;mobile;Appa_480x110_Save_EN_01_480W.jpg;$siteResource/images/banners/homepage/responsive/Appa_480x110_Save_EN_01_480W.jpg;Appa_480x110_Save_EN_01_480W.jpg;"70% off winter clothing";
 #;tablet;Appa_770x50_Save_EN_01_770W.jpg;$siteResource/images/banners/homepage/responsive/Appa_770x50_Save_EN_01_770W.jpg;Appa_770x50_Save_EN_01_770W.jpg;"70% off winter clothing";
