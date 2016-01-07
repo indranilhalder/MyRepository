@@ -262,7 +262,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String ERROR_OCCURED = "errorOccured";
 	private static final String UTF = "UTF-8";
 	public static final String ERROR_RESP = "gigys response error.";
-
+	public static final String UNUSED = "unused";
+	public static final String STATUS = "status";
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -482,7 +483,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ADDRESS_FORM, method = RequestMethod.GET)
 	public String getCountryAddressForm(@RequestParam(ModelAttributetConstants.ADDRESS_CODE) final String addressCode,
 			@RequestParam(ModelAttributetConstants.COUNTRY_ISO_CODE) final String countryIsoCode, final Model model)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -594,8 +595,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		LOG.debug("Step1-************************Order History");
 		try
 		{
-			final int pageSizeInoh = Integer.valueOf(configurationService.getConfiguration()
-					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
+			final int pageSizeInoh = Integer
+					.valueOf(configurationService.getConfiguration().getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
 			final PageableData pageableData = createPageableData(page, 5, sortCode, showMode);
 
 			//final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade().getPagedParentOrderHistoryForStatuses(pageableData);
@@ -613,8 +614,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (CollectionUtils.isNotEmpty(orderModels))
 			{
 				LOG.debug("Step1-************************Order History :fetching product serial no ");
-				final Map<String, Map<String, String>> productSerrialNumber = getMplOrderFacade().fetchOrderSerialNoDetails(
-						orderModels);
+				final Map<String, Map<String, String>> productSerrialNumber = getMplOrderFacade()
+						.fetchOrderSerialNoDetails(orderModels);
 				model.addAttribute("productSerrialNumber", productSerrialNumber);
 
 				LOG.debug("Step2-************************Order History :fetching invoice details ");
@@ -787,7 +788,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final ReturnRequestForm returnRequestForm = new ReturnRequestForm();
 		final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();
 		final Map<String, String> currentStatusMap = new HashMap<>();
-		String consignmentStatus = ModelAttributetConstants.EMPTY, formattedProductDate = ModelAttributetConstants.EMPTY, formattedActualProductDate = ModelAttributetConstants.EMPTY;
+		String consignmentStatus = ModelAttributetConstants.EMPTY, formattedProductDate = ModelAttributetConstants.EMPTY,
+				formattedActualProductDate = ModelAttributetConstants.EMPTY;
 
 		final Map<String, String> formattedDeliveryDates = new HashMap<>();
 		final Map<String, String> formattedActualDeliveryDates = new HashMap<>();
@@ -883,8 +885,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 										if (getMplOrderFacade().checkCancelStatus(subOrder.getStatus().getCode(),
 												MessageConstants.CANCEL_ORDER_STATUS))
 										{
-											LOG.debug(" order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
-													+ orderCode + MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
+											LOG.debug(
+													" order: Consignemnt is null or empty : Setting cancel status to true for  Order code :"
+															+ orderCode + MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS
+															+ consignmentStatus);
 											orderEntry.setItemCancellationStatus(true);
 										}
 									}
@@ -920,10 +924,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 												&& null != consignmentModel)
 										{
 											final Date sDate = new Date();
-											final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
-													consignmentModel.getDeliveryDate(), sDate);
-											final int actualReturnWindow = Integer.parseInt(richAttributeModelForSeller.get(0)
-													.getReturnWindow());
+											final int returnWindow = GenericUtilityMethods
+													.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(), sDate);
+											final int actualReturnWindow = Integer
+													.parseInt(richAttributeModelForSeller.get(0).getReturnWindow());
 
 											LOG.debug(" order : Setting Item Retrun status to true for  Order code :" + orderCode
 													+ MarketplacecommerceservicesConstants.CONSIGNMENT_STATUS + consignmentStatus);
@@ -948,8 +952,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 									else
 									{
-										LOG.debug(" order : Consignment is null or empty :Setting Item Retrun status to false for  Order code :"
-												+ orderCode);
+										LOG.debug(
+												" order : Consignment is null or empty :Setting Item Retrun status to false for  Order code :"
+														+ orderCode);
 										orderEntry.setItemReturnStatus(false);
 									}
 								}
@@ -1005,32 +1010,33 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.TRACKINGURL, trackStatusTrackingURLMap);
 
 			final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
-			breadcrumbs.add(new Breadcrumb(RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS,
-					getMessageSource().getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null,
-							getI18nService().getCurrentLocale()), null));
-			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
-					MessageConstants.TEXT_ACCOUNT_ORDER_ORDERBREADCRUMB, new Object[]
-					{ orderDetail.getCode() }, ModelAttributetConstants.ORDER_NUMBER_SYNTAX, getI18nService().getCurrentLocale()),
+			breadcrumbs
+					.add(new Breadcrumb(
+							RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS, getMessageSource()
+									.getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null, getI18nService().getCurrentLocale()),
 					null));
+			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL,
+					getMessageSource().getMessage(MessageConstants.TEXT_ACCOUNT_ORDER_ORDERBREADCRUMB, new Object[]
+			{ orderDetail.getCode() }, ModelAttributetConstants.ORDER_NUMBER_SYNTAX, getI18nService().getCurrentLocale()), null));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
 
 		}
 		catch (final IllegalArgumentException e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final NoSuchMessageException e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1238,7 +1244,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public String returnRequest(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
 			@RequestParam(ModelAttributetConstants.USSID) final String ussid,
 			@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId, final Model model)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -1284,15 +1290,18 @@ public class AccountPageController extends AbstractMplSearchPageController
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_REQUEST));
 
 			final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
-			breadcrumbs.add(new Breadcrumb(RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS,
-					getMessageSource().getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null,
-							getI18nService().getCurrentLocale()), null));
+			breadcrumbs
+					.add(new Breadcrumb(
+							RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS, getMessageSource()
+									.getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null, getI18nService().getCurrentLocale()),
+					null));
 
-			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
-					MessageConstants.TEXT_ACCOUNT_ORDER_ORDERBREADCRUMB, new Object[]
-					{ orderCode }, ModelAttributetConstants.ORDER_NUMBER_SYNTAX, getI18nService().getCurrentLocale()), null));
-			breadcrumbs.add(new Breadcrumb(null, getMessageSource().getMessage(MessageConstants.RETURN_REQUEST_LOCALE, null,
-					getI18nService().getCurrentLocale()), null));
+			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL,
+					getMessageSource().getMessage(MessageConstants.TEXT_ACCOUNT_ORDER_ORDERBREADCRUMB, new Object[]
+			{ orderCode }, ModelAttributetConstants.ORDER_NUMBER_SYNTAX, getI18nService().getCurrentLocale()), null));
+			breadcrumbs.add(new Breadcrumb(null,
+					getMessageSource().getMessage(MessageConstants.RETURN_REQUEST_LOCALE, null, getI18nService().getCurrentLocale()),
+					null));
 
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
 
@@ -1467,8 +1476,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				if (entry.getTransactionId().equalsIgnoreCase(transactionId))
 				{
 					subOrderEntry = entry;
-					returnSubOrderEntry = cancelReturnFacade.associatedEntriesData(
-							orderModelService.getOrder(returnRequestForm.getOrderCode()), transactionId);
+					returnSubOrderEntry = cancelReturnFacade
+							.associatedEntriesData(orderModelService.getOrder(returnRequestForm.getOrderCode()), transactionId);
 					returnProductMap.put(entry.getTransactionId(), returnSubOrderEntry);
 					break;
 				}
@@ -1488,8 +1497,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			final boolean cancellationStatus = cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry,
-					reasonCode, ussid, ticketTypeCode, customerData, refundType, true, SalesApplication.WEB);
+			final boolean cancellationStatus = cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode,
+					ussid, ticketTypeCode, customerData, refundType, true, SalesApplication.WEB);
 
 
 			if (!cancellationStatus)
@@ -1566,9 +1575,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_CANCEL_SUCCESS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody String cancelSuccess(final String orderCode, @SuppressWarnings("unused") final String transactionId,
+	public @ResponseBody String cancelSuccess(final String orderCode, @SuppressWarnings(UNUSED) final String transactionId,
 			final String reasonCode, final String ticketTypeCode, final String ussid, final Model model)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		try
 
@@ -1682,8 +1691,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		catch (final ConversionException e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1797,8 +1806,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final ConversionException e)
 
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (
@@ -1822,8 +1831,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final Exception e)
 
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 
@@ -1850,8 +1859,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			catch (final ConversionException e)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-						MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(
+						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 				return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 			catch (final Exception ex)
@@ -1868,8 +1877,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final MplCustomerProfileData mplCustomerProfileData = new MplCustomerProfileData();
 			mplCustomerProfileData.setDisplayUid(customerData.getDisplayUid());
 
-			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade.getCustomerProfileDetail(customerData
-					.getDisplayUid());
+			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade
+					.getCustomerProfileDetail(customerData.getDisplayUid());
 
 			if (!(ModelAttributetConstants.EMPTY).equals(customerProfileData.getMobileNumber()))
 			{
@@ -2014,8 +2023,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			catch (final DuplicateUidException e)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-						MarketplacecommerceservicesConstants.B0002));
+				ExceptionUtil.etailNonBusinessExceptionHandler(
+						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0002));
 				bindingResult.rejectValue(ModelAttributetConstants.EMAIL, MessageConstants.PROFILE_EMAIL_UNIQUE);
 				returnAction = errorUpdatingEmail(model);
 			}
@@ -2060,7 +2069,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String editProfile(final Model model,
 			@RequestParam(value = ModelAttributetConstants.PARAM, required = false) final String param)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -2085,8 +2094,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
 
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
-			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade.getCustomerProfileDetail(customerData
-					.getDisplayUid());
+			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade
+					.getCustomerProfileDetail(customerData.getDisplayUid());
 
 			final MplCustomerProfileForm mplCustomerProfileForm = new MplCustomerProfileForm();
 			if (null != customerProfileData && null != customerProfileData.getDateOfBirth()
@@ -2192,8 +2201,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		catch (final MalformedURLException e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0016));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0016));
 			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 			return ModelAttributetConstants.FAILURE;
 		}
@@ -2215,7 +2224,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String updateProfile(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes)
-			throws CMSItemNotFoundException, ParseException
+					throws CMSItemNotFoundException, ParseException
 	{
 		try
 		{
@@ -2318,8 +2327,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						else
 						{
 							GlobalMessages.addErrorMessage(model, MessageConstants.REGISTRATION_ERROR_ACCOUNT_EXISTS_TITLE);
-							returnAction = REDIRECT_TO_UPDATE_PROFILE_PAGE + ModelAttributetConstants.QS
-									+ ModelAttributetConstants.PARAM + ModelAttributetConstants.EQUALS + ModelAttributetConstants.FAILURE;
+							returnAction = REDIRECT_TO_UPDATE_PROFILE_PAGE + ModelAttributetConstants.QS + ModelAttributetConstants.PARAM
+									+ ModelAttributetConstants.EQUALS + ModelAttributetConstants.FAILURE;
 						}
 					}
 					else
@@ -2332,10 +2341,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 				catch (final DuplicateUidException e)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-							MarketplacecommerceservicesConstants.B0002));
-					bindingResult
-							.rejectValue(ModelAttributetConstants.EMAIL, MessageConstants.REGISTRATION_ERROR_ACCOUNT_EXISTS_TITLE);
+					ExceptionUtil.etailNonBusinessExceptionHandler(
+							new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0002));
+					bindingResult.rejectValue(ModelAttributetConstants.EMAIL,
+							MessageConstants.REGISTRATION_ERROR_ACCOUNT_EXISTS_TITLE);
 					GlobalMessages.addErrorMessage(model, MessageConstants.FORM_GLOBAL_ERROR);
 				}
 
@@ -2456,9 +2465,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_UPDATE_PASSWORD, method = RequestMethod.POST)
 	@RequireHardLogIn
-	public String updatePassword(final UpdatePasswordForm updatePasswordForm, final BindingResult bindingResult,
-			final Model model, final RedirectAttributes redirectAttributes, final HttpServletRequest request)
-			throws CMSItemNotFoundException
+	public String updatePassword(final UpdatePasswordForm updatePasswordForm, final BindingResult bindingResult, final Model model,
+			final RedirectAttributes redirectAttributes, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -2505,8 +2513,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 					catch (final PasswordMismatchException e)
 					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-								MarketplacecommerceservicesConstants.B0009));
+						ExceptionUtil.etailNonBusinessExceptionHandler(
+								new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0009));
 						bindingResult.rejectValue(ModelAttributetConstants.CURRENT_PASSWORD,
 								MessageConstants.PROFILE_CURRENTPASSWORD_INVALID, new Object[] {},
 								MessageConstants.PROFILE_CURRENTPASSWORD_INVALID);
@@ -2514,8 +2522,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 				else
 				{
-					bindingResult.rejectValue(ModelAttributetConstants.CHECK_NEW_PASSWORD,
-							MessageConstants.VALIDATION_CHECKPWD_EQUALS, new Object[] {}, MessageConstants.VALIDATION_CHECKPWD_EQUALS);
+					bindingResult.rejectValue(ModelAttributetConstants.CHECK_NEW_PASSWORD, MessageConstants.VALIDATION_CHECKPWD_EQUALS,
+							new Object[] {}, MessageConstants.VALIDATION_CHECKPWD_EQUALS);
 				}
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
 						MessageConstants.TEXT_ACCOUNT_CONFIRMATION_PASSWORD_UPDATED, null);
@@ -2608,14 +2616,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String updateNickName(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes)
-			throws CMSItemNotFoundException, ParseException
+					throws CMSItemNotFoundException, ParseException
 	{
 		try
 		{
 			String returnAction = ControllerConstants.Views.Pages.Account.AccountProfileEditPage;
 			final CustomerData currentCustomerData = customerFacade.getCurrentCustomer();
-			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade.getCustomerProfileDetail(currentCustomerData
-					.getDisplayUid());
+			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade
+					.getCustomerProfileDetail(currentCustomerData.getDisplayUid());
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
 			final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
 
@@ -2664,10 +2672,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 				catch (final DuplicateUidException e)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-							MarketplacecommerceservicesConstants.B0002));
-					bindingResult
-							.rejectValue(ModelAttributetConstants.EMAIL, MessageConstants.REGISTRATION_ERROR_ACCOUNT_EXISTS_TITLE);
+					ExceptionUtil.etailNonBusinessExceptionHandler(
+							new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B0002));
+					bindingResult.rejectValue(ModelAttributetConstants.EMAIL,
+							MessageConstants.REGISTRATION_ERROR_ACCOUNT_EXISTS_TITLE);
 					GlobalMessages.addErrorMessage(model, MessageConstants.FORM_GLOBAL_ERROR);
 				}
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.CONF_MESSAGES_HOLDER,
@@ -2790,9 +2798,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ADD_EDIT_ADDRESS_CMS_PAGE));
 
 			final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
-			breadcrumbs.add(new Breadcrumb(
-					RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ADDRESS_BOOK, getMessageSource()
-							.getMessage(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK, null, getI18nService().getCurrentLocale()), null));
+			breadcrumbs
+					.add(new Breadcrumb(
+							RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ADDRESS_BOOK, getMessageSource()
+									.getMessage(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK, null, getI18nService().getCurrentLocale()),
+					null));
 			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
 					MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK_ADDEDITADDRESS, null, getI18nService().getCurrentLocale()), null));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
@@ -2887,13 +2897,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			if (null != request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE))
 			{
-				if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE).equalsIgnoreCase(
-						ModelAttributetConstants.TYPE_RESIDENTIAL))
+				if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE)
+						.equalsIgnoreCase(ModelAttributetConstants.TYPE_RESIDENTIAL))
 				{
 					addressForm.setAddressType(ModelAttributetConstants.TYPE_HOME);
 				}
-				else if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE).equalsIgnoreCase(
-						ModelAttributetConstants.TYPE_COMMERCIAL))
+				else if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE)
+						.equalsIgnoreCase(ModelAttributetConstants.TYPE_COMMERCIAL))
 				{
 					addressForm.setAddressType(ModelAttributetConstants.TYPE_WORK);
 				}
@@ -2947,13 +2957,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 			else
 			{
 				if (null != request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX)
-						&& request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX).equalsIgnoreCase(
-								ModelAttributetConstants.TRUE))
+						&& request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX)
+								.equalsIgnoreCase(ModelAttributetConstants.TRUE))
 				{
 					addressForm.setDefaultAddress(Boolean.TRUE);
 				}
-				newAddress.setDefaultAddress(addressForm.getDefaultAddress() != null
-						&& addressForm.getDefaultAddress().booleanValue());
+				newAddress
+						.setDefaultAddress(addressForm.getDefaultAddress() != null && addressForm.getDefaultAddress().booleanValue());
 			}
 			getAccountAddressFacade().addaddress(newAddress);
 
@@ -2992,13 +3002,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			if (null != request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE))
 			{
-				if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE).equalsIgnoreCase(
-						ModelAttributetConstants.TYPE_RESIDENTIAL))
+				if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE)
+						.equalsIgnoreCase(ModelAttributetConstants.TYPE_RESIDENTIAL))
 				{
 					addressForm.setAddressType(ModelAttributetConstants.TYPE_HOME);
 				}
-				else if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE).equalsIgnoreCase(
-						ModelAttributetConstants.TYPE_COMMERCIAL))
+				else if (request.getParameter(ModelAttributetConstants.ADDRESS_RADIO_TYPE)
+						.equalsIgnoreCase(ModelAttributetConstants.TYPE_COMMERCIAL))
 				{
 					addressForm.setAddressType(ModelAttributetConstants.TYPE_WORK);
 				}
@@ -3060,13 +3070,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 			else
 			{
 				if (null != request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX)
-						&& request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX).equalsIgnoreCase(
-								ModelAttributetConstants.TRUE))
+						&& request.getParameter(ModelAttributetConstants.DEFAULT_ADDRESS_CHECKBOX)
+								.equalsIgnoreCase(ModelAttributetConstants.TRUE))
 				{
 					addressForm.setDefaultAddress(Boolean.TRUE);
 				}
-				newAddress.setDefaultAddress(addressForm.getDefaultAddress() != null
-						&& addressForm.getDefaultAddress().booleanValue());
+				newAddress
+						.setDefaultAddress(addressForm.getDefaultAddress() != null && addressForm.getDefaultAddress().booleanValue());
 			}
 
 			LOG.info("addrestype=" + newAddress.getAddressType());
@@ -3133,8 +3143,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				Boolean.valueOf(isDefaultAddress(addressForm.getAddressId())));
 		if (addressForm.getCountryIso() != null)
 		{
-			model.addAttribute(ModelAttributetConstants.REGIONS, getI18NFacade()
-					.getRegionsForCountryIso(addressForm.getCountryIso()));
+			model.addAttribute(ModelAttributetConstants.REGIONS,
+					getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
 			model.addAttribute(ModelAttributetConstants.COUNTRY, addressForm.getCountryIso());
 		}
 	}
@@ -3147,7 +3157,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return getViewForPage(model)
 	 * @throws CMSItemNotFoundException
 	 */
-	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS + ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS
+			+ ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String editAddress(@PathVariable(ModelAttributetConstants.ADDRESS_CODE) final String addressCode, final Model model)
 			throws CMSItemNotFoundException
@@ -3207,9 +3218,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ADD_EDIT_ADDRESS_CMS_PAGE));
 
 			final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
-			breadcrumbs.add(new Breadcrumb(
-					RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ADDRESS_BOOK, getMessageSource()
-							.getMessage(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK, null, getI18nService().getCurrentLocale()), null));
+			breadcrumbs
+					.add(new Breadcrumb(
+							RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ADDRESS_BOOK, getMessageSource()
+									.getMessage(MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK, null, getI18nService().getCurrentLocale()),
+					null));
 			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
 					MessageConstants.TEXT_ACCOUNT_ADDRESSBOOK_ADDEDITADDRESS, null, getI18nService().getCurrentLocale()), null));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
@@ -3258,8 +3271,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		try
 		{
-			final Set<String> resolveCountryRegions = org.springframework.util.StringUtils.commaDelimitedListToSet(Config
-					.getParameter("resolve.country.regions"));
+			final Set<String> resolveCountryRegions = org.springframework.util.StringUtils
+					.commaDelimitedListToSet(Config.getParameter("resolve.country.regions"));
 
 			final AddressData selectedAddress = new AddressData();
 			selectedAddress.setId(addressForm.getAddressId());
@@ -3287,14 +3300,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			if (Boolean.TRUE.equals(addressForm.getEditAddress()))
 			{
-				selectedAddress.setDefaultAddress(Boolean.TRUE.equals(addressForm.getDefaultAddress())
-						|| getAccountAddressFacade().getAddressBook().size() <= 1);
+				selectedAddress.setDefaultAddress(
+						Boolean.TRUE.equals(addressForm.getDefaultAddress()) || getAccountAddressFacade().getAddressBook().size() <= 1);
 				getAccountAddressFacade().editAddress(selectedAddress);
 			}
 			else
 			{
-				selectedAddress.setDefaultAddress(Boolean.TRUE.equals(addressForm.getDefaultAddress())
-						|| userFacade.isAddressBookEmpty());
+				selectedAddress
+						.setDefaultAddress(Boolean.TRUE.equals(addressForm.getDefaultAddress()) || userFacade.isAddressBookEmpty());
 				userFacade.addAddress(selectedAddress);
 			}
 
@@ -3359,7 +3372,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws CMSItemNotFoundException
 	 */
 
-	@RequestMapping(value = RequestMappingUrlConstants.LINK_SET_DEFAUT_ADDRESS + ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_SET_DEFAUT_ADDRESS
+			+ ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String setDefaultAddress(@PathVariable(ModelAttributetConstants.ADDRESS_CODE) final String addressCode,
 			final RedirectAttributes redirectModel, final Model model) throws CMSItemNotFoundException
@@ -3507,10 +3521,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return getViewForPage(model)
 	 * @throws CMSItemNotFoundException
 	 */
-	@RequestMapping(value = PRODUCT_CODE_PATH_VARIABLE_PATTERN + RequestMappingUrlConstants.LINK_WISHLIST, method = RequestMethod.GET)
+	@RequestMapping(value = PRODUCT_CODE_PATH_VARIABLE_PATTERN
+			+ RequestMappingUrlConstants.LINK_WISHLIST, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String showWishlistPage(@PathVariable(ModelAttributetConstants.PRODUCT_CODE) final String productCode, final Model model)
-			throws CMSItemNotFoundException
+	public String showWishlistPage(@PathVariable(ModelAttributetConstants.PRODUCT_CODE) final String productCode,
+			final Model model) throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -3522,9 +3537,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
 				final ProductModel productModel = getMplOrderFacade().getProductForCode(productCode);
-				final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-						ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY));
+				final ProductData productData = productFacade.getProductForOptions(productModel,
+						Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+								ProductOption.DELIVERY_MODE_AVAILABILITY));
 				populateProductData(productData, model);
 			}
 			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
@@ -3666,9 +3682,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 			final ProductModel productModel = getMplOrderFacade().getProductForCode(newWishlistData.getProductCode());
-			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-					ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY));
+			final ProductData productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+							ProductOption.DELIVERY_MODE_AVAILABILITY));
 
 			populateProductData(productData, model);
 
@@ -3680,10 +3697,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				for (final Wishlist2EntryModel entryModel : entryModels)
 				{
-					final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-							ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
-							ProductOption.DELIVERY_MODE_AVAILABILITY));
+					final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
+							Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+									ProductOption.DELIVERY_MODE_AVAILABILITY));
 					datas.add(productData1);
 				}
 			}
@@ -3800,9 +3817,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		try
 		{
 			final ProductModel productModel = getMplOrderFacade().getProductForCode(existingWishlistData.getProductCode());
-			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-					ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-					ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY));
+			final ProductData productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+							ProductOption.DELIVERY_MODE_AVAILABILITY));
 
 			populateProductData(productData, model);
 			model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
@@ -3846,8 +3864,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				LOG.info(MessageConstants.NO_WISHLIST_PRESENT_WITH_NAME + existingWishlistData.getExistingWishlistName());
 			}
 
-			final Wishlist2Model particularWishlist = wishlistFacade.getWishlistForName(existingWishlistData
-					.getExistingWishlistName());
+			final Wishlist2Model particularWishlist = wishlistFacade
+					.getWishlistForName(existingWishlistData.getExistingWishlistName());
 
 			final List<ProductData> datas = new ArrayList<ProductData>();
 			final List<Wishlist2EntryModel> entryModels = particularWishlist.getEntries();
@@ -3855,10 +3873,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				for (final Wishlist2EntryModel entryModel : entryModels)
 				{
-					final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-							ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-							ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
-							ProductOption.DELIVERY_MODE_AVAILABILITY));
+					final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
+							Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+									ProductOption.DELIVERY_MODE_AVAILABILITY));
 					datas.add(productData1);
 				}
 			}
@@ -3969,8 +3987,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 */
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST, method = RequestMethod.GET)
-	public String viewParticularWishlist(@RequestParam("particularWishlist") final String viewParticularWishlist, final Model model)
-			throws CMSItemNotFoundException
+	public String viewParticularWishlist(@RequestParam("particularWishlist") final String viewParticularWishlist,
+			final Model model) throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -4032,10 +4050,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 						//TISEE-6376
 						if (entryModel.getProduct() != null)
 						{
-							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-									ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
-									ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+							final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
+									Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
+											ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS,
+											ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY,
+											ProductOption.SELLER));
 
 							final BuyBoxModel buyboxmodel = buyBoxFacade.getpriceForUssid(entryModel.getUssid());
 							double price = 0.0;
@@ -4270,10 +4289,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (null != entryModel && null != entryModel.getProduct())
 					{
 						final WishlistProductData wishlistProductData = new WishlistProductData();
-						final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-								ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
-								ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
+						final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
+								Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+										ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+										ProductOption.DELIVERY_MODE_AVAILABILITY, ProductOption.SELLER));
 
 						datas.add(productData1);
 						wishlistProductData.setProductData(productData1);
@@ -4352,7 +4371,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_WISHLIST_FLYOUT, method = RequestMethod.GET)
 	public @ResponseBody JSONArray wishlistsAndItsItems(final Model model, final RedirectAttributes redirectAttributes,
 			final HttpServletRequest request) throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException,
-			com.granule.json.JSONException, MalformedURLException
+					com.granule.json.JSONException, MalformedURLException
 	{
 		JSONObject wishlistJson = new JSONObject();
 		final JSONArray jsonArray = new JSONArray();
@@ -4377,10 +4396,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 						final String url = request.getContextPath() + RequestMappingUrlConstants.LINK_MY_ACCOUNT
 								+ RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST + "?particularWishlist="
 								+ latestThreeWishList.get(i).getName();
-						wishlistJson
-								.put(ControllerConstants.Views.Fragments.Account.WishlistName, latestThreeWishList.get(i).getName());
-						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistSize, latestThreeWishList.get(i)
-								.getEntries().size());
+						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistName,
+								latestThreeWishList.get(i).getName());
+						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistSize,
+								latestThreeWishList.get(i).getEntries().size());
 						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistUrl, url);
 						jsonArray.put(wishlistJson);
 					}
@@ -4394,10 +4413,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 						final String url = request.getContextPath() + RequestMappingUrlConstants.LINK_MY_ACCOUNT
 								+ RequestMappingUrlConstants.LINK_VIEW_PARTICULAR_WISHLIST + "?particularWishlist="
 								+ latestThreeWishList.get(i).getName();
-						wishlistJson
-								.put(ControllerConstants.Views.Fragments.Account.WishlistName, latestThreeWishList.get(i).getName());
-						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistSize, latestThreeWishList.get(i)
-								.getEntries().size());
+						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistName,
+								latestThreeWishList.get(i).getName());
+						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistSize,
+								latestThreeWishList.get(i).getEntries().size());
 						wishlistJson.put(ControllerConstants.Views.Fragments.Account.WishlistUrl, url);
 						jsonArray.put(wishlistJson);
 					}
@@ -4424,7 +4443,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.ADD_TO_BAG_FROM_WL, method = RequestMethod.GET)
 	public @ResponseBody String addToBagFromWl(@RequestParam(ModelAttributetConstants.USSID) final String ussid,
 			@RequestParam(value = ModelAttributetConstants.ADDED_TO_CART) final boolean addedToCart, final Model model)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -4558,8 +4577,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
@@ -4583,8 +4602,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public String inviteFriends(final Model model, final HttpServletRequest request,
 			@RequestParam(ModelAttributetConstants.FRIENDS_EMAIL_LIST) final String emailList,
 			@RequestParam(ModelAttributetConstants.FRIENDS_TEXT_MESSAGE) String textMessage,
-			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, NullPointerException, JSONException,
-			MalformedURLException
+			final RedirectAttributes redirectAttributes)
+					throws CMSItemNotFoundException, NullPointerException, JSONException, MalformedURLException
 	{
 		try
 		{
@@ -4653,8 +4672,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			catch (final Exception e)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-						MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(
+						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 				returnAction = handlePageError(model, FRIENDS_INVITE_CMS_PAGE);
 			}
 
@@ -4702,7 +4721,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String marketplacePreference(final Model model,
 			@RequestParam(value = ModelAttributetConstants.PARAM, required = false) final String param)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -4879,7 +4898,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			@RequestParam(value = ModelAttributetConstants.FREQUENCY, required = false) final String frequency,
 			@RequestParam(value = ModelAttributetConstants.FEEDBACK_AREA, required = false) final String feedBackArea,
 			@RequestParam(value = ModelAttributetConstants.IS_UNSUBSCIBED, required = false) final String isUnsubscibed)
-			throws CMSItemNotFoundException, JSONException
+					throws CMSItemNotFoundException, JSONException
 	{
 		try
 		{
@@ -4940,8 +4959,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						mplPreferenceData.setFeedbackUserReview(Boolean.TRUE);
 						mplPreferenceData.setFeedbackCustomerSurveys(Boolean.FALSE);
 					}
-					else if (selectedFeedBackArea.get(0).equalsIgnoreCase(
-							convertFeedbackEnumToStr(FeedbackArea.CONSUMER_SURVEYS.toString())))
+					else if (selectedFeedBackArea.get(0)
+							.equalsIgnoreCase(convertFeedbackEnumToStr(FeedbackArea.CONSUMER_SURVEYS.toString())))
 					{
 						mplPreferenceData.setFeedbackUserReview(Boolean.FALSE);
 						mplPreferenceData.setFeedbackCustomerSurveys(Boolean.TRUE);
@@ -5275,7 +5294,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public Map<String, CategoryData> myInterestForBrand(
 			@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData,
 			@RequestParam(value = "modify", defaultValue = ModelAttributetConstants.TRUE) final String modify, final Model model)
-			throws CMSItemNotFoundException, NullPointerException, JSONException
+					throws CMSItemNotFoundException, NullPointerException, JSONException
 	{
 		final Map<String, CategoryData> categoryDataMap = new HashMap<String, CategoryData>();
 		final List<String> categoryListData = new ArrayList<String>();
@@ -5351,10 +5370,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_SUBCATEGORIES, method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, CategoryData>> getBrandSubCategory(
-			@SuppressWarnings("unused") @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
+			@SuppressWarnings(UNUSED) @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
 			@RequestParam(value = "subCategoryData") final String subCategoryData,
 			@RequestParam(value = "selectedCategory") final String selectedCategory, final Model model)
-			throws CMSItemNotFoundException, NullPointerException, JSONException
+					throws CMSItemNotFoundException, NullPointerException, JSONException
 	{
 
 		final List<Map<String, CategoryData>> categoryDataMapList = new ArrayList<Map<String, CategoryData>>();
@@ -5701,7 +5720,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@ResponseBody
 	public Map<String, CategoryData> saveSubCategoryData(
 			@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData, final Model model)
-			throws CMSItemNotFoundException, NullPointerException, JSONException
+					throws CMSItemNotFoundException, NullPointerException, JSONException
 	{
 
 		final Map<String, CategoryData> categoryDataMap = new HashMap<String, CategoryData>();
@@ -5806,7 +5825,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@ResponseBody
 	public void removeSingleCategory(@RequestParam(value = ModelAttributetConstants.CATEGORYDATA) final String categoryData,
 			@RequestParam(value = ModelAttributetConstants.BRAND_DATA) final String brandData, final Model model)
-			throws CMSItemNotFoundException, NullPointerException, JSONException
+					throws CMSItemNotFoundException, NullPointerException, JSONException
 	{
 		try
 		{
@@ -5959,7 +5978,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public AWBResponseData getAWBStatus(@RequestParam(value = ModelAttributetConstants.ORDERCODE) final String orderCode,
 			@RequestParam(value = ModelAttributetConstants.OrderLineId) final String orderLineId,
 			@RequestParam(value = ModelAttributetConstants.RETURN_AWB) final String returnAWB, final Model model)
-			throws CMSItemNotFoundException, NullPointerException, JSONException
+					throws CMSItemNotFoundException, NullPointerException, JSONException
 	{
 		AWBResponseData responseData = new AWBResponseData();
 		ConsignmentModel consignmentModel = null;
@@ -6097,7 +6116,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return String
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	@RequestMapping(value = "/reviews", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String review(
@@ -6140,11 +6159,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 								throw new EtailNonBusinessExceptions(exception);
 							}
 							productDataMap.put(productData.getCode(), productData);
-							/*
-							 * if (productDataMap.size() == 10) { break; }
-							 */
 
-							LOG.debug("************************ " + productDataMap);
+							LOG.debug("**********ProductDataMap************** " + productDataMap);
 						}
 					}
 				}
@@ -6159,7 +6175,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					final ProductData productDataValue = (ProductData) productEntry.getValue();
 					final boolean isCommented = gigyaCommentService.getReviewsByCategoryProductId(productDataValue.getRootCategory(),
 							productDataValue.getCode(), customerModel.getUid());
-					if (isCommented == false)
+					if (!isCommented)
 					{
 						productDataModifyMap.put(productDataValue.getCode(), productDataValue);
 						if (productDataModifyMap.size() == 10)
@@ -6267,12 +6283,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return Map
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	@RequestMapping(value = "/review/{operation}", method = RequestMethod.GET)
 	@RequireHardLogIn
 	@ResponseBody
-	public Map<String, String> modifyReview(
-			@PathVariable("operation") final String operation,
+	public Map<String, String> modifyReview(@PathVariable("operation") final String operation,
 			@RequestParam(value = ModelAttributetConstants.CATEGORY_ID, defaultValue = ModelAttributetConstants.CATEGORY_ID_VAL) final String categoryID,
 			@RequestParam(value = ModelAttributetConstants.STREAM_ID, defaultValue = ModelAttributetConstants.STREAM_ID_VAL) final String streamID,
 			@RequestParam(value = ModelAttributetConstants.COMMENT_ID, defaultValue = ModelAttributetConstants.COMMENT_ID_VAL) final String commentID,
@@ -6296,12 +6311,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
 				{
-					jsonMap.put("status", "success");
+					jsonMap.put(STATUS, "success");
 					return jsonMap;
 				}
 				else
 				{
-					jsonMap.put("status", "failed");
+					jsonMap.put(STATUS, "failed");
 					return jsonMap;
 				}
 			}
@@ -6312,12 +6327,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
 				{
-					jsonMap.put("status", "success");
+					jsonMap.put(STATUS, "success");
 					return jsonMap;
 				}
 				else
 				{
-					jsonMap.put("status", "failed");
+					jsonMap.put(STATUS, "failed");
 					return jsonMap;
 				}
 			}

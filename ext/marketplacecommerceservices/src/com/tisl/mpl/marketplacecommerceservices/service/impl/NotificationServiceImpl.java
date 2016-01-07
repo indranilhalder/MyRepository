@@ -41,7 +41,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
-import com.tisl.mpl.model.SemiClosedRestrictionModel;
 import com.tisl.mpl.sns.push.service.MplSNSMobilePushService;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.NotificationDataComparator;
@@ -112,7 +111,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -124,7 +123,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -155,7 +154,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -177,7 +176,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -201,7 +200,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -229,7 +228,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -287,7 +286,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -341,7 +340,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getVoucher()
 	 */
 	@Override
@@ -353,7 +352,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -373,7 +372,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */
@@ -386,7 +385,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getAllVoucherList(de.hybris.platform.core
 	 * .model.user.CustomerModel, java.util.List)
@@ -411,7 +410,7 @@ public class NotificationServiceImpl implements NotificationService
 				{
 					boolean dateRestrExists = false;
 					boolean userRestrExists = false;
-					boolean semiClosedRestrExists = false;
+					final boolean semiClosedRestrExists = false;
 
 					DateRestrictionModel dateRestrObj = null;
 					UserRestrictionModel userRestrObj = null;
@@ -432,11 +431,13 @@ public class NotificationServiceImpl implements NotificationService
 							userRestrExists = true;
 							userRestrObj = (UserRestrictionModel) restrictionModel;
 						}
-						if (restrictionModel instanceof SemiClosedRestrictionModel)
-						{
-							semiClosedRestrExists = true;
-							//semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel;
-						}
+
+						//TODO: Semi Closed Restriction-----Commented as functionality out of scope of R2.1   Uncomment when in scope
+						//						if (restrictionModel instanceof SemiClosedRestrictionModel)
+						//						{
+						//							semiClosedRestrExists = true;
+						//							//semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel;
+						//						}
 						//							if (restrictionModel instanceof SemiClosedRestrictionModel)
 						//							{
 						//								semiClosedRestrExists = false;
