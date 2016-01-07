@@ -969,7 +969,8 @@ $(document).ready(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
 		pageNo = parseInt(pageNo);
 		pageNo = pageNo+1;
-		if(pageNo <= ${totalPages})
+		var totalPages = ${totalPages};
+		if(totalPages!="" && pageNo <= ${totalPages})
 			{
 			window.location.href="?page="+pageNo;
 			}
