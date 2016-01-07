@@ -89,7 +89,7 @@
 		</itemtype> -->
 		
 		<!-- Tata Etail-Mail Sending Process Model -->
-			<itemtype code="EventBasedCouponMailProcess" extends="StoreFrontProcess" autocreate="true" generate="true"
+			<!-- <itemtype code="EventBasedCouponMailProcess" extends="StoreFrontProcess" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.jalo.EventBasedCouponMailProcess">
 				<description>Represents customer related store front business process.</description>
 				<attributes>
@@ -102,9 +102,10 @@
 						<description>Voucher Model</description>
 					</attribute>
 				</attributes>
-			</itemtype>
+			</itemtype> -->
 
-          <itemtype code="EventCouponCreationJob" extends="CronJob"
+<!-- Commented out as Event specific coupons are out of scope for Rel2.1. Uncomment when in scope-->
+          <!-- <itemtype code="EventCouponCreationJob" extends="CronJob"
 				autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.jalo.EventCouponCreationJob">				
 				<attributes>
@@ -185,7 +186,7 @@
 				</attribute>
 				
 			   </attributes>
-          </itemtype>
+          </itemtype> -->
           
           <!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
           <!-- Channel Restriction for Voucher -->
