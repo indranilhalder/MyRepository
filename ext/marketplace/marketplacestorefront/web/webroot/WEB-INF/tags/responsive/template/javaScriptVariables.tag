@@ -46,4 +46,4 @@
 	<template:javaScriptAddOnsVariables/>
 	
 	<%-- generated variables from commonVariables.properties --%>
-	<script type="text/javascript" src="${sharedResourcePath}/js/generatedVariables.js"></script>
+	<%-- <script type="text/javascript" src="${sharedResourcePath}/js/generatedVariables.js"></script> --%>

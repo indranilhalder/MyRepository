@@ -152,20 +152,6 @@
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.search.js"></script>
 
 
-<!--[if lt IE 9]>
-<link rel="stylesheet" type="text/css" med="all" href="${themeResourcePath}/css/main-ie8.css"/>
-<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<script type="text/javascript" src="${commonResourcePath}/js/mpl/html5shiv.js"></script>
-<script type="text/javascript" src="${commonResourcePath}/js/mpl/respond.js"></script>
-<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-<script type="text/javascript" src="${commonResourcePath}/js/mpl/jquery.backstretch.min.js"></script>
-<script type="text/javascript" src="${commonResourcePath}/js/mpl/background-size-shim.js"></script>
-<![endif]-->
-
-<!--[if lt IE 10]>
-<script type="text/javascript" src="${commonResourcePath}/js/mpl/jquery.html5-placeholder-shim.js"></script>
-<![endif]-->
-
 <!-- Search feed back End -->
 
 
@@ -226,3 +212,43 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.sellerDetails.js"></script>
 </c:if> 
+
+
+
+
+<c:if test="${isIAEnabled}">
+<script type="text/javascript"
+	src="${commonResourcePath}/js/ia-plugins/ia_plugin_general.js" defer="defer"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/ia-plugins/tataia.js" defer="defer"></script>
+</c:if>
+
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/populateAddressDetail') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/addNewAddress') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/editAddress') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/set-default-address/*') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/remove-address/*') or
+
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/orders') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/order/*') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnRequest') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
+	<script type="text/javascript"
+		src="${commonResourcePath}/js/acc.accountpagination.js"></script>
+</c:if>
+
+<script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/feedback.js"></script>
+	
+	
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${commonResourcePath}/js/html5shiv.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/respond.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/jquery.backstretch.min.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/background-size-shim.js"></script>
+<![endif]-->
+
+<!--[if lt IE 10]>
+<script type="text/javascript" src="${commonResourcePath}/js/jquery.html5-placeholder-shim.js"></script>
+<![endif]-->

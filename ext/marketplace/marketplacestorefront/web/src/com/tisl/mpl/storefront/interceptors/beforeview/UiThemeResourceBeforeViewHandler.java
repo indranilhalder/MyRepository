@@ -158,6 +158,7 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 
 		modelAndView.addObject("isMinificationEnabled",
 				Boolean.valueOf(siteConfigService.getBoolean("storefront.minification.enabled", false)));
+		modelAndView.addObject("minificationTimeStamp",siteConfigService.getString("marketplace.minification.build.time", ""));
 
 		final DeviceData currentDetectedDevice = deviceDetectionFacade.getCurrentDetectedDevice();
 		modelAndView.addObject("detectedDevice", currentDetectedDevice);

@@ -29,8 +29,7 @@ $(document).ready(function (){
 	var end = "";
 	var initStr = "";
 	var endStr = "";
-	console.log("in js " + totalItem);
-	//if(undefined !=totalItem){
+	
 	if (totalItem > 1) {
 		if(parseInt(pagelimitAcc) < parseInt(totalItem)){
 			end = pagelimitAcc;
