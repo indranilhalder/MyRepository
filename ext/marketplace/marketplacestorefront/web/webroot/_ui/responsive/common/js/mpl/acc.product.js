@@ -548,16 +548,8 @@ addToBagFromWl: function(ussid, addedToCart) {
 		    },
 			success : function(data) {
 				//alert("data: "+data);
-				/*if(stock==0)
-				{
-					//alert("formId: "+formId+"TitleoutOfStockId");
-					//alert("stock: "+stock);
-					$("#"+formId+"TitleoutOfStockId").html("<font color='#ff1c47'>" + $('#addToCartSizeGuideTitleoutOfStockId').text() + "</font>");
-					$("#"+formId+"TitleoutOfStockId").show()//.fadeOut(6000);
-					 return false;
-				}
-				else */if(data.indexOf("cnt:") >= 0){
-					alert("addtobag");
+				if(data.indexOf("cnt:") >= 0){
+					//alert("addtobag");
 				$("#"+formId+"TitleSuccess").html("");
 				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
 
@@ -584,7 +576,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 				}
 				else if(data=="outofinventory"){
 					
-					alert("outofinventory: "+data);
+					//alert("outofinventory: "+data);
 					 $("#"+formId+"noInventorySize").html("<font color='#ff1c47'>" + $('#addToCartSizeGuidenoInventorySize').text() + "</font>");
 					 $("#"+formId+"noInventorySize").show().fadeOut(6000);
 			   	     return false;
