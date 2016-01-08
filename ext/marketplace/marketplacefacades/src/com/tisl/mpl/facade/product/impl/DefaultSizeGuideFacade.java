@@ -8,13 +8,11 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SizeGuideModel;
@@ -35,13 +33,18 @@ import com.tisl.mpl.wsdto.SizeGuideWsDataValue;
  */
 public class DefaultSizeGuideFacade implements SizeGuideFacade
 {
+	/**
+	 * 
+	 */
+	private static final String CLOTHING = "Clothing";
+
 	@Resource
 	private SizeGuideService sizeGuideService;
 
 	@Resource
 	private Converter<SizeGuideModel, SizeGuideData> sizeGuideConverter;
 
-	@Autowired
+	@Resource(name = "sizeGuideComparator")
 	private SizeGuideComparator sizeGuideComparator;
 
 
@@ -51,43 +54,50 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 	 * @return list of SizeGuideData
 	 */
 	@Override
-	public Map<String, List<SizeGuideData>> getProductSizeguide(final String productCode) throws CMSItemNotFoundException
+	public Map<String, List<SizeGuideData>> getProductSizeguide(final String productCode, final String categoryType)
+			throws CMSItemNotFoundException
 	{
-		//// change it null. no need of new ArrayList<SizeGuideModel>();
 		List<SizeGuideModel> sizeGuideModels = null; //changed to null
 		List<SizeGuideData> sizeDataValues = null;
 		SizeGuideData sizeGuideData = null;
-		final HashMap<String, List<SizeGuideData>> sizeGuideDatas = new HashMap<String, List<SizeGuideData>>();
-		final HashMap<String, List<SizeGuideData>> sizeGuideSortedDatas = new HashMap<String, List<SizeGuideData>>();
-
+		final TreeMap<String, List<SizeGuideData>> sizeGuideDatas = new TreeMap<String, List<SizeGuideData>>();
+		final TreeMap<String, List<SizeGuideData>> sizeGuideSortedDatas = new TreeMap<String, List<SizeGuideData>>();
+		final List<SizeGuideData> sizeGuideDataListForFootwear = new ArrayList<SizeGuideData>();
 		try
 		{
 			sizeGuideModels = sizeGuideService.getProductSizeGuideList(productCode);
-			/* Converting the SizeGuide Model to SizeGuide Data transaction */
 			if (sizeGuideModels != null)
 			{
-				//// Y no converter and populator for SizeGuide??? Y we are writing code here
-				//// Converting the SizeGuide Model to SizeGuide Data transaction ????
 				for (final SizeGuideModel sizeGuideModel : sizeGuideModels)
 				{
 					//convertor is added
 					sizeGuideData = getSizeGuideConverter().convert(sizeGuideModel);
-					addToMap(sizeGuideDatas, sizeGuideModel.getDimension(), sizeGuideData);
+					if (categoryType.equalsIgnoreCase(CLOTHING))
+					{
+						addToMap(sizeGuideDatas, sizeGuideModel.getDimension(), sizeGuideData);
+					}
+					else
+					{
+						sizeGuideDataListForFootwear.add(sizeGuideData);
+					}
 				}
-
 			}
-
 			/* sorting the Size guide map based on dimension */
-			for (final String key : sizeGuideDatas.keySet())
+			if (categoryType.equalsIgnoreCase(CLOTHING))
 			{
-				sizeDataValues = sizeGuideDatas.get(key);
-				Collections.sort(sizeDataValues, sizeGuideComparator);
-				sizeGuideSortedDatas.put(key, sizeDataValues);
+
+				for (final String key : sizeGuideDatas.keySet())
+				{
+					sizeDataValues = sizeGuideDatas.get(key);
+					Collections.sort(sizeDataValues, sizeGuideComparator);
+					sizeGuideSortedDatas.put(key, sizeDataValues);
+				}
 			}
-
-
-
-
+			else if (categoryType.equalsIgnoreCase("Footwear"))
+			{
+				Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
+				sizeGuideSortedDatas.put(productCode, sizeGuideDataListForFootwear);
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -114,7 +124,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 		try
 		{
-			final Map<String, List<SizeGuideData>> sizeGuideDatas = getProductSizeguide(productCode);
+			final Map<String, List<SizeGuideData>> sizeGuideDatas = getProductSizeguide(productCode, "x");
 
 			/* Converting the SizeGuide Model to SizeGuide Web service Data transaction */
 			if (sizeGuideDatas != null)
@@ -217,5 +227,10 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 		this.sizeGuideConverter = sizeGuideConverter;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
+	 */
 
 }
