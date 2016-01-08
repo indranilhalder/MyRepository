@@ -1,5 +1,7 @@
 $(document).ready(function (){
 	//var divItem = "";
+	
+	// -----------*** TISPRO-48 --- Pagination with Lazy loading ***----------------
 	var pageIndex = $('#pageIndex').val();
 	var pagableSize = $('#pagableSize').val();
 	var pageNo = parseInt(pageIndex)+1;
@@ -15,6 +17,8 @@ $(document).ready(function (){
 	//	alert("pageIndex : "+pageIndex+"\n"+"pagableSize : "+pagableSize+"\n"+"pageNo : "+pageNo+"\n"+"endCount : "+endCount+"\n"+"startCount : "+startCount);
 	//	alert(startCount+"-"+endCount+ " of " + totalItemNew + " Orders");
 
+	// -----------*** TISPRO-48 --- Pagination with Lazy loading ***----------------
+	
 	for (var i = 1; i <= 2; i++) {
 		if (i == 1) {
 			divItem = divItem
@@ -92,9 +96,6 @@ function pageNavigation(num) {
 	$("#ofPaginationUp").html(divOrder);
 	dispPageLimit(startIndex, endIndex);
 }
-
-
-
 
 
 

@@ -17,6 +17,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<!-- TISPRO-48 ---- created mpl-pagination.tag for pagination with lazy loading with customization-->
 
 <c:set var="themeMsgKey"
 	value="${not empty msgKey ? msgKey : 'search.page'}" />

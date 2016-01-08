@@ -1989,6 +1989,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						else
 						{
 							auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+							juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
 						}
 					}
 					else
