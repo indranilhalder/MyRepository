@@ -733,8 +733,15 @@
 							</c:otherwise>
 							</c:choose>
 							</c:forEach>
-							<!-- <li class="number last "><a href="?page=2">2</a></li> -->
-						<c:if test="${totalPages gt param.page}">
+							<c:choose>
+								<c:when test="${param.page eq null}">
+									<c:set var="page" value="1"></c:set>
+								</c:when>
+								<c:otherwise>
+									<c:set var="page" value="${param.page}"></c:set>
+								</c:otherwise>
+							</c:choose>
+						<c:if test="${totalPages gt 1 and totalPages gt page }">
 							<li class="next"><a href="#nogo"><spring:theme code="myaccount.review.next"/> <span
 									class="lookbook-only">Page</span></a></li>
 									</c:if>
