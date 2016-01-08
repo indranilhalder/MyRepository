@@ -806,7 +806,8 @@ public class MplDiscountUtil
 				&& null != cashBackModel.getPercentageDiscount())
 		{
 			final FiredPromoData firedPromo = new FiredPromoData();
-			firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifPercentage"));
+			firedPromo.setPromoMessage(Localization
+					.getLocalizedString(MarketplacecommerceservicesConstants.PRODUCT_PROMO_PERCENTAGE_FIRE_MSG));
 			if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 			{
 				promoData.setFiredPromotion(firedPromo);
@@ -838,8 +839,6 @@ public class MplDiscountUtil
 		}
 		return promoData;
 	}
-
-
 
 	/**
 	 * @Description : For BOGO Promotion
@@ -1066,7 +1065,8 @@ public class MplDiscountUtil
 				&& null != oModel.getPercentageDiscount())
 		{
 			final FiredPromoData firedPromo = new FiredPromoData();
-			firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifPercentage"));
+			firedPromo.setPromoMessage(Localization
+					.getLocalizedString(MarketplacecommerceservicesConstants.PRODUCT_PROMO_PERCENTAGE_FIRE_MSG));
 			if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 			{
 				promoData.setFiredPromotion(firedPromo);
@@ -1131,7 +1131,8 @@ public class MplDiscountUtil
 		if (null != oModel.getPercentageDiscount())
 		{
 			final FiredPromoData firedPromo = new FiredPromoData();
-			firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifPercentage"));
+			firedPromo.setPromoMessage(Localization
+					.getLocalizedString(MarketplacecommerceservicesConstants.PRODUCT_PROMO_PERCENTAGE_FIRE_MSG));
 			if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 			{
 				promoData.setFiredPromotion(firedPromo);
@@ -1214,7 +1215,8 @@ public class MplDiscountUtil
 		if (null != oModel.getPercentageDiscount())
 		{
 			final FiredPromoData firedPromo = new FiredPromoData();
-			firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifPercentage"));
+			firedPromo.setPromoMessage(Localization
+					.getLocalizedString(MarketplacecommerceservicesConstants.PRODUCT_PROMO_PERCENTAGE_FIRE_MSG));
 			if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 			{
 				promoData.setFiredPromotion(firedPromo);

@@ -769,9 +769,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String order(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode, final Model model)
-			throws CMSItemNotFoundException
+	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
+			final Model model) throws CMSItemNotFoundException
 	{
+		if (null == orderCode)
+		{
+			return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_404;
+		}
 		final ReturnRequestForm returnRequestForm = new ReturnRequestForm();
 		final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();
 		final Map<String, String> currentStatusMap = new HashMap<>();

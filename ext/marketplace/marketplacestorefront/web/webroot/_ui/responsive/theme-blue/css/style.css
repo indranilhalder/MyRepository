@@ -13325,7 +13325,6 @@ div.get-in-touch ul li:after,
     width: 80px;
 }
 .no-results ul li:before,
-div.get-in-touch ul li:before,
 .rewards div.customer-service ul li:before{
     content: "";
 }
