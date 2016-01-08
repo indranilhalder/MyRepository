@@ -109,7 +109,7 @@
 		class="com.tisl.mpl.coupon.facade.impl.DefaultCustomerDetailsFacade">
 	</bean>
 	
-	<bean id="couponEventJob" class="com.tisl.mpl.coupon.facade.job.CouponEventJob" autowire="byName"/>
+	<!-- <bean id="couponEventJob" class="com.tisl.mpl.coupon.facade.job.CouponEventJob" autowire="byName"/> -->
      
      <!-- Coupon Helper Class -->
 	<bean id="mplCouponHelper" class="com.tisl.mpl.helper.MplCouponHelper" />

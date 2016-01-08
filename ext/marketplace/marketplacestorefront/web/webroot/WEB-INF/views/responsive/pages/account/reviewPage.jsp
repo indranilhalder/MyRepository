@@ -106,7 +106,7 @@
 										</div>
 										<div class="short-info">
 											<p class="company">${product.value.brand.brandname}</p>
-											<h3 class="product-name">${product.value.name}</h3>
+											<h3 class="product-name">${product.value.productTitle}</h3>
 											<!-- <div class="price">
 												<p class="normal">
 													<i class="rupee"></i>100,000

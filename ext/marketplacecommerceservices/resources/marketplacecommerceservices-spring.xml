@@ -1511,4 +1511,9 @@
 	<bean id="findOrderDiscountValuesStrategy"
 		class="com.tisl.mpl.order.impl.MplFindOrderDiscountValuesStrategy"
 		parent="abstractBusinessService"/>
+		
+		 <!--  pdp seller priority report cron job -->
+    <bean id="sellerPriorityReportJob" parent="abstractJobPerformable" class="com.tisl.mpl.marketplacecommerceservices.jobs.SellerPriorityReportJob" autowire="byName">
+    </bean>
+	  <!--  pdp seller priority report cron job ends -->
 </beans>

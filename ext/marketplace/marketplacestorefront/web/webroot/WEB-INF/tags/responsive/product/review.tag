@@ -17,7 +17,7 @@
 					<img class="new brush-strokes-sprite sprite-New"
 					style="z-index: 1; display: block;"
 					src="/store/_ui/responsive/common/images/transparent.png"> </c:if> <a
-					class="thumb" href="${productUrl}" title="${product.name}"> <product:productPrimaryImage
+					class="thumb" href="${productUrl}" title="${product.productTitle}"> <product:productPrimaryImage
 						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
 
 				</a>
@@ -30,7 +30,7 @@
 				
 							                  
 						<h3 class="product-name">
-							<a class="name" href="${productUrl}">${product.name}</a>
+							<a class="name" href="${productUrl}">${product.productTitle}</a>
 
 						</h3>
 					</div>
