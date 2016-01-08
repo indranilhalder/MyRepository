@@ -101,7 +101,7 @@ public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TAR
 							 */
 							if (null != media.getMediaPriority())
 							{
-								if (MediaTypeEnum.VIDEO.equals(media.getMediaType()))
+								if (null != media.getMediaType() && MediaTypeEnum.VIDEO.equals(media.getMediaType()))
 								{
 									final int newPriority = (media.getMediaPriority() == null ? 0 : media.getMediaPriority().intValue())
 											+ MarketplaceFacadesConstants.PRIORITY_INCREMENT;
