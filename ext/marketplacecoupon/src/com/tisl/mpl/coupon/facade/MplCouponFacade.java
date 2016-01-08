@@ -6,7 +6,9 @@ package com.tisl.mpl.coupon.facade;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -55,8 +57,12 @@ public interface MplCouponFacade
 	 * @return boolean
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
 	 */
-	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, CalculationException;
+	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, CalculationException,
+			NumberFormatException, JaloInvalidParameterException, JaloSecurityException;
 
 
 	/**
