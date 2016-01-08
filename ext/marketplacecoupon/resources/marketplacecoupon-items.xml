@@ -267,5 +267,18 @@
 			</attributes>
 		</itemtype>
 		
+		<itemtype code="Voucher" autocreate="false" generate="false">
+			<attributes>
+				<attribute qualifier="maxDiscountValue" type="java.lang.Double">
+					<description>the code used redeeming the voucher.</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="true"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
 	</itemtypes>
 </items>

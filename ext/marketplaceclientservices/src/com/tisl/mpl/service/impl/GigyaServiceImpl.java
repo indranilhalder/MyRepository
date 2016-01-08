@@ -45,8 +45,6 @@ public class GigyaServiceImpl implements GigyaService
 	private String proxyPort;
 	private String proxyEnabled;
 	private String proxyAddress;
-	public static final String TRUE_STATUS = "true";
-	public static final String EXCEPTION_MESSAGE = "Exception";
 
 	public String getApikey()
 	{
@@ -219,11 +217,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
@@ -273,7 +271,7 @@ public class GigyaServiceImpl implements GigyaService
 
 				//Defining the request
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+				if (proxyEnabledStatus.equalsIgnoreCase("true"))
 				{
 					setProxy();
 					request.setProxy(proxy);
@@ -336,7 +334,7 @@ public class GigyaServiceImpl implements GigyaService
 
 		catch (final Exception ex)
 		{
-			LOG.error(EXCEPTION_MESSAGE, ex);
+			LOG.error("Exception", ex);
 
 		}
 
@@ -359,11 +357,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_LOGOUT);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_LOGOUT);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 
 			if (getSecretkey() != null && getApikey() != null)
@@ -371,7 +369,7 @@ public class GigyaServiceImpl implements GigyaService
 			{
 				//Defining the request
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+				if (proxyEnabledStatus.equalsIgnoreCase("true"))
 				{
 					setProxy();
 					request.setProxy(proxy);
@@ -415,7 +413,7 @@ public class GigyaServiceImpl implements GigyaService
 
 		catch (final Exception ex)
 		{
-			LOG.error(EXCEPTION_MESSAGE + ex);
+			LOG.error("Exception" + ex);
 			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND + ex);
 
 		}
@@ -467,11 +465,11 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 			// Define the API-Key and Secret key .
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 
 			final JSONObject loginUserInfo = new JSONObject();
@@ -482,7 +480,7 @@ public class GigyaServiceImpl implements GigyaService
 				//Defining the request
 				final String method = gigyaMethod;
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), method);
-				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+				if (proxyEnabledStatus.equalsIgnoreCase("true"))
 				{
 					setProxy();
 					request.setProxy(proxy);
@@ -541,7 +539,7 @@ public class GigyaServiceImpl implements GigyaService
 
 		catch (final Exception ex)
 		{
-			LOG.error(EXCEPTION_MESSAGE + ex);
+			LOG.error("Exception" + ex);
 			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND + ex);
 
 		}
@@ -553,11 +551,11 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 			// Define the API-Key and Secret key .
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final JSONObject loginUserInfo = new JSONObject();
 
@@ -566,7 +564,7 @@ public class GigyaServiceImpl implements GigyaService
 			{
 				final String method = gigyaMethod;
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), method);
-				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+				if (proxyEnabledStatus.equalsIgnoreCase("true"))
 				{
 					setProxy();
 					request.setProxy(proxy);
@@ -619,13 +617,10 @@ public class GigyaServiceImpl implements GigyaService
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(EXCEPTION_MESSAGE, ex);
+			LOG.error("Exception", ex);
 			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND, ex);
 		}
 
 	}
-
-
-
 
 }

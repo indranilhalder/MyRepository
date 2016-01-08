@@ -4,7 +4,9 @@ import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLo
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -58,11 +60,15 @@ public class MplCouponController
 	 * @throws EtailNonBusinessExceptions
 	 * @throws JaloPriceFactoryException
 	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
 	 */
 	@RequestMapping(value = "/redeem", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
-			final String bankNameSelected) throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException
+			final String bankNameSelected) throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException,
+			NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
 		LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
@@ -126,8 +132,8 @@ public class MplCouponController
 	 */
 	@RequestMapping(value = "/release", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode)
-			throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException
+	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode) throws EtailNonBusinessExceptions,
+			JaloPriceFactoryException, CalculationException
 	{
 		LOG.debug("The coupon code to be released by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();

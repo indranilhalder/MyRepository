@@ -626,9 +626,4 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	{
 		this.orderModelService = orderModelService;
 	}
-
-
-
-
-
 }
