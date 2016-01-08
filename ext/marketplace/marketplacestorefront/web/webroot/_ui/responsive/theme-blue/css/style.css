@@ -12814,7 +12814,7 @@ div.pdp .reviews .toolbar select.white {
 }		
 @media (min-width: 1000px) {		
     .modal.size-guide .sizes .tables {		
-        transform: translateY(15%);		
+        transform: translateY(5%);		
     }		
 }		
 .modal.size-guide .sizes .tables::after {		
@@ -12871,13 +12871,14 @@ div.pdp .reviews .toolbar select.white {
 }		
 @media (min-width: 790px) {		
     .modal.size-guide .sizes .img {		
-        padding: 0 20px 20px 10px;		
+        padding: 0 20px 10px 10px;		
     }		
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .img {		
         width: 40%;		
-        float: right;		
+        float: right;	
+            margin-top: -12px;	
     }		
 }		
 .modal.size-guide .sizes .img::after {		
@@ -12902,7 +12903,7 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .details .attributes {		
     width: 80%;		
    /*  margin: 20px auto; */
-       margin: 20px 30px 20px 140px;		
+       margin: 10px 30px 20px 140px;		
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .details .attributes {		

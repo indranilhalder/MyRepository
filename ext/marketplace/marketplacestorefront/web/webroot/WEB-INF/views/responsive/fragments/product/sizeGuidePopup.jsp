@@ -117,7 +117,7 @@
 			<img src="${imageURL}" alt="sizeGuideImage" />
 			</c:when>
 			<c:when test="${product.rootCategory=='Footwear'}">
-			<img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:75%;" />
+			<img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" />
 			</c:when>
 			</c:choose>
 		</div>
@@ -125,7 +125,7 @@
 		<div class="details">
 	 
  <h3 class="company">
-              ${product.brand.brandname}<div id="sellerSelName"></div></h3> <%-- <spring:theme code="product.by"/> --%>
+              ${product.brand.brandname}&nbsp;&nbsp;<span id="sellerSelName"></span></h3> <%-- <spring:theme code="product.by"/> --%>
              
     <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
 
