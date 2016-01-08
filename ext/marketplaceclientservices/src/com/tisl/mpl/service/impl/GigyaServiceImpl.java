@@ -45,6 +45,8 @@ public class GigyaServiceImpl implements GigyaService
 	private String proxyPort;
 	private String proxyEnabled;
 	private String proxyAddress;
+	public static final String TRUE_STATUS = "true";
+	public static final String EXCEPTION_MESSAGE = "Exception";
 
 	public String getApikey()
 	{
@@ -271,7 +273,7 @@ public class GigyaServiceImpl implements GigyaService
 
 				//Defining the request
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-				if (proxyEnabledStatus.equalsIgnoreCase("true"))
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
 				{
 					setProxy();
 					request.setProxy(proxy);
@@ -334,7 +336,7 @@ public class GigyaServiceImpl implements GigyaService
 
 		catch (final Exception ex)
 		{
-			LOG.error("Exception", ex);
+			LOG.error(EXCEPTION_MESSAGE, ex);
 
 		}
 
@@ -369,7 +371,7 @@ public class GigyaServiceImpl implements GigyaService
 			{
 				//Defining the request
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-				if (proxyEnabledStatus.equalsIgnoreCase("true"))
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
 				{
 					setProxy();
 					request.setProxy(proxy);
@@ -413,7 +415,7 @@ public class GigyaServiceImpl implements GigyaService
 
 		catch (final Exception ex)
 		{
-			LOG.error("Exception" + ex);
+			LOG.error(EXCEPTION_MESSAGE + ex);
 			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND + ex);
 
 		}
@@ -480,7 +482,7 @@ public class GigyaServiceImpl implements GigyaService
 				//Defining the request
 				final String method = gigyaMethod;
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), method);
-				if (proxyEnabledStatus.equalsIgnoreCase("true"))
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
 				{
 					setProxy();
 					request.setProxy(proxy);
@@ -539,10 +541,88 @@ public class GigyaServiceImpl implements GigyaService
 
 		catch (final Exception ex)
 		{
-			LOG.error("Exception" + ex);
+			LOG.error(EXCEPTION_MESSAGE + ex);
 			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND + ex);
 
 		}
+	}
+
+	@Override
+	public void notifyGigyaToLinkAccounts(final String siteUid, final String gigyaUid, final String fName, final String lName)
+	{
+		try
+		{
+			// Define the API-Key and Secret key .
+			final String gigyaMethod = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+
+			final JSONObject loginUserInfo = new JSONObject();
+
+			if (getSecretkey() != null && getApikey() != null)
+
+			{
+				final String method = gigyaMethod;
+				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), method);
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+				{
+					setProxy();
+					request.setProxy(proxy);
+				}
+				request.setParam("siteUID", siteUid);
+				request.setParam("UID", gigyaUid);
+				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
+				request.setAPIDomain(getDomain());
+				if (fName != null || lName != null)
+				{
+					loginUserInfo.put("firstName", fName);
+					loginUserInfo.put("lastName", lName);
+				}
+
+				if (loginUserInfo.toString() != null)
+				{
+					request.setParam("userInfo", loginUserInfo.toString());
+				}
+
+
+				LOG.debug("notifyGigyaToLinkAccounts,UID:-" + siteUid);
+				LOG.debug("notifyGigyaToLinkAccounts,GIGYA UID:-" + gigyaUid);
+				LOG.debug(MarketplacecclientservicesConstants.WAIT_RESPONSE);
+
+				// Step 3 - Sending the request
+				final GSResponse response = request.send();
+
+				// Step 4 - handling the request's response.
+				if (response != null)
+				{
+					if (response.getErrorCode() == 0)
+					{
+						LOG.debug(response.getResponseText());
+					}
+					else
+					{
+						response.getResponseText();
+					}
+
+				}
+
+				else
+				{
+					LOG.debug(MarketplacecclientservicesConstants.NULL_RESPONSE);
+				}
+
+
+			}
+
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(EXCEPTION_MESSAGE, ex);
+			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND, ex);
+		}
+
 	}
 
 

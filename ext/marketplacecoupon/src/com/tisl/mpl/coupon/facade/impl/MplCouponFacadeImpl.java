@@ -36,6 +36,7 @@ import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.text.SimpleDateFormat;
@@ -735,14 +736,19 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final List<OrderData> orderDataList = new ArrayList<OrderData>();
 		final List<VoucherData> voucherDataList = new ArrayList<VoucherData>();
 		final List<String> voucherCodeList = new ArrayList<String>();
+		final List<String> amountList = new ArrayList<String>();
 		final Set<String> treeStringSet = new TreeSet<>();
 		final List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 		Collection<DiscountModel> discountModelList = new ArrayList<DiscountModel>();
+
 		final Map<OrderData, VoucherData> orderVoucherDataMap = new HashMap<OrderData, VoucherData>();
 		final Map<Date, OrderData> orderDateMap = new TreeMap<Date, OrderData>(Collections.reverseOrder());
+
+		final Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
 		final CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 		VoucherData voucherData = new VoucherData();
-		double savedSum = 0;
+		double savedSum = 0.0;
+
 		int couponsRedeemedCount = 0;
 		boolean isOrderDateValid = false;
 
@@ -757,13 +763,17 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				LOG.debug("Step 2-************************Inside orderModelsList");
 				discountModelList = getDefaultVoucherService().getAppliedVouchers(order); // getting the list of all vouchers that are redeemed through orders
 				final String orderCode = order.getCode();
+
 				final OrderData orderDetailsData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 
 				for (final DiscountModel discount : discountModelList)
 				{
 					LOG.debug("Step 3-************************Inside Discount Model");
 					VoucherModel voucher = new VoucherModel();
+					Collection<VoucherInvalidationModel> voucherInvalidations = new ArrayList<VoucherInvalidationModel>();
 					voucher = (VoucherModel) discount;
+					voucherInvalidations = voucher.getInvalidations();
+
 					try
 					{
 						voucherData = getDefaultVoucherFacade().getVoucher(((PromotionVoucherModel) voucher).getVoucherCode());//type casting to PromotionVoucherModel
@@ -771,19 +781,32 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						if (null != orderDetailsData && null != voucherData)
 						{
 							voucherDataList.add(voucherData);
-							orderDataList.add(orderDetailsData);
-							orderVoucherDataMap.put(orderDetailsData, voucherData);//mapping each order to its corresponding redeemed voucher
 							isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());// restrict orders to last six months only
+
+							if (isOrderDateValid)
+							{
+								orderDataList.add(orderDetailsData);
+							}
+
+							orderVoucherDataMap.put(orderDetailsData, voucherData);//mapping each order to its corresponding redeemed voucher
+
 							if (isOrderDateValid)
 							{
 								orderDateMap.put(orderDetailsData.getCreated(), orderDetailsData);//mapping order with date such that the latest order is on top
+
+								if (voucherCodeInvalidationMap.isEmpty())
+								{
+									voucherCodeInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);
+								}
+								else
+								{
+									if (!(voucherCodeInvalidationMap.containsKey(voucherData.getVoucherCode())))
+									{
+										voucherCodeInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);
+									}
+								}
+
 							}
-
-							LOG.debug("Step 4-************************Inside voucherValue with price-tag like INR");
-
-							final int vFormatINRLength = voucherData.getValueFormatted().length();
-							savedSum = savedSum
-									+ Double.parseDouble(voucherData.getValueFormatted().substring(0, (vFormatINRLength - 3))); //calculating the amount saved through vouchers
 
 
 						}
@@ -836,6 +859,44 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				}
 			}
 		}
+
+		if (!voucherCodeInvalidationMap.isEmpty())
+		{
+			final Iterator voucherCodeInvalidationIterator = voucherCodeInvalidationMap.entrySet().iterator();
+			while (voucherCodeInvalidationIterator.hasNext())
+			{
+				LOG.debug("************************voucherCodeInvalidationMap ITERATE********************");
+				final Map.Entry voucherCodeInvalidationEntry = (Map.Entry) voucherCodeInvalidationIterator.next();
+				final String voucherCode = (String) voucherCodeInvalidationEntry.getKey();
+				final Collection<VoucherInvalidationModel> voucherInvalidationsCol = (Collection<VoucherInvalidationModel>) voucherCodeInvalidationEntry
+						.getValue();
+
+				if (null != voucherCode)
+				{
+					for (final VoucherInvalidationModel voucherInv : voucherInvalidationsCol)
+					{
+
+						if (null != voucherInv.getSavedAmount())
+						{
+							amountList.add(String.valueOf(voucherInv.getSavedAmount())); //calculating the amount saved through vouchers
+						}
+
+					}
+				}
+			}
+		}
+
+
+		if (!amountList.isEmpty())
+		{
+			for (final String amount : amountList)
+			{
+				LOG.debug("Step 4-************************Inside amountList");
+
+				savedSum += Double.parseDouble(amount);
+			}
+		}
+
 
 		// calculating no. of unique coupon codes that has been redeemed by the customer
 
