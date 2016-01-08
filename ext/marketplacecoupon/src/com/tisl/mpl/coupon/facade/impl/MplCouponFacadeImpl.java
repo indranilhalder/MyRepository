@@ -518,15 +518,21 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			final VoucherEntrySet entrySet = getVoucherModelService().getApplicableEntries(lastVoucher, cartModel);
 			final List<AbstractOrderEntry> applicableOrderEntryList = getOrderEntriesFromVoucherEntries(entrySet);
 			double netAmountAfterAllDisc = 0.0D;
+			boolean flag = false;
 
 			for (final AbstractOrderEntry entry : applicableOrderEntryList)
 			{
-				netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
+				if (StringUtils.isNotEmpty(entry.getAttribute("productPromoCode").toString())
+						|| StringUtils.isNotEmpty(entry.getAttribute("cartPromoCode").toString()))
+				{
+					netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
+					flag = true;
+				}
 			}
 
 			final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
 
-			if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+			if (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
 			{
 				final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
 				discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
