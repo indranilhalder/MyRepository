@@ -46,7 +46,7 @@ public class AnonymousController extends AbstractController
 		OrderData orderDetails = null;
 		try
 		{
-			LOG.debug("Got order ======> " + code);
+			LOG.debug("Got order code ======> " + code);
 			orderDetails = orderFacade.getOrderDetailsForCodeWithoutUser(code);
 			LOG.debug("orderDetails ====> " + orderDetails);
 			return orderDetails;
