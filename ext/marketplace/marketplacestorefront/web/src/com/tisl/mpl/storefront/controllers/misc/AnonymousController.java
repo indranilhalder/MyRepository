@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
- * This class is written purely for testing purpose. Should be merged with production code.
+ * This class is written purely for testing purpose. Should not be merged with production code.
  *
  * @author 768233
  *
