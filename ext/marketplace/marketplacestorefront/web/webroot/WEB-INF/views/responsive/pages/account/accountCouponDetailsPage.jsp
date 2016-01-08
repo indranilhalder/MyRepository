@@ -305,11 +305,11 @@
 					</div>
 				</div>
 				<div class="couponHistoryLinkDiv"><a href="#nogo" id="couponHistory" class="couponHistoryLink"> <spring:theme
-						code="text.account.coupon.usage.history"
-						text="Your Coupon Usage History" /></a> <a href="#nogo"
+							code="text.account.coupon.usage.history"
+							text="Coupon transaction history" /></a> <a href="#nogo"
 					id="couponHistoryHide" class="couponHistoryLink"> <spring:theme
 						code="text.account.coupon.usage.history"
-						text="Back to Coupon History Page" /></a></div>
+						text="Back to Coupon Details" /></a></div>
 						
 						
 <!-- for showing  coupons history-end -->						
