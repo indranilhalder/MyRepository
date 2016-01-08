@@ -128,7 +128,7 @@
   <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;"><table width="405" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td width="246" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;">For further clarifications, feel free to </td>
-      <td  align="left" valign="top"><a href="mailto:hello@tatacliq.com" style="color:#00b6bd"><strong>contact us. </strong></a></td>
+      <td width="188" align="left" valign="top"><a href="${ctx.contactUsLink}" style="color:#00b6bd"><strong>contact us.</strong></a></td>
       </tr>
     </table></td>
   <td align="left" valign="top">&nbsp;</td>

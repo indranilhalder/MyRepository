@@ -49,7 +49,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType         ;age          			           ;"Age"
  ;$solrIndexedType         ;capacityCC        		           ;"Capacity"
  ;$solrIndexedType         ;displayFeatures                    ;"Display Features"
- ;$solrIndexedType         ;memorySmartphone                   ;"Memory"
+ ;$solrIndexedType         ;memorySmartphone                   ;"Smartphone Memory"
  ;$solrIndexedType         ;operatingSystemIphone              ;"Operating System"
  ;$solrIndexedType         ;cameraFeatures                     ;"Camera Features" 
  ;$solrIndexedType         ;maximumISO          	           ;"Maximum ISO"  
@@ -140,7 +140,6 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
 # Define the available sorts
 UPDATE SolrSort;indexedType(identifier)[unique=true];code[unique=true];name[lang=$lang]
 ;$solrIndexedType;relevance;Relevance
-;$solrIndexedType;topRated;Top Rated
 ;$solrIndexedType;name-asc;Name Ascending
 ;$solrIndexedType;name-desc;Name Descending
 ;$solrIndexedType;price-asc;Price Ascending

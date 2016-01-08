@@ -53,8 +53,8 @@
 <c:if test="${isMSDEnabled}">
 	<c:choose>
 	<c:when test="${product.rootCategory=='Clothing'}">
-		<script type="text/javascript"	src="${msdjsURL}" defer="defer"></script>
-		<script type="text/javascript"	src="${commonResourcePath}/js/moreMADness.js" defer="defer"></script>
+		<script type="text/javascript"	src="${msdjsURL}"></script>
+		<script type="text/javascript"	src="${commonResourcePath}/js/moreMADness.js"></script>
 		
 		 <c:set var="MSDRESTURL" scope="request" value="${msdRESTURL}"/>
 		  

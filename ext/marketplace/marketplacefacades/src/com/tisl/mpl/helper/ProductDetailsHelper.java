@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.helper;
 
+import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
@@ -19,7 +20,6 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.Constants.USER;
-import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -123,6 +123,9 @@ public class ProductDetailsHelper
 	@Autowired
 	private ExtendedUserServiceImpl userexService;
 
+	@Autowired
+	private SiteConfigService siteConfigService;
+
 	public GigyaService getGigyaservice()
 	{
 		return gigyaservice;
@@ -178,8 +181,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -361,24 +364,7 @@ public class ProductDetailsHelper
 	public PriceData formPriceData(final Double price)
 	{
 
-		PriceData pData = null;
-		try
-		{
-			final PriceData priceData = new PriceData();
-			priceData.setPriceType(PriceDataType.BUY);
-			priceData.setValue(new BigDecimal(price.doubleValue()));
-			priceData.setCurrencyIso(MarketplaceFacadesConstants.INR);
-			final CurrencyModel currency = new CurrencyModel();
-			currency.setIsocode(priceData.getCurrencyIso());
-			currency.setSymbol(priceData.getCurrencyIso());
-			pData = priceDataFactory.create(PriceDataType.BUY, priceData.getValue(), currency);
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-
-		return pData;
+		return priceDataFactory.create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), MarketplaceFacadesConstants.INR);
 	}
 
 	/**
@@ -846,15 +832,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,

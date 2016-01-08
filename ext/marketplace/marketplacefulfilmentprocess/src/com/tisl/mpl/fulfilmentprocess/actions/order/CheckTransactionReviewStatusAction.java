@@ -14,6 +14,7 @@
 package com.tisl.mpl.fulfilmentprocess.actions.order;
 
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.payment.dto.TransactionStatus;
@@ -31,6 +32,7 @@ import de.hybris.platform.ticket.model.CsTicketModel;
 import de.hybris.platform.ticket.service.TicketBusinessService;
 import de.hybris.platform.util.localization.Localization;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +41,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +49,9 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
+import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.fulfilmentprocess.constants.MarketplaceFulfilmentProcessConstants;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
@@ -381,12 +386,35 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, "FAILURE",
 					order.getTotalPriceWithConv(), PaymentTransactionType.CANCEL, "FAILURE", UUID.randomUUID().toString());
 			mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
+
+			// TISSIT-1784 Code addition started
+			if (CollectionUtils.isNotEmpty(order.getChildOrders()))
+			{
+				for (final OrderModel subOrderModel : order.getChildOrders())
+				{
+					if (subOrderModel != null && CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+						{
+							if (subOrderEntryModel != null)
+							{
+								// Making RTM entry to be picked up by webhook job
+								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+										RefundTransactionMappingModel.class);
+								refundTransactionMappingModel.setRefundedOrderEntry(subOrderEntryModel);
+								refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+								refundTransactionMappingModel.setCreationtime(new Date());
+								refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED_FOR_RISK);
+								getModelService().save(refundTransactionMappingModel);
+							}
+						}
+					}
+				}
+			}
+			// TISSIT-1784 Code addition ended
 		}
 		return paymentTransactionModel;
 	}
-
-
-
 
 	/**
 	 * This method creates a ticket in CRM
