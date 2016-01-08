@@ -996,8 +996,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
 
-		model.addAttribute("voucherDataList",
-				displayTopCoupons(getCartService().getSessionCart(), (CustomerModel) getUserService().getCurrentUser()));
+		//TODO: Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope
+		//model.addAttribute("voucherDataList",
+		//		displayTopCoupons(getCartService().getSessionCart(), (CustomerModel) getUserService().getCurrentUser()));
 
 		//saving cartmodel
 		getMplPaymentFacade().saveCart(getCartService().getSessionCart());

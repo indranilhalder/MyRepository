@@ -14,7 +14,8 @@
 		<button type="submit" id="couponSubmitButton" class="button btn-block">Submit</button>
 		<span class="error-message" id="couponError"></span>
 
-	<div id="voucherDisplay">
+	<!-- Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope -->
+	<%-- <div id="voucherDisplay">
 		<c:if test="${not empty voucherDataList}">
 			<h2>Top 5 Coupons</h2>
 			<select name="voucherDisplaySelection" id="voucherDisplaySelection">
@@ -23,6 +24,6 @@
 				</c:forEach>
 			</select>
 		</c:if>
-	</div>
+	</div> --%>
 		
 </div>

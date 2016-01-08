@@ -59,6 +59,8 @@ public class MplDiscountUtil
 {
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+	public static final String IFAMOUNT_FIREDMESSAGE = "product.promotion.firedMessage.ifAmount";
+	public static final String IFPERCENTAGE_FIREDMESSAGE = "product.promotion.firedMessage.ifPercentage";
 
 	/**
 	 * @Description : For Filtering Product Promotions
@@ -806,7 +808,7 @@ public class MplDiscountUtil
 				&& null != cashBackModel.getPercentageDiscount())
 		{
 			final FiredPromoData firedPromo = new FiredPromoData();
-			firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifPercentage"));
+			firedPromo.setPromoMessage(Localization.getLocalizedString(IFPERCENTAGE_FIREDMESSAGE));
 			if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 			{
 				promoData.setFiredPromotion(firedPromo);
@@ -826,7 +828,7 @@ public class MplDiscountUtil
 						promoData.setDiscountPrice(discountPrice);
 
 						final FiredPromoData firedPromo = new FiredPromoData();
-						firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifAmount"));
+						firedPromo.setPromoMessage(Localization.getLocalizedString(IFAMOUNT_FIREDMESSAGE));
 						if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 						{
 							promoData.setFiredPromotion(firedPromo);
@@ -1066,7 +1068,7 @@ public class MplDiscountUtil
 				&& null != oModel.getPercentageDiscount())
 		{
 			final FiredPromoData firedPromo = new FiredPromoData();
-			firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifPercentage"));
+			firedPromo.setPromoMessage(Localization.getLocalizedString(IFPERCENTAGE_FIREDMESSAGE));
 			if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 			{
 				promoData.setFiredPromotion(firedPromo);
@@ -1131,7 +1133,7 @@ public class MplDiscountUtil
 		if (null != oModel.getPercentageDiscount())
 		{
 			final FiredPromoData firedPromo = new FiredPromoData();
-			firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifPercentage"));
+			firedPromo.setPromoMessage(Localization.getLocalizedString(IFPERCENTAGE_FIREDMESSAGE));
 			if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 			{
 				promoData.setFiredPromotion(firedPromo);
@@ -1214,7 +1216,7 @@ public class MplDiscountUtil
 		if (null != oModel.getPercentageDiscount())
 		{
 			final FiredPromoData firedPromo = new FiredPromoData();
-			firedPromo.setPromoMessage(Localization.getLocalizedString("product.promotion.firedMessage.ifPercentage"));
+			firedPromo.setPromoMessage(Localization.getLocalizedString(IFPERCENTAGE_FIREDMESSAGE));
 			if (StringUtils.isNotEmpty(firedPromo.getPromoMessage()))
 			{
 				promoData.setFiredPromotion(firedPromo);

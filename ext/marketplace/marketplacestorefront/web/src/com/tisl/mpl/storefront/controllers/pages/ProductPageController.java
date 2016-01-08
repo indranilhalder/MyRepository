@@ -689,6 +689,7 @@ public class ProductPageController extends AbstractPageController
 
 			final String sellerName = buyboxdata.getSellerName();
 			model.addAttribute(ModelAttributetConstants.SELLER_NAME, sellerName);
+			model.addAttribute(ModelAttributetConstants.SELLER_ID, buyboxdata.getSellerId());
 			String isCodEligible = ModelAttributetConstants.EMPTY;
 			for (final SellerInformationData seller : productData.getSeller())
 			{
