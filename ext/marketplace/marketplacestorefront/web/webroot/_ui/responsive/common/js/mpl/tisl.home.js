@@ -20,8 +20,8 @@ $(function() {
 				}
 			}
 			$("input[name='CSRFToken']").each(function(){
-				console.log("old value ---"+this.value + "---new value--"+data.dts);
-		        this.value = data.dts;          
+			//	console.log("old value ---"+this.value + "---new value--"+data.dts);
+		        	this.value = data.dts;          
 		    });
 		}
 	});

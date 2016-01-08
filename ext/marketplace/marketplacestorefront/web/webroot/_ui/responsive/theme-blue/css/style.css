@@ -32936,6 +32936,36 @@ div.MSDQuickView, div.MSDQuickView:before {
 	}
 }
 
+ 
+.global-alerts button.close
+{
+	float:left;
+	top: -20px;
+  opacity: 1;
+  left: 0px;
+  margin-right: 10px;
+}
+.global-alerts 
+{
+	  font-family: 'Avenir Next';
+	  font-size:14px;
+	   opacity: 1;
+}
+/* TISEE-6257 starts */
+a#checkout-enabled.checkout-disabled, a#checkout-enabled.checkout-disabled:hover  {
+	background-color: rgb(255,118,133) !important;
+	cursor: default !important;
+}
+button#expressCheckoutButtonId.express-checkout-disabled {
+	opacity: 0.5;
+	cursor: default !important;
+}
+button#expressCheckoutButtonId.express-checkout-disabled:hover {
+	background: #fff;
+	color: #00cbe9;
+}
+/* TISEE-6257 ends */
+
  /*for MSD*/  
 span.sizesAvailableMSD { 
 	display: none; 
@@ -32971,32 +33001,3 @@ span.sizesAvailableMSD {
  line-height: 30px;
  }
   /*End MSD*/  
-  
-.global-alerts button.close
-{
-	float:left;
-	top: -20px;
-  opacity: 1;
-  left: 0px;
-  margin-right: 10px;
-}
-.global-alerts 
-{
-	  font-family: 'Avenir Next";
-	  font-size:14px;
-	   opacity: 1;
-}
-/* TISEE-6257 starts */
-a#checkout-enabled.checkout-disabled, a#checkout-enabled.checkout-disabled:hover  {
-	background-color: rgb(255,118,133) !important;
-	cursor: default !important;
-}
-button#expressCheckoutButtonId.express-checkout-disabled {
-	opacity: 0.5;
-	cursor: default !important;
-}
-button#expressCheckoutButtonId.express-checkout-disabled:hover {
-	background: #fff;
-	color: #00cbe9;
-}
-/* TISEE-6257 ends */
