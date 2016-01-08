@@ -163,23 +163,6 @@
 	
 					
 	<label>Size:</label> ${selectedSize=='selected'}
-			<%-- <c:choose>
-			<c:when test="${selectedSize=='selected'}"> 
-				<input type="hidden" name="sizeSelectedSizeGuide" id="sizeSelectedSizeGuide"	value="no"/>
-			</c:when> 
-			<c:otherwise>
-				<input type="hidden" name="sizeSelectedSizeGuide" id="sizeSelectedSizeGuide"	value="yes"/>
-			</c:otherwise>
-		</c:choose> --%>		
-	
-	<%-- 		<c:choose>
-		    <c:when test="${selectedSize!=null}"> 
-			<span class="selected">${product.size}</span>
-			</c:when>
-			<c:otherwise>
-			<span class="selected">Size:</span>
-			</c:otherwise>
-			</c:choose> --%>
 	
 	
 		<select id="variant" class="variant-select">
@@ -272,23 +255,34 @@
 	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost" value="N" />
 	<input type="hidden" maxlength="3" size=""  name="ussid" id="sellerSelArticleSKUVal" value="" />
 	
-<%-- 	<span id="inventory" style="display: none"><p class="in]y">
-			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
-		</p></span>
-	<span id="noinventory" style="display: none"><p class="noinventory">
-			<font color="#ff1c47">You are about to exceede maximum inventory</font>
-		</p></span> --%>
     <span id="addToCartSizeGuidenoInventorySize" style="display: none" class="no_inventory"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 		</p></span>
 	<span id="addToCartSizeGuideexcedeInventorySize" style="display: none"><p class="inventory">
 			<font color="#ff1c47">Please decrease the quantity</font>
 		</p></span>
+		
+		<span id="addToCartSizeGuideTitleaddtobag" style="display: none"><p class="inventory">
+			<spring:theme code="product.addtocart.success"/>
+		</p></span>
+		<span id="addToCartSizeGuideTitleaddtobagerror" style="display: none"><p class="inventory">
+			<spring:theme code="product.error"/>
+		</p></span>
+		<span id="addToCartSizeGuideTitlebagtofull" style="display: none"><p class="inventory">
+			<spring:theme code="product.addtocart.aboutfull"/>
+		</p></span>
+		<span id="addToCartSizeGuideTitlebagfull" style="display: none"><p class="inventory">
+			<spring:theme code="product.bag"/>
+		</p></span>
+		<span id="addToCartSizeGuideTitleoutOfStockId" style="display: none"><p class="inventory">
+			<%-- <spring:theme code="product.product.outOfStock" /> --%>
+			<font color="#ff1c47">Product is out of stock for the selected size</font>
+		</p></span>
 
-	<span id="outOfStockId" style="display: none"  class="out_of_stock">
+	<%-- <span id="addToCartSizeGuideTitleoutOfStockId" style="display: none"  class="inventory">
 		<spring:theme code="product.product.outOfStock" />
-		<%-- <input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/> --%>
-	</span>
+		<input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
+	</span> --%>
 	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 	<span id="addToCartButtonId">
 	<!-- <span id="addToCartFormSizeTitleSuccess"></span> -->
@@ -305,29 +299,12 @@
 	</span>
 	
 	
-<%-- 	<c:choose>
-			<c:when test="${allOOStock==stock_y}">
-			</c:when>
-			<c:otherwise>			
-					<button id="addToCartButton"   type="${buttonType}"
-						class="btn-block js-add-to-cart">
-						<spring:theme code="basket.add.to.basket" />
-					</button>
-				    <button
-			        id="addToCartButton-wrong" type="button"
-			        class="btn-block">
-		            <spring:theme code="basket.add.to.basket" />
-	                </button>
-			</c:otherwise>
-		</c:choose> --%>
-	
-	
 </form:form>
 
-<span id="addtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
-<span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
-<span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
-<span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span> 
+<%-- <span id="addToCartSizeGuideTitleaddtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
+<span id="addToCartSizeGuideTitleaddtobagerror" style="display:none"><spring:theme code="product.error"/></span>
+<span id="addToCartSizeGuideTitlebagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
+<span id="addToCartSizeGuideTitlebagfull" style="display:none"><spring:theme code="product.bag"/></span>  --%>
 			
 		</div>
 	</div>
