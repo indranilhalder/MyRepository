@@ -37,12 +37,13 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 		}
 
 
-		if (source.getClassificationAttributeAssignments() != null)
-		{
-
-			target.setClassificationAttributeAssignments(source.getClassificationAttributeAssignments());
-
-		}
+		/*
+		 * if (source.getClassificationAttributeAssignments() != null) {
+		 * 
+		 * target.setClassificationAttributeAssignments(source.getClassificationAttributeAssignments());
+		 * 
+		 * }
+		 */
 
 	}
 }
