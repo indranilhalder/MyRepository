@@ -311,17 +311,35 @@
 						<fileset dir="${mpstorefront.css.dir}" includes="main-ie9.css" />
 					</copy>
 					<echo message="Minifying CSS..." />
+					<pathconvert pathsep=" " property="customcssfiles">
+						<fileset dir="${mpstorefront.mincss.temp.dir}">
+							<include name="*.css" />
+						</fileset>
+					</pathconvert>
+					<pathconvert pathsep=" " property="ie8cssfiles">
+						<fileset dir="${mpstorefront.mincss.temp.ie8.dir}">
+							<include name="*.css" />
+						</fileset>
+					</pathconvert>
+					<pathconvert pathsep=" " property="ie9cssfiles">
+						<fileset dir="${mpstorefront.mincss.temp.ie9.dir}">
+							<include name="*.css" />
+						</fileset>
+					</pathconvert>
 					<java jar="${minifier.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.dir}" fork="true">
 						<arg line="--type css" />
-						<arg line="-o '.css$:-min.css' ${mpstorefront.mincss.temp.dir}/*.css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${customcssfiles}" />
 					</java>
 					<java jar="${minifier.ie8.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.ie8.dir}" fork="true">
 						<arg line="--type css" />
-						<arg line="-o '.css$:-min.css' ${mpstorefront.mincss.temp.ie8.dir}/*.css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${ie8cssfiles}" />
 					</java>
 					<java jar="${minifier.ie9.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.ie9.dir}" fork="true">
 						<arg line="--type css" />
-						<arg line="-o '.css$:-min.css' ${mpstorefront.mincss.temp.ie9.dir}/*.css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${ie9cssfiles}" />
 					</java>
 					<echo message="Merging minfied CSS..." />
 					<concat destfile="${mpstorefront.css.dir}/tmpmain.min.${timestamp}.css" append="true">
