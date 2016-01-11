@@ -607,9 +607,6 @@
 						<!-- mycode -->
 					</c:if>
 
-
-
-
 					<c:if test="${empty searchPageData.results}">
 						<div class="account-emptyOrderMessage">
 							<spring:theme code="text.account.orderHistory.noOrders"
@@ -623,23 +620,5 @@
 
 		</div>
 	</div>
-
-
-
 </template:page>
-<%-- <script type="text/javascript"
-	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
-<template:javaScriptVariables />
-<script type="text/javascript"
-	src="${commonResourcePath}/js/acc.accountaddress.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/acc.accountpagination.js"></script> --%>
 
-<script>
-	var i = 0;
-	var pageCount = 0;
-	var pagelimitAcc = $("#pageSize").val();
-	var totalItem = $("#orderEntryCount").val();
-	var noofpageCount = Math.ceil(totalItem / pagelimitAcc);
-	var pageNo = 1;
-</script>
