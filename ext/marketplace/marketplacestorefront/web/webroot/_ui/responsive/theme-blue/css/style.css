@@ -12789,7 +12789,7 @@ div.pdp .reviews .toolbar select.white {
     font-weight: 400;		
     text-align: center;		
     margin-bottom: 15px;
-    padding-top:45px;
+    padding-top:25px;
     		
 }		
 @media (min-width: 790px) {		
@@ -12814,7 +12814,7 @@ div.pdp .reviews .toolbar select.white {
 }		
 @media (min-width: 1000px) {		
     .modal.size-guide .sizes .tables {		
-        transform: translateY(15%);		
+        transform: translateY(5%);		
     }		
 }		
 .modal.size-guide .sizes .tables::after {		
@@ -12842,7 +12842,7 @@ div.pdp .reviews .toolbar select.white {
     display: inline-block;		
     float: left;		
     line-height: 30px;		
-}		
+}
 .modal.size-guide .sizes .tables li.header > ul > li {		
     text-transform: uppercase;		
     font-weight: 600;		
@@ -12871,13 +12871,14 @@ div.pdp .reviews .toolbar select.white {
 }		
 @media (min-width: 790px) {		
     .modal.size-guide .sizes .img {		
-        padding: 0 20px 20px 10px;		
+        padding: 0 20px 10px 10px;		
     }		
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .img {		
         width: 40%;		
-        float: right;		
+        float: right;	
+            margin-top: -12px;	
     }		
 }		
 .modal.size-guide .sizes .img::after {		
@@ -12902,7 +12903,7 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .details .attributes {		
     width: 80%;		
    /*  margin: 20px auto; */
-       margin: 20px 30px 20px 140px;		
+       margin: 10px 30px 20px 140px;		
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .details .attributes {		
@@ -18714,13 +18715,15 @@ input[type="checkbox"]#brandSelectAll + label{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  border-right: 1px solid #f0f4f5;
+  /* border-right: 1px solid #f0f4f5; */
+  height:30px;
 }
 
 .modal.size-guide .sizes .tables li.item > ul > li {
 text-align: center;
 text-transform:lowercase;
 } 
+
 
 .modal.size-guide .sizes .tables li.item > ul > li:first-letter{
 	text-transform: uppercase;
@@ -24034,6 +24037,7 @@ body #account-invite .right-account>div form .mytextarea {
 
 .owl-carousel .owl-controls .owl-buttons .disabled{
 	opacity:0.5;
+	display: none !important;
 }
 .owl-carousel .owl-controls .owl-buttons .disabled:after{
 	border-color:gray;
@@ -31765,7 +31769,7 @@ main {
 	{
 	cursor: pointer;
 	position: absolute !important;
-	top: 50% !important;
+	top: 39% !important;
 	display: table;
 	width: 60px;
 	height: 125px;

@@ -106,7 +106,7 @@
 										</div>
 										<div class="short-info">
 											<p class="company">${product.value.brand.brandname}</p>
-											<h3 class="product-name">${product.value.name}</h3>
+											<h3 class="product-name">${product.value.productTitle}</h3>
 											<!-- <div class="price">
 												<p class="normal">
 													<i class="rupee"></i>100,000
@@ -456,16 +456,27 @@
 							</c:when>
 							<c:otherwise>
 							<li class="number first"><a href="?page=${i}">${i}</a></li>
+							
+							
 							</c:otherwise>
 							</c:choose>
+							
 							</c:forEach>
-							<!-- <li class="number last "><a href="?page=2">2</a></li> -->
-						<c:if test="${ totalPages gt param.page}">				
+																				
+							<c:choose>
+								<c:when test="${param.page eq null}">
+									<c:set var="page" value="1"></c:set>
+								</c:when>
+								<c:otherwise>
+									<c:set var="page" value="${param.page}"></c:set>
+								</c:otherwise>
+							</c:choose>
+					
+							<c:if test="${ totalPages gt 1 and totalPages gt page }">				
 							<li class="next"><a href="#nogo"><spring:theme code="myaccount.review.next"/> <span
 									class="lookbook-only">Page</span></a></li>
 									</c:if>
-									<!-- previous link addition -->
-									
+			
 						</ul>
 						 </c:if> 
 					</div>
@@ -500,7 +511,7 @@
   							 <%-- <product:productListerGridItem product="${comment.productData}" /> --%>
   							 <product:review product="${comment.productData}" />
   							<format:price priceData="${comment.productData.productMOP}"/>
-  								<div class="reactions" id="reactionsDiv"></div>
+  								
 						</ul>
 						</div>
 						<div class="review">
@@ -722,8 +733,15 @@
 							</c:otherwise>
 							</c:choose>
 							</c:forEach>
-							<!-- <li class="number last "><a href="?page=2">2</a></li> -->
-						<c:if test="${totalPages gt param.page}">
+							<c:choose>
+								<c:when test="${param.page eq null}">
+									<c:set var="page" value="1"></c:set>
+								</c:when>
+								<c:otherwise>
+									<c:set var="page" value="${param.page}"></c:set>
+								</c:otherwise>
+							</c:choose>
+						<c:if test="${totalPages gt 1 and totalPages gt page }">
 							<li class="next"><a href="#nogo"><spring:theme code="myaccount.review.next"/> <span
 									class="lookbook-only">Page</span></a></li>
 									</c:if>
@@ -967,9 +985,14 @@ $(document).ready(function(){
 	
 	$(".next a").click(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
-		pageNo = parseInt(pageNo);
+		if(pageNo != ""){
+			pageNo = parseInt(pageNo);
+		}else{
+			pageNo = 1;
+		}
 		pageNo = pageNo+1;
-		if(pageNo <= ${totalPages})
+		var totalPages = ${totalPages};
+		if(totalPages!="" && pageNo <= totalPages)
 			{
 			window.location.href="?page="+pageNo;
 			}
@@ -979,7 +1002,8 @@ $(document).ready(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
 		pageNo = parseInt(pageNo);
 		pageNo = pageNo-1;
-		if(pageNo!=0 && pageNo <= ${totalPages})
+		var totalPages = ${totalPages};
+		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
 			{
 			window.location.href="?page="+pageNo;
 			}
@@ -1067,39 +1091,5 @@ rating(arrayrating);
 			});
 			}
 		
-		<!-- recommendation -->
-		var reactions=[
-		{
-		        text: 'Recommend',
-		        ID: 'Recommend',
-		        iconImgUp:'http://cdn.gigya.com/gs/i/reactions/icons/Recommend_Icon_Up.png',
-		        iconImgOver:'http://cdn.gigya.com/gs/i/reactions/icons/Recommend_Icon_Down.png',
-		        tooltip:'I recommend this item',
-		        feedMessage: 'I recommend this!',
-		        headerText:'You recommend this post,'
-		}
-		,{
-		        text: 'LOL',
-		        ID: 'lol',
-		        feedMessage: 'I LOL this!',
-		        headerText:'This post made you LOL,'
-		}];
-		 
-		var defaultUserAction = new gigya.socialize.UserAction();
-		 
-		defaultUserAction.setTitle("This is the post title");
-		defaultUserAction.setLinkBack("http://www.gigya.com");
-		 
-		var params =
-		{
-		        barID: 'myID',
-		        containerID:'reactionsDiv',
-		        reactions:reactions,
-		        userAction:defaultUserAction,
-		        bodyText:'Share it with your friends',
-		        onReactionClicked : function(a){alert("Reaction Clicked!");}
-		};
-		 
-		// Show the Reactions buttons bar
-		gigya.socialize.showReactionsBarUI(params);
+		
 </script>

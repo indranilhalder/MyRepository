@@ -15,9 +15,11 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -34,6 +36,7 @@ import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.text.SimpleDateFormat;
@@ -70,7 +73,6 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
-import com.tisl.mpl.model.SemiClosedRestrictionModel;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 
 
@@ -332,10 +334,13 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @return boolean
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
 	 */
 	@Override
 	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
-			CalculationException
+			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
 		boolean checkFlag = false;
 		if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
@@ -458,16 +463,19 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws ModelSavingException
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
 	 */
 	protected void checkCartAfterApply(final VoucherModel lastVoucher, final CartModel cartModel) throws ModelSavingException,
-			VoucherOperationException, CalculationException
+			VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
+			JaloSecurityException
 	{
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
 		final double cartSubTotal = cartModel.getSubtotal().doubleValue();
 		double voucherCalcValue = 0.0;
 		double promoCalcValue = 0.0;
-		final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues();
-		DiscountValue discountValue = null;
+		List<DiscountValue> discountList = cartModel.getGlobalDiscountValues();
 
 		final List<DiscountModel> voucherList = cartModel.getDiscounts();
 		if (CollectionUtils.isNotEmpty(discountList))
@@ -487,22 +495,100 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
-			for (final DiscountValue discount : discountList)
-			{
-				if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
-				{
-					discountValue = new DiscountValue(discount.getCode(), (cartSubTotal - promoCalcValue - 0.01), lastVoucher
-							.getAbsolute().booleanValue(), discount.getCurrencyIsoCode());
-					discountList.remove(discount);
-					break;
-				}
-			}
-			discountList.add(discountValue);
+			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, (cartSubTotal
+					- promoCalcValue - 0.01));
 			cartModel.setGlobalDiscountValues(discountList);
 			mplDefaultCalculationService.calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
 		}
+
+		else if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
+				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())
+		{
+			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
+					.getMaxDiscountValue().doubleValue());
+			cartModel.setGlobalDiscountValues(discountList);
+			mplDefaultCalculationService.calculateTotals(cartModel, false);
+			getModelService().save(cartModel);
+		}
+
+		else
+		{
+
+			final VoucherEntrySet entrySet = getVoucherModelService().getApplicableEntries(lastVoucher, cartModel);
+			final List<AbstractOrderEntry> applicableOrderEntryList = getOrderEntriesFromVoucherEntries(entrySet);
+			double netAmountAfterAllDisc = 0.0D;
+			boolean flag = false;
+
+			for (final AbstractOrderEntry entry : applicableOrderEntryList)
+			{
+				if (StringUtils.isNotEmpty(entry.getAttribute("productPromoCode").toString())
+						|| StringUtils.isNotEmpty(entry.getAttribute("cartPromoCode").toString()))
+				{
+					netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
+					flag = true;
+				}
+			}
+
+			final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
+
+			if (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+			{
+				final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
+				discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
+				cartModel.setGlobalDiscountValues(discountList);
+				mplDefaultCalculationService.calculateTotals(cartModel, false);
+				getModelService().save(cartModel);
+			}
+		}
+
 	}
+
+
+	/**
+	 *
+	 * @param discountList
+	 * @param voucherList
+	 * @param cartSubTotal
+	 * @param promoCalcValue
+	 * @param lastVoucher
+	 * @param discountAmt
+	 * @return List<DiscountValue>
+	 */
+	private List<DiscountValue> setGlobalDiscount(final List<DiscountValue> discountList, final List<DiscountModel> voucherList,
+			final double cartSubTotal, final double promoCalcValue, final VoucherModel lastVoucher, final double discountAmt)
+	{
+		DiscountValue discountValue = null;
+		for (final DiscountValue discount : discountList)
+		{
+			if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+			{
+				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discount.getCurrencyIsoCode());
+
+				//				if (identifier.equalsIgnoreCase("cartAmt"))
+				//				{
+				//					discountValue = new DiscountValue(discount.getCode(), (cartSubTotal - promoCalcValue - 0.01), lastVoucher
+				//							.getAbsolute().booleanValue(), discount.getCurrencyIsoCode());
+				//				}
+				//				else if(identifier.equalsIgnoreCase("MaxDisc"))
+				//				{
+				//					discountValue = new DiscountValue(discount.getCode(), lastVoucher.getMaxDiscountValue().doubleValue(), true,
+				//							discount.getCurrencyIsoCode());
+				//				}
+				//				else if(identifier.equalsIgnoreCase("OrderEntryAmt"))
+				//				{
+				//					discountValue = new DiscountValue(discount.getCode(), lastVoucher.getMaxDiscountValue().doubleValue(), true,
+				//							discount.getCurrencyIsoCode());
+				//				}
+				discountList.remove(discount);
+				break;
+			}
+		}
+		discountList.add(discountValue);
+		return discountList;
+	}
+
+
 
 	/**
 	 * This method releases the voucher already applied in the cart automatically
@@ -562,7 +648,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					boolean dateRestrExists = false;
 					boolean userRestrExists = false;
-					boolean semiClosedRestrExists = false;
+					final boolean semiClosedRestrExists = false;
 
 					DateRestrictionModel dateRestrObj = null;
 					UserRestrictionModel userRestrObj = null;
@@ -583,11 +669,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							userRestrExists = true;
 							userRestrObj = (UserRestrictionModel) restrictionModel;
 						}
-						if (restrictionModel instanceof SemiClosedRestrictionModel)
-						{
-							semiClosedRestrExists = true;
-							//semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel;
-						}
+						//TODO: Semi Closed Restriction-----Commented as functionality out of scope of R2.1   Uncomment when in scope
+						//						if (restrictionModel instanceof SemiClosedRestrictionModel)
+						//						{
+						//							semiClosedRestrExists = true;
+						//							//semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel;
+						//						}
+
+
+
 						//							if (restrictionModel instanceof SemiClosedRestrictionModel)
 						//							{
 						//								semiClosedRestrExists = false;
@@ -652,14 +742,19 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final List<OrderData> orderDataList = new ArrayList<OrderData>();
 		final List<VoucherData> voucherDataList = new ArrayList<VoucherData>();
 		final List<String> voucherCodeList = new ArrayList<String>();
+		final List<String> amountList = new ArrayList<String>();
 		final Set<String> treeStringSet = new TreeSet<>();
 		final List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 		Collection<DiscountModel> discountModelList = new ArrayList<DiscountModel>();
+
 		final Map<OrderData, VoucherData> orderVoucherDataMap = new HashMap<OrderData, VoucherData>();
 		final Map<Date, OrderData> orderDateMap = new TreeMap<Date, OrderData>(Collections.reverseOrder());
+
+		final Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
 		final CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 		VoucherData voucherData = new VoucherData();
-		double savedSum = 0;
+		double savedSum = 0.0;
+
 		int couponsRedeemedCount = 0;
 		boolean isOrderDateValid = false;
 
@@ -674,13 +769,17 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				LOG.debug("Step 2-************************Inside orderModelsList");
 				discountModelList = getDefaultVoucherService().getAppliedVouchers(order); // getting the list of all vouchers that are redeemed through orders
 				final String orderCode = order.getCode();
+
 				final OrderData orderDetailsData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 
 				for (final DiscountModel discount : discountModelList)
 				{
 					LOG.debug("Step 3-************************Inside Discount Model");
 					VoucherModel voucher = new VoucherModel();
+					Collection<VoucherInvalidationModel> voucherInvalidations = new ArrayList<VoucherInvalidationModel>();
 					voucher = (VoucherModel) discount;
+					voucherInvalidations = voucher.getInvalidations();
+
 					try
 					{
 						voucherData = getDefaultVoucherFacade().getVoucher(((PromotionVoucherModel) voucher).getVoucherCode());//type casting to PromotionVoucherModel
@@ -688,19 +787,32 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						if (null != orderDetailsData && null != voucherData)
 						{
 							voucherDataList.add(voucherData);
-							orderDataList.add(orderDetailsData);
-							orderVoucherDataMap.put(orderDetailsData, voucherData);//mapping each order to its corresponding redeemed voucher
 							isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());// restrict orders to last six months only
+
+							if (isOrderDateValid)
+							{
+								orderDataList.add(orderDetailsData);
+							}
+
+							orderVoucherDataMap.put(orderDetailsData, voucherData);//mapping each order to its corresponding redeemed voucher
+
 							if (isOrderDateValid)
 							{
 								orderDateMap.put(orderDetailsData.getCreated(), orderDetailsData);//mapping order with date such that the latest order is on top
+
+								if (voucherCodeInvalidationMap.isEmpty())
+								{
+									voucherCodeInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);
+								}
+								else
+								{
+									if (!(voucherCodeInvalidationMap.containsKey(voucherData.getVoucherCode())))
+									{
+										voucherCodeInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);
+									}
+								}
+
 							}
-
-							LOG.debug("Step 4-************************Inside voucherValue with price-tag like INR");
-
-							final int vFormatINRLength = voucherData.getValueFormatted().length();
-							savedSum = savedSum
-									+ Double.parseDouble(voucherData.getValueFormatted().substring(0, (vFormatINRLength - 3))); //calculating the amount saved through vouchers
 
 
 						}
@@ -753,6 +865,44 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				}
 			}
 		}
+
+		if (!voucherCodeInvalidationMap.isEmpty())
+		{
+			final Iterator voucherCodeInvalidationIterator = voucherCodeInvalidationMap.entrySet().iterator();
+			while (voucherCodeInvalidationIterator.hasNext())
+			{
+				LOG.debug("************************voucherCodeInvalidationMap ITERATE********************");
+				final Map.Entry voucherCodeInvalidationEntry = (Map.Entry) voucherCodeInvalidationIterator.next();
+				final String voucherCode = (String) voucherCodeInvalidationEntry.getKey();
+				final Collection<VoucherInvalidationModel> voucherInvalidationsCol = (Collection<VoucherInvalidationModel>) voucherCodeInvalidationEntry
+						.getValue();
+
+				if (null != voucherCode)
+				{
+					for (final VoucherInvalidationModel voucherInv : voucherInvalidationsCol)
+					{
+
+						if (null != voucherInv.getSavedAmount())
+						{
+							amountList.add(String.valueOf(voucherInv.getSavedAmount())); //calculating the amount saved through vouchers
+						}
+
+					}
+				}
+			}
+		}
+
+
+		if (!amountList.isEmpty())
+		{
+			for (final String amount : amountList)
+			{
+				LOG.debug("Step 4-************************Inside amountList");
+
+				savedSum += Double.parseDouble(amount);
+			}
+		}
+
 
 		// calculating no. of unique coupon codes that has been redeemed by the customer
 
