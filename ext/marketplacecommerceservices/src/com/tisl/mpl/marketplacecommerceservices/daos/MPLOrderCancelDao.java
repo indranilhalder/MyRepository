@@ -22,8 +22,13 @@ public interface MPLOrderCancelDao extends OrderCancelDao
 	 * @return List<RefundEntryModel>
 	 * @throws Exception
 	 */
+	List<OrderCancelRecordEntryModel> getAllCancelled() throws Exception;
 
-
+	/**
+	 * @description Get all Cancel request made
+	 * @return List<RefundEntryModel>
+	 * @throws Exception
+	 */
 	List<OrderCancelRecordEntryModel> getAllCancelled(Date startDate) throws Exception;
 
 	/**
