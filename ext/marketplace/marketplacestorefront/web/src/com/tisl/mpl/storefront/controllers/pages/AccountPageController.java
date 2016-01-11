@@ -88,9 +88,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -6106,8 +6108,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final Model model) throws Exception
 	{
 		final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE, 5);
-		final Map<String, ProductData> productDataMap = new HashMap<String, ProductData>();
-		final Map<String, ProductData> productDataModifyMap = new HashMap<String, ProductData>();
+		final Map<String, ProductData> productDataMap = new LinkedHashMap<String, ProductData>();
+		final Map<String, ProductData> productDataModifyMap = new LinkedHashMap<String, ProductData>();
 		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
 		final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
 		final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
@@ -6121,7 +6123,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			if (CollectionUtils.isNotEmpty(orderModels))
 			{
-				for (final OrderModel order : orderModels)
+				final List<OrderModel> modifiableOrderList = new ArrayList<OrderModel>();
+				modifiableOrderList.addAll(orderModels);
+
+				Collections.sort(modifiableOrderList, new Comparator<OrderModel>()
+				{
+					@Override
+					public int compare(final OrderModel o1, final OrderModel o2)
+					{
+						final int compare = o1.getCreationtime().compareTo(o2.getCreationtime());
+						return compare;
+					}
+				});
+				Collections.reverse(modifiableOrderList);
+				for (final OrderModel order : modifiableOrderList)
 				{
 					for (final OrderModel sellerOrder : order.getChildOrders())
 					{
