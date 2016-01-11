@@ -371,9 +371,9 @@ public class ProductPageController extends AbstractPageController
 			LOG.info("***************headerMap" + headerMap);
 			if (null != productData.getBrand())
 			{
-				model.addAttribute(WebConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
+				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
 			}
-			model.addAttribute(WebConstants.SIZE_CHART_HEADER_CAT,
+			model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
 					new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
 
 			model.addAttribute(ModelAttributetConstants.HEADER_SIZE_GUIDE, headerMap);
