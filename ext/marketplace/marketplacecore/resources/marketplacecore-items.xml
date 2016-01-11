@@ -6549,6 +6549,39 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+
+			<itemtype code="SolrFacetSearchConfig" autocreate="false" generate="false">
+				<description>Extending the SolrFacetSearchConfig type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedType" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedType type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedProperty" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedProperty type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			
 		</typegroup>
 		<!--End of CRM Ticket Detail -->
 	</itemtypes>

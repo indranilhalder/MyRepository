@@ -8,6 +8,7 @@ import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.converters.populator.DefaultIndexedPropertyPopulator;
 import de.hybris.platform.solrfacetsearch.model.config.SolrIndexedPropertyModel;
 
+import org.springframework.util.StringUtils;
 
 /**
  * @author 361234
@@ -36,14 +37,15 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 
 		}
 
+		if (source.getQueryType() == null || StringUtils.isEmpty(source.getQueryType()))
+		{
+			if (source.getClassificationAttributeAssignments() != null)
+			{
 
-		/*
-		 * if (source.getClassificationAttributeAssignments() != null) {
-		 * 
-		 * target.setClassificationAttributeAssignments(source.getClassificationAttributeAssignments());
-		 * 
-		 * }
-		 */
+				target.setClassificationAttributeAssignments(source.getClassificationAttributeAssignments());
+
+			}
+		}
 
 	}
 }
