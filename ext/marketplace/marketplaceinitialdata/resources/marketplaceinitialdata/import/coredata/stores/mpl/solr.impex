@@ -219,7 +219,7 @@ where tbl.code IN (
  ORDER BY tbl.code
 ";anonymous
 ;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"
-  SELECT distinct{p.code} FROM {Product AS p} 
+  SELECT distinct{p.PK} FROM {Product AS p} 
 						WHERE {p.code} IN ( 
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
