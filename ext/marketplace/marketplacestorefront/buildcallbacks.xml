@@ -255,9 +255,9 @@
 					<delete dir="${mpstorefront.mincss.temp.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
-					<delete file="${mpstorefront.css.dir}/tmpmain.min.${marketplace.minification.build.time}.css" />
-					<delete file="${mpstorefront.css.dir}/main-ie8-min.${marketplace.minification.build.time}.css" />
-					<delete file="${mpstorefront.css.dir}/main-ie9-min.${marketplace.minification.build.time}.css" />
+					<delete file="${mpstorefront.css.dir}/tmpmain.min.css" />
+					<delete file="${mpstorefront.css.dir}/main-ie8-min.css" />
+					<delete file="${mpstorefront.css.dir}/main-ie9-min.css" />
 					<mkdir dir="${mpstorefront.minjs.dir}" />
 					<mkdir dir="${mpstorefront.mincss.temp.dir}" />
 					<mkdir dir="${mpstorefront.mincss.temp.ie8.dir}" />
@@ -268,35 +268,35 @@
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
-						<arg line="--js_output_file ${mpstorefront.minjs.dir}/tmpmain.min.${timestamp}.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/tmpmain.min.js" />
 					</java>
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
 						<arg line="--compilation_level SIMPLE" />
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/plugins/**.js" />
-						<arg line="--js_output_file ${mpstorefront.minjs.dir}/plugins.min.${timestamp}.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/plugins.min.js" />
 					</java>
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
 						<arg line="--compilation_level SIMPLE" />
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/ia-plugins/**.js" />
-						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ia.min.${timestamp}.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ia.min.js" />
 					</java>
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
 						<arg line="--compilation_level SIMPLE" />
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/ie9_lower_plugins/**.js" />
-						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ie9.min.${timestamp}.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ie9.min.js" />
 					</java>
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
 						<arg line="--compilation_level SIMPLE" />
 						<arg line="--language_in ECMASCRIPT5" />
 						<arg line="--warning_level QUIET" />
 						<arg line="--js ${mpstorefront.js.dir}/ie10_lower_plugins/**.js" />
-						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ie10.min.${timestamp}.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ie10.min.js" />
 					</java>
 					<copy file="${yui.compresser.jar}" tofile="${minifier.yui.compresser.jar}" />
 					<copy file="${yui.compresser.jar}" tofile="${minifier.ie8.yui.compresser.jar}"/>
@@ -342,13 +342,13 @@
 						<arg line="${ie9cssfiles}" />
 					</java>
 					<echo message="Merging minfied CSS..." />
-					<concat destfile="${mpstorefront.css.dir}/tmpmain.min.${timestamp}.css" append="true">
+					<concat destfile="${mpstorefront.css.dir}/tmpmain.min.css" append="true">
 						<fileset dir="${mpstorefront.mincss.temp.dir}">
 							<include name="*-min.css" />
 						</fileset>
 					</concat>
-					<copy file="${mpstorefront.mincss.temp.ie8.dir}/main-ie8-min.css" tofile="${mpstorefront.css.dir}/main-ie8-min.${timestamp}.css" />
-					<copy file="${mpstorefront.mincss.temp.ie9.dir}/main-ie9-min.css" tofile="${mpstorefront.css.dir}/main-ie9-min.${timestamp}.css" />
+					<copy file="${mpstorefront.mincss.temp.ie8.dir}/main-ie8-min.css" tofile="${mpstorefront.css.dir}/main-ie8-min.css" />
+					<copy file="${mpstorefront.mincss.temp.ie9.dir}/main-ie9-min.css" tofile="${mpstorefront.css.dir}/main-ie9-min.css" />
 					<delete dir="${mpstorefront.mincss.temp.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
@@ -366,9 +366,9 @@
 		<delete dir="${mpstorefront.mincss.temp.dir}" />
 		<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
 		<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
-		<delete file="${mpstorefront.css.dir}/tmpmain.min.${marketplace.minification.build.time}.css" />
-		<delete file="${mpstorefront.css.dir}/main-ie8-min.${marketplace.minification.build.time}.css" />
-		<delete file="${mpstorefront.css.dir}/main-ie9-min.${marketplace.minification.build.time}.css" />
+		<delete file="${mpstorefront.css.dir}/tmpmain.min.css" />
+		<delete file="${mpstorefront.css.dir}/main-ie8-min.css" />
+		<delete file="${mpstorefront.css.dir}/main-ie9-min.css" />
 		<echo message="Cleaned!" />
 	</target>
 

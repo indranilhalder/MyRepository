@@ -3,19 +3,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <script type="text/javascript"
-	src="${commonResourcePath}/js/minified/plugins.min.${minificationTimeStamp}.js"></script>
+	src="${commonResourcePath}/js/minified/plugins.min.js<%-- ?clear=${minificationTimeStamp} --%>"></script>
 <script type="text/javascript"
-	src="${commonResourcePath}/js/minified/tmpmain.min.${minificationTimeStamp}.js"></script>
+	src="${commonResourcePath}/js/minified/tmpmain.min.js<%-- ?clear=${minificationTimeStamp} --%>"></script>
 <c:if test="${isIAEnabled}">
 	<script type="text/javascript"
-		src="${commonResourcePath}/js/minified/ia.min.${minificationTimeStamp}.js"></script>
+		src="${commonResourcePath}/js/minified/ia.min.js<%-- ?clear=${minificationTimeStamp} --%>"></script>
 </c:if>
 <!--[if lt IE 9]>
-<script type="text/javascript" src="${commonResourcePath}/js/minified/ie9.min.${minificationTimeStamp}.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/minified/ie9.min.js"></script>
 <![endif]-->
 
 <!--[if lt IE 10]>
-<script type="text/javascript" src="${commonResourcePath}/js/minified/ie10.min.${minificationTimeStamp}.js"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/minified/ie10.min.js"></script>
 <![endif]-->
 
 <c:forEach items="${addOnJavaScriptPaths}" var="addOnJavaScript">
