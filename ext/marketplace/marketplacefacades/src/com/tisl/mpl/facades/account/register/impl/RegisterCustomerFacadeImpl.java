@@ -414,10 +414,26 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			{
 				final CustomerModel customerModel = (CustomerModel) extUserService.getUserForUID(registerData.getLogin());
 				LOG.debug("Method  registerSocial return user ,SITE UID " + customerModel.getUid());
+				LOG.debug("Method  registerSocial else FIRST_NAME " + registerData.getFirstName());
+				LOG.debug("Method  registerSocial else LAST_NAME " + registerData.getLastName());
+
+				if (registerData.getFirstName() != null)
+				{
+					registerData.setFirstName(registerData.getFirstName());
+				}
+
+				if (registerData.getLastName() != null)
+				{
+					registerData.setLastName(registerData.getLastName());
+				}
+
 				final String password = "TATACLiQSocialLogin";
 				registerData.setPassword(password);
 				registerData.setSocialLogin(true);
-				LOG.error(MplConstants.USER_ALREADY_REGISTERED);
+				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
+
+				gigyaservice.notifyGigyaToLinkAccounts(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
+						registerData.getLastName());
 				return registerData;
 			}
 		}
@@ -450,8 +466,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	}
 
 	@Override
-	public void changeUid(final String newUid, final String currentPassword)
-			throws DuplicateUidException, PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
+			PasswordMismatchException
 	{
 		try
 		{
@@ -515,11 +531,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			//Added
 			if (!StringUtils.isEmpty(sendInvoiceData.getInvoiceUrl()) && !StringUtils.isEmpty(sendInvoiceData.getTransactionId()))
 			{
-				if (!StringUtils
-						.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId())))
+				if (!StringUtils.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
+						sendInvoiceData.getTransactionId())))
 				{
-					sendInvoiceProcessModel.setInvoiceUrl(
-							createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(), sendInvoiceData.getTransactionId()));
+					sendInvoiceProcessModel.setInvoiceUrl(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
+							sendInvoiceData.getTransactionId()));
 				}
 			}
 			//End
@@ -610,9 +626,4 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	{
 		this.orderModelService = orderModelService;
 	}
-
-
-
-
-
 }

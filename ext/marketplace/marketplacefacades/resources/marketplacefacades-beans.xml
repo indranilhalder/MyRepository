@@ -429,6 +429,9 @@
 		<property name="dimensionSize" type="String" />
 		<property name="dimensionUnit" type="String" />
 		<property name="imageURL" type="String" />
+		<property name="euroSize" type="String"/>
+		<property name="usSize" type="String"/>
+		<property name="age" type="String"/>
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData">

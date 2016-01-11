@@ -1228,10 +1228,11 @@
 							unique="false" />
 						<persistence type="property">
 							<columntype database='oracle'>
-								<value>VARCHAR2(255)</value>
+								<value>VARCHAR2(450)</value>
 							</columntype>
 						</persistence>
 					</attribute>
+					
 					<attribute qualifier='createdOn' type="java.util.Date">
 						<description>Date on which the product created</description>
 						<modifiers read="true" write="true" optional="true"
@@ -1245,7 +1246,7 @@
 							unique="false" />
 						<persistence type="property">
 							<columntype database='oracle'>
-								<value>VARCHAR2(100)</value>
+								<value>VARCHAR2(150)</value>
 							</columntype>
 						</persistence>
 					</attribute>
@@ -1589,6 +1590,18 @@
 						<description>Size</description>
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="euroSize" type="java.lang.String">
+						<description>Size</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="usSize" type="java.lang.String">
+						<description>Size</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="age" type="java.lang.String">
+						<description>Size</description>
+						<persistence type="property" />
+					</attribute>
 					<attribute qualifier="value" type="java.lang.String">
 						<description>Value</description>
 						<persistence type="property" />
@@ -1617,7 +1630,10 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-
+			
+			
+			
+			
 			<!-- Product Rating and Review -->
 			<itemtype code="ratingReview" extends="GenericItem"
 				generate="true" autocreate="true" jaloclass="com.tisl.mpl.core.jalo.RatingReview">

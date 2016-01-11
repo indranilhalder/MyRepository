@@ -1520,6 +1520,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				var availableStock = data['availablestock'];
 				var ussid = data['sellerArticleSKU'];
 				
+				//alert("buybox stock: "+availableStock);
 				if (specialPrice != null){
 					$("#specialSelPrice").html(specialPrice);
 				}
@@ -1541,23 +1542,17 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sellerSelArticleSKUVal").val(ussid);
 				//alert("specialPrice:"+specialPrice.value+"sellerName:"+sellerName+" sellerID:" +sellerID+"  ,  availableStock:  "+availableStock+" ussid: "+ussid);
 				
+				
+				if(availableStock==0){
+					$("#addToCartSizeGuideTitleoutOfStockId").html("<font color='#ff1c47'>" + $('#addToCartSizeGuideTitleoutOfStockId').text() + "</font>");
+					$("#addToCartSizeGuideTitleoutOfStockId").show();
+					//$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
+					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+				}
+				else{
+					$("#addToCartSizeGuide #addToCartButton").removeAttr('style');
+				} 
+				
 			}
 		});
 }
-
-//$(document).on("click.size-guide", 'a[data-target=#popUpModal]',
-/*function getComboA(sel){
-	var value = sel.value;
-	console.log(value);
-	var productcode = $(this).find('option:selected').data('productcode1')
-	console.log(productcode +" 1");
-	alert(value +" 1");
-	alert(productcode+" 1");
-    // load the url and show modal on success
-    $("#popUpModal .modal-content").load(value, function() { 
-         $("#popUpModal").modal("show");
-     	alert(value +" 2");
-    	alert(productcode+" 2");
-     	buyboxDetailsForSizeGuide(productcode);
-    });
-}*/
