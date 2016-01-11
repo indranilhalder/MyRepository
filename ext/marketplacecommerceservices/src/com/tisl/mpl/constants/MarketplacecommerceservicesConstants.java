@@ -190,6 +190,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MASTERCARD = "MasterCard".intern();
 	public static final String MAESTRO = "Maestro".intern();
 	public static final String AMEX = "AMEX".intern();
+	public static final String AMERICAN_EXPRESS = "AMERICAN EXPRESS".intern();
 	public static final String DINERSCARD = "DinersCard".intern();
 	public static final String VISA = "VISA".intern();
 	public static final String EUROCARD = "EuroCard".intern();
@@ -1270,6 +1271,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CARTQUERY = "select {c:pk} from {Cart As c} where {c.guid}=?guid".intern();
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
+
+	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
 
 	private MarketplacecommerceservicesConstants()
 	{

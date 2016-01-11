@@ -238,7 +238,7 @@ where tbl.code IN (
 
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
-;sortRef1;$solrIndexedType;relevance;true;
+;sortRef1;$solrIndexedType;relevance;false;
 ;sortRef3;$solrIndexedType;name-asc;false;
 ;sortRef4;$solrIndexedType;name-desc;false;
 ;sortRef5;$solrIndexedType;price-asc;false;

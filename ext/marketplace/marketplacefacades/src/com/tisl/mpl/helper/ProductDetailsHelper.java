@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.helper;
 
-import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
@@ -123,8 +122,9 @@ public class ProductDetailsHelper
 	@Autowired
 	private ExtendedUserServiceImpl userexService;
 
-	@Autowired
-	private SiteConfigService siteConfigService;
+	//SOnar fixes
+	//@Autowired
+	//private SiteConfigService siteConfigService;
 
 	public GigyaService getGigyaservice()
 	{
@@ -181,8 +181,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -832,15 +832,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
