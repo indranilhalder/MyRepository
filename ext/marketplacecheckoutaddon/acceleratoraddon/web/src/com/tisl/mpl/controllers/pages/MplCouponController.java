@@ -16,6 +16,7 @@ import java.util.Collection;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,7 +57,7 @@ public class MplCouponController
 	 *
 	 * @param couponCode
 	 * @param paymentMode
-	 * @return
+	 * @return VoucherDiscountData
 	 * @throws EtailNonBusinessExceptions
 	 * @throws JaloPriceFactoryException
 	 * @throws CalculationException
@@ -75,7 +76,7 @@ public class MplCouponController
 		getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
 
 		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
-		if (null == bankNameSelected)
+		if (StringUtils.isEmpty(bankNameSelected))
 		{
 			getSessionService().setAttribute("bank", bankNameSelected);
 		}
@@ -104,11 +105,24 @@ public class MplCouponController
 		{
 			if (e.getMessage().contains("total price exceeded"))
 			{
-				data.setRedeemErrorMsg("Cannot redeem voucher " + couponCode + " as total price exceeded");
-				data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
-				data.setCouponRedeemed(false);
-				return data;
+				data.setRedeemErrorMsg("Price exceeded");
 			}
+			else if (e.getMessage().contains("Voucher not found"))
+			{
+				data.setRedeemErrorMsg("Invalid");
+			}
+			else if (e.getMessage().contains("Voucher cannot be redeemed"))
+			{
+				data.setRedeemErrorMsg("Expired");
+			}
+			else if (e.getMessage().contains("Error while"))
+			{
+				data.setRedeemErrorMsg("Issue");
+			}
+
+			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			data.setCouponRedeemed(false);
+			return data;
 		}
 
 		LOG.debug("Coupon Redemption Status is:::" + couponRedStatus);
@@ -125,7 +139,7 @@ public class MplCouponController
 	 * This method releases the Coupon applied
 	 *
 	 * @param couponCode
-	 * @return
+	 * @return VoucherDiscountData
 	 * @throws EtailNonBusinessExceptions
 	 * @throws JaloPriceFactoryException
 	 * @throws CalculationException

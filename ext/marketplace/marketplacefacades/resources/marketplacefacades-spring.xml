@@ -1097,7 +1097,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultTrackOrderCouponPopulator" alias="trackOrderCouponPopulator"/>
 	<bean id="defaultTrackOrderCouponPopulator"
 			class="com.tisl.mpl.facades.populators.CustomNotificationCouponPopulator">
+			<property name="productModelUrlResolver" ref="productModelUrlResolver"/>
+			<property name="categoryModelUrlResolver" ref="categoryModelUrlResolver"/>
 	</bean>
+	
 	
 	
 	<!-- Track Order Populator End-->

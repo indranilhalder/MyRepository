@@ -6123,7 +6123,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			if (CollectionUtils.isNotEmpty(orderModels))
 			{
-				Collections.sort(orderModels, new Comparator<OrderModel>()
+				final List<OrderModel> modifiableOrderList = new ArrayList<OrderModel>();
+				modifiableOrderList.addAll(orderModels);
+
+				Collections.sort(modifiableOrderList, new Comparator<OrderModel>()
 				{
 					@Override
 					public int compare(final OrderModel o1, final OrderModel o2)
@@ -6132,7 +6135,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						return compare;
 					}
 				});
-				for (final OrderModel order : orderModels)
+				Collections.reverse(modifiableOrderList);
+				for (final OrderModel order : modifiableOrderList)
 				{
 					for (final OrderModel sellerOrder : order.getChildOrders())
 					{
