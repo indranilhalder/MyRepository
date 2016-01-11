@@ -21,7 +21,8 @@
 	#customerBlackListMessage, #emptyOTPMessage, 
 	#savedCVVError, #enterOTP, #OTPGenerationErrorMessage, #resendOTPMessage, 
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
-	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #couponError, #couponApplied {
+	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
+	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError {
 	display: none;
 }
 

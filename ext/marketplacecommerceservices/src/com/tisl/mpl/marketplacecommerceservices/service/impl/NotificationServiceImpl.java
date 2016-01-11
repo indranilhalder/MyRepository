@@ -3,8 +3,10 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
@@ -12,6 +14,8 @@ import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
+import de.hybris.platform.voucher.model.ProductCategoryRestrictionModel;
+import de.hybris.platform.voucher.model.ProductRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
@@ -111,7 +115,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -123,7 +127,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -154,7 +158,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -176,7 +180,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -200,7 +204,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -228,7 +232,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -286,7 +290,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -340,7 +344,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getVoucher()
 	 */
 	@Override
@@ -352,7 +356,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -372,7 +376,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */
@@ -385,7 +389,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getAllVoucherList(de.hybris.platform.core
 	 * .model.user.CustomerModel, java.util.List)
@@ -393,7 +397,6 @@ public class NotificationServiceImpl implements NotificationService
 	@Override
 	public AllVoucherListData getAllVoucherList(final CustomerModel currentCustomer, final List<VoucherModel> voucherList)
 	{
-
 		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, YYYY");
 		final List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 		final List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
@@ -414,8 +417,10 @@ public class NotificationServiceImpl implements NotificationService
 
 					DateRestrictionModel dateRestrObj = null;
 					UserRestrictionModel userRestrObj = null;
-					//SemiClosedRestrictionModel semiClosedRestrObj = null;
 
+					List<ProductModel> specificProductCoupon = new ArrayList<ProductModel>();
+					List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
+					//List<ProductModel> productForCategoryBasedCoupon = new ArrayList<ProductModel>();
 
 					for (final RestrictionModel restrictionModel : restrictionList)
 					{
@@ -432,17 +437,21 @@ public class NotificationServiceImpl implements NotificationService
 							userRestrObj = (UserRestrictionModel) restrictionModel;
 						}
 
-						//TODO: Semi Closed Restriction-----Commented as functionality out of scope of R2.1   Uncomment when in scope
-						//						if (restrictionModel instanceof SemiClosedRestrictionModel)
-						//						{
-						//							semiClosedRestrExists = true;
-						//							//semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel;
-						//						}
-						//							if (restrictionModel instanceof SemiClosedRestrictionModel)
-						//							{
-						//								semiClosedRestrExists = false;
-						//								semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel;
-						//							}
+						if (restrictionModel instanceof ProductRestrictionModel)
+						{
+							final ProductRestrictionModel productRestriction = (ProductRestrictionModel) restrictionModel;
+							specificProductCoupon = new ArrayList<ProductModel>(productRestriction.getProducts());
+
+						}
+
+						if (restrictionModel instanceof ProductCategoryRestrictionModel)
+						{
+							final ProductCategoryRestrictionModel categoryRestriction = (ProductCategoryRestrictionModel) restrictionModel;
+							categoryBasedCoupon = new ArrayList<CategoryModel>(categoryRestriction.getCategories());
+
+							//productForCategoryBasedCoupon = new ArrayList<ProductModel>(categoryRestriction.getProducts());
+						}
+
 					}
 
 					if (dateRestrExists)
@@ -464,6 +473,8 @@ public class NotificationServiceImpl implements NotificationService
 									voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
 									final Date startDate = dateRestrObj.getStartDate();
 									voucherDisplayData.setVoucherCreationDate(startDate);
+									voucherDisplayData.setProductsCoupon(specificProductCoupon);
+									voucherDisplayData.setCategoryBasedCoupon(categoryBasedCoupon);
 									closedVoucherDataList.add(voucherDisplayData);
 								}
 							}

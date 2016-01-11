@@ -138,6 +138,7 @@
 		<property name="couponCode" type="String"/>
 		<property name="promotionIdentifier" type="String"/>
 		<property name="promotionDescription" type="String"/>
+		<property name="productUrl" type="String"/>
 </bean>	
 	<!-- EMITermRateData for EMI -->
 	<bean class="com.tisl.mpl.data.EMITermRateData">
