@@ -19,13 +19,16 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.core.enums.MediaTypeEnum;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+
 
 /**
  * @author TCS
  *
  */
-public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TARGET extends ProductData>
-		extends ProductGalleryImagesPopulator<SOURCE, TARGET>
+public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TARGET extends ProductData> extends
+		ProductGalleryImagesPopulator<SOURCE, TARGET>
 {
 	private static final Logger LOG = Logger.getLogger(CustomProductGalleryImagePopulator.class);
 
@@ -98,7 +101,16 @@ public class CustomProductGalleryImagePopulator<SOURCE extends ProductModel, TAR
 							 */
 							if (null != media.getMediaPriority())
 							{
-								imageData.setMediaPriority(media.getMediaPriority());
+								if (null != media.getMediaType() && MediaTypeEnum.VIDEO.equals(media.getMediaType()))
+								{
+									final int newPriority = (media.getMediaPriority() == null ? 0 : media.getMediaPriority().intValue())
+											+ MarketplaceFacadesConstants.PRIORITY_INCREMENT;
+									imageData.setMediaPriority(Integer.valueOf(newPriority));
+								}
+								else
+								{
+									imageData.setMediaPriority(media.getMediaPriority());
+								}
 							}
 							else
 							{
