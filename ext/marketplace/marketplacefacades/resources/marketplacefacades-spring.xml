@@ -1097,7 +1097,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultTrackOrderCouponPopulator" alias="trackOrderCouponPopulator"/>
 	<bean id="defaultTrackOrderCouponPopulator"
 			class="com.tisl.mpl.facades.populators.CustomNotificationCouponPopulator">
+			<property name="productModelUrlResolver" ref="productModelUrlResolver"/>
+			<property name="categoryModelUrlResolver" ref="categoryModelUrlResolver"/>
 	</bean>
+	
 	
 	
 	<!-- Track Order Populator End-->
@@ -1309,12 +1312,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>SMALL</value>
 			    <value>MEDIUM</value> 
 				<value>LARGE</value>
-				<value>${footwear.header.age}</value>
-			    <value>${footwear.header.UK}</value>
-			    <value>${footwear.header.US}</value>
-			    <value>${footwear.header.EURO}</value>
-			    <value>${footwear.header.footlenth}</value>
-				<value>${footwear.header.Witdth}</value>
+				<value>X-LARGE</value>
 			</list>
 		</property>
 	</bean>

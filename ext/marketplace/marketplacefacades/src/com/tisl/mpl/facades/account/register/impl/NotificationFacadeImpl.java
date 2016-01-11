@@ -146,30 +146,13 @@ public class NotificationFacadeImpl implements NotificationFacade
 		final List<VoucherModel> voucherList = getAllCoupons();
 		final AllVoucherListData allVoucherList = notificationService.getAllVoucherList(currentCustomer, voucherList);
 
-
-		List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 		List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 		//final List<CouponNotificationModel> couponList = new ArrayList<>();
 
 		if (null != allVoucherList)
 		{
 
-			openVoucherDataList = allVoucherList.getOpenVoucherList();
 			closedVoucherDataList = allVoucherList.getClosedVoucherList();
-			/*
-			 * if (null != openVoucherDataList) { for (final VoucherDisplayData v : openVoucherDataList) { final
-			 * CouponNotificationModel trackOrderCoupon = new CouponNotificationModel();
-			 * 
-			 * trackOrderCoupon.setCouponCode(v.getVoucherCode());
-			 * trackOrderCoupon.setCouponStartDate(v.getVoucherCreationDate());
-			 * trackOrderCoupon.setCouponStatus("Coupon @ is available"); modelService.save(trackOrderCoupon);
-			 * couponList.add(trackOrderCoupon);
-			 * 
-			 * }
-			 * 
-			 * 
-			 * }
-			 */
 
 			/*
 			 * if (null != closedVoucherDataList) { for (final VoucherDisplayData v : closedVoucherDataList) { final
@@ -185,8 +168,6 @@ public class NotificationFacadeImpl implements NotificationFacade
 		}
 
 
-
-
 		List<NotificationData> notificationDataList = new ArrayList<>();
 
 
@@ -197,14 +178,10 @@ public class NotificationFacadeImpl implements NotificationFacade
 			notificationDataList.add(tempnotificationData);
 		}
 
-		for (final VoucherDisplayData v : openVoucherDataList)
-		{
-			final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
-			notificationDataList.add(dataForVoucher);
-		}
 
 		for (final VoucherDisplayData v : closedVoucherDataList)
 		{
+
 			final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
 			notificationDataList.add(dataForVoucher);
 		}
@@ -244,6 +221,8 @@ public class NotificationFacadeImpl implements NotificationFacade
 		{
 			notificationDataList.subList(count, notificationDataList.size()).clear();
 		}
+
+
 
 		return notificationDataList;
 	}
