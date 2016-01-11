@@ -12,27 +12,27 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.tisl.mpl.coupon.dao.CustomerDetailsDao;
-import com.tisl.mpl.coupon.service.CustomerDetailsService;
+import com.tisl.mpl.coupon.dao.MplCustomerDetailsDao;
+import com.tisl.mpl.coupon.service.MplCustomerDetailsService;
 
 
 
 
-public class DefaultCustomerDetailsImpl implements CustomerDetailsService
+public class MplCustomerDetailsServiceImpl implements MplCustomerDetailsService
 {
 
-	private CustomerDetailsDao customerDetailsDao;
+	private MplCustomerDetailsDao customerDetailsDao;
 
 
 	/**
 	 * @return the customerDetailsDao
 	 */
-	public CustomerDetailsDao getCustomerDetailsDao()
+	public MplCustomerDetailsDao getCustomerDetailsDao()
 	{
 		return customerDetailsDao;
 	}
 
-	private static final Logger LOG = Logger.getLogger(DefaultCustomerDetailsImpl.class);
+	private static final Logger LOG = Logger.getLogger(MplCustomerDetailsServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)
@@ -47,7 +47,7 @@ public class DefaultCustomerDetailsImpl implements CustomerDetailsService
 	}
 
 	@Required
-	public void setCustomerDetailsDao(final CustomerDetailsDao customerDetailsDao)
+	public void setCustomerDetailsDao(final MplCustomerDetailsDao customerDetailsDao)
 	{
 		this.customerDetailsDao = customerDetailsDao;
 	}
