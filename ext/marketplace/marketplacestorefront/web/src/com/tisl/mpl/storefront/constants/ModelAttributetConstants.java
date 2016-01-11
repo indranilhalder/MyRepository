@@ -331,6 +331,8 @@ public final class ModelAttributetConstants
 	public static final String COLLECTION_NAME = "collectionName";
 	public static final String PRODUCT_SIZE_GUIDE = "sizeguideData";
 	public static final String HEADER_SIZE_GUIDE = "sizeguideHeader";
+	public static final String SIZE_CHART_HEADER_BRAND = "brand";
+	public static final String SIZE_CHART_HEADER_CAT = "category";
 	public static final int SHOP_BY_LOOK_PAGE_SIZE = 1;
 	//comments and review changes
 	public static final String GIGYA_API_KEY = "gigyaAPIKey";
