@@ -230,7 +230,7 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 					String name = MarketplacecommerceservicesConstants.EMPTY;
 					if (refund.getOrderEntry().getOrder().getDeliveryAddress() != null)
 					{
-						if (refund.getOrderEntry().getOrder().getDeliveryAddress() != null)
+						if (refund.getOrderEntry().getOrder().getDeliveryAddress().getFirstname() != null)
 						{
 							name += refund.getOrderEntry().getOrder().getDeliveryAddress().getFirstname()
 									+ MarketplacecommerceservicesConstants.SPACE;

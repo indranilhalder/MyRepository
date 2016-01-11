@@ -400,16 +400,18 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 							LOG.debug("-----------Fetching Customer----" + subOrderDetail.getCode());
 							String name = MarketplacecommerceservicesConstants.EMPTY;
-							if (orderModel.getDeliveryAddress() != null && orderModel.getDeliveryAddress().getFirstname() != null)
+							if (null != orderModel.getDeliveryAddress() && orderModel.getDeliveryAddress().getFirstname() != null)
 							{
-								name += orderModel.getDeliveryAddress().getFirstname() + MarketplacecommerceservicesConstants.SPACE;
-								if (orderModel.getDeliveryAddress().getLastname() != null)
-								{
-									name += orderModel.getDeliveryAddress().getLastname();
-								}
-								data.setCustomerName(name);
+								name += orderModel.getDeliveryAddress().getFirstname();
 							}
-							if (orderModel.getDeliveryAddress() != null && orderModel.getDeliveryAddress().getCellphone() != null)
+							name += MarketplacecommerceservicesConstants.SPACE;
+							if (null != orderModel.getDeliveryAddress() && orderModel.getDeliveryAddress().getLastname() != null)
+							{
+								name += orderModel.getDeliveryAddress().getLastname();
+							}
+							data.setCustomerName(name);
+
+							if (null != orderModel.getDeliveryAddress() && orderModel.getDeliveryAddress().getCellphone() != null)
 							{
 								data.setPhNumber(orderModel.getDeliveryAddress().getCellphone());
 							}
