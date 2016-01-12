@@ -455,9 +455,14 @@
 							<li class="number first active"><a href="?page=${i}">${i}</a></li>
 							</c:when>
 							<c:otherwise>
-							<li class="number first"><a href="?page=${i}">${i}</a></li>
-							
-							
+							<c:choose>
+									<c:when test="${param.page eq null and i eq 1}">
+										<li class="number first active"><a href="?page=${i}">${i}</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="number first"><a href="?page=${i}">${i}</a></li>
+									</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 							</c:choose>
 							
@@ -729,7 +734,15 @@
 							<li class="number first active"><a href="?page=${i}">${i}</a></li>
 							</c:when>
 							<c:otherwise>
-							<li class="number first"><a href="?page=${i}">${i}</a></li>
+								<c:choose>
+									<c:when test="${param.page eq null and i eq 1}">
+										<li class="number first active"><a href="?page=${i}">${i}</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="number first"><a href="?page=${i}">${i}</a></li>
+									</c:otherwise>
+								</c:choose>
+							
 							</c:otherwise>
 							</c:choose>
 							</c:forEach>
