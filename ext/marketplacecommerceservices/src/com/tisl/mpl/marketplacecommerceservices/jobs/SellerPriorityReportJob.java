@@ -186,6 +186,10 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 				{
 					savedValueData.setSellerName(sellerDataVal.getFirstname());
 				}
+				else
+				{
+					savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+				}
 			}
 			else
 			{
@@ -218,26 +222,6 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			else
 			{
 				savedValueData.setProductId(MarketplacecommerceservicesConstants.EMPTYSTRING);
-			}
-
-			// Modified / Created Priority Start Date
-			if (null != sellerModData.getPriorityStartDate())
-			{
-				savedValueData.setOldStartDate(sdf.format(sellerModData.getPriorityStartDate()));
-			}
-			else
-			{
-				savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-			}
-
-			// Modified / Created priority End Date
-			if (null != sellerModData.getPriorityEndDate())
-			{
-				savedValueData.setOldEndDate(sdf.format(sellerModData.getPriorityEndDate()));
-			}
-			else
-			{
-				savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 			}
 
 			// Activation status of Priority
@@ -292,6 +276,17 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 							}
 						}
+						else
+						{
+							if (null != sellerModData.getPriorityStartDate())
+							{
+								savedValueData.setOldStartDate(sdf.format(sellerModData.getPriorityStartDate()));
+							}
+							else
+							{
+								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+							}
+						}
 						if (savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityEndDate"))
 						{
 							if (null != savedValueEntry.getOldValue())
@@ -309,6 +304,17 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 							else
 							{
 								savedValueData.setModifiedEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+							}
+						}
+						else
+						{
+							if (null != sellerModData.getPriorityEndDate())
+							{
+								savedValueData.setOldStartDate(sdf.format(sellerModData.getPriorityEndDate()));
+							}
+							else
+							{
+								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 							}
 						}
 						if (null == savedValueData.getModifiedStartDate())
@@ -329,6 +335,41 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 				savedValueData.setNewlyCreated("Y");
 				savedValueData.setModifiedStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 				savedValueData.setModifiedEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+
+
+				// Modified / Created Priority Start Date
+				for (final SavedValueEntryModel savedValueEntry : savedVal.getSavedValuesEntries())
+				{
+					LOG.debug("ModifiedAttribute: " + savedValueEntry.getModifiedAttribute());
+
+					if (null != savedValueEntry.getModifiedAttribute()
+							&& !savedValueEntry.getModifiedAttribute().equalsIgnoreCase("modifiedtime"))
+					{
+						if (savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityStartDate"))
+						{
+							if (null != savedValueEntry.getNewValue())
+							{
+								savedValueData.setOldStartDate(sdf.format(savedValueEntry.getNewValue()));
+							}
+							else
+							{
+								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+							}
+						}
+						if (savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityEndDate"))
+						{
+							if (null != savedValueEntry.getNewValue())
+							{
+								savedValueData.setOldEndDate(sdf.format(savedValueEntry.getNewValue()));
+							}
+							else
+							{
+								savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+							}
+						}
+					}
+				}
+
 			}
 			savedValueDataList.add(savedValueData);
 		}
