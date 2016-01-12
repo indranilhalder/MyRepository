@@ -156,4 +156,16 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBoxList;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#buyBoxStockForSeller(java.lang.String)
+	 */
+	@Override
+	public List<BuyBoxModel> buyBoxStockForSeller(final String sellerID)
+	{
+		// YTODO Auto-generated method stub
+		return buyBoxDao.buyBoxStockForSeller(sellerID);
+	}
+
 }

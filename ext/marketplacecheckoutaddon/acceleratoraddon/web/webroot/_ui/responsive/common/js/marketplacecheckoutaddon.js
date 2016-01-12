@@ -3446,13 +3446,13 @@ function clearDisable()
 //Coupon
 $("#couponSubmitButton").click(function(){
 	if($("#couponFieldId").val()==""){
-		$("#couponError").css("display","block");	
-		document.getElementById("couponError").innerHTML="Please enter a Coupon Code";
+		$("#emptyCouponError").css("display","block");	
+		//document.getElementById("couponError").innerHTML="Please enter a Coupon Code";
 	}
 	else if($("#couponFieldId").val()!="" && $('#couponFieldId').prop('readonly') == true)
 	{
-		$("#couponError").css("display","block");	
-		document.getElementById("couponError").innerHTML="Coupon is already applied";
+		$("#appliedCouponError").css("display","block");	
+		//document.getElementById("couponError").innerHTML="Coupon is already applied";
 	}
 	else{
 		var couponCode=$("#couponFieldId").val();
@@ -3465,8 +3465,24 @@ $("#couponSubmitButton").click(function(){
 	 		success : function(response) {
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			if(response.redeemErrorMsg!=null){
-	 				$("#couponError").css("display","block");	
-	 				document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 				if(response.redeemErrorMsg=="Price exceeded")
+	 				{
+	 					$("#priceCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Invalid")
+	 				{
+	 					$("#invalidCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Expired")
+	 				{
+	 					$("#expiredCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Issue")
+	 				{
+	 					$("#issueCouponError").css("display","block");
+	 				}
+	 				//$("#couponError").css("display","block");	
+	 				//document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -3487,7 +3503,8 @@ $("#couponSubmitButton").click(function(){
 });
 
 $("#couponFieldId").focus(function(){
-	$("#couponError").css("display","none");	
+	//$("#couponError").css("display","none");	
+	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError").css("display","none");
 });
 
 
@@ -3505,7 +3522,7 @@ $(".remove-coupon-button").click(function(){
  				couponApplied=true;
  			}
  			if(couponApplied==true){
- 				$("#couponApplied, #couponError").css("display","none");
+ 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError").css("display","none");
  				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
  				//$("#couponFieldId").attr('disabled','enabled');
  				$('#couponFieldId').attr('readonly', false);
