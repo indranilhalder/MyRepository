@@ -556,7 +556,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param discountAmt
 	 * @return List<DiscountValue>
 	 */
-	private List<DiscountValue> setGlobalDiscount(final List<DiscountValue> discountList, final List<DiscountModel> voucherList,
+	@Override
+	public List<DiscountValue> setGlobalDiscount(final List<DiscountValue> discountList, final List<DiscountModel> voucherList,
 			final double cartSubTotal, final double promoCalcValue, final VoucherModel lastVoucher, final double discountAmt)
 	{
 		DiscountValue discountValue = null;
@@ -566,21 +567,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discount.getCurrencyIsoCode());
 
-				//				if (identifier.equalsIgnoreCase("cartAmt"))
-				//				{
-				//					discountValue = new DiscountValue(discount.getCode(), (cartSubTotal - promoCalcValue - 0.01), lastVoucher
-				//							.getAbsolute().booleanValue(), discount.getCurrencyIsoCode());
-				//				}
-				//				else if(identifier.equalsIgnoreCase("MaxDisc"))
-				//				{
-				//					discountValue = new DiscountValue(discount.getCode(), lastVoucher.getMaxDiscountValue().doubleValue(), true,
-				//							discount.getCurrencyIsoCode());
-				//				}
-				//				else if(identifier.equalsIgnoreCase("OrderEntryAmt"))
-				//				{
-				//					discountValue = new DiscountValue(discount.getCode(), lastVoucher.getMaxDiscountValue().doubleValue(), true,
-				//							discount.getCurrencyIsoCode());
-				//				}
 				discountList.remove(discount);
 				break;
 			}
@@ -1132,7 +1118,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param voucherEntrySet
 	 * @return list of applicable AbstractOrderEntry
 	 */
-	private List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherEntrySet voucherEntrySet)
+	@Override
+	public List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherEntrySet voucherEntrySet)
 	{
 		final Iterator iter = voucherEntrySet.iterator();
 		final List<AbstractOrderEntry> applicableOrderList = new ArrayList<AbstractOrderEntry>();
