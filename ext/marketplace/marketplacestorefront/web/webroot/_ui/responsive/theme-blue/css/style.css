@@ -1129,11 +1129,11 @@ h2 {
           -moz-osx-font-smoothing: grayscale;
           font-weight: 100;
           content: "\e602";
-          font-size: 12px;
+          font-size: 14px;
           color: #00cbe9;
           line-height: 18px;
           margin-right: 5px;
-          top: 1px;
+          top: 3px;
           position: relative;
           font-weight: bold; }
         header .content .right > ul > li.wishlist .wishlist-info {
@@ -28690,6 +28690,7 @@ height:30px;
 
 
 
+
 /*footwear category start*/
 .footwear_left, .footwear_right {
 	display: inline-block;
@@ -28781,6 +28782,20 @@ height:30px;
 	}
 }
 /*footwear category end*/
+
+.bell-icon:after{
+	font-family: 'FontAwesome';
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   content:"\f0a2";
+    font-size: 16px;
+    color: #00cbe9;
+    line-height: 18px;
+    top: 2px;
+    position: relative;
+    font-weight: bold;
+}
+
 /*--------------maincss-----------*/
 .row
 {

@@ -6749,16 +6749,23 @@
 				generate="false">
 				<attributes>
 					<attribute qualifier="couponCode" autocreate="true"
-							type="java.lang.String">
-							<description>Coupon Code</description>
-							<modifiers read="true" write="true" removable="true"
-								optional="true" initial="true" unique="true" />
-							<persistence type="property" />
+						type="java.lang.String">
+						<description>Coupon Code</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
 					</attribute>
 					<attribute qualifier="couponValue" autocreate="true"
 						type="java.lang.Double">
 						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
 						<description>Coupon Value</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="sellerForCoupon" autocreate="true"
+						type="java.lang.String">
+						<description>Coupon Code</description>
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
