@@ -857,8 +857,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		final VoucherEntrySet entrySet = voucherModelService.getApplicableEntries(lastVoucher, cartModel);
 		final List<AbstractOrderEntry> applicableOrderEntryList = mplCouponFacade.getOrderEntriesFromVoucherEntries(entrySet);
 
-		final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
-
 		if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
 				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())
 		{
@@ -884,25 +882,30 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		{
 			double netAmountAfterAllDisc = 0.0D;
 			boolean flag = false;
+			
+			if(CollectionUtils.isNotEmpty(applicableOrderEntryList))
+			{				
+				final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
 
-			for (final AbstractOrderEntry entry : applicableOrderEntryList)
-			{
-				if (StringUtils.isNotEmpty(entry.getAttribute("productPromoCode").toString())
-						|| StringUtils.isNotEmpty(entry.getAttribute("cartPromoCode").toString()))
+				for (final AbstractOrderEntry entry : applicableOrderEntryList)
 				{
-					netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
-					flag = true;
+					if (StringUtils.isNotEmpty(entry.getAttribute("productPromoCode").toString())
+							|| StringUtils.isNotEmpty(entry.getAttribute("cartPromoCode").toString()))
+					{
+						netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
+						flag = true;
+					}
 				}
-			}
-
-
-			if (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
-			{
-				final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
-				discountList = mplCouponFacade.setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
-				cartModel.setGlobalDiscountValues(discountList);
-				mplDefaultCalculationService.calculateTotals(cartModel, false);
-				getModelService().save(cartModel);
+	
+	
+				if (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+				{
+					final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
+					discountList = mplCouponFacade.setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
+					cartModel.setGlobalDiscountValues(discountList);
+					mplDefaultCalculationService.calculateTotals(cartModel, false);
+					getModelService().save(cartModel);
+				}
 			}
 			return true;
 		}
