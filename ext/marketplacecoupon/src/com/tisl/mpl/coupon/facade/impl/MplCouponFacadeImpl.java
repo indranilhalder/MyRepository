@@ -342,7 +342,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
 			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
-		boolean checkFlag = false;
+		boolean checkFlag = true;
 		if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
 		{
 
@@ -476,6 +476,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		double voucherCalcValue = 0.0;
 		double promoCalcValue = 0.0;
 		List<DiscountValue> discountList = cartModel.getGlobalDiscountValues();
+		final String voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
 
 		final List<DiscountModel> voucherList = cartModel.getDiscounts();
 		if (CollectionUtils.isNotEmpty(discountList))
@@ -508,39 +509,60 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
-			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, (cartSubTotal
-					- promoCalcValue - 0.01));
-			cartModel.setGlobalDiscountValues(discountList);
+			//			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, (cartSubTotal
+			//					- promoCalcValue - 0.01));
+			//			cartModel.setGlobalDiscountValues(discountList);
+			//			mplDefaultCalculationService.calculateTotals(cartModel, false);
+			//			getModelService().save(cartModel);
+
+			getVoucherFacade().releaseVoucher(voucherCode);
 			mplDefaultCalculationService.calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
+			//Throw exception with specific information
+			throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
 		}
 
 		else
 		{
 			double netAmountAfterAllDisc = 0.0D;
+			double productPrice = 0.0D;
 			boolean flag = false;
 
 			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
 			{
-				final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
+				//final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
 				for (final AbstractOrderEntry entry : applicableOrderEntryList)
 				{
-					if (StringUtils.isNotEmpty(entry.getAttribute("productPromoCode").toString())
-							|| StringUtils.isNotEmpty(entry.getAttribute("cartPromoCode").toString()))
+					if ((null != entry.getAttribute("productPromoCode") && StringUtils.isNotEmpty(entry.getAttribute(
+							"productPromoCode").toString()))
+							|| (null != entry.getAttribute("cartPromoCode") && StringUtils.isNotEmpty(entry
+									.getAttribute("cartPromoCode").toString())))
 					{
 						netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
 						flag = true;
 					}
+
+					else
+					{
+						productPrice += entry.getTotalPrice().doubleValue();
+					}
 				}
 
 
-				if (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+				if ((flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
-					final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
-					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
-					cartModel.setGlobalDiscountValues(discountList);
+					//					final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
+					//					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
+					//					cartModel.setGlobalDiscountValues(discountList);
+					//					mplDefaultCalculationService.calculateTotals(cartModel, false);
+					//					getModelService().save(cartModel);
+
+					getVoucherFacade().releaseVoucher(voucherCode);
 					mplDefaultCalculationService.calculateTotals(cartModel, false);
 					getModelService().save(cartModel);
+					//Throw exception with specific information
+					throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
 				}
 			}
 		}
