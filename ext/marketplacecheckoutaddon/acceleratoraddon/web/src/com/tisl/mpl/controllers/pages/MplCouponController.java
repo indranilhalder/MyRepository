@@ -4,7 +4,9 @@ import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLo
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -14,6 +16,7 @@ import java.util.Collection;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,22 +57,26 @@ public class MplCouponController
 	 *
 	 * @param couponCode
 	 * @param paymentMode
-	 * @return
+	 * @return VoucherDiscountData
 	 * @throws EtailNonBusinessExceptions
 	 * @throws JaloPriceFactoryException
 	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
 	 */
 	@RequestMapping(value = "/redeem", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
-			final String bankNameSelected) throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException
+			final String bankNameSelected) throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException,
+			NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
 		LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
 		getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
 
 		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
-		if (null == bankNameSelected)
+		if (StringUtils.isEmpty(bankNameSelected))
 		{
 			getSessionService().setAttribute("bank", bankNameSelected);
 		}
@@ -98,11 +105,24 @@ public class MplCouponController
 		{
 			if (e.getMessage().contains("total price exceeded"))
 			{
-				data.setRedeemErrorMsg("Cannot redeem voucher " + couponCode + " as total price exceeded");
-				data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
-				data.setCouponRedeemed(false);
-				return data;
+				data.setRedeemErrorMsg("Price exceeded");
 			}
+			else if (e.getMessage().contains("Voucher not found"))
+			{
+				data.setRedeemErrorMsg("Invalid");
+			}
+			else if (e.getMessage().contains("Voucher cannot be redeemed"))
+			{
+				data.setRedeemErrorMsg("Expired");
+			}
+			else if (e.getMessage().contains("Error while"))
+			{
+				data.setRedeemErrorMsg("Issue");
+			}
+
+			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			data.setCouponRedeemed(false);
+			return data;
 		}
 
 		LOG.debug("Coupon Redemption Status is:::" + couponRedStatus);
@@ -119,15 +139,15 @@ public class MplCouponController
 	 * This method releases the Coupon applied
 	 *
 	 * @param couponCode
-	 * @return
+	 * @return VoucherDiscountData
 	 * @throws EtailNonBusinessExceptions
 	 * @throws JaloPriceFactoryException
 	 * @throws CalculationException
 	 */
 	@RequestMapping(value = "/release", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode)
-			throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException
+	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode) throws EtailNonBusinessExceptions,
+			JaloPriceFactoryException, CalculationException
 	{
 		LOG.debug("The coupon code to be released by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();

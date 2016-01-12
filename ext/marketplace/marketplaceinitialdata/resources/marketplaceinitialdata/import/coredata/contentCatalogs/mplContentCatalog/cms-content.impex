@@ -555,7 +555,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section4A;;MplFootwearComponent,SimpleBannerComponent;
 ;Section4A1;;MplFootwearComponent,SimpleBannerComponent;
 ;Section5;;CMSParagraphComponent;
-;Section5A1;;MplFootwearComponent;
+;Section5A1;;MplFootwearComponent,SimpleBannerComponent;
 ;Section6A;;MplCategoryCarouselComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide

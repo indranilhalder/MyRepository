@@ -170,7 +170,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<GigyaProductReviewWsDTO> getReviewsByUID(final String customerUID) throws Exception
+	public List<GigyaProductReviewWsDTO> getReviewsByUID(final String customerUID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -291,10 +291,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						final ProductModel productModel = productService.getProductForCode(gsCommentObject.getString("streamId"));
 
-						productData = productFacade.getProductForOptions(productModel,
-								Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-										ProductOption.GALLERY, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
-										ProductOption.VARIANT_FULL));
+						productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+								ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
+								ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
 					}
 
 					reviewDTO.setProductData(productData);
@@ -308,7 +307,6 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		catch (final Exception e)
 		{
 			LOG.error(MarketplacecclientservicesConstants.REVIEWS_UID_EXCEPTION + e.getMessage());
-			throw e;
 
 		}
 		return customerReviewList;
