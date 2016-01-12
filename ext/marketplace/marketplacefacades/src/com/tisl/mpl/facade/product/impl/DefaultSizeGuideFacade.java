@@ -34,7 +34,12 @@ import com.tisl.mpl.wsdto.SizeGuideWsDataValue;
 public class DefaultSizeGuideFacade implements SizeGuideFacade
 {
 	/**
-	 * 
+	 *
+	 */
+	private static final String FOOTWEAR = "Footwear";
+
+	/**
+	 *
 	 */
 	private static final String CLOTHING = "Clothing";
 
@@ -93,7 +98,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 					sizeGuideSortedDatas.put(key, sizeDataValues);
 				}
 			}
-			else if (categoryType.equalsIgnoreCase("Footwear"))
+			else if (categoryType.equalsIgnoreCase(FOOTWEAR))
 			{
 				Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
 				sizeGuideSortedDatas.put(productCode, sizeGuideDataListForFootwear);
@@ -227,9 +232,26 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 		this.sizeGuideConverter = sizeGuideConverter;
 	}
 
+	/**
+	 * @return the sizeGuideComparator
+	 */
+	public SizeGuideComparator getSizeGuideComparator()
+	{
+		return sizeGuideComparator;
+	}
+
+	/**
+	 * @param sizeGuideComparator
+	 *           the sizeGuideComparator to set
+	 */
+	public void setSizeGuideComparator(final SizeGuideComparator sizeGuideComparator)
+	{
+		this.sizeGuideComparator = sizeGuideComparator;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */
 

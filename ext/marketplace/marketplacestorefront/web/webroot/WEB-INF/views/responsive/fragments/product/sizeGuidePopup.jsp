@@ -106,8 +106,11 @@
 						 </c:when>
 						</c:choose>
 			</div>
+			 <c:if test="${product.rootCategory=='Footwear'}">
 			<div class="footwearNote" style="line-height:19px;">
 			<product:footwearNote/></div>
+			</c:if>
+			
 				
 		</div>
 			

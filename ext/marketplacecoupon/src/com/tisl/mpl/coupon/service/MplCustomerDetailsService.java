@@ -10,7 +10,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import java.util.List;
 
 
-public interface CustomerDetailsService
+public interface MplCustomerDetailsService
 {
 
 	List<CustomerModel> getCustomer();
