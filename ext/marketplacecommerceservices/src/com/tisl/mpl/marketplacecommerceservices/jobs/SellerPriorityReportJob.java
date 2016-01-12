@@ -182,7 +182,7 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 				{
 					savedValueData.setSellerId(sellerDataVal.getId());
 				}
-				if (null != sellerDataVal.getType())
+				if (null != sellerDataVal.getFirstname())
 				{
 					savedValueData.setSellerName(sellerDataVal.getFirstname());
 				}
