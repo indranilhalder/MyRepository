@@ -103,6 +103,8 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append(customer.getOriginalUid());
 				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(customer.getMobileNumber());
+				fileWriter.append(COMMA_DELIMITER);
 				if (customer.getGender() != null)
 				{
 					fileWriter.append(customer.getGender().getCode());
@@ -121,8 +123,8 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 				if (customer.getDateOfAnniversary() != null)
 				{
 					fileWriter.append(customer.getDateOfAnniversary().toString());
-					fileWriter.append(COMMA_DELIMITER);
 				}
+				fileWriter.append(COMMA_DELIMITER);
 
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}
@@ -144,7 +146,6 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 			}
 		}
 	}
-
 
 	/**
 	 * @return the configurationService
