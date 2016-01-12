@@ -36,6 +36,9 @@ public interface BuyBoxService
 	//get seller data
 	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
 
+	//
+	List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
+
 	/**
 	 * @param ussid
 	 * @return
