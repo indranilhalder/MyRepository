@@ -26,9 +26,6 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
-	<!-- Discussing with Sashi, IS Team need to take care Cross Framing Issue -->
-	<!-- <meta http-equiv="X-FRAME-OPTIONS" content="DENY"> -->
-
 	<%-- Additional meta tags --%>
 	<htmlmeta:meta items="${metatags}"/>
 

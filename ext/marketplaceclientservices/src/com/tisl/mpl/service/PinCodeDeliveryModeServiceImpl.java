@@ -185,7 +185,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		catch (final Exception e)
 		{
 			//pincodeResfromOMS = null;
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + e);
+			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, e);
 			throw new ClientEtailNonBusinessExceptions(e);
 		}
 		return pincodeResfromOMS;
@@ -265,7 +265,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
+			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
 			throw new ClientEtailNonBusinessExceptions(ex);
 		}
 		return responsefromOMS;
