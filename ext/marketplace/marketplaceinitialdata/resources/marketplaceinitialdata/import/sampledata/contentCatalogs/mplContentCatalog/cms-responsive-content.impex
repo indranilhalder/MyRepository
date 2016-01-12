@@ -343,21 +343,30 @@ INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=tr
 
 INSERT_UPDATE MplFootwearComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;categoryCode(code,$productCV);title
 ;;WomenFootwearImgComponent;Women Footwear;WomenFootwearImgComponent;MSH1311106,MSH1310102,MSH1310100,MSH1310103
-;;MenFootwearImgComponent;Men Footwear;MenFootwearImgComponent;MSH1311107,MSH1311101,MSH1311100,MSH1311104;Men's Footwear
+;;MenFootwearImgComponent;Men Footwear;MenFootwearImgComponent;MSH1311107,MSH1311101,MSH1311100,MSH1311104
 
 
 
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;title;description;
-;;WomenSingleImgComponent;Women Single Img 1;WomenSingleImgComponent;/;Women's Footwear;Step up with New Shoes <a class='shop_link' href='/'>Shop Now</a>;
+;;WomenSingleImgComponent;Women Single Img 1;WomenSingleImgComponent;/;;Step up with New Shoes <a class='shop_link' href='/'>Shop Now</a>;
 ;;MenSingleImgComponent;Men Single Img 1;MenSingleImgComponent;/;;Freshen Your Wardrobe <a class='shop_link' href='/'>Shop Now</a>;
 ;;KidsFirstImgComponent;Kids First Img 1;KidsFirstImgComponent;/;Kid's Footwear;She can Splash into Spring<a class='shop_link' href='/'>Shop ALL GIRL'S FOOTWEAR</a>;
 ;;KidsSecondImgComponent;Women Second Img 1;KidsSecondImgComponent;/;;Game on for Your Little Man <a class='shop_link' href='/'>Shop ALL BOY'S FOOTWEAR</a>;
 
+
+
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;WomenFootwearParagraphComponent;Women Footwear Title Paragraph Component;WomenFootwearParagraphComponent;;;;
+;;MenFootwearParagraphComponent;Men Footwear Title Component;MenFootwearParagraphComponent;;;;
+
+
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
 ;;Section1-footwear;true;Category Banner Slot 1;TMPFootwearHomepageBannerComponent
 ;;Section2-footwear;true;Category Carousel  Slot 2;TMPFootwearMainCategoriesCarouselComponent
+;;Section3-footwear;true;Women footwear  slot 3;WomenFootwearParagraphComponent
 ;;Section3A-footwear;true;Women footwear  slot 3A;WomenSingleImgComponent
 ;;Section3A1-footwear;true;Women Carousel  slot 3A1;WomenFootwearImgComponent
+;;Section4-footwear;true;Men footwear  slot 4;MenFootwearParagraphComponent
 ;;Section4A-footwear;true;Mens footwear slot 4A;MenFootwearImgComponent
 ;;Section4A1-footwear;true;Mens Carousel slot 4A1;MenSingleImgComponent
 ;;Section5A1-footwear;true;Kids footwear slot 5A1 ;KidsFirstImgComponent,KidsSecondImgComponent
@@ -368,8 +377,10 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;c
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='footwear'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section1-footwear;Section1;;Section1-footwear;;;
 ;;Section2-footwear;Section2;;Section2-footwear;;;
+;;Section3-footwear;Section3;;Section3-footwear;;;
 ;;Section3A-footwear;Section3A;;Section3A-footwear;;;
 ;;Section3A1-footwear;Section3A1;;Section3A1-footwear;;;
+;;Section4-footwear;Section4;;Section4-footwear;;;
 ;;Section4A-footwear;Section4A;;Section4A-footwear;;;
 ;;Section4A1-footwear;Section4A1;;Section4A1-footwear;;;
 ;;Section5A1-footwear;Section5A1;;Section5A1-footwear;;;
