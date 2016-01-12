@@ -42,6 +42,7 @@ public interface BuyBoxDao
 	//get seller details
 	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
 
+	public List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
 
 	/**
 	 * @param ussid
