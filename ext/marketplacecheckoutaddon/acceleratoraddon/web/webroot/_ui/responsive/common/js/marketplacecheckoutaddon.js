@@ -2514,7 +2514,8 @@ function submitNBForm(){
 		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		
 		$("#netbankingError").css("display","none");
-		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
+		var firstName=selectedValue;
+		var lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=false;
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
