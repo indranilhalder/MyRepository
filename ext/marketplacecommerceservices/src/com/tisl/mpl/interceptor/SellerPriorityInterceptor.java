@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
 
 /**
@@ -37,8 +38,12 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 	private static final String ENDDATEBLANK = "end date cannot be blank";
 	private static final String ENDDATEBEFORESTARTDATE = "end date cannot be before start date";
 	private static final String CATIDPRODIDNONEDITABLE = "cannot modify category id or product id";
+	private static final String NOT_STOCK_FOR_SELLERID = "There is no stock against the seller Id";
 	@Resource(name = "mplSellerPriorityDao")
 	private MplSellerPriorityDao mplSellerPriorityDao;
+
+	@Resource
+	private BuyBoxService buyBoxService;
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(SellerPriorityInterceptor.class.getName());
@@ -73,6 +78,10 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 			if (null == priority.getSellerId())
 			{
 				throw new InterceptorException(SELLERIDBLANK);
+			}
+			if (null != priority.getSellerId() && buyBoxService.buyBoxStockForSeller(priority.getSellerId().getId()).isEmpty())
+			{
+				throw new InterceptorException(NOT_STOCK_FOR_SELLERID);
 			}
 			if (null == priority.getCategoryId() && null == priority.getListingId())
 			{

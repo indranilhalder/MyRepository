@@ -182,6 +182,10 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 				{
 					savedValueData.setSellerId(sellerDataVal.getId());
 				}
+				if (null != sellerDataVal.getFirstname())
+				{
+					savedValueData.setSellerName(sellerDataVal.getFirstname());
+				}
 			}
 			else
 			{
@@ -350,6 +354,8 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 				fileWriter.append(report.getChangedBy());
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append(report.getSellerId());
+				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(report.getSellerName());
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append(report.getCategoryId());
 				fileWriter.append(COMMA_DELIMITER);
