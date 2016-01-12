@@ -547,11 +547,14 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
 ;Section1;;SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent,SimpleBannerComponent;
-;Section2;;MplCategoryCarouselComponent;
+;Section2;;MplCategoryCarouselComponent,SimpleBannerComponent;
+;Section3;;CMSParagraphComponent;
 ;Section3A;;MplFootwearComponent,SimpleBannerComponent;
-;Section3A1;;MplFootwearComponent;
-;Section4A;;MplFootwearComponent;
+;Section3A1;;MplFootwearComponent,SimpleBannerComponent;
+;Section4;;CMSParagraphComponent;
+;Section4A;;MplFootwearComponent,SimpleBannerComponent;
 ;Section4A1;;MplFootwearComponent,SimpleBannerComponent;
+;Section5;;CMSParagraphComponent;
 ;Section5A1;;MplFootwearComponent;
 ;Section6A;;MplCategoryCarouselComponent;
 ;Footer;;;footer
