@@ -14,6 +14,8 @@ import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -110,19 +112,21 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 					fileWriter.append(customer.getGender().getCode());
 				}
 				fileWriter.append(COMMA_DELIMITER);
+
+				final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 				if (customer.getCreationtime() != null)
 				{
-					fileWriter.append(customer.getCreationtime().toString());
+					fileWriter.append(dateFormat.format(customer.getCreationtime()));
 				}
 				fileWriter.append(COMMA_DELIMITER);
 				if (customer.getDateOfBirth() != null)
 				{
-					fileWriter.append(customer.getDateOfBirth().toString());
+					fileWriter.append(dateFormat.format(customer.getDateOfBirth()));
 				}
 				fileWriter.append(COMMA_DELIMITER);
 				if (customer.getDateOfAnniversary() != null)
 				{
-					fileWriter.append(customer.getDateOfAnniversary().toString());
+					fileWriter.append(dateFormat.format(customer.getDateOfAnniversary()));
 				}
 				fileWriter.append(COMMA_DELIMITER);
 
@@ -146,6 +150,8 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 			}
 		}
 	}
+
+
 
 	/**
 	 * @return the configurationService
