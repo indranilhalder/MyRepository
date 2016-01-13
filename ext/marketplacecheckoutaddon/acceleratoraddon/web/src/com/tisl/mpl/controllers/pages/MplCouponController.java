@@ -104,6 +104,7 @@ public class MplCouponController
 		}
 		catch (final VoucherOperationException e)
 		{
+			LOG.error("Issue with voucher redeem " + e.getMessage());
 			if (e.getMessage().contains("total price exceeded"))
 			{
 				data.setRedeemErrorMsg("Price exceeded");
@@ -126,7 +127,7 @@ public class MplCouponController
 			return data;
 		}
 
-		LOG.debug("Coupon Redemption Status is:::" + couponRedStatus);
+		LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
 
 		data = getMplCouponFacade().calculateValues(cartModel, couponRedStatus, redeem);
 
@@ -163,7 +164,7 @@ public class MplCouponController
 	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode) throws EtailNonBusinessExceptions,
 			JaloPriceFactoryException, CalculationException
 	{
-		LOG.debug("The coupon code to be released by the customer is ::: " + couponCode);
+		LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
 		boolean couponRelStatus = false;
 		final boolean redeem = false;
@@ -175,7 +176,12 @@ public class MplCouponController
 		}
 		catch (final VoucherOperationException e)
 		{
-			e.printStackTrace();
+			LOG.error("Issue with voucher release " + e.getMessage());
+			final VoucherDiscountData data = new VoucherDiscountData();
+			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			data.setRedeemErrorMsg("Release Issue");
+			data.setCouponReleased(false);
+			return data;
 		}
 
 		getMplCouponFacade().recalculateCartForCoupon(cartModel);
