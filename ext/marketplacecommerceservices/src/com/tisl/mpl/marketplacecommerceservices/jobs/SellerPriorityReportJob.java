@@ -295,7 +295,7 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 							}
 							else
 							{
-								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+								savedValueData.setModifiedStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 							}
 						}
 						else

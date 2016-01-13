@@ -538,7 +538,7 @@
 								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
 								<!-- Ratings -->
 								<div class="rating-div${count.index}" style="display: none;">
-								<span class="rating-name">Over All - </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.overall"/> </span>
 								<ul class="rating-stars" data-rating-name${count.index}="overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -549,7 +549,7 @@
 								</ul>
 								<c:choose>
 									<c:when test="${comment.rootCategory eq 'Clothing'}" >							
-								<span class="rating-name"><spring:theme code="myaccount.review.fit"/> </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.fit"/> </span>
 
 								<ul class="rating-stars" data-rating-name${count.index}="fit">
 								
@@ -561,7 +561,7 @@
 								</ul>
 								</c:when>
 								<c:otherwise>
-								<span class="rating-name">Ease of use </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.easeOfUse"/> </span>
 
 								<ul class="rating-stars" data-rating-name${count.index}="easeOfUse">
 								
@@ -574,7 +574,7 @@
 								</c:otherwise>
 								</c:choose>
 								
-								<span class="rating-name"><spring:theme code="myaccount.review.valueForMoney"/> </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.valueForMoney"/> </span>
 								<ul class="rating-stars" data-rating-name${count.index}="value_for_money">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -583,7 +583,7 @@
 	 										<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
 	  										<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
 								</ul>
-								<span class="rating-name"><spring:theme code="myaccount.review.quality"/> </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.quality"/> </span>
 								<ul class="rating-stars" data-rating-name${count.index}="quality">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -618,7 +618,7 @@
 								<input type="hidden" class="streamID${count.index}" value="${comment.productData.code}"/>
 								<input type="hidden" class="commentID${count.index}" value="${comment.commentId}"/>
 								
-								<div class="updateButtons${count.index}" style="display: none;">
+								<div class="updateButtons${count.index}" style="display: none;padding-top:20px;">
 									<input type="button" name="update" value="Update" data-index="${count.index}"/>
 									<input type="button" name="cancel" value="Cancel" data-index="${count.index}"/>
 								</div>
@@ -795,7 +795,6 @@ $(document).ready(function(){
 	
 	$(".edit").click(function(e){
 		e.preventDefault;
-		
 		var indexElement = $(this).attr("data-index");
 		if(indexElement!= undefined){
 			var reviewHeading = $(".reviewHeading"+indexElement);
@@ -809,6 +808,7 @@ $(document).ready(function(){
 			}
 			$(reviewHeading).html("<input class='inputBox' type='text' name='updateReviewHeading"+indexElement+"' value='"+reviewHeadingText+"'/>");
 			$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
+			$(reviewHeading).find('input.inputBox').focus();
 			$(".rating-div"+indexElement).show();
 			$(".rating-div"+indexElement).find("ul").addClass("rate");
 			$(updateButtons).show();
