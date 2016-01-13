@@ -325,6 +325,9 @@
 		<span id="addToCartSizeGuideTitlebagfull" style="display: none"><p class="inventory">
 			<spring:theme code="product.bag"/>
 		</p></span>
+		<span id="pinNotServicableSizeGuide" style="display: none">
+			<font color="#ff1c47">We're sorry. We don't service this pin code currently. Would you like to try entering another pin code that also works for you?</font>
+		</span>
 		<span id="addToCartSizeGuideTitleoutOfStockId" style="display: none"><p class="inventory">
 			<%-- <spring:theme code="product.product.outOfStock" /> --%>
 			<font color="#ff1c47">Product is out of stock for the selected size</font>
