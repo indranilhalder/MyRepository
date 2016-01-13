@@ -58,11 +58,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -102,11 +102,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -154,11 +154,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the inventory for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -221,11 +221,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for invalidating pk of the buybox sellers in the cache.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -276,9 +276,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given product code if all the seller has stock zero
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -322,7 +322,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getRichAttributeData(java.lang.String)
 	 */
 	@Override
@@ -435,9 +435,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given ussid if all the seller has stock zero
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -460,7 +460,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#priceForUssid(java.lang.String)
 	 */
 	@Override
@@ -494,13 +494,41 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
+
+	@Override
+	public List<BuyBoxModel> buyBoxStockForSeller(final String sellerID)
+	{
+		try
+		{
+
+			final String queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.SELLERID
+					+ "}=?sellerid" + " AND  {bb:" + BuyBoxModel.AVAILABLE + "}  > 0";
+
+			log.debug("Query" + queryString);
+			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(queryString);
+			flexQuery.addQueryParameter("sellerid", sellerID);
+			return flexibleSearchService.<BuyBoxModel> search(flexQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	@Override
 	public List<BuyBoxModel> buyBoxForSizeGuide(final String productCode, final String sellerID)

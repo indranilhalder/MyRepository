@@ -28,9 +28,9 @@ import javax.annotation.Resource;
 import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 
-import com.tisl.mpl.coupon.facade.CustomerDetailsFacade;
+import com.tisl.mpl.coupon.facade.MplCustomerDetailsFacade;
 import com.tisl.mpl.coupon.service.CronJobDataService;
-import com.tisl.mpl.coupon.service.CustomerDetailsService;
+import com.tisl.mpl.coupon.service.MplCustomerDetailsService;
 
 
 
@@ -39,12 +39,12 @@ import com.tisl.mpl.coupon.service.CustomerDetailsService;
  * @author TCS
  *
  */
-public class DefaultCustomerDetailsFacade implements CustomerDetailsFacade
+public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 {
-	private static final Logger LOG = Logger.getLogger(DefaultCustomerDetailsFacade.class);
+	private static final Logger LOG = Logger.getLogger(MplCustomerDetailsFacadeImpl.class);
 
 	@Resource(name = "customerDetailsService")
-	private CustomerDetailsService customerDetailsService;
+	private MplCustomerDetailsService customerDetailsService;
 
 	@Resource(name = "cronJobDataService")
 	private CronJobDataService cronJobDataService;

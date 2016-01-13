@@ -42,6 +42,12 @@ UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];title
 UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];title
 ;;SpringFlingPromotionComponent;Spring Fling
 
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;WomenFootwearParagraphComponent;"<div class='feature-collections'><h1>Women's Footwear</h1></div>"
+;;MenFootwearParagraphComponent;"<div class='feature-collections'><h1>Men's Footwear</h1></div>"
+
+
 UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
 ;;BeInspiredParagraphComponent;"<div class='feature-collections'><h1>Be Inspired</h1><h2>Shop The Latest Looks</h2></div>"
 ;;TechTrendsettersParagraphComponent;"<div class='feature-collections'><h1>Tech trendsetters</h1><h2>Shop The Latest Technology</h2></div>"
@@ -868,10 +874,11 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;widescreen;ShoeRectangle_1.jpeg;$siteResource/images/banners/homepage/responsive/ShoeRectangle_1.jpeg;ShoeRectangle_1.jpeg;"Shoe Image";
 ;widescreen;ShoeRectangle_2.jpeg;$siteResource/images/banners/homepage/responsive/ShoeRectangle_2.jpeg;ShoeRectangle_2.jpeg;"Shoe Image2";
 
-;;WomenSingleFootwear.JPG;$siteResource/images/banners/category_banners/WomenSingleFootwear.JPG;WomenSingleFootwear.JPG;"Shop the Collection"
-;;MenSingleFootwear.JPG;$siteResource/images/banners/category_banners/MenSingleFootwear.JPG;MenSingleFootwear.JPG;"Shop the Collection"
-;;KidFootwearFirst.JPG;$siteResource/images/banners/category_banners/KidFootwearFirst.JPG;KidFootwearFirst.JPG;"Shop the Collection"
-;;KidsFootwearSecond.JPG;$siteResource/images/banners/category_banners/KidsFootwearSecond.JPG;KidsFootwearSecond.JPG;"Shop the Collection"
+
+;;WomenSingleFootwear.JPG;$siteResource/images/banners/homepage/responsive/WomenSingleFootwear.JPG;WomenSingleFootwear.JPG;"Shop the Collection"
+;;MenSingleFootwear.JPG;$siteResource/images/banners/homepage/responsive/MenSingleFootwear.JPG;MenSingleFootwear.JPG;"Shop the Collection"
+;;KidFootwearFirst.JPG;$siteResource/images/banners/homepage/responsive/KidFootwearFirst.JPG;KidFootwearFirst.JPG;"Shop the Collection"
+;;KidsFootwearSecond.JPG;$siteResource/images/banners/homepage/responsive/KidsFootwearSecond.JPG;KidsFootwearSecond.JPG;"Shop the Collection"
 
 
 INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]

@@ -33,6 +33,8 @@
 		<property name="voucherDescription" type="String" />
 		<property name="voucherExpiryDate" type="String" />
 		<property name="voucherCreationDate" type="java.util.Date" />
+		<property name="productsCoupon" type="java.util.List&lt;de.hybris.platform.core.model.product.ProductModel>" />
+		<property name="categoryBasedCoupon" type="java.util.List&lt;de.hybris.platform.category.model.CategoryModel>" />
     </bean>
     
     <bean class="com.tisl.mpl.data.AllVoucherListData">

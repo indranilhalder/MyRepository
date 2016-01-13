@@ -15,15 +15,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.tisl.mpl.coupon.dao.CustomerDetailsDao;
+import com.tisl.mpl.coupon.dao.MplCustomerDetailsDao;
 
 
 
 @Component(value = "customerDetailsDao")
-public class DefaultCustomerDetailsDao implements CustomerDetailsDao
+public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 {
 
-	private static final Logger LOG = Logger.getLogger(DefaultCustomerDetailsDao.class);
+	private static final Logger LOG = Logger.getLogger(MplCustomerDetailsDaoImpl.class);
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 

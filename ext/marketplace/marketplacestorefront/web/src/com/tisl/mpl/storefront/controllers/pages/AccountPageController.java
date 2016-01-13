@@ -126,6 +126,7 @@ import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
@@ -190,6 +191,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MyWishListInHeaderComponentModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.service.MplGigyaReviewCommentService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -345,6 +347,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private RegisterCustomerFacade registerCustomerFacade;
 	@Autowired
 	private MplPasswordValidator mplPasswordValidator;
+	@Autowired
+	private GigyaService gigyaService;
+
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private BaseSiteService baseSiteService;
 	//	@Autowired
@@ -2351,7 +2356,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 				newAuthentication.setDetails(oldAuthentication.getDetails());
 				SecurityContextHolder.getContext().setAuthentication(newAuthentication);
 				mplCustomerProfileData.setDisplayUid(newUid);
+				// NOTIFY GIGYA OF THE USER PROFILE CHANGES
+				final String gigyaServiceSwitch = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
+
+				if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
+				{
+					final String gigyaMethod = configurationService.getConfiguration().getString(
+							MarketplacecclientservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+
+					gigyaService.notifyGigya(mplCustomerProfileData.getUid(), null, mplCustomerProfileData.getFirstName().trim(),
+							mplCustomerProfileData.getLastName().trim(), mplCustomerProfileData.getEmailId().trim(), gigyaMethod);
+
+				}
 			}
+
 			storeCmsPageInModel(model, getContentPageForLabelOrId(UPDATE_PROFILE_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(UPDATE_PROFILE_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -6143,11 +6161,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 						for (final AbstractOrderEntryModel entry : sellerOrder.getEntries())
 						{
 							final ProductModel productmodel = entry.getProduct();
+							final Double netPrice = entry.getNetAmountAfterAllDisc();
+							final PriceData price = productDetailsHelper.formPriceData(netPrice);
 							try
 							{
 								if (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS) != null)
 								{
 									productData = (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS));
+									productData.setPrice(price);
 								}
 							}
 							catch (final Exception exception)
