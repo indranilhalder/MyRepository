@@ -14738,14 +14738,17 @@ body.page-reviews .account .my-reviews .wrapper,body.page-reviews .account .tool
 }
 .reviews .review-list>.wrapper>li .review .details h3 input {
 	width: 100%;
-	border-color: #f0f4f5;
+	border-color: #dbeafa;
 	height: 30px;
 }
 .reviews .review-list>.wrapper>li .review .details p textarea {
     width: 100%;
     max-width: 100%;
-	border: 1px solid #f0f4f5;
+	border: 1px solid #dbeafa;
     margin-bottom: 10px;
+    padding:10px;
+    font-family: Avenir Next;
+    font-size: 12px;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="update"],body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
 	width: 48%;
