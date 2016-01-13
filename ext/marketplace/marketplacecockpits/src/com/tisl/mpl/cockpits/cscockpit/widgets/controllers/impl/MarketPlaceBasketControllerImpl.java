@@ -767,6 +767,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					return "prices_exceeded";
 				}
 				
+				mplCouponFacade.setApportionedValueForVoucher(voucher, cartModel, voucherCode);
+				
 				return StringUtils.EMPTY;
 			}
 			catch (Exception e)

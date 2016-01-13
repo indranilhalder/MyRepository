@@ -1032,7 +1032,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param cartModel
 	 * @param voucherCode
 	 */
-	private void setApportionedValueForVoucher(final VoucherModel voucher, final CartModel cartModel, final String voucherCode)
+	@Override
+	public void setApportionedValueForVoucher(final VoucherModel voucher, final CartModel cartModel, final String voucherCode)
 	{
 		final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
 		final AbstractOrder orderObj = (AbstractOrder) getModelService().getSource(cartModel);
