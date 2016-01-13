@@ -169,6 +169,8 @@
              <c:if test= "${ notifylist.couponCode  ne null}">
 		
 					<c:set var="coupon" value="${notifylist.couponCode}" />
+					  <c:url var="productUrl" value="${notifylist.productUrl}"></c:url>
+					 
 					
 				<c:set var="couponStatus"
 					value="${notifylist.notificationCustomerStatus}" />
@@ -176,7 +178,7 @@
 		         
 				<li id="${notifylist.couponCode}"
 					 data-status="${couponStatus}"> 
-					<a href="/store/mpl/en/my-account/coupons">${fn:replace(couponStatus, "@", coupon)}
+					<a href="${productUrl}">${fn:replace(couponStatus, "@", coupon)}
 				</a>
 				<div id="track_footer" style="float: right;">
 						<h4>

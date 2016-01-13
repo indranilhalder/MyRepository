@@ -96,6 +96,7 @@ import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.facade.comparator.SizeGuideComparator;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -128,6 +129,17 @@ import com.tisl.mpl.util.ExceptionUtil;
 @RequestMapping(value = "/**/p")
 public class ProductPageController extends AbstractPageController
 {
+
+	/**
+	 *
+	 */
+	private static final String FOOTWEAR = "Footwear";
+
+	/**
+	 *
+	 */
+	private static final String CLOTHING = "Clothing";
+
 	/**
 	 *
 	 */
@@ -142,6 +154,7 @@ public class ProductPageController extends AbstractPageController
 	 *
 	 */
 	private static final String IS_NEW = "isNew";
+
 	private static final String FULLFILMENT_TYPE = "fullfilmentType";
 
 	/**
@@ -230,7 +243,8 @@ public class ProductPageController extends AbstractPageController
 	@Autowired
 	private UserService userService;
 
-
+	@Resource(name = "sizeGuideComparator")
+	private SizeGuideComparator sizeGuideComparator;
 
 	/**
 	 * @param buyBoxFacade
@@ -335,11 +349,6 @@ public class ProductPageController extends AbstractPageController
 	{
 		try
 		{
-			final Map<String, List<SizeGuideData>> sizeguideList = sizeGuideFacade.getProductSizeguide(productCode);
-			//final Map<String, String>
-			final List<String> headerMap = getHeaderdata(sizeguideList);
-
-			LOG.info("***************headerMap" + headerMap);
 
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
@@ -349,10 +358,26 @@ public class ProductPageController extends AbstractPageController
 
 
 			populateProductData(productData, model);
+			final Map<String, List<SizeGuideData>> sizeguideList = sizeGuideFacade.getProductSizeguide(productCode,
+					productData.getRootCategory());
+			final List<String> headerMap = getHeaderdata(sizeguideList, productData.getRootCategory());
+
+			final List<SizeGuideData> sizeGuideDataList = new ArrayList<SizeGuideData>();
+			for (final String key : sizeguideList.keySet())
+			{
+				sizeGuideDataList.add(sizeguideList.get(key).get(0));
+			}
+			Collections.sort(sizeGuideDataList, sizeGuideComparator);
+			LOG.info("***************headerMap" + headerMap);
+			if (null != productData.getBrand())
+			{
+				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
+			}
+			model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
+					new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
 
 			model.addAttribute(ModelAttributetConstants.HEADER_SIZE_GUIDE, headerMap);
 			model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
-			//model.addAttribute(ModelAttributetConstants.PRODUCT_NAME, productName);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -416,7 +441,6 @@ public class ProductPageController extends AbstractPageController
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
-				//	buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
 			}
 			else
 			{
@@ -439,27 +463,62 @@ public class ProductPageController extends AbstractPageController
 		return buyboxJson;
 	}
 
-	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList)
+
+	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList, final String categoryType)
 	{
 		final Map<String, String> headerMap = new HashMap<String, String>();
-
+		final List<String> headerMapData = new ArrayList<String>();
 		for (final String key : sizeguideList.keySet())
 		{
-			for (final SizeGuideData data : sizeguideList.get(key))
+			if (categoryType.equalsIgnoreCase(CLOTHING))
 			{
-
-				if (null == headerMap.get(data.getDimensionSize()))
+				for (final SizeGuideData data : sizeguideList.get(key))
 				{
-					headerMap.put(data.getDimensionSize(), data.getDimensionSize());
+
+					if (null == headerMap.get(data.getDimensionSize()))
+					{
+						headerMap.put(data.getDimensionSize(), data.getDimensionSize());
+					}
+
 				}
 
 			}
+			else if (categoryType.equalsIgnoreCase(FOOTWEAR))
+			{
+				for (final SizeGuideData data : sizeguideList.get(key))
+				{
+					if (data.getAge() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.age"), "Y");
+					}
+					if (data.getDimension() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlenth"), "Y");
+					}
+					if (data.getDimensionSize() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.UK"), "Y");
+					}
+					if (data.getDimensionValue() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.Witdth"), "Y");
+					}
+					if (data.getEuroSize() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.EURO"), "Y");
+					}
+					if (data.getUsSize() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.US"), "Y");
+					}
+				}
+			}
 		}
-		final List<String> headerMapData = new ArrayList<String>();
-		for (final String key : headerMap.keySet())
+		for (final String keyData : headerMap.keySet())
 		{
-			headerMapData.add(key);
+			headerMapData.add(keyData);
 		}
+
 		Collections.sort(headerMapData, sizeGuideHeaderComparator);
 		return headerMapData;
 	}

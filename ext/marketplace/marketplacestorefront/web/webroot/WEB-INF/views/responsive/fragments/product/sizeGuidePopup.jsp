@@ -5,17 +5,17 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
 <c:set var="cod_y"><spring:theme code='cod.eligible.yes'/></c:set>
 <c:set var="stock_y"><spring:theme code='quickview.allOOStock'/></c:set>
 
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
-
+<input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <div class="sizes">
 	
-	<h3><spring:theme code="product.variants.size.guide"/></h3>
+	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
 	<c:choose>
 	<c:when test="${not empty sizeguideData}">	
 		
@@ -25,8 +25,10 @@
 					<ul>
 						<li class="header">
 							<ul>
+							   <c:if test="${product.rootCategory!='Footwear'}">
 								<li><spring:theme code="product.variants.size"/></li>
-								<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="sizeGuideIndex" end="0">
+								</c:if>
+								<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="Index" end="0">
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue" varStatus="sizeIndex" >
 										<c:if test="${sizeIndex.index eq 0}">
 											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
@@ -35,15 +37,26 @@
 									
 									</c:forEach>
 								</c:forEach>
+								<%-- <c:choose> --%>
+								<%-- <c:when test="${product.rootCategory=='Clothing'}"> --%>
 								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
-										<li>${sizeGuide}</li>
-									</c:forEach>	
-								
+								<li>${sizeGuide}</li>
+								</c:forEach>
+							   <%-- </c:when> --%>
+							   <%-- <c:when test="${product.rootCategory=='Footwear'}">
+								<li>IND / UK</li> 
+								<li>US</li> 
+								<li>EURO</li> 
+								<li>FOOT LENGTH(cm)</li> 
+								<li>WIDTH</li> 
+							   </c:when>	
+								</c:choose> --%>
 							</ul>
 						</li>
+						<c:choose>
+					    <c:when test="${product.rootCategory=='Clothing'}">
 						<c:forEach items="${sizeguideData}" var="sizeGuide" >
-							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>	
-													
+							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>
 							<li class="item">
 								<ul>
 									<li>${sizeGuide.key}</li>
@@ -62,22 +75,61 @@
 									</c:if>
 								</ul>
 							</li>	
-							
 						</c:forEach>
-						
-						
-					</ul>
+						</c:when>
+						 <c:when test="${product.rootCategory=='Footwear'}">
+								<c:forEach items="${sizeguideData}" var="sizeGuide" >
+							    <%--  <c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set> --%>
+							    <li class="item footwear">
+							
+									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
+									<ul>
+									    
+										<li>${sizeGuideValue.age}</li>
+										
+									  <%--   <c:if test="${not empty sizeGuideValue.dimensionSize}"> --%>
+										<li>${sizeGuideValue.dimensionSize}</li>
+									<%-- 	</c:if> --%>
+									<%-- 	 <c:if test="${not empty sizeGuideValue.usSize}"> --%>
+										<li>${sizeGuideValue.usSize}</li>
+									<%-- 	</c:if> --%>
+										<%--  <c:if test="${not empty sizeGuideValue.euroSize}"> --%>
+									    <li>${sizeGuideValue.euroSize}</li>
+									   <%--  </c:if> --%>
+										<%--  <c:if test="${not empty sizeGuideValue.dimension}"> --%>
+										<li>${sizeGuideValue.dimension}</li>
+										<%-- </c:if> --%>
+										<li>${sizeGuideValue.dimensionValue}</li>
+									</ul>	
+									</c:forEach>
+							</li>
+							</c:forEach>
+						 </c:when>
+						</c:choose>
 			</div>
+			 <c:if test="${product.rootCategory=='Footwear'}">
+			<div class="footwearNote" style="line-height:19px;">
+			<product:footwearNote/></div>
+			</c:if>
+			
 				
 		</div>
+			
 		<div class="img">
+		    <c:choose>
+		    <c:when test="${product.rootCategory=='Clothing'}">
 			<img src="${imageURL}" alt="sizeGuideImage" />
+			</c:when>
+			<c:when test="${product.rootCategory=='Footwear'}">
+			<img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" />
+			</c:when>
+			</c:choose>
 		</div>
 		
 		<div class="details">
 	 
  <h3 class="company">
-              ${product.brand.brandname}<div id="sellerSelName"></div></h3> <%-- <spring:theme code="product.by"/> --%>
+              ${product.brand.brandname}&nbsp;&nbsp;<span id="sellerSelName"></span></h3> <%-- <spring:theme code="product.by"/> --%>
              
     <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
 
@@ -101,7 +153,7 @@
 								<c:choose><c:when test="${empty selectedSize}">
 													 <a href="${variantUrl}" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
 												</c:when>
-												<c:otherwise>
+											  <c:otherwise>
 													 <a href="${variantUrl}?selectedSize=true" data-target="#popUpModals" data-productcode="${variantOption.code}" data-toggle="modal">
 												</c:otherwise>
 											</c:choose>
@@ -159,10 +211,10 @@
 				
 				
 				
-	<c:if test="${noVariant!=true&&notApparel!=true}">
+					<c:if test="${noVariant!=true&&notApparel!=true}">
+	<label>Size:</label> 
 	
-					
-	<label>Size:</label> ${selectedSize=='selected'}
+	
 	
 	
 		<select id="variant" class="variant-select">
@@ -190,7 +242,6 @@
 						</c:when>
 						<c:otherwise>
 							<c:forEach var="entry" items="${variantOption.sizeLink}">${variantOption.sizeLink}
-							
 								
 								<c:if test="${entry.key eq product.url}">
 									<c:set var="currentColor" value="${color}" />
@@ -238,7 +289,7 @@
 				</select>
 			</div>
 			<!-- <a href="#" class="button red">Add To Bag</a> -->
-<!-- <div id="addToCartSizeGuideTitleSuccess" >
+			<!-- <div id="addToCartSizeGuideTitleSuccess" >
 	
 </div -->
 <span id="addToCartSizeGuideTitleSuccess"></span>
@@ -274,6 +325,9 @@
 		<span id="addToCartSizeGuideTitlebagfull" style="display: none"><p class="inventory">
 			<spring:theme code="product.bag"/>
 		</p></span>
+		<span id="pinNotServicableSizeGuide" style="display: none">
+			<font color="#ff1c47">We're sorry. We don't service this pin code currently. Would you like to try entering another pin code that also works for you?</font>
+		</span>
 		<span id="addToCartSizeGuideTitleoutOfStockId" style="display: none"><p class="inventory">
 			<%-- <spring:theme code="product.product.outOfStock" /> --%>
 			<font color="#ff1c47">Product is out of stock for the selected size</font>
@@ -316,9 +370,15 @@
 </div>
 <script>
 $(document).ready(function(){
+	var category=$("#categoryType").val();
+	/* if(category!='Footwear'){ */
+	
 	var numLi= $(".modal.size-guide .sizes .tables li.header > ul").children().length;
+	
 	var sizeWidth= 88/(numLi-1) + "%";
+
 	$(".modal.size-guide .sizes .tables li > ul > li").css("width",sizeWidth);
-	//buyboxDetailsForSizeGuide('${product.code}');
+	$(".modal.size-guide .sizes .tables li > ul > li:first-child").css("width","12%");
+/* 	} */
 });
 </script> 	

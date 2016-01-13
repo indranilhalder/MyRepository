@@ -88,9 +88,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -124,6 +126,7 @@ import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
@@ -188,6 +191,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MyWishListInHeaderComponentModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.service.MplGigyaReviewCommentService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -343,6 +347,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private RegisterCustomerFacade registerCustomerFacade;
 	@Autowired
 	private MplPasswordValidator mplPasswordValidator;
+	@Autowired
+	private GigyaService gigyaService;
+
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private BaseSiteService baseSiteService;
 	//	@Autowired
@@ -2349,7 +2356,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 				newAuthentication.setDetails(oldAuthentication.getDetails());
 				SecurityContextHolder.getContext().setAuthentication(newAuthentication);
 				mplCustomerProfileData.setDisplayUid(newUid);
+				// NOTIFY GIGYA OF THE USER PROFILE CHANGES
+				final String gigyaServiceSwitch = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
+
+				if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
+				{
+					final String gigyaMethod = configurationService.getConfiguration().getString(
+							MarketplacecclientservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+
+					gigyaService.notifyGigya(mplCustomerProfileData.getUid(), null, mplCustomerProfileData.getFirstName().trim(),
+							mplCustomerProfileData.getLastName().trim(), mplCustomerProfileData.getEmailId().trim(), gigyaMethod);
+
+				}
 			}
+
 			storeCmsPageInModel(model, getContentPageForLabelOrId(UPDATE_PROFILE_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(UPDATE_PROFILE_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -6106,8 +6126,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final Model model) throws Exception
 	{
 		final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE, 5);
-		final Map<String, ProductData> productDataMap = new HashMap<String, ProductData>();
-		final Map<String, ProductData> productDataModifyMap = new HashMap<String, ProductData>();
+		final Map<String, ProductData> productDataMap = new LinkedHashMap<String, ProductData>();
+		final Map<String, ProductData> productDataModifyMap = new LinkedHashMap<String, ProductData>();
 		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
 		final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
 		final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
@@ -6121,18 +6141,34 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			if (CollectionUtils.isNotEmpty(orderModels))
 			{
-				for (final OrderModel order : orderModels)
+				final List<OrderModel> modifiableOrderList = new ArrayList<OrderModel>();
+				modifiableOrderList.addAll(orderModels);
+
+				Collections.sort(modifiableOrderList, new Comparator<OrderModel>()
+				{
+					@Override
+					public int compare(final OrderModel o1, final OrderModel o2)
+					{
+						final int compare = o1.getCreationtime().compareTo(o2.getCreationtime());
+						return compare;
+					}
+				});
+				Collections.reverse(modifiableOrderList);
+				for (final OrderModel order : modifiableOrderList)
 				{
 					for (final OrderModel sellerOrder : order.getChildOrders())
 					{
 						for (final AbstractOrderEntryModel entry : sellerOrder.getEntries())
 						{
 							final ProductModel productmodel = entry.getProduct();
+							final Double netPrice = entry.getNetAmountAfterAllDisc();
+							final PriceData price = productDetailsHelper.formPriceData(netPrice);
 							try
 							{
 								if (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS) != null)
 								{
 									productData = (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS));
+									productData.setPrice(price);
 								}
 							}
 							catch (final Exception exception)

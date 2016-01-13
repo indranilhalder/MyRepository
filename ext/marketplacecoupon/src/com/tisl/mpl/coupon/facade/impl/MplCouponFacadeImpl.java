@@ -15,9 +15,11 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -332,12 +334,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @return boolean
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
 	 */
 	@Override
 	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
-			CalculationException
+			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
-		boolean checkFlag = false;
+		boolean checkFlag = true;
 		if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
 		{
 
@@ -458,16 +463,20 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws ModelSavingException
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
 	 */
 	protected void checkCartAfterApply(final VoucherModel lastVoucher, final CartModel cartModel) throws ModelSavingException,
-			VoucherOperationException, CalculationException
+			VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
+			JaloSecurityException
 	{
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
 		final double cartSubTotal = cartModel.getSubtotal().doubleValue();
 		double voucherCalcValue = 0.0;
 		double promoCalcValue = 0.0;
-		final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues();
-		DiscountValue discountValue = null;
+		List<DiscountValue> discountList = cartModel.getGlobalDiscountValues();
+		final String voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
 
 		final List<DiscountModel> voucherList = cartModel.getDiscounts();
 		if (CollectionUtils.isNotEmpty(discountList))
@@ -485,24 +494,99 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			}
 		}
 
-		if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
+		final VoucherEntrySet entrySet = getVoucherModelService().getApplicableEntries(lastVoucher, cartModel);
+		final List<AbstractOrderEntry> applicableOrderEntryList = getOrderEntriesFromVoucherEntries(entrySet);
+
+		if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
+				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())
 		{
-			for (final DiscountValue discount : discountList)
-			{
-				if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
-				{
-					discountValue = new DiscountValue(discount.getCode(), (cartSubTotal - promoCalcValue - 0.01), lastVoucher
-							.getAbsolute().booleanValue(), discount.getCurrencyIsoCode());
-					discountList.remove(discount);
-					break;
-				}
-			}
-			discountList.add(discountValue);
+			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
+					.getMaxDiscountValue().doubleValue());
 			cartModel.setGlobalDiscountValues(discountList);
 			mplDefaultCalculationService.calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
 		}
+
+		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
+		{
+			getVoucherFacade().releaseVoucher(voucherCode);
+			mplDefaultCalculationService.calculateTotals(cartModel, false);
+			getModelService().save(cartModel);
+			//Throw exception with specific information
+			throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
+		}
+
+		else
+		{
+			double netAmountAfterAllDisc = 0.0D;
+			double productPrice = 0.0D;
+			boolean flag = false;
+
+			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
+			{
+				for (final AbstractOrderEntry entry : applicableOrderEntryList)
+				{
+					if ((null != entry.getAttribute("productPromoCode") && StringUtils.isNotEmpty(entry.getAttribute(
+							"productPromoCode").toString()))
+							|| (null != entry.getAttribute("cartPromoCode") && StringUtils.isNotEmpty(entry
+									.getAttribute("cartPromoCode").toString())))
+					{
+						netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
+						flag = true;
+					}
+
+					else
+					{
+						productPrice += entry.getTotalPrice().doubleValue();
+					}
+				}
+
+
+				if ((flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
+				{
+					getVoucherFacade().releaseVoucher(voucherCode);
+					mplDefaultCalculationService.calculateTotals(cartModel, false);
+					getModelService().save(cartModel);
+					//Throw exception with specific information
+					throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
+				}
+			}
+		}
+
 	}
+
+
+	/**
+	 *
+	 * @param discountList
+	 * @param voucherList
+	 * @param cartSubTotal
+	 * @param promoCalcValue
+	 * @param lastVoucher
+	 * @param discountAmt
+	 * @return List<DiscountValue>
+	 */
+	@Override
+	public List<DiscountValue> setGlobalDiscount(final List<DiscountValue> discountList, final List<DiscountModel> voucherList,
+			final double cartSubTotal, final double promoCalcValue, final VoucherModel lastVoucher, final double discountAmt)
+	{
+		DiscountValue discountValue = null;
+		for (final DiscountValue discount : discountList)
+		{
+			if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+			{
+				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discount.getCurrencyIsoCode());
+
+				discountList.remove(discount);
+				break;
+			}
+		}
+		discountList.add(discountValue);
+		return discountList;
+	}
+
+
 
 	/**
 	 * This method releases the voucher already applied in the cart automatically
@@ -1045,7 +1129,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param voucherEntrySet
 	 * @return list of applicable AbstractOrderEntry
 	 */
-	private List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherEntrySet voucherEntrySet)
+	@Override
+	public List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherEntrySet voucherEntrySet)
 	{
 		final Iterator iter = voucherEntrySet.iterator();
 		final List<AbstractOrderEntry> applicableOrderList = new ArrayList<AbstractOrderEntry>();

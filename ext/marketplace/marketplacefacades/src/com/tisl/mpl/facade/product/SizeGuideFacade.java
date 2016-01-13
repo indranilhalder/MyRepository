@@ -14,11 +14,12 @@ import com.tisl.mpl.wsdto.SizeGuideWsDTO;
 
 /**
  * @author TCS
- *
  */
+
 public interface SizeGuideFacade
 {
-	public Map<String, List<SizeGuideData>> getProductSizeguide(final String productCode) throws CMSItemNotFoundException;
+	public Map<String, List<SizeGuideData>> getProductSizeguide(final String productCode, String categoryType)
+			throws CMSItemNotFoundException;
 
 	public SizeGuideWsDTO getWSProductSizeguide(final String productCode) throws CMSItemNotFoundException;
 }

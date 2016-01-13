@@ -21,11 +21,18 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String EXTENSIONNAME = "marketplacecoupon";
 
 	public static final String VOUCHERWITHINDATEQUERY = "select {d.voucher} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
+	//public static final String VOUCHERWITHINDATEQUERY = "select {pk} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
 	public static final String COUPONCODE = "couponCode".intern();
 	public static final String COUPONVALUE = "couponValue".intern();
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 
 	public static final String CRONJOB_TITLE = "The CronJob";
+
+	//for customer list generation
+	public static final String CUSTOMER_LIST_FILE_LOCATION = "closedCoupon.customer.list.path".intern();
+	public static final String CUSTOMER_LIST_FILE_HEADER = "UID,FIRSTNAME,LASTNAME,ORIGINALUID,MOBILENO,GENDER,CREATIONTIME(dd/MM/yyyy HH:mm:ss),DEFAULTSHIPMENTADDRESS,DATEOFBIRTH(dd/MM/yyyy HH:mm:ss),DATEOFANNIVERSARY(dd/MM/yyyy HH:mm:ss)"
+			.intern();
+	public static final String CUSTOMER_LIST_FILE_NAME = "customerList".intern();
 
 
 	private MarketplacecouponConstants()

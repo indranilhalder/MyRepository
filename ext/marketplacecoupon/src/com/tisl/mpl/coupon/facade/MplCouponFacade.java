@@ -5,9 +5,15 @@ package com.tisl.mpl.coupon.facade;
 
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.util.DiscountValue;
+import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
@@ -55,8 +61,12 @@ public interface MplCouponFacade
 	 * @return boolean
 	 * @throws VoucherOperationException
 	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
 	 */
-	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, CalculationException;
+	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, CalculationException,
+			NumberFormatException, JaloInvalidParameterException, JaloSecurityException;
 
 
 	/**
@@ -88,5 +98,25 @@ public interface MplCouponFacade
 	 * @throws VoucherOperationException
 	 */
 	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer) throws VoucherOperationException;
+
+
+	/**
+	 * @param discountList
+	 * @param voucherList
+	 * @param cartSubTotal
+	 * @param promoCalcValue
+	 * @param lastVoucher
+	 * @param discountAmt
+	 * @return List<DiscountValue>
+	 */
+	List<DiscountValue> setGlobalDiscount(List<DiscountValue> discountList, List<DiscountModel> voucherList, double cartSubTotal,
+			double promoCalcValue, VoucherModel lastVoucher, double discountAmt);
+
+
+	/**
+	 * @param voucherEntrySet
+	 * @return List<AbstractOrderEntry>
+	 */
+	List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(VoucherEntrySet voucherEntrySet);
 
 }
