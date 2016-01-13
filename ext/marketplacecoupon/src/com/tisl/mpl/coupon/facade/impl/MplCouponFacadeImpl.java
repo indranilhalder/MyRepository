@@ -39,6 +39,8 @@ import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -542,25 +544,28 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				LOG.debug("Step 13:::applicableOrderEntryList is not empty");
 				for (final AbstractOrderEntry entry : applicableOrderEntryList)
 				{
-					if ((null != entry.getAttribute("productPromoCode") && StringUtils.isNotEmpty(entry.getAttribute(
-							"productPromoCode").toString()))
-							|| (null != entry.getAttribute("cartPromoCode") && StringUtils.isNotEmpty(entry
-									.getAttribute("cartPromoCode").toString())))
+					if ((null != entry.getAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) && StringUtils
+							.isNotEmpty(entry.getAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE).toString()))
+							|| (null != entry.getAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE) && StringUtils
+									.isNotEmpty(entry.getAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE).toString())))
 					{
-						netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
+						netAmountAfterAllDisc += Double.parseDouble((entry
+								.getAttribute(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC)).toString());
 						flag = true;
 					}
 
-					else
-					{
-						productPrice += entry.getTotalPrice().doubleValue();
-					}
+					//					else
+					//					{
+					//						productPrice += entry.getTotalPrice().doubleValue();
+					//					}
+
+					productPrice += entry.getTotalPrice().doubleValue();
 				}
 
 				LOG.debug("Step 14:::netAmountAfterAllDisc is " + netAmountAfterAllDisc + " & productPrice is " + productPrice);
 
 
-				if ((flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+				if ((productPrice < 1) || (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
 						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
 					LOG.debug("Step 15:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
@@ -770,8 +775,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
 		final CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 		VoucherData voucherData = new VoucherData();
-		double savedSum = 0.0;
-
+		String savedSum = null;
+		double finalAmount = 0.0D;
 		int couponsRedeemedCount = 0;
 		boolean isOrderDateValid = false;
 
@@ -914,9 +919,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			for (final String amount : amountList)
 			{
-				LOG.debug("Step 4-************************Inside amountList");
 
-				savedSum += Double.parseDouble(amount);
+				LOG.debug("Step 4-************************Inside amountList");
+				final double decimalAmount = Double.parseDouble(amount);
+				finalAmount += decimalAmount;
+
+				BigDecimal bd = new BigDecimal(finalAmount);
+				bd = bd.setScale(2, RoundingMode.HALF_UP);
+				savedSum = bd.toPlainString();
 			}
 		}
 
@@ -948,7 +958,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		// organizing the DTO with necessary data
 		couponHistoryStoreDTO.setCouponHistoryDTOList(couponHistoryDTOList);
 		couponHistoryStoreDTO.setCouponsRedeemedCount(couponsRedeemedCount);
-		couponHistoryStoreDTO.setSavedSum(Double.valueOf(savedSum));
+		couponHistoryStoreDTO.setSavedSum(savedSum);
+
 
 		return couponHistoryStoreDTO;
 
