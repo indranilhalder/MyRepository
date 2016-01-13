@@ -30,7 +30,7 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 
 	//for customer list generation
 	public static final String CUSTOMER_LIST_FILE_LOCATION = "closedCoupon.customer.list.path".intern();
-	public static final String CUSTOMER_LIST_FILE_HEADER = "UID,NAME,ORIGINALUID,MOBILENO,GENDER,CREATIONTIME(MM/dd/yyyy HH:mm:ss),DATEOFBIRTH(MM/dd/yyyy HH:mm:ss),DATEOFANNIVERSARY(MM/dd/yyyy HH:mm:ss)"
+	public static final String CUSTOMER_LIST_FILE_HEADER = "UID,FIRSTNAME,LASTNAME,ORIGINALUID,MOBILENO,GENDER,CREATIONTIME(dd/MM/yyyy HH:mm:ss),DEFAULTSHIPMENTADDRESS,DATEOFBIRTH(dd/MM/yyyy HH:mm:ss),DATEOFANNIVERSARY(dd/MM/yyyy HH:mm:ss)"
 			.intern();
 	public static final String CUSTOMER_LIST_FILE_NAME = "customerList".intern();
 
