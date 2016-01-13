@@ -18,6 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -144,9 +146,29 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 	 *
 	 * @param customers
 	 */
-	void putDataForSellerPriority(final List<SavedValuesModel> savedValues)
+	void putDataForSellerPriority(final List<SavedValuesModel> savedValuesList)
+	//public static List<SavedValuesModel> putDataForSellerPriority(final List<SavedValuesModel> savedValues)
 	{
 		final List<SellerPriorityReportData> savedValueDataList = new ArrayList<SellerPriorityReportData>();
+
+		final List<SavedValuesModel> savedValues = new ArrayList<SavedValuesModel>(savedValuesList);
+
+		//Sorting savedValues list for Timestamp
+		Collections.sort(savedValues, new Comparator<SavedValuesModel>()
+		{
+			@Override
+			public int compare(final SavedValuesModel val1, final SavedValuesModel val2)
+			{
+				if (val1.getTimestamp().compareTo(val2.getTimestamp()) > 0)
+				{
+					return 1;
+				}
+				else
+				{
+					return -1;
+				}
+			}
+		});
 
 
 
@@ -188,7 +210,7 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 				}
 				else
 				{
-					savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+					savedValueData.setSellerName(MarketplacecommerceservicesConstants.EMPTYSTRING);
 				}
 			}
 			else
@@ -227,11 +249,11 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			// Activation status of Priority
 			if (sellerModData.getIsActive().booleanValue())
 			{
-				savedValueData.setIsActive("Activate");
+				savedValueData.setIsActive("Y");
 			}
 			else
 			{
-				savedValueData.setIsActive("Deactivated");
+				savedValueData.setIsActive("N");
 			}
 
 			if (null != savedVal.getUser())
@@ -273,7 +295,7 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 							}
 							else
 							{
-								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+								savedValueData.setModifiedStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 							}
 						}
 						else
@@ -310,11 +332,11 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 						{
 							if (null != sellerModData.getPriorityEndDate())
 							{
-								savedValueData.setOldStartDate(sdf.format(sellerModData.getPriorityEndDate()));
+								savedValueData.setOldEndDate(sdf.format(sellerModData.getPriorityEndDate()));
 							}
 							else
 							{
-								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+								savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 							}
 						}
 						if (null == savedValueData.getModifiedStartDate())
@@ -373,6 +395,25 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			}
 			savedValueDataList.add(savedValueData);
 		}
+
+
+		//		Collections.sort(savedValueDataList, new Comparator<SellerPriorityReportData>()
+		//		{
+		//			@Override
+		//			public int compare(final SellerPriorityReportData o1, final SellerPriorityReportData o2)
+		//			{
+		//				if (o2.getModifiedTime().compareTo(o1.getModifiedTime()) > 0)
+		//				{
+		//					return 1;
+		//				}
+		//				else
+		//				{
+		//					return -1;
+		//				}
+		//			}
+		//		});
+
+		LOG.debug(savedValueDataList);
 
 		FileWriter fileWriter = null;
 		final File rootFolder1 = new File(configurationService.getConfiguration().getString(
@@ -436,6 +477,18 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 		}
 
 	}
+
+
+
+
+
+	final Comparator<List<SellerPriorityReportData>> comparator = new Comparator<List<SellerPriorityReportData>>()
+	{
+		public int compare(final List<SellerPriorityReportData> pList1, final List<SellerPriorityReportData> pList2)
+		{
+			return ((Comparable<SellerPriorityReportData>) pList1.get(0)).compareTo(pList2.get(0));
+		}
+	};
 
 	/**
 	 * @return the configurationService

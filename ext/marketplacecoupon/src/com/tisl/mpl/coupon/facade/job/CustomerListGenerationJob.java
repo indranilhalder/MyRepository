@@ -3,10 +3,13 @@
  */
 package com.tisl.mpl.coupon.facade.job;
 
+import de.hybris.platform.core.model.c2l.CountryModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
 import de.hybris.platform.cronjob.model.CronJobModel;
+import de.hybris.platform.deliveryzone.model.ZoneModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
@@ -14,7 +17,12 @@ import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -41,6 +49,8 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 
 	//Delimiter used in CSV file
 	private static final String COMMA_DELIMITER = ",";
+	private static final String COLON_DELIMITER = ":";
+	private static final String HYPHEN_DELIMITER = "-";
 	private static final String NEW_LINE_SEPARATOR = "\n";
 
 	//CSV file header
@@ -99,30 +109,69 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 			{
 				fileWriter.append(customer.getUid());
 				fileWriter.append(COMMA_DELIMITER);
-				fileWriter.append(customer.getName());
+				fileWriter.append(customer.getFirstName());
+				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(customer.getLastName());
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append(customer.getOriginalUid());
+				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(customer.getMobileNumber());
 				fileWriter.append(COMMA_DELIMITER);
 				if (customer.getGender() != null)
 				{
 					fileWriter.append(customer.getGender().getCode());
 				}
 				fileWriter.append(COMMA_DELIMITER);
+
+				final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				if (customer.getCreationtime() != null)
 				{
-					fileWriter.append(customer.getCreationtime().toString());
+					fileWriter.append(dateFormat.format(customer.getCreationtime()));
+				}
+				fileWriter.append(COMMA_DELIMITER);
+				if (customer.getDefaultShipmentAddress() != null)
+				{
+					final AddressModel address = customer.getDefaultShipmentAddress();
+					fileWriter.append(address.getAddressType());
+					fileWriter.append(COLON_DELIMITER);
+					fileWriter.append(address.getLine1());
+					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(address.getLine2());
+					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(address.getPostalcode());
+					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(address.getTown());
+					fileWriter.append(HYPHEN_DELIMITER);
+					if (address.getCountry() != null)
+					{
+						final CountryModel countryModel = address.getCountry();
+						final Set<ZoneModel> regions = new HashSet<ZoneModel>(countryModel.getZones());
+						final Iterator<ZoneModel> it = regions.iterator();
+						final StringBuffer country = new StringBuffer();
+						while (it.hasNext())
+						{
+							final ZoneModel zone = it.next();
+							country.append(zone.getCode());
+						}
+
+						fileWriter.append(country);
+					}
+					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(address.getPhone1());
+					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(address.getPhone2());
 				}
 				fileWriter.append(COMMA_DELIMITER);
 				if (customer.getDateOfBirth() != null)
 				{
-					fileWriter.append(customer.getDateOfBirth().toString());
+					fileWriter.append(dateFormat.format(customer.getDateOfBirth()));
 				}
 				fileWriter.append(COMMA_DELIMITER);
 				if (customer.getDateOfAnniversary() != null)
 				{
-					fileWriter.append(customer.getDateOfAnniversary().toString());
-					fileWriter.append(COMMA_DELIMITER);
+					fileWriter.append(dateFormat.format(customer.getDateOfAnniversary()));
 				}
+				fileWriter.append(COMMA_DELIMITER);
 
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}

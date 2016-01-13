@@ -509,12 +509,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
-			//			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, (cartSubTotal
-			//					- promoCalcValue - 0.01));
-			//			cartModel.setGlobalDiscountValues(discountList);
-			//			mplDefaultCalculationService.calculateTotals(cartModel, false);
-			//			getModelService().save(cartModel);
-
 			getVoucherFacade().releaseVoucher(voucherCode);
 			mplDefaultCalculationService.calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
@@ -530,7 +524,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
 			{
-				//final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
 				for (final AbstractOrderEntry entry : applicableOrderEntryList)
 				{
 					if ((null != entry.getAttribute("productPromoCode") && StringUtils.isNotEmpty(entry.getAttribute(
@@ -552,12 +545,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				if ((flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
 						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
-					//					final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
-					//					discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
-					//					cartModel.setGlobalDiscountValues(discountList);
-					//					mplDefaultCalculationService.calculateTotals(cartModel, false);
-					//					getModelService().save(cartModel);
-
 					getVoucherFacade().releaseVoucher(voucherCode);
 					mplDefaultCalculationService.calculateTotals(cartModel, false);
 					getModelService().save(cartModel);
