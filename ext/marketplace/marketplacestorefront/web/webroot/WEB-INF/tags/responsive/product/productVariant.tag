@@ -108,7 +108,7 @@ function loadVariant(x){
 							</c:choose>
 							<!-- size variant is not present -->
 							<%--   <c:if test="${variantOption.sizeLink==null}"> --%>
-							<c:if test="${product.rootCategory!='Electronics'}">
+							<c:if test="${product.rootCategory=='Electronics'}">
 								<c:set var="notApparel" value="true" />
 							</c:if>
 
