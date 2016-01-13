@@ -3493,6 +3493,8 @@ $("#couponSubmitButton").click(function(){
 		 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
 		 				//$("#couponFieldId").attr('disabled','disabled');
 		 				$('#couponFieldId').attr('readonly', true);
+		 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 2000);
 		 			}
 	 			}
 	 		},
@@ -3529,7 +3531,7 @@ $(".remove-coupon-button").click(function(){
  				var selection = $("#voucherDisplaySelection").val();
  				$("#couponFieldId").val(selection);
  				//$("#couponFieldId").val("");
- 				$("#couponMessage").html("Voucher "+couponCode+" has been removed");
+ 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
  				setTimeout(function(){ $("#couponMessage").html(""); }, 2000);
  			}
  		},
