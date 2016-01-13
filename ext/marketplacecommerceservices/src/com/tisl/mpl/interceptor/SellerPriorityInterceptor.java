@@ -112,7 +112,6 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 				{
 					// Cannot modify Category ID or Listing ID
 					if (arg.isModified(priorityValue, MplSellerPriorityModel.CATEGORYID)
-							|| arg.isModified(priorityValue, MplSellerPriorityModel.LISTINGID)
 							|| arg.isModified(priorityValue, MplSellerPriorityModel.LISTINGID))
 					{
 						throw new InterceptorException(CATIDPRODIDNONEDITABLE);
@@ -141,13 +140,16 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					}
 				}
 				// if new value already	 exist throw error
-				if (null != categoryId && categoryList.contains(categoryId))
+				if (priority.getIsActive().booleanValue())
 				{
-					throw new InterceptorException(ERROR_SAME_CATEGORY);
-				}
-				if (null != listingId && skuIdList.contains(listingId))
-				{
-					throw new InterceptorException(ERROR_SAME_SKU);
+					if (null != categoryId && categoryList.contains(categoryId))
+					{
+						throw new InterceptorException(ERROR_SAME_CATEGORY);
+					}
+					if (null != listingId && skuIdList.contains(listingId))
+					{
+						throw new InterceptorException(ERROR_SAME_SKU);
+					}
 				}
 			}
 		}

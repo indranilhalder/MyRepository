@@ -14738,14 +14738,17 @@ body.page-reviews .account .my-reviews .wrapper,body.page-reviews .account .tool
 }
 .reviews .review-list>.wrapper>li .review .details h3 input {
 	width: 100%;
-	border-color: #f0f4f5;
+	border-color: #dbeafa;
 	height: 30px;
 }
 .reviews .review-list>.wrapper>li .review .details p textarea {
     width: 100%;
     max-width: 100%;
-	border: 1px solid #f0f4f5;
+	border: 1px solid #dbeafa;
     margin-bottom: 10px;
+    padding:10px;
+    font-family: Avenir Next;
+    font-size: 12px;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="update"],body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
 	width: 48%;
@@ -14844,3 +14847,15 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 	margin-top:15px;
 }
 
+.bell-icon:after{
+	font-family: 'FontAwesome';
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   content:"\f0a2";
+    font-size: 16px;
+    color: #00cbe9;
+    line-height: 18px;
+    top: 2px;
+    position: relative;
+    font-weight: bold;
+}

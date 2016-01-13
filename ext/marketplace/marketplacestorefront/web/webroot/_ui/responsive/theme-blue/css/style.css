@@ -1129,11 +1129,11 @@ h2 {
           -moz-osx-font-smoothing: grayscale;
           font-weight: 100;
           content: "\e602";
-          font-size: 12px;
+          font-size: 14px;
           color: #00cbe9;
           line-height: 18px;
           margin-right: 5px;
-          top: 1px;
+          top: 3px;
           position: relative;
           font-weight: bold; }
         header .content .right > ul > li.wishlist .wishlist-info {
@@ -27541,14 +27541,17 @@ body .account .account-header select.menu-select optgroup option{
 }
 .reviews .review-list>.wrapper>li .review .details h3 input {
 	width: 100%;
-	border-color: #f0f4f5;
+	border-color: #dbeafa;
 	height: 30px;
 }
 .reviews .review-list>.wrapper>li .review .details p textarea {
     width: 100%;
     max-width: 100%;
-	border: 1px solid #f0f4f5;
+	border: 1px solid #dbeafa;
     margin-bottom: 10px;
+    padding: 10px;
+    font-family: Avenir Next;
+    font-size: 12px;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="update"],body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
 	width: 48%;
@@ -28686,6 +28689,114 @@ header .content .bottom.active nav > ul > li:first-child + li > ul {
 }
 .modal.size-guide .sizes .details .attributes #addToCartButton{
 height:30px;
+}
+
+
+
+
+/*footwear category start*/
+.footwear_left, .footwear_right {
+	display: inline-block;
+	vertical-align: top;
+	width: 49%;
+}
+
+.footwear_left {
+	float: left;
+	margin-left: 1%;
+} 
+
+.footwear_right {
+	float: right;
+}
+
+.footwear_left.countFour > li, .footwear_right.countFour > li {
+	width: 49%;
+	padding: 0 10px;
+	display: inline-block;
+	vertical-align: top;
+	margin-bottom: 10px;
+}
+
+.footwear_left li, .footwear_right li {
+	padding: 0 10px;
+}
+
+.footwear_left.countFour > li:nth-of-type(2n), .footwear_right.countFour > li:nth-of-type(2n) {
+	margin-left: 1%;
+}
+
+
+.feature-categories.footwear li img{
+	width: 100%;
+}
+.feature-categories  .footwear_left>li .simple-banner-component span,.feature-categories  .footwear_right>li .simple-banner-component span{
+	padding-bottom:0px;
+}
+.footwear_left>li .simple-banner-component span a.shop_link,.footwear_right>li .simple-banner-component span a.shop_link{
+	padding:15px 0px;
+}
+
+.feature-categories .footwear_left li span, .feature-categories .footwear_right li span
+	{
+	display: block;
+	line-height: 20px;
+	padding: 15px 0;
+	vertical-align: middle;
+	font-size: 16px;
+	text-align: center;
+}
+
+.feature-categories ul.footwear_left a.shop_link,
+	.feature-categories .footwear_right a.shop_link {
+	display: block;
+	text-transform: uppercase;
+	text-align: center;
+	font-size: 10px;
+	letter-spacing: .5px;
+	font-weight: 700;
+}
+
+.feature-categories ul.footwear_left a.shop_link:after,
+	.feature-categories .footwear_right a.shop_link:after {
+	content: "";
+	height: 0;
+	width: 0;
+	border-bottom: 4px solid transparent;
+	border-left: 4px solid #000;
+	border-top: 4px solid transparent;
+	display: inline-block;
+	margin-left: 7px;
+}
+
+.feature-categories ul.footwear_left a.shop_link:hover:after,
+	.feature-categories .footwear_right a.shop_link:hover:after {
+	border-left-color: #00cbe9;
+}
+
+@media ( max-width : 790px) {
+	.footwear_left {
+		width: 100%;
+		margin-left: 0;
+	}
+	
+	.footwear_right {
+		width: 100%;
+	}
+}
+/*footwear category end*/
+
+.bell-icon:after{
+	font-family: 'FontAwesome';
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   content:"\f0a2";
+    font-size: 16px;
+    color: #00cbe9;
+    line-height: 18px;
+    top: 2px;
+    position: relative;
+    font-weight: bold;
 }
 
 /*--------------maincss-----------*/
