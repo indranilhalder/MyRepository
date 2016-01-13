@@ -14844,3 +14844,15 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 	margin-top:15px;
 }
 
+.bell-icon:after{
+	font-family: 'FontAwesome';
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   content:"\f0a2";
+    font-size: 16px;
+    color: #00cbe9;
+    line-height: 18px;
+    top: 2px;
+    position: relative;
+    font-weight: bold;
+}

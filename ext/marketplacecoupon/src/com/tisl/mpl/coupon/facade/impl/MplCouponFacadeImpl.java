@@ -342,7 +342,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
 			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
-		boolean checkFlag = false;
+		boolean checkFlag = true;
 		if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
 		{
 
@@ -476,6 +476,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		double voucherCalcValue = 0.0;
 		double promoCalcValue = 0.0;
 		List<DiscountValue> discountList = cartModel.getGlobalDiscountValues();
+		final String voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
 
 		final List<DiscountModel> voucherList = cartModel.getDiscounts();
 		if (CollectionUtils.isNotEmpty(discountList))
@@ -496,8 +497,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final VoucherEntrySet entrySet = getVoucherModelService().getApplicableEntries(lastVoucher, cartModel);
 		final List<AbstractOrderEntry> applicableOrderEntryList = getOrderEntriesFromVoucherEntries(entrySet);
 
-		final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
-
 		if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
 				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())
 		{
@@ -510,36 +509,48 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
-			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, (cartSubTotal
-					- promoCalcValue - 0.01));
-			cartModel.setGlobalDiscountValues(discountList);
+			getVoucherFacade().releaseVoucher(voucherCode);
 			mplDefaultCalculationService.calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
+			//Throw exception with specific information
+			throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
 		}
 
 		else
 		{
 			double netAmountAfterAllDisc = 0.0D;
+			double productPrice = 0.0D;
 			boolean flag = false;
 
-			for (final AbstractOrderEntry entry : applicableOrderEntryList)
+			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
 			{
-				if (StringUtils.isNotEmpty(entry.getAttribute("productPromoCode").toString())
-						|| StringUtils.isNotEmpty(entry.getAttribute("cartPromoCode").toString()))
+				for (final AbstractOrderEntry entry : applicableOrderEntryList)
 				{
-					netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
-					flag = true;
+					if ((null != entry.getAttribute("productPromoCode") && StringUtils.isNotEmpty(entry.getAttribute(
+							"productPromoCode").toString()))
+							|| (null != entry.getAttribute("cartPromoCode") && StringUtils.isNotEmpty(entry
+									.getAttribute("cartPromoCode").toString())))
+					{
+						netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
+						flag = true;
+					}
+
+					else
+					{
+						productPrice += entry.getTotalPrice().doubleValue();
+					}
 				}
-			}
 
 
-			if (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
-			{
-				final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
-				discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
-				cartModel.setGlobalDiscountValues(discountList);
-				mplDefaultCalculationService.calculateTotals(cartModel, false);
-				getModelService().save(cartModel);
+				if ((flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
+				{
+					getVoucherFacade().releaseVoucher(voucherCode);
+					mplDefaultCalculationService.calculateTotals(cartModel, false);
+					getModelService().save(cartModel);
+					//Throw exception with specific information
+					throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
+				}
 			}
 		}
 
@@ -556,7 +567,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param discountAmt
 	 * @return List<DiscountValue>
 	 */
-	private List<DiscountValue> setGlobalDiscount(final List<DiscountValue> discountList, final List<DiscountModel> voucherList,
+	@Override
+	public List<DiscountValue> setGlobalDiscount(final List<DiscountValue> discountList, final List<DiscountModel> voucherList,
 			final double cartSubTotal, final double promoCalcValue, final VoucherModel lastVoucher, final double discountAmt)
 	{
 		DiscountValue discountValue = null;
@@ -566,21 +578,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discount.getCurrencyIsoCode());
 
-				//				if (identifier.equalsIgnoreCase("cartAmt"))
-				//				{
-				//					discountValue = new DiscountValue(discount.getCode(), (cartSubTotal - promoCalcValue - 0.01), lastVoucher
-				//							.getAbsolute().booleanValue(), discount.getCurrencyIsoCode());
-				//				}
-				//				else if(identifier.equalsIgnoreCase("MaxDisc"))
-				//				{
-				//					discountValue = new DiscountValue(discount.getCode(), lastVoucher.getMaxDiscountValue().doubleValue(), true,
-				//							discount.getCurrencyIsoCode());
-				//				}
-				//				else if(identifier.equalsIgnoreCase("OrderEntryAmt"))
-				//				{
-				//					discountValue = new DiscountValue(discount.getCode(), lastVoucher.getMaxDiscountValue().doubleValue(), true,
-				//							discount.getCurrencyIsoCode());
-				//				}
 				discountList.remove(discount);
 				break;
 			}
@@ -1132,7 +1129,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param voucherEntrySet
 	 * @return list of applicable AbstractOrderEntry
 	 */
-	private List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherEntrySet voucherEntrySet)
+	@Override
+	public List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherEntrySet voucherEntrySet)
 	{
 		final Iterator iter = voucherEntrySet.iterator();
 		final List<AbstractOrderEntry> applicableOrderList = new ArrayList<AbstractOrderEntry>();
