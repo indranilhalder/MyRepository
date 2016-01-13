@@ -2556,7 +2556,7 @@ public class UsersController extends BaseCommerceController
 	@SuppressWarnings(MarketplacewebservicesConstants.DEPRECATION)
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{emailId}/removeAddress", method = RequestMethod.POST)
+	@RequestMapping(value = "/{emailId}/removeAddress", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public UserResultWsDto removeAddress(@RequestParam final String emailId, @RequestParam final String addressId)
 			throws RequestParameterException
@@ -3453,9 +3453,9 @@ public class UsersController extends BaseCommerceController
 	 */
 	/*
 	 * @Secured( { CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	 *
+	 * 
 	 * @RequestMapping(value = "/{emailid}/resendOtpforcod", method = RequestMethod.POST, produces = APPLICATION_TYPE)
-	 *
+	 * 
 	 * @ResponseBody public ValidateOtpWsDto resendOTP(@PathVariable final String emailid, @RequestParam final String
 	 * mobilenumber, final String fields) throws DuplicateUidException, InvalidKeyException, NoSuchAlgorithmException {
 	 * final ValidateOtpWsDto validateOtpWsDto = new ValidateOtpWsDto(); List<CartModel> cartModelList = null; try {
@@ -3464,27 +3464,27 @@ public class UsersController extends BaseCommerceController
 	 * != mplCartFacade.getCartDetails(customerData.getUid())) { cartModelList = (List<CartModel>)
 	 * mplCartFacade.getCartDetails(customerData.getUid()); } String cartID = null; if (null != cartModelList &&
 	 * !cartModelList.isEmpty()) { cartID = cartModelList.get(0).getCode(); }
-	 *
+	 * 
 	 * final String mplCustomerID = customerData.getUid(); final String mplCustomerName = customerData.getName() != null
 	 * ? customerData.getName() : "";
-	 *
-	 *
+	 * 
+	 * 
 	 * if (null != mplCustomerID && StringUtils.isNotEmpty(mplCustomerID)) {
-	 *
+	 * 
 	 * if (null != mobilenumber && StringUtils.isNotEmpty(mobilenumber)) { if (StringUtils.length(mobilenumber) ==
 	 * MarketplacecommerceservicesConstants.MOBLENGTH &&
 	 * mobilenumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)) { ///////// final boolean NotBlackListed
 	 * = mplPaymentFacadeImpl.isMobileBlackListed(mobilenumber); if (NotBlackListed) { //////// final String validation =
 	 * getMplPaymentFacade().generateOTPforCODWeb(mplCustomerID, mobilenumber, mplCustomerName, cartID); if (null !=
 	 * validation && StringUtils.isNotEmpty(validation)) {
-	 *
+	 * 
 	 * validateOtpWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG); } else { throw new
 	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9022); } } else { throw new
 	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9202); } } else { throw new
 	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023); } } else { throw new
 	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9024); } } else { throw new
 	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025); }
-	 *
+	 * 
 	 * } catch (final InvalidCartException ce) { throw new EtailNonBusinessExceptions(ce,
 	 * MarketplacecommerceservicesConstants.B9004); } catch (final EtailNonBusinessExceptions e) {
 	 * ExceptionUtil.etailNonBusinessExceptionHandler(e); if (null != e.getErrorMessage()) {
@@ -3493,7 +3493,7 @@ public class UsersController extends BaseCommerceController
 	 * EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); if (null !=
 	 * e.getErrorMessage()) { validateOtpWsDto.setError(e.getErrorMessage()); }
 	 * validateOtpWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG); }
-	 *
+	 * 
 	 * return validateOtpWsDto; }
 	 */
 

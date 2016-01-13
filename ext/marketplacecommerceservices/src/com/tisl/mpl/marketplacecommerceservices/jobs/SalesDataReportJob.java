@@ -86,8 +86,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 	private DefaultPromotionManager defaultPromotionManager;
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
-
 	private Converter<OrderModel, OrderData> orderConverter;
+	@Autowired
 	private PriceDataFactory priceDataFactory;
 
 	//Delimiter used in CSV file
@@ -430,8 +430,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								data.setEmail(subOrderDetail.getCustomerData().getEmail());
 							}
 							//TODO IPaddress track by Order / Customer
-							data.setIpAdddress(configurationService.getConfiguration().getString(
-									MarketplacecommerceservicesConstants.SALES_DATA_REPORT_JOB_IP, ""));
+							data.setIpAdddress(configurationService.getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.SALES_DATA_REPORT_JOB_IP, ""));
 
 							//check delivery address and set
 							LOG.debug("-----------Order Delivery Address----" + entry.getProduct().getCode());
