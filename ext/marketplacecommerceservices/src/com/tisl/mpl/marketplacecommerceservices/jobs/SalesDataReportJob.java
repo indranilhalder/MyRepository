@@ -392,7 +392,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 							{
 								consignmentStatus = entry.getConsignment().getStatus().getCode();
 							}
-							else if (null != subOrderDetail.getStatus() && subOrderDetail.getStatus().getCode() != null)
+							else if (null != orderDetail.getStatus() && orderDetail.getStatus().getCode() != null)
 							{
 								consignmentStatus = subOrderDetail.getStatus().getCode();
 							}
@@ -457,6 +457,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 								try
 								{
+									LOG.debug("-----------Fetching Order product model----" + product.getCode());
 									final ProductModel productModel = mplOrderService.findProductsByCode(product.getCode());
 									String primaryCategory = MarketplacecommerceservicesConstants.NA;
 									String secondaryCategory = MarketplacecommerceservicesConstants.NA;
