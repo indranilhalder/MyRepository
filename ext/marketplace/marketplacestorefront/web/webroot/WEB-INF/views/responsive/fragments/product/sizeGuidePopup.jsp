@@ -84,21 +84,22 @@
 							
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
 									<ul>
-									    <c:if test="${not empty sizeGuideValue.dimensionSize}">
+									    
+										<li>${sizeGuideValue.age}</li>
+										
+									  <%--   <c:if test="${not empty sizeGuideValue.dimensionSize}"> --%>
 										<li>${sizeGuideValue.dimensionSize}</li>
-										</c:if>
-										 <c:if test="${not empty sizeGuideValue.euroSize}">
-									    <li>${sizeGuideValue.euroSize}</li>
-									    </c:if>
-									    <c:if test="${not empty sizeGuideValue.usSize}">
+									<%-- 	</c:if> --%>
+									<%-- 	 <c:if test="${not empty sizeGuideValue.usSize}"> --%>
 										<li>${sizeGuideValue.usSize}</li>
-										</c:if>
-										 <c:if test="${not empty sizeGuideValue.dimension}">
+									<%-- 	</c:if> --%>
+										<%--  <c:if test="${not empty sizeGuideValue.euroSize}"> --%>
+									    <li>${sizeGuideValue.euroSize}</li>
+									   <%--  </c:if> --%>
+										<%--  <c:if test="${not empty sizeGuideValue.dimension}"> --%>
 										<li>${sizeGuideValue.dimension}</li>
-										</c:if>
-									    <c:if test="${not empty sizeGuideValue.dimensionValue}">
+										<%-- </c:if> --%>
 										<li>${sizeGuideValue.dimensionValue}</li>
-										</c:if>
 									</ul>	
 									</c:forEach>
 							</li>
@@ -241,7 +242,6 @@
 						</c:when>
 						<c:otherwise>
 							<c:forEach var="entry" items="${variantOption.sizeLink}">${variantOption.sizeLink}
-							
 								
 								<c:if test="${entry.key eq product.url}">
 									<c:set var="currentColor" value="${color}" />
