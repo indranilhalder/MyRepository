@@ -39,6 +39,8 @@ import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -754,8 +756,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
 		final CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 		VoucherData voucherData = new VoucherData();
-		double savedSum = 0.0;
-
+		String savedSum = null;
+		double finalAmount = 0.0D;
 		int couponsRedeemedCount = 0;
 		boolean isOrderDateValid = false;
 
@@ -898,9 +900,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			for (final String amount : amountList)
 			{
-				LOG.debug("Step 4-************************Inside amountList");
 
-				savedSum += Double.parseDouble(amount);
+				LOG.debug("Step 4-************************Inside amountList");
+				final double decimalAmount = Double.parseDouble(amount);
+				finalAmount += decimalAmount;
+
+				BigDecimal bd = new BigDecimal(finalAmount);
+				bd = bd.setScale(2, RoundingMode.HALF_UP);
+				savedSum = bd.toPlainString();
 			}
 		}
 
@@ -932,7 +939,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		// organizing the DTO with necessary data
 		couponHistoryStoreDTO.setCouponHistoryDTOList(couponHistoryDTOList);
 		couponHistoryStoreDTO.setCouponsRedeemedCount(couponsRedeemedCount);
-		couponHistoryStoreDTO.setSavedSum(Double.valueOf(savedSum));
+		couponHistoryStoreDTO.setSavedSum(savedSum);
+
 
 		return couponHistoryStoreDTO;
 
