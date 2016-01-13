@@ -1528,6 +1528,7 @@ function buyboxDetailsForSizeGuide(productCode){
 					$("#specialSelPrice").html(mopPrice);
 				}
 				if(data['isPinCodeServicable']=='N'){
+					$("#pinNotServicableSizeGuide").show();
 					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
 				}
 				else{

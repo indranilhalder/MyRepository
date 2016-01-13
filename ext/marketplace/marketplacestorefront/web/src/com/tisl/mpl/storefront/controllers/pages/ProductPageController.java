@@ -487,6 +487,10 @@ public class ProductPageController extends AbstractPageController
 			{
 				for (final SizeGuideData data : sizeguideList.get(key))
 				{
+					if (data.getAge() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.age"), "Y");
+					}
 					if (data.getDimension() != null)
 					{
 						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlenth"), "Y");

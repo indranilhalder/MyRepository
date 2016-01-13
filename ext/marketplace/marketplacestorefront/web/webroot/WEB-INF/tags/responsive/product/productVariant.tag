@@ -47,7 +47,8 @@ function loadVariant(x){
 	 $("#variantForm").submit();
 }
 </script>
-
+<c:url var="sizeGuideUrl"
+	value="/p/sizeGuide?productCode=${product.code}" scope="request"></c:url>
 <div class="swatch">
 
 	<form:form action="/" id="variantForm" method="post">
@@ -162,6 +163,10 @@ function loadVariant(x){
 </div>
 
 <c:if test="${noVariant!=true&&notApparel!=true}">
+	<a class="size-guide" href="${sizeGuideUrl}" role="button"
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}"> <spring:theme
+				code="product.variants.size.guide" />
+		</a>
 	<form:form action="/" id="sizevariantForm" method="post">
 		<input type="hidden" maxlength="10" size="1" id="sellersSkuListId"
 			name="sellersSkuListId" value="" />
@@ -257,6 +262,8 @@ function loadVariant(x){
 					</c:forEach>
 				</c:forEach>
 			</select>
+			
 		</div>
 	</form:form>
+	
 </c:if>
