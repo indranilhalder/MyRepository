@@ -342,7 +342,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
 			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
-		boolean checkFlag = true;
+		boolean checkFlag = false;
 		if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
 		{
 
@@ -352,8 +352,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				throw new VoucherOperationException("Voucher not found: " + voucherCode);
 			}
 
-
 			final VoucherModel voucher = getVoucherModel(voucherCode);
+			if (voucher.getValue().doubleValue() <= 0)
+			{
+				throw new VoucherOperationException("Voucher not found: " + voucherCode);
+			}
 			if (!checkVoucherCanBeRedeemed(voucher, voucherCode))
 			{
 				throw new VoucherOperationException("Voucher cannot be redeemed: " + voucherCode);

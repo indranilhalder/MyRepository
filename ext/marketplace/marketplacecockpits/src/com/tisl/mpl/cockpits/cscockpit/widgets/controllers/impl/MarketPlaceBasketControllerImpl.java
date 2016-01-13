@@ -740,6 +740,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 
 		}
+		
+		if (voucher.getValue().doubleValue() <= 0)
+		{
+			LOG.error("Invalid Voucher : " + voucherCode);
+			return "invalid_voucher_code";
+		}
+		
 		if (!checkVoucherCanBeRedeemed(voucher, voucherCode))
 		{
 			
