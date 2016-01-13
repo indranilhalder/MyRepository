@@ -526,23 +526,26 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				for (final AbstractOrderEntry entry : applicableOrderEntryList)
 				{
-					if ((null != entry.getAttribute("productPromoCode") && StringUtils.isNotEmpty(entry.getAttribute(
-							"productPromoCode").toString()))
-							|| (null != entry.getAttribute("cartPromoCode") && StringUtils.isNotEmpty(entry
-									.getAttribute("cartPromoCode").toString())))
+					if ((null != entry.getAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) && StringUtils
+							.isNotEmpty(entry.getAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE).toString()))
+							|| (null != entry.getAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE) && StringUtils
+									.isNotEmpty(entry.getAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE).toString())))
 					{
-						netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
+						netAmountAfterAllDisc += Double.parseDouble((entry
+								.getAttribute(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC)).toString());
 						flag = true;
 					}
 
-					else
-					{
-						productPrice += entry.getTotalPrice().doubleValue();
-					}
+					//					else
+					//					{
+					//						productPrice += entry.getTotalPrice().doubleValue();
+					//					}
+
+					productPrice += entry.getTotalPrice().doubleValue();
 				}
 
 
-				if ((flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+				if ((productPrice < 1) || (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
 						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
 					getVoucherFacade().releaseVoucher(voucherCode);
