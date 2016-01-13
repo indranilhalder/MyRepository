@@ -119,4 +119,12 @@ public interface MplCouponFacade
 	 */
 	List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(VoucherEntrySet voucherEntrySet);
 
+
+	/**
+	 * @param voucherCode
+	 * @param cartModel
+	 * @throws VoucherOperationException
+	 */
+	void releaseVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
+
 }

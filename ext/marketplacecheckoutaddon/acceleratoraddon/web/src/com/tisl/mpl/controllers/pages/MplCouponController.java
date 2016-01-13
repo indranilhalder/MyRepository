@@ -156,7 +156,7 @@ public class MplCouponController
 
 		try
 		{
-			getVoucherFacade().releaseVoucher(couponCode);
+			getMplCouponFacade().releaseVoucher(couponCode, cartModel);
 			couponRelStatus = true;
 		}
 		catch (final VoucherOperationException e)

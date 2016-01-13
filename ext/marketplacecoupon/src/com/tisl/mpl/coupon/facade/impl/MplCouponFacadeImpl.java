@@ -509,7 +509,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
-			getVoucherFacade().releaseVoucher(voucherCode);
+			releaseVoucher(voucherCode, cartModel);
 			mplDefaultCalculationService.calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
 			//Throw exception with specific information
@@ -545,7 +545,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				if ((flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
 						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
-					getVoucherFacade().releaseVoucher(voucherCode);
+					releaseVoucher(voucherCode, cartModel);
 					mplDefaultCalculationService.calculateTotals(cartModel, false);
 					getModelService().save(cartModel);
 					//Throw exception with specific information
@@ -607,7 +607,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			try
 			{
-				getVoucherFacade().releaseVoucher(couponCode);
+				releaseVoucher(couponCode, cart);
 			}
 			catch (final VoucherOperationException e)
 			{
@@ -1146,6 +1146,37 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		return applicableOrderList;
 	}
+
+
+
+	/**
+	 * This method is used to release the voucher applied
+	 *
+	 * @param voucherCode
+	 * @throws VoucherOperationException
+	 */
+	@Override
+	public void releaseVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException
+	{
+		validateVoucherCodeParameter(voucherCode);
+		final VoucherModel voucher = getVoucherModel(voucherCode);
+		if (voucher != null && cartModel != null)
+		{
+			try
+			{
+				getVoucherService().releaseVoucher(voucherCode, cartModel);
+				return;
+			}
+			catch (final JaloPriceFactoryException e)
+			{
+				throw new VoucherOperationException("Couldn't release voucher: " + voucherCode);
+			}
+		}
+	}
+
+
+
+
 
 	public void setMplCouponService(final MplCouponService mplCouponService)
 	{
