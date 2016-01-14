@@ -267,7 +267,19 @@ public class MarketPlaceDefaultCancellationController extends
 							OrderEntryModel orderEntry = modificationEntry
 									.getOrderEntry();
 							if (orderEntry != null) {
-								mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_IN_PROGRESS);
+								//mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_IN_PROGRESS);
+								
+								
+								double deliveryCost = orderEntry
+										.getCurrDelCharge() != null ? orderEntry
+										.getCurrDelCharge()
+										: NumberUtils.DOUBLE_ZERO;
+								double totalprice = orderEntry.getNetAmountAfterAllDisc();
+								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+								orderEntry.setCurrDelCharge(0D);
+								getModelService().save(orderEntry);
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,totalprice + deliveryCost, ConsignmentStatus.REFUND_IN_PROGRESS);
+								
 							}
 						}
 						//TISSIT-1790 Code addition ended
@@ -303,9 +315,20 @@ public class MarketPlaceDefaultCancellationController extends
 							// consignmentModel
 							// .setStatus(ConsignmentStatus.REFUND_INITIATED);
 							// getModelService().save(consignmentModel);
-							mplJusPayRefundService.makeOMSStatusUpdate(
-									orderEntry,
-									ConsignmentStatus.REFUND_INITIATED);
+							
+							//mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_INITIATED);
+							
+							double deliveryCost = orderEntry
+									.getCurrDelCharge() != null ? orderEntry
+									.getCurrDelCharge()
+									: NumberUtils.DOUBLE_ZERO;
+							double totalprice = orderEntry.getNetAmountAfterAllDisc();
+							orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+							orderEntry.setCurrDelCharge(0D);
+							getModelService().save(orderEntry);
+							mplJusPayRefundService.makeRefundOMSCall(
+									orderEntry, paymentTransactionModel,
+									totalprice + deliveryCost, ConsignmentStatus.REFUND_INITIATED);
 							
 							// TISSIT-1784 Code addition started
 							
