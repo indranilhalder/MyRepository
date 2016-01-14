@@ -1508,9 +1508,9 @@
 	</bean> -->
 	
 	
-	<bean id="findOrderDiscountValuesStrategy"
+	<!-- <bean id="findOrderDiscountValuesStrategy"
 		class="com.tisl.mpl.order.impl.MplFindOrderDiscountValuesStrategy"
-		parent="abstractBusinessService"/>
+		parent="abstractBusinessService"/> -->
 		
 
 		 <!--  pdp seller priority report cron job -->

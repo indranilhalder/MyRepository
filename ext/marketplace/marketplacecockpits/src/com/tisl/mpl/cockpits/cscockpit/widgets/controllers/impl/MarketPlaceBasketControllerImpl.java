@@ -42,6 +42,7 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.impersonation.ImpersonationContext;
 import de.hybris.platform.commerceservices.impersonation.ImpersonationService;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
@@ -72,6 +73,7 @@ import de.hybris.platform.util.WeakArrayList;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 /**
@@ -738,6 +740,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 
 		}
+		
+		if (voucher.getValue().doubleValue() <= 0)
+		{
+			LOG.error("Invalid Voucher : " + voucherCode);
+			return "invalid_voucher_code";
+		}
+		
 		if (!checkVoucherCanBeRedeemed(voucher, voucherCode))
 		{
 			
@@ -756,13 +765,17 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				}
 				//Important! Checking cart, if total amount <0, release this voucher
 				//((EziBuyCommerceCartService) getCommerceCartService()).setAppliedVoucherCode(cartModel, voucherCode);
+				getCommerceCartService().recalculateCart(cartModel);
+				
 				boolean applyFlag = checkCartAfterApply(voucherCode, voucher);
 				if(!applyFlag)
 				{
 					LOG.error("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
 					return "prices_exceeded";
 				}
-				getCommerceCartService().recalculateCart(cartModel);
+				
+				mplCouponFacade.setApportionedValueForVoucher(voucher, cartModel, voucherCode);
+				
 				return StringUtils.EMPTY;
 			}
 			catch (Exception e)
@@ -832,6 +845,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		
 		
 		
+
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
 		final double cartSubTotal = cartModel.getSubtotal().doubleValue();
 		double voucherCalcValue = 0.0;
@@ -870,45 +884,53 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
-			discountList = mplCouponFacade.setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, (cartSubTotal
-					- promoCalcValue - 0.01));
-			cartModel.setGlobalDiscountValues(discountList);
+			releaseVoucher(lastVoucherCode);
+			LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
 			mplDefaultCalculationService.calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
-			return true;
+			return false;
 		}
 
 		else
 		{
 			double netAmountAfterAllDisc = 0.0D;
+			double productPrice = 0.0D;
 			boolean flag = false;
-			
-			if(CollectionUtils.isNotEmpty(applicableOrderEntryList))
-			{				
-				final int entryCount = applicableOrderEntryList.get(0).getQuantity().intValue();
 
+			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
+			{
 				for (final AbstractOrderEntry entry : applicableOrderEntryList)
 				{
-					if (StringUtils.isNotEmpty(entry.getAttribute("productPromoCode").toString())
-							|| StringUtils.isNotEmpty(entry.getAttribute("cartPromoCode").toString()))
+					if ((null != entry.getAttribute("productPromoCode") && StringUtils.isNotEmpty(entry.getAttribute(
+							"productPromoCode").toString()))
+							|| (null != entry.getAttribute("cartPromoCode") && StringUtils.isNotEmpty(entry
+									.getAttribute("cartPromoCode").toString())))
 					{
 						netAmountAfterAllDisc += Double.parseDouble((entry.getAttribute("netAmountAfterAllDisc")).toString());
 						flag = true;
 					}
+
+					else
+					{
+						productPrice += entry.getTotalPrice().doubleValue();
+					}
 				}
-	
-	
-				if (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+
+
+				if ((flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
-					final double discountAmt = netAmountAfterAllDisc - (0.01 * entryCount);
-					discountList = mplCouponFacade.setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, discountAmt);
-					cartModel.setGlobalDiscountValues(discountList);
+					releaseVoucher(lastVoucherCode);
+					LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
 					mplDefaultCalculationService.calculateTotals(cartModel, false);
 					getModelService().save(cartModel);
+					return false;
 				}
 			}
 			return true;
 		}
+
+	
 		
 	}
 	protected void releaseVoucher(final String voucherCode)

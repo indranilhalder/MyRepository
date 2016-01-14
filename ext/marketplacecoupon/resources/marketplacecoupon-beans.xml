@@ -53,7 +53,7 @@
 		
 	<bean class="com.tisl.mpl.data.CouponHistoryStoreDTO">
 		<property name="couponHistoryDTOList" type="java.util.List&lt;com.tisl.mpl.data.CouponHistoryData>"/>
-		<property name="savedSum" type="Double"/>
+		<property name="savedSum" type="String"/>
 		<property name="couponsRedeemedCount" type="int"/>
 	</bean>
 

@@ -18,6 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -144,9 +146,29 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 	 *
 	 * @param customers
 	 */
-	void putDataForSellerPriority(final List<SavedValuesModel> savedValues)
+	void putDataForSellerPriority(final List<SavedValuesModel> savedValuesList)
+	//public static List<SavedValuesModel> putDataForSellerPriority(final List<SavedValuesModel> savedValues)
 	{
 		final List<SellerPriorityReportData> savedValueDataList = new ArrayList<SellerPriorityReportData>();
+
+		final List<SavedValuesModel> savedValues = new ArrayList<SavedValuesModel>(savedValuesList);
+
+		//Sorting savedValues list for Timestamp
+		Collections.sort(savedValues, new Comparator<SavedValuesModel>()
+		{
+			@Override
+			public int compare(final SavedValuesModel val1, final SavedValuesModel val2)
+			{
+				if (val2.getTimestamp().compareTo(val1.getTimestamp()) > 0)
+				{
+					return 1;
+				}
+				else
+				{
+					return -1;
+				}
+			}
+		});
 
 
 
@@ -182,13 +204,17 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 				{
 					savedValueData.setSellerId(sellerDataVal.getId());
 				}
+				else
+				{
+					savedValueData.setSellerId(MarketplacecommerceservicesConstants.EMPTYSTRING);
+				}
 				if (null != sellerDataVal.getFirstname())
 				{
 					savedValueData.setSellerName(sellerDataVal.getFirstname());
 				}
 				else
 				{
-					savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+					savedValueData.setSellerName(MarketplacecommerceservicesConstants.EMPTYSTRING);
 				}
 			}
 			else
@@ -223,7 +249,6 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			{
 				savedValueData.setProductId(MarketplacecommerceservicesConstants.EMPTYSTRING);
 			}
-
 			// Activation status of Priority
 			if (sellerModData.getIsActive().booleanValue())
 			{
@@ -231,9 +256,32 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			}
 			else
 			{
-				savedValueData.setIsActive("Deactivated");
+				savedValueData.setIsActive("Deactivate");
 			}
 
+			// Priority Start Date
+			if (null != sellerModData.getPriorityStartDate())
+			{
+				savedValueData.setOldStartDate(sdf.format(sellerModData.getPriorityStartDate()));
+			}
+			else
+			{
+				savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+			}
+
+			// Priority End Date
+
+			if (null != sellerModData.getPriorityEndDate())
+			{
+				savedValueData.setOldEndDate(sdf.format(sellerModData.getPriorityEndDate()));
+			}
+			else
+			{
+				savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+			}
+
+
+			// User
 			if (null != savedVal.getUser())
 			{
 				savedValueData.setChangedBy(savedVal.getUser().getName());
@@ -244,10 +292,10 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			}
 			LOG.debug("ModificationType: " + savedVal.getModificationType().getCode());
 
+			savedValueData.setModifiedActiveFlag(MarketplacecommerceservicesConstants.EMPTYSTRING);
 			// Modified Data
 			if (savedVal.getModificationType().getCode().equalsIgnoreCase("CHANGED"))
 			{
-				savedValueData.setModifiedActiveFlag("Y");
 				savedValueData.setNewlyCreated("N");
 
 				for (final SavedValueEntryModel savedValueEntry : savedVal.getSavedValuesEntries())
@@ -255,83 +303,92 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 					LOG.debug("ModifiedAttribute: " + savedValueEntry.getModifiedAttribute());
 
 					if (null != savedValueEntry.getModifiedAttribute()
-							&& !savedValueEntry.getModifiedAttribute().equalsIgnoreCase("modifiedtime"))
+							&& savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityStartDate"))
 					{
-						if (savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityStartDate"))
+						if (null != savedValueEntry.getOldValue())
 						{
-							if (null != savedValueEntry.getOldValue())
-							{
-								savedValueData.setOldStartDate(sdf.format(savedValueEntry.getOldValue()));
-							}
-							else
-							{
-								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-							}
-							if (null != savedValueEntry.getNewValue())
-							{
-								savedValueData.setModifiedStartDate(sdf.format(savedValueEntry.getNewValue()));
-							}
-							else
-							{
-								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-							}
+							savedValueData.setOldStartDate(sdf.format(savedValueEntry.getOldValue()));
 						}
 						else
 						{
-							if (null != sellerModData.getPriorityStartDate())
-							{
-								savedValueData.setOldStartDate(sdf.format(sellerModData.getPriorityStartDate()));
-							}
-							else
-							{
-								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-							}
+							savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 						}
-						if (savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityEndDate"))
+						if (null != savedValueEntry.getNewValue())
 						{
-							if (null != savedValueEntry.getOldValue())
-							{
-								savedValueData.setOldEndDate(sdf.format(savedValueEntry.getOldValue()));
-							}
-							else
-							{
-								savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-							}
-							if (null != savedValueEntry.getNewValue())
-							{
-								savedValueData.setModifiedEndDate(sdf.format(savedValueEntry.getNewValue()));
-							}
-							else
-							{
-								savedValueData.setModifiedEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-							}
+							savedValueData.setModifiedStartDate(sdf.format(savedValueEntry.getNewValue()));
 						}
 						else
-						{
-							if (null != sellerModData.getPriorityEndDate())
-							{
-								savedValueData.setOldStartDate(sdf.format(sellerModData.getPriorityEndDate()));
-							}
-							else
-							{
-								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-							}
-						}
-						if (null == savedValueData.getModifiedStartDate())
 						{
 							savedValueData.setModifiedStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 						}
-						if (null == savedValueData.getModifiedEndDate())
+					}
+					//					else
+					//					{
+					//						if (null != sellerModData.getPriorityStartDate())
+					//						{
+					//							savedValueData.setOldStartDate(sdf.format(sellerModData.getPriorityStartDate()));
+					//						}
+					//						else
+					//						{
+					//							savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+					//						}
+					//					}
+					if (null != savedValueEntry.getModifiedAttribute()
+							&& savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityEndDate"))
+					{
+						if (null != savedValueEntry.getOldValue())
+						{
+							savedValueData.setOldEndDate(sdf.format(savedValueEntry.getOldValue()));
+						}
+						else
+						{
+							savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+						}
+						if (null != savedValueEntry.getNewValue())
+						{
+							savedValueData.setModifiedEndDate(sdf.format(savedValueEntry.getNewValue()));
+						}
+						else
 						{
 							savedValueData.setModifiedEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 						}
+					}
+					//					else
+					//					{
+					//						if (null != sellerModData.getPriorityEndDate())
+					//						{
+					//							savedValueData.setOldEndDate(sdf.format(sellerModData.getPriorityEndDate()));
+					//						}
+					//						else
+					//						{
+					//							savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+					//						}
+					//					}
+					if (null != savedValueEntry.getModifiedAttribute()
+							&& savedValueEntry.getModifiedAttribute().equalsIgnoreCase("isactive"))
+					{
+						if (savedValueEntry.getNewValue().toString().equalsIgnoreCase("true"))
+						{
+							savedValueData.setModifiedActiveFlag("Activate");
+						}
+						else
+						{
+							savedValueData.setModifiedActiveFlag("Deactivated");
+						}
+					}
+					if (null == savedValueData.getModifiedStartDate())
+					{
+						savedValueData.setModifiedStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+					}
+					if (null == savedValueData.getModifiedEndDate())
+					{
+						savedValueData.setModifiedEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 					}
 				}
 			}
 			else
 			{
 				// Created Data
-				savedValueData.setModifiedActiveFlag("N");
 				savedValueData.setNewlyCreated("Y");
 				savedValueData.setModifiedStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 				savedValueData.setModifiedEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
@@ -343,36 +400,100 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 					LOG.debug("ModifiedAttribute: " + savedValueEntry.getModifiedAttribute());
 
 					if (null != savedValueEntry.getModifiedAttribute()
-							&& !savedValueEntry.getModifiedAttribute().equalsIgnoreCase("modifiedtime"))
+							&& savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityStartDate"))
 					{
-						if (savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityStartDate"))
+						if (null != savedValueEntry.getNewValue())
 						{
-							if (null != savedValueEntry.getNewValue())
-							{
-								savedValueData.setOldStartDate(sdf.format(savedValueEntry.getNewValue()));
-							}
-							else
-							{
-								savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-							}
+							savedValueData.setOldStartDate(sdf.format(savedValueEntry.getNewValue()));
 						}
-						if (savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityEndDate"))
+						else
 						{
-							if (null != savedValueEntry.getNewValue())
-							{
-								savedValueData.setOldEndDate(sdf.format(savedValueEntry.getNewValue()));
-							}
-							else
-							{
-								savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
-							}
+							savedValueData.setOldStartDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
 						}
 					}
+					if (null != savedValueEntry.getModifiedAttribute()
+							&& savedValueEntry.getModifiedAttribute().equalsIgnoreCase("priorityEndDate"))
+					{
+						if (null != savedValueEntry.getNewValue())
+						{
+							savedValueData.setOldEndDate(sdf.format(savedValueEntry.getNewValue()));
+						}
+						else
+						{
+							savedValueData.setOldEndDate(MarketplacecommerceservicesConstants.EMPTYSTRING);
+						}
+					}
+
+					// Modified / Created SellerID
+					if (null != savedValueEntry.getModifiedAttribute()
+							&& savedValueEntry.getModifiedAttribute().equalsIgnoreCase("sellerid"))
+					{
+						final SellerMasterModel sellerDataVal = (SellerMasterModel) savedValueEntry.getNewValue();
+						if (null != sellerDataVal.getId())
+						{
+							savedValueData.setSellerId(sellerDataVal.getId());
+						}
+						else
+						{
+							savedValueData.setSellerId(MarketplacecommerceservicesConstants.EMPTYSTRING);
+						}
+						if (null != sellerDataVal.getFirstname())
+						{
+							savedValueData.setSellerName(sellerDataVal.getFirstname());
+						}
+						else
+						{
+							savedValueData.setSellerName(MarketplacecommerceservicesConstants.EMPTYSTRING);
+						}
+					}
+					// Modified / Created CategoryID
+					if (null != savedValueEntry.getModifiedAttribute()
+							&& savedValueEntry.getModifiedAttribute().equalsIgnoreCase("categoryid"))
+					{
+						final CategoryModel catData = (CategoryModel) savedValueEntry.getNewValue();
+						if (null != catData.getCode())
+						{
+							savedValueData.setCategoryId(catData.getCode());
+						}
+						else
+						{
+							savedValueData.setCategoryId(MarketplacecommerceservicesConstants.EMPTYSTRING);
+						}
+					}
+
+					// Modified / Created Product ID
+					if (null != savedValueEntry.getModifiedAttribute()
+							&& savedValueEntry.getModifiedAttribute().equalsIgnoreCase("listingid"))
+					{
+						final ProductModel prodData = (ProductModel) savedValueEntry.getNewValue();
+						if (null != prodData.getCode())
+						{
+							savedValueData.setProductId(prodData.getCode());
+						}
+						else
+						{
+							savedValueData.setProductId(MarketplacecommerceservicesConstants.EMPTYSTRING);
+						}
+					}
+
+
+					/*
+					 * // Activation status of Priority if (null != savedValueEntry.getModifiedAttribute() &&
+					 * savedValueEntry.getModifiedAttribute().equalsIgnoreCase("isactive")) { //final SellerMasterModel
+					 * sellerDataVal = sellerModData.getSellerId(); if (null != savedValueEntry.getNewValue()) { if
+					 * (savedValueEntry.getNewValue().toString().equalsIgnoreCase("true")) { savedValueData.setIsActive("Y");
+					 * } else { savedValueData.setProductId("N"); } } else {
+					 * savedValueData.setProductId(MarketplacecommerceservicesConstants.EMPTYSTRING); } } else {
+					 * savedValueData.setProductId(MarketplacecommerceservicesConstants.EMPTYSTRING); }
+					 */
 				}
 
 			}
 			savedValueDataList.add(savedValueData);
 		}
+
+
+		LOG.debug(savedValueDataList);
 
 		FileWriter fileWriter = null;
 		final File rootFolder1 = new File(configurationService.getConfiguration().getString(
@@ -436,6 +557,18 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 		}
 
 	}
+
+
+
+
+
+	final Comparator<List<SellerPriorityReportData>> comparator = new Comparator<List<SellerPriorityReportData>>()
+	{
+		public int compare(final List<SellerPriorityReportData> pList1, final List<SellerPriorityReportData> pList2)
+		{
+			return ((Comparable<SellerPriorityReportData>) pList1.get(0)).compareTo(pList2.get(0));
+		}
+	};
 
 	/**
 	 * @return the configurationService

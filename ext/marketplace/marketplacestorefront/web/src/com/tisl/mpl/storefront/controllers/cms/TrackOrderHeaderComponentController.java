@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.storefront.controllers.cms;
 
+import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.user.UserService;
 
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
@@ -27,6 +29,7 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
  * @author TCS
  *
  */
+
 @Controller("TrackOrderHeaderComponentController")
 @Scope("tenant")
 @RequestMapping(value = ControllerConstants.Actions.Cms.TrackOrderHeaderComponent)
@@ -79,6 +82,13 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 			}
 		}
 
+	}
+
+	@RequireHardLogIn
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String redirect()
+	{
+		return "redirect:/";
 	}
 
 }

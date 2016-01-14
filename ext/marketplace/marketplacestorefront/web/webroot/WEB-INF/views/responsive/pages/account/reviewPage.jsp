@@ -496,12 +496,12 @@
 				<c:choose>
 				<c:when test="${not empty comments}">
 				<c:forEach items="${comments}" var="comment" varStatus="count">
-					<li class="review-block${count.index}">
+					<li class="review-block${count.index} review-li" data-index="${count.index}">
 					
 					<!-- success handler -->
 					<div class="alert alert-info" style="display: none;" data-info-id="${count.index}">
-					<a href="#nogo" class="close-info" > </a>
-	    			<strong><b><spring:theme code="myaccount.review.successMsg"/> </b></strong><spring:theme code="myaccount.review.updateReviewMsg"/>
+					<a href="#nogo" class="close-info" >x </a>
+	    			<strong><b><spring:theme code="myaccount.review.successMsg"/> </b></strong> <spring:theme code="myaccount.review.updateReviewMsg"/>
 	    			</div>
 	    			
 	    			<!-- failure handler -->
@@ -532,13 +532,9 @@
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
 								<span class="review-date"> ${comment.reviewDate} </span>
-								
-								<h3 class="reviewHeading${count.index}">${comment.commentTitle}</h3>
-								<p class="reviewComment${count.index}">${comment.commentText}</p>
-								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
 								<!-- Ratings -->
-								<div class="rating-div${count.index}" style="display: none;">
-								<span class="rating-name">Over All - </span>
+								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
+								<span class="rating-name"><spring:theme code="myaccount.editreview.overall"/> </span>
 								<ul class="rating-stars" data-rating-name${count.index}="overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -549,7 +545,7 @@
 								</ul>
 								<c:choose>
 									<c:when test="${comment.rootCategory eq 'Clothing'}" >							
-								<span class="rating-name"><spring:theme code="myaccount.review.fit"/> </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.fit"/> </span>
 
 								<ul class="rating-stars" data-rating-name${count.index}="fit">
 								
@@ -561,7 +557,7 @@
 								</ul>
 								</c:when>
 								<c:otherwise>
-								<span class="rating-name">Ease of use </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.easeOfUse"/> </span>
 
 								<ul class="rating-stars" data-rating-name${count.index}="easeOfUse">
 								
@@ -574,7 +570,7 @@
 								</c:otherwise>
 								</c:choose>
 								
-								<span class="rating-name"><spring:theme code="myaccount.review.valueForMoney"/> </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.valueForMoney"/> </span>
 								<ul class="rating-stars" data-rating-name${count.index}="value_for_money">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -583,7 +579,7 @@
 	 										<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
 	  										<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
 								</ul>
-								<span class="rating-name"><spring:theme code="myaccount.review.quality"/> </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.quality"/> </span>
 								<ul class="rating-stars" data-rating-name${count.index}="quality">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -611,6 +607,10 @@
 								</script>
 								</c:if>
 								</div>
+								<h3 class="reviewHeading${count.index}">${comment.commentTitle}</h3>
+								<p class="reviewComment${count.index}">${comment.commentText}</p>
+								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
+								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>
 								<input type="hidden" class="hiddenReviewComment${count.index}" value="${comment.commentText}"/>
 								
@@ -618,7 +618,7 @@
 								<input type="hidden" class="streamID${count.index}" value="${comment.productData.code}"/>
 								<input type="hidden" class="commentID${count.index}" value="${comment.commentId}"/>
 								
-								<div class="updateButtons${count.index}" style="display: none;">
+								<div class="updateButtons${count.index} update-wrapper" style="display: none;">
 									<input type="button" name="update" value="Update" data-index="${count.index}"/>
 									<input type="button" name="cancel" value="Cancel" data-index="${count.index}"/>
 								</div>
@@ -771,7 +771,7 @@
 </div>
 <div id="deleteReviewcontainer" style="display: none;">
 <div id="deleteReview">
-			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:100%">
+			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:270px;margin:0px;">
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
@@ -787,6 +787,24 @@
 			</div>
 		  </div>
 		</div> 
+<div id="updateReviewcontainer" style="display: none;">
+<div id="updateReview">
+			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:270px;margin:0px;">
+			<div class="modal-content">
+				<!-- Dynamically Insert Content Here -->
+				<div class="modal-header">
+				<h4 class="modal-title">
+					<spring:theme code="myaccount.review.updatemsg"/>  
+				</h4> 
+				
+				<button class="updateReviewConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
+					<a class="close updateReviewConfirmationNo" href="#nogo" onclick="closeModal(this);"><spring:theme code="text.wishlist.no" /></a>
+				</div>
+				<!-- <button class="close" data-dismiss="modal"></button> -->
+			</div>
+			</div>
+		  </div>
+		</div> 
 </template:page>
 <script>
 $(document).ready(function(){
@@ -795,7 +813,6 @@ $(document).ready(function(){
 	
 	$(".edit").click(function(e){
 		e.preventDefault;
-		
 		var indexElement = $(this).attr("data-index");
 		if(indexElement!= undefined){
 			var reviewHeading = $(".reviewHeading"+indexElement);
@@ -809,6 +826,7 @@ $(document).ready(function(){
 			}
 			$(reviewHeading).html("<input class='inputBox' type='text' name='updateReviewHeading"+indexElement+"' value='"+reviewHeadingText+"'/>");
 			$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
+			$(reviewHeading).find('input.inputBox').focus();
 			$(".rating-div"+indexElement).show();
 			$(".rating-div"+indexElement).find("ul").addClass("rate");
 			$(updateButtons).show();
@@ -841,11 +859,14 @@ $(document).ready(function(){
 	});
 	
 	$("input[name=update]").click(function(){
-		
+		var indexElement =  $(this).attr("data-index");
+		$(".review-block"+indexElement).block({message:$("#updateReviewcontainer").html()});
+	});
+	$(document).on("click","button.updateReviewConfirmation",function(){
 		//validate the text first
 		var isValidated=true;
 		var isValidated_e =true;
-		var indexElement =  $(this).attr("data-index");
+		var indexElement =  $(this).parents("li.review-li").attr("data-index");
 		$(".errorUpdateReview"+indexElement).empty();
 		$(".errorUpdateRating"+indexElement).empty();
 		
@@ -968,9 +989,8 @@ $(document).ready(function(){
 					}
 				});
 			}
-		}
+		} 
 	});
-	
 	$(".delete").click(function(){
 		var indexElement =  $(this).attr("data-del-index");
 		$(".review-block"+indexElement).block({message:$("#deleteReviewcontainer").html()});

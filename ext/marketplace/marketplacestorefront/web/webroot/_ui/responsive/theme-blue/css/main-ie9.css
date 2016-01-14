@@ -11907,7 +11907,7 @@ body .account .right-account form .full.span input#currentPassword{
 }
 
 
-#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation{
+#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation, #deleteReview .deleteReviewConfirmation, #updateReview .updateReviewConfirmation{
 	    background-color: #00cbe9;
     color: #fff;
     text-transform: uppercase;
@@ -11921,7 +11921,7 @@ body .account .right-account form .full.span input#currentPassword{
      margin:20px 10px 10px 10px !important;
     vertical-align: top;
 }
-#deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo{
+#deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo, #updateReview .updateReviewConfirmationNo{
 	background-color: red;
     opacity: 0.7;
     color: #fff;
@@ -13802,6 +13802,10 @@ word-break: break-word;
 max-width:80px;
 min-width:80px;
 }
+#updateReview .updateReviewConfirmation{
+max-width:80px;
+min-width:80px;
+}
 
 .cart.wrapper .right-block .block.top button.remove-coupon-button{
 min-width: 12px;
@@ -14738,14 +14742,17 @@ body.page-reviews .account .my-reviews .wrapper,body.page-reviews .account .tool
 }
 .reviews .review-list>.wrapper>li .review .details h3 input {
 	width: 100%;
-	border-color: #f0f4f5;
+	border-color: #dbeafa;
 	height: 30px;
 }
 .reviews .review-list>.wrapper>li .review .details p textarea {
     width: 100%;
     max-width: 100%;
-	border: 1px solid #f0f4f5;
+	border: 1px solid #dbeafa;
     margin-bottom: 10px;
+    padding:10px;
+    font-family: Avenir Next;
+    font-size: 12px;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="update"],body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
 	width: 48%;
@@ -14855,4 +14862,11 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
     top: 2px;
     position: relative;
     font-weight: bold;
+}
+.review-list .close-info{
+	font-weight: 600;
+    font-size: 14px;
+    color: #31708f;
+    position: relative;
+    top: -1px;
 }
