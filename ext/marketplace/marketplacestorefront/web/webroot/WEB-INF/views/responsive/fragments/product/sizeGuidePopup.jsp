@@ -33,26 +33,33 @@
 										<c:if test="${sizeIndex.index eq 0}">
 											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 										</c:if>
-										
-									
 									</c:forEach>
 								</c:forEach>
-								<%-- <c:choose> --%>
-								<%-- <c:when test="${product.rootCategory=='Clothing'}"> --%>
+								
 								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
 								<li>${sizeGuide}</li>
+								<c:if test="${sizeGuide=='Age'}">
+								<c:set var="age" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='IND/UK'}">
+								<c:set var="uk" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='EURO'}">
+								<c:set var="euro" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='Width(cm)'}">
+								<c:set var="width" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='FootLength(cm)'}">
+								<c:set var="footlength" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='US'}">
+								<c:set var="us" value="Y"/>
+								</c:if>
 								</c:forEach>
-							   <%-- </c:when> --%>
-							   <%-- <c:when test="${product.rootCategory=='Footwear'}">
-								<li>IND / UK</li> 
-								<li>US</li> 
-								<li>EURO</li> 
-								<li>FOOT LENGTH(cm)</li> 
-								<li>WIDTH</li> 
-							   </c:when>	
-								</c:choose> --%>
 							</ul>
 						</li>
+					
 						<c:choose>
 					    <c:when test="${product.rootCategory=='Clothing'}">
 						<c:forEach items="${sizeguideData}" var="sizeGuide" >
@@ -84,22 +91,66 @@
 							
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
 									<ul>
-									    
+									<c:if test="${age=='Y' }">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.age}">
 										<li>${sizeGuideValue.age}</li>
-										
-									  <%--   <c:if test="${not empty sizeGuideValue.dimensionSize}"> --%>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${uk=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.dimensionSize}">
 										<li>${sizeGuideValue.dimensionSize}</li>
-									<%-- 	</c:if> --%>
-									<%-- 	 <c:if test="${not empty sizeGuideValue.usSize}"> --%>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${us=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.usSize}">
 										<li>${sizeGuideValue.usSize}</li>
-									<%-- 	</c:if> --%>
-										<%--  <c:if test="${not empty sizeGuideValue.euroSize}"> --%>
-									    <li>${sizeGuideValue.euroSize}</li>
-									   <%--  </c:if> --%>
-										<%--  <c:if test="${not empty sizeGuideValue.dimension}"> --%>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${euro=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.euroSize}">
+										<li>${sizeGuideValue.euroSize}</li>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>	
+									 <c:if test="${footlength=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.dimension}">
 										<li>${sizeGuideValue.dimension}</li>
-										<%-- </c:if> --%>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>	
+									 <c:if test="${width=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.dimensionValue}">
 										<li>${sizeGuideValue.dimensionValue}</li>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>	
 									</ul>	
 									</c:forEach>
 							</li>
@@ -364,7 +415,7 @@
 	</div>
 	</c:when>
 	<c:otherwise>
-		<p><spring:theme code="product.variants.size.guide.notavail"/></p>
+		<p style="padding-bottom: 20px;"><spring:theme code="product.variants.size.guide.notavail"/></p>
 	</c:otherwise>
 	</c:choose>	
 </div>
