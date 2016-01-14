@@ -3493,7 +3493,10 @@ $("#couponSubmitButton").click(function(){
 		 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
 		 				//$("#couponFieldId").attr('disabled','disabled');
 		 				$('#couponFieldId').attr('readonly', true);
-		 			}
+		 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(2000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);		 			}
 	 			}
 	 		},
 	 		error : function(resp) {
@@ -3529,9 +3532,10 @@ $(".remove-coupon-button").click(function(){
  				var selection = $("#voucherDisplaySelection").val();
  				$("#couponFieldId").val(selection);
  				//$("#couponFieldId").val("");
- 				$("#couponMessage").html("Voucher "+couponCode+" has been removed");
- 				setTimeout(function(){ $("#couponMessage").html(""); }, 2000);
- 			}
+ 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
+ 				$('#couponMessage').show();
+ 				$('#couponMessage').delay(2000).fadeOut('slow');
+ 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
  		},
  		error : function(resp) {
  		}

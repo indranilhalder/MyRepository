@@ -11907,7 +11907,7 @@ body .account .right-account form .full.span input#currentPassword{
 }
 
 
-#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation{
+#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation, #deleteReview .deleteReviewConfirmation, #updateReview .updateReviewConfirmation{
 	    background-color: #00cbe9;
     color: #fff;
     text-transform: uppercase;
@@ -11921,7 +11921,7 @@ body .account .right-account form .full.span input#currentPassword{
      margin:20px 10px 10px 10px !important;
     vertical-align: top;
 }
-#deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo{
+#deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo, #updateReview .updateReviewConfirmationNo{
 	background-color: red;
     opacity: 0.7;
     color: #fff;
@@ -13802,6 +13802,10 @@ word-break: break-word;
 max-width:80px;
 min-width:80px;
 }
+#updateReview .updateReviewConfirmation{
+max-width:80px;
+min-width:80px;
+}
 
 .cart.wrapper .right-block .block.top button.remove-coupon-button{
 min-width: 12px;
@@ -14854,8 +14858,16 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
    content:"\f0a2";
     font-size: 16px;
     color: #00cbe9;
-    line-height: 18px;
+    line-height: 50px;
+    height:50px;
     top: 2px;
     position: relative;
     font-weight: bold;
+}
+.review-list .close-info{
+	font-weight: 600;
+    font-size: 14px;
+    color: #31708f;
+    position: relative;
+    top: -1px;
 }

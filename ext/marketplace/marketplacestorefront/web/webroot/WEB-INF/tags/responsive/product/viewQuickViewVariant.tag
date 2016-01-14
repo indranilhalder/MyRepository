@@ -98,7 +98,7 @@
     <c:set var="noVariant" value="true" />
     </c:otherwise>
 	</c:choose>
-	<c:if test="${product.rootCategory!=clothing}">
+	<c:if test="${product.rootCategory=='Electronics'}">
 				<c:set var="notApparel" value="true" />
 				</c:if> 
 	</ul>
