@@ -28799,6 +28799,11 @@ height:30px;
 	border-left-color: #00cbe9;
 }
 
+.feature-categories.footwear h1{
+	font-size:24px;
+	padding: 40px 0;
+}
+
 @media ( max-width : 790px) {
 	.footwear_left {
 		width: 100%;
