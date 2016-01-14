@@ -160,13 +160,9 @@ function loadVariant(x){
 		</div>
 	</c:if>
 
-</div>
 
+<div class="size" style="font-size: 12px;">
 <c:if test="${noVariant!=true&&notApparel!=true}">
-	<a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}"> <spring:theme
-				code="product.variants.size.guide" />
-		</a>
 	<form:form action="/" id="sizevariantForm" method="post">
 		<input type="hidden" maxlength="10" size="1" id="sellersSkuListId"
 			name="sellersSkuListId" value="" />
@@ -265,5 +261,9 @@ function loadVariant(x){
 			
 		</div>
 	</form:form>
-	
+	<a class="size-guide" href="${sizeGuideUrl}" role="button"
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}"> <spring:theme
+				code="product.variants.size.guide" />
+		</a>
 </c:if>
+</div>

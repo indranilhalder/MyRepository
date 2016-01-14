@@ -3502,8 +3502,9 @@ $("#couponSubmitButton").click(function(){
 		 				//$("#couponFieldId").attr('disabled','disabled');
 		 				$('#couponFieldId').attr('readonly', true);
 		 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
-		 				setTimeout(function(){ $("#couponMessage").html(""); }, 2000);
-		 			}
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(2000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);		 			}
 	 			}
 	 		},
 	 		error : function(resp) {
@@ -3540,8 +3541,9 @@ $(".remove-coupon-button").click(function(){
  				$("#couponFieldId").val(selection);
  				//$("#couponFieldId").val("");
  				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
- 				setTimeout(function(){ $("#couponMessage").html(""); }, 2000);
- 			}
+ 				$('#couponMessage').show();
+ 				$('#couponMessage').delay(2000).fadeOut('slow');
+ 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
  		},
  		error : function(resp) {
  		}
