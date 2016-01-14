@@ -142,13 +142,14 @@
 					<p class="mobile">Edit the coupon code in your cart to receive
 						your discount.</p>
 					<ul class="coupon-container">
-						<c:forEach items="${closedVoucherDisplayList}"
+						<c:forEach items="${closedCouponList}"
 							var="closedVoucherDisplay" varStatus="vlstatus">
 							<li class="coupon-box starred">
+							
 								<h2>${closedVoucherDisplay.voucherDescription}</h2>
 								<div class="left">
 									<p>Coupon Code</p>
-									<p>${closedVoucherDisplay.voucherCode}</p>
+									${closedVoucherDisplay.voucherCode}
 								</div>
 								<div class="right">
 									<p>Expires on</p>
@@ -157,7 +158,7 @@
 							</li>
 						</c:forEach>
 
-						<c:forEach items="${openVoucherDisplayList}"
+						<%-- <c:forEach items="${openVoucherDisplayList}"
 							var="openVoucherDisplay" varStatus="vlstatus">
 							<li class="coupon-box">
 								<h2>${openVoucherDisplay.voucherDescription}</h2>
@@ -170,7 +171,7 @@
 									<p>${openVoucherDisplay.voucherExpiryDate}</p>
 								</div>
 							</li>
-						</c:forEach>
+						</c:forEach> --%>
 					</ul>
 					<div class="bottom">
 						<p>1-5 of 12 Transactions</p>
@@ -192,16 +193,14 @@
 				<div class="your-activity coupon-history">
 					<c:if test="${not empty couponOrderDataDTOList}">
 
-						<p>
-							You have used <span>${couponsRedeemedCount} <c:if
+						<p><spring:theme code="text.account.coupons.youhvused"/><span>${couponsRedeemedCount}&nbsp;<c:if
 									test="${couponsRedeemedCount < 2}">
-							 Coupon
+							 <spring:theme code="text.account.coupons.coupon1"/>
 							 </c:if> <c:if test="${couponsRedeemedCount > 1}">
-							 Coupons
+							 <spring:theme code="text.account.coupons.coupons"/>
 							 </c:if>
-							</span> so far and saved <span>Rs. ${totalSavedSum}</span> on your
-							purchase!
-						</p>
+							</span>&nbsp;<spring:theme code="text.account.coupons.sofarsaved"/><span>Rs. ${totalSavedSum}</span>
+							<spring:theme code="text.account.coupons.onpurchase"/></p>
 						<c:if test="${not empty commentsListSize}">
 							<c:forEach begin="1" end="${totalPages}" var="i">
 								<c:choose>
@@ -212,17 +211,18 @@
 							</c:forEach>
 							<div class="bottom">
 								<c:if test="${not empty commentsListSize}">
-									<p>${startIndex}-${endIndex} of ${commentsListSize}
-										Transactions</p>
+									<p>${startIndex}-${endIndex} of ${commentsListSize} 
+										&nbsp;<spring:theme code="text.account.coupons.transactions"/></p>
 								</c:if>
 								<div class="btn-placement bottom">
 									<c:if test="${totalPages ne 1 }">
 										<ul class="pagination">
 											<!-- Previous link addition -->
 											<c:if
-												test="${param.page != 1 and not empty param.page or param.page eq totalPages}">
-												<li class="prev"><a href="?page=${param.page - 1}"><spring:theme
-															code="Previous" /> <span class="lookbook-only"> Page</span></a></li>
+												test="${param.page != 1 and not empty param.page and not empty couponOrderDataDTOList}">
+												<li class="prev"><a href="#nogo"><spring:theme
+															code="text.account.coupons.prev"/> <span class="lookbook-only">
+															Page</span></a></li>
 											</c:if>
 											<c:forEach begin="1" end="${totalPages}" var="i">
 												<c:choose>
@@ -234,12 +234,18 @@
 													</c:otherwise>
 												</c:choose>
 											</c:forEach>
-
+											<c:choose>
+												<c:when test="${param.page eq null}">
+													<c:set var="page" value="1"></c:set>
+												</c:when>
+												<c:otherwise>
+													<c:set var="page" value="${param.page}"></c:set>
+												</c:otherwise>
+											</c:choose>
 											<!-- Next link addition -->
-											<c:if
-												test="${(totalPages gt param.page) and (param.page >= 1)}">
-												<li class="next"><a href="?page=${param.page + 1}"><spring:theme
-															code="myaccount.review.next" /> <span
+											<c:if test="${totalPages gt 1 and totalPages gt page}">
+												<li class="next"><a href="#nogo"><spring:theme
+															code="text.account.coupons.next" /> <span
 														class="lookbook-only"> Page</span></a></li>
 											</c:if>
 
@@ -251,10 +257,10 @@
 
 						<ul>
 							<li class="header">
-								<p class="coupon">Coupon</p>
-								<p class="description">Description</p>
-								<p class="order">Applied for Order</p>
-								<p class="date">Date</p>
+								<p class="coupon"><spring:theme code="text.account.coupons.coupon"/></p>
+								<p class="description"><spring:theme code="text.account.coupons.decription"/></p>
+								<p class="order"><spring:theme code="text.account.coupons.appliedorder"/></p>
+								<p class="date"><spring:theme code="text.account.coupons.date"/></p>
 							</li>
 							<c:forEach items="${couponOrderDataDTOList}"
 								var="couponHistoryDetailDTO">
@@ -281,16 +287,17 @@
 					<div class="bottom">
 						<c:if test="${not empty commentsListSize}">
 							<p>${startIndex}-${endIndex} of ${commentsListSize}
-								Transactions</p>
+								&nbsp;<spring:theme code="text.account.coupons.transactions"/></p>
 						</c:if>
 						<div class="btn-placement bottom">
 							<c:if test="${totalPages ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
 									<c:if
-										test="${param.page != 1 and not empty param.page or param.page eq totalPages}">
-										<li class="prev"><a href="?page=${param.page - 1}"><spring:theme
-													code="Previous" /> <span class="lookbook-only"> Page</span></a></li>
+										test="${param.page != 1 and not empty param.page and not empty couponOrderDataDTOList}">
+										<li class="prev"><a href="#nogo"><spring:theme
+													code="text.account.coupons.prev"/> <span class="lookbook-only">
+													Page</span></a></li>
 									</c:if>
 									<c:forEach begin="1" end="${totalPages}" var="i">
 										<c:choose>
@@ -302,11 +309,18 @@
 											</c:otherwise>
 										</c:choose>
 									</c:forEach>
-
+									<c:choose>
+										<c:when test="${param.page eq null}">
+											<c:set var="page" value="1"></c:set>
+										</c:when>
+										<c:otherwise>
+											<c:set var="page" value="${param.page}"></c:set>
+										</c:otherwise>
+									</c:choose>
 									<!-- Next link addition -->
-									<c:if test="${(totalPages gt param.page)}">
-										<li class="next"><a href="?page=${param.page + 1}"><spring:theme
-													code="myaccount.review.next" /> <span
+									<c:if test="${totalPages gt 1 and totalPages gt page}">
+										<li class="next"><a href="#nogo"><spring:theme
+													code="text.account.coupons.next" /> <span
 												class="lookbook-only"> Page</span></a></li>
 									</c:if>
 
@@ -317,10 +331,10 @@
 				</div>
 				<div class="couponHistoryLinkDiv">
 					<a href="#nogo" id="couponHistory" class="couponHistoryLink"> <spring:theme
-							code="text.account.coupon.usage.history"
+							code="text.account.coupons.usage.history"
 							text="Coupon transaction history" /></a> <a href="#nogo"
 						id="couponHistoryHide" class="couponHistoryLink"> <spring:theme
-							code="text.account.coupon.usage.history"
+							code="text.account.coupons.back.history"
 							text="Back to Coupon Details" /></a>
 				</div>
 
@@ -328,16 +342,16 @@
 				<!-- for showing  coupons history-end -->
 
 				<div class="customer-service steps">
-					<h2>How Coupons Work</h2>
+					<h2><spring:theme code="text.account.coupons.work"/></h2>
 					<ul>
 						<li class="step"><span>1</span>
-							<p>Ensure that you have items in your shopping bag</p></li>
+							<p><spring:theme code="text.account.coupons.work.step1"/></p></li>
 						<li class="step"><span>2</span>
-							<p>Select the Coupon you want to apply</p></li>
+							<p><spring:theme code="text.account.coupons.work.step2"/></p></li>
 						<li class="step"><span>3</span>
-							<p>Enter the Coupon Code in your bag</p></li>
+							<p><spring:theme code="text.account.coupons.work.step3"/></p></li>
 						<li class="step"><span>4</span>
-							<p>Your bag will reflect the discount earned</p></li>
+							<p><spring:theme code="text.account.coupons.work.step4"/></p></li>
 					</ul>
 				</div>
 			</div>
@@ -358,4 +372,30 @@
 			$("#couponHistory").show();
 		});
 	});
+
+	$(".next a").click(function(){
+		var pageNo = $(this).closest(".pagination").find("li.active a").text();
+		if(pageNo != ""){
+			pageNo = parseInt(pageNo);
+		}else{
+			pageNo = 1;
+		}
+		pageNo = pageNo+1;
+		var totalPages = ${totalPages};
+		if(totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?page="+pageNo;
+			}
+	});
+
+	$(".prev a").click(function(){
+		var pageNo = $(this).closest(".pagination").find("li.active a").text();
+		pageNo = parseInt(pageNo);
+		pageNo = pageNo-1;
+		var totalPages = ${totalPages};
+		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?page="+pageNo;
+			}
+	});	
 </script>

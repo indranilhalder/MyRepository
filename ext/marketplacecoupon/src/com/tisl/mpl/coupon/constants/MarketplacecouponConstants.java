@@ -34,6 +34,8 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 			.intern();
 	public static final String CUSTOMER_LIST_FILE_NAME = "customerList".intern();
 
+	public static final String CLOSED_VOUCHER = "select {v.pk},{dr.pk} from {voucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} ORDER BY {dr.startdate} ASC";
+
 
 	private MarketplacecouponConstants()
 	{
