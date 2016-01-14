@@ -278,7 +278,7 @@ public class MarketPlaceDefaultCancellationController extends
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
 								orderEntry.setCurrDelCharge(0D);
 								getModelService().save(orderEntry);
-								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,totalprice + deliveryCost, ConsignmentStatus.REFUND_INITIATED);
+								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,totalprice + deliveryCost, ConsignmentStatus.REFUND_IN_PROGRESS);
 								
 							}
 						}
