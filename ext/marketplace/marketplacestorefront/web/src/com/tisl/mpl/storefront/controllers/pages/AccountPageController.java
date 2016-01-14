@@ -6206,7 +6206,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
 					.getReviewsByUID(customerModel.getUid());
-			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
+			commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
 
 			/* pagination logic */
 
