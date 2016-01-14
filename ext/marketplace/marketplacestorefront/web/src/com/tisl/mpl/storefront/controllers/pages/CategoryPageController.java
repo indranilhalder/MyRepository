@@ -16,11 +16,9 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
-import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.cms2.model.pages.CategoryPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
@@ -142,10 +140,16 @@ public class CategoryPageController extends AbstractCategoryPageController
 			final String categoryName = category.getName();
 			model.addAttribute("dropDownText", categoryName);
 		}
-
+		int count = getSearchPageSize();
 		//Check if there is a landing page for the category
 		try
 		{
+			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+			if (preferencesData != null && preferencesData.getPageSize() != null)
+			{
+				count = preferencesData.getPageSize().intValue();
+			}
+
 			if (categoryService.getCategoryForCode(categoryCode) != null)
 			{
 
@@ -157,12 +161,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 					return redirection;
 				}
 
-				final CategoryPageModel categoryPage = getCategoryPage(category);
-				final CategorySearchEvaluator categorySearch = new CategorySearchEvaluator(categoryCode,
-						XSSFilterUtil.filter(searchQuery), page, showMode, sortCode, categoryPage);
-				categorySearch.doSearch();
-				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
-						.getSearchPageData();
+				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+						categoryCode, searchQuery, page, showMode, sortCode, count);
 
 				final List<ProductData> normalProductDatas = searchPageData.getResults();
 				//Set department hierarchy
@@ -193,7 +193,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 			try
 			{
 				final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
-				int count = getSearchPageSize();
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
 					count = preferencesData.getPageSize().intValue();
