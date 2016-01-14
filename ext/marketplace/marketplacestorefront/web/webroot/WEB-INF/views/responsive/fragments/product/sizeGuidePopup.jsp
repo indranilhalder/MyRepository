@@ -33,26 +33,33 @@
 										<c:if test="${sizeIndex.index eq 0}">
 											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 										</c:if>
-										
-									
 									</c:forEach>
 								</c:forEach>
-								<%-- <c:choose> --%>
-								<%-- <c:when test="${product.rootCategory=='Clothing'}"> --%>
+								
 								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
 								<li>${sizeGuide}</li>
+								<c:if test="${sizeGuide=='Age'}">
+								<c:set var="age" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='IND/UK'}">
+								<c:set var="uk" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='EURO'}">
+								<c:set var="euro" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='Width(cm)'}">
+								<c:set var="width" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='FootLength(cm)'}">
+								<c:set var="footlength" value="Y"/>
+								</c:if>
+								<c:if test="${sizeGuide=='US'}">
+								<c:set var="us" value="Y"/>
+								</c:if>
 								</c:forEach>
-							   <%-- </c:when> --%>
-							   <%-- <c:when test="${product.rootCategory=='Footwear'}">
-								<li>IND / UK</li> 
-								<li>US</li> 
-								<li>EURO</li> 
-								<li>FOOT LENGTH(cm)</li> 
-								<li>WIDTH</li> 
-							   </c:when>	
-								</c:choose> --%>
 							</ul>
 						</li>
+					
 						<c:choose>
 					    <c:when test="${product.rootCategory=='Clothing'}">
 						<c:forEach items="${sizeguideData}" var="sizeGuide" >
@@ -84,21 +91,66 @@
 							
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
 									<ul>
-									    <c:if test="${not empty sizeGuideValue.dimensionSize}">
+									<c:if test="${age=='Y' }">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.age}">
+										<li>${sizeGuideValue.age}</li>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${uk=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.dimensionSize}">
 										<li>${sizeGuideValue.dimensionSize}</li>
-										</c:if>
-										 <c:if test="${not empty sizeGuideValue.euroSize}">
-									    <li>${sizeGuideValue.euroSize}</li>
-									    </c:if>
-									    <c:if test="${not empty sizeGuideValue.usSize}">
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${us=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.usSize}">
 										<li>${sizeGuideValue.usSize}</li>
-										</c:if>
-										 <c:if test="${not empty sizeGuideValue.dimension}">
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>
+									<c:if test="${euro=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.euroSize}">
+										<li>${sizeGuideValue.euroSize}</li>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>	
+									 <c:if test="${footlength=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.dimension}">
 										<li>${sizeGuideValue.dimension}</li>
-										</c:if>
-									    <c:if test="${not empty sizeGuideValue.dimensionValue}">
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>	
+									 <c:if test="${width=='Y'}">
+									<c:choose>
+									     <c:when test="${not empty sizeGuideValue.dimensionValue}">
 										<li>${sizeGuideValue.dimensionValue}</li>
-										</c:if>
+										</c:when>
+										<c:otherwise>
+										<li></li>
+									</c:otherwise>
+									</c:choose>	
+									</c:if>	
 									</ul>	
 									</c:forEach>
 							</li>
@@ -241,7 +293,6 @@
 						</c:when>
 						<c:otherwise>
 							<c:forEach var="entry" items="${variantOption.sizeLink}">${variantOption.sizeLink}
-							
 								
 								<c:if test="${entry.key eq product.url}">
 									<c:set var="currentColor" value="${color}" />
@@ -325,6 +376,9 @@
 		<span id="addToCartSizeGuideTitlebagfull" style="display: none"><p class="inventory">
 			<spring:theme code="product.bag"/>
 		</p></span>
+		<span id="pinNotServicableSizeGuide" style="display: none">
+			<font color="#ff1c47">We're sorry. We don't service this pin code currently. Would you like to try entering another pin code that also works for you?</font>
+		</span>
 		<span id="addToCartSizeGuideTitleoutOfStockId" style="display: none"><p class="inventory">
 			<%-- <spring:theme code="product.product.outOfStock" /> --%>
 			<font color="#ff1c47">Product is out of stock for the selected size</font>

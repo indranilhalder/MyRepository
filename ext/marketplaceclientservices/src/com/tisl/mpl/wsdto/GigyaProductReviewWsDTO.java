@@ -5,6 +5,7 @@ package com.tisl.mpl.wsdto;
 
 import de.hybris.platform.commercefacades.product.data.ProductData;
 
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -12,7 +13,7 @@ import java.util.Date;
  * @author TCS
  *
  */
-public class GigyaProductReviewWsDTO
+public class GigyaProductReviewWsDTO implements Comparator<GigyaProductReviewWsDTO>
 {
 	private String commentId;
 	private String commentTitle;
@@ -230,5 +231,23 @@ public class GigyaProductReviewWsDTO
 	public void setReviewDate(final String reviewDate)
 	{
 		this.reviewDate = reviewDate;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public int compare(final GigyaProductReviewWsDTO arg0, final GigyaProductReviewWsDTO arg1)
+	{
+		if (arg0.getProductData().getCode().equals(arg1.getProductData().getCode()))
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 }
