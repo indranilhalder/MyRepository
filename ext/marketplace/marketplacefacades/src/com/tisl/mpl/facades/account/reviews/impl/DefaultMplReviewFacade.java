@@ -41,9 +41,9 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 
 	/*
 	 * @Desc fetching ProductData from DTOlist
-	 * 
+	 *
 	 * @param commentsWithProductData
-	 * 
+	 *
 	 * @return GigyaProductReviewWsDTO
 	 */
 	@Override
@@ -84,9 +84,9 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 
 	/*
 	 * @Desc checking product price present in order or Review comments
-	 * 
+	 *
 	 * @param commentsWithProductData,orderModels
-	 * 
+	 *
 	 * @return GigyaProductReviewWsDTO
 	 */
 	@Override
@@ -95,6 +95,7 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 	{
 
 		final List<GigyaProductReviewWsDTO> orderedProductDtoList = new ArrayList<GigyaProductReviewWsDTO>();
+		List<GigyaProductReviewWsDTO> reviewedProductPriceWsDTOList = new ArrayList<GigyaProductReviewWsDTO>();
 		PriceData price = null;
 		String productCode = "";
 		String listingId = "";
@@ -140,9 +141,10 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 				}
 			}
 			commentsWithProductData.removeAll(orderedProductDtoList);
-			if (!CollectionUtils.isEmpty(getReviewedProductPrice(commentsWithProductData)))
+			reviewedProductPriceWsDTOList = getReviewedProductPrice(commentsWithProductData);
+			if (!CollectionUtils.isEmpty(reviewedProductPriceWsDTOList))
 			{
-				orderedProductDtoList.addAll(getReviewedProductPrice(commentsWithProductData));
+				orderedProductDtoList.addAll(reviewedProductPriceWsDTOList);
 			}
 			return orderedProductDtoList;
 		}
