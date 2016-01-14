@@ -142,13 +142,14 @@
 					<p class="mobile">Edit the coupon code in your cart to receive
 						your discount.</p>
 					<ul class="coupon-container">
-						<c:forEach items="${closedVoucherDisplayList}"
+						<c:forEach items="${closedCouponList}"
 							var="closedVoucherDisplay" varStatus="vlstatus">
 							<li class="coupon-box starred">
+							
 								<h2>${closedVoucherDisplay.voucherDescription}</h2>
 								<div class="left">
 									<p>Coupon Code</p>
-									<p>${closedVoucherDisplay.voucherCode}</p>
+									${closedVoucherDisplay.voucherCode}
 								</div>
 								<div class="right">
 									<p>Expires on</p>
@@ -157,7 +158,7 @@
 							</li>
 						</c:forEach>
 
-						<c:forEach items="${openVoucherDisplayList}"
+						<%-- <c:forEach items="${openVoucherDisplayList}"
 							var="openVoucherDisplay" varStatus="vlstatus">
 							<li class="coupon-box">
 								<h2>${openVoucherDisplay.voucherDescription}</h2>
@@ -170,7 +171,7 @@
 									<p>${openVoucherDisplay.voucherExpiryDate}</p>
 								</div>
 							</li>
-						</c:forEach>
+						</c:forEach> --%>
 					</ul>
 					<div class="bottom">
 						<p>1-5 of 12 Transactions</p>
