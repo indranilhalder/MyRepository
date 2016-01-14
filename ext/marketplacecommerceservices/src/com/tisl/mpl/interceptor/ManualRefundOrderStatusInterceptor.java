@@ -76,10 +76,14 @@ public class ManualRefundOrderStatusInterceptor implements LoadInterceptor, Prep
 						.getItemModelContext((ConsignmentModel) object);
 
 				//SONAR Fix
-				if (arg1.isModified(type, type.STATUS)
-						&& imp.getValueHistory().isValueLoaded(type.STATUS)
+				if (arg1.isModified(type, type.STATUS) && imp.getValueHistory().isValueLoaded(type.STATUS)
 						&& imp.getValueHistory().getOriginalValue(type.STATUS) != null
-						&& imp.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.REFUND_IN_PROGRESS)
+						//&& imp.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.REFUND_IN_PROGRESS)
+						// TISPRO-94 Code fixes start
+						&& (imp.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.REFUND_IN_PROGRESS)
+								|| imp.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.CANCELLATION_INITIATED) || imp
+								.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.REFUND_INITIATED))
+						// TISPRO-94 Code fixes end
 						&& (consignmentStatusObject.equals(ConsignmentStatus.RETURN_COMPLETED)
 								|| consignmentStatusObject.equals(ConsignmentStatus.CANCELLED) || consignmentStatusObject
 									.equals(ConsignmentStatus.ORDER_CANCELLED)))
