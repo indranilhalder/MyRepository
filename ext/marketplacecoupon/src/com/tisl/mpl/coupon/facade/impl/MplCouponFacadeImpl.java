@@ -478,10 +478,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws JaloSecurityException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
+	 * @throws JaloPriceFactoryException
 	 */
 	protected void checkCartAfterApply(final VoucherModel lastVoucher, final CartModel cartModel) throws ModelSavingException,
 			VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
-			JaloSecurityException
+			JaloSecurityException, JaloPriceFactoryException
 	{
 		LOG.debug("Step 7:::Inside checking cart after applying voucher");
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
@@ -527,7 +528,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			LOG.debug("Step 12:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0 block");
 			releaseVoucher(voucherCode, cartModel);
-			mplDefaultCalculationService.calculateTotals(cartModel, false);
+			recalculateCartForCoupon(cartModel);
+			//mplDefaultCalculationService.calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
 			//Throw exception with specific information
 			throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
@@ -570,7 +572,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					LOG.debug("Step 15:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 					releaseVoucher(voucherCode, cartModel);
-					mplDefaultCalculationService.calculateTotals(cartModel, false);
+					recalculateCartForCoupon(cartModel);
+					//mplDefaultCalculationService.calculateTotals(cartModel, false);
 					getModelService().save(cartModel);
 					//Throw exception with specific information
 					throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");

@@ -13,7 +13,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
+<c:if test="${empty notificationMessagelist}">
+	
+		<li><spring:theme
+				code="default.notification.message.trackOrder" /></li>
+				
+</c:if>
 <c:if test="${isSignedInUser eq 'yes' }">
+	
 <script type="text/javascript">
 	//  function countread(count)
 	//  {		
@@ -76,10 +83,7 @@
 </script>
 
 
-	<c:if test="${empty notificationMessagelist}">
-		<li class="trackOrder_message"><spring:theme
-				code="default.notification.message.trackOrder" /></li>
-	</c:if>
+	
 
 	<c:forEach items="${notificationMessagelist}" var="notifylist">
 		<c:choose>
