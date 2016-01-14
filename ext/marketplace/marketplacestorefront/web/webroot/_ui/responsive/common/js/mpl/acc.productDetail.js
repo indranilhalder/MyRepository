@@ -1511,7 +1511,6 @@ function buyboxDetailsForSizeGuide(productCode){
 			data : dataString,
 			dataType : "json",
 			success : function(data) {
-				
 				var sellerName = data['sellerName'];
 				var sellerID = data['sellerId'];
 				var mopPrice = data['price'];
@@ -1519,8 +1518,6 @@ function buyboxDetailsForSizeGuide(productCode){
 				var specialPrice = data['specialPrice'];
 				var availableStock = data['availablestock'];
 				var ussid = data['sellerArticleSKU'];
-				
-				//alert("buybox stock: "+availableStock);
 				if (specialPrice != null){
 					$("#specialSelPrice").html(specialPrice);
 				}
