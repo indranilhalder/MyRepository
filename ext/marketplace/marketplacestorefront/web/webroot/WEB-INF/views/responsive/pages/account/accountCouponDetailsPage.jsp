@@ -192,13 +192,13 @@
 				<div class="your-activity coupon-history">
 					<c:if test="${not empty couponOrderDataDTOList}">
 
-						<p><spring:theme code="text.account.coupons.youhvused"/><span>${couponsRedeemedCount} <c:if
+						<p><spring:theme code="text.account.coupons.youhvused"/><span>${couponsRedeemedCount}&nbsp;<c:if
 									test="${couponsRedeemedCount < 2}">
-							 <spring:theme code="text.account.coupons.coupon"/>
+							 <spring:theme code="text.account.coupons.coupon1"/>
 							 </c:if> <c:if test="${couponsRedeemedCount > 1}">
 							 <spring:theme code="text.account.coupons.coupons"/>
 							 </c:if>
-							</span><spring:theme code="text.account.coupons.sofarsaved"/><span>Rs. ${totalSavedSum}</span>
+							</span>&nbsp;<spring:theme code="text.account.coupons.sofarsaved"/><span>Rs. ${totalSavedSum}</span>
 							<spring:theme code="text.account.coupons.onpurchase"/></p>
 						<c:if test="${not empty commentsListSize}">
 							<c:forEach begin="1" end="${totalPages}" var="i">
@@ -210,8 +210,8 @@
 							</c:forEach>
 							<div class="bottom">
 								<c:if test="${not empty commentsListSize}">
-									<p>${startIndex}-${endIndex} of ${commentsListSize}
-										<spring:theme code="text.account.coupons.transactions"/></p>
+									<p>${startIndex}-${endIndex} of ${commentsListSize} 
+										&nbsp;<spring:theme code="text.account.coupons.transactions"/></p>
 								</c:if>
 								<div class="btn-placement bottom">
 									<c:if test="${totalPages ne 1 }">
@@ -286,7 +286,7 @@
 					<div class="bottom">
 						<c:if test="${not empty commentsListSize}">
 							<p>${startIndex}-${endIndex} of ${commentsListSize}
-								<spring:theme code="text.account.coupons.transactions"/></p>
+								&nbsp;<spring:theme code="text.account.coupons.transactions"/></p>
 						</c:if>
 						<div class="btn-placement bottom">
 							<c:if test="${totalPages ne 1 }">
