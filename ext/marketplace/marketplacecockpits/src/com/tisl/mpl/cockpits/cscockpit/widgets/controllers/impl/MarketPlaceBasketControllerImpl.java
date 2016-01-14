@@ -740,6 +740,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 
 		}
+		
+		if (voucher.getValue().doubleValue() <= 0)
+		{
+			LOG.error("Invalid Voucher : " + voucherCode);
+			return "invalid_voucher_code";
+		}
+		
 		if (!checkVoucherCanBeRedeemed(voucher, voucherCode))
 		{
 			
@@ -766,6 +773,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					LOG.error("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
 					return "prices_exceeded";
 				}
+				
+				mplCouponFacade.setApportionedValueForVoucher(voucher, cartModel, voucherCode);
 				
 				return StringUtils.EMPTY;
 			}

@@ -361,13 +361,6 @@ public class ProductPageController extends AbstractPageController
 			final Map<String, List<SizeGuideData>> sizeguideList = sizeGuideFacade.getProductSizeguide(productCode,
 					productData.getRootCategory());
 			final List<String> headerMap = getHeaderdata(sizeguideList, productData.getRootCategory());
-
-			final List<SizeGuideData> sizeGuideDataList = new ArrayList<SizeGuideData>();
-			for (final String key : sizeguideList.keySet())
-			{
-				sizeGuideDataList.add(sizeguideList.get(key).get(0));
-			}
-			Collections.sort(sizeGuideDataList, sizeGuideComparator);
 			LOG.info("***************headerMap" + headerMap);
 			if (null != productData.getBrand())
 			{
