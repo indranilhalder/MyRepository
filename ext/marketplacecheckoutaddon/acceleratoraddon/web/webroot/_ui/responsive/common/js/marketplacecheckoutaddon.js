@@ -3465,7 +3465,7 @@ $("#couponSubmitButton").click(function(){
 	 		success : function(response) {
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			if(response.redeemErrorMsg!=null){
-	 				if(response.redeemErrorMsg=="Price exceeded")
+	 				if(response.redeemErrorMsg=="Price_exceeded")
 	 				{
 	 					$("#priceCouponError").css("display","block");
 	 				}
@@ -3480,6 +3480,14 @@ $("#couponSubmitButton").click(function(){
 	 				else if(response.redeemErrorMsg=="Issue")
 	 				{
 	 					$("#issueCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Not_Applicable")
+	 				{
+	 					$("#notApplicableCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Not_Reservable")
+	 				{
+	 					$("#notReservableCouponError").css("display","block");
 	 				}
 	 				//$("#couponError").css("display","block");	
 	 				//document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
@@ -3507,7 +3515,7 @@ $("#couponSubmitButton").click(function(){
 
 $("#couponFieldId").focus(function(){
 	//$("#couponError").css("display","none");	
-	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError").css("display","none");
+	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError, #notApplicableCouponError, #notReservableCouponError").css("display","none");
 });
 
 
