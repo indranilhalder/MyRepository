@@ -366,6 +366,7 @@ public class ProductPageController extends AbstractPageController
 			{
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
 			}
+			//if(productBreadcrumbBuilder.getBreadcrumbs(productModel).>0)
 			model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
 					new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
 
@@ -492,7 +493,7 @@ public class ProductPageController extends AbstractPageController
 					}
 					if (data.getDimension() != null)
 					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlenth"), "Y");
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlength"), "Y");
 					}
 					if (data.getDimensionSize() != null)
 					{

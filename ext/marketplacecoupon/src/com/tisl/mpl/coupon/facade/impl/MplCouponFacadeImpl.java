@@ -34,6 +34,7 @@ import de.hybris.platform.voucher.jalo.util.VoucherEntry;
 import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -318,7 +319,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			for (final VoucherModel voucherModel : voucherList)
 			{
 				if (voucherModel instanceof PromotionVoucherModel
-						&& checkVoucherCanBeRedeemed(voucherModel, ((PromotionVoucherModel) voucherModel).getVoucherCode()))
+						&& checkVoucherCanBeRedeemed(voucherModel, ((PromotionVoucherModel) voucherModel).getVoucherCode(), cart))
 				{
 					voucherDataList = calculateVoucherDisplay(voucherModel, voucherDataList, cart);
 				}
@@ -336,7 +337,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 		return voucherDataList;
 	}
-
 
 
 	/**
@@ -418,9 +418,24 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				throw new VoucherOperationException("Voucher not found: " + voucherCode);
 			}
 			LOG.debug("Step 3:::Voucher value is not negative");
-			if (!checkVoucherCanBeRedeemed(voucher, voucherCode))
+			if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel))
 			{
-				throw new VoucherOperationException("Voucher cannot be redeemed: " + voucherCode);
+				LOG.debug("Step 3.1:::Voucher is not applicable");
+				final boolean dateFlag = checkViolatedRestrictions(voucher, cartModel);
+				if (dateFlag)
+				{
+					throw new VoucherOperationException("Voucher cannot be redeemed: " + voucherCode);
+				}
+				else
+				{
+					throw new VoucherOperationException("Voucher is not applicable: " + voucherCode);
+				}
+			}
+
+			else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel))
+			{
+				LOG.debug("Step 3.2:::Voucher is not reservable");
+				throw new VoucherOperationException("Voucher is not reservable: " + voucherCode);
 			}
 
 			else
@@ -512,10 +527,60 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param voucherCode
 	 * @return boolean
 	 */
-	protected boolean checkVoucherCanBeRedeemed(final VoucherModel voucher, final String voucherCode)
+	protected boolean checkVoucherCanBeRedeemed(final VoucherModel voucher, final String voucherCode, final CartModel cartModel)
 	{
-		return getVoucherModelService().isApplicable(voucher, getCartService().getSessionCart())
-				&& getVoucherModelService().isReservable(voucher, voucherCode, getCartService().getSessionCart());
+		return getVoucherModelService().isApplicable(voucher, cartModel)
+				&& getVoucherModelService().isReservable(voucher, voucherCode, cartModel);
+	}
+
+
+	/**
+	 *
+	 * @param voucher
+	 * @param voucherCode
+	 * @param cartModel
+	 * @return boolean
+	 */
+	protected boolean checkVoucherIsApplicable(final VoucherModel voucher, final String voucherCode, final CartModel cartModel)
+	{
+		return getVoucherModelService().isApplicable(voucher, cartModel);
+	}
+
+
+	/**
+	 *
+	 * @param voucher
+	 * @param voucherCode
+	 * @param cartModel
+	 * @return boolean
+	 */
+	protected boolean checkVoucherIsReservable(final VoucherModel voucher, final String voucherCode, final CartModel cartModel)
+	{
+		return getVoucherModelService().isReservable(voucher, voucherCode, cartModel);
+	}
+
+
+
+	/**
+	 *
+	 * @param voucher
+	 * @param cartModel
+	 * @return boolean
+	 */
+	protected boolean checkViolatedRestrictions(final VoucherModel voucher, final CartModel cartModel)
+	{
+		final List<RestrictionModel> getViolatedRestrictions = getVoucherModelService().getViolatedRestrictions(voucher, cartModel);
+		boolean dateFlag = false;
+		for (final RestrictionModel restriction : getViolatedRestrictions)
+		{
+			if (restriction instanceof DateRestrictionModel)
+			{
+				LOG.debug("Date restriction is violated");
+				dateFlag = true;
+				break;
+			}
+		}
+		return dateFlag;
 	}
 
 
@@ -715,33 +780,33 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * closedVoucherDataList = new ArrayList<VoucherDisplayData>(); final AllVoucherListData allVoucherListData = new
 	 * AllVoucherListData(); for (final VoucherModel voucherModel : voucherList) { if (voucherModel instanceof
 	 * PromotionVoucherModel) {
-	 * 
+	 *
 	 * final PromotionVoucherModel VoucherObj = (PromotionVoucherModel) voucherModel;
-	 * 
+	 *
 	 * final Set<RestrictionModel> restrictionList = voucherModel.getRestrictions(); if
 	 * (CollectionUtils.isNotEmpty(restrictionList)) { boolean dateRestrExists = false; boolean userRestrExists = false;
 	 * final boolean semiClosedRestrExists = false;
-	 * 
+	 *
 	 * DateRestrictionModel dateRestrObj = null; UserRestrictionModel userRestrObj = null; //SemiClosedRestrictionModel
 	 * semiClosedRestrObj = null;
-	 * 
-	 * 
+	 *
+	 *
 	 * for (final RestrictionModel restrictionModel : restrictionList) {
-	 * 
+	 *
 	 * //final VoucherDisplayData voucherDisplayData = new VoucherDisplayData(); if (restrictionModel instanceof
 	 * DateRestrictionModel) { dateRestrExists = true; dateRestrObj = (DateRestrictionModel) restrictionModel; } if
 	 * (restrictionModel instanceof UserRestrictionModel) { userRestrExists = true; userRestrObj = (UserRestrictionModel)
 	 * restrictionModel; } //TODO: Semi Closed Restriction-----Commented as functionality out of scope of R2.1 Uncomment
 	 * when in scope // if (restrictionModel instanceof SemiClosedRestrictionModel) // { // semiClosedRestrExists = true;
 	 * // //semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel; // }
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * // if (restrictionModel instanceof SemiClosedRestrictionModel) // { // semiClosedRestrExists = false; //
 	 * semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel; // } }
-	 * 
+	 *
 	 * if (dateRestrExists) { final String voucherCode = VoucherObj.getVoucherCode();
-	 * 
+	 *
 	 * if (dateRestrExists && voucherModelService.isReservable(voucherModel, voucherCode, customer)) { final
 	 * VoucherDisplayData voucherDisplayData = new VoucherDisplayData(); if (userRestrExists) { // final
 	 * Collection<PrincipalModel> userList = userRestrObj != null ? userRestrObj.getUsers() // : new
