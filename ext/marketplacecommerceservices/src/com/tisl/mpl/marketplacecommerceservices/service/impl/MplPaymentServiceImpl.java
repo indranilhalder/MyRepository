@@ -35,6 +35,7 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.DiscountValue;
@@ -131,6 +132,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private MplPaymentTransactionService mplPaymentTransactionService;
 	@Autowired
 	private PersistentKeyGenerator codCodeGenerator;
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
 
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
@@ -308,68 +311,71 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_STAT_RESP + orderStatusResponse);
 
 			//Logic if the order status response is not null
-			if (null != orderStatusResponse.getCardResponse())
+			//if (null != orderStatusResponse.getCardResponse())
+			//{
+			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
 			{
-				for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+				if (null != orderStatusResponse.getCardResponse()
+						&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(entry.getKey()))
 				{
-					if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(entry.getKey()))
+					try
 					{
-						try
-						{
-							//saving the cartmodel for Debit Card
-							getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
-							break;
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-							throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-						}
+						//saving the cartmodel for Debit Card
+						getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
+						break;
 					}
-					else if (MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(entry.getKey()))
+					catch (final ModelSavingException e)
 					{
-						try
-						{
-							//saving the cartmodel for Credit Card
-							getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
-							break;
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-							throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-						}
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
 					}
-					else if (MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(entry.getKey()))
+				}
+				else if (null != orderStatusResponse.getCardResponse()
+						&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(entry.getKey()))
+				{
+					try
 					{
-						try
-						{
-							//saving the cartmodel for EMI
-							getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
-							break;
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-							throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-						}
+						//saving the cartmodel for Credit Card
+						getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
+						break;
 					}
-					else if (MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey()))
+					catch (final ModelSavingException e)
 					{
-						try
-						{
-							//saving the cartmodel for Netbanking
-							getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
-							break;
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-							throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-						}
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
+					}
+				}
+				else if (null != orderStatusResponse.getCardResponse()
+						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(entry.getKey()))
+				{
+					try
+					{
+						//saving the cartmodel for EMI
+						getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
+						break;
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
+					}
+				}
+				else if (MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
+				{
+					try
+					{
+						//saving the cartmodel for Netbanking
+						getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
+						break;
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
 					}
 				}
 			}
+			//}
 		}
 	}
 
@@ -660,7 +666,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				debitCardPaymentInfoModel.setType(CreditCardType.MAESTRO);
 			}
-			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand()))
+			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand())
+					|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS.equalsIgnoreCase(orderStatusResponse.getCardResponse()
+							.getCardBrand()))
 			{
 				debitCardPaymentInfoModel.setType(CreditCardType.AMEX);
 			}
@@ -825,7 +833,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				creditCardPaymentInfoModel.setType(CreditCardType.MAESTRO);
 			}
 			else if (MarketplacecommerceservicesConstants.AMEX
-					.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand()))
+					.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand())
+					|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS.equalsIgnoreCase(orderStatusResponse.getCardResponse()
+							.getCardBrand()))
 			{
 				creditCardPaymentInfoModel.setType(CreditCardType.AMEX);
 			}
@@ -1011,7 +1021,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				emiPaymentInfoModel.setType(CreditCardType.MAESTRO);
 			}
-			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
+			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardResponse().getCardBrand())
+					|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS.equalsIgnoreCase(response.getCardResponse()
+							.getCardBrand()))
 			{
 				emiPaymentInfoModel.setType(CreditCardType.AMEX);
 			}
@@ -1088,40 +1100,52 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	private CartModel setValueInNetbankingPaymentInfo(final CartModel cart, final GetOrderStatusResponse response)
 	{
-		//creating NetbankingPaymentInfoModel
-		final NetbankingPaymentInfoModel nbPaymentInfoModel = getModelService().create(NetbankingPaymentInfoModel.class);
-
-		if (StringUtils.isNotEmpty(response.getCardResponse().getCardReference()))
-		{
-			nbPaymentInfoModel.setCode(response.getCardResponse().getCardReference());//TODO::What exactly will Juspay send in response for NB?
-		}
-		else
-		{
-			nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getCode());
-		}
-		nbPaymentInfoModel.setUser(getUserService().getCurrentUser());
-		if (StringUtils.isNotEmpty(response.getCardResponse().getNameOnCard()))
-		{
-			nbPaymentInfoModel.setBankOwner(response.getCardResponse().getNameOnCard());
-		}
-		else
-		{
-			nbPaymentInfoModel.setBankOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);
-		}
-
 		try
 		{
-			//saving the creditCardPaymentInfoModel
+			//creating NetbankingPaymentInfoModel
+			final NetbankingPaymentInfoModel nbPaymentInfoModel = getModelService().create(NetbankingPaymentInfoModel.class);
+
+			if (StringUtils.isNotEmpty(cart.getGuid()))
+			{
+				nbPaymentInfoModel.setCode("NB_" + cart.getGuid());//TODO::Setting like this until it is finalized
+			}
+			else
+			{
+				nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getGuid());
+			}
+
+			if (null != getUserService().getCurrentUser())
+			{
+				nbPaymentInfoModel.setUser(getUserService().getCurrentUser());
+				if (StringUtils.isNotEmpty(getUserService().getCurrentUser().getName()))
+				{
+					nbPaymentInfoModel.setBankOwner(getUserService().getCurrentUser().getName());
+				}
+				else
+				{
+					nbPaymentInfoModel.setBankOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);
+				}
+			}
+
+			if (StringUtils.isNotEmpty(response.getUdf1()))
+			{
+				BankforNetbankingModel nbBankModel = getModelService().create(BankforNetbankingModel.class);
+				nbBankModel.setNbCode(response.getUdf1());
+				nbBankModel = getFlexibleSearchService().getModelByExample(nbBankModel);
+				nbPaymentInfoModel.setBank(nbBankModel);
+			}
+
+			//saving the nbPaymentInfoModel
 			getModelService().save(nbPaymentInfoModel);
+
+			//setting paymentinfo in cart
+			cart.setPaymentInfo(nbPaymentInfoModel);
+			cart.setPaymentAddress(cart.getDeliveryAddress());
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Exception while saving emi payment info with " + e);
+			LOG.error("Exception while saving netbanking payment info with " + e);
 		}
-		//setting paymentinfo in cart
-		cart.setPaymentInfo(nbPaymentInfoModel);
-		cart.setPaymentAddress(cart.getDeliveryAddress());
-
 		//returning the cart
 		return cart;
 	}
@@ -1871,6 +1895,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final ArrayList<JuspayEBSResponseModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseModel>();
 			final JuspayEBSResponseModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseModel.class);
 			final String ebsDowntime = getConfigurationService().getConfiguration().getString("payment.ebs.downtime");
+			final Map<String, Double> paymentMode = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.PAYMENTMODE);
 
 			if (null != auditModel)
 			{
@@ -1990,6 +2016,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					flag = true;
 				}
 				//Condition when RiskResponse is NOT available in OrderStatusResponse
+				//For NetBanking , we will not get any RISK structure
 				else
 				{
 					if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
@@ -2002,7 +2029,27 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						}
 						else
 						{
-							auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+
+							boolean netBanking = false;
+							for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+							{
+								//if (entry.getKey() != null
+								//		&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey()))
+								if (entry.getKey() != null
+										&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
+								{
+									auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+									auditModel.setIsExpired(Boolean.TRUE);
+									netBanking = true;
+									break;
+								}
+							}
+							// For credit card/debit card and emi , if risk block is not available
+							if (!netBanking)
+							{
+								auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+								juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
+							}
 						}
 					}
 					else
@@ -2714,6 +2761,26 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.codCodeGenerator = codCodeGenerator;
 	}
+
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
 
 
 

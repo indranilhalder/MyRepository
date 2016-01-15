@@ -366,8 +366,6 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationRiskEmailTemplate'];validComponentTypes(code)
 ;OrderConfirmSiteLogo;;;logo
-;TopContent;;$wideContent;
-;BottomContent;;$wideContent;
 ;OrderRefOne;;$wideContent;
 ;OrderRefTwo;;$wideContent;
 ;OrderDelivery;;$wideContent;
@@ -377,7 +375,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TrackOrderTwo;;$wideContent;
 ;OrderConfirmBannerTwo;;$wideContent;
 ;OrderConfirmsmileyimg;;$wideContent;
-;OrderConfirmPwdfb;;$wideContent;
+;OrderConfirmfb;;$wideContent;
 ;OrderConfirmgplus;;$wideContent;
 
 
@@ -580,6 +578,20 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;EmailInvoiceGplusSlot;Default Send Invoice Gplus Slot;true
 
 
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailConfirmOrderSiteLogoSlot;Default Site Logo Slot;true
+;;EmailOrderRefOneSlot;Default Order Reference One Slot;true
+;;EmailOrderRefTwoSlot;Default Order Reference Two Slot;true
+;;EmailOrderDeliverySlot;Default Order Delivery Slot;true
+;;EmailOrderConfirmSlot;Default Order Confirm Slot;true
+;;EmailOrderConfirmDescriptionSlot;Default Order Confirmation Description Slot;true
+;;EmailTrackOrderOneSlot;Default Email Track Order One Slot;true
+;;EmailTrackOrderTwoSlot;Default Track Order Two Slot;true
+;;EmailOrderConfirmBannerTwoSlot;Default Order Confirmation Two Slot;true
+;;EmailOrderConfirmsmileyimgSlot;Default Email Order Confirmation smiley Slot;true
+;;EmailOrderConfirmPwdfbSlot;Default Order Confirmation Facebook Slot;true
+;;EmailOrderConfirmgplusSlot;Default Order Confirmation Gooogle Plus Slot;true
 
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
@@ -926,9 +938,19 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationRiskEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;SiteLogo-OrderConfRiskEmail;SiteLogo;;EmailSiteLogoSlot;true
-;;TopContent-OrderConfRiskEmail;TopContent;;EmailTopSlot;true
-;;BottomContent-OrderConfRiskEmail;BottomContent;;EmailBottomSlot;true
+;;OrderConfirmSiteLogo-OrderConfirmationRiskEmail;OrderConfirmSiteLogo;;EmailConfirmOrderSiteLogoSlot;true
+;;OrderRefOne-OrderConfirmationRiskEmail;OrderRefOne;;EmailOrderRefOneSlot;true
+;;OrderRefTwo-OrderConfirmationRiskEmail;OrderRefTwo;;EmailOrderRefTwoSlot;true
+;;OrderDelivery-OrderConfirmationRiskEmail;OrderDelivery;;EmailOrderDeliverySlot;true
+;;OrderConfirmTip-OrderConfirmationRiskEmail;OrderConfirmTip;;EmailOrderConfirmSlot;true
+;;OrderConfirmDescription-OrderConfirmationRiskEmail;OrderConfirmDescription;;EmailOrderConfirmDescriptionSlot;true
+;;TrackOrderOne-OrderConfirmationRiskEmail;TrackOrderOne;;EmailTrackOrderOneSlot;true
+;;TrackOrderTwo-OrderConfirmationRiskEmail;TrackOrderTwo;;EmailTrackOrderTwoSlot;true
+;;OrderConfirmBannerTwo-OrderConfirmationRiskEmail;OrderConfirmBannerTwo;;EmailOrderConfirmBannerTwoSlot;true
+;;OrderConfirmsmileyimg-OrderConfirmationRiskEmail;OrderConfirmsmileyimg;;EmailOrderConfirmsmileyimgSlot;true
+;;OrderConfirmfb-OrderConfirmationRiskEmail;OrderConfirmfb;;EmailOrderConfirmPwdfbSlot;true
+;;OrderConfirmgplus-OrderConfirmationRiskEmail;OrderConfirmgplus;;EmailOrderConfirmgplusSlot;true
+
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderRejectRiskEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite

@@ -406,6 +406,9 @@ public class LoginPageController extends AbstractLoginPageController
 			if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 			{
 				getRegisterCustomerFacade().register(data);
+				// To avoid multiple time decoding of password containing '%' specially
+				final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
+				form.setPwd(password);
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
 				//	updating the isRegistered flag in friends model (in case of valid affiliated id)

@@ -1,4 +1,3 @@
-
 # 
 # ImpEx for Responsive Tata Marketplace Site CMS Content 
 # 
@@ -558,9 +557,11 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailOrderConfirmPwdfbSlot;EmailfbImage
 ;;EmailOrderConfirmgplusSlot;EmailgplusImage
 
+
 #Order Refund Email
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
 ;;/images/theme/OrderRefundSiteLogoImage.jpg;OrderRefundSiteLogoImage.jpg;$siteResource/images/theme/OrderRefundSiteLogoImage.jpg;;
+;;/images/theme/RefundBannerImage.jpg;RefundBannerImage.jpg;$siteResource/images/theme/RefundBannerImage.jpg;;
 
 
 
