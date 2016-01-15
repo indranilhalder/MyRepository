@@ -415,7 +415,7 @@
 	</div>
 	</c:when>
 	<c:otherwise>
-		<p><spring:theme code="product.variants.size.guide.notavail"/></p>
+		<p style="padding-bottom: 20px;"><spring:theme code="product.variants.size.guide.notavail"/></p>
 	</c:otherwise>
 	</c:choose>	
 </div>

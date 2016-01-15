@@ -73,7 +73,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.Config;
-import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -139,7 +138,6 @@ import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
-import com.tisl.mpl.data.AllVoucherListData;
 import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.EditWishlistNameData;
@@ -1092,9 +1090,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			/* getting all voucher in a list */
 
-			final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
-			List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
-			List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
+			//final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
+			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons();
+			//List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
+			//List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
 			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
@@ -1109,15 +1108,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 			int pageMultMaxSize = 0;
 
 			/* setting voucher list data */
-			final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList);
-			if (null != allVoucherListData)
-
-			/* all type of voucher is shown in open voucher and personalized vouchers are shown as closed voucher */
-
-			{
-				openVoucherDataList = allVoucherListData.getOpenVoucherList();
-				closedVoucherDataList = allVoucherListData.getClosedVoucherList();
-			}
+			/*
+			 * final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList); if
+			 * (null != allVoucherListData)
+			 * 
+			 * all type of voucher is shown in open voucher and personalized vouchers are shown as closed voucher
+			 * 
+			 * { openVoucherDataList = allVoucherListData.getOpenVoucherList(); closedVoucherDataList =
+			 * allVoucherListData.getClosedVoucherList(); }
+			 */
 
 			/* getting all voucher transactions along with the order placed in a DTO */
 			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
@@ -1203,8 +1202,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-			model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
-			model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
+			//model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
+			//model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
+			model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, closedVoucherDataList);
 
 			model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistoryDTOListModified);
 			model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, couponHistoryStoreDTO.getSavedSum());
