@@ -179,8 +179,7 @@
 						<ul class="pagination">
 							<li class="number first active"><a href="?page=1">1</a></li>
 							<li class="number last "><a href="?page=2">2</a></li>
-							<li class="next"><a href="?page=2">Next <span
-									class="lookbook-only"> Page</span></a></li>
+							<li class="next"><a href="?page=2">Next</a></li>
 						</ul>
 					</div>
 				</div>
@@ -221,8 +220,7 @@
 											<c:if
 												test="${param.page != 1 and not empty param.page and not empty couponOrderDataDTOList}">
 												<li class="prev"><a href="#nogo"><spring:theme
-															code="text.account.coupons.prev"/> <span class="lookbook-only">
-															Page</span></a></li>
+															code="text.account.coupons.prev"/></a></li>
 											</c:if>
 											<c:forEach begin="1" end="${totalPages}" var="i">
 												<c:choose>
@@ -245,8 +243,7 @@
 											<!-- Next link addition -->
 											<c:if test="${totalPages gt 1 and totalPages gt page}">
 												<li class="next"><a href="#nogo"><spring:theme
-															code="text.account.coupons.next" /> <span
-														class="lookbook-only"> Page</span></a></li>
+															code="text.account.coupons.next" /></a></li>
 											</c:if>
 
 										</ul>
@@ -296,8 +293,7 @@
 									<c:if
 										test="${param.page != 1 and not empty param.page and not empty couponOrderDataDTOList}">
 										<li class="prev"><a href="#nogo"><spring:theme
-													code="text.account.coupons.prev"/> <span class="lookbook-only">
-													Page</span></a></li>
+													code="text.account.coupons.prev"/></a></li>
 									</c:if>
 									<c:forEach begin="1" end="${totalPages}" var="i">
 										<c:choose>
@@ -320,8 +316,7 @@
 									<!-- Next link addition -->
 									<c:if test="${totalPages gt 1 and totalPages gt page}">
 										<li class="next"><a href="#nogo"><spring:theme
-													code="text.account.coupons.next" /> <span
-												class="lookbook-only"> Page</span></a></li>
+													code="text.account.coupons.next" /> </a></li>
 									</c:if>
 
 								</ul>
