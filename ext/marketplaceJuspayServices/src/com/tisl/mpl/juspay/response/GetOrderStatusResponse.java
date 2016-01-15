@@ -49,6 +49,11 @@ public class GetOrderStatusResponse
 
 	private RiskResponse riskResponse;
 
+	//Extra fields to identify Payment method
+	private String paymentMethodType;
+	private String paymentMethod;
+
+
 	public String getMerchantId()
 	{
 		return merchantId;
@@ -338,5 +343,39 @@ public class GetOrderStatusResponse
 				+ '\'' + ", udf5='" + udf5 + '\'' + ", udf6='" + udf6 + '\'' + ", udf7='" + udf7 + '\'' + ", udf8='" + udf8 + '\''
 				+ ", udf9='" + udf9 + '\'' + ", udf10='" + udf10 + '\'' + ", paymentGatewayResponse=" + paymentGatewayResponse + '\''
 				+ ", cardResponse=" + cardResponse + '\'' + ", riskResponse=" + riskResponse + '}';
+	}
+
+	/**
+	 * @return the paymentMethodType
+	 */
+	public String getPaymentMethodType()
+	{
+		return paymentMethodType;
+	}
+
+	/**
+	 * @param paymentMethodType
+	 *           the paymentMethodType to set
+	 */
+	public void setPaymentMethodType(final String paymentMethodType)
+	{
+		this.paymentMethodType = paymentMethodType;
+	}
+
+	/**
+	 * @return the paymentMethod
+	 */
+	public String getPaymentMethod()
+	{
+		return paymentMethod;
+	}
+
+	/**
+	 * @param paymentMethod
+	 *           the paymentMethod to set
+	 */
+	public void setPaymentMethod(final String paymentMethod)
+	{
+		this.paymentMethod = paymentMethod;
 	}
 }

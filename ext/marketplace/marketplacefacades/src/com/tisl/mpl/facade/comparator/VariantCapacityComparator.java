@@ -27,8 +27,9 @@ public class VariantCapacityComparator implements Comparator<VariantOptionData>
 	public int compare(final VariantOptionData arg0, final VariantOptionData arg1)
 	{
 
-		final String value0 = arg0.getCapacity().replaceAll("\\s+", "");
-		final String value1 = arg1.getCapacity().replaceAll("\\s+", "");
+		//TISPRO-50 - null check added
+		final String value0 = arg0.getCapacity() == null ? null : arg0.getCapacity().replaceAll("\\s+", "");
+		final String value1 = arg1.getCapacity() == null ? null : arg1.getCapacity().replaceAll("\\s+", "");
 		if (value0 == null || value1 == null)
 		{
 			return 0;

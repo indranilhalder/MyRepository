@@ -471,9 +471,6 @@
 										
 										<div class="errorMessage"><div id="erraddressMob"></div></div>
 									</div>
-									 
-									
-
 								</fieldset>
 								
 								<%-- <input type="checkbox" name="mark-address-default" id="mark-address-default" class="account-only">
@@ -494,45 +491,9 @@
 									</div>
 							</form:form></li>
 					</ul>
-					
 				</div>
-				
 			</div>
 		</div>
 		</div>
 	</template:page>
 
-<%-- <script type="text/javascript" src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script> --%>
-<%-- <template:javaScriptVariables /> --%>
-<%-- <script type="text/javascript" src="${commonResourcePath}/js/acc.accountaddress.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/acc.accountpagination.js"></script>--%>
-<script type="text/javascript">
-<!-- address pagination	 -->	
-var i=0;
-var pageCount=0;
-var pagelimitAcc=10;
-var totalItem=$('#accountAddressCount').val();
-var noofpageCount=Math.ceil(totalItem/pagelimitAcc);
-$(document).ready(function() {
-	var divItem = "";
-	for(var i=1; i<=noofpageCount; i++){
-		divItem = divItem + "<a href='#nogo' onclick='pageNavigation("+i+")'>"+i+"</a>&emsp;";
-	}
-	  $('#prev').html(divItem);
-	  $('.right-account #address_item #item_ul>li').each(function(i)  {
-    	$(this).attr('id', 'p_' + i);
-    i=i + 1;
-    });
-    dispPageLimit(0,pagelimitAcc);
-});
-function pageNavigation(num){
-	var index = num;
-	var endIndex = (index*pagelimitAcc);
-	var startIndex = endIndex - pagelimitAcc;
-	 
-
-	dispPageLimit(startIndex,endIndex);
-	
-}
-</script> 
