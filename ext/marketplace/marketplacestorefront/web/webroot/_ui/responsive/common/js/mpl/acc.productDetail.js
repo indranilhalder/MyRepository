@@ -215,7 +215,6 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				       });
 			}
 		    }else{
-		    	$history = window.history.length;
 		    	var url = $(this).attr("data-videosrc");
 		    	$("#videoFrame").show();
 				$("#videoFrame").attr("src",url);

@@ -36,10 +36,6 @@
 		$("#zoomModal, #videoModal").modal('hide');
 		//$("#zoomModal, #videoModal").removeClass("active");
 		 $("#videoFrame")[0].src += "&autoplay=0";
-		 if (navigator.userAgent.match(/(Chrome|Opera|Safari)/gi)) {
-	            var goTo = window.history.length - $history;
-	            window.history.go(-goTo) // restore initial history
-	        }
 	}
 	$(document).ready(function(){
 		if ($(window).width() > 789) {
