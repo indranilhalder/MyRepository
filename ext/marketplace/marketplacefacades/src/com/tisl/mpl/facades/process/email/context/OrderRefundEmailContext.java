@@ -26,11 +26,13 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.OrderRefundProcessModel;
@@ -55,6 +57,10 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 	private static final String AMOUNT_REFUNDED = "amountrefunded";
 	private static final String DELIVERY_CHARGE = "deliveryCharge";
 	private static final String CUSTOMER = "Customer";
+	private static final String CONTACT_US_LINK = "contactUsLink";
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	private static final Logger LOG = Logger.getLogger(OrderRefundEmailContext.class);
 
@@ -71,6 +77,8 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 		storeName = orderRefundProcessModel.getOrder().getStore().getName();
 		orderData = getOrderConverter().convert(orderRefundProcessModel.getOrder());
 		refundAmount = orderData.getTotalPrice();
+		final String contactUsLink = configurationService.getConfiguration().getString("marketplace.contactus.link");
+		put(CONTACT_US_LINK, contactUsLink);
 		put(ORDER_REFERENCE_NUMBER, orderCode);
 		final CustomerModel customer = (CustomerModel) orderRefundProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());

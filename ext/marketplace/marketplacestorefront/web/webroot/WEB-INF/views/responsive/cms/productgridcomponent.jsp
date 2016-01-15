@@ -12,7 +12,7 @@
 
 	<!-- Hero product pane -->
 	<c:if test="${not empty heroProducts}">
-	 <h2>Shop Our Top Picks</h2>
+	 <!-- <h2>Shop Our Top Picks</h2> -->
 	</c:if>
 	<ul class="product-listing product-grid hero_carousel">
 		<c:forEach items="${heroProducts}" var="heroProduct"

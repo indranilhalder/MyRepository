@@ -62,6 +62,8 @@ public class OrdersHelper extends AbstractHelper
 
 	public static final String MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY = "orderHistory.max.page.limit.count.display";
 
+	//Sonar fixes
+	//private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT = "orderHistory.pagination.number.results.count";
 
 	@Cacheable(value = MarketplacewebservicesConstants.ORDERCACHE, key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,'DTO',#statuses,#currentPage,#pageSize,#sort,#fields)")
 	public OrderHistoryListWsDTO searchOrderHistory(final String statuses, final int currentPage, final int pageSize,

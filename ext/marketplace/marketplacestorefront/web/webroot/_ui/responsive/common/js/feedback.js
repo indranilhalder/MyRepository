@@ -1021,7 +1021,7 @@ $(document).ready(function(){
 	
 	if($(".product-listing.product-grid.hero_carousel").children().length>0){
 		$(".product-listing.product-grid.hero_carousel").css("border-bottom","2px solid #f0f4f5");
-		$(".product-listing.product-grid.hero_carousel").before("<h3 class='heroTitle'>Recommended&nbsp;&nbsp;Products</h3>");
+		$(".product-listing.product-grid.hero_carousel").before("<h3 class='heroTitle'>Shop Our Top Picks</h3>");
 		
 	}
 	
