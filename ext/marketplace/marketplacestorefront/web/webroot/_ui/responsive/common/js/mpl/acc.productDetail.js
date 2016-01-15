@@ -215,17 +215,17 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				       });
 			}
 		    }else{
+		    	$history = window.history.length;
 		    	var url = $(this).attr("data-videosrc");
-		    	//$("#videoFrame").show();
+		    	$("#videoFrame").show();
 				$("#videoFrame").attr("src",url);
 				$("#videoModal #videoFrame").attr("src",url);
 				$("#videoModal").modal();
 				$("#videoModal").addClass("active");
 				//$(".productImagePrimary .picZoomer-pic-wp img").hide();
-				$(".zoomContainer").remove();
-				$('.picZoomer-pic').removeData('zoom-image');
+				/*$(".zoomContainer").remove();
+				$('.picZoomer-pic').removeData('zoom-image');*/
 		    }
-			
 		});
 
 function openPop(ussidfromSeller) {
