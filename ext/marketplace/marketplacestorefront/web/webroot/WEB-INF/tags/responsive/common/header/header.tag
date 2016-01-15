@@ -201,7 +201,15 @@ function registerUser(eventObject)
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
 						<div class="mobile-bag bag">
-							<a href="${cartUrl}">(<span class="responsive-bag-count"></span>)</a>
+							<div class="mobile-bag bag">
+							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->
+							<a href="/store/mpl/en/cart" class="mini-cart-link myBag-sticky"
+						data-mini-cart-url="/store/mpl/en/cart/rollover/MiniCart"
+						data-mini-cart-refresh-url="/store/mpl/en/cart/miniCart/SUBTOTAL"
+						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
+						style="position: static;">(<span
+						class="responsive-bag-count"></span>) </a>
+						</div> 
 						</div>
 					</div>
 				</c:when>
