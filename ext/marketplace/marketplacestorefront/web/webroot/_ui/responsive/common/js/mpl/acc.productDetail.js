@@ -1258,7 +1258,8 @@ function CheckonReload()
 									
 				},
 				error : function(resp) {
-					alert("Error Occured");
+					//alert("Error Occured");
+					console.log( "Error Occured" );
 				}
 			});
 		
@@ -1347,7 +1348,8 @@ function CheckUserLogedIn() {
 								
 			},
 			error : function(resp) {
-				alert("Error Occured");
+				//alert("Error Occured");
+				console.log( "Error Occured" );
 			}
 		});
 	
