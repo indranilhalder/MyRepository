@@ -466,10 +466,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws JaloSecurityException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
+	 * @throws JaloPriceFactoryException
 	 */
 	protected void checkCartAfterApply(final VoucherModel lastVoucher, final CartModel cartModel) throws ModelSavingException,
 			VoucherOperationException, CalculationException, NumberFormatException, JaloInvalidParameterException,
-			JaloSecurityException
+			JaloSecurityException, JaloPriceFactoryException
 	{
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
 		final double cartSubTotal = cartModel.getSubtotal().doubleValue();
@@ -510,7 +511,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
 			getVoucherFacade().releaseVoucher(voucherCode);
-			mplDefaultCalculationService.calculateTotals(cartModel, false);
+			//mplDefaultCalculationService.calculateTotals(cartModel, false);
+			recalculateCartForCoupon(cartModel);
 			getModelService().save(cartModel);
 			//Throw exception with specific information
 			throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
@@ -549,7 +551,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
 					getVoucherFacade().releaseVoucher(voucherCode);
-					mplDefaultCalculationService.calculateTotals(cartModel, false);
+					//mplDefaultCalculationService.calculateTotals(cartModel, false);
+					recalculateCartForCoupon(cartModel);
 					getModelService().save(cartModel);
 					//Throw exception with specific information
 					throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
@@ -1052,17 +1055,27 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			totalApplicablePrice += entry.getTotalPriceAsPrimitive();
 		}
 
-		for (final DiscountValue discount : cartModel.getGlobalDiscountValues())
+		//		for (final DiscountValue discount : cartModel.getGlobalDiscountValues())
+		//		{
+		//			if (discount.getCode().equals(voucher.getCode()))
+		//			{
+		//				percentageDiscount = discount.getAppliedValue();
+		//				break;
+		//			}
+		//		}
+
+		//percentageDiscount = (percentageDiscount / totalApplicablePrice) * 100;
+
+		final double discountValue = voucherObj.getValueAsPrimitive();
+
+		if (voucherObj.isAbsoluteAsPrimitive())
 		{
-			if (discount.getCode().equals(voucher.getCode()))
-			{
-				percentageDiscount = discount.getAppliedValue();
-				break;
-			}
+			percentageDiscount = (discountValue / totalApplicablePrice) * 100;
 		}
-
-		percentageDiscount = (percentageDiscount / totalApplicablePrice) * 100;
-
+		else
+		{
+			percentageDiscount = discountValue;
+		}
 
 		double totalAmtDeductedOnItemLevel = 0.00D;
 
