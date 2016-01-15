@@ -240,11 +240,11 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			// Activation status of Priority
 			if (sellerModData.getIsActive().booleanValue())
 			{
-				savedValueData.setIsActive("Activate");
+				savedValueData.setIsActive("Y");
 			}
 			else
 			{
-				savedValueData.setIsActive("Deactivated");
+				savedValueData.setIsActive("N");
 			}
 
 			if (null != savedVal.getUser())
