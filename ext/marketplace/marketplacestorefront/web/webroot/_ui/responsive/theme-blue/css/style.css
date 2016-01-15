@@ -9578,8 +9578,8 @@ footer .banner {
     .pagination li.next {
       padding-left: 10px; }
 body .account .right-account .order-history .pagination li{
-	float:right;
 	font-size:12px;
+	margin: auto 2px;
 } 
 .bottom-pagination {
   width: 100%;
@@ -13352,7 +13352,6 @@ div.get-in-touch ul li:after,
     width: 80px;
 }
 .no-results ul li:before,
-div.get-in-touch ul li:before,
 .rewards div.customer-service ul li:before{
     content: "";
 }
@@ -25580,8 +25579,9 @@ padding-left: 0px;}
         float:left;}
         .product-tile .image .quickview a{
         width:100%;}
-        .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
-        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span{
+       .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
+        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span,
+        .pagination-bar.listing-menu.bottom .prev span,.pagination-bar.listing-menu.bottom .next span{
         display:none;} 
        .listing.wrapper .right-block .listing-menu > div .pagination.mobile{
        position: absolute;
@@ -26127,6 +26127,7 @@ display:none;
 body .account .right-account .order-history .navigation2{
     border: 1px solid rgb(237,242,245);
         padding: 5px 0 5px 20px;	
+        position:relative;
 }
 body .account .right-account .order-history .navigation2 #ofPagination{
 		
@@ -28839,6 +28840,52 @@ height:30px;
     font-weight: bold;
 }
 
+body .account .right-account .order-history .bottom .pagination.mobile{
+	     position: absolute;
+    bottom: 6px;
+    width: auto;
+    right: 0;}
+ body .account .right-account .order-history .top .pagination.mobile{
+	      position: absolute;
+    right: 80px;
+    top: 55px;}
+@media (max-width: 650px){
+	body .account .right-account .order-history .pagination li.next,body .account .right-account .order-history .pagination li.prev{
+	border:none;}
+
+	body .account .right-account .order-history .top .pagination.mobile{
+    top: 63px;
+    right: 0px;}
+     body .account .right-account .order-history .pagination .next:after,body .account .right-account .order-history .pagination .prev:before{
+     display:none;}
+    body .account .right-account .order-history .pagination li.next a:after {
+        content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        margin-left:5px;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s; }
+        body .account .right-account .order-history .pagination li.prev a:before{
+       content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s;
+        margin-right:5px;  }
+        #displayPaginationCountUp, #displayPaginationCountDown{
+        margin: 10px 0;
+        display:inline-block;}
+}
 /*--------------maincss-----------*/
 .row
 {
