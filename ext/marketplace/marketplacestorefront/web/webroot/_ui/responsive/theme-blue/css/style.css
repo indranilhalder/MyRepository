@@ -643,8 +643,8 @@ input:focus {
     .select-view .select-list li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+    /*   height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 46px;
       padding-left: 10px;
@@ -17882,8 +17882,8 @@ header .content .bottom .search .select-list select
      #variantForm .select-size li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+    /*   height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 20px;
       padding-left: 20px;
