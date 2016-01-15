@@ -1155,19 +1155,29 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			totalApplicablePrice += entry.getTotalPriceAsPrimitive();
 		}
 
-		for (final DiscountValue discount : cartModel.getGlobalDiscountValues())
-		{
-			if (discount.getCode().equals(voucher.getCode()))
-			{
-				percentageDiscount = discount.getAppliedValue();
-				break;
-			}
-		}
+		//		for (final DiscountValue discount : cartModel.getGlobalDiscountValues())
+		//		{
+		//			if (discount.getCode().equals(voucher.getCode()))
+		//			{
+		//				percentageDiscount = discount.getAppliedValue();
+		//				break;
+		//			}
+		//		}
 
-		percentageDiscount = (percentageDiscount / totalApplicablePrice) * 100;
+		//percentageDiscount = (percentageDiscount / totalApplicablePrice) * 100;
+
+		final double discountValue = voucherObj.getValueAsPrimitive();
+
+		if (voucherObj.isAbsoluteAsPrimitive())
+		{
+			percentageDiscount = (discountValue / totalApplicablePrice) * 100;
+		}
+		else
+		{
+			percentageDiscount = discountValue;
+		}		
 
 		LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
-
 
 		double totalAmtDeductedOnItemLevel = 0.00D;
 
