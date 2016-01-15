@@ -361,18 +361,12 @@ public class ProductPageController extends AbstractPageController
 			final Map<String, List<SizeGuideData>> sizeguideList = sizeGuideFacade.getProductSizeguide(productCode,
 					productData.getRootCategory());
 			final List<String> headerMap = getHeaderdata(sizeguideList, productData.getRootCategory());
-
-			final List<SizeGuideData> sizeGuideDataList = new ArrayList<SizeGuideData>();
-			for (final String key : sizeguideList.keySet())
-			{
-				sizeGuideDataList.add(sizeguideList.get(key).get(0));
-			}
-			Collections.sort(sizeGuideDataList, sizeGuideComparator);
 			LOG.info("***************headerMap" + headerMap);
 			if (null != productData.getBrand())
 			{
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
 			}
+			//if(productBreadcrumbBuilder.getBreadcrumbs(productModel).>0)
 			model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
 					new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
 
@@ -433,10 +427,17 @@ public class ProductPageController extends AbstractPageController
 
 				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice().getValue());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
+							.getFormattedValue());
 				}
-				// populate json with price,ussid,sellername and other details
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getValue());
+				else if (buyboxdata.getPrice().getValue().doubleValue() > 0.0)
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getMrp().getFormattedValue());
+				}
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getValue());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
@@ -463,7 +464,6 @@ public class ProductPageController extends AbstractPageController
 		return buyboxJson;
 	}
 
-
 	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList, final String categoryType)
 	{
 		final Map<String, String> headerMap = new HashMap<String, String>();
@@ -487,9 +487,13 @@ public class ProductPageController extends AbstractPageController
 			{
 				for (final SizeGuideData data : sizeguideList.get(key))
 				{
+					if (data.getAge() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.age"), "Y");
+					}
 					if (data.getDimension() != null)
 					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlenth"), "Y");
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlength"), "Y");
 					}
 					if (data.getDimensionSize() != null)
 					{

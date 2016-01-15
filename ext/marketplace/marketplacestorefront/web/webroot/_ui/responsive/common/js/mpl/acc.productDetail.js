@@ -1502,8 +1502,7 @@ function buyboxDetailsForSizeGuide(productCode){
 	console.log(sellerID +" "+productCode);
 	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
-	
-	
+
 	
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -1511,7 +1510,6 @@ function buyboxDetailsForSizeGuide(productCode){
 			data : dataString,
 			dataType : "json",
 			success : function(data) {
-				
 				var sellerName = data['sellerName'];
 				var sellerID = data['sellerId'];
 				var mopPrice = data['price'];
@@ -1519,8 +1517,6 @@ function buyboxDetailsForSizeGuide(productCode){
 				var specialPrice = data['specialPrice'];
 				var availableStock = data['availablestock'];
 				var ussid = data['sellerArticleSKU'];
-				
-				//alert("buybox stock: "+availableStock);
 				if (specialPrice != null){
 					$("#specialSelPrice").html(specialPrice);
 				}
@@ -1528,6 +1524,7 @@ function buyboxDetailsForSizeGuide(productCode){
 					$("#specialSelPrice").html(mopPrice);
 				}
 				if(data['isPinCodeServicable']=='N'){
+					$("#pinNotServicableSizeGuide").show();
 					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
 				}
 				else{
@@ -1540,13 +1537,9 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sizeStock").val(availableStock);
 				$("#sellerSelArticleSKU").html(ussid);
 				$("#sellerSelArticleSKUVal").val(ussid);
-				//alert("specialPrice:"+specialPrice.value+"sellerName:"+sellerName+" sellerID:" +sellerID+"  ,  availableStock:  "+availableStock+" ussid: "+ussid);
-				
-				
 				if(availableStock==0){
 					$("#addToCartSizeGuideTitleoutOfStockId").html("<font color='#ff1c47'>" + $('#addToCartSizeGuideTitleoutOfStockId').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
-					//$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}
 				else{

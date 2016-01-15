@@ -15,9 +15,9 @@
 	src="${commonResourcePath}/js/plugins/jquery.cookie.min.js"></script>
 	
 <script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/matchMed.js"></script>
+	src="${commonResourcePath}/js/mpl/matchMedia.js"></script>
 <script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/matchMed.addListener.js"></script>
+	src="${commonResourcePath}/js/mpl/matchMedia.addListener.js"></script>
 
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/jquery.blockUI-2.66.js"></script>

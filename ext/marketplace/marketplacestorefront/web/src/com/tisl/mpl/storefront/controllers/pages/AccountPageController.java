@@ -73,7 +73,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.Config;
-import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -139,7 +138,6 @@ import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
-import com.tisl.mpl.data.AllVoucherListData;
 import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.EditWishlistNameData;
@@ -587,7 +585,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String orders(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int page,
-			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_ALL) final ShowMode showMode,
+			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = ModelAttributetConstants.SORT, required = false) final String sortCode, final Model model)
 
 	throws CMSItemNotFoundException
@@ -604,7 +602,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			final int pageSizeInoh = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
-			final PageableData pageableData = createPageableData(page, 5, sortCode, showMode);
+			// TISPRO-48 - Changes made for implementing lazy loading in Order history pagination
+			final int pageSize = Integer.valueOf(configurationService.getConfiguration()
+					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE, "10").trim());
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 
 			//final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade().getPagedParentOrderHistoryForStatuses(pageableData);
 
@@ -684,6 +685,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.ORDER_DATA_MAP, orderFormattedDateMap);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
 			model.addAttribute(ModelAttributetConstants.CANCEL_PRODUCT_MAP, currentProductMap);
+			// TISPRO-48 - added page index and page size attribute for pagination
+			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
+			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -789,9 +793,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String order(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode, final Model model)
-			throws CMSItemNotFoundException
+	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
+			final Model model) throws CMSItemNotFoundException
 	{
+		if (null == orderCode)
+		{
+			return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_404;
+		}
 		final ReturnRequestForm returnRequestForm = new ReturnRequestForm();
 		final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();
 		final Map<String, String> currentStatusMap = new HashMap<>();
@@ -1092,9 +1100,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			/* getting all voucher in a list */
 
-			final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
-			List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
-			List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
+			//final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
+			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons();
+			//List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
+			//List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
 			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
@@ -1109,15 +1118,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 			int pageMultMaxSize = 0;
 
 			/* setting voucher list data */
-			final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList);
-			if (null != allVoucherListData)
-
-			/* all type of voucher is shown in open voucher and personalized vouchers are shown as closed voucher */
-
-			{
-				openVoucherDataList = allVoucherListData.getOpenVoucherList();
-				closedVoucherDataList = allVoucherListData.getClosedVoucherList();
-			}
+			/*
+			 * final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList); if
+			 * (null != allVoucherListData)
+			 * 
+			 * all type of voucher is shown in open voucher and personalized vouchers are shown as closed voucher
+			 * 
+			 * { openVoucherDataList = allVoucherListData.getOpenVoucherList(); closedVoucherDataList =
+			 * allVoucherListData.getClosedVoucherList(); }
+			 */
 
 			/* getting all voucher transactions along with the order placed in a DTO */
 			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
@@ -1203,8 +1212,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-			model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
-			model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
+			//model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
+			//model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
+			model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, closedVoucherDataList);
 
 			model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistoryDTOListModified);
 			model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, couponHistoryStoreDTO.getSavedSum());
@@ -4560,6 +4570,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				model.addAttribute(ModelAttributetConstants.FRIENDS_TEXT_MESSAGE, messageText);
 			}
+			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(FRIENDS_INVITE_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(FRIENDS_INVITE_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -6206,7 +6220,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
 					.getReviewsByUID(customerModel.getUid());
-			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
+			commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
 
 			/* pagination logic */
 

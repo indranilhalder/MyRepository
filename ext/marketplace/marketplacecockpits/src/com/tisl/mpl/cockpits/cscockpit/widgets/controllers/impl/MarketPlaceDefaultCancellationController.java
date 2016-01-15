@@ -260,6 +260,17 @@ public class MarketPlaceDefaultCancellationController extends
 						}
 					} else {
 						LOG.error("Refund Failed");
+						//TISSIT-1790 Code addition started
+						
+						for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
+								.getOrderEntriesModificationEntries()) {
+							OrderEntryModel orderEntry = modificationEntry
+									.getOrderEntry();
+							if (orderEntry != null) {
+								mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_IN_PROGRESS);
+							}
+						}
+						//TISSIT-1790 Code addition ended
 						paymentTransactionModel = mplJusPayRefundService
 								.createPaymentTransactionModel(
 										orderCancelRecord.getOriginalVersion()
@@ -295,6 +306,17 @@ public class MarketPlaceDefaultCancellationController extends
 							mplJusPayRefundService.makeOMSStatusUpdate(
 									orderEntry,
 									ConsignmentStatus.REFUND_INITIATED);
+							
+							// TISSIT-1784 Code addition started
+							
+							// Making RTM entry to be picked up by webhook job	
+							RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
+							refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+							refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+							refundTransactionMappingModel.setCreationtime(new Date());
+							refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED);
+							getModelService().save(refundTransactionMappingModel);
+							// TISSIT-1784 Code addition ended
 						}
 					}
 

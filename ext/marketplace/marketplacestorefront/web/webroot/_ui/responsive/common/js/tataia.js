@@ -28,6 +28,8 @@ domain			= $('#ia_product_rootCategory_type').val();
 search_string	= $('#ia_search_text').val();
 searchCategory_id		= $('#selectedSearchCategoryId').val(); // For Normal search
 searchCategory_idFromMicrosite		= $('#selectedSearchCategoryIdMicrosite').val(); // For Microsite search
+var daysDif = '';
+var is_new_product = false;
 
 if (searchCategory_id){
 	if(searchCategory_id.indexOf("MSH") > -1){
@@ -76,7 +78,7 @@ if(site_page_type == 'myStyleProfile'){
 		brand_array.push(val.value);
 		}
 	});
-	search_string = brand_array.join(",");
+
 }
 if(currentPageURL.indexOf("/c/MSH") > -1 || currentPageURL.indexOf("/c/SSH") > -1)
 {
@@ -100,10 +102,6 @@ if(currentPageURL.indexOf("/c/MBH") > -1){
     brand_id = brand_id.substr(0, brand_id.indexOf('?'));
   }
 }
-	if(currentPageURL.indexOf("/brands/?brandName=") > -1){
-		site_page_type = 'brand';
-		//brand_id = currentPageURL.split('/').pop();  
-	}
 if(currentPageURL.indexOf("/m/") > -1){
 	site_page_type = 'seller';
 	seller_id = $('#mSellerID').val();
@@ -311,10 +309,17 @@ function getFilteredRecommendations(widgetElement, respData, priceRanges, sale, 
     if(priceRanges.length === 0) { //no price filter
       priceSatisfied = true;  
     }
-    for (var i=0; i<priceRanges.length; i++) {
+    for (var i=0; i<priceRanges.length; i++) {    	
       var prices = priceRanges[i].split(' - ');
+      if(priceRanges[i].indexOf('And') > -1){
+    	var  pricess = priceRanges[i].replace('And','-');
+    	prices = pricess.split(' - ');
+  	}
       var min = parseInt(prices[0].substr(1));
       var max = parseInt(prices[1].substr(1));
+      if(isNaN(max)){
+    	  max = '100000000';
+      }
       if(min <= parseInt(this.price) && parseInt(this.price) <= max) {
         priceSatisfied = true;
         break; //condition met, stop searching
@@ -358,6 +363,17 @@ function getFilteredRecommendations(widgetElement, respData, priceRanges, sale, 
     	      afterFilter++;
     	}
   });
+  for (var i=0; i<5; i++) {
+	  if(i <= page){
+		  $('#iapage'+(i+1)).css("visibility", "visible");
+		  $('#iapage_next').css("visibility", "visible");
+		  $('#iapage'+(i+1)).removeClass('active');
+          $('#iapage1').addClass('active');
+	  }else{
+		  $('#iapage'+(i+1)).css("visibility", "hidden");
+		  $('#iapage_next').css("visibility", "hidden");
+	  }
+  }
   return filteredRespData;
 }
 
@@ -490,17 +506,73 @@ function hideQuickView(productElement) {
 /*Create pop-up Quickview window*/
 function popupwindow(productId) {
 	ACC.colorbox.open("QV",{
-		href: ACC.config.encodedContextPath+"/p/"+productId+"/quickView"
-		
+		href: ACC.config.encodedContextPath+"/p/"+productId+"/quickView",
+		onComplete: function(){
+			$(".imageList ul li img").css("height", "102px");
+		}
 });
 }
+function compareDateWithToday(SaleDate) {
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
 
+	if(dd<10) {
+	    dd='0'+dd
+	} 
+	if(mm<10) {
+	    mm='0'+mm
+	} 
+
+	var today = new Date(mm+'/'+dd+'/'+yyyy+' 00:00:00');
+	 // adjust diff for for daylight savings
+		//var SaleDate = new Date("10/21/2015 00:00:00");
+	 var hoursToAdjust = Math.abs(today.getTimezoneOffset() /60) - Math.abs(SaleDate.getTimezoneOffset() /60);
+	 // apply the tz offset
+	 SaleDate.addHours(hoursToAdjust); 
+	    // The number of milliseconds in one day
+	    var ONE_DAY = 1000 * 60 * 60 * 24
+	    // Convert both dates to milliseconds
+	    var today_ms = today.getTime()
+	    var SaleDate_ms = SaleDate.getTime()
+	    // Calculate the difference in milliseconds
+	    var difference_ms = Math.abs(today_ms - SaleDate_ms)
+	    // Convert back to days and return
+	    return Math.round(difference_ms/ONE_DAY)
+	}
+	// you'll want this addHours function too 
+
+	Date.prototype.addHours= function(h){
+	    this.setHours(this.getHours()+h);
+	    return this;
+	}
 /*Creates HTML of individual products*/
 function makeProductHtml(widgetElement, obj, rid) { 
   /*This is a bad image*/
   if (typeof obj.image_url === "undefined") {
 	  return;
   }
+  if(obj.start_date != undefined){
+	  daysDif = compareDateWithToday(new Date(obj.start_date))
+	  if((daysDif < 8) && (daysDif >= 0)){
+	  is_new_product = true;
+	  }
+  }
+  
+  if(obj.colors!= undefined){
+		jQuery.each(obj.colors, function (icount, itemColor) {	
+			if(itemColor == 'Pewter'){
+				obj.colors[icount] = '#8E9294';
+			}else if(itemColor == 'Peach'){
+				obj.colors[icount] = '#FFDAB9';
+			}else if(itemColor == 'Multi'){
+				obj.colors[icount] = '/store/_ui/responsive/common/images/multi.jpg';
+			}else if(itemColor == 'Metallic'){
+				obj.colors[icount] = '#37FDFC';
+			}
+	  });
+}
 
 	  var IAurl = obj.url + '/store/mpl/en/p/'+obj.site_product_id+'/?iaclick=true&req=' + rid; /*iaclick=true for tracking our clicks vs. other services, pass request id to track clicks*/
 	  if(spid.length > 0) { /*pass if product page or if this is applicable for whatever other reason*/
@@ -511,17 +583,17 @@ function makeProductHtml(widgetElement, obj, rid) {
 	  
 	 if((obj.colors != null && obj.colors.length < 2) && (obj.sizes != null && obj.sizes.length < 2)){ 
 		 html += '<li onmouseover="showBoth(this)" onmouseout="hideBoth(this)" class="look slide ' + widgetElement + '_list_elements productParentList" style="display: inline-block; width: 221px; margin-left: 10px; margin-right: 10px; height: 500px; margin-bottom: 20px;position: relative;">';
-		 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; margin: 10px 0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;width: 106px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 26%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; margin: 35px 106px; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 106px;font-size:12px;"><span>Add To Bag</span></div>';
+		 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; margin: 10px 0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height:70px;width: 108px;font-size:12px;"><span>Quick View</span></div><div onclick=submitAddToCart("'+obj.site_product_id+'","'+obj.site_uss_id+'") class="iaAddToCartButton" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 26%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; margin: 35px 108px; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 109px;font-size:12px;"><span>Add To Bag</span></div>';
 		
 	 }else{
 		 html += '<li onmouseover="showQuickview(this)" onmouseout="hideQuickView(this)" class="look slide ' + widgetElement + '_list_elements productParentList" style="display: inline-block; width: 221px; margin-left: 10px; margin-right: 10px; height: 500px; margin-bottom: 20px;position: relative;">';
-		 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; margin: 10px 0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 211px;font-size:12px;"><span>Quick View</span></div>';
+		 html += '<div onclick=popupwindow("'+obj.site_product_id+'") class="IAQuickView" style="position: absolute; text-transform: uppercase;cursor: pointer; bottom: 31%; z-index: -1; visibility: hidden; color: #00cbe9;display: block; width: 100%; margin: 10px 0; text-align: center;background: #f8f9fb;background-color: rgba(248, 249, 251,0.77);-webkit-font-smoothing: antialiased;height: 70px;width: 218px;font-size:12px;"><span>Quick View</span></div>';
 		 
 	 }
 	  html += '<a href="'+IAurl+'" class="product-tile" style="height: 423px; position: relative;">';
 	  if(obj.image_url.indexOf("/") > -1){
 		  html += '<div class="image" style="position: relative; left: 0; line-height: 347px; height: 347px;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="'+obj.image_url+'" alt="'+obj.name+'"/>';
-		 if(obj.is_new_product == true){
+		 if(is_new_product == true){
 		  html += '<img class="new brush-strokes-sprite sprite-New" style="z-index: 0; display: block;margin-left: 14px;margin-top: 5px;" src="/store/_ui/responsive/common/images/transparent.png"/>';
 		 }
 		 if(obj.online_exclusive == true){
@@ -531,7 +603,7 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  
 	  }else{
 		  html += '<div class="image" style="position: relative; left: 0; line-height: 347px; height: 347px;"><img class="product-image" style="font-size: 16px;text-overflow: ellipsis;" src="/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg" alt="'+obj.name+'"/>';
-		  if(obj.is_new_product == true){
+		  if(is_new_product == true){
 			  html += '<img class="new brush-strokes-sprite sprite-New" style="z-index: 0; display: block;margin-left: 14px;margin-top: 5px;" src="/store/_ui/responsive/common/images/transparent.png"/>';
 			 }
 		  if(obj.online_exclusive == true){
@@ -787,6 +859,7 @@ function updatePage(response, widgetMode) {
         html += '<li class="price"><h4 class="active">price</h4>';
         html += '<ul class="checkbox-menu price">';
         html += '<li><input type="checkbox" id="0-500"> <label for="0-500">₹0 - ₹500</label></li><li><input type="checkbox" id="500-1000"> <label for="500-1000">₹500 - ₹1000</label></li><li><input type="checkbox" id="1000-2000"> <label for="1000-2000">₹1000 - ₹2000</label></li><li><input type="checkbox" id="2000-3000"> <label for="2000-3000">₹2000 - ₹3000</label></li><li><input type="checkbox" id="3000-4000"> <label for="3000-4000">₹3000 - ₹4000</label></li><li><input type="checkbox" id="4000-5000"> <label for="4000-5000">₹4000 - ₹5000</label></li>';
+        html += '<li><input type="checkbox" id="5000-10000"> <label for="5000-10000">₹5000 - ₹10000</label></li><li><input type="checkbox" id="10000-25000"> <label for="10000-25000">₹10000 - ₹25000</label></li><li><input type="checkbox" id="25000-50000"> <label for="25000-50000">₹25000 - ₹50000</label></li><li><input type="checkbox" id="And>50000"> <label for="And>50000">₹50000 And Above</label></li>';
         html += '</ul></li><li class="on sale"><h4 class="active">Sale</h4><ul class="checkbox-menu on-sale">';
         html += '<li><input type="checkbox" id="sale-filter"><label for="sale-filter">On Sale</label></li></ul></li></div></ul></div>';
         html += '<div class="right-block">';
@@ -959,7 +1032,7 @@ function updatePage(response, widgetMode) {
     	  if(pageData[parseInt(jQuery(this).text()) - 1] != undefined){
         document.getElementById(widgetElement + '_list').innerHTML = pageData[parseInt(jQuery(this).text()) - 1];
     	  }else{
-    		  document.getElementById(widgetElement + '_list').innerHTML = "<h1>No Results Found.</h1>";
+    		  document.getElementById(widgetElement + '_list').innerHTML = "<h1 style='text-align:center;color: #22bfe6;font-size: 24px;'>No Results Found.</h1>";
     	  }
         jQuery('#'+activePage).removeClass('active');
         jQuery(this).addClass('active');
@@ -977,7 +1050,7 @@ function updatePage(response, widgetMode) {
           if(pageData[parseInt(jQuery(el).text()) - 1] != undefined){
           document.getElementById(widgetElement + '_list').innerHTML = pageData[parseInt(jQuery(el).text()) - 1];
           }else{
-        	  document.getElementById(widgetElement + '_list').innerHTML = "<h1>No Results Found.</h1>";
+        	  document.getElementById(widgetElement + '_list').innerHTML = "<h1 style='text-align:center;color: #22bfe6;font-size: 24px;'>No Results Found.</h1>";
           }
           jQuery('#'+activePage).removeClass('active');
           jQuery(document.getElementById(el.id)).addClass('active');
@@ -992,16 +1065,16 @@ function updatePage(response, widgetMode) {
       /*Select Price Filter*/
       jQuery(".price li label").on('click', function() {
         /*Follow the checkmark which isn't visible as an html element*/
-        if(priceRanges.indexOf(this.innerText) > -1) {
-          priceRanges.splice(priceRanges.indexOf(this.innerText), 1);
+        if(priceRanges.indexOf(this.textContent) > -1) {
+          priceRanges.splice(priceRanges.indexOf(this.textContent), 1);
         } else {
-          priceRanges.push(this.innerText);
+          priceRanges.push(this.textContent);
         }
         pageData = getFilteredRecommendations(widgetElement, respData, priceRanges, saleOptions, response.request_id);          
         if(pageData[0] != undefined || pageData[0] != null){
         document.getElementById(widgetElement + '_list').innerHTML = pageData[0];
         }else{
-        	document.getElementById(widgetElement + '_list').innerHTML = "<h1>No Results Found.</h1>";
+        	document.getElementById(widgetElement + '_list').innerHTML = "<h1 style='text-align:center;color: #22bfe6;font-size: 24px;'>No Results Found.</h1>";
         }
         /*Reset page numbers*/
         var pages = document.getElementById("ia_products_hotpage_numbers").childNodes;
@@ -1017,16 +1090,16 @@ function updatePage(response, widgetMode) {
       /*Select sale filter*/
       jQuery(".on-sale li label").on('click', function() {
         /*Follow the checkmark which isn't visible as an html element*/
-        if(saleOptions.indexOf(this.innerText) > -1) {
-          saleOptions.splice(saleOptions.indexOf(this.innerText), 1);
+        if(saleOptions.indexOf(this.textContent) > -1) {
+          saleOptions.splice(saleOptions.indexOf(this.textContent), 1);
         } else {
-          saleOptions.push(this.innerText);
+          saleOptions.push(this.textContent);
         }
         pageData = getFilteredRecommendations(widgetElement, respData, priceRanges, saleOptions, response.request_id);          
          if(pageData[0] != undefined){       
         document.getElementById(widgetElement + '_list').innerHTML = pageData[0];
          }else{
-         	document.getElementById(widgetElement + '_list').innerHTML = "<h1>No Results Found.</h1>";
+         	document.getElementById(widgetElement + '_list').innerHTML = "<h1 style='text-align:center;color: #22bfe6;font-size: 24px;'>No Results Found.</h1>";
          }
         /*Reset page numbers*/
         var pages = document.getElementById("ia_products_hotpage_numbers").childNodes;
