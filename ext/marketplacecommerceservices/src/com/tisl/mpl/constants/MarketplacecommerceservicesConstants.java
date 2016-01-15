@@ -1014,6 +1014,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String GATEWAYID = "gateway_id".intern();
 	public static final String BANKERRORCODE = "bank_error_code".intern();
 	public static final String BANKERRORMESSAGE = "bank_error_message".intern();
+	public static final String PAYMENTMETHOD = "payment_method".intern();
+	public static final String PAYMENTMETHODTYPE = "payment_method_type".intern();
+	public static final String PAYMENT_METHOD_NB = "NB".intern();
 
 	// Order Response
 
