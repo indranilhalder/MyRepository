@@ -286,6 +286,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
 						voucherDisplayData.setVoucherCode(voucherObj.getVoucherCode());
 						voucherDisplayData.setVoucherDescription(voucherObj.getDescription());
+						voucherDisplayData.setReedemCouponCount(String.valueOf(voucherObj.getRedemptionQuantityLimit()));
 						final Date endDate = dateRestriction.getEndDate() != null ? dateRestriction.getEndDate() : new Date();
 						voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
 						final Date startDate = dateRestriction.getStartDate();
