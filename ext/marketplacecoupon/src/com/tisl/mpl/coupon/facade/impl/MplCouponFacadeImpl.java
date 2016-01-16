@@ -286,6 +286,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
 						voucherDisplayData.setVoucherCode(voucherObj.getVoucherCode());
 						voucherDisplayData.setVoucherDescription(voucherObj.getDescription());
+						voucherDisplayData.setReedemCouponCount(String.valueOf(voucherObj.getRedemptionQuantityLimit()));
 						final Date endDate = dateRestriction.getEndDate() != null ? dateRestriction.getEndDate() : new Date();
 						voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
 						final Date startDate = dateRestriction.getStartDate();
@@ -1175,7 +1176,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		else
 		{
 			percentageDiscount = discountValue;
-		}		
+		}
 
 		LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
 
@@ -1188,57 +1189,60 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			final double entryTotalPrice = entry.getTotalPriceAsPrimitive();
 
-			if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+			if (entryTotalPrice > 1)//For freebie & bogo, 0.01 priced product
 			{
-				final double discountPriceValue = (percentageDiscount / 100) * totalApplicablePrice;
-				entryLevelApportionedPrice = discountPriceValue - totalAmtDeductedOnItemLevel;
-			}
-			else
-			{
-				entryLevelApportionedPrice = (percentageDiscount / 100) * entryTotalPrice;
-				totalAmtDeductedOnItemLevel += entryLevelApportionedPrice;
-			}
-
-			LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
-
-			entry.setProperty(MarketplacecouponConstants.COUPONCODE, voucherCode);//TODO
-			entry.setProperty(MarketplacecouponConstants.COUPONVALUE, Double.valueOf(entryLevelApportionedPrice));//TODO
-
-
-			if ((null != entry.getProperty(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) && !((String) entry
-					.getProperty(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
-					|| (null != entry.getProperty(MarketplacecommerceservicesConstants.CARTPROMOCODE) && !((String) entry
-							.getProperty(MarketplacecommerceservicesConstants.CARTPROMOCODE)).isEmpty()))
-			{
-				final double netAmtAftrAllDisc = entry.getProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC) != null ? ((Double) entry
-						.getProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC)).doubleValue() : 0.00D;
-
-				if (netAmtAftrAllDisc > entryLevelApportionedPrice)
+				if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
 				{
-					currNetAmtAftrAllDisc = netAmtAftrAllDisc - entryLevelApportionedPrice;
+					final double discountPriceValue = (percentageDiscount / 100) * totalApplicablePrice;
+					entryLevelApportionedPrice = discountPriceValue - totalAmtDeductedOnItemLevel;
+				}
+				else
+				{
+					entryLevelApportionedPrice = (percentageDiscount / 100) * entryTotalPrice;
+					totalAmtDeductedOnItemLevel += entryLevelApportionedPrice;
+				}
+
+				LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
+
+				entry.setProperty(MarketplacecouponConstants.COUPONCODE, voucherCode);//TODO
+				entry.setProperty(MarketplacecouponConstants.COUPONVALUE, Double.valueOf(entryLevelApportionedPrice));//TODO
+
+
+				if ((null != entry.getProperty(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) && !((String) entry
+						.getProperty(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
+						|| (null != entry.getProperty(MarketplacecommerceservicesConstants.CARTPROMOCODE) && !((String) entry
+								.getProperty(MarketplacecommerceservicesConstants.CARTPROMOCODE)).isEmpty()))
+				{
+					final double netAmtAftrAllDisc = entry.getProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC) != null ? ((Double) entry
+							.getProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC)).doubleValue() : 0.00D;
+
+					if (netAmtAftrAllDisc > entryLevelApportionedPrice)
+					{
+						currNetAmtAftrAllDisc = netAmtAftrAllDisc - entryLevelApportionedPrice;
+
+					}
+					else
+					{
+						currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecouponConstants.ZEROPOINTZEROONE);
+					}
 
 				}
 				else
 				{
-					currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecouponConstants.ZEROPOINTZEROONE);
-				}
+					if (entryTotalPrice > entryLevelApportionedPrice)
+					{
+						currNetAmtAftrAllDisc = entryTotalPrice - entryLevelApportionedPrice;
 
+					}
+					else
+					{
+						currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecouponConstants.ZEROPOINTZEROONE);
+					}
+
+				}
+				LOG.debug("Step 19:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
+				entry.setProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC, Double.valueOf(currNetAmtAftrAllDisc));
 			}
-			else
-			{
-				if (entryTotalPrice > entryLevelApportionedPrice)
-				{
-					currNetAmtAftrAllDisc = entryTotalPrice - entryLevelApportionedPrice;
-
-				}
-				else
-				{
-					currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecouponConstants.ZEROPOINTZEROONE);
-				}
-
-			}
-			LOG.debug("Step 19:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
-			entry.setProperty(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC, Double.valueOf(currNetAmtAftrAllDisc));
 		}
 
 		//final VoucherValue voucherVal = voucherObj.getAppliedValue(orderObj);
