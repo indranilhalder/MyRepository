@@ -213,18 +213,13 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
-			paymentTransactionModel = mplJusPayRefundService
-					.createPaymentTransactionModel(orderEntryModel.get(0)
-							.getOrder(), "FAILURE", totalRefundAmount,
-							PaymentTransactionType.RETURN, "FAILURE", UUID
-									.randomUUID().toString());
-			mplJusPayRefundService.attachPaymentTransactionModel(
-					orderEntryModel.get(0).getOrder(), paymentTransactionModel);
 			
 			// TISSIT-1784 Code addition started
 			for (OrderEntryModel orderEntry : orderEntryModel) {
 				// Calling OMS for Refund Initiated
-				mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_INITIATED);
+				//mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_INITIATED);
+				
+				mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
 
 				// Making RTM entry to be picked up by webhook job	
 				RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
@@ -235,6 +230,15 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				getModelService().save(refundTransactionMappingModel);
 			}
 			// TISSIT-1784 Code addition ended
+			
+			paymentTransactionModel = mplJusPayRefundService
+					.createPaymentTransactionModel(orderEntryModel.get(0)
+							.getOrder(), "FAILURE", totalRefundAmount,
+							PaymentTransactionType.RETURN, "FAILURE", UUID
+									.randomUUID().toString());
+			mplJusPayRefundService.attachPaymentTransactionModel(
+					orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+			
 			
 		}
 		String result = paymentTransactionModel.getStatus() + ","

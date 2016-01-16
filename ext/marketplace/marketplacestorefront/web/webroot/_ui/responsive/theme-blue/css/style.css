@@ -9969,7 +9969,7 @@ body .account .right-account .order-history .pagination li{
       margin-bottom: 5px; }
     .product-tile .image .new {
       position: absolute;
-      width: 30%;
+      height: 31%;
       top: 0;
       left: -15px; }
       .shop-sale.wrapper .product-tile .image .new {
@@ -10488,7 +10488,8 @@ body .account .right-account .order-history .pagination li{
     float: left;
 }
 .promo-block .promo-img img {
-    position: relative
+    position: relative;
+     width: 90%;
 }
 .promo-block .promo-img img.sprite-icon {
     position: absolute;
@@ -18613,7 +18614,7 @@ input[type="checkbox"]#brandSelectAll + label{
 	margin: 0px;
 }
  .quick-view-popup .size-guide {
-  width: 100%;
+ /*  width: 100%; */
   text-transform: uppercase;
 	float:left;
   font-weight: 600;
@@ -18623,6 +18624,9 @@ input[type="checkbox"]#brandSelectAll + label{
   bottom:0;
   left:0;
 } 
+.select_height_toggle{
+display: block !important;
+}
 .quick-view-popup .size-guide:before {
   font-family: 'icomoon';
   -webkit-font-smoothing: antialiased;
@@ -22470,7 +22474,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
     margin: 10px 0;
     text-align: center;
 }
-@media(min-width:651px){
+@media(min-width:791px){
 .product-tile:hover .image .quickview {
     opacity: 1;
     -webkit-transition: opacity 0.3s;
