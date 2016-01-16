@@ -286,7 +286,11 @@
 
 					</c:when>
 					<c:otherwise>
+					<c:if test="${empty couponOrderDataDTOList}">
+					<div>
 					<h2><spring:theme code="text.account.coupons.nocouponhistory"/></h2>
+					</div>
+					</c:if>
 					</c:otherwise>
 					
 					</c:choose>
