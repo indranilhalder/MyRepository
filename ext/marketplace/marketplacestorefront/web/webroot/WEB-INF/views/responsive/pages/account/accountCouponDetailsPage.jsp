@@ -191,7 +191,8 @@
 				<!-- for showing  coupons history-start -->
 				<div class="your-activity coupon-history">
 					<c:if test="${not empty couponOrderDataDTOList}">
-
+					<h2><spring:theme code="text.account.coupons.couponHistory"/></h2>
+					
 						<p>
 							<spring:theme code="text.account.coupons.youhvused" />
 							<span>${couponsRedeemedCount}&nbsp;<c:if
@@ -284,7 +285,7 @@
 										<span>${couponHistoryDetailDTO.couponDescription}</span>
 									</p> <c:if test="${couponHistoryDetailDTO ne null}">
 										<p class="order">
-											<span>${couponHistoryDetailDTO.orderCode}</span>
+											#<span>${couponHistoryDetailDTO.orderCode}</span>
 										</p>
 										<p class="date">
 											<span>${couponHistoryDetailDTO.redeemedDate}</span>
