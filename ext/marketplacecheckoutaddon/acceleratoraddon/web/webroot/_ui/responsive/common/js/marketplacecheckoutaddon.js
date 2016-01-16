@@ -3451,6 +3451,9 @@ function clearDisable()
 
 //Coupon
 $("#couponSubmitButton").click(function(){
+	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
+			"#invalidCouponError, #expiredCouponError, #issueCouponError, " +
+			"#notApplicableCouponError, #notReservableCouponError").css("display","none");
 	if($("#couponFieldId").val()==""){
 		$("#emptyCouponError").css("display","block");	
 		//document.getElementById("couponError").innerHTML="Please enter a Coupon Code";

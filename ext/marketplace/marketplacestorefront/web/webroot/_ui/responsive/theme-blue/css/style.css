@@ -17881,7 +17881,7 @@ header .content .bottom .search .select-list select
      #variantForm .select-size li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-    /*   height: -webkit-calc(100% + 4px);
+     /*  height: -webkit-calc(100% + 4px);
       height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 20px;
@@ -28045,6 +28045,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2
 	{
 	font-size: 14px;
+	font-weight:600;
 	text-align: center;
 	float: left;
 	width: 100%;
@@ -28074,7 +28075,8 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	width: 50%;
 	padding: 0 10px;
 	margin: 0 0 10px;
-	line-height: 20px
+	line-height: 20px;
+	font-weight:500;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
@@ -28358,7 +28360,7 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity.coupon-history h2
 	{
-	font-weight: 500
+	font-weight: 600;
 }
 
 @media ( max-width :790px) {
