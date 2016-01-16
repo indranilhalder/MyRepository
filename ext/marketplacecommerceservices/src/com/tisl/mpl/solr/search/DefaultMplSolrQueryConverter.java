@@ -125,8 +125,8 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 			 * if (getFacetSort() == null) { this.facetSort = DEFAULT_FACET_SORT; }
 			 */
 
-			solrQuery.setFacetSort(FacetSort.COUNT.toString());
-			super.setFacetSort(FacetSort.COUNT);
+			//solrQuery.setFacetSort(FacetSort.COUNT.toString());
+			//super.setFacetSort(FacetSort.COUNT);
 
 			if (searchQuery.getSolrParams().size() > 0)
 			{

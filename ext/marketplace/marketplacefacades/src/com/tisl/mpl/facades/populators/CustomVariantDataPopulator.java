@@ -85,7 +85,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					if (null != pm.getSize())
 					{
 						//chceking size variant exists or not
-						if (selectedSize.equals(pm.getSize()))
+						//TISPRO-50 - null check added
+						if (null != selectedSize && selectedSize.equals(pm.getSize()))
 						{
 							isSizeVariantPresent = true;
 							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
@@ -102,9 +103,6 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							variantOptionData.setColour(pm.getColour());
 						}
 						//checking for colour hex code
-						/*
-						 * if (null != pm.getColourHexCode()) { variantOptionData.setColourCode(pm.getColourHexCode()); }
-						 */
 						sizeLink.put(variantOptionData.getUrl(), pm.getSize());
 						variantOptionData.setSizeLink(sizeLink);
 					}
@@ -112,7 +110,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					else if (null != pm.getCapacity())
 					{
 						isCapacityVariantPresent = true;
-						if (selectedCapacity.equals(pm.getCapacity()))
+						//TISPRO-50 - null check added
+						if (null != selectedCapacity && selectedCapacity.equals(pm.getCapacity()))
 						{
 							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode()) ? pm
 									.getColourHexCode() : pm.getColour().toLowerCase());

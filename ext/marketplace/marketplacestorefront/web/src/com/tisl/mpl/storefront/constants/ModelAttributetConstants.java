@@ -655,7 +655,9 @@ public final class ModelAttributetConstants
 	public static final String RETURN_AWBNUM = "returnAwbNum";
 	public static final String RETURN_LOGISCTIC = "returnLogistic";
 	public static final String TRACKINGURL = "trackingurl";
-
+	// TISPRO-48 - added new constants for pagination with lazy loading
+	public static final String PAGE_INDEX = "pageIndex";
+	public static final String PAGE_SIZE = "pageSize";
 
 	//for Coupons
 	public static final String OPEN_VOUCHER_DISPLAY_LIST = "openVoucherDisplayList";
@@ -670,6 +672,7 @@ public final class ModelAttributetConstants
 	public static final String ONE_VAL_COUPONS = "1";
 	public static final String FOOTWEAR = "Footwear";
 	public static final String PINCODE_DETAILS = "pincodeData";
+	public static final String CLOSED_COUPON_LIST = "closedCouponList";
 
 
 

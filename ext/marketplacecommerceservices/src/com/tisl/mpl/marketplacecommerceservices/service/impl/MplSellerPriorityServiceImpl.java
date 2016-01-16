@@ -9,6 +9,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -73,12 +74,14 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 					final int count = 1;
 					priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
 					ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
+					ussidList.removeAll(Collections.singletonList(null));
 					priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, sellerPriority.getIsActive().booleanValue(),
 							priorityMap));
 					final int productPriorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
-					ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
-							sellerPriority.getSellerId())));
-
+					if (getUssidFromSkuId(sellerPriority.getListingId(), sellerPriority.getSellerId()) != null)
+					{
+						ussidList.add(getUssidFromSkuId(sellerPriority.getListingId(), sellerPriority.getSellerId()));
+					}
 					priorityMap.putAll(getPriorityLevelData(ussidList, productPriorityLevel, isValid, priorityMap));
 					log.info(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
 							.append("prioritylevel").append(priorityLevel).toString());
@@ -94,6 +97,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
 						log.info(new StringBuilder("###########ussid for category level").append(ussidList).append("prioritylevel")
 								.append(priorityLevel).toString());
+						ussidList.removeAll(Collections.singletonList(null));
 					}
 					//if only listing id level priority exist
 					else if (null != sellerPriority.getListingId())
