@@ -142,27 +142,13 @@
 					<p class="mobile">Edit the coupon code in your cart to receive
 						your discount.</p>
 					<ul class="coupon-container">
-						<c:forEach items="${closedCouponList}" var="closedVoucherDisplay"
-							varStatus="vlstatus">
+						<c:forEach items="${closedVoucherDisplayList}"
+							var="closedVoucherDisplay" varStatus="vlstatus">
 							<li class="coupon-box starred">
-
 								<h2>${closedVoucherDisplay.voucherDescription}</h2>
-								<c:if test="${not empty closedVoucherDisplay.reedemCouponCount}">
-								<div align="center">
-									<c:choose>
-										<c:when
-											test="${closedVoucherDisplay.reedemCouponCount eq '1'}">
-											<p>Single</p>
-										</c:when>
-										<c:otherwise>
-											<p>Multiple</p>
-										</c:otherwise>
-									</c:choose>
-									</div>
-								</c:if>
 								<div class="left">
 									<p>Coupon Code</p>
-									${closedVoucherDisplay.voucherCode}
+									<p>${closedVoucherDisplay.voucherCode}</p>
 								</div>
 								<div class="right">
 									<p>Expires on</p>
@@ -171,7 +157,20 @@
 							</li>
 						</c:forEach>
 
-
+						<c:forEach items="${openVoucherDisplayList}"
+							var="openVoucherDisplay" varStatus="vlstatus">
+							<li class="coupon-box">
+								<h2>${openVoucherDisplay.voucherDescription}</h2>
+								<div class="left">
+									<p>Coupon Code</p>
+									<p>${openVoucherDisplay.voucherCode}</p>
+								</div>
+								<div class="right">
+									<p>Expires on</p>
+									<p>${openVoucherDisplay.voucherExpiryDate}</p>
+								</div>
+							</li>
+						</c:forEach>
 					</ul>
 					<div class="bottom">
 						<p>1-5 of 12 Transactions</p>
@@ -179,7 +178,8 @@
 						<ul class="pagination">
 							<li class="number first active"><a href="?page=1">1</a></li>
 							<li class="number last "><a href="?page=2">2</a></li>
-							<li class="next"><a href="?page=2">Next</a></li>
+							<li class="next"><a href="?page=2">Next <span
+									class="lookbook-only"> Page</span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -190,22 +190,20 @@
 
 				<!-- for showing  coupons history-start -->
 				<div class="your-activity coupon-history">
-					<c:if test="${not empty couponOrderDataDTOList}">
+				
+				<c:choose>
+					<c:when  test="${not empty couponOrderDataDTOList}">
+					
 					<h2><spring:theme code="text.account.coupons.couponHistory"/></h2>
 					
-						<p>
-							<spring:theme code="text.account.coupons.youhvused" />
-							<span>${couponsRedeemedCount}&nbsp;<c:if
+						<p><spring:theme code="text.account.coupons.youhvused"/><span> ${couponsRedeemedCount}&nbsp;<c:if
 									test="${couponsRedeemedCount < 2}">
-									<spring:theme code="text.account.coupons.coupon1" />
-								</c:if> <c:if test="${couponsRedeemedCount > 1}">
-									<spring:theme code="text.account.coupons.coupons" />
-								</c:if>
-							</span>&nbsp;
-							<spring:theme code="text.account.coupons.sofarsaved" />
-							<span>Rs. ${totalSavedSum}</span>
-							<spring:theme code="text.account.coupons.onpurchase" />
-						</p>
+							 <spring:theme code="text.account.coupons.coupon1"/>
+							 </c:if> <c:if test="${couponsRedeemedCount > 1}">
+							 <spring:theme code="text.account.coupons.coupons"/>
+							 </c:if>
+							</span>&nbsp;<spring:theme code="text.account.coupons.sofarsaved"/><span>Rs. ${totalSavedSum}</span>
+							<spring:theme code="text.account.coupons.onpurchase"/></p>
 						<c:if test="${not empty commentsListSize}">
 							<c:forEach begin="1" end="${totalPages}" var="i">
 								<c:choose>
@@ -216,10 +214,8 @@
 							</c:forEach>
 							<div class="bottom">
 								<c:if test="${not empty commentsListSize}">
-									<p>${startIndex}-${endIndex}
-										of ${commentsListSize} &nbsp;
-										<spring:theme code="text.account.coupons.transactions" />
-									</p>
+									<p>${startIndex}-${endIndex} of ${commentsListSize} 
+										&nbsp;<spring:theme code="text.account.coupons.transactions"/></p>
 								</c:if>
 								<div class="btn-placement bottom">
 									<c:if test="${totalPages ne 1 }">
@@ -228,7 +224,7 @@
 											<c:if
 												test="${param.page != 1 and not empty param.page and not empty couponOrderDataDTOList}">
 												<li class="prev"><a href="#nogo"><spring:theme
-															code="text.account.coupons.prev" /></a></li>
+															code="text.account.coupons.prev"/> <span class="lookbook-only"></span></a></li>
 											</c:if>
 											<c:forEach begin="1" end="${totalPages}" var="i">
 												<c:choose>
@@ -251,7 +247,8 @@
 											<!-- Next link addition -->
 											<c:if test="${totalPages gt 1 and totalPages gt page}">
 												<li class="next"><a href="#nogo"><spring:theme
-															code="text.account.coupons.next" /></a></li>
+															code="text.account.coupons.next" /> <span
+														class="lookbook-only"></span></a></li>
 											</c:if>
 
 										</ul>
@@ -262,18 +259,10 @@
 
 						<ul>
 							<li class="header">
-								<p class="coupon">
-									<spring:theme code="text.account.coupons.coupon" />
-								</p>
-								<p class="description">
-									<spring:theme code="text.account.coupons.decription" />
-								</p>
-								<p class="order">
-									<spring:theme code="text.account.coupons.appliedorder" />
-								</p>
-								<p class="date">
-									<spring:theme code="text.account.coupons.date" />
-								</p>
+								<p class="coupon"><spring:theme code="text.account.coupons.coupon"/></p>
+								<p class="description"><spring:theme code="text.account.coupons.decription"/></p>
+								<p class="order"><spring:theme code="text.account.coupons.appliedorder"/></p>
+								<p class="date"><spring:theme code="text.account.coupons.date"/></p>
 							</li>
 							<c:forEach items="${couponOrderDataDTOList}"
 								var="couponHistoryDetailDTO">
@@ -295,14 +284,21 @@
 							</c:forEach>
 						</ul>
 
+					</c:when>
+					<c:otherwise>
+					<c:if test="${empty couponOrderDataDTOList}">
+					<div>
+					<h2><spring:theme code="text.account.coupons.nocouponhistory"/></h2>
+					</div>
 					</c:if>
+					</c:otherwise>
+					
+					</c:choose>
 
 					<div class="bottom">
 						<c:if test="${not empty commentsListSize}">
-							<p>${startIndex}-${endIndex}
-								of ${commentsListSize} &nbsp;
-								<spring:theme code="text.account.coupons.transactions" />
-							</p>
+							<p>${startIndex}-${endIndex} of ${commentsListSize}
+								&nbsp;<spring:theme code="text.account.coupons.transactions"/></p>
 						</c:if>
 						<div class="btn-placement bottom">
 							<c:if test="${totalPages ne 1 }">
@@ -311,7 +307,7 @@
 									<c:if
 										test="${param.page != 1 and not empty param.page and not empty couponOrderDataDTOList}">
 										<li class="prev"><a href="#nogo"><spring:theme
-													code="text.account.coupons.prev" /></a></li>
+													code="text.account.coupons.prev"/> <span class="lookbook-only"></span></a></li>
 									</c:if>
 									<c:forEach begin="1" end="${totalPages}" var="i">
 										<c:choose>
@@ -334,7 +330,8 @@
 									<!-- Next link addition -->
 									<c:if test="${totalPages gt 1 and totalPages gt page}">
 										<li class="next"><a href="#nogo"><spring:theme
-													code="text.account.coupons.next" /> </a></li>
+													code="text.account.coupons.next" /> <span
+												class="lookbook-only"></span></a></li>
 									</c:if>
 
 								</ul>
@@ -355,26 +352,16 @@
 				<!-- for showing  coupons history-end -->
 
 				<div class="customer-service steps">
-					<h2>
-						<spring:theme code="text.account.coupons.work" />
-					</h2>
+					<h2><spring:theme code="text.account.coupons.work"/></h2>
 					<ul>
 						<li class="step"><span>1</span>
-							<p>
-								<spring:theme code="text.account.coupons.work.step1" />
-							</p></li>
+							<p><spring:theme code="text.account.coupons.work.step1"/></p></li>
 						<li class="step"><span>2</span>
-							<p>
-								<spring:theme code="text.account.coupons.work.step2" />
-							</p></li>
+							<p><spring:theme code="text.account.coupons.work.step2"/></p></li>
 						<li class="step"><span>3</span>
-							<p>
-								<spring:theme code="text.account.coupons.work.step3" />
-							</p></li>
+							<p><spring:theme code="text.account.coupons.work.step3"/></p></li>
 						<li class="step"><span>4</span>
-							<p>
-								<spring:theme code="text.account.coupons.work.step4" />
-							</p></li>
+							<p><spring:theme code="text.account.coupons.work.step4"/></p></li>
 					</ul>
 				</div>
 			</div>
@@ -396,35 +383,29 @@
 		});
 	});
 
-	$(".next a").click(function() {
+	$(".next a").click(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
-		if (pageNo != "") {
+		if(pageNo != ""){
 			pageNo = parseInt(pageNo);
-		} else {
+		}else{
 			pageNo = 1;
 		}
-		pageNo = pageNo + 1;
-		var totalPages = $
-		{
-			totalPages
-		}
-		;
-		if (totalPages != "" && pageNo <= totalPages) {
-			window.location.href = "?page=" + pageNo;
-		}
+		pageNo = pageNo+1;
+		var totalPages = ${totalPages};
+		if(totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?page="+pageNo;
+			}
 	});
 
-	$(".prev a").click(function() {
+	$(".prev a").click(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
 		pageNo = parseInt(pageNo);
-		pageNo = pageNo - 1;
-		var totalPages = $
-		{
-			totalPages
-		}
-		;
-		if (pageNo != 0 && totalPages != "" && pageNo <= totalPages) {
-			window.location.href = "?page=" + pageNo;
-		}
-	});
+		pageNo = pageNo-1;
+		var totalPages = ${totalPages};
+		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?page="+pageNo;
+			}
+	});	
 </script>
