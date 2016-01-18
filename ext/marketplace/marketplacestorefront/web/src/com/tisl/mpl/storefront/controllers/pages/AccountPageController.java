@@ -1101,7 +1101,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			/* getting all voucher in a list */
 
 			//final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
-			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons();
+			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons(customer);
 			//List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 			//List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
@@ -1121,9 +1121,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			/*
 			 * final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList); if
 			 * (null != allVoucherListData)
-			 * 
+			 *
 			 * all type of voucher is shown in open voucher and personalized vouchers are shown as closed voucher
-			 * 
+			 *
 			 * { openVoucherDataList = allVoucherListData.getOpenVoucherList(); closedVoucherDataList =
 			 * allVoucherListData.getClosedVoucherList(); }
 			 */

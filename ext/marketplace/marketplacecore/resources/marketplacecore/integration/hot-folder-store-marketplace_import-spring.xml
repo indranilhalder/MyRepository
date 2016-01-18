@@ -52,6 +52,7 @@
 				<entry key="product_sizeguide" value="0" />
 				<entry key="sales_category" value="0" />
 				<entry key="online_exclusive" value="0" />
+				<entry key="priority_seller" value="0"/>
 					</map>
 		</property>
 	</bean>
@@ -237,6 +238,34 @@
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="online_exclusive"
     p:converter-ref="batchOnlineExclusiveConverter"/>
+    
+    
+     <!-- Transformer for SellerPriority update -->
+    <bean id="batchUpdateSellerPriorityConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="priority_seller"
+    p:converter-ref="batchSellerPriorityConverter"/>
+    
+      <!-- Converter for seller Import -->
+  	<bean id="batchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            $productCatalog=mplProductCatalog
+				$productCatalog=mplProductCatalog
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+				$supercategories=supercategories(code, $catalogVersion)
+				$baseProduct=baseProduct(code,$catalogVersion)
+				$approved=approvalstatus(code)[default='check']
+				$unit=unit(code)[default='pieces']
+				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
+				Update MplSellerPriority;ListingId[unique=true][allownull=true](code,$catalogversion);CategoryId[unique=true][allownull=true](code,$catalogversion);SellerId(id)[unique=true];isActive;priorityStartDate[dateformat=dd/MM/yyyy];priorityEndDate[dateformat=dd/MM/yyyy] 
+			</value>
+        </property>
+		<property name="impexRow">
+		<value>;{0};{1};{+2};{3};{4};{5}</value>
+		</property>
+        </bean>
     
  	  <!-- Converters -->
  	  
