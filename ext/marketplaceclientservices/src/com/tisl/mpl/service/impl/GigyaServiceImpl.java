@@ -205,10 +205,10 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * This method helps in Logging the User in the Gigya Side and Registers New User
-	 * 
+	 *
 	 * @param CustomerModel customerModel
-	 * 
-	 * 
+	 *
+	 *
 	 * @return List<String> cookieData
 	 */
 	@Override
@@ -348,7 +348,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#RatingLogoutHelper(de.hybris.platform.core.model.user.CustomerModel)
 	 */
 	@Override
@@ -425,7 +425,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.GigyaService#validateSignature(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -469,7 +469,7 @@ public class GigyaServiceImpl implements GigyaService
 
 
 				LOG.debug("GigyaServiceImpl, notifyGigya Gigya Method" + gigyaMethod);
-
+				final String FIRSTNAME = "  \"{ firstName: \" + \"'\"  ";
 				// NOTIFY GIGYA WHEN USER LOGIN USING SOCIAL NETWORKS
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.notifyRegistration"))
 				{
@@ -478,7 +478,7 @@ public class GigyaServiceImpl implements GigyaService
 					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
 					if (fName != null)
 					{
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + "}";
 					}
 					else
 					{
@@ -491,7 +491,7 @@ public class GigyaServiceImpl implements GigyaService
 								fName = fName.replace('.', ' ');
 							}
 						}
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + "}";
 					}
 				}
 
@@ -502,8 +502,8 @@ public class GigyaServiceImpl implements GigyaService
 					request.setParam(MarketplacecclientservicesConstants.UID, siteUid);
 					if (fName != null || lName != null || eMail != null)
 					{
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'"
-								+ eMail + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
+								+ "}";
 					}
 				}
 
@@ -516,7 +516,7 @@ public class GigyaServiceImpl implements GigyaService
 
 					if (fName != null)
 					{
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + "}";
 					}
 					else
 					{
@@ -529,7 +529,7 @@ public class GigyaServiceImpl implements GigyaService
 								fName = fName.replace('.', ' ');
 							}
 						}
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + "}";
 					}
 
 				}
