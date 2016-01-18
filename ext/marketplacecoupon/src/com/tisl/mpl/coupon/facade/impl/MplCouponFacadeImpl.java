@@ -157,7 +157,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 			{
-				if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
+				if (cartEntryModel != null && null != cartEntryModel.getGiveAway() && !cartEntryModel.getGiveAway().booleanValue()
 						&& cartEntryModel.getSelectedUSSID() != null)
 				{
 					freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
@@ -201,6 +201,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				if (dis.getCode().equalsIgnoreCase(voucher.getCode()))
 				{
 					totalDiscount += dis.getAppliedValue();
+					break;
 				}
 			}
 
