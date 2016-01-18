@@ -2924,36 +2924,41 @@
 		</group>
  </explorertree>
 
+
 <type name="MplSellerPriority"  mode="append">
 		<organizer>
 			<search mode="append">
 				<condition attribute="SellerId" />
 				<condition attribute="CategoryId" />
 				<condition attribute="ListingId" />
+				<condition attribute="priorityStatus" />
 			</search>
 			<result defaultview="list">
 				<listview>
 					<itemlayout mode="replace">
-						<attribute name="SellerId" width="300"></attribute>
-						<attribute name="CategoryId" width="300"></attribute>
-						<attribute name="ListingId" width="300"></attribute>
-						<attribute name="isActive" />
+						<attribute name="SellerId" width="200"></attribute>
+						<attribute name="CategoryId" width="200"></attribute>
+						<attribute name="ListingId" width="200"></attribute>
+						<attribute name="isActive"  width="200"/>
+						 <attribute name="priorityStatus" width="200"/>
 					</itemlayout>
 				</listview>
 				<editview mode="replace">
 					<itemlayout>
-						<attribute name="SellerId" width="300" />
+						<attribute name="SellerId" width="200" />
 						<attribute name="CategoryId" width="200" />
-						<attribute name="ListingId" width="300"></attribute>
+						<attribute name="ListingId" width="200"></attribute>
 						<attribute name="isActive" />
+						 <attribute name="priorityStatus" width="200"/> 
 					</itemlayout>
 				</editview>
 				<treeview mode="replace">
 					<itemlayout>
-						<attribute name="SellerId" width="300" />
+						<attribute name="SellerId" width="200" />
 						<attribute name="CategoryId" width="200" />
-						<attribute name="ListingId" width="300"></attribute>
-						<attribute name="isActive" />
+						<attribute name="ListingId" width="200"></attribute>
+						<attribute name="isActive" width="200" />
+					 	<attribute name="priorityStatus" width="200"/> 
 					</itemlayout>
 				</treeview>
 			</result>
