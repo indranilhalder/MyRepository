@@ -1182,4 +1182,12 @@ $(document).ready(function(){
 		$("input[name='email']").parents("form#loginForm").attr("autocomplete","off");
 		$("input[name='j_username'],input[name='email']").attr("autocomplete","off");
 		$("input[type='password']").attr("autocomplete","new-password");  
+		
+		if ('ontouchstart' in window) {
+			$('body').addClass("touchDevice");
+	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
+	 			$(this).attr("href","#");
+	 		});
+			}
+		
 });

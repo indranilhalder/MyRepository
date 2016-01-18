@@ -1628,7 +1628,7 @@ h2 {
             header .content nav > ul > li > ul > li > ul {
               position: absolute;
               top: 0;
-              left: 190px;
+              left: 189px;
               height: 450px;
               padding-top: 10px;
               padding-left: 40px;
@@ -27539,6 +27539,22 @@ body .account .right-account .order-history .bottom .pagination.mobile{
         #displayPaginationCountUp, #displayPaginationCountDown{
         margin: 10px 0;
         display:inline-block;}
+}
+header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+	display:none;}
+header .content nav > ul > li > ul > li > ul.words > li:nth-child(2){
+	margin-top:0px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+	padding-top:40px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+position: absolute;
+    top: 0;
+	font-size:18px;
+	font-weight:600;
+	display:block;
+	
 }
 /*--------------maincss-----------*/
 .row
