@@ -136,7 +136,7 @@
 				<c:forEach items="${facetData.values}" var="facetValue">
 				
 					<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
-					<li class="filter-${facetData.name}">
+					<li class="filter-${facetData.code}">
 
 					<c:choose>
 						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">

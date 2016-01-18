@@ -19,7 +19,6 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.Constants.USER;
-import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -122,6 +121,10 @@ public class ProductDetailsHelper
 
 	@Autowired
 	private ExtendedUserServiceImpl userexService;
+
+	//SOnar fixes
+	//@Autowired
+	//private SiteConfigService siteConfigService;
 
 	public GigyaService getGigyaservice()
 	{
@@ -361,24 +364,7 @@ public class ProductDetailsHelper
 	public PriceData formPriceData(final Double price)
 	{
 
-		PriceData pData = null;
-		try
-		{
-			final PriceData priceData = new PriceData();
-			priceData.setPriceType(PriceDataType.BUY);
-			priceData.setValue(new BigDecimal(price.doubleValue()));
-			priceData.setCurrencyIso(MarketplaceFacadesConstants.INR);
-			final CurrencyModel currency = new CurrencyModel();
-			currency.setIsocode(priceData.getCurrencyIso());
-			currency.setSymbol(priceData.getCurrencyIso());
-			pData = priceDataFactory.create(PriceDataType.BUY, priceData.getValue(), currency);
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-
-		return pData;
+		return priceDataFactory.create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), MarketplaceFacadesConstants.INR);
 	}
 
 	/**
