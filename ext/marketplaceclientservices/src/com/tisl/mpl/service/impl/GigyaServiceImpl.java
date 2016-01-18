@@ -205,10 +205,10 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * This method helps in Logging the User in the Gigya Side and Registers New User
-	 *
+	 * 
 	 * @param CustomerModel customerModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @return List<String> cookieData
 	 */
 	@Override
@@ -219,11 +219,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
@@ -348,7 +348,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#RatingLogoutHelper(de.hybris.platform.core.model.user.CustomerModel)
 	 */
 	@Override
@@ -359,11 +359,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_LOGOUT);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_LOGOUT);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 
 			if (getSecretkey() != null && getApikey() != null)
@@ -377,7 +377,7 @@ public class GigyaServiceImpl implements GigyaService
 					request.setProxy(proxy);
 				}
 				// Adding parameters
-				request.setParam("UID", customerModel.getUid()); // set the "uid" parameter to user's ID
+				request.setParam(MarketplacecclientservicesConstants.UID, customerModel.getUid()); // set the "uid" parameter to user's ID
 				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
 				request.setAPIDomain(getDomain());
 
@@ -425,7 +425,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#validateSignature(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -457,8 +457,8 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			String loginUserInfo = null;
 
@@ -474,8 +474,8 @@ public class GigyaServiceImpl implements GigyaService
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.notifyRegistration"))
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-					request.setParam("siteUID", siteUid);
-					request.setParam("UID", gigyaUid);
+					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
+					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
 					if (fName != null)
 					{
 						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
@@ -499,7 +499,7 @@ public class GigyaServiceImpl implements GigyaService
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.setUserInfo"))
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-					request.setParam("UID", siteUid);
+					request.setParam(MarketplacecclientservicesConstants.UID, siteUid);
 					if (fName != null || lName != null || eMail != null)
 					{
 						loginUserInfo = "{ firstName: " + "'" + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'"
@@ -511,8 +511,8 @@ public class GigyaServiceImpl implements GigyaService
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.setUID"))
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-					request.setParam("siteUID", siteUid);
-					request.setParam("UID", gigyaUid);
+					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
+					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
 
 					if (fName != null)
 					{
@@ -557,8 +557,7 @@ public class GigyaServiceImpl implements GigyaService
 					}
 					else
 					{
-						LOG.debug(
-								"GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + "MESSAGE ->" + (response.getErrorMessage()));
+						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + "MESSAGE ->" + (response.getErrorMessage()));
 					}
 
 				}
