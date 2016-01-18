@@ -4,11 +4,11 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
-import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
+import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
 
 
 /**
@@ -30,8 +30,14 @@ public interface NotificationDao
 	List<OrderStatusNotificationModel> getNotification(final String customerId, final String orderId, final String transactionId,
 			final String orderStatus);
 
-	List<VoucherModel> findVoucher();
+	List<VoucherStatusNotificationModel> findVoucher();
 
 	List<AbstractPromotionModel> getPromotion();
+
+
+	boolean checkIsUpdated(String voucherCode);
+
+
+	List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherCode);
 
 }
