@@ -79,6 +79,7 @@ public class ForgetPasswordServiceImpl extends DefaultSecureTokenService impleme
 
 	private long tokenValiditySeconds;
 	private static final String PASSWORDENCODING = "default.password.encoder.key";
+	private static final String TOKENENCODING = "default.token.encoder.key";
 	private static final Logger LOG = Logger.getLogger(ForgetPasswordServiceImpl.class);
 	private byte[] signatureKeyBytes;
 	private byte[] encryptionKeyBytes;
@@ -407,8 +408,7 @@ public class ForgetPasswordServiceImpl extends DefaultSecureTokenService impleme
 	protected byte[] generateSignature(final byte[] data, final int offset, final int length, final byte[] signatureKeyBytes)
 			throws NoSuchAlgorithmException
 	{
-		final MessageDigest md5Digest = MessageDigest
-				.getInstance(configurationService.getConfiguration().getString(PASSWORDENCODING));
+		final MessageDigest md5Digest = MessageDigest.getInstance(configurationService.getConfiguration().getString(TOKENENCODING));
 
 		md5Digest.update(signatureKeyBytes);
 
