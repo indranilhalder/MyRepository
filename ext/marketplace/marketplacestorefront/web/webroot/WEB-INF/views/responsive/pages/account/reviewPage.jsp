@@ -535,7 +535,7 @@
 								<!-- Ratings -->
 								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
 								<span class="rating-name"><spring:theme code="myaccount.editreview.overall"/> </span>
-								<ul class="rating-stars" data-rating-name${count.index}="overall">
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -547,7 +547,7 @@
 									<c:when test="${comment.rootCategory eq 'Clothing'}" >							
 								<span class="rating-name"><spring:theme code="myaccount.editreview.fit"/> </span>
 
-								<ul class="rating-stars" data-rating-name${count.index}="fit">
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="fit">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -559,7 +559,7 @@
 								<c:otherwise>
 								<span class="rating-name"><spring:theme code="myaccount.editreview.easeOfUse"/> </span>
 
-								<ul class="rating-stars" data-rating-name${count.index}="easeOfUse">
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="easeOfUse">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -571,7 +571,7 @@
 								</c:choose>
 								
 								<span class="rating-name"><spring:theme code="myaccount.editreview.valueForMoney"/> </span>
-								<ul class="rating-stars" data-rating-name${count.index}="value_for_money">
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="value_for_money">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -580,7 +580,7 @@
 	  										<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
 								</ul>
 								<span class="rating-name"><spring:theme code="myaccount.editreview.quality"/> </span>
-								<ul class="rating-stars" data-rating-name${count.index}="quality">
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="quality">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -639,7 +639,7 @@
                </c:if> --%>
 								<ul class="rating-list">
 								<c:choose>
-								<c:when test ="${comment.rootCategory eq 'Clothing'}">
+								<c:when test ="${comment.rootCategory eq 'Clothing' || comment.rootCategory eq 'Footwear' }">
 									<li class="fit">
 										<div class="rate-details two-block">
 											<div class="before"><spring:theme code="myaccount.review.fit"/></div>
@@ -769,7 +769,7 @@
 	</div>
 </div>
 </div>
-<div id="deleteReviewcontainer" style="display: none;">
+<div id="deleteReviewcontainer" >
 <div id="deleteReview">
 			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:270px;margin:0px;">
 			<div class="modal-content">
@@ -798,7 +798,7 @@
 				</h4> 
 				
 				<button class="updateReviewConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
-					<a class="close updateReviewConfirmationNo" href="#nogo" onclick="closeModal(this);"><spring:theme code="text.wishlist.no" /></a>
+			    <a class="close updateReviewConfirmationNo" href="#nogo" onclick="closeModal(this);"><spring:theme code="text.wishlist.no" /></a>
 				</div>
 				<!-- <button class="close" data-dismiss="modal"></button> -->
 			</div>
@@ -808,9 +808,7 @@
 </template:page>
 <script>
 $(document).ready(function(){
-	
-	
-	
+			
 	$(".edit").click(function(e){
 		e.preventDefault;
 		var indexElement = $(this).attr("data-index");
@@ -828,8 +826,22 @@ $(document).ready(function(){
 			$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
 			$(reviewHeading).find('input.inputBox').focus();
 			$(".rating-div"+indexElement).show();
-			$(".rating-div"+indexElement).find("ul").addClass("rate");
+			$(".rating-div"+indexElement).find("ul").removeClass("rate");
 			$(updateButtons).show();
+			
+			$(".rating-div"+indexElement+" .rateEdit span").removeAttr('style');
+			
+			var arrayIndex = arrayrating[indexElement];
+			
+			for(key in arrayIndex) {
+				var $rate = $(".rating-div"+indexElement+" .rateEdit[data-rating-name"+indexElement+"="+key+"]");
+				$rate.data($rate.attr('data-rating-name'+indexElement),arrayIndex[key]/20);
+				$rate.find("li span").removeClass('full');
+				for( var i = 0; i < $rate.data($rate.attr('data-rating-name'+indexElement)) ; i++) {	
+					$rate.find("li span").eq(i).addClass("full");		
+			      }
+			}
+			
 		}
 		//$(this).parents(".review").find(".rating-stars li span").remove();
 		//$(this).parents(".review").find(".rating-stars li").append("<span></span>");
@@ -860,8 +872,11 @@ $(document).ready(function(){
 	
 	$("input[name=update]").click(function(){
 		var indexElement =  $(this).attr("data-index");
+		//alert("inside update");
 		$(".review-block"+indexElement).block({message:$("#updateReviewcontainer").html()});
+		//alert("inside update-pop up");
 	});
+	
 	$(document).on("click","button.updateReviewConfirmation",function(){
 		//validate the text first
 		var isValidated=true;
@@ -890,14 +905,14 @@ $(document).ready(function(){
 			
 			if(categoryID == "Electronics"){
 				ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Ease of use':"+updated_rating_efu+",'Value for Money':"+updated_rating_vfm+"}";
-				ratingsJSON = {overall:updated_rating_overall,easeOfUse:updated_rating_efu,value_for_money:updated_rating_vfm,quality:updated_rating_quality};
+				ratingsJSON = {overall:updated_rating_overall,easeOfUse:updated_rating_efu,value_for_money:updated_rating_vfm,quality:d_rating_quality};
 			}else if(categoryID == 'Clothing'){
 				ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Fit':"+updated_rating_fit+",'Value for Money':"+updated_rating_vfm+"}";	
 				ratingsJSON = {overall:updated_rating_overall,fit:updated_rating_fit,value_for_money:updated_rating_vfm,quality:updated_rating_quality};
 			}else{
 				ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Fit':"+updated_rating_fit+",'Value for Money':"+updated_rating_vfm+"}";
 			}
-			console.log(ratingsJSON.hasOwnProperty("easeOfUse"));
+			//console.log(ratingsJSON.hasOwnProperty("easeOfUse"));
 			//validate before update
 			if(updatedReviewHeading == undefined ||updatedReviewHeading  == "")		
 				{		
@@ -928,7 +943,6 @@ $(document).ready(function(){
 					success:function(data){
 						if(data){
 							if(data.status == "success"){
-								
 								if(indexElement!= undefined){
 									var reviewHeading = $(".reviewHeading"+indexElement);
 									var reviewComment = $(".reviewComment"+indexElement);
@@ -950,9 +964,7 @@ $(document).ready(function(){
 										fit = (fit/5) * 100;
 									}
 									
-									
-									
-									
+																		
 									var quality = ratingsJSON.quality;
 									quality = (quality/5) * 100;
 									
@@ -971,7 +983,6 @@ $(document).ready(function(){
 									}else{
 										$("div[data-rating"+indexElement+"=easeOfUse]").attr("style","width:"+easeOfUse+"%");
 									}
-									
 									$("div[data-rating"+indexElement+"=value]").attr("style","width:"+value+"%");
 									$("div[data-rating"+indexElement+"=quality]").attr("style","width:"+quality+"%");
 									$("div[data-info-id="+indexElement+"]").show();
@@ -986,7 +997,8 @@ $(document).ready(function(){
 					},
 					complete:function(){
 						$(".review-block"+indexElement).unblock();
-					}
+						window.location.reload();
+						}
 				});
 			}
 		} 
@@ -997,22 +1009,30 @@ $(document).ready(function(){
 		$(this).attr("current-delete","true");
 	});
 	
-	$(document).on("mouseenter",".rate li",function() {
+	$(document).on("mouseenter",".rateEdit li",function() {
 		$(this).parent().find("li span").removeAttr('style');
+		$(this).parent().find("li span").removeClass("full");
 		for (var i = 0; i <= $(this).index(); i++) {
 			$(this).parent().find("li span").eq(i)
 					.addClass("full");
 		}
 	});
 
-	$(document).on("mouseleave",".rate li",function() {
-		$(".rate li span").removeClass("full");
+	$(document).on("mouseleave",".rateEdit li",function() {
+		$(this).parent().find("span").removeClass("full");
+	});
+	
+	$(document).on("mouseleave",".rateEdit",function(){		
+		var indexElement =  $(this).parents(".rating-wrapper").siblings(".update-wrapper").find("input[name='update']").attr("data-index");
+		for( var i =0; i < $(this).data($(this).attr('data-rating-name'+indexElement)); i++) {		
+       		$(this).find("li span").eq(i).addClass("full");		
+        }		
 	});
 
-	$(document).on("click",".rate li",function() {
-				$(this).parent().removeClass("rate").addClass("rating-done");
-				$(this).parent().find("li").off("mouseenter");
-				$(this).parent().find("li").off("mouseleave");
+	$(document).on("click",".rateEdit li",function() {
+		var indexElement =  $(this).parents(".rating-wrapper").siblings(".update-wrapper").find("input[name='update']").attr("data-index");
+		$(this).parent().addClass("rating-done");
+		$(this).parent().data($(this).parent().attr('data-rating-name'+indexElement),$(this).parent().find("li span.full").length);
 				
 			}); 
 	
@@ -1048,15 +1068,7 @@ $(document).ready(function(){
 rating(arrayrating);
 						
 });
-	/**
-	 * 
-	 */
-		/**
-		Rating plugin 
-		**/
 		
-		
-
 		function deleteReview() {
 
 			var currentDeleteHref = $("a[current-delete=true]");
