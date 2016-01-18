@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.core.enums.SellerPriorityEnum;
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
@@ -140,7 +141,8 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					}
 				}
 				// if new value already	 exist throw error
-				if (priority.getIsActive().booleanValue())
+				if (priority.getIsActive().booleanValue() && null != priority.getPriorityStatus()
+						&& SellerPriorityEnum.NEW.equals(priority.getPriorityStatus()))
 				{
 					if (null != categoryId && categoryList.contains(categoryId))
 					{

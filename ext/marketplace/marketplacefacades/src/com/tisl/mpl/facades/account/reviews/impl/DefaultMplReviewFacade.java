@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.facades.account.reviews.impl;
 
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
@@ -38,17 +37,16 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 	private static final Logger LOG = Logger.getLogger(DefaultMplReviewFacade.class);
 	@Autowired
 	private BuyBoxFacade buyBoxFacade;
-	@Autowired
-	private ProductFacade productFacade;
+
 	@Autowired
 	private MplDefaultPriceDataFactory priceDataFactory;
 
 
 	/*
 	 * @Desc fetching ProductData from DTOlist
-	 * 
+	 *
 	 * @param commentsWithProductData
-	 * 
+	 *
 	 * @return GigyaProductReviewWsDTO
 	 */
 	@Override
@@ -90,9 +88,9 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 
 	/*
 	 * @Desc checking product price present in order or Review comments
-	 * 
+	 *
 	 * @param commentsWithProductData,orderModels
-	 * 
+	 *
 	 * @return GigyaProductReviewWsDTO
 	 */
 	@Override
