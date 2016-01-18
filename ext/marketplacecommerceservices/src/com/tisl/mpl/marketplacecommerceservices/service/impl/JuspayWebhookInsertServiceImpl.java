@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -103,18 +104,43 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 			//validating order response
 			orderResponse = validateOrderResponse(orderResponse, jobjectOrdrRes);
 
-			JSONObject jobjectCard = null;
-			if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.CARD))
+			if (StringUtils.isNotEmpty(orderResponse.getPaymentMethodType())
+					&& !orderResponse.getPaymentMethodType().equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
 			{
-				// Fetch Details from Json for cardResponse
-				jobjectCard = (JSONObject) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.CARD);
+				JSONObject jobjectCard = null;
+				if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.CARD))
+				{
+					// Fetch Details from Json for cardResponse
+					jobjectCard = (JSONObject) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.CARD);
+				}
+
+				if (null != jobjectCard)
+				{
+					// Set values into cardResponse
+					cardResponse = validateCardResponse(cardResponse, jobjectCard);
+
+					// Set cardResponce into orderResponse
+					orderResponse.setCardResponse(cardResponse);
+
+				}
+
+				JSONObject jobjectEBS = null;
+				if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.RISK))
+				{
+					// Fetch Details from Json for EBS Response
+					jobjectEBS = (JSONObject) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.RISK);
+				}
+
+				if (null != jobjectEBS)
+				{
+					// Set values into EBSResponse
+					ebsResponse = validateEbsResponse(ebsResponse, jobjectEBS);
+
+					// Set EBS Response into orderStatusResponseJuspay
+					orderResponse.setEbsResponse(ebsResponse);
+				}
+
 			}
-
-			// Set values into cardResponse
-			cardResponse = validateCardResponse(cardResponse, jobjectCard);
-
-			// Set cardResponce into orderResponse
-			orderResponse.setCardResponse(cardResponse);
 
 			JSONObject jobjectPayment = null;
 			if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.PAYMENT_GATEWAY_RESPONSE))
@@ -123,25 +149,14 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 				jobjectPayment = (JSONObject) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.PAYMENT_GATEWAY_RESPONSE);
 			}
 
-			// Set values into paymentGatewayResponse
-			pgresponse = validatePgResponse(pgresponse, jobjectPayment);
-
-			// Set paymentGatewayResponse into orderStatusResponseJuspay
-			orderResponse.setPgResponse(pgresponse);
-
-			JSONObject jobjectEBS = null;
-			if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.RISK))
+			if (null != jobjectPayment)
 			{
-				// Fetch Details from Json for EBS Response
-				jobjectEBS = (JSONObject) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.RISK);
+				// Set values into paymentGatewayResponse
+				pgresponse = validatePgResponse(pgresponse, jobjectPayment);
+
+				// Set paymentGatewayResponse into orderStatusResponseJuspay
+				orderResponse.setPgResponse(pgresponse);
 			}
-
-			// Set values into EBSResponse
-
-			ebsResponse = validateEbsResponse(ebsResponse, jobjectEBS);
-
-			// Set EBS Response into orderStatusResponseJuspay
-			orderResponse.setEbsResponse(ebsResponse);
 
 			ArrayList<JSONObject> refundList = new ArrayList<JSONObject>();
 			if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.REFUNDS))
@@ -291,6 +306,15 @@ public class JuspayWebhookInsertServiceImpl implements JuspayWebhookInsertServic
 		if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.UFD10))
 		{
 			orderResponse.setUdf10((String) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.UFD10));
+		}
+		//Extra field for Payment mode type handled
+		if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.PAYMENTMETHOD))
+		{
+			orderResponse.setPaymentMethod((String) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.PAYMENTMETHOD));
+		}
+		if (null != jobjectOrdrRes.get(MarketplacecommerceservicesConstants.PAYMENTMETHODTYPE))
+		{
+			orderResponse.setPaymentMethodType((String) jobjectOrdrRes.get(MarketplacecommerceservicesConstants.PAYMENTMETHODTYPE));
 		}
 
 		return orderResponse;

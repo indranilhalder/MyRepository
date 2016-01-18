@@ -32,6 +32,13 @@ public interface MPLRefundService extends RefundService
 	 * @return List<RefundEntryModel>
 	 * @throws Exception
 	 */
+	List<RefundEntryModel> getAllRefund() throws Exception;
+
+	/**
+	 * @description Fetch all Refunds for Report
+	 * @return List<RefundEntryModel>
+	 * @throws Exception
+	 */
 	List<RefundEntryModel> getAllRefund(Date startDate) throws Exception;
 
 	/**
@@ -40,6 +47,13 @@ public interface MPLRefundService extends RefundService
 	 * @throws Exception
 	 */
 	List<RefundEntryModel> getAllRefund(Date startDate, Date endDate) throws Exception;
+
+	/**
+	 * @description Fetch all Replacement for Report
+	 * @return List<ReplacementEntryModel>
+	 * @throws Exception
+	 */
+	List<ReplacementEntryModel> getAllReplacement() throws Exception;
 
 	/**
 	 * @description Fetch all Replacement for Report
@@ -68,4 +82,11 @@ public interface MPLRefundService extends RefundService
 	 * @throws Exception
 	 */
 	List<OrderCancelRecordEntryModel> getAllCancelled(Date startDate) throws Exception;
+
+	/**
+	 * @description Fetch all Cancelled for Report
+	 * @return List<ReplacementEntryModel>
+	 * @throws Exception
+	 */
+	List<OrderCancelRecordEntryModel> getAllCancelled() throws Exception;
 }

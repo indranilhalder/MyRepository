@@ -144,7 +144,7 @@
         <tr>
           <td width="13" height="23" align="left" valign="middle">&nbsp;</td>
           <td width="76" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#000000;" ><strong>Shipping:</strong></td>
-          <td width="122" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">${ctx.shippingCharge}</td>
+          <td width="122" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">INR&nbsp; $shippingCharge</td>
           </tr>
         </table></td>
       </tr>
@@ -161,7 +161,7 @@
   <td align="center" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="154" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td width="17" align="right" valign="top">${ctx.cmsSlotContents.TrackOrderOne}</td>
-      <td width="121" align="center" valign="middle" bgcolor="#EE0C6E" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">Track Order </td>
+      <td width="143" align="center" valign="middle" bgcolor="#EE0C6E" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;">Track Order</a></td>
       <td width="16" align="left" valign="top">${ctx.cmsSlotContents.TrackOrderTwo}</td>
       </tr>
     </table></td>

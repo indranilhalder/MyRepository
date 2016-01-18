@@ -17,6 +17,7 @@
 	<div class="csMainContent">
 		<div id="orderDetailOrderItemsWidget" class="orderDetailOrderItemsWidget" />
 		<div id="orderDetailAppliedPromotionsWidget" class="appliedPromotionsWidget"/>
+		<div id="orderCouponAppliedWidget" class="appliedPromotionsWidget"/>
 		<div id="orderConsignmentsWidget" class="orderConsignmentsWidget"/>
 		<div id="orderPaymentTransactionsWidget" class="orderPaymentTransactionsWidget"/>
 		<div id="associatedOrdersWidget" class="associatedOrdersWidget"/>

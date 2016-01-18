@@ -643,8 +643,8 @@ input:focus {
     .select-view .select-list li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+    /*   height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 46px;
       padding-left: 10px;
@@ -9578,8 +9578,8 @@ footer .banner {
     .pagination li.next {
       padding-left: 10px; }
 body .account .right-account .order-history .pagination li{
-	float:right;
 	font-size:12px;
+	margin: auto 2px;
 } 
 .bottom-pagination {
   width: 100%;
@@ -13352,7 +13352,6 @@ div.get-in-touch ul li:after,
     width: 80px;
 }
 .no-results ul li:before,
-div.get-in-touch ul li:before,
 .rewards div.customer-service ul li:before{
     content: "";
 }
@@ -17882,8 +17881,8 @@ header .content .bottom .search .select-list select
      #variantForm .select-size li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+     /*  height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 20px;
       padding-left: 20px;
@@ -25580,8 +25579,9 @@ padding-left: 0px;}
         float:left;}
         .product-tile .image .quickview a{
         width:100%;}
-        .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
-        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span{
+       .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
+        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span,
+        .pagination-bar.listing-menu.bottom .prev span,.pagination-bar.listing-menu.bottom .next span{
         display:none;} 
        .listing.wrapper .right-block .listing-menu > div .pagination.mobile{
        position: absolute;
@@ -26127,6 +26127,7 @@ display:none;
 body .account .right-account .order-history .navigation2{
     border: 1px solid rgb(237,242,245);
         padding: 5px 0 5px 20px;	
+        position:relative;
 }
 body .account .right-account .order-history .navigation2 #ofPagination{
 		
@@ -28044,6 +28045,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2
 	{
 	font-size: 14px;
+	font-weight:600;
 	text-align: center;
 	float: left;
 	width: 100%;
@@ -28073,7 +28075,8 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	width: 50%;
 	padding: 0 10px;
 	margin: 0 0 10px;
-	line-height: 20px
+	line-height: 20px;
+	font-weight:500;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
@@ -28357,7 +28360,7 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity.coupon-history h2
 	{
-	font-weight: 500
+	font-weight: 600;
 }
 
 @media ( max-width :790px) {
@@ -28832,13 +28835,59 @@ height:30px;
    content:"\f0a2";
     font-size: 16px;
     color: #00cbe9;
-    line-height: 50px;
-    height:50px;
+    line-height: 46px;
+    height:46px;
     top: 2px;
     position: relative;
     font-weight: bold;
 }
 
+body .account .right-account .order-history .bottom .pagination.mobile{
+	     position: absolute;
+    bottom: 6px;
+    width: auto;
+    right: 0;}
+ body .account .right-account .order-history .top .pagination.mobile{
+	      position: absolute;
+    right: 80px;
+    top: 55px;}
+@media (max-width: 650px){
+	body .account .right-account .order-history .pagination li.next,body .account .right-account .order-history .pagination li.prev{
+	border:none;}
+
+	body .account .right-account .order-history .top .pagination.mobile{
+    top: 63px;
+    right: 0px;}
+     body .account .right-account .order-history .pagination .next:after,body .account .right-account .order-history .pagination .prev:before{
+     display:none;}
+    body .account .right-account .order-history .pagination li.next a:after {
+        content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        margin-left:5px;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s; }
+        body .account .right-account .order-history .pagination li.prev a:before{
+       content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s;
+        margin-right:5px;  }
+        #displayPaginationCountUp, #displayPaginationCountDown{
+        margin: 10px 0;
+        display:inline-block;}
+}
 /*--------------maincss-----------*/
 .row
 {

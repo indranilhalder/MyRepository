@@ -133,9 +133,10 @@ public interface MplCouponFacade
 	 * @param voucherCode
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode);
-	 /* @return
+
+	/*
+	 * @return
 	 */
 	@SuppressWarnings("javadoc")
-	List<VoucherDisplayData> getAllClosedCoupons();
-
+	List<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer);
 }
