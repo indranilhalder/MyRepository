@@ -15,16 +15,16 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
 import com.tisl.mpl.data.NotificationData;
-import com.tisl.mpl.data.VoucherDisplayData;
 
 
 /**
  * @author TCS
  *
  */
-public class CustomNotificationCouponPopulator<SOURCE extends VoucherDisplayData, TARGET extends NotificationData> implements
-		Populator<SOURCE, TARGET>
+public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotificationModel, TARGET extends NotificationData>
+		implements Populator<SOURCE, TARGET>
 {
 
 
@@ -59,20 +59,20 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherDisplayData
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void populate(final SOURCE VoucherDisplayData, final TARGET notificationData) throws ConversionException
+	public void populate(final SOURCE VoucherStatusNotificationModel, final TARGET notificationData) throws ConversionException
 	{
 
-		if (null != VoucherDisplayData)
+		if (null != VoucherStatusNotificationModel)
 		{
 
 			List<ProductModel> productsCoupon = new ArrayList<ProductModel>();
 			List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
-			productsCoupon = VoucherDisplayData.getProductsCoupon();
-			categoryBasedCoupon = VoucherDisplayData.getCategoryBasedCoupon();
+			productsCoupon = VoucherStatusNotificationModel.getProductAssociated();
+			categoryBasedCoupon = VoucherStatusNotificationModel.getCategoryAssociated();
 
 			String productUrl = "";
 			if (null != productsCoupon)
@@ -95,9 +95,9 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherDisplayData
 				}
 			}
 
-			notificationData.setCouponCode(VoucherDisplayData.getVoucherCode());
-			notificationData.setNotificationRead(Boolean.FALSE);
-			notificationData.setNotificationCreationDate(VoucherDisplayData.getVoucherCreationDate());
+			notificationData.setCouponCode(VoucherStatusNotificationModel.getVoucherCode());
+			notificationData.setNotificationRead(VoucherStatusNotificationModel.getIsRead());
+			notificationData.setNotificationCreationDate(VoucherStatusNotificationModel.getVoucherStartDate());
 			notificationData.setNotificationCustomerStatus("Coupon @ is available");
 
 
