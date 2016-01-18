@@ -645,7 +645,7 @@ $language=language(isocode)[default='en'][unique=true];
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
 				          
-				INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension; unit[unique=true];size[unique=true];value[unique=true];categoryCode;brand;fitType;imageUrl;$catalogVersion
+				INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true]; unit[unique=true];size[unique=true];value[unique=true];categoryCode;brand;fitType;imageUrl;$catalogVersion
 			</value>
         </property>
         <property name="impexRow">

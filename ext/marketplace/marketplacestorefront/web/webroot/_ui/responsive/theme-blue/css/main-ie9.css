@@ -1715,8 +1715,9 @@ font-size: 12px;
      #variantForm .select-size li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+     /*  height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
+      
       background-color: #fff;
       line-height: 20px;
       padding-left: 20px;
@@ -14858,8 +14859,8 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
    content:"\f0a2";
     font-size: 16px;
     color: #00cbe9;
-    line-height: 50px;
-    height:50px;
+    line-height: 46px;
+    height:46px;
     top: 2px;
     position: relative;
     font-weight: bold;

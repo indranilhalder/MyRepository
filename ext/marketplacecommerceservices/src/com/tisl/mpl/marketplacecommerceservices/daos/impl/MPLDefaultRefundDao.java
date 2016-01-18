@@ -53,7 +53,7 @@ public class MPLDefaultRefundDao extends DefaultRefundDao implements MPLRefundDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MPLRefundDao#getAllRefunds()
 	 */
 	@Override
@@ -69,7 +69,7 @@ public class MPLDefaultRefundDao extends DefaultRefundDao implements MPLRefundDa
 			return flexibleSearchService.<RefundEntryModel> search(query).getResult();
 			/*
 			 * if (result.getTotalCount() > 1)
-			 * 
+			 *
 			 * { throw new EtailBusinessExceptions("Refund  is Allowed"); }
 			 */
 		}
@@ -82,7 +82,35 @@ public class MPLDefaultRefundDao extends DefaultRefundDao implements MPLRefundDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MPLRefundDao#getAllRefunds()
+	 */
+	@Override
+	public List<RefundEntryModel> getAllRefunds() throws Exception
+	{
+		final Map<String, Object> params = new HashMap<>();
+		//params.put("returnRequest", "");
+		try
+		{
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.REFUND_REPORT_QUERY,
+					params);
+			return flexibleSearchService.<RefundEntryModel> search(query).getResult();
+			/*
+			 * if (result.getTotalCount() > 1)
+			 *
+			 * { throw new EtailBusinessExceptions("Refund  is Allowed"); }
+			 */
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MPLRefundDao#getAllRefunds()
 	 */
 	@Override
@@ -99,7 +127,7 @@ public class MPLDefaultRefundDao extends DefaultRefundDao implements MPLRefundDa
 			return flexibleSearchService.<RefundEntryModel> search(query).getResult();
 			/*
 			 * if (result.getTotalCount() > 1)
-			 * 
+			 *
 			 * { throw new EtailBusinessExceptions("Refund  is Allowed"); }
 			 */
 		}

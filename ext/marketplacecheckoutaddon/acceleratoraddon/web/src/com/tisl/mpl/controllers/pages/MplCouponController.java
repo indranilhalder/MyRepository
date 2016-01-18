@@ -107,7 +107,7 @@ public class MplCouponController
 			LOG.error("Issue with voucher redeem " + e.getMessage());
 			if (e.getMessage().contains("total price exceeded"))
 			{
-				data.setRedeemErrorMsg("Price exceeded");
+				data.setRedeemErrorMsg("Price_exceeded");
 			}
 			else if (e.getMessage().contains("Voucher not found"))
 			{
@@ -120,6 +120,14 @@ public class MplCouponController
 			else if (e.getMessage().contains("Error while"))
 			{
 				data.setRedeemErrorMsg("Issue");
+			}
+			else if (e.getMessage().contains("Voucher is not applicable"))
+			{
+				data.setRedeemErrorMsg("Not_Applicable");
+			}
+			else if (e.getMessage().contains("Voucher is not reservable"))
+			{
+				data.setRedeemErrorMsg("Not_Reservable");
 			}
 
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
