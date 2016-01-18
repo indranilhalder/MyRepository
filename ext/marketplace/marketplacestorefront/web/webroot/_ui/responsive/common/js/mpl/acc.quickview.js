@@ -64,5 +64,14 @@ function quickviewGallery() {
 	 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
 	 	}
 	 	$(".imageListCarousel").show();
+	 	
+	 	if ('ontouchstart' in window) {
+	 		$(".quick-view-popup #variantForm .select-size span.selected").next("ul").hide();
+			  $(".quick-view-popup #variantForm .select-size span.selected").click(function(){
+				  $(this).next("ul").toggleClass("select_height_toggle");
+			  });
+			}
 	 });
+	
+	
 }

@@ -121,6 +121,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		model.addAttribute("searchCode", searchCode);
 		model.addAttribute("isCategoryPage", Boolean.TRUE);
+		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 		//Set the drop down text if the attribute is not empty or null
 		if (dropDownText != null && !dropDownText.isEmpty())
 		{
@@ -130,7 +131,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 		else
 		{
 			//Set the search drop down text to category name
-			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 			/*
 			 * Getting all Hero products as configured in back office
 			 */
@@ -139,17 +139,15 @@ public class CategoryPageController extends AbstractCategoryPageController
 			{
 				heroProducts = solrModel.getProducts();
 			}
-			final String categoryName = category.getName();
+			final String categoryName = (category == null) ? "" : category.getName();
 			model.addAttribute("dropDownText", categoryName);
 		}
 
 		//Check if there is a landing page for the category
 		try
 		{
-			if (categoryService.getCategoryForCode(categoryCode) != null)
+			if (category != null)
 			{
-
-				final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 
 				final String redirection = checkRequestUrl(request, response, getCategoryModelUrlResolver().resolve(category));
 				if (StringUtils.isNotEmpty(redirection))
