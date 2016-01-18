@@ -113,7 +113,10 @@
 												</p>
 											</div> -->
 										</div>
-								</a> <a class="account-only new-review" href='<c:url value="${product.value.url}"></c:url>'><spring:theme code="myaccount.review.reviewProduct"/></a>
+								</a> <a class="account-only new-review" data-toggle="modal" data-target="#reviewPluginContainer" 
+										data-product = "${product.value.code}" data-category = "${product.value.rootCategory}"
+										onclick="reviewPopUpDisplay('${product.value.rootCategory}','${product.value.code}','${product.value.productTitle}')"
+										><spring:theme code="myaccount.review.reviewProduct"/></a>
 								</div>
 								</c:forEach>
 							
@@ -786,7 +789,7 @@
 			</div>
 			</div>
 		  </div>
-		</div> 
+		</div>
 <div id="updateReviewcontainer" style="display: none;">
 <div id="updateReview">
 			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:270px;margin:0px;">
@@ -805,6 +808,22 @@
 			</div>
 		  </div>
 		</div> 
+		
+<div id="reviewPluginContainer" style="display: none;" class="modal fade">
+			<div class="modal-content content" style="background-color:#fff;margin:0 auto;">
+				<div class="modal-header">
+				<h4 class="modal-title">
+					<spring:theme code="myaccount.review.editpopuptitle"/> <span id="popUpProductTitle"></span> 
+				</h4> 
+				</div>
+				<div class="commentcontent" style="width:100%;padding: 5px;">
+				<input type="hidden" name="user_logged">
+				<ul id="commentsDiv" class="review-list" style="margin:auto;"></ul>
+				</div>
+				<button class="close" data-dismiss="modal"></button>
+			</div>
+			<div class="overlay" data-dismiss="modal"></div> 
+		  </div>
 </template:page>
 <script>
 $(document).ready(function(){
@@ -1135,6 +1154,41 @@ rating(arrayrating);
 			 	index++;
 			});
 			}
+		
+	    function reviewPopUpDisplay(rootCategory , productCode , productTitle){
+	    	
+	    	$("#popUpProductTitle").text(productTitle);
+			var ratingsParams = {
+					categoryID : rootCategory,
+					streamID : productCode,
+					containerID : 'ratingDiv',
+					linkedCommentsUI : 'commentsDiv',
+					showCommentButton : 'true',
+					onAddReviewClicked:reviewClick,
+				}
+				
+				gigya.comments.showRatingUI(ratingsParams);
+
+				var params = {
+					categoryID : rootCategory,
+					streamID : productCode,
+					scope : 'both',
+					privacy : 'public',
+					version : 2,
+					containerID : 'commentsDiv',
+					/*onCommentSubmitted:reviewCount,*/ 
+					cid : '',
+					enabledShareProviders : 'facebook,twitter',
+					enabledProviders : 'facebook,google', // login providers that should be displayed when click post
+					/*onLoad :commentBox,*/
+					//userAction: shareUserAction
+				}
+				gigya.comments.showCommentsUI(params);	
+	    }	
+		
+		function reviewClick(response) {
+			CheckUserLogedIn();
+		}
 		
 		
 </script>
