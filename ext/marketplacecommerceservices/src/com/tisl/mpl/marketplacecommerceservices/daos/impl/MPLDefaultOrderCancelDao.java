@@ -47,7 +47,7 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 			return flexibleSearchService.<OrderCancelRecordEntryModel> search(query).getResult();
 			/*
 			 * if (result.getTotalCount() > 1)
-			 *
+			 * 
 			 * { throw new EtailBusinessExceptions("Cancel  not found"); }
 			 */
 		}
@@ -80,6 +80,30 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 		}
 	}
 
+	@Override
+	public List<OrderCancelRecordEntryModel> getAllCancelled() throws Exception
+	{
+		final Map<String, Object> params = new HashMap<>();
+		//params.put("returnRequest", "");
+		//params.put("startDate", startDate);
+		try
+		{
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.CANCELLED_REPORT_QUERY,
+					params);
+			return flexibleSearchService.<OrderCancelRecordEntryModel> search(query).getResult();
+			/*
+			 * if (result.getTotalCount() > 1)
+			 * 
+			 * { throw new EtailBusinessExceptions("Cancel  not found"); }
+			 */
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return null;
+		}
+	}
+
 
 	/**
 	 * @return the flexibleSearchService
@@ -100,6 +124,8 @@ public class MPLDefaultOrderCancelDao extends DefaultOrderCancelDao implements M
 	{
 		this.flexibleSearchService = flexibleSearchService;
 	}
+
+
 
 
 }

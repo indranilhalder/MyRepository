@@ -436,7 +436,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ADDRESS_DATA = "addressData";
 	public static final String ADDRESTYPE_EQUALS_ADDADDRESS = "addrestype=addaddress";
 	public static final String MODEL_SAVING_EXCEPTION = "ModelSavingException";
-	public static final String CLIENTID = "siteadmin";
+	public static final String CLIENTID = "config.clientId";
 	public static final int NAME = 40;
 	public static final String MOBILENUMBERLENGTH = "Please Enter valid 10 digit phone number";
 	public static final int MOBLENGTH = 10;
@@ -854,7 +854,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B2002 = "B2002";
 
 	//For Sales Report
-	public static final String DATE_FORMAT_REPORT = "dd-MM-yyyy";
+	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
 	public static final String ORDER_ERROR = "Order not found in current BaseStore";
 	public static final String CSV_ERROR = "Error in CsvFileWriter !!!";
 	public static final String FILE_WRITER_ERROR = "Error while flushing/closing fileWriter !!!";
@@ -863,11 +863,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FILE_PATH = "_";
 	public static final String SALES_REPORT_INCREMENTAL = "incremental";
 	public static final String SALES_REPORT_FULL = "full";
-	public static final String SALES_REPORT_QUERY = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE + "}";
+	public static final String SALES_REPORT_QUERY = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE + "} WHERE {"
+			+ OrderModel.TYPE + "}=?type";
 	public static final String SALES_REPORT_QUERY_START = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
-			+ "} WHERE " + "{" + OrderModel.CREATIONTIME + "} >=?fromDate";
+			+ "} WHERE " + "{" + OrderModel.CREATIONTIME + "} >=?fromDate AND {" + OrderModel.TYPE + "}=?type";
 	public static final String SALES_REPORT_QUERY_START_END = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
-			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate ";
+			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate AND {"
+			+ OrderModel.TYPE + "}=?type";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
@@ -894,20 +896,26 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//For Bulk Upload in Promotion Restriction
 	public static final String EXCLUDEBRANDRESTRICTION = "ExcludeManufacturersRestriction".intern();
 	//For Refund Report
+	public static final String REFUND_REPORT_QUERY = "SELECT {" + RefundEntryModel.PK + "} FROM {" + RefundEntryModel._TYPECODE
+			+ "} ";
 	public static final String REFUND_REPORT_QUERY_START = "SELECT {" + RefundEntryModel.PK + "} FROM {"
 			+ RefundEntryModel._TYPECODE + "} WHERE {" + RefundEntryModel.REFUNDEDDATE + "} >= ?startDate ";
-
 	public static final String REFUND_REPORT_QUERY_START_END = "SELECT {" + RefundEntryModel.PK + "} FROM {"
 			+ RefundEntryModel._TYPECODE + "} WHERE {" + RefundEntryModel.REFUNDEDDATE + "} >= ?startDate AND {"
 			+ RefundEntryModel.REFUNDEDDATE + "} <=?endDate ";
 
 	//For Replacement Report
+	public static final String REPLACE_REPORT_QUERY = "SELECT {" + ReplacementEntryModel.PK + "} FROM {"
+			+ ReplacementEntryModel._TYPECODE + "} ";
 	public static final String REPLACE_REPORT_QUERY_START = "SELECT {" + ReplacementEntryModel.PK + "} FROM {"
 			+ ReplacementEntryModel._TYPECODE + "} WHERE {" + ReplacementEntryModel.CREATIONTIME + "} >= ?startDate ";
 	public static final String REPLACE_REPORT_QUERY_START_END = "SELECT {" + ReplacementEntryModel.PK + "} FROM {"
 			+ ReplacementEntryModel._TYPECODE + "} WHERE {" + ReplacementEntryModel.CREATIONTIME + "} >= ?startDate AND {"
 			+ ReplacementEntryModel.CREATIONTIME + "} <=?endDate ";
+
 	//For Cancel Report
+	public static final String CANCELLED_REPORT_QUERY = "SELECT {" + OrderCancelRecordEntryModel.PK + "} FROM {"
+			+ OrderCancelRecordEntryModel._TYPECODE + "} ";
 	public static final String CANCELLED_REPORT_QUERY_START = "SELECT {" + OrderCancelRecordEntryModel.PK + "} FROM {"
 			+ OrderCancelRecordEntryModel._TYPECODE + "} WHERE {" + OrderCancelRecordEntryModel.CREATIONTIME + "} >= ?startDate ";
 	public static final String CANCELLED_REPORT_QUERY_START_END = "SELECT {" + OrderCancelRecordEntryModel.PK + "} FROM {"
@@ -1006,6 +1014,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String GATEWAYID = "gateway_id".intern();
 	public static final String BANKERRORCODE = "bank_error_code".intern();
 	public static final String BANKERRORMESSAGE = "bank_error_message".intern();
+	public static final String PAYMENTMETHOD = "payment_method".intern();
+	public static final String PAYMENTMETHODTYPE = "payment_method_type".intern();
+	public static final String PAYMENT_METHOD_NB = "NB".intern();
 
 	// Order Response
 
@@ -1271,6 +1282,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CARTQUERY = "select {c:pk} from {Cart As c} where {c.guid}=?guid".intern();
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
+
+	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
 
 	private MarketplacecommerceservicesConstants()
 	{

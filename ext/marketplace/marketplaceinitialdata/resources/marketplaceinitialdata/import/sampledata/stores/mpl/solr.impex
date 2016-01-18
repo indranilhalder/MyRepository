@@ -219,7 +219,7 @@ where tbl.code IN (
  ORDER BY tbl.code
 ";anonymous
 ;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"
-  SELECT distinct{p.code} FROM {Product AS p} 
+  SELECT distinct{p.PK} FROM {Product AS p} 
 						WHERE {p.code} IN ( 
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
@@ -238,7 +238,7 @@ where tbl.code IN (
 
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
-;sortRef1;$solrIndexedType;relevance;true;
+;sortRef1;$solrIndexedType;relevance;false;
 ;sortRef3;$solrIndexedType;name-asc;false;
 ;sortRef4;$solrIndexedType;name-desc;false;
 ;sortRef5;$solrIndexedType;price-asc;false;
@@ -296,7 +296,6 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 								 ;$solrIndexedType                        ;braCoverage						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;bracoverage:bracoverageCC
 								 ;$solrIndexedType                        ;displayFeatures					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;displayfeatures:iphonedf,displayfeatures:smartphonesdf,displayfeatures:ipaddf,displayfeatures:kindledf,displayfeatures:tabletsdf
 								 ;$solrIndexedType                        ;memorySmartphone					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;memorysmartphone:iphonems,memorysmartphone:smartphonesms
-								 ;$solrIndexedType                        ;operatingSystemIphone			;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;operatingsystemiphone:iphonegf
 								 ;$solrIndexedType                        ;cameraFeatures					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;camerafeatures:smartphonesca,camerafeatures:ipadca,camerafeatures:tabletsca
 								 ;$solrIndexedType                        ;maximumISO						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;maximumiso:camerasgf
 								 ;$solrIndexedType                        ;megapixel						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;megapixel:actioncamcordersgf,megapixel:camerasgf
@@ -375,7 +374,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 								 ;$solrIndexedType                        ;type								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;typecamerabinotelescope:camerasgf,typecamerasecurity:securitycamerasgf,typeearheadphone:headphonesandheadsetsgf,typehealthcare:healthcaregf,typehealthcare:personalcaregf,typehts:hometheatresystemsgf,typemixer:mixers&foodprocessorsgf,typenetworking:networkinggf,typeofassistivetechnology:healthcaretypeofasstech,typeperipheralsoftware:peripheralsandsoftwaregf,typepersonalcare:healthcaregf,typepersonalcare:personalcaregf,typepurifier:waterpurifiersgf,typestorage:laptopsgf,typetvacc:tvaccessoriesgf,typevacuumcleaner:vacuumcleanergf
 								 ;$solrIndexedType                        ;usbPorts							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;usbinputs:soundbarsaf,usbinputs:desktopsaf,usbinputs:laptopsaf,usbinputs:tabletsaf,usbinputs:dvdplayeraf,usbinputs:ledtvaf
 								 ;$solrIndexedType                        ;videoFormat						;string		;					; 					;true						;						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;videoformatledtv:ledtvtf,videoformatprojectors:projectorstf,videoformatshts:hometheatretf,videoformatstventermnt:dvdplayertf,videoformatstventermnt:ledtvtf,videoformatstventermnt:hometheatreprojectortf,videoformatstventermnt:portableprojectorstf,videoformatstventermnt:projectortf,videoplaybackformats:dvdplayermm
-								 ;$solrIndexedType                        ;warranty							;string		;					; 					;true						;						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;warrantydescription:electronicswa,warrantysummary:electronicswa
+								 ;$solrIndexedType                        ;warranty							;string		;					; 					;true						;						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;warrantysummary:electronicswa
 								 ;$solrIndexedType                        ;weight							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;weight:electronicsdm
 
 #For Exclude OutofStock facet

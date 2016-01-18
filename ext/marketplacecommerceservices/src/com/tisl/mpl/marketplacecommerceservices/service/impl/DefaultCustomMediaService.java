@@ -37,10 +37,16 @@ public class DefaultCustomMediaService extends DefaultMediaService
 		}
 
 		final String damHostName = getConfigurationService().getConfiguration().getString("product.dammedia.host");
-		final String internalURL = media.getInternalURL();
+		String internalURL = media.getInternalURL();
 		if (StringUtils.isEmpty(damHostName))
 		{
 			LOG.debug("Actual URL :" + internalURL);
+			final int indexVal = internalURL.indexOf(CONTEXT_PARAM_MARKERS);
+
+			if (indexVal == -1)
+			{
+				internalURL = CONTEXT_PARAM_MARKERS + internalURL;
+			}
 			return internalURL.substring(internalURL.indexOf(CONTEXT_PARAM_MARKERS));
 		}
 
