@@ -22,6 +22,13 @@ public interface MPLReplacementDao extends ReplacementOrderDao
 	 * @return List<RefundEntryModel>
 	 * @throws Exception
 	 */
+	List<ReplacementEntryModel> getAllReplacement() throws Exception;
+
+	/**
+	 * @description Get all Refund request made
+	 * @return List<RefundEntryModel>
+	 * @throws Exception
+	 */
 	List<ReplacementEntryModel> getAllReplacement(Date startDate) throws Exception;
 
 	/**

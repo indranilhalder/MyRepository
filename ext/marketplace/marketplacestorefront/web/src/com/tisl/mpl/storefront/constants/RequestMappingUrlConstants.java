@@ -19,6 +19,7 @@ public final class RequestMappingUrlConstants
 	public static final String FORWARD_PREFIX = "forward:";
 	public static final String ROOT = "/";
 	public static final String TENANT = "tenant";
+	public static final String LINK_404 = "/404";
 
 	public static final String LINK_MY_ACCOUNT = "/my-account";
 	public static final String LINK_ADDRESS_FORM = "/addressform";

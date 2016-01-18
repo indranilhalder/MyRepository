@@ -18,7 +18,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
-import com.tisl.mpl.data.AllVoucherListData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
@@ -90,7 +89,7 @@ public interface MplCouponFacade
 	 * @param voucherList
 	 * @return AllVoucherListData
 	 */
-	AllVoucherListData getAllVoucherList(CustomerModel customer, List<VoucherModel> voucherList);
+	//AllVoucherListData getAllVoucherList(CustomerModel customer, List<VoucherModel> voucherList);
 
 	/**
 	 * @param customer
@@ -135,4 +134,9 @@ public interface MplCouponFacade
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode);
 
+	/*
+	 * @return
+	 */
+	@SuppressWarnings("javadoc")
+	List<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer);
 }

@@ -1502,8 +1502,7 @@ function buyboxDetailsForSizeGuide(productCode){
 	console.log(sellerID +" "+productCode);
 	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
-	
-	
+
 	
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -1538,13 +1537,9 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sizeStock").val(availableStock);
 				$("#sellerSelArticleSKU").html(ussid);
 				$("#sellerSelArticleSKUVal").val(ussid);
-				//alert("specialPrice:"+specialPrice.value+"sellerName:"+sellerName+" sellerID:" +sellerID+"  ,  availableStock:  "+availableStock+" ussid: "+ussid);
-				
-				
 				if(availableStock==0){
 					$("#addToCartSizeGuideTitleoutOfStockId").html("<font color='#ff1c47'>" + $('#addToCartSizeGuideTitleoutOfStockId').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
-					//$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}
 				else{
