@@ -30,6 +30,7 @@
     	<property name="couponDiscount" type="double" />
     	<property name="voucherCode" type="String"/>
     	<property name="voucherType" type="String" />
+    	<property name="reedemCouponCount" type="String" />
 		<property name="voucherDescription" type="String" />
 		<property name="voucherExpiryDate" type="String" />
 		<property name="voucherCreationDate" type="java.util.Date" />
@@ -53,7 +54,7 @@
 		
 	<bean class="com.tisl.mpl.data.CouponHistoryStoreDTO">
 		<property name="couponHistoryDTOList" type="java.util.List&lt;com.tisl.mpl.data.CouponHistoryData>"/>
-		<property name="savedSum" type="Double"/>
+		<property name="savedSum" type="String"/>
 		<property name="couponsRedeemedCount" type="int"/>
 	</bean>
 

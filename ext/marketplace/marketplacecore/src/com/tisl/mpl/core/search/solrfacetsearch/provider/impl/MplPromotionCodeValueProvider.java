@@ -2,10 +2,12 @@
 package com.tisl.mpl.core.search.solrfacetsearch.provider.impl;
 
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.promotions.PromotionsService;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.servicelayer.time.TimeService;
 import de.hybris.platform.solrfacetsearch.config.IndexConfig;
@@ -29,7 +31,13 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
+import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
+import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
+import com.tisl.mpl.model.ManufacturersRestrictionModel;
 
 
 public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
@@ -107,10 +115,14 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 		{
 			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
 
-			final Iterator localIterator = getPromotionsService()
-					.getProductPromotions(Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true,
-							currentTimeRoundedToMinute)
-					.iterator();
+			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
+
+			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
+
+			final Iterator localIterator = restrictedPromotions.iterator();
+
+
 			if (localIterator.hasNext())
 			{
 				final ProductPromotionModel promotion = (ProductPromotionModel) localIterator.next();
@@ -130,8 +142,15 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 		final BaseSiteModel baseSiteModel = indexConfig.getBaseSite();
 		if ((baseSiteModel != null) && (baseSiteModel.getDefaultPromotionGroup() != null))
 		{
-			final Iterator localIterator = getPromotionsService()
-					.getProductPromotions(Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product).iterator();
+			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+
+			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
+
+			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
+
+			final Iterator localIterator = restrictedPromotions.iterator();
+
 			if (localIterator.hasNext())
 			{
 				final ProductPromotionModel promotion = (ProductPromotionModel) localIterator.next();
@@ -152,8 +171,14 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 		{
 			final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>();
 
-			for (final ProductPromotionModel promotion : getPromotionsService()
-					.getProductPromotions(Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product))
+			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+
+			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
+
+			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
+
+			for (final ProductPromotionModel promotion : restrictedPromotions)
 			{
 				if (promotion.getChannel().contains(SalesApplication.WEB) || promotion.getChannel().isEmpty())
 				{
@@ -211,8 +236,14 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 		{
 			final List<ProductPromotionModel> promotions = new ArrayList<ProductPromotionModel>();
 
-			for (final ProductPromotionModel promotion : getPromotionsService()
-					.getProductPromotions(Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product))
+			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+
+			final List<ProductPromotionModel> productPromotions = getPromotionsService().getProductPromotions(
+					Collections.singletonList(baseSiteModel.getDefaultPromotionGroup()), product, true, currentTimeRoundedToMinute);
+
+			final List<ProductPromotionModel> restrictedPromotions = validatePromotionRestrictions(productPromotions, product);
+
+			for (final ProductPromotionModel promotion : restrictedPromotions)
 			{
 
 				promotions.add(promotion);
@@ -283,6 +314,190 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 	public void setTimeService(final TimeService timeService)
 	{
 		this.timeService = timeService;
+	}
+
+
+	public List<ProductPromotionModel> validatePromotionRestrictions(final List<ProductPromotionModel> promotions,
+			final ProductModel productModel)
+	{
+		//excluded product check starts
+		boolean isFreeBee = false;
+		final List<ProductPromotionModel> toRemovePromotionList = new ArrayList<ProductPromotionModel>();
+		if (null != promotions)
+		{
+			for (final ProductPromotionModel productPromotion : promotions)
+			{
+				boolean excludePromotion = false;
+				if (null != productPromotion)
+				{
+					isFreeBee = isFreeBeePromotionExists(productPromotion);//check bogo promotion present or not
+					if (isFreeBee && productPromotion.getRestrictions().isEmpty())
+					{
+						toRemovePromotionList.add(productPromotion);
+						excludePromotion = true;
+						break;
+					}
+					if (null != productPromotion.getExcludedProducts() && (!productPromotion.getExcludedProducts().isEmpty()))
+					{
+						final List<ProductModel> excludedList = new ArrayList<ProductModel>(productPromotion.getExcludedProducts());
+						for (final ProductModel product : excludedList)
+						{
+							if (null != product.getCode() && product.getCode().equalsIgnoreCase(productModel.getCode()))
+							{
+								LOG.debug("*******Product not applicable for Excluded product criteria:" + product.getCode());
+								toRemovePromotionList.add(productPromotion);
+								excludePromotion = true;
+								break;
+							}
+						}
+
+						if (excludePromotion)
+						{
+							continue;
+						}
+
+					}
+
+					///brand restriction check
+
+
+					for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
+					{
+
+						boolean excluseBrandRestrictionPresent = false;
+
+						//checking if BOGO promotion present or not and removing the promotion if seller restriction not present
+						if (!(restriction instanceof EtailSellerSpecificRestrictionModel) && isFreeBee)
+						{
+							toRemovePromotionList.add(productPromotion);
+							excludePromotion = true;
+							break;
+						}
+
+						//checking Exclude brandRestriction
+						if (restriction instanceof ExcludeManufacturersRestrictionModel)
+						{
+
+							final ExcludeManufacturersRestrictionModel brandRestriction = (ExcludeManufacturersRestrictionModel) restriction;
+							final List<CategoryModel> brandRestrictions = new ArrayList<CategoryModel>(
+									brandRestriction.getManufacturers());
+							final List<String> brands = new ArrayList<String>(getBrandsForProduct(productModel));
+							for (final CategoryModel retriction : brandRestrictions)
+							{
+								if (brands.contains(retriction.getCode()))
+								{
+									excluseBrandRestrictionPresent = true;
+									break;
+								}
+
+							}
+
+							if (excluseBrandRestrictionPresent)
+							{
+								LOG.debug("*******Product not applicable for Exclude brand restriction:" + productModel.getCode());
+								toRemovePromotionList.add(productPromotion);
+							}
+						}
+
+						//checking brandRestriction
+						if (restriction instanceof ManufacturersRestrictionModel)
+						{
+							boolean brandRestrictionPresent = false;
+							final ManufacturersRestrictionModel brandRestriction = (ManufacturersRestrictionModel) restriction;
+							final List<CategoryModel> brandRestrictions = new ArrayList<CategoryModel>(
+									brandRestriction.getManufacturers());
+							final List<String> brands = new ArrayList<String>(getBrandsForProduct(productModel));
+							for (final CategoryModel retriction : brandRestrictions)
+							{
+								if (brands.contains(retriction.getCode()))
+								{
+									brandRestrictionPresent = true;
+									break;
+								}
+
+							}
+
+							if (!brandRestrictionPresent)
+							{
+								LOG.debug("*******Product not applicable for brand restriction:" + productModel.getCode());
+								toRemovePromotionList.add(productPromotion);
+							}
+						}
+
+
+					}
+
+
+				}
+			} //end promotion for loop
+		}
+		if (!toRemovePromotionList.isEmpty())
+		{
+			promotions.removeAll(toRemovePromotionList);
+		}
+
+		return promotions;
+
+	}
+
+	private boolean isFreeBeePromotionExists(final ProductPromotionModel productPromotion)
+	{
+		boolean isFreeBree = false;
+		if (productPromotion instanceof BuyXItemsofproductAgetproductBforfreeModel)
+		{
+			isFreeBree = true;
+		}
+		return isFreeBree;
+	}
+
+	public List<String> getBrandsForProduct(final ProductModel productModel)
+	{
+		List<String> brandList = null;
+		try
+		{
+
+			final List<CategoryModel> categories = getImmediateSuperCategory(productModel);//(List<CategoryModel>) productModel.getSupercategories();
+			if (categories != null && !categories.isEmpty())
+			{
+				brandList = new ArrayList<String>();
+				for (final CategoryModel categoryModel : categories)
+				{
+					if (categoryModel.getCode().startsWith("MBH"))
+					{
+						brandList.add(categoryModel.getCode());
+					}
+
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return brandList;
+	}
+
+	private List<CategoryModel> getImmediateSuperCategory(final ProductModel product)
+	{
+
+		List<CategoryModel> superCategories = new ArrayList<CategoryModel>();
+		try
+		{
+			if (product != null)
+			{
+
+				superCategories = (List<CategoryModel>) product.getSupercategories();
+
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		return superCategories;
+
+
 	}
 
 

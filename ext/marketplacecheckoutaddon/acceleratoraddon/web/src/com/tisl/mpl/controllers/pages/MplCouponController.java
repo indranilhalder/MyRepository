@@ -12,11 +12,11 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,6 @@ import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
-import com.tisl.mpl.model.BankModel;
 
 
 @Controller
@@ -73,25 +72,27 @@ public class MplCouponController
 	{
 		LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
-		getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
 
-		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
-		if (StringUtils.isEmpty(bankNameSelected))
-		{
-			getSessionService().setAttribute("bank", bankNameSelected);
-		}
-		else
-		{
-			for (final BankModel bank : bankList)
-			{
-				if (bank.getBankName().equalsIgnoreCase(bankNameSelected))
-				{
-					//setting the bank in session to be used for Promotion
-					getSessionService().setAttribute("bank", bank);
-					break;
-				}
-			}
-		}
+		LOG.debug("The bank selected is  ::: " + bankNameSelected);
+		//		getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
+		//
+		//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
+		//		if (StringUtils.isEmpty(bankNameSelected))
+		//		{
+		//			getSessionService().setAttribute("bank", bankNameSelected);
+		//		}
+		//		else
+		//		{
+		//			for (final BankModel bank : bankList)
+		//			{
+		//				if (bank.getBankName().equalsIgnoreCase(bankNameSelected))
+		//				{
+		//					//setting the bank in session to be used for Promotion
+		//					getSessionService().setAttribute("bank", bank);
+		//					break;
+		//				}
+		//			}
+		//		}
 
 		final boolean redeem = true;
 		boolean couponRedStatus = false;
@@ -103,9 +104,10 @@ public class MplCouponController
 		}
 		catch (final VoucherOperationException e)
 		{
+			LOG.error("Issue with voucher redeem " + e.getMessage());
 			if (e.getMessage().contains("total price exceeded"))
 			{
-				data.setRedeemErrorMsg("Price exceeded");
+				data.setRedeemErrorMsg("Price_exceeded");
 			}
 			else if (e.getMessage().contains("Voucher not found"))
 			{
@@ -119,17 +121,38 @@ public class MplCouponController
 			{
 				data.setRedeemErrorMsg("Issue");
 			}
+			else if (e.getMessage().contains("Voucher is not applicable"))
+			{
+				data.setRedeemErrorMsg("Not_Applicable");
+			}
+			else if (e.getMessage().contains("Voucher is not reservable"))
+			{
+				data.setRedeemErrorMsg("Not_Reservable");
+			}
 
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
 			data.setCouponRedeemed(false);
 			return data;
 		}
 
-		LOG.debug("Coupon Redemption Status is:::" + couponRedStatus);
+		LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
 
 		data = getMplCouponFacade().calculateValues(cartModel, couponRedStatus, redeem);
 
-		getSessionService().removeAttribute("bank");
+		final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+		final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
+		if (null != paymentInfo)
+		{
+			for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
+			{
+				if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+				{
+					updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
+					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, updatedPaymentInfo);
+				}
+			}
+		}
+		//getSessionService().removeAttribute("bank");
 
 		return data;
 	}
@@ -149,19 +172,24 @@ public class MplCouponController
 	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode) throws EtailNonBusinessExceptions,
 			JaloPriceFactoryException, CalculationException
 	{
-		LOG.debug("The coupon code to be released by the customer is ::: " + couponCode);
+		LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
 		boolean couponRelStatus = false;
 		final boolean redeem = false;
 
 		try
 		{
-			getVoucherFacade().releaseVoucher(couponCode);
+			getMplCouponFacade().releaseVoucher(couponCode, cartModel);
 			couponRelStatus = true;
 		}
 		catch (final VoucherOperationException e)
 		{
-			e.printStackTrace();
+			LOG.error("Issue with voucher release " + e.getMessage());
+			final VoucherDiscountData data = new VoucherDiscountData();
+			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			data.setRedeemErrorMsg("Release Issue");
+			data.setCouponReleased(false);
+			return data;
 		}
 
 		getMplCouponFacade().recalculateCartForCoupon(cartModel);
@@ -171,6 +199,20 @@ public class MplCouponController
 		if (couponRelStatus)
 		{
 			data = getMplCouponFacade().calculateValues(cartModel, couponRelStatus, redeem);
+
+			final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+			final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
+			if (null != paymentInfo)
+			{
+				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
+				{
+					if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+					{
+						updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, updatedPaymentInfo);
+					}
+				}
+			}
 		}
 
 		return data;

@@ -81,7 +81,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 					{
 						addToMap(sizeGuideDatas, sizeGuideModel.getDimension(), sizeGuideData);
 					}
-					else
+					else if (categoryType.equalsIgnoreCase(FOOTWEAR))
 					{
 						sizeGuideDataListForFootwear.add(sizeGuideData);
 					}
@@ -251,7 +251,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */
 

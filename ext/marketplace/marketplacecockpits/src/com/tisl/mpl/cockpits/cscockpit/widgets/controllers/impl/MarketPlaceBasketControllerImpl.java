@@ -740,6 +740,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 
 		}
+		
+		if (voucher.getValue().doubleValue() <= 0)
+		{
+			LOG.error("Invalid Voucher : " + voucherCode);
+			return "invalid_voucher_code";
+		}
+		
 		if (!checkVoucherCanBeRedeemed(voucher, voucherCode))
 		{
 			
@@ -766,6 +773,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					LOG.error("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
 					return "prices_exceeded";
 				}
+				
+				mplCouponFacade.setApportionedValueForVoucher(voucher, cartModel, voucherCode);
 				
 				return StringUtils.EMPTY;
 			}
@@ -817,8 +826,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	 * @throws NumberFormatException 
 	 * @throws JaloInvalidParameterException 
 	 * @throws CalculationException 
+	 * @throws JaloPriceFactoryException 
 	 */
-	protected boolean checkCartAfterApply(final String lastVoucherCode, final VoucherModel lastVoucher) throws JaloInvalidParameterException, NumberFormatException, JaloSecurityException, CalculationException
+	protected boolean checkCartAfterApply(final String lastVoucherCode, final VoucherModel lastVoucher) throws JaloInvalidParameterException, NumberFormatException, JaloSecurityException, CalculationException, JaloPriceFactoryException
 	{
 		final CartModel cartModel = getCartModel();
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
@@ -877,7 +887,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		{
 			releaseVoucher(lastVoucherCode);
 			LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
-			mplDefaultCalculationService.calculateTotals(cartModel, false);
+			mplCouponFacade.recalculateCartForCoupon(cartModel);
 			getModelService().save(cartModel);
 			return false;
 		}
@@ -913,7 +923,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				{
 					releaseVoucher(lastVoucherCode);
 					LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
-					mplDefaultCalculationService.calculateTotals(cartModel, false);
+					mplCouponFacade.recalculateCartForCoupon(cartModel);
 					getModelService().save(cartModel);
 					return false;
 				}
