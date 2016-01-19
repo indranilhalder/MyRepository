@@ -1538,7 +1538,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sellerSelArticleSKU").html(ussid);
 				$("#sellerSelArticleSKUVal").val(ussid);
 				if(availableStock==0){
-					$("#addToCartSizeGuideTitleoutOfStockId").html("<font color='#ff1c47'>" + $('#addToCartSizeGuideTitleoutOfStockId').text() + "</font>");
+					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}
