@@ -264,6 +264,7 @@ public interface ControllerConstants
 				String MiniCartPanel = "fragments/cart/miniCartPanel";
 				String MiniCartErrorPanel = "fragments/cart/miniCartErrorPanel";
 				String CartPopup = "fragments/cart/cartPopup";
+				String GiftList = "fragments/cart/cartGiftList";
 			}
 
 			interface Account
