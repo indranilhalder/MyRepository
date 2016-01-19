@@ -16,7 +16,6 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.jalo.Voucher;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
@@ -75,8 +74,7 @@ public class NotificationServiceImpl implements NotificationService
 	private MplSNSMobilePushService mplSNSMobilePushService;
 	@Autowired
 	private VoucherModelService voucherModelService;
-	@Autowired
-	private UserService userService;
+
 
 
 	/**
@@ -125,7 +123,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -137,7 +135,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -168,7 +166,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -190,7 +188,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -220,7 +218,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -248,7 +246,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -306,7 +304,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -360,7 +358,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getVoucher()
 	 */
 	@Override
@@ -372,7 +370,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -392,7 +390,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */
@@ -405,7 +403,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getAllVoucherList(de.hybris.platform.core
 	 * .model.user.CustomerModel, java.util.List)
@@ -517,7 +515,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#saveToVoucherStatusNotification(de.hybris
 	 * .platform.jalo.Item)
