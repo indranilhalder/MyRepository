@@ -171,6 +171,15 @@
 										</span></li>
 									</c:if>
 									<!-- TISEE-2672 -->
+									
+									<!-- TISSTRT-136 -->
+									<c:if test="${subOrder.couponDiscount.value > 0}">
+										<li><spring:theme code="text.account.order.coupon"
+												text="Coupon" /> <span class="amt"> -<format:price
+													priceData="${subOrder.couponDiscount}" />
+										</span></li>
+									</c:if>
+									<!-- TISSTRT-136 -->
 
 									<c:if test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
 										<li><spring:theme

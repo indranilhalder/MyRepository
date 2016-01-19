@@ -14,7 +14,10 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
+import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserGroupModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrder;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -35,6 +38,7 @@ import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
+import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -153,7 +157,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 			{
-				if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
+				if (cartEntryModel != null && null != cartEntryModel.getGiveAway() && !cartEntryModel.getGiveAway().booleanValue()
 						&& cartEntryModel.getSelectedUSSID() != null)
 				{
 					freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
@@ -197,6 +201,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				if (dis.getCode().equalsIgnoreCase(voucher.getCode()))
 				{
 					totalDiscount += dis.getAppliedValue();
+					break;
 				}
 			}
 
@@ -251,14 +256,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 */
 	@Override
-	public List<VoucherDisplayData> getAllClosedCoupons()
+	public List<VoucherDisplayData> getAllClosedCoupons(final CustomerModel customer)
 	{
 		List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 		final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap = getMplCouponService().getClosedVoucher();
 
 		if (null != voucherWithStartDateMap)
 		{
-			closedVoucherDataList = iterateSetToCreateList(voucherWithStartDateMap);
+			closedVoucherDataList = iterateSetToCreateList(voucherWithStartDateMap, customer);
 		}
 		return closedVoucherDataList;
 	}
@@ -268,37 +273,72 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @return
 	 */
 	private List<VoucherDisplayData> iterateSetToCreateList(
-			final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap)
+			final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap, final CustomerModel customer)
 	{
 		{
+
 			final List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			for (final Map<VoucherModel, DateRestrictionModel> entry : voucherWithStartDateMap)
 			{
 				for (final Map.Entry<VoucherModel, DateRestrictionModel> mapEntry : entry.entrySet())
 				{
 					final VoucherModel voucher = mapEntry.getKey();
+
 					if (voucher instanceof PromotionVoucherModel)
 					{
-						final PromotionVoucherModel voucherObj = (PromotionVoucherModel) voucher;
-
-
+						final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
 						final DateRestrictionModel dateRestriction = mapEntry.getValue();
-						final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
-						voucherDisplayData.setVoucherCode(voucherObj.getVoucherCode());
-						voucherDisplayData.setVoucherDescription(voucherObj.getDescription());
-						final Date endDate = dateRestriction.getEndDate() != null ? dateRestriction.getEndDate() : new Date();
-						voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
-						final Date startDate = dateRestriction.getStartDate();
-						voucherDisplayData.setVoucherCreationDate(startDate);
-						closedVoucherDataList.add(voucherDisplayData);
+						final String voucherCode = promoVoucher.getVoucherCode();
+
+						final List<RestrictionModel> restrictionList = new ArrayList<RestrictionModel>(promoVoucher.getRestrictions());
+						UserRestrictionModel userRestrObj = null;
+						final List<PrincipalModel> restrCustomerList = new ArrayList<PrincipalModel>();
+
+						for (final RestrictionModel restrictionModel : restrictionList)
+						{
+							if (restrictionModel instanceof UserRestrictionModel)
+							{
+								userRestrObj = (UserRestrictionModel) restrictionModel;
+
+								for (final PrincipalModel user : userRestrObj.getUsers())
+								{
+									if (user instanceof UserGroupModel)
+									{
+										restrCustomerList.addAll(((UserGroupModel) user).getMembers());
+									}
+									else if (user instanceof UserModel)
+									{
+										restrCustomerList.add(user);
+									}
+								}
+
+								break;
+							}
+						}
+
+						if (voucherModelService.isReservable(promoVoucher, voucherCode, customer)
+								&& restrCustomerList.contains(customer))
+						{
+
+							final Date endDate = dateRestriction.getEndDate() != null ? dateRestriction.getEndDate() : new Date();
+							final Date startDate = dateRestriction.getStartDate();
+
+							final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
+
+							voucherDisplayData.setVoucherCode(voucherCode);
+							voucherDisplayData.setVoucherDescription(promoVoucher.getDescription());
+							voucherDisplayData.setReedemCouponCount(String.valueOf(promoVoucher.getRedemptionQuantityLimit()));
+							voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
+							voucherDisplayData.setVoucherCreationDate(startDate);
+
+							closedVoucherDataList.add(voucherDisplayData);
+						}
 					}
 				}
 			}
 			return closedVoucherDataList;
 		}
 	}
-
-
 
 
 	/**

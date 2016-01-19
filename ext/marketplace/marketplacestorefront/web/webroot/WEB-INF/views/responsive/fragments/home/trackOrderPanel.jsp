@@ -38,15 +38,15 @@
 				function() {
 					$(this).click(
 							function() {
+								
 								$(this).css("background-Color", "#c0c0c0");
-								var current = $('.badge').text();
+								//var current = $('.badge').text();
+								var current = '${notificationCount}';
+								
 								if (current > 0) {
 									current = current - 1;
-									markAsRead(this.id, $(this).attr(
-											'data-name'), $(this).attr(
-											'data-status'));
-
-									$('.badge').text(current)
+									markAsRead(this.id,$(this).attr('data-name'), $(this).attr('data-status'));
+									$('#tracklink span').text(current)
 								}
 							});
 					$(this).mouseout(function() {
@@ -55,23 +55,24 @@
 				});
 	});
 
-	function markAsRead(orderNo, creationDate, shopperstatus) {
-
-		var consignmentNo = creationDate;
-		var orderNo = orderNo;
-		var status = shopperstatus
+	function markAsRead(currentId, consignmentNo, shopperstatus) {
+     
+		var consignmentNo = consignmentNo;
+		var currentId = currentId;
+		var shopperstatus = shopperstatus
 		var contentData = '';
 		$.ajax({
 			url : ACC.config.encodedContextPath
-					+ "/view/TrackOrderHeaderComponentController/markAsRead",
+					+ "/headerTrackOrder/markAsRead",
 			data : {
+				'currentId' : currentId,
 				'consignmentNo' : consignmentNo,
-				'orderId' : orderNo,
 				'shopperStatus' : shopperstatus
 			},
 			type : "GET",
 			cache : false,
 			success : function(data) {
+			
 
 			},
 			error : function(resp) {
@@ -81,7 +82,6 @@
 
 	}
 </script>
-
 
 	
 

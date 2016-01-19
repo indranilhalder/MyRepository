@@ -981,6 +981,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FOR TRACK ORDER NOTIFICATION
 	public static final String NOTIFICATION_COUNT = "notification.count";
 	public static final String NOTIFICATION_COUNT_MOBILE = "notification.count.mobile";
+	public static final String CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION = "notification.coupon.status";
 
 	public static final String BASESTORE_UID = "mpl".intern();
 	public static final String WEBHOOK_ENTRY_EXPIRED = "0".intern();
@@ -1304,6 +1305,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate} and {immutableKeyHash} is null";
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
+	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where sysdate>={p.voucherStartDate} ";
 
 	private MarketplacecommerceservicesConstants()
 	{

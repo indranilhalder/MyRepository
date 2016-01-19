@@ -96,7 +96,6 @@ import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
-import com.tisl.mpl.facade.comparator.SizeGuideComparator;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -243,8 +242,7 @@ public class ProductPageController extends AbstractPageController
 	@Autowired
 	private UserService userService;
 
-	@Resource(name = "sizeGuideComparator")
-	private SizeGuideComparator sizeGuideComparator;
+
 
 	/**
 	 * @param buyBoxFacade
