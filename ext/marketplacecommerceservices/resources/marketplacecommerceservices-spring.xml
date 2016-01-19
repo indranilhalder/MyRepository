@@ -1478,6 +1478,13 @@
 		</property>
 	</bean>
 	
+	<bean id="addPriorityStatusInterceptor" class="com.tisl.mpl.interceptor.AddSellerPriorityInterceptor" /> 
+	<bean id="SellerPriorityStatusInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+  <property name="interceptor" ref="addPriorityStatusInterceptor" /> 
+  <property name="typeCode" value="MplSellerPriority" /> 
+  </bean>
+	
+	
 	<!-- pdp seller priority interceptor starts -->
 	<bean id="sellerPriorityInterceptor" class="com.tisl.mpl.interceptor.SellerPriorityInterceptor">
 	</bean>

@@ -615,7 +615,7 @@
 	<bean id="csCouponOrderWidgetConfig" parent="csBaseWidgetConfig">
 		<property name="widgetTitle" value="cscockpit.widget.Order.appliedCoupon" />
 		<property name="widgetRenderer" ref="csCouponOrderWidgetRenderer" />
-		<property name="widgetController" ref="csOrderController" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
 		<property name="widgetModel" ref="csBasketCartWidgetModel" />
 	</bean>
 

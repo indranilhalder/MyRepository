@@ -52,8 +52,10 @@ public class TrackOrderHeaderController
 		{
 
 
+
 			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
 			final String customerUID = currentCustomer.getUid();
+
 			if (null != customerUID)
 			{
 				notificationMessagelist = notificationFacade.getNotificationDetail(customerUID, true);
@@ -61,6 +63,7 @@ public class TrackOrderHeaderController
 
 				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 				{
+
 					model.addAttribute("notificationMessagelist", notificationMessagelist);
 
 					int notificationCount = Integer.valueOf(0);
@@ -75,6 +78,8 @@ public class TrackOrderHeaderController
 					model.addAttribute("notificationCount", notificationCount);
 					model.addAttribute("isSignedInUser", "yes");
 				}
+
+				model.addAttribute("notificationMessagelist", notificationMessagelist);
 			}
 		}
 		return ControllerConstants.Views.Fragments.Home.TrackOrderPanel;
@@ -85,7 +90,7 @@ public class TrackOrderHeaderController
 
 	@ResponseBody
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MARKREAD, method = RequestMethod.GET, produces = "application/json")
-	public void markAsRead(final String consignmentNo, final String orderId, final String shopperStatus)
+	public void markAsRead(final String currentId, final String consignmentNo, final String shopperStatus)
 	{
 
 		try
@@ -94,7 +99,8 @@ public class TrackOrderHeaderController
 			final String customerUID = currentCustomer.getUid();
 			if (null != customerUID)
 			{
-				notificationFacade.markNotificationRead(customerUID, orderId, consignmentNo, shopperStatus);
+
+				notificationFacade.markNotificationRead(customerUID, currentId, consignmentNo, shopperStatus);
 			}
 
 		}
