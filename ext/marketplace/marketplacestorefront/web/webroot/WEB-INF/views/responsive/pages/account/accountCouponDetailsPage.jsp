@@ -139,7 +139,7 @@
 					<h2>Coupons</h2>
 					<p>Listing of offers &amp; discounts with coupon codes, which
 						helps you to save money and smart shopping!</p>
-					<p class="mobile">Edit the coupon code in your cart to receive
+					<p class="mobile">Enter the coupon code in your cart to receive
 						your discount.</p>
 					<ul class="coupon-container">
 						<%-- <input type="hidden" id="accountCouponCount" value="${fn:length(closedCouponList)}"/> --%>

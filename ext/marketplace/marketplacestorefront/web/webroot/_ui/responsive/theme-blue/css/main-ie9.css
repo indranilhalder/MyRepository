@@ -14872,3 +14872,50 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
     position: relative;
     top: -1px;
 }
+.trackorder-dropdown li[data-read="true"] a {
+	color: #555;
+}
+.trackorder-dropdown li[data-read="false"] a {
+	font-weight: 600;
+} 
+
+.ShoeBrandLandingLayoutPage .feature-categories h1{
+    text-transform: capitalize;
+}
+@media(max-width:650px){
+.feature-collections ul.collections li.chef h3 span {
+		font-family: "Avenir Next", "Courier New";
+		font-style: normal;
+		font-size: 14px;
+	}
+	.feature-collections ul.collections li.chef h3 span a {
+		font-size: 12px;
+		font-weight: 700;
+	}
+body .account .right-account .reviews .review-list .account-only.product {
+    padding: 30px;
+    padding-right: 0;
+}
+	}
+
+body .account .right-account .reviews .toolbar .account-only h2{
+  text-transform: capitalize;}
+  @media(max-width:790px){
+  .rating-stars-wrapper{
+  position:absolute;
+  top:25px;
+  }
+  	.rate-bar {
+		height: 9px;
+	}
+	body.page-reviews .right-account .reviews .review-list .wrapper>li .product .short-info{
+	    padding-top: 20px;
+  }
+.order-details .totals ul li{
+  display:inline-block;
+  }
+  
+  body .account .right-account .order-history .product-block li.header>ul>li span.amt {
+    background-color: transparent;
+}
+  
