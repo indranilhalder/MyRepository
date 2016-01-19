@@ -138,6 +138,7 @@
 		<property name="couponCode" type="String"/>
 		<property name="promotionIdentifier" type="String"/>
 		<property name="promotionDescription" type="String"/>
+		<property name="productUrl" type="String"/>
 </bean>	
 	<!-- EMITermRateData for EMI -->
 	<bean class="com.tisl.mpl.data.EMITermRateData">
@@ -599,15 +600,16 @@
 	
 	<!-- Seller Priority Report Headers Data-->
 	<bean class="com.tisl.mpl.data.SellerPriorityReportData">
-		<property name="modifiedTime" type="String"/>
+		<property name="modifiedTime" type="java.util.Date"/>
 		<property name="changedBy" type="String"/>
 		<property name="sellerId" type="String"/>
+		<property name="sellerName" type="String"/>
 		<property name="categoryId" type="String"/>
 		<property name="productId" type="String"/>
-		<property name="OldStartDate" type="String"/>
-		<property name="modifiedStartDate" type="String"/>
-		<property name="oldEndDate" type="String"/>
-		<property name="modifiedEndDate" type="String"/>
+		<property name="OldStartDate" type="java.util.Date"/>
+		<property name="modifiedStartDate" type="java.util.Date"/>
+		<property name="oldEndDate" type="java.util.Date"/>
+		<property name="modifiedEndDate" type="java.util.Date"/>
 		<property name="isActive" type="String"/>
 		<property name="modifiedActiveFlag" type="String"/>
 		<property name="newlyCreated" type="String"/>

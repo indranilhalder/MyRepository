@@ -66,6 +66,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.beans.BindingException;
@@ -243,7 +244,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		catch (final NullPointerException e)
 		{
 			//logging error message
-			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			//LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.ERRORMSG);
 			return getCheckoutStep().previousStep();
@@ -996,8 +997,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
 
-		model.addAttribute("voucherDataList",
-				displayTopCoupons(getCartService().getSessionCart(), (CustomerModel) getUserService().getCurrentUser()));
+		//TODO: Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope
+		//model.addAttribute("voucherDataList",
+		//		displayTopCoupons(getCartService().getSessionCart(), (CustomerModel) getUserService().getCurrentUser()));
 
 		//saving cartmodel
 		getMplPaymentFacade().saveCart(getCartService().getSessionCart());
@@ -1316,14 +1318,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 			savedCreditCards = getMplPaymentFacade().listStoredCreditCards(customer);
-			if (!savedCreditCards.isEmpty())
+			if (MapUtils.isNotEmpty(savedCreditCards))
 			{
 				//adding cards to model
 				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedCreditCards);
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecheckoutaddonConstants.B6005);
+				LOG.info("No Saved credit cards found !!");
+				//throw new EtailBusinessExceptions(MarketplacecheckoutaddonConstants.B6005);
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1347,7 +1350,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecheckoutaddonConstants.B6006);
+				LOG.info("No Saved debit cards found !!");
+				//throw new EtailBusinessExceptions(MarketplacecheckoutaddonConstants.B6006);
 			}
 		}
 		catch (final EtailBusinessExceptions e)

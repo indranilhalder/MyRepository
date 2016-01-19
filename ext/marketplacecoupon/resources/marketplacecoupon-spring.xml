@@ -92,7 +92,7 @@
 	
 	<alias name="customerDetailsService" alias="customerDetailsService" />
 	<bean id="customerDetailsService"
-		class="com.tisl.mpl.coupon.service.impl.DefaultCustomerDetailsImpl">
+		class="com.tisl.mpl.coupon.service.impl.MplCustomerDetailsServiceImpl">
 		<property name="customerDetailsDao" ref="customerDetailsDao" />
 	</bean>
 
@@ -102,17 +102,21 @@
 	</bean>
 
 	<bean id="customerDetailsDao"
-		class="com.tisl.mpl.coupon.dao.impl.DefaultCustomerDetailsDao" />
+		class="com.tisl.mpl.coupon.dao.impl.MplCustomerDetailsDaoImpl" />
 	
 	<alias name="defaultCustomerDetailsFacade" alias="customerDetailsFacade" />
 	<bean id="defaultCustomerDetailsFacade"
-		class="com.tisl.mpl.coupon.facade.impl.DefaultCustomerDetailsFacade">
+		class="com.tisl.mpl.coupon.facade.impl.MplCustomerDetailsFacadeImpl">
 	</bean>
 	
-	<bean id="couponEventJob" class="com.tisl.mpl.coupon.facade.job.CouponEventJob" autowire="byName"/>
+	<!-- <bean id="couponEventJob" class="com.tisl.mpl.coupon.facade.job.CouponEventJob" autowire="byName"/> -->
      
      <!-- Coupon Helper Class -->
 	<bean id="mplCouponHelper" class="com.tisl.mpl.helper.MplCouponHelper" />
+	
+	<bean id="couponMailJob" class="com.tisl.mpl.coupon.facade.job.CouponMailJob" autowire="byName"/>
+	
+	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.facade.job.CustomerListGenerationJob" autowire="byName"/>
 
 	
 			

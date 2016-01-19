@@ -12,9 +12,17 @@
 <h2>Apply Coupon Code</h2>
 		<input type="text" id="couponFieldId" placeholder="Enter coupon code"/>
 		<button type="submit" id="couponSubmitButton" class="button btn-block">Submit</button>
-		<span class="error-message" id="couponError"></span>
+		<span class="error-message" id="invalidCouponError"><spring:theme code="checkout.multi.coupons.invalid"/></span>
+		<span class="error-message" id="expiredCouponError"><spring:theme code="checkout.multi.coupons.expired"/></span>
+		<span class="error-message" id="issueCouponError"><spring:theme code="checkout.multi.coupons.issue"/></span>
+		<span class="error-message" id="priceCouponError"><spring:theme code="checkout.multi.coupons.priceExceeded"/></span>
+		<span class="error-message" id="appliedCouponError"><spring:theme code="checkout.multi.coupons.alreadyApplied"/></span>
+		<span class="error-message" id="emptyCouponError"><spring:theme code="checkout.multi.coupons.notApplied"/></span>
+		<span class="error-message" id="notApplicableCouponError"><spring:theme code="checkout.multi.coupons.notApplicable"/></span>
+		<span class="error-message" id="notReservableCouponError"><spring:theme code="checkout.multi.coupons.notReservable"/></span>
 
-	<div id="voucherDisplay">
+	<!-- Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope -->
+	<%-- <div id="voucherDisplay">
 		<c:if test="${not empty voucherDataList}">
 			<h2>Top 5 Coupons</h2>
 			<select name="voucherDisplaySelection" id="voucherDisplaySelection">
@@ -23,6 +31,6 @@
 				</c:forEach>
 			</select>
 		</c:if>
-	</div>
+	</div> --%>
 		
 </div>

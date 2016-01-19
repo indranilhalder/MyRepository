@@ -73,7 +73,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.Config;
-import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -88,9 +87,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -124,6 +125,7 @@ import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
@@ -136,7 +138,6 @@ import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
-import com.tisl.mpl.data.AllVoucherListData;
 import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.EditWishlistNameData;
@@ -188,6 +189,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MyWishListInHeaderComponentModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.service.GigyaService;
 import com.tisl.mpl.service.MplGigyaReviewCommentService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -262,7 +264,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String ERROR_OCCURED = "errorOccured";
 	private static final String UTF = "UTF-8";
 	public static final String ERROR_RESP = "gigys response error.";
-
+	public static final String UNUSED = "unused";
+	public static final String STATUS = "status";
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -342,6 +345,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private RegisterCustomerFacade registerCustomerFacade;
 	@Autowired
 	private MplPasswordValidator mplPasswordValidator;
+	@Autowired
+	private GigyaService gigyaService;
+
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private BaseSiteService baseSiteService;
 	//	@Autowired
@@ -579,7 +585,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String orders(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int page,
-			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_ALL) final ShowMode showMode,
+			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = ModelAttributetConstants.SORT, required = false) final String sortCode, final Model model)
 
 	throws CMSItemNotFoundException
@@ -596,7 +602,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			final int pageSizeInoh = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
-			final PageableData pageableData = createPageableData(page, 5, sortCode, showMode);
+			// TISPRO-48 - Changes made for implementing lazy loading in Order history pagination
+			final int pageSize = Integer.valueOf(configurationService.getConfiguration()
+					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE, "10").trim());
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 
 			//final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade().getPagedParentOrderHistoryForStatuses(pageableData);
 
@@ -676,6 +685,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.ORDER_DATA_MAP, orderFormattedDateMap);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
 			model.addAttribute(ModelAttributetConstants.CANCEL_PRODUCT_MAP, currentProductMap);
+			// TISPRO-48 - added page index and page size attribute for pagination
+			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
+			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -781,9 +793,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String order(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode, final Model model)
-			throws CMSItemNotFoundException
+	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
+			final Model model) throws CMSItemNotFoundException
 	{
+		if (null == orderCode)
+		{
+			return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_404;
+		}
 		final ReturnRequestForm returnRequestForm = new ReturnRequestForm();
 		final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();
 		final Map<String, String> currentStatusMap = new HashMap<>();
@@ -1058,17 +1074,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 	/**
-	 * /**
 	 *
-	 * @description This method returns the coupon details page
-	 *
+	 * @description This method returns the account management coupon details page along with offers & discounts with
+	 *              coupon codes, transaction history and a user guide on how coupons are redeemed
 	 * @param model
+	 * @param page
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 * @throws VoucherOperationException
-	 * @throws JSONException
 	 * @throws NullPointerException
-	 * @throws MalformedURLException
 	 */
 
 
@@ -1086,13 +1100,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			/* getting all voucher in a list */
 
-			final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
-			List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
-			List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
+			//final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
+			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons(customer);
+			//List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
+			//List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
 			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
-			final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 12);
+			final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 20);
 
 			/* initializing the indexes for pagination */
 			int start = 0;
@@ -1103,19 +1118,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 			int pageMultMaxSize = 0;
 
 			/* setting voucher list data */
-			final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList);
-			if (null != allVoucherListData)
-
-			/* all type of voucher is shown in open voucher and personalised vouchers is shown as closed voucher */
-
-			{
-				openVoucherDataList = allVoucherListData.getOpenVoucherList();
-				closedVoucherDataList = allVoucherListData.getClosedVoucherList();
-			}
+			/*
+			 * final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList); if
+			 * (null != allVoucherListData)
+			 *
+			 * all type of voucher is shown in open voucher and personalized vouchers are shown as closed voucher
+			 *
+			 * { openVoucherDataList = allVoucherListData.getOpenVoucherList(); closedVoucherDataList =
+			 * allVoucherListData.getClosedVoucherList(); }
+			 */
 
 			/* getting all voucher transactions along with the order placed in a DTO */
 			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
-			couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
+
+			if (null != couponHistoryStoreDTO)
+			{
+				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
+			}
+
 
 			if (!couponHistoryDTOList.isEmpty())
 			{
@@ -1192,8 +1212,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 
-			model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
-			model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
+			//model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
+			//model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
+			model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, closedVoucherDataList);
 
 			model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistoryDTOListModified);
 			model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, couponHistoryStoreDTO.getSavedSum());
@@ -1563,7 +1584,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_CANCEL_SUCCESS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody String cancelSuccess(final String orderCode, @SuppressWarnings("unused") final String transactionId,
+	public @ResponseBody String cancelSuccess(final String orderCode, @SuppressWarnings(UNUSED) final String transactionId,
 			final String reasonCode, final String ticketTypeCode, final String ussid, final Model model)
 			throws CMSItemNotFoundException
 	{
@@ -2345,7 +2366,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 				newAuthentication.setDetails(oldAuthentication.getDetails());
 				SecurityContextHolder.getContext().setAuthentication(newAuthentication);
 				mplCustomerProfileData.setDisplayUid(newUid);
+				// NOTIFY GIGYA OF THE USER PROFILE CHANGES
+				final String gigyaServiceSwitch = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
+
+				if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
+				{
+					final String gigyaMethod = configurationService.getConfiguration().getString(
+							MarketplacecclientservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+
+					gigyaService.notifyGigya(mplCustomerProfileData.getUid(), null, mplCustomerProfileData.getFirstName().trim(),
+							mplCustomerProfileData.getLastName().trim(), mplCustomerProfileData.getEmailId().trim(), gigyaMethod);
+
+				}
 			}
+
 			storeCmsPageInModel(model, getContentPageForLabelOrId(UPDATE_PROFILE_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(UPDATE_PROFILE_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -4536,6 +4570,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				model.addAttribute(ModelAttributetConstants.FRIENDS_TEXT_MESSAGE, messageText);
 			}
+			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(FRIENDS_INVITE_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(FRIENDS_INVITE_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -5348,7 +5386,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_SUBCATEGORIES, method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, CategoryData>> getBrandSubCategory(
-			@SuppressWarnings("unused") @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
+			@SuppressWarnings(UNUSED) @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
 			@RequestParam(value = "subCategoryData") final String subCategoryData,
 			@RequestParam(value = "selectedCategory") final String selectedCategory, final Model model)
 			throws CMSItemNotFoundException, NullPointerException, JSONException
@@ -6094,7 +6132,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return String
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	@RequestMapping(value = "/reviews", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String review(
@@ -6102,8 +6140,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final Model model) throws Exception
 	{
 		final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE, 5);
-		final Map<String, ProductData> productDataMap = new HashMap<String, ProductData>();
-		final Map<String, ProductData> productDataModifyMap = new HashMap<String, ProductData>();
+		final Map<String, ProductData> productDataMap = new LinkedHashMap<String, ProductData>();
+		final Map<String, ProductData> productDataModifyMap = new LinkedHashMap<String, ProductData>();
 		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
 		final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
 		final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
@@ -6117,18 +6155,34 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			if (CollectionUtils.isNotEmpty(orderModels))
 			{
-				for (final OrderModel order : orderModels)
+				final List<OrderModel> modifiableOrderList = new ArrayList<OrderModel>();
+				modifiableOrderList.addAll(orderModels);
+
+				Collections.sort(modifiableOrderList, new Comparator<OrderModel>()
+				{
+					@Override
+					public int compare(final OrderModel o1, final OrderModel o2)
+					{
+						final int compare = o1.getCreationtime().compareTo(o2.getCreationtime());
+						return compare;
+					}
+				});
+				Collections.reverse(modifiableOrderList);
+				for (final OrderModel order : modifiableOrderList)
 				{
 					for (final OrderModel sellerOrder : order.getChildOrders())
 					{
 						for (final AbstractOrderEntryModel entry : sellerOrder.getEntries())
 						{
 							final ProductModel productmodel = entry.getProduct();
+							final Double netPrice = entry.getNetAmountAfterAllDisc();
+							final PriceData price = productDetailsHelper.formPriceData(netPrice);
 							try
 							{
 								if (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS) != null)
 								{
 									productData = (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS));
+									productData.setPrice(price);
 								}
 							}
 							catch (final Exception exception)
@@ -6137,11 +6191,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 								throw new EtailNonBusinessExceptions(exception);
 							}
 							productDataMap.put(productData.getCode(), productData);
-							/*
-							 * if (productDataMap.size() == 10) { break; }
-							 */
 
-							LOG.debug("************************ " + productDataMap);
+							LOG.debug("**********ProductDataMap************** " + productDataMap);
 						}
 					}
 				}
@@ -6156,7 +6207,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					final ProductData productDataValue = (ProductData) productEntry.getValue();
 					final boolean isCommented = gigyaCommentService.getReviewsByCategoryProductId(productDataValue.getRootCategory(),
 							productDataValue.getCode(), customerModel.getUid());
-					if (isCommented == false)
+					if (!isCommented)
 					{
 						productDataModifyMap.put(productDataValue.getCode(), productDataValue);
 						if (productDataModifyMap.size() == 10)
@@ -6169,7 +6220,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
 					.getReviewsByUID(customerModel.getUid());
-			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
+			commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
 
 			/* pagination logic */
 
@@ -6264,7 +6315,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return Map
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings(UNUSED)
 	@RequestMapping(value = "/review/{operation}", method = RequestMethod.GET)
 	@RequireHardLogIn
 	@ResponseBody
@@ -6293,12 +6344,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
 				{
-					jsonMap.put("status", "success");
+					jsonMap.put(STATUS, "success");
 					return jsonMap;
 				}
 				else
 				{
-					jsonMap.put("status", "failed");
+					jsonMap.put(STATUS, "failed");
 					return jsonMap;
 				}
 			}
@@ -6309,12 +6360,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
 				{
-					jsonMap.put("status", "success");
+					jsonMap.put(STATUS, "success");
 					return jsonMap;
 				}
 				else
 				{
-					jsonMap.put("status", "failed");
+					jsonMap.put(STATUS, "failed");
 					return jsonMap;
 				}
 			}

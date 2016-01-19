@@ -1097,22 +1097,11 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<alias name="defaultTrackOrderCouponPopulator" alias="trackOrderCouponPopulator"/>
 	<bean id="defaultTrackOrderCouponPopulator"
 			class="com.tisl.mpl.facades.populators.CustomNotificationCouponPopulator">
+			<property name="productModelUrlResolver" ref="productModelUrlResolver"/>
+			<property name="categoryModelUrlResolver" ref="categoryModelUrlResolver"/>
 	</bean>
 	
-	<alias name="defaultTrackOrderPromotionConverter" alias="trackOrderPromotionConverter"/>
-	<bean id="defaultTrackOrderPromotionConverter" parent="abstractPopulatingConverter">
-		<property name="targetClass" value="com.tisl.mpl.data.NotificationData"/>
-		<property name="populators">
-			<list>
-				<ref bean="trackOrderPromotionPopulator"/>
-			</list>
-		</property>
-	</bean>
-
-	<alias name="defaultTrackOrderPromotionPopulator" alias="trackOrderPromotionPopulator"/>
-	<bean id="defaultTrackOrderPromotionPopulator"
-			class="com.tisl.mpl.facades.populators.CustomNotificationPromotionPopulator">
-	</bean>
+	
 	
 	<!-- Track Order Populator End-->
 	<bean id="mobileSubBrandComponentConverter" parent="abstractPopulatingConverter">
@@ -1324,6 +1313,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			    <value>MEDIUM</value> 
 				<value>LARGE</value>
 				<value>X-LARGE</value>
+				<value>${footwear.header.age}</value>
+				<value>${footwear.header.UK}</value>
+				<value>${footwear.header.US}</value>
+				<value>${footwear.header.EURO}</value>
+				<value>${footwear.header.footlength}</value>
+				<value>${footwear.header.Witdth}</value>
 			</list>
 		</property>
 	</bean>
@@ -1376,4 +1371,5 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="mplReviewrFacade"
 		class="com.tisl.mpl.facades.account.reviews.impl.DefaultMplReviewFacade">
 	</bean>
+	<!--<bean id="dynamicPriorityStatusHandler" class="com.tisl.mpl.tisl.facade.handler.DynamicPriorityStatusHandler"/>-->
 </beans>

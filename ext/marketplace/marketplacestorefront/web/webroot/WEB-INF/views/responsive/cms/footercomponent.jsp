@@ -6,6 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+
 <!-- This is used for NewsLetter SignUp Section in footer -->
 <div class="right">
 	<div class="newsletter">

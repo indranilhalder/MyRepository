@@ -106,14 +106,17 @@
 										</div>
 										<div class="short-info">
 											<p class="company">${product.value.brand.brandname}</p>
-											<h3 class="product-name">${product.value.name}</h3>
+											<h3 class="product-name">${product.value.productTitle}</h3>
 											<!-- <div class="price">
 												<p class="normal">
 													<i class="rupee"></i>100,000
 												</p>
 											</div> -->
 										</div>
-								</a> <a class="account-only new-review" href='<c:url value="${product.value.url}"></c:url>'><spring:theme code="myaccount.review.reviewProduct"/></a>
+								</a> <a class="account-only new-review" data-toggle="modal" data-target="#reviewPluginContainer" 
+										data-product = "${product.value.code}" data-category = "${product.value.rootCategory}"
+										onclick="reviewPopUpDisplay('${product.value.rootCategory}','${product.value.code}','${product.value.productTitle}')"
+										><spring:theme code="myaccount.review.reviewProduct"/></a>
 								</div>
 								</c:forEach>
 							
@@ -455,17 +458,33 @@
 							<li class="number first active"><a href="?page=${i}">${i}</a></li>
 							</c:when>
 							<c:otherwise>
-							<li class="number first"><a href="?page=${i}">${i}</a></li>
+							<c:choose>
+									<c:when test="${param.page eq null and i eq 1}">
+										<li class="number first active"><a href="?page=${i}">${i}</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="number first"><a href="?page=${i}">${i}</a></li>
+									</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 							</c:choose>
+							
 							</c:forEach>
-							<!-- <li class="number last "><a href="?page=2">2</a></li> -->
-						<c:if test="${ totalPages gt param.page}">				
+																				
+							<c:choose>
+								<c:when test="${param.page eq null}">
+									<c:set var="page" value="1"></c:set>
+								</c:when>
+								<c:otherwise>
+									<c:set var="page" value="${param.page}"></c:set>
+								</c:otherwise>
+							</c:choose>
+					
+							<c:if test="${ totalPages gt 1 and totalPages gt page }">				
 							<li class="next"><a href="#nogo"><spring:theme code="myaccount.review.next"/> <span
 									class="lookbook-only">Page</span></a></li>
 									</c:if>
-									<!-- previous link addition -->
-									
+			
 						</ul>
 						 </c:if> 
 					</div>
@@ -480,12 +499,12 @@
 				<c:choose>
 				<c:when test="${not empty comments}">
 				<c:forEach items="${comments}" var="comment" varStatus="count">
-					<li class="review-block${count.index}">
+					<li class="review-block${count.index} review-li" data-index="${count.index}">
 					
 					<!-- success handler -->
 					<div class="alert alert-info" style="display: none;" data-info-id="${count.index}">
-					<a href="#nogo" class="close-info" > </a>
-	    			<strong><b><spring:theme code="myaccount.review.successMsg"/> </b></strong><spring:theme code="myaccount.review.updateReviewMsg"/>
+					<a href="#nogo" class="close-info" >x </a>
+	    			<strong><b><spring:theme code="myaccount.review.successMsg"/> </b></strong> <spring:theme code="myaccount.review.updateReviewMsg"/>
 	    			</div>
 	    			
 	    			<!-- failure handler -->
@@ -500,7 +519,7 @@
   							 <%-- <product:productListerGridItem product="${comment.productData}" /> --%>
   							 <product:review product="${comment.productData}" />
   							<format:price priceData="${comment.productData.productMOP}"/>
-  								<div class="reactions" id="reactionsDiv"></div>
+  								
 						</ul>
 						</div>
 						<div class="review">
@@ -516,14 +535,10 @@
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
 								<span class="review-date"> ${comment.reviewDate} </span>
-								
-								<h3 class="reviewHeading${count.index}">${comment.commentTitle}</h3>
-								<p class="reviewComment${count.index}">${comment.commentText}</p>
-								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
 								<!-- Ratings -->
-								<div class="rating-div${count.index}" style="display: none;">
-								<span class="rating-name">Over All - </span>
-								<ul class="rating-stars" data-rating-name${count.index}="overall">
+								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
+								<span class="rating-name"><spring:theme code="myaccount.editreview.overall"/> </span>
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -533,9 +548,9 @@
 								</ul>
 								<c:choose>
 									<c:when test="${comment.rootCategory eq 'Clothing'}" >							
-								<span class="rating-name"><spring:theme code="myaccount.review.fit"/> </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.fit"/> </span>
 
-								<ul class="rating-stars" data-rating-name${count.index}="fit">
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="fit">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -545,9 +560,9 @@
 								</ul>
 								</c:when>
 								<c:otherwise>
-								<span class="rating-name">Ease of use </span>
+								<span class="rating-name"><spring:theme code="myaccount.editreview.easeOfUse"/> </span>
 
-								<ul class="rating-stars" data-rating-name${count.index}="easeOfUse">
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="easeOfUse">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -558,8 +573,8 @@
 								</c:otherwise>
 								</c:choose>
 								
-								<span class="rating-name"><spring:theme code="myaccount.review.valueForMoney"/> </span>
-								<ul class="rating-stars" data-rating-name${count.index}="value_for_money">
+								<span class="rating-name"><spring:theme code="myaccount.editreview.valueForMoney"/> </span>
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="value_for_money">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -567,8 +582,8 @@
 	 										<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
 	  										<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
 								</ul>
-								<span class="rating-name"><spring:theme code="myaccount.review.quality"/> </span>
-								<ul class="rating-stars" data-rating-name${count.index}="quality">
+								<span class="rating-name"><spring:theme code="myaccount.editreview.quality"/> </span>
+								<ul class="rating-stars rateEdit" data-rating-name${count.index}="quality">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
    											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -595,6 +610,10 @@
 								</script>
 								</c:if>
 								</div>
+								<h3 class="reviewHeading${count.index}">${comment.commentTitle}</h3>
+								<p class="reviewComment${count.index}">${comment.commentText}</p>
+								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
+								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>
 								<input type="hidden" class="hiddenReviewComment${count.index}" value="${comment.commentText}"/>
 								
@@ -602,7 +621,7 @@
 								<input type="hidden" class="streamID${count.index}" value="${comment.productData.code}"/>
 								<input type="hidden" class="commentID${count.index}" value="${comment.commentId}"/>
 								
-								<div class="updateButtons${count.index}" style="display: none;">
+								<div class="updateButtons${count.index} update-wrapper" style="display: none;">
 									<input type="button" name="update" value="Update" data-index="${count.index}"/>
 									<input type="button" name="cancel" value="Cancel" data-index="${count.index}"/>
 								</div>
@@ -623,7 +642,7 @@
                </c:if> --%>
 								<ul class="rating-list">
 								<c:choose>
-								<c:when test ="${comment.rootCategory eq 'Clothing'}">
+								<c:when test ="${comment.rootCategory eq 'Clothing' || comment.rootCategory eq 'Footwear' }">
 									<li class="fit">
 										<div class="rate-details two-block">
 											<div class="before"><spring:theme code="myaccount.review.fit"/></div>
@@ -718,12 +737,27 @@
 							<li class="number first active"><a href="?page=${i}">${i}</a></li>
 							</c:when>
 							<c:otherwise>
-							<li class="number first"><a href="?page=${i}">${i}</a></li>
+								<c:choose>
+									<c:when test="${param.page eq null and i eq 1}">
+										<li class="number first active"><a href="?page=${i}">${i}</a></li>
+									</c:when>
+									<c:otherwise>
+										<li class="number first"><a href="?page=${i}">${i}</a></li>
+									</c:otherwise>
+								</c:choose>
+							
 							</c:otherwise>
 							</c:choose>
 							</c:forEach>
-							<!-- <li class="number last "><a href="?page=2">2</a></li> -->
-						<c:if test="${totalPages gt param.page}">
+							<c:choose>
+								<c:when test="${param.page eq null}">
+									<c:set var="page" value="1"></c:set>
+								</c:when>
+								<c:otherwise>
+									<c:set var="page" value="${param.page}"></c:set>
+								</c:otherwise>
+							</c:choose>
+						<c:if test="${totalPages gt 1 and totalPages gt page }">
 							<li class="next"><a href="#nogo"><spring:theme code="myaccount.review.next"/> <span
 									class="lookbook-only">Page</span></a></li>
 									</c:if>
@@ -738,9 +772,9 @@
 	</div>
 </div>
 </div>
-<div id="deleteReviewcontainer" style="display: none;">
+<div id="deleteReviewcontainer" >
 <div id="deleteReview">
-			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:100%">
+			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:270px;margin:0px;">
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
@@ -755,16 +789,47 @@
 			</div>
 			</div>
 		  </div>
+		</div>
+<div id="updateReviewcontainer" style="display: none;">
+<div id="updateReview">
+			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:270px;margin:0px;">
+			<div class="modal-content">
+				<!-- Dynamically Insert Content Here -->
+				<div class="modal-header">
+				<h4 class="modal-title">
+					<spring:theme code="myaccount.review.updatemsg"/>  
+				</h4> 
+				
+				<button class="updateReviewConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
+			    <a class="close updateReviewConfirmationNo" href="#nogo" onclick="closeModal(this);"><spring:theme code="text.wishlist.no" /></a>
+				</div>
+				<!-- <button class="close" data-dismiss="modal"></button> -->
+			</div>
+			</div>
+		  </div>
 		</div> 
+		
+<div id="reviewPluginContainer" style="display: none;" class="modal fade">
+			<div class="modal-content content" style="background-color:#fff;margin:0 auto;">
+				<div class="modal-header">
+				<h4 class="modal-title">
+					<spring:theme code="myaccount.review.editpopuptitle"/> <span id="popUpProductTitle"></span> 
+				</h4> 
+				</div>
+				<div class="commentcontent" style="width:100%;padding: 5px;">
+				<input type="hidden" name="user_logged">
+				<ul id="commentsDiv" class="review-list" style="margin:auto;"></ul>
+				</div>
+				<button class="close" data-dismiss="modal"></button>
+			</div>
+			<div class="overlay" data-dismiss="modal"></div> 
+		  </div>
 </template:page>
 <script>
 $(document).ready(function(){
-	
-	
-	
+			
 	$(".edit").click(function(e){
 		e.preventDefault;
-		
 		var indexElement = $(this).attr("data-index");
 		if(indexElement!= undefined){
 			var reviewHeading = $(".reviewHeading"+indexElement);
@@ -778,9 +843,24 @@ $(document).ready(function(){
 			}
 			$(reviewHeading).html("<input class='inputBox' type='text' name='updateReviewHeading"+indexElement+"' value='"+reviewHeadingText+"'/>");
 			$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
+			$(reviewHeading).find('input.inputBox').focus();
 			$(".rating-div"+indexElement).show();
-			$(".rating-div"+indexElement).find("ul").addClass("rate");
+			$(".rating-div"+indexElement).find("ul").removeClass("rate");
 			$(updateButtons).show();
+			
+			$(".rating-div"+indexElement+" .rateEdit span").removeAttr('style');
+			
+			var arrayIndex = arrayrating[indexElement];
+			
+			for(key in arrayIndex) {
+				var $rate = $(".rating-div"+indexElement+" .rateEdit[data-rating-name"+indexElement+"="+key+"]");
+				$rate.data($rate.attr('data-rating-name'+indexElement),arrayIndex[key]/20);
+				$rate.find("li span").removeClass('full');
+				for( var i = 0; i < $rate.data($rate.attr('data-rating-name'+indexElement)) ; i++) {	
+					$rate.find("li span").eq(i).addClass("full");		
+			      }
+			}
+			
 		}
 		//$(this).parents(".review").find(".rating-stars li span").remove();
 		//$(this).parents(".review").find(".rating-stars li").append("<span></span>");
@@ -810,11 +890,17 @@ $(document).ready(function(){
 	});
 	
 	$("input[name=update]").click(function(){
-		
+		var indexElement =  $(this).attr("data-index");
+		//alert("inside update");
+		$(".review-block"+indexElement).block({message:$("#updateReviewcontainer").html()});
+		//alert("inside update-pop up");
+	});
+	
+	$(document).on("click","button.updateReviewConfirmation",function(){
 		//validate the text first
 		var isValidated=true;
 		var isValidated_e =true;
-		var indexElement =  $(this).attr("data-index");
+		var indexElement =  $(this).parents("li.review-li").attr("data-index");
 		$(".errorUpdateReview"+indexElement).empty();
 		$(".errorUpdateRating"+indexElement).empty();
 		
@@ -838,14 +924,14 @@ $(document).ready(function(){
 			
 			if(categoryID == "Electronics"){
 				ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Ease of use':"+updated_rating_efu+",'Value for Money':"+updated_rating_vfm+"}";
-				ratingsJSON = {overall:updated_rating_overall,easeOfUse:updated_rating_efu,value_for_money:updated_rating_vfm,quality:updated_rating_quality};
+				ratingsJSON = {overall:updated_rating_overall,easeOfUse:updated_rating_efu,value_for_money:updated_rating_vfm,quality:d_rating_quality};
 			}else if(categoryID == 'Clothing'){
 				ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Fit':"+updated_rating_fit+",'Value for Money':"+updated_rating_vfm+"}";	
 				ratingsJSON = {overall:updated_rating_overall,fit:updated_rating_fit,value_for_money:updated_rating_vfm,quality:updated_rating_quality};
 			}else{
 				ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Fit':"+updated_rating_fit+",'Value for Money':"+updated_rating_vfm+"}";
 			}
-			console.log(ratingsJSON.hasOwnProperty("easeOfUse"));
+			//console.log(ratingsJSON.hasOwnProperty("easeOfUse"));
 			//validate before update
 			if(updatedReviewHeading == undefined ||updatedReviewHeading  == "")		
 				{		
@@ -876,7 +962,6 @@ $(document).ready(function(){
 					success:function(data){
 						if(data){
 							if(data.status == "success"){
-								
 								if(indexElement!= undefined){
 									var reviewHeading = $(".reviewHeading"+indexElement);
 									var reviewComment = $(".reviewComment"+indexElement);
@@ -898,9 +983,7 @@ $(document).ready(function(){
 										fit = (fit/5) * 100;
 									}
 									
-									
-									
-									
+																		
 									var quality = ratingsJSON.quality;
 									quality = (quality/5) * 100;
 									
@@ -919,7 +1002,6 @@ $(document).ready(function(){
 									}else{
 										$("div[data-rating"+indexElement+"=easeOfUse]").attr("style","width:"+easeOfUse+"%");
 									}
-									
 									$("div[data-rating"+indexElement+"=value]").attr("style","width:"+value+"%");
 									$("div[data-rating"+indexElement+"=quality]").attr("style","width:"+quality+"%");
 									$("div[data-info-id="+indexElement+"]").show();
@@ -934,42 +1016,55 @@ $(document).ready(function(){
 					},
 					complete:function(){
 						$(".review-block"+indexElement).unblock();
-					}
+						window.location.reload();
+						}
 				});
 			}
-		}
+		} 
 	});
-	
 	$(".delete").click(function(){
 		var indexElement =  $(this).attr("data-del-index");
 		$(".review-block"+indexElement).block({message:$("#deleteReviewcontainer").html()});
 		$(this).attr("current-delete","true");
 	});
 	
-	$(document).on("mouseenter",".rate li",function() {
+	$(document).on("mouseenter",".rateEdit li",function() {
 		$(this).parent().find("li span").removeAttr('style');
+		$(this).parent().find("li span").removeClass("full");
 		for (var i = 0; i <= $(this).index(); i++) {
 			$(this).parent().find("li span").eq(i)
 					.addClass("full");
 		}
 	});
 
-	$(document).on("mouseleave",".rate li",function() {
-		$(".rate li span").removeClass("full");
+	$(document).on("mouseleave",".rateEdit li",function() {
+		$(this).parent().find("span").removeClass("full");
+	});
+	
+	$(document).on("mouseleave",".rateEdit",function(){		
+		var indexElement =  $(this).parents(".rating-wrapper").siblings(".update-wrapper").find("input[name='update']").attr("data-index");
+		for( var i =0; i < $(this).data($(this).attr('data-rating-name'+indexElement)); i++) {		
+       		$(this).find("li span").eq(i).addClass("full");		
+        }		
 	});
 
-	$(document).on("click",".rate li",function() {
-				$(this).parent().removeClass("rate").addClass("rating-done");
-				$(this).parent().find("li").off("mouseenter");
-				$(this).parent().find("li").off("mouseleave");
+	$(document).on("click",".rateEdit li",function() {
+		var indexElement =  $(this).parents(".rating-wrapper").siblings(".update-wrapper").find("input[name='update']").attr("data-index");
+		$(this).parent().addClass("rating-done");
+		$(this).parent().data($(this).parent().attr('data-rating-name'+indexElement),$(this).parent().find("li span.full").length);
 				
 			}); 
 	
 	$(".next a").click(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
-		pageNo = parseInt(pageNo);
+		if(pageNo != ""){
+			pageNo = parseInt(pageNo);
+		}else{
+			pageNo = 1;
+		}
 		pageNo = pageNo+1;
-		if(pageNo <= ${totalPages})
+		var totalPages = ${totalPages};
+		if(totalPages!="" && pageNo <= totalPages)
 			{
 			window.location.href="?page="+pageNo;
 			}
@@ -979,7 +1074,8 @@ $(document).ready(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
 		pageNo = parseInt(pageNo);
 		pageNo = pageNo-1;
-		if(pageNo!=0 && pageNo <= ${totalPages})
+		var totalPages = ${totalPages};
+		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
 			{
 			window.location.href="?page="+pageNo;
 			}
@@ -991,15 +1087,7 @@ $(document).ready(function(){
 rating(arrayrating);
 						
 });
-	/**
-	 * 
-	 */
-		/**
-		Rating plugin 
-		**/
 		
-		
-
 		function deleteReview() {
 
 			var currentDeleteHref = $("a[current-delete=true]");
@@ -1067,39 +1155,40 @@ rating(arrayrating);
 			});
 			}
 		
-		<!-- recommendation -->
-		var reactions=[
-		{
-		        text: 'Recommend',
-		        ID: 'Recommend',
-		        iconImgUp:'http://cdn.gigya.com/gs/i/reactions/icons/Recommend_Icon_Up.png',
-		        iconImgOver:'http://cdn.gigya.com/gs/i/reactions/icons/Recommend_Icon_Down.png',
-		        tooltip:'I recommend this item',
-		        feedMessage: 'I recommend this!',
-		        headerText:'You recommend this post,'
+	    function reviewPopUpDisplay(rootCategory , productCode , productTitle){
+	    	
+	    	$("#popUpProductTitle").text(productTitle);
+			var ratingsParams = {
+					categoryID : rootCategory,
+					streamID : productCode,
+					containerID : 'ratingDiv',
+					linkedCommentsUI : 'commentsDiv',
+					showCommentButton : 'true',
+					onAddReviewClicked:reviewClick,
+				}
+				
+				gigya.comments.showRatingUI(ratingsParams);
+
+				var params = {
+					categoryID : rootCategory,
+					streamID : productCode,
+					scope : 'both',
+					privacy : 'public',
+					version : 2,
+					containerID : 'commentsDiv',
+					/*onCommentSubmitted:reviewCount,*/ 
+					cid : '',
+					enabledShareProviders : 'facebook,twitter',
+					enabledProviders : 'facebook,google', // login providers that should be displayed when click post
+					/*onLoad :commentBox,*/
+					//userAction: shareUserAction
+				}
+				gigya.comments.showCommentsUI(params);	
+	    }	
+		
+		function reviewClick(response) {
+			CheckUserLogedIn();
 		}
-		,{
-		        text: 'LOL',
-		        ID: 'lol',
-		        feedMessage: 'I LOL this!',
-		        headerText:'This post made you LOL,'
-		}];
-		 
-		var defaultUserAction = new gigya.socialize.UserAction();
-		 
-		defaultUserAction.setTitle("This is the post title");
-		defaultUserAction.setLinkBack("http://www.gigya.com");
-		 
-		var params =
-		{
-		        barID: 'myID',
-		        containerID:'reactionsDiv',
-		        reactions:reactions,
-		        userAction:defaultUserAction,
-		        bodyText:'Share it with your friends',
-		        onReactionClicked : function(a){alert("Reaction Clicked!");}
-		};
-		 
-		// Show the Reactions buttons bar
-		gigya.socialize.showReactionsBarUI(params);
+		
+		
 </script>

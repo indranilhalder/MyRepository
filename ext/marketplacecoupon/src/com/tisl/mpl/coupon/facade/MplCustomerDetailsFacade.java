@@ -16,7 +16,7 @@ import java.util.Map;
  * @author TCS
  *
  */
-public interface CustomerDetailsFacade
+public interface MplCustomerDetailsFacade
 {
 
 	//void getCustomer(String eventType, CurrencyModel currency, Double discountVal, Boolean isFreeShipping, Integer noOfDays);

@@ -42,6 +42,12 @@ UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];title
 UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];title
 ;;SpringFlingPromotionComponent;Spring Fling
 
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;WomenFootwearParagraphComponent;"<div class='feature-collections'><h1>Women's Footwear</h1></div>"
+;;MenFootwearParagraphComponent;"<div class='feature-collections'><h1>Men's Footwear</h1></div>"
+
+
 UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
 ;;BeInspiredParagraphComponent;"<div class='feature-collections'><h1>Be Inspired</h1><h2>Shop The Latest Looks</h2></div>"
 ;;TechTrendsettersParagraphComponent;"<div class='feature-collections'><h1>Tech trendsetters</h1><h2>Shop The Latest Technology</h2></div>"
@@ -639,10 +645,10 @@ UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];banne
                     <a href='#' class='button'>SHOP WHAT'S NEW</a>"	
 
 ;;;;TMPWestsportBannerComponent;westsportbanner.png;"<a href='' class='button'>SHOP BELOW</a>";
-   ;;TMPFootwearHomepageBannerComponent;footwearBanner.JPG;"<span class='major-promo-header-italic'>SHOP ONLINE EXCLUSIVES</span>";
+  ;;TMPFootwearHomepageBannerComponent;footwearBanner.JPG;"<span  class='major-promo-header-italic'>Footwear </span> <span class='major-promo-description'>Exclusively at tata Marketplace</span> <a href='#' class='button'>SHOP NOW</a>";
 ;;TMPShoeHomepageBannerComponent;ShoeBanner.jpeg;<span  class='major-promo-header-italic'>NIKE</span><span class='major-promo-description'>Exclusively at tata Marketplace</span> <span class='major-promo-description'>Become unstoppable with our latest collection of running,training,and everyday wear.</span> <a href='#' class='button'>SHOP WHAT'S NEW</a>"	               
 
-
+   
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
 #;mobile;Appa_480x110_Save_EN_01_480W.jpg;$siteResource/images/banners/homepage/responsive/Appa_480x110_Save_EN_01_480W.jpg;Appa_480x110_Save_EN_01_480W.jpg;"70% off winter clothing";
 #;tablet;Appa_770x50_Save_EN_01_770W.jpg;$siteResource/images/banners/homepage/responsive/Appa_770x50_Save_EN_01_770W.jpg;Appa_770x50_Save_EN_01_770W.jpg;"70% off winter clothing";
@@ -868,10 +874,11 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;widescreen;ShoeRectangle_1.jpeg;$siteResource/images/banners/homepage/responsive/ShoeRectangle_1.jpeg;ShoeRectangle_1.jpeg;"Shoe Image";
 ;widescreen;ShoeRectangle_2.jpeg;$siteResource/images/banners/homepage/responsive/ShoeRectangle_2.jpeg;ShoeRectangle_2.jpeg;"Shoe Image2";
 
-;;WomenSingleFootwear.JPG;$siteResource/images/banners/category_banners/WomenSingleFootwear.JPG;WomenSingleFootwear.JPG;"Shop the Collection"
-;;MenSingleFootwear.JPG;$siteResource/images/banners/category_banners/MenSingleFootwear.JPG;MenSingleFootwear.JPG;"Shop the Collection"
-;;KidFootwearFirst.JPG;$siteResource/images/banners/category_banners/KidFootwearFirst.JPG;KidFootwearFirst.JPG;"Shop the Collection"
-;;KidsFootwearSecond.JPG;$siteResource/images/banners/category_banners/KidsFootwearSecond.JPG;KidsFootwearSecond.JPG;"Shop the Collection"
+
+;;WomenSingleFootwear.JPG;$siteResource/images/banners/homepage/responsive/WomenSingleFootwear.JPG;WomenSingleFootwear.JPG;"Shop the Collection"
+;;MenSingleFootwear.JPG;$siteResource/images/banners/homepage/responsive/MenSingleFootwear.JPG;MenSingleFootwear.JPG;"Shop the Collection"
+;;KidFootwearFirst.JPG;$siteResource/images/banners/homepage/responsive/KidFootwearFirst.JPG;KidFootwearFirst.JPG;"Shop the Collection"
+;;KidsFootwearSecond.JPG;$siteResource/images/banners/homepage/responsive/KidsFootwearSecond.JPG;KidsFootwearSecond.JPG;"Shop the Collection"
 
 
 INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
@@ -961,7 +968,7 @@ UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];conte
 <p>Pick your favourites - brands, categories  & more - here!</p>
 <a href='/store/mpl/en/my-account/marketplace-preference'>VIEW MARKETPLACE PREFERENCES</a>"
 
-;;PersonalInformationMediaParagraphComponent;"<h3>ALL YOUR DETAILS</h3>
+;;PersonalInformationMediaParagraphComponent;"<h3>ALL ABOUT YOU</h3>
 <p>Pick a name, change your password and all that jazz.</p>
 <a href='/store/mpl/en/my-account/update-profile'>VIEW PERSONAL INFO</a>"
 
@@ -975,7 +982,7 @@ UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];conte
 
 ;;InviteFriendsMediaParagraphComponent;"<h3>INVITE YOUR FRIENDS</h3>
 <p>Why shop solo when you can do it with your friends?  Get your crew here.</p>
-<a href='/store/mpl/en/my-account/myInterest'>INVITE FRIENDS TO THE MARKETPLACE</a>"
+<a href='/store/mpl/en/my-account/friendsInvite'>INVITE FRIENDS TO THE MARKETPLACE</a>"
 
 ;;OrderHistoryMediaParagraphComponent;"<h3>ORDER HISTORY</h3>
 <p>When will that package arrive? And other such pressing questions.</p>

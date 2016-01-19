@@ -69,6 +69,35 @@ public class MPLDefaultReplacmentDao extends DefaultReplacementOrderDao implemen
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MPLRefundDao#getAllRefunds()
 	 */
 	@Override
+	public List<ReplacementEntryModel> getAllReplacement() throws Exception
+	{
+		final Map<String, Object> params = new HashMap<>();
+		//params.put("returnRequest", "");
+		//params.put("startDate", startDate);
+		try
+		{
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.REPLACE_REPORT_QUERY,
+					params);
+			return flexibleSearchService.<ReplacementEntryModel> search(query).getResult();
+			/*
+			 * if (result.getTotalCount() > 1)
+			 * 
+			 * { throw new EtailBusinessExceptions("Refund  is Allowed"); }
+			 */
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			return null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MPLRefundDao#getAllRefunds()
+	 */
+	@Override
 	public List<ReplacementEntryModel> getAllReplacement(final Date startDate, final Date endDate) throws Exception
 	{
 		final Map<String, Object> params = new HashMap<>();
@@ -111,6 +140,7 @@ public class MPLDefaultReplacmentDao extends DefaultReplacementOrderDao implemen
 	{
 		this.flexibleSearchService = flexibleSearchService;
 	}
+
 
 
 }

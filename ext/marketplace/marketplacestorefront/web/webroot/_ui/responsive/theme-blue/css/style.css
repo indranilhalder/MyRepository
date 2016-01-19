@@ -643,8 +643,8 @@ input:focus {
     .select-view .select-list li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+    /*   height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 46px;
       padding-left: 10px;
@@ -1129,11 +1129,11 @@ h2 {
           -moz-osx-font-smoothing: grayscale;
           font-weight: 100;
           content: "\e602";
-          font-size: 12px;
+          font-size: 14px;
           color: #00cbe9;
           line-height: 18px;
           margin-right: 5px;
-          top: 1px;
+          top: 3px;
           position: relative;
           font-weight: bold; }
         header .content .right > ul > li.wishlist .wishlist-info {
@@ -9578,8 +9578,8 @@ footer .banner {
     .pagination li.next {
       padding-left: 10px; }
 body .account .right-account .order-history .pagination li{
-	float:right;
 	font-size:12px;
+	margin: auto 2px;
 } 
 .bottom-pagination {
   width: 100%;
@@ -10788,7 +10788,8 @@ body .account .right-account .order-history .pagination li{
     margin: 15px 0;
     font-weight: 600;
     letter-spacing: 1px;
-    font-size: 11px
+    font-size: 11px;
+        clear: both;
 }
 .product-info .product-content .swatch .size a:before,
 .product-info .product-content .swatch .qty a:before {
@@ -12789,7 +12790,7 @@ div.pdp .reviews .toolbar select.white {
     font-weight: 400;		
     text-align: center;		
     margin-bottom: 15px;
-    padding-top:45px;
+    padding-top:25px;
     		
 }		
 @media (min-width: 790px) {		
@@ -12814,7 +12815,7 @@ div.pdp .reviews .toolbar select.white {
 }		
 @media (min-width: 1000px) {		
     .modal.size-guide .sizes .tables {		
-        transform: translateY(15%);		
+        transform: translateY(5%);		
     }		
 }		
 .modal.size-guide .sizes .tables::after {		
@@ -12842,7 +12843,7 @@ div.pdp .reviews .toolbar select.white {
     display: inline-block;		
     float: left;		
     line-height: 30px;		
-}		
+}
 .modal.size-guide .sizes .tables li.header > ul > li {		
     text-transform: uppercase;		
     font-weight: 600;		
@@ -12871,13 +12872,14 @@ div.pdp .reviews .toolbar select.white {
 }		
 @media (min-width: 790px) {		
     .modal.size-guide .sizes .img {		
-        padding: 0 20px 20px 10px;		
+        padding: 0 20px 10px 10px;		
     }		
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .img {		
         width: 40%;		
-        float: right;		
+        float: right;	
+            margin-top: -12px;	
     }		
 }		
 .modal.size-guide .sizes .img::after {		
@@ -12902,7 +12904,7 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .details .attributes {		
     width: 80%;		
    /*  margin: 20px auto; */
-       margin: 20px 30px 20px 140px;		
+       margin: 10px 30px 20px 140px;		
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .details .attributes {		
@@ -13350,7 +13352,6 @@ div.get-in-touch ul li:after,
     width: 80px;
 }
 .no-results ul li:before,
-div.get-in-touch ul li:before,
 .rewards div.customer-service ul li:before{
     content: "";
 }
@@ -15571,7 +15572,8 @@ body .account .right-account .reviews .review-list .wrapper>li .review .stats .b
     width: auto;
     display: block;
     margin-bottom: 5px;
-    font-weight: 600
+    font-weight: 600;
+    text-align: left;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .stats .rate-bar {
     width: 100%
@@ -17879,8 +17881,8 @@ header .content .bottom .search .select-list select
      #variantForm .select-size li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+     /*  height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 20px;
       padding-left: 20px;
@@ -18714,13 +18716,15 @@ input[type="checkbox"]#brandSelectAll + label{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  border-right: 1px solid #f0f4f5;
+  /* border-right: 1px solid #f0f4f5; */
+  height:30px;
 }
 
 .modal.size-guide .sizes .tables li.item > ul > li {
 text-align: center;
 text-transform:lowercase;
 } 
+
 
 .modal.size-guide .sizes .tables li.item > ul > li:first-letter{
 	text-transform: uppercase;
@@ -23751,7 +23755,7 @@ span.brand-subdesc {
 .forgotten-password.modal .content{
 	width:35%;
 }
-.add_to_cart_form .out_of_stock #add_to_wishlist {
+.add_to_cart_form .out_of_stock #add_to_wishlist, #add_to_wishlist-sizeguide{
     font-size: 12px;
     letter-spacing: 1px;
     line-height: 55px;
@@ -24034,6 +24038,7 @@ body #account-invite .right-account>div form .mytextarea {
 
 .owl-carousel .owl-controls .owl-buttons .disabled{
 	opacity:0.5;
+	display: none !important;
 }
 .owl-carousel .owl-controls .owl-buttons .disabled:after{
 	border-color:gray;
@@ -25574,8 +25579,9 @@ padding-left: 0px;}
         float:left;}
         .product-tile .image .quickview a{
         width:100%;}
-        .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
-        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span{
+       .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
+        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span,
+        .pagination-bar.listing-menu.bottom .prev span,.pagination-bar.listing-menu.bottom .next span{
         display:none;} 
        .listing.wrapper .right-block .listing-menu > div .pagination.mobile{
        position: absolute;
@@ -26121,6 +26127,7 @@ display:none;
 body .account .right-account .order-history .navigation2{
     border: 1px solid rgb(237,242,245);
         padding: 5px 0 5px 20px;	
+        position:relative;
 }
 body .account .right-account .order-history .navigation2 #ofPagination{
 		
@@ -26263,7 +26270,7 @@ li#savedCVVError{
 	}
 }
 
-#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation, #deleteReview .deleteReviewConfirmation{
+#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation, #deleteReview .deleteReviewConfirmation, #updateReview .updateReviewConfirmation{
 	    background-color: #00cbe9;
     color: #fff;
     text-transform: uppercase;
@@ -26277,7 +26284,7 @@ li#savedCVVError{
      margin:20px 10px 10px 10px;
     vertical-align: top;
 }
-#deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo{
+#deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo, #updateReview .updateReviewConfirmationNo{
 	background-color: red;
     opacity: 0.7;
     color: #fff;
@@ -27537,22 +27544,37 @@ body .account .account-header select.menu-select optgroup option{
 }
 .reviews .review-list>.wrapper>li .review .details h3 input {
 	width: 100%;
-	border-color: #f0f4f5;
+	border-color: #dbeafa;
 	height: 30px;
 }
 .reviews .review-list>.wrapper>li .review .details p textarea {
     width: 100%;
     max-width: 100%;
-	border: 1px solid #f0f4f5;
+	border: 1px solid #dbeafa;
     margin-bottom: 10px;
+    padding: 10px;
+    font-family: Avenir Next;
+    font-size: 12px;
+}
+.review-list .close-info{
+	font-weight: 600;
+    font-size: 14px;
+    color: #31708f;
+    position: relative;
+    top: -1px;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="update"],body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
-	width: 48%;
+	width: 47%;
 	border: none;
     color: #fff;
     font-size: 14px;
     height: 40px;
     line-height: 1;	
+    padding: 13px 0;
+    text-align: center;
+}
+body .account .right-account .reviews .update-wrapper{
+	text-align: center;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="update"]{
     margin-right: 2%;
@@ -27566,6 +27588,17 @@ body .account .right-account .reviews .review-list .wrapper>li .review .details 
 #deleteReview .deleteReviewConfirmation{
 max-width:80px;
 min-width:80px;
+}
+#updateReview .updateReviewConfirmation{
+max-width:80px;
+min-width:80px;
+}
+
+body .account .right-account .reviews div.blockUI.blockMsg.blockElement{
+	width:270px !important;
+	left:0 !important;
+	right:0 !important;
+	margin:auto !important;
 }
 
 .cart.wrapper .right-block .block.top button.remove-coupon-button{
@@ -28012,6 +28045,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2
 	{
 	font-size: 14px;
+	font-weight:600;
 	text-align: center;
 	float: left;
 	width: 100%;
@@ -28041,7 +28075,8 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	width: 50%;
 	padding: 0 10px;
 	margin: 0 0 10px;
-	line-height: 20px
+	line-height: 20px;
+	font-weight:500;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
@@ -28325,7 +28360,7 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity.coupon-history h2
 	{
-	font-weight: 500
+	font-weight: 600;
 }
 
 @media ( max-width :790px) {
@@ -28680,10 +28715,179 @@ header .content .bottom.active nav > ul > li:first-child + li > ul {
 	float: left;
     width: 15%;
 }
-.modal.size-guide .sizes .details .attributes #addToCartButton{
+.modal.size-guide .sizes .details .attributes #addToCartButton,#add_to_wishlist-sizeguide{
 height:30px;
 }
 
+#add_to_wishlist-sizeguide{
+	margin-top:16px;
+	line-height:30px;
+}
+.sizeGuide-message{
+	width:275px;
+	position:absolute;
+	bottom:65px;
+	right:100px;
+} 
+
+
+/*footwear category start*/
+.footwear_left, .footwear_right {
+	display: inline-block;
+	vertical-align: top;
+	width: 49%;
+}
+
+.footwear_left {
+	float: left;
+	margin-left: 1%;
+} 
+
+.footwear_right {
+	float: right;
+}
+
+.footwear_left.countFour > li, .footwear_right.countFour > li {
+	width: 49%;
+	padding: 0 10px;
+	display: inline-block;
+	vertical-align: top;
+	margin-bottom: 10px;
+}
+
+.footwear_left li, .footwear_right li {
+	padding: 0 10px;
+}
+
+.footwear_left.countFour > li:nth-of-type(2n), .footwear_right.countFour > li:nth-of-type(2n) {
+	margin-left: 1%;
+}
+
+
+.feature-categories.footwear li img{
+	width: 100%;
+}
+.feature-categories  .footwear_left>li .simple-banner-component span,.feature-categories  .footwear_right>li .simple-banner-component span{
+	padding-bottom:0px;
+}
+.footwear_left>li .simple-banner-component span a.shop_link,.footwear_right>li .simple-banner-component span a.shop_link{
+	padding:15px 0px;
+}
+
+.feature-categories .footwear_left li span, .feature-categories .footwear_right li span
+	{
+	display: block;
+	line-height: 20px;
+	padding: 15px 0;
+	vertical-align: middle;
+	font-size: 16px;
+	text-align: center;
+}
+
+.feature-categories ul.footwear_left a.shop_link,
+	.feature-categories .footwear_right a.shop_link {
+	display: block;
+	text-transform: uppercase;
+	text-align: center;
+	font-size: 10px;
+	letter-spacing: .5px;
+	font-weight: 700;
+}
+
+.feature-categories ul.footwear_left a.shop_link:after,
+	.feature-categories .footwear_right a.shop_link:after {
+	content: "";
+	height: 0;
+	width: 0;
+	border-bottom: 4px solid transparent;
+	border-left: 4px solid #000;
+	border-top: 4px solid transparent;
+	display: inline-block;
+	margin-left: 7px;
+}
+
+.feature-categories ul.footwear_left a.shop_link:hover:after,
+	.feature-categories .footwear_right a.shop_link:hover:after {
+	border-left-color: #00cbe9;
+}
+
+.feature-categories.footwear h1{
+	font-size:24px;
+	padding: 40px 0;
+}
+
+@media ( max-width : 790px) {
+	.footwear_left {
+		width: 100%;
+		margin-left: 0;
+	}
+	
+	.footwear_right {
+		width: 100%;
+	}
+}
+/*footwear category end*/
+
+.bell-icon:after{
+	font-family: 'FontAwesome';
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   content:"\f0a2";
+    font-size: 16px;
+    color: #00cbe9;
+    line-height: 46px;
+    height:46px;
+    top: 2px;
+    position: relative;
+    font-weight: bold;
+}
+
+body .account .right-account .order-history .bottom .pagination.mobile{
+	     position: absolute;
+    bottom: 6px;
+    width: auto;
+    right: 0;}
+ body .account .right-account .order-history .top .pagination.mobile{
+	      position: absolute;
+    right: 80px;
+    top: 55px;}
+@media (max-width: 650px){
+	body .account .right-account .order-history .pagination li.next,body .account .right-account .order-history .pagination li.prev{
+	border:none;}
+
+	body .account .right-account .order-history .top .pagination.mobile{
+    top: 63px;
+    right: 0px;}
+     body .account .right-account .order-history .pagination .next:after,body .account .right-account .order-history .pagination .prev:before{
+     display:none;}
+    body .account .right-account .order-history .pagination li.next a:after {
+        content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        margin-left:5px;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s; }
+        body .account .right-account .order-history .pagination li.prev a:before{
+       content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s;
+        margin-right:5px;  }
+        #displayPaginationCountUp, #displayPaginationCountDown{
+        margin: 10px 0;
+        display:inline-block;}
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -31765,7 +31969,7 @@ main {
 	{
 	cursor: pointer;
 	position: absolute !important;
-	top: 50% !important;
+	top: 39% !important;
 	display: table;
 	width: 60px;
 	height: 125px;
@@ -33693,7 +33897,9 @@ ul li a:hover .dropdown-menu {
 	position: relative;
 	z-index: 2;
 }
-
+.pdp.other-sellers .selectSize{
+	width:100%;
+}
 .selectQty .form-control::before {
 	content: "Qty: ";
 }
@@ -34151,3 +34357,282 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	color: #00cbe9;
 }
 /* TISEE-6257 ends */
+#selectMode {
+	/* 	border: 3px solid #555555; */
+	/* 	padding: 10px 10px 10px 10px; */
+	margin: 0px 10px 10px 10px;
+	/* 	height: 60px; */
+}
+
+#selectMode button {
+	width: 100%;
+	margin-bottom: 5px;
+	text-transform: capitalize;
+	background-image: none !important;
+	background: rgb(237, 243, 244);
+	border-radius: 0;
+	padding: 8px 12px !important;
+}
+
+#netbanking, #submitButtons, #paymentDetails, #radioForEMI, #otpNUM,
+	#codMessage, #otpValidationMessage, #form-actions,
+	#wrongOtpValidationMessage, #expiredOtpValidationMessage,
+	#customerBlackListMessage, #emptyOTPMessage, 
+	#savedCVVError, #enterOTP, #OTPGenerationErrorMessage, #resendOTPMessage, 
+	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
+	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
+	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
+	#notApplicableCouponError, #notReservableCouponError {
+	display: none;
+}
+
+#EMITermTable {
+	padding: 2px;
+}
+
+#EMITermTable th {
+	padding: 2px;
+}
+
+#EMITermTable td {
+	padding: 2px;
+}
+
+#sendOTPNumber {
+	display: none;
+	vertical-align: middle;
+}
+
+#convCharge {
+	display: none;
+}
+
+#convChargeFieldId {
+	display: none;
+}
+
+#promotionApplied {
+	display: none;
+}
+
+#fulfillmentMessage {
+	display: none;
+}
+
+#codItemEligibilityMessage {
+	display: none;
+}
+
+#convChargeFieldId span {
+	float: right;
+}
+
+#totalPriceConvChargeId span {
+	float: right;
+}
+
+#COD {
+	display: none;
+}
+
+#submitButtons {
+	display: none;
+}
+
+#emi {
+	display: none;
+}
+
+#submitPaymentFormCODButton {
+	display: none;
+}
+
+#card {
+	display: none;
+}
+
+#paymentFormButton {
+	display: none;
+}
+
+#savedCard {
+	display: block;
+}
+
+#newCard {
+	display: none;
+}
+
+#savedCreditCard {
+	display: none;
+}
+
+#savedDebitCard {
+	display: none;
+}
+
+#dcHeader {
+	display: none;
+}
+
+#ccHeader {
+	display: none;
+}
+
+.cvvHelp_hide {
+	display: none;
+}
+
+.cvvHelp {
+	display: block;
+}
+
+.form-inline .form-control.security_code_hide {
+	display: none;
+}
+
+.control-label {
+	font-weight: 600;
+	margin-bottom: 5px;
+}
+
+#cvvHelpText {
+	display: none;
+	width: auto;
+	text-decoration: none;
+	font-family: tahoma;
+	box-shadow: inset 2px 2px 2px 0px #dddddd;
+	border: none;
+}
+
+#card .form-group input, #otpNUMField, #otpMobileNUMField, #mobilePrefix
+	{
+	border-radius: 0;
+	border: 1px solid #dbeafa;
+}
+
+#mobilePrefix {
+	padding: 14px 7px;
+	border-radius:0px;
+}
+input#otpMobileNUMField
+{
+	height:25px;
+	border-radius:0px;
+	border:1px solid #dbeafa;
+}
+input#otpMobileNUMField:focus {
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	box-shadow:none;
+}	
+
+#card .form-group select, #bankNameForEMI {
+	border-radius: 0;
+	border: 1px solid #dbeafa;
+}
+
+.controls {
+	padding-left: 0 !important;
+}
+
+#cardNo {
+	margin-right: 10px;
+}
+
+.security_code {
+	width: 100%;
+}
+
+#cvvHelp {
+	float: right;
+}
+
+.card_exp_year, .card_exp_month {
+	width: 48%
+}
+
+.make_payment, #paymentFormButton button {
+	background-color: rgb(255, 28, 71) !important;
+	
+	border-radius: 0 !important;
+	/* padding: 15px !important; */
+	background-image: none !important;
+	/* 	width: 50% !important; */
+	margin: auto;
+	opacity: 0.9;
+	transition: background 0.3s;
+}
+
+.make_payment:hover, #paymentFormButton button:hover {
+	background-color: rgb(232, 0, 44) !important;
+}
+
+#billingAddress input[type="text"] {
+	box-shadow: none !important;
+	font-size: 12px;
+}
+
+@media ( min-width :1024px) and ( max-width : 1366px) {
+	#submitPaymentFormCODButton {
+		width: 100% !important;
+	}
+	@media ( min-width :1014px) and ( max-width : 1023px) {
+		#selectMode button {
+			width: 24%; 
+		}
+	}
+	@media ( min-width :640px) and ( max-width : 1013px) {
+		#selectMode button {
+			width: 48%;
+		}
+	}
+	@media ( min-width :876px) and ( max-width : 1023px) {
+		.make_payment, #paymentFormButton button {
+			width: 50% !important;
+		}
+	}
+	@media ( min-width :640px) and ( max-width : 875px) {
+		.make_payment, #paymentFormButton button {
+			width: 70% !important;
+		}
+	}
+	@media ( min-width :1024px) and ( max-width : 1134px) {
+		.make_payment, #paymentFormButton button {
+			width: 70% !important;
+		}
+	}
+	@media ( min-width :640px) and ( max-width : 1023px) {
+		#submitPaymentFormCODButton {
+			width: 50% !important;
+		}
+	}
+	.credit-card-group, .debit-card-group {
+		clear: both;
+		float: none;
+	}
+}
+
+#juspayconnErrorDiv:after {
+	content: "";
+	display: block;
+	clear: both;
+} 
+#juspayconnErrorDiv button {
+	float: left;
+}
+#juspayconnErrorDiv button.close {
+	right: -7px;
+}
+#juspayconnErrorDiv span {
+	margin: 0px 15px;
+    line-height: 48px;
+}
+#sendOTPButton {
+	position: relative;
+}
+
+button.make_payment[disabled] {
+    opacity: 0.6 !important;
+    cursor: not-allowed;
+}

@@ -12,7 +12,7 @@ import java.util.List;
 
 
 
-public interface CustomerDetailsDao
+public interface MplCustomerDetailsDao
 {
 
 	List<CustomerModel> findCustomer();
