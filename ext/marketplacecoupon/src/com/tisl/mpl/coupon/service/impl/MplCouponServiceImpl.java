@@ -3,10 +3,13 @@
  */
 package com.tisl.mpl.coupon.service.impl;
 
+import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,7 @@ import com.tisl.mpl.util.VoucherDiscountComparator;
 
 
 /**
- * @author 752131
+ * @author TCS
  *
  */
 public class MplCouponServiceImpl implements MplCouponService
@@ -61,6 +64,19 @@ public class MplCouponServiceImpl implements MplCouponService
 	public void setMplCouponDao(final MplCouponDao mplCouponDao)
 	{
 		this.mplCouponDao = mplCouponDao;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.coupon.service.MplCouponService#getClosedVoucher()
+	 */
+	@Override
+	public Set<Map<VoucherModel, DateRestrictionModel>> getClosedVoucher()
+	{
+		return getMplCouponDao().findClosedVoucher();
+
 	}
 
 

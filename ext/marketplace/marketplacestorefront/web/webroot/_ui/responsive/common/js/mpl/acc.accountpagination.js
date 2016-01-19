@@ -1,21 +1,66 @@
-$(document).ready(function (){
-	//var divItem = "";
+var i=0;
+var pageCount=0;
+var pagelimitAcc=10;
+var totalItem=$('#accountAddressCount').val();
+var noofpageCount=Math.ceil(totalItem/pagelimitAcc);
+var start = 1;
+var end = "";
+var pageNo = 1;
 
+$(document).ready(function (){
+
+	// -----------*** TISPRO-48 --- Pagination with Lazy loading ***----------------
+	var pageIndex = $('#pageIndex').val();
+	var pagableSize = $('#pagableSize').val();
+	var pageNum = parseInt(pageIndex)+1;
+	var endCount = pageNum*pagableSize;
+	var startCount = endCount-pagableSize+1;
+	var totalNumberOfResults = $('#totalNumberOfResults').val();
+	if(endCount>totalNumberOfResults){
+		endCount = totalNumberOfResults;
+	}
+	var displayOrder = startCount+"-"+endCount+ " of " + totalNumberOfResults + " Orders";
+	$("#displayPaginationCountUp").html(displayOrder);
+	$("#ofPagination").html(displayOrder);
+	//	alert("pageIndex : "+pageIndex+"\n"+"pagableSize : "+pagableSize+"\n"+"pageNum : "+pageNum+"\n"+"endCount : "+endCount+"\n"+"startCount : "+startCount);
+	//	alert(startCount+"-"+endCount+ " of " + totalItemNew + " Orders");
+
+	// -----------*** TISPRO-48 --- Pagination with Lazy loading ***----------------
+
+	
+	
+	
+	
+	
+// [START]
+
+	var divItem = "";
+	for(var i=1; i<=noofpageCount; i++){
+		divItem = divItem + "<a href='#nogo' onclick='pageNavigation("+i+")'>"+i+"</a>&emsp;";
+	}
+	$('#prev').html(divItem);
+	$('.right-account #address_item #item_ul>li').each(function(i)  {
+		$(this).attr('id', 'p_' + i);
+		i=i + 1;
+	});
+	dispPageLimit(0,pagelimitAcc);
+	
+	
 	for (var i = 1; i <= 2; i++) {
 		if (i == 1) {
 			divItem = divItem
-					+ "<a href='#nogo' onclick='pageNavigation("
-					+ i + ")' class='active'>" + i
-					+ "</a>&emsp;";
+			+ "<a href='#nogo' onclick='pageNavigation("
+			+ i + ")' class='active'>" + i
+			+ "</a>&emsp;";
 		} else {
 			divItem = divItem
-					+ "<a href='#nogo' onclick='pageNavigation("
-					+ i + ")'>" + i + "</a>&emsp;";
+			+ "<a href='#nogo' onclick='pageNavigation("
+			+ i + ")'>" + i + "</a>&emsp;";
 		}
 		//divItem = divItem + "<a href='#nogo' onclick='pageNavigation("+i+")'>"+i+"</a>&emsp;";
 	}
 	divItem = divItem + "<a href='#nogo' onclick='nextAction(" + 0
-			+ "," + 2 + ")' class='order-pagination-next'>Next</a>"
+	+ "," + 2 + ")' class='order-pagination-next'>Next</a>"
 
 	$('#paginationDiv').html(divItem);
 	$('#paginationDiv2').html(divItem);
@@ -29,14 +74,13 @@ $(document).ready(function (){
 	var end = "";
 	var initStr = "";
 	var endStr = "";
-	console.log("in js " + totalItem);
-	//if(undefined !=totalItem){
+	
 	if (totalItem > 1) {
 		if(parseInt(pagelimitAcc) < parseInt(totalItem)){
 			end = pagelimitAcc;
 		}
 		else{
-		end = totalItem;
+			end = totalItem;
 		}
 		initStr = start + "-" + end;
 		endStr = "s";
@@ -47,23 +91,23 @@ $(document).ready(function (){
 	}
 	var divOrder = "";
 	divOrder = initStr + " of " + totalItem + " Order" + endStr;
-	$("#ofPagination").html(divOrder);
+//	$("#ofPagination").html(divOrder);
 	$("#ofPaginationUp").html(divOrder);
 
 	dispPageLimit(0, pagelimitAcc);
 	//}
-	
+
 });
 /*-------------- For account --------------*/
 var divItem = "";
 function pageNavigation(num) {
 	pageNo = num;
-	
+
 	$('body').on("click",".address_pagination a",function(){
 		$(".address_pagination a").removeClass("active");
 		$(this).addClass("active");
 	});
-	
+
 	var endIndex = (pageNo * pagelimitAcc);
 	var startIndex = endIndex - pagelimitAcc;
 
@@ -74,14 +118,10 @@ function pageNavigation(num) {
 	}
 	var divOrder = "";
 	divOrder = start + "-" + end + " of " + totalItem + " Orders";
-	$("#ofPagination").html(divOrder);
+//	$("#ofPagination").html(divOrder);
 	$("#ofPaginationUp").html(divOrder);
 	dispPageLimit(startIndex, endIndex);
 }
-
-
-
-
 
 
 function nextAction(startNo, endNo) {
@@ -100,22 +140,22 @@ function nextAction(startNo, endNo) {
 		divItem = "";
 
 		divItem = "<a href='#nogo' onclick='prevAction(" + startNo + ","
-				+ endNo + ")' class='order-pagination-prev'>Prev</a>&emsp;"
+		+ endNo + ")' class='order-pagination-prev'>Prev</a>&emsp;"
 		for (var i = endNoOfPagination - 1; i <= endNoOfPagination; i++) {
 			if (i == endNo) {
 				divItem = divItem
-						+ "<a href='#nogo' onclick='pageNavigation(" + i
-						+ ")' class='active'>" + i + "</a>&emsp;";
+				+ "<a href='#nogo' onclick='pageNavigation(" + i
+				+ ")' class='active'>" + i + "</a>&emsp;";
 			} else {
 				divItem = divItem
-						+ "<a href='#nogo' onclick='pageNavigation(" + i
-						+ ")'>" + i + "</a>&emsp;";
+				+ "<a href='#nogo' onclick='pageNavigation(" + i
+				+ ")'>" + i + "</a>&emsp;";
 			}
 			//divItem = divItem + "<a href='#nogo' onclick='pageNavigation(" + i + ")'>" + i + "</a>&emsp;";
 		}
 		if (pageNo != noofpageCount) {
 			divItem = divItem + "<a href='#nogo' onclick='nextAction("
-					+ startNo + "," + endNoOfPagination + ")' class='order-pagination-next'>Next</a>";
+			+ startNo + "," + endNoOfPagination + ")' class='order-pagination-next'>Next</a>";
 		}
 	}
 	$('#paginationDiv').html(divItem);
@@ -123,7 +163,7 @@ function nextAction(startNo, endNo) {
 	pageNavigation(pageNo);
 }
 
-// for PREV button Action
+//for PREV button Action
 function prevAction(startNo, endNo) {
 	//alert("Page No >>>>>>"+pageNo);
 	var endNoOfPagination = endNo + 1;
@@ -142,62 +182,74 @@ function prevAction(startNo, endNo) {
 		divItem = "";
 		if (newPrevPageNo != 1) {
 			divItem = "<a href='#nogo' onclick='prevAction(" + startNo
-					+ "," + newPrevEnd + ")' class='order-pagination-prev'>Prev</a>&emsp;"
+			+ "," + newPrevEnd + ")' class='order-pagination-prev'>Prev</a>&emsp;"
 		}
 		for (var i = newPrevEnd - 1; i <= newPrevEnd; i++) {
 			if (i == newPrevPageNo) {
 				divItem = divItem
-						+ "<a href='#nogo' onclick='pageNavigation(" + i
-						+ ")' class='active'>" + i + "</a>&emsp;";
+				+ "<a href='#nogo' onclick='pageNavigation(" + i
+				+ ")' class='active'>" + i + "</a>&emsp;";
 			} else {
 				divItem = divItem
-						+ "<a href='#nogo' onclick='pageNavigation(" + i
-						+ ")'>" + i + "</a>&emsp;";
+				+ "<a href='#nogo' onclick='pageNavigation(" + i
+				+ ")'>" + i + "</a>&emsp;";
 			}
 			//divItem = divItem + "<a href='#nogo' onclick='pageNavigation(" + i + ")'>" + i + "</a>&emsp;";
 		}
 		divItem = divItem + "<a href='#nogo' onclick='nextAction("
-				+ startNo + "," + endNoOfPagination + ")' class='order-pagination-next'>Next</a>";
+		+ startNo + "," + endNoOfPagination + ")' class='order-pagination-next'>Next</a>";
 	}
 	$('#paginationDiv').html(divItem);
 	$('#paginationDiv2').html(divItem);
 	pageNavigation(newPrevPageNo);
 } 
- // Pagination ***********************************
-   
-    
-    function nextAcc()
-    {
-    	if(pageCount<noofpageCount-1)
-    	{
-    		pageCount++;
-    		dispPageLimit(pageCount*pagelimitAcc,(pageCount+1)*pagelimitAcc);
-    	}
-    }
+// Pagination ***********************************
 
-    function prevAcc()
-    {
-    	if(pageCount>0)
-    	{
-    		pageCount=pageCount-1;
-    		dispPageLimit(pageCount*pagelimitAcc,(pageCount+1)*pagelimitAcc);
-    	}
-    }
 
-    function dispPageLimit(start,end)
-    {
-    	if(undefined !=totalItem){
-    	for(var i=0;i<totalItem;i++)
-    	{
-    		if(i>=start && i<end){
-    			$('#p_'+i).show();
-    		}
-    		else
-    		{
-    			$('#p_'+i).hide();
-    		}
-    	}
-    	}
-    }
-  //End | Pagination  
-    
+function nextAcc()
+{
+	if(pageCount<noofpageCount-1)
+	{
+		pageCount++;
+		dispPageLimit(pageCount*pagelimitAcc,(pageCount+1)*pagelimitAcc);
+	}
+}
+
+function prevAcc()
+{
+	if(pageCount>0)
+	{
+		pageCount=pageCount-1;
+		dispPageLimit(pageCount*pagelimitAcc,(pageCount+1)*pagelimitAcc);
+	}
+}
+// [END]
+
+
+//For Address Book Pagination
+function dispPageLimit(start,end)
+{
+	if(undefined !=totalItem){
+		for(var i=0;i<totalItem;i++)
+		{
+			if(i>=start && i<end){
+				$('#p_'+i).show();
+			}
+			else
+			{
+				$('#p_'+i).hide();
+			}
+		}
+	}
+}
+
+
+function pageNavigation(num){
+	var index = num;
+	var endIndex = (index*pagelimitAcc);
+	var startIndex = endIndex - pagelimitAcc;
+	dispPageLimit(startIndex,endIndex);
+}
+
+//For Address Book Pagination
+

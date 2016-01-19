@@ -87,6 +87,15 @@
 		<collectiontype code="MplShopByLookCollection"
 			elementtype="MplShopByLook" autocreate="true" generate="true" type="list" />
 			
+			<collectiontype code="voucherCustomerUidList"
+			elementtype="java.lang.String" autocreate="true" generate="true" type="list" />	
+			<collectiontype code="productBasedCoupon"
+			elementtype="Product" autocreate="true" generate="true" type="list" />	
+			<collectiontype code="categoryBasedCoupon"
+			elementtype="Category" autocreate="true" generate="true" type="list" />	
+			
+			
+			
 	</collectiontypes>
 
 
@@ -670,7 +679,16 @@
 			<value code="ReturnToOrigin" />
 
 		</enumtype>
-
+        
+      <!--    ENUM STATUS FOR SELLER PRIORITY -->
+      <enumtype code="sellerPriorityEnum" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="NEW"></value>
+			<value code="PROCESSED"></value>
+			<value code="ERROR"></value>
+		</enumtype>
+	<!-- Product Feature Enum Ends -->
+        
 
 	</enumtypes>
 	<!-- Product Feature Enum Ends -->
@@ -6088,6 +6106,16 @@
 						<modifiers read="true" write="true" search="false"
 							optional="true" partof="true" />
 					</attribute>
+					<attribute qualifier="paymentMethod" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="paymentMethodType" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"
@@ -6370,6 +6398,56 @@
 			</itemtype>
 		</typegroup>
 		<!-- Order Tracking Start -->
+		
+			<typegroup name="VoucherStatusNotification">
+			<itemtype code="VoucherStatusNotification" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.VoucherStatusNotification">
+				<deployment table="MplVoucherNotifctnTable" typecode="16008" />
+				<attributes>
+					<attribute qualifier='customerUidList' type="voucherCustomerUidList">
+						<description>Customer Id</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='voucherCode' type="java.lang.String">
+						<description>Voucher Code</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="customerStatus">
+						<description>Shopper Facing Status</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="isRead ">
+						<description>Voucher Notification Read</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute qualifier="voucherStartDate" type="java.util.Date">
+						<description>Voucher Start date</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="productAssociated" type="productBasedCoupon"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+						<attribute qualifier="categoryAssociated" type="categoryBasedCoupon"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		
 
 <!-- Seller Priority Job -->
 		<typegroup name="MplSellerPriorityListing">
@@ -6434,6 +6512,10 @@
 					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false"/>
 				</attribute>
+				<attribute qualifier="priorityStatus" type="sellerPriorityEnum">
+  <persistence type="property" /> 
+  <modifiers read="true" write="true" optional="false" /> 
+  </attribute>
 				
 				<!-- <attribute qualifier="isActive" 
 						type="java.lang.Boolean">
@@ -6738,6 +6820,18 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="FeedbackCronJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.FeedbackCronJob">
+				<attributes>
+					<attribute type="java.util.Date" qualifier="lastExecutionTime">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+				
 				</attributes>
 			</itemtype>
 		</typegroup>

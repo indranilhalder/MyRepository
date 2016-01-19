@@ -3,12 +3,15 @@
  */
 package com.tisl.mpl.facades.account.reviews.impl;
 
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.reviews.MplReviewFacade;
+import com.tisl.mpl.facades.order.impl.MplDefaultPriceDataFactory;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
-import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 
@@ -34,10 +37,10 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 	private static final Logger LOG = Logger.getLogger(DefaultMplReviewFacade.class);
 	@Autowired
 	private BuyBoxFacade buyBoxFacade;
+
 	@Autowired
-	private ProductDetailsHelper productDetailsHelper;
-	@Autowired
-	private ProductFacade productFacade;
+	private MplDefaultPriceDataFactory priceDataFactory;
+
 
 	/*
 	 * @Desc fetching ProductData from DTOlist
@@ -49,11 +52,12 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 	@Override
 	public List<GigyaProductReviewWsDTO> getReviewedProductPrice(final List<GigyaProductReviewWsDTO> commentsWithProductData)
 	{
+
 		ProductData productData = null;
+		PriceData priceFinal = null;
 		final List<GigyaProductReviewWsDTO> modifiedDTOList = new ArrayList<GigyaProductReviewWsDTO>();
 		try
 		{
-
 			for (final GigyaProductReviewWsDTO list : commentsWithProductData)
 			{
 				productData = list.getProductData();
@@ -67,9 +71,10 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 				{
 					price = productPrice.getPrice();
 				}
-				final String priceFinal = price.getFormattedValue();
+				priceFinal = priceDataFactory.create(price.getPriceType(), price.getValue(), price.getCurrencyIso());
 				LOG.debug("price :" + priceFinal);
-				productData.setProductMOP(price);
+				productData.setProductMOP(priceFinal);
+
 				list.setProductData(productData);
 				modifiedDTOList.add(list);
 			}
@@ -79,7 +84,6 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
-
 	}
 
 	/*
@@ -119,7 +123,7 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 								{
 
 									final Double netPrice = entry.getNetAmountAfterAllDisc();
-									price = productDetailsHelper.formPriceData(netPrice);
+									price = createPrice(order, netPrice);
 									LOG.debug("ordered product price>>>>> " + price);
 									ProductData productData = new ProductData();
 									productData = commentedProduct.getProductData();
@@ -153,5 +157,31 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 
 		}
+	}
+
+	/**
+	 * @description: It is creating price data for a price value
+	 * @param source
+	 * @param val
+	 *
+	 * @return PriceData
+	 */
+	public PriceData createPrice(final AbstractOrderModel source, final Double val)
+	{
+		if (source == null)
+		{
+			throw new IllegalArgumentException("source order must not be null");
+		}
+
+		final CurrencyModel currency = source.getCurrency();
+		if (currency == null)
+		{
+			throw new IllegalArgumentException("source order currency must not be null");
+		}
+
+		// Get double value, handle null as zero
+		final double priceValue = val != null ? val.doubleValue() : 0d;
+
+		return priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(priceValue), currency);
 	}
 }
