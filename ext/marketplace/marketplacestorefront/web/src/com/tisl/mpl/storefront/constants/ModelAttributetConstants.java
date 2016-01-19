@@ -675,5 +675,12 @@ public final class ModelAttributetConstants
 	public static final String CLOSED_COUPON_LIST = "closedCouponList";
 
 
+	//for bell notification
+
+	public static final String NOTIFICATION_MESSAGE_LIST = "notificationMessagelist";
+	public static final String NOTIFICATION_COUNT = "notificationCount";
+	public static final String IS_SIGNED_IN = "isSignedInUser";
+
+
 
 }

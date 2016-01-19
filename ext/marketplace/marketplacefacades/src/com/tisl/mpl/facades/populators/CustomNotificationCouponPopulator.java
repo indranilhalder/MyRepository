@@ -59,7 +59,7 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -98,7 +98,7 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 			notificationData.setCouponCode(VoucherStatusNotificationModel.getVoucherCode());
 			notificationData.setNotificationRead(VoucherStatusNotificationModel.getIsRead());
 			notificationData.setNotificationCreationDate(VoucherStatusNotificationModel.getVoucherStartDate());
-			notificationData.setNotificationCustomerStatus("Coupon @ is available");
+			notificationData.setNotificationCustomerStatus(VoucherStatusNotificationModel.getCustomerStatus());
 
 
 		}
