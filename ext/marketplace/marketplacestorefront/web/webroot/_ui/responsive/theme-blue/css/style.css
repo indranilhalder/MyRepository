@@ -13127,6 +13127,9 @@ font-size:14px;
 .customer-service .content * {
     font-family: avenir next !important;
 }
+.customer-service .content h3 {
+    text-align:center;
+}
 .content b {
     font-weight: 600;
 }
