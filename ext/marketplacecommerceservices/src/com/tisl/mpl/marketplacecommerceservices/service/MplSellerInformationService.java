@@ -23,4 +23,6 @@ public interface MplSellerInformationService
 			final String sellerName);
 
 	public SellerSalesCategoryModel getActiveSellerRootCategoryBySellerId(final String sellerId);
+
+	SellerInformationModel getSellerInformationWithSellerMaster(final String sellerID);
 }

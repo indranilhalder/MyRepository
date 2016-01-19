@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.service;
 
-import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
 
 
@@ -14,10 +13,12 @@ import com.tisl.mpl.wsdto.SellerMasterWsDTO;
  */
 public interface MplSellerMasterService
 {
-	public String saveSellerInformation(final SellerMasterWsDTO sellerInformationWSDTO);
+	//public String saveSellerInformation(final SellerMasterWsDTO sellerInformationWSDTO);
 
-	public String saveSellerInformationUpdate(final SellerMasterWsDTO sellerMasterWsDTO,
-			final SellerInformationModel resModelUpdate);
+	/*
+	 * public String saveSellerInformationUpdate(final SellerMasterWsDTO sellerMasterWsDTO, final SellerInformationModel
+	 * resModelUpdate);
+	 */
 
 	public String insertUpdate(final SellerMasterWsDTO sellerMasterWsDTO);
 

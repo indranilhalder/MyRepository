@@ -68,6 +68,18 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 	}
 
 	@Override
+	public SellerInformationModel getSellerInformationWithSellerMaster(final String sellerID)
+	{
+
+		if (sellerID != null)
+		{
+			//return mplSellerInformationDAO.getSellerInformation(sellerID);
+			return getMplSellerInformationDAO().getSellerInformationWithSellerMaster(sellerID);
+		}
+		return null;
+	}
+
+	@Override
 	public SellerInformationModel getSellerInformationBySellerName(final CatalogVersionModel catalogVersion,
 			final String sellerName)
 	{
