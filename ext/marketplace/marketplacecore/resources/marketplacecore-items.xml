@@ -679,7 +679,16 @@
 			<value code="ReturnToOrigin" />
 
 		</enumtype>
-
+        
+      <!--    ENUM STATUS FOR SELLER PRIORITY -->
+      <enumtype code="sellerPriorityEnum" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="NEW"></value>
+			<value code="PROCESSED"></value>
+			<value code="ERROR"></value>
+		</enumtype>
+	<!-- Product Feature Enum Ends -->
+        
 
 	</enumtypes>
 	<!-- Product Feature Enum Ends -->
@@ -6503,6 +6512,10 @@
 					<persistence type="property" />
 					<modifiers read="true" write="true" optional="false"/>
 				</attribute>
+				<attribute qualifier="priorityStatus" type="sellerPriorityEnum">
+  <persistence type="property" /> 
+  <modifiers read="true" write="true" optional="false" /> 
+  </attribute>
 				
 				<!-- <attribute qualifier="isActive" 
 						type="java.lang.Boolean">
