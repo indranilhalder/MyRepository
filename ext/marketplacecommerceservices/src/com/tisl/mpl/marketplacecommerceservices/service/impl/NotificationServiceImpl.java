@@ -136,7 +136,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -148,7 +148,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -179,7 +179,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -201,7 +201,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -231,7 +231,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -259,7 +259,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -317,7 +317,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -371,9 +371,10 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getVoucher()
 	 */
+
 	@Override
 	public List<VoucherStatusNotificationModel> getVoucher()
 	{
@@ -383,7 +384,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -403,7 +404,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */
@@ -416,7 +417,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getAllVoucherList(de.hybris.platform.core
 	 * .model.user.CustomerModel, java.util.List)
@@ -528,7 +529,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#saveToVoucherStatusNotification(de.hybris
 	 * .platform.jalo.Item)
@@ -616,38 +617,42 @@ public class NotificationServiceImpl implements NotificationService
 				}
 			}
 
-			final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherCode);
-
-			if (existingVoucherList.isEmpty())
+			if (null != voucherCode)
 			{
-				voucherStatus = modelService.create(VoucherStatusNotificationModel.class);
-				userUidList.addAll(restrUserUidList);
-				//voucherStatus.setCustomerUidList(userUidList);
+
+				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherCode);
+
+				if (existingVoucherList.isEmpty())
+				{
+					voucherStatus = modelService.create(VoucherStatusNotificationModel.class);
+					userUidList.addAll(restrUserUidList);
+					//voucherStatus.setCustomerUidList(userUidList);
+				}
+				else
+				{
+					voucherStatus = existingVoucherList.get(0);
+					//voucherStatus.setCustomerUidList(voucherStatus.getCustomerUidList());
+					final Set customerUidSet = new HashSet(restrUserUidList);
+					customerUidSet.add(restrUserUidList);
+
+					userUidList.addAll(customerUidSet);
+
+				}
+
+				final String customerStatus = getConfigurationService().getConfiguration().getString(
+						MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
+
+				//Setting values in model
+				voucherStatus.setVoucherCode(voucherCode);
+				voucherStatus.setCustomerUidList(userUidList);
+				voucherStatus.setVoucherStartDate(voucherStartDate);
+				voucherStatus.setIsRead(isRead);
+				voucherStatus.setCustomerStatus(customerStatus);
+				voucherStatus.setCategoryAssociated(categoryAssociated);
+				voucherStatus.setProductAssociated(productAssociated);
+				modelService.save(voucherStatus);
+
 			}
-			else
-			{
-				voucherStatus = existingVoucherList.get(0);
-				//voucherStatus.setCustomerUidList(voucherStatus.getCustomerUidList());
-				final Set customerUidSet = new HashSet(restrUserUidList);
-				customerUidSet.add(restrUserUidList);
-
-				userUidList.addAll(customerUidSet);
-
-			}
-
-			final String customerStatus = getConfigurationService().getConfiguration().getString(
-					MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
-
-			//Setting values in model
-			voucherStatus.setVoucherCode(voucherCode);
-			voucherStatus.setCustomerUidList(userUidList);
-			voucherStatus.setVoucherStartDate(voucherStartDate);
-			voucherStatus.setIsRead(isRead);
-			voucherStatus.setCustomerStatus(customerStatus);
-			voucherStatus.setCategoryAssociated(categoryAssociated);
-			voucherStatus.setProductAssociated(productAssociated);
-			modelService.save(voucherStatus);
-
 		}
 	}
 
