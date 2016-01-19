@@ -192,7 +192,7 @@
 						<ul class="color-swatch">
 					<c:choose>
 		<c:when test="${not empty product.variantOptions}">
-			<label class="colors">Colour:</label> 
+			<label class="colors">Color:</label> 
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
 					<c:when test="${not empty variantOption.defaultUrl}">
