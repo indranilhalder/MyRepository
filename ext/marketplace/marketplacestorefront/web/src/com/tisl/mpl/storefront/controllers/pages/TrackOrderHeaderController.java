@@ -25,13 +25,14 @@ import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
- *
+ * @author TCS
  */
 @Controller
 @Scope("tenant")
@@ -44,6 +45,11 @@ public class TrackOrderHeaderController
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * @param model
+	 * @param request
+	 * @return fragments/home/trackOrderPanel
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String get(final Model model, final HttpServletRequest request)
 	{
@@ -64,9 +70,9 @@ public class TrackOrderHeaderController
 				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 				{
 
-					model.addAttribute("notificationMessagelist", notificationMessagelist);
+					model.addAttribute(ModelAttributetConstants.NOTIFICATION_MESSAGE_LIST, notificationMessagelist);
 
-					int notificationCount = Integer.valueOf(0);
+					int notificationCount = 0;
 					for (final NotificationData single : notificationMessagelist)
 					{
 						if (single.getNotificationRead() != null && !single.getNotificationRead())
@@ -75,11 +81,11 @@ public class TrackOrderHeaderController
 						}
 
 					}
-					model.addAttribute("notificationCount", notificationCount);
-					model.addAttribute("isSignedInUser", "yes");
+					model.addAttribute(ModelAttributetConstants.NOTIFICATION_COUNT, notificationCount);
+					model.addAttribute(ModelAttributetConstants.IS_SIGNED_IN, "yes");
 				}
 
-				model.addAttribute("notificationMessagelist", notificationMessagelist);
+				model.addAttribute(ModelAttributetConstants.NOTIFICATION_MESSAGE_LIST, notificationMessagelist);
 			}
 		}
 		return ControllerConstants.Views.Fragments.Home.TrackOrderPanel;
