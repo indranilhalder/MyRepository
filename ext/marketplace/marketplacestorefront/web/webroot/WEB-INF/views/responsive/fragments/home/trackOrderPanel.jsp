@@ -74,7 +74,7 @@
 			},
 			error : function(resp) {
 				alert("Sorry We Could Not Connect to Database");
-			},
+			}
 		});
 	}
 </script>
