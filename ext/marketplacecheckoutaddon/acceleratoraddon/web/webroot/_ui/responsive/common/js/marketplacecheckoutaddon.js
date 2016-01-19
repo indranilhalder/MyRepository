@@ -3451,17 +3451,23 @@ function clearDisable()
 
 //Coupon
 $("#couponSubmitButton").click(function(){
+	$(this).prop('disabled', true);
+	$(this).css("opacity","0.5");
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
 			"#invalidCouponError, #expiredCouponError, #issueCouponError, " +
 			"#notApplicableCouponError, #notReservableCouponError").css("display","none");
 	if($("#couponFieldId").val()==""){
 		$("#emptyCouponError").css("display","block");	
 		//document.getElementById("couponError").innerHTML="Please enter a Coupon Code";
+		$(this).prop('disabled', false);
+		$(this).css("opacity","1");
 	}
 	else if($("#couponFieldId").val()!="" && $('#couponFieldId').prop('readonly') == true)
 	{
 		$("#appliedCouponError").css("display","block");	
 		//document.getElementById("couponError").innerHTML="Coupon is already applied";
+		$(this).prop('disabled', false);
+		$(this).css("opacity","1");
 	}
 	else{
 		var couponCode=$("#couponFieldId").val();
@@ -3506,17 +3512,29 @@ $("#couponSubmitButton").click(function(){
 		 				couponApplied=true;
 		 			}
 		 			if(couponApplied==true){
-		 				$("#couponApplied").css("display","block");
-		 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
-		 				//$("#couponFieldId").attr('disabled','disabled');
-		 				$('#couponFieldId').attr('readonly', true);
-		 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
-		 				$('#couponMessage').show();
-		 				$('#couponMessage').delay(2000).fadeOut('slow');
-		 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);		 			}
+		 				if(response.couponDiscount.doubleValue>0)
+			 			{
+			 				$("#couponApplied").css("display","block");
+			 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
+			 				//$("#couponFieldId").attr('disabled','disabled');
+			 				$('#couponFieldId').attr('readonly', true);
+			 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
+			 				$('#couponMessage').show();
+			 				$('#couponMessage').delay(2000).fadeOut('slow');
+			 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);		 		
+			 			}
+		 				else
+		 				{
+		 					$("#issueCouponError").css("display","block");
+		 				}
+		 			}
 	 			}
+	 			$("#couponSubmitButton").prop('disabled', false);
+	 			$("#couponSubmitButton").css("opacity","1");
 	 		},
 	 		error : function(resp) {
+	 			$("#couponSubmitButton").prop('disabled', false);
+	 			$("#couponSubmitButton").css("opacity","1");
 	 		}
 	 	});	 
 	}
