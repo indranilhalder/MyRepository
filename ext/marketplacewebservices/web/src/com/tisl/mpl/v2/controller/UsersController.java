@@ -88,10 +88,12 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -3400,102 +3402,75 @@ public class UsersController extends BaseCommerceController
 	{ TRUSTED_CLIENT, CUSTOMERMANAGER, CUSTOMER })
 	@RequestMapping(value = "/{userId}/logout", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto logoutUser(@PathVariable final String userId, final String fields)
+	public MplUserResultWsDto logoutUser(@PathVariable final String userId, final String fields,
+			final HttpServletRequest httpRequest)
 	{
 		final MplUserResultWsDto mplUserResultWsDto = new MplUserResultWsDto();
 
-		final List<OAuthAccessTokenModel> accessTokenModelList = oauthTokenService.getAccessTokensForClientAndUser(
-				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.CLIENTID), userId);
-		if (null == accessTokenModelList)
+		try
 		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9012);
-		}
-		else
-		{
-			for (final OAuthAccessTokenModel accessTokenModel : accessTokenModelList)
+			final String authorization = httpRequest.getHeader("Authorization");
+			String username = null;
+			if (authorization != null && authorization.startsWith("Basic"))
 			{
-				try
+				// Authorization: Basic base64credentials
+				final String base64Credentials = authorization.substring("Basic".length()).trim();
+				final String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
+				// credentials = username:password
+				final String[] values = credentials.split(":", 2);
+				username = values[0];
+			}
+
+			List<OAuthAccessTokenModel> accessTokenModelList = null;
+			if (StringUtils.isNotEmpty(username))
+			{
+				accessTokenModelList = oauthTokenService.getAccessTokensForClientAndUser(username, userId);
+			}
+			if (CollectionUtils.isEmpty(accessTokenModelList))
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9012);
+			}
+			else
+			{
+				for (final OAuthAccessTokenModel accessTokenModel : accessTokenModelList)
 				{
+
 					oauthTokenService.removeAccessToken(accessTokenModel.getTokenId());
 					mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-				}
-				catch (final EtailNonBusinessExceptions e)
-				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(e);
-					if (null != e.getErrorMessage())
-					{
-						mplUserResultWsDto.setError(e.getErrorMessage());
-					}
-					mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-				}
-				catch (final EtailBusinessExceptions e)
-				{
-					ExceptionUtil.etailBusinessExceptionHandler(e, null);
-					if (null != e.getErrorMessage())
-					{
-						mplUserResultWsDto.setError(e.getErrorMessage());
-					}
-					mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
 				}
 			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				mplUserResultWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplUserResultWsDto.setErrorCode(e.getErrorCode());
+			}
+
+			mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				mplUserResultWsDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				mplUserResultWsDto.setErrorCode(e.getErrorCode());
+			}
+			mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return dataMapper.map(mplUserResultWsDto, MplUserResultWsDto.class, fields);
 	}
 
-
-	/**
-	 * @description method is called to resend the OTP Number for COD
-	 * @param emailid
-	 * @param fields
-	 * @return ValidateOtpWsDto
-	 * @throws DuplicateUidException
-	 *            , InvalidKeyException ,NoSuchAlgorithmException
-	 */
-	/*
-	 * @Secured( { CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	 * 
-	 * @RequestMapping(value = "/{emailid}/resendOtpforcod", method = RequestMethod.POST, produces = APPLICATION_TYPE)
-	 * 
-	 * @ResponseBody public ValidateOtpWsDto resendOTP(@PathVariable final String emailid, @RequestParam final String
-	 * mobilenumber, final String fields) throws DuplicateUidException, InvalidKeyException, NoSuchAlgorithmException {
-	 * final ValidateOtpWsDto validateOtpWsDto = new ValidateOtpWsDto(); List<CartModel> cartModelList = null; try {
-	 * final CustomerData customerData = customerFacade.getCurrentCustomer(); if (null == customerData) { throw new
-	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025); } if (null != customerData.getUid() && null
-	 * != mplCartFacade.getCartDetails(customerData.getUid())) { cartModelList = (List<CartModel>)
-	 * mplCartFacade.getCartDetails(customerData.getUid()); } String cartID = null; if (null != cartModelList &&
-	 * !cartModelList.isEmpty()) { cartID = cartModelList.get(0).getCode(); }
-	 * 
-	 * final String mplCustomerID = customerData.getUid(); final String mplCustomerName = customerData.getName() != null
-	 * ? customerData.getName() : "";
-	 * 
-	 * 
-	 * if (null != mplCustomerID && StringUtils.isNotEmpty(mplCustomerID)) {
-	 * 
-	 * if (null != mobilenumber && StringUtils.isNotEmpty(mobilenumber)) { if (StringUtils.length(mobilenumber) ==
-	 * MarketplacecommerceservicesConstants.MOBLENGTH &&
-	 * mobilenumber.matches(MarketplacecommerceservicesConstants.MOBILE_REGEX)) { ///////// final boolean NotBlackListed
-	 * = mplPaymentFacadeImpl.isMobileBlackListed(mobilenumber); if (NotBlackListed) { //////// final String validation =
-	 * getMplPaymentFacade().generateOTPforCODWeb(mplCustomerID, mobilenumber, mplCustomerName, cartID); if (null !=
-	 * validation && StringUtils.isNotEmpty(validation)) {
-	 * 
-	 * validateOtpWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG); } else { throw new
-	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9022); } } else { throw new
-	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9202); } } else { throw new
-	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9023); } } else { throw new
-	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9024); } } else { throw new
-	 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025); }
-	 * 
-	 * } catch (final InvalidCartException ce) { throw new EtailNonBusinessExceptions(ce,
-	 * MarketplacecommerceservicesConstants.B9004); } catch (final EtailNonBusinessExceptions e) {
-	 * ExceptionUtil.etailNonBusinessExceptionHandler(e); if (null != e.getErrorMessage()) {
-	 * validateOtpWsDto.setError(e.getErrorMessage()); }
-	 * validateOtpWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG); } catch (final
-	 * EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); if (null !=
-	 * e.getErrorMessage()) { validateOtpWsDto.setError(e.getErrorMessage()); }
-	 * validateOtpWsDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG); }
-	 * 
-	 * return validateOtpWsDto; }
-	 */
 
 	/**
 	 * @description method is called to send personalized link to friends Email
