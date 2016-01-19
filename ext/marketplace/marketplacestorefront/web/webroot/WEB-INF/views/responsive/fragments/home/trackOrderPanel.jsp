@@ -46,7 +46,7 @@
 								if (current > 0) {
 									current = current - 1;
 									markAsRead(this.id,$(this).attr('data-name'), $(this).attr('data-status'));
-									$('#tracklink span').text(current)
+									//$('#tracklink span').text(current)
 								}
 							});
 					$(this).mouseout(function() {
@@ -56,7 +56,6 @@
 	});
 
 	function markAsRead(currentId, consignmentNo, shopperstatus) {
-     
 		var consignmentNo = consignmentNo;
 		var currentId = currentId;
 		var shopperstatus = shopperstatus
@@ -72,14 +71,11 @@
 			type : "GET",
 			cache : false,
 			success : function(data) {
-			
-
 			},
 			error : function(resp) {
 				alert("Sorry We Could Not Connect to Database");
 			}
 		});
-
 	}
 </script>
 
@@ -92,13 +88,14 @@
 			<c:when test="${empty notifylist.transactionID and notifylist.orderNumber ne null}">
 
 				<c:set var="orderId" value="${notifylist.orderNumber}" />
+				<c:set var="orderIsRead" value="${notifylist.notificationRead}" />
 				<c:set var="cstatus"
 					value="${notifylist.notificationCustomerStatus}" />
 
 				<li id="${notifylist.orderNumber}"
 				  data-name="${notifylist.transactionID }"
 					data-order="${notifylist.transactionID}"
-					 data-status="${notifylist.notificationCustomerStatus}"> 
+					 data-status="${notifylist.notificationCustomerStatus}" data-read="${orderIsRead}"> 
 					<a href="/store/mpl/en/my-account/order/?orderCode=${notifylist.orderNumber}">${fn:replace(cstatus, "@", orderId)}
 				</a>
 					<div id="track_footer" style="float: right;">
@@ -133,13 +130,14 @@
 			<c:if test="${ notifylist.couponCode eq null}">
 		
 				<c:set var="orderId" value="${notifylist.orderNumber}" />
+				<c:set var="orderIsRead" value="${notifylist.notificationRead}" />
 				<c:set var="cstatus"
 					value="${notifylist.notificationCustomerStatus}" />
 
 				<li id="${notifylist.orderNumber}"
 				 data-name="${notifylist.transactionID }"
 					data-order="${notifylist.transactionID}"
-					data-status="${notifylist.notificationCustomerStatus}"><a
+					data-status="${notifylist.notificationCustomerStatus}" data-read="${orderIsRead}"><a
 					href="/store/mpl/en/my-account/order/?orderCode=${notifylist.orderNumber}">${fn:replace(cstatus, "@", orderId)}</a>
 					<div id="track_footer" style="float: right;">
 						<h4>
@@ -173,15 +171,16 @@
              <c:if test= "${ notifylist.couponCode  ne null}">
 		
 					<c:set var="coupon" value="${notifylist.couponCode}" />
+					<c:set var="couponIsRead" value="${notifylist.notificationRead}" />
 					  <c:url var="productUrl" value="${notifylist.productUrl}"></c:url>
-					 
+
 					
 				<c:set var="couponStatus"
 					value="${notifylist.notificationCustomerStatus}" />
 		       
 		         
 				<li id="${notifylist.couponCode}"
-					 data-status="${couponStatus}"> 
+					 data-status="${couponStatus}" data-read="${couponIsRead}"> 
 					<a href="${productUrl}">${fn:replace(couponStatus, "@", coupon)}
 				</a>
 				<div id="track_footer" style="float: right;">

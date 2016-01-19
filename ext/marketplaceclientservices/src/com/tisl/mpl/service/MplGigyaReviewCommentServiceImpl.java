@@ -235,7 +235,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					}
 
 					//	if (category.equals("Clothing"))
-					if ("Clothing".equalsIgnoreCase(category)) //removing unneccessary comparison of boolean objects(Sonar Fix)
+					if ("Clothing".equalsIgnoreCase(category) || "Footwear".equalsIgnoreCase(category)) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
 						if (checkItemKey(ratings, "Fit"))
 						{

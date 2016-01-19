@@ -127,302 +127,7 @@
 			</div>
 		</div>
 		<div class="reviews">
-
-			<div class="header ">
-				<h2>Reviews</h2>
-				<p>13 out of 14 people recommend this product</p>
-			</div>
-			<!-- <div class="overview">
-
-				<div class="tabs-block">
-					<ul class="nav">
-						<div class="wrapper">
-							<li class="active">Seller Reviews (14)</li>
-							<li>Customer Reviews (12,000)</li>
-							<li>Questions &amp; Answers (5)</li>
-						</div>
-					</ul>
-					<ul class="tabs">
-						<li class="active">
-							<div class="wrapper">
-								<div class="half">
-									<ul class="rating-list">
-										<li class="header">Rating Snapshot</li>
-										<li>
-											<div class="rate-details three-block">
-												<div class="before">
-													<span>5</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 70%" class="rating"></div>
-												</div>
-												<div class="after">7</div>
-											</div>
-										</li>
-										<li>
-											<div class="rate-details three-block">
-												<div class="before">
-													<span>4</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 60%" class="rating"></div>
-												</div>
-												<div class="after">6</div>
-											</div>
-										</li>
-										<li>
-											<div class="rate-details three-block">
-												<div class="before">
-													<span>3</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 10%" class="rating"></div>
-												</div>
-												<div class="after">1</div>
-											</div>
-										</li>
-										<li>
-											<div class="rate-details three-block empty">
-												<div class="before">
-													<span>2</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 0%" class="rating"></div>
-												</div>
-												<div class="after">0</div>
-											</div>
-										</li>
-										<li>
-											<div class="rate-details three-block empty">
-												<div class="before">
-													<span>1</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 0%" class="rating"></div>
-												</div>
-												<div class="after">0</div>
-											</div>
-										</li>
-									</ul>
-								</div>
-
-								<div class="half">
-									<ul class="rating-list">
-										<li class="header">Overall Rating
-											<ul class="star-review">
-												<li class="full"></li>
-												<li class="full"></li>
-												<li class="full"></li>
-												<li class="half"></li>
-												<li class="empty"></li>
-												<span>4.2 out of 5</span>
-											</ul>
-											<p class="books-only">13 out of 14 people recommend this
-												product</p>
-										</li>
-										<li class="fit">
-											<div class="rate-details three-block">
-												<div class="before">Fit</div>
-												<div class="rate-bar white">
-													<div style="width: 80%" class="rating"></div>
-													<ul>
-														<li>Runs Small</li>
-														<li>Runs large</li>
-													</ul>
-												</div>
-												<div class="after">3.0</div>
-											</div>
-										</li>
-										<li class="length">
-											<div class="rate-details three-block">
-												<div class="before">Length</div>
-												<div class="rate-bar white">
-													<div style="width: 40%" class="rating"></div>
-													<ul>
-														<li>Runs Short</li>
-														<li>Runs long</li>
-													</ul>
-												</div>
-												<div class="after">3.0</div>
-											</div>
-										</li>
-										<li class="quality">
-											<div class="rate-details three-block">
-												<div class="before">Quality</div>
-												<div class="rate-bar white">
-													<div style="width: 10%" class="rating"></div>
-													<ul>
-														<li>Poor</li>
-														<li>Excellent</li>
-													</ul>
-												</div>
-												<div class="after">3.0</div>
-											</div>
-										</li>
-									</ul>
-								</div>
-
-								<div class="full">
-									<button class="orange">Write a Review</button>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="wrapper">
-								<div class="half">
-									<ul class="rating-list">
-										<li class="header">Rating Snapshot</li>
-										<li>
-											<div class="rate-details three-block">
-												<div class="before">
-													<span>5</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 70%" class="rating"></div>
-												</div>
-												<div class="after">7</div>
-											</div>
-										</li>
-										<li>
-											<div class="rate-details three-block">
-												<div class="before">
-													<span>4</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 60%" class="rating"></div>
-												</div>
-												<div class="after">6</div>
-											</div>
-										</li>
-										<li>
-											<div class="rate-details three-block">
-												<div class="before">
-													<span>3</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 10%" class="rating"></div>
-												</div>
-												<div class="after">1</div>
-											</div>
-										</li>
-										<li>
-											<div class="rate-details three-block empty">
-												<div class="before">
-													<span>2</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 0%" class="rating"></div>
-												</div>
-												<div class="after">0</div>
-											</div>
-										</li>
-										<li>
-											<div class="rate-details three-block empty">
-												<div class="before">
-													<span>1</span>
-													<ul class="star-review">
-														<li class="full"></li>
-													</ul>
-												</div>
-												<div class="rate-bar white">
-													<div style="width: 0%" class="rating"></div>
-												</div>
-												<div class="after">0</div>
-											</div>
-										</li>
-									</ul>
-								</div>
-
-								<div class="half">
-									<ul class="rating-list">
-										<li class="header">Overall Rating
-											<ul class="star-review">
-												<li class="full"></li>
-												<li class="full"></li>
-												<li class="full"></li>
-												<li class="half"></li>
-												<li class="empty"></li>
-												<span>4.2 out of 5</span>
-											</ul>
-										</li>
-										<li class="fit">
-											<div class="rate-details three-block">
-												<div class="before">Fit</div>
-												<div class="rate-bar white">
-													<div style="width: 80%" class="rating"></div>
-													<ul>
-														<li>Runs Small</li>
-														<li>Runs large</li>
-													</ul>
-												</div>
-												<div class="after">3.0</div>
-											</div>
-										</li>
-										<li class="length">
-											<div class="rate-details three-block">
-												<div class="before">Length</div>
-												<div class="rate-bar white">
-													<div style="width: 40%" class="rating"></div>
-													<ul>
-														<li>Runs Short</li>
-														<li>Runs long</li>
-													</ul>
-												</div>
-												<div class="after">3.0</div>
-											</div>
-										</li>
-										<li class="quality">
-											<div class="rate-details three-block">
-												<div class="before">Quality</div>
-												<div class="rate-bar white">
-													<div style="width: 10%" class="rating"></div>
-													<ul>
-														<li>Poor</li>
-														<li>Excellent</li>
-													</ul>
-												</div>
-												<div class="after">3.0</div>
-											</div>
-										</li>
-									</ul>
-								</div>
-
-								<div class="full">
-									<button class="orange">Write a Review</button>
-								</div>
-							</div>
-						</li>
-						<li><div class="wrapper">Questions Tab</div></li>
-					</ul>
-				</div>
-			</div>-->
+					
 			<!--  Interface for customer own comments starts from here -->
 			<div class="toolbar">
 				<div class="wrapper">
@@ -441,9 +146,9 @@
 					<p>${startIndex}-${endIndex} of  ${commentsListSize} Reviews</p>
 					</c:if>
 					
-					<select class="white black-arrow">
+					<!-- <select class="white black-arrow">
 						<option>Sort by</option>
-					</select>
+					</select> -->
 					<div class="account-only">
 						 <c:if test="${totalPages ne 1 }"> 
 						<ul class="pagination">
@@ -547,7 +252,7 @@
 	  										<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
 								</ul>
 								<c:choose>
-									<c:when test="${comment.rootCategory eq 'Clothing'}" >							
+									<c:when test="${comment.rootCategory eq 'Clothing' || comment.rootCategory eq 'Footwear'}" >							
 								<span class="rating-name"><spring:theme code="myaccount.editreview.fit"/> </span>
 
 								<ul class="rating-stars rateEdit" data-rating-name${count.index}="fit">
@@ -593,8 +298,8 @@
 								</ul>
 							
 								<div class="errorUpdateRating${count.index}"  style="color: red;"></div>
-								<!-- for Clothing category -->
-								<c:if test="${comment.rootCategory eq 'Clothing'}" >
+								<!-- for Clothing category  and 'Footwear category'-->
+								<c:if test="${comment.rootCategory eq 'Clothing' || comment.rootCategory eq 'Footwear' }" >
 								<script type="text/javascript">
 								
 								var ratingJson = {_overall:${comment.overAllRating},overall:${comment.overAllRating},fit:${comment.fitRating},value_for_money:${comment.valueForMoneyRating},quality:${comment.qualityRating}};
@@ -772,7 +477,7 @@
 	</div>
 </div>
 </div>
-<div id="deleteReviewcontainer" >
+<div id="deleteReviewcontainer" style="display: none;">
 <div id="deleteReview">
 			<div class="modal-dialog" style="top:-80%;background-color:#fff;width:270px;margin:0px;">
 			<div class="modal-content">
@@ -925,7 +630,7 @@ $(document).ready(function(){
 			if(categoryID == "Electronics"){
 				ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Ease of use':"+updated_rating_efu+",'Value for Money':"+updated_rating_vfm+"}";
 				ratingsJSON = {overall:updated_rating_overall,easeOfUse:updated_rating_efu,value_for_money:updated_rating_vfm,quality:d_rating_quality};
-			}else if(categoryID == 'Clothing'){
+			}else if(categoryID == 'Clothing' || categoryID == 'Footwear' ){
 				ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Fit':"+updated_rating_fit+",'Value for Money':"+updated_rating_vfm+"}";	
 				ratingsJSON = {overall:updated_rating_overall,fit:updated_rating_fit,value_for_money:updated_rating_vfm,quality:updated_rating_quality};
 			}else{
@@ -1084,7 +789,11 @@ $(document).ready(function(){
 	$(".close-info,.close-danger").click(function(){
 		$(this).parent().hide();
 	});
-rating(arrayrating);
+	
+	$('#reviewPluginContainer').on('hidden.bs.modal', function () {
+	   window.location.reload();
+	});
+	rating(arrayrating);
 						
 });
 		
