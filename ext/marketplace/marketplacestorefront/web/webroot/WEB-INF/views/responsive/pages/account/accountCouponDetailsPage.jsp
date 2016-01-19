@@ -142,6 +142,7 @@
 					<p class="mobile">Edit the coupon code in your cart to receive
 						your discount.</p>
 					<ul class="coupon-container">
+					<input type="hidden" id="accountCouponCount" value="${fn:length(closedCouponList)}"/>
 						<c:forEach items="${closedCouponList}" var="closedVoucherDisplay"
 							varStatus="vlstatus">
 							<li class="coupon-box starred">
@@ -172,7 +173,7 @@
 						</c:forEach>
 					</ul>
 					<div class="bottom">
-						<p>1-5 of 12 Transactions</p>
+						
 
 						<ul class="pagination">
 							<li class="number first active"><a href="?page=1">1</a></li>
