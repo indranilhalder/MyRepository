@@ -1091,7 +1091,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String getCoupons(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL_COUPONS) final int page,
-			final Model model) throws CMSItemNotFoundException, VoucherOperationException
+			@RequestParam(value = ModelAttributetConstants.PAGE_FOR, defaultValue = "") final String pageFor, final Model model)
+			throws CMSItemNotFoundException, VoucherOperationException
 	{
 		try
 		{
@@ -1105,6 +1106,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			//List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 			//List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
+			List<VoucherDisplayData> closedVoucherListModified = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 			final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 20);
@@ -1113,6 +1115,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			int start = 0;
 			int end = 0;
 			int couponhistoryListSize = 0;
+			int closedVoucherDataListSize = 0;
 			int startIndex = 0;
 			int endIndex = 0;
 			int pageMultMaxSize = 0;
@@ -1136,7 +1139,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
 			}
 
-
+			// usedCoupons
 			if (!couponHistoryDTOList.isEmpty())
 			{
 				couponhistoryListSize = couponHistoryDTOList.size();
@@ -1175,38 +1178,114 @@ public class AccountPageController extends AbstractMplSearchPageController
 					LOG.debug("Step 3-************************Inside couponhistoryListSize > end NOT EMPTY");
 					couponHistoryDTOListModified = couponHistoryDTOList.subList(start, end);
 				}
-			}
-			if (page > 1)
-			{
-				pageMultMaxSize = (page * (int) pageSize);
-				startIndex = ((page - 1) * (int) pageSize) + 1;
+				if (page > 1)
+				{
+					pageMultMaxSize = (page * (int) pageSize);
+					startIndex = ((page - 1) * (int) pageSize) + 1;
 
-				if (startIndex == couponhistoryListSize)
-				{
-					endIndex = ((page - 1) * (int) pageSize) + couponhistoryListSize - startIndex + 1;
-				}
-				else if (couponhistoryListSize > pageMultMaxSize)
-				{
-					endIndex = pageMultMaxSize;
+					if (startIndex == couponhistoryListSize)
+					{
+						endIndex = ((page - 1) * (int) pageSize) + couponhistoryListSize - startIndex + 1;
+					}
+					else if (couponhistoryListSize > pageMultMaxSize)
+					{
+						endIndex = pageMultMaxSize;
+					}
+					else
+					{
+
+						endIndex = couponhistoryListSize;
+					}
 				}
 				else
 				{
-
-					endIndex = couponhistoryListSize;
+					if (couponhistoryListSize > pageSize)
+					{
+						LOG.debug("Step 3-************************Inside couponhistoryListSize > pageSize NOT EMPTY and page < 1 ");
+						startIndex = 1;
+						endIndex = (int) pageSize;
+					}
+					else
+					{
+						startIndex = 1;
+						endIndex = couponhistoryListSize;
+					}
 				}
 			}
-			else
+
+			//unused coupon
+
+			if (!closedVoucherDataList.isEmpty())
 			{
-				if (couponhistoryListSize > pageSize)
+				closedVoucherDataListSize = closedVoucherDataList.size();
+				/* Pagination starts */
+				LOG.debug("Step 0-************************Pagination Starts********************");
+				LOG.debug("Step 1-************************Inside couponHistoryDTOList NOT EMPTY");
+
+				final double pages = Math.ceil(closedVoucherDataListSize / pageSize);
+				final int totalPages = (int) pages;
+				//change
+				model.addAttribute(ModelAttributetConstants.TOTAL_PAGES_COUPONS, Integer.valueOf(totalPages));
+				model.addAttribute(ModelAttributetConstants.COUPONS_LIST_SIZE, Integer.valueOf(closedVoucherDataListSize));
+				if (page != 0)
 				{
-					LOG.debug("Step 3-************************Inside couponhistoryListSize > pageSize NOT EMPTY and page < 1 ");
-					startIndex = 1;
-					endIndex = (int) pageSize;
+					start = (int) ((page - 1) * pageSize);
+					end = (int) (start + pageSize);
 				}
 				else
 				{
-					startIndex = 1;
-					endIndex = couponhistoryListSize;
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (start > couponhistoryListSize)
+				{
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (end > couponhistoryListSize)
+				{
+					LOG.debug("Step 2-************************Inside end > couponhistoryListSize NOT EMPTY");
+					closedVoucherListModified = closedVoucherDataList.subList(start, closedVoucherDataListSize);
+				}
+				else
+				{
+					LOG.debug("Step 3-************************Inside couponhistoryListSize > end NOT EMPTY");
+					closedVoucherListModified = closedVoucherDataList.subList(start, end);
+				}
+				if (page > 1)
+				{
+					pageMultMaxSize = (page * (int) pageSize);
+					startIndex = ((page - 1) * (int) pageSize) + 1;
+
+					if (startIndex == closedVoucherDataListSize)
+					{
+						endIndex = ((page - 1) * (int) pageSize) + closedVoucherDataListSize - startIndex + 1;
+					}
+					else if (closedVoucherDataListSize > pageMultMaxSize)
+					{
+						endIndex = pageMultMaxSize;
+					}
+					else
+					{
+
+						endIndex = closedVoucherDataListSize;
+					}
+				}
+				else
+				{
+					if (closedVoucherDataListSize > pageSize)
+					{
+						LOG.debug("Step 3-************************Inside couponhistoryListSize > pageSize NOT EMPTY and page < 1 ");
+						startIndex = 1;
+						endIndex = (int) pageSize;
+					}
+					else
+					{
+						startIndex = 1;
+						endIndex = closedVoucherDataListSize;
+					}
 				}
 			}
 
@@ -1214,8 +1293,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			//model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
 			//model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
-			model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, closedVoucherDataList);
-
+			model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, closedVoucherListModified);
+			model.addAttribute("closedCouponListSize", closedVoucherDataListSize);
 			model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistoryDTOListModified);
 			model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, couponHistoryStoreDTO.getSavedSum());
 			model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, couponHistoryStoreDTO.getCouponsRedeemedCount());
