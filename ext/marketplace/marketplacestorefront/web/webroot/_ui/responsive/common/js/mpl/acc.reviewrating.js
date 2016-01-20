@@ -34,9 +34,7 @@ $(document).ready(function(){
 			}
 			
 		}
-		//$(this).parents(".review").find(".rating-stars li span").remove();
-		//$(this).parents(".review").find(".rating-stars li").append("<span></span>");
-		//$(this).parents(".review").find(".rating-stars").addClass("rate");
+		
 	});
 	
 	$("input[name=cancel]").click(function(){
@@ -305,9 +303,12 @@ $(document).ready(function(){
 			});
 			}
 		
-	    function reviewPopUpDisplay(rootCategory , productCode , productTitle){
+	    function reviewPopUpDisplay(rootCategory , productCode , productTitle,productBrand,id){
 	    	
-	    	$("#popUpProductTitle").text(productTitle);
+	    	$(".popUpProductTitle").text(productTitle);
+	    	$(".popUpProductBrand").text(productBrand);
+	    	var x = $("#new-review-link"+productCode).siblings().find(".picZoomer-pic").attr("src");		
+	    	$(".review-image").attr("src", x);
 			var ratingsParams = {
 					categoryID : rootCategory,
 					streamID : productCode,
