@@ -117,7 +117,7 @@
 			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
 			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
 			    			<c:otherwise>
-			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    				<fmt:formatDate type="both" pattern="MMM dd yyyy HH:mm" value="${notify}" />
 			    			</c:otherwise>	
 			 			</c:choose>
 						</h4>
@@ -158,7 +158,7 @@
 			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
 			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
 			    			<c:otherwise>
-			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    				<fmt:formatDate type="both" pattern="MMM dd yyyy HH:mm" value="${notify}" />
 			    			</c:otherwise>	
 			 			</c:choose>
 					
@@ -207,7 +207,7 @@
 			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
 			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
 			    			<c:otherwise>
-			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    				<fmt:formatDate type="both" pattern="MMM dd yyyy HH:mm" value="${notify}" />
 			    			</c:otherwise>	
 			 			</c:choose>
 				
