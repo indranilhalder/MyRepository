@@ -26,8 +26,8 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
  *
  */
 
-public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCartCalculationStrategy
-		implements MplCommerceCartCalculationStrategy
+public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCartCalculationStrategy implements
+		MplCommerceCartCalculationStrategy
 {
 
 	/*
@@ -60,8 +60,8 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			}
 			catch (final CalculationException calculationException)
 			{
-				throw new IllegalStateException(
-						"Cart model " + cartModel.getCode() + " was not calculated due to: " + calculationException.getMessage());
+				throw new IllegalStateException("Cart model " + cartModel.getCode() + " was not calculated due to: "
+						+ calculationException.getMessage());
 			}
 			finally
 			{
@@ -85,8 +85,9 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			beforeCalculate(parameter);
 			resetCartModel(cartModel);
 			getCalculationService().recalculate(cartModel);
-			getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true, PromotionsManager.AutoApplyMode.APPLY_ALL,
-					PromotionsManager.AutoApplyMode.APPLY_ALL, getTimeService().getCurrentTime());
+			getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true,
+					PromotionsManager.AutoApplyMode.APPLY_ALL, PromotionsManager.AutoApplyMode.APPLY_ALL,
+					getTimeService().getCurrentTime());
 		}
 		catch (final CalculationException calculationException)
 		{
@@ -104,8 +105,10 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	@Override
 	protected void beforeCalculate(final CommerceCartParameter parameter)
 	{
-		if ((getCommerceCartCalculationMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
-				.getConfiguration().getBoolean("commerceservices.commercecartcalculationmethodhook.enabled", true))))
+		if ((getCommerceCartCalculationMethodHooks() == null)
+				|| (!(parameter.isEnableHooks()))
+				|| (!(getConfigurationService().getConfiguration().getBoolean(
+						"commerceservices.commercecartcalculationmethodhook.enabled", true))))
 		{
 			return;
 		}
@@ -118,8 +121,10 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 	@Override
 	protected void afterCalculate(final CommerceCartParameter parameter)
 	{
-		if ((getCommerceCartCalculationMethodHooks() == null) || (!(parameter.isEnableHooks())) || (!(getConfigurationService()
-				.getConfiguration().getBoolean("commerceservices.commercecartcalculationmethodhook.enabled", true))))
+		if ((getCommerceCartCalculationMethodHooks() == null)
+				|| (!(parameter.isEnableHooks()))
+				|| (!(getConfigurationService().getConfiguration().getBoolean(
+						"commerceservices.commercecartcalculationmethodhook.enabled", true))))
 		{
 			return;
 		}
@@ -149,8 +154,8 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			cartEntry.setCartPromoCode("");
 			cartEntry.setIsPercentageDisc(Boolean.FALSE);
 			cartEntry.setTotalProductLevelDisc(Double.valueOf(0.00D));
-			cartEntry.setCouponCode("");
-			cartEntry.setCouponValue(Double.valueOf(0.00D));
+			//			cartEntry.setCouponCode("");
+			//			cartEntry.setCouponValue(Double.valueOf(0.00D));
 			modelService.save(cartEntry);
 		}
 
