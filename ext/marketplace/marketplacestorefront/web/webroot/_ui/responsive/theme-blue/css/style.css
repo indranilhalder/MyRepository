@@ -14932,6 +14932,8 @@ body .account .right-account form label {
     body .account .right-account form label {
         font-size: 10px;
     }
+    body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before{
+    margin-right:25px !important;}
 }
 body .account .right-account form input {
     border-color: #dbeafa;
@@ -25701,6 +25703,9 @@ ul.links li.product:nth-last-child(1),ul.links li.product:nth-last-child(2) {
 
 #new-address-option-1 + label, #new-address-option-2 + label{
 	width:25%;
+}
+body.page-address-book #new-address-option-1 + label, body.page-address-book #new-address-option-2 + label{
+width:auto;
 }
 }
 .fill-in-concierge, .select-value-concierge {
