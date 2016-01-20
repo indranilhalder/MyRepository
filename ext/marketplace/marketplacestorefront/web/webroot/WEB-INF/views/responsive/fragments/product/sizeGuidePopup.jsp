@@ -18,9 +18,10 @@
 <div class="sizes">
 	
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
+	
+	
 	<c:choose>
-	<c:when test="${not empty sizeguideData}">	
-		
+	<c:when test="${not empty sizeguideData}">
 		<div class="tables">
 			<div>
 				<%-- <h2>Top</h2> --%>
@@ -286,7 +287,7 @@
 				
 				
 					<c:if test="${noVariant!=true&&notApparel!=true}">
-	<label><spring:theme code="product.variant.size"></spring:theme>(${productSizeType})</label>
+	<label><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 	
 	
 	
