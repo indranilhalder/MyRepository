@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
@@ -409,56 +410,64 @@ public class ProductPageController extends AbstractPageController
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
 			if (buyboxdata != null)
 			{
-
-
-
-				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
-						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+				if (null != buyboxdata.getAvailable())
 				{
-					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
-							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+					if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
+							&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
 					{
-						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
+						for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
+								.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
 						{
-							if (response.getIsServicable().equalsIgnoreCase("Y"))
+							if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
 							{
-								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
-							}
-							buyboxJson
-									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
+								if (response.getIsServicable().equalsIgnoreCase("Y"))
+								{
+									buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
+								}
+								buyboxJson.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY,
+										response.getIsServicable());
 
+							}
 						}
+
+					}
+					else
+					{
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
 					}
 
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-				}
 
-				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
-							.getFormattedValue());
-				}
-				else if (buyboxdata.getPrice().getValue().doubleValue() > 0.0)
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
+					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
+					{
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
+								.getFormattedValue());
+					}
+					else if (buyboxdata.getPrice().getValue().doubleValue() > 0.0)
+					{
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
+					}
+					else
+					{
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getMrp().getFormattedValue());
+					}
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getValue());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
 				}
 				else
 				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getMrp().getFormattedValue());
+
+					LOG.debug("***************************Inproper BuyBox data********************");
+					buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
+
 				}
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getValue());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
 			}
 			else
 			{
 
 				LOG.debug("***************************Inproper BuyBox data********************");
-				buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_SELLERS);
+				buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
 
 			}
 		}
