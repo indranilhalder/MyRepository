@@ -6,6 +6,8 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -30,7 +32,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -52,12 +54,12 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
 	@Override
-	public SellerInformationModel getSellerInformation(final String sellerID)
+	public List<SellerInformationModel> getSellerInformation(final String sellerID)
 	{
 		if (sellerID != null)
 		{
