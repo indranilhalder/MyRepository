@@ -169,7 +169,7 @@ function loadVariant(x){
 		<product:sellerForm></product:sellerForm>
 		<div class="selectSize">
 			<p>
-				<b><spring:theme code="product.variant.size"></spring:theme></b>
+				<b><spring:theme code="product.variant.size"></spring:theme></b>(${productSizeType})
 			</p>
 			<select id="sizevariant" class="form-control variant-select"
 				onchange="selectProductSize()">

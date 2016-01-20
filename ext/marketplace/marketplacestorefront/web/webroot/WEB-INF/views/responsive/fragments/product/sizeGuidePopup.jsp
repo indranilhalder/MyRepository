@@ -286,7 +286,7 @@
 				
 				
 					<c:if test="${noVariant!=true&&notApparel!=true}">
-	<label>Size:</label> 
+	<label><spring:theme code="product.variant.size"></spring:theme>(${productSizeType})</label>
 	
 	
 	

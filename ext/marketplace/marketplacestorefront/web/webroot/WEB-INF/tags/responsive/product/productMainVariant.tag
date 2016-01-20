@@ -185,9 +185,10 @@ $("#variant").change(function() {
 <!-- currentcolor is populated on selecting color swatch -->
 
 <div class="size" style="font-size: 12px;">
+
 	<c:if test="${noVariant!=true&&notApparel!=true}">
 		<p>
-			<spring:theme code="product.variant.size"></spring:theme>
+			<spring:theme code="product.variant.size"></spring:theme>(${productSizeType})
 		</p>
 		<select id="variant" class="variant-select">
 			<c:choose>
