@@ -367,10 +367,11 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	private PaymentTransactionModel initiateRefund(final OrderModel order)
 	{
 		PaymentTransactionModel paymentTransactionModel = null;
+		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
 		try
 		{
 			paymentTransactionModel = mplJusPayRefundService.doRefund(order, order.getTotalPriceWithConv().doubleValue(),
-					PaymentTransactionType.CANCEL);
+					PaymentTransactionType.CANCEL, uniqueRequestId);
 			if (null != paymentTransactionModel)
 			{
 				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
