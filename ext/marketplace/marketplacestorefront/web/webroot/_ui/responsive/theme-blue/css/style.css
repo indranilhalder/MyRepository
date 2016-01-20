@@ -12894,7 +12894,8 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .details {		
     clear: both;		
     background: rgb(237,242,245);		
-    padding-top: 30px;		
+    padding-top: 30px;	
+    position:relative;	
 }		
 .modal.size-guide .sizes .details::after {		
     clear: both;		
