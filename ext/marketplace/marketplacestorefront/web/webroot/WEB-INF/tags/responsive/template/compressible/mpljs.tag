@@ -151,6 +151,10 @@
 	src="${commonResourcePath}/js/mpl/tisl.home.js"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.search.js"></script>
 
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/reviews')}">
+    <script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.reviewrating.js"></script>
+</c:if> 
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" med="all" href="${themeResourcePath}/css/main-ie8.css"/>

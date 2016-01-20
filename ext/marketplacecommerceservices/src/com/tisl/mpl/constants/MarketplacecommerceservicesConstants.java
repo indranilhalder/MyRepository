@@ -981,6 +981,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FOR TRACK ORDER NOTIFICATION
 	public static final String NOTIFICATION_COUNT = "notification.count";
 	public static final String NOTIFICATION_COUNT_MOBILE = "notification.count.mobile";
+	public static final String CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION = "notification.coupon.status";
 
 	public static final String BASESTORE_UID = "mpl".intern();
 	public static final String WEBHOOK_ENTRY_EXPIRED = "0".intern();

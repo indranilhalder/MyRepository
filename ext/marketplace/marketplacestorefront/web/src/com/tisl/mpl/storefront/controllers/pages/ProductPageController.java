@@ -130,6 +130,11 @@ public class ProductPageController extends AbstractPageController
 {
 
 	/**
+	 * 
+	 */
+	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
+
+	/**
 	 *
 	 */
 	private static final String FOOTWEAR = "Footwear";
@@ -345,6 +350,7 @@ public class ProductPageController extends AbstractPageController
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			final Model model) throws CMSItemNotFoundException
 	{
+		Map<String, List<SizeGuideData>> sizeguideList = null;
 		try
 		{
 
@@ -356,20 +362,27 @@ public class ProductPageController extends AbstractPageController
 
 
 			populateProductData(productData, model);
-			final Map<String, List<SizeGuideData>> sizeguideList = sizeGuideFacade.getProductSizeguide(productCode,
-					productData.getRootCategory());
+			sizeguideList = sizeGuideFacade.getProductSizeguide(productCode, productData.getRootCategory());
 			final List<String> headerMap = getHeaderdata(sizeguideList, productData.getRootCategory());
 			LOG.info("***************headerMap" + headerMap);
 			if (null != productData.getBrand())
 			{
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
 			}
-			//if(productBreadcrumbBuilder.getBreadcrumbs(productModel).>0)
+			if (sizeguideList != null && CollectionUtils.isNotEmpty(sizeguideList.get(productCode)))
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
+			}
 			model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
 					new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
 
 			model.addAttribute(ModelAttributetConstants.HEADER_SIZE_GUIDE, headerMap);
-			model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -672,6 +685,7 @@ public class ProductPageController extends AbstractPageController
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -982,8 +996,6 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
 			model.addAttribute(ModelAttributetConstants.RATING_REVIEW_URL, gigyaRatingURL);
 			//End Gigya
-
-
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.CLIQCARENUMBER,
 					((cliqCareNumber == null || cliqCareNumber.isEmpty()) ? CUSTOMER_CARE_NUMBER : cliqCareNumber));
@@ -995,6 +1007,7 @@ public class ProductPageController extends AbstractPageController
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
 			final String productCode = productData.getCode();
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			setUpMetaData(model, metaDescription, metaTitle, productCode);
 		}
 		//populateVariantSizes(productData);
