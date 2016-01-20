@@ -365,11 +365,13 @@ public class ProductPageController extends AbstractPageController
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
 			}
 			//if(productBreadcrumbBuilder.getBreadcrumbs(productModel).>0)
-			model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
-					new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
+			/* comment should be reverted */
+			//			model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
+			//					new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
 
 			model.addAttribute(ModelAttributetConstants.HEADER_SIZE_GUIDE, headerMap);
 			model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+			model.addAttribute("productSizeType", productDetailsHelper.getSizeType(productModel));
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -672,6 +674,7 @@ public class ProductPageController extends AbstractPageController
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			model.addAttribute("productSizeType", productDetailsHelper.getSizeType(productModel));
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -982,8 +985,6 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
 			model.addAttribute(ModelAttributetConstants.RATING_REVIEW_URL, gigyaRatingURL);
 			//End Gigya
-
-
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.CLIQCARENUMBER,
 					((cliqCareNumber == null || cliqCareNumber.isEmpty()) ? CUSTOMER_CARE_NUMBER : cliqCareNumber));
@@ -995,6 +996,7 @@ public class ProductPageController extends AbstractPageController
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
 			final String productCode = productData.getCode();
+			model.addAttribute("productSizeType", productDetailsHelper.getSizeType(productModel));
 			setUpMetaData(model, metaDescription, metaTitle, productCode);
 		}
 		//populateVariantSizes(productData);
