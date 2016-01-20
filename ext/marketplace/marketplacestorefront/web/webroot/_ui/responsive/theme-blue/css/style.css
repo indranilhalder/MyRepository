@@ -10271,15 +10271,15 @@ body .account .right-account .order-history .pagination li{
     position: relative;
 }
 .product-info .product-image-container .image-list li img {
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     cursor: pointer;
-    -webkit-transition: border-color 0.15s;
+    /* -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s; */
     width:auto;
-    margin-bottom:4px;
+    /* margin-bottom:4px; */
 }
-.product-info .product-image-container .image-list li img:hover, .product-info .product-image-container .image-list li .active img {
+.product-info .product-image-container .image-list li span.thumb:hover, .product-info .product-image-container .image-list li .active{
     border-color: #000;
     -webkit-transition: border-color 0.3s;
     -moz-transition: border-color 0.3s;
@@ -28927,6 +28927,7 @@ body .account .right-account .reviews .toolbar .account-only h2{
 	body.page-reviews .right-account .reviews .review-list .wrapper>li .product .short-info{
 	    padding-top: 20px;
   }
+  }
   .order-details .totals ul li{
   display:inline-block;
   }
@@ -32515,6 +32516,14 @@ main {
 
 .thumb {
 	position: relative;
+	width: 100%;
+	display:inline-block;
+	border: 1px solid transparent;
+	margin-bottom:2px;
+	padding: 1px 0;
+	 -webkit-transition: border-color 0.15s;
+    -moz-transition: border-color 0.15s;
+    transition: border-color 0.15s;
 }
 
 .thumb .badges {
