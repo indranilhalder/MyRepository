@@ -7130,6 +7130,8 @@ body .account .right-account h2 {
     body .account .right-account select {
         padding-left: 5px
     }
+     body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before{
+    margin-right:25px !important;}
 }
 body .account .right-account button {
     height: 30px;
