@@ -110,7 +110,7 @@
 				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Invite your mum, dad, friends, bros, aunties, uncles, next-door neighbors Call everybody here!"/></p>
                 <form>
 						<c:if test="${not empty textMessage}">
-							<c:set var="textMessage" value="Hey, I was blown away by the incredible shopping experience at Tata Mall. I highly recommend that you register as a member as well"></c:set>
+							<c:set var="textMessage" value="Hey, I was blown away by the incredible shopping experience at Tata CliQ. I highly recommend that you register as a member as well"></c:set>
                        	</c:if>
                         <label><spring:theme code="text.InviteFriends.friends.email" /></label>	
 						<input type="text" id="friendsEmail" onkeypress="kpressfemail()"/>
