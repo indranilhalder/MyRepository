@@ -1368,6 +1368,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.EBSDOWNCHECK, MarketplacecheckoutaddonConstants.NA);
 		}
 
+		final String noOfExpYear = getConfigurationService().getConfiguration().getString(
+				MarketplacecheckoutaddonConstants.NOOFYEARS, "25");
+		model.addAttribute(MarketplacecheckoutaddonConstants.EXPYEARS, noOfExpYear);
+
 		setupMplMessages(model);
 	}
 
