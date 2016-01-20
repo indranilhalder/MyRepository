@@ -188,7 +188,7 @@ $("#variant").change(function() {
 
 	<c:if test="${noVariant!=true&&notApparel!=true}">
 		<p>
-			<spring:theme code="product.variant.size"></spring:theme>(${productSizeType})
+			<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 		</p>
 		<select id="variant" class="variant-select">
 			<c:choose>
