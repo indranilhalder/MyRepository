@@ -12894,7 +12894,8 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .details {		
     clear: both;		
     background: rgb(237,242,245);		
-    padding-top: 30px;		
+    padding-top: 30px;	
+    position:relative;	
 }		
 .modal.size-guide .sizes .details::after {		
     clear: both;		
@@ -14931,6 +14932,8 @@ body .account .right-account form label {
     body .account .right-account form label {
         font-size: 10px;
     }
+    body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before{
+    margin-right:25px !important;}
 }
 body .account .right-account form input {
     border-color: #dbeafa;
@@ -25701,6 +25704,9 @@ ul.links li.product:nth-last-child(1),ul.links li.product:nth-last-child(2) {
 #new-address-option-1 + label, #new-address-option-2 + label{
 	width:25%;
 }
+body.page-address-book #new-address-option-1 + label, body.page-address-book #new-address-option-2 + label{
+width:auto;
+}
 }
 .fill-in-concierge, .select-value-concierge {
 	display: none;
@@ -34445,7 +34451,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError {
 	display: none;
 }
 

@@ -970,7 +970,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			try
 			{
-				voucherFacade.releaseVoucher(voucher.getVoucherCode());
+				//voucherFacade.releaseVoucher(voucher.getVoucherCode());
+				mplCouponFacade.releaseVoucher(voucher.getVoucherCode(), getCartService().getSessionCart());
 			}
 			catch (final VoucherOperationException e)
 			{
