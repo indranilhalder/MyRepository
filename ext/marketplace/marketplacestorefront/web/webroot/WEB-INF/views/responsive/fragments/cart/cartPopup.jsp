@@ -56,7 +56,7 @@
 										<ul class="item-edit-details">
 											<li><spring:theme code="cart.popup.quantity" /> ${entry.quantity}</li>
 											<c:if test="${not empty entry.product.size}">
-											<li><spring:theme code="cart.popup.size" /> ${entry.product.size}</li>
+											<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
 											</c:if>
 											<c:if test="${entry.giveAway ne true}">
 											<li><a href="#nogo" class="removeFromCart" data-entry-no="${entry.entryNumber}" data-ussid="${entry.selectedUssid}"><spring:theme code="text.iconCartRemove" /></a></li>
