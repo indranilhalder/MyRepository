@@ -100,22 +100,17 @@
 								<div class="slide item"><a
 									class="product-tile" href='<c:url value="${product.value.url}"></c:url>'>
 										<div class="image">
-											<!-- <img alt="" src="images/Rectangle_2_copy_4.jpeg"
-												class="product-image"> -->
+											
 												<product:productPrimaryImage product="${product.value}" format="searchPage" />
 										</div>
 										<div class="short-info">
 											<p class="company">${product.value.brand.brandname}</p>
 											<h3 class="product-name">${product.value.productTitle}</h3>
-											<!-- <div class="price">
-												<p class="normal">
-													<i class="rupee"></i>100,000
-												</p>
-											</div> -->
+											
 										</div>
-								</a> <a class="account-only new-review" data-toggle="modal" data-target="#reviewPluginContainer" 
+								</a> <a id="new-review-link${product.value.code}" class="account-only new-review" data-toggle="modal" data-target="#reviewPluginContainer" 
 										data-product = "${product.value.code}" data-category = "${product.value.rootCategory}"
-										onclick="reviewPopUpDisplay('${product.value.rootCategory}','${product.value.code}','${product.value.productTitle}')"
+										onclick="reviewPopUpDisplay('${product.value.rootCategory}','${product.value.code}','${product.value.productTitle}','${product.value.brand.brandname}',this.id)"
 										><spring:theme code="myaccount.review.reviewProduct"/></a>
 								</div>
 								</c:forEach>
@@ -229,7 +224,7 @@
 						</div>
 						<div class="review">
 							<div class="details">
-							<div class="rating-stars-wrapper">
+							
 								<ul class="rating-stars" data-rating-name${count.index}="_overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -241,7 +236,7 @@
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
 								<span class="review-date"> ${comment.reviewDate} </span>
-								</div>
+								
 								<!-- Ratings -->
 								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
 								<span class="rating-name"><spring:theme code="myaccount.editreview.overall"/> </span>
@@ -332,12 +327,7 @@
 									<input type="button" name="update" value="Update" data-index="${count.index}"/>
 									<input type="button" name="cancel" value="Cancel" data-index="${count.index}"/>
 								</div>
-								<!-- <ul class="rate-list">
-									<li><span>Best Uses:</span> Party, Special Occasion</li>
-									<li><span>Pros:</span> Quality, fit</li>
-									<li><span>Cons:</span> Too Long</li>
-								</ul> -->
-								<!-- <a class="yes" href="#">Yes, I recommend this product.</a> -->
+								
 								<p class="helpful">
 									<span class="no-mobile"></span>helpful? <a href="#">YES -5</a>
 									| <a href="#">NO - 0</a> <a class="report" href="#">Report</a>
@@ -520,11 +510,16 @@
 			<div class="modal-content content" style="background-color:#fff;margin:0 auto;">
 				<div class="modal-header">
 				<h4 class="modal-title">
-					<spring:theme code="myaccount.review.editpopuptitle"/> <span id="popUpProductTitle"></span> 
+					<spring:theme code="myaccount.review.editpopuptitle"/> <span class="popUpProductTitle"></span> 
 				</h4> 
 				</div>
 				<div class="commentcontent" style="width:100%;padding: 5px;">
 				<input type="hidden" name="user_logged">
+				<div style="float:left; width: 20%;">		
+					<img class="review-image" style="width: 60%;">		
+					<div class="popUpProductBrand" style="padding: 5px;"></div>		
+					<div class="popUpProductTitle"></div>		
+				</div> 
 				<ul id="commentsDiv" class="review-list" style="margin:auto;"></ul>
 				</div>
 				<button class="close" data-dismiss="modal"></button>

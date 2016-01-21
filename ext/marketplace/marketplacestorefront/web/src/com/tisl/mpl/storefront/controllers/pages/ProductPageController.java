@@ -128,7 +128,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 @RequestMapping(value = "/**/p")
 public class ProductPageController extends AbstractPageController
 {
-
+	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
 	 */
@@ -345,6 +345,7 @@ public class ProductPageController extends AbstractPageController
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			final Model model) throws CMSItemNotFoundException
 	{
+		Map<String, List<SizeGuideData>> sizeguideList = null;
 		try
 		{
 
@@ -356,22 +357,46 @@ public class ProductPageController extends AbstractPageController
 
 
 			populateProductData(productData, model);
-			final Map<String, List<SizeGuideData>> sizeguideList = sizeGuideFacade.getProductSizeguide(productCode,
-					productData.getRootCategory());
+			sizeguideList = sizeGuideFacade.getProductSizeguide(productCode, productData.getRootCategory());
+
 			final List<String> headerMap = getHeaderdata(sizeguideList, productData.getRootCategory());
-			LOG.info("***************headerMap" + headerMap);
 			if (null != productData.getBrand())
 			{
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
 			}
-			//if(productBreadcrumbBuilder.getBreadcrumbs(productModel).>0)
-			/* comment should be reverted */
-			//			model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
-			//					new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
+			if (FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				if (sizeguideList != null && CollectionUtils.isNotEmpty(sizeguideList.get(productCode)))
+				{
+					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
+				}
+			}
+			else if (CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+			}
+
+			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel))
+					&& null != productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()
+					&& !productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName().isEmpty())
+
+			{
+				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
+						new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+			}
+
 
 			model.addAttribute(ModelAttributetConstants.HEADER_SIZE_GUIDE, headerMap);
-			model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
-			model.addAttribute("productSizeType", productDetailsHelper.getSizeType(productModel));
+
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -381,8 +406,6 @@ public class ProductPageController extends AbstractPageController
 
 
 	}
-
-
 
 
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
@@ -398,56 +421,53 @@ public class ProductPageController extends AbstractPageController
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
 			if (buyboxdata != null)
 			{
-
-
-
-				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
-						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+				if (null != buyboxdata.getAvailable())
 				{
-					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
-							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+					if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
+							&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
 					{
-						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
+						for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
+								.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
 						{
-							if (response.getIsServicable().equalsIgnoreCase("Y"))
+							if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
 							{
-								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
-							}
-							buyboxJson
-									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
+								if (response.getIsServicable().equalsIgnoreCase("Y"))
+								{
+									buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
+								}
+								buyboxJson.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY,
+										response.getIsServicable());
 
+							}
 						}
+
+					}
+					else
+					{
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
 					}
 
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-				}
-
-				if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
-				{
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
 							.getFormattedValue());
-				}
-				else if (buyboxdata.getPrice().getValue().doubleValue() > 0.0)
-				{
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getFormattedValue());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
 				}
 				else
 				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getMrp().getFormattedValue());
+
+					LOG.debug("***************************Inproper BuyBox data********************");
+					buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
+
 				}
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getValue());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
-				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
 			}
 			else
 			{
 
 				LOG.debug("***************************Inproper BuyBox data********************");
-				buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_SELLERS);
+				buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
 
 			}
 		}
@@ -674,7 +694,6 @@ public class ProductPageController extends AbstractPageController
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-			model.addAttribute("productSizeType", productDetailsHelper.getSizeType(productModel));
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -985,6 +1004,8 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
 			model.addAttribute(ModelAttributetConstants.RATING_REVIEW_URL, gigyaRatingURL);
 			//End Gigya
+
+
 			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
 			model.addAttribute(ModelAttributetConstants.CLIQCARENUMBER,
 					((cliqCareNumber == null || cliqCareNumber.isEmpty()) ? CUSTOMER_CARE_NUMBER : cliqCareNumber));
@@ -996,7 +1017,6 @@ public class ProductPageController extends AbstractPageController
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
 			final String productCode = productData.getCode();
-			model.addAttribute("productSizeType", productDetailsHelper.getSizeType(productModel));
 			setUpMetaData(model, metaDescription, metaTitle, productCode);
 		}
 		//populateVariantSizes(productData);
