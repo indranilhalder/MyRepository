@@ -1257,6 +1257,19 @@
 	 <!--  pdp seller priority cron job -->
     <bean id="updateSellerPriorityCronJob" parent="abstractJobPerformable" class="com.tisl.mpl.core.cronjob.priority.UpdateSellerPriorityCronJob" autowire="byName">
     </bean>
+    
+     <bean id="mplCouponListingDao" class="com.tisl.mpl.core.coupon.dao.impl.MplCouponListingDaoImpl">
+	</bean>
+	   
+	 <bean id="mplVoucherCodeValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplCouponValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="voucherModelService" ref="voucherModelService" />
+		<property name="mplCouponListingDao" ref="mplCouponListingDao" />
+		<property name="voucherRestrictionService" ref="voucherRestrictionService" />
+		
+	</bean>
 	   <!--  pdp seller priority cron job ends -->
 </beans>
 
