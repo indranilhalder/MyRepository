@@ -82,14 +82,13 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						sellerPriority.setPriorityStatus(SellerPriorityEnum.PROCESSED);
 						ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
 						ussidList.removeAll(Collections.singletonList(null));
-						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, sellerPriority.getIsActive().booleanValue(),
-								priorityMap));
+						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, isValid, priorityMap));
 						final int productPriorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
-						if (getUssidFromSkuId(sellerPriority.getListingId(), sellerPriority.getSellerId()) != null)
-						{
-							ussidList.add(getUssidFromSkuId(sellerPriority.getListingId(), sellerPriority.getSellerId()));
-						}
-						if (ussidList.isEmpty() || ussidList.contains(null))
+
+						ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
+								sellerPriority.getSellerId())));
+						ussidList.removeAll(Collections.singletonList(null));
+						if (ussidList.isEmpty())
 						{
 							sellerPriority.setPriorityStatus(SellerPriorityEnum.ERROR);
 						}
@@ -380,12 +379,22 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 					if (!isActive)
 					{
 						updateInvalidPriorityLevel(priorityLevel, sellerPriorityLevel);
-						sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
 					}
-					else
+					else if (isActive)
 					{
 						setPriorityLevel(priorityLevel, sellerPriorityLevel);
+						sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
 					}
+					if (sellerPriorityLevel.getL1Priority() == Integer.valueOf(0)
+							&& sellerPriorityLevel.getL2Priority() == Integer.valueOf(0)
+							&& sellerPriorityLevel.getL3Priority() == Integer.valueOf(0)
+							&& sellerPriorityLevel.getL4Priority() == Integer.valueOf(0)
+							&& sellerPriorityLevel.getProductPriority() == Integer.valueOf(0))
+					{
+						sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(false));
+					}
+					priorityLevelMap.put(ussid, sellerPriorityLevel);
+
 				}
 				//creating a new entry
 				else if (priorityLevelMap.get(ussid) != null)
@@ -402,7 +411,8 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						setPriorityLevel(priorityLevel, sellerPriorityLevel);
 					}
 				}
-				if (!(isNewEntry && !isActive))
+				// if (!(isNewEntry && !isActive))
+				if (isNewEntry && isActive)
 				{
 					sellerPriorityLevel.setUssid(ussid);
 					sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
