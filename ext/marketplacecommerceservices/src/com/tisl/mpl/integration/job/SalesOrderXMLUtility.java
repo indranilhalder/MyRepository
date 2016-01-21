@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,9 +22,17 @@ import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -66,15 +75,16 @@ public class SalesOrderXMLUtility
 	{
 
 
-		final BulkSalesOrderXMLData xmlData = new BulkSalesOrderXMLData();
-		List<SalesOrderXMLData> bulkSalesDataList = new ArrayList<SalesOrderXMLData>();
+		BulkSalesOrderXMLData xmlData = null;
+		List<SalesOrderXMLData> bulkSalesDataList = null;
 		String xmlString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		boolean invalidXMLToFICO = false;
 
 		try
 		{
 			if (null != orderData && !orderData.isEmpty())
 			{
-
+				xmlData = new BulkSalesOrderXMLData();
 				bulkSalesDataList = getParentOrderData(orderData);
 				if (null != bulkSalesDataList && !bulkSalesDataList.isEmpty())
 				{
@@ -87,8 +97,36 @@ public class SalesOrderXMLUtility
 					final StringWriter sw = new StringWriter();
 					m.marshal(xmlData, sw);
 					xmlString = sw.toString();
-					LOG.debug(xmlString);
-					paymentInfoRevWebService.paymentInfoRev(xmlString);
+					LOG.info(xmlString);
+
+					final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+					factory.setIgnoringComments(true);
+					factory.setCoalescing(true); // Convert CDATA to Text nodes
+					factory.setNamespaceAware(false); // No namespaces: this is default factory.setValidating(false); //
+					// Don't validate DTD: also default
+
+					final DocumentBuilder parser = factory.newDocumentBuilder();
+
+					final Document document = parser.parse(new InputSource(new StringReader(xmlString)));
+
+					NodeList nm = null;
+					Node node = null;
+
+					nm = document.getElementsByTagName("SalesOrders");
+
+					if (null != nm)
+					{
+						node = nm.item(0);
+						if (null != node && StringUtils.isEmpty(node.getTextContent()))
+						{
+							invalidXMLToFICO = true;
+						}
+					}
+
+					if (!invalidXMLToFICO)
+					{
+						paymentInfoRevWebService.paymentInfoRev(xmlString);
+					}
 
 				}
 			}
@@ -147,86 +185,93 @@ public class SalesOrderXMLUtility
 	private List<SalesOrderXMLData> getParentOrderData(final List<OrderModel> listOrderData)
 	{
 		final SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		final List<SalesOrderXMLData> bulkSalesDataList = new ArrayList<SalesOrderXMLData>();
-
-		for (final OrderModel order : listOrderData)
+		List<SalesOrderXMLData> bulkSalesDataList = null;
+		if (CollectionUtils.isEmpty(listOrderData))
 		{
-			//checkCanellation(orderData);
-			xmlToFico = true;
+			xmlToFico = false;
+		}
+		else
+		{
+			bulkSalesDataList = new ArrayList<SalesOrderXMLData>();
 
-			if (!checkCOD(order))
+			for (final OrderModel order : listOrderData)
 			{
-				final SalesOrderXMLData salesXMLData = new SalesOrderXMLData();
-				LOG.debug("COD Check done");
-				if (null != order.getCode() && xmlToFico)
-				{
-					salesXMLData.setOrderId(order.getCode());
-					LOG.debug("order id" + order.getCode());
-				}
-				else
-				{
-					xmlToFico = false;
-				}
+				//checkCanellation(orderData);
+				xmlToFico = true;
 
-				if (null != order.getDate() && xmlToFico)
+				if (!checkCOD(order))
 				{
-					salesXMLData.setOrderDate(sdformat.format(order.getDate()));
-				}
-				else
-				{
-					xmlToFico = false;
-				}
-				salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
-				if (null != order.getPaymentTransactions() && xmlToFico)
-				{
-					final List<PaymentTransactionModel> list = order.getPaymentTransactions();
-					if (null != list && !list.isEmpty())
+					final SalesOrderXMLData salesXMLData = new SalesOrderXMLData();
+					LOG.debug("COD Check done");
+					if (null != order.getCode() && xmlToFico)
 					{
-						for (final PaymentTransactionModel oModel : list)
-						{
+						salesXMLData.setOrderId(order.getCode());
+						LOG.info("order id in SalesOrder" + order.getCode());
+					}
+					else
+					{
+						xmlToFico = false;
+					}
 
-							if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
-									&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+					if (null != order.getDate() && xmlToFico)
+					{
+						salesXMLData.setOrderDate(sdformat.format(order.getDate()));
+					}
+					else
+					{
+						xmlToFico = false;
+					}
+					salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
+					if (null != order.getPaymentTransactions() && xmlToFico)
+					{
+						final List<PaymentTransactionModel> list = order.getPaymentTransactions();
+						if (null != list && !list.isEmpty())
+						{
+							for (final PaymentTransactionModel oModel : list)
 							{
-								LOG.debug("Inside Parent order: Pyment Transaction model");
-								salesXMLData.setMerchantCode(oModel.getPaymentProvider());
-								if (null != oModel.getCode())
+
+								if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
+										&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 								{
-									payemntrefid = oModel.getCode();
-									LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-								}
-								else
-								{
-									xmlToFico = false;
+									LOG.debug("Inside Parent order: Pyment Transaction model");
+									salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+									if (null != oModel.getCode())
+									{
+										payemntrefid = oModel.getCode();
+										LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
+									}
+									else
+									{
+										xmlToFico = false;
+									}
+
 								}
 
 							}
+						}
 
+					}
+					else
+					{
+						xmlToFico = false;
+					}
+
+					if (null != order.getChildOrders() && !order.getChildOrders().isEmpty() && xmlToFico)
+					{
+						LOG.debug(" child order data not null");
+						List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
+						subOrderDataList = getSubOrderData(order.getChildOrders());
+						LOG.debug("after sub order data list call");
+						if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
+						{
+							salesXMLData.setSubOrderList(subOrderDataList);
+							LOG.debug("set sub order list");
 						}
 					}
-
+					bulkSalesDataList.add(salesXMLData);
 				}
-				else
-				{
-					xmlToFico = false;
-				}
-
-				if (null != order.getChildOrders() && !order.getChildOrders().isEmpty() && xmlToFico)
-				{
-					LOG.debug(" child order data not null");
-					List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
-					subOrderDataList = getSubOrderData(order.getChildOrders());
-					LOG.debug("after sub order data list call");
-					if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
-					{
-						salesXMLData.setSubOrderList(subOrderDataList);
-						LOG.debug("set sub order list");
-					}
-				}
-				bulkSalesDataList.add(salesXMLData);
 			}
 		}
-
 		return bulkSalesDataList;
 	}
 
@@ -380,10 +425,10 @@ public class SalesOrderXMLUtility
 						final String ussId = entry.getSelectedUSSID();
 
 						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
-						if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
+						if (sellerInfoModel != null
+								&& sellerInfoModel.getRichAttribute() != null
 								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-										.getDeliveryFulfillModes() != null)
+								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 						{
 							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
 									.getDeliveryFulfillModes().getCode();
