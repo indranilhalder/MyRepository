@@ -1494,7 +1494,51 @@ function validEmail(email) {
 	  }	  
 	  return true;	  
 	}
+function dispPriceForSizeGuide(mrp, mop, spPrice) {
+	
+	if(null!= mrp){
+		$("#sizemrpPriceId").append(mrp);
+	}
+	if(null!= mop){
+		$("#sizemopPriceId").append(mop);
+	}
+	if(null!= spPrice){
+		$("#sizespPriceId").append(spPrice);
+	} 
 
+	if (null!=spPrice && spPrice != 0) {
+
+		if (mop.value == mrp.value) {
+			$('#sizemrpPriceId').css('text-decoration', 'line-through');
+			$("#sizemrpPriceId").show();
+			$("#sizespPriceId").show();
+		} else {
+			$('#sizemrpPriceId').css('text-decoration', 'line-through');
+			$("#sizemrpPriceId").show();
+			$("#sizespPriceId").show();
+		}
+
+	} else {
+		if (null!=mop && mop.value != 0) {
+			if (mop.value == mrp.value) {
+				$("#sizemrpPriceId").removeClass("old").addClass("sale");
+				$("#sizemrpPriceId").show();
+			} else {
+				$('#sizemrpPriceId').css('text-decoration', 'line-through');
+				$("#sizemrpPriceId").show();
+				$("#sizemopPriceId").show();
+			}
+		} else {
+			$("#sizemrpPriceId").show();
+		}
+	}
+	if (mrp.value == "") {
+		$("#sizemrpPriceId").hide();
+	} else {
+		$("#sizemrpPriceId").show();
+	}
+
+}
 function buyboxDetailsForSizeGuide(productCode){
 	var sellerID= $("#sellerSelId").val();
 	var productCode = productCode;//$("#product").val();
@@ -1540,12 +1584,12 @@ function buyboxDetailsForSizeGuide(productCode){
 					$("#noProductForSelectedSeller").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}
-				if (specialPrice != null){
-					$("#specialSelPrice").html(specialPrice);
-				}
-				else{
-					$("#specialSelPrice").html(mopPrice);
-				}
+//				if (specialPrice != null){
+//					$("#specialSelPrice").html(specialPrice);
+//				}
+//				else{
+//					$("#specialSelPrice").html(mopPrice);
+//				}
 				if(data['isPinCodeServicable']=='N'){
 					$("#pinNotServicableSizeGuide").show();
 					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
@@ -1561,6 +1605,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sellerSelArticleSKU").html(ussid);
 				$("#sellerSelArticleSKUVal").val(ussid);
 				$("#nosellerVal").val(nosellerData);
+				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice);
 				if(availableStock==0){
 					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
