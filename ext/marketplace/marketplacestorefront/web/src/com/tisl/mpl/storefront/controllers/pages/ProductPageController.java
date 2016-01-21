@@ -360,20 +360,26 @@ public class ProductPageController extends AbstractPageController
 			sizeguideList = sizeGuideFacade.getProductSizeguide(productCode, productData.getRootCategory());
 
 			final List<String> headerMap = getHeaderdata(sizeguideList, productData.getRootCategory());
-			LOG.info("***************headerMap" + headerMap);
 			if (null != productData.getBrand())
 			{
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
 			}
-			//			if (sizeguideList != null && CollectionUtils.isNotEmpty(sizeguideList.get(productCode)))
-			//			{
-			model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+			if (FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				if (sizeguideList != null && CollectionUtils.isNotEmpty(sizeguideList.get(productCode)))
+				{
+					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
+				}
+			}
+			else if (CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+			}
 
-			//			}
-			//			else
-			//			{
-			//				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
-			//			}
 			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel))
 					&& null != productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()
 					&& !productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName().isEmpty())
@@ -387,6 +393,7 @@ public class ProductPageController extends AbstractPageController
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
 			}
 
+
 			model.addAttribute(ModelAttributetConstants.HEADER_SIZE_GUIDE, headerMap);
 
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
@@ -399,8 +406,6 @@ public class ProductPageController extends AbstractPageController
 
 
 	}
-
-
 
 
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
@@ -442,21 +447,10 @@ public class ProductPageController extends AbstractPageController
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
 					}
 
-
-					if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
-								.getFormattedValue());
-					}
-					else if (buyboxdata.getPrice().getValue().doubleValue() > 0.0)
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
-					}
-					else
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getMrp().getFormattedValue());
-					}
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getValue());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
+							.getFormattedValue());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getFormattedValue());
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
