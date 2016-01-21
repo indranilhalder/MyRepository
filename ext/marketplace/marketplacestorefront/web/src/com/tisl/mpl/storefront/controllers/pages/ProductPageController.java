@@ -465,7 +465,7 @@ public class ProductPageController extends AbstractPageController
 				{
 
 					LOG.debug("***************************Inproper BuyBox data********************");
-					//	buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
+					buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
 
 				}
 			}
@@ -473,7 +473,7 @@ public class ProductPageController extends AbstractPageController
 			{
 
 				LOG.debug("***************************Inproper BuyBox data********************");
-				//	buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
+				buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
 
 			}
 		}

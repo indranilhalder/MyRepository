@@ -184,8 +184,8 @@
 		</div>
 		
 		<div class="details">
-	 	<span id="noProductForSelectedSeller"><font color="#ff1c47">
-			<spring:theme code="product.product.size.guide.notavail"/></font>
+	 	<span id="noProductForSelectedSeller"><%-- <font color="#ff1c47">
+			<spring:theme code="product.product.size.guide.notavail"/></font> --%>
 			<!-- <h3> Selected Size is not available for this Seller </h3> -->
 			</span>
 		<span id="productDetails"> 
