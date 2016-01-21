@@ -128,7 +128,7 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 			couponMaxDiv.setSclass("editorWidgetEditor");
 			if(!discount.getAbsolute())
 			{
-				Label couponMaxLabel = new Label((((PromotionVoucherModel)discount).getCurrency().getSymbol())+(String.valueOf(((PromotionVoucherModel)discount).getMaxDiscountValue())));
+				Label couponMaxLabel = new Label((String.valueOf(((PromotionVoucherModel)discount).getMaxDiscountValue())));
 				couponMaxLabel.setParent(couponMaxDiv);
 			}
 			else
