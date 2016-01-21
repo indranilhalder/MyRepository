@@ -149,7 +149,10 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			cartEntry.setIsBOGOapplied(Boolean.FALSE);
 			cartEntry.setProdLevelPercentageDisc(Double.valueOf(0.00D));
 			cartEntry.setCartLevelPercentageDisc(Double.valueOf(0.00D));
-			cartEntry.setNetAmountAfterAllDisc(Double.valueOf(0.00D));
+			if (null != cartEntry.getCouponCode() && cartEntry.getCouponCode().isEmpty())
+			{
+				cartEntry.setNetAmountAfterAllDisc(Double.valueOf(0.00D));
+			}
 			cartEntry.setProductPromoCode("");
 			cartEntry.setCartPromoCode("");
 			cartEntry.setIsPercentageDisc(Boolean.FALSE);

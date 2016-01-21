@@ -68,7 +68,7 @@ public class MplCouponController
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
 			final String bankNameSelected) throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException,
-			NumberFormatException, JaloInvalidParameterException, JaloSecurityException
+					NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
 		LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
@@ -129,6 +129,10 @@ public class MplCouponController
 			{
 				data.setRedeemErrorMsg("Not_Reservable");
 			}
+			else if (e.getMessage().contains("freebie"))
+			{
+				data.setRedeemErrorMsg("Freebie");
+			}
 
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
 			data.setCouponRedeemed(false);
@@ -169,8 +173,8 @@ public class MplCouponController
 	 */
 	@RequestMapping(value = "/release", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode) throws EtailNonBusinessExceptions,
-			JaloPriceFactoryException, CalculationException
+	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode)
+			throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException
 	{
 		LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
