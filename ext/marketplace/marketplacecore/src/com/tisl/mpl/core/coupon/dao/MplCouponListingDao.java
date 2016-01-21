@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.core.coupon.dao.impl;
+package com.tisl.mpl.core.coupon.dao;
 
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
