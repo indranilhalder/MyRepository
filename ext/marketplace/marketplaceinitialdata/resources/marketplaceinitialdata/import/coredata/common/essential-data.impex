@@ -216,7 +216,7 @@ INSERT_UPDATE BuyboxUpdateLog;last_run_time[dateformat=yyyy-MM-dd HH:mm];proc_na
 
 #buybox insert the weightage values
 INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue
-;priceweightage;-0.7
+;priceweightage;-0.00000001 
 ;invweightage;0.3
 
 INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
