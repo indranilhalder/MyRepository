@@ -55,7 +55,7 @@ if(typeof(arrayrating)!= "undefined"){
 				$(this).parent().hide();
 			}
 			$(".rating-div"+indexElement).hide();
-			rating(arrayrating);
+			ratingReview(arrayrating);
 			$(".errorUpdateReview"+indexElement).empty();
 			$(".errorUpdateRating"+indexElement).empty();
 		});
@@ -114,11 +114,11 @@ if(typeof(arrayrating)!= "undefined"){
 				    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment text cannot be left blank.</p>");		
 				    isValidated=false;		
 				}
-				if(ratingsJSON == undefined ||  (ratingsJSON.overall == 0 || ratingsJSON.fit == 0 || ratingsJSON.value_for_money == 0 || ratingsJSON.quality == 0 || (ratingsJSON.hasOwnProperty("easeOfUse") && ratingsJSON.easeOfUse == 0)))		
+			/*	if(ratingsJSON == undefined ||  (ratingsJSON.overall == 0 || ratingsJSON.fit == 0 || ratingsJSON.value_for_money == 0 || ratingsJSON.quality == 0 || (ratingsJSON.hasOwnProperty("easeOfUse") && ratingsJSON.easeOfUse == 0)))		
 				{		
 				    $(".errorUpdateRating"+indexElement).html("<p>Please enter all ratings.Ratings cannot be left blank.</p>");		
 				    isValidated=false;		
-				}
+				}*/
 			
 				if(isValidated){
 					$.ajax({
@@ -233,7 +233,7 @@ if(typeof(arrayrating)!= "undefined"){
 		$('#reviewPluginContainer').on('hidden.bs.modal', function () {
 		   window.location.reload();
 		});
-		rating(arrayrating);
+		ratingReview(arrayrating);
 							
 	});
 			
@@ -289,7 +289,7 @@ if(typeof(arrayrating)!= "undefined"){
 				var blockedElement = $(element).closest("li");
 				$(blockedElement).unblock();
 			}
-			function rating(r) {
+			function ratingReview(r) {
 				var index = 0;
 				$.each(r,function(rk,rv){
 				 	$.each(rv,function(k,v){

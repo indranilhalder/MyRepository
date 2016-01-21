@@ -689,6 +689,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(PINCODE_CHECKED, form.getIsPinCodeChecked());
 			model.addAttribute(ModelAttributetConstants.SELLER_PAGE, ModelAttributetConstants.Y);
 			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			setUpMetaData(model, metaDescription, metaTitle, pdCode);
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
@@ -792,6 +793,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 		}
@@ -1013,7 +1015,7 @@ public class ProductPageController extends AbstractPageController
 					((cliqCareMail == null || cliqCareMail.isEmpty()) ? CUSTOMER_CARE_EMAIL : cliqCareMail));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
 			final String productCode = productData.getCode();
