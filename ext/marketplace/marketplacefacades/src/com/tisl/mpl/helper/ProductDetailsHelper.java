@@ -5,7 +5,12 @@ package com.tisl.mpl.helper;
 
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.catalog.model.classification.ClassificationAttributeValueModel;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.classification.ClassificationService;
+import de.hybris.platform.classification.features.Feature;
+import de.hybris.platform.classification.features.FeatureList;
+import de.hybris.platform.classification.features.FeatureValue;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -94,7 +99,8 @@ public class ProductDetailsHelper
 	 *
 	 */
 	private static final String N_A = "n/a";
-
+	@Resource
+	private ClassificationService classificationService;
 	/*
 	 * private MplCheckoutFacade mplCheckoutFacade;
 	 *//**
@@ -917,5 +923,35 @@ public class ProductDetailsHelper
 
 	}
 
+	/**
+	 * get
+	 *
+	 * @param product
+	 * @return String
+	 */
+	public String getSizeType(final ProductModel product)
+	{
+		String sizeGuideCode = null;
+		//get size chart feature
+		final FeatureList featureList = classificationService.getFeatures(product);
+		for (final Feature feature : featureList)
+		{
+			final String featureName = feature.getName().replaceAll("\\s+", "");
 
+			final String sizeChart = configurationService.getConfiguration().getString("product.sizetype.value")
+					.replaceAll("\\s+", "");
+			if (featureName.equalsIgnoreCase(sizeChart))
+			{
+				if (null != feature.getValue())
+				{
+					final FeatureValue sizeGuidefeatureVal = feature.getValue();
+					sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode()
+							.replaceAll("sizetype", ""));
+					break;
+				}
+			}
+		}
+
+		return sizeGuideCode;
+	}
 }

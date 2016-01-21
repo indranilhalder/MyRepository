@@ -869,8 +869,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 		}
 
-		final VoucherEntrySet entrySet = voucherModelService.getApplicableEntries(lastVoucher, cartModel);
-		final List<AbstractOrderEntry> applicableOrderEntryList = mplCouponFacade.getOrderEntriesFromVoucherEntries(entrySet);
+		//final VoucherEntrySet entrySet = voucherModelService.getApplicableEntries(lastVoucher, cartModel);
+		final List<AbstractOrderEntry> applicableOrderEntryList = mplCouponFacade.getOrderEntriesFromVoucherEntries(lastVoucher, cartModel);
 
 		if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
 				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())

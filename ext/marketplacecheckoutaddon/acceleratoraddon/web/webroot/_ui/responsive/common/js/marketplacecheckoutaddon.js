@@ -3455,7 +3455,7 @@ $("#couponSubmitButton").click(function(){
 	$(this).css("opacity","0.5");
 	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
 			"#invalidCouponError, #expiredCouponError, #issueCouponError, " +
-			"#notApplicableCouponError, #notReservableCouponError").css("display","none");
+			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError").css("display","none");
 	if($("#couponFieldId").val()==""){
 		$("#emptyCouponError").css("display","block");	
 		//document.getElementById("couponError").innerHTML="Please enter a Coupon Code";
@@ -3504,6 +3504,10 @@ $("#couponSubmitButton").click(function(){
 	 				{
 	 					$("#notReservableCouponError").css("display","block");
 	 				}
+	 				else if(response.redeemErrorMsg=="Freebie")
+	 				{
+	 					$("#freebieCouponError").css("display","block");
+	 				}
 	 				//$("#couponError").css("display","block");	
 	 				//document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
 	 			}
@@ -3542,7 +3546,9 @@ $("#couponSubmitButton").click(function(){
 
 $("#couponFieldId").focus(function(){
 	//$("#couponError").css("display","none");	
-	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError, #notApplicableCouponError, #notReservableCouponError").css("display","none");
+	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+			" #expiredCouponError, #issueCouponError, #notApplicableCouponError," +
+			" #notReservableCouponError, #freebieCouponError").css("display","none");
 });
 
 
@@ -3560,7 +3566,8 @@ $(".remove-coupon-button").click(function(){
  				couponApplied=true;
  			}
  			if(couponApplied==true){
- 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError, #expiredCouponError, #issueCouponError").css("display","none");
+ 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+ 						" #expiredCouponError, #issueCouponError, #freebieCouponError").css("display","none");
  				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
  				//$("#couponFieldId").attr('disabled','enabled');
  				$('#couponFieldId').attr('readonly', false);
