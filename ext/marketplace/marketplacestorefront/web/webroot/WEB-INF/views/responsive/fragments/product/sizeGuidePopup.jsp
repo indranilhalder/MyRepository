@@ -277,9 +277,9 @@
 		</c:otherwise>
 	</c:choose>	
 			</ul>			
-			<div class="size">				
-					<c:if test="${noVariant!=true&&notApparel!=true}">
-	<label>Size:</label> 
+<div class="size">				
+<c:if test="${noVariant!=true&&notApparel!=true}">
+ <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 	
 	
 	
