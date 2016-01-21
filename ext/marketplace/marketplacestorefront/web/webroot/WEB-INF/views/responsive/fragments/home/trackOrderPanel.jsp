@@ -39,8 +39,7 @@
 					$(this).click(
 							function() {
 								
-								$(this).css("background-Color", "#c0c0c0");
-								//var current = $('.badge').text();
+							  //var current = $('.badge').text();
 								var current = '${notificationCount}';
 								
 								if (current > 0) {
@@ -49,9 +48,7 @@
 									//$('#tracklink span').text(current)
 								}
 							});
-					$(this).mouseout(function() {
-						$(this).css("background-Color", "#FFF");
-					});
+					
 				});
 	});
 

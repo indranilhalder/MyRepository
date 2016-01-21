@@ -10,6 +10,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -240,7 +241,9 @@ public class NotificationDaoImpl implements NotificationDao
 	{
 		final String queryString = MarketplacecommerceservicesConstants.VOUCHERWITHINDATEQUERYFROMCOUPONMODEL;
 
+
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("sysdate", new Date());
 
 		return flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
 	}
