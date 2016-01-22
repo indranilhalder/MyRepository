@@ -378,7 +378,21 @@ public class NotificationServiceImpl implements NotificationService
 	@Override
 	public List<VoucherStatusNotificationModel> getVoucher()
 	{
-		return getNotificationDao().findVoucher();
+		List<VoucherStatusNotificationModel> voucherList = new ArrayList<>();
+		voucherList = getNotificationDao().findVoucher();
+		if (null != voucherList)
+		{
+			for (final VoucherStatusNotificationModel v : voucherList)
+			{
+				if (v.getVoucherEndDate().before(new Date()))
+				{
+					modelService.remove(v);
+				}
+			}
+		}
+
+
+		return voucherList;
 
 	}
 
@@ -552,6 +566,7 @@ public class NotificationServiceImpl implements NotificationService
 		}
 
 		Date voucherStartDate = null;
+		Date voucherEndDate = null;
 		final Set<RestrictionModel> restrictionList = voucher.getRestrictions();
 
 		final List<PrincipalModel> userList = new ArrayList<PrincipalModel>();
@@ -569,6 +584,7 @@ public class NotificationServiceImpl implements NotificationService
 			if (restrictionModel instanceof DateRestrictionModel)
 			{
 				voucherStartDate = ((DateRestrictionModel) restrictionModel).getStartDate();
+				voucherEndDate = ((DateRestrictionModel) restrictionModel).getEndDate();
 				dateRestrExists = true;
 
 			}
@@ -646,11 +662,14 @@ public class NotificationServiceImpl implements NotificationService
 				voucherStatus.setVoucherCode(voucherCode);
 				voucherStatus.setCustomerUidList(userUidList);
 				voucherStatus.setVoucherStartDate(voucherStartDate);
+				voucherStatus.setVoucherEndDate(voucherEndDate);
 				voucherStatus.setIsRead(isRead);
 				voucherStatus.setCustomerStatus(customerStatus);
 				voucherStatus.setCategoryAssociated(categoryAssociated);
 				voucherStatus.setProductAssociated(productAssociated);
 				modelService.save(voucherStatus);
+
+
 
 			}
 		}

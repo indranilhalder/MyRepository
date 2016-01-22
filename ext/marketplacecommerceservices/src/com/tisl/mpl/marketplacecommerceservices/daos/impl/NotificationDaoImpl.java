@@ -239,13 +239,14 @@ public class NotificationDaoImpl implements NotificationDao
 	@Override
 	public List<VoucherStatusNotificationModel> findVoucher()
 	{
+		List<VoucherStatusNotificationModel> voucherList = new ArrayList<>();
 		final String queryString = MarketplacecommerceservicesConstants.VOUCHERWITHINDATEQUERYFROMCOUPONMODEL;
-
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("sysdate", new Date());
 
-		return flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
+		voucherList = flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
+		return voucherList;
 	}
 
 	/*
