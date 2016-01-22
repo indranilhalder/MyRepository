@@ -469,7 +469,7 @@ public class GigyaServiceImpl implements GigyaService
 
 
 				LOG.debug("GigyaServiceImpl, notifyGigya Gigya Method" + gigyaMethod);
-				final String FIRSTNAME = "  \"{ firstName: \" + \"'\"  ";
+				final String FIRSTNAME = "{firstName:" + "'";
 				// NOTIFY GIGYA WHEN USER LOGIN USING SOCIAL NETWORKS
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.notifyRegistration"))
 				{

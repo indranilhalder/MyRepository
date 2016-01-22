@@ -224,7 +224,7 @@
 						</div>
 						<div class="review">
 							<div class="details">
-							
+							<div class="rating-stars-wrapper">
 								<ul class="rating-stars" data-rating-name${count.index}="_overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -236,7 +236,7 @@
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
 								<span class="review-date"> ${comment.reviewDate} </span>
-								
+								</div>
 								<!-- Ratings -->
 								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
 								<span class="rating-name"><spring:theme code="myaccount.editreview.overall"/> </span>
