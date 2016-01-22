@@ -284,6 +284,11 @@ font-weight: normal;
     display: none;
 } 
 
+*.gig-composebox-follow
+{
+display: none;
+} 
+
 </style> 
 
 </c:if>	

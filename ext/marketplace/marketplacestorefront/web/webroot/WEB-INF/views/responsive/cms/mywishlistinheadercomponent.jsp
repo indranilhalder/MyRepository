@@ -15,7 +15,7 @@
 <script >
 function checkWishListName() {
 	var wishlistName = $('#newWishlistName').val();
-	var re = /^[a-zA-Z0-9]*[a-zA-Z0-9]+[a-zA-Z]*$/i;
+	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
 	var isValid = re.test(wishlistName);
 
 	if (!isValid) {

@@ -13,7 +13,6 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.util.DiscountValue;
-import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
@@ -116,7 +115,7 @@ public interface MplCouponFacade
 	 * @param voucherEntrySet
 	 * @return List<AbstractOrderEntry>
 	 */
-	List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(VoucherEntrySet voucherEntrySet);
+	List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherModel voucherModel, final CartModel cartModel);
 
 
 	/**
@@ -133,9 +132,10 @@ public interface MplCouponFacade
 	 * @param voucherCode
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode);
-	 /* @return
+
+	/*
+	 * @return
 	 */
 	@SuppressWarnings("javadoc")
-	List<VoucherDisplayData> getAllClosedCoupons();
-
+	List<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer);
 }

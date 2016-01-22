@@ -643,8 +643,8 @@ input:focus {
     .select-view .select-list li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+    /*   height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 46px;
       padding-left: 10px;
@@ -9578,8 +9578,8 @@ footer .banner {
     .pagination li.next {
       padding-left: 10px; }
 body .account .right-account .order-history .pagination li{
-	float:right;
 	font-size:12px;
+	margin: auto 2px;
 } 
 .bottom-pagination {
   width: 100%;
@@ -10271,15 +10271,15 @@ body .account .right-account .order-history .pagination li{
     position: relative;
 }
 .product-info .product-image-container .image-list li img {
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     cursor: pointer;
-    -webkit-transition: border-color 0.15s;
+    /* -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s; */
     width:auto;
-    margin-bottom:4px;
+    /* margin-bottom:4px; */
 }
-.product-info .product-image-container .image-list li img:hover, .product-info .product-image-container .image-list li .active img {
+.product-info .product-image-container .image-list li span.thumb:hover, .product-info .product-image-container .image-list li .active{
     border-color: #000;
     -webkit-transition: border-color 0.3s;
     -moz-transition: border-color 0.3s;
@@ -12894,7 +12894,8 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .details {		
     clear: both;		
     background: rgb(237,242,245);		
-    padding-top: 30px;		
+    padding-top: 30px;	
+    position:relative;	
 }		
 .modal.size-guide .sizes .details::after {		
     clear: both;		
@@ -13352,7 +13353,6 @@ div.get-in-touch ul li:after,
     width: 80px;
 }
 .no-results ul li:before,
-div.get-in-touch ul li:before,
 .rewards div.customer-service ul li:before{
     content: "";
 }
@@ -14932,6 +14932,8 @@ body .account .right-account form label {
     body .account .right-account form label {
         font-size: 10px;
     }
+    body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before{
+    margin-right:25px !important;}
 }
 body .account .right-account form input {
     border-color: #dbeafa;
@@ -17882,8 +17884,8 @@ header .content .bottom .search .select-list select
      #variantForm .select-size li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+     /*  height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
       background-color: #fff;
       line-height: 20px;
       padding-left: 20px;
@@ -25580,8 +25582,9 @@ padding-left: 0px;}
         float:left;}
         .product-tile .image .quickview a{
         width:100%;}
-        .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
-        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span{
+       .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
+        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span,
+        .pagination-bar.listing-menu.bottom .prev span,.pagination-bar.listing-menu.bottom .next span{
         display:none;} 
        .listing.wrapper .right-block .listing-menu > div .pagination.mobile{
        position: absolute;
@@ -25700,6 +25703,9 @@ ul.links li.product:nth-last-child(1),ul.links li.product:nth-last-child(2) {
 
 #new-address-option-1 + label, #new-address-option-2 + label{
 	width:25%;
+}
+body.page-address-book #new-address-option-1 + label, body.page-address-book #new-address-option-2 + label{
+width:auto;
 }
 }
 .fill-in-concierge, .select-value-concierge {
@@ -26127,6 +26133,7 @@ display:none;
 body .account .right-account .order-history .navigation2{
     border: 1px solid rgb(237,242,245);
         padding: 5px 0 5px 20px;	
+        position:relative;
 }
 body .account .right-account .order-history .navigation2 #ofPagination{
 		
@@ -28017,10 +28024,12 @@ body .account .right-account.rewards>div.your-activity>p.mobile {
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container
 	{
-	margin: 30px 15px 0;
+	padding: 30px 15px 0;
 	/* border-top: 2px dashed #f0f4f5;
 	border-left: 2px dashed #f0f4f5; */
 	font-weight: 600;
+	display:table;
+	width:100%;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container::after
@@ -28035,7 +28044,9 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	border: 2px dashed #f0f4f5;
 	/* border-right: 2px dashed #f0f4f5; */
 	width: 33.3333%;
-	float: left;
+	/* float: left; */
+	display: inline-block;
+	vertical-align:top;
 	background-color: #fff;
 	margin-left: -2px;
     margin-bottom: -2px;
@@ -28044,6 +28055,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2
 	{
 	font-size: 14px;
+	font-weight:600;
 	text-align: center;
 	float: left;
 	width: 100%;
@@ -28051,8 +28063,12 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	line-height: 20px;
 	margin-bottom: 0
 }
-
-body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .coupon_count{
+	display:inline-block;
+	line-height: 15px;
+    padding-bottom: 10px;
+}
+/* body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
 	{
 	height: 142px;
 }
@@ -28061,7 +28077,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	{
 	height: 70px;
 }
-
+ */
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right
 	{
@@ -28073,14 +28089,18 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	width: 50%;
 	padding: 0 10px;
 	margin: 0 0 10px;
-	line-height: 20px
+	line-height: 15px;
+	font-weight:500;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p
 	{
 	text-align: center;
-	white-space: nowrap
+	line-height: 14px;
+    padding: 3px 0px 8px 0px;
+    white-space: normal;
+    word-break: break-word;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left
@@ -28093,12 +28113,9 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	direction: rtl;
 	font-size:10px;
 }
-body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p:last-child
+ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p:last-child
 	{
-	line-height: 14px;
-    padding: 3px 0px;
-    white-space: normal;
-    word-break:break-word;
+    padding: 0px;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box.starred:before
@@ -28357,7 +28374,7 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity.coupon-history h2
 	{
-	font-weight: 500
+	font-weight: 600;
 }
 
 @media ( max-width :790px) {
@@ -28406,7 +28423,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container
 		{
 		border: none;
-		margin: 20px 5px 0
+		padding: 20px 5px 0;
 	}
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
 		{
@@ -28421,7 +28438,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 		font-size: 14px;
 		font-weight: 500;
 		margin-bottom: 0;
-		padding-bottom: 0
+		margin-top: 10px;
 	}
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left,
 		body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right
@@ -28564,7 +28581,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 		font-weight: 400;
 	}
 }
-@media(max-width:895px) and (min-width:821px){
+/* @media(max-width:895px) and (min-width:821px){
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box {
     height: 150px;
 }
@@ -28583,7 +28600,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box {
     height: 180px;
 }
-}
+} */
 a#couponHistoryHide{
 	display:none;
 }
@@ -28832,13 +28849,106 @@ height:30px;
    content:"\f0a2";
     font-size: 16px;
     color: #00cbe9;
-    line-height: 50px;
-    height:50px;
+    line-height: 46px;
+    height:46px;
     top: 2px;
     position: relative;
     font-weight: bold;
 }
 
+body .account .right-account .order-history .bottom .pagination.mobile{
+	     position: absolute;
+    bottom: 6px;
+    width: auto;
+    right: 0;}
+ body .account .right-account .order-history .top .pagination.mobile{
+	      position: absolute;
+    right: 80px;
+    top: 55px;}
+@media (max-width: 650px){
+	body .account .right-account .order-history .pagination li.next,body .account .right-account .order-history .pagination li.prev{
+	border:none;}
+
+	body .account .right-account .order-history .top .pagination.mobile{
+    top: 63px;
+    right: 0px;}
+     body .account .right-account .order-history .pagination .next:after,body .account .right-account .order-history .pagination .prev:before{
+     display:none;}
+    body .account .right-account .order-history .pagination li.next a:after {
+        content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        margin-left:5px;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s; }
+        body .account .right-account .order-history .pagination li.prev a:before{
+       content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s;
+        margin-right:5px;  }
+        #displayPaginationCountUp, #displayPaginationCountDown{
+        margin: 10px 0;
+        display:inline-block;}
+}
+.trackorder-dropdown li[data-read="true"] a {
+	color: #555;
+}
+.trackorder-dropdown li[data-read="false"] a {
+	font-weight: 600;
+} 
+
+.ShoeBrandLandingLayoutPage .feature-categories h1{
+    text-transform: capitalize;
+}
+@media(max-width:650px){
+.feature-collections ul.collections li.chef h3 span {
+		font-family: "Avenir Next", "Courier New";
+		font-style: normal;
+		font-size: 14px;
+	}
+	.feature-collections ul.collections li.chef h3 span a {
+		font-size: 12px;
+		font-weight: 700;
+	}
+body .account .right-account .reviews .review-list .account-only.product {
+    padding: 30px;
+    padding-right: 0;
+}
+	}
+
+body .account .right-account .reviews .toolbar .account-only h2{
+  text-transform: capitalize;}
+  @media(max-width:790px){
+  .rating-stars-wrapper{
+  position:absolute;
+  top:25px;
+  }
+  	.rate-bar {
+		height: 9px;
+	}
+	body.page-reviews .right-account .reviews .review-list .wrapper>li .product .short-info{
+	    padding-top: 20px;
+  }
+  }
+  .order-details .totals ul li{
+  display:inline-block;
+  }
+  
+  body .account .right-account .order-history .product-block li.header>ul>li span.amt {
+    background-color: transparent;
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -32420,6 +32530,14 @@ main {
 
 .thumb {
 	position: relative;
+	width: 100%;
+	display:inline-block;
+	border: 1px solid transparent;
+	margin-bottom:2px;
+	padding: 1px 0;
+	 -webkit-transition: border-color 0.15s;
+    -moz-transition: border-color 0.15s;
+    transition: border-color 0.15s;
 }
 
 .thumb .badges {
@@ -34332,7 +34450,8 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#savedCVVError, #enterOTP, #OTPGenerationErrorMessage, #resendOTPMessage, 
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
-	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError {
+	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError {
 	display: none;
 }
 

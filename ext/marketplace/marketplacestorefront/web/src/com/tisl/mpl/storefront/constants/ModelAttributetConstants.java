@@ -64,6 +64,7 @@ public final class ModelAttributetConstants
 	public static final String ADDRESS_FORM = "addressForm";
 	public static final String ADDRESS_DATA = "addressData";
 	public static final String PAGE = "page";
+	public static final String PAGE_FOR = "pageFor";
 	public static final String PAGE_VAL = "Page";
 	public static final String PAGE_ALL = "All";
 	public static final String SHOW = "show";
@@ -655,7 +656,9 @@ public final class ModelAttributetConstants
 	public static final String RETURN_AWBNUM = "returnAwbNum";
 	public static final String RETURN_LOGISCTIC = "returnLogistic";
 	public static final String TRACKINGURL = "trackingurl";
-
+	// TISPRO-48 - added new constants for pagination with lazy loading
+	public static final String PAGE_INDEX = "pageIndex";
+	public static final String PAGE_SIZE = "pageSize";
 
 	//for Coupons
 	public static final String OPEN_VOUCHER_DISPLAY_LIST = "openVoucherDisplayList";
@@ -664,13 +667,20 @@ public final class ModelAttributetConstants
 	public static final String TOTAL_SAVED_SUM = "totalSavedSum";
 	public static final String COUPONS_REDEEMED_COUNT = "couponsRedeemedCount";
 	public static final String TOTAL_PAGES_COUPONS = "totalPages";
-	public static final String COUPONS_LIST_SIZE = "commentsListSize";
+	public static final String COUPONS_LIST_SIZE = "couponListSize";
 	public static final String START_INDEX_COUPONS = "startIndex";
 	public static final String END_INDEX_COUPONS = "endIndex";
 	public static final String ONE_VAL_COUPONS = "1";
 	public static final String FOOTWEAR = "Footwear";
 	public static final String PINCODE_DETAILS = "pincodeData";
 	public static final String CLOSED_COUPON_LIST = "closedCouponList";
+
+
+	//for bell notification
+
+	public static final String NOTIFICATION_MESSAGE_LIST = "notificationMessagelist";
+	public static final String NOTIFICATION_COUNT = "notificationCount";
+	public static final String IS_SIGNED_IN = "isSignedInUser";
 
 
 

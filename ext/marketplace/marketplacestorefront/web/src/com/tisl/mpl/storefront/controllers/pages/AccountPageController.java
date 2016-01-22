@@ -585,7 +585,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String orders(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int page,
-			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_ALL) final ShowMode showMode,
+			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = ModelAttributetConstants.SORT, required = false) final String sortCode, final Model model)
 
 	throws CMSItemNotFoundException
@@ -602,7 +602,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			final int pageSizeInoh = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
-			final PageableData pageableData = createPageableData(page, 5, sortCode, showMode);
+			// TISPRO-48 - Changes made for implementing lazy loading in Order history pagination
+			final int pageSize = Integer.valueOf(configurationService.getConfiguration()
+					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE, "10").trim());
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 
 			//final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade().getPagedParentOrderHistoryForStatuses(pageableData);
 
@@ -682,6 +685,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.ORDER_DATA_MAP, orderFormattedDateMap);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
 			model.addAttribute(ModelAttributetConstants.CANCEL_PRODUCT_MAP, currentProductMap);
+			// TISPRO-48 - added page index and page size attribute for pagination
+			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
+			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -787,9 +793,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String order(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode, final Model model)
-			throws CMSItemNotFoundException
+	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
+			final Model model) throws CMSItemNotFoundException
 	{
+		if (null == orderCode)
+		{
+			return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_404;
+		}
 		final ReturnRequestForm returnRequestForm = new ReturnRequestForm();
 		final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();
 		final Map<String, String> currentStatusMap = new HashMap<>();
@@ -1081,7 +1091,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String getCoupons(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL_COUPONS) final int page,
-			final Model model) throws CMSItemNotFoundException, VoucherOperationException
+			@RequestParam(value = ModelAttributetConstants.PAGE_FOR, defaultValue = "") final String pageFor, final Model model)
+			throws CMSItemNotFoundException, VoucherOperationException
 	{
 		try
 		{
@@ -1091,10 +1102,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			/* getting all voucher in a list */
 
 			//final List<VoucherModel> voucherList = mplCouponFacade.getAllCoupons();
-			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons();
+			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons(customer);
 			//List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
 			//List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
+			List<VoucherDisplayData> closedVoucherListModified = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 			final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 20);
@@ -1103,6 +1115,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			int start = 0;
 			int end = 0;
 			int couponhistoryListSize = 0;
+			int closedVoucherDataListSize = 0;
 			int startIndex = 0;
 			int endIndex = 0;
 			int pageMultMaxSize = 0;
@@ -1126,7 +1139,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
 			}
 
-
+			// usedCoupons
 			if (!couponHistoryDTOList.isEmpty())
 			{
 				couponhistoryListSize = couponHistoryDTOList.size();
@@ -1165,38 +1178,114 @@ public class AccountPageController extends AbstractMplSearchPageController
 					LOG.debug("Step 3-************************Inside couponhistoryListSize > end NOT EMPTY");
 					couponHistoryDTOListModified = couponHistoryDTOList.subList(start, end);
 				}
-			}
-			if (page > 1)
-			{
-				pageMultMaxSize = (page * (int) pageSize);
-				startIndex = ((page - 1) * (int) pageSize) + 1;
+				if (page > 1)
+				{
+					pageMultMaxSize = (page * (int) pageSize);
+					startIndex = ((page - 1) * (int) pageSize) + 1;
 
-				if (startIndex == couponhistoryListSize)
-				{
-					endIndex = ((page - 1) * (int) pageSize) + couponhistoryListSize - startIndex + 1;
-				}
-				else if (couponhistoryListSize > pageMultMaxSize)
-				{
-					endIndex = pageMultMaxSize;
+					if (startIndex == couponhistoryListSize)
+					{
+						endIndex = ((page - 1) * (int) pageSize) + couponhistoryListSize - startIndex + 1;
+					}
+					else if (couponhistoryListSize > pageMultMaxSize)
+					{
+						endIndex = pageMultMaxSize;
+					}
+					else
+					{
+
+						endIndex = couponhistoryListSize;
+					}
 				}
 				else
 				{
-
-					endIndex = couponhistoryListSize;
+					if (couponhistoryListSize > pageSize)
+					{
+						LOG.debug("Step 3-************************Inside couponhistoryListSize > pageSize NOT EMPTY and page < 1 ");
+						startIndex = 1;
+						endIndex = (int) pageSize;
+					}
+					else
+					{
+						startIndex = 1;
+						endIndex = couponhistoryListSize;
+					}
 				}
 			}
-			else
+
+			//unused coupon
+
+			if (!closedVoucherDataList.isEmpty())
 			{
-				if (couponhistoryListSize > pageSize)
+				closedVoucherDataListSize = closedVoucherDataList.size();
+				/* Pagination starts */
+				LOG.debug("Step 0-************************Pagination Starts********************");
+				LOG.debug("Step 1-************************Inside couponHistoryDTOList NOT EMPTY");
+
+				final double pages = Math.ceil(closedVoucherDataListSize / pageSize);
+				final int totalPages = (int) pages;
+				//change
+				model.addAttribute(ModelAttributetConstants.TOTAL_PAGES_COUPONS, Integer.valueOf(totalPages));
+				model.addAttribute(ModelAttributetConstants.COUPONS_LIST_SIZE, Integer.valueOf(closedVoucherDataListSize));
+				if (page != 0)
 				{
-					LOG.debug("Step 3-************************Inside couponhistoryListSize > pageSize NOT EMPTY and page < 1 ");
-					startIndex = 1;
-					endIndex = (int) pageSize;
+					start = (int) ((page - 1) * pageSize);
+					end = (int) (start + pageSize);
 				}
 				else
 				{
-					startIndex = 1;
-					endIndex = couponhistoryListSize;
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (start > couponhistoryListSize)
+				{
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (end > couponhistoryListSize)
+				{
+					LOG.debug("Step 2-************************Inside end > couponhistoryListSize NOT EMPTY");
+					closedVoucherListModified = closedVoucherDataList.subList(start, closedVoucherDataListSize);
+				}
+				else
+				{
+					LOG.debug("Step 3-************************Inside couponhistoryListSize > end NOT EMPTY");
+					closedVoucherListModified = closedVoucherDataList.subList(start, end);
+				}
+				if (page > 1)
+				{
+					pageMultMaxSize = (page * (int) pageSize);
+					startIndex = ((page - 1) * (int) pageSize) + 1;
+
+					if (startIndex == closedVoucherDataListSize)
+					{
+						endIndex = ((page - 1) * (int) pageSize) + closedVoucherDataListSize - startIndex + 1;
+					}
+					else if (closedVoucherDataListSize > pageMultMaxSize)
+					{
+						endIndex = pageMultMaxSize;
+					}
+					else
+					{
+
+						endIndex = closedVoucherDataListSize;
+					}
+				}
+				else
+				{
+					if (closedVoucherDataListSize > pageSize)
+					{
+						LOG.debug("Step 3-************************Inside couponhistoryListSize > pageSize NOT EMPTY and page < 1 ");
+						startIndex = 1;
+						endIndex = (int) pageSize;
+					}
+					else
+					{
+						startIndex = 1;
+						endIndex = closedVoucherDataListSize;
+					}
 				}
 			}
 
@@ -1204,8 +1293,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			//model.addAttribute(ModelAttributetConstants.OPEN_VOUCHER_DISPLAY_LIST, openVoucherDataList);
 			//model.addAttribute(ModelAttributetConstants.CLOSED_VOUCHER_DISPLAY_LIST, closedVoucherDataList);
-			model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, closedVoucherDataList);
-
+			model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, closedVoucherListModified);
+			model.addAttribute("closedCouponListSize", closedVoucherDataListSize);
 			model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistoryDTOListModified);
 			model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, couponHistoryStoreDTO.getSavedSum());
 			model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, couponHistoryStoreDTO.getCouponsRedeemedCount());
@@ -4560,6 +4649,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				model.addAttribute(ModelAttributetConstants.FRIENDS_TEXT_MESSAGE, messageText);
 			}
+			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(FRIENDS_INVITE_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(FRIENDS_INVITE_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -6123,7 +6216,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String review(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL) final int page,
-			final Model model) throws Exception
+			final Model model) throws CMSItemNotFoundException
 	{
 		final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE, 5);
 		final Map<String, ProductData> productDataMap = new LinkedHashMap<String, ProductData>();
@@ -6281,6 +6374,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+		}
 		storeCmsPageInModel(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -6367,6 +6466,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
 		}
 		return null;

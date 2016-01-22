@@ -82,13 +82,13 @@ $(document).ready(function(){
 	*/
 	}
 	});
-	 $(document).keypress(function(event){
-			var keycode = (event.keyCode ? event.keyCode : event.which);
-			var isSocialHovered = $(".dropdown.sign-in-dropdown.sign-in").is(":hover");
-			if(isSocialHovered){
-				if(keycode == '13'){
-					$("#triggerLoginAjax").click();
-				}
+	$(document).keypress(function(event){
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+	//	var isSocialHovered = ;
+		if($(".dropdown.sign-in-dropdown.sign-in.hover").length == 0){
+			if(keycode == '13'){
+				$("#triggerLoginAjax").click();
 			}
-		});
+		}
+	});
 });

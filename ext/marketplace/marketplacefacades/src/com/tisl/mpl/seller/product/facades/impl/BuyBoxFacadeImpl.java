@@ -309,15 +309,16 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 		try
 		{
-			final List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>(
-					buyBoxService.buyboxForSizeGuide(productCode, sellerId));
-			buyboxData.setAllOOStock(MarketplaceFacadesConstants.N);
+			final List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyboxForSizeGuide(productCode,
+					sellerId));
+			//buyboxData.setAllOOStock(MarketplaceFacadesConstants.N);
 
 			//If all the sellers has stock zero, then display any product having non zero price
-			buyBoxMod = buyboxModelList.get(0);
+
 			//if (buyboxModelList != null && buyboxModelList.size() > 0)
-			if (buyboxModelList.size() > 0)
+			if (!buyboxModelList.isEmpty() && buyboxModelList.size() > 0)
 			{
+				buyBoxMod = buyboxModelList.get(0);
 				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
 				{
 					final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
@@ -341,7 +342,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3001);
+				//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3001);
+				return buyboxData;
 			}
 		}
 		catch (final NumberFormatException e)
@@ -370,8 +372,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @return SellerInformationDataList
 	 */
 	@Override
-	public List<SellerInformationData> getsellersDetails(final String productCode)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions
+	public List<SellerInformationData> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
 	{
 		final List<SellerInformationData> SellerInformationDataList = new ArrayList<SellerInformationData>();
 
@@ -443,8 +445,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					sellerData.setFullfillment(rich.getDeliveryFulfillModes().getCode());
 				}
 				if (null != rich.getPaymentModes()
-						&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode())
-								|| (PaymentModesEnum.BOTH.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+						&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
+								.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
 
 
 				{
@@ -485,10 +487,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		final String allowNew = configurationService.getConfiguration().getString("attribute.new.display");
 		for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
 		{
-			if ((seller.getSellerAssociationStatus() == null
-					|| seller.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
-					&& (null != seller.getStartDate() && new Date().after(seller.getStartDate()) && null != seller.getEndDate()
-							&& new Date().before(seller.getEndDate())))
+			if ((seller.getSellerAssociationStatus() == null || seller.getSellerAssociationStatus().equals(
+					SellerAssociationStatusEnum.YES))
+					&& (null != seller.getStartDate() && new Date().after(seller.getStartDate()) && null != seller.getEndDate() && new Date()
+							.before(seller.getEndDate())))
 			{
 				if (null != seller.getOnlineExclusive()
 						&& (OnlineExclusiveEnum.YES).toString().equalsIgnoreCase(seller.getOnlineExclusive().getCode()))
@@ -502,8 +504,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					for (final RichAttributeModel rich : seller.getRichAttribute())
 					{
 						if (null != rich.getPaymentModes()
-								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode())
-										|| (PaymentModesEnum.BOTH.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
+								&& (PaymentModesEnum.COD.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()) || (PaymentModesEnum.BOTH
+										.toString().equalsIgnoreCase(rich.getPaymentModes().getCode()))))
 
 
 						{
@@ -592,7 +594,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 

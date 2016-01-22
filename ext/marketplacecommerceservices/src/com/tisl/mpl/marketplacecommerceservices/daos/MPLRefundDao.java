@@ -40,4 +40,11 @@ public interface MPLRefundDao extends RefundDao
 	 * @throws Exception
 	 */
 	List<RefundEntryModel> getAllRefunds(Date startDate, Date endDate) throws Exception;
+
+	/**
+	 * @description Get all Refund request made
+	 * @return List<RefundEntryModel>
+	 * @throws Exception
+	 */
+	List<RefundEntryModel> getAllRefunds() throws Exception;
 }

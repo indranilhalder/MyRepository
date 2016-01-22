@@ -68,7 +68,7 @@ public class MplCouponController
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
 			final String bankNameSelected) throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException,
-			NumberFormatException, JaloInvalidParameterException, JaloSecurityException
+					NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
 		LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
@@ -107,7 +107,7 @@ public class MplCouponController
 			LOG.error("Issue with voucher redeem " + e.getMessage());
 			if (e.getMessage().contains("total price exceeded"))
 			{
-				data.setRedeemErrorMsg("Price exceeded");
+				data.setRedeemErrorMsg("Price_exceeded");
 			}
 			else if (e.getMessage().contains("Voucher not found"))
 			{
@@ -120,6 +120,18 @@ public class MplCouponController
 			else if (e.getMessage().contains("Error while"))
 			{
 				data.setRedeemErrorMsg("Issue");
+			}
+			else if (e.getMessage().contains("Voucher is not applicable"))
+			{
+				data.setRedeemErrorMsg("Not_Applicable");
+			}
+			else if (e.getMessage().contains("Voucher is not reservable"))
+			{
+				data.setRedeemErrorMsg("Not_Reservable");
+			}
+			else if (e.getMessage().contains("freebie"))
+			{
+				data.setRedeemErrorMsg("Freebie");
 			}
 
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
@@ -161,8 +173,8 @@ public class MplCouponController
 	 */
 	@RequestMapping(value = "/release", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode) throws EtailNonBusinessExceptions,
-			JaloPriceFactoryException, CalculationException
+	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode)
+			throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException
 	{
 		LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();

@@ -401,7 +401,7 @@ function addToWishlistFromCart() {
 									<c:choose>
 										<c:when test="${fulfilmentValue eq 'tship'}">
 												<div class="name">
-													<spring:theme code="mpl.myBag.fulfillment"/><spring:theme code="product.default.fulfillmentType"></spring:theme>
+													<spring:theme code="mpl.myBag.fulfillment"/>&nbsp;<spring:theme code="product.default.fulfillmentType"></spring:theme>
 												</div>
 										</c:when>
 										<c:otherwise>

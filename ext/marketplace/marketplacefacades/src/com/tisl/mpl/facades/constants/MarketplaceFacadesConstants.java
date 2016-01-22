@@ -122,6 +122,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String CART_HOME_DELIVERY = "Home Delivery".intern();
 	public static final String CART_EXPRESS_DELIVERY = "Express Delivery ".intern();
 	public static final String CART_CLICK_COLLECT = "Click And Collect".intern();
+	public static final int PRIORITY_INCREMENT = 1000;
 
 
 

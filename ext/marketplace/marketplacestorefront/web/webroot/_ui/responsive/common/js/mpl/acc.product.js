@@ -127,6 +127,7 @@ ACC.product = {
 		$(document).off('click', '#addToCartFormQuick').on('click', '#addToCartFormQuick', function(event) { 
 		   
 			 $("#qty1").val($("#quantity").val());
+			 
 				if($("#sizeSelected").val()!='no'){
 				ACC.product.sendAddToBagQuick("addToCartFormQuick");
 				
@@ -141,16 +142,22 @@ ACC.product = {
 		// Size Guide addToCartSizeGuide
 		$(document).on('click','#addToCartSizeGuide .js-add-to-cart',function(event){
 			
+			var selectedSizeFlag = $("#sizeSelectedVal").val();
+			
+			
+			
 			 $("#sizeQty").val($("#sizeGuideQty").val());
-			/*	if($("#sizeSelectedSizeGuide").val()!='no'){*/
+			//alert($('#variant.size-g option:selected').val());
+			 if($('#variant.size-g option:selected').val()!="#")
+			 {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
-				
-			/*	}else{
-					$("#addToCartFormSizeTitle").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
-					$("#addToCartFormSizeTitle").show().fadeOut(6000);
-				}*/
-				event.preventDefault();
-				return false;
+			 
+			}else{
+					$("#sizeSelectedSizeGuide").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
+					$("#sizeSelectedSizeGuide").show();
+			}
+			event.preventDefault();
+			return false;
 		});
 				
 		$(document).on('click','#addToCartFormId .js-add-to-cart',function(event){
@@ -713,7 +720,21 @@ addToBagFromWl: function(ussid, addedToCart) {
 		        var listItemText = $(li).text().toUpperCase(), searchText = that.value.toUpperCase();
 		        return ~listItemText.indexOf(searchText);
 		    });
-		    
+		    if(($matchingListElements).size() > 0) {
+			    $(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+	
+				$(this).parents(".js-facet").find(".js-more-facet-values").hide();
+				$(this).parents(".js-facet").find(".js-less-facet-values").show();
+		    }
+		    if(that.value.toUpperCase() == ''){
+		    	$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+
+				$(this).parents(".js-facet").find(".js-more-facet-values").show();
+				$(this).parents(".js-facet").find(".js-less-facet-values").hide();
+		    }
+			    
 		    $allListElements.hide();
 		    $(".brand .js-facet-top-values").hide();
 			$(".brand .js-facet-list.js-facet-list-hidden").show();
@@ -747,6 +768,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 				var currentBrand = "";
 				if(i==0) {
 					selectQueryParams = selectQueryParams + url;
+					//get searchcategory value to append with brand checkall url
 					if(url.indexOf(':category:') != -1){
 						var urlAry = url.split(':');
 						for (var j = 2; j <  urlAry.length; j = j + 2) { 
@@ -757,8 +779,11 @@ addToBagFromWl: function(ussid, addedToCart) {
 					}
 				}
 				else{
-					currentBrand = arr[arr.length-2]+":"+arr[arr.length-1];
-					selectQueryParams = selectQueryParams + ":"+currentBrand;
+					//condition to avoid duplicate brand
+					if(selectQueryParams.indexOf(arr[arr.length-1]) == -1) {
+						currentBrand = arr[arr.length-2]+":"+arr[arr.length-1];
+						selectQueryParams = selectQueryParams + ":"+currentBrand;
+					}
 				}
 				i = i + 1;
 				window.location.href = "?q="+selectQueryParams+"&searchCategory="+searchCategory+"&selectAllBrand=true";

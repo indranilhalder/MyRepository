@@ -563,6 +563,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			if (flag)
 			{
 				//creating InitOrderRequest of Juspay
+				// For netbanking firstname will be set as Bank Code
 				final InitOrderRequest request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
 						.withCustomerId(uid).withEmail(customerEmail).withUdf1(firstName).withUdf2(lastName).withUdf3(addressLine1)
 						.withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state).withUdf8(city)
@@ -819,7 +820,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6005);
+				LOG.info("No Saved credit cards found !!");
 			}
 		}
 		catch (final NullPointerException e)
@@ -1003,7 +1004,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6006);
+				LOG.info("No Saved debit cards found !!");
 			}
 		}
 		catch (final NullPointerException e)

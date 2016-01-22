@@ -594,4 +594,36 @@
 	</bean>
 	
 	
+	<!-- checkout  coupon widget -->
+	<alias alias="csCouponCheckoutWidgetConfig" name="csCouponCheckoutWidgetConfig" />
+	<bean id="csCouponCheckoutWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.checkout.appliedCoupon" />
+		<property name="widgetRenderer" ref="csCouponCheckoutWidgetRenderer" />
+		<property name="widgetController" ref="csBasketController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cscockpit.widgets.impl.CaptionUpdateListboxWidget" />
+		<property name="widgetModel" ref="csBasketCartWidgetModel" />
+	</bean>
+
+	<alias alias="csCouponCheckoutWidgetRenderer" name="csCouponCheckoutWidgetRenderer" />
+	<bean id="csCouponCheckoutWidgetRenderer" parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponCheckoutWidgetRenderer">
+	</bean> 
+	
+	<!-- Order  coupon widget -->
+	<alias alias="csCouponOrderWidgetConfig" name="csCouponOrderWidgetConfig" />
+	<bean id="csCouponOrderWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.Order.appliedCoupon" />
+		<property name="widgetRenderer" ref="csCouponOrderWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetModel" ref="csBasketCartWidgetModel" />
+	</bean>
+
+	<alias alias="csCouponOrderWidgetRenderer" name="csCouponOrderWidgetRenderer" />
+	<bean id="csCouponOrderWidgetRenderer" parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponOrderWidgetRenderer">
+	</bean> 
+	
+	
+	
 </beans>
