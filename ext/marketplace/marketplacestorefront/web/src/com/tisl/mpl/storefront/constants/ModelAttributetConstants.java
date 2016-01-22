@@ -64,6 +64,8 @@ public final class ModelAttributetConstants
 	public static final String ADDRESS_FORM = "addressForm";
 	public static final String ADDRESS_DATA = "addressData";
 	public static final String PAGE = "page";
+	public static final String PAGE_VOUCHER = "pageVoucher";
+	public static final String PAGE_HISTORY = "pageHistory";
 	public static final String PAGE_FOR = "pageFor";
 	public static final String PAGE_VAL = "Page";
 	public static final String PAGE_ALL = "All";
@@ -666,10 +668,14 @@ public final class ModelAttributetConstants
 	public static final String COUPON_ORDER_DATA_DTO_LIST = "couponOrderDataDTOList";
 	public static final String TOTAL_SAVED_SUM = "totalSavedSum";
 	public static final String COUPONS_REDEEMED_COUNT = "couponsRedeemedCount";
-	public static final String TOTAL_PAGES_COUPONS = "totalPages";
+	public static final String TOTAL_PAGES_COUPONS = "totalPagesCoupon";
+	public static final String TOTAL_PAGES_COUPONS_HIST = "totalPagesCouponHist";
 	public static final String COUPONS_LIST_SIZE = "couponListSize";
-	public static final String START_INDEX_COUPONS = "startIndex";
-	public static final String END_INDEX_COUPONS = "endIndex";
+	public static final String COUPONS_HIST_LIST_SIZE = "couponHistListSize";
+	public static final String START_INDEX_COUPONS = "startIndexCoupon";
+	public static final String END_INDEX_COUPONS = "endIndexCoupon";
+	public static final String START_INDEX_COUPONS_HIST = "startIndexHist";
+	public static final String END_INDEX_COUPONS_HIST = "endIndexHist";
 	public static final String ONE_VAL_COUPONS = "1";
 	public static final String FOOTWEAR = "Footwear";
 	public static final String PINCODE_DETAILS = "pincodeData";
