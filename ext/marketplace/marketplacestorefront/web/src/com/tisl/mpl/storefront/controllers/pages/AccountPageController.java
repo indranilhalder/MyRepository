@@ -6507,6 +6507,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
+		}
 		return null;
 	}
 
