@@ -25,6 +25,7 @@ public class MarketplacecclientservicesConstants
 	public static final String TRUE = "true";
 	public static final String X = "X";
 
+	public static final String SMS_SENDER_ID = "marketplace.sms.sender.name".intern();
 	public static final String SMS_SENDER_TAG = "Sender_ID";
 	public static final String SMS_MOBILE_NO_TAG = "Mobile_No";
 	public static final String SMS_MESSAGE_TAG = "Message";
