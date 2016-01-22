@@ -283,7 +283,70 @@ font-weight: normal;
     margin-right: 0;
     display: none;
 } 
-
+#ratingDiv .gig-rating-button {
+	border: 0;
+	border-radius: 0;
+	color: #fff;
+	background-color: #ffb810;
+	text-decoration: none;
+	height: 45px;
+	line-height: 45px;
+	padding: 0 60px;
+}
+#ratingDiv .gig-rating-button:hover {
+    background: #cc8600;
+}
+#ratingDiv div.gig-rating-star.gig-rating-star-full:before, .gig-comment-rating-star.gig-comment-rating-star-full:before {
+	color: #00cbe9;
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f005";
+}
+*.gig-comment-rating-star, *.gig-composebox-rating-star, *.gig-selfreview-rating-star, *.gig-rating-star-full, *.gig-rating-star, *.gig-rating-dimensions div.gig-rating-star, *.gig-comment-rating-star-full, *.gig-composebox-rating-star-full, *.gig-selfreview-rating-star-full {
+	background-image: none;
+}
+#ratingDiv div.gig-rating-star.gig-rating-star-empty:before, .gig-comment-rating-star:before {
+	color: #00cbe9;
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f006";
+}
+.gig-rating-stars {
+	top: 0px;
+}
+#ratingDiv div.gig-rating-star.gig-rating-star-half:before {
+	color: #00cbe9;
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f123";
+}
+#ReviewSecion {
+	font-family: 'Avenir Next';
+}
+.gig-rating *, div.gig-rating {
+	color: #000;
+}
+*.gig-comment-title * {
+	vertical-align: middle;
+}
+#ReviewSecion {
+	background-color: #f8f9fb;
+}
+.gig-comment {
+	margin: 20px 0px;
+    border: 1px solid #EBEBEB;
+    padding: 5px;
+    background-color: white;
+}
+.gig-comment-footer {
+	border: none;
+}
 </style> 
 
 </c:if>	
