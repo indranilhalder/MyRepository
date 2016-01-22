@@ -893,7 +893,7 @@ h2 {
         display: inline-block;
         font-size: 18px;
         line-height: 60px;
-        max-width: 770px; }
+        max-width: 780px; }
         @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
 		 header .banner .content form {
         max-width: 770px; }
@@ -9289,7 +9289,7 @@ footer .banner {
     margin-bottom: 20px;
     clear: both;
      }
-      .page-search .listing.wrapper .right-block .listing-menu{
+.listing.wrapper .right-block .listing-menu{
         border-bottom: 2px solid #f0f4f5;}
     .listing.wrapper .right-block .listing-menu::after {
       clear: both;
@@ -9586,10 +9586,9 @@ body .account .right-account .order-history .pagination li{
   display: inline-block;
   position: relative;
   text-align: center;
-  padding: 5px 0 40px 0;}
-  .feedBack-block {
-  	border-top:2px solid #f0f4f5;
-  }
+  padding: 5px 0 40px 0;
+  border-bottom:2px solid #f0f4f5;}
+
   .bottom-pagination::after {
     clear: both;
     content: "";
@@ -23599,29 +23598,30 @@ body .account.preferences .right-account div.email-pref form fieldset .feed labe
 
 @media (min-width:791px)
 {
-	.order-details .totals ul li span {
+	.order-details .totals ul li > span {
 		float: right;
 		margin-right: 30px;
 	}
-	.order-details .totals ul li span.amt {
+	/* .order-details .totals ul li span.amt {
 		margin-right: 60px;
-	}
-	.order-details .totals ul li span.amt span{
+	} */
+	/* .order-details .totals ul li span.amt span{
 		margin-right: 0px;
-	}
+	} */
 	.order-details .totals ul li.grand-total span.amt {
 		text-align: right;
 	}}
 @media (max-width:790px)
 {
-	.order-details .totals ul li span {
+	.order-details .totals ul li > span {
 		float: right;
 		margin-right: 20px;
 	}
 	.order-details .totals ul li.grand-total span.amt {
 		text-align: right;
-		margin-right: 0px;
-	}}
+		/* margin-right: 0px; */
+	}
+	}
 
 .progress-bar {
 	background-image: none !important;
@@ -25593,11 +25593,14 @@ padding-left: 0px;}
        .pagination li.prev{
      border: 2px solid #f0f4f5;
     padding-left: 7px;
-    padding-right: 5px;}
+    padding-right: 5px;
+   }
+   
        .pagination li.next{
     border: 2px solid #f0f4f5;
     padding-left: 5px;
-    padding-right: 5px;}
+    padding-right: 5px;
+   }
     .no-results ul li{
     padding-top: 15px;
     padding-bottom: 15px;}
@@ -25612,6 +25615,12 @@ padding-left: 0px;}
     padding-right:0px;}
     div.wishlist-nav h3{
     margin:30px 0;}
+    .listing.wrapper .right-block .listing-menu .pagination li.prev,.listing.wrapper .right-block .listing-menu .pagination li.next{
+    height:34px;}
+     .listing.wrapper .right-block .listing-menu .pagination .prev:before,.listing.wrapper .right-block .listing-menu .pagination .next:after{
+    margin-top:9px;}
+     .listing.wrapper .bottom-pagination .pagination .prev:before,.listing.wrapper .bottom-pagination .pagination .next:after{
+    margin-top:12px;}
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 640px) and (-webkit-min-device-pixel-ratio: 2) {
@@ -27383,9 +27392,10 @@ body.page-reviews .right-account .reviews .navigation p {
 		bottom: 60px;
 		left: 40%;
 	}
-	body.page-reviews .pagination li.next {
+	body.page-reviews .pagination li.next,body.page-reviews .pagination li.prev {
 		border: none;
 	}
+	
 	
 }
 .cart.wrapper .right-block .block.coupon button{
@@ -28944,6 +28954,7 @@ body .account .right-account .reviews .toolbar .account-only h2{
   }
   .order-details .totals ul li{
   display:inline-block;
+  width:100%;
   }
   
   body .account .right-account .order-history .product-block li.header>ul>li span.amt {

@@ -108,11 +108,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @param category
 	 *           ,productId,customerUID
 	 * @return boolean
-	 * @throws Exception
 	 */
 	@Override
 	public boolean getReviewsByCategoryProductId(final String category, final String productId, final String customerUID)
-			throws Exception
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -129,15 +127,12 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, productId);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
 		{
-			if (null != proxyHost && null != proxyPort)
-			{
-				final int proxyPortInt = Integer.parseInt(proxyPort);
-				final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				gsRequest.setProxy(proxy);
-			}
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			gsRequest.setProxy(proxy);
 		}
 
 		LOG.debug(PROXY_SET_STATEMNT + proxySet);
@@ -156,7 +151,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			catch (final Exception e)
 			{
 				LOG.error(MarketplacecclientservicesConstants.REVIEWS_CATEGORYID_EXCEPTION + e.getMessage());
-				throw e;
+
 			}
 		}
 		return true;
@@ -166,7 +161,6 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @Description: Gigya get comments for user id supplied
 	 * @param customerUID
 	 * @return List<GigyaProductReviewWsDTO>
-	 * @throws Exception
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
@@ -184,15 +178,12 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
 		{
-			if (null != proxyHost && null != proxyPort)
-			{
-				final int proxyPortInt = Integer.parseInt(proxyPort);
-				final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				gsRequest.setProxy(proxy);
-			}
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			gsRequest.setProxy(proxy);
 		}
 		LOG.debug(PROXY_SET_STATEMNT + proxySet);
 		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
@@ -317,11 +308,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @param categoryID
 	 *           ,streamID,commentID,commentText,commentTitle.ratings,UID
 	 * @return String
-	 * @throws Exception
 	 */
 	@Override
 	public String editComment(final String categoryID, final String streamID, final String commentID, final String commentText,
-			final String commentTitle, final String ratings, final String UID) throws Exception
+			final String commentTitle, final String ratings, final String UID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -337,15 +327,12 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequestAllowEdit.setParam("categorySettings", "{userEditComment : true}");
 		Proxy proxy = null;
 
-		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
 		{
-			if (null != proxyHost && null != proxyPort)
-			{
-				final int proxyPortInt = Integer.parseInt(proxyPort);
-				final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-				proxy = new Proxy(Proxy.Type.HTTP, addr);
-				gsRequestAllowEdit.setProxy(proxy);
-			}
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			proxy = new Proxy(Proxy.Type.HTTP, addr);
+			gsRequestAllowEdit.setProxy(proxy);
 		}
 		LOG.debug(PROXY_SET_STATEMNT + proxySet);
 		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
@@ -385,7 +372,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		}
 		catch (final Exception e)
 		{
-			throw e;
+			LOG.error(MarketplacecclientservicesConstants.REVIEWS_EDIT_EXCEPTION + e.getMessage());
 
 		}
 		return null;
@@ -396,10 +383,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @param categoryID
 	 *           ,streamID,commentID
 	 * @return String
-	 * @throws Exception
 	 */
 	@Override
-	public String deleteComment(final String categoryID, final String streamID, final String commentID) throws Exception
+	public String deleteComment(final String categoryID, final String streamID, final String commentID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
@@ -416,15 +402,12 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.COMMENT_ID, commentID);
 
 
-		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
 		{
-			if (null != proxyHost && null != proxyPort)
-			{
-				final int proxyPortInt = Integer.parseInt(proxyPort);
-				final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				gsRequest.setProxy(proxy);
-			}
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			gsRequest.setProxy(proxy);
 		}
 		LOG.debug(PROXY_SET_STATEMNT + proxySet);
 		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
@@ -440,7 +423,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		}
 		catch (final Exception e)
 		{
-			throw e;
+			LOG.error(MarketplacecclientservicesConstants.REVIEWS_DELETE_EXCEPTION + e.getMessage());
 		}
 		return null;
 	}
