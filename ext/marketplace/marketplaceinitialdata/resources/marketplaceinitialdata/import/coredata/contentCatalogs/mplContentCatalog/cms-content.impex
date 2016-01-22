@@ -1466,6 +1466,7 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;marketplacePreference;Account Marketplace Preference;AccountPageTemplate;marketplacePreference
 ;;sellerListing;Seller Listing;ProductGridPageTemplate;sellerListing
 ;;offerPageListing;Offer Page Listing;ProductGridPageTemplate;offerListing
+;;couponListing;Coupon Page Listing;ProductGridPageTemplate;couponListing
 
 ########## For Lets Get Personal ##########
 ;;myInterest;My Interest Page;AccountPageTemplate;myInterest
