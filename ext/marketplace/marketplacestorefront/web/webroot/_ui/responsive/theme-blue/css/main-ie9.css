@@ -9736,7 +9736,7 @@ h5.questions a:hover {
         display: inline-block;
         font-size: 18px;
         line-height: 60px;
-        max-width: 770px; }
+        max-width: 780px; }
         header .banner .content form span {
           display: inline-block;
           margin: 0 5px; }
@@ -13755,7 +13755,7 @@ body.page-reviews .account .my-reviews .wrapper,body.page-reviews .account .tool
 		bottom: 60px;
 		left: 40%;
 	}
-	body.page-reviews .pagination li.next {
+	body.page-reviews .pagination li.next, body.page-reviews .pagination li.prev {
 		border: none;
 	}
 	

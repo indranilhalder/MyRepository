@@ -893,7 +893,7 @@ h2 {
         display: inline-block;
         font-size: 18px;
         line-height: 60px;
-        max-width: 770px; }
+        max-width: 780px; }
         @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
 		 header .banner .content form {
         max-width: 770px; }
@@ -25595,6 +25595,7 @@ padding-left: 0px;}
     padding-left: 7px;
     padding-right: 5px;
    }
+   
        .pagination li.next{
     border: 2px solid #f0f4f5;
     padding-left: 5px;
@@ -27391,9 +27392,10 @@ body.page-reviews .right-account .reviews .navigation p {
 		bottom: 60px;
 		left: 40%;
 	}
-	body.page-reviews .pagination li.next {
+	body.page-reviews .pagination li.next,body.page-reviews .pagination li.prev {
 		border: none;
 	}
+	
 	
 }
 .cart.wrapper .right-block .block.coupon button{
