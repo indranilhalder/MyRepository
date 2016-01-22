@@ -102,8 +102,7 @@ public class DefaultBrandCategorySource implements CategorySource
 				for (final CategoryModel categoryModel : getAllCategories(category, rootCategories))
 				{
 
-					if (categoryModel != null && (categoryModel.getCode().equalsIgnoreCase("MBH11")
-							|| categoryModel.getCode().equalsIgnoreCase("MBH12") || categoryModel.getCode().equalsIgnoreCase("MBH1")
+					if (categoryModel != null && ((categoryModel.getCode().startsWith("MBH1") && categoryModel.getCode().length() <= 5)
 							|| categoryModel.getCode().equalsIgnoreCase("MSH1")))
 					{
 						continue;

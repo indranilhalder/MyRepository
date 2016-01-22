@@ -1495,7 +1495,7 @@ function validEmail(email) {
 	  return true;	  
 	}
 function dispPriceForSizeGuide(mrp, mop, spPrice) {
-	
+	//alert("mrp: "+mrp +" Mop: "+mop+" spPrice: "+spPrice);
 	if(null!= mrp){
 		$("#sizemrpPriceId").append(mrp);
 	}
@@ -1508,22 +1508,24 @@ function dispPriceForSizeGuide(mrp, mop, spPrice) {
 
 	if (null!=spPrice && spPrice != 0) {
 
-		if (mop.value == mrp.value) {
+		if (mop == mrp) {
 			$('#sizemrpPriceId').css('text-decoration', 'line-through');
 			$("#sizemrpPriceId").show();
 			$("#sizespPriceId").show();
 		} else {
+			//alert("mop!=mrp sp");
 			$('#sizemrpPriceId').css('text-decoration', 'line-through');
 			$("#sizemrpPriceId").show();
 			$("#sizespPriceId").show();
 		}
 
 	} else {
-		if (null!=mop && mop.value != 0) {
-			if (mop.value == mrp.value) {
+		if (null!=mop && mop != 0) {
+			if (mop == mrp) {
 				$("#sizemrpPriceId").removeClass("old").addClass("sale");
 				$("#sizemrpPriceId").show();
 			} else {
+				//alert("mop!=mrp");
 				$('#sizemrpPriceId').css('text-decoration', 'line-through');
 				$("#sizemrpPriceId").show();
 				$("#sizemopPriceId").show();
@@ -1532,7 +1534,7 @@ function dispPriceForSizeGuide(mrp, mop, spPrice) {
 			$("#sizemrpPriceId").show();
 		}
 	}
-	if (mrp.value == "") {
+	if (mrp == "") {
 		$("#sizemrpPriceId").hide();
 	} else {
 		$("#sizemrpPriceId").show();
@@ -1565,9 +1567,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				var sizeSelected=true;
 				
 				var count =0;
-				$("#noProductForSelectedSeller").hide();
-				$("#productDetails").show();
-				$("#price").show();
+
 
 				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
 					$('#variant option#select-option').attr("selected", "selected");

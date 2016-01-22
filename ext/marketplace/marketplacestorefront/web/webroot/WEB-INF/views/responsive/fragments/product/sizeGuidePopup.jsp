@@ -496,6 +496,10 @@ $("#add_to_wishlist-sizeguide").click(function(){
 	 $(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
 	return false;
 });
+
+$("#noProductForSelectedSeller").hide();
+$("#productDetails").show();
+$("#price").show();
 });
 
 
