@@ -9736,7 +9736,7 @@ h5.questions a:hover {
         display: inline-block;
         font-size: 18px;
         line-height: 60px;
-        max-width: 770px; }
+        max-width: 780px; }
         header .banner .content form span {
           display: inline-block;
           margin: 0 5px; }
@@ -13190,14 +13190,14 @@ padding-top:25px;
 	transform: rotate(45deg);
 }
 @media (min-width: 791px){
-.order-details .totals ul li span {
+.order-details .totals ul li > span {
     float: right;
     margin-right: 30px;
 }}
 @media (min-width: 791px){
 .order-details .totals ul li.grand-total span.amt {
     text-align: right;
-    margin-right: 0px;
+    /* margin-right: 0px; */
 }}
 .wishlist-content .remove-btn {
     background-color: #f0f4f5;
@@ -13755,7 +13755,7 @@ body.page-reviews .account .my-reviews .wrapper,body.page-reviews .account .tool
 		bottom: 60px;
 		left: 40%;
 	}
-	body.page-reviews .pagination li.next {
+	body.page-reviews .pagination li.next, body.page-reviews .pagination li.prev {
 		border: none;
 	}
 	
@@ -14932,6 +14932,7 @@ body .account .right-account .reviews .toolbar .account-only h2{
   }
 .order-details .totals ul li{
   display:inline-block;
+  width:100%;
   }
   
   body .account .right-account .order-history .product-block li.header>ul>li span.amt {

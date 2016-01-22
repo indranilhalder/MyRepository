@@ -1124,9 +1124,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			/*
 			 * final AllVoucherListData allVoucherListData = mplCouponFacade.getAllVoucherList(customer, voucherList); if
 			 * (null != allVoucherListData)
-			 *
+			 * 
 			 * all type of voucher is shown in open voucher and personalized vouchers are shown as closed voucher
-			 *
+			 * 
 			 * { openVoucherDataList = allVoucherListData.getOpenVoucherList(); closedVoucherDataList =
 			 * allVoucherListData.getClosedVoucherList(); }
 			 */
@@ -6216,7 +6216,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String review(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL) final int page,
-			final Model model) throws Exception
+			final Model model) throws CMSItemNotFoundException
 	{
 		final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE, 5);
 		final Map<String, ProductData> productDataMap = new LinkedHashMap<String, ProductData>();
@@ -6374,6 +6374,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+		}
 		storeCmsPageInModel(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -6460,6 +6466,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
 		}
 		return null;

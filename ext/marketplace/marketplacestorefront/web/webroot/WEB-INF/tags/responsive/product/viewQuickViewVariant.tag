@@ -164,7 +164,7 @@
 	</a>
 	<!-- End Size guide Pop-up -->
 	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm" >
-    <p style="margin-top:15px;"><spring:theme code="product.variant.size"></spring:theme></p>
+    <p style="margin-top:15px;"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
 		<div class="select-size">
 		<c:choose>
 		    <c:when test="${selectedSize!=null}"> 

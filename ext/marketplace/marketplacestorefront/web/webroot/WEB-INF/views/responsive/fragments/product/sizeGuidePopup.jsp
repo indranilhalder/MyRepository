@@ -184,8 +184,8 @@
 		</div>
 		
 		<div class="details">
-	 	<span id="noProductForSelectedSeller"><%-- <font color="#ff1c47">
-			<spring:theme code="product.product.size.guide.notavail"/></font> --%>
+	 	<span id="noProductForSelectedSeller"> <font color="#ff1c47">
+			<spring:theme code="product.product.size.guide.notavail"/></font>
 			<!-- <h3> Selected Size is not available for this Seller </h3> -->
 			</span>
 		<span id="productDetails"> 
@@ -195,9 +195,22 @@
     <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
 
 </span>
-        <div class="price">
+ <div class="price">
+         <!--  <p class="normal"><div id="specialSelPrice"></div></p> -->
+	<p class="old" id="sizemrpPriceId" style="display:none">
+		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	</p>
+	<p class="sale" id="sizemopPriceId" style="display:none">
+		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	</p>
+	<p class="sale" id="sizespPriceId" style="display:none">
+		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	</p>
+	<br>
+    </div>
+        <!-- <div class="price">
           <p class="normal"><div id="specialSelPrice"></div></p>
-        </div>
+        </div> -->
         <div class="attributes">
 						<ul class="color-swatch">
 					<c:choose>
@@ -264,9 +277,9 @@
 		</c:otherwise>
 	</c:choose>	
 			</ul>			
-			<div class="size">				
-					<c:if test="${noVariant!=true&&notApparel!=true}">
-	<label>Size:</label> 
+<div class="size">				
+<c:if test="${noVariant!=true&&notApparel!=true}">
+ <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 	
 	
 	

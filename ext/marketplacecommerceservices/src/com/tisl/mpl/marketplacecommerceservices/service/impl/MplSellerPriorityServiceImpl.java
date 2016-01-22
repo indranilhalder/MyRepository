@@ -384,6 +384,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 					{
 						setPriorityLevel(priorityLevel, sellerPriorityLevel);
 						sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
+						//sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
 					}
 					if (sellerPriorityLevel.getL1Priority() == Integer.valueOf(0)
 							&& sellerPriorityLevel.getL2Priority() == Integer.valueOf(0)
@@ -391,7 +392,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							&& sellerPriorityLevel.getL4Priority() == Integer.valueOf(0)
 							&& sellerPriorityLevel.getProductPriority() == Integer.valueOf(0))
 					{
-						sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(false));
+						sellerPriorityLevel.setIsValidPriority(Boolean.FALSE);
 					}
 					priorityLevelMap.put(ussid, sellerPriorityLevel);
 
