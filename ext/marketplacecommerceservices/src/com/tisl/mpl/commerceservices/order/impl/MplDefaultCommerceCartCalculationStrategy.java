@@ -57,6 +57,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 				getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true,
 						PromotionsManager.AutoApplyMode.APPLY_ALL, PromotionsManager.AutoApplyMode.APPLY_ALL,
 						getTimeService().getCurrentTime());
+				resetNetAmtAftrAllDisc(cartModel);
 			}
 			catch (final CalculationException calculationException)
 			{
@@ -88,6 +89,7 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 			getPromotionsService().updatePromotions(getPromotionGroups(), cartModel, true,
 					PromotionsManager.AutoApplyMode.APPLY_ALL, PromotionsManager.AutoApplyMode.APPLY_ALL,
 					getTimeService().getCurrentTime());
+			resetNetAmtAftrAllDisc(cartModel);
 		}
 		catch (final CalculationException calculationException)
 		{
@@ -164,7 +166,33 @@ public class MplDefaultCommerceCartCalculationStrategy extends DefaultCommerceCa
 		return cartModel;
 	}
 
-	//return cartModel;
+	private void resetNetAmtAftrAllDisc(final CartModel cartModel)
+	{
+		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		{
+			if (null != entry.getCouponCode() && !entry.getCouponCode().isEmpty())
+			{
+				double currNetAmtAftrAllDisc = 0.00D;
+				final double entryTotalPrice = entry.getTotalPrice().doubleValue();
+				final double couponValue = entry.getCouponValue().doubleValue();
+
+				if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
+						|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
+				{
+					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
+							.doubleValue() : 0.00D;
+					currNetAmtAftrAllDisc = netAmtAftrAllDisc - couponValue;
+				}
+				else
+				{
+					currNetAmtAftrAllDisc = entryTotalPrice - couponValue;
+				}
+				entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
+				getModelService().save(entry);
+			}
+
+		}
+	}
 
 
 

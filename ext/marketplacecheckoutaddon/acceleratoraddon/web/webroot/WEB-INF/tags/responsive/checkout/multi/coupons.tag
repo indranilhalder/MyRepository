@@ -20,6 +20,7 @@
 		<span class="error-message" id="emptyCouponError"><spring:theme code="checkout.multi.coupons.notApplied"/></span>
 		<span class="error-message" id="notApplicableCouponError"><spring:theme code="checkout.multi.coupons.notApplicable"/></span>
 		<span class="error-message" id="notReservableCouponError"><spring:theme code="checkout.multi.coupons.notReservable"/></span>
+		<span class="error-message" id="freebieCouponError"><spring:theme code="checkout.multi.coupons.freebie"/></span>
 
 	<!-- Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 	<%-- <div id="voucherDisplay">

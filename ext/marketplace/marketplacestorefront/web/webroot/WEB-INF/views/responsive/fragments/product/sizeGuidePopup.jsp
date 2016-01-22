@@ -15,13 +15,13 @@
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
+<input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
 <div class="sizes">
 	
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
-	
-	
 	<c:choose>
-	<c:when test="${not empty sizeguideData}">
+	<c:when test="${not empty sizeguideData}">	
+		
 		<div class="tables">
 			<div>
 				<%-- <h2>Top</h2> --%>
@@ -36,13 +36,8 @@
 										<c:if test="${sizeIndex.index eq 0}">
 											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 										</c:if>
-
-
 									</c:forEach>
-								</c:forEach>
-
-
-								
+								</c:forEach>							
 								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
 								<li>${sizeGuide}</li>
 								<c:if test="${sizeGuide=='Age'}">
@@ -64,15 +59,6 @@
 								<c:set var="us" value="Y"/>
 								</c:if>
 								</c:forEach>
-
-
-
-
-
-
-
-
-
 							</ul>
 						</li>
 					
@@ -183,9 +169,7 @@
 			 <c:if test="${product.rootCategory=='Footwear'}">
 			<div class="footwearNote" style="line-height:19px;">
 			<product:footwearNote/></div>
-			</c:if>
-			
-				
+			</c:if>		
 		</div>
 			
 		<div class="img">
@@ -200,18 +184,33 @@
 		</div>
 		
 		<div class="details">
-	 
+	 	<span id="noProductForSelectedSeller"> <font color="#ff1c47">
+			<spring:theme code="product.product.size.guide.notavail"/></font>
+			<!-- <h3> Selected Size is not available for this Seller </h3> -->
+			</span>
+		<span id="productDetails"> 
  <h3 class="company">
               ${product.brand.brandname}&nbsp;&nbsp;<span id="sellerSelName"></span></h3> <%-- <spring:theme code="product.by"/> --%>
              
     <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
 
-
-        <div class="price">
+</span>
+ <div class="price">
+         <!--  <p class="normal"><div id="specialSelPrice"></div></p> -->
+	<p class="old" id="sizemrpPriceId" style="display:none">
+		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	</p>
+	<p class="sale" id="sizemopPriceId" style="display:none">
+		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	</p>
+	<p class="sale" id="sizespPriceId" style="display:none">
+		<%-- <spring:theme code="product.currency"></spring:theme> --%>
+	</p>
+	<br>
+    </div>
+        <!-- <div class="price">
           <p class="normal"><div id="specialSelPrice"></div></p>
-        </div>
-
-
+        </div> -->
         <div class="attributes">
 						<ul class="color-swatch">
 					<c:choose>
@@ -276,24 +275,18 @@
 		<c:otherwise>
 			<c:set var="noVariant" value="true" />
 		</c:otherwise>
-	</c:choose>
-		
-	
-			</ul>
-			
-			<div class="size">
-				
-				
-				
-				
-					<c:if test="${noVariant!=true&&notApparel!=true}">
-	<label><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
+	</c:choose>	
+			</ul>			
+<div class="size">				
+<c:if test="${noVariant!=true&&notApparel!=true}">
+ <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 	
 	
 	
 	
 	
-		<select id="variant" class="variant-select">
+		<select id="variant" class="variant-select size-g">
+			<option value="#" id="select-option"><spring:theme code="text.select.size" /></option>
 			<%-- <option value="#" data-target="#popUpModalNew"><spring:theme code="text.select.size" /></option> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
@@ -390,23 +383,18 @@
 		</p></span>
 		
 		<span id="addToCartSizeGuideTitleaddtobag" style="display: none" class="sizeGuide-message"><p class="inventory">
-
 			<spring:theme code="product.addtocart.success"/>
 		</p></span>
 		<span id="addToCartSizeGuideTitleaddtobagerror" style="display: none" class="sizeGuide-message"><p class="inventory">
-
 			<spring:theme code="product.error"/>
 		</p></span>
 		<span id="addToCartSizeGuideTitlebagtofull" style="display: none" class="sizeGuide-message"><p class="inventory">
-
 			<spring:theme code="product.addtocart.aboutfull"/>
 		</p></span>
 		<span id="addToCartSizeGuideTitlebagfull" style="display: none" class="sizeGuide-message"><p class="inventory">
-
 			<spring:theme code="product.bag"/>
 		</p></span>
 		<span id="pinNotServicableSizeGuide" style="display: none" class="sizeGuide-message">
-
 			<font color="#ff1c47">We're sorry. We don't service this pin code currently. Would you like to try entering another pin code that also works for you?</font>
 		</span>
 		<span id="addToCartSizeGuideTitleoutOfStockId" style="display: none"><p class="inventory">
@@ -417,11 +405,7 @@
 			<!-- <font color="#ff1c47">Product is out of stock for the selected size</font> -->
 		</p></span>
 		
-		
-		
-		
-		
-	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	<span id="sizeSelectedSizeGuide"   class="sizeGuide-message" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 	<span id="addToCartButtonId">
 	<!-- <span id="addToCartFormSizeTitleSuccess"></span> -->
 	<button style="display: block;"
@@ -435,10 +419,7 @@
 		<spring:theme code="basket.add.to.basket" />
 	</button>
 	</span>
-	
-	
 </form:form>
-
 <%-- <span id="addToCartSizeGuideTitleaddtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addToCartSizeGuideTitleaddtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="addToCartSizeGuideTitlebagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
@@ -452,7 +433,6 @@
 	</c:otherwise>
 	</c:choose>	
 </div>
-
 
 <div class="add-to-wishlist-container-sizeguide">
 <form>
@@ -750,4 +730,3 @@ function loadDefaultWishListName_SizeGuide() {
 		}, 1500);
 	}
 </script> 	
-

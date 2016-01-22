@@ -1305,7 +1305,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate} and {immutableKeyHash} is null";
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
-	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where sysdate>={p.voucherStartDate} ";
+	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate ";
 
 	private MarketplacecommerceservicesConstants()
 	{

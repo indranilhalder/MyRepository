@@ -347,6 +347,12 @@ font-weight: normal;
 .gig-comment-footer {
 	border: none;
 }
+
+*.gig-composebox-follow
+{
+display: none;
+} 
+
 </style> 
 
 </c:if>	

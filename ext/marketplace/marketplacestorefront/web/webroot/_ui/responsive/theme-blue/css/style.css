@@ -34462,7 +34462,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError {
 	display: none;
 }
 
