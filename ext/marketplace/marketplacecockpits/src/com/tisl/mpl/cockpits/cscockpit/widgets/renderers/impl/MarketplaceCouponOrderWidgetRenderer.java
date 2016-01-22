@@ -36,17 +36,13 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 		Hbox mainbox = new Hbox();
 		
 		container.setSclass("voucherAlignment");
-		//Label lbl = new Label(LabelUtils.getLabel(widget, "lblCode",new Object[0]));
-		//lbl.setParent(mainbox);
-		//lbl.setSclass("editorWidgetEditorLabel z-label");
-		//lbl = new Label("Applied Coupon");
-		//lbl.setParent(mainbox);
 		
 		Div couponDiv=new Div();
 		couponDiv.setParent(mainbox);
 		TypedObject order=widget.getWidgetController().getCurrentOrder();
 		OrderModel orderModel=(OrderModel) order.getObject();
 		List<DiscountModel> discounts=orderModel.getDiscounts();
+		final CurrencyModel currency=orderModel.getCurrency();
 		Listbox listBox=new Listbox();
 		listBox.setParent(couponDiv);
 		
@@ -72,23 +68,13 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 				widget, "maxDiscount", new Object[0]));
 		maxDiscHeader.setWidth("50px");
 		maxDiscHeader.setParent(headRow);
-		
-		
-		
+				
 		final Listitem row = new Listitem();
 		
 		row.setSclass("listbox-row-item");
 		row.setParent(listBox);
 
-			
-		//row.setSclass(CSS_LISTBOX_ROW_ITEM);
-		//row.setParent(listBox);
-		for(DiscountModel discount:discounts){
-//			Listcell cell=new Listcell();
-//			cell.setValue(new Label(discount.getCode()));
-//			cell.setParent(row);
-			
-			
+		for(DiscountModel discount:discounts){			
 			Listcell couponCodeCell = new Listcell();
 			couponCodeCell.setParent(row);
 			Div couponCodeDiv = new Div();
@@ -128,7 +114,7 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 			couponMaxDiv.setSclass("editorWidgetEditor");
 			if(!discount.getAbsolute())
 			{
-				Label couponMaxLabel = new Label((String.valueOf(((PromotionVoucherModel)discount).getMaxDiscountValue())));
+				Label couponMaxLabel = new Label(currency.getSymbol()+(String.valueOf(((PromotionVoucherModel)discount).getMaxDiscountValue())));
 				couponMaxLabel.setParent(couponMaxDiv);
 			}
 			else
