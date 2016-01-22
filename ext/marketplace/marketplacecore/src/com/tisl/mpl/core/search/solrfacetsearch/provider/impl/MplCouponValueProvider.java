@@ -12,8 +12,6 @@ import de.hybris.platform.solrfacetsearch.provider.FieldValueProvider;
 import de.hybris.platform.solrfacetsearch.provider.impl.AbstractPropertyFieldValueProvider;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherRestrictionService;
-import de.hybris.platform.voucher.model.ProductCategoryRestrictionModel;
-import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.Serializable;
@@ -182,7 +180,7 @@ public class MplCouponValueProvider extends AbstractPropertyFieldValueProvider i
 	{
 		//include product vouchers alone
 		final List<VoucherModel> productVoucherList = new ArrayList<VoucherModel>();
-		boolean isProductCategoryVoucher = false;
+		//final boolean isProductCategoryVoucher = false;
 		if (null != vouchers)
 		{
 			for (final VoucherModel voucher : vouchers)
@@ -197,28 +195,20 @@ public class MplCouponValueProvider extends AbstractPropertyFieldValueProvider i
 				}
 
 
-				if (!voucher.getRestrictions().isEmpty())
-				{
-					for (final RestrictionModel voucherRestriction : voucher.getRestrictions())
-					{
-						if (voucherRestriction instanceof ProductCategoryRestrictionModel)
-						{
-							if (getVoucherRestrictionService().isFulfilled(voucherRestriction, productModel))
-							{
-								isProductCategoryVoucher = true;
-							}
-							break;
-						}
-					}
-				}
+				/*
+				 * if (!voucher.getRestrictions().isEmpty()) { for (final RestrictionModel voucherRestriction :
+				 * voucher.getRestrictions()) { if (voucherRestriction instanceof ProductCategoryRestrictionModel) { if
+				 * (getVoucherRestrictionService().isFulfilled(voucherRestriction, productModel)) { isProductCategoryVoucher
+				 * = true; } break; } } }
+				 */
 
 
 
-				if (isProductCategoryVoucher)
-				{
-
-					productVoucherList.add(voucher);
-				}
+				/*
+				 * if (isProductCategoryVoucher) {
+				 *
+				 * productVoucherList.add(voucher); }
+				 */
 			} //end promotion for loop
 		}
 
