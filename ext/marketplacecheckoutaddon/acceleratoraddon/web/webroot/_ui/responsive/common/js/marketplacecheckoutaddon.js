@@ -2353,6 +2353,38 @@ function applyPromotion(bankName)
 				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
+				
+				//Coupon
+				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
+				{
+					if(response.voucherDiscount.couponDiscount.doubleValue<=0)
+					{
+		 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+		 						" #expiredCouponError, #issueCouponError, #freebieCouponError").css("display","none");
+		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
+		 				$('#couponFieldId').attr('readonly', false);
+		 				var selection = $("#voucherDisplaySelection").val();
+		 				$("#couponFieldId").val(selection);
+		 				$("#couponMessage").html("Coupon has been removed after applying promotion");
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(2000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 5000); 	
+					}
+					else
+					{
+						$("#couponApplied").css("display","block");
+		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
+		 				//$("#couponFieldId").attr('disabled','disabled');
+		 				$('#couponFieldId').attr('readonly', true);
+		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(2000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 5000);
+					}
+				}
+				
+				
+				//Promotion
 				if(response.mplPromo==null || response.mplPromo==[])
 				{
 					$("#promotionApplied,#promotionMessage").css("display","none");
