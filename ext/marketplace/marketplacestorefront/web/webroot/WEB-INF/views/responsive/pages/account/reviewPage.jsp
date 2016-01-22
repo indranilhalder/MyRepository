@@ -97,7 +97,7 @@
 							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel">
 							
 								<c:forEach items="${productDataModifyMap}" var="product">
-								<div class="slide item"><a
+								<div class="slide item" id="no-image-link${product.value.code}"><a
 									class="product-tile" href='<c:url value="${product.value.url}"></c:url>'>
 										<div class="image">
 											
@@ -555,3 +555,11 @@ $(".prev a").click(function(){
 });	
 		
 </script>
+<style>
+.commentcontent .gig-composebox-logout, .commentcontent .gig-composebox-follow {
+	display: none;
+}
+ul.gig-comments-header-right.gig-comments-linksContainer{
+	display: none;
+}
+</style>
