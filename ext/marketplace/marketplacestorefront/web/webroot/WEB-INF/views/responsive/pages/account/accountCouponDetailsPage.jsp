@@ -177,7 +177,7 @@
 						<c:if test="${not empty closedCouponList}">
 							<p>${startIndex}-${endIndex}
 								of ${closedCouponListSize} &nbsp;
-								<spring:theme code="text.account.coupons.transactions" />
+								<spring:theme code="text.account.coupons.coupons" />
 							</p>
 						</c:if>
 						<div class="btn-placement bottom">
