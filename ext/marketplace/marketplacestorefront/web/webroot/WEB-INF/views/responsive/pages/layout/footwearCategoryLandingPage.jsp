@@ -65,7 +65,7 @@
 
 
 	<!-- For Infinite Analytics Start -->
-	<div class="trending" id="ia_products_new"></div>
+	<!-- <div class="trending" id="ia_products_new"></div> -->
 	<!-- For Infinite Analytics End -->
 </template:page>
 

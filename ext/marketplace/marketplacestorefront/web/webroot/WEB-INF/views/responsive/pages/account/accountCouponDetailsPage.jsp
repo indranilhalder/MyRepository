@@ -153,10 +153,10 @@
 										<c:choose>
 											<c:when
 												test="${closedVoucherDisplay.reedemCouponCount eq '1'}">
-												<p class="coupon_count">Single</p>
+												<p>Single</p>
 											</c:when>
 											<c:otherwise>
-												<p class="coupon_count">Multiple</p>
+												<p>Multiple</p>
 											</c:otherwise>
 										</c:choose>
 									</div>
@@ -175,50 +175,51 @@
 					<!--  pagination for upper section  -->
 					<div class="bottom">
 						<c:if test="${not empty closedCouponList}">
-							<p>${startIndex}-${endIndex}
-								of ${closedCouponListSize} &nbsp;
-								<spring:theme code="text.account.coupons.coupons" />
+							<p>${startIndexCoupon}-${endIndexCoupon}
+								of ${couponListSize} &nbsp;
+								<spring:theme code="text.account.coupons.transactions" />
 							</p>
 						</c:if>
 						<div class="btn-placement bottom">
-							<c:if test="${totalPages ne 1 }">
+							<c:if test="${totalPagesCoupon ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
 									<c:if
-										test="${param.page != 1 and not empty param.page and not empty closedCouponList}">
-										<li class="prev"><a href="#nogo"><spring:theme
+										test="${param.pageVoucher != 1 and not empty param.pageVoucher and not empty closedCouponList}">
+										<li class="prev" id="voucherPrev"><a href="#nogo"><spring:theme
 													code="text.account.coupons.prev" /> <span
 												class="lookbook-only"></span></a></li>
 									</c:if>
 
-									<c:forEach begin="1" end="${totalPages}" var="i">
+									<c:forEach begin="1" end="${totalPagesCoupon}" var="i">
 										<c:choose>
-											<c:when test="${param.page eq i}">
-												<li class="number first active"><a href="?page=${i}">${i}</a></li>
+											<c:when test="${param.pageVoucher eq i}">
+												<li class="number first active"><a href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
 											</c:when>
 											<c:otherwise>
 												<c:choose>
-													<c:when test="${param.page eq null and i eq 1}">
-														<li class="number first active"><a href="?page=${i}">${i}</a></li>
+													<c:when test="${param.pageVoucher eq null and i eq 1}">
+														<li class="number first active"><a href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
 													</c:when>
 													<c:otherwise>
-														<li class="number first"><a href="?page=${i}">${i}</a></li>
+														<li class="number first"><a href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
 													</c:otherwise>
 												</c:choose>
 											</c:otherwise>
 										</c:choose>
 									</c:forEach>
 									<c:choose>
-										<c:when test="${param.page eq null}">
+										<c:when test="${param.pageVoucher eq null}">
 											<c:set var="page" value="1"></c:set>
 										</c:when>
 										<c:otherwise>
-											<c:set var="page" value="${param.page}"></c:set>
+											<c:set var="page" value="${param.pageVoucher}"></c:set>
 										</c:otherwise>
 									</c:choose>
 									<!-- Next link addition -->
-									<c:if test="${totalPages gt 1 and totalPages gt page}">
-										<li class="next"><a href="#nogo"><spring:theme
+									
+									<c:if test="${totalPagesCoupon gt 1}">
+										<li class="next" id="voucherNext"><a href="#nogo"><spring:theme
 													code="text.account.coupons.next" /> <span
 												class="lookbook-only"></span></a></li>
 									</c:if>
@@ -256,44 +257,44 @@
 								<span>Rs. ${totalSavedSum}</span>
 								<spring:theme code="text.account.coupons.onpurchase" />
 							</p>
-							<c:if test="${not empty commentsListSize}">
-								<c:forEach begin="1" end="${totalPages}" var="i">
+							<c:if test="${not empty couponHistListSize}">
+								<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 									<c:choose>
-										<c:when test="${param.page eq i}">
+										<c:when test="${param.pageHistory eq i}">
 										</c:when>
 										<c:otherwise></c:otherwise>
 									</c:choose>
 								</c:forEach>
 								<div class="bottom">
-									<c:if test="${not empty closedVoucherDataList}">
-										<p>${startIndex}-${endIndex}
-											of ${closedVoucherDataList} &nbsp;
+									<c:if test="${not empty couponOrderDataDTOList}">
+										<p>${startIndexHist}-${endIndexHist}
+											of ${couponHistListSize} &nbsp;
 											<spring:theme code="text.account.coupons.transactions" />
 										</p>
 									</c:if>
 									<div class="btn-placement bottom">
-										<c:if test="${totalPages ne 1 }">
+										<c:if test="${totalPagesCouponHist ne 1 }">
 											<ul class="pagination">
 												<!-- Previous link addition -->
 												<c:if
-													test="${param.page != 1 and not empty param.page and not empty couponOrderDataDTOList}">
-													<li class="prev"><a href="#nogo"><spring:theme
+													test="${param.pageHistory != 1 and not empty param.pageHistory and not empty couponOrderDataDTOList}">
+													<li class="prev" id="historyPrev"><a href="#nogo"><spring:theme
 																code="text.account.coupons.prev" /> <span
 															class="lookbook-only"></span></a></li>
 												</c:if>
-												<c:forEach begin="1" end="${totalPages}" var="i">
+												<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 													<c:choose>
-														<c:when test="${param.page eq i}">
-															<li class="number first active"><a href="?page=${i}">${i}</a></li>
+														<c:when test="${param.pageHistory eq i}">
+															<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 														</c:when>
 														<c:otherwise>
 															<c:choose>
-																<c:when test="${param.page eq null and i eq 1}">
+																<c:when test="${param.pageHistory eq null and i eq 1}">
 																	<li class="number first active"><a
-																		href="?page=${i}">${i}</a></li>
+																		href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 																</c:when>
 																<c:otherwise>
-																	<li class="number first"><a href="?page=${i}">${i}</a></li>
+																	<li class="number first"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 																</c:otherwise>
 															</c:choose>
 														</c:otherwise>
@@ -301,15 +302,15 @@
 												</c:forEach>
 												<c:choose>
 													<c:when test="${param.page eq null}">
-														<c:set var="page" value="1"></c:set>
+														<c:set var="pageHistory" value="1"></c:set>
 													</c:when>
 													<c:otherwise>
-														<c:set var="page" value="${param.page}"></c:set>
+														<c:set var="pageHistory" value="${param.pageHistory}"></c:set>
 													</c:otherwise>
 												</c:choose>
 												<!-- Next link addition -->
-												<c:if test="${totalPages gt 1 and totalPages gt page}">
-													<li class="next"><a href="#nogo"><spring:theme
+												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory}">
+													<li class="next" id="historyNext"><a href="#nogo"><spring:theme
 																code="text.account.coupons.next" /> <span
 															class="lookbook-only"></span></a></li>
 												</c:if>
@@ -369,51 +370,51 @@
 					</c:choose>
 
 					<div class="bottom">
-						<c:if test="${not empty couponListSize}">
-							<p>${startIndex}-${endIndex}
-								of ${couponListSize} &nbsp;
-								<spring:theme code="text.account.coupons.transactions" />
-							</p>
+						<c:if test="${not empty couponOrderDataDTOList}">
+										<p>${startIndexHist}-${endIndexHist}
+											of ${couponHistListSize} &nbsp;
+											<spring:theme code="text.account.coupons.transactions" />
+										</p>
 						</c:if>
 						<div class="btn-placement bottom">
-							<c:if test="${totalPages ne 1 }">
+							<c:if test="${totalPagesCouponHist ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
 									<c:if
-										test="${param.page != 1 and not empty param.page and not empty couponOrderDataDTOList}">
-										<li class="prev"><a href="#nogo"><spring:theme
+										test="${param.pageHistory != 1 and not empty param.pageHistory and not empty couponOrderDataDTOList}">
+										<li class="prev" id="historyPrevBtm"><a href="#nogo"><spring:theme
 													code="text.account.coupons.prev" /> <span
 												class="lookbook-only"></span></a></li>
 									</c:if>
 
-									<c:forEach begin="1" end="${totalPages}" var="i">
+									<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 										<c:choose>
-											<c:when test="${param.page eq i}">
-												<li class="number first active"><a href="?page=${i}">${i}</a></li>
+											<c:when test="${param.pageHistory eq i}">
+												<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 											</c:when>
 											<c:otherwise>
 												<c:choose>
-													<c:when test="${param.page eq null and i eq 1}">
-														<li class="number first active"><a href="?page=${i}">${i}</a></li>
+													<c:when test="${param.pageHistory eq null and i eq 1}">
+														<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 													</c:when>
 													<c:otherwise>
-														<li class="number first"><a href="?page=${i}">${i}</a></li>
+														<li class="number first"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 													</c:otherwise>
 												</c:choose>
 											</c:otherwise>
 										</c:choose>
 									</c:forEach>
 									<c:choose>
-										<c:when test="${param.page eq null}">
-											<c:set var="page" value="1"></c:set>
+										<c:when test="${param.pageHistory eq null}">
+											<c:set var="pageHistory" value="1"></c:set>
 										</c:when>
 										<c:otherwise>
-											<c:set var="page" value="${param.page}"></c:set>
+											<c:set var="pageHistory" value="${param.pageHistory}"></c:set>
 										</c:otherwise>
 									</c:choose>
 									<!-- Next link addition -->
-									<c:if test="${totalPages gt 1 and totalPages gt page}">
-										<li class="next"><a href="#nogo"><spring:theme
+									<c:if test="${totalPagesCouponHist gt 1}">
+										<li class="next" id="historyNextBtm"><a href="#nogo"><spring:theme
 													code="text.account.coupons.next" /> <span
 												class="lookbook-only"></span></a></li>
 									</c:if>
@@ -477,8 +478,8 @@
 		});
 	});
 
-	
-	$(".next a").click(function(){
+	//voucher list 
+	$("#voucherNext").click(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
 		if(pageNo != ""){
 			pageNo = parseInt(pageNo);
@@ -486,27 +487,55 @@
 			pageNo = 1;
 		}
 		pageNo = pageNo+1;
-		var totalPages = ${totalPages};
+		var totalPages = '${totalPagesCoupon}';
 		if(totalPages!="" && pageNo <= totalPages)
 			{
-			window.location.href="?page="+pageNo;
+			window.location.href="?pageVoucher="+pageNo+"&pageFor=voucher";
 			}
 	});
 	
-	$(".prev a").click(function(){
+	$("#voucherPrev").click(function(){
 		var pageNo = $(this).closest(".pagination").find("li.active a").text();
 		pageNo = parseInt(pageNo);
 		pageNo = pageNo-1;
-		var totalPages = ${totalPages};
+		var totalPages = '${totalPagesCoupon}';
 		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
 			{
-			window.location.href="?page="+pageNo;
+			window.location.href="?pageVoucher="+pageNo+"&pageFor=voucher";
 			}
 	});
 	
 	
+
+	//hitory list 
+	$("#historyNext,#historyNextBtm").click(function(){
+		var pageNo = $(this).closest(".pagination").find("li.active a").text();
+		if(pageNo != ""){
+			pageNo = parseInt(pageNo);
+		}else{
+			pageNo = 1;
+		}
+		pageNo = pageNo+1;
+		var totalPages = '${totalPagesCouponHist}';
+		if(totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?pageHistory="+pageNo+"&pageFor=history";
+			}
+	});
+	
+	$("#historyPrev,#historyPrevBtm").click(function(){
+		var pageNo = $(this).closest(".pagination").find("li.active a").text();
+		pageNo = parseInt(pageNo);
+		pageNo = pageNo-1;
+		var totalPages = '${totalPagesCouponHist}';
+		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?pageHistory="+pageNo+"&pageFor=history";
+			}
+	});
+	
 </script>
-<c:if test="${param.page ne null}">
+<c:if test="${param.pageHistory ne null or param.pageVoucher ne null}">
 	<script>
 		$(document).ready(function(){
 			$("#couponHistory").click();	
