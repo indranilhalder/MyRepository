@@ -1161,4 +1161,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MBH13F00007;Solester;MBH13;mplProductCatalog:Staged;admingroup
 ;MBH13F00008;Salomon;MBH13;mplProductCatalog:Staged;admingroup
 
+
+;MBH13A00001;Nike;MBH13;mplProductCatalog:Staged;admingroup
 #### Footwear Categories End ########
+
