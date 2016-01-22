@@ -255,7 +255,7 @@
 						format="product" />
 					<ul class="content">
 						<li>${compareItem.brand.brandname}</li>
-						<li>${compareItem.name}</li>
+						<li>${compareItem.productTitle}</li>
 
 						<li class="compare-price">
 							<div class="price">

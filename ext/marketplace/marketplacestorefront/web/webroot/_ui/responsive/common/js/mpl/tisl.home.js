@@ -5,7 +5,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
 
 	if(!$.cookie("dept-list") && window.localStorage) {
 		for (var key in localStorage){
-			if (key.startsWith("deptmenuhtml")) {
+			if (key.indexOf("deptmenuhtml")>=0) {
 				window.localStorage.removeItem(key);
 				//console.log("Deleting.." + key);
 			}
@@ -39,7 +39,7 @@ $(".A-ZBrands").on("mouseover touchend", function(e) {
 		
 		if(!$.cookie("dept-list") && window.localStorage) {
 			for (var key in localStorage){
-				if (key.startsWith("atozbrandmenuhtml")) {
+				if (key.indexOf("atozbrandmenuhtml")>=0) {
 					window.localStorage.removeItem(key);
 					//console.log("Deleting.." + key);
 				}
