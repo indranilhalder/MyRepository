@@ -23598,29 +23598,30 @@ body .account.preferences .right-account div.email-pref form fieldset .feed labe
 
 @media (min-width:791px)
 {
-	.order-details .totals ul li span {
+	.order-details .totals ul li > span {
 		float: right;
 		margin-right: 30px;
 	}
-	.order-details .totals ul li span.amt {
+	/* .order-details .totals ul li span.amt {
 		margin-right: 60px;
-	}
-	.order-details .totals ul li span.amt span{
+	} */
+	/* .order-details .totals ul li span.amt span{
 		margin-right: 0px;
-	}
+	} */
 	.order-details .totals ul li.grand-total span.amt {
 		text-align: right;
 	}}
 @media (max-width:790px)
 {
-	.order-details .totals ul li span {
+	.order-details .totals ul li > span {
 		float: right;
 		margin-right: 20px;
 	}
 	.order-details .totals ul li.grand-total span.amt {
 		text-align: right;
-		margin-right: 0px;
-	}}
+		/* margin-right: 0px; */
+	}
+	}
 
 .progress-bar {
 	background-image: none !important;
@@ -28951,6 +28952,7 @@ body .account .right-account .reviews .toolbar .account-only h2{
   }
   .order-details .totals ul li{
   display:inline-block;
+  width:100%;
   }
   
   body .account .right-account .order-history .product-block li.header>ul>li span.amt {
