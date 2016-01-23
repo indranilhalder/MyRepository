@@ -6345,6 +6345,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
 					.getReviewsByUID(customerModel.getUid());
 			commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
+			if (!CollectionUtils.isEmpty(commentsWithProductDataModified))
+			{
+				Collections.sort(commentsWithProductDataModified, new Comparator<GigyaProductReviewWsDTO>()
+				{
+
+					@Override
+					public int compare(final GigyaProductReviewWsDTO arg0, final GigyaProductReviewWsDTO arg1)
+					{
+						return arg0.getCommentDate().compareTo(arg1.getCommentDate());
+					}
+				});
+				Collections.reverse(commentsWithProductDataModified);
+			}
 
 			/* pagination logic */
 

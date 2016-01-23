@@ -677,7 +677,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
 					.getMaxDiscountValue().doubleValue());
 			cartModel.setGlobalDiscountValues(discountList);
-			mplDefaultCalculationService.calculateTotals(cartModel, false);
+			getMplDefaultCalculationService().calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
 		}
 
@@ -1571,4 +1571,54 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		return mplCouponService;
 	}
+
+
+
+
+	/**
+	 * @return the mplDefaultCalculationService
+	 */
+	public MplDefaultCalculationService getMplDefaultCalculationService()
+	{
+		return mplDefaultCalculationService;
+	}
+
+
+
+
+	/**
+	 * @param mplDefaultCalculationService
+	 *           the mplDefaultCalculationService to set
+	 */
+	public void setMplDefaultCalculationService(final MplDefaultCalculationService mplDefaultCalculationService)
+	{
+		this.mplDefaultCalculationService = mplDefaultCalculationService;
+	}
+
+
+
+
+	/**
+	 * @param defaultVoucherService
+	 *           the defaultVoucherService to set
+	 */
+	public void setDefaultVoucherService(final DefaultVoucherService defaultVoucherService)
+	{
+		this.defaultVoucherService = defaultVoucherService;
+	}
+
+
+
+
+	/**
+	 * @param defaultVoucherFacade
+	 *           the defaultVoucherFacade to set
+	 */
+	public void setDefaultVoucherFacade(final DefaultVoucherFacade defaultVoucherFacade)
+	{
+		this.defaultVoucherFacade = defaultVoucherFacade;
+	}
+
+
+
 }

@@ -476,7 +476,7 @@ public class GigyaServiceImpl implements GigyaService
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
 					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
 					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
-					if (fName != null)
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
 						loginUserInfo = FIRSTNAME + fName + "'" + "}";
 					}
@@ -500,8 +500,20 @@ public class GigyaServiceImpl implements GigyaService
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
 					request.setParam(MarketplacecclientservicesConstants.UID, siteUid);
-					if (fName != null || lName != null || eMail != null)
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
+						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
+								+ "}";
+					}
+
+					else
+					{
+						final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+						fName = splitList[0];
+						if (fName.contains("."))
+						{
+							fName = fName.replace('.', ' ');
+						}
 						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
 								+ "}";
 					}
@@ -514,9 +526,10 @@ public class GigyaServiceImpl implements GigyaService
 					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
 					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
 
-					if (fName != null)
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
-						loginUserInfo = FIRSTNAME + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
+								+ "}";
 					}
 					else
 					{
@@ -529,8 +542,10 @@ public class GigyaServiceImpl implements GigyaService
 								fName = fName.replace('.', ' ');
 							}
 						}
-						loginUserInfo = FIRSTNAME + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
+								+ "}";
 					}
+
 
 				}
 
@@ -557,7 +572,8 @@ public class GigyaServiceImpl implements GigyaService
 					}
 					else
 					{
-						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + "MESSAGE ->" + (response.getErrorMessage()));
+						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->"
+								+ (response.getErrorMessage()));
 					}
 
 				}
@@ -578,6 +594,4 @@ public class GigyaServiceImpl implements GigyaService
 		}
 
 	}
-
-
 }

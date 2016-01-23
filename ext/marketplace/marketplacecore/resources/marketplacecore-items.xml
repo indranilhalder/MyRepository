@@ -6462,6 +6462,18 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="voucherEndDate" type="java.util.Date">
+						<description>Voucher End date</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='voucherIdentifier' type="java.lang.String">
+						<description>Voucher Identifier</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
