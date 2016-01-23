@@ -153,15 +153,14 @@
 										<c:choose>
 											<c:when
 												test="${closedVoucherDisplay.reedemCouponCount eq '1'}">
-												<p>Single</p>
+												<p class="coupon_count">Single</p>
 											</c:when>
 											<c:otherwise>
-												<p>Multiple</p>
+												<p class="coupon_count">Multiple</p>
 											</c:otherwise>
 										</c:choose>
 									</div>
 								</c:if>
-
 								<div class="left">
 									<p>Coupon Code</p>
 									${closedVoucherDisplay.voucherCode}
@@ -172,26 +171,13 @@
 								</div>
 							</li>
 						</c:forEach>
-						
-						<c:if
-								test="${empty closedVoucherDisplay}">
-									<div>
-									
-									<h2>
-									
-										<spring:theme code="text.account.coupons.nocouponavailable" />
-									</h2>
-								</div>
-							
-							</c:if>
-						
 					</ul>
 					<!--  pagination for upper section  -->
 					<div class="bottom">
 						<c:if test="${not empty closedCouponList}">
 							<p>${startIndexCoupon}-${endIndexCoupon}
 								of ${couponListSize} &nbsp;
-								<spring:theme code="text.account.coupons.transactions" />
+								<spring:theme code="text.account.coupons.coupons" />
 							</p>
 						</c:if>
 						<div class="btn-placement bottom">
@@ -208,18 +194,15 @@
 									<c:forEach begin="1" end="${totalPagesCoupon}" var="i">
 										<c:choose>
 											<c:when test="${param.pageVoucher eq i}">
-												<li class="number first active"><a
-													href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
+												<li class="number first active"><a href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
 											</c:when>
 											<c:otherwise>
 												<c:choose>
 													<c:when test="${param.pageVoucher eq null and i eq 1}">
-														<li class="number first active"><a
-															href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
+														<li class="number first active"><a href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
 													</c:when>
 													<c:otherwise>
-														<li class="number first"><a
-															href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
+														<li class="number first"><a href="?pageVoucher=${i}&pageFor=voucher">${i}</a></li>
 													</c:otherwise>
 												</c:choose>
 											</c:otherwise>
@@ -234,7 +217,7 @@
 										</c:otherwise>
 									</c:choose>
 									<!-- Next link addition -->
-
+									
 									<c:if test="${totalPagesCoupon gt 1}">
 										<li class="next" id="voucherNext"><a href="#nogo"><spring:theme
 													code="text.account.coupons.next" /> <span
@@ -302,8 +285,7 @@
 												<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 													<c:choose>
 														<c:when test="${param.pageHistory eq i}">
-															<li class="number first active"><a
-																href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+															<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 														</c:when>
 														<c:otherwise>
 															<c:choose>
@@ -312,8 +294,7 @@
 																		href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 																</c:when>
 																<c:otherwise>
-																	<li class="number first"><a
-																		href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+																	<li class="number first"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 																</c:otherwise>
 															</c:choose>
 														</c:otherwise>
@@ -328,8 +309,7 @@
 													</c:otherwise>
 												</c:choose>
 												<!-- Next link addition -->
-												<c:if
-													test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory}">
+												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory}">
 													<li class="next" id="historyNext"><a href="#nogo"><spring:theme
 																code="text.account.coupons.next" /> <span
 															class="lookbook-only"></span></a></li>
@@ -391,10 +371,10 @@
 
 					<div class="bottom">
 						<c:if test="${not empty couponOrderDataDTOList}">
-							<p>${startIndexHist}-${endIndexHist}
-								of ${couponHistListSize} &nbsp;
-								<spring:theme code="text.account.coupons.transactions" />
-							</p>
+										<p>${startIndexHist}-${endIndexHist}
+											of ${couponHistListSize} &nbsp;
+											<spring:theme code="text.account.coupons.transactions" />
+										</p>
 						</c:if>
 						<div class="btn-placement bottom">
 							<c:if test="${totalPagesCouponHist ne 1 }">
@@ -410,18 +390,15 @@
 									<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 										<c:choose>
 											<c:when test="${param.pageHistory eq i}">
-												<li class="number first active"><a
-													href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+												<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 											</c:when>
 											<c:otherwise>
 												<c:choose>
 													<c:when test="${param.pageHistory eq null and i eq 1}">
-														<li class="number first active"><a
-															href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+														<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 													</c:when>
 													<c:otherwise>
-														<li class="number first"><a
-															href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+														<li class="number first"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
 													</c:otherwise>
 												</c:choose>
 											</c:otherwise>
@@ -502,66 +479,61 @@
 	});
 
 	//voucher list 
-	$("#voucherNext").click(
-			function() {
-				var pageNo = $(this).closest(".pagination").find("li.active a")
-						.text();
-				if (pageNo != "") {
-					pageNo = parseInt(pageNo);
-				} else {
-					pageNo = 1;
-				}
-				pageNo = pageNo + 1;
-				var totalPages = '${totalPagesCoupon}';
-				if (totalPages != "" && pageNo <= totalPages) {
-					window.location.href = "?pageVoucher=" + pageNo
-							+ "&pageFor=voucher";
-				}
-			});
-
-	$("#voucherPrev").click(
-			function() {
-				var pageNo = $(this).closest(".pagination").find("li.active a")
-						.text();
-				pageNo = parseInt(pageNo);
-				pageNo = pageNo - 1;
-				var totalPages = '${totalPagesCoupon}';
-				if (pageNo != 0 && totalPages != "" && pageNo <= totalPages) {
-					window.location.href = "?pageVoucher=" + pageNo
-							+ "&pageFor=voucher";
-				}
-			});
+	$("#voucherNext").click(function(){
+		var pageNo = $(this).closest(".pagination").find("li.active a").text();
+		if(pageNo != ""){
+			pageNo = parseInt(pageNo);
+		}else{
+			pageNo = 1;
+		}
+		pageNo = pageNo+1;
+		var totalPages = '${totalPagesCoupon}';
+		if(totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?pageVoucher="+pageNo+"&pageFor=voucher";
+			}
+	});
+	
+	$("#voucherPrev").click(function(){
+		var pageNo = $(this).closest(".pagination").find("li.active a").text();
+		pageNo = parseInt(pageNo);
+		pageNo = pageNo-1;
+		var totalPages = '${totalPagesCoupon}';
+		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?pageVoucher="+pageNo+"&pageFor=voucher";
+			}
+	});
+	
+	
 
 	//hitory list 
-	$("#historyNext,#historyNextBtm").click(
-			function() {
-				var pageNo = $(this).closest(".pagination").find("li.active a")
-						.text();
-				if (pageNo != "") {
-					pageNo = parseInt(pageNo);
-				} else {
-					pageNo = 1;
-				}
-				pageNo = pageNo + 1;
-				var totalPages = '${totalPagesCouponHist}';
-				if (totalPages != "" && pageNo <= totalPages) {
-					window.location.href = "?pageHistory=" + pageNo
-							+ "&pageFor=history";
-				}
-			});
-
-	$("#historyPrev,#historyPrevBtm").click(
-			function() {
-				var pageNo = $(this).closest(".pagination").find("li.active a")
-						.text();
-				pageNo = parseInt(pageNo);
-				pageNo = pageNo - 1;
-				var totalPages = '${totalPagesCouponHist}';
-				if (pageNo != 0 && totalPages != "" && pageNo <= totalPages) {
-					window.location.href = "?pageHistory=" + pageNo
-							+ "&pageFor=history";
-				}
-			});
+	$("#historyNext,#historyNextBtm").click(function(){
+		var pageNo = $(this).closest(".pagination").find("li.active a").text();
+		if(pageNo != ""){
+			pageNo = parseInt(pageNo);
+		}else{
+			pageNo = 1;
+		}
+		pageNo = pageNo+1;
+		var totalPages = '${totalPagesCouponHist}';
+		if(totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?pageHistory="+pageNo+"&pageFor=history";
+			}
+	});
+	
+	$("#historyPrev,#historyPrevBtm").click(function(){
+		var pageNo = $(this).closest(".pagination").find("li.active a").text();
+		pageNo = parseInt(pageNo);
+		pageNo = pageNo-1;
+		var totalPages = '${totalPagesCouponHist}';
+		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
+			{
+			window.location.href="?pageHistory="+pageNo+"&pageFor=history";
+			}
+	});
+	
 </script>
 <c:if test="${param.pageHistory ne null or param.pageVoucher ne null}">
 	<script>

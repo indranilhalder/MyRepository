@@ -28919,7 +28919,7 @@ body .account .right-account .order-history .bottom .pagination.mobile{
 	font-weight: 600;
 } 
 
-.ShoeBrandLandingLayoutPage .feature-categories h1{
+.page-shoe .feature-categories h1{
     text-transform: capitalize;
 }
 @media(max-width:650px){
