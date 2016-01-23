@@ -404,15 +404,28 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 		double totalApplicablePrice = 0.0D;
 		double percentageDiscount = 0.0D;
+		double discountValue = 0.0D;
 
 		for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 		{
 			totalApplicablePrice += entry.getTotalPrice().doubleValue();
 		}
 
-		final double discountValue = voucherObj.getValueAsPrimitive();
+		for (final DiscountValue disVal : cartModel.getGlobalDiscountValues())
+		{
+			if (disVal.getCode().equals(voucher.getCode()))
+			{
+				discountValue = disVal.getAppliedValue();
+				break;
+			}
 
-		if (voucherObj.isAbsoluteAsPrimitive())
+		}
+
+
+		//		final double discountValue = voucherObj.getValueAsPrimitive();
+
+		if (voucherObj.isAbsoluteAsPrimitive()
+				|| (null != voucher.getMaxDiscountValue() && discountValue == voucher.getMaxDiscountValue().doubleValue()))
 		{
 			percentageDiscount = (discountValue / totalApplicablePrice) * 100;
 		}

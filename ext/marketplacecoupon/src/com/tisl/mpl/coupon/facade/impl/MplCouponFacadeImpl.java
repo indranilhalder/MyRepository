@@ -431,10 +431,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel))
 			{
 				LOG.debug("Step 3.1:::Voucher is not applicable");
-				final boolean dateFlag = checkViolatedRestrictions(voucher, cartModel);
-				if (dateFlag)
+				final String error = checkViolatedRestrictions(voucher, cartModel);
+				if (error.equalsIgnoreCase("Date"))
 				{
 					throw new VoucherOperationException("Voucher cannot be redeemed: " + voucherCode);
+				}
+				else if (error.equalsIgnoreCase("User"))
+				{
+					throw new VoucherOperationException("User not valid for : " + voucherCode);
 				}
 				else
 				{
@@ -575,20 +579,26 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param cartModel
 	 * @return boolean
 	 */
-	protected boolean checkViolatedRestrictions(final VoucherModel voucher, final CartModel cartModel)
+	protected String checkViolatedRestrictions(final VoucherModel voucher, final CartModel cartModel)
 	{
 		final List<RestrictionModel> getViolatedRestrictions = getVoucherModelService().getViolatedRestrictions(voucher, cartModel);
-		boolean dateFlag = false;
+		String error = "";
 		for (final RestrictionModel restriction : getViolatedRestrictions)
 		{
 			if (restriction instanceof DateRestrictionModel)
 			{
-				LOG.debug("Date restriction is violated");
-				dateFlag = true;
+				LOG.error("Date restriction is violated");
+				error = "Date";
+				break;
+			}
+			else if (restriction instanceof UserRestrictionModel)
+			{
+				LOG.error("user restriction is violated");
+				error = "User";
 				break;
 			}
 		}
-		return dateFlag;
+		return error;
 	}
 
 
