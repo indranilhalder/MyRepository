@@ -14897,7 +14897,7 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 	font-weight: 600;
 } 
 
-.ShoeBrandLandingLayoutPage .feature-categories h1{
+.page-shoe .feature-categories h1{
     text-transform: capitalize;
 }
 @media(max-width:650px){
