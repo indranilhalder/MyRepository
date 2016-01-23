@@ -34,7 +34,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
@@ -166,7 +165,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 		LOG.debug("Step 8:::Voucher discount in cart is " + voucherCalcValue + " & promo discount in cart is " + promoCalcValue);
 
-		final List<AbstractOrderEntry> applicableOrderEntryList = getOrderEntriesFromVoucherEntries(lastVoucher, cartModel);
+		final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(lastVoucher, cartModel);
 
 		if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
 				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())
@@ -202,22 +201,26 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			double netAmountAfterAllDisc = 0.0D;
 			double productPrice = 0.0D;
-			boolean flag = false;
+			final boolean flag = false;
 
 			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
 			{
 				LOG.debug("Step 13:::applicableOrderEntryList is not empty");
-				for (final AbstractOrderEntry entry : applicableOrderEntryList)
+				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 				{
-					if ((null != entry.getAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) && StringUtils
-							.isNotEmpty(entry.getAttribute(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE).toString()))
-							|| (null != entry.getAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE) && StringUtils
-									.isNotEmpty(entry.getAttribute(MarketplacecommerceservicesConstants.CARTPROMOCODE).toString())))
-					{
-						netAmountAfterAllDisc += Double
-								.parseDouble((entry.getAttribute(MarketplacecommerceservicesConstants.NETAMOUNTAFTERALLDISC)).toString());
-						flag = true;
-					}
+					//					if ((null != entry.getProductPromoCode() && StringUtils
+					//							.isNotEmpty(entry.getProductPromoCode()))
+					//							|| (null != entry.getCartPromoCode() && StringUtils
+					//									.isNotEmpty(entry.getCartPromoCode())))
+					//					{
+					//						netAmountAfterAllDisc += entry.getNetAmountAfterAllDisc().doubleValue();
+					//						flag = true;
+					//					}
+
+					netAmountAfterAllDisc += (null != entry.getCartLevelDisc()
+							&& StringUtils.isNotEmpty(entry.getCartLevelDisc().toString()))
+									? (entry.getTotalPrice().doubleValue() - entry.getCartLevelDisc().doubleValue())
+									: entry.getTotalPrice().doubleValue();
 
 					productPrice += entry.getTotalPrice().doubleValue();
 				}
