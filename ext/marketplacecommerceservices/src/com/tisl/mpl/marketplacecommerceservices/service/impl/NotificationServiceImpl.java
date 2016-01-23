@@ -349,8 +349,8 @@ public class NotificationServiceImpl implements NotificationService
 					pushData = new PushNotificationData();
 					if (null != orderReferenceNumber)
 					{
-						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED.replace(
-								MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
+						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED
+								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
 						pushData.setOrderId(orderReferenceNumber);
 					}
 					if (null != customer.getOriginalUid() && !customer.getOriginalUid().isEmpty() && null != customer.getIsActive()
@@ -565,7 +565,7 @@ public class NotificationServiceImpl implements NotificationService
 			final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
 			voucherCode = promoVoucher.getVoucherCode();
 			voucherIndentifier = promoVoucher.getCode();
-			System.out.println("voucher identifier :" + voucherIndentifier);
+			LOG.debug("voucher identifier :" + voucherIndentifier);
 		}
 
 		Date voucherStartDate = null;
@@ -658,8 +658,8 @@ public class NotificationServiceImpl implements NotificationService
 
 				}
 
-				final String customerStatus = getConfigurationService().getConfiguration().getString(
-						MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
+				final String customerStatus = getConfigurationService().getConfiguration()
+						.getString(MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
 
 				//Setting values in model
 				voucherStatus.setVoucherIdentifier(voucherIndentifier);
