@@ -552,6 +552,7 @@
     	<property name="totalExcConv" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="convCharge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="voucherDiscount" type="com.tisl.mpl.data.VoucherDiscountData" />
     </bean> 
 	
 	<!-- Data class for Payment Specific Promotions Ends-->
