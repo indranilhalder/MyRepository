@@ -6453,7 +6453,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws Exception
 	 */
 	@SuppressWarnings(UNUSED)
-	@RequestMapping(value = "/review/{operation}", method = RequestMethod.GET)
+	@RequestMapping(value = "/review/{operation}", method = RequestMethod.POST)
 	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, String> modifyReview(
