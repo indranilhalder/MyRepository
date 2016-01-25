@@ -63,7 +63,15 @@ function registerUser(eventObject)
 							}
 							else
 							{
-							window.open(ACC.config.encodedContextPath +data,"_self");
+							var hostName=window.location.host;
+							if(hostName.indexOf(':') >=0)
+							{
+								window.open(ACC.config.encodedContextPath +data,"_self");
+							}	
+							else
+								{
+							window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
+								}
 							}
 							
 						}	

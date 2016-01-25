@@ -304,7 +304,7 @@ font-weight: normal;
     font-weight: 100;
     content: "\f005";
 }
-*.gig-comment-rating-star, *.gig-composebox-rating-star, *.gig-selfreview-rating-star, *.gig-rating-star-full, *.gig-rating-star, *.gig-rating-dimensions div.gig-rating-star, *.gig-comment-rating-star-full, *.gig-composebox-rating-star-full, *.gig-selfreview-rating-star-full {
+*.gig-comment-rating-star, *.gig-selfreview-rating-star, *.gig-rating-star-full, *.gig-rating-star, *.gig-rating-dimensions div.gig-rating-star, *.gig-comment-rating-star-full, *.gig-selfreview-rating-star-full {
 	background-image: none;
 }
 #ratingDiv div.gig-rating-star.gig-rating-star-empty:before, .gig-comment-rating-star:before {
