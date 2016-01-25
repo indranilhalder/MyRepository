@@ -133,6 +133,10 @@ public class MplCouponController
 			{
 				data.setRedeemErrorMsg("Freebie");
 			}
+			else if (e.getMessage().contains("User not valid"))
+			{
+				data.setRedeemErrorMsg("User_Invalid");
+			}
 
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
 			data.setCouponRedeemed(false);
