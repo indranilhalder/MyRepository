@@ -81,6 +81,10 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 				}
 			}
 		}
+		if (userService.isAnonymousUser(currentCustomer))
+		{
+			model.addAttribute("isSignedInUser", "no");
+		}
 
 	}
 
