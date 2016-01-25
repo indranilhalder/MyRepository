@@ -14938,4 +14938,7 @@ body .account .right-account .reviews .toolbar .account-only h2{
   body .account .right-account .order-history .product-block li.header>ul>li span.amt {
     background-color: transparent;
 }
-  
+.modal.size-guide .sizes .details .price p {
+    display: inline-block;
+    margin: 0 5px;
+}
