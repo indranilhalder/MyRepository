@@ -1151,6 +1151,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				LOG.debug("****** initiateRefund Step 1 >> Begin >> Calling for prepaid for " + orderRequestRecord.getCode());
 				paymentTransactionModel = mplJusPayRefundService.doRefund(subOrderModel, orderRequestRecord.getRefundableAmount()
 						.doubleValue(), PaymentTransactionType.CANCEL);
+
 				if (null != paymentTransactionModel)
 				{
 					mplJusPayRefundService.attachPaymentTransactionModel(subOrderModel, paymentTransactionModel);
@@ -1207,26 +1208,24 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				else
 				{
 					LOG.debug("****** initiateRefund >>Payment transaction mode is null");
-					double refundedAmount = 0D;
+
+
 					for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
 							.getOrderEntriesModificationEntries())
 					{
 						final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
-						refundedAmount += orderEntry.getNetAmountAfterAllDisc().doubleValue()
+						final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
 								+ orderEntry.getCurrDelCharge().doubleValue();
 
-						//if (CollectionUtils.isNotEmpty(orderEntry.getConsignmentEntries()))
-						//{
-						//mplJusPayRefundService.makeOMSStatusUpdate(orderEntry, ConsignmentStatus.CLOSED_ON_CANCELLATION);
-						//TISSIT-1790
-						mplJusPayRefundService.makeOMSStatusUpdate(orderEntry, ConsignmentStatus.REFUND_IN_PROGRESS);
-						//}
+						mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel, Double.valueOf(refundedAmount),
+								ConsignmentStatus.REFUND_INITIATED);
+
 					}
 
 					paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord
-							.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, new Double(
-							refundedAmount), PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG, UUID
-							.randomUUID().toString());
+							.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, orderRequestRecord
+							.getRefundableAmount(), PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG,
+							UUID.randomUUID().toString());
 					mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
 							paymentTransactionModel);
 
@@ -1235,6 +1234,37 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			catch (final Exception e)
 			{
 				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
+				//TISPRO-94 code additon started
+				for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
+						.getOrderEntriesModificationEntries())
+				{
+					final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+					if (orderEntry != null)
+					{
+						final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
+								+ orderEntry.getCurrDelCharge().doubleValue();
+
+						mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel, Double.valueOf(refundedAmount),
+								ConsignmentStatus.REFUND_INITIATED);
+
+						// Making RTM entry to be picked up by webhook job
+						final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+								RefundTransactionMappingModel.class);
+						refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+						refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+						refundTransactionMappingModel.setCreationtime(new Date());
+						refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED);
+						getModelService().save(refundTransactionMappingModel);
+					}
+				}
+
+				paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord
+						.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, orderRequestRecord
+						.getRefundableAmount(), PaymentTransactionType.CANCEL, "An Exception Occured.", UUID.randomUUID().toString());
+				mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
+						paymentTransactionModel);
+
+				//TISPRO-94 code additon ended
 			}
 		}
 		else

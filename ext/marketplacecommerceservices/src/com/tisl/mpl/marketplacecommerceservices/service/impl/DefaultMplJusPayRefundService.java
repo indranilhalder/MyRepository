@@ -686,14 +686,16 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 			if (paymentTransactionModel != null)
 			{
-				refundInfo.setRefundedBankTrxID(paymentTransactionModel.getCode());
-				refundInfo.setRefundedBankTrxStatus(paymentTransactionModel.getStatus());
+				refundInfo.setRefundedBankTrxID(paymentTransactionModel.getCode() != null ? paymentTransactionModel.getCode()
+						: StringUtils.EMPTY);
+				refundInfo.setRefundedBankTrxStatus(paymentTransactionModel.getStatus() != null ? paymentTransactionModel.getStatus()
+						: StringUtils.EMPTY);
 				refundInfo.setRefundedAmt(amount.floatValue());
 			}
 			else
 			{
-				refundInfo.setRefundedBankTrxID(StringUtils.EMPTY);
-				refundInfo.setRefundedBankTrxStatus(StringUtils.EMPTY);
+				refundInfo.setRefundedBankTrxID("ERROROCCURED");
+				refundInfo.setRefundedBankTrxStatus("ERROROCCURED");
 				//refundInfo.setRefundedAmt(NumberUtils.FLOAT_ZERO.floatValue());
 				refundInfo.setRefundedAmt(amount.floatValue());
 
@@ -737,7 +739,6 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 		return false;
 	}
-
 
 	/*
 	 * (non-Javadoc)
