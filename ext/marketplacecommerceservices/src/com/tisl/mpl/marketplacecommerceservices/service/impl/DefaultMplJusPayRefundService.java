@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -123,7 +122,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#doRefund(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -397,8 +396,10 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 								case MarketplacecommerceservicesConstants.SUCCESS_VAL:
 									LOG.debug("Inside SUCCESS case for refund================");
 									paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS_VAL);
-									paymentTransactionModel.setCode(UUID.randomUUID().toString());
-									paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
+									//paymentTransactionModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionModel.setCode(uniqueId);
+									//paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionEntryModel.setCode(uniqueId);
 									bigAmount = new BigDecimal(refundResponse.getAmount().doubleValue(), MathContext.DECIMAL64);
 									paymentTransactionEntryModel.setAmount(bigAmount);
 									paymentTransactionEntryModel.setTime(new Date());
@@ -432,9 +433,10 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 								case MarketplacecommerceservicesConstants.PENDING_VAL:
 									LOG.debug("Inside PENDING case for refund================");
 									paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.PENDING_VAL);
-									paymentTransactionModel.setCode(UUID.randomUUID().toString());
-
-									paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
+									//paymentTransactionModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionModel.setCode(uniqueId);
+									//paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionEntryModel.setCode(uniqueId);
 									bigAmount = new BigDecimal(refundResponse.getAmount().doubleValue(), MathContext.DECIMAL64);
 									paymentTransactionEntryModel.setAmount(bigAmount);
 									paymentTransactionEntryModel.setTime(new Date());
@@ -579,7 +581,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#attachPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, de.hybris.platform.payment.model.PaymentTransactionModel)
@@ -635,7 +637,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#createPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, java.lang.String, java.math.BigDecimal,
@@ -678,7 +680,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeRefundOMSCall(de.hybris.platform.core
 	 * .model.order.OrderEntryModel, java.lang.Double)
@@ -750,7 +752,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeOMSStatusUpdate(de.hybris.platform
 	 * .core.model.order.AbstractOrderEntryModel)
@@ -782,7 +784,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#validateRefundAmount(double,
 	 * de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -850,15 +852,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for handling network exception while cancellation TISSIT-1801 TISPRO-94
-	 *
+	 * 
 	 * @param orderRequestRecord
-	 *
+	 * 
 	 * @param paymentTransactionType
-	 *
+	 * 
 	 * @param juspayRefundType
-	 *
+	 * 
 	 * @param uniqueRequestId
-	 *
+	 * 
 	 * @return void
 	 */
 
@@ -908,15 +910,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	/*
 	 * @Desc used in web and cscockpit for in case no response received from juspay while cancellation refund TISSIT-1801
 	 * TISPRO-94
-	 * 
+	 *
 	 * @param orderRequestRecord
-	 * 
+	 *
 	 * @param paymentTransactionType
-	 * 
+	 *
 	 * @param juspayRefundType
-	 * 
+	 *
 	 * @param uniqueRequestId
-	 * 
+	 *
 	 * @return void
 	 */
 

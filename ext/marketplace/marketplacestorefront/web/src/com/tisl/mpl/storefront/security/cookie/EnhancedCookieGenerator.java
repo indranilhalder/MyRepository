@@ -85,19 +85,25 @@ public class EnhancedCookieGenerator extends CookieGenerator
 				setEnhancedCookiePath(cookie);
 				setEnhancedCookie(cookie);
 
-				if (isHttpOnly())
-				{
-					// Custom code to write the cookie including the httpOnly flag
-					final StringBuffer headerBuffer = new StringBuffer(100);
-					ServerCookie.appendCookieValue(headerBuffer, cookie.getVersion(), cookie.getName(), cookie.getValue(),
-							cookie.getPath(), cookie.getDomain(), cookie.getComment(), cookie.getMaxAge(), cookie.getSecure(), true);
-					response.addHeader(HEADER_COOKIE, headerBuffer.toString());
-				}
-				else
-				{
-					// Write the cookie as normal
-					super.addCookie(cookie);
-				}
+				final StringBuffer headerBuffer = new StringBuffer(100);
+				ServerCookie.appendCookieValue(headerBuffer, cookie.getVersion(), cookie.getName(), cookie.getValue(),
+						cookie.getPath(), cookie.getDomain(), cookie.getComment(), cookie.getMaxAge(), true, true);
+				response.addHeader(HEADER_COOKIE, headerBuffer.toString());
+
+
+				//				if (isHttpOnly())
+				//				{
+				//					// Custom code to write the cookie including the httpOnly flag
+				//					final StringBuffer headerBuffer = new StringBuffer(100);
+				//					ServerCookie.appendCookieValue(headerBuffer, cookie.getVersion(), cookie.getName(), cookie.getValue(),
+				//							cookie.getPath(), cookie.getDomain(), cookie.getComment(), cookie.getMaxAge(), cookie.getSecure(), true);
+				//					response.addHeader(HEADER_COOKIE, headerBuffer.toString());
+				//				}
+				//				else
+				//				{
+				//					// Write the cookie as normal
+				//					super.addCookie(cookie);
+				//				}
 			}
 		}, cookieValue);
 	}

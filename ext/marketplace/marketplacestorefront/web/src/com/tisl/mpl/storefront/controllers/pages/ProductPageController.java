@@ -923,7 +923,8 @@ public class ProductPageController extends AbstractPageController
 							  //electronics
 							else
 							{
-								if (properitsValue.toLowerCase().contains(configurableAttributData.getName().toLowerCase()))
+								//TISPRO-121
+								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
 
 								{
 
