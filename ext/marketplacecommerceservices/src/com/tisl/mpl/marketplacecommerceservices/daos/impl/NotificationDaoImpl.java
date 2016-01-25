@@ -292,8 +292,56 @@ public class NotificationDaoImpl implements NotificationDao
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#getModelForVoucher(java.lang.String)
 	 */
 	@Override
-	public List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherCode)
+	public List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherIndentifier)
 	{
+		List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>();
+
+		//		for (int i = 0; i < customerId.size(); i++)
+		//		{
+
+		if (null != voucherIndentifier && !voucherIndentifier.isEmpty())
+		{
+			//				final String queryString = //
+			//				"SELECT {p:" + VoucherStatusNotificationModel.PK
+			//						+ "}" //
+			//						+ "FROM {" + VoucherStatusNotificationModel._TYPECODE
+			//						+ " AS p} "//
+			//						+ "WHERE " + "{p:" + VoucherStatusNotificationModel.CUSTOMERUID + "}=?customerId  AND " + "{p:"
+			//						+ VoucherStatusNotificationModel.VOUCHERCODE + "}=?voucherCode";
+
+			final String queryString1 = //
+			"SELECT {p:" + VoucherStatusNotificationModel.PK + "}" //
+					+ "FROM {" + VoucherStatusNotificationModel._TYPECODE + " AS p} "//
+					+ "WHERE " + "{p:" + VoucherStatusNotificationModel.VOUCHERIDENTIFIER + "}=?voucherIndentifier";
+
+
+
+
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString1);
+			//query.addQueryParameter("customerId", customerId);
+			query.addQueryParameter("voucherIndentifier", voucherIndentifier);
+			flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
+			voucherList = flexibleSearchService.<VoucherStatusNotificationModel> search(query).getResult();
+
+			//			if (voucherList.isEmpty())
+			//			{
+			//				return true;
+			//			}
+		}
+		//}
+		return voucherList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao#getModelForVoucherIdentifier(java.lang.String)
+	 */
+	@Override
+	public List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode)
+	{
+
 		List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>();
 
 		//		for (int i = 0; i < customerId.size(); i++)
@@ -331,6 +379,7 @@ public class NotificationDaoImpl implements NotificationDao
 		}
 		//}
 		return voucherList;
+
 	}
 
 

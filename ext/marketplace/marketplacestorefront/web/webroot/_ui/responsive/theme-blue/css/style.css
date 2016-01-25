@@ -28919,7 +28919,7 @@ body .account .right-account .order-history .bottom .pagination.mobile{
 	font-weight: 600;
 } 
 
-.ShoeBrandLandingLayoutPage .feature-categories h1{
+.page-shoe .feature-categories h1{
     text-transform: capitalize;
 }
 @media(max-width:650px){
@@ -28959,6 +28959,10 @@ body .account .right-account .reviews .toolbar .account-only h2{
   
   body .account .right-account .order-history .product-block li.header>ul>li span.amt {
     background-color: transparent;
+}
+.modal.size-guide .sizes .details .price p {
+    display: inline-block;
+    margin: 0 5px;
 }
 /*--------------maincss-----------*/
 .row
@@ -34462,7 +34466,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError {
 	display: none;
 }
 

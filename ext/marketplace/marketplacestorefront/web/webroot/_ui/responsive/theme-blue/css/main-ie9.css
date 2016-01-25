@@ -14897,7 +14897,7 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 	font-weight: 600;
 } 
 
-.ShoeBrandLandingLayoutPage .feature-categories h1{
+.page-shoe .feature-categories h1{
     text-transform: capitalize;
 }
 @media(max-width:650px){
@@ -14938,4 +14938,7 @@ body .account .right-account .reviews .toolbar .account-only h2{
   body .account .right-account .order-history .product-block li.header>ul>li span.amt {
     background-color: transparent;
 }
-  
+.modal.size-guide .sizes .details .price p {
+    display: inline-block;
+    margin: 0 5px;
+}
