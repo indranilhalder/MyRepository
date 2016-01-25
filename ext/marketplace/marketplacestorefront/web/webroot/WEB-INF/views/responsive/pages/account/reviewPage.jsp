@@ -224,7 +224,7 @@
 						</div>
 						<div class="review">
 							<div class="details">
-							<div class="rating-stars-wrapper">
+							<div class="rating-stars-wrapper" data-rating-all="${count.index}">
 								<ul class="rating-stars" data-rating-name${count.index}="_overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>

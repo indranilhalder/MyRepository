@@ -4,6 +4,7 @@ if(typeof(arrayrating)!= "undefined"){
 		$(".edit").click(function(e){
 			e.preventDefault;
 			var indexElement = $(this).attr("data-index");
+			$("div[data-rating-all="+indexElement+"]").hide();
 			if(indexElement!= undefined){
 				var reviewHeading = $(".reviewHeading"+indexElement);
 				var reviewComment = $(".reviewComment"+indexElement);
@@ -41,7 +42,7 @@ if(typeof(arrayrating)!= "undefined"){
 		$("input[name=cancel]").click(function(){
 			
 			var indexElement =  $(this).attr("data-index");
-			
+			$("div[data-rating-all="+indexElement+"]").show();
 			var reviewHeading = $(".reviewHeading"+indexElement);
 			var reviewComment = $(".reviewComment"+indexElement);
 			
