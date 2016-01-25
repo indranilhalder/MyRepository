@@ -1214,6 +1214,10 @@ $(document).ready(function(){
 					$li.eq(i).css("height",li_max_height);
 					$li.eq(i+1).css("height",li_max_height);
 				}
+				var remaining_li=$li.length % 2;
+				if(remaining_li==1){
+					$li.eq($li.length - 1).css("height",'auto');
+				}
 			}
 		});
 });

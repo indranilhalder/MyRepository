@@ -481,7 +481,7 @@ $(document).ready(function(){
 				}
 			});
 		  }
-	var category=$("#categoryType").val();
+	var category=$("#categoryType").val(); 
 	/* if(category!='Footwear'){ */
 	
 	var numLi= $(".modal.size-guide .sizes .tables li.header > ul").children().length;
@@ -500,6 +500,12 @@ $("#add_to_wishlist-sizeguide").click(function(){
 $("#noProductForSelectedSeller").hide();
 $("#productDetails").show();
 $("#price").show();
+
+if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
+	$('#variant option#select-option').attr("selected", "selected");
+	sizeSelected=false;
+}
+
 });
 
 
@@ -517,7 +523,7 @@ function openPop() {
 	//} else {
 	//	ussidValue = ussidfromSeller;
 	//}
-	var productCode = ${product.code};//$("#product").val();
+	var productCode = '${product.code}';//$("#product").val();
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/viewWishlistsInPDP";
@@ -641,7 +647,7 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 
 	function addToWishlist_SizeGuide() {
-	var productCodePost = ${product.code};
+	var productCodePost = '${product.code}'; //$("#productCode").val();
 	//var productCodePost = $("#productCodePostQuick").val();
 	//alert(productCodePost);
 	var wishName = "";
