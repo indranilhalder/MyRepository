@@ -137,9 +137,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	@Override
 	public VoucherDiscountData checkCartAfterApply(final VoucherModel lastVoucher, final CartModel cartModel,
-			final List<AbstractOrderEntryModel> applicableOrderEntryList)
-					throws ModelSavingException, VoucherOperationException, CalculationException, NumberFormatException,
-					JaloInvalidParameterException, JaloSecurityException, JaloPriceFactoryException
+			final List<AbstractOrderEntryModel> applicableOrderEntryList) throws ModelSavingException, VoucherOperationException,
+			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException,
+			JaloPriceFactoryException
 	{
 		LOG.debug("Step 7:::Inside checking cart after applying voucher");
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
@@ -172,14 +172,14 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())
 		{
 			LOG.debug("Step 11:::Inside max discount block");
-			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher,
-					lastVoucher.getMaxDiscountValue().doubleValue());
+			discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
+					.getMaxDiscountValue().doubleValue());
 			cartModel.setGlobalDiscountValues(discountList);
 			getMplDefaultCalculationService().calculateTotals(cartModel, false);
 			getModelService().save(cartModel);
 
-			discountData.setCouponDiscount(
-					discountUtility.createPrice(cartModel, Double.valueOf(lastVoucher.getMaxDiscountValue().doubleValue())));
+			discountData.setCouponDiscount(discountUtility.createPrice(cartModel,
+					Double.valueOf(lastVoucher.getMaxDiscountValue().doubleValue())));
 
 			return discountData;
 		}
@@ -209,10 +209,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				LOG.debug("Step 13:::applicableOrderEntryList is not empty");
 				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 				{
-					netAmountAfterAllDisc += (null != entry.getCartLevelDisc()
-							&& StringUtils.isNotEmpty(entry.getCartLevelDisc().toString()))
-									? (entry.getTotalPrice().doubleValue() - entry.getCartLevelDisc().doubleValue())
-									: entry.getTotalPrice().doubleValue();
+					netAmountAfterAllDisc += (null != entry.getCartLevelDisc() && StringUtils.isNotEmpty(entry.getCartLevelDisc()
+							.toString())) ? (entry.getTotalPrice().doubleValue() - entry.getCartLevelDisc().doubleValue()) : entry
+							.getTotalPrice().doubleValue();
 
 					productPrice += entry.getTotalPrice().doubleValue();
 				}
@@ -223,8 +222,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				if ((productPrice < 1) || (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
 						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
-					LOG.debug(
-							"Step 15:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
+					LOG.debug("Step 15:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 					releaseVoucher(voucherCode, cartModel);
 					recalculateCartForCoupon(cartModel);
 					//mplDefaultCalculationService.calculateTotals(cartModel, false);
@@ -404,35 +402,59 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 		double totalApplicablePrice = 0.0D;
 		double percentageDiscount = 0.0D;
-		double discountValue = 0.0D;
+		//double discountValue = 0.0D;
+		//final DecimalFormat df = new DecimalFormat("#");
 
 		for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 		{
 			totalApplicablePrice += entry.getTotalPrice().doubleValue();
 		}
 
-		for (final DiscountValue disVal : cartModel.getGlobalDiscountValues())
-		{
-			if (disVal.getCode().equals(voucher.getCode()))
-			{
-				discountValue = disVal.getAppliedValue();
-				break;
-			}
+		//		for (final DiscountValue disVal : cartModel.getGlobalDiscountValues())
+		//		{
+		//			if (disVal.getCode().equals(voucher.getCode()))
+		//			{
+		//				discountValue = disVal.getAppliedValue();
+		//				break;
+		//			}
+		//
+		//		}
 
-		}
+		//totalApplicablePrice = Double.parseDouble(df.format(totalApplicablePrice));
+		final double discountValue = voucherObj.getValueAsPrimitive();
 
-
-		//		final double discountValue = voucherObj.getValueAsPrimitive();
-
-		if (voucherObj.isAbsoluteAsPrimitive()
-				|| (null != voucher.getMaxDiscountValue() && discountValue == voucher.getMaxDiscountValue().doubleValue()))
+		if (voucherObj.isAbsoluteAsPrimitive())
 		{
 			percentageDiscount = (discountValue / totalApplicablePrice) * 100;
 		}
 		else
 		{
 			percentageDiscount = discountValue;
+			final double totalSavings = (totalApplicablePrice * percentageDiscount) / 100;
+			final double totalMaxDiscount = voucher.getMaxDiscountValue() != null ? voucher.getMaxDiscountValue().doubleValue()
+					: 0.0D;
+
+			if (totalMaxDiscount != 0.0D && totalSavings > totalMaxDiscount)
+			{
+				percentageDiscount = (voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice) * 100;
+
+			}
+
 		}
+
+		////////
+
+		//		if (voucherObj.isAbsoluteAsPrimitive()
+		//				|| (null != voucher.getMaxDiscountValue() && discountValue == voucher.getMaxDiscountValue().doubleValue()))
+		//		{
+		//			percentageDiscount = (discountValue / totalApplicablePrice) * 100;
+		//		}
+		//		else
+		//		{
+		//			percentageDiscount = discountValue;
+		//		}
+
+		////////////
 
 		LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
 
@@ -466,8 +488,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
 						|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
 				{
-					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null
-							? entry.getNetAmountAfterAllDisc().doubleValue() : 0.00D;
+					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
+							.doubleValue() : 0.00D;
 
 					if (netAmtAftrAllDisc > entryLevelApportionedPrice)
 					{
@@ -495,15 +517,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				}
 				LOG.debug("Step 19:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
 
+				//entry.setNetAmountAfterAllDisc(Double.valueOf(df.format(currNetAmtAftrAllDisc)));
 				entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
 				getModelService().save(entry);
 			}
 		}
 
 	}
-
-
-
 
 
 	/**

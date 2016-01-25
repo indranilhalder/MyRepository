@@ -5,6 +5,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%-- <c:url var="sizeGuideUrl"
+
 	value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url> --%>
 <style>
 #variant, .productCount select {

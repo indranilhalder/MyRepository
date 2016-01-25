@@ -175,11 +175,13 @@ public class MarketPlaceDefaultCancellationController extends
 			if (orderCancelRecord.getRefundableAmount() != null
 					&& orderCancelRecord.getRefundableAmount() > NumberUtils.DOUBLE_ZERO) {
 
+				final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+				
 				try {
 					paymentTransactionModel = mplJusPayRefundService.doRefund(
 							orderCancelRecord.getOriginalVersion().getOrder(),
 							orderCancelRecord.getRefundableAmount(),
-							PaymentTransactionType.CANCEL);
+							PaymentTransactionType.CANCEL,uniqueRequestId);
 					if (null != paymentTransactionModel) {
 						mplJusPayRefundService.attachPaymentTransactionModel(
 								orderCancelRecord.getOriginalVersion()
@@ -262,75 +264,91 @@ public class MarketPlaceDefaultCancellationController extends
 						LOG.error("Refund Failed");
 						//TISSIT-1790 Code addition started
 						
-						for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
-								.getOrderEntriesModificationEntries()) {
-							OrderEntryModel orderEntry = modificationEntry
-									.getOrderEntry();
-							if (orderEntry != null) {
-								mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_IN_PROGRESS);
-							}
-						}
-						//TISSIT-1790 Code addition ended
-						paymentTransactionModel = mplJusPayRefundService
-								.createPaymentTransactionModel(
-										orderCancelRecord.getOriginalVersion()
-												.getOrder(),
-										MarketplaceCockpitsConstants.FAILURE,
-										orderCancelRecord.getRefundableAmount(),
-										PaymentTransactionType.CANCEL,
-										"NO Response FROM PG", UUID
-												.randomUUID().toString());
-						mplJusPayRefundService.attachPaymentTransactionModel(
-								orderCancelRecord.getOriginalVersion()
-										.getOrder(), paymentTransactionModel);
+						mplJusPayRefundService.createCancelRefundPgErrorEntry(orderCancelRecord, PaymentTransactionType.CANCEL,
+								JuspayRefundType.CANCELLED, uniqueRequestId);
+						
+//						for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
+//								.getOrderEntriesModificationEntries()) {
+//							OrderEntryModel orderEntry = modificationEntry
+//									.getOrderEntry();
+//							if (orderEntry != null) {
+//								//mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_IN_PROGRESS);
+//								
+//								
+//								double deliveryCost = orderEntry
+//										.getCurrDelCharge() != null ? orderEntry
+//										.getCurrDelCharge()
+//										: NumberUtils.DOUBLE_ZERO;
+//								double totalprice = orderEntry.getNetAmountAfterAllDisc();
+//								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+//								orderEntry.setCurrDelCharge(0D);
+//								getModelService().save(orderEntry);
+//								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,totalprice + deliveryCost, ConsignmentStatus.REFUND_IN_PROGRESS);
+//								
+//							}
+//						}
+//						//TISSIT-1790 Code addition ended
+//						paymentTransactionModel = mplJusPayRefundService
+//								.createPaymentTransactionModel(
+//										orderCancelRecord.getOriginalVersion()
+//												.getOrder(),
+//										MarketplaceCockpitsConstants.FAILURE,
+//										orderCancelRecord.getRefundableAmount(),
+//										PaymentTransactionType.CANCEL,
+//										"NO Response FROM PG", uniqueRequestId);
+//						mplJusPayRefundService.attachPaymentTransactionModel(
+//								orderCancelRecord.getOriginalVersion()
+//										.getOrder(), paymentTransactionModel);
 					}
 				} catch (Exception e) {
 					LOG.error(e.getMessage(), e);
 					// Setting status as of Pending in case of any exception
 					// occurs.
-					for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
-							.getOrderEntriesModificationEntries()) {
-						OrderEntryModel orderEntry = modificationEntry
-								.getOrderEntry();
-						if (orderEntry != null
-								/*&& CollectionUtils.isNotEmpty(orderEntry
-										.getConsignmentEntries())*/) {
-							// Do not save status updates in commerce, rather
-							// update it on OMS and let it come in sync.
-							// ConsignmentModel consignmentModel = orderEntry
-							// .getConsignmentEntries().iterator().next()
-							// .getConsignment();
-							// consignmentModel
-							// .setStatus(ConsignmentStatus.REFUND_INITIATED);
-							// getModelService().save(consignmentModel);
-							mplJusPayRefundService.makeOMSStatusUpdate(
-									orderEntry,
-									ConsignmentStatus.REFUND_INITIATED);
-							
-							// TISSIT-1784 Code addition started
-							
-							// Making RTM entry to be picked up by webhook job	
-							RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
-							refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
-							refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
-							refundTransactionMappingModel.setCreationtime(new Date());
-							refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED);
-							getModelService().save(refundTransactionMappingModel);
-							// TISSIT-1784 Code addition ended
-						}
-					}
-
-					paymentTransactionModel = mplJusPayRefundService
-							.createPaymentTransactionModel(orderCancelRecord
-									.getOriginalVersion().getOrder(),
-									MarketplaceCockpitsConstants.FAILURE, orderCancelRecord
-											.getRefundableAmount(),
-									PaymentTransactionType.CANCEL,
-									"An Exception Occured.", UUID.randomUUID()
-											.toString());
-					mplJusPayRefundService.attachPaymentTransactionModel(
-							orderCancelRecord.getOriginalVersion().getOrder(),
-							paymentTransactionModel);
+					
+					mplJusPayRefundService.createCancelRefundExceptionEntry(orderCancelRecord, PaymentTransactionType.CANCEL,
+							JuspayRefundType.CANCELLED, uniqueRequestId);
+					
+					
+//					for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
+//							.getOrderEntriesModificationEntries()) {
+//						OrderEntryModel orderEntry = modificationEntry
+//								.getOrderEntry();
+//						if (orderEntry != null)
+//						{
+//							// Do not save status updates in commerce, rather
+//							// update it on OMS and let it come in sync.
+//							
+//							double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge(): NumberUtils.DOUBLE_ZERO;
+//							double totalprice = orderEntry.getNetAmountAfterAllDisc();
+//							orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+//							orderEntry.setCurrDelCharge(0D);
+//							getModelService().save(orderEntry);
+//							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,totalprice + deliveryCost, ConsignmentStatus.REFUND_INITIATED);
+//							
+//							// TISSIT-1784 Code addition started
+//							
+//							// Making RTM entry to be picked up by webhook job	
+//							RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
+//							refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+//							refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+//							refundTransactionMappingModel.setCreationtime(new Date());
+//							refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED);
+//							getModelService().save(refundTransactionMappingModel);
+//							// TISSIT-1784 Code addition ended
+//						}
+//					}
+//
+//					paymentTransactionModel = mplJusPayRefundService
+//							.createPaymentTransactionModel(orderCancelRecord
+//									.getOriginalVersion().getOrder(),
+//									MarketplaceCockpitsConstants.FAILURE, orderCancelRecord
+//											.getRefundableAmount(),
+//									PaymentTransactionType.CANCEL,
+//									"An Exception Occured.", UUID.randomUUID()
+//											.toString());
+//					mplJusPayRefundService.attachPaymentTransactionModel(
+//							orderCancelRecord.getOriginalVersion().getOrder(),
+//							paymentTransactionModel);
 
 				}
 
