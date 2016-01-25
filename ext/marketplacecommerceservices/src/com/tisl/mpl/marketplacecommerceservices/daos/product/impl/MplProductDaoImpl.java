@@ -45,6 +45,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	@Override
 	public List<ProductModel> findProductsByCode(final String code)
 	{
+		LOG.debug("findProductsByCode: code********** " + code);
 		final CatalogVersionModel catalogVersion = getCatalogVersion();
 		final StringBuilder stringBuilder = new StringBuilder(70);
 		stringBuilder.append("SELECT  distinct {p:").append(ProductModel.PK).append("} ");
@@ -55,12 +56,13 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		final String inPart = "{p:" + ProductModel.CODE + "} = (?code) AND {p:" + ProductModel.CATALOGVERSION
 				+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
 		stringBuilder.append("WHERE ").append(inPart);
-		LOG.debug(stringBuilder);
+		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
 		query.addQueryParameter("code", code);
 		query.addQueryParameter("catalogVersion", catalogVersion);
 		query.setResultClassList(Collections.singletonList(ProductModel.class));
 		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
+		LOG.debug("findProductsByCode: searchResult********** " + searchResult);
 		return searchResult.getResult();
 	}
 
