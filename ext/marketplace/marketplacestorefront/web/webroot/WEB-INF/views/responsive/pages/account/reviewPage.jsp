@@ -562,4 +562,7 @@ $(".prev a").click(function(){
 ul.gig-comments-header-right.gig-comments-linksContainer{
 	display: none;
 }
+.gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
+   display: none;
+}
 </style>
