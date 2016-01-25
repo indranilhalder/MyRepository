@@ -1494,7 +1494,53 @@ function validEmail(email) {
 	  }	  
 	  return true;	  
 	}
+function dispPriceForSizeGuide(mrp, mop, spPrice) {
+	//alert("mrp: "+mrp +" Mop: "+mop+" spPrice: "+spPrice);
+	if(null!= mrp){
+		$("#sizemrpPriceId").append(mrp);
+	}
+	if(null!= mop){
+		$("#sizemopPriceId").append(mop);
+	}
+	if(null!= spPrice){
+		$("#sizespPriceId").append(spPrice);
+	} 
 
+	if (null!=spPrice && spPrice != 0) {
+
+		if (mop == mrp) {
+			$('#sizemrpPriceId').css('text-decoration', 'line-through');
+			$("#sizemrpPriceId").show();
+			$("#sizespPriceId").show();
+		} else {
+			//alert("mop!=mrp sp");
+			$('#sizemrpPriceId').css('text-decoration', 'line-through');
+			$("#sizemrpPriceId").show();
+			$("#sizespPriceId").show();
+		}
+
+	} else {
+		if (null!=mop && mop != 0) {
+			if (mop == mrp) {
+				$("#sizemrpPriceId").removeClass("old").addClass("sale");
+				$("#sizemrpPriceId").show();
+			} else {
+				//alert("mop!=mrp");
+				$('#sizemrpPriceId').css('text-decoration', 'line-through');
+				$("#sizemrpPriceId").show();
+				$("#sizemopPriceId").show();
+			}
+		} else {
+			$("#sizemrpPriceId").show();
+		}
+	}
+	if (mrp == "") {
+		$("#sizemrpPriceId").hide();
+	} else {
+		$("#sizemrpPriceId").show();
+	}
+
+}
 function buyboxDetailsForSizeGuide(productCode){
 	var sellerID= $("#sellerSelId").val();
 	var productCode = productCode;//$("#product").val();
@@ -1502,7 +1548,6 @@ function buyboxDetailsForSizeGuide(productCode){
 	console.log(sellerID +" "+productCode);
 	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
-
 	
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -1521,14 +1566,12 @@ function buyboxDetailsForSizeGuide(productCode){
 				var sizeSelected=true;
 				
 				var count =0;
-				$("#noProductForSelectedSeller").hide();
-				$("#productDetails").show();
-				$("#price").show();
 
-				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
-					$('#variant option#select-option').attr("selected", "selected");
-					sizeSelected=false;
-				}
+
+//				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
+//					$('#variant option#select-option').attr("selected", "selected");
+//					sizeSelected=false;
+//				}
 				
 				$("#sizeSelectedVal").val(sizeSelected);
 				
@@ -1540,12 +1583,12 @@ function buyboxDetailsForSizeGuide(productCode){
 					$("#noProductForSelectedSeller").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}
-				if (specialPrice != null){
-					$("#specialSelPrice").html(specialPrice);
-				}
-				else{
-					$("#specialSelPrice").html(mopPrice);
-				}
+//				if (specialPrice != null){
+//					$("#specialSelPrice").html(specialPrice);
+//				}
+//				else{
+//					$("#specialSelPrice").html(mopPrice);
+//				}
 				if(data['isPinCodeServicable']=='N'){
 					$("#pinNotServicableSizeGuide").show();
 					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
@@ -1561,6 +1604,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sellerSelArticleSKU").html(ussid);
 				$("#sellerSelArticleSKUVal").val(ussid);
 				$("#nosellerVal").val(nosellerData);
+				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice);
 				if(availableStock==0){
 					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
