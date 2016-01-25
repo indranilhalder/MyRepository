@@ -1548,7 +1548,6 @@ function buyboxDetailsForSizeGuide(productCode){
 	console.log(sellerID +" "+productCode);
 	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
-
 	
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -1569,10 +1568,10 @@ function buyboxDetailsForSizeGuide(productCode){
 				var count =0;
 
 
-				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
-					$('#variant option#select-option').attr("selected", "selected");
-					sizeSelected=false;
-				}
+//				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
+//					$('#variant option#select-option').attr("selected", "selected");
+//					sizeSelected=false;
+//				}
 				
 				$("#sizeSelectedVal").val(sizeSelected);
 				

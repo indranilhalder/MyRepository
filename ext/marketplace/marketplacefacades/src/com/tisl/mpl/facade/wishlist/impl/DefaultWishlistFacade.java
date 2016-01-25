@@ -27,6 +27,7 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -45,6 +46,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService;
  */
 public class DefaultWishlistFacade implements WishlistFacade
 {
+	protected static final Logger LOG = Logger.getLogger(DefaultWishlistFacade.class);
 
 	@Autowired
 	private Wishlist2Service wishlistService;
@@ -167,6 +169,8 @@ public class DefaultWishlistFacade implements WishlistFacade
 		boolean add = true;
 		try
 		{
+			LOG.debug("addProductToWishlist: *****productCode: " + productCode + " **** ussid: " + ussid + " *** selectedSize: "
+					+ selectedSize);
 			final List<Wishlist2EntryModel> entries = wishlist.getEntries();
 			ProductModel product = null;
 			for (final Wishlist2EntryModel wlEntry : entries)
@@ -205,6 +209,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 	{
 		try
 		{
+			LOG.debug("getWishlistForName: ***** wishlistName: " + wishlistName);
 			final List<Wishlist2Model> allWishlists = getAllWishlists();
 			Wishlist2Model requiredWl = null;
 			for (final Wishlist2Model wl : allWishlists)
@@ -215,6 +220,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 					break;
 				}
 			}
+			LOG.debug("getWishlistForName: ***** Return requiredWl: " + requiredWl);
 			return requiredWl;
 		}
 		catch (final Exception ex)
