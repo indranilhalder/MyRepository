@@ -254,16 +254,15 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
-		    	//$("#videoFrame").show();
+		    	$("#videoFrame").show();
 				$("#videoFrame").attr("src",url);
 				$("#videoModal #videoFrame").attr("src",url);
 				$("#videoModal").modal();
 				$("#videoModal").addClass("active");
 				//$(".productImagePrimary .picZoomer-pic-wp img").hide();
-				$(".zoomContainer").remove();
-				$('.picZoomer-pic').removeData('zoom-image');
+				/*$(".zoomContainer").remove();
+				$('.picZoomer-pic').removeData('zoom-image');*/
 		    }
-			
 		});
 
 function openPop(ussidfromSeller) {
@@ -1301,7 +1300,8 @@ function CheckonReload()
 									
 				},
 				error : function(resp) {
-					alert("Error Occured");
+					//alert("Error Occured");
+					console.log( "Error Occured" );
 				}
 			});
 		
@@ -1314,15 +1314,17 @@ function getRating(key,productCode,category)
 {
 	
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
-	  $.getJSON(url, function(data){		  
+	  $.getJSON(url, function(data){
+	  	var totalCount=data.streamInfo.ratingCount;
+		//Reverse the source array
+		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
+		ratingArray  = ratingArray.reverse();
+		
 		  $(".rate-details .after").each(function(count){			  
-				var totalCount=data.streamInfo.ratingCount;
-				//Reverse the source array
-				var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
-				ratingArray  = ratingArray.reverse();
+				
 				var countIndiv=ratingArray[count];								
-				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100});
-				$(".rate-details .after").eq(count).text(data.streamInfo.ratingDetails._overall.ratings[count]);
+				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
+				$(".rate-details .after").eq(count).text(ratingArray[count]);
 				
 			})
 			
@@ -1390,7 +1392,8 @@ function CheckUserLogedIn() {
 								
 			},
 			error : function(resp) {
-				alert("Error Occured");
+				//alert("Error Occured");
+				console.log( "Error Occured" );
 			}
 		});
 	
@@ -1548,7 +1551,6 @@ function buyboxDetailsForSizeGuide(productCode){
 	console.log(sellerID +" "+productCode);
 	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
-
 	
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -1569,10 +1571,10 @@ function buyboxDetailsForSizeGuide(productCode){
 				var count =0;
 
 
-				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
-					$('#variant option#select-option').attr("selected", "selected");
-					sizeSelected=false;
-				}
+//				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
+//					$('#variant option#select-option').attr("selected", "selected");
+//					sizeSelected=false;
+//				}
 				
 				$("#sizeSelectedVal").val(sizeSelected);
 				

@@ -170,7 +170,11 @@
 					<c:set var="coupon" value="${notifylist.couponCode}" />
 					<c:set var="couponIsRead" value="${notifylist.notificationRead}" />
 					  <c:url var="productUrl" value="${notifylist.productUrl}"></c:url>
+					
 
+                    <c:if test="${empty productUrl }">
+	               <c:set var="productUrl" value="/store/mpl/en/my-account/coupons" />
+                   </c:if>
 					
 				<c:set var="couponStatus"
 					value="${notifylist.notificationCustomerStatus}" />

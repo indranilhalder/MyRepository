@@ -24,6 +24,7 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.Constants.USER;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -187,8 +188,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -389,12 +390,17 @@ public class ProductDetailsHelper
 			Wishlist2Model existingWishlist = wishlistFacade.getWishlistForName(wishName);
 			//  boolean add=
 			//checking whether the wishlist with given name exists or not
+			LOG.debug("addToWishListInPopup: *****productCode: " + productCode + " **** ussid: " + ussid + " *** wishName: "
+					+ wishName);
 			if (null != existingWishlist)
 			{
 				add = wishlistFacade.addProductToWishlist(existingWishlist, productCode, ussid, sizeSelected.booleanValue());
+
+				LOG.debug("addToWishListInPopup: ***** existingWishlist: add" + add);
 			}
 			else
 			{
+				LOG.debug("addToWishListInPopup: ***** New Create");
 				final UserModel user = userService.getCurrentUser();
 				final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, wishName, productCode);
 				add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, sizeSelected.booleanValue());
@@ -838,15 +844,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,

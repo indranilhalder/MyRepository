@@ -555,11 +555,4 @@ $(".prev a").click(function(){
 });	
 		
 </script>
-<style>
-.commentcontent .gig-composebox-logout, .commentcontent .gig-composebox-follow {
-	display: none;
-}
-ul.gig-comments-header-right.gig-comments-linksContainer{
-	display: none;
-}
-</style>
+

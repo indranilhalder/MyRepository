@@ -14,6 +14,7 @@ import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,10 +26,17 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -74,15 +82,16 @@ public class SalesOrderReverseXMLUtility
 	public String generateCanellOrderData(final List<OrderModel> orderData)
 	{
 
-		final BulkSalesOrderXMLData xmlData = new BulkSalesOrderXMLData();
-		List<SalesOrderXMLData> bulkSalesDataList = new ArrayList<SalesOrderXMLData>();
+		BulkSalesOrderXMLData xmlData = null;
+		List<SalesOrderXMLData> bulkSalesDataList = null;
 		String xmlString = MarketplacecommerceservicesConstants.EMPTYSPACE;
+		boolean invalidXMLToFICO = false;
 
 		try
 		{
 			if (null != orderData && !orderData.isEmpty())
 			{
-
+				xmlData = new BulkSalesOrderXMLData();
 				bulkSalesDataList = getParentOrderData(orderData);
 				if (null != bulkSalesDataList && !bulkSalesDataList.isEmpty())
 				{
@@ -93,8 +102,36 @@ public class SalesOrderReverseXMLUtility
 					final StringWriter sw = new StringWriter();
 					m.marshal(xmlData, sw);
 					xmlString = sw.toString();
-					LOG.debug(xmlString);
-					paymentInfoCancelService.paymentCancelRev(xmlString);
+					LOG.info(xmlString);
+
+					final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+					factory.setIgnoringComments(true);
+					factory.setCoalescing(true); // Convert CDATA to Text nodes
+					factory.setNamespaceAware(false); // No namespaces: this is default factory.setValidating(false); //
+					// Don't validate DTD: also default
+
+					final DocumentBuilder parser = factory.newDocumentBuilder();
+
+					final Document document = parser.parse(new InputSource(new StringReader(xmlString)));
+
+					NodeList nm = null;
+					Node node = null;
+
+					nm = document.getElementsByTagName("SalesOrders");
+
+					if (null != nm)
+					{
+						node = nm.item(0);
+						if (null != node && StringUtils.isEmpty(node.getTextContent()))
+						{
+							invalidXMLToFICO = true;
+						}
+					}
+
+					if (!invalidXMLToFICO)
+					{
+						paymentInfoCancelService.paymentCancelRev(xmlString);
+					}
 
 				}
 			}
@@ -205,91 +242,102 @@ public class SalesOrderReverseXMLUtility
 	{
 
 		final SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		final List<SalesOrderXMLData> bulkSalesDataList = new ArrayList<SalesOrderXMLData>();
+		List<SalesOrderXMLData> bulkSalesDataList = null;
 		try
 		{
-			for (final OrderModel order : listordermodel)
+
+			if (CollectionUtils.isEmpty(listordermodel))
 			{
-				xmlToFico = true;
-
-				LOG.debug("checkReturnCancelMap and cod");
-				if (!checkCOD(order))
+				xmlToFico = false;
+			}
+			else
+			{
+				bulkSalesDataList = new ArrayList<SalesOrderXMLData>();
+				for (final OrderModel order : listordermodel)
 				{
-					// else { LOG.INFO("checkReturnCancelMap IS IEM")}
-					SalesOrderXMLData salesXMLData = new SalesOrderXMLData();
+					xmlToFico = true;
 
-					if (null != order.getParentReference() && null != order.getParentReference().getCode() && xmlToFico)
+					LOG.debug("checkReturnCancelMap and cod");
+					if (!checkCOD(order))
 					{
-						salesXMLData.setOrderId(order.getParentReference().getCode());
-						LOG.debug("order id " + order.getParentReference().getCode());
-					}
-					else
-					{
-						xmlToFico = false;
-					}
+						// else { LOG.INFO("checkReturnCancelMap IS IEM")}
+						SalesOrderXMLData salesXMLData = new SalesOrderXMLData();
 
-
-					if (null != order.getDate() && xmlToFico)
-					{
-						salesXMLData.setOrderDate(sdformat.format(order.getDate()));
-					}
-					else
-					{
-						xmlToFico = false;
-					}
-					salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
-					if (null != order.getParentReference() && null != order.getParentReference().getPaymentTransactions() && xmlToFico)
-					{
-						final List<PaymentTransactionModel> list = order.getParentReference().getPaymentTransactions();
-						if (null != list && !list.isEmpty())
+						if (null != order.getParentReference() && null != order.getParentReference().getCode() && xmlToFico)
 						{
+							salesXMLData.setOrderId(order.getParentReference().getCode());
+							LOG.info("order id in SalesOrderReverse" + order.getParentReference().getCode());
+						}
+						else
+						{
+							xmlToFico = false;
+						}
 
-							for (final PaymentTransactionModel oModel : list)
+
+						if (null != order.getDate() && xmlToFico)
+						{
+							salesXMLData.setOrderDate(sdformat.format(order.getDate()));
+						}
+						else
+						{
+							xmlToFico = false;
+						}
+						salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
+						if (null != order.getParentReference() && null != order.getParentReference().getPaymentTransactions()
+								&& xmlToFico)
+						{
+							final List<PaymentTransactionModel> list = order.getParentReference().getPaymentTransactions();
+							if (null != list && !list.isEmpty())
 							{
-								if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
-										&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS) && xmlToFico)
+
+								for (final PaymentTransactionModel oModel : list)
 								{
-									salesXMLData.setMerchantCode(oModel.getPaymentProvider());
-									if (null != oModel.getCode())
+									if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
+											&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS)
+											&& xmlToFico)
 									{
-										payemntrefid = oModel.getCode();
-										LOG.debug(">>>>>>>>>>>>>>" + payemntrefid);
+										salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										if (null != oModel.getCode())
+										{
+											payemntrefid = oModel.getCode();
+											LOG.debug(">>>>>>>>>>>>>>" + payemntrefid);
+										}
 									}
 								}
 							}
+
 						}
-
-					}
-					else
-					{
-						xmlToFico = false;
-					}
-					LOG.debug("****calling suborder*****");
-					if (null != order.getParentReference() && null != order.getParentReference().getChildOrders()
-							&& !order.getParentReference().getChildOrders().isEmpty() && xmlToFico)
-					{
-
-						LOG.debug(" child order data not null");
-						List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
-						subOrderDataList = getSubOrderData(order.getParentReference().getChildOrders());
-
-						if (subOrderDataList.size() == 0)
+						else
 						{
-							salesXMLData = null;
+							xmlToFico = false;
 						}
-
-						if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
+						LOG.debug("****calling suborder*****");
+						if (null != order.getParentReference() && null != order.getParentReference().getChildOrders()
+								&& !order.getParentReference().getChildOrders().isEmpty() && xmlToFico)
 						{
-							salesXMLData.setSubOrderList(subOrderDataList);
-							LOG.debug("set sub order list");
+
+							LOG.debug(" child order data not null");
+							List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
+							subOrderDataList = getSubOrderData(order.getParentReference().getChildOrders());
+
+							if (subOrderDataList.size() == 0)
+							{
+								salesXMLData = null;
+							}
+
+							if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
+							{
+								salesXMLData.setSubOrderList(subOrderDataList);
+								LOG.debug("set sub order list");
+							}
+						}
+						if (bulkSalesDataList != null)
+						{
+							bulkSalesDataList.add(salesXMLData);
 						}
 					}
-					if (bulkSalesDataList != null)
-					{
-						bulkSalesDataList.add(salesXMLData);
-					}
+
 				}
-
 			}
 		}
 		catch (final EtailBusinessExceptions e)
