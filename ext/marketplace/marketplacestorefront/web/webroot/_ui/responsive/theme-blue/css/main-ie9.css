@@ -14022,6 +14022,8 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	margin: 0 0 10px;
 	line-height: 15px;
 	font-weight:500;
+	text-align:center;
+	word-break: break-word;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
@@ -14941,4 +14943,13 @@ body .account .right-account .reviews .toolbar .account-only h2{
 .modal.size-guide .sizes .details .price p {
     display: inline-block;
     margin: 0 5px;
+}
+body.page-reviews .commentcontent .gig-composebox-logout, .commentcontent .gig-composebox-follow {
+	display: none;
+}
+body.page-reviews ul.gig-comments-header-right.gig-comments-linksContainer{
+	display: none;
+}
+body.page-reviews .gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
+   display: none;
 }
