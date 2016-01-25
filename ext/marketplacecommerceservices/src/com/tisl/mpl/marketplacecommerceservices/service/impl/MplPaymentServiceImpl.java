@@ -44,6 +44,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.DiscountValue;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
@@ -89,6 +90,7 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -142,7 +144,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 	@Autowired
-	private MplVoucherServiceImpl mplVoucherServiceImpl;
+	private MplVoucherService mplVoucherService;
 
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
@@ -1535,6 +1537,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
 			CalculationException, JaloSecurityException, JaloPriceFactoryException
 	{
+		//Reset Voucher Apportion
+		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+		{
+			for (final AbstractOrderEntryModel entry : getMplVoucherService()
+					.getOrderEntryModelFromVouEntries((VoucherModel) cart.getDiscounts().get(0), cart))
+			{
+				entry.setCouponCode("");
+				entry.setCouponValue(Double.valueOf(0.00D));
+				getModelService().save(entry);
+			}
+		}
+
+
 		final MplPromoPriceData promoPriceData = new MplPromoPriceData();
 		MplPromotionData responseData = new MplPromotionData();
 		VoucherDiscountData discData = new VoucherDiscountData();
@@ -1580,7 +1595,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
 		{
-			discData = getMplVoucherServiceImpl().checkCartAfterApply((VoucherModel) cart.getDiscounts().get(0), cart);
+			final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
+			final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService()
+					.getOrderEntryModelFromVouEntries(voucher, cart);
+			discData = getMplVoucherService().checkCartAfterApply(voucher, cart, applicableOrderEntryList);
+			getMplVoucherService().setApportionedValueForVoucher(voucher, cart, voucher.getVoucherCode(), applicableOrderEntryList);
 			getMplCommerceCartService().setTotalWithConvCharge(cart, cartData);
 
 		}
@@ -2811,22 +2830,25 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 
 	/**
-	 * @return the mplVoucherServiceImpl
+	 * @return the mplVoucherService
 	 */
-	public MplVoucherServiceImpl getMplVoucherServiceImpl()
+	public MplVoucherService getMplVoucherService()
 	{
-		return mplVoucherServiceImpl;
+		return mplVoucherService;
 	}
 
 
 	/**
-	 * @param mplVoucherServiceImpl
-	 *           the mplVoucherServiceImpl to set
+	 * @param mplVoucherService
+	 *           the mplVoucherService to set
 	 */
-	public void setMplVoucherServiceImpl(final MplVoucherServiceImpl mplVoucherServiceImpl)
+	public void setMplVoucherService(final MplVoucherService mplVoucherService)
 	{
-		this.mplVoucherServiceImpl = mplVoucherServiceImpl;
+		this.mplVoucherService = mplVoucherService;
 	}
+
+
+
 
 
 

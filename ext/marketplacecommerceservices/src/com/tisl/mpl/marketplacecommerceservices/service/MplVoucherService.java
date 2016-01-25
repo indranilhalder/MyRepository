@@ -36,22 +36,6 @@ public interface MplVoucherService
 	void recalculateCartForCoupon(CartModel cartModel) throws JaloPriceFactoryException, CalculationException;
 
 	/**
-	 * @param lastVoucher
-	 * @param cartModel
-	 * @return VoucherDiscountData
-	 * @throws ModelSavingException
-	 * @throws VoucherOperationException
-	 * @throws CalculationException
-	 * @throws NumberFormatException
-	 * @throws JaloInvalidParameterException
-	 * @throws JaloSecurityException
-	 * @throws JaloPriceFactoryException
-	 */
-	VoucherDiscountData checkCartAfterApply(VoucherModel lastVoucher, CartModel cartModel)
-			throws ModelSavingException, VoucherOperationException, CalculationException, NumberFormatException,
-			JaloInvalidParameterException, JaloSecurityException, JaloPriceFactoryException;
-
-	/**
 	 * @param voucherModel
 	 * @param cartModel
 	 * @return List<AbstractOrderEntry>
@@ -83,5 +67,32 @@ public interface MplVoucherService
 	 * @throws VoucherOperationException
 	 */
 	VoucherModel getVoucherModel(String voucherCode) throws VoucherOperationException;
+
+	/**
+	 * @param voucher
+	 * @param cartModel
+	 * @param voucherCode
+	 * @param applicableOrderEntryList
+	 */
+	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
+			List<AbstractOrderEntryModel> applicableOrderEntryList);
+
+	/**
+	 * @param lastVoucher
+	 * @param cartModel
+	 * @param applicableOrderEntryList
+	 * @return VoucherDiscountData
+	 * @throws ModelSavingException
+	 * @throws VoucherOperationException
+	 * @throws CalculationException
+	 * @throws NumberFormatException
+	 * @throws JaloInvalidParameterException
+	 * @throws JaloSecurityException
+	 * @throws JaloPriceFactoryException
+	 */
+	VoucherDiscountData checkCartAfterApply(VoucherModel lastVoucher, CartModel cartModel,
+			List<AbstractOrderEntryModel> applicableOrderEntryList)
+					throws ModelSavingException, VoucherOperationException, CalculationException, NumberFormatException,
+					JaloInvalidParameterException, JaloSecurityException, JaloPriceFactoryException;
 
 }

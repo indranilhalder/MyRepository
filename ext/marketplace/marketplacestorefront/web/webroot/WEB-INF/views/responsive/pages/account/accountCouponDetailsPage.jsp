@@ -142,35 +142,45 @@
 					<p class="mobile">Enter the coupon code in your cart to receive
 						your discount.</p>
 					<ul class="coupon-container">
-						<%-- <input type="hidden" id="accountCouponCount" value="${fn:length(closedCouponList)}"/> --%>
-						<c:forEach items="${closedCouponList}" var="closedVoucherDisplay"
-							varStatus="vlstatus">
-							<li class="coupon-box starred">
-
-								<h2>${closedVoucherDisplay.voucherDescription}</h2> <c:if
-									test="${not empty closedVoucherDisplay.reedemCouponCount}">
-									<div align="center">
-										<c:choose>
-											<c:when
-												test="${closedVoucherDisplay.reedemCouponCount eq '1'}">
-												<p class="coupon_count">Single</p>
-											</c:when>
-											<c:otherwise>
-												<p class="coupon_count">Multiple</p>
-											</c:otherwise>
-										</c:choose>
+						<c:choose>
+							<c:when test="${empty closedCouponList}">
+								<div>
+								<h2>
+										<spring:theme code="text.account.coupons.nocouponavailable" />
+									</h2>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${closedCouponList}" var="closedVoucherDisplay" varStatus="vlstatus">
+									<li class="coupon-box starred">
+									<h2>${closedVoucherDisplay.voucherDescription}</h2> <c:if
+										test="${not empty closedVoucherDisplay.reedemCouponCount}">
+										<div align="center">
+											<c:choose>
+												<c:when
+													test="${closedVoucherDisplay.reedemCouponCount eq '1'}">
+													<p>Single</p>
+												</c:when>
+												<c:otherwise>
+													<p>Multiple</p>
+												</c:otherwise>
+											</c:choose>
+										</div>
+									</c:if>
+									<div class="left">
+										<p>Coupon Code</p>
+										${closedVoucherDisplay.voucherCode}
 									</div>
-								</c:if>
-								<div class="left">
-									<p>Coupon Code</p>
-									${closedVoucherDisplay.voucherCode}
-								</div>
-								<div class="right">
-									<p>Expires on</p>
-									<p>${closedVoucherDisplay.voucherExpiryDate}</p>
-								</div>
-							</li>
-						</c:forEach>
+									<div class="right">
+										<p>Expires on</p>
+										<p>${closedVoucherDisplay.voucherExpiryDate}</p>
+									</div>
+								</li>
+							  </c:forEach>
+					      </c:otherwise>
+						</c:choose>
+						
+					</ul>
 					</ul>
 					<!--  pagination for upper section  -->
 					<div class="bottom">
