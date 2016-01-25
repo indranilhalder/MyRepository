@@ -22,11 +22,6 @@
 			</cms:pageSlot>
 		</ul>
 	</div>
-	
-	<cms:pageSlot position="Section3" var="feature">
-		<cms:component component="${feature}" />
-	</cms:pageSlot>
-	
 
 	<!-- For Infinite Analytics Start -->
 	<div class="brands" id="ia_brands_favorites"></div>
