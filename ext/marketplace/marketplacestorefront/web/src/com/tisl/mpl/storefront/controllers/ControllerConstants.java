@@ -312,6 +312,7 @@ public interface ControllerConstants
 				public static final String OTHERSELLERS_PAGE_LIMIT = "othersellers.pageLimit";
 				public static final String VIEW_SELLERS = "viewSellers";
 				public static final String PRODUCT_CODE = "productCode";
+				public static final String SIZESELECTED = "sizeSelected";
 				public static final String BUYBOXUSSID = "buyboxussid";
 				public static final String ALLSELLERS = "allsellers";
 				public static final String PAGE_LIMIT = "pageLimit";

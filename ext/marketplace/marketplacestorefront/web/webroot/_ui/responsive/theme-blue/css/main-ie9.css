@@ -16,6 +16,12 @@ img[src='']{
     opacity:0;
     width:0px;
 }
+  b{
+  font-weight:bold;
+  }
+  i{
+  font-style:italic;
+  }
 select {
   background-image: none;
   padding: 0;
