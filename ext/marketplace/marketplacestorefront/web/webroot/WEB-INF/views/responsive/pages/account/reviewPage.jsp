@@ -97,7 +97,7 @@
 							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel">
 							
 								<c:forEach items="${productDataModifyMap}" var="product">
-								<div class="slide item"><a
+								<div class="slide item" id="no-image-link${product.value.code}"><a
 									class="product-tile" href='<c:url value="${product.value.url}"></c:url>'>
 										<div class="image">
 											
@@ -224,7 +224,7 @@
 						</div>
 						<div class="review">
 							<div class="details">
-							
+							<div class="rating-stars-wrapper">
 								<ul class="rating-stars" data-rating-name${count.index}="_overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -236,7 +236,7 @@
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
 								<span class="review-date"> ${comment.reviewDate} </span>
-								
+								</div>
 								<!-- Ratings -->
 								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
 								<span class="rating-name"><spring:theme code="myaccount.editreview.overall"/> </span>
@@ -555,3 +555,14 @@ $(".prev a").click(function(){
 });	
 		
 </script>
+<style>
+.commentcontent .gig-composebox-logout, .commentcontent .gig-composebox-follow {
+	display: none;
+}
+ul.gig-comments-header-right.gig-comments-linksContainer{
+	display: none;
+}
+.gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
+   display: none;
+}
+</style>
