@@ -61,10 +61,37 @@ if(typeof(arrayrating)!= "undefined"){
 		});
 		
 		$("input[name=update]").click(function(){
+			var isValidated = true;
 			var indexElement =  $(this).attr("data-index");
 			//alert("inside update");
-			$(".review-block"+indexElement).block({message:$("#updateReviewcontainer").html()});
-			//alert("inside update-pop up");
+			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
+			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
+			if(updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "")		
+			{		
+			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment Title cannot be left blank.</p>");		
+			    isValidated=false;		
+			}else if(updatedReviewHeading.length > 5000){
+				$(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater than 5000 charecters.</p>");		
+			    isValidated=false;
+			}
+			if(updatedCommentTitle == undefined || updatedCommentTitle.replace(/\s/g, '')  == "")		
+			{		
+			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment text cannot be left blank.</p>");		
+			    isValidated=false;		
+			}else if(updatedCommentTitle.length > 5000){
+				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
+			    isValidated=false;	
+			}
+			var x = updatedReviewHeading.length;
+			var y = updatedCommentTitle.length;
+			if(x > 0 && y > 0 && isValidated ) {
+				console.log(x);
+				console.log(y);
+				$(".errorUpdateReview"+indexElement).html("");
+				$(".review-block"+indexElement).block({message:$("#updateReviewcontainer").html()});
+			}
+			
+			
 		});
 		
 		$(document).on("click","button.updateReviewConfirmation",function(){
@@ -102,24 +129,7 @@ if(typeof(arrayrating)!= "undefined"){
 				}else{
 					ratings = "{'_overall':"+updated_rating_overall+", 'Quality':"+updated_rating_quality+",'Fit':"+updated_rating_fit+",'Value for Money':"+updated_rating_vfm+"}";
 				}
-				//console.log(ratingsJSON.hasOwnProperty("easeOfUse"));
-				//validate before update
-				if(updatedReviewHeading == undefined ||updatedReviewHeading  == "")		
-					{		
-					    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment Title cannot be left blank.</p>");		
-					    isValidated=false;		
-					}
-				if(updatedCommentTitle == undefined || updatedCommentTitle  == "")		
-				{		
-				    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment text cannot be left blank.</p>");		
-				    isValidated=false;		
-				}
-			/*	if(ratingsJSON == undefined ||  (ratingsJSON.overall == 0 || ratingsJSON.fit == 0 || ratingsJSON.value_for_money == 0 || ratingsJSON.quality == 0 || (ratingsJSON.hasOwnProperty("easeOfUse") && ratingsJSON.easeOfUse == 0)))		
-				{		
-				    $(".errorUpdateRating"+indexElement).html("<p>Please enter all ratings.Ratings cannot be left blank.</p>");		
-				    isValidated=false;		
-				}*/
-			
+				
 				if(isValidated){
 					$.ajax({
 						url:"review/edit",
@@ -308,8 +318,14 @@ if(typeof(arrayrating)!= "undefined"){
 		    	
 		    	$(".popUpProductTitle").text(productTitle);
 		    	$(".popUpProductBrand").text(productBrand);
-		    	var x = $("#new-review-link"+productCode).siblings().find(".picZoomer-pic").attr("src");		
-		    	$(".review-image").attr("src", x);
+		    	var x = $("#new-review-link"+productCode).siblings().find(".picZoomer-pic").attr("src");
+		    	
+		    	if(typeof(x) == "undefined" || x == ""){
+		    		var noimg = $("#no-image-link"+productCode).find("div.image").find("img").attr("src");
+		    		$(".review-image").attr("src", noimg);
+		    	}else{
+		    		$(".review-image").attr("src", x);
+		    	}
 				var ratingsParams = {
 						categoryID : rootCategory,
 						streamID : productCode,

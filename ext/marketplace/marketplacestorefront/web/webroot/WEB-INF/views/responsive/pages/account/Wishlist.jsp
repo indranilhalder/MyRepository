@@ -398,7 +398,7 @@
 													</c:when>
 
 													<c:otherwise>
-													<c:if test="${not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing'||wpproduct.productCategory eq 'Footwear'}">
+													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear')}">
 														<span>
 															<button id="addToCartButton" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -415,8 +415,7 @@
 															</button>
 														</span>
 														</c:if>
-														
-														<c:if test="${empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing'||wpproduct.productCategory eq 'Footwear'}">
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')}">
 														<span id="addToCartButtonId" style="display: none">
 															<button type="button" id="addToCartButton" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"

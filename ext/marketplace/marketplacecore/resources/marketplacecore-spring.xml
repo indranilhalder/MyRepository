@@ -1258,7 +1258,7 @@
     <bean id="updateSellerPriorityCronJob" parent="abstractJobPerformable" class="com.tisl.mpl.core.cronjob.priority.UpdateSellerPriorityCronJob" autowire="byName">
     </bean>
     
- <!--     <bean id="mplCouponListingDao" class="com.tisl.mpl.core.coupon.dao.MplCouponListingDaoImpl">
+     <bean id="mplCouponListingDao" class="com.tisl.mpl.core.coupon.dao.MplCouponListingDaoImpl">
 	</bean>
 	   
 	 <bean id="mplVoucherCodeValueProvider"
@@ -1269,7 +1269,7 @@
 		<property name="mplCouponListingDao" ref="mplCouponListingDao" />
 		<property name="voucherRestrictionService" ref="voucherRestrictionService" />
 		
-	</bean> -->
+	</bean>
 	   <!--  pdp seller priority cron job ends -->
 </beans>
 

@@ -43,6 +43,7 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCommerceCartDao;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
@@ -288,8 +289,8 @@ public class MplCommerceCartServiceImplTest
 		cartDataMock.setName("user");
 		cartDataMock.setSite("site");
 		Mockito.when(mplCommerceCartDao.getCart(cartId)).thenReturn(cartModelMock);
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addItemToCart(cartId, productCode, quantity, ussid))).thenReturn(
-				(success));
+		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addItemToCart(cartId, productCode, quantity, ussid)))
+				.thenReturn((success));
 	}
 
 	@Test
@@ -523,40 +524,40 @@ public class MplCommerceCartServiceImplTest
 	 * wishlist2EntryModel.setUssid("123654098765485130011713");
 	 * given(mplCommerceCartServiceImpl.getGiftYourselfDetails(minGiftQuantity, allWishlists,
 	 * pincode)).willReturn(sortedWishList);
-	 * 
+	 *
 	 * final Map<String, List<Wishlist2EntryModel>> sortedWishListMap = new HashMap<String, List<Wishlist2EntryModel>>();
 	 * final List<GetWishListDataWsDTO> getWishListDataWsDTOList = new ArrayList<GetWishListDataWsDTO>(); final String
 	 * wishListName = "DefaultWishlist"; final List<Wishlist2EntryModel> wishlist2EntryModelList = new
 	 * ArrayList<Wishlist2EntryModel>();
-	 * 
+	 *
 	 * wishlist2EntryModelList.add(wishlist2EntryModel); sortedWishListMap.put((wishListName), wishlist2EntryModelList);
 	 * final List<GetWishListProductWsDTO> getWishListProductWsList = new ArrayList<GetWishListProductWsDTO>();
 	 * productModelMock.setArticleDescription("article 12"); productModelMock.setCode("987654321");
 	 * productModelMock.setManufacturerName("manufacturer21"); wishlist2EntryModel.setProduct(productModelMock); final
-	 * List<BrandModel> brandModelList = new ArrayList<BrandModel>();
-	 * brandModel.setDescription("Leading electronic Brand "); brandModel.setName("Samsung");
-	 * 
+	 * List<BrandModel> brandModelList = new ArrayList<BrandModel>(); brandModel.setDescription(
+	 * "Leading electronic Brand "); brandModel.setName("Samsung");
+	 *
 	 * brandModelList.add(brandModel); productModelMock.setBrands(brandModelList); final List<BuyBoxModel>
 	 * buyBoxModelList = buyBoxDao.getBuyBoxPriceForUssId(wishlist2EntryModel.getUssid());
 	 * buyBoxModel.setAvailable(Integer.valueOf(71)); buyBoxModel.setPrice(Double.valueOf(1234));
 	 * buyBoxModel.setSellerId("12345"); buyBoxModel.setSellerArticleSKU("123654098765485130011713");
 	 * buyBoxModel.setProduct("electronic");
-	 * 
+	 *
 	 * buyBoxModelList.add(buyBoxModel);
 	 * given(buyBoxDao.getBuyBoxPriceForUssId("123654098765485130011713")).willReturn(buyBoxModelList); Double finalPrice
 	 * = Double.valueOf(0.0); final Double mrpPrice = Double.valueOf(800); finalPrice = mrpPrice; final String color =
 	 * "red"; final String size = "34"; final String imageUrl = "www.getMyPic.com";
 	 * getWishListProductWsObj.setUSSID((wishlist2EntryModel.getUssid())); getWishListProductWsObj.setColor(color);
 	 * getWishListProductWsObj.setDate(wishlist2EntryModel.getAddedDate());
-	 * 
+	 *
 	 * getWishListProductWsObj.setImageURL(imageUrl); getWishListProductWsObj.setPrice(finalPrice);
 	 * getWishListProductWsObj.setProductBrand((brandModelList.get(0).getName()));
-	 * 
+	 *
 	 * getWishListProductWsObj.setProductcode("987654321");
 	 * getWishListProductWsObj.setSellerId((buyBoxModelList.get(0).getSellerId()));
 	 * getWishListProductWsObj.setSellerName((buyBoxModelList.get(0).getSellerName()));
 	 * getWishListProductWsObj.setSize(size); getWishListProductWsList.add(getWishListProductWsObj);
-	 * 
+	 *
 	 * getWishListDataWsDTOObj.setName(wishListName); getWishListDataWsDTOObj.setProducts(getWishListProductWsList);
 	 * getWishListDataWsDTOList.add(getWishListDataWsDTOObj);
 	 * given(mplCommerceCartServiceImpl.getTopTwoWishlistForUser(userModelMock, pincode)).willReturn(getWishListWsDTO); }
@@ -594,7 +595,7 @@ public class MplCommerceCartServiceImplTest
 		codEligible = Boolean.FALSE;
 
 
-		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry))).thenReturn(
-				Boolean.valueOf((codEligible.booleanValue())));
+		Mockito.when(Boolean.valueOf(mplCommerceCartServiceImpl.addCartCodEligible(deliveryModeMap, pinCodeEntry)))
+				.thenReturn(Boolean.valueOf((codEligible.booleanValue())));
 	}
 }

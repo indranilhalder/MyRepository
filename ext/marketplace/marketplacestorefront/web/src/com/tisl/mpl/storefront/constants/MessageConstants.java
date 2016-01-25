@@ -178,6 +178,8 @@ public final class MessageConstants
 
 	//coupons
 	public static final String PAZE_SIZE_COUPONS = "mpl.account.coupon.pazesize";
+	//closed coupon
+	public static final String PAZE_SIZE_VOUCHER = "mpl.account.voucher.pazesize";
 	//reviews
 	public static final String TEXT_ACCOUNT_REVIEWS = "text.account.reviews";
 	public static final String PAZE_SIZE = "mpl.account.review.pazesize";
