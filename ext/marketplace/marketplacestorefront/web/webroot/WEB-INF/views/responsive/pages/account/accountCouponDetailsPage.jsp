@@ -159,10 +159,10 @@
 											<c:choose>
 												<c:when
 													test="${closedVoucherDisplay.reedemCouponCount eq '1'}">
-													<p>Single</p>
+													<p class="coupon_count">Single</p>
 												</c:when>
 												<c:otherwise>
-													<p>Multiple</p>
+													<p class="coupon_count">Multiple</p>
 												</c:otherwise>
 											</c:choose>
 										</div>

@@ -73,10 +73,14 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					currencyInstance, container);
 
 			double promotion = Double.valueOf(0);
+			double cartPromo = Double.valueOf(0);
+			double couponPromo = Double.valueOf(0);
 			
 			for(AbstractOrderEntryModel entry : abstractOrderModel.getEntries()){
 				if(entry.getNetAmountAfterAllDisc()!=null)
 				promotion+= (entry.getTotalProductLevelDisc()) ;
+				cartPromo+=entry.getCartLevelDisc();
+				couponPromo+=entry.getCouponValue();
 			}
 			renderRow(promotion,
 					LabelUtils.getLabel(widget, "promotion", new Object[0]),
@@ -120,32 +124,32 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					LabelUtils.getLabel(widget, "deliveryCosts", new Object[0]),
 					currencyInstance, container);
 			
-			final List<DiscountValue>discountList=abstractOrderModel.getGlobalDiscountValues();
-		    final List<DiscountModel> voucherList=abstractOrderModel.getDiscounts();
-		    double orderDiscount=0;
-		    double couponDiscount=0;
-		    
-		    if(CollectionUtils.isNotEmpty(discountList))
-		    {
-		    	for(DiscountValue disVal:discountList)
-		    	{
-		    		if(CollectionUtils.isNotEmpty(voucherList) && disVal.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
-		    		{
-		    			couponDiscount+=disVal.getAppliedValue();
-		    		}
-		    		else
-		    		{
-		    			orderDiscount+=disVal.getAppliedValue();
-		    		}
-		    	}
-		    }
+//			final List<DiscountValue>discountList=abstractOrderModel.getGlobalDiscountValues();
+//		    final List<DiscountModel> voucherList=abstractOrderModel.getDiscounts();
+//		    double orderDiscount=0;
+//		    double couponDiscount=0;
+//		    
+//		    if(CollectionUtils.isNotEmpty(discountList))
+//		    {
+//		    	for(DiscountValue disVal:discountList)
+//		    	{
+//		    		if(CollectionUtils.isNotEmpty(voucherList) && disVal.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+//		    		{
+//		    			couponDiscount+=disVal.getAppliedValue();
+//		    		}
+//		    		else
+//		    		{
+//		    			orderDiscount+=disVal.getAppliedValue();
+//		    		}
+//		    	}
+//		    }
 
 			//Double discounts = abstractOrderModel.getTotalDiscounts();
-			renderRow(Double.valueOf(orderDiscount),
+			renderRow(Double.valueOf(cartPromo),
 					LabelUtils.getLabel(widget, "discounts", new Object[0]),
 					currencyInstance, container);
 			
-			renderRow(Double.valueOf(couponDiscount),
+			renderRow(Double.valueOf(couponPromo),
 					LabelUtils.getLabel(widget, "couponDiscounts", new Object[0]),
 					currencyInstance, container);
 

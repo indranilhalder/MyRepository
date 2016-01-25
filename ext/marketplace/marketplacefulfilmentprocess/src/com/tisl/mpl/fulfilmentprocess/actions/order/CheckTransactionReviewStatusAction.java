@@ -36,7 +36,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
@@ -367,10 +366,11 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	private PaymentTransactionModel initiateRefund(final OrderModel order)
 	{
 		PaymentTransactionModel paymentTransactionModel = null;
+		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
 		try
 		{
 			paymentTransactionModel = mplJusPayRefundService.doRefund(order, order.getTotalPriceWithConv().doubleValue(),
-					PaymentTransactionType.CANCEL);
+					PaymentTransactionType.CANCEL, uniqueRequestId);
 			if (null != paymentTransactionModel)
 			{
 				mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
@@ -384,7 +384,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		{
 			LOG.error(e.getMessage(), e);
 			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(order, "FAILURE",
-					order.getTotalPriceWithConv(), PaymentTransactionType.CANCEL, "FAILURE", UUID.randomUUID().toString());
+					order.getTotalPriceWithConv(), PaymentTransactionType.CANCEL, "FAILURE", uniqueRequestId);
 			mplJusPayRefundService.attachPaymentTransactionModel(order, paymentTransactionModel);
 
 			// TISSIT-1784 Code addition started
@@ -402,7 +402,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
 										RefundTransactionMappingModel.class);
 								refundTransactionMappingModel.setRefundedOrderEntry(subOrderEntryModel);
-								refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
+								refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 								refundTransactionMappingModel.setCreationtime(new Date());
 								refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED_FOR_RISK);
 								getModelService().save(refundTransactionMappingModel);
