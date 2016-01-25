@@ -82,6 +82,12 @@ if(typeof(arrayrating)!= "undefined"){
 				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
 			    isValidated=false;	
 			}
+			//TISSTRT-290 fix
+			if((updatedReviewHeading.length > 5000) && (updatedCommentTitle.length > 5000))		
+			{		
+			    $(".errorUpdateReview"+indexElement).html("<p>Review title/Review text cannot be greater than 5000 charecters.</p>");		
+			    isValidated=false;		
+			}
 			var x = updatedReviewHeading.length;
 			var y = updatedCommentTitle.length;
 			if(x > 0 && y > 0 && isValidated ) {
@@ -133,7 +139,7 @@ if(typeof(arrayrating)!= "undefined"){
 				if(isValidated){
 					$.ajax({
 						url:"review/edit",
-						type:"GET",
+						type:"POST",
 						dataType:"JSON",
 						data:{categoryID:categoryID,streamID:streamID,commentID:commentID,commentText:updatedCommentTitle,commentTitle:updatedReviewHeading,ratings:ratings},
 						beforeSend:function(){
