@@ -4,6 +4,7 @@
 package com.tisl.mpl.coupon.facade;
 
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -82,14 +83,6 @@ public interface MplCouponFacade
 	 */
 	void releaseVoucherInCheckout(CartModel cart) throws JaloPriceFactoryException, CalculationException;
 
-
-	/**
-	 * @param customer
-	 * @param voucherList
-	 * @return AllVoucherListData
-	 */
-	//AllVoucherListData getAllVoucherList(CustomerModel customer, List<VoucherModel> voucherList);
-
 	/**
 	 * @param customer
 	 * @return CouponHistoryStoreDTO
@@ -112,7 +105,9 @@ public interface MplCouponFacade
 
 
 	/**
-	 * @param voucherEntrySet
+	 *
+	 * @param voucherModel
+	 * @param cartModel
 	 * @return List<AbstractOrderEntry>
 	 */
 	List<AbstractOrderEntry> getOrderEntriesFromVoucherEntries(final VoucherModel voucherModel, final CartModel cartModel);
@@ -125,17 +120,19 @@ public interface MplCouponFacade
 	 */
 	void releaseVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
 
-
-	/**
-	 * @param voucher
-	 * @param cartModel
-	 * @param voucherCode
-	 */
-	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode);
-
 	/*
 	 * @return
 	 */
 	@SuppressWarnings("javadoc")
 	List<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer);
+
+
+	/**
+	 * @param voucher
+	 * @param cartModel
+	 * @param voucherCode
+	 * @param applicableOrderEntryList
+	 */
+	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
+			List<AbstractOrderEntryModel> applicableOrderEntryList);
 }

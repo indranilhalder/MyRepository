@@ -277,9 +277,9 @@
 		</c:otherwise>
 	</c:choose>	
 			</ul>			
-			<div class="size">				
-					<c:if test="${noVariant!=true&&notApparel!=true}">
-	<label>Size:</label> 
+<div class="size">				
+<c:if test="${noVariant!=true&&notApparel!=true}">
+ <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 	
 	
 	
@@ -496,6 +496,10 @@ $("#add_to_wishlist-sizeguide").click(function(){
 	 $(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
 	return false;
 });
+
+$("#noProductForSelectedSeller").hide();
+$("#productDetails").show();
+$("#price").show();
 });
 
 

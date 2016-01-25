@@ -788,5 +788,65 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		}
 	}
 
+
+
+
+	@Override
+	public ProductCategorySearchPageData dropDownSearchForCoupon(final SearchStateData searchState, final String couponId,
+			final PageableData pageableData)
+	{
+		// YTODO Auto-generated method stub
+		return getThreadContextService().executeInContext(
+				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+				{
+					@Override
+					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+					{
+						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+								.convert(getProductSearchService().searchAgain(decodeCouponStateDropDown(searchState, couponId),
+										pageableData));
+					}
+				});
+	}
+
+
+
+	protected final SolrSearchQueryData decodeCouponStateDropDown(final SearchStateData searchState, final String couponId)
+	{
+		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
+		if (couponId != null)
+		{
+			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+			solrSearchQueryTermData.setKey("vouchers");
+			solrSearchQueryTermData.setValue(couponId);
+			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
+		}
+		return searchQueryData;
+	}
+
+	@Override
+	public ProductCategorySearchPageData dropDownSearchForCouponListing(final SearchStateData searchState, final String couponId,
+			final PageableData pageableData)
+	{
+		// YTODO Auto-generated method stub
+		return getThreadContextService().executeInContext(
+				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+				{
+					@Override
+					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+					{
+						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+								.convert(getProductSearchService().searchAgain(decodeCouponListingStateDropDown(searchState, couponId),
+										pageableData));
+					}
+				});
+	}
+
+
+	protected final SolrSearchQueryData decodeCouponListingStateDropDown(final SearchStateData searchState, final String couponId)
+	{
+		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
+		return searchQueryData;
+	}
 }
 

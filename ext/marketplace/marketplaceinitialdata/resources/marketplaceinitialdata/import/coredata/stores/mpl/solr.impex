@@ -150,6 +150,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;
 ;$solrIndexedType; deliveryMode           ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplDeliveryModeValueProvider         ;    									;                           ;
 ;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;
+;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;facet[default=true]
 ;$solrIndexedType; snsCategory            ;string ;     ;    ;     ;true ;true ;	 ;mplSnscategoryValueProvider;
