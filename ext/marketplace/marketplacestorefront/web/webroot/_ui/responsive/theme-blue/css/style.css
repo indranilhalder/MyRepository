@@ -1628,7 +1628,7 @@ h2 {
             header .content nav > ul > li > ul > li > ul {
               position: absolute;
               top: 0;
-              left: 190px;
+              left: 189px;
               height: 450px;
               padding-top: 10px;
               padding-left: 40px;
@@ -9978,7 +9978,7 @@ body .account .right-account .order-history .pagination li{
       margin-bottom: 5px; }
     .product-tile .image .new {
       position: absolute;
-      width: 30%;
+      height: 31%;
       top: 0;
       left: -15px; }
       .shop-sale.wrapper .product-tile .image .new {
@@ -10497,7 +10497,8 @@ body .account .right-account .order-history .pagination li{
     float: left;
 }
 .promo-block .promo-img img {
-    position: relative
+    position: relative;
+     width: 90%;
 }
 .promo-block .promo-img img.sprite-icon {
     position: absolute;
@@ -13152,6 +13153,9 @@ font-size:14px;
 }
 .customer-service .content * {
     font-family: avenir next !important;
+}
+.customer-service .content h3 {
+    text-align:center;
 }
 .content b {
     font-weight: 600;
@@ -18666,7 +18670,7 @@ input[type="checkbox"]#brandSelectAll + label{
 	margin: 0px;
 }
  .quick-view-popup .size-guide {
-  width: 100%;
+ /*  width: 100%; */
   text-transform: uppercase;
 	float:left;
   font-weight: 600;
@@ -18676,6 +18680,9 @@ input[type="checkbox"]#brandSelectAll + label{
   bottom:0;
   left:0;
 } 
+.select_height_toggle{
+display: block !important;
+}
 .quick-view-popup .size-guide:before {
   font-family: 'icomoon';
   -webkit-font-smoothing: antialiased;
@@ -22528,7 +22535,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
     margin: 10px 0;
     text-align: center;
 }
-@media(min-width:651px){
+@media(min-width:791px){
 .product-tile:hover .image .quickview {
     opacity: 1;
     -webkit-transition: opacity 0.3s;
@@ -28974,6 +28981,22 @@ body.page-reviews ul.gig-comments-header-right.gig-comments-linksContainer{
 }
 body.page-reviews .gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
    display: none;
+}
+header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+	display:none;}
+header .content nav > ul > li > ul > li > ul.words > li:nth-child(2){
+	margin-top:0px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+	padding-top:40px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+position: absolute;
+    top: 0;
+	font-size:18px;
+	font-weight:600;
+	display:block;
+	
 }
 /*--------------maincss-----------*/
 .row

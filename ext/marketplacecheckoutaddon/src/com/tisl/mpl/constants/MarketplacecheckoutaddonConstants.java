@@ -225,6 +225,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CELLNO = "cellNo";
 
 	//Coupon
+	public static final String NOOFYEARS = "payment.exp.no.of.years";
+	public static final String EXPYEARS = "noOfYearsFromCurrentYear";
+
 	public static final String MPLCOUPONURL = "/checkout/multi/coupon";
 
 	private MarketplacecheckoutaddonConstants()
