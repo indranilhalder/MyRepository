@@ -156,7 +156,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 *
+	 * 
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -392,7 +392,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 							{
 								consignmentStatus = entry.getConsignment().getStatus().getCode();
 							}
-							else if (subOrderDetail.getStatus().getCode() != null)
+							else if (null != orderDetail.getStatus() && orderDetail.getStatus().getCode() != null)
 							{
 								consignmentStatus = subOrderDetail.getStatus().getCode();
 							}
@@ -430,16 +430,16 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								data.setEmail(subOrderDetail.getCustomerData().getEmail());
 							}
 							//TODO IPaddress track by Order / Customer
-							data.setIpAdddress(configurationService.getConfiguration()
-									.getString(MarketplacecommerceservicesConstants.SALES_DATA_REPORT_JOB_IP, ""));
+							data.setIpAdddress(configurationService.getConfiguration().getString(
+									MarketplacecommerceservicesConstants.SALES_DATA_REPORT_JOB_IP, ""));
 
 							//check delivery address and set
-							LOG.debug("-----------Order Delivery Address----" + entry.getProduct().getCode());
+							LOG.debug("-----------Order Delivery Address----" + subOrderDetail.getCode());
 							setDeliveryAddress(subOrderDetail, data);
 
-							LOG.debug("-----------Fetching Order product----" + entry.getProduct().getCode());
+							LOG.debug("-----------Fetching Order product----" + subOrderDetail.getCode());
 							product = entry.getProduct();
-							if (product != null)
+							if (product != null && null != product.getCode())
 							{
 								if (product.getRootCategory() != null)
 								{
@@ -453,64 +453,78 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								{
 									data.setListingId(product.getListingId());
 								}
-							}
 
-							final ProductModel productModel = mplOrderService.findProductsByCode(entry.getProduct().getCode());
-							String primaryCategory = MarketplacecommerceservicesConstants.NA;
-							String secondaryCategory = MarketplacecommerceservicesConstants.NA;
-							if (productModel != null)
-							{
-								LOG.debug("----Product Category---");
-								final List<CategoryModel> productCategoryList = defaultPromotionManager
-										.getPrimarycategoryData(productModel);
-								if (null != productCategoryList && productCategoryList.size() > 0)
+
+								try
 								{
-									categoryList = new ArrayList<String>();
-									for (final CategoryModel category : productCategoryList)
+									LOG.debug("-----------Fetching Order product model----" + product.getCode());
+									final ProductModel productModel = mplOrderService.findProductsByCode(product.getCode());
+									String primaryCategory = MarketplacecommerceservicesConstants.NA;
+									String secondaryCategory = MarketplacecommerceservicesConstants.NA;
+									if (productModel != null)
 									{
-										if (category != null && !(category instanceof ClassificationClassModel)
-												&& null != category.getName())
+										LOG.debug("----Product Category---" + product.getCode());
+										final List<CategoryModel> productCategoryList = defaultPromotionManager
+												.getPrimarycategoryData(productModel);
+										if (null != productCategoryList && productCategoryList.size() > 0)
 										{
-											categoryList.add(category.getName());
-										}
-									}
-									if (categoryList.size() > 0)
-									{
-										Collections.sort(categoryList, new Comparator()
-										{
-
-											@Override
-											public int compare(final Object o1, final Object o2)
+											categoryList = new ArrayList<String>();
+											for (final CategoryModel category : productCategoryList)
 											{
-												if (o1.toString().length() < o2.toString().length())
+												if (category != null && !(category instanceof ClassificationClassModel)
+														&& null != category.getName())
 												{
-													return 1;
+													categoryList.add(category.getName());
 												}
-												else if (o1.toString().length() > o2.toString().length())
+											}
+											if (categoryList.size() > 0)
+											{
+												Collections.sort(categoryList, new Comparator()
 												{
-													return -1;
-												}
-												else
+
+													@Override
+													public int compare(final Object o1, final Object o2)
+													{
+														if (o1.toString().length() < o2.toString().length())
+														{
+															return 1;
+														}
+														else if (o1.toString().length() > o2.toString().length())
+														{
+															return -1;
+														}
+														else
+														{
+															return 0;
+														}
+													}
+
+												});
+												if (categoryList.size() > 3)
 												{
-													return 0;
+													primaryCategory = categoryList.get(categoryList.size() - 2);
+													secondaryCategory = categoryList.get(categoryList.size() - 3);
+													LOG.debug("---Product Category list:" + categoryList.size());
 												}
 											}
 
-										});
-										if (categoryList.size() > 3)
-										{
-											primaryCategory = categoryList.get(categoryList.size() - 2);
-											secondaryCategory = categoryList.get(categoryList.size() - 3);
-											LOG.debug("---Product Category list:" + categoryList.size());
 										}
+										data.setItemCategory(primaryCategory);
+										data.setItemSubCategory(secondaryCategory);
+										LOG.debug("--Product Category set----" + product.getCode());
 									}
-
 								}
-								data.setItemCategory(primaryCategory);
-								data.setItemSubCategory(secondaryCategory);
-								LOG.debug("--Product Category set----");
+								catch (final Exception e)
+								{
+									LOG.debug("-----------Order Product Exception----" + orderModels.size());
+									continue;
+								}
 							}
-
+							else
+							{
+								LOG.debug("-----------Order Product Exception----" + orderModels.size());
+								continue;
+							}
 							//data.setQuantity(entry.getQuantity().toString());
 							data.setQuantity("1");
 							//Checking payment type and then setting payment info
@@ -539,45 +553,52 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		catch (final Exception e)
 		{
 			LOG.debug("-----------Order Sales Conversion Exception----" + orderModels.size());
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 			return dataList;
 		}
 		return dataList;
 	}
 
 	/* Setting Seller Information */
-	protected void setSellerInfo(final OrderEntryData product, final SalesReportData reportDTO)
+	protected void setSellerInfo(final OrderEntryData entry, final SalesReportData reportDTO)
 	{
 		//Freebie and non-freebie seller detail population
 		SellerInformationModel sellerInfoModel = null;
 		String fulfillmentType = MarketplacecommerceservicesConstants.EMPTY;
-		if (StringUtils.isNotEmpty(product.getSelectedUssid()))
+		try
 		{
-			sellerInfoModel = mplSellerInformationService.getSellerDetail(product.getSelectedUssid());
+			if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
+			{
+				sellerInfoModel = mplSellerInformationService.getSellerDetail(entry.getSelectedUssid());
 
-			if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerID()))
-			{
-				reportDTO.setSellerSKUId(sellerInfoModel.getSellerID());
-			}
-			if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerArticleSKU()))
-			{
-				reportDTO.setUSSID(sellerInfoModel.getSellerArticleSKU());
-			}
-			if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerName()))
-			{
-				reportDTO.setSellerName(sellerInfoModel.getSellerName());
-			}
-			if (sellerInfoModel.getRichAttribute().size() > 0)
-			{
-				for (final RichAttributeModel richEntry : sellerInfoModel.getRichAttribute())
+				if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerID()))
 				{
-					LOG.debug("-----Inside seller rich attribute model-----" + richEntry.getDeliveryFulfillModes());
-					fulfillmentType = richEntry.getDeliveryFulfillModes().toString().toUpperCase();
-					LOG.debug("-----Fulfilment mode set------");
+					reportDTO.setSellerSKUId(sellerInfoModel.getSellerID());
 				}
-				reportDTO.setProductType(fulfillmentType);
-			}
+				if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerArticleSKU()))
+				{
+					reportDTO.setUSSID(sellerInfoModel.getSellerArticleSKU());
+				}
+				if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerName()))
+				{
+					reportDTO.setSellerName(sellerInfoModel.getSellerName());
+				}
+				if (sellerInfoModel.getRichAttribute().size() > 0)
+				{
+					for (final RichAttributeModel richEntry : sellerInfoModel.getRichAttribute())
+					{
+						LOG.debug("-----Inside seller rich attribute model-----" + richEntry.getDeliveryFulfillModes());
+						fulfillmentType = richEntry.getDeliveryFulfillModes().toString().toUpperCase();
+						LOG.debug("-----Fulfilment mode set------");
+					}
+					reportDTO.setProductType(fulfillmentType);
+				}
 
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("-----Inside seller-----" + entry.getTransactionId());
 		}
 	}
 
