@@ -94,5 +94,4 @@ public interface MplVoucherService
 			List<AbstractOrderEntryModel> applicableOrderEntryList)
 					throws ModelSavingException, VoucherOperationException, CalculationException, NumberFormatException,
 					JaloInvalidParameterException, JaloSecurityException, JaloPriceFactoryException;
-
 }
