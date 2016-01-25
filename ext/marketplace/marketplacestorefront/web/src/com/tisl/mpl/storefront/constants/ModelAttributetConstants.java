@@ -242,7 +242,6 @@ public final class ModelAttributetConstants
 	public static final String CONFIGURABLE_ATTRIBUTE = "classification.attributes.";
 	public static final String MAP_CONFIGURABLE_ATTRIBUTE = "mapConfigurableAttribute";
 	public static final String SELLER_ID = "sellerID";
-
 	public static final String PIN = "pin";
 	public static final String FULLFILLMENT = "fullfillment";
 	public static final String MOP_PRICE = "mopPrice";
@@ -687,7 +686,9 @@ public final class ModelAttributetConstants
 	public static final String NOTIFICATION_MESSAGE_LIST = "notificationMessagelist";
 	public static final String NOTIFICATION_COUNT = "notificationCount";
 	public static final String IS_SIGNED_IN = "isSignedInUser";
+	//sizeguide
 
+	public static final String SELECTEDSIZE = "sizeSelectedSizeGuide";
 
 
 }
