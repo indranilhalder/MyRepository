@@ -185,7 +185,7 @@
 	/*Review description 5000 characters limit*/
 	$(document).on("keypress",".gig-composebox-textarea",function(){
 	$(".gig-composebox-error").hide();
-	if($(this).text().length <= 4999)
+	if($(this).text().length <= 4998)
 	{
 		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").hide();
 		return true;
