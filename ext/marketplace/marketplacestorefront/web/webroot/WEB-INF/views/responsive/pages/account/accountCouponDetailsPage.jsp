@@ -183,14 +183,14 @@
 					</ul>
 					</ul>
 					<!--  pagination for upper section  -->
-					<div class="bottom">
+					<div class="bottom btn-placement">
 						<c:if test="${not empty closedCouponList}">
 							<p>${startIndexCoupon}-${endIndexCoupon}
 								of ${couponListSize} &nbsp;
 								<spring:theme code="text.account.coupons.coupons" />
 							</p>
 						</c:if>
-						<div class="btn-placement bottom">
+					
 							<c:if test="${totalPagesCoupon ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
@@ -236,7 +236,7 @@
 
 								</ul>
 							</c:if>
-						</div>
+					
 					</div>
 				</div>
 
@@ -275,14 +275,13 @@
 										<c:otherwise></c:otherwise>
 									</c:choose>
 								</c:forEach>
-								<div class="bottom">
+								<div class="bottom btn-placement">
 									<c:if test="${not empty couponOrderDataDTOList}">
 										<p>${startIndexHist}-${endIndexHist}
 											of ${couponHistListSize} &nbsp;
 											<spring:theme code="text.account.coupons.transactions" />
 										</p>
 									</c:if>
-									<div class="btn-placement bottom">
 										<c:if test="${totalPagesCouponHist ne 1 }">
 											<ul class="pagination">
 												<!-- Previous link addition -->
@@ -327,7 +326,7 @@
 
 											</ul>
 										</c:if>
-									</div>
+									
 								</div>
 							</c:if>
 
@@ -379,14 +378,14 @@
 
 					</c:choose>
 
-					<div class="bottom">
+					<div class="bottom btn-placement">
 						<c:if test="${not empty couponOrderDataDTOList}">
 										<p>${startIndexHist}-${endIndexHist}
 											of ${couponHistListSize} &nbsp;
 											<spring:theme code="text.account.coupons.transactions" />
 										</p>
 						</c:if>
-						<div class="btn-placement bottom">
+						
 							<c:if test="${totalPagesCouponHist ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
@@ -431,7 +430,7 @@
 
 								</ul>
 							</c:if>
-						</div>
+					
 					</div>
 				</div>
 				<div class="couponHistoryLinkDiv">
