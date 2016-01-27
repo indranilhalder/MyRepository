@@ -784,7 +784,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				
 				mplVoucherService.setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
 				
-				return StringUtils.EMPTY;
+				//For TISSTRT-302
+				return "coupom_reedeem";
 			}
 			catch (Exception e)
 			{
