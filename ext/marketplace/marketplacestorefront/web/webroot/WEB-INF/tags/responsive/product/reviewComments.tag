@@ -181,9 +181,35 @@
 	$(document).ready(function() {
 				
 		getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
-		
 	});
-	
+	/*Review description 5000 characters limit*/
+	$(document).on("keypress",".gig-composebox-textarea",function(){
+	$(".gig-composebox-error").hide();
+	if($(this).text().length <= 4998)
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+		return true;
+		}
+	else
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").text('Review description can contain upto 5000 characters').show();
+		return false;
+	}
+	});
+	/*Review title 255 characters limit*/
+	$(document).on("keypress",".gig-composebox-summary-input",function(){
+	$(".gig-composebox-error").hide();
+	if($(this).val().length <= 254)
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+		return true;
+		}
+	else
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").text('Review title can contain upto 255 characters').show();
+		return false;
+	}
+	});
 	//function onGigyaServiceReady(serviceName) {
 		/* var shareUserAction = new gigya.socialize.UserAction(); 
 		shareUserAction.setSubtitle("This is my sub title");  */
