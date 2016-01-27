@@ -197,7 +197,7 @@ function displayCODForm()
 						}
 						else
 						{
-							document.getElementById("convChargeField").innerHTML="FREE";
+							document.getElementById("convChargeField").innerHTML="Free"; //TISPRD-146
 							$("#convChargeMessage").css("display","none");
 						}
 						//document.getElementById("totalWithConvField").innerHTML=totalPrice; TISPT-29
