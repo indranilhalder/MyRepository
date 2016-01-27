@@ -224,7 +224,7 @@
 						</div>
 						<div class="review">
 							<div class="details">
-							<div class="rating-stars-wrapper">
+							<div class="rating-stars-wrapper" data-rating-all="${count.index}">
 								<ul class="rating-stars" data-rating-name${count.index}="_overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -555,14 +555,4 @@ $(".prev a").click(function(){
 });	
 		
 </script>
-<style>
-.commentcontent .gig-composebox-logout, .commentcontent .gig-composebox-follow {
-	display: none;
-}
-ul.gig-comments-header-right.gig-comments-linksContainer{
-	display: none;
-}
-.gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
-   display: none;
-}
-</style>
+

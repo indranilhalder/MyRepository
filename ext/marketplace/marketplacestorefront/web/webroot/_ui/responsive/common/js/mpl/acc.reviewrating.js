@@ -4,6 +4,7 @@ if(typeof(arrayrating)!= "undefined"){
 		$(".edit").click(function(e){
 			e.preventDefault;
 			var indexElement = $(this).attr("data-index");
+			$("div[data-rating-all="+indexElement+"]").hide();
 			if(indexElement!= undefined){
 				var reviewHeading = $(".reviewHeading"+indexElement);
 				var reviewComment = $(".reviewComment"+indexElement);
@@ -41,7 +42,7 @@ if(typeof(arrayrating)!= "undefined"){
 		$("input[name=cancel]").click(function(){
 			
 			var indexElement =  $(this).attr("data-index");
-			
+			$("div[data-rating-all="+indexElement+"]").show();
 			var reviewHeading = $(".reviewHeading"+indexElement);
 			var reviewComment = $(".reviewComment"+indexElement);
 			
@@ -70,8 +71,8 @@ if(typeof(arrayrating)!= "undefined"){
 			{		
 			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment Title cannot be left blank.</p>");		
 			    isValidated=false;		
-			}else if(updatedReviewHeading.length > 5000){
-				$(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater than 5000 charecters.</p>");		
+			}else if(updatedReviewHeading.length > 250){
+				$(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater than 250 charecters.</p>");		
 			    isValidated=false;
 			}
 			if(updatedCommentTitle == undefined || updatedCommentTitle.replace(/\s/g, '')  == "")		
@@ -82,11 +83,15 @@ if(typeof(arrayrating)!= "undefined"){
 				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
 			    isValidated=false;	
 			}
+			//TISSTRT-290 fix
+			if((updatedReviewHeading.length > 250) && (updatedCommentTitle.length > 5000))		
+			{		
+			    $(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater that 250 characters<br/>Review text cannot be greater than 5000 charecters.</p>");		
+			    isValidated=false;		
+			}
 			var x = updatedReviewHeading.length;
 			var y = updatedCommentTitle.length;
 			if(x > 0 && y > 0 && isValidated ) {
-				console.log(x);
-				console.log(y);
 				$(".errorUpdateReview"+indexElement).html("");
 				$(".review-block"+indexElement).block({message:$("#updateReviewcontainer").html()});
 			}
@@ -133,7 +138,7 @@ if(typeof(arrayrating)!= "undefined"){
 				if(isValidated){
 					$.ajax({
 						url:"review/edit",
-						type:"GET",
+						type:"POST",
 						dataType:"JSON",
 						data:{categoryID:categoryID,streamID:streamID,commentID:commentID,commentText:updatedCommentTitle,commentTitle:updatedReviewHeading,ratings:ratings},
 						beforeSend:function(){
@@ -260,7 +265,7 @@ if(typeof(arrayrating)!= "undefined"){
 
 					$.ajax({
 								url : "review/delete",
-								type : "GET",
+								type : "POST",
 								dataType : "JSON",
 								data : {
 									categoryID : categoryID,
