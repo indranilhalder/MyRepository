@@ -478,7 +478,7 @@
 
 	<alias name="mplCommerceCartService" alias="commerceCartService" />
 	<bean id="mplCommerceCartService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl"
 		parent="defaultCommerceCartService">
 		<property name="keyGenerator"
 			ref="#{configurationService.configuration.getProperty('commerceservices.orderCode.keyGenerator')}" />
@@ -1525,4 +1525,9 @@
     <bean id="sellerPriorityReportJob" parent="abstractJobPerformable" class="com.tisl.mpl.marketplacecommerceservices.jobs.SellerPriorityReportJob" autowire="byName">
     </bean>
 	  <!--  pdp seller priority report cron job ends -->
+	  
+	  <alias name="mplVoucherService" alias="mplVoucherService" />
+	<bean id="mplVoucherService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
+	</bean>
 </beans>

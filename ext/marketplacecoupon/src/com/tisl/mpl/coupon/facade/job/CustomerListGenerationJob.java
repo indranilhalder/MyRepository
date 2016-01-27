@@ -92,7 +92,8 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 		FileWriter fileWriter = null;
 		final File rootFolder1 = new File(configurationService.getConfiguration().getString(
 				MarketplacecouponConstants.CUSTOMER_LIST_FILE_LOCATION), MarketplacecouponConstants.CUSTOMER_LIST_FILE_NAME
-				+ System.currentTimeMillis());
+				+ System.currentTimeMillis()
+				+ configurationService.getConfiguration().getString(MarketplacecouponConstants.CUSTOMER_LIST_FILE_EXTENSION));
 		try
 		{
 			rootFolder1.getParentFile().mkdirs();

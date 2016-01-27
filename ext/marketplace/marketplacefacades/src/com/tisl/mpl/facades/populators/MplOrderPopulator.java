@@ -80,8 +80,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 
 					if (promotionResultModel.getCertainty().floatValue() == 1.0F
 							&& (promotion instanceof BuyAGetPromotionOnShippingChargesModel
-									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel
-									|| promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
+									|| promotion instanceof BuyAandBGetPromotionOnShippingChargesModel || promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel))
 					{
 						isShippingPromoApplied = true;
 						break;
@@ -270,7 +269,10 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		{
 			for (final DiscountValue discount : discountList)
 			{
-				if (CollectionUtils.isNotEmpty(voucherList) && !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+				//if (CollectionUtils.isNotEmpty(voucherList) && !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+				//Changed for TISSTRT-194
+				if (CollectionUtils.isEmpty(voucherList) || CollectionUtils.isNotEmpty(voucherList)
+						&& !discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))//if no voucher is applied
 				{
 					final double value = discount.getAppliedValue();
 					if (value > 0.0d)

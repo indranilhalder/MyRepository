@@ -4,8 +4,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
-<c:url var="sizeGuideUrl"
-	value="/p/sizeGuide?productCode=${product.code}" scope="request"></c:url>
+<%-- <c:url var="sizeGuideUrl"
+
+	value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url> --%>
 <style>
 #variant, .productCount select {
 	border-radius: 0;
@@ -42,6 +43,11 @@ $("#variant").change(function() {
 });
 </script> 
 <c:set var="selectedSize" value="true" />
+
+<c:url var="sizeGuideUrl"
+	value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
+	
+	
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
 <c:choose>

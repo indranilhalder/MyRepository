@@ -63,7 +63,15 @@ function registerUser(eventObject)
 							}
 							else
 							{
-							window.open(ACC.config.encodedContextPath +data,"_self");
+							var hostName=window.location.host;
+							if(hostName.indexOf(':') >=0)
+							{
+								window.open(ACC.config.encodedContextPath +data,"_self");
+							}	
+							else
+								{
+							window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
+								}
 							}
 							
 						}	
@@ -201,7 +209,8 @@ function registerUser(eventObject)
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
 						<div class="mobile-bag bag">
-							<a href="${cartUrl}">(<span class="responsive-bag-count"></span>)</a>
+						<!-- TISPRD-32-fix -->
+							<a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a>
 						</div>
 					</div>
 				</c:when>

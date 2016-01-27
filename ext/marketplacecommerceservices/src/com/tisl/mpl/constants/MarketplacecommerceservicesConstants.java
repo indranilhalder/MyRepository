@@ -357,6 +357,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERROR_CODE_1 = "101";
 	public static final String ERROR_MSG_INVALID_TYPE_CODE = "Invalid seller type code";
 	public static final String SELLER_MASTER_ERROR_MSG = "Exception in saving seller master data";
+	public static final String SELLER_INFO_UPDATE_ERROR_MSG = "Exception in updating seller information with seller master";
 	public static final String INVALID_SCHEMA_MSG = "Invalid XML, XML did not match XSD schema";
 	public static final String DATA_SAVED_MSG = "Data save successfully.!!!";
 	public static final String STATUS = "STATUS";
@@ -981,6 +982,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FOR TRACK ORDER NOTIFICATION
 	public static final String NOTIFICATION_COUNT = "notification.count";
 	public static final String NOTIFICATION_COUNT_MOBILE = "notification.count.mobile";
+	public static final String CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION = "notification.coupon.status";
 
 	public static final String BASESTORE_UID = "mpl".intern();
 	public static final String WEBHOOK_ENTRY_EXPIRED = "0".intern();
@@ -1304,7 +1306,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate} and {immutableKeyHash} is null";
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
-	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where sysdate>={p.voucherStartDate} ";
+	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
+
+
+	//Coupon
+	public static final String ZEROPOINTZEROONE = "0.01".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

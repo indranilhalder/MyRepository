@@ -127,6 +127,7 @@ ACC.product = {
 		$(document).off('click', '#addToCartFormQuick').on('click', '#addToCartFormQuick', function(event) { 
 		   
 			 $("#qty1").val($("#quantity").val());
+			 
 				if($("#sizeSelected").val()!='no'){
 				ACC.product.sendAddToBagQuick("addToCartFormQuick");
 				
@@ -141,16 +142,22 @@ ACC.product = {
 		// Size Guide addToCartSizeGuide
 		$(document).on('click','#addToCartSizeGuide .js-add-to-cart',function(event){
 			
+			var selectedSizeFlag = $("#sizeSelectedVal").val();
+			
+			
+			
 			 $("#sizeQty").val($("#sizeGuideQty").val());
-			/*	if($("#sizeSelectedSizeGuide").val()!='no'){*/
+			//alert($('#variant.size-g option:selected').val());
+			 if($('#variant.size-g option:selected').val()!="#")
+			 {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
-				
-			/*	}else{
-					$("#addToCartFormSizeTitle").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
-					$("#addToCartFormSizeTitle").show().fadeOut(6000);
-				}*/
-				event.preventDefault();
-				return false;
+			 
+			}else{
+					$("#sizeSelectedSizeGuide").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
+					$("#sizeSelectedSizeGuide").show();
+			}
+			event.preventDefault();
+			return false;
 		});
 				
 		$(document).on('click','#addToCartFormId .js-add-to-cart',function(event){

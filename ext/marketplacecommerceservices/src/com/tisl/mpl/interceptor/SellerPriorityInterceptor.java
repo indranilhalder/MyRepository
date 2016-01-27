@@ -39,7 +39,6 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 	private static final String ENDDATEBLANK = "end date cannot be blank";
 	private static final String ENDDATEBEFORESTARTDATE = "end date cannot be before start date";
 	private static final String CATIDPRODIDNONEDITABLE = "cannot modify category id or product id";
-	private static final String NOT_STOCK_FOR_SELLERID = "There is no stock against the seller Id";
 	@Resource(name = "mplSellerPriorityDao")
 	private MplSellerPriorityDao mplSellerPriorityDao;
 
@@ -80,10 +79,7 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 			{
 				throw new InterceptorException(SELLERIDBLANK);
 			}
-			if (null != priority.getSellerId() && buyBoxService.buyBoxStockForSeller(priority.getSellerId().getId()).isEmpty())
-			{
-				throw new InterceptorException(NOT_STOCK_FOR_SELLERID);
-			}
+
 			if (null == priority.getCategoryId() && null == priority.getListingId())
 			{
 				throw new InterceptorException(CATANDLISTBLANK);
@@ -121,8 +117,7 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					{
 						// Addding Category id and listing id into a list for the rows not modified
 						if (!arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYSTARTDATE)
-								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)
-								&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE))
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)) //&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE)
 						{
 							LOG.debug("no modification *********** categoryId : " + priorityValue.getCategoryId()
 									+ " **************   listingId" + priorityValue.getListingId());

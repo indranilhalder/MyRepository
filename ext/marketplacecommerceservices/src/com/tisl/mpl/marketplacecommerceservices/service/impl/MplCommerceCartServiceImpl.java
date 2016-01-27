@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.marketplacecommerceservices.service;
+package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
@@ -100,6 +100,12 @@ import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCommerceCartDao;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.ExtDefaultCommerceUpdateCartEntryStrategy;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
@@ -3857,6 +3863,106 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 		final SellerInformationModel sellerInformation = mplSellerInformationService.getSellerDetail(ussid);
 		return sellerInformation;
+	}
+
+
+
+	/*
+	 * @desc use to save freebie delivery mode
+	 *
+	 * @param cartModel
+	 *
+	 * @param freebieModelMap
+	 *
+	 * @param freebieParentQtyMap
+	 *
+	 * @return void
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public void saveDeliveryMethForFreebie(final CartModel cartModel,
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+					throws EtailNonBusinessExceptions
+	{
+		if (cartModel != null && cartModel.getEntries() != null && freebieModelMap != null && !freebieModelMap.isEmpty())
+		{
+			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			{
+				if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
+						&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
+				{
+					saveDeliveryMethForFreebie(cartEntryModel, freebieModelMap, freebieParentQtyMap);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * This method saves delivery modes for freebie order entries
+	 * 
+	 * @param cartEntryModel
+	 * @param freebieModelMap
+	 * @param freebieParentQtyMap
+	 */
+	private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+	{
+
+		MplZoneDeliveryModeValueModel mplDeliveryMode = null;
+		if (cartEntryModel.getAssociatedItems().size() == 1)
+		{
+			mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+		}
+		else if (cartEntryModel.getAssociatedItems().size() == 2
+				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode() != null
+				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1)).getDeliveryMode() != null
+				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode() != null)
+		{
+			if ((freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode())
+					.equals((freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1)).getDeliveryMode().getCode())))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+			}
+			else if (freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(0)).doubleValue() == freebieParentQtyMap
+					.get(cartEntryModel.getAssociatedItems().get(1)).doubleValue())
+			{
+				if (freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode()
+						.equalsIgnoreCase("home-delivery"))
+				{
+					mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+				}
+				else
+				{
+					mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
+				}
+			}
+			else if (freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(0)).doubleValue() > freebieParentQtyMap
+					.get(cartEntryModel.getAssociatedItems().get(1)).doubleValue())
+			{
+
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
+
+			}
+			else
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+			}
+
+		}
+		else
+		{
+			LOG.debug("Unable to handle DeliveryMode as more than two Parent");
+		}
+
+
+		if (mplDeliveryMode != null)
+		{
+			//saving parent product delivery mode to freebie item
+			cartEntryModel.setMplDeliveryMode(mplDeliveryMode);
+			getModelService().save(cartEntryModel);
+		}
 	}
 
 
