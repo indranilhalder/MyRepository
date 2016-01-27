@@ -136,7 +136,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -148,7 +148,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -179,7 +179,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -201,7 +201,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -231,7 +231,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -259,7 +259,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -317,7 +317,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -349,8 +349,8 @@ public class NotificationServiceImpl implements NotificationService
 					pushData = new PushNotificationData();
 					if (null != orderReferenceNumber)
 					{
-						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
+						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_PLACED.replace(
+								MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, orderReferenceNumber));
 						pushData.setOrderId(orderReferenceNumber);
 					}
 					if (null != customer.getOriginalUid() && !customer.getOriginalUid().isEmpty() && null != customer.getIsActive()
@@ -371,7 +371,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getVoucher()
 	 */
 
@@ -398,7 +398,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -418,7 +418,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */
@@ -431,7 +431,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getAllVoucherList(de.hybris.platform.core
 	 * .model.user.CustomerModel, java.util.List)
@@ -543,7 +543,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#saveToVoucherStatusNotification(de.hybris
 	 * .platform.jalo.Item)
@@ -636,7 +636,7 @@ public class NotificationServiceImpl implements NotificationService
 				}
 			}
 
-			if (null != voucherIndentifier)
+			if (null != voucherIndentifier && null != voucherCode)
 			{
 
 				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
@@ -658,8 +658,8 @@ public class NotificationServiceImpl implements NotificationService
 
 				}
 
-				final String customerStatus = getConfigurationService().getConfiguration()
-						.getString(MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
+				final String customerStatus = getConfigurationService().getConfiguration().getString(
+						MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
 
 				//Setting values in model
 				voucherStatus.setVoucherIdentifier(voucherIndentifier);
