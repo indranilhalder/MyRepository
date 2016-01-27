@@ -132,75 +132,91 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
 		}
 	});
 });
+//
 
+function getBrandsYouLoveAjaxCall(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getBrandsYouLove",
+
+		success : function(response) {
+			console.log(response.subComponents);
+			var defaultHtml = "";
+			renderHtml = "<h1>" + response.title + "</h1>"
+					+ "<div class='home-brands-you-love-carousel'>";
+			$
+					.each(
+							response.subComponents,
+							function(k, v) {
+								console.log(v.brandLogoUrl);
+								if (v.showByDefault) {
+
+								}
+								if (!v.showByDefault) {
+									renderHtml += "<div class='home-brands-you-love-carousel-brands' id='"
+											+ v.compId
+											+ "'><img src='"
+											+ v.brandLogoUrl
+											+ "'></img></div>";
+								} else {
+									renderHtml += "<div class='home-brands-you-love-carousel-brands active' id='"
+											+ v.compId
+											+ "'><img src='"
+											+ v.brandLogoUrl
+											+ "'></imghmmm></div>";
+									defaultHtml += "<div class='home-brands-you-love-desc'>";
+									if (v.firstProductImageUrl != "") {
+										defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
+												+ v.firstProductImageUrl
+												+ "'></img></div>";
+									}
+									defaultHtml += "<div class='home-brands-you-love-main-image'>";
+									if (v.text != "") {
+										defaultHtml += v.text;
+									}
+									if (v.bannerImageUrl != "") {
+										defaultHtml += "<div class='home-brands-you-love-main-image-wrapper'>";
+										if (v.bannerText != "") {
+											defaultHtml += "<div class='visit-store-wrapper'>"
+													+ v.bannerText
+													+ "</div>";
+										}
+										defaultHtml += "<img src='"
+												+ v.bannerImageUrl
+												+ "'></img></div></div>";
+
+									}
+
+									if (v.secondproductImageUrl != "") {
+										defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
+												+ v.secondproductImageUrl
+												+ "'></img></div>";
+									}
+
+									defaultHtml += "</div>";
+								}
+
+							});
+			renderHtml += "</div>";
+			$('#brandsYouLove').html(renderHtml);
+			$('#brandsYouLove').append(defaultHtml);
+
+		},
+		error : function() {
+			globalErrorPopup('Failure!!!');
+		}
+	});
+}
 // AJAX CALL
-$
-		.ajax({
-			type : "GET",
-			dataType : "json",
-			url : ACC.config.encodedContextPath + "/getBrandsYouLove",
-
-			success : function(response) {
-				console.log(response.subComponents);
-				var defaultHtml = "";
-				renderHtml = "<h1>" + response.title + "</h1>"
-						+ "<div class='home-brands-you-love-carousel'>";
-				$
-						.each(
-								response.subComponents,
-								function(k, v) {
-									console.log(v.brandLogoUrl);
-									if (v.showByDefault) {
-
-									}
-									if (!v.showByDefault) {
-										renderHtml += "<div class='home-brands-you-love-carousel-brands' id='"
-												+ v.compId
-												+ "'><img src='"
-												+ v.brandLogoUrl
-												+ "'></img></div>";
-									} else {
-										renderHtml += "<div class='home-brands-you-love-carousel-brands active' id='"
-												+ v.compId
-												+ "'><img src='"
-												+ v.brandLogoUrl
-												+ "'></img></div>";
-										defaultHtml += "<div class='home-brands-you-love-desc'>";
-										if (v.firstProductImageUrl != "") {
-											defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
-													+ v.firstProductImageUrl
-													+ "'></img></div>";
-										}
-										defaultHtml +="<div class='home-brands-you-love-main-image'>";
-										if(v.text!=""){
-											defaultHtml +=v.text;
-										}
-										if(v.bannerImageUrl !=""){
-											defaultHtml +="<div class='home-brands-you-love-main-image-wrapper'>";
-											if(v.bannerText !=""){
-												defaultHtml +="<div class='visit-store-wrapper'>"+v.bannerText+"</div>";	
-											}
-											defaultHtml +="<img src='"+v.bannerImageUrl+"'></img></div></div>";
-											
-										}
-										
-										if (v.secondproductImageUrl != "") {
-											defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
-													+ v.secondproductImageUrl
-													+ "'></img></div>";
-										}
-
-										defaultHtml += "</div>";
-									}
-
-								});
-				renderHtml += "</div>";
-				$('#brandsYouLove').html(renderHtml);
-				$('#brandsYouLove').append(defaultHtml);
-
-			},
-			error : function() {
-				globalErrorPopup('Failure!!!');
-			}
-		});
-
+if ($('#brandsYouLove').children().length == 0) {
+	
+	getBrandsYouLoveAjaxCall();
+}
+$(document).on("mouseover touchend", ".home-brands-you-love-carousel-brands", function() {
+	$(".home-brands-you-love-carousel-brands").removeClass('active');
+	$(this).addClass('active');
+	$('.home-brands-you-love-desc').empty();
+	
+});
