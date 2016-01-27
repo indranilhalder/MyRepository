@@ -32,8 +32,7 @@ public class MplCategoryTypeValueProvider extends AbstractPropertyFieldValueProv
 
 	/**
 	 * @Description : Return Category Type
-	 * @param :
-	 *           final IndexConfig indexConfig, final IndexedProperty indexedProperty,final Object model
+	 * @param : final IndexConfig indexConfig, final IndexedProperty indexedProperty,final Object model
 	 * @return : Collection<FieldValue>
 	 */
 	//Return brand name against each Product.Return brand facets.
@@ -57,12 +56,17 @@ public class MplCategoryTypeValueProvider extends AbstractPropertyFieldValueProv
 
 				productCategoryType = "Apparel";
 			}
-			else
+			else if (productCategoryType.equalsIgnoreCase("Electronics"))
 			{
 
 				productCategoryType = "Electronics";
 
 			}
+			else if (productCategoryType.equalsIgnoreCase("Footwear"))
+			{
+				productCategoryType = "Footwear";
+			}
+
 
 			final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
@@ -80,8 +84,7 @@ public class MplCategoryTypeValueProvider extends AbstractPropertyFieldValueProv
 
 	/**
 	 * @Description : Return filed values
-	 * @param :
-	 *           final String brand, final IndexedProperty indexedProperty
+	 * @param : final String brand, final IndexedProperty indexedProperty
 	 * @return : List<FieldValue>
 	 */
 	//Create field value for brand name

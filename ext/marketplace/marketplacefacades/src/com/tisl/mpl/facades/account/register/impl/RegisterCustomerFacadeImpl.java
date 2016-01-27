@@ -17,6 +17,7 @@ import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.processengine.BusinessProcessService;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.keygenerator.KeyGenerator;
@@ -42,6 +43,7 @@ import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.SendInvoiceProcessModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -89,6 +91,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	private OrderModelService orderModelService;
 	@Autowired
 	private CatalogVersionService catalogVersionService;
+	@Autowired
+	ConfigurationService configurationService;
 
 
 	@Resource(name = "defaultEmailService")
@@ -398,8 +402,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					LOG.debug("Method  registerSocial SITE UID " + registerData.getUid());
 					LOG.debug("Method  registerSocial FIRST_NAME " + registerData.getFirstName());
 					LOG.debug("Method  registerSocial LAST_NAME " + registerData.getLastName());
-					gigyaservice.notifyGigyaOfRegistration(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
-							registerData.getLastName());
+					final String gigyaMethod = configurationService.getConfiguration().getString(
+							MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
+					LOG.debug("GIGYA METHOD" + gigyaMethod);
+					gigyaservice.notifyGigya(newCustomer.getUid(), registerData.getUid(), registerData.getFirstName(),
+							registerData.getLastName(), registerData.getLogin(), gigyaMethod);
 
 				}
 				catch (final Exception e)
@@ -431,9 +438,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				registerData.setPassword(password);
 				registerData.setSocialLogin(true);
 				LOG.debug(MplConstants.USER_ALREADY_REGISTERED + " via site login");
-
-				gigyaservice.notifyGigyaToLinkAccounts(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
-						registerData.getLastName());
+				final String gigyaMethod = configurationService.getConfiguration().getString(
+						MarketplacecclientservicesConstants.GIGYA_METHOD_LINK_ACCOUNTS);
+				LOG.debug("GIGYA METHOD" + gigyaMethod);
+				gigyaservice.notifyGigya(customerModel.getUid(), registerData.getUid(), registerData.getFirstName(),
+						registerData.getLastName(), registerData.getLogin(), gigyaMethod);
 				return registerData;
 			}
 		}
@@ -626,9 +635,4 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	{
 		this.orderModelService = orderModelService;
 	}
-
-
-
-
-
 }

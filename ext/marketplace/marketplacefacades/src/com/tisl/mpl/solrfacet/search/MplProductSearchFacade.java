@@ -71,4 +71,10 @@ public interface MplProductSearchFacade<ITEM extends ProductData> extends Produc
 
 	ProductCategorySearchPageData dropDownSearchForOfferListing(SearchStateData searchState, String offerId,
 			PageableData pageableData, final String categoryCode);
+
+
+	ProductCategorySearchPageData dropDownSearchForCoupon(SearchStateData searchState, String offerId, PageableData pageableData);
+
+	ProductCategorySearchPageData dropDownSearchForCouponListing(SearchStateData searchState, String couponId,
+			PageableData pageableData);
 }

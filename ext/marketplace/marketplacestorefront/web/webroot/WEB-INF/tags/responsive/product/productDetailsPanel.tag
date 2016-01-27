@@ -92,8 +92,7 @@ tr.d0 td {
 			</ycommerce:testId>
 			
 			<div class="fullfilled-by">
-			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>
-			<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 			<span id="fulFilledBySship"  style="display:none;"></span>
 			</div>
 			
@@ -200,7 +199,7 @@ tr.d0 td {
 <!--- END:MSD ---> 
 	
 <c:choose>
-<c:when test="${product.rootCategory==electronics||productCategoryType=='Footwear'}">
+<c:when test="${product.rootCategory==electronics}">
 <product:productDetailsClassifications product="${product}"/>
 </c:when>
 <c:otherwise>

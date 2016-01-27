@@ -16,6 +16,12 @@ img[src='']{
     opacity:0;
     width:0px;
 }
+  b{
+  font-weight:bold;
+  }
+  i{
+  font-style:italic;
+  }
 select {
   background-image: none;
   padding: 0;
@@ -1715,8 +1721,9 @@ font-size: 12px;
      #variantForm .select-size li {
       width: -webkit-calc(100% + 4px);
       width: calc(100% + 4px);
-      height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px);
+     /*  height: -webkit-calc(100% + 4px);
+      height: calc(100% + 4px); */
+      
       background-color: #fff;
       line-height: 20px;
       padding-left: 20px;
@@ -7129,6 +7136,8 @@ body .account .right-account h2 {
     body .account .right-account select {
         padding-left: 5px
     }
+     body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before{
+    margin-right:25px !important;}
 }
 body .account .right-account button {
     height: 30px;
@@ -9733,7 +9742,7 @@ h5.questions a:hover {
         display: inline-block;
         font-size: 18px;
         line-height: 60px;
-        max-width: 770px; }
+        max-width: 780px; }
         header .banner .content form span {
           display: inline-block;
           margin: 0 5px; }
@@ -11907,7 +11916,7 @@ body .account .right-account form .full.span input#currentPassword{
 }
 
 
-#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation{
+#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation, #deleteReview .deleteReviewConfirmation, #updateReview .updateReviewConfirmation{
 	    background-color: #00cbe9;
     color: #fff;
     text-transform: uppercase;
@@ -11921,7 +11930,7 @@ body .account .right-account form .full.span input#currentPassword{
      margin:20px 10px 10px 10px !important;
     vertical-align: top;
 }
-#deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo{
+#deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo, #updateReview .updateReviewConfirmationNo{
 	background-color: red;
     opacity: 0.7;
     color: #fff;
@@ -13187,14 +13196,14 @@ padding-top:25px;
 	transform: rotate(45deg);
 }
 @media (min-width: 791px){
-.order-details .totals ul li span {
+.order-details .totals ul li > span {
     float: right;
     margin-right: 30px;
 }}
 @media (min-width: 791px){
 .order-details .totals ul li.grand-total span.amt {
     text-align: right;
-    margin-right: 0px;
+    /* margin-right: 0px; */
 }}
 .wishlist-content .remove-btn {
     background-color: #f0f4f5;
@@ -13242,7 +13251,7 @@ div.other-sellers .other-sellers-table tr{
 }
 .product-tile .image .new {
     position: absolute;
-    width: 30%;
+    height: 31%;
     top: 0;
     left: -15px;
 }
@@ -13752,7 +13761,7 @@ body.page-reviews .account .my-reviews .wrapper,body.page-reviews .account .tool
 		bottom: 60px;
 		left: 40%;
 	}
-	body.page-reviews .pagination li.next {
+	body.page-reviews .pagination li.next, body.page-reviews .pagination li.prev {
 		border: none;
 	}
 	
@@ -13799,6 +13808,10 @@ word-break: break-word;
 	width:10% !important;
 }
 #deleteReview .deleteReviewConfirmation{
+max-width:80px;
+min-width:80px;
+}
+#updateReview .updateReviewConfirmation{
 max-width:80px;
 min-width:80px;
 }
@@ -13879,8 +13892,6 @@ body .account .right-account.rewards>div.customer-service.steps ul .step
 	padding: 10px;
 	text-align: center;
 	border: none;
-	width:24%;
-	vertical-align: top;
 }
 
 body .account .right-account.rewards>div.customer-service.steps ul .step span
@@ -13939,7 +13950,7 @@ body .account .right-account.rewards>div.your-activity {
 
 body .account .right-account.rewards>div.your-activity>p {
 	margin-bottom: 10px;
-	margin-top: 10px;
+	    margin-top: 10px;
 	font-weight: 500;
 	font-size: 14px;
 }
@@ -13950,10 +13961,12 @@ body .account .right-account.rewards>div.your-activity>p.mobile {
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container
 	{
-	margin: 30px 15px 0;
+	padding: 30px 15px 0;
 	/* border-top: 2px dashed #f0f4f5;
 	border-left: 2px dashed #f0f4f5; */
 	font-weight: 600;
+	display:table;
+	width:100%;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container::after
@@ -13968,7 +13981,9 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	border: 2px dashed #f0f4f5;
 	/* border-right: 2px dashed #f0f4f5; */
 	width: 33.3333%;
-	float: left;
+	/* float: left; */
+	display: inline-block;
+	vertical-align:top;
 	background-color: #fff;
 	margin-left: -2px;
     margin-bottom: -2px;
@@ -13977,6 +13992,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2
 	{
 	font-size: 14px;
+	font-weight:600;
 	text-align: center;
 	float: left;
 	width: 100%;
@@ -13984,8 +14000,12 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	line-height: 20px;
 	margin-bottom: 0
 }
-
-body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .coupon_count{
+	display:inline-block;
+	line-height: 15px;
+    padding-bottom: 10px;
+}
+/* body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
 	{
 	height: 142px;
 }
@@ -13994,7 +14014,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	{
 	height: 70px;
 }
-
+ */
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right
 	{
@@ -14006,14 +14026,20 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	width: 50%;
 	padding: 0 10px;
 	margin: 0 0 10px;
-	line-height: 20px
+	line-height: 15px;
+	font-weight:500;
+	text-align:center;
+	word-break: break-word;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p
 	{
 	text-align: center;
-	white-space: nowrap
+	line-height: 14px;
+    padding: 3px 0px 8px 0px;
+    white-space: normal;
+    word-break: break-word;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left
@@ -14026,13 +14052,11 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	direction: rtl;
 	font-size:10px;
 }
-body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p:last-child
+ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p:last-child
 	{
-	line-height: 14px;
-    padding: 3px 0px;
-    white-space: normal;
-    word-break:break-word;
+    padding: 0px;
 }
+
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box.starred:before
 	{
 	font-family: 'FontAwesome';
@@ -14289,7 +14313,7 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity.coupon-history h2
 	{
-	font-weight: 500
+	font-weight: 600;
 }
 
 @media ( max-width :790px) {
@@ -14338,7 +14362,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container
 		{
 		border: none;
-		margin: 20px 5px 0
+		padding: 20px 5px 0;
 	}
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
 		{
@@ -14353,7 +14377,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 		font-size: 14px;
 		font-weight: 500;
 		margin-bottom: 0;
-		padding-bottom: 0
+		margin-top: 10px;
 	}
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left,
 		body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right
@@ -14496,7 +14520,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 		font-weight: 400;
 	}
 }
-@media(max-width:895px) and (min-width:821px){
+/* @media(max-width:895px) and (min-width:821px){
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box {
     height: 150px;
 }
@@ -14515,7 +14539,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box {
     height: 180px;
 }
-}
+} */
 a#couponHistoryHide{
 	display:none;
 }
@@ -14536,6 +14560,13 @@ body .account .right-account.rewards>div.couponHistoryLinkDiv{
 body .account .right-account.rewards>div.your-activity.coupon-history>ul>li p span{
 	line-height: 20px;
 	display: inline-block;
+}
+body.page-coupons .pagination li:not(.next):not(.prev):not(.active) span,body.page-coupons .pagination li:not(.next):not(.prev):not(.active) a {
+    opacity: 0.5;
+}
+body.page-coupons .pagination li.active span,body.page-coupons .pagination li.active a {
+    border: 0px;
+    opacity: 1;
 }
 /*account coupon page css ends*/
 
@@ -14738,14 +14769,17 @@ body.page-reviews .account .my-reviews .wrapper,body.page-reviews .account .tool
 }
 .reviews .review-list>.wrapper>li .review .details h3 input {
 	width: 100%;
-	border-color: #f0f4f5;
+	border-color: #dbeafa;
 	height: 30px;
 }
 .reviews .review-list>.wrapper>li .review .details p textarea {
     width: 100%;
     max-width: 100%;
-	border: 1px solid #f0f4f5;
+	border: 1px solid #dbeafa;
     margin-bottom: 10px;
+    padding:10px;
+    font-family: Avenir Next;
+    font-size: 12px;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="update"],body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
 	width: 48%;
@@ -14844,3 +14878,87 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 	margin-top:15px;
 }
 
+.bell-icon:after{
+	font-family: 'FontAwesome';
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   content:"\f0a2";
+    font-size: 16px;
+    color: #00cbe9;
+    line-height: 46px;
+    height:46px;
+    top: 2px;
+    position: relative;
+    font-weight: bold;
+}
+.review-list .close-info{
+	font-weight: 600;
+    font-size: 14px;
+    color: #31708f;
+    position: relative;
+    top: -1px;
+}
+.trackorder-dropdown li[data-read="true"] a {
+	color: #555;
+}
+.trackorder-dropdown li[data-read="false"] a {
+	font-weight: 600;
+} 
+
+.page-shoe .feature-categories h1{
+    text-transform: capitalize;
+}
+@media(max-width:650px){
+.feature-collections ul.collections li.chef h3 span {
+		font-family: "Avenir Next", "Courier New";
+		font-style: normal;
+		font-size: 14px;
+	}
+	.feature-collections ul.collections li.chef h3 span a {
+		font-size: 12px;
+		font-weight: 700;
+	}
+body .account .right-account .reviews .review-list .account-only.product {
+    padding: 30px;
+    padding-right: 0;
+}
+	}
+
+body .account .right-account .reviews .toolbar .account-only h2{
+  text-transform: capitalize;}
+  @media(max-width:790px){
+  .rating-stars-wrapper{
+  position:absolute;
+  top:25px;
+  }
+  	.rate-bar {
+		height: 9px;
+	}
+	body.page-reviews .right-account .reviews .review-list .wrapper>li .product .short-info{
+	    padding-top: 20px;
+  }
+  }
+.order-details .totals ul li{
+  display:inline-block;
+  width:100%;
+  }
+  
+  body .account .right-account .order-history .product-block li.header>ul>li span.amt {
+    background-color: transparent;
+}
+.modal.size-guide .sizes .details .price p {
+    display: inline-block;
+    margin: 0 5px;
+}
+body.page-reviews .commentcontent .gig-composebox-logout, .commentcontent .gig-composebox-follow {
+	display: none;
+}
+body.page-reviews ul.gig-comments-header-right.gig-comments-linksContainer{
+	display: none;
+}
+body.page-reviews .gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
+   display: none;
+}
+body .account .right-account.rewards>div.your-activity.coupon-history>ul{
+	border-bottom: 1px solid #f0f4f5;
+}

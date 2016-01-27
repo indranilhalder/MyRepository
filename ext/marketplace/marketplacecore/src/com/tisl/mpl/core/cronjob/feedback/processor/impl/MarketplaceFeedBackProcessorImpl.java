@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,7 +52,7 @@ public class MarketplaceFeedBackProcessorImpl implements MarketplaceFeedBackProc
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.core.cronjob.feedback.processor.MarketplaceFeedBackProcessor#writeItemsToCSV(java.util.List,
 	 * java.lang.String)
 	 */
@@ -67,7 +68,11 @@ public class MarketplaceFeedBackProcessorImpl implements MarketplaceFeedBackProc
 			{
 				writerHelper.writeMapLine(header);
 			}
-			writerHelper.writeList(feedBackStoringModelToStringListConverter.convert(items));
+
+			if (CollectionUtils.isNotEmpty(items) && items != null)
+			{
+				writerHelper.writeList(feedBackStoringModelToStringListConverter.convert(items));
+			}
 
 			writerHelper.closeCSVFile();
 		}

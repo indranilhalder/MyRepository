@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -20,7 +21,11 @@ import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -35,9 +40,12 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.DiscountValue;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -73,6 +81,7 @@ import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromotionData;
+import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.CardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
@@ -81,6 +90,7 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -131,6 +141,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private MplPaymentTransactionService mplPaymentTransactionService;
 	@Autowired
 	private PersistentKeyGenerator codCodeGenerator;
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
+	@Autowired
+	private MplVoucherService mplVoucherService;
 
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
@@ -308,68 +322,71 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.info(MarketplacecommerceservicesConstants.JUSPAY_ORDER_STAT_RESP + orderStatusResponse);
 
 			//Logic if the order status response is not null
-			if (null != orderStatusResponse.getCardResponse())
+			//if (null != orderStatusResponse.getCardResponse())
+			//{
+			for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
 			{
-				for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+				if (null != orderStatusResponse.getCardResponse()
+						&& MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(entry.getKey()))
 				{
-					if (MarketplacecommerceservicesConstants.DEBIT.equalsIgnoreCase(entry.getKey()))
+					try
 					{
-						try
-						{
-							//saving the cartmodel for Debit Card
-							getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
-							break;
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-							throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-						}
+						//saving the cartmodel for Debit Card
+						getModelService().save(setValueInDebitCardPaymentInfo(cart, orderStatusResponse));
+						break;
 					}
-					else if (MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(entry.getKey()))
+					catch (final ModelSavingException e)
 					{
-						try
-						{
-							//saving the cartmodel for Credit Card
-							getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
-							break;
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-							throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-						}
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
 					}
-					else if (MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(entry.getKey()))
+				}
+				else if (null != orderStatusResponse.getCardResponse()
+						&& MarketplacecommerceservicesConstants.CREDIT.equalsIgnoreCase(entry.getKey()))
+				{
+					try
 					{
-						try
-						{
-							//saving the cartmodel for EMI
-							getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
-							break;
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-							throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-						}
+						//saving the cartmodel for Credit Card
+						getModelService().save(setValueInCreditCardPaymentInfo(cart, orderStatusResponse));
+						break;
 					}
-					else if (MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey()))
+					catch (final ModelSavingException e)
 					{
-						try
-						{
-							//saving the cartmodel for Netbanking
-							getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
-							break;
-						}
-						catch (final ModelSavingException e)
-						{
-							LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
-							throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
-						}
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
+					}
+				}
+				else if (null != orderStatusResponse.getCardResponse()
+						&& MarketplacecommerceservicesConstants.EMI.equalsIgnoreCase(entry.getKey()))
+				{
+					try
+					{
+						//saving the cartmodel for EMI
+						getModelService().save(setValueInEMIPaymentInfo(cart, orderStatusResponse));
+						break;
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
+					}
+				}
+				else if (MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
+				{
+					try
+					{
+						//saving the cartmodel for Netbanking
+						getModelService().save(setValueInNetbankingPaymentInfo(cart, orderStatusResponse));
+						break;
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error(MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG + e);
+						throw new ModelSavingException(e + MarketplacecommerceservicesConstants.PAYMENT_EXC_LOG_END);
 					}
 				}
 			}
+			//}
 		}
 	}
 
@@ -660,7 +677,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				debitCardPaymentInfoModel.setType(CreditCardType.MAESTRO);
 			}
-			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand()))
+			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardBrand())
+					|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS
+							.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand()))
 			{
 				debitCardPaymentInfoModel.setType(CreditCardType.AMEX);
 			}
@@ -824,8 +843,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				creditCardPaymentInfoModel.setType(CreditCardType.MAESTRO);
 			}
-			else if (MarketplacecommerceservicesConstants.AMEX
-					.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand()))
+			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand())
+					|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS
+							.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand()))
 			{
 				creditCardPaymentInfoModel.setType(CreditCardType.AMEX);
 			}
@@ -834,8 +854,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				creditCardPaymentInfoModel.setType(CreditCardType.DINERS);
 			}
-			else if (MarketplacecommerceservicesConstants.VISA
-					.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand()))
+			else
+				if (MarketplacecommerceservicesConstants.VISA.equalsIgnoreCase(orderStatusResponse.getCardResponse().getCardBrand()))
 			{
 				creditCardPaymentInfoModel.setType(CreditCardType.VISA);
 			}
@@ -1011,7 +1031,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				emiPaymentInfoModel.setType(CreditCardType.MAESTRO);
 			}
-			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
+			else if (MarketplacecommerceservicesConstants.AMEX.equalsIgnoreCase(response.getCardResponse().getCardBrand())
+					|| MarketplacecommerceservicesConstants.AMERICAN_EXPRESS
+							.equalsIgnoreCase(response.getCardResponse().getCardBrand()))
 			{
 				emiPaymentInfoModel.setType(CreditCardType.AMEX);
 			}
@@ -1088,40 +1110,52 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	private CartModel setValueInNetbankingPaymentInfo(final CartModel cart, final GetOrderStatusResponse response)
 	{
-		//creating NetbankingPaymentInfoModel
-		final NetbankingPaymentInfoModel nbPaymentInfoModel = getModelService().create(NetbankingPaymentInfoModel.class);
-
-		if (StringUtils.isNotEmpty(response.getCardResponse().getCardReference()))
-		{
-			nbPaymentInfoModel.setCode(response.getCardResponse().getCardReference());//TODO::What exactly will Juspay send in response for NB?
-		}
-		else
-		{
-			nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getCode());
-		}
-		nbPaymentInfoModel.setUser(getUserService().getCurrentUser());
-		if (StringUtils.isNotEmpty(response.getCardResponse().getNameOnCard()))
-		{
-			nbPaymentInfoModel.setBankOwner(response.getCardResponse().getNameOnCard());
-		}
-		else
-		{
-			nbPaymentInfoModel.setBankOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);
-		}
-
 		try
 		{
-			//saving the creditCardPaymentInfoModel
+			//creating NetbankingPaymentInfoModel
+			final NetbankingPaymentInfoModel nbPaymentInfoModel = getModelService().create(NetbankingPaymentInfoModel.class);
+
+			if (StringUtils.isNotEmpty(cart.getGuid()))
+			{
+				nbPaymentInfoModel.setCode("NB_" + cart.getGuid());//TODO::Setting like this until it is finalized
+			}
+			else
+			{
+				nbPaymentInfoModel.setCode("DUMMY_NB_" + cart.getGuid());
+			}
+
+			if (null != getUserService().getCurrentUser())
+			{
+				nbPaymentInfoModel.setUser(getUserService().getCurrentUser());
+				if (StringUtils.isNotEmpty(getUserService().getCurrentUser().getName()))
+				{
+					nbPaymentInfoModel.setBankOwner(getUserService().getCurrentUser().getName());
+				}
+				else
+				{
+					nbPaymentInfoModel.setBankOwner(MarketplacecommerceservicesConstants.DUMMYCCOWNER);
+				}
+			}
+
+			if (StringUtils.isNotEmpty(response.getUdf1()))
+			{
+				BankforNetbankingModel nbBankModel = getModelService().create(BankforNetbankingModel.class);
+				nbBankModel.setNbCode(response.getUdf1());
+				nbBankModel = getFlexibleSearchService().getModelByExample(nbBankModel);
+				nbPaymentInfoModel.setBank(nbBankModel);
+			}
+
+			//saving the nbPaymentInfoModel
 			getModelService().save(nbPaymentInfoModel);
+
+			//setting paymentinfo in cart
+			cart.setPaymentInfo(nbPaymentInfoModel);
+			cart.setPaymentAddress(cart.getDeliveryAddress());
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Exception while saving emi payment info with " + e);
+			LOG.error("Exception while saving netbanking payment info with " + e);
 		}
-		//setting paymentinfo in cart
-		cart.setPaymentInfo(nbPaymentInfoModel);
-		cart.setPaymentAddress(cart.getDeliveryAddress());
-
 		//returning the cart
 		return cart;
 	}
@@ -1489,13 +1523,36 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cartData
 	 * @param cart
 	 * @return MplPromoPriceData
+	 * @throws JaloPriceFactoryException
+	 * @throws JaloSecurityException
+	 * @throws CalculationException
+	 * @throws VoucherOperationException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
+	 * @throws ModelSavingException
 	 *
 	 */
 	@Override
 	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
+			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			CalculationException, JaloSecurityException, JaloPriceFactoryException
 	{
+		//Reset Voucher Apportion
+		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+		{
+			for (final AbstractOrderEntryModel entry : getMplVoucherService()
+					.getOrderEntryModelFromVouEntries((VoucherModel) cart.getDiscounts().get(0), cart))
+			{
+				entry.setCouponCode("");
+				entry.setCouponValue(Double.valueOf(0.00D));
+				getModelService().save(entry);
+			}
+		}
+
+
 		final MplPromoPriceData promoPriceData = new MplPromoPriceData();
 		MplPromotionData responseData = new MplPromotionData();
+		VoucherDiscountData discData = new VoucherDiscountData();
 		final List<MplPromotionData> responseDataList = new ArrayList<MplPromotionData>();
 		calculatePromotion(cart, cartData);
 
@@ -1536,7 +1593,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 		}
 
+		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+		{
+			final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
+			final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService()
+					.getOrderEntryModelFromVouEntries(voucher, cart);
+			discData = getMplVoucherService().checkCartAfterApply(voucher, cart, applicableOrderEntryList);
+			getMplVoucherService().setApportionedValueForVoucher(voucher, cart, voucher.getVoucherCode(), applicableOrderEntryList);
+			getMplCommerceCartService().setTotalWithConvCharge(cart, cartData);
+
+		}
+
 		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
+
 		//getting the promotion data
 		final Set<PromotionResultModel> promotion = cart.getAllPromotionResults();
 		if (null != promotion && !promotion.isEmpty())
@@ -1610,6 +1679,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			promoPriceData.setDeliveryCost(cartData.getDeliveryCost());
 		}
 
+		promoPriceData.setVoucherDiscount(discData);
+
 		return promoPriceData;
 	}
 
@@ -1654,7 +1725,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		double discount = 0.0d;
 		double totalPrice = 0.0D;
-		if (null != cart && null != cart.getEntries() && !cart.getEntries().isEmpty())
+		if (null != cart && CollectionUtils.isNotEmpty(cart.getEntries()))
 		{
 			final List<DiscountModel> discountList = cart.getDiscounts();
 			final List<DiscountValue> discountValueList = cart.getGlobalDiscountValues();
@@ -1871,6 +1942,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final ArrayList<JuspayEBSResponseModel> juspayEBSResponseList = new ArrayList<JuspayEBSResponseModel>();
 			final JuspayEBSResponseModel juspayEBSResponseModel = getModelService().create(JuspayEBSResponseModel.class);
 			final String ebsDowntime = getConfigurationService().getConfiguration().getString("payment.ebs.downtime");
+			final Map<String, Double> paymentMode = getSessionService()
+					.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
 
 			if (null != auditModel)
 			{
@@ -1990,6 +2063,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					flag = true;
 				}
 				//Condition when RiskResponse is NOT available in OrderStatusResponse
+				//For NetBanking , we will not get any RISK structure
 				else
 				{
 					if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
@@ -2002,7 +2076,27 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						}
 						else
 						{
-							auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+
+							boolean netBanking = false;
+							for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
+							{
+								//if (entry.getKey() != null
+								//		&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey()))
+								if (entry.getKey() != null
+										&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
+								{
+									auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
+									auditModel.setIsExpired(Boolean.TRUE);
+									netBanking = true;
+									break;
+								}
+							}
+							// For credit card/debit card and emi , if risk block is not available
+							if (!netBanking)
+							{
+								auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
+								juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
+							}
 						}
 					}
 					else
@@ -2714,6 +2808,50 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.codCodeGenerator = codCodeGenerator;
 	}
+
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
+
+	/**
+	 * @return the mplVoucherService
+	 */
+	public MplVoucherService getMplVoucherService()
+	{
+		return mplVoucherService;
+	}
+
+
+	/**
+	 * @param mplVoucherService
+	 *           the mplVoucherService to set
+	 */
+	public void setMplVoucherService(final MplVoucherService mplVoucherService)
+	{
+		this.mplVoucherService = mplVoucherService;
+	}
+
+
+
+
+
+
 
 
 

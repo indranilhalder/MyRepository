@@ -73,15 +73,15 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		try
 		{
 
-			final String queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
+			final String queryStringForPrice = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
 			+ WHERE_CLASS + BuyBoxModel.PRODUCT + "}=?productBuyBox" + " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:"
 					+ BuyBoxModel.DELISTED + "}=0)    AND   {bb:" + BuyBoxModel.AVAILABLE + "} > 0 AND (sysdate between  {bb:"
 					+ BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE + "}) AND {bb:" + BuyBoxModel.PRICE
 					+ "} > 0  ORDER BY {bb:" + BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
 
-			log.debug("Query" + queryString);
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			log.debug("QueryStringFetchingPrice" + queryStringForPrice);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForPrice);
 			query.addQueryParameter("productBuyBox", productCode);
 			return flexibleSearchService.<BuyBoxModel> search(query).getResult();
 		}
@@ -503,21 +503,49 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	 */
 
 	@Override
+	public List<BuyBoxModel> buyBoxStockForSeller(final String sellerID)
+	{
+		try
+		{
+
+			final String queryStringForStock = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS + WHERE_CLASS + BuyBoxModel.SELLERID
+					+ "}=?sellerid" + " AND  {bb:" + BuyBoxModel.AVAILABLE + "}  > 0";
+
+			log.debug("QueryFetchingStock" + queryStringForStock);
+			final FlexibleSearchQuery flexQuery = new FlexibleSearchQuery(queryStringForStock);
+			flexQuery.addQueryParameter("sellerid", sellerID);
+			return flexibleSearchService.<BuyBoxModel> search(flexQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	@Override
 	public List<BuyBoxModel> buyBoxForSizeGuide(final String productCode, final String sellerID)
 	{
 
 		try
 		{
 
-			final String queryString = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
+			final String queryStringForSizeGuide = SELECT_CLASS + BuyBoxModel._TYPECODE + AS_CLASS
 
 			+ WHERE_CLASS + BuyBoxModel.PRODUCT + "}=?productSizeGuide" + " AND  {bb:" + BuyBoxModel.SELLERID + "}=?sellerid"
 					+ " AND ( {bb:" + BuyBoxModel.DELISTED + "}  IS NULL OR {bb:" + BuyBoxModel.DELISTED
 					+ "}=0) AND (sysdate between  {bb:" + BuyBoxModel.SELLERSTARTDATE + "} and {bb:" + BuyBoxModel.SELLERENDDATE
 					+ "}) AND {bb:" + BuyBoxModel.PRICE + "} > 0";
 
-			log.debug("Query" + queryString);
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			log.debug("Query fetching SizeGuide" + queryStringForSizeGuide);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForSizeGuide);
 			query.addQueryParameter("productSizeGuide", productCode);
 			query.addQueryParameter("sellerid", sellerID);
 			return flexibleSearchService.<BuyBoxModel> search(query).getResult();

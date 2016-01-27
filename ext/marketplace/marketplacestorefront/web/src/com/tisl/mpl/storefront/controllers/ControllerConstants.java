@@ -312,6 +312,7 @@ public interface ControllerConstants
 				public static final String OTHERSELLERS_PAGE_LIMIT = "othersellers.pageLimit";
 				public static final String VIEW_SELLERS = "viewSellers";
 				public static final String PRODUCT_CODE = "productCode";
+				public static final String SIZESELECTED = "sizeSelected";
 				public static final String BUYBOXUSSID = "buyboxussid";
 				public static final String ALLSELLERS = "allsellers";
 				public static final String PAGE_LIMIT = "pageLimit";
@@ -321,6 +322,7 @@ public interface ControllerConstants
 				public static final String CHECK_PINCODE = "/checkPincode";
 				public static final String SIZE_GUIDE = "/sizeGuide";
 				public static final String NO_SELLERS = "No Sellers Defined For This Product";
+				public static final String NO_PRODUCT = "Selected Size is not available for this Seller";
 				public static final String PRODUCT_CODE_PATH_VARIABLE_PATTERN = "/{productCode:.*}";
 				public static final String REVIEWS_PATH_VARIABLE_PATTERN = "{numberOfReviews:.*}";
 				public static final String IS_COD = "isCod";

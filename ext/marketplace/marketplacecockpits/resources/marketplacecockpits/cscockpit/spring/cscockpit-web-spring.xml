@@ -590,6 +590,12 @@
 					<property name="widgetCode" value="checkoutCartAppliedPromotionsWidget"/>
 					<property name="widgetConfig" ref="csCheckoutCartAppliedPromotionsWidgetConfig"/>
 				</bean>
+				<!-- Applied coupon -->
+				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+					<property name="widgetCode" value="checkoutCouponAppliedWidget"/>
+					<property name="widgetConfig" ref="csCouponCheckoutWidgetConfig"/>
+				</bean>
+				
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="cartPaymentTransactionsWidget"/>
 					<property name="widgetConfig" ref="csCartPaymentTransactionsWidgetConfig"/>
@@ -628,6 +634,13 @@
 					<property name="widgetCode" value="orderDetailAppliedPromotionsWidget"/>
 					<property name="widgetConfig" ref="csOrderDetailAppliedPromotionsWidgetConfig"/>
 				</bean>
+				
+				<!-- Applied coupon -->
+				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+					<property name="widgetCode" value="orderCouponAppliedWidget"/>
+					<property name="widgetConfig" ref="csCouponOrderWidgetConfig"/>
+				</bean>
+				
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="orderConsignmentsWidget"/>
 					<property name="widgetConfig" ref="csOrderConsignmentsWidgetConfig"/>

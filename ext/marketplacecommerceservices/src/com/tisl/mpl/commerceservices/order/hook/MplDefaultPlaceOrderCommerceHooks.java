@@ -132,7 +132,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -214,7 +214,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -228,7 +228,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -619,9 +619,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
+	 *
 	 * @param orderList
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
@@ -1069,6 +1069,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getCouponCode()))
 			{
 				orderEntryModel.setCouponCode(abstractOrderEntryModel.getCouponCode());
+			}
+			if (StringUtils.isNotEmpty(abstractOrderEntryModel.getSellerForCoupon()))
+			{
+				orderEntryModel.setSellerForCoupon(abstractOrderEntryModel.getSellerForCoupon());
 			}
 			final DecimalFormat df = new DecimalFormat("#.##");
 			final double netSellingPrice = Double.parseDouble(df.format(price - productApportionvalue));

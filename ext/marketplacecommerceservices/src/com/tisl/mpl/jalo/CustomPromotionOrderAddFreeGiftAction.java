@@ -256,13 +256,13 @@ public class CustomPromotionOrderAddFreeGiftAction extends GeneratedCustomPromot
 								try
 								{
 									if (null != cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT)
-											&& Integer.parseInt(
-													(cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT))
-															.toString()) > 0)
+											&& Integer.parseInt(cartEntry.getAttribute(ctx,
+													MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString()) > 0)
 									{
-										qualifyingCount = Integer.parseInt(
-												cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString());
-										//qualifyingCount = cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT);
+										//Sonar fixes
+										//qualifyingCount = Integer.valueOf(cartEntry.getAttribute(ctx, MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString()).intValue();
+										qualifyingCount = Integer.parseInt(cartEntry.getAttribute(ctx,
+												MarketplacecommerceservicesConstants.QUALIFYINGCOUNT).toString());
 									}
 									else
 									{

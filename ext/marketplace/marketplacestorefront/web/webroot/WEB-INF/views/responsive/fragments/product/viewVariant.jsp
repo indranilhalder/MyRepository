@@ -27,7 +27,7 @@
 	}
 </script>
 
-<c:url var="sizeGuideUrl" value="/p/sizeGuide?productCode=${product.code}" scope="request"></c:url>
+<c:url var="sizeGuideUrl" value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
 
 <div class="color-swatch-container">
 		<p>Colour:</p>

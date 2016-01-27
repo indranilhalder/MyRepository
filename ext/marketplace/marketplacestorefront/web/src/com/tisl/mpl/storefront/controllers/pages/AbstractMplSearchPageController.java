@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
@@ -35,6 +36,7 @@ public abstract class AbstractMplSearchPageController extends AbstractPageContro
 	public static int MAX_PAGE_LIMIT = 0;
 	public static final String MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY = "orderHistory.max.page.limit.count.display";
 	private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT = "orderHistory.pagination.number.results.count";
+	private static final Logger LOG = Logger.getLogger(AbstractMplSearchPageController.class);
 
 	public static enum ShowMode
 	{
@@ -92,14 +94,19 @@ public abstract class AbstractMplSearchPageController extends AbstractPageContro
 
 	protected void populateModel(final Model model, final SearchPageData<?> searchPageData, final ShowMode showMode)
 	{
-		final int numberPagesShown = getSiteConfigService().getInt(PAGINATION_NUMBER_OF_RESULTS_COUNT, 10);
+		final int totalNoOfPages = searchPageData.getPagination().getNumberOfPages();
+		int numberPagesShown = getSiteConfigService().getInt(PAGINATION_NUMBER_OF_RESULTS_COUNT, 5);
+		if (numberPagesShown > totalNoOfPages)
+		{
+			LOG.debug("*************** Order History : Set Number Of Pages Shown as 5 as its found greater than Total No Of Pages ***********");
+			numberPagesShown = 5;
+		}
 
 		model.addAttribute("numberPagesShown", Integer.valueOf(numberPagesShown));
 		model.addAttribute("searchPageData", searchPageData);
 		model.addAttribute("isShowAllAllowed", calculateShowAll(searchPageData, showMode));
 		model.addAttribute("isShowPageAllowed", calculateShowPaged(searchPageData, showMode));
 	}
-
 
 	protected Boolean calculateShowAll(final SearchPageData<?> searchPageData, final ShowMode showMode)
 	{
