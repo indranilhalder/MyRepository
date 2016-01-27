@@ -29004,6 +29004,28 @@ position: absolute;
 	display:block;
 	
 }
+/*New Homepage change starts*/
+.electronic-brand-slider #rotatingImageTimeout  .item img{
+width:100%;
+}
+.owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination {
+    display: block !important;
+}
+.owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page{
+	width: 15px;
+    height: 35px;
+}
+.owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page span {
+    background: rgba(255,255,255,0.8);
+    border-radius: 100%;
+    width:10px;
+    height:10px;
+}
+.owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
+    background: transparent;
+    border:2px solid rgba(255,255,255,0.8);
+}
+/*New Homepage change ends*/
 /*--------------maincss-----------*/
 .row
 {
