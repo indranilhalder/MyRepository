@@ -1466,7 +1466,6 @@
 			</itemtype>
 
 			<itemtype code="Category" autocreate="false" generate="true">
-
 				<attributes>
 					<attribute qualifier="targetCrossProduct" type="TargetCrossProductCollection">
 						<modifiers read="true" write="true" search="true"
@@ -1678,7 +1677,6 @@
 			</itemtype>
 
 			<itemtype code="StockLevel" autocreate="false" generate="true">
-
 				<attributes>
 					<attribute type="java.lang.String" qualifier="sellerArticleSKU"
 						autocreate="true" generate="true">
@@ -1695,6 +1693,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="SELLERARTICLESKU_IDX">
+						<key attribute="sellerArticleSKU"/>
+					</index>
+				</indexes>
 			</itemtype>
 
 			<itemtype code="RichAttribute" autocreate="true" generate="true"
@@ -2584,6 +2587,11 @@
 					</attribute>
 					<!-- Push notification save device key web service ends -->
 				</attributes>
+				<indexes>
+					<index name="ORIGINALUID_IDX" unique="true">
+						<key attribute="originalUid"/>
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="Address" autocreate="false" generate="false">
 				<description>Extending the Address type from core with additional attributes.</description>
@@ -4841,11 +4849,6 @@
 						<persistence type='property' />
 					</attribute>
 				</attributes>
-				<indexes>
-					<index name="SellerIDX">
-						<key attribute="sellerArticleSKU" />
-					</index>
-				</indexes>
 			</itemtype>
 
 
@@ -5774,6 +5777,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="AUDITENTRYID_IDX">
+						<key attribute="auditId"/>
+					</index>	
+				</indexes>
 			</itemtype>
 
 			<itemtype code="MplPaymentAudit" autocreate="true" generate="true"
@@ -5834,6 +5842,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="AUDITID_IDX">
+						<key attribute="auditId"/>
+					</index>	
+				</indexes>
 			</itemtype>
 		</typegroup>
 
