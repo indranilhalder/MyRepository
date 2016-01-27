@@ -254,11 +254,25 @@ INSERT_UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid
 #;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending Product Carousel;MPH1111100100,MPH1111100101,MPH1112100108;TMPHomepageNowTrendingProductCarouselComponent
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
 #;;HandpickedCollectionsParagraphComponent;Handpicked Collections Paragraph Component;HandpickedCollectionsParagraphComponent;;;;
+
+#######Brands You Love###################
+
+INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);
+;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;ZaraBrandShowcaseItem,NuonBrandShowcaseItem,LandmarkBrandShowcaseItem,AscotBrandShowcaseItem,TitanBrandShowcaseItem,CromaBrandShowcaseItem
+
+INSERT_UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
+;;ZaraBrandShowcaseItem;Zara Brand Showcase;ZaraBrandShowcaseItem
+;;NuonBrandShowcaseItem;Nuon Brand Showcase;NuonBrandShowcaseItem
+;;LandmarkBrandShowcaseItem;Landmark Brand Showcase;LandmarkBrandShowcaseItem
+;;AscotBrandShowcaseItem;Ascot Brand Showcase;AscotBrandShowcaseItem
+;;TitanBrandShowcaseItem;Titan Brand Showcase;TitanBrandShowcaseItem
+;;CromaBrandShowcaseItem;Croma Brand Showcase;CromaBrandShowcaseItem
+
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
-#;;Section3Slot-Homepage;BrandsYouLoveComponent,SmallBrandsComponent,TMPHomepageCategoryCarousel
+;;Section3Slot-Homepage;BrandsYouLoveComponent
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
-#;;Section3Slot-Homepage;Section3;;Section3Slot-Homepage;;;
+;;Section3Slot-Homepage;Section3;;Section3Slot-Homepage;;;
 
 #### Section 4
 
@@ -900,4 +914,5 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 #ContentSlotforPage for Overview  Page
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='overview'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;BodyContent-Overview;BodyContent;;BodyContent-Overview;;;
+
 

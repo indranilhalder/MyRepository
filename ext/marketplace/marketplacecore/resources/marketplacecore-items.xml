@@ -94,6 +94,9 @@
 			<collectiontype code="categoryBasedCoupon"
 			elementtype="Category" autocreate="true" generate="true" type="list" />	
 			
+			<collectiontype code="showcaseItemsCollection"
+			elementtype="MplShowcaseItemComponent" autocreate="true" generate="true"
+			type="list" />
 			
 			
 	</collectiontypes>
@@ -3738,7 +3741,121 @@
 			</itemtype>
 			
 			<!-- End of Mpl Advanced Category Carousel Component -->
+			<!-- Start of Brands You Love and Showcase -->
+			<itemtype code="MplShowcaseComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplShowcaseComponent">
+				<description>This component is created for showcasing Brands You Love and collection showcase</description>
+				<attributes>
 
+					<attribute type="java.lang.String" qualifier="title"
+						autocreate="true" generate="true">
+						<description>This attribute is for showing the title of the component</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					
+					<attribute type="showcaseItemsCollection" qualifier="showcaseItems"
+						autocreate="true" generate="true">
+						<description>This attribute is a collection of showcase items</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+					
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="MplShowcaseItemComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.mpl.core.jalo.MplShowcaseItemComponent">
+				<description>This component is created for configuring each item of the brand showcase </description>
+				<attributes>
+
+					<attribute type="Media" qualifier="logo"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing the brand logo to be displayed</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="Product" qualifier="product1"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing 1st product</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="Product" qualifier="product2"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing 2nd product</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="text"
+						autocreate="true" generate="true">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+
+						</persistence>
+					</attribute>
+					
+					<attribute type="java.lang.Boolean" qualifier="showByDefault"
+						autocreate="true" generate="true">
+						<description>This attribute is for marking the component as default so that it shows at first</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="Media" qualifier="bannerImage"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing the collection banner</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="bannerText"
+						autocreate="true" generate="true">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+
+						</persistence>
+					</attribute>
+					
+				</attributes>
+			</itemtype>
+			<!-- End -->
 		</typegroup>
 
 		<typegroup name="EmailProcesses">

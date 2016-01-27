@@ -334,7 +334,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section2A;;CMSMediaParagraphComponent;
 ;Section2B;;CMSMediaParagraphComponent;
 ;Section2C;;;wide
-;Section3;;;wide
+;Section3;;MplShowcaseComponent;
 ;Section4A;;;narrow
 ;Section4B;;;narrow
 ;Section5;;CMSParagraphComponent;
