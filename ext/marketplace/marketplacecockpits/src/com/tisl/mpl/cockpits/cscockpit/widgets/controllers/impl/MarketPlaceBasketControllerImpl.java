@@ -966,9 +966,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		}
 	}
 	@Override
-	public void releaseVoucher()
+	public String releaseVoucher()
 	{
-		
+		//Modified for TISSTRT-303
+		String message = StringUtils.EMPTY;
 		final CartModel cartModel = getCartModel();
 		Collection<String> voucherList = voucherService.getAppliedVoucherCodes(cartModel);
 		if(CollectionUtils.isNotEmpty(voucherList))
@@ -983,10 +984,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 			try {
 				getCommerceCartService().recalculateCart(cartModel);
+				message="release_voucher";
 			} catch (CalculationException e) {
 				LOG.error("Recalculation of Cart Failed ");
 			}
 		}
+		
+		return message;
 	}
 	@Override
 	public Collection<String> getAppliedVoucherCodesList()
