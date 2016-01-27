@@ -11,11 +11,11 @@
 <span id="wishlistnotblank_sizeGuide" style="display:none"><spring:theme code="wishlist.notblank"/></span>
 
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
-
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
+
 <div class="sizes">
 	
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
@@ -221,7 +221,7 @@
 					<c:when test="${not empty variantOption.defaultUrl}">
 					
 						<li>
-						<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
+						<c:url value="/p/sizeGuide?productCode=${variantOption.code}&sizeSelected=true" 
 								var="variantUrl" />
 						
 								<c:choose><c:when test="${empty selectedSize}">
@@ -277,16 +277,24 @@
 		</c:otherwise>
 	</c:choose>	
 			</ul>			
-<div class="size">				
+<div class="size">	
+				<%-- <c:when test="${sizeSelectedSizeGuide == true}"> --%>
+					<%-- ${sizeSelectedSizeGuide} --%>
+				<%-- </c:when> --%>
+
 <c:if test="${noVariant!=true&&notApparel!=true}">
- <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
-	
-	
-	
-	
-	
+ <label>Size:  
+ <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 		<select id="variant" class="variant-select size-g">
-			<option value="#" id="select-option"><spring:theme code="text.select.size" /></option>
+			<c:choose>
+				<c:when test="${empty sizeSelectedSizeGuide}">
+					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
+				</c:when>
+				<c:otherwise>
+					<option value="#"><spring:theme code="text.select.size" /></option>
+				</c:otherwise>
+			</c:choose>
+			<%-- <option value="#" id="select-option"><spring:theme code="text.select.size" /></option> --%>
 			<%-- <option value="#" data-target="#popUpModalNew"><spring:theme code="text.select.size" /></option> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
@@ -295,12 +303,24 @@
 							<c:if test="${currentColor eq color}">
 								<c:set var="currentColor" value="${color}" />
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
-									<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
+									<c:url value="/p/sizeGuide?productCode=${variantOption.code}&sizeSelected=true" 
 								var="link" />
 								<c:set var="code" value="${variantOption.code}"/>
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
-											<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option>
+										
+											<c:choose>
+											    <c:when test="${empty sizeSelectedSizeGuide}">
+													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option>
+												</c:otherwise>
+											</c:choose>
+										
+										
+										
+											<%-- <option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option> --%>
 										</c:when>
 										<c:otherwise>
 											<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option>
@@ -321,7 +341,7 @@
 										<c:if test="${currentColor eq color}">
 
 											<c:forEach var="entry" items="${variantOption.sizeLink}">
-											<c:url value="/p/sizeGuide?productCode=${variantOption.code}" var="link" />
+											<c:url value="/p/sizeGuide?productCode=${variantOption.code}&sizeSelected=true" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
 														<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option>
@@ -501,11 +521,6 @@ $("#noProductForSelectedSeller").hide();
 $("#productDetails").show();
 $("#price").show();
 
-if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
-	$('#variant option#select-option').attr("selected", "selected");
-	sizeSelected=false;
-}
-
 });
 
 
@@ -675,9 +690,14 @@ function loadDefaultWishListName_SizeGuide() {
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/addToWishListInPDP";
 	var sizeSelected=true;
-	if( $("#variant,#sizevariant option:selected").val()=="#"){
+	//if( $("#variant,#sizevariant option:selected").val()=="#"){
+		
+	if($('#variant.size-g option:selected').val()=="#"){
 		sizeSelected=false;
 	}
+	
+	//alert("sizeSelected: "+sizeSelected);
+	
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 

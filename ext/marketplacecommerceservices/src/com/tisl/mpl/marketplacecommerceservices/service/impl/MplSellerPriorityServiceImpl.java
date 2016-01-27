@@ -77,18 +77,20 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 					}
 					if (null != sellerPriority.getCategoryId() && null != sellerPriority.getListingId())
 					{
-						//final int count = 1;
-						//priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
 						sellerPriority.setPriorityStatus(SellerPriorityEnum.PROCESSED);
-						ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
-								sellerPriority.getSellerId())));
+						final int count = 1;
+						priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
+						ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
 						ussidList.removeAll(Collections.singletonList(null));
-						final int productPriorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
+						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, sellerPriority.getIsActive().booleanValue(),
+								priorityMap));
 						if (ussidList.isEmpty())
 						{
 							sellerPriority.setPriorityStatus(SellerPriorityEnum.ERROR);
 						}
-						priorityMap.putAll(getPriorityLevelData(ussidList, productPriorityLevel, isValid, priorityMap));
+						//						ussidList.clear();
+						//						final int productPriorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
+						//						priorityMap.putAll(getPriorityLevelData(ussidList, productPriorityLevel, isValid, priorityMap));
 						priorityModelList.add(sellerPriority);
 
 						log.info(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
@@ -397,7 +399,8 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						setPriorityLevel(priorityLevel, sellerPriorityLevel);
 						sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
 					}
-					else
+					else if (!isActive && null != priorityLevelMap.get(ussid)
+							&& !priorityLevelMap.get(ussid).getIsValidPriority().booleanValue())
 					{
 						updateInvalidPriorityLevel(priorityLevel, sellerPriorityLevel);
 					}

@@ -688,7 +688,9 @@ public final class ModelAttributetConstants
 	public static final String NOTIFICATION_MESSAGE_LIST = "notificationMessagelist";
 	public static final String NOTIFICATION_COUNT = "notificationCount";
 	public static final String IS_SIGNED_IN = "isSignedInUser";
+	//sizeguide
 
+	public static final String SELECTEDSIZE = "sizeSelectedSizeGuide";
 
 
 }
