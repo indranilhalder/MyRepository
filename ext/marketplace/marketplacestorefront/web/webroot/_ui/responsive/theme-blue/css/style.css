@@ -29008,11 +29008,13 @@ position: absolute;
 	
 }
 
-body.page-productDetails .gig-comment .gig-media-thumbnail {
+body.page-productDetails .gig-comment .gig-media-thumbnail,
+body.page-reviews .gig-comment .gig-media-thumbnail {
 	height: auto !important;
 }
 
-body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
+body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image,
+body.page-reviews .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
 	height: auto !important;
 	width: 50px !important;
 }
