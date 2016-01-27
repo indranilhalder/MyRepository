@@ -283,7 +283,8 @@
 				<%-- </c:when> --%>
 
 <c:if test="${noVariant!=true&&notApparel!=true}">
- <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
+ <label>Size:  
+ <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
 		<select id="variant" class="variant-select size-g">
 			<c:choose>
 				<c:when test="${empty sizeSelectedSizeGuide}">
@@ -689,9 +690,14 @@ function loadDefaultWishListName_SizeGuide() {
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/addToWishListInPDP";
 	var sizeSelected=true;
-	if( $("#variant,#sizevariant option:selected").val()=="#"){
+	//if( $("#variant,#sizevariant option:selected").val()=="#"){
+		
+	if($('#variant.size-g option:selected').val()=="#"){
 		sizeSelected=false;
 	}
+	
+	//alert("sizeSelected: "+sizeSelected);
+	
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
