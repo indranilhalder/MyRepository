@@ -1566,7 +1566,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				var availableStock = data['availablestock'];
 				var ussid = data['sellerArticleSKU'];
 				var nosellerData = data['noseller'];
-				var sizeSelected=true;
+				//var sizeSelected=true;
 				
 				var count =0;
 
@@ -1576,7 +1576,7 @@ function buyboxDetailsForSizeGuide(productCode){
 //					sizeSelected=false;
 //				}
 				
-				$("#sizeSelectedVal").val(sizeSelected);
+				//$("#sizeSelectedVal").val(sizeSelected);
 				
 				if(sellerName=="undefined" || sellerName==null)
 				{

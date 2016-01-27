@@ -28342,6 +28342,9 @@ body .account .right-account.rewards>div.your-activity.coupon-history>p span
 	color: #00cbe9;
 	font-weight: 500
 }
+body .account .right-account.rewards>div.your-activity.coupon-history>ul{
+	border-bottom: 1px solid #f0f4f5;
+}
 
 body .account .right-account.rewards>div.your-activity.coupon-history>ul>li,
 	body .account .right-account.rewards>div.your-activity.coupon-history>ul>li.header
