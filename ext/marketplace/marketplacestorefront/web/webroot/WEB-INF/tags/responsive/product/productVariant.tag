@@ -48,7 +48,7 @@ function loadVariant(x){
 }
 </script>
 <c:url var="sizeGuideUrl"
-	value="/p/sizeGuide?productCode=${product.code}" scope="request"></c:url>
+	value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
 <div class="swatch">
 
 	<form:form action="/" id="variantForm" method="post">
@@ -262,7 +262,7 @@ function loadVariant(x){
 		</div>
 	</form:form>
 	<a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}"> <spring:theme
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 		</a>
 </c:if>
