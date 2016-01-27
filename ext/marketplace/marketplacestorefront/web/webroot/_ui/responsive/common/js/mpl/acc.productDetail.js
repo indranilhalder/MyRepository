@@ -254,16 +254,15 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
-		    	//$("#videoFrame").show();
+		    	$("#videoFrame").show();
 				$("#videoFrame").attr("src",url);
 				$("#videoModal #videoFrame").attr("src",url);
 				$("#videoModal").modal();
 				$("#videoModal").addClass("active");
 				//$(".productImagePrimary .picZoomer-pic-wp img").hide();
-				$(".zoomContainer").remove();
-				$('.picZoomer-pic').removeData('zoom-image');
+				/*$(".zoomContainer").remove();
+				$('.picZoomer-pic').removeData('zoom-image');*/
 		    }
-			
 		});
 
 function openPop(ussidfromSeller) {
@@ -1301,7 +1300,8 @@ function CheckonReload()
 									
 				},
 				error : function(resp) {
-					alert("Error Occured");
+					//alert("Error Occured");
+					console.log( "Error Occured" );
 				}
 			});
 		
@@ -1392,7 +1392,8 @@ function CheckUserLogedIn() {
 								
 			},
 			error : function(resp) {
-				alert("Error Occured");
+				//alert("Error Occured");
+				console.log( "Error Occured" );
 			}
 		});
 	
@@ -1565,7 +1566,7 @@ function buyboxDetailsForSizeGuide(productCode){
 				var availableStock = data['availablestock'];
 				var ussid = data['sellerArticleSKU'];
 				var nosellerData = data['noseller'];
-				var sizeSelected=true;
+				//var sizeSelected=true;
 				
 				var count =0;
 
@@ -1575,7 +1576,7 @@ function buyboxDetailsForSizeGuide(productCode){
 //					sizeSelected=false;
 //				}
 				
-				$("#sizeSelectedVal").val(sizeSelected);
+				//$("#sizeSelectedVal").val(sizeSelected);
 				
 				if(sellerName=="undefined" || sellerName==null)
 				{

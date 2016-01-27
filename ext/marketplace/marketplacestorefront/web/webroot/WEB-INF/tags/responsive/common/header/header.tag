@@ -209,7 +209,8 @@ function registerUser(eventObject)
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
 						<div class="mobile-bag bag">
-							<a href="${cartUrl}">(<span class="responsive-bag-count"></span>)</a>
+						<!-- TISPRD-32-fix -->
+							<a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a>
 						</div>
 					</div>
 				</c:when>

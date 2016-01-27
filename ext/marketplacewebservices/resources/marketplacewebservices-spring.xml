@@ -276,7 +276,11 @@
 <bean id="mplValidateAgainstXSDService"
 			class="com.tisl.mpl.service.MplValidateAgainstXSDServiceImpl"/>
 <bean id="mplSellerMasterService"
-			class="com.tisl.mpl.service.MplSellerMasterServiceImpl"/>			
+			class="com.tisl.mpl.service.MplSellerMasterServiceImpl"/>	
+			
+<bean id="mplSellerMasterDao"
+			class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerMasterDaoImpl"/>			
+			
 <bean id="mplSellerTypeGlobalCodesService"
 			class="com.tisl.mpl.service.MplSellerTypeGlobalCodesServiceImpl"/>	
 <bean id="mplSellerTypeGlobalCodesDAO"

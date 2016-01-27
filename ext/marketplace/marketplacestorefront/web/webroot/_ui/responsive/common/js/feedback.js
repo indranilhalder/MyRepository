@@ -1220,4 +1220,12 @@ $(document).ready(function(){
 				}
 			}
 		});
+		
+		if ('ontouchstart' in window) {
+			$('body').addClass("touchDevice");
+	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
+	 			$(this).attr("href","#");
+	 		});
+			}
+		
 });
