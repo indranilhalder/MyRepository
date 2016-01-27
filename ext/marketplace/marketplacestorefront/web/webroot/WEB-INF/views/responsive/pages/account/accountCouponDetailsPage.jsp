@@ -228,7 +228,7 @@
 									</c:choose>
 									<!-- Next link addition -->
 									
-									<c:if test="${totalPagesCoupon gt 1}">
+									<c:if test="${totalPagesCoupon gt 1 and param.pageVoucher ne totalPagesCoupon}">
 										<li class="next" id="voucherNext"><a href="#nogo"><spring:theme
 													code="text.account.coupons.next" /> <span
 												class="lookbook-only"></span></a></li>
@@ -318,7 +318,7 @@
 													</c:otherwise>
 												</c:choose>
 												<!-- Next link addition -->
-												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory}">
+												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory and param.pageHistory ne totalPagesCouponHist}">
 													<li class="next" id="historyNext"><a href="#nogo"><spring:theme
 																code="text.account.coupons.next" /> <span
 															class="lookbook-only"></span></a></li>
@@ -422,7 +422,7 @@
 										</c:otherwise>
 									</c:choose>
 									<!-- Next link addition -->
-									<c:if test="${totalPagesCouponHist gt 1}">
+									<c:if test="${totalPagesCouponHist gt 1 and param.pageHistory ne totalPagesCouponHist}">
 										<li class="next" id="historyNextBtm"><a href="#nogo"><spring:theme
 													code="text.account.coupons.next" /> <span
 												class="lookbook-only"></span></a></li>
