@@ -3938,7 +3938,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.RENDERING_METHOD,
 					ModelAttributetConstants.RENDERING_METHOD_VIEW_PARTICULAR_WISHLIST);
 			model.addAttribute(ModelAttributetConstants.SHOW_WISHLIST, ModelAttributetConstants.Y_SMALL_VAL);
-			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_NAME, particularWishlist.getName());
+			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_NAME,
+					particularWishlist != null ? particularWishlist.getName() : null);
 			final RemoveWishlistData removeWishlistData = new RemoveWishlistData();
 			model.addAttribute(ModelAttributetConstants.REMOVE_WISHLIST_DATA, removeWishlistData);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(WISHLIST_CMS_PAGE));
