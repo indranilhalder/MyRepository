@@ -29007,6 +29007,16 @@ position: absolute;
 	display:block;
 	
 }
+
+body.page-productDetails .gig-comment .gig-media-thumbnail {
+	height: auto !important;
+}
+
+body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
+	height: auto !important;
+	width: 50px !important;
+}
+
 /*--------------maincss-----------*/
 .row
 {
