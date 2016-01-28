@@ -116,6 +116,10 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
 							log.info(new StringBuilder("###########ussid for category level").append(ussidList).append("prioritylevel")
 									.append(priorityLevel).toString());
+							if (isValid)
+							{
+								priorityMapList.addAll(ussidList);
+							}
 							if (null != ussidList && ussidList.contains(null) || ussidList == null || ussidList.isEmpty())
 							{
 								sellerPriority.setPriorityStatus(SellerPriorityEnum.ERROR);
@@ -135,6 +139,10 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							{
 								ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
 										sellerPriority.getSellerId())));
+								if (isValid)
+								{
+									priorityMapList.addAll(ussidList);
+								}
 								log.info(new StringBuilder("***************ussid for product level").append(ussidList)
 										.append("prioritylevel").append(priorityLevel).toString());
 							}
