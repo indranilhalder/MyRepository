@@ -28,6 +28,7 @@ import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -129,6 +130,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	private MplCouponFacade mplCouponFacade;
 	@Autowired
 	private MplDefaultCalculationService mplDefaultCalculationService;
+	@Autowired
+	private MplVoucherService mplVoucherService;
 
 	public BuyBoxFacade getBuyBoxFacade() {
 		return buyBoxFacade;
@@ -765,7 +768,12 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				}
 				//Important! Checking cart, if total amount <0, release this voucher
 				//((EziBuyCommerceCartService) getCommerceCartService()).setAppliedVoucherCode(cartModel, voucherCode);
-				getCommerceCartService().recalculateCart(cartModel);
+				//getCommerceCartService().recalculateCart(cartModel);
+				
+				mplVoucherService.recalculateCartForCoupon(cartModel);
+				
+				final List<AbstractOrderEntryModel> applicableOrderEntryList = mplVoucherService.getOrderEntryModelFromVouEntries(voucher,
+						cartModel);
 				
 				boolean applyFlag = checkCartAfterApply(voucherCode, voucher);
 				if(!applyFlag)
@@ -774,9 +782,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					return "prices_exceeded";
 				}
 				
-				mplCouponFacade.setApportionedValueForVoucher(voucher, cartModel, voucherCode);
+				mplVoucherService.setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
 				
-				return StringUtils.EMPTY;
+				//For TISSTRT-302
+				return "coupom_reedeem";
 			}
 			catch (Exception e)
 			{
@@ -869,13 +878,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 		}
 
-		final VoucherEntrySet entrySet = voucherModelService.getApplicableEntries(lastVoucher, cartModel);
-		final List<AbstractOrderEntry> applicableOrderEntryList = mplCouponFacade.getOrderEntriesFromVoucherEntries(entrySet);
+		//final VoucherEntrySet entrySet = voucherModelService.getApplicableEntries(lastVoucher, cartModel);
+		final List<AbstractOrderEntry> applicableOrderEntryList = mplVoucherService.getOrderEntriesFromVoucherEntries(lastVoucher, cartModel);
 
 		if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
 				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())
 		{
-			discountList = mplCouponFacade.setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
+			discountList = mplVoucherService.setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
 					.getMaxDiscountValue().doubleValue());
 			cartModel.setGlobalDiscountValues(discountList);
 			mplDefaultCalculationService.calculateTotals(cartModel, false);
@@ -887,7 +896,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		{
 			releaseVoucher(lastVoucherCode);
 			LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
-			mplCouponFacade.recalculateCartForCoupon(cartModel);
+			mplVoucherService.recalculateCartForCoupon(cartModel);
 			getModelService().save(cartModel);
 			return false;
 		}
@@ -923,7 +932,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				{
 					releaseVoucher(lastVoucherCode);
 					LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
-					mplCouponFacade.recalculateCartForCoupon(cartModel);
+					mplVoucherService.recalculateCartForCoupon(cartModel);
 					getModelService().save(cartModel);
 					return false;
 				}
@@ -957,9 +966,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		}
 	}
 	@Override
-	public void releaseVoucher()
+	public String releaseVoucher()
 	{
-		
+		//Modified for TISSTRT-303
+		String message = StringUtils.EMPTY;
 		final CartModel cartModel = getCartModel();
 		Collection<String> voucherList = voucherService.getAppliedVoucherCodes(cartModel);
 		if(CollectionUtils.isNotEmpty(voucherList))
@@ -974,10 +984,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 			try {
 				getCommerceCartService().recalculateCart(cartModel);
+				message="release_voucher";
 			} catch (CalculationException e) {
 				LOG.error("Recalculation of Cart Failed ");
 			}
 		}
+		
+		return message;
 	}
 	@Override
 	public Collection<String> getAppliedVoucherCodesList()

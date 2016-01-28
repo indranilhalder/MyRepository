@@ -654,11 +654,11 @@ $language=language(isocode)[default='en'][unique=true];
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
 				          
-				INSERT_UPDATE RichAttribute;typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;productsource(code,$catalogVersion)[unique=true];$catalogversion
+				INSERT_UPDATE RichAttribute;typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);productsource(code,$catalogVersion)[unique=true];$catalogversion
 			</value>
         </property>
         <property name="impexRow">
-            <value>;{0};{1};{2};{+3};{+4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{+14}</value>
+            <value>;{0};{1};{2};{+3};{+4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{+14};{+15}</value>
         </property>
         </bean>
          <!-- Converter for SizeGuide For Product Import --> 
@@ -770,11 +770,11 @@ $language=language(isocode)[default='en'][unique=true];
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
 				          
-				INSERT_UPDATE RichAttribute;homeDelivery(code);expressDelivery(code);clickAndCollect(code);typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;sellerInfo(sellerArticleSKU,$catalogVersion)[unique=true];$catalogversion
+				INSERT_UPDATE RichAttribute;homeDelivery(code);expressDelivery(code);clickAndCollect(code);typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);sellerInfo(sellerArticleSKU,$catalogVersion)[unique=true];$catalogversion
 			</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{+2};{3};{4};{5};{+6};{+7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{+17}</value>
+            <value>;{+0};{+1};{+2};{3};{4};{5};{+6};{+7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{+17};{+18}</value>
         </property>
         </bean>
         

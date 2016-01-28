@@ -38,6 +38,8 @@ public interface NotificationDao
 	boolean checkIsUpdated(String voucherCode);
 
 
-	List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherCode);
+	List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherIndentifier);
+
+	List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode);
 
 }

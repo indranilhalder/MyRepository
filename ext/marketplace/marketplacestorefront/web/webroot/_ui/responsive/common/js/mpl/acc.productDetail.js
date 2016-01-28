@@ -254,16 +254,15 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
-		    	//$("#videoFrame").show();
+		    	$("#videoFrame").show();
 				$("#videoFrame").attr("src",url);
 				$("#videoModal #videoFrame").attr("src",url);
 				$("#videoModal").modal();
 				$("#videoModal").addClass("active");
 				//$(".productImagePrimary .picZoomer-pic-wp img").hide();
-				$(".zoomContainer").remove();
-				$('.picZoomer-pic').removeData('zoom-image');
+				/*$(".zoomContainer").remove();
+				$('.picZoomer-pic').removeData('zoom-image');*/
 		    }
-			
 		});
 
 function openPop(ussidfromSeller) {
@@ -1301,7 +1300,8 @@ function CheckonReload()
 									
 				},
 				error : function(resp) {
-					alert("Error Occured");
+					//alert("Error Occured");
+					console.log( "Error Occured" );
 				}
 			});
 		
@@ -1314,15 +1314,17 @@ function getRating(key,productCode,category)
 {
 	
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
-	  $.getJSON(url, function(data){		  
+	  $.getJSON(url, function(data){
+	  	var totalCount=data.streamInfo.ratingCount;
+		//Reverse the source array
+		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
+		ratingArray  = ratingArray.reverse();
+		
 		  $(".rate-details .after").each(function(count){			  
-				var totalCount=data.streamInfo.ratingCount;
-				//Reverse the source array
-				var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
-				ratingArray  = ratingArray.reverse();
+				
 				var countIndiv=ratingArray[count];								
-				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100});
-				$(".rate-details .after").eq(count).text(data.streamInfo.ratingDetails._overall.ratings[count]);
+				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
+				$(".rate-details .after").eq(count).text(ratingArray[count]);
 				
 			})
 			
@@ -1390,7 +1392,8 @@ function CheckUserLogedIn() {
 								
 			},
 			error : function(resp) {
-				alert("Error Occured");
+				//alert("Error Occured");
+				console.log( "Error Occured" );
 			}
 		});
 	
@@ -1494,7 +1497,53 @@ function validEmail(email) {
 	  }	  
 	  return true;	  
 	}
+function dispPriceForSizeGuide(mrp, mop, spPrice) {
+	//alert("mrp: "+mrp +" Mop: "+mop+" spPrice: "+spPrice);
+	if(null!= mrp){
+		$("#sizemrpPriceId").append(mrp);
+	}
+	if(null!= mop){
+		$("#sizemopPriceId").append(mop);
+	}
+	if(null!= spPrice){
+		$("#sizespPriceId").append(spPrice);
+	} 
 
+	if (null!=spPrice && spPrice != 0) {
+
+		if (mop == mrp) {
+			$('#sizemrpPriceId').css('text-decoration', 'line-through');
+			$("#sizemrpPriceId").show();
+			$("#sizespPriceId").show();
+		} else {
+			//alert("mop!=mrp sp");
+			$('#sizemrpPriceId').css('text-decoration', 'line-through');
+			$("#sizemrpPriceId").show();
+			$("#sizespPriceId").show();
+		}
+
+	} else {
+		if (null!=mop && mop != 0) {
+			if (mop == mrp) {
+				$("#sizemrpPriceId").removeClass("old").addClass("sale");
+				$("#sizemrpPriceId").show();
+			} else {
+				//alert("mop!=mrp");
+				$('#sizemrpPriceId').css('text-decoration', 'line-through');
+				$("#sizemrpPriceId").show();
+				$("#sizemopPriceId").show();
+			}
+		} else {
+			$("#sizemrpPriceId").show();
+		}
+	}
+	if (mrp == "") {
+		$("#sizemrpPriceId").hide();
+	} else {
+		$("#sizemrpPriceId").show();
+	}
+
+}
 function buyboxDetailsForSizeGuide(productCode){
 	var sellerID= $("#sellerSelId").val();
 	var productCode = productCode;//$("#product").val();
@@ -1502,7 +1551,6 @@ function buyboxDetailsForSizeGuide(productCode){
 	console.log(sellerID +" "+productCode);
 	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
 	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
-
 	
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
@@ -1517,12 +1565,33 @@ function buyboxDetailsForSizeGuide(productCode){
 				var specialPrice = data['specialPrice'];
 				var availableStock = data['availablestock'];
 				var ussid = data['sellerArticleSKU'];
-				if (specialPrice != null){
-					$("#specialSelPrice").html(specialPrice);
+				var nosellerData = data['noseller'];
+				//var sizeSelected=true;
+				
+				var count =0;
+
+
+//				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
+//					$('#variant option#select-option').attr("selected", "selected");
+//					sizeSelected=false;
+//				}
+				
+				//$("#sizeSelectedVal").val(sizeSelected);
+				
+				if(sellerName=="undefined" || sellerName==null)
+				{
+					$("#productDetails").hide();
+					$("#price").hide();
+					$("#addToCartSizeGuide").hide();
+					$("#noProductForSelectedSeller").show();
+					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}
-				else{
-					$("#specialSelPrice").html(mopPrice);
-				}
+//				if (specialPrice != null){
+//					$("#specialSelPrice").html(specialPrice);
+//				}
+//				else{
+//					$("#specialSelPrice").html(mopPrice);
+//				}
 				if(data['isPinCodeServicable']=='N'){
 					$("#pinNotServicableSizeGuide").show();
 					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
@@ -1537,6 +1606,8 @@ function buyboxDetailsForSizeGuide(productCode){
 				$("#sizeStock").val(availableStock);
 				$("#sellerSelArticleSKU").html(ussid);
 				$("#sellerSelArticleSKUVal").val(ussid);
+				$("#nosellerVal").val(nosellerData);
+				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice);
 				if(availableStock==0){
 					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
 					$("#addToCartSizeGuideTitleoutOfStockId").show();
@@ -1545,7 +1616,6 @@ function buyboxDetailsForSizeGuide(productCode){
 				else{
 					$("#addToCartSizeGuide #addToCartButton").removeAttr('style');
 				} 
-				
 			}
 		});
 }

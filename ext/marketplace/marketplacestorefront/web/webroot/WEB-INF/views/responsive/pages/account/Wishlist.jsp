@@ -222,7 +222,7 @@
 					<c:if test="${isMSDEnabled}">
 					<input type="hidden" value="${isMSDEnabled}" name="isMSDEnabled" />
 						<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-							<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'}">
+							<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
 							        <c:set var="includeMSDJS" scope="request" value="true"/>
 							        <input type="hidden" value="true" name="isApparelExist"/>
 							</c:if>
@@ -398,7 +398,7 @@
 													</c:when>
 
 													<c:otherwise>
-													<c:if test="${not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing'}">
+													<c:if test="${(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(not empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Footwear')}">
 														<span>
 															<button id="addToCartButton" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -415,8 +415,7 @@
 															</button>
 														</span>
 														</c:if>
-														
-														<c:if test="${empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing'}">
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')}">
 														<span id="addToCartButtonId" style="display: none">
 															<button type="button" id="addToCartButton" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"
@@ -434,7 +433,7 @@
 												<c:if test="${isMSDEnabled}">
 													<input type="hidden" value="${isMSDEnabled}" id="isMSDEnabled_wl_AddToBag" />
 													<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'}">
+														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
 														        <c:set var="includeMSDJS" scope="request" value="true"/>
 														        <input type="hidden" value="true" id="isApparelExist_wl_AddToBag"/>
 														</c:if>
@@ -480,7 +479,7 @@
 												<c:if test="${isMSDEnabled}">
 													<input type="hidden" value="${isMSDEnabled}" id="isMSDEnabled_wl" />
 													<c:forEach items="${WishlistProductDataList}" var="wishListMSD">
-														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'}">
+														<c:if test="${wishListMSD.productData.rootCategory eq 'Clothing'||wishListMSD.productData.rootCategory eq 'Footwear'}">
 														        <c:set var="includeMSDJS" scope="request" value="true"/>
 														        <input type="hidden" value="true" id="isApparelExist_wl"/>
 														</c:if>

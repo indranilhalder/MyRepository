@@ -286,6 +286,14 @@
 			<value code="brand" />
 		</enumtype>
 
+<!-- R2 Code Changes Start -->
+		<enumtype code="emiEnum" autocreate="true" generate="true"
+			dynamic="true">
+			<value code="yes" />
+			<value code="no" />
+		</enumtype>
+		<!-- R2 Code Changes End -->
+
 		<!-- pcm changes! -->
 		<enumtype code="isPromotionsAllowedEnum" autocreate="true"
 			generate="true" dynamic="true">
@@ -1856,6 +1864,16 @@
 							unique="false" />
 						<persistence type='property' />
 					</attribute>
+							<!-- R2 Code Changes Start -->
+					<attribute type="emiEnum" qualifier="emi">
+						<description>Rich Attribute:- isPromotionsAllowed</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type='property' />
+					</attribute>
+					<!-- R2 Code Changes End -->
+					
+					
 					<attribute type="CatalogVersion" qualifier="catalogVersion">
 						<description></description>
 						<modifiers read="true" write="true" optional="true"
@@ -6442,6 +6460,18 @@
 						<attribute qualifier="categoryAssociated" type="categoryBasedCoupon"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="voucherEndDate" type="java.util.Date">
+						<description>Voucher End date</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='voucherIdentifier' type="java.lang.String">
+						<description>Voucher Identifier</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
 						<persistence type="property" />
 					</attribute>
 				</attributes>

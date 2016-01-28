@@ -16,14 +16,14 @@ import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
  */
 public interface MplGigyaReviewCommentService
 {
-	public boolean getReviewsByCategoryProductId(String category, String productId, String customerUID) throws Exception;
+	public boolean getReviewsByCategoryProductId(String category, String productId, String customerUID);
 
-	public List<GigyaProductReviewWsDTO> getReviewsByUID(String customerUID) throws Exception;
+	public List<GigyaProductReviewWsDTO> getReviewsByUID(String customerUID);
 
 	public String editComment(final String categoryID, final String streamID, final String commentID, final String commentText,
-			final String commentTitle, final String ratings, String UID) throws Exception;
+			final String commentTitle, final String ratings, String UID);
 
-	public String deleteComment(String categoryID, String streamID, String commentID) throws Exception;
+	public String deleteComment(String categoryID, String streamID, String commentID);
 
 	public String getDate(final Date commentDateObj);
 

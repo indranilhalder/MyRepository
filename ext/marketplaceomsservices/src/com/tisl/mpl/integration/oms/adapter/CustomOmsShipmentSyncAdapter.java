@@ -60,10 +60,6 @@ import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 
 //import com.tisl.mpl.marketplacecommerceservices.event.ShippingConfirmationEvent;
 
-
-
-
-
 /**
  * @author TCS
  *
@@ -125,7 +121,6 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 			Thread.sleep(1000);
 			for (final OrderLine line : wrapper.getOrder().getOrderLines())
 			{
-
 				final ConsignmentModel existingConsignmentModel = getConsignmentByLine(line, orderModel);
 				if (line.getSellerOrderStatus() != null)
 				{
@@ -136,7 +131,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 					ConsignmentEntryModel consigmnetEntry = null;
 					if (CollectionUtils.isEmpty(existingConsignmentModel.getConsignmentEntries()))
 					{
-						consigmnetEntry = createNewConsigmnetEntry(line, orderModel);
+						consigmnetEntry = createNewConsigmnetEntry(line.getOrderLineId(), orderModel);
 						consigmnetEntry.setConsignment(existingConsignmentModel);
 						consigmnetEntry.setShippedQuantity(Long.valueOf(line.getShippedQuantity()));
 						modelService.save(consigmnetEntry);
@@ -188,7 +183,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 				{
 					updateReturnReason(line, orderModel);
 				}
-				final AbstractOrderEntryModel orderEntry = getOrderEntryByLine(line, orderModel);
+				final AbstractOrderEntryModel orderEntry = getOrderEntryByLine(line.getOrderLineId(), orderModel);
 				if (orderEntry != null)
 				{
 					try
@@ -296,7 +291,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 		{
 			for (final ReturnEntryModel returnEntry : returnRequest.getReturnEntries())
 			{
-				if (returnEntry.getOrderEntry().equals(getOrderEntryByLine(line, orderModel)))
+				if (returnEntry.getOrderEntry().equals(getOrderEntryByLine(line.getOrderLineId(), orderModel)))
 				{
 					String qcReasonCodeEnum = MplCodeMasterUtility.getQCFailedDesc(line.getQcReasonCode());
 					qcReasonCodeEnum = (qcReasonCodeEnum != null) ? qcReasonCodeEnum : line.getQcReasonCode();
@@ -347,12 +342,12 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 	 * @return
 	 */
 	@SuppressWarnings(JAVADOC)
-	private AbstractOrderEntryModel getOrderEntryByLine(final OrderLine line, final OrderModel orderModel)
+	private AbstractOrderEntryModel getOrderEntryByLine(final String lineId, final OrderModel orderModel)
 	{
 		// YTODO Auto-generated method stub
 		for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 		{
-			if (orderEntry.getOrderLineId().equals(line.getOrderLineId()))
+			if (orderEntry.getOrderLineId().equals(lineId))
 			{
 				return orderEntry;
 			}
@@ -505,7 +500,10 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 		wrapper.getShipment().setLocation(MarketplacecommerceservicesConstants.WAREHOUSE); // HardCode as one WareHouse in Commerce.
 		getOmsShipmentReverseConverter().convert(wrapper.getShipment(), consignmentModel);
 		consignmentModel.getShippingAddress().setOwner(owner);
-
+		final ConsignmentEntryModel consigmnetEntry = createNewConsigmnetEntry(consignmentModel.getCode(), (OrderModel) owner);
+		consigmnetEntry.setConsignment(consignmentModel);
+		consigmnetEntry.setShippedQuantity(Long.valueOf("1"));
+		modelService.save(consigmnetEntry);
 		modelService
 				.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner, consignmentModel.getCode()));
 		getModelService().save(consignmentModel.getShippingAddress());
@@ -537,12 +535,12 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 		return null;
 	}
 
-	ConsignmentEntryModel createNewConsigmnetEntry(final OrderLine line, final OrderModel orderModel)
+	ConsignmentEntryModel createNewConsigmnetEntry(final String lineId, final OrderModel orderModel)
 	{
 		final ConsignmentEntryModel newConsignmentEntry = (ConsignmentEntryModel) getModelService().create(
 				ConsignmentEntryModel.class);
 
-		newConsignmentEntry.setOrderEntry(getOrderEntryByLine(line, orderModel));
+		newConsignmentEntry.setOrderEntry(getOrderEntryByLine(lineId, orderModel));
 
 		newConsignmentEntry.setQuantity(Long.valueOf(1));
 		return newConsignmentEntry;
@@ -723,9 +721,9 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
-	 *
+	 * 
 	 * }
-	 *
+	 * 
 	 * return null; }
 	 */
 

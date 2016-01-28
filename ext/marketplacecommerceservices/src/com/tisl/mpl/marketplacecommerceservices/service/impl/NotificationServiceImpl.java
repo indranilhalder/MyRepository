@@ -14,6 +14,7 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.voucher.VoucherModelService;
@@ -74,6 +75,18 @@ public class NotificationServiceImpl implements NotificationService
 	private MplSNSMobilePushService mplSNSMobilePushService;
 	@Autowired
 	private VoucherModelService voucherModelService;
+	@Autowired
+	private ConfigurationService configurationService;
+
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
 
 
@@ -198,7 +211,7 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		final List<OrderStatusNotificationModel> notificationList = getNotificationDao().getModelforDetails(customerId, orderNo,
 				consignmentNo, shopperStatus);
-		final List<VoucherStatusNotificationModel> voucherList = getModelForVoucher(orderNo);
+		final List<VoucherStatusNotificationModel> voucherList = getModelForVoucherIdentifier(orderNo);
 		final Boolean isRead = Boolean.TRUE;
 		for (final OrderStatusNotificationModel osn : notificationList)
 		{
@@ -361,10 +374,25 @@ public class NotificationServiceImpl implements NotificationService
 	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getVoucher()
 	 */
+
 	@Override
 	public List<VoucherStatusNotificationModel> getVoucher()
 	{
-		return getNotificationDao().findVoucher();
+		List<VoucherStatusNotificationModel> voucherList = new ArrayList<>();
+		voucherList = getNotificationDao().findVoucher();
+		if (null != voucherList)
+		{
+			for (final VoucherStatusNotificationModel v : voucherList)
+			{
+				if (v.getVoucherEndDate().before(new Date()))
+				{
+					modelService.remove(v);
+				}
+			}
+		}
+
+
+		return voucherList;
 
 	}
 
@@ -530,14 +558,18 @@ public class NotificationServiceImpl implements NotificationService
 		final Voucher voucherJalo = (Voucher) item;
 		final VoucherModel voucher = ((VoucherModel) getModelService().get(voucherJalo));
 		String voucherCode = "";
+		String voucherIndentifier = "";
 
 		if (voucher instanceof PromotionVoucherModel)
 		{
 			final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
 			voucherCode = promoVoucher.getVoucherCode();
+			voucherIndentifier = promoVoucher.getCode();
+			LOG.debug("voucher identifier :" + voucherIndentifier);
 		}
 
 		Date voucherStartDate = null;
+		Date voucherEndDate = null;
 		final Set<RestrictionModel> restrictionList = voucher.getRestrictions();
 
 		final List<PrincipalModel> userList = new ArrayList<PrincipalModel>();
@@ -555,6 +587,7 @@ public class NotificationServiceImpl implements NotificationService
 			if (restrictionModel instanceof DateRestrictionModel)
 			{
 				voucherStartDate = ((DateRestrictionModel) restrictionModel).getStartDate();
+				voucherEndDate = ((DateRestrictionModel) restrictionModel).getEndDate();
 				dateRestrExists = true;
 
 			}
@@ -603,35 +636,46 @@ public class NotificationServiceImpl implements NotificationService
 				}
 			}
 
-			final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherCode);
-
-			if (existingVoucherList.isEmpty())
+			if (null != voucherIndentifier && null != voucherCode)
 			{
-				voucherStatus = modelService.create(VoucherStatusNotificationModel.class);
-				userUidList.addAll(restrUserUidList);
-				//voucherStatus.setCustomerUidList(userUidList);
+
+				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
+
+				if (existingVoucherList.isEmpty())
+				{
+					voucherStatus = modelService.create(VoucherStatusNotificationModel.class);
+					userUidList.addAll(restrUserUidList);
+					//voucherStatus.setCustomerUidList(userUidList);
+				}
+				else
+				{
+					voucherStatus = existingVoucherList.get(0);
+					//voucherStatus.setCustomerUidList(voucherStatus.getCustomerUidList());
+					final Set customerUidSet = new HashSet(restrUserUidList);
+					customerUidSet.add(restrUserUidList);
+
+					userUidList.addAll(customerUidSet);
+
+				}
+
+				final String customerStatus = getConfigurationService().getConfiguration().getString(
+						MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
+
+				//Setting values in model
+				voucherStatus.setVoucherIdentifier(voucherIndentifier);
+				voucherStatus.setVoucherCode(voucherCode);
+				voucherStatus.setCustomerUidList(userUidList);
+				voucherStatus.setVoucherStartDate(voucherStartDate);
+				voucherStatus.setVoucherEndDate(voucherEndDate);
+				voucherStatus.setIsRead(isRead);
+				voucherStatus.setCustomerStatus(customerStatus);
+				voucherStatus.setCategoryAssociated(categoryAssociated);
+				voucherStatus.setProductAssociated(productAssociated);
+				modelService.save(voucherStatus);
+
+
+
 			}
-			else
-			{
-				voucherStatus = existingVoucherList.get(0);
-				//voucherStatus.setCustomerUidList(voucherStatus.getCustomerUidList());
-				final Set customerUidSet = new HashSet(restrUserUidList);
-				customerUidSet.add(restrUserUidList);
-
-				userUidList.addAll(customerUidSet);
-
-			}
-
-			//Setting values in model
-			voucherStatus.setVoucherCode(voucherCode);
-			voucherStatus.setCustomerUidList(userUidList);
-			voucherStatus.setVoucherStartDate(voucherStartDate);
-			voucherStatus.setIsRead(isRead);
-			voucherStatus.setCustomerStatus("coupon @ is available");
-			voucherStatus.setCategoryAssociated(categoryAssociated);
-			voucherStatus.setProductAssociated(productAssociated);
-			modelService.save(voucherStatus);
-
 		}
 	}
 
@@ -640,10 +684,18 @@ public class NotificationServiceImpl implements NotificationService
 
 
 
-	private List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherCode)
+	private List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherIndentifier)
 	{
 
-		return getNotificationDao().getModelForVoucher(voucherCode);
+		return getNotificationDao().getModelForVoucher(voucherIndentifier);
+
+
+	}
+
+	private List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode)
+	{
+
+		return getNotificationDao().getModelForVoucherIdentifier(voucherCode);
 
 
 	}
