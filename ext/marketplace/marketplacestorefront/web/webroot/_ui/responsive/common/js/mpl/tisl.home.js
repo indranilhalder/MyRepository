@@ -181,6 +181,14 @@ function getBrandsYouLoveAjaxCall() {
 
 // Get Brands You Love Content AJAX
 function getBrandsYouLoveContentAjaxCall(id) {
+	if (window.localStorage
+			&& (html = window.localStorage.getItem("brandContent-" + id)) && html != "") {
+		// console.log("Local");
+		$('.home-brands-you-love-desc').empty();
+		$('#brandsYouLove').append(decodeURI(html));
+	}
+	else{
+		
 	$
 			.ajax({
 				type : "GET",
@@ -205,9 +213,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					if (typeof response.text !== "undefined") {
 						defaultHtml += response.text;
 					}
-					if (typeof response.bannerText !=="undefined") {
+					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml += "<div class='home-brands-you-love-main-image-wrapper'>";
-						if (response.bannerText != "") {
+						if (typeof response.bannerText !=="undefined") {
 							defaultHtml += "<div class='visit-store-wrapper'>"
 									+ response.bannerText + "</div>";
 						}
@@ -225,16 +233,28 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					defaultHtml += "</div>";
 					
 					$('#brandsYouLove').append(defaultHtml);
+					
+					window.localStorage.setItem("brandContent-" + id,
+							encodeURI(defaultHtml));
 
 				},
 				error : function() {
 					globalErrorPopup('Failure!!!');
 				}
 			});
+	}
 }
 // ENd AJAX CALL
 if ($('#brandsYouLove').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
-
+	
+	if (window.localStorage) {
+		for ( var key in localStorage) {
+			if (key.indexOf("brandContent") >= 0) {
+				window.localStorage.removeItem(key);
+				console.log("Deleting.." + key);
+			}
+		}
+	}
 	getBrandsYouLoveAjaxCall();
 	
 }
