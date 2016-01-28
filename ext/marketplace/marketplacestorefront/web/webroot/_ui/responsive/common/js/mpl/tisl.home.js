@@ -330,7 +330,6 @@ function getBestPicksAjaxCall(){
 				});
 			renderHtml += "</div>";	
 			$("#bestPicks").html(renderHtml);
-			console.log(renderHtml);
 		},
 		
 		error : function() {
