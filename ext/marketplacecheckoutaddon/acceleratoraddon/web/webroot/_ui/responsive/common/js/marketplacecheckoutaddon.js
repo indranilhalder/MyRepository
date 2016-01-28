@@ -2716,7 +2716,7 @@ function checkPincodeServiceability(buttonType)
  			$("#isPincodeServicableId").val('N');
  		}
  	});
-	if ($('#giftYourselfProducts').length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
+	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
 	{
 		window.location.reload();
 		
