@@ -805,7 +805,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				mplVoucherService.setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
 				
 				//For TISSTRT-302
-				return "coupon_reedeem";
+				return "coupon_redeem";
 			}
 			catch (Exception e)
 			{
