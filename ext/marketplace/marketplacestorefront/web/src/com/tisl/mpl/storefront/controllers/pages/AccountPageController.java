@@ -1117,7 +1117,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
 			}
 
-			if (pageFor.equals("voucher"))
+			if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_VOUCHER))
 			{
 				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
 				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0,
@@ -1140,7 +1140,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
 				}
 			}
-			else if (pageFor.equals("history"))
+			else if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_HISTORY))
 			{
 				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
 				final Map<String, Object> returnMap = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, pageHistory,
