@@ -3727,13 +3727,13 @@ h2 {
 	font-weight: 600;
 }
 
-.shop-promos .promos li span:last-child {
+/* .shop-promos .promos li span:last-child {
 	font-weight: 600;
 	text-transform: uppercase;
 	font-size: 12px;
-}
+} */
 
-.shop-promos .promos li span:last-child:after {
+/* .shop-promos .promos li span:last-child:after {
 	content: "";
 	position: relative;
 	height: 0;
@@ -3743,18 +3743,18 @@ h2 {
 	border-top: 4.5px solid transparent;
 	display: inline-block;
 	margin-left: 5px;
-}
-
+} */
+/* 
 @media ( max-width : 650px) {
 	.shop-promos .promos li span:last-child:after {
 		margin-bottom: 1px;
 	}
-}
+} */
 
-.shop-promos .promos li span:last-child:hover:after {
+/* .shop-promos .promos li span:last-child:hover:after {
 	border-left-color: #A9143C;
 	transition: border-left-color 0.15s;
-}
+} */
 
 @media ( min-width : 650px) {
 	.shop-promos .promos::after {
@@ -3789,14 +3789,14 @@ h2 {
 		margin-bottom: 0;
 		letter-spacing: 1.1px;
 	}
-	.shop-promos .promos li span:last-child {
+/* 	.shop-promos .promos li span:last-child {
 		font-size: 10px;
 		font-weight: 700;
 		padding-top: 3px;
-	}
-	.shop-promos .promos li span:last-child:after {
+	} */
+	/* .shop-promos .promos li span:last-child:after {
 		margin-left: 5px;
-	}
+	} */
 }
 
 .shop-promos .promos li a:hover {
@@ -5705,7 +5705,7 @@ text-transform: uppercase;
         text-align: center;
         font-weight: 500; }
         .cart.wrapper .left-block .payments.tab-view .pay p a, .confirmation .left-block .payments.tab-view .pay p a {
-          color: #22bfe6;
+          color: #A9143C;
           text-transform: uppercase;
           text-decoration: underline;
           font-size: 10px;
@@ -5884,7 +5884,7 @@ text-transform: uppercase;
           margin-top: 0; }
         .cart.wrapper .left-block .payments.tab-view .nav li.active,.cart.wrapper .left-block .payments.tab-view .nav li:hover, .confirmation .left-block .payments.tab-view .nav li.active,.confirmation .left-block .payments.tab-view .nav li:hover {
           background: #fff;
-          color: #22bfe6;
+          color: #A9143C;
           -webkit-transition: background 0.3s, color 0.3s;
           -moz-transition: background 0.3s, color 0.3s;
           transition: background 0.3s, color 0.3s; }
@@ -6598,7 +6598,7 @@ text-transform: uppercase;
               padding-left: 15px; } }
         .cart.wrapper .product-block li.header ul li.pincode-button, .confirmation .product-block li.header ul li.pincode-button {
           text-align:center;
-          color:#22bfe6;
+          color:#A9143C;
           font-size: 10px;
           font-weight: 600;
           letter-spacing: 1.2px;
@@ -7554,7 +7554,7 @@ text-transform: uppercase;}
           font-weight: 700; } }
     .confirmation .left-block .address p {
       text-transform: uppercase;
-      color: #22bfe6;
+      color: #A9143C;
       margin: 10px 0;
       font-size: 11px;
       font-weight: 600;
@@ -7639,7 +7639,7 @@ text-transform: uppercase;}
 	vertical-align: middle;
 }
 .newsletter button:hover {		
-    background: #d89400; }
+    background: #88102C; }
 
  @media ( min-width :790px) {
 	.newsletter {
@@ -8787,7 +8787,7 @@ footer .banner {
       line-height:40px;
       padding: 0;
       border:none;
-      background-color: #22bfe6;
+      background-color: #A9143C;
       color: #fff;
       text-transform: uppercase;
       font-size: 10px;
@@ -14566,7 +14566,7 @@ body .account .left-nav ul li {
     margin: 15px 0;
 }
 body .account .left-nav ul li a.active {
-    color: #22bfe6;
+    color: #A9143C;
     text-decoration: underline;
 }
 @media (max-width: 790px) {
@@ -14608,7 +14608,7 @@ body #account-invite .right-account>div.social-invites .social {
     padding-bottom: 20px;
 }
 body #account-invite .right-account>div.social-invites .social .links a:after {
-    color: #22bfe6;
+    color: #A9143C;
     background-color: #f0f4f5;
 }
 body #account-invite .right-account>div.social-invites .social .links a:hover:after {
@@ -14774,7 +14774,7 @@ body .account .right-account button {
     min-width: 225px;
 }
 body .account .right-account button.blue {
-    background-color: #22bfe6;
+    background-color: #A9143C;
     width:auto;
 }
 body .account .right-account button.blue:hover {
@@ -15795,7 +15795,7 @@ body .account .right-account .my-reviews.ready .slider .slide .price {
 body .account .right-account .my-reviews.ready .slider .slide .new-review {
     font-size: 10px;
     text-decoration: underline;
-    color: #22bfe6;
+    color: #A9143C;
     padding: 0 10px;
     position: absolute;
     bottom: 25px
@@ -15919,7 +15919,7 @@ body .account .right-account .order-history .product-block li.header>ul>li:last-
 body .account .right-account .order-history .product-block li.header>ul>li:last-of-type a {
     text-transform: uppercase;
     text-decoration: underline;
-    color: #22bfe6;
+    color: #A9143C;
     font-weight: 600;
     letter-spacing: 1.2px
 }
@@ -16271,7 +16271,7 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     padding:20px 0;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot {
-    color: #22bfe6;
+    color: #A9143C;
     display: block;
     text-transform: uppercase;
     letter-spacing: .5px;
@@ -16378,7 +16378,7 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status p {
     margin-top: 15px;
-    color: #22bfe6;
+    color: #A9143C;
     text-transform: none;
     padding: 0 5px
 }
@@ -16403,7 +16403,7 @@ body .account .right-account .order-history.order-details li.item .status .messa
     border: 3px solid #b9b9b9;
     padding: 10px;
     font-weight: 500;
-    color: #22bfe6;
+    color: #A9143C;
     position: absolute;
     z-index: 100;
     background: #fff;
@@ -17328,8 +17328,8 @@ ul.social-connect > li a
   right: 40%;
   border-bottom: 3px solid #A9143C;
   border-left: 3px solid #A9143C;
-  height: 15px;
-  width: 15px;
+  height: 12px;
+  width: 12px;
   margin-top: -5px;
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
@@ -17353,8 +17353,8 @@ ul.social-connect > li a
   left: 45%;
   border-top: 3px solid #A9143C;
   border-right: 3px solid #A9143C;
-  height: 15px;
-  width: 15px;
+  height: 12px;
+  width: 12px;
   margin-top: -5px;
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
@@ -17807,7 +17807,7 @@ header .content .bottom .search .select-list select
     padding: 0 20px;
     letter-spacing: 1px;
     min-width: 200px;
-    background-color: #22bfe6;
+    background-color: #A9143C;
     color: #fff;
     font-size: 12px;
     font-family: "Avenir Next";
@@ -18267,7 +18267,7 @@ font-size: 24px;
     padding: 0 20%;
 }
 .feature-categories .carousel{
-	padding:0 35px;
+	padding:0 10px;
 }
 @media (min-width: 790px)
 {
@@ -20394,7 +20394,7 @@ padding:10px;
 margin-top:5px;
 }
 a#cvvHelp{
-color: #22bfe6;
+color: #A9143C;
       font-size: 10px;
     font-weight: 600;
   text-transform: uppercase;
@@ -20471,7 +20471,7 @@ body .marketplace-mystyle div.marketplaces div.item a {
     text-align: center;
 }
 body .marketplace-mystyle div.marketplaces h2 span.right a {
-    color: #22bfe6;
+    color: #A9143C;
     text-decoration: underline;
 }
 .owl-carousel.mystyle-carousel{
@@ -21058,7 +21058,7 @@ body .account.preferences .right-account div.brands>p span.right a,
 body .account.preferences .right-account div.categories>p span.right a,
 body .account.preferences .right-account div.stores>p span.right a,
 body .account.preferences .right-account div.email-pref>p span.right a {
-    color: #22bfe6;
+    color: #A9143C;
     text-decoration: underline;
 }
 
@@ -23265,7 +23265,7 @@ body .marketplace-mystyle h1 {
     padding: 40px 20px;
     margin-bottom: 20px;
     background-color: #fafafa;
-    color: #22bfe6;
+    color: #A9143C;
     font-size: 24px;
     font-weight: 400;
 }
@@ -26421,7 +26421,7 @@ li#savedCVVError{
 
 .updatePassword .blue{
   cursor:pointer;
-  background-color:#22bfe6;
+  background-color:#A9143C;
   border:none;
   height: 30px;
   line-height: 24px;
@@ -28170,7 +28170,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	-moz-osx-font-smoothing: grayscale;
 	font-weight: 100;
 	content: "\f005";
-	color: #22bfe6;
+	color: #A9143C;
 	position: absolute;
 	right: 10px;
 	top: 5px;
@@ -29100,46 +29100,7 @@ padding:15px;}
    	border-top:1px solid #ccc;
 }}
 /* Baby banner end */
-/* caraousel arrows start */
-.owl-prev::after{
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto !important;
-    left: 0;
-    -webkit-transform-origin: center;
-    -moz-transform-origin: center;
-    -ms-transform-origin: center;
-    -o-transform-origin: center;
-	transform-origin: center;
-    border-bottom: 1px solid #fff;
-    border-left: 1px solid #fff;
 
-}
-.owl-next::after{
- top: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto !important;
-    left: 0;
-border-top: 1px solid #fff;
-    border-right: 1px solid #fff;
-    
-	}
-.owl-carousel .owl-controls .owl-buttons .owl-prev, .owl-carousel .owl-controls .owl-buttons .owl-next{
-width: 35px;
-    background: #5c2a50;
-    height: 35px;
-    border-radius: 100%;
-    
-}
-.owl-carousel .owl-controls .owl-buttons .owl-prev{
-	left:0;
-}
-.owl-carousel .owl-controls .owl-buttons .owl-next{
-	right:0;
-}
-/* caraousel arrow end */
 .helpmeshopbanner p{
 display:inline-block;
 }
@@ -34931,3 +34892,44 @@ button.make_payment[disabled] {
     opacity: 0.6 !important;
     cursor: not-allowed;
 }
+
+/* caraousel arrows start */
+.owl-prev::after{
+    top: 1px;
+    right: 0;
+    bottom: 0;
+    margin: auto !important;
+    left: 0;
+    -webkit-transform-origin: center;
+    -moz-transform-origin: center;
+    -ms-transform-origin: center;
+    -o-transform-origin: center;
+	transform-origin: center;
+    border-bottom: 1px solid #fff;
+    border-left: 1px solid #fff;
+
+}
+.owl-next::after{
+ top: 1px;
+    right: 0;
+    bottom: 0;
+    margin: auto !important;
+    left: 0;
+border-top: 1px solid #fff;
+    border-right: 1px solid #fff;
+    
+	}
+.owl-carousel .owl-controls .owl-buttons .owl-prev, .owl-carousel .owl-controls .owl-buttons .owl-next{
+width: 40px;
+    background: #a9143c;
+    height: 40px;
+    border-radius: 100%;
+    
+}
+.owl-carousel .owl-controls .owl-buttons .owl-prev{
+	left:0;
+}
+.owl-carousel .owl-controls .owl-buttons .owl-next{
+	right:0;
+}
+/* caraousel arrow end */
