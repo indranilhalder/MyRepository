@@ -18,6 +18,7 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
+import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
@@ -73,6 +74,9 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService cmsPageService;
+
+	@Resource(name = "cmsComponentService")
+	private CMSComponentService cmsComponentService;
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
@@ -164,41 +168,6 @@ public class HomePageController extends AbstractPageController
 						}
 						showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
 						showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
-						if (showcaseItem.getShowByDefault().booleanValue())
-						{
-							ProductData firstProduct = null;
-							ProductData secondProduct = null;
-
-							if (showcaseItem.getProduct1() != null)
-							{
-								firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS);
-								showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
-								showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
-								showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
-							}
-							if (showcaseItem.getProduct2() != null)
-							{
-								secondProduct = productFacade.getProductForOptions(showcaseItem.getProduct2(), PRODUCT_OPTIONS);
-								showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct));
-								showCaseItemJson.put("secondProductTitle", secondProduct.getProductTitle());
-								showCaseItemJson.put("secondProductUrl", secondProduct.getUrl());
-							}
-							if (StringUtils.isNotEmpty(showcaseItem.getText()))
-							{
-								showCaseItemJson.put("text", showcaseItem.getText());
-							}
-
-							if (null != showcaseItem.getBannerImage() && StringUtils.isNotEmpty(showcaseItem.getBannerImage().getURL()))
-							{
-								showCaseItemJson.put("bannerImageUrl", showcaseItem.getBannerImage().getURL());
-							}
-
-							if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
-							{
-								showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
-							}
-
-						}
 						subComponentJsonArray.add(showCaseItemJson);
 					}
 				}
@@ -214,12 +183,65 @@ public class HomePageController extends AbstractPageController
 
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/getBrandsYouLoveContent", method = RequestMethod.GET)
+	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId)
+	{
+		MplShowcaseItemComponentModel showcaseItem = null;
+		final JSONObject showCaseItemJson = new JSONObject();
+		LOG.info("Finding component with id::::" + componentId);
+		try
+		{
 
+			showcaseItem = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(componentId);
+			LOG.info("Found component with id::::" + componentId);
+
+			ProductData firstProduct = null;
+			ProductData secondProduct = null;
+
+			if (showcaseItem.getProduct1() != null)
+			{
+				firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS);
+				showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
+				showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
+				showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
+			}
+			if (showcaseItem.getProduct2() != null)
+			{
+				secondProduct = productFacade.getProductForOptions(showcaseItem.getProduct2(), PRODUCT_OPTIONS);
+				showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct));
+				showCaseItemJson.put("secondProductTitle", secondProduct.getProductTitle());
+				showCaseItemJson.put("secondProductUrl", secondProduct.getUrl());
+			}
+			if (StringUtils.isNotEmpty(showcaseItem.getText()))
+			{
+				showCaseItemJson.put("text", showcaseItem.getText());
+			}
+
+			if (null != showcaseItem.getBannerImage() && StringUtils.isNotEmpty(showcaseItem.getBannerImage().getURL()))
+			{
+				showCaseItemJson.put("bannerImageUrl", showcaseItem.getBannerImage().getURL());
+			}
+
+			if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
+			{
+				showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
+			}
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			LOG.error(e.getStackTrace());
+			LOG.error("Could not find component with id::::" + componentId);
+
+		}
+		return showCaseItemJson;
+	}
+
+	
 	@ResponseBody
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
 	public JSONObject getBestPicks()
 	{
-		LOG.info("Check 1 :: Inside getBestPicks emthod");
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject bestPicks = new JSONObject();
 		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage("homepage",
@@ -227,22 +249,17 @@ public class HomePageController extends AbstractPageController
 
 		if (CollectionUtils.isNotEmpty(homepageSection4CSlot.getCmsComponents()))
 		{
-			LOG.info("Check 2 :: Inside if (CollectionUtils.isNotEmpty(homepageSection4CSlot.getCmsComponents()))");
 			components = homepageSection4CSlot.getCmsComponents();
 		}
 
 		for (final AbstractCMSComponentModel component : components)
 		{
-			LOG.info("Check 3 :: Inside for (final AbstractCMSComponentModel component : components)");
-			LOG.info("Found Component>>>>with id :::" + component.getUid());
 			if (component instanceof BestPicksCarouselComponentModel)
 			{
-				LOG.info("Check 4 :: Inside if (component instanceof BestPicksCarouselComponentModel)");
 				final BestPicksCarouselComponentModel bestPickCarouselComponent = (BestPicksCarouselComponentModel) component;
 				String title = "";
 				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))
 				{
-					LOG.info("Check 5 :: Inside if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))");
 					title = bestPickCarouselComponent.getTitle();
 				}
 
@@ -251,19 +268,16 @@ public class HomePageController extends AbstractPageController
 				final JSONArray subComponentJsonArray = new JSONArray();
 				if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getBestPicksItems()))
 				{
-					LOG.info("Check 6 :: Inside if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getBestPicksItems()))");
 					String imageURL = "";
 					String text = "";
 					String linkUrl = "";
 
 					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getBestPicksItems())
 					{
-						LOG.info("Check 7 :: Inside for (final CMSMediaParagraphComponentModel bestPickItem");
 						final JSONObject bestPickItemJson = new JSONObject();
 
 						if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
 						{
-							LOG.info("Check 8 :: media null check");
 							imageURL = bestPickItem.getMedia().getURL();
 						}
 
@@ -271,7 +285,6 @@ public class HomePageController extends AbstractPageController
 
 						if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
 						{
-							LOG.info("Check 9 :: text null check");
 							text = bestPickItem.getContent();
 						}
 
@@ -279,7 +292,6 @@ public class HomePageController extends AbstractPageController
 
 						if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
 						{
-							LOG.info("Check 10 :: url null check");
 							linkUrl = bestPickItem.getUrl();
 						}
 
@@ -287,19 +299,19 @@ public class HomePageController extends AbstractPageController
 
 						subComponentJsonArray.add(bestPickItemJson);
 					}
-					LOG.info("Check 11 :: Outside for (final CMSMediaParagraphComponentModel bestPickItem");
 				}
-				LOG.info("Check 12 :: Outside if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getBestPicksItems()))");
 				bestPicks.put("subItems", subComponentJsonArray);
 
 			}
 		}
 		return bestPicks;
 	}
+	
+	
 
 	/**
-	 * @param firstProduct
-	 * @return
+	 * @param productData
+	 * @return imageUrl
 	 */
 	private String getProductPrimaryImageUrl(final ProductData productData)
 	{
@@ -362,4 +374,3 @@ public class HomePageController extends AbstractPageController
 
 
 }
-
