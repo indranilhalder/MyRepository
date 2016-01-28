@@ -126,7 +126,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetail(com.tisl.mpl.data.NotificationData)
 	 */
@@ -134,89 +134,57 @@ public class NotificationFacadeImpl implements NotificationFacade
 	public List<NotificationData> getNotificationDetail(final String customerUID, final boolean isDesktop)
 	{
 
-		//final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
 		final List<OrderStatusNotificationModel> notificationModel = notificationService.getNotificationDetails(customerUID,
 				isDesktop);
-		//	final List<AbstractPromotionModel> promotionList = notificationService.getPromotion();
-		//		final List<VoucherModel> voucherList = getAllCoupons();
-		//		final AllVoucherListData allVoucherList = notificationService.getAllVoucherList(currentCustomer, voucherList);
-		//
-		//		List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
-		//		//final List<CouponNotificationModel> couponList = new ArrayList<>();
-		//
-		//		if (null != allVoucherList)
-		//		{
-		//
-		//			closedVoucherDataList = allVoucherList.getClosedVoucherList();
-		//
-		//		}
 		final List<VoucherStatusNotificationModel> voucherList = getAllCoupons();
-
 		List<NotificationData> notificationDataList = new ArrayList<>();
-
-
 		for (final OrderStatusNotificationModel osnm : notificationModel)
 		{
 			final NotificationData tempnotificationData = trackOrderConverter.convert(osnm);
-
 			notificationDataList.add(tempnotificationData);
 		}
-
 
 		for (final VoucherStatusNotificationModel v : voucherList)
 		{
 			if (v.getCustomerUidList().contains(customerUID))
 			{
-
 				final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
 				notificationDataList.add(dataForVoucher);
 			}
 		}
 
-
 		notificationDataList = notificationService.getSortedNotificationData(notificationDataList);
-
-
 		String couponCount = null;
 		if (isDesktop)
 		{
-
-
 			couponCount = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.NOTIFICATION_COUNT);
-
 		}
 		else
 		{
 			couponCount = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.NOTIFICATION_COUNT_MOBILE);
-
 		}
 		int count = 0;
-
 		try
 		{
 			count = Integer.parseInt(couponCount);
 		}
-
 		catch (final NumberFormatException e)
 		{
 			LOG.debug("Number format exception occured while parsing");
 		}
-
 		if (notificationDataList.size() > count)
 		{
 			notificationDataList.subList(count, notificationDataList.size()).clear();
 		}
-
-
-
 		return notificationDataList;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#checkCustomerFacingEntry(com.tisl.mpl.core.model.
 	 * OrderStatusNotificationModel)
 	 */
@@ -229,7 +197,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetailForEmailID(java.lang.String)
 	 */
 	@Override
@@ -254,7 +222,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -282,7 +250,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getUnReadNotificationCount(java.util.List)
 	 */
 	@Override

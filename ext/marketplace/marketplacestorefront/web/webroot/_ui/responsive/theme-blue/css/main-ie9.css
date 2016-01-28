@@ -14959,3 +14959,6 @@ body.page-reviews ul.gig-comments-header-right.gig-comments-linksContainer{
 body.page-reviews .gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
    display: none;
 }
+body .account .right-account.rewards>div.your-activity.coupon-history>ul{
+	border-bottom: 1px solid #f0f4f5;
+}
