@@ -29019,6 +29019,10 @@ body.page-reviews .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-imag
 	width: 50px !important;
 }
 
+body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-caption a {
+	display: none;
+}  
+
 /*--------------maincss-----------*/
 .row
 {
