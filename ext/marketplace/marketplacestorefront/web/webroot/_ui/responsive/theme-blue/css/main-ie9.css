@@ -16,6 +16,12 @@ img[src='']{
     opacity:0;
     width:0px;
 }
+  b{
+  font-weight:bold;
+  }
+  i{
+  font-style:italic;
+  }
 select {
   background-image: none;
   padding: 0;
@@ -13245,7 +13251,7 @@ div.other-sellers .other-sellers-table tr{
 }
 .product-tile .image .new {
     position: absolute;
-    width: 30%;
+    height: 31%;
     top: 0;
     left: -15px;
 }
@@ -14952,4 +14958,7 @@ body.page-reviews ul.gig-comments-header-right.gig-comments-linksContainer{
 }
 body.page-reviews .gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
    display: none;
+}
+body .account .right-account.rewards>div.your-activity.coupon-history>ul{
+	border-bottom: 1px solid #f0f4f5;
 }

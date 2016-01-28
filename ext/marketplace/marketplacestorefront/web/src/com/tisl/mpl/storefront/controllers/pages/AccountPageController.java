@@ -6344,7 +6344,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
 					.getReviewsByUID(customerModel.getUid());
-			commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
+			//commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
+			/* TISSTRT-119 fix */
+			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
 			if (!CollectionUtils.isEmpty(commentsWithProductDataModified))
 			{
 				Collections.sort(commentsWithProductDataModified, new Comparator<GigyaProductReviewWsDTO>()
@@ -6453,7 +6455,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws Exception
 	 */
 	@SuppressWarnings(UNUSED)
-	@RequestMapping(value = "/review/{operation}", method = RequestMethod.GET)
+	@RequestMapping(value = "/review/{operation}", method = RequestMethod.POST)
 	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, String> modifyReview(

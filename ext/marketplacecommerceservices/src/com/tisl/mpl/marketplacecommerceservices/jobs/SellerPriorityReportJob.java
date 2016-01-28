@@ -147,7 +147,6 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 	 * @param customers
 	 */
 	void putDataForSellerPriority(final List<SavedValuesModel> savedValuesList)
-	//public static List<SavedValuesModel> putDataForSellerPriority(final List<SavedValuesModel> savedValues)
 	{
 		final List<SellerPriorityReportData> savedValueDataList = new ArrayList<SellerPriorityReportData>();
 
@@ -158,21 +157,21 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 
 
 		//Sorting savedValues list for Timestamp
-		Collections.sort(savedValues, new Comparator<SavedValuesModel>()
-		{
-			@Override
-			public int compare(final SavedValuesModel val1, final SavedValuesModel val2)
-			{
-				if (val2.getTimestamp().compareTo(val1.getTimestamp()) > 0)
-				{
-					return 1;
-				}
-				else
-				{
-					return -1;
-				}
-			}
-		});
+		//		Collections.sort(savedValues, new Comparator<SavedValuesModel>()
+		//		{
+		//			@Override
+		//			public int compare(final SavedValuesModel val1, final SavedValuesModel val2)
+		//			{
+		//				if (val2.getTimestamp().compareTo(val1.getTimestamp()) > 0)
+		//				{
+		//					return 1;
+		//				}
+		//				else
+		//				{
+		//					return -1;
+		//				}
+		//			}
+		//		});
 
 
 		final ArrayList<String> modItemsList = new ArrayList<String>();

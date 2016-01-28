@@ -199,28 +199,38 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						{
 							if (!rtmModel.getIsProcessed().booleanValue())
 							{
-								//fetching audit records
-								final MplPaymentAuditModel auditModel = juspayWebHookDao.fetchAuditData(hook.getOrderStatus()
-										.getOrderId());
-								final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(auditModel.getCartGUID());
+								//								//fetching audit records
+								//								final MplPaymentAuditModel auditModel = juspayWebHookDao.fetchAuditData(hook.getOrderStatus()
+								//										.getOrderId());
+								//								final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(auditModel.getCartGUID());
 
-								if (null != parentOrder && null != rtmModel.getRefundType()
+								//TISSIT-1802
+								OrderModel subOrder = modelService.create(OrderModel.class);
+								if (null != rtmModel.getRefundedOrderEntry())
+								{
+									if (null != rtmModel.getRefundedOrderEntry().getOrder())
+									{
+										subOrder = (OrderModel) rtmModel.getRefundedOrderEntry().getOrder();
+									}
+								}
+
+								if (null != subOrder && null != rtmModel.getRefundType()
 										&& rtmModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.CANCELLED.toString()))
 								{
 									//Change status of Consignment against order line when it is SUCCESS at Juspay & CANCELLED in RTM
-									changeConsignmentStatusForCancelled(rtmModel, refund, parentOrder, hook.getOrderStatus().getOrderId());
+									changeConsignmentStatusForCancelled(rtmModel, refund, subOrder, hook.getOrderStatus().getOrderId());
 								}
-								else if (null != parentOrder && null != rtmModel.getRefundType()
+								else if (null != subOrder && null != rtmModel.getRefundType()
 										&& rtmModel.getRefundType().toString().equalsIgnoreCase(JuspayRefundType.RETURN.toString()))
 								{
 									//Change status of Consignment against order line when it is SUCCESS at Juspay & RETURN in RTM
-									changeConsignmentStatusForReturn(rtmModel, refund, parentOrder, hook.getOrderStatus().getOrderId());
+									changeConsignmentStatusForReturn(rtmModel, refund, subOrder, hook.getOrderStatus().getOrderId());
 								}
-								else if (null != parentOrder && null != rtmModel.getRefundType()
+								else if (null != subOrder && null != rtmModel.getRefundType()
 										&& rtmModel.getRefundType().equals(JuspayRefundType.CANCELLED_FOR_RISK))
 								{
 									//Change status of Consignment against order line when it is SUCCESS at Juspay & RETURN in RTM
-									changeConsignmentStatusForCancelledForRisk(rtmModel, refund, parentOrder, hook.getOrderStatus()
+									changeConsignmentStatusForCancelledForRisk(rtmModel, refund, subOrder, hook.getOrderStatus()
 											.getOrderId());
 								}
 							}

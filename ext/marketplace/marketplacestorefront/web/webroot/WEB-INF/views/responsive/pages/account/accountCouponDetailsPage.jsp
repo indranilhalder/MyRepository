@@ -159,10 +159,10 @@
 											<c:choose>
 												<c:when
 													test="${closedVoucherDisplay.reedemCouponCount eq '1'}">
-													<p>Single</p>
+													<p class="coupon_count">Single</p>
 												</c:when>
 												<c:otherwise>
-													<p>Multiple</p>
+													<p class="coupon_count">Multiple</p>
 												</c:otherwise>
 											</c:choose>
 										</div>
@@ -183,14 +183,14 @@
 					</ul>
 					</ul>
 					<!--  pagination for upper section  -->
-					<div class="bottom">
+					<div class="bottom btn-placement">
 						<c:if test="${not empty closedCouponList}">
 							<p>${startIndexCoupon}-${endIndexCoupon}
 								of ${couponListSize} &nbsp;
 								<spring:theme code="text.account.coupons.coupons" />
 							</p>
 						</c:if>
-						<div class="btn-placement bottom">
+					
 							<c:if test="${totalPagesCoupon ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
@@ -228,7 +228,7 @@
 									</c:choose>
 									<!-- Next link addition -->
 									
-									<c:if test="${totalPagesCoupon gt 1}">
+									<c:if test="${totalPagesCoupon gt 1 and param.pageVoucher ne totalPagesCoupon}">
 										<li class="next" id="voucherNext"><a href="#nogo"><spring:theme
 													code="text.account.coupons.next" /> <span
 												class="lookbook-only"></span></a></li>
@@ -236,7 +236,7 @@
 
 								</ul>
 							</c:if>
-						</div>
+					
 					</div>
 				</div>
 
@@ -275,14 +275,13 @@
 										<c:otherwise></c:otherwise>
 									</c:choose>
 								</c:forEach>
-								<div class="bottom">
+								<div class="bottom btn-placement">
 									<c:if test="${not empty couponOrderDataDTOList}">
 										<p>${startIndexHist}-${endIndexHist}
 											of ${couponHistListSize} &nbsp;
 											<spring:theme code="text.account.coupons.transactions" />
 										</p>
 									</c:if>
-									<div class="btn-placement bottom">
 										<c:if test="${totalPagesCouponHist ne 1 }">
 											<ul class="pagination">
 												<!-- Previous link addition -->
@@ -319,7 +318,7 @@
 													</c:otherwise>
 												</c:choose>
 												<!-- Next link addition -->
-												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory}">
+												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory and param.pageHistory ne totalPagesCouponHist}">
 													<li class="next" id="historyNext"><a href="#nogo"><spring:theme
 																code="text.account.coupons.next" /> <span
 															class="lookbook-only"></span></a></li>
@@ -327,7 +326,7 @@
 
 											</ul>
 										</c:if>
-									</div>
+									
 								</div>
 							</c:if>
 
@@ -379,14 +378,14 @@
 
 					</c:choose>
 
-					<div class="bottom">
+					<div class="bottom btn-placement">
 						<c:if test="${not empty couponOrderDataDTOList}">
 										<p>${startIndexHist}-${endIndexHist}
 											of ${couponHistListSize} &nbsp;
 											<spring:theme code="text.account.coupons.transactions" />
 										</p>
 						</c:if>
-						<div class="btn-placement bottom">
+						
 							<c:if test="${totalPagesCouponHist ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
@@ -423,7 +422,7 @@
 										</c:otherwise>
 									</c:choose>
 									<!-- Next link addition -->
-									<c:if test="${totalPagesCouponHist gt 1}">
+									<c:if test="${totalPagesCouponHist gt 1 and param.pageHistory ne totalPagesCouponHist}">
 										<li class="next" id="historyNextBtm"><a href="#nogo"><spring:theme
 													code="text.account.coupons.next" /> <span
 												class="lookbook-only"></span></a></li>
@@ -431,7 +430,7 @@
 
 								</ul>
 							</c:if>
-						</div>
+					
 					</div>
 				</div>
 				<div class="couponHistoryLinkDiv">

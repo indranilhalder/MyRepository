@@ -297,6 +297,7 @@ public final class ModelAttributetConstants
 	public static final String P_Z_Brands = "PToZBrands";
 
 
+	public static final String FIRST_LEVEL_CATEGORY = "firstLevelCategory";
 	public static final String SECOND_LEVEL_CATEGORY = "secondLevelCategoryMap";
 	public static final String THIRD_LEVEL_CATEGORY = "thirdLevelCategoryMap";
 	public static final String PRODUCT_NAME = "productName";
@@ -687,7 +688,9 @@ public final class ModelAttributetConstants
 	public static final String NOTIFICATION_MESSAGE_LIST = "notificationMessagelist";
 	public static final String NOTIFICATION_COUNT = "notificationCount";
 	public static final String IS_SIGNED_IN = "isSignedInUser";
+	//sizeguide
 
+	public static final String SELECTEDSIZE = "sizeSelectedSizeGuide";
 
 
 }

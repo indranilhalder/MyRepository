@@ -526,8 +526,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	}
 
 
-
-
 	/**
 	 * @return the mplDefaultCalculationService
 	 */

@@ -59,7 +59,7 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -70,9 +70,9 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 		{
 
 			List<ProductModel> productsCoupon = new ArrayList<ProductModel>();
-			List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
+			//List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
 			productsCoupon = VoucherStatusNotificationModel.getProductAssociated();
-			categoryBasedCoupon = VoucherStatusNotificationModel.getCategoryAssociated();
+			//categoryBasedCoupon = VoucherStatusNotificationModel.getCategoryAssociated();
 
 			String productUrl = "";
 			if (null != productsCoupon)
@@ -84,15 +84,13 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 
 				}
 			}
-			if (null != categoryBasedCoupon)
+			if (!VoucherStatusNotificationModel.getCategoryAssociated().isEmpty())
 			{
 
-				for (final CategoryModel c : categoryBasedCoupon)
-				{
-					productUrl = getCategoryModelUrlResolver().resolve(c);
+				productUrl = "/v/" + (VoucherStatusNotificationModel.getVoucherIdentifier());
+				notificationData.setProductUrl(productUrl);
 
-					notificationData.setProductUrl(productUrl);
-				}
+
 			}
 
 			notificationData.setCouponCode(VoucherStatusNotificationModel.getVoucherCode());
