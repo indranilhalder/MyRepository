@@ -1021,7 +1021,7 @@ $(document).ready(function(){
 	
 	if($(".product-listing.product-grid.hero_carousel").children().length>0){
 		$(".product-listing.product-grid.hero_carousel").css("border-bottom","2px solid #f0f4f5");
-		$(".product-listing.product-grid.hero_carousel").before("<h3 class='heroTitle'>Recommended&nbsp;&nbsp;Products</h3>");
+		$(".product-listing.product-grid.hero_carousel").before("<h3 class='heroTitle'>Shop Our Top Picks</h3>");
 		
 	}
 	
@@ -1182,4 +1182,12 @@ $(document).ready(function(){
 		$("input[name='email']").parents("form#loginForm").attr("autocomplete","off");
 		$("input[name='j_username'],input[name='email']").attr("autocomplete","off");
 		$("input[type='password']").attr("autocomplete","new-password");  
+		
+		if ('ontouchstart' in window) {
+			$('body').addClass("touchDevice");
+	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
+	 			$(this).attr("href","#");
+	 		});
+			}
+		
 });

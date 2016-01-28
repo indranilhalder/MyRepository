@@ -196,9 +196,13 @@
 	<session-config>
 		<!-- Session timeout of 30 minutes -->
 		<session-timeout>30</session-timeout>
-		<cookie-config>
+		<!-- <cookie-config>
 			<name>SID</name>
-		</cookie-config>
+		</cookie-config> -->
+		<cookie-config>       
+	     <http-only>true</http-only>
+	     <secure>true</secure>
+  		</cookie-config>
 	</session-config>
 
 

@@ -7,15 +7,17 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
+import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.model.PaymentTypeModel;
 
 
 /**
- * @author 666220
+ * @author TCS
  *
  */
 public interface MplJusPayRefundService
@@ -28,15 +30,15 @@ public interface MplJusPayRefundService
 	 * @param paymentTransactionType
 	 * @return
 	 */
-	public PaymentTransactionModel doRefund(final OrderModel order, final double refundAmount,
-			final PaymentTransactionType paymentTransactionType) throws Exception;
+	PaymentTransactionModel doRefund(final OrderModel order, final double refundAmount,
+			final PaymentTransactionType paymentTransactionType, final String uniqueRequestId) throws Exception;
 
 	/**
 	 *
 	 * @param orderId
 	 * @throws Exception
 	 */
-	public void doRefund(final String orderId, final String paymentType);
+	void doRefund(final String orderId, final String paymentType);
 
 	/**
 	 *
@@ -44,7 +46,7 @@ public interface MplJusPayRefundService
 	 * @param paymentTransactionModel
 	 * @return
 	 */
-	public boolean attachPaymentTransactionModel(OrderModel orderModel, PaymentTransactionModel paymentTransactionModel);
+	boolean attachPaymentTransactionModel(OrderModel orderModel, PaymentTransactionModel paymentTransactionModel);
 
 	/**
 	 *
@@ -53,7 +55,7 @@ public interface MplJusPayRefundService
 	 * @param paymentTransactionModel
 	 * @return
 	 */
-	public boolean checkAndAttachPaymentTransactionModel(final OrderModel order,
+	boolean checkAndAttachPaymentTransactionModel(final OrderModel order,
 			final PaymentTransactionEntryModel paymentTransactionEntryModel, final PaymentTransactionModel paymentTransactionModel);
 
 
@@ -67,7 +69,7 @@ public interface MplJusPayRefundService
 	 * @param code
 	 * @return
 	 */
-	public PaymentTransactionModel createPaymentTransactionModel(OrderModel orderModel, String status, Double amount,
+	PaymentTransactionModel createPaymentTransactionModel(OrderModel orderModel, String status, Double amount,
 			PaymentTransactionType paymentTransactionType, String statusDetails, String code);
 
 	/**
@@ -77,15 +79,15 @@ public interface MplJusPayRefundService
 	 * @param amount
 	 * @return
 	 */
-	public boolean makeRefundOMSCall(final AbstractOrderEntryModel orderEntry,
-			final PaymentTransactionModel paymentTransactionModel, final Double amount, ConsignmentStatus newOrderLineStatus);
+	boolean makeRefundOMSCall(final AbstractOrderEntryModel orderEntry, final PaymentTransactionModel paymentTransactionModel,
+			final Double amount, ConsignmentStatus newOrderLineStatus);
 
 	/**
 	 *
 	 * @param orderEntry
 	 * @return
 	 */
-	public boolean makeOMSStatusUpdate(AbstractOrderEntryModel orderEntry, ConsignmentStatus newOrderLineStatus);
+	boolean makeOMSStatusUpdate(AbstractOrderEntryModel orderEntry, ConsignmentStatus newOrderLineStatus);
 
 	/**
 	 * @param order
@@ -104,7 +106,47 @@ public interface MplJusPayRefundService
 	 * @param subOrderModel
 	 * @return
 	 */
-	public double validateRefundAmount(double refundAmount, OrderModel subOrderModel);
+	double validateRefundAmount(double refundAmount, OrderModel subOrderModel);
+
+
+	/*
+	 * @Desc used in web and cscockpit for handling network exception while cancellation TISSIT-1801 TISPRO-94
+	 * 
+	 * @param orderRequestRecord
+	 * 
+	 * @param paymentTransactionType
+	 * 
+	 * @param juspayRefundType
+	 * 
+	 * @param uniqueRequestId
+	 * 
+	 * @return void
+	 */
+
+	void createCancelRefundExceptionEntry(OrderCancelRecordEntryModel orderRequestRecord,
+			PaymentTransactionType paymentTransactionType, JuspayRefundType juspayRefundType, String uniqueRequestId);
+
+
+	/*
+	 * @Desc used in web and cscockpit for in case no response received from juspay while cancellation refund TISSIT-1801
+	 * TISPRO-94
+	 * 
+	 * @param orderRequestRecord
+	 * 
+	 * @param paymentTransactionType
+	 * 
+	 * @param juspayRefundType
+	 * 
+	 * @param uniqueRequestId
+	 * 
+	 * @return void
+	 */
+
+	void createCancelRefundPgErrorEntry(OrderCancelRecordEntryModel orderRequestRecord,
+			PaymentTransactionType paymentTransactionType, JuspayRefundType juspayRefundType, String uniqueRequestId);
+
+
+	String getRefundUniqueRequestId();
 
 
 }

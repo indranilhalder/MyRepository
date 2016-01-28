@@ -12,10 +12,6 @@
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
 
-<!--[if lt IE 9]>
-<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
-<![endif]-->
 
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
@@ -26,13 +22,20 @@
 	</c:otherwise>
 </c:choose>
 
+<c:if test="${isIAEnabled}">
+<script type="text/javascript"
+	src="${commonResourcePath}/js/ia_plugin_general.js" defer="defer"></script>
+<script type="text/javascript" src="${commonResourcePath}/js/tataia.js" defer="defer"></script>
+</c:if>
+
+
 
 <!--- START: INSERTED for MSD --->
 <c:if test="${isMSDEnabled}">
 	<c:choose>
 	<c:when test="${product.rootCategory=='Clothing'}">
-		<script type="text/javascript"	src="${msdjsURL}" defer="defer"></script>
-		<script type="text/javascript"	src="${commonResourcePath}/js/moreMADness.js" defer="defer"></script>
+		<script type="text/javascript"	src="${msdjsURL}"></script>
+		<script type="text/javascript"	src="${commonResourcePath}/js/moreMADness.js"></script>
 		
 		 <c:set var="MSDRESTURL" scope="request" value="${msdRESTURL}"/>
 		  

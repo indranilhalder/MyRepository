@@ -34,6 +34,7 @@ import de.hybris.platform.cscockpit.widgets.models.impl.BasketCartWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.BasketCartWidgetRenderer;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
+import org.zkoss.zk.ui.api.HtmlBasedComponent;
 
 import org.zkoss.zk.ui.event.Event;
 
@@ -226,7 +227,19 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	}
 	
 	
-	
+	/* (non-Javadoc)
+ 	 * @see de.hybris.platform.cscockpit.widgets.renderers.impl.BasketCartWidgetRenderer#createContentInternal(de.hybris.platform.cockpit.widgets.ListboxWidget, org.zkoss.zk.ui.api.HtmlBasedComponent)
+ 	 */
+  	@Override
+  	protected HtmlBasedComponent createContentInternal(
+  			ListboxWidget<BasketCartWidgetModel, BasketController> widget,
+  			HtmlBasedComponent rootContainer) {
+  		
+  		//Fix TISEE-6282
+  		widget.getWidgetModel().setItems(((BasketController)widget.getWidgetController()).getPromotionalCartLineItems());
+  		
+  		return super.createContentInternal(widget, rootContainer);
+  	}
 	
 	
 	

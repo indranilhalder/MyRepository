@@ -224,6 +224,9 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String JUSPAYREDIRECTKEY = "payment.juspay.redirect";
 	public static final String CELLNO = "cellNo";
 
+	public static final String NOOFYEARS = "payment.exp.no.of.years";
+	public static final String EXPYEARS = "noOfYearsFromCurrentYear";
+
 	private MarketplacecheckoutaddonConstants()
 	{
 		//empty to avoid instantiating this constant class

@@ -34,7 +34,7 @@ $("div.departmenthover").on("mouseover touchend", function() {
 
 	if(!$.cookie("dept-list") && window.localStorage) {
 		for (var key in localStorage){
-			if (key.startsWith("deptmenuhtml")) {
+			if (key.indexOf("deptmenuhtml")>=0) {
 				window.localStorage.removeItem(key);
 				//console.log("Deleting.." + key);
 			}
@@ -68,7 +68,7 @@ $(".A-ZBrands").on("mouseover touchend", function(e) {
 		
 		if(!$.cookie("dept-list") && window.localStorage) {
 			for (var key in localStorage){
-				if (key.startsWith("atozbrandmenuhtml")) {
+				if (key.indexOf("atozbrandmenuhtml")>=0) {
 					window.localStorage.removeItem(key);
 					//console.log("Deleting.." + key);
 				}
@@ -125,10 +125,13 @@ $("a#tracklink").on("mouseover touchend", function(e) {
 			type: 'GET',
 			success: function (html)
 			{
+
 				$("ul.trackorder-dropdown").html(html);
 			}
 		});
     }
+
+
 });
 
 
@@ -142,6 +145,7 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
 	 	    data: "&productCount="+$(this).attr("data-count"),
 			success: function (html)
 			{
+
 				$("div.wishlist-info").html(html);
 			}
 		});
@@ -182,6 +186,7 @@ $(function() {
 		}
 	}
     $(".homepage-banner").removeAttr("style");
+
 });
 
 function hideAllBanners(count) {

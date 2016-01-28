@@ -1466,6 +1466,7 @@
 			</itemtype>
 
 			<itemtype code="Category" autocreate="false" generate="true">
+
 				<attributes>
 					<attribute qualifier="targetCrossProduct" type="TargetCrossProductCollection">
 						<modifiers read="true" write="true" search="true"
@@ -1677,6 +1678,7 @@
 			</itemtype>
 
 			<itemtype code="StockLevel" autocreate="false" generate="true">
+
 				<attributes>
 					<attribute type="java.lang.String" qualifier="sellerArticleSKU"
 						autocreate="true" generate="true">
@@ -4849,6 +4851,11 @@
 						<persistence type='property' />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="SellerIDX">
+						<key attribute="sellerArticleSKU" />
+					</index>
+				</indexes>
 			</itemtype>
 
 
@@ -4922,6 +4929,37 @@
 						<persistence type="property" />
 					</attribute>
 
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="SolrFacetSearchConfig" autocreate="false" generate="false">
+				<description>Extending the SolrFacetSearchConfig type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedType" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedType type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedProperty" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedProperty type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
@@ -6053,6 +6091,16 @@
 						<modifiers read="true" write="true" search="false"
 							optional="true" partof="true" />
 					</attribute>
+					<attribute qualifier="paymentMethod" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="paymentMethodType" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"
@@ -6562,40 +6610,21 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-
-			<itemtype code="SolrFacetSearchConfig" autocreate="false" generate="false">
-				<description>Extending the SolrFacetSearchConfig type from core with additional attributes.</description>
-				<attributes>
-					<attribute qualifier="queryType" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" optional="true"
-							unique="false" />
-					</attribute>
-				</attributes>
-			</itemtype>
-			<itemtype code="SolrIndexedType" autocreate="false" generate="false">
-				<description>Extending the SolrIndexedType type from core with additional attributes.</description>
-				<attributes>
-					<attribute qualifier="queryType" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" optional="true"
-							unique="false" />
-					</attribute>
-				</attributes>
-			</itemtype>
-			<itemtype code="SolrIndexedProperty" autocreate="false" generate="false">
-				<description>Extending the SolrIndexedProperty type from core with additional attributes.</description>
-				<attributes>
-					<attribute qualifier="queryType" type="java.lang.String">
-						<persistence type="property" />
-						<modifiers read="true" write="true" optional="true"
-							unique="false" />
-					</attribute>
-				</attributes>
-			</itemtype>
 			
-			
+			<itemtype code="FeedbackCronJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.FeedbackCronJob">
+				<attributes>
+					<attribute type="java.util.Date" qualifier="lastExecutionTime">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+				
+				</attributes>
+			</itemtype>
 		</typegroup>
 		<!--End of CRM Ticket Detail -->
+		
+		
 	</itemtypes>
 </items>

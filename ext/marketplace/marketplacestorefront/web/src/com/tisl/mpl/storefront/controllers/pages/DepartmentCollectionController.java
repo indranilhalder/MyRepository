@@ -85,6 +85,7 @@ public class DepartmentCollectionController
 			secondLevelCategoryMap.put(department.getCode(), secondLevelCategories);
 
 			//}
+			model.addAttribute(ModelAttributetConstants.FIRST_LEVEL_CATEGORY, department);
 		}
 		catch (final EtailBusinessExceptions businessException)
 		{
