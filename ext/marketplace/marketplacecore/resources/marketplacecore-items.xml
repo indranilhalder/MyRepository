@@ -3325,6 +3325,37 @@
 						<persistence type="property" />
 						<description>This attribute represents the list of footer images</description>
 					</attribute>
+				
+					<attribute qualifier="footerText" type="localized:java.lang.String" generate="true" autocreate="true">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(4000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>This attribute represents footer text to be displayed in the footer</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="CMSNavigationNode" generate="false"
+				autocreate="false">
+				<attributes>
+					<attribute qualifier="media" generate="true" autocreate="true"
+						type="localized:Media">
+						<persistence type="property" />
+						<description>Attribute that stores the localized media in CMS Navigation Node.</description>
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- CMS Media Paragraph Component -->
