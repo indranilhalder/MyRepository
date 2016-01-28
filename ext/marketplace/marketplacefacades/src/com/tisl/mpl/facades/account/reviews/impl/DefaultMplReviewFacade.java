@@ -63,14 +63,20 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 				productData = list.getProductData();
 				final BuyBoxData productPrice = buyBoxFacade.buyboxPrice(productData.getCode());
 				PriceData price = null;
-				if (productPrice.getSpecialPrice() != null)
+				final Double zeroValue = new Double(0.0);
+				if (productPrice.getSpecialPrice() != null && productPrice.getSpecialPrice().getDoubleValue() != zeroValue)
 				{
 					price = productPrice.getSpecialPrice();
 				}
-				else
+				else if (null != productPrice.getPrice() && productPrice.getPrice().getDoubleValue() != zeroValue)
 				{
 					price = productPrice.getPrice();
 				}
+				else
+				{
+					price = productPrice.getMrp();
+				}
+
 				priceFinal = priceDataFactory.create(price.getPriceType(), price.getValue(), price.getCurrencyIso());
 				LOG.debug("price :" + priceFinal);
 				productData.setProductMOP(priceFinal);
