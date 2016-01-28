@@ -1,6 +1,7 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -45,7 +46,19 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 		OrderModel orderModel=(OrderModel) order.getObject();
 		List<DiscountModel> discounts=orderModel.getDiscounts();
 		
-		if(CollectionUtils.isNotEmpty(discounts))
+		final List<AbstractOrderEntryModel> orderEntryList=orderModel.getEntries();
+		boolean couponFlag=false; 
+		
+		for(AbstractOrderEntryModel orderEntry:orderEntryList)
+		{
+			if(StringUtils.isNotEmpty(orderEntry.getCouponCode()))
+			{
+				couponFlag=true;
+				break;
+			}
+		}
+		
+		if(CollectionUtils.isNotEmpty(discounts) && couponFlag)
 		{
 			Div container = new Div();
 			container.setSclass("voucherAlignment");
@@ -143,21 +156,16 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 			
 			mainbox.setParent(container);
 			
-			final List<AbstractOrderEntryModel> orderEntryList=orderModel.getEntries();
-			boolean couponFlag=false;
-			
-			for(AbstractOrderEntryModel orderEntry:orderEntryList)
-			{
-				if(StringUtils.isNotEmpty(orderEntry.getCouponCode()))
-				{
-					couponFlag=true;
-					break;
-				}
-			}
-			
-			if(couponFlag)
-			{
+			//if(couponFlag)
+			//{
 				//Product Details
+			List<AbstractOrderEntryModel> parentOrderEntryList=new ArrayList<AbstractOrderEntryModel>();
+			if(orderModel.getType().equalsIgnoreCase("Child"))
+			{
+				final OrderModel parentOrder=orderModel.getParentReference();
+				parentOrderEntryList=parentOrder.getEntries();
+				
+			}
 				Hbox prodBox = new Hbox();		
 				Div couponEntryDiv=new Div();
 				couponEntryDiv.setParent(prodBox);
@@ -182,45 +190,18 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 				colProdSaveHeader.setWidth("50px");
 				colProdSaveHeader.setParent(headRowProd);
 
-				for(AbstractOrderEntryModel entry:orderEntryList){	
-					if(StringUtils.isNotEmpty(entry.getCouponCode()) && null!=entry.getCouponValue() && entry.getCouponValue()>0)
-					{
-						final Listitem rowProd = new Listitem();
-						
-						rowProd.setSclass("listbox-row-item");
-						rowProd.setParent(listBoxProd);
-						
-						
-						Listcell productIdCell = new Listcell();
-						productIdCell.setParent(rowProd);
-						Div productIdDiv = new Div();
-						productIdDiv.setParent(productIdCell);
-						productIdDiv.setSclass("editorWidgetEditor");
-						Label productIdLabel = new Label(entry.getProduct().getCode());
-						productIdLabel.setParent(productIdDiv);
-						
-						Listcell productNameCell = new Listcell();
-						productNameCell.setParent(rowProd);
-						Div productNameDiv = new Div();
-						productNameDiv.setParent(productNameCell);
-						productNameDiv.setSclass("editorWidgetEditor");
-						Label productNameLabel = new Label(entry.getProduct().getName());
-						productNameLabel.setParent(productNameDiv);
-
-						Listcell productSaveCell = new Listcell();
-						productSaveCell.setParent(rowProd);
-						Div productSaveDiv = new Div();
-						productSaveDiv.setParent(productSaveCell);
-						productSaveDiv.setSclass("editorWidgetEditor");
-						final PriceData couponDiscVal=discountUtility.createPrice(orderModel, entry.getCouponValue());
-						Label productSaveLabel = new Label(couponDiscVal.getFormattedValue());
-						productSaveLabel.setParent(productSaveDiv);
+				for(AbstractOrderEntryModel entry:orderEntryList){
+					final OrderModel orderForEntry=(OrderModel) entry.getOrder();
+					if(orderForEntry.getType().equalsIgnoreCase("Child") && CollectionUtils.isNotEmpty(parentOrderEntryList)){
+						populateSubOrder(parentOrderEntryList, entry, orderForEntry, listBoxProd);
 					}
-						
+					else{
+						populateParentOrder(entry, orderModel, listBoxProd);
+					}
 				}
 				
 				prodBox.setParent(container);
-			}
+			//}
 		}
 		else
 		{
@@ -233,5 +214,86 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 		return content;
 	}
 	
+	
+	
+	/**
+	 * 
+	 * @param parentOrderEntryList
+	 * @param entry
+	 * @param orderModel
+	 * @param listBoxProd
+	 */
+	private void populateSubOrder(final List<AbstractOrderEntryModel> parentOrderEntryList, final AbstractOrderEntryModel entry, final OrderModel orderModel, Listbox listBoxProd)
+	{
+		for(AbstractOrderEntryModel parOrderEntry: parentOrderEntryList)
+		{
+			if(StringUtils.isNotEmpty(entry.getCouponCode()) && null!=entry.getCouponValue() && entry.getCouponValue()>0 
+					&& entry.getSelectedUSSID().equalsIgnoreCase(parOrderEntry.getSelectedUSSID()))
+			{
+				populateList(orderModel, listBoxProd, entry);
+			}
+		}
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param parentOrderEntryList
+	 * @param entry
+	 * @param orderModel
+	 * @param listBoxProd
+	 */
+	private void populateParentOrder(final AbstractOrderEntryModel entry, final OrderModel orderModel, Listbox listBoxProd)
+	{
+		if(StringUtils.isNotEmpty(entry.getCouponCode()) && null!=entry.getCouponValue() && entry.getCouponValue()>0 )
+		{
+			populateList(orderModel, listBoxProd, entry);
+		}
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param orderModel
+	 * @param listBoxProd
+	 * @param entry
+	 */
+	private void populateList(final OrderModel orderModel, Listbox listBoxProd, final AbstractOrderEntryModel entry)
+	{
+		final Listitem rowProd = new Listitem();
+		
+		rowProd.setSclass("listbox-row-item");
+		rowProd.setParent(listBoxProd);
+		
+		
+		Listcell productIdCell = new Listcell();
+		productIdCell.setParent(rowProd);
+		Div productIdDiv = new Div();
+		productIdDiv.setParent(productIdCell);
+		productIdDiv.setSclass("editorWidgetEditor");
+		Label productIdLabel = new Label(entry.getProduct().getCode());
+		productIdLabel.setParent(productIdDiv);
+		
+		Listcell productNameCell = new Listcell();
+		productNameCell.setParent(rowProd);
+		Div productNameDiv = new Div();
+		productNameDiv.setParent(productNameCell);
+		productNameDiv.setSclass("editorWidgetEditor");
+		Label productNameLabel = new Label(entry.getProduct().getName());
+		productNameLabel.setParent(productNameDiv);
+
+		Listcell productSaveCell = new Listcell();
+		productSaveCell.setParent(rowProd);
+		Div productSaveDiv = new Div();
+		productSaveDiv.setParent(productSaveCell);
+		productSaveDiv.setSclass("editorWidgetEditor");
+		final PriceData couponDiscVal=discountUtility.createPrice(orderModel, entry.getCouponValue());
+		Label productSaveLabel = new Label(couponDiscVal.getFormattedValue());
+		productSaveLabel.setParent(productSaveDiv);
+	}
 
 }
