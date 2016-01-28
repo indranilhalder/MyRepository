@@ -79,8 +79,14 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 			for(AbstractOrderEntryModel entry : abstractOrderModel.getEntries()){
 				if(entry.getNetAmountAfterAllDisc()!=null)
 				promotion+= (entry.getTotalProductLevelDisc()) ;
-				cartPromo+=entry.getCartLevelDisc();
-				couponPromo+=entry.getCouponValue();
+				if(null!=entry.getCartLevelDisc())
+				{
+					cartPromo+=entry.getCartLevelDisc();
+				}
+				if(null!=entry.getCouponValue())
+				{
+					couponPromo+=entry.getCouponValue();
+				}
 			}
 			renderRow(promotion,
 					LabelUtils.getLabel(widget, "promotion", new Object[0]),
