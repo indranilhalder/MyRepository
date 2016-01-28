@@ -29007,6 +29007,22 @@ position: absolute;
 	display:block;
 	
 }
+
+body.page-productDetails .gig-comment .gig-media-thumbnail,
+body.page-reviews .gig-comment .gig-media-thumbnail {
+	height: auto !important;
+}
+
+body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image,
+body.page-reviews .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
+	height: auto !important;
+	width: 50px !important;
+}
+
+body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-caption a {
+	display: none;
+}  
+
 /*--------------maincss-----------*/
 .row
 {

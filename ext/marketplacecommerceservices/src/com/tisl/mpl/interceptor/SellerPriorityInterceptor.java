@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.core.enums.SellerPriorityEnum;
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
-import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
 
 /**
@@ -42,8 +41,7 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 	@Resource(name = "mplSellerPriorityDao")
 	private MplSellerPriorityDao mplSellerPriorityDao;
 
-	@Resource
-	private BuyBoxService buyBoxService;
+
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(SellerPriorityInterceptor.class.getName());

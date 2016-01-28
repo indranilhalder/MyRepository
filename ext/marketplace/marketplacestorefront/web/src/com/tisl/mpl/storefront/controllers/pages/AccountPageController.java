@@ -6344,7 +6344,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
 					.getReviewsByUID(customerModel.getUid());
-			commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
+			//commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
+			/* TISSTRT-119 fix */
+			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
 			if (!CollectionUtils.isEmpty(commentsWithProductDataModified))
 			{
 				Collections.sort(commentsWithProductDataModified, new Comparator<GigyaProductReviewWsDTO>()
@@ -6430,6 +6432,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		storeCmsPageInModel(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
