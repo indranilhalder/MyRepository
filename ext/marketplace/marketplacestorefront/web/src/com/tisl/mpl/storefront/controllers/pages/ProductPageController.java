@@ -456,7 +456,7 @@ public class ProductPageController extends AbstractPageController
 					}
 					else
 					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, "0.0");
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, ModelAttributetConstants.NOVALUE);
 					}
 				}
 				if (null != buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValue()
@@ -467,7 +467,7 @@ public class ProductPageController extends AbstractPageController
 				}
 				else
 				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, "0.0");
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, ModelAttributetConstants.NOVALUE);
 				}
 				if (null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
 						&& !buyboxdata.getPrice().getFormattedValue().isEmpty())
@@ -476,7 +476,7 @@ public class ProductPageController extends AbstractPageController
 				}
 				else
 				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, "0.0");
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, ModelAttributetConstants.NOVALUE);
 				}
 				if (null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
 						&& !buyboxdata.getMrp().getFormattedValue().isEmpty())
@@ -485,7 +485,7 @@ public class ProductPageController extends AbstractPageController
 				}
 				else
 				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, "0.0");
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, ModelAttributetConstants.NOVALUE);
 				}
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
 				if (null != buyboxdata.getSellerName())
