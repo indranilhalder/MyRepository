@@ -84,7 +84,7 @@ public class MarketplaceCouponWidgetRenderer extends AbstractCsWidgetRenderer<Wi
 		if(StringUtils.isNotEmpty(releaseMessage))
 		{
 			try {
-				Messagebox.show(LabelUtils.getLabel(widget, releaseMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_error_title", new Object[0]), 1, "z-msgbox z-msgbox-error");
+				Messagebox.show(LabelUtils.getLabel(widget, releaseMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_info_title", new Object[0]), 1, "z-msgbox z-msgbox-information");
 			} catch (InterruptedException e) {
 				throw new Exception(e);
 			}	
