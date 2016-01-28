@@ -6434,6 +6434,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		catch (final Exception e)
+		{
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
 		storeCmsPageInModel(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
