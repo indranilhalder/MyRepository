@@ -214,9 +214,75 @@ if ($('#brandsYouLove').children().length == 0) {
 	
 	getBrandsYouLoveAjaxCall();
 }
+
+
+
 $(document).on("mouseover touchend", ".home-brands-you-love-carousel-brands", function() {
 	$(".home-brands-you-love-carousel-brands").removeClass('active');
 	$(this).addClass('active');
 	$('.home-brands-you-love-desc').empty();
 	
 });
+
+
+//AJAX CALL
+if ($('#bestPicks').children().length == 0) {
+	getBestPicksAjaxCall();
+}
+
+
+function getBestPicksAjaxCall(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getBestPicks",
+		
+		success : function(response) {
+			//console.log(response.subItems);
+//			var defaultHtml = "";
+			renderHtml = "<h1>" + response.title + "</h1>"
+				+ "<div class='home-best-pick-carousel'>";
+			
+			$
+				.each(
+						response.subItems,function(k, v){
+							//console.log(v.imageUrl);
+							//console.log(v.text);
+							//console.log(v.url);
+							if(v.url){
+								renderHtml += "<a href='"
+									+ v.url
+									+ "'>";
+							}
+							
+							if(v.imageUrl){
+								renderHtml += "<div class='home-best-pick-carousel-img'> <img src='"
+									+ v.imageUrl
+									+ "'></img></div>";
+							}
+							
+							if(v.text){
+								renderHtml += "<div class='home-best-pick-carousel-text'> <p>"
+									+ v.text
+									+ "</p></div>";
+							}
+							
+							renderHtml += "</a>";
+							
+						
+				});
+			renderHtml += "</div>";	
+			$("#bestPicks").html(renderHtml);
+			console.log(renderHtml);
+		},
+		
+		error : function() {
+			globalErrorPopup('Failure!!!');
+		}
+
+	}
+			
+	)
+}
+

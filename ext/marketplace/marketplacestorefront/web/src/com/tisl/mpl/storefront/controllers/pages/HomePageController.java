@@ -49,6 +49,8 @@ import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
+import com.tisl.mpl.model.cms.components.BestPicksCarouselComponentModel;
+import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -125,8 +127,8 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject brandsYouLoveJson = new JSONObject();
-		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section3Slot-Homepage", "Online");
+		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage", "Section3Slot-Homepage",
+				"Online");
 		if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
 		{
 			components = homepageSection3Slot.getCmsComponents();
@@ -210,6 +212,89 @@ public class HomePageController extends AbstractPageController
 
 		return brandsYouLoveJson;
 
+	}
+
+
+	@ResponseBody
+	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
+	public JSONObject getBestPicks()
+	{
+		LOG.info("Check 1 :: Inside getBestPicks emthod");
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject bestPicks = new JSONObject();
+		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section4CSlot-Homepage", "Online");
+
+		if (CollectionUtils.isNotEmpty(homepageSection4CSlot.getCmsComponents()))
+		{
+			LOG.info("Check 2 :: Inside if (CollectionUtils.isNotEmpty(homepageSection4CSlot.getCmsComponents()))");
+			components = homepageSection4CSlot.getCmsComponents();
+		}
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			LOG.info("Check 3 :: Inside for (final AbstractCMSComponentModel component : components)");
+			LOG.info("Found Component>>>>with id :::" + component.getUid());
+			if (component instanceof BestPicksCarouselComponentModel)
+			{
+				LOG.info("Check 4 :: Inside if (component instanceof BestPicksCarouselComponentModel)");
+				final BestPicksCarouselComponentModel bestPickCarouselComponent = (BestPicksCarouselComponentModel) component;
+				String title = "";
+				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))
+				{
+					LOG.info("Check 5 :: Inside if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))");
+					title = bestPickCarouselComponent.getTitle();
+				}
+
+				bestPicks.put("title", title);
+
+				final JSONArray subComponentJsonArray = new JSONArray();
+				if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getBestPicksItems()))
+				{
+					LOG.info("Check 6 :: Inside if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getBestPicksItems()))");
+					String imageURL = "";
+					String text = "";
+					String linkUrl = "";
+
+					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getBestPicksItems())
+					{
+						LOG.info("Check 7 :: Inside for (final CMSMediaParagraphComponentModel bestPickItem");
+						final JSONObject bestPickItemJson = new JSONObject();
+
+						if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
+						{
+							LOG.info("Check 8 :: media null check");
+							imageURL = bestPickItem.getMedia().getURL();
+						}
+
+						bestPickItemJson.put("imageUrl", imageURL);
+
+						if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
+						{
+							LOG.info("Check 9 :: text null check");
+							text = bestPickItem.getContent();
+						}
+
+						bestPickItemJson.put("text", text);
+
+						if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
+						{
+							LOG.info("Check 10 :: url null check");
+							linkUrl = bestPickItem.getUrl();
+						}
+
+						bestPickItemJson.put("url", linkUrl);
+
+						subComponentJsonArray.add(bestPickItemJson);
+					}
+					LOG.info("Check 11 :: Outside for (final CMSMediaParagraphComponentModel bestPickItem");
+				}
+				LOG.info("Check 12 :: Outside if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getBestPicksItems()))");
+				bestPicks.put("subItems", subComponentJsonArray);
+
+			}
+		}
+		return bestPicks;
 	}
 
 	/**
