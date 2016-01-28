@@ -381,9 +381,7 @@ public class ProductPageController extends AbstractPageController
 				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
 			}
 
-			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel))
-					&& null != productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()
-					&& !productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName().isEmpty())
+			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
 
 			{
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
