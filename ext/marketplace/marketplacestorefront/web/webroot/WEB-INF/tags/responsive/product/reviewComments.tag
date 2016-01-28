@@ -196,17 +196,37 @@
 		return false;
 	}
 	});
-	/*Review title 255 characters limit*/
+	$(document).on("paste",".gig-composebox-textarea",function(){
+		var that = $(this);
+		var text_length=0;
+		setTimeout(function () {
+	text_length = that.text().length;		
+		if(text_length <= 4998)
+		{
+			that.parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+			return true;
+			}
+		else
+		{
+			that.parents(".gig-composebox-open").find(".gig-composebox-error").text('Review description can contain upto 5000 characters').show();
+			return false;
+		}
+		},100);
+	});
+	/*Review title 250 characters limit*/
+	$(document).on("focus",".gig-composebox-summary-input",function(){
+	$(this).attr("maxlength","250");
+	});
 	$(document).on("keypress",".gig-composebox-summary-input",function(){
 	$(".gig-composebox-error").hide();
-	if($(this).val().length <= 254)
+	if($(this).val().length <= 249)
 	{
 		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").hide();
 		return true;
 		}
 	else
 	{
-		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").text('Review title can contain upto 255 characters').show();
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").text('Review title can contain upto 250 characters').show();
 		return false;
 	}
 	});

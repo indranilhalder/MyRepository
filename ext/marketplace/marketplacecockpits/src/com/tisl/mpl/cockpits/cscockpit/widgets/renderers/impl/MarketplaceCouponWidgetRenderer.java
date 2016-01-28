@@ -62,7 +62,7 @@ public class MarketplaceCouponWidgetRenderer extends AbstractCsWidgetRenderer<Wi
 		});
 		releaseVoucherButton.addEventListener(Events.ON_CLICK, new EventListener() {
 			public void onEvent(Event event) throws Exception {
-				handleReleaseVoucherBtnEvent(widget);
+				handleReleaseVoucherBtnEvent(widget,txtbox);
 			}
 		});
 		Collection<String> appliedVoucherCodeList =((MarketPlaceBasketController)widget.getWidgetController()).getAppliedVoucherCodesList(); 
@@ -78,8 +78,18 @@ public class MarketplaceCouponWidgetRenderer extends AbstractCsWidgetRenderer<Wi
 		
 	}
 	private void handleReleaseVoucherBtnEvent(
-			Widget<BasketCartWidgetModel, BasketController> widget) throws Exception {
-		((MarketPlaceBasketController)widget.getWidgetController()).releaseVoucher();
+			Widget<BasketCartWidgetModel, BasketController> widget,Textbox txtbox) throws Exception {
+		//TISSTRT-303
+		String releaseMessage= ((MarketPlaceBasketController)widget.getWidgetController()).releaseVoucher();
+		if(StringUtils.isNotEmpty(releaseMessage))
+		{
+			try {
+				Messagebox.show(LabelUtils.getLabel(widget, releaseMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_error_title", new Object[0]), 1, "z-msgbox z-msgbox-error");
+			} catch (InterruptedException e) {
+				throw new Exception(e);
+			}	
+		}
+		
 		Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 		widget.getWidgetController().dispatchEvent(null,null, data);
 	}
