@@ -1123,7 +1123,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0,
 						pageVoucher, model);
 				//model = (Model) returnMapVoucher.get("model_attr_unused");
-				if (null != returnMapVoucher.get("paginated_data_coupon_unused"))
+				if (null != returnMapVoucher.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
 				{
 					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMapVoucher
 							.get("paginated_data_coupon_unused");
@@ -1133,7 +1133,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
 				final Map<String, Object> returnMapHistory = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, 1, model);
 				//model = (Model) returnMapHistory.get("model_attr_used");
-				if (null != returnMapHistory.get("paginated_data_coupon_used"))
+				if (null != returnMapHistory.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
 				{
 					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMapHistory
 							.get("paginated_data_coupon_used");
