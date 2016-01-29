@@ -470,6 +470,8 @@ public class GigyaServiceImpl implements GigyaService
 
 				LOG.debug("GigyaServiceImpl, notifyGigya Gigya Method" + gigyaMethod);
 				final String FIRSTNAME = "{firstName:" + "'";
+				final String LASTNAME = ",lastName: ";
+				final String EMAIL = ",email:";
 				// NOTIFY GIGYA WHEN USER LOGIN USING SOCIAL NETWORKS
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.notifyRegistration"))
 				{
@@ -502,8 +504,7 @@ public class GigyaServiceImpl implements GigyaService
 					request.setParam(MarketplacecclientservicesConstants.UID, siteUid);
 					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
-						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
-								+ "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 
 					else
@@ -514,8 +515,7 @@ public class GigyaServiceImpl implements GigyaService
 						{
 							fName = fName.replace('.', ' ');
 						}
-						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
-								+ "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 				}
 
@@ -528,8 +528,7 @@ public class GigyaServiceImpl implements GigyaService
 
 					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
-						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
-								+ "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 					else
 					{
@@ -542,8 +541,7 @@ public class GigyaServiceImpl implements GigyaService
 								fName = fName.replace('.', ' ');
 							}
 						}
-						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
-								+ "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 
 
