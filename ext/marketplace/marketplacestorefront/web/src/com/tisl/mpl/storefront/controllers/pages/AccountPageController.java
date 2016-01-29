@@ -1117,13 +1117,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
 			}
 
-			if (pageFor.equals("voucher"))
+			if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_VOUCHER))
 			{
 				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
 				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0,
 						pageVoucher, model);
 				//model = (Model) returnMapVoucher.get("model_attr_unused");
-				if (null != returnMapVoucher.get("paginated_data_coupon_unused"))
+				if (null != returnMapVoucher.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
 				{
 					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMapVoucher
 							.get("paginated_data_coupon_unused");
@@ -1133,14 +1133,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
 				final Map<String, Object> returnMapHistory = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, 1, model);
 				//model = (Model) returnMapHistory.get("model_attr_used");
-				if (null != returnMapHistory.get("paginated_data_coupon_used"))
+				if (null != returnMapHistory.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
 				{
 					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMapHistory
 							.get("paginated_data_coupon_used");
 					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
 				}
 			}
-			else if (pageFor.equals("history"))
+			else if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_HISTORY))
 			{
 				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
 				final Map<String, Object> returnMap = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, pageHistory,
@@ -6432,6 +6432,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		storeCmsPageInModel(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
