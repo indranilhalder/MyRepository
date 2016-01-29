@@ -1117,49 +1117,49 @@ public class AccountPageController extends AbstractMplSearchPageController
 				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
 			}
 
-			if (pageFor.equals("voucher"))
+			if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_VOUCHER))
 			{
 				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
 				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0,
 						pageVoucher, model);
 				//model = (Model) returnMapVoucher.get("model_attr_unused");
-				if (null != returnMapVoucher.get("paginated_data_coupon_unused"))
+				if (null != returnMapVoucher.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
 				{
 					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMapVoucher
-							.get("paginated_data_coupon_unused");
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
 					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
 				}
 				// Auxiliary pagination with default 1 page
 				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
 				final Map<String, Object> returnMapHistory = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, 1, model);
 				//model = (Model) returnMapHistory.get("model_attr_used");
-				if (null != returnMapHistory.get("paginated_data_coupon_used"))
+				if (null != returnMapHistory.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
 				{
 					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMapHistory
-							.get("paginated_data_coupon_used");
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
 					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
 				}
 			}
-			else if (pageFor.equals("history"))
+			else if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_HISTORY))
 			{
 				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
 				final Map<String, Object> returnMap = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, pageHistory,
 						model);
 				//model = (Model) returnMap.get("model_attr_used");
-				if (null != returnMap.get("paginated_data_coupon_used"))
+				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
 				{
 					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMap
-							.get("paginated_data_coupon_used");
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
 					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
 				}
 				// Auxiliary pagination with default 1 page
 				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
 				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0, 1, model);
 				//model = (Model) returnMapVoucher.get("model_attr_unused");
-				if (null != returnMapVoucher.get("paginated_data_coupon_unused"))
+				if (null != returnMapVoucher.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
 				{
 					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMapVoucher
-							.get("paginated_data_coupon_unused");
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
 					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
 				}
 			}
@@ -1170,17 +1170,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 				final Map<String, Object> returnMap = couponPagation(closedVoucherDataList, couponHistoryDTOList, pageSizeCoupon,
 						pageSizeHistory, 1, model);
 				//model = (Model) returnMap.get("model_attr_unused");
-				if (null != returnMap.get("paginated_data_coupon_unused"))
+				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
 				{
 					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMap
-							.get("paginated_data_coupon_unused");
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
 					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
 				}
 				//model = (Model) returnMap.get("model_attr_used");
-				if (null != returnMap.get("paginated_data_coupon_used"))
+				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
 				{
 					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMap
-							.get("paginated_data_coupon_used");
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
 					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
 				}
 
