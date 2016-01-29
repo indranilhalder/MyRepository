@@ -104,7 +104,7 @@ border-bottom: 1px solid;
 	</cms:pageSlot>
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper"></div>
 	<!-- For Infinite Analytics Start -->
-	<div class="brands" id="ia_brands_favorites"></div>
+	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
 	<div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div>
 	<div class="trending" id="ia_products_hot"></div>
