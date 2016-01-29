@@ -142,11 +142,17 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					else
 					{
 						processWebhook(hook, webHookDetailList);
+
+						//TISSIT-1811:the processed hook in the uniqueList
+						uniqueList.add(hook);
 					}
 				}
 				else
 				{
 					processWebhook(hook, webHookDetailList);
+
+					//TISSIT-1811:the processed hook in the uniqueList
+					uniqueList.add(hook);
 				}
 			}
 		}
@@ -199,10 +205,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						{
 							if (!rtmModel.getIsProcessed().booleanValue())
 							{
-								//								//fetching audit records
-								//								final MplPaymentAuditModel auditModel = juspayWebHookDao.fetchAuditData(hook.getOrderStatus()
-								//										.getOrderId());
-								//								final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(auditModel.getCartGUID());
+								//fetching audit records
+								final MplPaymentAuditModel auditModel = juspayWebHookDao.fetchAuditData(hook.getOrderStatus()
+										.getOrderId());
+								final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(auditModel.getCartGUID());
 
 								//TISSIT-1802
 								OrderModel subOrder = modelService.create(OrderModel.class);
@@ -229,8 +235,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								else if (null != subOrder && null != rtmModel.getRefundType()
 										&& rtmModel.getRefundType().equals(JuspayRefundType.CANCELLED_FOR_RISK))
 								{
-									//Change status of Consignment against order line when it is SUCCESS at Juspay & RETURN in RTM
-									changeConsignmentStatusForCancelledForRisk(rtmModel, refund, subOrder, hook.getOrderStatus()
+									//Change status of Consignment against parent order when it is SUCCESS at Juspay & CANCELLED_FOR_RISK in RTM
+									changeConsignmentStatusForCancelledForRisk(rtmModel, refund, parentOrder, hook.getOrderStatus()
 											.getOrderId());
 								}
 							}
@@ -560,7 +566,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	}
 
 	/**
-	 * To set the request id 
+	 * To set the request id
+	 *
 	 * @param rtmModel
 	 * @return String
 	 */
