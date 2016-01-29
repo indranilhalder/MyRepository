@@ -483,7 +483,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
 
 				entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
-				entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice));
+				entry.setCouponValue(Double.valueOf((int) entryLevelApportionedPrice));
 
 				if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
 						|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
@@ -493,7 +493,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 					if (netAmtAftrAllDisc > entryLevelApportionedPrice)
 					{
-						currNetAmtAftrAllDisc = netAmtAftrAllDisc - entryLevelApportionedPrice;
+						currNetAmtAftrAllDisc = netAmtAftrAllDisc - (int) entryLevelApportionedPrice;
 
 					}
 					else
@@ -506,7 +506,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					if (entryTotalPrice > entryLevelApportionedPrice)
 					{
-						currNetAmtAftrAllDisc = entryTotalPrice - entryLevelApportionedPrice;
+						currNetAmtAftrAllDisc = entryTotalPrice - (int) entryLevelApportionedPrice;
 
 					}
 					else
