@@ -68,17 +68,18 @@ INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true
 INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
 ;;TMPFootwearHomepageBannerComponent;TMP Footwear Homepage Banner Component;4;TMPFootwearHomepageBannerComponent
 
-INSERT_UPDATE MplSequentialBannerComponent;$contentCV[unique=true];uid[unique=true];name;bannersList(&componentRef);&componentRef
-;;TMPSequentialHomepageBannerComponent;Sequential Homepage Banner;TMPGoodsHompageBannerComponent,TMPApparelHomepageBannerComponent,TMPJwelleryHomepageBannerComponent;TMPSequentialHomepageBannerComponent;TMPFootwearHomepageBannerComponent;TMPShoeHomepageBannerComponent
+####New Homepage change
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;timeout
+;;HomepageCarouselBannerComponent;Homepage Carousel Banner Component;TMPGoodsHompageBannerComponent,TMPWestsideBannerComponent,TMPJwelleryHomepageBannerComponent;HomepageCarouselBannerComponent;10
 
+####New Homepage change
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section1-TMPHomepage;true;Homepage Banner Slot;TMPSequentialHomepageBannerComponent
+;;Section1-TMPHomepage;true;Homepage Banner Slot;HomepageCarouselBannerComponent
 
+####New Homepage change
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;Section1-TMPHomepage;Section1;;Section1-TMPHomepage;;;
-
-
+;;Section1-TMPHomepage;Section1;;Section1-TMPHomepage;;; 
 
 
 #CMSMediaParagraphComponent changes starts
