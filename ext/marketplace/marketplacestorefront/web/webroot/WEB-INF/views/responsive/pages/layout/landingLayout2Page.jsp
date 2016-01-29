@@ -103,8 +103,9 @@ border-bottom: 1px solid;
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
 	
-	<div id="bestPicks" class=""></div>
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper"></div>
+	<div id="bestPicks" class=""></div>
+	
 	<!-- For Infinite Analytics Start -->
 	<div class="brands" id="ia_brands_favorites"></div>
 	<div class="feature-categories" id="ia_categories_favorites"></div>
