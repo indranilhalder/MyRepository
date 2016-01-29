@@ -50,8 +50,8 @@ import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
-import com.tisl.mpl.model.cms.components.BestPicksCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
+import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -237,7 +237,7 @@ public class HomePageController extends AbstractPageController
 		return showCaseItemJson;
 	}
 
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
 	public JSONObject getBestPicks()
@@ -254,9 +254,9 @@ public class HomePageController extends AbstractPageController
 
 		for (final AbstractCMSComponentModel component : components)
 		{
-			if (component instanceof BestPicksCarouselComponentModel)
+			if (component instanceof ImageCarouselComponentModel)
 			{
-				final BestPicksCarouselComponentModel bestPickCarouselComponent = (BestPicksCarouselComponentModel) component;
+				final ImageCarouselComponentModel bestPickCarouselComponent = (ImageCarouselComponentModel) component;
 				String title = "";
 				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))
 				{
@@ -266,13 +266,13 @@ public class HomePageController extends AbstractPageController
 				bestPicks.put("title", title);
 
 				final JSONArray subComponentJsonArray = new JSONArray();
-				if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getBestPicksItems()))
+				if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getCollectionItems()))
 				{
 					String imageURL = "";
 					String text = "";
 					String linkUrl = "";
 
-					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getBestPicksItems())
+					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getCollectionItems())
 					{
 						final JSONObject bestPickItemJson = new JSONObject();
 
@@ -306,8 +306,8 @@ public class HomePageController extends AbstractPageController
 		}
 		return bestPicks;
 	}
-	
-	
+
+
 
 	/**
 	 * @param productData

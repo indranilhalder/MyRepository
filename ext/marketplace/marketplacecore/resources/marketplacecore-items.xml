@@ -98,7 +98,7 @@
 			elementtype="MplShowcaseItemComponent" autocreate="true" generate="true"
 			type="list" />
 			
-			<collectiontype elementtype="CMSMediaParagraphComponent" code="bestPicksCollection"
+			<collectiontype elementtype="CMSMediaParagraphComponent" code="imageCollection"
  				autocreate="true" generate="true" type="list"/>
 			
 			
@@ -3382,10 +3382,11 @@
 
 
 			<!-- Best Picks Carousel Component -->
- 			<itemtype code="BestPicksCarouselComponent" extends="SimpleCMSComponent"
+ 			<itemtype code="ImageCarouselComponent" extends="SimpleCMSComponent"
  				generate="true" autocreate="true"
- 				jaloclass="com.tisl.mpl.jalo.cms.components.BestPicksCarouselComponent">
- 				<description>It represents Best Picks Carousel component.</description>
+ 				jaloclass="com.tisl.mpl.jalo.cms.components.ImageCarouselComponent">
+ 				<description>It represents an Image Carousel component with an attribute 
+ 				that is collection of Media paragraph components.</description>
  				<attributes>
  					<attribute qualifier="title" type="java.lang.String"
  						autocreate="true" generate="true">
@@ -3394,7 +3395,7 @@
  						<persistence type="property" />
  					</attribute>
  					
- 					<attribute qualifier="bestPicksItems" type="bestPicksCollection"
+ 					<attribute qualifier="collectionItems" type="imageCollection"
  						autocreate="true" generate="true">
  						<modifiers read="true" write="true" search="true" />
  						<description>Collection of the best pick media paragraph components</description>
