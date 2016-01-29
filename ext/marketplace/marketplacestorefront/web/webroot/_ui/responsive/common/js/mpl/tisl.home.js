@@ -205,9 +205,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					
 					if (typeof response.firstProductImageUrl !== "undefined") {
 						
-						defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
+						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></div>";
+								+ "'></img></a></div>";
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
 					if (typeof response.text !== "undefined") {
@@ -225,9 +225,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					}
 
 					if (typeof response.secondproductImageUrl !== "undefined") {
-						defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
+						defaultHtml += "<div class='home-brands-you-love-side-image right'><a href='"+ACC.config.encodedContextPath+response.secondProductUrl+"'><img src='"
 								+ response.secondproductImageUrl
-								+ "'></img></div>";
+								+ "'></img></a></div>";
 					}
 
 					defaultHtml += "</div>";
@@ -285,7 +285,7 @@ setInterval(function() {
 
 
 
-//AJAX CALL
+//AJAX CALL BEST PICKS START
 if ($('#bestPicks').children().length == 0) {
 	getBestPicksAjaxCall();
 }
@@ -353,3 +353,5 @@ function getBestPicksAjaxCall(){
 
 	});
 }
+
+//AJAX CALL BEST PICKS END

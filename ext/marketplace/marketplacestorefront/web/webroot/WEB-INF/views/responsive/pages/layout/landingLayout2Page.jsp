@@ -80,6 +80,7 @@ border-bottom: 1px solid;
     padding: 5px;
 }
 
+
 /*best picks start*/
 #bestPicks h1{
 	padding: 40px 0;
@@ -87,11 +88,9 @@ border-bottom: 1px solid;
     text-align: center;
     font-size: 24px;
 }
-
 #bestPicks .home-best-pick-carousel-img img{
 	width: 100%;
 }
-
 #bestPicks .short-info span {
     font-size: 16px;
     font-family: "Avenir Next";
@@ -116,6 +115,8 @@ padding: 15px;
     text-align: center;
 }
 /*best picks end*/
+
+
 </style>
 
 <template:page pageTitle="${pageTitle}">
@@ -139,12 +140,11 @@ padding: 15px;
 	<cms:pageSlot position="Section2C" var="feature">
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
-	
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper"></div>
 	<div id="bestPicks" class=""></div>
 	
 	<!-- For Infinite Analytics Start -->
-	<div class="brands" id="ia_brands_favorites"></div>
+	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
 	<div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div>
 	<div class="trending" id="ia_products_hot"></div>
@@ -156,4 +156,3 @@ padding: 15px;
 	</cms:pageSlot>
 
 </template:page>
-
