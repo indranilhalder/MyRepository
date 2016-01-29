@@ -50,6 +50,8 @@ import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
+import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
+import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -129,8 +131,8 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject brandsYouLoveJson = new JSONObject();
-		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section3Slot-Homepage", "Online");
+		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage", "Section3Slot-Homepage",
+				"Online");
 		if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
 		{
 			components = homepageSection3Slot.getCmsComponents();
@@ -180,7 +182,6 @@ public class HomePageController extends AbstractPageController
 		return brandsYouLoveJson;
 
 	}
-
 
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLoveContent", method = RequestMethod.GET)
@@ -235,6 +236,78 @@ public class HomePageController extends AbstractPageController
 		}
 		return showCaseItemJson;
 	}
+
+
+	@ResponseBody
+	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
+	public JSONObject getBestPicks()
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject bestPicks = new JSONObject();
+		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section4CSlot-Homepage", "Online");
+
+		if (CollectionUtils.isNotEmpty(homepageSection4CSlot.getCmsComponents()))
+		{
+			components = homepageSection4CSlot.getCmsComponents();
+		}
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			if (component instanceof ImageCarouselComponentModel)
+			{
+				final ImageCarouselComponentModel bestPickCarouselComponent = (ImageCarouselComponentModel) component;
+				String title = "";
+				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))
+				{
+					title = bestPickCarouselComponent.getTitle();
+				}
+
+				bestPicks.put("title", title);
+
+				final JSONArray subComponentJsonArray = new JSONArray();
+				if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getCollectionItems()))
+				{
+					String imageURL = "";
+					String text = "";
+					String linkUrl = "";
+
+					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getCollectionItems())
+					{
+						final JSONObject bestPickItemJson = new JSONObject();
+
+						if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
+						{
+							imageURL = bestPickItem.getMedia().getURL();
+						}
+
+						bestPickItemJson.put("imageUrl", imageURL);
+
+						if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
+						{
+							text = bestPickItem.getContent();
+						}
+
+						bestPickItemJson.put("text", text);
+
+						if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
+						{
+							linkUrl = bestPickItem.getUrl();
+						}
+
+						bestPickItemJson.put("url", linkUrl);
+
+						subComponentJsonArray.add(bestPickItemJson);
+					}
+				}
+				bestPicks.put("subItems", subComponentJsonArray);
+
+			}
+		}
+		return bestPicks;
+	}
+
+
 
 	/**
 	 * @param productData

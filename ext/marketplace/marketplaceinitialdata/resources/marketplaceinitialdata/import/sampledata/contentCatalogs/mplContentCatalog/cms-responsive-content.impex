@@ -274,6 +274,36 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsCom
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 #;;Section4ASlot-Homepage;Section4A;;Section4ASlot-Homepage;;;
 #;;Section4BSlot-Homepage;Section4B;;Section4BSlot-Homepage;;;
+
+##### Home section 4C
+#Best picks Component
+
+#CMSMediaParagraphComponent changes starts
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;url
+;;BestPicksItems1Component;Best Picks Items One;BestPicksItems1Component;"<span>Westly</span><span>Duffle Bag</span><span>₹8,900</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems2Component;Best Picks Items Two;BestPicksItems2Component;"<span>Boxy</span><span>Leather Biker Jacket</span><span>₹18,000</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems3Component;Best Picks Items Three;BestPicksItems3Component;"<span>Zara</span><span>Kitten Floral Shirtdress</span><span>₹3,600</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems4Component;Best Picks Items Four;BestPicksItems4Component;"<span>Ascot</span><span>Tailored Belted Coat</span><span>₹10,095</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems5Component;Best Picks Items Five;BestPicksItems5Component;"<span>Dune</span><span>Daniella Handbag</span><span>₹100,000</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems6Component;Best Picks Items Six;BestPicksItems6Component;"<span>Westly</span><span>Duffle Bag</span><span>₹8,900</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems7Component;Best Picks Items Seven;BestPicksItems7Component;"<span>Boxy</span><span>Leather Biker Jacket</span><span>₹18,000</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems8Component;Best Picks Items Eight;BestPicksItems8Component;"<span>Zara</span><span>Kitten Floral Shirtdress</span><span>₹3,600</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems9Component;Best Picks Items Nine;BestPicksItems9Component;"<span>Ascot</span><span>Tailored Belted Coat</span><span>₹10,095</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems10Component;Best Picks Items Ten;BestPicksItems10Component;"<span>Dune</span><span>Daniella Handbag</span><span>₹100,000</span>";"/store/mpl/en/authenticAndExclusive";
+
+
+#BestPicksCarouselComponent
+INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(uid)
+;;TMPBestPicksCarouselComponent;Best Picks Carousel Component;Best Picks;TMPBestPicksCarouselComponent;BestPicksItems1Component,BestPicksItems2Component,BestPicksItems3Component,BestPicksItems4Component,BestPicksItems5Component,BestPicksItems6Component,BestPicksItems7Component,BestPicksItems8Component,BestPicksItems9Component,BestPicksItems10Component
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;Section4CSlot-Homepage;TMPBestPicksCarouselComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section4CSlot-Homepage;Section4C;;Section4CSlot-Homepage;;;
+
+
 #### Section 5
 ## Home section 2C
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
@@ -899,5 +929,4 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 #ContentSlotforPage for Overview  Page
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='overview'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;BodyContent-Overview;BodyContent;;BodyContent-Overview;;;
-
 

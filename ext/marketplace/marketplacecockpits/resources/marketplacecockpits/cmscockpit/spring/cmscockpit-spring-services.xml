@@ -77,6 +77,7 @@
 						<value>MplSequentialBannerComponent.bannersList</value>
 						<value>MplAdvancedCategoryCarouselComponent.categories</value>
 						<value>MplShowcaseComponent.showcaseItems</value>
+						<value>ImageCarouselComponent.collectionItems</value>
 					</list>
 				</entry>
 				<entry key="AbstractCMSComponent">
@@ -138,6 +139,11 @@
 				<entry key="MplShowcaseComponent">
 					<list>
 						<value>MplShowcaseComponent.showcaseItems</value>
+					</list>
+				</entry>
+				<entry key="ImageCarouselComponent">
+					<list>
+						<value>ImageCarouselComponent.collectionItems</value>
 					</list>
 				</entry>
 			</map>
