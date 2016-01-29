@@ -147,7 +147,7 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 			}
 
 			final int rankingValue = (category.getRanking() != null) ? category.getRanking() : 0;
-			accumulator.append(MplConstants.FORWARD_SLASH).append(category.getCode()).append(MplConstants.COLON)
+			accumulator.append(MplConstants.PIPE).append(category.getCode()).append(MplConstants.COLON)
 					.append(category.getName()).append(":L").append(level).append(MplConstants.COLON).append(department)
 					.append(MplConstants.COLON).append(rankingValue);
 			output.add(accumulator.toString());
