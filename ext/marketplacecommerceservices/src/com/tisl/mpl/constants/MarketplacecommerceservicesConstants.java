@@ -1284,6 +1284,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
 
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
+	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
+	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

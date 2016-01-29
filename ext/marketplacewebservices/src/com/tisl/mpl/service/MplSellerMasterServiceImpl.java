@@ -700,7 +700,7 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 	{
 		final SellerMasterResponseWsDTO sellerMasterResWsDTO = new SellerMasterResponseWsDTO();
 		String status = MarketplacecommerceservicesConstants.SUCCESSS_RESP;
-		final StringBuilder stringBuilder = new StringBuilder();
+		//final StringBuilder stringBuilder = new StringBuilder();
 		try
 		{
 
@@ -714,16 +714,11 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getFirstname()))
 			{
-				if (sellerMasterWsDTO.getLastname() != null && sellerMasterWsDTO.getMidname() != null)
-				{
-					stringBuilder.append(sellerMasterWsDTO.getFirstname()).append(sellerMasterWsDTO.getMidname())
-							.append(sellerMasterWsDTO.getLastname());
-					//resModel.setSellerName(stringBuilder.toString());
-				}
-				else
-				{
-					//	resModel.setSellerName(sellerMasterWsDTO.getFirstname());
-				}
+				/*
+				 * if (sellerMasterWsDTO.getLastname() != null && sellerMasterWsDTO.getMidname() != null) {
+				 * stringBuilder.append(sellerMasterWsDTO.getFirstname()).append(sellerMasterWsDTO.getMidname())
+				 * .append(sellerMasterWsDTO.getLastname()); }
+				 */
 
 				masterModel.setFirstname(sellerMasterWsDTO.getFirstname());
 			}

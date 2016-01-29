@@ -122,7 +122,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#doRefund(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -519,14 +519,20 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		String paymentMode = MarketplacecommerceservicesConstants.EMPTY;
 		if (StringUtils.isNotEmpty(paymentType))
 		{
-			if (paymentType.equalsIgnoreCase("CREDIT"))
+			if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_CREDIT))
 			{
-				paymentMode = "Credit Card";
+				paymentMode = MarketplacecommerceservicesConstants.CREDIT;
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
-			else if (paymentType.equalsIgnoreCase("DEBIT"))
+			else if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_DEBIT))
 			{
-				paymentMode = "Debit Card";
+				paymentMode = MarketplacecommerceservicesConstants.DEBIT;
+				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+			}
+			//TISPRO-130
+			else if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+			{
+				paymentMode = MarketplacecommerceservicesConstants.NETBANKING;
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
 		}
@@ -581,7 +587,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#attachPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, de.hybris.platform.payment.model.PaymentTransactionModel)
@@ -637,7 +643,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#createPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, java.lang.String, java.math.BigDecimal,
@@ -680,7 +686,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeRefundOMSCall(de.hybris.platform.core
 	 * .model.order.OrderEntryModel, java.lang.Double)
@@ -752,7 +758,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeOMSStatusUpdate(de.hybris.platform
 	 * .core.model.order.AbstractOrderEntryModel)
@@ -784,7 +790,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#validateRefundAmount(double,
 	 * de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -852,15 +858,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for handling network exception while cancellation TISSIT-1801 TISPRO-94
-	 * 
+	 *
 	 * @param orderRequestRecord
-	 * 
+	 *
 	 * @param paymentTransactionType
-	 * 
+	 *
 	 * @param juspayRefundType
-	 * 
+	 *
 	 * @param uniqueRequestId
-	 * 
+	 *
 	 * @return void
 	 */
 
@@ -910,15 +916,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	/*
 	 * @Desc used in web and cscockpit for in case no response received from juspay while cancellation refund TISSIT-1801
 	 * TISPRO-94
-	 *
+	 * 
 	 * @param orderRequestRecord
-	 *
+	 * 
 	 * @param paymentTransactionType
-	 *
+	 * 
 	 * @param juspayRefundType
-	 *
+	 * 
 	 * @param uniqueRequestId
-	 *
+	 * 
 	 * @return void
 	 */
 
