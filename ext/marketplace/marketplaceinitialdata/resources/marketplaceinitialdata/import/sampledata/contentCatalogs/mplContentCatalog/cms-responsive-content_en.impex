@@ -754,6 +754,31 @@ INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=tr
 INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
 ;;ApparelUKHompageServiceBannerComponent;apparel-uk-homepage-service-en
 
+
+###### Best Picks carousel component
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;DuffleBag.png;$siteResource/images/banners/homepage/responsive/DuffleBag.png;DuffleBag.png;"Westly Duffle Bag";
+;;KittenFloralShirtdress.png;$siteResource/images/banners/homepage/responsive/KittenFloralShirtdress.png;KittenFloralShirtdress.png;"Zara Kitten Floral Shirtdress";
+;;LeatherBikerJacket.png;$siteResource/images/banners/homepage/responsive/LeatherBikerJacket.png;LeatherBikerJacket.png;"Boxy Leather Biker Jacket";
+;;TailoredBeltedCoat.png;$siteResource/images/banners/homepage/responsive/TailoredBeltedCoat.png;TailoredBeltedCoat.png;"Dune Daniella Handbag";
+
+
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];$picture
+;;BestPicksItems1Component;DuffleBag.png
+;;BestPicksItems2Component;KittenFloralShirtdress.png
+;;BestPicksItems3Component;LeatherBikerJacket.png
+;;BestPicksItems4Component;TailoredBeltedCoat.png
+;;BestPicksItems5Component;DuffleBag.png
+;;BestPicksItems6Component;KittenFloralShirtdress.png
+;;BestPicksItems7Component;LeatherBikerJacket.png
+;;BestPicksItems8Component;TailoredBeltedCoat.png
+;;BestPicksItems9Component;DuffleBag.png
+;;BestPicksItems10Component;KittenFloralShirtdress.png
+
+
+
+
 #### Section 5
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
 ;mobile;Appa_480x110_FreeDel_EN_01_480W.jpg;$siteResource/images/banners/homepage/responsive/Appa_480x110_FreeDel_EN_01_480W.jpg;Appa_480x110_FreeDel_EN_01_480W.jpg;"Free shipping and returns!";
