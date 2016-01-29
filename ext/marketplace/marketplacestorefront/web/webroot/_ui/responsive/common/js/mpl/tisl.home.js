@@ -309,7 +309,7 @@ function getBestPicksAjaxCall(){
 							if(v.url){
 								renderHtml += "<a href='"
 									+ v.url
-									+ "'>";
+									+ "' class='item'>";
 							}
 							
 							if(v.imageUrl){
@@ -319,21 +319,36 @@ function getBestPicksAjaxCall(){
 							}
 							
 							if(v.text){
-								renderHtml += "<div class='home-best-pick-carousel-text'> <p>"
+								renderHtml += "<div class='short-info'>"
 									+ v.text
-									+ "</p></div>";
+									+ "</div>";
 							}
 							
 							renderHtml += "</a>";
 							
 						
 				});
-			renderHtml += "</div>";	
+			renderHtml += "</div> <a href='#' class='view-cliq-offers'> View Cliq Offers </a>";	
 			$("#bestPicks").html(renderHtml);
+			//console.log()
 		},
 		
 		error : function() {
 			globalErrorPopup('Failure!!!');
+		},
+		
+		complete: function() {
+			$(".home-best-pick-carousel").owlCarousel({
+				navigation:true,
+				navigationText : [],
+				pagination:false,
+				itemsDesktop : [5000,5], 
+				itemsDesktopSmall : [1400,5], 
+				itemsTablet: [650,2], 
+				itemsMobile : [480,2], 
+				rewindNav: false,
+				lazyLoad:true
+			});
 		}
 
 	});

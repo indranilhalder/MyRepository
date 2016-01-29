@@ -79,6 +79,43 @@ text-align: center;
 border-bottom: 1px solid;
     padding: 5px;
 }
+
+/*best picks start*/
+#bestPicks h1{
+	padding: 40px 0;
+    font-weight: 500;
+    text-align: center;
+    font-size: 24px;
+}
+
+#bestPicks .home-best-pick-carousel-img img{
+	width: 100%;
+}
+
+#bestPicks .short-info span {
+    font-size: 16px;
+    font-family: "Avenir Next";
+    font-weight: 400;
+    text-align: center;
+    line-height: 1;
+    display: inline-block;
+    padding-bottom: 3px;
+    width: 100%;
+}
+#bestPicks .view-cliq-offers {
+padding: 15px;
+    border: 1px solid #a9143c;
+    color: #a9143c;
+    font-size: 12px;
+    font-family: "Avenir Next";
+    font-weight: 600;
+	    margin: 15px auto;
+    text-transform: uppercase;
+    display: block;
+    width: 200px;
+    text-align: center;
+}
+/*best picks end*/
 </style>
 
 <template:page pageTitle="${pageTitle}">
