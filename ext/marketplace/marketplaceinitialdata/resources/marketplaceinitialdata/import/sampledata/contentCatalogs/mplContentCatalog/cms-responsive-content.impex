@@ -239,22 +239,6 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 #;;Section2B-ApparelUKHomepage;Section2B;;Section2BSlot-Homepage;;;
 
 ## Home section 3
-#Brands You Love Component
-INSERT_UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;BrandList(subBrandName);imageSize(code);;
-#;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;WestSide,Chroma,Tanishq;large;;
-#;;SmallBrandsComponent;Small Brands Component;SmallBrandsComponent;Nuon,Ascot,L.O.V,bombay,gia,soda;thumbnail;;
-#Category carousel for Products you care
-INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
-#;;TMPHomepageCategoryCarousel;Products You Care Component;MPH1111100100,MPH1111100101,MPH1111100102,MPH1111100103;TMPHomepageCategoryCarousel;thumbnail;
-# Product Carousel for Handpicked Collections
-INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
-#;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections Component;987654321,987654322,987654323;allVisible;false;TMPHomepageHandpickedProductCarouselComponent
-# Product Carousel for Now trending products
-INSERT_UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef
-#;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending Product Carousel;MPH1111100100,MPH1111100101,MPH1112100108;TMPHomepageNowTrendingProductCarouselComponent
-INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
-#;;HandpickedCollectionsParagraphComponent;Handpicked Collections Paragraph Component;HandpickedCollectionsParagraphComponent;;;;
-
 #######Brands You Love###################
 
 INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);
@@ -491,7 +475,7 @@ INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=tr
 
 
 INSERT_UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;Promotion(code);seller(id);;
-;;SpringFlingPromotionComponent;Spring Fling Component;SpringFlingPromotionComponent;;123654;;
+;;SpringFlingPromotionComponent;Spring Fling Component;SpringFlingPromotionComponent;;;;
 
 
 ### PREMIER BRAND COMPONENT ON BRAND LANDING PAGE ###
