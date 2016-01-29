@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -141,11 +142,17 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					else
 					{
 						processWebhook(hook, webHookDetailList);
+
+						//TISSIT-1811:the processed hook in the uniqueList
+						uniqueList.add(hook);
 					}
 				}
 				else
 				{
 					processWebhook(hook, webHookDetailList);
+
+					//TISSIT-1811:the processed hook in the uniqueList
+					uniqueList.add(hook);
 				}
 			}
 		}
@@ -198,10 +205,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						{
 							if (!rtmModel.getIsProcessed().booleanValue())
 							{
-								//								//fetching audit records
-								//								final MplPaymentAuditModel auditModel = juspayWebHookDao.fetchAuditData(hook.getOrderStatus()
-								//										.getOrderId());
-								//								final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(auditModel.getCartGUID());
+								//fetching audit records
+								final MplPaymentAuditModel auditModel = juspayWebHookDao.fetchAuditData(hook.getOrderStatus()
+										.getOrderId());
+								final OrderModel parentOrder = juspayWebHookDao.fetchParentOrder(auditModel.getCartGUID());
 
 								//TISSIT-1802
 								OrderModel subOrder = modelService.create(OrderModel.class);
@@ -228,8 +235,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								else if (null != subOrder && null != rtmModel.getRefundType()
 										&& rtmModel.getRefundType().equals(JuspayRefundType.CANCELLED_FOR_RISK))
 								{
-									//Change status of Consignment against order line when it is SUCCESS at Juspay & RETURN in RTM
-									changeConsignmentStatusForCancelledForRisk(rtmModel, refund, subOrder, hook.getOrderStatus()
+									//Change status of Consignment against parent order when it is SUCCESS at Juspay & CANCELLED_FOR_RISK in RTM
+									changeConsignmentStatusForCancelledForRisk(rtmModel, refund, parentOrder, hook.getOrderStatus()
 											.getOrderId());
 								}
 							}
@@ -272,8 +279,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								mplPaymentAuditEntryModel.setAuditId(audit.getAuditId());
 								mplPaymentAuditEntryModel.setResponseDate(new Date());
 								paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-								paymentTransactionModel.setCode(entry.getRefundReqId());
-								paymentTransactionEntryModel.setCode(entry.getRefundReqId());
+								paymentTransactionModel.setCode(entry.getRefundReqId() + MarketplacecommerceservicesConstants.UNDER_SCORE
+										+ new Date().getSeconds());
+								paymentTransactionEntryModel.setCode(entry.getRefundReqId()
+										+ MarketplacecommerceservicesConstants.UNDER_SCORE + new Date().getSeconds());
 								bigAmount = new BigDecimal(refund.getAmount().doubleValue(), MathContext.DECIMAL64);
 								paymentTransactionEntryModel.setAmount(bigAmount);
 								paymentTransactionEntryModel.setTime(new Date());
@@ -321,8 +330,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								mplPaymentAuditEntryModel.setAuditId(audit.getAuditId());
 								mplPaymentAuditEntryModel.setResponseDate(new Date());
 								paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
-								paymentTransactionModel.setCode(entry.getRefundReqId());
-								paymentTransactionEntryModel.setCode(entry.getRefundReqId());
+								paymentTransactionModel.setCode(entry.getRefundReqId() + MarketplacecommerceservicesConstants.UNDER_SCORE
+										+ new Date().getSeconds());
+								paymentTransactionEntryModel.setCode(entry.getRefundReqId()
+										+ MarketplacecommerceservicesConstants.UNDER_SCORE + new Date().getSeconds());
 								bigAmount = new BigDecimal(refund.getAmount().doubleValue(), MathContext.DECIMAL64);
 								paymentTransactionEntryModel.setAmount(bigAmount);
 								paymentTransactionEntryModel.setTime(new Date());
@@ -440,7 +451,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	{
 		try
 		{
-			if (null != rtmModel.getJuspayRefundId())
+			if (null != rtmModel.getJuspayRefundId() && null != rtmModel.getRefundedOrderEntry()
+					&& null != rtmModel.getRefundedOrderEntry().getTransactionID())
 			{
 				ConsignmentStatus newStatus = null;
 				PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
@@ -449,14 +461,14 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
 							MarketplacecommerceservicesConstants.SUCCESS, refund.getAmount(), PaymentTransactionType.CANCEL, REFUND,
-							rtmModel.getJuspayRefundId());
+							getWebhookUniqueRequestId(rtmModel));
 					newStatus = ConsignmentStatus.ORDER_CANCELLED;
 				}
 				else if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.FAILURE))
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
 							MarketplacecommerceservicesConstants.FAILURE, refund.getAmount(), PaymentTransactionType.CANCEL,
-							REFUND_FAIL, rtmModel.getJuspayRefundId());
+							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));
 					newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
 				}
 
@@ -474,7 +486,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus);
 
 					//Update in Audit table with new status
-					updateInAudit(juspayOrderId, refund.getStatus(), refund.getUniqueRequestId(), paymentTransactionModel);
+					updateInAudit(juspayOrderId, refund.getStatus(), getWebhookUniqueRequestId(rtmModel), paymentTransactionModel);
 				}
 			}
 		}
@@ -501,7 +513,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	{
 		try
 		{
-			if (null != rtmModel.getJuspayRefundId())
+			if (null != rtmModel.getJuspayRefundId() && null != rtmModel.getRefundedOrderEntry()
+					&& null != rtmModel.getRefundedOrderEntry().getTransactionID())
 			{
 				PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
 				ConsignmentStatus newStatus = null;
@@ -509,7 +522,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
 							MarketplacecommerceservicesConstants.SUCCESS, refund.getAmount(), PaymentTransactionType.RETURN, REFUND,
-							rtmModel.getJuspayRefundId());
+							getWebhookUniqueRequestId(rtmModel));
 
 					newStatus = ConsignmentStatus.RETURN_COMPLETED;
 				}
@@ -517,7 +530,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
 							MarketplacecommerceservicesConstants.FAILURE, refund.getAmount(), PaymentTransactionType.RETURN,
-							REFUND_FAIL, rtmModel.getJuspayRefundId());
+							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));
 
 					newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
 				}
@@ -538,7 +551,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					mplJusPayRefundService.makeRefundOMSCall(orderEntryModel, paymentTransactionModel, refund.getAmount(), newStatus);
 
 					//Update in Audit table with new status
-					updateInAudit(juspayOrderId, refund.getStatus(), refund.getUniqueRequestId(), paymentTransactionModel);
+					updateInAudit(juspayOrderId, refund.getStatus(), getWebhookUniqueRequestId(rtmModel), paymentTransactionModel);
 				}
 			}
 		}
@@ -553,6 +566,29 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	}
 
 	/**
+	 * To set the request id
+	 *
+	 * @param rtmModel
+	 * @return String
+	 */
+	private String getWebhookUniqueRequestId(final RefundTransactionMappingModel rtmModel)
+	{
+		String requestId = MarketplacecommerceservicesConstants.EMPTY;
+
+		if (rtmModel != null && rtmModel.getJuspayRefundId() != null && rtmModel.getRefundedOrderEntry() != null
+				&& rtmModel.getRefundedOrderEntry().getTransactionID() != null)
+		{
+			requestId = rtmModel.getJuspayRefundId() + MarketplacecommerceservicesConstants.UNDER_SCORE
+					+ rtmModel.getRefundedOrderEntry().getTransactionID();
+		}
+		else
+		{
+			requestId = UUID.randomUUID().toString();
+		}
+		return requestId;
+	}
+
+	/**
 	 * To change the consignment status against order entry line when the status is CANCELLED in RTM
 	 *
 	 * @param rtmModel
@@ -564,7 +600,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			final JuspayRefundResponseModel refund, final OrderModel order, final String juspayOrderId)
 	{
 		if (!refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING)
-				&& null != rtmModel.getJuspayRefundId())
+				&& null != rtmModel.getJuspayRefundId() && null != rtmModel.getRefundedOrderEntry()
+				&& null != rtmModel.getRefundedOrderEntry().getTransactionID())
 		{
 			try
 			{
@@ -578,7 +615,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
 							MarketplacecommerceservicesConstants.SUCCESS, refund.getAmount(), PaymentTransactionType.CANCEL, REFUND,
-							rtmModel.getJuspayRefundId());
+							getWebhookUniqueRequestId(rtmModel));
 
 					notPending = true;
 				}
@@ -589,7 +626,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
 							MarketplacecommerceservicesConstants.FAILURE, refund.getAmount(), PaymentTransactionType.CANCEL,
-							REFUND_FAIL, rtmModel.getJuspayRefundId());
+							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));
 
 					notPending = true;
 				}
@@ -602,7 +639,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					getModelService().save(rtmModel);
 
 					//Update in Audit table with new status
-					updateInAudit(juspayOrderId, refund.getStatus(), refund.getUniqueRequestId(), paymentTransactionModel);
+					updateInAudit(juspayOrderId, refund.getStatus(), getWebhookUniqueRequestId(rtmModel), paymentTransactionModel);
 				}
 			}
 			catch (final ModelSavingException e)
