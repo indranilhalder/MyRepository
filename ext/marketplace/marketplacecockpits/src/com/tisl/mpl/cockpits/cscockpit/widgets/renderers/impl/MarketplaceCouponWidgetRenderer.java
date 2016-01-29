@@ -17,6 +17,7 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 
 import de.hybris.platform.cockpit.widgets.Widget;
@@ -84,7 +85,7 @@ public class MarketplaceCouponWidgetRenderer extends AbstractCsWidgetRenderer<Wi
 		if(StringUtils.isNotEmpty(releaseMessage))
 		{
 			try {
-				Messagebox.show(LabelUtils.getLabel(widget, releaseMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_error_title", new Object[0]), 1, "z-msgbox z-msgbox-error");
+				Messagebox.show(LabelUtils.getLabel(widget, releaseMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_info_title", new Object[0]), 1, "z-msgbox z-msgbox-information");
 			} catch (InterruptedException e) {
 				throw new Exception(e);
 			}	
@@ -100,7 +101,13 @@ public class MarketplaceCouponWidgetRenderer extends AbstractCsWidgetRenderer<Wi
 		if(StringUtils.isNotEmpty(successMessage))
 		{
 			try {
-				Messagebox.show(LabelUtils.getLabel(widget, successMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_error_title", new Object[0]), 1, "z-msgbox z-msgbox-error");
+				if(successMessage.equalsIgnoreCase(MarketplaceCockpitsConstants.COUPON_REDEEM))
+				{
+					Messagebox.show(LabelUtils.getLabel(widget, successMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_info_title", new Object[0]), 1, "z-msgbox z-msgbox-information");
+				}else{
+					Messagebox.show(LabelUtils.getLabel(widget, successMessage, txtbox.getValue()),LabelUtils.getLabel(widget, "voucher_error_title", new Object[0]), 1, "z-msgbox z-msgbox-error");
+				}
+				
 			} catch (InterruptedException e) {
 				throw new Exception(e);
 			}	
