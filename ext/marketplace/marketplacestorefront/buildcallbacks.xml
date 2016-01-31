@@ -185,6 +185,7 @@
 				</do>
 			</containsExact>
 			<ui/>
+			<serverinfo/>
 		</sequential>
 	</macrodef>
 
@@ -254,9 +255,25 @@
 				</if>
 			</sequential>
 		</macrodef>
+	
+		<macrodef name="serverinfo" description="Copy the serverinfo.properties file">
+					<sequential>
+						<echo message="####Starting Serverinfo.properties movement##### "/>
+						<delete dir="${HYBRIS_BIN_DIR}/platform/tomcat/lib/org/apache/catalina/util"/>
+						<mkdir dir="${HYBRIS_BIN_DIR}/platform/tomcat/lib/org/apache/catalina/util"/>
+						<copy todir="${HYBRIS_BIN_DIR}/platform/tomcat/lib/org/apache/catalina/util">
+								<fileset dir="${ext.marketplacestorefront.path}/resources" includes="ServerInfo.properties"/>
+						</copy>
+						<echo message="#####EndServerinfo.properties movement##### "/>
+					</sequential>
+		</macrodef>
 
 		<target name="ui" description="minifies the js and css files in the storefront under folder _ui" >
 			<ui/>
+		</target>
+	
+		<target name="serverinfo" description="Copy the serverinfo.properties file" >
+					<serverinfo/>
 		</target>
 	
 		<target name="clean-ui" description="deletes the minified js" >

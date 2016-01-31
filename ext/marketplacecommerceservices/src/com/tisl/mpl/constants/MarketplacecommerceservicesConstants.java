@@ -1,5 +1,4 @@
 /*
- * [y] hybris Platform
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -354,6 +353,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERROR_CODE_1 = "101";
 	public static final String ERROR_MSG_INVALID_TYPE_CODE = "Invalid seller type code";
 	public static final String SELLER_MASTER_ERROR_MSG = "Exception in saving seller master data";
+	public static final String SELLER_INFO_UPDATE_ERROR_MSG = "Exception in updating seller information with seller master";
 	public static final String INVALID_SCHEMA_MSG = "Invalid XML, XML did not match XSD schema";
 	public static final String DATA_SAVED_MSG = "Data save successfully.!!!";
 	public static final String STATUS = "STATUS";
@@ -487,7 +487,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 
-	public static final String SMS_SENDER_ID = "TATAUS";
+	public static final String SMS_SENDER_ID = "marketplace.sms.sender.name".intern();
 	public static final String SMS_MESSAGE_FORGOT_PWD = "Dear Customer, One Time Password for your request is {0}. Please enter the same to submit the request. Regards, Team Tata Unistore.";
 	public static final String SMS_MESSAGE_ORDER_PLACED = "Hi {0}, thank you for placing the order with us .Your order ref no is ({1}). Excited? Click here to track your order {2} .";
 	public static final String SMS_MESSAGE_ORDER_SHIPPED = "Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
@@ -1284,6 +1284,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
 
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
+	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
+	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

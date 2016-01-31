@@ -92,11 +92,8 @@ public class MicrositePageController extends AbstractSearchPageController
 		// Get the path for this request.
 		// Note that the path begins with a '/'
 		final String lookupPathForRequest = urlPathHelper.getLookupPathForRequest(request);
-		System.out.println("********  lookupPathForRequest  " + lookupPathForRequest);
 		try
 		{
-			System.out
-					.println("********  lookupPathForRequest returns " + getCmsPageService().getPageForLabel(lookupPathForRequest));
 			// Lookup the CMS Content Page by label. Note that the label value must begin with a '/'.
 			return getCmsPageService().getPageForLabel(lookupPathForRequest);
 		}
