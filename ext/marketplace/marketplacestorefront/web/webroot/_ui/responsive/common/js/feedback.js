@@ -1190,4 +1190,14 @@ $(document).ready(function(){
 	 		});
 			}
 		
+			if($('.lookbook_wrapper .bottom-pagination').children().length==0){
+			$('.lookbook_wrapper .bottom-pagination').css('padding','0');
+			}
+			if($('body .lookbook_wrapper .lookbook-pagination').children().length==0){
+				$('body .lookbook_wrapper .lookbook-pagination').css('padding','0');
+			}
+			if($('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').children().length==0){
+			$('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').parents().find('.listing.wrapper').css('height','0px');
+			}
+			
 });
