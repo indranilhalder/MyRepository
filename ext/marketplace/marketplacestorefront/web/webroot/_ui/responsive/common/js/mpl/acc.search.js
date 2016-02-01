@@ -90,6 +90,7 @@
 	);
 		
 	}
+	
 	//change serp product details based on filters
 function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
 	if(mrpPriceValue!="" && productPrice!=""){
@@ -351,6 +352,8 @@ function checkSizeCount(list, serpSizeList) {
 //	console.log("arrays" + list + finalProductSizeArray);
 	var temp = new Array();
 	temp = finalProductSizeArray.split(",");
+
+
 	for (var j = 0; j < serpSizeList.length; j++) {
 		if (finalProductSizeArray.indexOf(serpSizeList[j]) != -1) {
 			count++;
@@ -363,5 +366,14 @@ function checkSizeCount(list, serpSizeList) {
 	}
 	//console.log("count" + matchedSize + "count" + count);
 	return matchedSize;
-}
 
+
+}
+	$(function() {
+	    img = document.querySelectorAll('[data-searchimgsrc]');
+	    for (var i = 0; i < img.length; i++) {
+	        var self = img[i];
+	          self.src = self.getAttribute('data-searchimgsrc');
+	      }
+
+	});

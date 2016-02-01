@@ -338,8 +338,15 @@
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
-	<bean id="orderConfirmationRiskEventListener"
-		class="com.tisl.mpl.core.event.OrderConfirmationRiskEventListener"
+
+	<!-- <bean id="orderConfirmationRiskEventListener"
+		class="com.tisl.mpl.core.event.OrderConfirmationRiskEventListener"></bean> -->
+	
+	<bean id="orderConfirmationPushNotificationEventListener" class="com.tisl.mpl.core.event.OrderConfirmationPushNotificationEventListener"
+		parent="abstractSiteEventListener">
+		<property name="notificationService" ref="notificationService" />
+	</bean>
+	<bean id="orderConfirmationRiskEventListener" class="com.tisl.mpl.core.event.OrderConfirmationRiskEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />

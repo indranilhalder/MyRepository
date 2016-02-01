@@ -256,6 +256,8 @@ public interface ControllerConstants
 				String HelpMeShop = "fragments/home/helpmeShopPanel";
 				String TrackOrderPanel = "fragments/home/trackOrderPanel";
 				String WishlistPanel = "fragments/home/wishlistPanel";
+				String LoginPanel = "fragments/home/loginPanel";
+				String MyAccountPanel = "fragments/home/myaccountPanel";
 			}
 
 			interface Cart
@@ -264,6 +266,7 @@ public interface ControllerConstants
 				String MiniCartPanel = "fragments/cart/miniCartPanel";
 				String MiniCartErrorPanel = "fragments/cart/miniCartErrorPanel";
 				String CartPopup = "fragments/cart/cartPopup";
+				String GiftList = "fragments/cart/cartGiftList";
 			}
 
 			interface Account
@@ -334,3 +337,4 @@ public interface ControllerConstants
 
 
 }
+

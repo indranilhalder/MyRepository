@@ -2571,6 +2571,10 @@ function submitNBForm(){
 								var url = juspayResponse.payment.authentication.url;
 								var method = juspayResponse.payment.authentication.method;
 								
+
+
+
+
 								if(method === "POST") {
 									var frm = document.createElement("form")
 									frm.style.display = "none"; // ensure that the form is hidden from the user
@@ -2775,11 +2779,14 @@ function reloadpage(selectedPincode,buttonType) {
 	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
 	{		
 		if(buttonType != 'typeCheckout') {
+
 		  window.location.reload(); 
 		}
 		
 	}
+
 }
+
 
 function populatePincodeDeliveryMode(response,buttonType){
 	
@@ -3045,6 +3052,8 @@ function checkSignInValidation(path){
 	/*if(validationResult){
 		utag.link({ "event_type" : "Login", "link_name" : "Login" });
 	}*/
+
+
 	return validationResult;
 }
 
@@ -3518,6 +3527,7 @@ function clearDisable()
 {
 	$("#no-click").remove();
 	$(".make_payment").removeAttr('disabled');
+
 }
 
 function sendTealiumData(){
@@ -3585,5 +3595,4 @@ function sendTealiumData(){
 	        
 	   } catch (e) {
 		// TODO: handle exception
-	   }     
-}
+	   }

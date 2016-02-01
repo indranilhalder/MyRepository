@@ -18,6 +18,7 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
+import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -25,20 +26,29 @@ import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.user.UserFacade;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
+
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,6 +65,7 @@ import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
+import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -62,6 +73,7 @@ import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
+import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -86,6 +98,19 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "cmsComponentService")
 	private CMSComponentService cmsComponentService;
 
+	
+	@Resource(name = "cartFacade")
+
+	private CartFacade cartFacade;
+
+	@Resource(name = "userFacade")
+
+	private UserFacade userFacade;
+
+	@Resource(name = "userService")
+
+	private UserService userService;
+	
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 
@@ -98,6 +123,8 @@ public class HomePageController extends AbstractPageController
 	private static final String VERSION = "version";
 	private static final String HOMEPAGE = "homepage";
 	private static final String TITLE = "title";
+	@Autowired
+	private MplCustomerProfileFacade mplCustomerProfileFacade;
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
@@ -113,6 +140,7 @@ public class HomePageController extends AbstractPageController
 
 	private static final String EXCEPTION_MESSAGE_NEWEXCLUSIVE = "Exception in getNewAndExclusive";
 
+	private static final String userFirstName = "userFirstName";
 
 	/**
 	 * @description this is called to load home page
@@ -830,5 +858,53 @@ public class HomePageController extends AbstractPageController
 		return matcher.matches();
 	}
 
+	/**
+	 * @description Used to store emailid for newslettersubscription
+	 * @param emailId
+	 * @return String
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/setheader", method = RequestMethod.GET)
+	public Map<String, Object> setHeaderData(final HttpSession session)
+	{
 
+		final Map<String, Object> header = new HashMap<String, Object>();
+		final CartData cartData = cartFacade.getMiniCart();
+		header.put("cartcount", String.valueOf(cartData.getTotalItems()));
+
+		header.put("dts", CSRFTokenManager.getTokenForSession(session));
+
+		//customer name in the header
+		if (!userFacade.isAnonymousUser())
+		{
+			header.put("loggedInStatus", true);
+			final Object sessionFirstName = session.getAttribute(userFirstName);
+			if (sessionFirstName == null)
+			{
+				final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+				String firstName = currentCustomer.getFirstName();
+				if (StringUtils.contains(firstName, '@'))
+				{
+					firstName = StringUtils.EMPTY;
+				}
+				else if (StringUtils.length(firstName) > 25)
+				{
+					firstName = StringUtils.substring(firstName, 0, 25);
+				}
+				header.put(userFirstName, firstName);
+				session.setAttribute(userFirstName, firstName);
+			}
+			else
+			{
+				header.put(userFirstName, sessionFirstName);
+			}
+		}
+		else
+		{
+			header.put("loggedInStatus", false);
+			header.put(userFirstName, null);
+		}
+
+		return header;
+	}
 }

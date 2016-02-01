@@ -1,4 +1,32 @@
-$("div.departmenthover").on(
+var headerLoggedinStatus = false;
+$(function() {
+	
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/setheader",
+		type: 'GET',
+		success: function (data)
+		{
+			headerLoggedinStatus = data.loggedInStatus;
+			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+			if (!headerLoggedinStatus) {
+				$("a.headeruserdetails").html("Sign In");
+			}
+			else {
+				var firstName = data.userFirstName;
+				if (firstName == null || firstName.trim() == '') {
+					$("a.headeruserdetails").html("Hi!");
+				} else {
+					$("a.headeruserdetails").html("Hi, " + firstName + "!");
+				}
+			}
+			$("input[name='CSRFToken']").each(function(){
+			//	console.log("old value ---"+this.value + "---new value--"+data.dts);
+		        	this.value = data.dts;          
+		    });
+		}
+	});
+});
+ $("div.departmenthover").on(
 		"mouseover touchend",
 		function() {
 

@@ -10,7 +10,8 @@
  Information and shall use it only in accordance with the terms of the
  license agreement you entered into with hybris.
 
---><!--
+-->
+<!--
  All hybris buildcallbacks.xml macrodefinitions:
 
  Build/Documentation
@@ -71,6 +72,7 @@
 		 <macrodef name="marketplacestorefront_before_dist_copy"/>
 		 <macrodef name="marketplacestorefront_after_dist_copy"/>
 
+
 --><project name="marketplacestorefront_buildcallbacks">
 	<property location="${ext.marketplacestorefront.path}/web/webroot/WEB-INF/lib/less-rhino-1.7.3.js" name="tool.less"/>
 	<property location="${ext.marketplacestorefront.path}/web/webroot/WEB-INF/lib/lessc-rhino-1.7.3.js" name="tool.lessc"/>
@@ -81,6 +83,16 @@
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js/minified" name="mpstorefront.minjs.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js" name="mpstorefront.js.dir" />
 	<property location="**.js" name="alljs.file.expression" />
+	<property location="${ext.marketplacestorefront.path}/web/webroot/_ui/yuicompressor.jar" name="yui.compresser.jar" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-blue/css/minified" name="mpstorefront.mincss.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-blue/css/minifier-temp" name="mpstorefront.mincss.temp.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-blue/css/minifier-temp-ie8" name="mpstorefront.mincss.temp.ie8.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-blue/css/minifier-temp-ie9" name="mpstorefront.mincss.temp.ie9.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-blue/css" name="mpstorefront.css.dir" />
+	<property location="${mpstorefront.mincss.temp.dir}/yuicompressor.jar" name="minifier.yui.compresser.jar" />
+	<property location="${mpstorefront.mincss.temp.ie8.dir}/yuicompressor.jar" name="minifier.ie8.yui.compresser.jar" />
+	<property location="${mpstorefront.mincss.temp.ie9.dir}/yuicompressor.jar" name="minifier.ie9.yui.compresser.jar" />
+
 
 	<if>
 		<os family="windows"/>
@@ -89,6 +101,7 @@
 	    </then>
 	</if>
 	
+
 	<macrodef name="lesscss">
 		<sequential>
 			<copy todir="${ext.marketplacestorefront.path}/web/webroot/_ui/responsive/">
@@ -156,6 +169,7 @@
 						<filelist dir="${ext.marketplacestorefront.path}/resources" files="generateVariables.properties"/>
 					</concat>
 					
+
 					<replaceregexp byline="true" file="${ext.marketplacestorefront.path}/web/webroot/WEB-INF/_ui-src/shared/less/generatedVariables.less" match="(.*)=(.*)" replace="@\1:\2;"/>
 				</then>
 			</if>
@@ -185,6 +199,7 @@
 				</do>
 			</containsExact>
 			<ui/>
+
 		</sequential>
 	</macrodef>
 
@@ -223,45 +238,154 @@
 		</sequential>
 	</macrodef>
 	
+
 	<target description="compile the _ui-src folder in _ui" name="compileuisrc">
 		<lesscss/>
 		<movelibs/>
 	</target>
 	
 	<macrodef name="ui" description="minifies the js and css files in the storefront under folder _ui">
-			<sequential>
-				<if>
-					<equals arg1="${storefront.minification.enabled}" arg2="true" />
-					<then>
-						<delete dir="${mpstorefront.minjs.dir}" />
-						<mkdir dir="${mpstorefront.minjs.dir}" />
-						<echo message="Minifying JS..."/>
-						<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
-							<arg line="--compilation_level SIMPLE" />
-							<arg line="--language_in ECMASCRIPT5" />
-							<arg line="--warning_level QUIET" />
-							<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
-							<arg line="--js_output_file ${mpstorefront.minjs.dir}/tmpmain.min.js" />
-						</java>
-						<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
-							<arg line="--compilation_level SIMPLE" />
-							<arg line="--language_in ECMASCRIPT5" />
-							<arg line="--warning_level QUIET" />
-							<arg line="--js ${mpstorefront.js.dir}/plugins/**.js" />
-							<arg line="--js_output_file ${mpstorefront.minjs.dir}/plugins.min.js" />
-						</java>
-					</then>
-				</if>
-			</sequential>
-		</macrodef>
+		<sequential>
+			<if>
+				<equals arg1="${storefront.minification.enabled}" arg2="true" />
+				<then>
+					<delete dir="${mpstorefront.minjs.dir}" />
+					<delete dir="${mpstorefront.mincss.temp.dir}" />
+					<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
+					<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
+					<delete file="${mpstorefront.css.dir}/tmpmain.min.css" />
+					<delete file="${mpstorefront.css.dir}/main-ie8-min.css" />
+					<delete file="${mpstorefront.css.dir}/main-ie9-min.css" />
+					<mkdir dir="${mpstorefront.minjs.dir}" />
+					<mkdir dir="${mpstorefront.mincss.temp.dir}" />
+					<mkdir dir="${mpstorefront.mincss.temp.ie8.dir}" />
+					<mkdir dir="${mpstorefront.mincss.temp.ie9.dir}" />
+					<echo message="Minifying JS..."/>
+					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
+						<arg line="--compilation_level SIMPLE" />
+						<arg line="--language_in ECMASCRIPT5" />
+						<arg line="--warning_level QUIET" />
+						<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/tmpmain.min.js" />
+					</java>
+					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
+						<arg line="--compilation_level SIMPLE" />
+						<arg line="--language_in ECMASCRIPT5" />
+						<arg line="--warning_level QUIET" />
+						<arg line="--js ${mpstorefront.js.dir}/plugins/**.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/plugins.min.js" />
+					</java>
+					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
+						<arg line="--compilation_level SIMPLE" />
+						<arg line="--language_in ECMASCRIPT5" />
+						<arg line="--warning_level QUIET" />
+						<arg line="--js ${mpstorefront.js.dir}/ia-plugins/**.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ia.min.js" />
+					</java>
+					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
+						<arg line="--compilation_level SIMPLE" />
+						<arg line="--language_in ECMASCRIPT5" />
+						<arg line="--warning_level QUIET" />
+						<arg line="--js ${mpstorefront.js.dir}/ie9_lower_plugins/**.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ie9.min.js" />
+					</java>
+					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
+						<arg line="--compilation_level SIMPLE" />
+						<arg line="--language_in ECMASCRIPT5" />
+						<arg line="--warning_level QUIET" />
+						<arg line="--js ${mpstorefront.js.dir}/ie10_lower_plugins/**.js" />
+						<arg line="--js_output_file ${mpstorefront.minjs.dir}/ie10.min.js" />
+					</java>
+					<copy file="${yui.compresser.jar}" tofile="${minifier.yui.compresser.jar}" />
+					<copy file="${yui.compresser.jar}" tofile="${minifier.ie8.yui.compresser.jar}"/>
+					<copy file="${yui.compresser.jar}" tofile="${minifier.ie9.yui.compresser.jar}"/>
+					<copy todir="${mpstorefront.mincss.temp.dir}">
+						<fileset dir="${mpstorefront.css.dir}" includes="*.css" excludes="hybris.cms.live.edit.css,main-ie8.css,main-ie9.css" />
+					</copy>
+					<copy todir="${mpstorefront.mincss.temp.ie8.dir}">
+						<fileset dir="${mpstorefront.css.dir}" includes="main-ie8.css" />
+					</copy>
+					<copy todir="${mpstorefront.mincss.temp.ie9.dir}">
+						<fileset dir="${mpstorefront.css.dir}" includes="main-ie9.css" />
+					</copy>
+					<echo message="Minifying CSS..." />
+					<pathconvert pathsep=" " property="customcssfiles">
+						<fileset dir="${mpstorefront.mincss.temp.dir}">
+							<include name="*.css" />
+						</fileset>
+					</pathconvert>
+					<pathconvert pathsep=" " property="ie8cssfiles">
+						<fileset dir="${mpstorefront.mincss.temp.ie8.dir}">
+							<include name="*.css" />
+						</fileset>
+					</pathconvert>
+					<pathconvert pathsep=" " property="ie9cssfiles">
+						<fileset dir="${mpstorefront.mincss.temp.ie9.dir}">
+							<include name="*.css" />
+						</fileset>
+					</pathconvert>
+					<java jar="${minifier.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.dir}" fork="true">
+						<arg line="--type css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${customcssfiles}" />
+					</java>
+					<java jar="${minifier.ie8.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.ie8.dir}" fork="true">
+						<arg line="--type css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${ie8cssfiles}" />
+					</java>
+					<java jar="${minifier.ie9.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.ie9.dir}" fork="true">
+						<arg line="--type css" />
+						<arg line="-o '.css$:-min.css'" />
+						<arg line="${ie9cssfiles}" />
+					</java>
+					<echo message="Merging minfied CSS..." />
+					<concat destfile="${mpstorefront.css.dir}/tmpmain.min.css" append="true">
+						<fileset dir="${mpstorefront.mincss.temp.dir}">
+							<include name="*-min.css" />
+						</fileset>
+					</concat>
+					<copy file="${mpstorefront.mincss.temp.ie8.dir}/main-ie8-min.css" tofile="${mpstorefront.css.dir}/main-ie8-min.css" />
+					<copy file="${mpstorefront.mincss.temp.ie9.dir}/main-ie9-min.css" tofile="${mpstorefront.css.dir}/main-ie9-min.css" />
+					<delete dir="${mpstorefront.mincss.temp.dir}" />
+					<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
+					<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
 
-		<target name="ui" description="minifies the js and css files in the storefront under folder _ui" >
-			<ui/>
-		</target>
 	
-		<target name="clean-ui" description="deletes the minified js" >
-			<delete dir="${mpstorefront.minjs.dir}" />
-			<echo message="Cleaned!"/>
-		</target> 
+	<macrodef name="serverinfo" description="Copy the serverinfo.properties file">
+
+		<sequential>
+			<echo message="####Starting Serverinfo.properties movement##### "/>
+			<delete dir="${HYBRIS_BIN_DIR}/platform/tomcat/lib/org/apache/catalina/util"/>
+			<mkdir dir="${HYBRIS_BIN_DIR}/platform/tomcat/lib/org/apache/catalina/util"/>
+			<copy todir="${HYBRIS_BIN_DIR}/platform/tomcat/lib/org/apache/catalina/util">
+					<fileset dir="${ext.marketplacestorefront.path}/resources" includes="ServerInfo.properties"/>
+			</copy>
+			<echo message="#####EndServerinfo.properties movement##### "/>
+		</sequential>
+	</macrodef>
+
+	<target name="ui" description="minifies the js and css files in the storefront under folder _ui">
+		<ui/>
+	</target>
 	
+	<target name="serverinfo" description="Copy the serverinfo.properties file" >
+		<serverinfo/>
+	</target>
+
+	<target name="clean-ui" description="deletes the minified js">
+		<delete dir="${mpstorefront.minjs.dir}" />
+		<delete dir="${mpstorefront.mincss.temp.dir}" />
+		<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
+		<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
+		<delete file="${mpstorefront.css.dir}/tmpmain.min.css" />
+		<delete file="${mpstorefront.css.dir}/main-ie8-min.css" />
+		<delete file="${mpstorefront.css.dir}/main-ie9-min.css" />
+		<echo message="Cleaned!" />
+	</target>
+
 </project>

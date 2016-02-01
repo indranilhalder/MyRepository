@@ -45,6 +45,7 @@ import de.hybris.platform.core.Constants.USER;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
+
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -126,6 +127,8 @@ public class CartPageController extends AbstractPageController
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
 
+
+
 	@Resource(name = "mplCartFacade")
 	private MplCartFacade mplCartFacade;
 	@Autowired
@@ -133,6 +136,9 @@ public class CartPageController extends AbstractPageController
 
 	@Resource(name = "siteConfigService")
 	private SiteConfigService siteConfigService;
+
+
+
 
 	@Resource(name = "simpleBreadcrumbBuilder")
 	private ResourceBreadcrumbBuilder resourceBreadcrumbBuilder;
@@ -177,23 +183,33 @@ public class CartPageController extends AbstractPageController
 	@RequestMapping(method = RequestMethod.GET)
 	public String showCart(final Model model, @RequestParam(value = "ussid", required = false) final String ussid,
 			@RequestParam(value = "pincode", required = false) final String pinCode) throws CMSItemNotFoundException
+
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
+
 
 		try
 		{
 			CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
+
+
 			//TISST-13012
 			if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid()))
+
+
 			{
 				final CartModel serviceCart = getCartService().getSessionCart();
+
+
 				if (!serviceCart.getChannel().equals(SalesApplication.WEB))
 				{
 					serviceCart.setChannel(SalesApplication.WEB);
 					getModelService().save(serviceCart);
 				}
+
+
 
 				//TISEE-3676 & TISEE-4013
 				final boolean deListedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart);
@@ -208,6 +224,15 @@ public class CartPageController extends AbstractPageController
 
 				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 
+
+
+
+
+
+
+
+
+
 				final boolean isUserAnym = getUserFacade().isAnonymousUser();
 				model.addAttribute("isUserAnym", isUserAnym);
 
@@ -217,6 +242,14 @@ public class CartPageController extends AbstractPageController
 				checkCartDataChange(cart, cartDataOnLoad, cartData, model);
 				showPincode(model, selectedPinCode, cartData);
 				showAddress(model);
+
+
+
+
+
+
+
+
 
 				if (StringUtil.isNotEmpty(ussid))
 				{
@@ -234,9 +267,15 @@ public class CartPageController extends AbstractPageController
 					LOG.debug("CartPageController : product quanity is empty");
 				}
 				cartDataOnLoad = cartData;
+
+
 			}
 
 			prepareDataForPage(model, cartDataOnLoad);
+
+
+
+
 
 			// for MSD
 
@@ -260,6 +299,7 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
+
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
@@ -276,13 +316,16 @@ public class CartPageController extends AbstractPageController
 	 */
 	private void checkCartDataChange(final CartModel cart, final CartData cartDataOld, final CartData cartDataLatest,
 			final Model model) throws EtailBusinessExceptions, EtailNonBusinessExceptions, Exception
+
 	{
 		final Map<String, String> priceModified = new HashMap<String, String>();
 		final Map<String, String> priceModifiedMssg = new HashMap<String, String>();
 		final Map<String, PriceData> basePriceMap = new HashMap<String, PriceData>();
 		final Map<String, String> promoModified = new HashMap<String, String>();
 		if (cartDataOld != null && cartDataLatest != null && cartDataOld.getEntries() != null)
+
 		{
+
 			for (final OrderEntryData entryOld : cartDataOld.getEntries())
 			{
 				for (final OrderEntryData entryLatest : cartDataLatest.getEntries())
@@ -294,10 +337,13 @@ public class CartPageController extends AbstractPageController
 							&& entryLatest.getSelectedSellerInformation().getUssid()
 									.equalsIgnoreCase(entryOld.getSelectedSellerInformation().getUssid()) && !entryOld.isGiveAway()
 							&& !entryLatest.isGiveAway())
+
 					{
 
 						final BigDecimal updatedTotalPrice = new BigDecimal(entryLatest.getTotalPrice().getValue().toString());
 						final BigDecimal oldTotalPrice = new BigDecimal(entryOld.getTotalPrice().getValue().toString());
+
+
 						if (entryLatest.isIsBOGOapplied())
 						{
 							final Long qty = entryLatest.getQuantity();
@@ -317,6 +363,9 @@ public class CartPageController extends AbstractPageController
 							priceModifiedMssg.put(entryLatest.getEntryNumber().toString(), "Sorry! The price of this item has changed.");
 						}
 
+
+
+
 						final double oldPromoValue = (entryOld.getQuantity().doubleValue() * Double.parseDouble(entryOld.getBasePrice()
 								.getValue().toString()))
 								- Double.parseDouble(entryOld.getTotalPrice().getValue().toString());
@@ -334,9 +383,12 @@ public class CartPageController extends AbstractPageController
 						final PriceData baseTotalPrice = priceDataFactory.create(PriceDataType.BUY, basetotal,
 								MarketplaceFacadesConstants.INR);
 
+
 						basePriceMap.put(entryLatest.getEntryNumber().toString(), baseTotalPrice);
 
+
 						model.addAttribute(ModelAttributetConstants.BASEPRICEMAP, basePriceMap);
+
 
 						if (entryLatest.getCartLevelDisc() != null && entryLatest.getCartLevelDisc().getValue() != null)
 						{
@@ -346,10 +398,12 @@ public class CartPageController extends AbstractPageController
 								final double latestCartLevelDiscount = Double.parseDouble(entryLatest.getCartLevelDisc().getValue()
 										.toString());
 
+
 								//Adding to model
 								compareCartLevelDiscount(oldCartLevelDiscount, latestCartLevelDiscount, model);
 							}
 							else
+
 							{
 								model.addAttribute("cartLevelDiscountModified", "Cart Promotion has been modified");
 							}
@@ -362,6 +416,20 @@ public class CartPageController extends AbstractPageController
 		model.addAttribute("priceModified", priceModified);
 		model.addAttribute("promoModified", promoModified);
 		model.addAttribute("priceModifiedMssg", priceModifiedMssg);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
 
@@ -419,12 +487,14 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
+
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 		return returnPage;
+
 	}
 
 	/*
@@ -464,12 +534,17 @@ public class CartPageController extends AbstractPageController
 				if (checkoutFlow != null && StringUtils.isNotBlank(checkoutFlow.getCode()))
 				{
 
+
+
+
 					SessionOverrideCheckoutFlowFacade.setSessionOverrideCheckoutFlow(checkoutFlow);
 				}
+
 
 				// Override the Checkout PCI setting in the session
 				if (checkoutPci != null && StringUtils.isNotBlank(checkoutPci.getCode()))
 				{
+
 					SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
 				}
 				// Redirect to the start of the checkout flow to begin the checkout process
@@ -477,6 +552,11 @@ public class CartPageController extends AbstractPageController
 				// to use. The customer is not necessarily logged in on this request, but will be forced to login
 				// when they arrive on the '/checkout' page.
 			}
+
+
+
+
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -492,12 +572,14 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
+
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 		return returnPage;
+
 	}
 
 
@@ -512,11 +594,14 @@ public class CartPageController extends AbstractPageController
 		LOG.debug("Entering into updateCartQuantities" + "Class NameupdateCartQuantities :" + className);
 
 		try
+
+
 		{
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			if (bindingResult.hasErrors())
 			{
 				for (final ObjectError error : bindingResult.getAllErrors())
+
 				{
 					if (error.getCode().equals("typeMismatch"))
 					{
@@ -527,8 +612,15 @@ public class CartPageController extends AbstractPageController
 						GlobalMessages.addErrorMessage(model, error.getDefaultMessage());
 					}
 				}
+
+
+
+
 			}
+
 			else if (getMplCartFacade().hasEntries())
+
+
 			{
 
 				final CartModificationData cartModification = getMplCartFacade().updateCartEntry(entryNumber,
@@ -538,6 +630,7 @@ public class CartPageController extends AbstractPageController
 					if (cartModification.getQuantity() == form.getQuantity().longValue())
 					{
 						// Success
+
 						if (cartModification.getQuantity() == 0)
 						{
 							// Success in removing entry
@@ -579,6 +672,28 @@ public class CartPageController extends AbstractPageController
 
 			prepareDataForPage(model, cartData);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		}
 		catch (final CommerceCartModificationException ex)
 		{
@@ -604,9 +719,14 @@ public class CartPageController extends AbstractPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
+
+
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+
 		}
+
+
 		return returnPage;
 	}
 
@@ -615,6 +735,7 @@ public class CartPageController extends AbstractPageController
 	{
 		LOG.debug("Entring into createProductList" + "Class NamecreateProductList :" + className);
 		boolean hasPickUpCartEntries = false;
+
 
 		if (cartData.getEntries() != null && !cartData.getEntries().isEmpty())
 		{
@@ -646,6 +767,7 @@ public class CartPageController extends AbstractPageController
 	/**
 	 * Get Product Delivery Modes
 	 */
+
 	private void prepareDataForPage(final Model model, final CartData cartData) throws CMSItemNotFoundException,
 			EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
 	{
@@ -661,6 +783,8 @@ public class CartPageController extends AbstractPageController
 		model.addAttribute("isOmsEnabled", Boolean.valueOf(getSiteConfigService().getBoolean("oms.enabled", false)));
 		//TISST-13012
 		if (StringUtils.isNotEmpty(cartData.getGuid()))
+
+
 		{
 			final List<ProductData> productDataList = new ArrayList<ProductData>();
 			List<Wishlist2EntryModel> entryModels = new ArrayList<Wishlist2EntryModel>();
@@ -672,7 +796,19 @@ public class CartPageController extends AbstractPageController
 			final boolean isUserAnym = getUserFacade().isAnonymousUser();
 			final String defaultPinCodeId = fetchPincode(isUserAnym);
 			if (!isUserAnym)
+
+
+
 			{
+
+
+
+
+
+
+
+
+
 				entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId); // Code moved to Facade and Impl
 
 				for (final Wishlist2EntryModel entryModel : entryModels)
@@ -700,6 +836,8 @@ public class CartPageController extends AbstractPageController
 								&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0).getDeliveryFulfillModes() != null
 								&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0).getDeliveryFulfillModes()
 										.getCode() != null)
+
+
 
 						{
 							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0)
@@ -745,8 +883,43 @@ public class CartPageController extends AbstractPageController
 				{
 					model.addAttribute("giftYourselfDeliveryModeDataMap", null);
 				}
+
+
+
+
+
+
+
+
+
+
 				/* TISEE-435 : New Code Added section ends */
 			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			//TIS-404
 			final String payNowInventoryCheck = getSessionService().getAttribute(
 					MarketplacecheckoutaddonConstants.PAYNOWINVENTORYNOTPRESENT);
@@ -850,15 +1023,31 @@ public class CartPageController extends AbstractPageController
 		modifications = getMplCartFacade().validateCartData();
 
 		if (CollectionUtils.isNotEmpty(modifications))
+
 		{
 			redirectModel.addFlashAttribute("validationData", modifications);
+
 		}
 
+
+
+
+
+
+
+
 		return (CollectionUtils.isNotEmpty(modifications)) ? true : false;
+
+
+
+
 	}
 
 	/**
 	 * Cart Item Removal
+
+
+
 	 */
 	@RequestMapping(value = "/removeFromMinicart", method = RequestMethod.GET)
 	public @ResponseBody String removeFromMinicart(final HttpServletRequest request)
@@ -868,12 +1057,18 @@ public class CartPageController extends AbstractPageController
 		String returnStatement = "fail";
 
 		try
+
+
+
 		{
 
 			LOG.debug("Class NameremoveFromMinicar :" + className + "entry number is >>>>>>>>" + entryNumberString);
 			final long entryNumber = Long.parseLong(entryNumberString);
 
+
+
 			if (getMplCartFacade().hasEntries())
+
 			{
 				LOG.debug("Class NameremoveFromMinica :" + className + "#####Inside Remove Ajax call#####");
 				final CartModificationData cartModification = getMplCartFacade().updateCartEntry(entryNumber, 0);
@@ -903,9 +1098,15 @@ public class CartPageController extends AbstractPageController
 		catch (final Exception ex)
 		{
 			LOG.error("Exception while remove item from minicart ", ex);
+
+
+
+
+
 		}
 		LOG.debug("Class NameremoveFromMi :" + className + "Could find any cart entries");
 		return returnStatement;
+
 	}
 
 	/**
@@ -937,6 +1138,7 @@ public class CartPageController extends AbstractPageController
 	@SuppressWarnings(MarketplacecommerceservicesConstants.BOXING)
 	private void showPincode(final Model model, final String defaultPinCodeId, final CartData cartData)
 			throws CMSItemNotFoundException, EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
+
 	{
 		LOG.debug("Entring into showPincode" + "Class NameshowPincod :" + className);
 
@@ -963,6 +1165,7 @@ public class CartPageController extends AbstractPageController
 
 			//TIS-390 Express checkout button available for the logged in customer
 			if (getUserFacade().isAnonymousUser())
+
 			{
 				model.addAttribute("isLoggedIn", Boolean.FALSE);
 			}
@@ -989,6 +1192,9 @@ public class CartPageController extends AbstractPageController
 		//TISSEC-11
 		final String regex = "\\d{6}";
 		try
+
+
+
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
 			if (selectedPincode.matches(regex))
@@ -1001,22 +1207,33 @@ public class CartPageController extends AbstractPageController
 
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
+
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 				}
+
 				try
+
+
+
 				{
 					final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 					if (cartData != null)
 					{
 						if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
+
 						{
 							if (!StringUtil.isEmpty(selectedPincode))
 							{
 								responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
 							}
+
 							if (responseData != null)
+
+
 							{
 								for (final PinCodeResponseData pinCodeResponseData : responseData)
+
+
 								{
 									if (pinCodeResponseData != null
 											&& pinCodeResponseData.getIsServicable() != null
@@ -1038,6 +1255,10 @@ public class CartPageController extends AbstractPageController
 						}
 					}
 
+
+
+
+
 					LOG.debug(">> isServicable :" + isServicable + " >> json " + jsonResponse);
 				}
 				catch (final EtailNonBusinessExceptions ex)
@@ -1048,28 +1269,47 @@ public class CartPageController extends AbstractPageController
 				catch (final Exception ex)
 				{
 					LOG.error("Exception while checking pincode serviceabilty ", ex);
+
+
+
 				}
 
 				returnStatement = isServicable + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + selectedPincode
 						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + jsonResponse;
 
+
 			}
 			else
+
 			{
 				isServicable = MarketplacecommerceservicesConstants.N;
 				returnStatement = isServicable;
+
 			}
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
 			LOG.error("EtailNonBusinessExceptions while checkPincodeServiceability ", ex);
+
+
+
+
+
+
+
+
 		}
 		catch (final Exception ex)
+
 		{
 			LOG.error("Exception in checkPincodeServiceability ", ex);
+
+
 		}
 		return returnStatement;
+
+
 	}
 
 	/**
@@ -1109,6 +1349,7 @@ public class CartPageController extends AbstractPageController
 			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName, final Model model,
 			@SuppressWarnings(MarketplacecommerceservicesConstants.UNUSED) final HttpServletRequest request,
 			@SuppressWarnings(MarketplacecommerceservicesConstants.UNUSED) final HttpServletResponse response)
+
 	{
 		LOG.debug("Entring into addWishListsForCartPage" + "Class NameaddWishListsForCartPage :" + className);
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
@@ -1163,6 +1404,7 @@ public class CartPageController extends AbstractPageController
 			@RequestParam("ussid") final String ussid, final Model model,
 			@SuppressWarnings(MarketplacecommerceservicesConstants.UNUSED) final HttpServletRequest request,
 			@SuppressWarnings(MarketplacecommerceservicesConstants.UNUSED) final HttpServletResponse response)
+
 	{
 		LOG.debug("Entring into showWishListsForCartPage" + "Class NameshowWishListsForCartPag :" + className);
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
@@ -1179,12 +1421,25 @@ public class CartPageController extends AbstractPageController
 				final int wishListSize = allWishlists.size();
 				final String nameSet = ModelAttributetConstants.WISHLIST_NO + ModelAttributetConstants.UNDER_SCORE + "1";
 
+
+
 				//check whether any wishlist exits for user or not or else create a new wishlist and add product to it
+
+
+
+
 				if (wishListSize == 0)
 				{
 
 					//add product to new wishlist
 					final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, nameSet, productCode);
+
+
+
+
+
+
+
 
 					wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, Boolean.valueOf(Boolean.TRUE));
 					final WishlistData wishData = new WishlistData();
@@ -1192,14 +1447,22 @@ public class CartPageController extends AbstractPageController
 					wishData.setProductCode(productCode);
 					wishListData.add(wishData);
 				}
+
 				else
+
+
+
 				{
 					//view existing wishlists
 					for (final Wishlist2Model wish : allWishlists)
+
+
+
 					{
 						final WishlistData wishList = new WishlistData();
 						wishList.setParticularWishlistName(wish.getName());
 						for (final Wishlist2EntryModel wlEntry : wish.getEntries())
+
 						{
 							if (wlEntry.getProduct().getCode().equals(productCode))
 							{
@@ -1208,6 +1471,7 @@ public class CartPageController extends AbstractPageController
 						}
 						wishListData.add(wishList);
 					}
+
 				}
 			}
 			catch (final EtailBusinessExceptions e)
@@ -1273,6 +1537,7 @@ public class CartPageController extends AbstractPageController
 	@RequireHardLogIn
 	public @ResponseBody String checkExpressCheckoutPincodeServiceability(
 			@PathVariable(MarketplacecheckoutaddonConstants.SELECTEDADDRESSID) final String selectedAddressId)
+
 	{
 		LOG.debug("selectedAddressId " + selectedAddressId);
 		ServicesUtil.validateParameterNotNull(selectedAddressId, "Address Id cannot be null");
@@ -1320,6 +1585,9 @@ public class CartPageController extends AbstractPageController
 				if (StringUtil.isEmpty(selectedPincode)
 						|| (StringUtil.isNotEmpty(selectedPincode) && CollectionUtils.isEmpty(responseData)))
 
+
+
+
 				{
 					isServicable = MarketplacecommerceservicesConstants.N;
 				}
@@ -1351,6 +1619,7 @@ public class CartPageController extends AbstractPageController
 		final String pdpPinCode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_PDP);
 		final String cartPincodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 		String selectedPincode = MarketplacecommerceservicesConstants.EMPTY;
+
 
 		if (StringUtils.isNotEmpty(pdpPinCode))
 		{

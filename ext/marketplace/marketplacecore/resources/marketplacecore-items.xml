@@ -103,6 +103,7 @@
 			code="imageCollection" autocreate="true" generate="true" type="list" />
 
 
+
 	</collectiontypes>
 
 
@@ -1765,6 +1766,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="SELLERARTICLESKU_IDX">
+						<key attribute="sellerArticleSKU"/>
+					</index>
+				</indexes>
 			</itemtype>
 
 			<itemtype code="RichAttribute" autocreate="true" generate="true"
@@ -2664,6 +2670,11 @@
 					</attribute>
 					<!-- Push notification save device key web service ends -->
 				</attributes>
+				<indexes>
+					<index name="ORIGINALUID_IDX" unique="true">
+						<key attribute="originalUid"/>
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="Address" autocreate="false" generate="false">
 				<description>Extending the Address type from core with additional attributes.</description>
@@ -3247,6 +3258,7 @@
 					<!-- <attribute qualifier="SeqNumForStayQued" type="java.lang.Integer" 
 						generate="true" autocreate="true"> <persistence type="property" /> <description>This 
 						is a sequence number for the stay qued section</description> </attribute> -->
+
 				</attributes>
 			</itemtype>
 
@@ -3832,6 +3844,7 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+
 
 			<!-- End of Mpl Advanced Category Carousel Component -->
 			<!-- Start of Brands You Love and Showcase -->
@@ -5268,6 +5281,37 @@
 
 				</attributes>
 			</itemtype>
+			
+			<itemtype code="SolrFacetSearchConfig" autocreate="false" generate="false">
+				<description>Extending the SolrFacetSearchConfig type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedType" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedType type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedProperty" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedProperty type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
 		</typegroup>
 
 		<typegroup name="AccountManagement">
@@ -5661,12 +5705,20 @@
 					</attribute>
 
 					<!-- <attribute qualifier="targetCategory" type="Category" autocreate="true" 
+
 						generate="true"> <modifiers read="true" write="true" search="true" /> <persistence 
+
+
 						type="property" /> </attribute> <attribute qualifier="targetProduct" type="Product" 
+
 						autocreate="true" generate="true"> <modifiers read="true" write="true" search="true" 
+
+
 						/> <persistence type="property" /> </attribute> <attribute qualifier="targetCollection" 
 						type="MplShopByLook" autocreate="true" generate="true"> <modifiers read="true" 
+
 						write="true" search="true" /> <persistence type="property" /> </attribute> -->
+
 					<attribute qualifier="associatedCategory" type="targetCategoryCollection"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
@@ -5733,12 +5785,20 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- <attribute qualifier="targetCategory" type="Category" autocreate="true" 
+
 						generate="true"> <modifiers read="true" write="true" search="true" /> <persistence 
+
+
 						type="property" /> </attribute> <attribute qualifier="targetProduct" type="Product" 
+
 						autocreate="true" generate="true"> <modifiers read="true" write="true" search="true" 
+
+
 						/> <persistence type="property" /> </attribute> <attribute qualifier="targetCollection" 
 						type="MplShopByLook" autocreate="true" generate="true"> <modifiers read="true" 
+
 						write="true" search="true" /> <persistence type="property" /> </attribute> -->
+
 					<attribute qualifier="associatedCategory" type="targetCategoryCollection"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
@@ -5783,12 +5843,20 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- <attribute qualifier="targetCategory" type="Category" autocreate="true" 
+
 						generate="true"> <modifiers read="true" write="true" search="true" /> <persistence 
+
+
 						type="property" /> </attribute> <attribute qualifier="targetProduct" type="Product" 
+
 						autocreate="true" generate="true"> <modifiers read="true" write="true" search="true" 
+
+
 						/> <persistence type="property" /> </attribute> <attribute qualifier="targetCollection" 
 						type="MplShopByLook" autocreate="true" generate="true"> <modifiers read="true" 
+
 						write="true" search="true" /> <persistence type="property" /> </attribute> -->
+
 					<attribute qualifier="associatedCategory" type="targetCategoryCollection"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
@@ -5930,12 +5998,20 @@
 				<description>It represents MobileAppHeroComponent</description>
 				<attributes>
 					<!-- <attribute qualifier="targetCategory" type="Category" autocreate="true" 
+
 						generate="true"> <modifiers read="true" write="true" search="true" /> <persistence 
+
+
 						type="property" /> </attribute> <attribute qualifier="targetProduct" type="Product" 
+
 						autocreate="true" generate="true"> <modifiers read="true" write="true" search="true" 
+
+
 						/> <persistence type="property" /> </attribute> <attribute qualifier="targetCollection" 
 						type="MplShopByLook" autocreate="true" generate="true"> <modifiers read="true" 
+
 						write="true" search="true" /> <persistence type="property" /> </attribute> -->
+
 					<attribute qualifier="associatedCategory" type="targetCategoryCollection"
 						autocreate="true" generate="true">
 						<modifiers read="true" write="true" search="true" />
@@ -6094,6 +6170,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="AUDITENTRYID_IDX">
+						<key attribute="auditId"/>
+					</index>	
+				</indexes>
 			</itemtype>
 
 			<itemtype code="MplPaymentAudit" autocreate="true" generate="true"
@@ -6154,6 +6235,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="AUDITID_IDX">
+						<key attribute="auditId"/>
+					</index>	
+				</indexes>
 			</itemtype>
 		</typegroup>
 
@@ -7100,13 +7186,16 @@
 				</attributes>
 			</itemtype>
 
+
 			<itemtype code="FeedbackCronJob" extends="CronJob"
+
 				autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.FeedbackCronJob">
 				<attributes>
 					<attribute type="java.util.Date" qualifier="lastExecutionTime">
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+
 
 				</attributes>
 			</itemtype>
