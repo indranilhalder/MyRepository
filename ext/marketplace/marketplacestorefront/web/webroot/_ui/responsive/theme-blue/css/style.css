@@ -1863,7 +1863,7 @@ h2 {
       margin-left: -2px;
       margin-right: -2px;
       width: 140px;
-      z-index: 2;
+      z-index: 3;
       -webkit-transition: border 0.3s;
       -moz-transition: border 0.3s;
       transition: border 0.3s; }
