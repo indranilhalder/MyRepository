@@ -37,6 +37,8 @@ public class CouponMailJob extends AbstractJobPerformable<CouponMailJobModel>
 			final VoucherModel voucher = getVoucherService().getVoucher(couponCode);
 			LOG.debug("*****************Coupon Mail Cronjob is triggered*******************************");
 
+			LOG.debug("***Voucher from the dao call is " + voucher.getCode());
+
 			LOG.debug("*****************Coupon Mail Cronjob Ends*******************************");
 
 			return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);

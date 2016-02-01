@@ -52,7 +52,7 @@
 </script>
 <c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
 <span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
-<c:url var="sizeGuideUrl" value="/p/sizeGuide?productCode=${product.code}"  scope="request"></c:url>
+<c:url var="sizeGuideUrl" value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}"  scope="request"></c:url>
 
 <div class="color-swatch-container">
 
@@ -159,12 +159,12 @@
 </c:otherwise>
 </c:choose>
 	<!-- Size guide Pop-up -->
-	<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}">
+	<a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
 		<spring:theme code="product.variants.size.guide"/>
 	</a>
 	<!-- End Size guide Pop-up -->
 	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm" >
-    <p style="margin-top:15px;"><spring:theme code="product.variant.size"></spring:theme></p>
+    <p style="margin-top:15px;"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
 		<div class="select-size">
 		<c:choose>
 		    <c:when test="${selectedSize!=null}"> 

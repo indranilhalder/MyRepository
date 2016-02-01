@@ -38,50 +38,43 @@
 				function() {
 					$(this).click(
 							function() {
-								$(this).css("background-Color", "#c0c0c0");
-								var current = $('.badge').text();
+								
+							  //var current = $('.badge').text();
+								var current = '${notificationCount}';
+								
 								if (current > 0) {
 									current = current - 1;
-									markAsRead(this.id, $(this).attr(
-											'data-name'), $(this).attr(
-											'data-status'));
-
-									$('.badge').text(current)
+									markAsRead(this.id,$(this).attr('data-name'), $(this).attr('data-status'));
+									//$('#tracklink span').text(current)
 								}
 							});
-					$(this).mouseout(function() {
-						$(this).css("background-Color", "#FFF");
-					});
+					
 				});
 	});
 
-	function markAsRead(orderNo, creationDate, shopperstatus) {
-
-		var consignmentNo = creationDate;
-		var orderNo = orderNo;
-		var status = shopperstatus
+	function markAsRead(currentId, consignmentNo, shopperstatus) {
+		var consignmentNo = consignmentNo;
+		var currentId = currentId;
+		var shopperstatus = shopperstatus
 		var contentData = '';
 		$.ajax({
 			url : ACC.config.encodedContextPath
-					+ "/view/TrackOrderHeaderComponentController/markAsRead",
+					+ "/headerTrackOrder/markAsRead",
 			data : {
+				'currentId' : currentId,
 				'consignmentNo' : consignmentNo,
-				'orderId' : orderNo,
 				'shopperStatus' : shopperstatus
 			},
 			type : "GET",
 			cache : false,
 			success : function(data) {
-
 			},
 			error : function(resp) {
 				alert("Sorry We Could Not Connect to Database");
 			}
 		});
-
 	}
 </script>
-
 
 	
 
@@ -92,13 +85,14 @@
 			<c:when test="${empty notifylist.transactionID and notifylist.orderNumber ne null}">
 
 				<c:set var="orderId" value="${notifylist.orderNumber}" />
+				<c:set var="orderIsRead" value="${notifylist.notificationRead}" />
 				<c:set var="cstatus"
 					value="${notifylist.notificationCustomerStatus}" />
 
 				<li id="${notifylist.orderNumber}"
 				  data-name="${notifylist.transactionID }"
 					data-order="${notifylist.transactionID}"
-					 data-status="${notifylist.notificationCustomerStatus}"> 
+					 data-status="${notifylist.notificationCustomerStatus}" data-read="${orderIsRead}"> 
 					<a href="/store/mpl/en/my-account/order/?orderCode=${notifylist.orderNumber}">${fn:replace(cstatus, "@", orderId)}
 				</a>
 					<div id="track_footer" style="float: right;">
@@ -120,7 +114,7 @@
 			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
 			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
 			    			<c:otherwise>
-			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    				<fmt:formatDate type="both" pattern="MMM dd yyyy HH:mm" value="${notify}" />
 			    			</c:otherwise>	
 			 			</c:choose>
 						</h4>
@@ -133,13 +127,14 @@
 			<c:if test="${ notifylist.couponCode eq null}">
 		
 				<c:set var="orderId" value="${notifylist.orderNumber}" />
+				<c:set var="orderIsRead" value="${notifylist.notificationRead}" />
 				<c:set var="cstatus"
 					value="${notifylist.notificationCustomerStatus}" />
 
 				<li id="${notifylist.orderNumber}"
 				 data-name="${notifylist.transactionID }"
 					data-order="${notifylist.transactionID}"
-					data-status="${notifylist.notificationCustomerStatus}"><a
+					data-status="${notifylist.notificationCustomerStatus}" data-read="${orderIsRead}"><a
 					href="/store/mpl/en/my-account/order/?orderCode=${notifylist.orderNumber}">${fn:replace(cstatus, "@", orderId)}</a>
 					<div id="track_footer" style="float: right;">
 						<h4>
@@ -160,7 +155,7 @@
 			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
 			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
 			    			<c:otherwise>
-			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    				<fmt:formatDate type="both" pattern="MMM dd yyyy HH:mm" value="${notify}" />
 			    			</c:otherwise>	
 			 			</c:choose>
 					
@@ -173,15 +168,20 @@
              <c:if test= "${ notifylist.couponCode  ne null}">
 		
 					<c:set var="coupon" value="${notifylist.couponCode}" />
+					<c:set var="couponIsRead" value="${notifylist.notificationRead}" />
 					  <c:url var="productUrl" value="${notifylist.productUrl}"></c:url>
-					 
+					
+
+                    <c:if test="${empty productUrl }">
+	               <c:set var="productUrl" value="/store/mpl/en/my-account/coupons" />
+                   </c:if>
 					
 				<c:set var="couponStatus"
 					value="${notifylist.notificationCustomerStatus}" />
 		       
 		         
 				<li id="${notifylist.couponCode}"
-					 data-status="${couponStatus}"> 
+					 data-status="${couponStatus}" data-read="${couponIsRead}"> 
 					<a href="${productUrl}">${fn:replace(couponStatus, "@", coupon)}
 				</a>
 				<div id="track_footer" style="float: right;">
@@ -208,7 +208,7 @@
 			    			<c:when test="${dateDiff eq 0}">TODAY <fmt:formatDate type="both" pattern="HH:mm" value="${notify}" /></c:when>
 			    			<%-- <c:when test="${dateDiff eq 1}">yesterday</c:when> --%>
 			    			<c:otherwise>
-			    				<fmt:formatDate type="both" pattern="dd/MM/yyyy HH:mm" value="${notify}" />
+			    				<fmt:formatDate type="both" pattern="MMM dd yyyy HH:mm" value="${notify}" />
 			    			</c:otherwise>	
 			 			</c:choose>
 				

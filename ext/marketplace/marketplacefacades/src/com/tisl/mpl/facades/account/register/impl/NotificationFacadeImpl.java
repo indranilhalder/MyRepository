@@ -3,12 +3,9 @@
  */
 package com.tisl.mpl.facades.account.register.impl;
 
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
-import com.tisl.mpl.data.AllVoucherListData;
+import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
 import com.tisl.mpl.data.NotificationData;
-import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
@@ -41,9 +37,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 	@Autowired
 	private ExtendedUserService extendedUserService;
 	@Autowired
-	private Converter<VoucherDisplayData, NotificationData> trackOrderCouponConverter;
-	@Autowired
-	private UserService userService;
+	private Converter<VoucherStatusNotificationModel, NotificationData> trackOrderCouponConverter;
 	@Autowired
 	private ConfigurationService configurationService;
 	protected static final Logger LOG = Logger.getLogger(NotificationFacadeImpl.class);
@@ -63,7 +57,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 	/**
 	 * @return the trackOrderCouponConverter
 	 */
-	public Converter<VoucherDisplayData, NotificationData> getTrackOrderCouponConverter()
+	public Converter<VoucherStatusNotificationModel, NotificationData> getTrackOrderCouponConverter()
 	{
 		return trackOrderCouponConverter;
 	}
@@ -72,7 +66,8 @@ public class NotificationFacadeImpl implements NotificationFacade
 	 * @param trackOrderCouponConverter
 	 *           the trackOrderCouponConverter to set
 	 */
-	public void setTrackOrderCouponConverter(final Converter<VoucherDisplayData, NotificationData> trackOrderCouponConverter)
+	public void setTrackOrderCouponConverter(
+			final Converter<VoucherStatusNotificationModel, NotificationData> trackOrderCouponConverter)
 	{
 		this.trackOrderCouponConverter = trackOrderCouponConverter;
 	}
@@ -139,91 +134,51 @@ public class NotificationFacadeImpl implements NotificationFacade
 	public List<NotificationData> getNotificationDetail(final String customerUID, final boolean isDesktop)
 	{
 
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+
 		final List<OrderStatusNotificationModel> notificationModel = notificationService.getNotificationDetails(customerUID,
 				isDesktop);
-		//	final List<AbstractPromotionModel> promotionList = notificationService.getPromotion();
-		final List<VoucherModel> voucherList = getAllCoupons();
-		final AllVoucherListData allVoucherList = notificationService.getAllVoucherList(currentCustomer, voucherList);
-
-		List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
-		//final List<CouponNotificationModel> couponList = new ArrayList<>();
-
-		if (null != allVoucherList)
-		{
-
-			closedVoucherDataList = allVoucherList.getClosedVoucherList();
-
-			/*
-			 * if (null != closedVoucherDataList) { for (final VoucherDisplayData v : closedVoucherDataList) { final
-			 * CouponNotificationModel trackOrderCoupon = new CouponNotificationModel();
-			 * 
-			 * trackOrderCoupon.setCouponCode(v.getVoucherCode());
-			 * trackOrderCoupon.setCouponStartDate(v.getVoucherCreationDate());
-			 * trackOrderCoupon.setCouponStatus("Coupon @ is available"); modelService.save(trackOrderCoupon);
-			 * couponList.add(trackOrderCoupon);
-			 * 
-			 * }
-			 */
-		}
-
-
+		final List<VoucherStatusNotificationModel> voucherList = getAllCoupons();
 		List<NotificationData> notificationDataList = new ArrayList<>();
-
-
 		for (final OrderStatusNotificationModel osnm : notificationModel)
 		{
 			final NotificationData tempnotificationData = trackOrderConverter.convert(osnm);
-
 			notificationDataList.add(tempnotificationData);
 		}
 
-
-		for (final VoucherDisplayData v : closedVoucherDataList)
+		for (final VoucherStatusNotificationModel v : voucherList)
 		{
-
-			final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
-			notificationDataList.add(dataForVoucher);
+			if (v.getCustomerUidList().contains(customerUID))
+			{
+				final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
+				notificationDataList.add(dataForVoucher);
+			}
 		}
 
-
 		notificationDataList = notificationService.getSortedNotificationData(notificationDataList);
-
-
 		String couponCount = null;
 		if (isDesktop)
 		{
-
-
 			couponCount = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.NOTIFICATION_COUNT);
-
 		}
 		else
 		{
 			couponCount = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.NOTIFICATION_COUNT_MOBILE);
-
 		}
 		int count = 0;
-
 		try
 		{
 			count = Integer.parseInt(couponCount);
 		}
-
 		catch (final NumberFormatException e)
 		{
 			LOG.debug("Number format exception occured while parsing");
 		}
-
 		if (notificationDataList.size() > count)
 		{
 			notificationDataList.subList(count, notificationDataList.size()).clear();
 		}
-
-
-
 		return notificationDataList;
 	}
 
@@ -322,10 +277,10 @@ public class NotificationFacadeImpl implements NotificationFacade
 		return count;
 	}
 
-	public List<VoucherModel> getAllCoupons()
+	private List<VoucherStatusNotificationModel> getAllCoupons()
 	{
-		final List<VoucherModel> voucherList = new ArrayList<VoucherModel>();
-		final List<VoucherModel> voucherColl = notificationService.getVoucher();
+		final List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>();
+		final List<VoucherStatusNotificationModel> voucherColl = notificationService.getVoucher();
 		if (CollectionUtils.isNotEmpty(voucherColl))
 		{
 			voucherList.addAll(voucherColl);

@@ -219,11 +219,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
@@ -359,11 +359,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_LOGOUT);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_LOGOUT);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 
 			if (getSecretkey() != null && getApikey() != null)
@@ -377,7 +377,7 @@ public class GigyaServiceImpl implements GigyaService
 					request.setProxy(proxy);
 				}
 				// Adding parameters
-				request.setParam("UID", customerModel.getUid()); // set the "uid" parameter to user's ID
+				request.setParam(MarketplacecclientservicesConstants.UID, customerModel.getUid()); // set the "uid" parameter to user's ID
 				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
 				request.setAPIDomain(getDomain());
 
@@ -457,8 +457,8 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			String loginUserInfo = null;
 
@@ -469,16 +469,18 @@ public class GigyaServiceImpl implements GigyaService
 
 
 				LOG.debug("GigyaServiceImpl, notifyGigya Gigya Method" + gigyaMethod);
-
+				final String FIRSTNAME = "{firstName:" + "'";
+				final String LASTNAME = ",lastName: ";
+				final String EMAIL = ",email:";
 				// NOTIFY GIGYA WHEN USER LOGIN USING SOCIAL NETWORKS
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.notifyRegistration"))
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-					request.setParam("siteUID", siteUid);
-					request.setParam("UID", gigyaUid);
-					if (fName != null)
+					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
+					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + "}";
 					}
 					else
 					{
@@ -491,7 +493,7 @@ public class GigyaServiceImpl implements GigyaService
 								fName = fName.replace('.', ' ');
 							}
 						}
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + "}";
 					}
 				}
 
@@ -499,11 +501,21 @@ public class GigyaServiceImpl implements GigyaService
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.setUserInfo"))
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-					request.setParam("UID", siteUid);
-					if (fName != null || lName != null || eMail != null)
+					request.setParam(MarketplacecclientservicesConstants.UID, siteUid);
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'"
-								+ eMail + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+
+					else
+					{
+						final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+						fName = splitList[0];
+						if (fName.contains("."))
+						{
+							fName = fName.replace('.', ' ');
+						}
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 				}
 
@@ -511,12 +523,12 @@ public class GigyaServiceImpl implements GigyaService
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.setUID"))
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-					request.setParam("siteUID", siteUid);
-					request.setParam("UID", gigyaUid);
+					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
+					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
 
-					if (fName != null)
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 					else
 					{
@@ -529,8 +541,9 @@ public class GigyaServiceImpl implements GigyaService
 								fName = fName.replace('.', ' ');
 							}
 						}
-						loginUserInfo = "{ firstName: " + "'" + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
+
 
 				}
 
@@ -557,8 +570,8 @@ public class GigyaServiceImpl implements GigyaService
 					}
 					else
 					{
-						LOG.debug(
-								"GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + "MESSAGE ->" + (response.getErrorMessage()));
+						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->"
+								+ (response.getErrorMessage()));
 					}
 
 				}
@@ -579,6 +592,4 @@ public class GigyaServiceImpl implements GigyaService
 		}
 
 	}
-
-
 }

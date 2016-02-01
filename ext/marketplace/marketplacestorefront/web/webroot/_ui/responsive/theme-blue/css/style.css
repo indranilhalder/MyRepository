@@ -11,6 +11,12 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   font: inherit;
   vertical-align: baseline;
   }
+    b{
+  font-weight:bold;
+  }
+  i{
+  font-style:italic;
+  }
 html,body,main {
 	height:100%;
 }
@@ -893,7 +899,7 @@ h2 {
         display: inline-block;
         font-size: 18px;
         line-height: 60px;
-        max-width: 770px; }
+        max-width: 780px; }
         @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
 		 header .banner .content form {
         max-width: 770px; }
@@ -1628,7 +1634,7 @@ h2 {
             header .content nav > ul > li > ul > li > ul {
               position: absolute;
               top: 0;
-              left: 190px;
+              left: 189px;
               height: 450px;
               padding-top: 10px;
               padding-left: 40px;
@@ -1857,7 +1863,7 @@ h2 {
       margin-left: -2px;
       margin-right: -2px;
       width: 140px;
-      z-index: 2;
+      z-index: 3;
       -webkit-transition: border 0.3s;
       -moz-transition: border 0.3s;
       transition: border 0.3s; }
@@ -9289,7 +9295,7 @@ footer .banner {
     margin-bottom: 20px;
     clear: both;
      }
-      .page-search .listing.wrapper .right-block .listing-menu{
+.listing.wrapper .right-block .listing-menu{
         border-bottom: 2px solid #f0f4f5;}
     .listing.wrapper .right-block .listing-menu::after {
       clear: both;
@@ -9586,10 +9592,9 @@ body .account .right-account .order-history .pagination li{
   display: inline-block;
   position: relative;
   text-align: center;
-  padding: 5px 0 40px 0;}
-  .feedBack-block {
-  	border-top:2px solid #f0f4f5;
-  }
+  padding: 5px 0 40px 0;
+  border-bottom:2px solid #f0f4f5;}
+
   .bottom-pagination::after {
     clear: both;
     content: "";
@@ -9979,7 +9984,7 @@ body .account .right-account .order-history .pagination li{
       margin-bottom: 5px; }
     .product-tile .image .new {
       position: absolute;
-      width: 30%;
+      height: 31%;
       top: 0;
       left: -15px; }
       .shop-sale.wrapper .product-tile .image .new {
@@ -10271,15 +10276,15 @@ body .account .right-account .order-history .pagination li{
     position: relative;
 }
 .product-info .product-image-container .image-list li img {
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     cursor: pointer;
-    -webkit-transition: border-color 0.15s;
+    /* -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s; */
     width:auto;
-    margin-bottom:4px;
+    /* margin-bottom:4px; */
 }
-.product-info .product-image-container .image-list li img:hover, .product-info .product-image-container .image-list li .active img {
+.product-info .product-image-container .image-list li span.thumb:hover, .product-info .product-image-container .image-list li .active{
     border-color: #000;
     -webkit-transition: border-color 0.3s;
     -moz-transition: border-color 0.3s;
@@ -10498,7 +10503,8 @@ body .account .right-account .order-history .pagination li{
     float: left;
 }
 .promo-block .promo-img img {
-    position: relative
+    position: relative;
+     width: 90%;
 }
 .promo-block .promo-img img.sprite-icon {
     position: absolute;
@@ -12894,7 +12900,8 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .details {		
     clear: both;		
     background: rgb(237,242,245);		
-    padding-top: 30px;		
+    padding-top: 30px;	
+    position:relative;	
 }		
 .modal.size-guide .sizes .details::after {		
     clear: both;		
@@ -13152,6 +13159,9 @@ font-size:14px;
 }
 .customer-service .content * {
     font-family: avenir next !important;
+}
+.customer-service .content h3 {
+    text-align:center;
 }
 .content b {
     font-weight: 600;
@@ -14931,6 +14941,8 @@ body .account .right-account form label {
     body .account .right-account form label {
         font-size: 10px;
     }
+    body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before{
+    margin-right:25px !important;}
 }
 body .account .right-account form input {
     border-color: #dbeafa;
@@ -18664,7 +18676,7 @@ input[type="checkbox"]#brandSelectAll + label{
 	margin: 0px;
 }
  .quick-view-popup .size-guide {
-  width: 100%;
+ /*  width: 100%; */
   text-transform: uppercase;
 	float:left;
   font-weight: 600;
@@ -18674,6 +18686,9 @@ input[type="checkbox"]#brandSelectAll + label{
   bottom:0;
   left:0;
 } 
+.select_height_toggle{
+display: block !important;
+}
 .quick-view-popup .size-guide:before {
   font-family: 'icomoon';
   -webkit-font-smoothing: antialiased;
@@ -22526,7 +22541,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
     margin: 10px 0;
     text-align: center;
 }
-@media(min-width:651px){
+@media(min-width:791px){
 .product-tile:hover .image .quickview {
     opacity: 1;
     -webkit-transition: opacity 0.3s;
@@ -23596,29 +23611,30 @@ body .account.preferences .right-account div.email-pref form fieldset .feed labe
 
 @media (min-width:791px)
 {
-	.order-details .totals ul li span {
+	.order-details .totals ul li > span {
 		float: right;
 		margin-right: 30px;
 	}
-	.order-details .totals ul li span.amt {
+	/* .order-details .totals ul li span.amt {
 		margin-right: 60px;
-	}
-	.order-details .totals ul li span.amt span{
+	} */
+	/* .order-details .totals ul li span.amt span{
 		margin-right: 0px;
-	}
+	} */
 	.order-details .totals ul li.grand-total span.amt {
 		text-align: right;
 	}}
 @media (max-width:790px)
 {
-	.order-details .totals ul li span {
+	.order-details .totals ul li > span {
 		float: right;
 		margin-right: 20px;
 	}
 	.order-details .totals ul li.grand-total span.amt {
 		text-align: right;
-		margin-right: 0px;
-	}}
+		/* margin-right: 0px; */
+	}
+	}
 
 .progress-bar {
 	background-image: none !important;
@@ -25590,11 +25606,14 @@ padding-left: 0px;}
        .pagination li.prev{
      border: 2px solid #f0f4f5;
     padding-left: 7px;
-    padding-right: 5px;}
+    padding-right: 5px;
+   }
+   
        .pagination li.next{
     border: 2px solid #f0f4f5;
     padding-left: 5px;
-    padding-right: 5px;}
+    padding-right: 5px;
+   }
     .no-results ul li{
     padding-top: 15px;
     padding-bottom: 15px;}
@@ -25609,6 +25628,12 @@ padding-left: 0px;}
     padding-right:0px;}
     div.wishlist-nav h3{
     margin:30px 0;}
+    .listing.wrapper .right-block .listing-menu .pagination li.prev,.listing.wrapper .right-block .listing-menu .pagination li.next{
+    height:34px;}
+     .listing.wrapper .right-block .listing-menu .pagination .prev:before,.listing.wrapper .right-block .listing-menu .pagination .next:after{
+    margin-top:9px;}
+     .listing.wrapper .bottom-pagination .pagination .prev:before,.listing.wrapper .bottom-pagination .pagination .next:after{
+    margin-top:12px;}
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 640px) and (-webkit-min-device-pixel-ratio: 2) {
@@ -25700,6 +25725,9 @@ ul.links li.product:nth-last-child(1),ul.links li.product:nth-last-child(2) {
 
 #new-address-option-1 + label, #new-address-option-2 + label{
 	width:25%;
+}
+body.page-address-book #new-address-option-1 + label, body.page-address-book #new-address-option-2 + label{
+width:auto;
 }
 }
 .fill-in-concierge, .select-value-concierge {
@@ -27377,9 +27405,10 @@ body.page-reviews .right-account .reviews .navigation p {
 		bottom: 60px;
 		left: 40%;
 	}
-	body.page-reviews .pagination li.next {
+	body.page-reviews .pagination li.next,body.page-reviews .pagination li.prev {
 		border: none;
 	}
+	
 	
 }
 .cart.wrapper .right-block .block.coupon button{
@@ -28018,10 +28047,12 @@ body .account .right-account.rewards>div.your-activity>p.mobile {
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container
 	{
-	margin: 30px 15px 0;
+	padding: 30px 15px 0;
 	/* border-top: 2px dashed #f0f4f5;
 	border-left: 2px dashed #f0f4f5; */
 	font-weight: 600;
+	display:table;
+	width:100%;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container::after
@@ -28036,7 +28067,9 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	border: 2px dashed #f0f4f5;
 	/* border-right: 2px dashed #f0f4f5; */
 	width: 33.3333%;
-	float: left;
+	/* float: left; */
+	display: inline-block;
+	vertical-align:top;
 	background-color: #fff;
 	margin-left: -2px;
     margin-bottom: -2px;
@@ -28053,8 +28086,12 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	line-height: 20px;
 	margin-bottom: 0
 }
-
-body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .coupon_count{
+	display:inline-block;
+	line-height: 15px;
+    padding-bottom: 10px;
+}
+/* body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
 	{
 	height: 142px;
 }
@@ -28063,7 +28100,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	{
 	height: 70px;
 }
-
+ */
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right
 	{
@@ -28075,15 +28112,20 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	width: 50%;
 	padding: 0 10px;
 	margin: 0 0 10px;
-	line-height: 20px;
+	line-height: 15px;
 	font-weight:500;
+	text-align:center;
+	word-break: break-word;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p
 	{
 	text-align: center;
-	white-space: nowrap
+	line-height: 14px;
+    padding: 3px 0px 8px 0px;
+    white-space: normal;
+    word-break: break-word;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left
@@ -28096,12 +28138,9 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	direction: rtl;
 	font-size:10px;
 }
-body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p:last-child
+ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p:last-child
 	{
-	line-height: 14px;
-    padding: 3px 0px;
-    white-space: normal;
-    word-break:break-word;
+    padding: 0px;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box.starred:before
@@ -28303,6 +28342,9 @@ body .account .right-account.rewards>div.your-activity.coupon-history>p span
 	color: #00cbe9;
 	font-weight: 500
 }
+body .account .right-account.rewards>div.your-activity.coupon-history>ul{
+	border-bottom: 1px solid #f0f4f5;
+}
 
 body .account .right-account.rewards>div.your-activity.coupon-history>ul>li,
 	body .account .right-account.rewards>div.your-activity.coupon-history>ul>li.header
@@ -28409,7 +28451,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container
 		{
 		border: none;
-		margin: 20px 5px 0
+		padding: 20px 5px 0;
 	}
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
 		{
@@ -28424,7 +28466,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 		font-size: 14px;
 		font-weight: 500;
 		margin-bottom: 0;
-		padding-bottom: 0
+		margin-top: 10px;
 	}
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left,
 		body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right
@@ -28567,7 +28609,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 		font-weight: 400;
 	}
 }
-@media(max-width:895px) and (min-width:821px){
+/* @media(max-width:895px) and (min-width:821px){
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box {
     height: 150px;
 }
@@ -28586,7 +28628,7 @@ body .account .right-account.rewards>div.your-activity.coupon-listing h2,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box {
     height: 180px;
 }
-}
+} */
 a#couponHistoryHide{
 	display:none;
 }
@@ -28675,7 +28717,6 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
 #loginDivCheckout,#loginDivCheckout td, #loginDivCheckout table, #loginDivCheckout tr, #loginDivCheckout tbody, #loginDivCheckout div,
-#loginDivsiginflyout,#loginDivsiginflyout td, #loginDivsiginflyout table, #loginDivsiginflyout tr, #loginDivsiginflyout tbody, #loginDivsiginflyout div,
 #loginDivRegisterCheckOut,#loginDivRegisterCheckOut td, #loginDivRegisterCheckOut table, #loginDivRegisterCheckOut tr, #loginDivRegisterCheckOut tbody, #loginDivRegisterCheckOut div {
     display: block;
     width: 100% !important;
@@ -28888,6 +28929,103 @@ body .account .right-account .order-history .bottom .pagination.mobile{
         margin: 10px 0;
         display:inline-block;}
 }
+.trackorder-dropdown li[data-read="true"] a {
+	color: #555;
+}
+.trackorder-dropdown li[data-read="false"] a {
+	font-weight: 600;
+} 
+
+.page-shoe .feature-categories h1{
+    text-transform: capitalize;
+}
+@media(max-width:650px){
+.feature-collections ul.collections li.chef h3 span {
+		font-family: "Avenir Next", "Courier New";
+		font-style: normal;
+		font-size: 14px;
+	}
+	.feature-collections ul.collections li.chef h3 span a {
+		font-size: 12px;
+		font-weight: 700;
+	}
+body .account .right-account .reviews .review-list .account-only.product {
+    padding: 30px;
+    padding-right: 0;
+}
+	}
+
+body .account .right-account .reviews .toolbar .account-only h2{
+  text-transform: capitalize;}
+  @media(max-width:790px){
+  .rating-stars-wrapper{
+  position:absolute;
+  top:25px;
+  }
+  	.rate-bar {
+		height: 9px;
+	}
+	body.page-reviews .right-account .reviews .review-list .wrapper>li .product .short-info{
+	    padding-top: 20px;
+  }
+  }
+  .order-details .totals ul li{
+  display:inline-block;
+  width:100%;
+  }
+  
+  body .account .right-account .order-history .product-block li.header>ul>li span.amt {
+    background-color: transparent;
+}
+.modal.size-guide .sizes .details .price p {
+    display: inline-block;
+    margin: 0 5px;
+}
+body.page-reviews .commentcontent .gig-composebox-logout, .commentcontent .gig-composebox-follow {
+	display: none;
+}
+body.page-reviews ul.gig-comments-header-right.gig-comments-linksContainer{
+	display: none;
+}
+body.page-reviews .gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
+   display: none;
+}
+header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+	display:none;}
+header .content nav > ul > li > ul > li > ul.words > li:nth-child(2){
+	margin-top:0px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+	padding-top:40px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+position: absolute;
+    top: 0;
+	font-size:18px;
+	font-weight:600;
+	display:block;
+	
+}
+
+body.page-productDetails .gig-comment .gig-media-thumbnail,
+body.page-reviews .gig-comment .gig-media-thumbnail {
+	height: auto !important;
+}
+
+body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image,
+body.page-reviews .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
+	height: auto !important;
+	width: 50px !important;
+}
+
+body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-caption a {
+	display: none;
+}  
+
+#loginDivsiginflyout > table > tbody > tr > td table td:first-child{
+	width: 10% !important;
+} 
+
 /*--------------maincss-----------*/
 .row
 {
@@ -32469,6 +32607,14 @@ main {
 
 .thumb {
 	position: relative;
+	width: 100%;
+	display:inline-block;
+	border: 1px solid transparent;
+	margin-bottom:2px;
+	padding: 1px 0;
+	 -webkit-transition: border-color 0.15s;
+    -moz-transition: border-color 0.15s;
+    transition: border-color 0.15s;
 }
 
 .thumb .badges {
@@ -34382,7 +34528,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError {
 	display: none;
 }
 
