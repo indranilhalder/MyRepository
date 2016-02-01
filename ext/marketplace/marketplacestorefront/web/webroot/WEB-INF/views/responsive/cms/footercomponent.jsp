@@ -6,7 +6,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-
 <!-- This is used for NewsLetter SignUp Section in footer -->
 <div class="right">
 	<div class="newsletter">
@@ -37,7 +36,15 @@
 			<li><c:forEach items="${node.links}"
 					step="${component.wrapAfter}" varStatus="i">
 					<c:if test="${component.wrapAfter > i.index}">
-						<h3 class="toggle">${node.title}</h3>
+						<c:choose>
+							<c:when test="${empty node.media}">
+							 <h3 class="toggle">${node.title}</h3>
+						    </c:when>    
+						    <c:otherwise>
+						        <img src="${node.media.url}" alt="${node.media.altText}" />
+						    </c:otherwise>
+						</c:choose>
+						<!-- <h3 class="toggle">${node.title}</h3> -->
 					</c:if>
 					<ul class="">
 						<c:forEach items="${node.links}" var="childlink"
@@ -111,7 +118,10 @@
 		//return true;
 	}
 </script>
-
+<!-- This is used for displaying text in footer -->
+<div class="" style="float: left; width: 100%; text-align: left; padding: 10px 20px;">
+	<span>${footerText}</span>
+</div>
 <!-- This is used for displaying copyright in footer -->
 <div class="banner">
 	<span>${notice}</span>
@@ -129,13 +139,3 @@
 </div>
 <!-- /.modal -->
 
-<!-- /.modal -->
-<div class="modal size-guide fade" id="popUpModalNew" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
-	<div class="overlay"></div>
-		<div class="modal-content content" style="width:90%; max-width:90%;">
-			
-		</div>
-		<!-- /.modal-content -->
-	
-	<!-- /.modal-dialog -->
-</div>

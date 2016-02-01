@@ -134,95 +134,227 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
 });
 //
 
-function getBrandsYouLoveAjaxCall(){
+function getBrandsYouLoveAjaxCall() {
+	$
+			.ajax({
+				type : "GET",
+				dataType : "json",
+				url : ACC.config.encodedContextPath + "/getBrandsYouLove",
+
+				success : function(response) {
+					console.log(response.subComponents);
+					defaultComponentId="";
+					renderHtml = "<h1>" + response.title + "</h1>"
+							+ "<div class='home-brands-you-love-carousel'>";
+					$
+							.each(
+									response.subComponents,
+									function(k, v) {
+										console.log(v.brandLogoUrl);
+										
+										if (!v.showByDefault) {
+											renderHtml += "<div class='home-brands-you-love-carousel-brands' id='"
+													+ v.compId
+													+ "'><img src='"
+													+ v.brandLogoUrl
+													+ "'></img></div>";
+										} else {
+											renderHtml += "<div class='home-brands-you-love-carousel-brands active' id='"
+													+ v.compId
+													+ "'><img src='"
+													+ v.brandLogoUrl
+													+ "'></img></div>";
+											defaultComponentId= v.compId;
+										}
+
+									});
+					renderHtml += "</div>";
+					$('#brandsYouLove').html(renderHtml);
+					
+					getBrandsYouLoveContentAjaxCall(defaultComponentId);
+				},
+				error : function() {
+					globalErrorPopup('Failure!!!');
+				}
+			});
+}
+
+// Get Brands You Love Content AJAX
+function getBrandsYouLoveContentAjaxCall(id) {
+	if (window.localStorage
+			&& (html = window.localStorage.getItem("brandContent-" + id)) && html != "") {
+		// console.log("Local");
+		$('.home-brands-you-love-desc').empty();
+		$('#brandsYouLove').append(decodeURI(html));
+	}
+	else{
+		
+	$
+			.ajax({
+				type : "GET",
+				dataType : "json",
+				
+				url : ACC.config.encodedContextPath
+						+ "/getBrandsYouLoveContent",
+				data : {
+					"id" : id
+				},
+				success : function(response) {
+					$('.home-brands-you-love-desc').empty();
+					defaultHtml = "<div class='home-brands-you-love-desc'>";
+					
+					if (typeof response.firstProductImageUrl !== "undefined") {
+						
+						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
+								+ response.firstProductImageUrl
+								+ "'></img></a></div>";
+					}
+					defaultHtml += "<div class='home-brands-you-love-main-image'>";
+					if (typeof response.text !== "undefined") {
+						defaultHtml += response.text;
+					}
+					if (typeof response.bannerImageUrl !=="undefined") {
+						defaultHtml += "<div class='home-brands-you-love-main-image-wrapper'>";
+						if (typeof response.bannerText !=="undefined") {
+							defaultHtml += "<div class='visit-store-wrapper'>"
+									+ response.bannerText + "</div>";
+						}
+						defaultHtml += "<img src='" + response.bannerImageUrl
+								+ "'></img></div></div>";
+
+					}
+
+					if (typeof response.secondproductImageUrl !== "undefined") {
+						defaultHtml += "<div class='home-brands-you-love-side-image right'><a href='"+ACC.config.encodedContextPath+response.secondProductUrl+"'><img src='"
+								+ response.secondproductImageUrl
+								+ "'></img></a></div>";
+					}
+
+					defaultHtml += "</div>";
+					
+					$('#brandsYouLove').append(defaultHtml);
+					
+					window.localStorage.setItem("brandContent-" + id,
+							encodeURI(defaultHtml));
+
+				},
+				error : function() {
+					globalErrorPopup('Failure!!!');
+				}
+			});
+	}
+}
+// ENd AJAX CALL
+if ($('#brandsYouLove').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
 	
+	if (window.localStorage) {
+		for ( var key in localStorage) {
+			if (key.indexOf("brandContent") >= 0) {
+				window.localStorage.removeItem(key);
+				console.log("Deleting.." + key);
+			}
+		}
+	}
+	getBrandsYouLoveAjaxCall();
 	
+}
+
+var bulCount = $(".home-brands-you-love-carousel-brands.active").index() - 1;
+$(document).on("mouseover", ".home-brands-you-love-carousel-brands",
+		function() {
+			$(".home-brands-you-love-carousel-brands").removeClass('active');
+			$(this).addClass('active');
+			$('.home-brands-you-love-desc').empty();
+			bulCount = $(this).index();
+			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
+		});
+
+setInterval(function() {
+
+	$(".home-brands-you-love-carousel-brands").removeClass('active');
+	$(".home-brands-you-love-carousel-brands").eq(bulCount).addClass('active');
+	componentId = $(".home-brands-you-love-carousel-brands").eq(bulCount).attr(
+			'id');
+	getBrandsYouLoveContentAjaxCall(componentId);
+	bulCount++;
+	if (bulCount == $(".home-brands-you-love-carousel-brands").length) {
+		bulCount = 0;
+	}
+
+}, 20000);
+
+
+
+//AJAX CALL BEST PICKS START
+if ($('#bestPicks').children().length == 0) {
+	getBestPicksAjaxCall();
+}
+
+
+function getBestPicksAjaxCall(){
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
-		url : ACC.config.encodedContextPath + "/getBrandsYouLove",
-
-		success : function(response) {
+		url : ACC.config.encodedContextPath + "/getBestPicks",
 		
-			console.log(response.subComponents);
-			var defaultHtml = "";
+		success : function(response) {
 			renderHtml = "<h1>" + response.title + "</h1>"
-					+ "<div class='home-brands-you-love-carousel'>";
-			$.each(
-							response.subComponents,
-							function(k, v) {
-								console.log(v.brandLogoUrl);
-								if (v.showByDefault) {
-
-								}
-								if (!v.showByDefault) {
-									renderHtml += "<div class='home-brands-you-love-carousel-brands' id='"
-											+ v.compId
-											+ "'><img src='"
-											+ v.brandLogoUrl
-											+ "'></img></div>";
-								} else {
-									renderHtml += "<div class='home-brands-you-love-carousel-brands active' id='"
-											+ v.compId
-											+ "'><img src='"
-											+ v.brandLogoUrl
-											+ "'></imghmmm></div>";
-									defaultHtml += "<div class='home-brands-you-love-desc'>";
-									if (v.firstProductImageUrl != "") {
-										defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
-												+ v.firstProductImageUrl
-												+ "'></img></div>";
-									}
-									defaultHtml += "<div class='home-brands-you-love-main-image'>";
-									if (v.text != "") {
-										defaultHtml += v.text;
-									}
-									if (v.bannerImageUrl != "") {
-										defaultHtml += "<div class='home-brands-you-love-main-image-wrapper'>";
-										if (v.bannerText != "") {
-											defaultHtml += "<div class='visit-store-wrapper'>"
-													+ v.bannerText
-													+ "</div>";
-										}
-										defaultHtml += "<img src='"
-												+ v.bannerImageUrl
-												+ "'></img></div></div>";
-
-									}
-
-									if (v.secondproductImageUrl != "") {
-										defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
-												+ v.secondproductImageUrl
-												+ "'></img></div>";
-									}
-
-									defaultHtml += "</div>";
-								}
-
-							});
-			renderHtml += "</div>";
-			$('#brandsYouLove').html(renderHtml);
-			$('#brandsYouLove').append(defaultHtml);
-
+				+ "<div class='home-best-pick-carousel'>";
+			
+			$
+				.each(
+						response.subItems,function(k, v){
+							
+							if(v.url){
+								renderHtml += "<a href='"
+									+ v.url
+									+ "' class='item'>";
+							}
+							
+							if(v.imageUrl){
+								renderHtml += "<div class='home-best-pick-carousel-img'> <img src='"
+									+ v.imageUrl
+									+ "'></img></div>";
+							}
+							
+							if(v.text){
+								renderHtml += "<div class='short-info'>"
+									+ v.text
+									+ "</div>";
+							}
+							
+							renderHtml += "</a>";
+							
+						
+				});
+			renderHtml += "</div> <a href='#' class='view-cliq-offers'> View Cliq Offers </a>";	
+			$("#bestPicks").html(renderHtml);
+			//console.log()
 		},
+		
 		error : function() {
 			globalErrorPopup('Failure!!!');
+		},
+		
+		complete: function() {
+			$(".home-best-pick-carousel").owlCarousel({
+				navigation:true,
+				navigationText : [],
+				pagination:false,
+				itemsDesktop : [5000,5], 
+				itemsDesktopSmall : [1400,5], 
+				itemsTablet: [650,2], 
+				itemsMobile : [480,2], 
+				rewindNav: false,
+				lazyLoad:true
+			});
 		}
+
 	});
 }
-// AJAX CALL
-if ($('#brandsYouLove').children().length == 0) {
-	
-	getBrandsYouLoveAjaxCall();
-}
 
-$(document).on("mouseover touchend", ".home-brands-you-love-carousel-brands", function() {
-	$(".home-brands-you-love-carousel-brands").removeClass('active');
-	$(this).addClass('active');
-	$('.home-brands-you-love-desc').empty();
-	
-});
+//AJAX CALL BEST PICKS END
 
 
 function getNewAndExclusiveAjaxCall(){
@@ -283,3 +415,5 @@ if ($('#newAndExclusive').children().length == 0) {
 	
 	getNewAndExclusiveAjaxCall();
 }
+
+

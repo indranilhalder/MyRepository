@@ -79,13 +79,43 @@ text-align: center;
 border-bottom: 1px solid;
     padding: 5px;
 }
-#new_exclusive{
-width:50%;
-} 
 
-.newExclusiveElement img {
+
+/*best picks start*/
+#bestPicks h1{
+	padding: 40px 0;
+    font-weight: 500;
+    text-align: center;
+    font-size: 24px;
+}
+#bestPicks .home-best-pick-carousel-img img{
 	width: 100%;
 }
+#bestPicks .short-info span {
+    font-size: 16px;
+    font-family: "Avenir Next";
+    font-weight: 400;
+    text-align: center;
+    line-height: 1;
+    display: inline-block;
+    padding-bottom: 3px;
+    width: 100%;
+}
+#bestPicks .view-cliq-offers {
+padding: 15px;
+    border: 1px solid #a9143c;
+    color: #a9143c;
+    font-size: 12px;
+    font-family: "Avenir Next";
+    font-weight: 600;
+	    margin: 15px auto;
+    text-transform: uppercase;
+    display: block;
+    width: 200px;
+    text-align: center;
+}
+/*best picks end*/
+
 
 </style>
 
@@ -110,15 +140,11 @@ width:50%;
 	<cms:pageSlot position="Section2C" var="feature">
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
-	<%--  <cms:pageSlot position="Section4B" var="feature">
-		<cms:component component="${feature}" />
-	</cms:pageSlot> --%>
-	
-	<div id="newAndExclusive" class=""></div>
-	
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper"></div>
+	<div id="bestPicks" class=""></div>
+	<div id="newAndExclusive" class=""></div>
 	<!-- For Infinite Analytics Start -->
-	<div class="brands" id="ia_brands_favorites"></div>
+	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
 	<div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div>
 	<div class="trending" id="ia_products_hot"></div>
@@ -130,4 +156,3 @@ width:50%;
 	</cms:pageSlot>
 
 </template:page>
-

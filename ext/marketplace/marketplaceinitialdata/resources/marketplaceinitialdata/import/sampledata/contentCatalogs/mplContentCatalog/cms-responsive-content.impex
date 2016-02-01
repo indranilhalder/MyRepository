@@ -68,25 +68,26 @@ INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true
 INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
 ;;TMPFootwearHomepageBannerComponent;TMP Footwear Homepage Banner Component;4;TMPFootwearHomepageBannerComponent
 
-INSERT_UPDATE MplSequentialBannerComponent;$contentCV[unique=true];uid[unique=true];name;bannersList(&componentRef);&componentRef
-;;TMPSequentialHomepageBannerComponent;Sequential Homepage Banner;TMPGoodsHompageBannerComponent,TMPApparelHomepageBannerComponent,TMPJwelleryHomepageBannerComponent;TMPSequentialHomepageBannerComponent;TMPFootwearHomepageBannerComponent;TMPShoeHomepageBannerComponent
+####New Homepage change
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef;timeout
+;;HomepageCarouselBannerComponent;Homepage Carousel Banner Component;TMPGoodsHompageBannerComponent,TMPWestsideBannerComponent,TMPJwelleryHomepageBannerComponent;HomepageCarouselBannerComponent;10
 
+####New Homepage change
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section1-TMPHomepage;true;Homepage Banner Slot;TMPSequentialHomepageBannerComponent
+;;Section1-TMPHomepage;true;Homepage Banner Slot;HomepageCarouselBannerComponent
 
+####New Homepage change
 # ContentSlotForPage 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
-;;Section1-TMPHomepage;Section1;;Section1-TMPHomepage;;;
-
-
+;;Section1-TMPHomepage;Section1;;Section1-TMPHomepage;;; 
 
 
 #CMSMediaParagraphComponent changes starts
 INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
-;;AuthenticExclusiveMediaParagraphComponent;Authentic And Exclusive Media Paragraph Component;AuthenticExclusiveMediaParagraphComponent;"<span>Authentic & Exclusive</span><span>Shop Our Brands</span>";AuthenticExclusive.png;"/store/mpl/en/authenticAndExclusive";
-;;BestCollectionMediaParagraphComponent;Best Collection Media Paragraph Component;BestCollectionMediaParagraphComponent;"<span>Best Collections</span><span>Shop Our Collections</span>";BestCollection.png;"#";
-;;CustomerFirstMediaParagraphComponent;Customer First Media Paragraph Component;CustomerFirstMediaParagraphComponent;"<span>Customer First</span><span>Learn About Our Service</span>";CustomerFirst.png;"/store/mpl/en/contact";
-;;DeliveryOnTimeMediaParagraphComponent;Delivery On Time Media Paragraph Component;DeliveryOnTimeMediaParagraphComponent;"<span>Delivery On-time</span><span>Track Your Order</span>";DeliveryOnTime.png;"/store/mpl/en/trackorders";
+;;AuthenticExclusiveMediaParagraphComponent;Authentic And Exclusive Media Paragraph Component;AuthenticExclusiveMediaParagraphComponent;"<span>Authentic & Exclusive</span>";AuthenticExclusive.png;"/store/mpl/en/authenticAndExclusive";
+;;BestCollectionMediaParagraphComponent;Best Collection Media Paragraph Component;BestCollectionMediaParagraphComponent;"<span>Best Collections</span>";BestCollection.png;"#";
+;;CustomerFirstMediaParagraphComponent;Customer First Media Paragraph Component;CustomerFirstMediaParagraphComponent;"<span>Customer First</span>";CustomerFirst.png;"/store/mpl/en/contact";
+;;DeliveryOnTimeMediaParagraphComponent;Delivery On Time Media Paragraph Component;DeliveryOnTimeMediaParagraphComponent;"<span>Delivery On-time</span>";DeliveryOnTime.png;"/store/mpl/en/trackorders";
 #;;EveryWhereMediaParagraphComponent;EveryWhere Media Paragraph Component;EveryWhereMediaParagraphComponent;
 ;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<div>Call Us,24/7</div><div><a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a></div>";callus.png
 ;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<div>Chat with us</div><a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available Now</a>";chatwidus.png
@@ -239,22 +240,6 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 #;;Section2B-ApparelUKHomepage;Section2B;;Section2BSlot-Homepage;;;
 
 ## Home section 3
-#Brands You Love Component
-INSERT_UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;BrandList(subBrandName);imageSize(code);;
-#;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;WestSide,Chroma,Tanishq;large;;
-#;;SmallBrandsComponent;Small Brands Component;SmallBrandsComponent;Nuon,Ascot,L.O.V,bombay,gia,soda;thumbnail;;
-#Category carousel for Products you care
-INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
-#;;TMPHomepageCategoryCarousel;Products You Care Component;MPH1111100100,MPH1111100101,MPH1111100102,MPH1111100103;TMPHomepageCategoryCarousel;thumbnail;
-# Product Carousel for Handpicked Collections
-INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
-#;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections Component;987654321,987654322,987654323;allVisible;false;TMPHomepageHandpickedProductCarouselComponent
-# Product Carousel for Now trending products
-INSERT_UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef
-#;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending Product Carousel;MPH1111100100,MPH1111100101,MPH1112100108;TMPHomepageNowTrendingProductCarouselComponent
-INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
-#;;HandpickedCollectionsParagraphComponent;Handpicked Collections Paragraph Component;HandpickedCollectionsParagraphComponent;;;;
-
 #######Brands You Love###################
 
 INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);
@@ -274,8 +259,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section3Slot-Homepage;Section3;;Section3Slot-Homepage;;;
 
-
-########## New And Exclusive ##################
+########## New And Exclusive-Section4B ##################
 
 # Product Carousel for  New And Exclusive
 INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
@@ -286,6 +270,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section4BSlot-Homepage;Section4B;;Section4BSlot-Homepage;;;
+
 
 #### Section 4
 
@@ -302,6 +287,36 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsCom
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 #;;Section4ASlot-Homepage;Section4A;;Section4ASlot-Homepage;;;
 #;;Section4BSlot-Homepage;Section4B;;Section4BSlot-Homepage;;;
+
+##### Home section 4C
+#Best picks Component
+
+#CMSMediaParagraphComponent changes starts
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;url
+;;BestPicksItems1Component;Best Picks Items One;BestPicksItems1Component;"<span>Westly</span><span>Duffle Bag</span><span>₹8,900</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems2Component;Best Picks Items Two;BestPicksItems2Component;"<span>Boxy</span><span>Leather Biker Jacket</span><span>₹18,000</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems3Component;Best Picks Items Three;BestPicksItems3Component;"<span>Zara</span><span>Kitten Floral Shirtdress</span><span>₹3,600</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems4Component;Best Picks Items Four;BestPicksItems4Component;"<span>Ascot</span><span>Tailored Belted Coat</span><span>₹10,095</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems5Component;Best Picks Items Five;BestPicksItems5Component;"<span>Dune</span><span>Daniella Handbag</span><span>₹100,000</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems6Component;Best Picks Items Six;BestPicksItems6Component;"<span>Westly</span><span>Duffle Bag</span><span>₹8,900</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems7Component;Best Picks Items Seven;BestPicksItems7Component;"<span>Boxy</span><span>Leather Biker Jacket</span><span>₹18,000</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems8Component;Best Picks Items Eight;BestPicksItems8Component;"<span>Zara</span><span>Kitten Floral Shirtdress</span><span>₹3,600</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems9Component;Best Picks Items Nine;BestPicksItems9Component;"<span>Ascot</span><span>Tailored Belted Coat</span><span>₹10,095</span>";"/store/mpl/en/authenticAndExclusive";
+;;BestPicksItems10Component;Best Picks Items Ten;BestPicksItems10Component;"<span>Dune</span><span>Daniella Handbag</span><span>₹100,000</span>";"/store/mpl/en/authenticAndExclusive";
+
+
+#BestPicksCarouselComponent
+INSERT_UPDATE ImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(uid)
+;;TMPBestPicksCarouselComponent;Best Picks Carousel Component;Best Picks;TMPBestPicksCarouselComponent;BestPicksItems1Component,BestPicksItems2Component,BestPicksItems3Component,BestPicksItems4Component,BestPicksItems5Component,BestPicksItems6Component,BestPicksItems7Component,BestPicksItems8Component,BestPicksItems9Component,BestPicksItems10Component
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;Section4CSlot-Homepage;TMPBestPicksCarouselComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section4CSlot-Homepage;Section4C;;Section4CSlot-Homepage;;;
+
+
 #### Section 5
 ## Home section 2C
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
@@ -504,7 +519,7 @@ INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=tr
 
 
 INSERT_UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;Promotion(code);seller(id);;
-;;SpringFlingPromotionComponent;Spring Fling Component;SpringFlingPromotionComponent;;123654;;
+;;SpringFlingPromotionComponent;Spring Fling Component;SpringFlingPromotionComponent;;;;
 
 
 ### PREMIER BRAND COMPONENT ON BRAND LANDING PAGE ###
@@ -927,5 +942,3 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 #ContentSlotforPage for Overview  Page
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='overview'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;BodyContent-Overview;BodyContent;;BodyContent-Overview;;;
-
-

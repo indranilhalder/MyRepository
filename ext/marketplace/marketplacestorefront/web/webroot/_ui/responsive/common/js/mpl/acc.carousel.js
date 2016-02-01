@@ -75,6 +75,17 @@ ACC.carousel = {
 			pagination:false,
 			singleItem:true
 		});
+		
+		var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+		//alert(timeout);
+		$("#rotatingImageTimeout").owlCarousel({
+			navigation:false,
+			rewindNav: true,
+			autoPlay: timeout,
+			navigationText : [],
+			pagination:true,
+			singleItem:true
+		});
 	},
 	shopByLookCarousel: function(){
 		$(".shopByLookCarousel").owlCarousel({
@@ -146,5 +157,20 @@ ACC.carousel = {
 		});
 	}
 	
+	/*New Homepage change*/
+	/*timeoutCarousel: function(){
+		var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+		//alert(timeout);
+		$("#rotatingImageTimeout").owlCarousel({
+			navigation:false,
+			rewindNav: true,
+			autoPlay: timeout,
+			navigationText : [],
+			pagination:true,
+			singleItem:true
+		});
+	}*/
 	
+	
+
 };

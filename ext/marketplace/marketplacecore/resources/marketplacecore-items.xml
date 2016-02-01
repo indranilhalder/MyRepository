@@ -98,6 +98,9 @@
 			elementtype="MplShowcaseItemComponent" autocreate="true" generate="true"
 			type="list" />
 			
+			<collectiontype elementtype="CMSMediaParagraphComponent" code="imageCollection"
+ 				autocreate="true" generate="true" type="list"/>
+			
 			
 	</collectiontypes>
 
@@ -3325,6 +3328,37 @@
 						<persistence type="property" />
 						<description>This attribute represents the list of footer images</description>
 					</attribute>
+				
+					<attribute qualifier="footerText" type="localized:java.lang.String" generate="true" autocreate="true">
+						<persistence type="property">
+							<columntype database="oracle">
+								<value>varchar2(4000)</value>
+							</columntype>
+							<columntype database="mysql">
+								<value>text</value>
+							</columntype>
+							<columntype database="sqlserver">
+								<value>nvarchar(max)</value>
+							</columntype>
+							<columntype database="hsqldb">
+								<value>LONGVARCHAR</value>
+							</columntype>
+							<columntype>
+								<value>varchar</value>
+							</columntype>
+						</persistence>
+						<description>This attribute represents footer text to be displayed in the footer</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="CMSNavigationNode" generate="false"
+				autocreate="false">
+				<attributes>
+					<attribute qualifier="media" generate="true" autocreate="true"
+						type="localized:Media">
+						<persistence type="property" />
+						<description>Attribute that stores the localized media in CMS Navigation Node.</description>
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- CMS Media Paragraph Component -->
@@ -3346,6 +3380,31 @@
 				</attributes>
 			</itemtype>
 
+
+			<!-- Best Picks Carousel Component -->
+ 			<itemtype code="ImageCarouselComponent" extends="SimpleCMSComponent"
+ 				generate="true" autocreate="true"
+ 				jaloclass="com.tisl.mpl.jalo.cms.components.ImageCarouselComponent">
+ 				<description>It represents an Image Carousel component with an attribute 
+ 				that is collection of Media paragraph components.</description>
+ 				<attributes>
+ 					<attribute qualifier="title" type="java.lang.String"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<description>Title Of The Component</description>
+ 						<persistence type="property" />
+ 					</attribute>
+ 					
+ 					<attribute qualifier="collectionItems" type="imageCollection"
+ 						autocreate="true" generate="true">
+ 						<modifiers read="true" write="true" search="true" />
+ 						<description>Collection of the best pick media paragraph components</description>
+ 						<persistence type="property" />
+ 					</attribute>
+ 				</attributes>
+ 			</itemtype>
+ 
+ 
 			<itemtype code="NeedHelpComponent" generate="true"
 				extends="SimpleCMSComponent" autocreate="true"
 				jaloclass="com.tisl.mpl.jalo.cms.components.NeedHelpComponent">

@@ -21,6 +21,10 @@
 					<td><div style="height:6px"/></td>
 				</tr>
 				<tr>
+					<td style="width:900px"><cockpit code="property" value="FooterComponent.footerText"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
 					<td style="width:900px"><cockpit code="property" value="FooterComponent.wrapAfter"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
@@ -32,4 +36,5 @@
 		</table>
 	]]>
 	</template>
+
 </content-editor>
