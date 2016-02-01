@@ -307,6 +307,58 @@ public class HomePageController extends AbstractPageController
 		return bestPicks;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/getNewAndExclusive", method = RequestMethod.GET)
+	public JSONObject getNewAndExclusive()
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject newAndExclusiveJson = new JSONObject();
+		final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section4BSlot-Homepage", "Online");
+		if (CollectionUtils.isNotEmpty(homepageSection4BSlot.getCmsComponents()))
+		{
+			components = homepageSection4BSlot.getCmsComponents();
+		}
+
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			LOG.info("Found Component>>>>with id :::" + component.getUid());
+
+			if (component instanceof ProductCarouselComponentModel)
+			{
+				final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
+
+				String title = "";
+				if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
+				{
+					title = newAndExclusiveComponent.getTitle();
+				}
+				newAndExclusiveJson.put("title", title);
+				final JSONArray newAndExclusiveJsonArray = new JSONArray();
+				if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
+				{
+					for (final ProductModel newAndExclusiveProducts : newAndExclusiveComponent.getProducts())
+					{
+						final JSONObject newAndExclusiveProductJson = new JSONObject();
+						ProductData product = null;
+
+						product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
+						newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
+						newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
+						newAndExclusiveProductJson.put("productUrl", product.getUrl());
+						//newAndExclusiveJson.put("ProductPrice", product.getProductMOP());
+						newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+					}
+				}
+
+				newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+			}
+		}
+
+		return newAndExclusiveJson;
+
+	}
 
 
 	/**
@@ -374,3 +426,4 @@ public class HomePageController extends AbstractPageController
 
 
 }
+
