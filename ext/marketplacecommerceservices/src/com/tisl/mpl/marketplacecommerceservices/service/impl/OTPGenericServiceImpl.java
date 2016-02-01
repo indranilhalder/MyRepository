@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -46,6 +47,8 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	private static final Logger LOG = Logger.getLogger(OTPGenericServiceImpl.class);
 	private OTPDao otpDao;
 	private final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	private static final String OTP_ENABLED_STRING = "marketplace.otp.enabled";
+	private ConfigurationService configurationService;
 	private ModelService modelservice;
 	private UserService userService;
 	private final String EMAILPATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -378,9 +381,17 @@ public class OTPGenericServiceImpl implements OTPGenericService
 
 		try
 		{
-			final UserModel user = userService.getUserForUID(userIdOrEmail);
-			otplist = otpDao.fetchOTP(user.getPk().toString(), OTPType);
-
+			if (getConfigurationService().getConfiguration().getBoolean(OTP_ENABLED_STRING, true))
+			{
+				final UserModel user = userService.getUserForUID(userIdOrEmail);
+				otplist = otpDao.fetchOTP(user.getPk().toString(), OTPType);
+			}
+			else
+			{
+				otpResponse.setOTPValid(Boolean.TRUE);
+				otpResponse.setInvalidErrorMessage("VALID");
+				return otpResponse;
+			}
 		}
 		catch (final UnknownIdentifierException e)
 		{
@@ -639,6 +650,23 @@ public class OTPGenericServiceImpl implements OTPGenericService
 	public String getEMAILPATTERN()
 	{
 		return EMAILPATTERN;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
 	}
 
 

@@ -1,4 +1,3 @@
-<%@ tag language="java" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/desktop/template"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -15,21 +14,22 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 
+<c:if test="${fn:length(ProductDatas)>0}">
 <script>
-var sellersArray = [];
+/* var sellersArray = [];
 var ussidArray=[];
 var pincodeServiceableArray = [];
 var index = -1;
 var seq = -1;
 var mrp = '${product.productMRP.value}';
 var sellersList = '${product.seller}';
-var productCode = '${product.code}';
+var productCode = '${product.code}'; */
   
  /* $( document ).ready(function() { 		
 	fetchPrice();		
  }); */
   
-/* $( document ).ready(function() {
+$( document ).ready(function() {
 	$(".selectQty").change(function() {	
 		$("#qty").val($(".selectQty :selected").val());
 	});
@@ -74,19 +74,11 @@ var productCode = '${product.code}';
 	});	
 			
 		
-}); */
+});
 </script>
 
 
-<%-- <c:if test="${fn:length(ProductDatas)>0}"> --%>
-	<div class="wishlist-banner" id="wishlistBanner" style="display:none">
-		<h2>
-			<spring:theme code="Treat Yourself" />
-			<span><spring:theme code="mpl.gift.Yourself" /></span>
-		</h2>
-	</div>
-	<ul class="product-block wishlist" id="giftYourselfProducts">
-		<%-- <c:forEach items="${ProductDatas}" var="product">
+		<c:forEach items="${ProductDatas}" var="product">
 			<li class="item" id="${product.code}">
 				<ul class="desktop">
 					<li>
@@ -157,7 +149,7 @@ var productCode = '${product.code}';
 						<ul>
 						
 							
-								<c:if test="${not empty giftYourselfDeliveryModeDataMap}">
+								<%-- <c:if test="${not empty giftYourselfDeliveryModeDataMap}"> --%>
 									<c:forEach items="${giftYourselfDeliveryModeDataMap}"
 										var="giftYourselfDeliveryModeDataMap">
 										<c:if
@@ -168,7 +160,7 @@ var productCode = '${product.code}';
 											</c:forEach>
 										</c:if>
 									</c:forEach>
-								</c:if>
+								<%-- </c:if> --%>
 							
 
 						</ul>
@@ -179,15 +171,8 @@ var productCode = '${product.code}';
 				</ul>
 				
 			</li>
-		</c:forEach> --%>
-	</ul>
-<%-- </c:if> --%>
-<div class="modal fade in" id="addedToBag">
-<div class="content">
-<div class="">Successfully Added to Bag</div>
-</div>
-<div class="overlay"></div>
-</div>
+		</c:forEach>
+	</c:if>
 <%-- <c:if test="${fn:length(ProductDatas)>0}">
 	<ul class="cart-list">
 		<li class="product-item">

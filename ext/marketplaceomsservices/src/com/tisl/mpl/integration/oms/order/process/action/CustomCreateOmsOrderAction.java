@@ -11,9 +11,12 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction;
 import de.hybris.platform.task.RetryLaterException;
 
+import javax.ws.rs.core.Response;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
+
+import com.hybris.commons.client.RestCallException;
 
 
 public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<OrderProcessModel>
@@ -22,73 +25,50 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 	private OmsOrderService omsOrderService;
 	private int maxRetryCount;
 	private int retryDelay;
-	private ImpersonationService impersonationService;
 	private CatalogVersionService catalogVersionService;
+	private ImpersonationService impersonationService;
+
 
 	@Override
-	public AbstractSimpleDecisionAction.Transition executeAction(final OrderProcessModel process) throws RetryLaterException
+	public Transition executeAction(final OrderProcessModel process) throws RetryLaterException
 	{
 		final OrderModel order = process.getOrder();
+
 		final ImpersonationContext context = new ImpersonationContext();
 		context.setOrder(order);
-		context.setCatalogVersions(CommerceCatalogUtils.findProductCatalogVersions(getCatalogVersionService()
-				.getAllCatalogVersions()));
+		context.setCatalogVersions(
+				CommerceCatalogUtils.findProductCatalogVersions(getCatalogVersionService().getAllCatalogVersions()));
 
-		final OrderPlacementResult result = CustomCreateOmsOrderAction.this.getOmsOrderService().createOmsOrder(order);
+		final OrderPlacementResult result = getOmsOrderService().createOmsOrder(order);
 
 		if (result.getResult().equals(OrderPlacementResult.Status.SUCCESS))
 		{
-			return AbstractSimpleDecisionAction.Transition.OK;
+			return Transition.OK;
 		}
 		if ((result.getResult().equals(OrderPlacementResult.Status.FAILED))
-				&& (order.getExportedToOmsRetryCount().intValue() < CustomCreateOmsOrderAction.this.getMaxRetryCount()))
+				&& (order.getExportedToOmsRetryCount().intValue() < getMaxRetryCount())
+				&& result.getCause() instanceof RestCallException)
 		{
-			CustomCreateOmsOrderAction.LOG.warn(String.format(
-					"Failed to send order %s to OMS. Service unavailable. Call will be retried. Error:  %s", new Object[]
-					{ order.getCode(), result.getCause().getMessage() }));
-			order.setExportedToOmsRetryCount(Integer.valueOf(order.getExportedToOmsRetryCount().intValue() + 1));
-			final RetryLaterException retryLaterException = new RetryLaterException(
-					"Error occurred during oms order submission of order : " + order.getCode(), result.getCause());
-			retryLaterException.setDelay(CustomCreateOmsOrderAction.this.getRetryDelay());
-			throw retryLaterException;
+			final RestCallException e = (RestCallException) result.getCause();
+			if (Response.Status.SERVICE_UNAVAILABLE.equals(e.getResponse().getStatus())
+					|| Response.Status.FORBIDDEN.equals(e.getResponse().getStatus())
+					|| Response.Status.INTERNAL_SERVER_ERROR.equals(e.getResponse().getStatus())
+					|| Response.Status.NOT_FOUND.equals(e.getResponse().getStatus())
+					|| Response.Status.UNAUTHORIZED.equals(e.getResponse().getStatus()))
+			{
+				LOG.warn("Failed to send order " + order.getCode() + " to OMS. Service unavailable. Call will be retried. Error: "
+						+ result.getCause().getMessage());
+				order.setExportedToOmsRetryCount(Integer.valueOf(order.getExportedToOmsRetryCount().intValue() + 1));
+				final RetryLaterException retryLaterException = new RetryLaterException(
+						"Error occurred during oms order submission of order : " + order.getCode(), result.getCause());
+				retryLaterException.setDelay(getRetryDelay());
+				throw retryLaterException;
+			}
+
 		}
 
-		return null;
+		return Transition.NOK;
 
-		//		return ((AbstractSimpleDecisionAction.Transition) getImpersonationService().executeInContext(context,
-		//				new ImpersonationService.Executor(order)
-		//				{
-		//					public AbstractSimpleDecisionAction.Transition execute() throws RetryLaterException
-		//					{
-		//						final OrderPlacementResult result = CustomCreateOmsOrderAction.this.getOmsOrderService().createOmsOrder(
-		//								this.val$order);
-		//
-		//						if (result.getResult().equals(OrderPlacementResult.Status.SUCCESS))
-		//						{
-		//							return AbstractSimpleDecisionAction.Transition.OK;
-		//						}
-		//						if ((result.getResult().equals(OrderPlacementResult.Status.FAILED))
-		//								&& (this.val$order.getExportedToOmsRetryCount().intValue() < CustomCreateOmsOrderAction.this
-		//										.getMaxRetryCount()))
-		//						{
-		//							CustomCreateOmsOrderAction.LOG.warn(String.format(
-		//									"Failed to send order %s to OMS. Service unavailable. Call will be retried. Error:  %s", new Object[]
-		//									{ this.val$order.getCode(), result.getCause().getMessage() }));
-		//							this.val$order.setExportedToOmsRetryCount(Integer.valueOf(this.val$order.getExportedToOmsRetryCount()
-		//									.intValue() + 1));
-		//							final RetryLaterException retryLaterException = new RetryLaterException(
-		//									"Error occurred during oms order submission of order : " + this.val$order.getCode(), result.getCause());
-		//							retryLaterException.setDelay(CustomCreateOmsOrderAction.this.getRetryDelay());
-		//							throw retryLaterException;
-		//						}
-		//
-		//						CustomCreateOmsOrderAction.LOG.error(String.format(
-		//								"Failed to send order %s to OMS. Service unavailable. Call won't be retried. Error:  %s", new Object[]
-		//								{ this.val$order.getCode(), result.getCause().getMessage() }), result.getCause());
-		//						CustomCreateOmsOrderAction.this.getOmsOrderService().flagTheOrderAsFailed(this.val$order, result.getCause());
-		//						return AbstractSimpleDecisionAction.Transition.NOK;
-		//					}
-		//				}));
 	}
 
 	public OmsOrderService getOmsOrderService()
@@ -121,25 +101,38 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 		this.retryDelay = retryDelay;
 	}
 
-	protected ImpersonationService getImpersonationService()
+	/**
+	 * @return the catalogVersionService
+	 */
+	public CatalogVersionService getCatalogVersionService()
 	{
-		return this.impersonationService;
+		return catalogVersionService;
 	}
 
-	@Required
+	/**
+	 * @param catalogVersionService
+	 *           the catalogVersionService to set
+	 */
+	public void setCatalogVersionService(final CatalogVersionService catalogVersionService)
+	{
+		this.catalogVersionService = catalogVersionService;
+	}
+
+	/**
+	 * @return the impersonationService
+	 */
+	public ImpersonationService getImpersonationService()
+	{
+		return impersonationService;
+	}
+
+	/**
+	 * @param impersonationService
+	 *           the impersonationService to set
+	 */
 	public void setImpersonationService(final ImpersonationService impersonationService)
 	{
 		this.impersonationService = impersonationService;
 	}
 
-	protected CatalogVersionService getCatalogVersionService()
-	{
-		return this.catalogVersionService;
-	}
-
-	@Required
-	public void setCatalogVersionService(final CatalogVersionService catalogVersionService)
-	{
-		this.catalogVersionService = catalogVersionService;
-	}
 }
