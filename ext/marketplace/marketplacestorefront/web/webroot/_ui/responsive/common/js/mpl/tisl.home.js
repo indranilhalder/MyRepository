@@ -174,7 +174,8 @@ function getBrandsYouLoveAjaxCall() {
 					getBrandsYouLoveContentAjaxCall(defaultComponentId);
 				},
 				error : function() {
-					globalErrorPopup('Failure!!!');
+					//globalErrorPopup('Failure!!!');
+					console.log("Error while getting brands you love");
 				}
 			});
 }
@@ -239,7 +240,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 
 				},
 				error : function() {
-					globalErrorPopup('Failure!!!');
+					console.log("Error while getting brands you love content");
 				}
 			});
 	}
@@ -286,7 +287,7 @@ setInterval(function() {
 
 
 //AJAX CALL BEST PICKS START
-if ($('#bestPicks').children().length == 0) {
+if ($('#bestPicks').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
 	getBestPicksAjaxCall();
 }
 
@@ -334,7 +335,7 @@ function getBestPicksAjaxCall(){
 		},
 		
 		error : function() {
-			globalErrorPopup('Failure!!!');
+			console.log("Error while getting best picks");
 		},
 		
 		complete: function() {
@@ -355,7 +356,6 @@ function getBestPicksAjaxCall(){
 }
 
 //AJAX CALL BEST PICKS END
-
 
 function getNewAndExclusiveAjaxCall(){
 	
@@ -392,7 +392,7 @@ function getNewAndExclusiveAjaxCall(){
 
 		},
 		error : function() {
-			globalErrorPopup('Failure!!!');
+			console.log("Error while getting new and exclusive");
 		},
 		
 		complete: function() {
@@ -411,9 +411,8 @@ function getNewAndExclusiveAjaxCall(){
 	});
 }
 
-if ($('#newAndExclusive').children().length == 0) {
+if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
 	
 	getNewAndExclusiveAjaxCall();
 }
-
 
