@@ -45,7 +45,22 @@ public class MarketplaceCouponCheckoutWidgetRenderer extends AbstractCsWidgetRen
 		CartModel cartModel=(CartModel) cart.getObject();
 		List<DiscountModel> discounts=cartModel.getDiscounts();
 		
-		if(CollectionUtils.isNotEmpty(discounts))
+		final List<AbstractOrderEntryModel> orderEntryList=cartModel.getEntries();
+		boolean couponFlag=false; 
+		
+		if(CollectionUtils.isNotEmpty(orderEntryList)){
+			for(AbstractOrderEntryModel orderEntry:orderEntryList)
+			{
+				if(StringUtils.isNotEmpty(orderEntry.getCouponCode()))
+				{
+					couponFlag=true;
+					break;
+				}
+			}
+		}
+		
+		
+		if(CollectionUtils.isNotEmpty(discounts) && couponFlag)
 		{
 			Div container = new Div();
 			container.setSclass("voucherAlignment");
@@ -142,20 +157,8 @@ public class MarketplaceCouponCheckoutWidgetRenderer extends AbstractCsWidgetRen
 			
 			mainbox.setParent(container);
 			
-			final List<AbstractOrderEntryModel> orderEntryList=cartModel.getEntries();
-			boolean couponFlag=false;
-			
-			for(AbstractOrderEntryModel orderEntry:orderEntryList)
-			{
-				if(StringUtils.isNotEmpty(orderEntry.getCouponCode()))
-				{
-					couponFlag=true;
-					break;
-				}
-			}
-			
-			if(couponFlag)
-			{
+			//if(couponFlag)
+			//{
 				//Product Details
 				Hbox prodBox = new Hbox();		
 				Div couponEntryDiv=new Div();
@@ -219,7 +222,7 @@ public class MarketplaceCouponCheckoutWidgetRenderer extends AbstractCsWidgetRen
 				}
 				
 				prodBox.setParent(container);
-			}	
+			//}	
 		}
 		else
 		{
