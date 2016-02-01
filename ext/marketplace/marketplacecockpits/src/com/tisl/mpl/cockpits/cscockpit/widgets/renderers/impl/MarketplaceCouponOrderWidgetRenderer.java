@@ -160,11 +160,15 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 			//{
 				//Product Details
 			List<AbstractOrderEntryModel> parentOrderEntryList=new ArrayList<AbstractOrderEntryModel>();
-			if(orderModel.getType().equalsIgnoreCase("Child"))
+			if(orderModel.getType().equalsIgnoreCase("SubOrder"))
 			{
 				final OrderModel parentOrder=orderModel.getParentReference();
-				parentOrderEntryList=parentOrder.getEntries();
+				parentOrderEntryList = parentOrder.getEntries();
 				
+			}
+			else if(orderModel.getType().equalsIgnoreCase("Parent"))
+			{
+				parentOrderEntryList = orderEntryList;
 			}
 				Hbox prodBox = new Hbox();		
 				Div couponEntryDiv=new Div();
@@ -190,15 +194,21 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 				colProdSaveHeader.setWidth("50px");
 				colProdSaveHeader.setParent(headRowProd);
 
-				for(AbstractOrderEntryModel entry:orderEntryList){
-					final OrderModel orderForEntry=(OrderModel) entry.getOrder();
-					if(orderForEntry.getType().equalsIgnoreCase("Child") && CollectionUtils.isNotEmpty(parentOrderEntryList)){
-						populateSubOrder(parentOrderEntryList, entry, orderForEntry, listBoxProd);
-					}
-					else{
-						populateParentOrder(entry, orderModel, listBoxProd);
-					}
+//				for(AbstractOrderEntryModel entry:orderEntryList){
+//					final OrderModel orderForEntry=(OrderModel) entry.getOrder();
+//					if(orderForEntry.getType().equalsIgnoreCase("Child") && CollectionUtils.isNotEmpty(parentOrderEntryList)){
+//						populateSubOrder(parentOrderEntryList, entry, orderForEntry, listBoxProd);
+//					}
+//					else{
+						//populateParentOrder(entry, orderModel, listBoxProd);
+					//}					
+				//}
+				
+				for(AbstractOrderEntryModel entry : parentOrderEntryList)
+				{
+					populateParentOrder(entry, orderModel, listBoxProd);
 				}
+				
 				
 				prodBox.setParent(container);
 			//}
@@ -264,6 +274,8 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 	 */
 	private void populateList(final OrderModel orderModel, Listbox listBoxProd, final AbstractOrderEntryModel entry)
 	{
+		if(StringUtils.isNotEmpty(entry.getCouponCode()) && null!=entry.getCouponValue() && entry.getCouponValue()>0)
+		{
 		final Listitem rowProd = new Listitem();
 		
 		rowProd.setSclass("listbox-row-item");
@@ -294,6 +306,7 @@ public class MarketplaceCouponOrderWidgetRenderer extends AbstractCsWidgetRender
 		final PriceData couponDiscVal=discountUtility.createPrice(orderModel, entry.getCouponValue());
 		Label productSaveLabel = new Label(couponDiscVal.getFormattedValue());
 		productSaveLabel.setParent(productSaveDiv);
+		}
 	}
 
 }
