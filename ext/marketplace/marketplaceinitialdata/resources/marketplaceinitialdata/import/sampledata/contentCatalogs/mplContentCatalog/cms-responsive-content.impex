@@ -242,16 +242,16 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ## Home section 3
 #######Brands You Love###################
 
+INSERT_UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showByDefault;;
+;;ZaraBrandShowcaseItem;Zara Brand Showcase;ZaraBrandShowcaseItem;false
+;;NuonBrandShowcaseItem;Nuon Brand Showcase;NuonBrandShowcaseItem;false
+;;LandmarkBrandShowcaseItem;Landmark Brand Showcase;LandmarkBrandShowcaseItem;false
+;;AscotBrandShowcaseItem;Ascot Brand Showcase;AscotBrandShowcaseItem;true
+;;TitanBrandShowcaseItem;Titan Brand Showcase;TitanBrandShowcaseItem;false
+;;CromaBrandShowcaseItem;Croma Brand Showcase;CromaBrandShowcaseItem;false
+
 INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);
 ;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;ZaraBrandShowcaseItem,NuonBrandShowcaseItem,LandmarkBrandShowcaseItem,AscotBrandShowcaseItem,TitanBrandShowcaseItem,CromaBrandShowcaseItem
-
-INSERT_UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
-;;ZaraBrandShowcaseItem;Zara Brand Showcase;ZaraBrandShowcaseItem
-;;NuonBrandShowcaseItem;Nuon Brand Showcase;NuonBrandShowcaseItem
-;;LandmarkBrandShowcaseItem;Landmark Brand Showcase;LandmarkBrandShowcaseItem
-;;AscotBrandShowcaseItem;Ascot Brand Showcase;AscotBrandShowcaseItem
-;;TitanBrandShowcaseItem;Titan Brand Showcase;TitanBrandShowcaseItem
-;;CromaBrandShowcaseItem;Croma Brand Showcase;CromaBrandShowcaseItem
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
 ;;Section3Slot-Homepage;BrandsYouLoveComponent
