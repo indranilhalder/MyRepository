@@ -355,3 +355,65 @@ function getBestPicksAjaxCall(){
 }
 
 //AJAX CALL BEST PICKS END
+
+
+function getNewAndExclusiveAjaxCall(){
+	
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getNewAndExclusive",
+
+		success : function(response) {
+			
+		
+			console.log(response.newAndExclusiveProducts);
+			var defaultHtml = "";
+			renderHtml = "<h1>" + response.title + "</h1>"
+					+ "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
+			$.each(
+							response.newAndExclusiveProducts,
+							function(key, value) {
+								
+									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
+											+ value.productImageUrl
+											+ "'></img></a>" + value.productTitle + "</div></div>"; 
+												/*+ "'></img></a>" + value.productTitle + value.productTitle + "</div></div>"; */
+											
+
+							});
+			renderHtml += "</div><button type='submit'>View All</button>";
+			$('#newAndExclusive').html(renderHtml);
+			
+
+		
+		
+
+		},
+		error : function() {
+			globalErrorPopup('Failure!!!');
+		},
+		
+		complete: function() {
+			$("#new_exclusive").owlCarousel({
+			navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:2,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : false
+		});
+		}
+	});
+}
+
+if ($('#newAndExclusive').children().length == 0) {
+	
+	getNewAndExclusiveAjaxCall();
+}
+
+
