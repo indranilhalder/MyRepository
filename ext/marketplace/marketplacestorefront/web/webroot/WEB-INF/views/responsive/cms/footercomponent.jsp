@@ -41,7 +41,7 @@
 							 <h3 class="toggle">${node.title}</h3>
 						    </c:when>    
 						    <c:otherwise>
-						        <img src="${node.media.url}" alt="${node.media.altText}" />
+						        <h3 class="toggle"><img src="${node.media.url}" alt="${node.media.altText}" /></h3>
 						    </c:otherwise>
 						</c:choose>
 						<!-- <h3 class="toggle">${node.title}</h3> -->
@@ -119,8 +119,8 @@
 	}
 </script>
 <!-- This is used for displaying text in footer -->
-<div class="" style="float: left; width: 100%; text-align: left; padding: 10px 20px;">
-	<span>${footerText}</span>
+<div class="footer-text">
+	<p>${footerText}</p>
 </div>
 <!-- This is used for displaying copyright in footer -->
 <div class="banner">
