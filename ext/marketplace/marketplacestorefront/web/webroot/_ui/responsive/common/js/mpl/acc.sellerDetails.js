@@ -301,7 +301,7 @@ function focusOnElement() {
 		  	    }	 
 		  	    }
 	  	tbodycontent+="<input type='hidden' size='1' id='stock' name='stock' value="+stock+">";
-	  	tbodycontent+="<input type='hidden' size='1' id='ussid' name='ussid' value="+ussid+">";
+	  	tbodycontent+="<input type='hidden' size='1' id='ussid'  value="+ussid+">";
 	  
 	    //if(stockUssidIds.indexOf(sellersArray[i]['ussid'])==-1){
 	  	 if($("#isPinCodeChecked").val()!="true"){
