@@ -17,8 +17,58 @@ $mediaContainer=media(qualifier, $contentCV)[lang=$lang];
 # Load the storefront context root config param
 $storefrontContextRoot=$config-storefrontContextRoot
 
+#Brands You Love Media
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;;ascotlogo.png;$siteResource/images/logo/ascot.png;ascot.png;"Ascot Logo"
+;;cromalogo.png;$siteResource/images/logo/croma.png;croma.png;"Croma Logo";
+;;lovlogo.png;$siteResource/images/logo/L.O.V.png;L.O.V.png;"LOV Logo";
+;;landmarklogo.png;$siteResource/images/logo/landmark.png;landmark.png;"Landmark Logo"
+;;nuonlogo.jpg;$siteResource/images/logo/nuon.png;nuon.png;"Nuon Logo";
+;;zaralogo.png;$siteResource/images/logo/zara.png;zara.png;"Zara Logo";
+;;titanlogo.png;$siteResource/images/logo/titan.png;titan.png;"Titan Logo";
+#Banners
+;;brandbanner1.png;$siteResource/images/banners/homepage/responsive/brandbanner1.png;brandbanner1.png;;
+;;brandbanner2.png;$siteResource/images/banners/homepage/responsive/brandbanner2.png;brandbanner2.png;;
+;;brandbanner3.png;$siteResource/images/banners/homepage/responsive/brandbanner3.png;brandbanner3.png;;
+;;brandbanner4.png;$siteResource/images/banners/homepage/responsive/brandbanner4.png;brandbanner4.png;;
+;;brandbanner5.png;$siteResource/images/banners/homepage/responsive/brandbanner5.png;brandbanner5.png;;
+;;brandbanner6.png;$siteResource/images/banners/homepage/responsive/brandbanner6.png;brandbanner6.png;;
+
+UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];logo(code, $contentCV);bannerImage(code, $contentCV)
+;;ZaraBrandShowcaseItem;zaralogo.png;brandbanner1.png
+;;NuonBrandShowcaseItem;nuonlogo.jpg;brandbanner2.png
+;;LandmarkBrandShowcaseItem;landmarklogo.png;brandbanner3.png
+;;AscotBrandShowcaseItem;ascotlogo.png;brandbanner6.png
+;;TitanBrandShowcaseItem;titanlogo.png;brandbanner5.png
+;;CromaBrandShowcaseItem;cromalogo.png;brandbanner4.png
+
+UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];text;bannerText
+;;ZaraBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Zara Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Zara Collections SS16</p>:
+<button class='visit-store'>visit the store</button>"
+;;NuonBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Nuon Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Nuon Collections SS16</p>:
+<button class='visit-store'>visit the store</button>"
+;;LandmarkBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Landmark Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Landmark Collections SS16</p>:
+<button class='visit-store'>visit the store</button>"
+;;AscotBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Ascot Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Ascot Collections SS16</p>:
+<button class='visit-store'>visit the store</button>"
+;;TitanBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Titan Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Titan Collections SS16</p>:
+<button class='visit-store'>visit the store</button>"
+;;CromaBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Croma Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Croma Collections SS16</p>:
+<button class='visit-store'>visit the store</button>"
+
+UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];title
+;;BrandsYouLoveComponent;"The Brands You Love"
+
+UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];product1(code,$productCV);product2(code,$productCV)
+;;ZaraBrandShowcaseItem;98765432;98765433
+;;NuonBrandShowcaseItem;98765432;98765433
+;;LandmarkBrandShowcaseItem;98765432;98765433
+;;AscotBrandShowcaseItem;98765432;98765433
+;;TitanBrandShowcaseItem;98765432;98765433
+;;CromaBrandShowcaseItem;98765432;98765433
+
 UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
-;;TMPHomepageCategoryCarousel;The products you care about.;
+#;;TMPHomepageCategoryCarousel;The products you care about.;
 ;;TMPWomenMainCategoriesCarouselComponent;We all have a story to tell
 ;;TMPElectronicsMainHottestProductsCarouselComponent;The hottest products
 ;;TMPWestsidepageCategoryCarousel;Products For The Whole Family
@@ -32,12 +82,12 @@ UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[l
 #;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
 
 UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
-;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending
+#;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending
 
 UPDATE PremierBrandComponent;$contentCV[unique=true];uid[unique=true];title
 ;;PremierBrandComponent1;Our Premier Brands
 ;;TopBrandComponent1;Top brands
-;;BrandsYouLoveComponent;The brands you love
+#;;BrandsYouLoveComponent;The brands you love
 
 UPDATE PromotionalProductsComponent;$contentCV[unique=true];uid[unique=true];title
 ;;SpringFlingPromotionComponent;Spring Fling
@@ -66,7 +116,7 @@ consectetur adipiscing elit.
 <p>Our seamless online and in-store experiences allow you to shop, make returns, and earn rewards on all your purchases across brands online or in-store.</p>
 <a href='#'>SHOP THE COLLECTION</a></div>"
 
-;;HandpickedCollectionsParagraphComponent;"<div class='feature-collections'><h1>Be Inspired</h1><h2>Shop Handpicked Collections</h2></div>"
+#;;HandpickedCollectionsParagraphComponent;"<div class='feature-collections'><h1>Be Inspired</h1><h2>Shop Handpicked Collections</h2></div>"
 ;;DeliveryTextParagraphComponent;"<div class='promise'>
   Delivering the <span>best</span> the world has to offer.</div>"
 ;;ShopByCollectionLinkComponent;"<p style='text-align:center;'><a href='#'>SHOP BY COLLECTION</a></p>"
@@ -1016,3 +1066,4 @@ UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];conte
 ;;SavedAddressesMediaParagraphComponent;"<h3>MY ADDRESS</h3>
 <p>Where do we send that package? And other such address details. </p>
 <a href='/store/mpl/en/my-account/address-book'>VIEW SAVED ADDRESSES</a>"
+
