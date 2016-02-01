@@ -174,7 +174,8 @@ function getBrandsYouLoveAjaxCall() {
 					getBrandsYouLoveContentAjaxCall(defaultComponentId);
 				},
 				error : function() {
-					globalErrorPopup('Failure!!!');
+					//globalErrorPopup('Failure!!!');
+					console.log("Error while getting brands you love");
 				}
 			});
 }
@@ -239,7 +240,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 
 				},
 				error : function() {
-					globalErrorPopup('Failure!!!');
+					console.log("Error while getting brands you love content");
 				}
 			});
 	}
@@ -286,7 +287,7 @@ setInterval(function() {
 
 
 //AJAX CALL BEST PICKS START
-if ($('#bestPicks').children().length == 0) {
+if ($('#bestPicks').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
 	getBestPicksAjaxCall();
 }
 
@@ -334,7 +335,7 @@ function getBestPicksAjaxCall(){
 		},
 		
 		error : function() {
-			globalErrorPopup('Failure!!!');
+			console.log("Error while getting best picks");
 		},
 		
 		complete: function() {
@@ -355,3 +356,65 @@ function getBestPicksAjaxCall(){
 }
 
 //AJAX CALL BEST PICKS END
+
+
+function getNewAndExclusiveAjaxCall(){
+	
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getNewAndExclusive",
+
+		success : function(response) {
+			
+		
+			console.log(response.newAndExclusiveProducts);
+			var defaultHtml = "";
+			renderHtml = "<h1>" + response.title + "</h1>"
+					+ "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
+			$.each(
+							response.newAndExclusiveProducts,
+							function(key, value) {
+								
+									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
+											+ value.productImageUrl
+											+ "'></img></a>" + value.productTitle + "</div></div>"; 
+												/*+ "'></img></a>" + value.productTitle + value.productTitle + "</div></div>"; */
+											
+
+							});
+			renderHtml += "</div><button type='submit'>View All</button>";
+			$('#newAndExclusive').html(renderHtml);
+			
+
+		
+		
+
+		},
+		error : function() {
+			console.log("Error while getting new and exclusive");
+		},
+		
+		complete: function() {
+			$("#new_exclusive").owlCarousel({
+			navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:2,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : false
+		});
+		}
+	});
+}
+
+if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	
+	getNewAndExclusiveAjaxCall();
+}
+
+
