@@ -31,7 +31,7 @@ var category_array = [];
 /*widget modes that are just products*/
 productWidget = [ "complements", "similar", "bought_together", "normal", "hot", "best_selling", 
                   "new", "recent", "search", "hot_in_category", "hot_in_brand"];
-productWidgetTitle = ["Complete the Look", "More Stuff Like This", "Things That Go With This", "You Know You Want This", "Hot Now", "Best Sellers", 
+productWidgetTitle = ["Complete The Look", "More Stuff Like This", "Things That Go With This", "You Know You Want This", "Hot Now", "Best Sellers", 
                       "Just In(credible)!", "Last Seen", "My Recommendations", "Hot Now", "Hot Now"];
 productWidgetElement = ["ia_products_complements", "ia_products_similar", "ia_products_bought_together", "ia_products", "ia_products_hot", "ia_products_best_selling", "ia_products_new", 
                         "ia_products_recent", "ia_products_search", "ia_products_hot_in_category", "ia_products_hot_in_brand"];
@@ -231,7 +231,7 @@ function buildParams(moreParams) {
 	    var spids = {};
 	    currentParams.category_id = '';
 	    for(var i=0; i<category_array.length; i++) {
-	      currentParams.category_id += category_array[i] + ','; 
+	      currentParams.category_id += category_array[i] + '	'; 
 	    }
 	    currentParams.category_id = currentParams.category_id.substring(0, currentParams.category_id.length - 1);
 	  }
@@ -239,7 +239,7 @@ function buildParams(moreParams) {
 	    var spids = {};
 	    currentParams.brand_id = '';
 	    for(var i=0; i<brand_array.length; i++) {
-	      currentParams.brand_id += brand_array[i] + ','; 
+	      currentParams.brand_id += brand_array[i] + '	'; 
 	    }
 	    currentParams.brand_id = currentParams.brand_id.substring(0, currentParams.brand_id.length - 1);
 	  }

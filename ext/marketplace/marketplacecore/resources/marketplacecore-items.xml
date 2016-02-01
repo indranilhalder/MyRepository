@@ -6040,6 +6040,16 @@
 						<modifiers read="true" write="true" search="false"
 							optional="true" partof="true" />
 					</attribute>
+					<attribute qualifier="paymentMethod" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="paymentMethodType" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<itemtype code="JuspayCardResponse" autocreate="true"
@@ -6547,6 +6557,18 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="FeedbackCronJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.FeedbackCronJob">
+				<attributes>
+					<attribute type="java.util.Date" qualifier="lastExecutionTime">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+				
 				</attributes>
 			</itemtype>
 		</typegroup>

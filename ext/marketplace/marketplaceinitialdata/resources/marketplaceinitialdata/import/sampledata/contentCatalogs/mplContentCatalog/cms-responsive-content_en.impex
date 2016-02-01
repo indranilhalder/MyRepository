@@ -933,7 +933,7 @@ UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];conte
 <p>Pick your favourites - brands, categories  & more - here!</p>
 <a href='/store/mpl/en/my-account/marketplace-preference'>VIEW MARKETPLACE PREFERENCES</a>"
 
-;;PersonalInformationMediaParagraphComponent;"<h3>ALL YOUR DETAILS</h3>
+;;PersonalInformationMediaParagraphComponent;"<h3>ALL ABOUT YOU</h3>
 <p>Pick a name, change your password and all that jazz.</p>
 <a href='/store/mpl/en/my-account/update-profile'>VIEW PERSONAL INFO</a>"
 
@@ -947,7 +947,7 @@ UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];conte
 
 ;;InviteFriendsMediaParagraphComponent;"<h3>INVITE YOUR FRIENDS</h3>
 <p>Why shop solo when you can do it with your friends?  Get your crew here.</p>
-<a href='/store/mpl/en/my-account/myInterest'>INVITE FRIENDS TO THE MARKETPLACE</a>"
+<a href='/store/mpl/en/my-account/friendsInvite'>INVITE FRIENDS TO THE MARKETPLACE</a>"
 
 ;;OrderHistoryMediaParagraphComponent;"<h3>ORDER HISTORY</h3>
 <p>When will that package arrive? And other such pressing questions.</p>

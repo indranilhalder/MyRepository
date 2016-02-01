@@ -1628,7 +1628,7 @@ h2 {
             header .content nav > ul > li > ul > li > ul {
               position: absolute;
               top: 0;
-              left: 190px;
+              left: 189px;
               height: 450px;
               padding-top: 10px;
               padding-left: 40px;
@@ -9568,8 +9568,8 @@ footer .banner {
     .pagination li.next {
       padding-left: 10px; }
 body .account .right-account .order-history .pagination li{
-	float:right;
 	font-size:12px;
+	margin: auto 2px;
 } 
 .bottom-pagination {
   width: 100%;
@@ -9969,7 +9969,7 @@ body .account .right-account .order-history .pagination li{
       margin-bottom: 5px; }
     .product-tile .image .new {
       position: absolute;
-      width: 30%;
+      height: 31%;
       top: 0;
       left: -15px; }
       .shop-sale.wrapper .product-tile .image .new {
@@ -10488,7 +10488,8 @@ body .account .right-account .order-history .pagination li{
     float: left;
 }
 .promo-block .promo-img img {
-    position: relative
+    position: relative;
+     width: 90%;
 }
 .promo-block .promo-img img.sprite-icon {
     position: absolute;
@@ -13126,6 +13127,9 @@ font-size:14px;
 .customer-service .content * {
     font-family: avenir next !important;
 }
+.customer-service .content h3 {
+    text-align:center;
+}
 .content b {
     font-weight: 600;
 }
@@ -13325,7 +13329,6 @@ div.get-in-touch ul li:after,
     width: 80px;
 }
 .no-results ul li:before,
-div.get-in-touch ul li:before,
 .rewards div.customer-service ul li:before{
     content: "";
 }
@@ -18614,7 +18617,7 @@ input[type="checkbox"]#brandSelectAll + label{
 	margin: 0px;
 }
  .quick-view-popup .size-guide {
-  width: 100%;
+ /*  width: 100%; */
   text-transform: uppercase;
 	float:left;
   font-weight: 600;
@@ -18624,6 +18627,9 @@ input[type="checkbox"]#brandSelectAll + label{
   bottom:0;
   left:0;
 } 
+.select_height_toggle{
+display: block !important;
+}
 .quick-view-popup .size-guide:before {
   font-family: 'icomoon';
   -webkit-font-smoothing: antialiased;
@@ -22471,7 +22477,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
     margin: 10px 0;
     text-align: center;
 }
-@media(min-width:651px){
+@media(min-width:791px){
 .product-tile:hover .image .quickview {
     opacity: 1;
     -webkit-transition: opacity 0.3s;
@@ -25523,8 +25529,9 @@ padding-left: 0px;}
         float:left;}
         .product-tile .image .quickview a{
         width:100%;}
-        .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
-        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span{
+       .bottom-pagination .pagination-bar .pagination .prev span,  .bottom-pagination .pagination-bar .pagination .next span,
+        .pagination-bar.listing-menu.top .prev span,.pagination-bar.listing-menu.top .next span,
+        .pagination-bar.listing-menu.bottom .prev span,.pagination-bar.listing-menu.bottom .next span{
         display:none;} 
        .listing.wrapper .right-block .listing-menu > div .pagination.mobile{
        position: absolute;
@@ -26070,6 +26077,7 @@ display:none;
 body .account .right-account .order-history .navigation2{
     border: 1px solid rgb(237,242,245);
         padding: 5px 0 5px 20px;	
+        position:relative;
 }
 body .account .right-account .order-history .navigation2 #ofPagination{
 		
@@ -27489,6 +27497,68 @@ header .content .bottom.active nav > ul > li:first-child > ul {
 header .content .bottom.active nav > ul > li:first-child + li > ul {
     left: 330px;
 }}
+body .account .right-account .order-history .bottom .pagination.mobile{
+	     position: absolute;
+    bottom: 6px;
+    width: auto;
+    right: 0;}
+ body .account .right-account .order-history .top .pagination.mobile{
+	      position: absolute;
+    right: 80px;
+    top: 55px;}
+@media (max-width: 650px){
+	body .account .right-account .order-history .pagination li.next,body .account .right-account .order-history .pagination li.prev{
+	border:none;}
+
+	body .account .right-account .order-history .top .pagination.mobile{
+    top: 63px;
+    right: 0px;}
+     body .account .right-account .order-history .pagination .next:after,body .account .right-account .order-history .pagination .prev:before{
+     display:none;}
+    body .account .right-account .order-history .pagination li.next a:after {
+        content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        margin-left:5px;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s; }
+        body .account .right-account .order-history .pagination li.prev a:before{
+       content: "";
+        display: inline-block;
+        height: 0;
+        width: 0;
+        border-bottom: 5px solid transparent;
+        border-right: 5px solid #000;
+        border-top: 5px solid transparent;
+        -webkit-transition: border 0.3s;
+        -moz-transition: border 0.3s;
+        transition: border 0.3s;
+        margin-right:5px;  }
+        #displayPaginationCountUp, #displayPaginationCountDown{
+        margin: 10px 0;
+        display:inline-block;}
+}
+header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+	display:none;}
+header .content nav > ul > li > ul > li > ul.words > li:nth-child(2){
+	margin-top:0px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+	padding-top:40px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+position: absolute;
+    top: 0;
+	font-size:18px;
+	font-weight:600;
+	display:block;
+	
+}
 /*--------------maincss-----------*/
 .row
 {

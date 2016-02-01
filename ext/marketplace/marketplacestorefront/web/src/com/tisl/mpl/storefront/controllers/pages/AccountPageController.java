@@ -561,7 +561,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String orders(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int page,
-			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_ALL) final ShowMode showMode,
+			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = ModelAttributetConstants.SORT, required = false) final String sortCode, final Model model)
 
 	throws CMSItemNotFoundException
@@ -578,7 +578,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			final int pageSizeInoh = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
-			final PageableData pageableData = createPageableData(page, 5, sortCode, showMode);
+			// TISPRO-48 - Changes made for implementing lazy loading in Order history pagination
+			final int pageSize = Integer.valueOf(configurationService.getConfiguration()
+					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE, "10").trim());
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 
 			//final SearchPageData<OrderHistoryData> searchPageDataParentOrder = getMplOrderFacade().getPagedParentOrderHistoryForStatuses(pageableData);
 
@@ -658,6 +661,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.ORDER_DATA_MAP, orderFormattedDateMap);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
 			model.addAttribute(ModelAttributetConstants.CANCEL_PRODUCT_MAP, currentProductMap);
+			// TISPRO-48 - added page index and page size attribute for pagination
+			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
+			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -763,9 +769,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String order(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode, final Model model)
-			throws CMSItemNotFoundException
+	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
+			final Model model) throws CMSItemNotFoundException
 	{
+		if (null == orderCode)
+		{
+			return REDIRECT_PREFIX + RequestMappingUrlConstants.LINK_404;
+		}
 		final ReturnRequestForm returnRequestForm = new ReturnRequestForm();
 		final Map<String, Map<String, List<AWBResponseData>>> trackStatusMap = new HashMap<>();
 		final Map<String, String> currentStatusMap = new HashMap<>();
@@ -3928,7 +3938,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.RENDERING_METHOD,
 					ModelAttributetConstants.RENDERING_METHOD_VIEW_PARTICULAR_WISHLIST);
 			model.addAttribute(ModelAttributetConstants.SHOW_WISHLIST, ModelAttributetConstants.Y_SMALL_VAL);
-			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_NAME, particularWishlist.getName());
+			model.addAttribute(ModelAttributetConstants.PARTICULAR_WISHLIST_NAME,
+					particularWishlist != null ? particularWishlist.getName() : null);
 			final RemoveWishlistData removeWishlistData = new RemoveWishlistData();
 			model.addAttribute(ModelAttributetConstants.REMOVE_WISHLIST_DATA, removeWishlistData);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(WISHLIST_CMS_PAGE));
@@ -4350,6 +4361,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				model.addAttribute(ModelAttributetConstants.FRIENDS_TEXT_MESSAGE, messageText);
 			}
+			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(FRIENDS_INVITE_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(FRIENDS_INVITE_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,

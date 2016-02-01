@@ -6,7 +6,10 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
+import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
@@ -24,18 +27,20 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
 import com.tisl.mpl.core.model.GlobalCodeMasterModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.juspay.PaymentService;
 import com.tisl.mpl.juspay.Refund;
 import com.tisl.mpl.juspay.request.RefundRequest;
@@ -123,11 +128,10 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	 */
 	@Override
 	public PaymentTransactionModel doRefund(final OrderModel order, final double refundAmount,
-			final PaymentTransactionType paymentTransactionType) throws Exception
+			final PaymentTransactionType paymentTransactionType, final String uniqueRequestId) throws Exception
 	{
 		try
 		{
-
 			String auditid = null;
 			//Find the correct juspay orderid(auditid) model for sucess //AT
 
@@ -157,16 +161,6 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 			if (CollectionUtils.isNotEmpty(mplPaymentAuditModels) && auditid != null && !isCODOrder(order))
 			{
-				//				final PaymentService paymentService = new PaymentService()
-				//						.withEnvironment(Environment.SANDBOX)
-				//						.withKey(
-				//								configurationService.getConfiguration().getString(
-				//										MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-				//						.withMerchantId(
-				//								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MARCHANTID));
-
-
-
 				mplPaymentAuditModel = mplPaymentAuditModels.get(0);
 				final MplPaymentAuditEntryModel mplPaymentAuditEntryModel = modelService.create(MplPaymentAuditEntryModel.class);
 				mplPaymentAuditEntryModel.setAuditId(mplPaymentAuditModel.getAuditId());
@@ -182,18 +176,30 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 						.withMerchantId(
 								configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
+
 				final RefundRequest refundRequest = new RefundRequest();
-
-				//adjusting .01 amt in caese of aprtioned  rounding off  TISEE-6279
-				final double adjustedRefundAmt = validateRefundAmount(refundAmount, order);
-
-				refundRequest.setAmount(Double.valueOf(adjustedRefundAmt));
+				double adjustedRefundAmt = 0.0;
+				if (order.getType().equalsIgnoreCase("PARENT"))
+				{
+					// In case of held order is rejection from EBS , total order amount needs to be refunded
+					//TISSIT-1781
+					adjustedRefundAmt = refundAmount;
+					refundRequest.setAmount(Double.valueOf(adjustedRefundAmt));
+				}
+				else
+				{
+					//adjusting .01 amt in caese of aprtioned  rounding off  TISEE-6279
+					adjustedRefundAmt = validateRefundAmount(refundAmount, order);
+					refundRequest.setAmount(Double.valueOf(adjustedRefundAmt));
+				}
 
 				refundRequest.setOrderId(mplPaymentAuditModel.getAuditId());
-				final Random random = new Random(System.nanoTime());
-				final String uniqueId = MarketplacecommerceservicesConstants.EMPTYSTRING + random.nextInt(1000000000);
-				refundRequest.setUniqueRequestId(uniqueId);
-				mplPaymentAuditEntryModel.setRefundReqId(uniqueId);
+				//final Random random = new Random(System.nanoTime());
+				//final String uniqueId = MarketplacecommerceservicesConstants.EMPTYSTRING + random.nextInt(1000000000);
+				//refundRequest.setUniqueRequestId(uniqueId);
+				refundRequest.setUniqueRequestId(uniqueRequestId);
+
+				mplPaymentAuditEntryModel.setRefundReqId(uniqueRequestId);
 				modelService.save(mplPaymentAuditEntryModel);
 				final List<MplPaymentAuditEntryModel> auditEnteries = new ArrayList<MplPaymentAuditEntryModel>(
 						mplPaymentAuditModel.getAuditEntries());
@@ -201,7 +207,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				mplPaymentAuditModel.setAuditEntries(auditEnteries);
 				modelService.save(mplPaymentAuditModel);
 
-				LOG.debug("Refund status for unique ID genrated :" + uniqueId);
+				LOG.debug("Refund status for unique ID genrated :" + uniqueRequestId);
 				RefundResponse refundResponse = null;
 				LOG.debug("before calling refund service *******************************");
 				refundResponse = paymentService.refund(refundRequest);
@@ -216,7 +222,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				{
 					for (final Refund refund : refundResponse.getRefunds())
 					{
-						if (refund.getUniqueRequestId().equalsIgnoreCase(uniqueId))
+						if (refund.getUniqueRequestId().equalsIgnoreCase(uniqueRequestId))
 						{
 							LOG.debug("Refund status for ID:" + refund.getUniqueRequestId() + " is :" + refund.getStatus());
 							switch (refund.getStatus().toUpperCase())
@@ -237,7 +243,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 									createAuditEntryForRefund(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL, mplPaymentAuditModel, refund);
 							}
 							paymentTransactionModel = createPaymentTransactionModel(order, refund.getStatus().toUpperCase(),
-									Double.valueOf(adjustedRefundAmt), paymentTransactionType, refund.getStatus(), uniqueId);
+									Double.valueOf(adjustedRefundAmt), paymentTransactionType, refund.getStatus(), uniqueRequestId);
 						}
 					}
 				}
@@ -250,7 +256,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 					//mplPaymentAuditEntryModel.setStatus(MplPaymentAuditStatusEnum.REFUND_UNSUCCESSFUL);
 					//modelService.save(mplPaymentAuditEntryModel);
 					paymentTransactionModel = createPaymentTransactionModel(order, "FAILURE", Double.valueOf(refundAmount),
-							paymentTransactionType, "NO REFUND FROM PG", uniqueId);
+							paymentTransactionType, "NO REFUND FROM PG", uniqueRequestId);
 				}
 
 				//TISBOX-1779
@@ -390,8 +396,10 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 								case MarketplacecommerceservicesConstants.SUCCESS_VAL:
 									LOG.debug("Inside SUCCESS case for refund================");
 									paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS_VAL);
-									paymentTransactionModel.setCode(UUID.randomUUID().toString());
-									paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
+									//paymentTransactionModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionModel.setCode(uniqueId);
+									//paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionEntryModel.setCode(uniqueId);
 									bigAmount = new BigDecimal(refundResponse.getAmount().doubleValue(), MathContext.DECIMAL64);
 									paymentTransactionEntryModel.setAmount(bigAmount);
 									paymentTransactionEntryModel.setTime(new Date());
@@ -425,9 +433,10 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 								case MarketplacecommerceservicesConstants.PENDING_VAL:
 									LOG.debug("Inside PENDING case for refund================");
 									paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.PENDING_VAL);
-									paymentTransactionModel.setCode(UUID.randomUUID().toString());
-
-									paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
+									//paymentTransactionModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionModel.setCode(uniqueId);
+									//paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionEntryModel.setCode(uniqueId);
 									bigAmount = new BigDecimal(refundResponse.getAmount().doubleValue(), MathContext.DECIMAL64);
 									paymentTransactionEntryModel.setAmount(bigAmount);
 									paymentTransactionEntryModel.setTime(new Date());
@@ -687,14 +696,16 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 			if (paymentTransactionModel != null)
 			{
-				refundInfo.setRefundedBankTrxID(paymentTransactionModel.getCode());
-				refundInfo.setRefundedBankTrxStatus(paymentTransactionModel.getStatus());
+				refundInfo.setRefundedBankTrxID(paymentTransactionModel.getCode() != null ? paymentTransactionModel.getCode()
+						: StringUtils.EMPTY);
+				refundInfo.setRefundedBankTrxStatus(paymentTransactionModel.getStatus() != null ? paymentTransactionModel.getStatus()
+						: StringUtils.EMPTY);
 				refundInfo.setRefundedAmt(amount.floatValue());
 			}
 			else
 			{
-				refundInfo.setRefundedBankTrxID(StringUtils.EMPTY);
-				refundInfo.setRefundedBankTrxStatus(StringUtils.EMPTY);
+				refundInfo.setRefundedBankTrxID("ERROROCCURED");
+				refundInfo.setRefundedBankTrxStatus("ERROROCCURED");
 				//refundInfo.setRefundedAmt(NumberUtils.FLOAT_ZERO.floatValue());
 				refundInfo.setRefundedAmt(amount.floatValue());
 
@@ -738,7 +749,6 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 		return false;
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -839,4 +849,118 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		return refundAmount;
 
 	}
+
+	/*
+	 * @Desc used in web and cscockpit for handling network exception while cancellation TISSIT-1801 TISPRO-94
+	 * 
+	 * @param orderRequestRecord
+	 * 
+	 * @param paymentTransactionType
+	 * 
+	 * @param juspayRefundType
+	 * 
+	 * @param uniqueRequestId
+	 * 
+	 * @return void
+	 */
+
+	@Override
+	public void createCancelRefundExceptionEntry(final OrderCancelRecordEntryModel orderRequestRecord,
+			final PaymentTransactionType paymentTransactionType, final JuspayRefundType juspayRefundType,
+			final String uniqueRequestId)
+	{
+
+		for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
+				.getOrderEntriesModificationEntries())
+		{
+			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+			if (orderEntry != null)
+			{
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
+						+ orderEntry.getCurrDelCharge().doubleValue();
+
+
+				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
+						: NumberUtils.DOUBLE_ZERO.doubleValue();
+
+				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
+				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				getModelService().save(orderEntry);
+
+				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_INITIATED);
+
+				// Making RTM entry to be picked up by webhook job
+				final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+						RefundTransactionMappingModel.class);
+				refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+				refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+				refundTransactionMappingModel.setCreationtime(new Date());
+				refundTransactionMappingModel.setRefundType(juspayRefundType);
+				getModelService().save(refundTransactionMappingModel);
+			}
+		}
+
+		final PaymentTransactionModel paymentTransactionModel = createPaymentTransactionModel(orderRequestRecord
+				.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG,
+				orderRequestRecord.getRefundableAmount(), paymentTransactionType, "An Exception Occured.", uniqueRequestId);
+		attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(), paymentTransactionModel);
+
+	}
+
+	/*
+	 * @Desc used in web and cscockpit for in case no response received from juspay while cancellation refund TISSIT-1801
+	 * TISPRO-94
+	 *
+	 * @param orderRequestRecord
+	 *
+	 * @param paymentTransactionType
+	 *
+	 * @param juspayRefundType
+	 *
+	 * @param uniqueRequestId
+	 *
+	 * @return void
+	 */
+
+	@Override
+	public void createCancelRefundPgErrorEntry(final OrderCancelRecordEntryModel orderRequestRecord,
+			final PaymentTransactionType paymentTransactionType, final JuspayRefundType juspayRefundType,
+			final String uniqueRequestId)
+	{
+		for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
+				.getOrderEntriesModificationEntries())
+		{
+			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+			if (orderEntry != null)
+			{
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
+						+ orderEntry.getCurrDelCharge().doubleValue();
+
+
+				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
+						: NumberUtils.DOUBLE_ZERO.doubleValue();
+
+				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
+				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
+				getModelService().save(orderEntry);
+
+				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_IN_PROGRESS);
+
+			}
+		}
+
+		final PaymentTransactionModel paymentTransactionModel = createPaymentTransactionModel(orderRequestRecord
+				.getOriginalVersion().getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG,
+				orderRequestRecord.getRefundableAmount(), paymentTransactionType, "NO Response FROM PG", uniqueRequestId);
+		attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(), paymentTransactionModel);
+	}
+
+	@Override
+	public String getRefundUniqueRequestId()
+	{
+		final Random random = new Random(System.nanoTime());
+		final String uniqueRequestId = MarketplacecommerceservicesConstants.EMPTYSTRING + random.nextInt(1000000000);
+		return uniqueRequestId;
+	}
+
 }

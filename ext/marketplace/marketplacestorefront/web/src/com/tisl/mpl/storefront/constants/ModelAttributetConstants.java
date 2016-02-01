@@ -275,7 +275,7 @@ public final class ModelAttributetConstants
 	public static final String K_T_Brands = "KToTBrands";
 	public static final String P_Z_Brands = "PToZBrands";
 
-
+	public static final String FIRST_LEVEL_CATEGORY = "firstLevelCategory";
 	public static final String SECOND_LEVEL_CATEGORY = "secondLevelCategoryMap";
 	public static final String THIRD_LEVEL_CATEGORY = "thirdLevelCategoryMap";
 	public static final String PRODUCT_NAME = "productName";
@@ -634,6 +634,8 @@ public final class ModelAttributetConstants
 	public static final String RETURN_AWBNUM = "returnAwbNum";
 	public static final String RETURN_LOGISCTIC = "returnLogistic";
 	public static final String TRACKINGURL = "trackingurl";
-
+	// TISPRO-48 - added new constants for pagination with lazy loading
+	public static final String PAGE_INDEX = "pageIndex";
+	public static final String PAGE_SIZE = "pageSize";
 
 }

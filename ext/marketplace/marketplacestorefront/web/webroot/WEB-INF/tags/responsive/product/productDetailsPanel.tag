@@ -92,9 +92,7 @@ tr.d0 td {
 			</ycommerce:testId>
 			
 			<div class="fullfilled-by">
-			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>
-			<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-			<span id="fulFilledBySship"  style="display:none;"></span>
+			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span><span id="fulFilledBySship"  style="display:none;"></span>
 			</div>
 			
 			<%-- <div class="description">${product.summary}</div> --%>
