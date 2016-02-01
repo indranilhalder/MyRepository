@@ -22,7 +22,7 @@ public interface MplProductSearchFacade<ITEM extends ProductData> extends Produc
 {
 	/*
 	 * Returns Products based on the search query.
-	 * 
+	 *
 	 * @return the search results
 	 */
 	/**
@@ -81,6 +81,6 @@ public interface MplProductSearchFacade<ITEM extends ProductData> extends Produc
 	//find online and new exclusive products
 	//	ProductCategorySearchPageData<SearchStateData, ITEM, ProductData> mplOnlineAndNewProductSearch(final String string,
 	//			final SearchStateData searchState, final PageableData pageableData);
-	ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> mplOnlineAndNewProductSearch(final String cat,
+	ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> mplOnlineAndNewProductSearch(
 			final SearchStateData searchState, final PageableData pageableData);
 }

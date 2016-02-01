@@ -38,6 +38,14 @@ import com.tisl.mpl.solrfacet.search.service.MplProductSearchService;
 public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends DefaultSolrProductSearchFacade implements
 		MplProductSearchFacade
 {
+	/**
+	 *
+	 */
+	private static final String IS_PRODUCT_NEW = "isProductNew";
+	/**
+	 *
+	 */
+	private static final String ONLINE_EXCLUSIVE = "onlineExclusive";
 	private MplProductSearchService<SolrSearchQueryData, SearchResultValueData, ProductCategorySearchPageData<SolrSearchQueryData, SearchResultValueData, CategoryModel>> mplProductSearchService;
 
 	/**
@@ -893,7 +901,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	 * @return
 	 */
 	@Override
-	public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> mplOnlineAndNewProductSearch(final String catCode,
+	public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> mplOnlineAndNewProductSearch(
 			final SearchStateData searchState, final PageableData pageableData)
 	{
 		// YTODO Auto-generated method stub
@@ -906,8 +914,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 							{
 								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
 										.convert(
-												getProductSearchService().searchAgain(mplOnlineAndNewProductFind(searchState, catCode),
-														pageableData));
+												getProductSearchService().searchAgain(mplOnlineAndNewProductFind(searchState), pageableData));
 							}
 						});
 	}
@@ -919,36 +926,20 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	 * @param categoryCode
 	 * @return
 	 */
-	protected SolrSearchQueryData mplOnlineAndNewProductFind(final SearchStateData searchState, final String categoryCode)
+	protected SolrSearchQueryData mplOnlineAndNewProductFind(final SearchStateData searchState)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
-		solrSearchQueryTermData.setKey("onlineExclusive");
+		solrSearchQueryTermData.setKey(ONLINE_EXCLUSIVE);
 		solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
 		final SolrSearchQueryTermData solrSearchQueryTermNew = new SolrSearchQueryTermData();
-		solrSearchQueryTermNew.setKey("isProductNew");
+		solrSearchQueryTermNew.setKey(IS_PRODUCT_NEW);
 		solrSearchQueryTermNew.setValue(Boolean.TRUE.toString());
 		filterTerms.add(solrSearchQueryTermData);
 		filterTerms.add(solrSearchQueryTermNew);
 		searchQueryData.setFilterTerms(filterTerms);
-		//searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 
-		//
-		//		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-		//		//final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
-		//		final SolrSearchQueryData searchQueryData = new SolrSearchQueryData();
-		//		final List<SolrSearchQueryTermData> filterTerms = new ArrayList<SolrSearchQueryTermData>();
-		//		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-		//		solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
-		//		solrSearchQueryTermData.setValue(categoryCode);
-		//		solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
-		//		solrSearchQueryTermData.setKey("onlineExclusive");
-		//		solrSearchQueryTermData.setValue(Integer.valueOf(1).toString());
-		//		//		solrSearchQueryTermData.setKey("isProductNew");
-		//		//		solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
-		//		filterTerms.add(solrSearchQueryTermData);
-		//		searchQueryData.setFilterTerms(filterTerms);
 		return searchQueryData;
 	}
 
