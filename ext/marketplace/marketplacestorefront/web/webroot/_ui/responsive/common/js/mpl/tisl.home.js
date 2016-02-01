@@ -378,7 +378,7 @@ function getNewAndExclusiveAjaxCall(){
 								
 									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
 											+ value.productImageUrl
-											+ "'></img></a>" + value.productTitle + "</div></div>"; 
+											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p></div></div>"; 
 												/*+ "'></img></a>" + value.productTitle + value.productTitle + "</div></div>"; */
 											
 
