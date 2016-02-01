@@ -330,7 +330,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SearchBox;;;searchbox
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
-;Section1;;MplSequentialBannerComponent;
+;Section1;;RotatingImagesComponent;
 ;Section2A;;CMSMediaParagraphComponent;
 ;Section2B;;CMSMediaParagraphComponent;
 ;Section2C;;;wide
