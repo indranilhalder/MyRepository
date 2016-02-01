@@ -16,19 +16,19 @@
 					<div class="image">
 						<img src="${component.bannerImage.URL}" alt="">
 					</div>
-					<ul class="major-promos" data-bannerid="${component.pk}">
-						<li>${component.promoText4}</li>
+					<ul class="major-promos">
+						<li data-bannerid="${component.pk}">${component.promoText4}</li>
 					</ul>
 
-					<ul class="minor-promos" data-bannerid="${component.pk}">
-						<li>${component.promoText2}</li>
+					<ul class="minor-promos">
+						<li data-bannerid="${component.pk}">${component.promoText2}</li>
 					</ul>
 
-					<ul class="top-promos" data-bannerid="${component.pk}">
-						<li>${component.promoText1}</li>
+					<ul class="top-promos">
+						<li data-bannerid="${component.pk}">${component.promoText1}</li>
 					</ul>
-					<ul class="bottom-promos" data-bannerid="${component.pk}">
-						<li>${component.promoText3}</li>
+					<ul class="bottom-promos">
+						<li data-bannerid="${component.pk}">${component.promoText3}</li>
 					</ul>
 
 				</div></a>
@@ -38,19 +38,19 @@
 				<div class="image">
 					<img src="${component.bannerImage.URL}" alt="">
 				</div>
-				<ul class="major-promos" data-bannerid="${component.pk}">
-					<li>${component.promoText4}</li>
+				<ul class="major-promos">
+					<li data-bannerid="${component.pk}">${component.promoText4}</li>
 				</ul>
 
-				<ul class="minor-promos" data-bannerid="${component.pk}">
-					<li>${component.promoText2}</li>
+				<ul class="minor-promos">
+					<li data-bannerid="${component.pk}">${component.promoText2}</li>
 				</ul>
 
-				<ul class="top-promos" data-bannerid="${component.pk}">
-					<li>${component.promoText1}</li>
+				<ul class="top-promos">
+					<li data-bannerid="${component.pk}">${component.promoText1}</li>
 				</ul>
-				<ul class="bottom-promos" data-bannerid="${component.pk}">
-					<li>${component.promoText3}</li>
+				<ul class="bottom-promos">
+					<li data-bannerid="${component.pk}">${component.promoText3}</li>
 				</ul>
 
 			</div>
@@ -59,9 +59,12 @@
 </c:if>
 <script>
 $(document).ready(function(){
-	$("data-bannerid='${component.pk}'").each(function(){
+	
+	$("li[data-bannerid=${component.pk}]").each(function(){
 		var x = $(this).find("a").attr("href");
-		console.log(x);
+		if(typeof(x) != "undefined"){
+			$(this).find("a").attr("href",x+"?icid=${component.pk}");
+		}
 	});
 });
 </script>
