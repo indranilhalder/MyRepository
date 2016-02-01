@@ -24991,7 +24991,7 @@ height:100px;
 max-height:100%;
 }
 }
-@media(max-width:790px){
+@media(max-width:791px){
 .brand-content-grid .brand-trySomethingNew , .apparel-brand div.brand-content-grid ul li .video-wrapper{
 margin-bottom:10px;
 }
@@ -27558,6 +27558,15 @@ position: absolute;
 	font-weight:600;
 	display:block;
 	
+}
+
+body.page-Infiniti-Retail-Limited .electronics-brand .feature-categories.custom-feature {
+	    padding: 0;
+    background: #e6e6e6;
+}
+
+body.page-Infiniti-Retail-Limited .electronics-brand .feature-categories.custom-feature h1 {
+	background: #fff;
 }
 /*--------------maincss-----------*/
 .row
