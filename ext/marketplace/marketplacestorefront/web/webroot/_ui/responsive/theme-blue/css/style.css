@@ -27560,12 +27560,11 @@ position: absolute;
 	
 }
 
-body.page-Infiniti-Retail-Limited .electronics-brand .feature-categories.custom-feature {
+.electronics-brand .feature-categories.custom-feature {
 	    padding: 0;
     background: #e6e6e6;
 }
-
-body.page-Infiniti-Retail-Limited .electronics-brand .feature-categories.custom-feature h1 {
+ .electronics-brand .feature-categories.custom-feature h1 {
 	background: #fff;
 }
 /*--------------maincss-----------*/
