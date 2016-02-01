@@ -1,4 +1,3 @@
-
 # 
 # ImpEx for Responsive Tata Marketplace Site CMS Content 
 # 
@@ -827,7 +826,22 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 ;;BestPicksItems10Component;KittenFloralShirtdress.png
 
 
+####Home Page Section 4B
+#### Promotion Banner #########
 
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+# Added the Multiple Homepage Banners for TMP only for desktop and widescreen resolution
+;;banner1.jpg;$siteResource/images/banners/homepage/responsive/banner1.jpg;banner1.jpg;"Promotion Banner1";
+;;banner2.jpg;$siteResource/images/banners/homepage/responsive/banner2.jpg;banner2.jpg;"Promotion Banner2";
+;;banner3.jpg;$siteResource/images/banners/homepage/responsive/banner3.jpg;banner3.jpg;"Promotion Banner3";
+
+#Added this line
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;TMPHomepagePromotionBannerComponent1;banner1.jpg;
+;;TMPHomepagePromotionBannerComponent2;banner2.jpg;
+;;TMPHomepagePromotionBannerComponent3;banner3.jpg;
+
+#### Promotion Banner Ends#########
 
 #### Section 5
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
@@ -1066,4 +1080,3 @@ UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];conte
 ;;SavedAddressesMediaParagraphComponent;"<h3>MY ADDRESS</h3>
 <p>Where do we send that package? And other such address details. </p>
 <a href='/store/mpl/en/my-account/address-book'>VIEW SAVED ADDRESSES</a>"
-
