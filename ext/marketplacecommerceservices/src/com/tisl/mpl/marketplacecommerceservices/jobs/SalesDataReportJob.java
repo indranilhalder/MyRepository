@@ -157,7 +157,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 *
+	 * 
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -405,7 +405,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 							{
 								consignmentStatus = entry.getConsignment().getStatus().getCode();
 							}
-							else if (null != orderDetail.getStatus() && orderDetail.getStatus().getCode() != null)
+							else if (null != subOrderDetail.getStatus() && subOrderDetail.getStatus().getCode() != null)
 							{
 								consignmentStatus = subOrderDetail.getStatus().getCode();
 							}
