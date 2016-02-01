@@ -400,7 +400,7 @@ function focusOnElement() {
 	}
 
 	 function fetchAllSellers(stockDataArrayList) {
-		 var buyboxSeller = $("#ussid").val();
+		 var buyboxSeller = $(".ussidPdp").val();
 		    var modifiedData="";
 			var isproductPage = $("#isproductPage").val();
 			var productCode = $("#product").val();
@@ -452,7 +452,7 @@ function focusOnElement() {
 			
 			});
 		}
-	 function sort(value)
+	 function sortSellers(value)
 	 {
 		 if(value == 1)
 	    	 sortPrice(pageCount);
@@ -465,7 +465,7 @@ function focusOnElement() {
 		 /*pageCount=1;*/
 	 }
 	 function sortPrice(pageCount){
-		 var buyboxSeller = $("#ussid").val();
+		 var buyboxSeller = $(".ussidPdp").val();
 		     var aFinalPrice="";
 		     var bFinalPrice="";
 		
@@ -489,7 +489,7 @@ function focusOnElement() {
 	
 	 
 	 function sortPriceDesc(pageCount){
-		 var buyboxSeller = $("#ussid").val();
+		 var buyboxSeller = $(".ussidPdp").val();
 		 var aFinalPrice="";
 	     var bFinalPrice="";
 		 sellerDetailsArray.sort(function(a, b){
