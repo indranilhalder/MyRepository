@@ -40,8 +40,8 @@ public interface MplProductSearchFacade<ITEM extends ProductData> extends Produc
 			final String brandCode, final String type, final PageableData pageableData);
 
 
-	ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> conceirgeSearch(final String age, final String categoryCode,
-			final String reasonOrEvent, final SearchStateData searchState, final PageableData pageableData);
+	ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> conceirgeSearch(final String age,
+			final String categoryCode, final String reasonOrEvent, final SearchStateData searchState, final PageableData pageableData);
 
 	public ProductSearchPageData<SearchStateData, ITEM> mplProductSearchForWebservice(final SearchStateData searchState,
 			final PageableData pageableData, final String categoryCode);
@@ -77,4 +77,10 @@ public interface MplProductSearchFacade<ITEM extends ProductData> extends Produc
 
 	ProductCategorySearchPageData dropDownSearchForCouponListing(SearchStateData searchState, String couponId,
 			PageableData pageableData);
+
+	//find online and new exclusive products
+	//	ProductCategorySearchPageData<SearchStateData, ITEM, ProductData> mplOnlineAndNewProductSearch(final String string,
+	//			final SearchStateData searchState, final PageableData pageableData);
+	ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> mplOnlineAndNewProductSearch(
+			final SearchStateData searchState, final PageableData pageableData);
 }

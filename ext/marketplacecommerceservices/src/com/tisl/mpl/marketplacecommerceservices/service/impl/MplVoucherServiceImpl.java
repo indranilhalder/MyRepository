@@ -24,6 +24,7 @@ import de.hybris.platform.voucher.jalo.util.VoucherEntrySet;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -401,7 +402,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
 
 		double totalApplicablePrice = 0.0D;
-		double percentageDiscount = 0.0D;
+		BigDecimal percentageDiscount = null;
 		//double discountValue = 0.0D;
 		//final DecimalFormat df = new DecimalFormat("#");
 
@@ -425,18 +426,18 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 		if (voucherObj.isAbsoluteAsPrimitive())
 		{
-			percentageDiscount = (discountValue / totalApplicablePrice) * 100;
+			percentageDiscount = BigDecimal.valueOf((discountValue / totalApplicablePrice) * 100);
 		}
 		else
 		{
-			percentageDiscount = discountValue;
-			final double totalSavings = (totalApplicablePrice * percentageDiscount) / 100;
+			percentageDiscount = BigDecimal.valueOf(discountValue);
+			final double totalSavings = (totalApplicablePrice * percentageDiscount.doubleValue()) / 100;
 			final double totalMaxDiscount = voucher.getMaxDiscountValue() != null ? voucher.getMaxDiscountValue().doubleValue()
 					: 0.0D;
 
 			if (totalMaxDiscount != 0.0D && totalSavings > totalMaxDiscount)
 			{
-				percentageDiscount = (voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice) * 100;
+				percentageDiscount = BigDecimal.valueOf((voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice) * 100);
 
 			}
 
@@ -471,19 +472,21 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			{
 				if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
 				{
-					final double discountPriceValue = (percentageDiscount / 100) * totalApplicablePrice;
+					final double discountPriceValue = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(
+							BigDecimal.valueOf(totalApplicablePrice)).doubleValue();
 					entryLevelApportionedPrice = discountPriceValue - totalAmtDeductedOnItemLevel;
 				}
 				else
 				{
-					entryLevelApportionedPrice = (percentageDiscount / 100) * entryTotalPrice;
+					entryLevelApportionedPrice = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(
+							BigDecimal.valueOf(entryTotalPrice)).doubleValue();
 					totalAmtDeductedOnItemLevel += entryLevelApportionedPrice;
 				}
 
 				LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
 
 				entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
-				entry.setCouponValue(Double.valueOf((int) entryLevelApportionedPrice));
+				entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice));
 
 				if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
 						|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
@@ -493,7 +496,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 					if (netAmtAftrAllDisc > entryLevelApportionedPrice)
 					{
-						currNetAmtAftrAllDisc = netAmtAftrAllDisc - (int) entryLevelApportionedPrice;
+						currNetAmtAftrAllDisc = netAmtAftrAllDisc - entryLevelApportionedPrice;
 
 					}
 					else
@@ -506,7 +509,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					if (entryTotalPrice > entryLevelApportionedPrice)
 					{
-						currNetAmtAftrAllDisc = entryTotalPrice - (int) entryLevelApportionedPrice;
+						currNetAmtAftrAllDisc = entryTotalPrice - entryLevelApportionedPrice;
 
 					}
 					else
@@ -524,7 +527,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 
 	}
-
 
 	/**
 	 * @return the mplDefaultCalculationService

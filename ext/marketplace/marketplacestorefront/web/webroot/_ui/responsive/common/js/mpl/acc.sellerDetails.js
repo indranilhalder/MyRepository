@@ -452,7 +452,7 @@ function focusOnElement() {
 			
 			});
 		}
-	 function sort(value)
+	 function sortSellers(value)
 	 {
 		 if(value == 1)
 	    	 sortPrice(pageCount);
