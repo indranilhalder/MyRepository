@@ -18,6 +18,7 @@ import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
@@ -30,7 +31,6 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -53,6 +53,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Resource;
+
 import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -70,6 +72,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -113,6 +116,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Autowired
 	private CatalogService catalogService;
+
+	@Resource
+	MplCommerceCartCalculationStrategy mplDefaultCommerceCartCalculationStrategy;
+
+
+
+	public MplCommerceCartCalculationStrategy getMplDefaultCommerceCartCalculationStrategy()
+	{
+		return mplDefaultCommerceCartCalculationStrategy;
+	}
+
+	public void setMplDefaultCommerceCartCalculationStrategy(
+			final MplCommerceCartCalculationStrategy mplDefaultCommerceCartCalculationStrategy)
+	{
+		this.mplDefaultCommerceCartCalculationStrategy = mplDefaultCommerceCartCalculationStrategy;
+	}
 
 	/*
 	 * @Desc fetching cartdata with selected ussid
@@ -496,6 +515,57 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			cartModel.setTotalPriceWithConv(Double.valueOf(totalPrice));
 			getModelService().save(cartModel);
 		}
+	}
+
+
+
+	@Override
+	public boolean setCartSubTotal2(final CartModel cartModel) throws EtailNonBusinessExceptions
+	{
+		double subtotal = 0.0;
+		double totalPrice = 0.0;
+		Double discountValue = Double.valueOf(0.0);
+		boolean subtotalChanged = false;
+		//	final CartModel cartModel = getCartService().getSessionCart();
+		if (cartModel != null)
+		{
+			if (null != cartModel.getDeliveryCost() && 0.0 != cartModel.getDeliveryCost().doubleValue())
+			{
+				final List<AbstractOrderEntryModel> entries = cartModel.getEntries();
+				for (final AbstractOrderEntryModel entry : entries)
+				{
+					final double entryTotal = entry.getQuantity().doubleValue() * entry.getBasePrice().doubleValue();
+					subtotal += entryTotal;
+					//TISEE-581
+					entry.setPrevDelCharge(Double.valueOf(0));
+					entry.setCurrDelCharge(Double.valueOf(0));
+					getModelService().save(entry);
+					subtotalChanged = true;
+				}
+
+				//final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+				////TISST-13010
+
+				//				if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
+				//				{
+				//					discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
+				//				}
+
+				if (cartModel.getTotalDiscounts() != null && cartModel.getTotalDiscounts() != null)
+				{
+					discountValue = Double.valueOf(cartModel.getTotalDiscounts().doubleValue());
+				}
+
+				totalPrice = subtotal - discountValue.doubleValue();
+				cartModel.setSubtotal(Double.valueOf(subtotal));
+				cartModel.setTotalPrice(Double.valueOf(totalPrice));
+				cartModel.setTotalPriceWithConv(Double.valueOf(totalPrice));
+				getModelService().save(cartModel);
+			}
+		}
+
+		return subtotalChanged;
+
 	}
 
 
@@ -1126,6 +1196,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public CartModel removeDeliveryMode(final CartModel cart)
 	{
+		boolean hasDeliveryMode = false;
 		try
 		{
 			for (final AbstractOrderEntryModel entry : cart.getEntries())
@@ -1134,19 +1205,54 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				{
 					entry.setMplDeliveryMode(null);
 					modelService.save(entry);
+					hasDeliveryMode = true;
 				}
 			}
 
-			commerceCartService.recalculateCart(cart);
-			modelService.save(cart);
+			//call recalculate on cart, only if there's a change in deliverymode.
+			if (hasDeliveryMode)
+			{
+				commerceCartService.recalculateCart(cart);
+				modelService.save(cart);
+			}
+
 		}
-		catch (final CalculationException e)
+		catch (final Exception e)
 		{
 			// YTODO Auto-generated catch block
 			LOG.info("Some issue may be happend while removing Dellivery mode from Cart to remove Delivery Specific promotion");
 		}
 		// YTODO Auto-generated method stub
 		return cart;
+	}
+
+	@Override
+	public boolean removeDeliveryMode2(final CartModel cart)
+	{
+		boolean hasDeliveryMode = false;
+		try
+		{
+			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			{
+				if (entry.getMplDeliveryMode() != null)
+				{
+					entry.setMplDeliveryMode(null);
+					modelService.save(entry);
+					hasDeliveryMode = true;
+				}
+			}
+
+			if (hasDeliveryMode)
+			{
+				modelService.save(cart);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while removing delivery mode ", e);
+		}
+
+		return hasDeliveryMode;
 	}
 
 	/*
@@ -1294,10 +1400,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		boolean delistedStatus = false;
 		//TISEE-5143
-		final CatalogVersionModel onlineCatalog = catalogService.getCatalogVersion(
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+		//		final CatalogVersionModel onlineCatalog = catalogService.getCatalogVersion(
+		//				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+		//				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
 
+		final CatalogVersionModel onlineCatalog = getSessionService().getAttribute("currentCatalogVersion");
 
 		if (cartModel != null)
 		{
@@ -1740,5 +1847,45 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 
 		return giftYourselfDeliveryModeDataMap;
+	}
+
+	@Override
+	public CartModel getCalculatedCart() throws CommerceCartModificationException, EtailNonBusinessExceptions
+	{
+		final CartModel cart = getCartService().getSessionCart();
+
+		setChannelForCart(cart);
+		final boolean isDelisted = isCartEntryDelisted(cart);
+		final boolean isDeliveryModeRemoved = removeDeliveryMode2(cart);
+		final boolean hasSubtotalChanged = setCartSubTotal2(cart);
+		//TODO Add release voucher code
+		//Do calculate the cart, if any of the following conditions met. Else return the cart as it is.
+		if (isDelisted || isDeliveryModeRemoved || hasSubtotalChanged)
+		{
+			cart.setCalculated(Boolean.FALSE);
+			setCartEntriesCalculation(cart);
+			final CommerceCartParameter parameter = new CommerceCartParameter();
+			parameter.setCart(cart);
+			getMplDefaultCommerceCartCalculationStrategy().calculateCart(parameter);
+			getCartService().setSessionCart(cart);
+		}
+		return cart;
+	}
+
+	private void setCartEntriesCalculation(final CartModel oldCart)
+	{
+		for (final AbstractOrderEntryModel entry : oldCart.getEntries())
+		{
+			entry.setCalculated(Boolean.FALSE);
+		}
+	}
+
+	private void setChannelForCart(final CartModel model)
+	{
+		if (!model.getChannel().equals(SalesApplication.WEB))
+		{
+			model.setChannel(SalesApplication.WEB);
+			getModelService().save(model);
+		}
 	}
 }
