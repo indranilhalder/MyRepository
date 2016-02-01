@@ -79,6 +79,14 @@ text-align: center;
 border-bottom: 1px solid;
     padding: 5px;
 }
+#new_exclusive{
+width:50%;
+} 
+
+.newExclusiveElement img {
+	width: 100%;
+}
+
 </style>
 
 <template:page pageTitle="${pageTitle}">
@@ -102,6 +110,12 @@ border-bottom: 1px solid;
 	<cms:pageSlot position="Section2C" var="feature">
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
+	<%--  <cms:pageSlot position="Section4B" var="feature">
+		<cms:component component="${feature}" />
+	</cms:pageSlot> --%>
+	
+	<div id="newAndExclusive" class=""></div>
+	
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper"></div>
 	<!-- For Infinite Analytics Start -->
 	<div class="brands" id="ia_brands_favorites"></div>

@@ -274,6 +274,19 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section3Slot-Homepage;Section3;;Section3Slot-Homepage;;;
 
+
+########## New And Exclusive ##################
+
+# Product Carousel for  New And Exclusive
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
+;; NewAndExclusiveProductCarouselComponent; New And Exclusive Component;987654321,987654322,987654323;allVisible;false;NewAndExclusiveProductCarouselComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;Section4BSlot-Homepage; NewAndExclusiveProductCarouselComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section4BSlot-Homepage;Section4B;;Section4BSlot-Homepage;;;
+
 #### Section 4
 
 #Banners for Handpicked Collections
