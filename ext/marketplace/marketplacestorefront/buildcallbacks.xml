@@ -246,12 +246,6 @@
 			<if>
 				<equals arg1="${storefront.minification.enabled}" arg2="true" />
 				<then>
-					<tstamp>
-						<format property="timestamp" pattern="ddMMYYYYhhmmss" locale="en,GB" />
-					</tstamp>
-					<propertyfile file="${HYBRIS_CONFIG_DIR}/local.properties">
-						<entry key="marketplace.minification.build.time" type="string" value="${timestamp}"/>
-					</propertyfile>
 					<delete dir="${mpstorefront.minjs.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
