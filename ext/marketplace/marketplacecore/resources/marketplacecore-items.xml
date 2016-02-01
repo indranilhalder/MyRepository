@@ -4275,6 +4275,10 @@
 							optional="true" partof="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="ipAddress" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
