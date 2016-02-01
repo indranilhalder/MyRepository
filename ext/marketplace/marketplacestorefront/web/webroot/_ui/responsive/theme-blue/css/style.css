@@ -1523,11 +1523,6 @@ h2 {
             width: 145px; }
             header .content nav > ul > li > .toggle {
               font-size: 12px; }
-              header .content nav > ul > li > .toggle:after {
-			    margin-left: 3px;
-			    top: 2px;
-			    font-size: 14px;
-			}
             header .content nav > ul > li:first-child  {
               padding-right: 0;
             }
@@ -22401,8 +22396,8 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 	}
 }
 .brandGroupLink{
-	line-height:25px;
-	height:25px;
+	line-height:22px;
+	height:22px;
 }
 .account-sprite {
     background-image: url(../images/account.png);

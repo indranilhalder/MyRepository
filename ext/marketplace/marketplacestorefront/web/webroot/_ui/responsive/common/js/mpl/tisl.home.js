@@ -181,6 +181,14 @@ function getBrandsYouLoveAjaxCall() {
 
 // Get Brands You Love Content AJAX
 function getBrandsYouLoveContentAjaxCall(id) {
+	if (window.localStorage
+			&& (html = window.localStorage.getItem("brandContent-" + id)) && html != "") {
+		// console.log("Local");
+		$('.home-brands-you-love-desc').empty();
+		$('#brandsYouLove').append(decodeURI(html));
+	}
+	else{
+		
 	$
 			.ajax({
 				type : "GET",
@@ -197,17 +205,17 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					
 					if (typeof response.firstProductImageUrl !== "undefined") {
 						
-						defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
+						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></div>";
+								+ "'></img></a></div>";
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
 					if (typeof response.text !== "undefined") {
 						defaultHtml += response.text;
 					}
-					if (typeof response.bannerText !=="undefined") {
+					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml += "<div class='home-brands-you-love-main-image-wrapper'>";
-						if (response.bannerText != "") {
+						if (typeof response.bannerText !=="undefined") {
 							defaultHtml += "<div class='visit-store-wrapper'>"
 									+ response.bannerText + "</div>";
 						}
@@ -217,24 +225,36 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					}
 
 					if (typeof response.secondproductImageUrl !== "undefined") {
-						defaultHtml += "<div class='home-brands-you-love-side-image left'><img src='"
+						defaultHtml += "<div class='home-brands-you-love-side-image right'><a href='"+ACC.config.encodedContextPath+response.secondProductUrl+"'><img src='"
 								+ response.secondproductImageUrl
-								+ "'></img></div>";
+								+ "'></img></a></div>";
 					}
 
 					defaultHtml += "</div>";
 					
 					$('#brandsYouLove').append(defaultHtml);
+					
+					window.localStorage.setItem("brandContent-" + id,
+							encodeURI(defaultHtml));
 
 				},
 				error : function() {
 					globalErrorPopup('Failure!!!');
 				}
 			});
+	}
 }
 // ENd AJAX CALL
 if ($('#brandsYouLove').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
-
+	
+	if (window.localStorage) {
+		for ( var key in localStorage) {
+			if (key.indexOf("brandContent") >= 0) {
+				window.localStorage.removeItem(key);
+				console.log("Deleting.." + key);
+			}
+		}
+	}
 	getBrandsYouLoveAjaxCall();
 	
 }
@@ -262,3 +282,76 @@ setInterval(function() {
 	}
 
 }, 20000);
+
+
+
+//AJAX CALL BEST PICKS START
+if ($('#bestPicks').children().length == 0) {
+	getBestPicksAjaxCall();
+}
+
+
+function getBestPicksAjaxCall(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getBestPicks",
+		
+		success : function(response) {
+			renderHtml = "<h1>" + response.title + "</h1>"
+				+ "<div class='home-best-pick-carousel'>";
+			
+			$
+				.each(
+						response.subItems,function(k, v){
+							
+							if(v.url){
+								renderHtml += "<a href='"
+									+ v.url
+									+ "' class='item'>";
+							}
+							
+							if(v.imageUrl){
+								renderHtml += "<div class='home-best-pick-carousel-img'> <img src='"
+									+ v.imageUrl
+									+ "'></img></div>";
+							}
+							
+							if(v.text){
+								renderHtml += "<div class='short-info'>"
+									+ v.text
+									+ "</div>";
+							}
+							
+							renderHtml += "</a>";
+							
+						
+				});
+			renderHtml += "</div> <a href='#' class='view-cliq-offers'> View Cliq Offers </a>";	
+			$("#bestPicks").html(renderHtml);
+			//console.log()
+		},
+		
+		error : function() {
+			globalErrorPopup('Failure!!!');
+		},
+		
+		complete: function() {
+			$(".home-best-pick-carousel").owlCarousel({
+				navigation:true,
+				navigationText : [],
+				pagination:false,
+				itemsDesktop : [5000,5], 
+				itemsDesktopSmall : [1400,5], 
+				itemsTablet: [650,2], 
+				itemsMobile : [480,2], 
+				rewindNav: false,
+				lazyLoad:true
+			});
+		}
+
+	});
+}
+
+//AJAX CALL BEST PICKS END
