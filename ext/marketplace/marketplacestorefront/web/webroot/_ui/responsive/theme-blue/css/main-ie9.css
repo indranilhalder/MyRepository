@@ -13652,7 +13652,6 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
 #loginDivCheckout,#loginDivCheckout td, #loginDivCheckout table, #loginDivCheckout tr, #loginDivCheckout tbody, #loginDivCheckout div,
-#loginDivsiginflyout,#loginDivsiginflyout td, #loginDivsiginflyout table, #loginDivsiginflyout tr, #loginDivsiginflyout tbody, #loginDivsiginflyout div,
 #loginDivRegisterCheckOut,#loginDivRegisterCheckOut td, #loginDivRegisterCheckOut table, #loginDivRegisterCheckOut tr, #loginDivRegisterCheckOut tbody, #loginDivRegisterCheckOut div {
     display: block;
     width: 100% !important;
@@ -13681,3 +13680,6 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDivsiginflyout{
 	margin-top:15px;
 }
+#loginDivsiginflyout > table > tbody > tr > td table td:first-child{
+	width: 10% !important;
+} 
