@@ -285,7 +285,7 @@
 												<!-- Previous link addition -->
 												<c:if
 													test="${param.pageHistory != 1 and not empty param.pageHistory and not empty couponOrderDataDTOList}">
-													<li class="prev" id="historyPrev"><a href="#" target="#transactionHistory"><spring:theme
+													<li class="prev" id="historyPrev"><a href="#" ><spring:theme
 																code="text.account.coupons.prev" /> <span
 															class="lookbook-only"></span></a></li>
 												</c:if>
@@ -317,7 +317,7 @@
 												</c:choose>
 												<!-- Next link addition -->
 												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory and param.pageHistory ne totalPagesCouponHist}">
-													<li class="next" id="historyNext"><a href="#" target="#transactionHistory"><spring:theme
+													<li class="next" id="historyNext"><a href="#"><spring:theme
 																code="text.account.coupons.next" /> <span
 															class="lookbook-only"></span></a></li>
 												</c:if>
