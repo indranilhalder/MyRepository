@@ -434,7 +434,7 @@ function getPromoBannerHomepage(){
 
 		},
 		error : function() {
-			globalErrorPopup('Failure in Promo!!!');
+			console.log('Failure in Promo!!!');
 		}
 	});
 }

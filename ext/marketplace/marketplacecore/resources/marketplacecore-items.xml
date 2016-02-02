@@ -519,6 +519,11 @@
 			<value code="OneCloumnOneBrandImage"></value>
 			<value code="AtoZ"></value>
 		</enumtype>
+		
+		<enumtype code="showCaseLayout" autocreate="true" dynamic="true">
+			<value code="BrandShowCase"></value>
+			<value code="CollectionShowCase"></value>
+		</enumtype>
 
 
 		<!-- EnumType for Payment -->
@@ -3822,6 +3827,13 @@
 						<persistence type='property' />
 					</attribute>
 
+					<attribute type="showCaseLayout" qualifier="layout"
+						autocreate="true" generate="true">
+						<description>This attribute is for determining the layout structure of the component</description>
+						<defaultvalue>em().getEnumerationValue("showCaseLayout","BrandShowCase")</defaultvalue> 
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 					
 				</attributes>
 			</itemtype>
@@ -3831,7 +3843,14 @@
 				jaloclass="com.tisl.mpl.core.jalo.MplShowcaseItemComponent">
 				<description>This component is created for configuring each item of the brand showcase </description>
 				<attributes>
-
+					
+					<attribute type="java.lang.String" qualifier="headerText"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing the header text</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+					
 					<attribute type="Media" qualifier="logo"
 						autocreate="true" generate="true">
 						<description>This attribute is for storing the brand logo to be displayed</description>
