@@ -27374,9 +27374,11 @@ body .account .account-header select.menu-select optgroup option{
 	.cart.wrapper .product-block li.item > ul.desktop > li.price{
 	    position: absolute;
     left: calc(30% + 10px);
-    top: 140px;
-    text-align:left;
-    padding-top:0px;
+    top: 110px;
+    text-align: left;
+    padding-top: 0px;
+    font-size: 12px;
+    width: 70%;
 	}
 	.cart.wrapper .product-block li.item ul .item-edit-details{
 	bottom: -75px;
@@ -27415,6 +27417,9 @@ body .account .account-header select.menu-select optgroup option{
 	}
 }
 }
+.cart.wrapper .product-block li.item > ul.desktop > li.price{
+	line-height:18px;
+	}
 
 	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
 	    width: 100px;
@@ -27461,7 +27466,6 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
 #loginDivCheckout,#loginDivCheckout td, #loginDivCheckout table, #loginDivCheckout tr, #loginDivCheckout tbody, #loginDivCheckout div,
-#loginDivsiginflyout,#loginDivsiginflyout td, #loginDivsiginflyout table, #loginDivsiginflyout tr, #loginDivsiginflyout tbody, #loginDivsiginflyout div,
 #loginDivRegisterCheckOut,#loginDivRegisterCheckOut td, #loginDivRegisterCheckOut table, #loginDivRegisterCheckOut tr, #loginDivRegisterCheckOut tbody, #loginDivRegisterCheckOut div {
     display: block;
     width: 100% !important;
@@ -27490,6 +27494,9 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDivsiginflyout{
 	margin-top:15px;
 }
+#loginDivsiginflyout > table > tbody > tr > td table td:first-child{
+	width: 10% !important;
+}  
 @media (max-width: 1050px) and (min-width: 901px){
 header .content .bottom.active nav > ul > li:first-child > ul {
     left: 200px;
@@ -27559,6 +27566,14 @@ position: absolute;
 	display:block;
 	
 }
+@media(max-width:790px){
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+    padding-top: 0px;
+	position:relative;}
+
+body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
+    padding-top: 40px;}
+} 
 
 .electronics-brand .feature-categories.custom-feature {
 	    padding: 0;
