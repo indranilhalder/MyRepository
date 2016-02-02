@@ -312,7 +312,7 @@
 										
 											<c:choose>
 											    <c:when test="${empty sizeSelectedSizeGuide}">
-													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</option>
+													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
 												</c:when>
 												<c:otherwise>
 													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
@@ -348,7 +348,7 @@
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
 																								<c:choose>
 											    <c:when test="${empty sizeSelectedSizeGuide}">
-													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</option>
+													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
 												</c:when>
 												<c:otherwise>
 													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
