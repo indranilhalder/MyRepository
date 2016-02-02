@@ -547,12 +547,15 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
 ;Section1;;SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent,SimpleBannerComponent;
-;Section2;;MplCategoryCarouselComponent;
+;Section2;;MplCategoryCarouselComponent,SimpleBannerComponent;
+;Section3;;CMSParagraphComponent;
 ;Section3A;;MplFootwearComponent,SimpleBannerComponent;
-;Section3A1;;MplFootwearComponent;
-;Section4A;;MplFootwearComponent;
+;Section3A1;;MplFootwearComponent,SimpleBannerComponent;
+;Section4;;CMSParagraphComponent;
+;Section4A;;MplFootwearComponent,SimpleBannerComponent;
 ;Section4A1;;MplFootwearComponent,SimpleBannerComponent;
-;Section5A1;;MplFootwearComponent;
+;Section5;;CMSParagraphComponent;
+;Section5A1;;MplFootwearComponent,SimpleBannerComponent;
 ;Section6A;;MplCategoryCarouselComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
@@ -1463,6 +1466,7 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;marketplacePreference;Account Marketplace Preference;AccountPageTemplate;marketplacePreference
 ;;sellerListing;Seller Listing;ProductGridPageTemplate;sellerListing
 ;;offerPageListing;Offer Page Listing;ProductGridPageTemplate;offerListing
+;;couponListing;Coupon Page Listing;ProductGridPageTemplate;couponListing
 
 ########## For Lets Get Personal ##########
 ;;myInterest;My Interest Page;AccountPageTemplate;myInterest

@@ -55,6 +55,8 @@
 					<option value=/store/mpl/en/my-account/address-book
 						data-href="account-addresses.php"><spring:theme
 							code="header.flyout.address" /></option>
+							<option value=/store/mpl/en/my-account/reviews
+						data-href="account-addresses.php"><spring:theme code="header.flyout.review" /></option>
 				</optgroup>
 
 				<optgroup label="Share">
@@ -91,8 +93,16 @@
 								code="header.flyout.cards" /></a></li>
 					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 								code="header.flyout.address" /></a></li>
+								<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li>
 					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
+				</ul>
+				<ul>
+				<li class="header-SignInShare"><h3><spring:theme
+									code="header.flyout.credits" /></h3></li>
+						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>
 				</ul>
 				<ul>
 					<li><h3>
@@ -112,15 +122,13 @@
 							<spring:theme text="Order History" />
 						</h1>
 						<c:if test="${not empty searchPageData.results}">
-						<div id="ofPaginationUp"></div>
+						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
+							<input type="hidden" id="pageIndex" value="${pageIndex}" />
+							<input type="hidden" id="pagableSize" value="${pageSize}" />
+							<input type="hidden" id="totalNumberOfResults"
+								value="${searchPageData.pagination.totalNumberOfResults}" />
+							<div id="displayPaginationCountUp"></div>
 						</c:if>
-						<%-- <p>${fn:length(orderDataList)}
-							&nbsp;
-							<spring:theme code="text.account.orderHistory.order.placed.in" />
-						</p>
-						<select>
-							<option>${showOrdersFrom}</option>
-						</select> --%>
 					</div>
 
 					<c:if test="${not empty searchPageData.results}">
@@ -128,12 +136,20 @@
 						<input type="hidden" id="pageSize" value="${pageSizeInoh}" />
 						<input type="hidden" id="orderEntryCount"
 							value="${fn:length(orderDataList)}" />
-						<c:if test="${fn:length(orderDataList)>pageSizeInoh}">
+						<%-- <c:if test="${fn:length(orderDataList)>pageSizeInoh}">
 							<ul class="pagination orderhistory_address_pagination">
 								<li class="address_pagination" id="paginationDiv"></li>
 
 							</ul>
-						</c:if>
+						</c:if> --%>
+						
+						<!-- TISPRO-48 ---- call mpl-pagination.tag for pagination -->
+						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
+							supportShowAll="${isShowAllAllowed}"
+							searchPageData="${searchPageData}"
+							searchUrl="/my-account/orders?sort=${searchPageData.pagination.sort}"
+							msgKey="text.account.orderHistory.page"
+							numberPagesShown="${numberPagesShown}" />
 						<c:forEach items="${orderDataList}" var="orderHistoryDetail"
 							varStatus="status">
 							<ul class="pagination_ul">
@@ -577,20 +593,29 @@
 							</ul>
 						</c:forEach>
 
-<div class="navigation2" >
-						<span id="ofPagination"></span>
-						<c:if test="${fn:length(orderDataList)>pageSizeInoh}">
-							<ul class="pagination orderhistory_address_pagination2">
-								<li class="address_pagination2" id="paginationDiv2"></li>
-
-							</ul>
-						</c:if>
+						<div class="navigation2" >
+							<span id="ofPagination"></span>
+							<%-- <div class="navigation2" >
+							<span id="ofPagination"></span>
+							<c:if test="${fn:length(orderDataList)>pageSizeInoh}">
+								<ul class="pagination orderhistory_address_pagination2">
+									<li class="address_pagination2" id="paginationDiv2"></li>
+	
+								</ul>
+							</c:if>
+							</div> --%>
+							<!-- TISPRO-48 ---- call mpl-pagination.tag for pagination -->
+							<nav:mpl-pagination top="false"
+								supportShowPaged="${isShowPageAllowed}"
+								supportShowAll="${isShowAllAllowed}"
+								searchPageData="${searchPageData}"
+								searchUrl="/my-account/orders?sort=${searchPageData.pagination.sort}"
+								msgKey="text.account.orderHistory.page"
+								numberPagesShown="${numberPagesShown}" />
+						<!-- mycode -->
 						</div>
 						<!-- mycode -->
 					</c:if>
-
-
-
 
 					<c:if test="${empty searchPageData.results}">
 						<div class="account-emptyOrderMessage">
@@ -605,23 +630,5 @@
 
 		</div>
 	</div>
-
-
-
 </template:page>
-<%-- <script type="text/javascript"
-	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
-<template:javaScriptVariables />
-<script type="text/javascript"
-	src="${commonResourcePath}/js/acc.accountaddress.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/acc.accountpagination.js"></script> --%>
 
-<script>
-	var i = 0;
-	var pageCount = 0;
-	var pagelimitAcc = $("#pageSize").val();
-	var totalItem = $("#orderEntryCount").val();
-	var noofpageCount = Math.ceil(totalItem / pagelimitAcc);
-	var pageNo = 1;
-</script>

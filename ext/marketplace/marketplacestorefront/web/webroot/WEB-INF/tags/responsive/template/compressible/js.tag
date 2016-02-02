@@ -53,8 +53,8 @@
 <c:if test="${isMSDEnabled}">
 	<c:choose>
 	<c:when test="${product.rootCategory=='Clothing'}">
-		<script type="text/javascript"	src="${msdjsURL}" defer="defer"></script>
-		<script type="text/javascript"	src="${commonResourcePath}/js/moreMADness.js" defer="defer"></script>
+		<script type="text/javascript"	src="${msdjsURL}"></script>
+		<script type="text/javascript"	src="${commonResourcePath}/js/moreMADness.js"></script>
 		
 		 <c:set var="MSDRESTURL" scope="request" value="${msdRESTURL}"/>
 		  
@@ -89,16 +89,16 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnRequest') 
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
 	<script type="text/javascript"
-		src="${commonResourcePath}/js/acc.accountpagination.js"></script>
+		src="${commonResourcePath}/js/mpl/acc.accountpagination.js"></script>
 </c:if>
 
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/login') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/register') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/login/*')}">
 <script type="text/javascript"
-		src="${commonResourcePath}/js/acc.accountaddress.js"></script>
+		src="${commonResourcePath}/js/mpl/acc.accountaddress.js"></script>
 <script type="text/javascript"
-		src="${commonResourcePath}/js/acc.forgottenpassword.js"></script>
+		src="${commonResourcePath}/js/mpl/acc.forgottenpassword.js"></script>
 </c:if>
 
 <script>
@@ -120,10 +120,10 @@ div.blockMsg {
     color: #fff;
     margin-left:20px;
 }
-div.blockUI.blockOverlay{
+/* div.blockUI.blockOverlay{
 	opacity : .09 !important;
 	top : 100px !important;
-}
+} */
 </style> 
 
 <!--- END:MSD --->

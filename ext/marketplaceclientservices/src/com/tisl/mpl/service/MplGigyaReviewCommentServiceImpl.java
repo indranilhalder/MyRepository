@@ -47,6 +47,11 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	@Autowired
 	private ProductFacade productFacade;
 
+	public static final String TRUE_STATUS = "true";
+	public static final String PROXY_SET_STATEMNT = "******************** PROXY SET ";
+	public static final String PROXY_HOST_STATEMNT = "******************** PROXY HOST ";
+	public static final String PROXY_PORT_STATEMNT = "******************** PROXY PORT ";
+
 	/**
 	 * @return the productFacade
 	 */
@@ -103,11 +108,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @param category
 	 *           ,productId,customerUID
 	 * @return boolean
-	 * @throws Exception
 	 */
 	@Override
 	public boolean getReviewsByCategoryProductId(final String category, final String productId, final String customerUID)
-			throws Exception
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -124,20 +127,17 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, productId);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
 		{
-			if (null != proxyHost && null != proxyPort)
-			{
-				final int proxyPortInt = Integer.parseInt(proxyPort);
-				final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				gsRequest.setProxy(proxy);
-			}
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			gsRequest.setProxy(proxy);
 		}
 
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 
 		final GSResponse gsResponse = gsRequest.send();
 		if (gsResponse.getErrorCode() == 0)
@@ -145,19 +145,13 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			try
 			{
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
-				if ((gsObj.getInt("commentCount") == 0))
-				{
-					return false;
-				}
-				else
-				{
-					return true;
-				}
+				return (gsObj.getInt("commentCount") == 0) ? false : true;//sonar fix for avoiding unnecessary boolean returns
+
 			}
 			catch (final Exception e)
 			{
 				LOG.error(MarketplacecclientservicesConstants.REVIEWS_CATEGORYID_EXCEPTION + e.getMessage());
-				throw e;
+
 			}
 		}
 		return true;
@@ -167,11 +161,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @Description: Gigya get comments for user id supplied
 	 * @param customerUID
 	 * @return List<GigyaProductReviewWsDTO>
-	 * @throws Exception
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<GigyaProductReviewWsDTO> getReviewsByUID(final String customerUID) throws Exception
+	public List<GigyaProductReviewWsDTO> getReviewsByUID(final String customerUID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -185,19 +178,16 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
 		{
-			if (null != proxyHost && null != proxyPort)
-			{
-				final int proxyPortInt = Integer.parseInt(proxyPort);
-				final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				gsRequest.setProxy(proxy);
-			}
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			gsRequest.setProxy(proxy);
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		final List<GigyaProductReviewWsDTO> customerReviewList = new ArrayList<GigyaProductReviewWsDTO>();
 		try
 		{
@@ -223,7 +213,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						reviewDTO.setOverAllRating(String.valueOf(overAllRatingInt));
 					}
 
-					if (checkItemKey(ratings, "Quality") == true)
+					if (checkItemKey(ratings, "Quality")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
 						double qualityInt = ratings.getDouble("Quality");
 						qualityInt = (qualityInt / 5) * 100;
@@ -235,9 +225,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						reviewDTO.setQualityRating(String.valueOf(0));
 					}
 
-					if (category.equals("Clothing"))
+					//	if (category.equals("Clothing"))
+					if ("Clothing".equalsIgnoreCase(category) || "Footwear".equalsIgnoreCase(category)) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
-						if (checkItemKey(ratings, "Fit") == true)
+						if (checkItemKey(ratings, "Fit"))
 						{
 							double fitInt = ratings.getDouble("Fit");
 							fitInt = (fitInt / 5) * 100;
@@ -251,7 +242,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					}
 					else
 					{
-						if (checkItemKey(ratings, "Ease of use") == true)
+						if (checkItemKey(ratings, "Ease of use")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 						{
 							double easeOfUseInt = ratings.getDouble("Ease of use");
 							easeOfUseInt = (easeOfUseInt / 5) * 100;
@@ -264,7 +255,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						}
 					}
 
-					if (checkItemKey(ratings, "Value for Money") == true)
+					if (checkItemKey(ratings, "Value for Money")) //removing unneccessary comparison of boolean objects(Sonar Fix)
 					{
 
 						double valueForMoneyInt = ratings.getDouble("Value for Money");
@@ -307,7 +298,6 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		catch (final Exception e)
 		{
 			LOG.error(MarketplacecclientservicesConstants.REVIEWS_UID_EXCEPTION + e.getMessage());
-			throw e;
 
 		}
 		return customerReviewList;
@@ -318,11 +308,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @param categoryID
 	 *           ,streamID,commentID,commentText,commentTitle.ratings,UID
 	 * @return String
-	 * @throws Exception
 	 */
 	@Override
 	public String editComment(final String categoryID, final String streamID, final String commentID, final String commentText,
-			final String commentTitle, final String ratings, final String UID) throws Exception
+			final String commentTitle, final String ratings, final String UID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -338,19 +327,16 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequestAllowEdit.setParam("categorySettings", "{userEditComment : true}");
 		Proxy proxy = null;
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
 		{
-			if (null != proxyHost && null != proxyPort)
-			{
-				final int proxyPortInt = Integer.parseInt(proxyPort);
-				final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-				proxy = new Proxy(Proxy.Type.HTTP, addr);
-				gsRequestAllowEdit.setProxy(proxy);
-			}
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			proxy = new Proxy(Proxy.Type.HTTP, addr);
+			gsRequestAllowEdit.setProxy(proxy);
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		try
 		{
 			final GSResponse allowEdit = gsRequestAllowEdit.send();
@@ -386,7 +372,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		}
 		catch (final Exception e)
 		{
-			throw e;
+			LOG.error(MarketplacecclientservicesConstants.REVIEWS_EDIT_EXCEPTION + e.getMessage());
 
 		}
 		return null;
@@ -397,10 +383,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @param categoryID
 	 *           ,streamID,commentID
 	 * @return String
-	 * @throws Exception
 	 */
 	@Override
-	public String deleteComment(final String categoryID, final String streamID, final String commentID) throws Exception
+	public String deleteComment(final String categoryID, final String streamID, final String commentID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
@@ -417,19 +402,16 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.COMMENT_ID, commentID);
 
 
-		if (null != proxySet && proxySet.equalsIgnoreCase("true"))
+		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
 		{
-			if (null != proxyHost && null != proxyPort)
-			{
-				final int proxyPortInt = Integer.parseInt(proxyPort);
-				final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-				gsRequest.setProxy(proxy);
-			}
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			gsRequest.setProxy(proxy);
 		}
-		LOG.debug("******************** PROXY SET " + proxySet);
-		LOG.debug("******************** PROXY HOST " + proxyHost);
-		LOG.debug("******************** PROXY PORT " + proxyPort);
+		LOG.debug(PROXY_SET_STATEMNT + proxySet);
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		try
 		{
 			final GSResponse gsResponse = gsRequest.send();
@@ -441,7 +423,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		}
 		catch (final Exception e)
 		{
-			throw e;
+			LOG.error(MarketplacecclientservicesConstants.REVIEWS_DELETE_EXCEPTION + e.getMessage());
 		}
 		return null;
 	}
@@ -481,18 +463,18 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			}
 			else if (dayDiff == 1)
 			{
-				formatedDate = String.valueOf(dayDiff) + " " + "day ago";
+				formatedDate = dayDiff + " " + "day ago";
 			}
 			else if (dayDiff > 1 && dayDiff < 30)
 			{
 				LOG.debug(">>>>>>>>>date diffrence>>>>>>" + dayDiff + " " + "day ago");
-				formatedDate = String.valueOf(dayDiff) + " " + "days ago";
+				formatedDate = dayDiff + " " + "days ago";
 			}
 
 			else if (dayDiff == 30 || dayDiff == 31)
 			{
 				final int monthDiff = thisMonth - cMonth;
-				formatedDate = String.valueOf(monthDiff) + " " + " month ago";
+				formatedDate = monthDiff + " " + " month ago";
 			}
 		}
 		catch (final Exception e)

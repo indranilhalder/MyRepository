@@ -65,10 +65,15 @@
 				</p>
 				
 
-				<p>
+				<%-- <p>
+				**************************************
+				Blocked for Defect : TISPRD-57
 					<spring:theme code="checkout.orderConfirmation.copySentTo"
 						arguments="${orderData.customerData.displayUid}" />
-				</p>
+				****************************************
+				</p> --%>
+				
+				
 				<p>
 					<spring:theme code="checkout.orderConfirmation.checkOrderStatus" />
 				</p>

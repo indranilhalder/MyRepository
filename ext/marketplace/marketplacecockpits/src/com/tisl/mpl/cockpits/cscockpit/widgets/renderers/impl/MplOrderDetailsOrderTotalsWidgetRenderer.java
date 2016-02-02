@@ -4,7 +4,9 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 import java.text.NumberFormat;
+import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
 import org.zkoss.zul.Div;
@@ -20,11 +22,13 @@ import de.hybris.platform.cockpit.widgets.Widget;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.OrderDetailsOrderTotalsWidgetRenderer;
 import de.hybris.platform.servicelayer.session.SessionExecutionBody;
+import de.hybris.platform.util.DiscountValue;
 
 /**
  * @author 890223
@@ -69,10 +73,20 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					currencyInstance, container);
 
 			double promotion = Double.valueOf(0);
+			double cartPromo = Double.valueOf(0);
+			double couponPromo = Double.valueOf(0);
 			
 			for(AbstractOrderEntryModel entry : abstractOrderModel.getEntries()){
 				if(entry.getNetAmountAfterAllDisc()!=null)
 				promotion+= (entry.getTotalProductLevelDisc()) ;
+				if(null!=entry.getCartLevelDisc())
+				{
+					cartPromo+=entry.getCartLevelDisc();
+				}
+				if(null!=entry.getCouponValue())
+				{
+					couponPromo+=entry.getCouponValue();
+				}
 			}
 			renderRow(promotion,
 					LabelUtils.getLabel(widget, "promotion", new Object[0]),
@@ -115,10 +129,34 @@ public class MplOrderDetailsOrderTotalsWidgetRenderer extends
 					deliveryCosts,
 					LabelUtils.getLabel(widget, "deliveryCosts", new Object[0]),
 					currencyInstance, container);
+			
+//			final List<DiscountValue>discountList=abstractOrderModel.getGlobalDiscountValues();
+//		    final List<DiscountModel> voucherList=abstractOrderModel.getDiscounts();
+//		    double orderDiscount=0;
+//		    double couponDiscount=0;
+//		    
+//		    if(CollectionUtils.isNotEmpty(discountList))
+//		    {
+//		    	for(DiscountValue disVal:discountList)
+//		    	{
+//		    		if(CollectionUtils.isNotEmpty(voucherList) && disVal.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+//		    		{
+//		    			couponDiscount+=disVal.getAppliedValue();
+//		    		}
+//		    		else
+//		    		{
+//		    			orderDiscount+=disVal.getAppliedValue();
+//		    		}
+//		    	}
+//		    }
 
-			Double discounts = abstractOrderModel.getTotalDiscounts();
-			renderRow(discounts,
+			//Double discounts = abstractOrderModel.getTotalDiscounts();
+			renderRow(Double.valueOf(cartPromo),
 					LabelUtils.getLabel(widget, "discounts", new Object[0]),
+					currencyInstance, container);
+			
+			renderRow(Double.valueOf(couponPromo),
+					LabelUtils.getLabel(widget, "couponDiscounts", new Object[0]),
 					currencyInstance, container);
 
 			Double convenienceCharges = abstractOrderModel

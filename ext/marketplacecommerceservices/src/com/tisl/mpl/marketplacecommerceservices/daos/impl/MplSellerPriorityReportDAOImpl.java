@@ -9,6 +9,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -44,11 +45,15 @@ public class MplSellerPriorityReportDAOImpl implements MplSellerPriorityReportDA
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.SELLERPRIORITYWITHINDATEQUERY;
-
+			final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			final String startDataInput = sdf.format(startDate);
+			final String endDataInput = sdf.format(endDate);
 			//forming the flexible search query
 			final FlexibleSearchQuery changedDataQry = new FlexibleSearchQuery(queryString);
-			changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.START_DATE, startDate);
-			changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.END_DATE, endDate);
+			changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.START_DATE, startDataInput);
+			changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.END_DATE, endDataInput);
+			//changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.START_DATE, startDate);
+			//changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.END_DATE, endDate);
 
 			LOG.info("**************** getSellerPriorityDetails Query ******************** : changedDataQry : " + changedDataQry);
 

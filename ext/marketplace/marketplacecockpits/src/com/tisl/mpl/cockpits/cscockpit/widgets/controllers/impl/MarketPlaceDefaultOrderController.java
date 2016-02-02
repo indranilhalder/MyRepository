@@ -18,6 +18,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,6 +26,7 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.data.RefundDeliveryData;
 import com.tisl.mpl.cockpits.cscockpit.services.MarketPlaceOrderSearchServices;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceOrderController;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
@@ -44,6 +46,7 @@ import de.hybris.platform.cscockpit.widgets.controllers.CallContextController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultOrderController;
 import de.hybris.platform.orderhistory.OrderHistoryService;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
+import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
@@ -160,10 +163,11 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		for (OrderEntryModel orderEntry : orderEntryModel) {
 			totalRefundAmount += orderEntry.getNetAmountAfterAllDisc();
 		}
+		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
 		try {
 			paymentTransactionModel = mplJusPayRefundService.doRefund(
 					orderEntryModel.get(0).getOrder(), totalRefundAmount,
-					PaymentTransactionType.RETURN);
+					PaymentTransactionType.RETURN,uniqueRequestId);
 			if (null != paymentTransactionModel) {
 				mplJusPayRefundService.attachPaymentTransactionModel(
 						orderEntryModel.get(0).getOrder(),
@@ -209,17 +213,42 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					}
 				}
 			} else {
+				
+				//TISSIT-1801
 				LOG.error("Manual Refund Failed");
+				for (OrderEntryModel orderEntry : orderEntryModel) {
+					mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_IN_PROGRESS);
+				}
+				
+				paymentTransactionModel = mplJusPayRefundService
+						.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(), "FAILURE", totalRefundAmount,
+								PaymentTransactionType.RETURN, "NO Response FROM PG", uniqueRequestId);
+				mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+				//TISSIT-1801
+				
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage(), e);
+			
+			// TISSIT-1784 Code addition started
+			for (OrderEntryModel orderEntry : orderEntryModel) {
+				mplJusPayRefundService.makeRefundOMSCall(orderEntry,paymentTransactionModel,orderEntry.getNetAmountAfterAllDisc(),ConsignmentStatus.REFUND_INITIATED);
+
+				// Making RTM entry to be picked up by webhook job	
+				RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
+				refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
+				refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
+				refundTransactionMappingModel.setCreationtime(new Date());
+				refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+				getModelService().save(refundTransactionMappingModel);
+			}
+			// TISSIT-1784 Code addition ended
+			
 			paymentTransactionModel = mplJusPayRefundService
-					.createPaymentTransactionModel(orderEntryModel.get(0)
-							.getOrder(), "FAILURE", totalRefundAmount,
-							PaymentTransactionType.RETURN, "FAILURE", UUID
-									.randomUUID().toString());
-			mplJusPayRefundService.attachPaymentTransactionModel(
-					orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+					.createPaymentTransactionModel(orderEntryModel.get(0).getOrder(), "FAILURE", totalRefundAmount,
+							PaymentTransactionType.RETURN, "FAILURE", uniqueRequestId);
+			mplJusPayRefundService.attachPaymentTransactionModel(orderEntryModel.get(0).getOrder(), paymentTransactionModel);
+			
 		}
 		String result = paymentTransactionModel.getStatus() + ","
 				+ paymentTransactionModel.getCode() + "," + totalRefundAmount;
@@ -233,6 +262,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		PaymentTransactionModel paymentTransactionModel = null;
 		Double totalRefundDeliveryCharges = Double.valueOf(0);
 		if (MapUtils.isNotEmpty(refundMap)) {
+			final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+			
 			try {
 				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 						.entrySet()) {
@@ -247,7 +278,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				}
 				paymentTransactionModel = mplJusPayRefundService.doRefund(
 						orderModel, totalRefundDeliveryCharges,
-						PaymentTransactionType.REFUND_DELIVERY_CHARGES);
+						PaymentTransactionType.REFUND_DELIVERY_CHARGES,uniqueRequestId);
 				if (null != paymentTransactionModel) {
 					mplJusPayRefundService.attachPaymentTransactionModel(
 							orderModel, paymentTransactionModel);
@@ -295,7 +326,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						.createPaymentTransactionModel(orderModel, "FAILURE",
 								totalRefundDeliveryCharges,
 								PaymentTransactionType.REFUND_DELIVERY_CHARGES,
-								"FAILURE", UUID.randomUUID().toString());
+								"FAILURE", uniqueRequestId);
 				mplJusPayRefundService.attachPaymentTransactionModel(
 						orderModel, paymentTransactionModel);
 			}

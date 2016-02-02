@@ -37,6 +37,9 @@ import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
@@ -66,6 +69,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.beans.BindingException;
@@ -243,7 +247,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		catch (final NullPointerException e)
 		{
 			//logging error message
-			LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
+			//LOG.error(MarketplacecheckoutaddonConstants.LOGERROR, e);
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
 					MarketplacecheckoutaddonConstants.ERRORMSG);
 			return getCheckoutStep().previousStep();
@@ -970,7 +974,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			try
 			{
-				voucherFacade.releaseVoucher(voucher.getVoucherCode());
+				//voucherFacade.releaseVoucher(voucher.getVoucherCode());
+				mplCouponFacade.releaseVoucher(voucher.getVoucherCode(), getCartService().getSessionCart());
 			}
 			catch (final VoucherOperationException e)
 			{
@@ -997,8 +1002,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		model.addAttribute(MarketplacecheckoutaddonConstants.TNCLINK,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
 
-		model.addAttribute("voucherDataList",
-				displayTopCoupons(getCartService().getSessionCart(), (CustomerModel) getUserService().getCurrentUser()));
+		//TODO: Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope
+		//model.addAttribute("voucherDataList",
+		//		displayTopCoupons(getCartService().getSessionCart(), (CustomerModel) getUserService().getCurrentUser()));
 
 		//saving cartmodel
 		getMplPaymentFacade().saveCart(getCartService().getSessionCart());
@@ -1318,14 +1324,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		try
 		{
 			savedCreditCards = getMplPaymentFacade().listStoredCreditCards(customer);
-			if (!savedCreditCards.isEmpty())
+			if (MapUtils.isNotEmpty(savedCreditCards))
 			{
 				//adding cards to model
 				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedCreditCards);
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecheckoutaddonConstants.B6005);
+				LOG.info("No Saved credit cards found !!");
+				//throw new EtailBusinessExceptions(MarketplacecheckoutaddonConstants.B6005);
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1349,7 +1356,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecheckoutaddonConstants.B6006);
+				LOG.info("No Saved debit cards found !!");
+				//throw new EtailBusinessExceptions(MarketplacecheckoutaddonConstants.B6006);
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1397,6 +1405,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			model.addAttribute(MarketplacecheckoutaddonConstants.EBSDOWNCHECK, MarketplacecheckoutaddonConstants.NA);
 		}
+
+		final String noOfExpYear = getConfigurationService().getConfiguration().getString(
+				MarketplacecheckoutaddonConstants.NOOFYEARS, "25");
+		model.addAttribute(MarketplacecheckoutaddonConstants.EXPYEARS, noOfExpYear);
 
 		setupMplMessages(model);
 	}
@@ -1604,13 +1616,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 *
 	 * @return String
 	 * @throws CalculationException
+	 * @throws JaloPriceFactoryException
+	 * @throws JaloSecurityException
+	 * @throws VoucherOperationException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
+	 * @throws ModelSavingException
 	 *
 	 */
 	@SuppressWarnings("deprecation")
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.APPLYPROMOTIONS, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody MplPromoPriceData applyPromotions(final String paymentMode, final String bankName)
-			throws CMSItemNotFoundException, InvalidCartException, CalculationException
+			throws CMSItemNotFoundException, InvalidCartException, CalculationException, ModelSavingException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, JaloSecurityException, JaloPriceFactoryException
 	{
 		final CartModel cart = getCartService().getSessionCart();
 		//TISEE-510
@@ -2121,9 +2140,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param cart
 	 * @param customer
 	 */
-	private ArrayList<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer)
+	private List<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer)
 	{
-		final ArrayList<VoucherModel> voucherList = getMplCouponFacade().getAllCoupons();
+		final List<VoucherModel> voucherList = getMplCouponFacade().getAllCoupons();
 
 		return getMplCouponFacade().displayTopCoupons(cart, customer, voucherList);
 	}

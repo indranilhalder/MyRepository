@@ -48,10 +48,10 @@ public class SizeGuidePopulator<SOURCE extends SizeGuideModel, TARGET extends Si
 			sizeGuideData.setImageURL(sizeGuideModel.getImageUrl());
 			sizeGuideData.setDimensionUnit(sizeGuideModel.getUnit());
 			sizeGuideData.setDimensionSize(sizeGuideModel.getSize());
-
+			sizeGuideData.setEuroSize(sizeGuideModel.getEuroSize());
+			sizeGuideData.setAge(sizeGuideModel.getAge());
+			sizeGuideData.setUsSize(sizeGuideModel.getUsSize());
 		}
-
-
 
 	}
 

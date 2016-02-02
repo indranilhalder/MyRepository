@@ -92,6 +92,7 @@
 	</c:if>
 	
 	<li id="promotionMessage" />
+	<li id="couponMessage" />
 	<!-- Commented to hide your order includes %tax  
 	<c:if test="${not cartData.net}">
 		<li class="realTotals">

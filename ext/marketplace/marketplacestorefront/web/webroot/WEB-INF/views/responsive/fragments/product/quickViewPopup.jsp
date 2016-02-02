@@ -681,7 +681,7 @@ display:none;
 			</script> -->
  
  	<div class="fullfilled-by">
-		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>
+		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
 		<c:choose>
 		<c:when test="${fn:toLowerCase(fullfilmentType) == fn:toLowerCase('sship')}">
 			<span id="fullFilledById">${sellerName}</span>

@@ -1021,7 +1021,7 @@ $(document).ready(function(){
 	
 	if($(".product-listing.product-grid.hero_carousel").children().length>0){
 		$(".product-listing.product-grid.hero_carousel").css("border-bottom","2px solid #f0f4f5");
-		$(".product-listing.product-grid.hero_carousel").before("<h3 class='heroTitle'>Recommended&nbsp;&nbsp;Products</h3>");
+		$(".product-listing.product-grid.hero_carousel").before("<h3 class='heroTitle'>Shop Our Top Picks</h3>");
 		
 	}
 	
@@ -1181,5 +1181,51 @@ $(document).ready(function(){
 	  $("input[name='j_username']").parents("form#extRegisterForm").attr("autocomplete","off");
 		$("input[name='email']").parents("form#loginForm").attr("autocomplete","off");
 		$("input[name='j_username'],input[name='email']").attr("autocomplete","off");
-		$("input[type='password']").attr("autocomplete","new-password");  
+		$("input[type='password']").attr("autocomplete","new-password");
+		$(window).on("load resize", function() {
+			var $li = $("body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box");
+			var top_margin=$li.css("margin-top");
+			if (top_margin == '0px') {
+			for(var i = 0; i < $li.length; i+=3) {
+				var first_elem,second_elem,third_elem;
+				first_elem=parseInt($li.eq(i).find("h2").css("height")) + parseInt($li.eq(i).find("p.coupon_count").css("height")) + parseInt($li.eq(i).find("div.left").css("height"));
+				second_elem=parseInt($li.eq(i+1).find("h2").css("height")) + parseInt($li.eq(i+1).find("p.coupon_count").css("height")) + parseInt($li.eq(i+1).find("div.left").css("height"));;
+				third_elem=parseInt($li.eq(i+2).find("h2").css("height")) + parseInt($li.eq(i+2).find("p.coupon_count").css("height")) + parseInt($li.eq(i+2).find("div.left").css("height"));;
+				var li_max_height=Math.max(first_elem,second_elem,third_elem) + 30;
+				$li.eq(i).css("height",li_max_height);
+				$li.eq(i+1).css("height",li_max_height);
+				$li.eq(i+2).css("height",li_max_height);
+			}
+			var remaining_li=$li.length % 3;
+			if(remaining_li==2){
+				first_elem=parseInt($li.eq($li.length - 1).find("h2").css("height")) + parseInt($li.eq($li.length - 1).find("p.coupon_count").css("height")) + parseInt($li.eq($li.length - 1).find("div.left").css("height"));;
+				second_elem=parseInt($li.eq($li.length - 2).find("h2").css("height")) + parseInt($li.eq($li.length - 2).find("p.coupon_count").css("height")) + parseInt($li.eq($li.length - 2).find("div.left").css("height"));;
+				var li_max_height=Math.max(first_elem,second_elem) + 30;
+				$li.eq($li.length - 1).css("height",li_max_height);
+				$li.eq($li.length - 2).css("height",li_max_height);
+			}
+			}
+			else{
+				for(var i = 0; i < $li.length; i+=2) {
+					var first_elem,second_elem;
+					first_elem=parseInt($li.eq(i).find("h2").css("height")) + parseInt($li.eq(i).find("p.coupon_count").css("height")) + parseInt($li.eq(i).find("div.left").css("height"));
+					second_elem=parseInt($li.eq(i+1).find("h2").css("height")) + parseInt($li.eq(i+1).find("p.coupon_count").css("height")) + parseInt($li.eq(i+1).find("div.left").css("height"));
+					var li_max_height=Math.max(first_elem,second_elem) + 30;
+					$li.eq(i).css("height",li_max_height);
+					$li.eq(i+1).css("height",li_max_height);
+				}
+				var remaining_li=$li.length % 2;
+				if(remaining_li==1){
+					$li.eq($li.length - 1).css("height",'auto');
+				}
+			}
+		});
+		
+		if ('ontouchstart' in window) {
+			$('body').addClass("touchDevice");
+	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
+	 			$(this).attr("href","#");
+	 		});
+			}
+		
 });

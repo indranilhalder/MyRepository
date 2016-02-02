@@ -19,9 +19,8 @@
 <items 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 			xsi:noNamespaceSchemaLocation="items.xsd">
 
-	<collectiontypes>
-		<collectiontype code="brandListCollection" elementtype="java.lang.String"
-			autocreate="true" generate="false" type="list" />
+	<!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
+	<!-- <collectiontypes>
 	    <collectiontype code="DeliveryModeDataCollection" elementtype="DeliveryMode"
 			autocreate="true" generate="false" type="list" /> 
 		<collectiontype code="PaymentModeDataCollection" elementtype="PaymentMode"
@@ -32,7 +31,7 @@
 			autocreate="true" generate="false" />
 		<collectiontype code="ChannelDataCollection" elementtype="SalesApplication"
 			autocreate="true" generate="false" type="list" /> 
-	</collectiontypes>
+	</collectiontypes> -->
 	
 	<enumtypes>
         <!-- Event Type Enum -->
@@ -51,8 +50,9 @@
 
 <!-- Tata Etail change - Coupon starts -->
 		
+		<!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 		<!-- Tata Etail-DeliveryModeRestriction -->
-		<itemtype generate="true" code="DeliveryModeRestriction"
+		<!-- <itemtype generate="true" code="DeliveryModeRestriction"
 			jaloclass="com.tisl.mpl.jalo.DeliveryModeRestriction" extends="Restriction"
 			autocreate="true">
 			<attributes>
@@ -86,10 +86,10 @@
 				</attribute>
 			</attributes>
 
-		</itemtype>
+		</itemtype> -->
 		
 		<!-- Tata Etail-Mail Sending Process Model -->
-			<itemtype code="EventBasedCouponMailProcess" extends="StoreFrontProcess" autocreate="true" generate="true"
+			<!-- <itemtype code="EventBasedCouponMailProcess" extends="StoreFrontProcess" autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.jalo.EventBasedCouponMailProcess">
 				<description>Represents customer related store front business process.</description>
 				<attributes>
@@ -102,9 +102,10 @@
 						<description>Voucher Model</description>
 					</attribute>
 				</attributes>
-			</itemtype>
+			</itemtype> -->
 
-          <itemtype code="EventCouponCreationJob" extends="CronJob"
+<!-- Commented out as Event specific coupons are out of scope for Rel2.1. Uncomment when in scope-->
+          <!-- <itemtype code="EventCouponCreationJob" extends="CronJob"
 				autocreate="true" generate="true"
 				jaloclass="com.tisl.mpl.jalo.EventCouponCreationJob">				
 				<attributes>
@@ -185,10 +186,11 @@
 				</attribute>
 				
 			   </attributes>
-          </itemtype>
+          </itemtype> -->
           
+          <!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
           <!-- Channel Restriction for Voucher -->
-		<itemtype generate="true" code="ChannelRestriction"
+		<!-- <itemtype generate="true" code="ChannelRestriction"
 			jaloclass="com.tisl.mpl.jalo.ChannelRestriction" extends="Restriction"
 			autocreate="true">
 			<attributes>
@@ -199,11 +201,11 @@
 						optional="false" initial="false" />
 				</attribute>
 			</attributes>
-		</itemtype>
+		</itemtype> -->
 
-
+		<!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 		<!-- Seller Restriction for Voucher -->
-		<itemtype generate="true" code="SellerRestriction"
+		<!-- <itemtype generate="true" code="SellerRestriction"
 			jaloclass="com.tisl.mpl.jalo.SellerRestriction" extends="ProductRestriction"
 			autocreate="true">
 			<attributes>
@@ -226,6 +228,54 @@
 					<description>the principals the given voucher is valid for.</description>
 					<persistence type="property"/>
 					<modifiers read="true" write="true" search="false" initial="false" optional="false"/>
+				</attribute>
+			</attributes>
+		</itemtype> -->
+		
+		<itemtype code="CouponMailJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.jalo.CouponMailJob">				
+				<attributes>
+				   <attribute qualifier="voucherCode" type="java.lang.String">					
+						<description>
+							Specifies the user defined voucher code
+						</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="true" optional="true"/>
+				   </attribute>	
+				   <attribute qualifier="targetCustomer" type="PrincipalCollection">					
+						<description>
+							Specifies the user defined voucher code
+						</description>
+						<persistence type="property"/>
+						<modifiers read="true" write="true" search="false" initial="false" optional="false"/>
+				   </attribute>					
+			   </attributes>
+          </itemtype>
+          
+          <itemtype code="VoucherInvalidation" autocreate="false" generate="false">
+			<attributes>
+				<attribute qualifier="savedAmount" type="java.lang.Double">
+					<description>the code used redeeming the voucher.</description>
+					<defaultvalue>Double.valueOf(0.0D)</defaultvalue>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="true"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
+				</attribute>
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="Voucher" autocreate="false" generate="false">
+			<attributes>
+				<attribute qualifier="maxDiscountValue" type="java.lang.Double">
+					<description>the code used redeeming the voucher.</description>
+					<persistence type="property"/>
+					<modifiers read="true" write="true" optional="true"/>
+					<custom-properties>
+						<property name="hmcIndexField"><value>"thefield"</value></property>
+					</custom-properties>
 				</attribute>
 			</attributes>
 		</itemtype>

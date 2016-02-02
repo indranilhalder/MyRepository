@@ -9,7 +9,6 @@ import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.impl.DefaultVoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -29,9 +28,9 @@ import javax.annotation.Resource;
 import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 
-import com.tisl.mpl.coupon.facade.CustomerDetailsFacade;
+import com.tisl.mpl.coupon.facade.MplCustomerDetailsFacade;
 import com.tisl.mpl.coupon.service.CronJobDataService;
-import com.tisl.mpl.coupon.service.CustomerDetailsService;
+import com.tisl.mpl.coupon.service.MplCustomerDetailsService;
 
 
 
@@ -40,12 +39,12 @@ import com.tisl.mpl.coupon.service.CustomerDetailsService;
  * @author TCS
  *
  */
-public class DefaultCustomerDetailsFacade implements CustomerDetailsFacade
+public class MplCustomerDetailsFacadeImpl implements MplCustomerDetailsFacade
 {
-	private static final Logger LOG = Logger.getLogger(DefaultCustomerDetailsFacade.class);
+	private static final Logger LOG = Logger.getLogger(MplCustomerDetailsFacadeImpl.class);
 
 	@Resource(name = "customerDetailsService")
-	private CustomerDetailsService customerDetailsService;
+	private MplCustomerDetailsService customerDetailsService;
 
 	@Resource(name = "cronJobDataService")
 	private CronJobDataService cronJobDataService;
@@ -56,11 +55,8 @@ public class DefaultCustomerDetailsFacade implements CustomerDetailsFacade
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-	@Resource(name = "voucherModelService")
-	private VoucherModelService voucherModelService;
-
 	@Resource(name = "voucherService")
-	DefaultVoucherService voucherService;
+	private DefaultVoucherService voucherService;
 
 	private static String voucherCode;
 

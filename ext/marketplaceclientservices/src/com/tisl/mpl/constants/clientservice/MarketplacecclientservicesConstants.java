@@ -152,6 +152,7 @@ public class MarketplacecclientservicesConstants
 	//Gigya Social Login
 	public static final String METHOD_NOTIFY_REGISTRATION = "gigya.notifyregistration.method".intern();
 	public static final String LAST_NAME = "lastName";
+	public static final String GIGYA_METHOD_LINK_ACCOUNTS = "gigya.linkaccount.method".intern();
 	//account page review
 	public static final String PROXY_HOST = "http.proxyHost";
 	public static final String PROXY_PORT = "http.proxyPort";
@@ -165,5 +166,9 @@ public class MarketplacecclientservicesConstants
 	public static final String UID = "UID";
 
 	public static final String REVIEWS_CATEGORYID_EXCEPTION = "Gigya 'getReviewsByCategoryProductId' for UID error ";
+	public static final String REVIEWS_EDIT_EXCEPTION = "Gigya 'editReviews' error ";
+	public static final String REVIEWS_DELETE_EXCEPTION = "Gigya 'deleteReviews' error ";
 	public static final String REVIEWS_UID_EXCEPTION = "Gigya 'getReviewsByUID'  UID error";
+
+	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
 }

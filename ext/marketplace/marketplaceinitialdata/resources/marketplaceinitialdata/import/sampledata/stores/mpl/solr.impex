@@ -42,7 +42,7 @@ INSERT_UPDATE SolrSearchConfig;description[unique=true];pageSize
 
 # Declare the indexed type Product
 INSERT_UPDATE SolrIndexedType;identifier[unique=true];type(code);variant;sorts(&sortRefID)
-;$solrIndexedType;Product;false;sortRef1,sortRef2,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8
+;$solrIndexedType;Product;false;sortRef1,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8
 
 INSERT_UPDATE SolrFacetSearchConfig;name[unique=true];description;indexNamePrefix;languages(isocode);currencies(isocode);solrServerConfig(name);solrSearchConfig(description);solrIndexConfig(name);solrIndexedTypes(identifier);enabledLanguageFallbackMechanism;$catalogVersions
 ;$facetSearchConfigName;$facetSearchConfigDescription;$searchIndexNamePrefix;$indexLanguages;$indexCurrencies;$serverConfigName;$searchConfigName;$indexConfigName;$solrIndexedType;true;$productCatalog:Online,$productCatalog:Staged
@@ -150,6 +150,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; sellerId            	  ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplSellerIdValueProvider             ;                						;                           ;
 ;$solrIndexedType; deliveryMode           ;string ;  	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplDeliveryModeValueProvider         ;    									;                           ;
 ;$solrIndexedType; collectionIds          ;string ; 	;    ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 2500;true;     ;     ;mplOccasionIDValueProvider           ;                						;                           ;
+;$solrIndexedType; vouchers		          ;string ;     ;	 ;     ;     ;true ;     ;MultiSelectOr ;Alpha ; 0   ;true;     ;     ;mplVoucherCodeValueProvider		    ;	;                         	;
 
 INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter;facet[default=true]
 ;$solrIndexedType; snsCategory            ;string ;     ;    ;     ;true ;true ;	 ;mplSnscategoryValueProvider;
@@ -219,7 +220,7 @@ where tbl.code IN (
  ORDER BY tbl.code
 ";anonymous
 ;$solrIndexedType;$searchIndexNamePrefix-deleteQuery;delete;;;;"
-  SELECT distinct{p.code} FROM {Product AS p} 
+  SELECT distinct{p.PK} FROM {Product AS p} 
 						WHERE {p.code} IN ( 
 										{{ SELECT distinct{bbox.product} FROM 	{BuyBox AS bbox} 
 													WHERE 	{bbox:modifiedtime} >= ?lastIndexTime 
@@ -238,8 +239,7 @@ where tbl.code IN (
 
 # Define the available sorts
 INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[unique=true];useBoost;name
-;sortRef1;$solrIndexedType;relevance;true;
-;sortRef2;$solrIndexedType;topRated;false;
+;sortRef1;$solrIndexedType;relevance;false;
 ;sortRef3;$solrIndexedType;name-asc;false;
 ;sortRef4;$solrIndexedType;name-desc;false;
 ;sortRef5;$solrIndexedType;price-asc;false;
@@ -252,8 +252,6 @@ INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[uniq
 INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fieldName[unique=true];ascending[unique=true];sortpos
 ;$solrIndexedType:relevance;inStockFlag;false;0
 ;$solrIndexedType:relevance;score;false;1
-;$solrIndexedType:topRated;inStockFlag;false;0
-;$solrIndexedType:topRated;mplAvgRating;false;1
 ;$solrIndexedType:name-asc;inStockFlag;false;0
 ;$solrIndexedType:name-asc;name;true;1
 ;$solrIndexedType:name-desc;inStockFlag;false;0
@@ -299,7 +297,6 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 								 ;$solrIndexedType                        ;braCoverage						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;bracoverage:bracoverageCC
 								 ;$solrIndexedType                        ;displayFeatures					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;displayfeatures:iphonedf,displayfeatures:smartphonesdf,displayfeatures:ipaddf,displayfeatures:kindledf,displayfeatures:tabletsdf
 								 ;$solrIndexedType                        ;memorySmartphone					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;memorysmartphone:iphonems,memorysmartphone:smartphonesms
-								 ;$solrIndexedType                        ;operatingSystemIphone			;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;operatingsystemiphone:iphonegf
 								 ;$solrIndexedType                        ;cameraFeatures					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;camerafeatures:smartphonesca,camerafeatures:ipadca,camerafeatures:tabletsca
 								 ;$solrIndexedType                        ;maximumISO						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;maximumiso:camerasgf
 								 ;$solrIndexedType                        ;megapixel						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;megapixel:actioncamcordersgf,megapixel:camerasgf
@@ -361,15 +358,15 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 								 ;$solrIndexedType                        ;internalStorage					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;capacitycomputerstorage:laptopss,capacitycomputerstorage:storagems
 								 ;$solrIndexedType                        ;jars								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;noofjars:mixers&foodprocessorsgf
 								 ;$solrIndexedType                        ;memory							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;memoryaudiohts:ipodandmp3playersms,memorysmartphone:iphonems,memorysmartphone:smartphonesms,memorytablet:smartphonesms,memorytablet:tabletsms
-								 ;$solrIndexedType                        ;operatingSystem					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;operatingsysgamingaccessories:gamingaccessoriesgf,operatingsystemiphone:iphonegf,operatingsystemlaptops:desktopsgf,operatingsystemlaptops:laptopsgf,operatingsystemlaptops:networkinggf,operatingsystemlaptops:peripheralsandsoftwaregf,operatingsystemlaptops:aio'sgf,operatingsystemlaptops:lasersgf,operatingsystemlaptops:storagegf,operatingsystempcgames:softwaregf,operatingsystemsmartphones:smartphonesgf3,operatingsystemtablets:tabletsna
+								 ;$solrIndexedType                        ;operatingSystem					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;operatingsysgamingaccessories:gamingaccessoriesgf,operatingsystemiphone:iphonegf,operatingsystemlaptops:desktopsgf,operatingsystemlaptops:laptopsgf,operatingsystemlaptops:networkinggf,operatingsystemlaptops:peripheralsandsoftwaregf,operatingsystemlaptops:aiosgf,operatingsystemlaptops:lasersgf,operatingsystemlaptops:storagegf,operatingsystempcgames:softwaregf,operatingsystemsmartphones:smartphonesgf3,operatingsystemtablets:tabletsna
 								 ;$solrIndexedType                        ;powerConsumption					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;powerconsumpairconditioners:airconditionerstf,powerconsumpaudiohomethreatre:hometheatresystemstf,powerconsumpkettlecoffeemakers:kettles&coffeemakerstf,powerconsumptiondesktops:desktopsaf,powerconsumptionfryerscooktops:fryers&cooktopstf,powerconsumptionmicrowaves:microwavestf,powerconsumptionpersonalcare:personalcaretf,powerconsumptionpurifiers:purifiersaf,powerconsumptionstorage:storagetf,powerconsumptiontvaccessories:adapterstf,powerconsumptiontvaccessories:mediaplayerstf,powerconsumptiontvaccessories:remotestf,powerconsumptiontvaccessories:standingandmountingsolutionstf,powerconsumptiontvaccessories:surgeprotectorsandpowertf,powerconsuptioncamcorders:poweractioncamcorderstf
-								 ;$solrIndexedType                        ;processor						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;processorapple:imacgf,processorapple:ipadgf,processorlaptopdesktop:aio'sgf,processorlaptopdesktop:buildmypcgf,processorlaptopdesktop:gamingpf,processorlaptopdesktop:laptopsgf,processorsmartphone:smartphonesgf3,processortablet:tabletsna
+								 ;$solrIndexedType                        ;processor						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;processorapple:imacgf,processorapple:ipadgf,processorlaptopdesktop:aiosgf,processorlaptopdesktop:buildmypcgf,processorlaptopdesktop:gamingpf,processorlaptopdesktop:laptopsgf,processorsmartphone:smartphonesgf3,processortablet:tabletsna
 								 ;$solrIndexedType                        ;projectionType					;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;projection:projectorstf
 								 ;$solrIndexedType                        ;protocols						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;supportedprotocols:networkingtf
 								 ;$solrIndexedType                        ;ramType							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;ram:desktopsms,ram:laptopsm,ram:smartphonesms,ram:tabletsms
 								 ;$solrIndexedType                        ;resolution						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;resolutionactioncamcorders:resolutionactioncamcorderstf,resolutionactivitytracker:activitytrackerdf,resolutionbinocularstelescopes:binocularsandtelescopestf,resolutioncomputerslaptops:desktopstf,resolutionipad:ipaddf,resolutioniphone:iphonedf,resolutionkindle:kindledf,resolutionsecuritycameras:securitycamerastf,resolutiontvprojectors:projectorsdf
 								 ;$solrIndexedType                        ;screen							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;screenactioncamcorders:actioncamcorderstf,screenactivitytracker:activitytrackeraf,screencameras:camerasgf,screendesktops:desktopsdf,screenresolution:ledtvdf
-								 ;$solrIndexedType                        ;screenSize						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;screensizeaio:aio'sdf,screensizeaio:lasersdf,screensizecamcorder:actioncamcorderstf,screensizedesktops:desktopsdf,screensizekindle:kindledf,screensizelaptops:laptopsdf,screensizeledtv:ledtvdf,screensizesmartphone:iphonedf,screensizesmartphone:smartphonesdf
+								 ;$solrIndexedType                        ;screenSize						;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;screensizeaio:aiosdf,screensizeaio:lasersdf,screensizecamcorder:actioncamcorderstf,screensizedesktops:desktopsdf,screensizekindle:kindledf,screensizelaptops:laptopsdf,screensizeledtv:ledtvdf,screensizesmartphone:iphonedf,screensizesmartphone:smartphonesdf
 								 ;$solrIndexedType                        ;simSize							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;simsizeiphone:iphonegf,simsizesmartphones:smartphonesgf3
 								 ;$solrIndexedType                        ;speakers							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;speakersdesktops:desktopsaf
 								 ;$solrIndexedType                        ;speed							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;cpuspeed:laptopstf,maximumshutterspeed:camerastf,printspeed:printingtf,speednetworking:networkingtf
@@ -378,7 +375,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 								 ;$solrIndexedType                        ;type								;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;typecamerabinotelescope:camerasgf,typecamerasecurity:securitycamerasgf,typeearheadphone:headphonesandheadsetsgf,typehealthcare:healthcaregf,typehealthcare:personalcaregf,typehts:hometheatresystemsgf,typemixer:mixers&foodprocessorsgf,typenetworking:networkinggf,typeofassistivetechnology:healthcaretypeofasstech,typeperipheralsoftware:peripheralsandsoftwaregf,typepersonalcare:healthcaregf,typepersonalcare:personalcaregf,typepurifier:waterpurifiersgf,typestorage:laptopsgf,typetvacc:tvaccessoriesgf,typevacuumcleaner:vacuumcleanergf
 								 ;$solrIndexedType                        ;usbPorts							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;usbinputs:soundbarsaf,usbinputs:desktopsaf,usbinputs:laptopsaf,usbinputs:tabletsaf,usbinputs:dvdplayeraf,usbinputs:ledtvaf
 								 ;$solrIndexedType                        ;videoFormat						;string		;					; 					;true						;						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;videoformatledtv:ledtvtf,videoformatprojectors:projectorstf,videoformatshts:hometheatretf,videoformatstventermnt:dvdplayertf,videoformatstventermnt:ledtvtf,videoformatstventermnt:hometheatreprojectortf,videoformatstventermnt:portableprojectorstf,videoformatstventermnt:projectortf,videoplaybackformats:dvdplayermm
-								 ;$solrIndexedType                        ;warranty							;string		;					; 					;true						;						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;warrantydescription:electronicswa,warrantysummary:electronicswa
+								 ;$solrIndexedType                        ;warranty							;string		;					; 					;true						;						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;warrantysummary:electronicswa
 								 ;$solrIndexedType                        ;weight							;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;weight:electronicsdm
 
 #For Exclude OutofStock facet

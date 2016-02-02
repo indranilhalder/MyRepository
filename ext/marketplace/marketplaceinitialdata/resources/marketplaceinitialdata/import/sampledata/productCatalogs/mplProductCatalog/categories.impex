@@ -354,6 +354,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;;;;;
 ;MBH11;Apparel;MBH1;mplProductCatalog:Staged;admingroup
 ;MBH12;Electronics;MBH1;mplProductCatalog:Staged;admingroup
+
 ;;;;;
 ;MBH11A00000;Others;MBH11;mplProductCatalog:Staged;admingroup
 ;MBH11A00001;Global Desi;MBH11;mplProductCatalog:Staged;admingroup
@@ -1151,5 +1152,16 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MBH1;Brand;;mplProductCatalog:Staged;admingroup
 ;;;;;
 ;MBH13;Footwear;MBH1;mplProductCatalog:Staged;admingroup
+;MBH13F00001;Aerosoles;MBH13;mplProductCatalog:Staged;admingroup
+;MBH13F00002;Franco Leone;MBH13;mplProductCatalog:Staged;admingroup
+;MBH13F00003;La Briza;MBH13;mplProductCatalog:Staged;admingroup
+;MBH13F00004;Metro;MBH13;mplProductCatalog:Staged;admingroup
+;MBH13F00005;Mochi;MBH13;mplProductCatalog:Staged;admingroup
+;MBH13F00006;Pavers England;MBH13;mplProductCatalog:Staged;admingroup
+;MBH13F00007;Solester;MBH13;mplProductCatalog:Staged;admingroup
+;MBH13F00008;Salomon;MBH13;mplProductCatalog:Staged;admingroup
+
+
 ;MBH13A00001;Nike;MBH13;mplProductCatalog:Staged;admingroup
 #### Footwear Categories End ########
+

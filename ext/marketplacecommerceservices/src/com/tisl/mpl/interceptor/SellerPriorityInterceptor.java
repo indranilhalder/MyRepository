@@ -6,7 +6,6 @@ package com.tisl.mpl.interceptor;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.ValidateInterceptor;
-import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +13,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.core.enums.SellerPriorityEnum;
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 
@@ -27,19 +26,12 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 public class SellerPriorityInterceptor implements ValidateInterceptor
 {
 
-	/**
-	 *
-	 */
-	private static final String ERROR_SAME_SKU_AND_CATEGORY = "There is already an entry active for the same listing id and category id";
-	/**
-	 *
-	 */
+
 	private static final String ERROR_SAME_CATEGORY = "There is already an entry active for the same category id";
 	/**
 	 *
 	 */
 	private static final String ERROR_SAME_SKU = "There is already an entry for the same product id";
-	private static final String ERROR_AUTHORISED_USER = "You are not authorised user";
 	private static final String SELLERIDBLANK = "seller Id cannot be blank";
 	private static final String CATANDLISTBLANK = "Category Id and Product Id both cannot be blank";
 	private static final String STARTDATEBLANK = "start date cannot be blank";
@@ -48,8 +40,8 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 	private static final String CATIDPRODIDNONEDITABLE = "cannot modify category id or product id";
 	@Resource(name = "mplSellerPriorityDao")
 	private MplSellerPriorityDao mplSellerPriorityDao;
-	@Autowired
-	private UserService userService;
+
+
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(SellerPriorityInterceptor.class.getName());
@@ -85,6 +77,7 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 			{
 				throw new InterceptorException(SELLERIDBLANK);
 			}
+
 			if (null == priority.getCategoryId() && null == priority.getListingId())
 			{
 				throw new InterceptorException(CATANDLISTBLANK);
@@ -114,7 +107,6 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 				{
 					// Cannot modify Category ID or Listing ID
 					if (arg.isModified(priorityValue, MplSellerPriorityModel.CATEGORYID)
-							|| arg.isModified(priorityValue, MplSellerPriorityModel.LISTINGID)
 							|| arg.isModified(priorityValue, MplSellerPriorityModel.LISTINGID))
 					{
 						throw new InterceptorException(CATIDPRODIDNONEDITABLE);
@@ -123,12 +115,11 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					{
 						// Addding Category id and listing id into a list for the rows not modified
 						if (!arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYSTARTDATE)
-								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)
-								&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE))
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)) //&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE)
 						{
 							LOG.debug("no modification *********** categoryId : " + priorityValue.getCategoryId()
 									+ " **************   listingId" + priorityValue.getListingId());
-							if (null!=priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue())
+							if (null != priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue())
 							{
 								if (null != priorityValue.getCategoryId())
 								{
@@ -143,13 +134,17 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					}
 				}
 				// if new value already	 exist throw error
-				if (null != categoryId && categoryList.contains(categoryId))
+				if (priority.getIsActive().booleanValue() && null != priority.getPriorityStatus()
+						&& SellerPriorityEnum.NEW.equals(priority.getPriorityStatus()))
 				{
-					throw new InterceptorException(ERROR_SAME_CATEGORY);
-				}
-				if (null != listingId && skuIdList.contains(listingId))
-				{
-					throw new InterceptorException(ERROR_SAME_SKU);
+					if (null != categoryId && categoryList.contains(categoryId))
+					{
+						throw new InterceptorException(ERROR_SAME_CATEGORY);
+					}
+					if (null != listingId && skuIdList.contains(listingId))
+					{
+						throw new InterceptorException(ERROR_SAME_SKU);
+					}
 				}
 			}
 		}
