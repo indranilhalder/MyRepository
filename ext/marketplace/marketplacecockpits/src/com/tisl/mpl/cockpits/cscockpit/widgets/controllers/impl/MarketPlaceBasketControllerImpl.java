@@ -512,7 +512,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 													cartParameter);
 									cart.setCartReservationDate(null);
 									 ((MarketplaceCheckoutControllerImpl) getCheckoutController()).removeCODPayment();
-								} catch (CommerceCartModificationException | PaymentException | ValidationException e) {
+									
+									 
+								} catch (CommerceCartModificationException | PaymentException | 
+										ValidationException | JaloInvalidParameterException | NumberFormatException e) {
 									LOG.error("Exception calculating cart ["
 											+ cart + "]", e);
 									throw new ClientEtailNonBusinessExceptions(e);
@@ -520,6 +523,34 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 								return null;
 							}
 						});
+		
+		modelService.save(cart);
+		 
+		 if (CollectionUtils.isNotEmpty(cart.getDiscounts())){
+				final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
+				final String voucherCode=voucher.getVoucherCode();
+				final List<AbstractOrderEntryModel> applicableOrderEntryList = mplVoucherService.getOrderEntryModelFromVouEntries(voucher,
+						cart);
+				try {
+					checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
+				} catch (JaloInvalidParameterException | NumberFormatException
+						| JaloSecurityException | CalculationException
+						| JaloPriceFactoryException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+//				final String checkMsg = checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
+//				if(!checkMsg.equalsIgnoreCase("success"))
+//				{
+//					LOG.error("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
+//					return checkMsg;
+//				}
+				
+				mplVoucherService.setApportionedValueForVoucher(voucher, cart, voucherCode, applicableOrderEntryList);
+
+		} 
+		 
 	}
 	
 	
@@ -952,6 +983,14 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					}
 					return "total_price_exceeded";
 				}
+			}
+			else if(CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
+			{
+				releaseVoucher(lastVoucherCode);
+				LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
+				mplVoucherService.recalculateCartForCoupon(cartModel);
+				getModelService().save(cartModel);
+				return "total_price_exceeded";//TODO: Fix error message
 			}
 			return "success";
 		}

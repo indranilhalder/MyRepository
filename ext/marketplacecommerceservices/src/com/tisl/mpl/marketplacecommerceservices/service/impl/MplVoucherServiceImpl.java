@@ -187,15 +187,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
 			LOG.debug("Step 12:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0 block");
-			releaseVoucher(voucherCode, cartModel);
-			recalculateCartForCoupon(cartModel);
-			//mplDefaultCalculationService.calculateTotals(cartModel, false);
-			getModelService().save(cartModel);
-
-			discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(0)));
-			discountData.setRedeemErrorMsg("Price_exceeded");
-
-			return discountData;
+			return releaseVoucherAfterCheck(cartModel, voucherCode);
 		}
 
 		else
@@ -223,16 +215,14 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
 				{
 					LOG.debug("Step 15:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
-					releaseVoucher(voucherCode, cartModel);
-					recalculateCartForCoupon(cartModel);
-					//mplDefaultCalculationService.calculateTotals(cartModel, false);
-					getModelService().save(cartModel);
-
-					discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(0)));
-					discountData.setRedeemErrorMsg("Price_exceeded");
-
-					return discountData;
+					return releaseVoucherAfterCheck(cartModel, voucherCode);
 				}
+			}
+
+			else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
+			{
+				LOG.debug("Step 13,14,15/1:::applicable entries empty");
+				return releaseVoucherAfterCheck(cartModel, voucherCode);
 			}
 
 			discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(voucherCalcValue)));
@@ -241,6 +231,32 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 		//return discountData;
 
+	}
+
+
+
+	/**
+	 *
+	 * @param cartModel
+	 * @param voucherCode
+	 * @return VoucherDiscountData
+	 * @throws VoucherOperationException
+	 * @throws JaloPriceFactoryException
+	 * @throws CalculationException
+	 */
+	private VoucherDiscountData releaseVoucherAfterCheck(final CartModel cartModel, final String voucherCode)
+			throws VoucherOperationException, JaloPriceFactoryException, CalculationException
+	{
+		final VoucherDiscountData discountData = new VoucherDiscountData();
+		releaseVoucher(voucherCode, cartModel);
+		recalculateCartForCoupon(cartModel);
+		//mplDefaultCalculationService.calculateTotals(cartModel, false);
+		getModelService().save(cartModel);
+
+		discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(0)));
+		discountData.setRedeemErrorMsg("Price_exceeded");
+
+		return discountData;
 	}
 
 
@@ -306,8 +322,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	}
 
 
-
-	private void releaseVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException
+	@Override
+	public void releaseVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException
 	{
 		LOG.debug("Step 2:::Inside releaseVoucher");
 		final VoucherModel voucher = getVoucherModel(voucherCode);

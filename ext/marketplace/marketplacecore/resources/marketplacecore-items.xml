@@ -5156,6 +5156,11 @@
 						<persistence type="property" />
 						<defaultvalue>em().getEnumerationValue("SalesApplication","Web")</defaultvalue>
 					</attribute>
+					<!-- <attribute qualifier="couponErrorMsg" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<description>Error Message for coupon on cart</description>
+						<persistence type="property" />
+					</attribute> -->
 				</attributes>
 			</itemtype>
 		</typegroup>
