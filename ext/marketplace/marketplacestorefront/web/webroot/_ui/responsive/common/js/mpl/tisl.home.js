@@ -329,7 +329,7 @@ function getBestPicksAjaxCall(){
 							
 						
 				});
-			renderHtml += "</div> <a href='#' class='view-cliq-offers'> View Cliq Offers </a>";	
+			renderHtml += "</div> <a href='/store/o/all' class='view-cliq-offers'> View Cliq Offers </a>";	
 			$("#bestPicks").html(renderHtml);
 			//console.log()
 		},

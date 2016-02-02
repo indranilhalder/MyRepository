@@ -332,34 +332,56 @@ public class HomePageController extends AbstractPageController
 				{
 					String imageURL = "";
 					String text = "";
-					String linkUrl = "";
+					String linkUrl = "#";
 
 					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getCollectionItems())
 					{
 						final JSONObject bestPickItemJson = new JSONObject();
 
-						if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
+						if (null != bestPickItem)
 						{
-							imageURL = bestPickItem.getMedia().getURL();
+							if (null != bestPickItem.getMedia())
+							{
+								if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
+								{
+									imageURL = bestPickItem.getMedia().getURL();
+								}
+
+							}
+							else
+							{
+								LOG.info("No Media for this item");
+								imageURL = MISSING_IMAGE_URL;
+							}
+
+							bestPickItemJson.put("imageUrl", imageURL);
+
+							if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
+							{
+								text = bestPickItem.getContent();
+							}
+							else
+							{
+								LOG.info("No text for this item");
+							}
+							bestPickItemJson.put("text", text);
+
+							if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
+							{
+								linkUrl = bestPickItem.getUrl();
+							}
+							else
+							{
+								LOG.info("No URL for this item");
+							}
+							bestPickItemJson.put("url", linkUrl);
+							subComponentJsonArray.add(bestPickItemJson);
+
 						}
-
-						bestPickItemJson.put("imageUrl", imageURL);
-
-						if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
+						else
 						{
-							text = bestPickItem.getContent();
+							LOG.info("No instance of bestPickCarouselComponent found!!!");
 						}
-
-						bestPickItemJson.put("text", text);
-
-						if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
-						{
-							linkUrl = bestPickItem.getUrl();
-						}
-
-						bestPickItemJson.put("url", linkUrl);
-
-						subComponentJsonArray.add(bestPickItemJson);
 					}
 				}
 				bestPicks.put("subItems", subComponentJsonArray);
