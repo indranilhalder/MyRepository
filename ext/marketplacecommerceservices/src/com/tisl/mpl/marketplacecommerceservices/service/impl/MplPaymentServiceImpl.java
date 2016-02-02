@@ -1539,7 +1539,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException
 	{
-		//boolean couponApplied = false;
 		//Reset Voucher Apportion
 		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
 		{
@@ -1550,7 +1549,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				entry.setCouponValue(Double.valueOf(0.00D));
 				getModelService().save(entry);
 			}
-			//couponApplied = true;
 		}
 
 
@@ -1607,12 +1605,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			getMplCommerceCartService().setTotalWithConvCharge(cart, cartData);
 
 		}
-		//		else if (CollectionUtils.isEmpty(cart.getDiscounts()) && StringUtils.isNotEmpty(cart.getCouponErrorMsg()) && couponApplied)
-		//		{
-		//			discData.setCouponDiscount(discountUtility.createPrice(cart, Double.valueOf(0)));
-		//			discData.setRedeemErrorMsg(cart.getCouponErrorMsg());
-		//		}
-
 		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 
 		//getting the promotion data

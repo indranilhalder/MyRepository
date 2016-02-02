@@ -415,132 +415,109 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final List<AbstractOrderEntryModel> applicableOrderEntryList)
 	{
 		LOG.debug("Step 16:::Inside setApportionedValueForVoucher");
-		final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
-
-		double totalApplicablePrice = 0.0D;
-		BigDecimal percentageDiscount = null;
-		//double discountValue = 0.0D;
-		//final DecimalFormat df = new DecimalFormat("#");
-
-		for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 		{
-			totalApplicablePrice += entry.getTotalPrice().doubleValue();
-		}
+			final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
 
-		//		for (final DiscountValue disVal : cartModel.getGlobalDiscountValues())
-		//		{
-		//			if (disVal.getCode().equals(voucher.getCode()))
-		//			{
-		//				discountValue = disVal.getAppliedValue();
-		//				break;
-		//			}
-		//
-		//		}
+			double totalApplicablePrice = 0.0D;
+			BigDecimal percentageDiscount = null;
 
-		//totalApplicablePrice = Double.parseDouble(df.format(totalApplicablePrice));
-		final double discountValue = voucherObj.getValueAsPrimitive();
-
-		if (voucherObj.isAbsoluteAsPrimitive())
-		{
-			percentageDiscount = BigDecimal.valueOf((discountValue / totalApplicablePrice) * 100);
-		}
-		else
-		{
-			percentageDiscount = BigDecimal.valueOf(discountValue);
-			final double totalSavings = (totalApplicablePrice * percentageDiscount.doubleValue()) / 100;
-			final double totalMaxDiscount = voucher.getMaxDiscountValue() != null ? voucher.getMaxDiscountValue().doubleValue()
-					: 0.0D;
-
-			if (totalMaxDiscount != 0.0D && totalSavings > totalMaxDiscount)
+			for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 			{
-				percentageDiscount = BigDecimal.valueOf((voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice) * 100);
+				totalApplicablePrice += entry.getTotalPrice().doubleValue();
+			}
+
+			final double discountValue = voucherObj.getValueAsPrimitive();
+
+			if (voucherObj.isAbsoluteAsPrimitive())
+			{
+				percentageDiscount = BigDecimal.valueOf((discountValue / totalApplicablePrice) * 100);
+			}
+			else
+			{
+				percentageDiscount = BigDecimal.valueOf(discountValue);
+				final double totalSavings = (totalApplicablePrice * percentageDiscount.doubleValue()) / 100;
+				final double totalMaxDiscount = voucher.getMaxDiscountValue() != null ? voucher.getMaxDiscountValue().doubleValue()
+						: 0.0D;
+
+				if (totalMaxDiscount != 0.0D && totalSavings > totalMaxDiscount)
+				{
+					percentageDiscount = BigDecimal
+							.valueOf((voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice) * 100);
+
+				}
 
 			}
 
-		}
+			LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
 
-		////////
+			double totalAmtDeductedOnItemLevel = 0.00D;
 
-		//		if (voucherObj.isAbsoluteAsPrimitive()
-		//				|| (null != voucher.getMaxDiscountValue() && discountValue == voucher.getMaxDiscountValue().doubleValue()))
-		//		{
-		//			percentageDiscount = (discountValue / totalApplicablePrice) * 100;
-		//		}
-		//		else
-		//		{
-		//			percentageDiscount = discountValue;
-		//		}
-
-		////////////
-
-		LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
-
-		double totalAmtDeductedOnItemLevel = 0.00D;
-
-		for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
-		{
-			double entryLevelApportionedPrice = 0.00D;
-			double currNetAmtAftrAllDisc = 0.00D;
-
-			final double entryTotalPrice = entry.getTotalPrice().doubleValue();
-
-			if (entryTotalPrice > 1) //For freebie & bogo, 0.01 priced product, isBogoApplied can't be checked as same product might be free and non free for BOGO
+			for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 			{
-				if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+				double entryLevelApportionedPrice = 0.00D;
+				double currNetAmtAftrAllDisc = 0.00D;
+
+				final double entryTotalPrice = entry.getTotalPrice().doubleValue();
+
+				if (entryTotalPrice > 1) //For freebie & bogo, 0.01 priced product, isBogoApplied can't be checked as same product might be free and non free for BOGO
 				{
-					final double discountPriceValue = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(
-							BigDecimal.valueOf(totalApplicablePrice)).doubleValue();
-					entryLevelApportionedPrice = discountPriceValue - totalAmtDeductedOnItemLevel;
-				}
-				else
-				{
-					entryLevelApportionedPrice = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(
-							BigDecimal.valueOf(entryTotalPrice)).doubleValue();
-					totalAmtDeductedOnItemLevel += entryLevelApportionedPrice;
-				}
-
-				LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
-
-				entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
-				entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice));
-
-				if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
-						|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
-				{
-					final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
-							.doubleValue() : 0.00D;
-
-					if (netAmtAftrAllDisc > entryLevelApportionedPrice)
+					if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
 					{
-						currNetAmtAftrAllDisc = netAmtAftrAllDisc - entryLevelApportionedPrice;
+						final double discountPriceValue = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(
+								BigDecimal.valueOf(totalApplicablePrice)).doubleValue();
+						entryLevelApportionedPrice = discountPriceValue - totalAmtDeductedOnItemLevel;
+					}
+					else
+					{
+						entryLevelApportionedPrice = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(
+								BigDecimal.valueOf(entryTotalPrice)).doubleValue();
+						totalAmtDeductedOnItemLevel += entryLevelApportionedPrice;
+					}
+
+					LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
+
+					entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
+					entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice));
+
+					if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
+							|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
+					{
+						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
+								.doubleValue() : 0.00D;
+
+						if (netAmtAftrAllDisc > entryLevelApportionedPrice)
+						{
+							currNetAmtAftrAllDisc = netAmtAftrAllDisc - entryLevelApportionedPrice;
+
+						}
+						else
+						{
+							currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
+						}
 
 					}
 					else
 					{
-						currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
-					}
+						if (entryTotalPrice > entryLevelApportionedPrice)
+						{
+							currNetAmtAftrAllDisc = entryTotalPrice - entryLevelApportionedPrice;
 
+						}
+						else
+						{
+							currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
+						}
+
+					}
+					LOG.debug("Step 19:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
+
+					entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
+					getModelService().save(entry);
 				}
-				else
-				{
-					if (entryTotalPrice > entryLevelApportionedPrice)
-					{
-						currNetAmtAftrAllDisc = entryTotalPrice - entryLevelApportionedPrice;
-
-					}
-					else
-					{
-						currNetAmtAftrAllDisc = Double.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
-					}
-
-				}
-				LOG.debug("Step 19:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
-
-				//entry.setNetAmountAfterAllDisc(Double.valueOf(df.format(currNetAmtAftrAllDisc)));
-				entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
-				getModelService().save(entry);
 			}
 		}
+
 
 	}
 

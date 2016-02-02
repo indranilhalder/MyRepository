@@ -712,7 +712,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			{
 				LOG.debug("Step 13,14,15/1:::applicable entries empty");
 				releaseVoucherAfterCheck(cartModel, voucherCode);
-				throw new VoucherOperationException("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");//TODO:Check scenario later
+				throw new VoucherOperationException("Voucher is not applicable: " + voucherCode);
 			}
 		}
 
@@ -808,33 +808,33 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * closedVoucherDataList = new ArrayList<VoucherDisplayData>(); final AllVoucherListData allVoucherListData = new
 	 * AllVoucherListData(); for (final VoucherModel voucherModel : voucherList) { if (voucherModel instanceof
 	 * PromotionVoucherModel) {
-	 *
+	 * 
 	 * final PromotionVoucherModel VoucherObj = (PromotionVoucherModel) voucherModel;
-	 *
+	 * 
 	 * final Set<RestrictionModel> restrictionList = voucherModel.getRestrictions(); if
 	 * (CollectionUtils.isNotEmpty(restrictionList)) { boolean dateRestrExists = false; boolean userRestrExists = false;
 	 * final boolean semiClosedRestrExists = false;
-	 *
+	 * 
 	 * DateRestrictionModel dateRestrObj = null; UserRestrictionModel userRestrObj = null; //SemiClosedRestrictionModel
 	 * semiClosedRestrObj = null;
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final RestrictionModel restrictionModel : restrictionList) {
-	 *
+	 * 
 	 * //final VoucherDisplayData voucherDisplayData = new VoucherDisplayData(); if (restrictionModel instanceof
 	 * DateRestrictionModel) { dateRestrExists = true; dateRestrObj = (DateRestrictionModel) restrictionModel; } if
 	 * (restrictionModel instanceof UserRestrictionModel) { userRestrExists = true; userRestrObj = (UserRestrictionModel)
 	 * restrictionModel; } //TODO: Semi Closed Restriction-----Commented as functionality out of scope of R2.1 Uncomment
 	 * when in scope // if (restrictionModel instanceof SemiClosedRestrictionModel) // { // semiClosedRestrExists = true;
 	 * // //semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel; // }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * // if (restrictionModel instanceof SemiClosedRestrictionModel) // { // semiClosedRestrExists = false; //
 	 * semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel; // } }
-	 *
+	 * 
 	 * if (dateRestrExists) { final String voucherCode = VoucherObj.getVoucherCode();
-	 *
+	 * 
 	 * if (dateRestrExists && voucherModelService.isReservable(voucherModel, voucherCode, customer)) { final
 	 * VoucherDisplayData voucherDisplayData = new VoucherDisplayData(); if (userRestrExists) { // final
 	 * Collection<PrincipalModel> userList = userRestrObj != null ? userRestrObj.getUsers() // : new
