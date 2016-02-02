@@ -69,7 +69,6 @@
 		<property name="maxRetryCount" value="${hybris.omsorders.maxRetryCount}"/>
 		<property name="retryDelay" value="${hybris.omsorders.retryDelay}"/>
 		<property name="catalogVersionService" ref="catalogVersionService"/>
-		<property name="impersonationService" ref="impersonationService"/>
 	</bean>
 	
 	
@@ -175,6 +174,13 @@
 	<alias name="defaultOmsSendOrderPlacedNotificationAction" alias="omsSendOrderPlacedNotificationAction"/>
 	<bean id="defaultOmsSendOrderPlacedNotificationAction"
 		  class="com.tisl.mpl.fulfilmentprocess.actions.order.SendOrderPlacedNotificationAction"
+		  scope="tenant" parent="abstractAction">
+		<property name="eventService" ref="eventService"/>
+	</bean>
+	
+	<alias name="defaultSendOrderPlacedPushNotificationAction" alias="sendOrderPlacedPushNotificationAction"/>
+	<bean id="defaultSendOrderPlacedPushNotificationAction"
+		  class="com.tisl.mpl.fulfilmentprocess.actions.order.SendOrderPlacedPushNotificationAction"
 		  scope="tenant" parent="abstractAction">
 		<property name="eventService" ref="eventService"/>
 	</bean>

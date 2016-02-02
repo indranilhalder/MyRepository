@@ -590,6 +590,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="cartService" ref="cartService"/>
 		<property name="mplExtendedCartConverter" ref="mplExtendedCartConverter"/>
 		<property name="modelService" ref="modelService" />
+		<property name="mplDefaultCommerceCartCalculationStrategy" ref="mplDefaultCommerceCartCalculationStrategy" />
 	
 	</bean>
 	
@@ -1341,5 +1342,16 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="mplDefaultPriceDataFactory" parent="defaultPriceDataFactory" class="com.tisl.mpl.facades.order.impl.MplDefaultPriceDataFactory">
 	
 </bean>
+
+<alias name="mplDefaultIndexConfigPopulator" alias="solrIndexConfigPopulator" />
+	<bean id="mplDefaultIndexConfigPopulator" class="com.tisl.mpl.search.converters.populator.MplDefaultIndexConfigPopulator">
+		<property name="indexedTypeConverter" ref="solrIndexedTypeConverter"></property>
+		<property name="solrServerConfigConverter" ref="solrServerConfigConverter"></property>
+	</bean>
+	
+	<alias name="mplDefaultIndexedTypePopulator" alias="solrIndexedTypePopulator" />
+	<bean id="mplDefaultIndexedTypePopulator" class="com.tisl.mpl.facades.populators.MplDefaultIndexedTypePopulator">
+		<property name="indexedPropertyConverter" ref="indexedPropertyConverter"></property>
+	</bean>
 
 </beans>

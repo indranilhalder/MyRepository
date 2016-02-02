@@ -41,7 +41,7 @@
 	<jsp:invoke fragment="pageCss"/>
 	<!-- This is commented out as we are not using Google analytics -->
 	<%-- <analytics:analytics/> --%>
-	<generatedVariables:generatedVariables/>
+	<%-- <generatedVariables:generatedVariables/> --%>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<!-- <script src="//tags.tiqcdn.com/utag/tataunistore/main/dev/utag.sync.js"></script> -->

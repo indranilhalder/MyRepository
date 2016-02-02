@@ -31,8 +31,8 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 					<img class="new brush-strokes-sprite sprite-New"
 					style="z-index: 1; display: block;"
 					src="/store/_ui/responsive/common/images/transparent.png"> </c:if> <a
-					class="thumb" href="${productUrl}" title="${product.name}"> <product:productPrimaryImage
-						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
+					class="thumb" href="${productUrl}" title="${product.name}"> <%-- <product:productPrimaryImage
+						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
 
 				</a>
 				

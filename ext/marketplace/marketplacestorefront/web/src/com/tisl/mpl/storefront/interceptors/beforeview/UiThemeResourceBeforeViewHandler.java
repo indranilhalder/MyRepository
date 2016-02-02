@@ -107,15 +107,17 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 
 		LOG.debug("Actual context path static ====> " + contextPath);
 		final String staticResourceHost = configurationService.getConfiguration().getString("marketplace.static.resource.host");
-		String siteRootUrl;
+		String siteRootUrl, addOnContextPath;
 		if (StringUtils.isNotEmpty(staticResourceHost))
 		{
 			siteRootUrl = "//" + staticResourceHost + contextPath + "/_ui/" + uiExperienceCodeLower;
-			LOG.debug("Static resource host ====> " + contextPath);
+			addOnContextPath = "//" + staticResourceHost + contextPath;
+			LOG.debug("Static resource host ====> " + addOnContextPath);
 		}
 		else
 		{
 			siteRootUrl = contextPath + "/_ui/" + uiExperienceCodeLower;
+			addOnContextPath = contextPath;
 		}
 		LOG.debug("siteRootUrl ===> " + siteRootUrl);
 
@@ -158,6 +160,7 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 
 		modelAndView.addObject("isMinificationEnabled",
 				Boolean.valueOf(siteConfigService.getBoolean("storefront.minification.enabled", false)));
+		modelAndView.addObject("minificationTimeStamp",siteConfigService.getString("marketplace.minification.build.time", ""));
 
 		final DeviceData currentDetectedDevice = deviceDetectionFacade.getCurrentDetectedDevice();
 		modelAndView.addObject("detectedDevice", currentDetectedDevice);
@@ -165,11 +168,11 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		final List<String> dependantAddOns = requiredAddOnsNameProvider
 				.getAddOns(request.getSession().getServletContext().getServletContextName());
 
-		modelAndView.addObject("addOnCommonCssPaths", getAddOnCommonCSSPaths(contextPath, uiExperienceCodeLower, dependantAddOns));
+		modelAndView.addObject("addOnCommonCssPaths", getAddOnCommonCSSPaths(addOnContextPath, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject("addOnThemeCssPaths",
-				getAddOnThemeCSSPaths(contextPath, themeName, uiExperienceCodeLower, dependantAddOns));
+				getAddOnThemeCSSPaths(addOnContextPath, themeName, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject("addOnJavaScriptPaths",
-				getAddOnJSPaths(contextPath, siteName, uiExperienceCodeLower, dependantAddOns));
+				getAddOnJSPaths(addOnContextPath, siteName, uiExperienceCodeLower, dependantAddOns));
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
 		modelAndView.addObject(ModelAttributetConstants.GIGYA_SOCIAL_LOGIN_URL, gigyaSocialLoginURL);
 		modelAndView.addObject(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
