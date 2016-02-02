@@ -250,8 +250,8 @@ INSERT_UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];
 ;;TitanBrandShowcaseItem;Titan Brand Showcase;TitanBrandShowcaseItem;false
 ;;CromaBrandShowcaseItem;Croma Brand Showcase;CromaBrandShowcaseItem;false
 
-INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);
-;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;ZaraBrandShowcaseItem,NuonBrandShowcaseItem,LandmarkBrandShowcaseItem,AscotBrandShowcaseItem,TitanBrandShowcaseItem,CromaBrandShowcaseItem
+INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);layout(code)
+;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;ZaraBrandShowcaseItem,NuonBrandShowcaseItem,LandmarkBrandShowcaseItem,AscotBrandShowcaseItem,TitanBrandShowcaseItem,CromaBrandShowcaseItem;BrandShowCase
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
 ;;Section3Slot-Homepage;BrandsYouLoveComponent

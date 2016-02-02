@@ -19,7 +19,6 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
-import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -27,7 +26,6 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,8 +48,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
-import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
+import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -59,7 +56,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
-import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 
@@ -87,11 +83,6 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
-
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
-
-	private static final String SEQUENCE_NUMBER = "SequenceNumber";
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
@@ -142,7 +133,7 @@ public class HomePageController extends AbstractPageController
 	public JSONObject getBrandsYouLove()
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
-		final JSONObject brandsYouLoveJson = new JSONObject();
+		JSONObject brandsYouLoveJson = new JSONObject();
 		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage",
 				"Section3Slot-Homepage", "Online");
 		if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
@@ -158,35 +149,7 @@ public class HomePageController extends AbstractPageController
 			if (component instanceof MplShowcaseComponentModel)
 			{
 				final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
-
-				String title = "";
-				if (StringUtils.isNotEmpty(brandsYouLoveComponent.getTitle()))
-				{
-					title = brandsYouLoveComponent.getTitle();
-				}
-				brandsYouLoveJson.put("title", title);
-				final JSONArray subComponentJsonArray = new JSONArray();
-				if (CollectionUtils.isNotEmpty(brandsYouLoveComponent.getShowcaseItems()))
-				{
-
-					String brandLogoUrl = "";
-					for (final MplShowcaseItemComponentModel showcaseItem : brandsYouLoveComponent.getShowcaseItems())
-					{
-						final JSONObject showCaseItemJson = new JSONObject();
-						showCaseItemJson.put("compId", showcaseItem.getUid());
-						if (null != showcaseItem.getLogo() && StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
-						{
-							brandLogoUrl = showcaseItem.getLogo().getURL();
-						}
-						showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
-						showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
-						subComponentJsonArray.add(showCaseItemJson);
-					}
-				}
-
-				brandsYouLoveJson.put("subComponents", subComponentJsonArray);
-
-
+				brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
 			}
 		}
 
@@ -195,12 +158,63 @@ public class HomePageController extends AbstractPageController
 
 	}
 
+	/**
+	 * @param showCaseComponent
+	 */
+	private JSONObject getJSONForShowcaseComponent(final MplShowcaseComponentModel showCaseComponent)
+	{
+		final JSONObject showCaseComponentJson = new JSONObject();
+		String title = "";
+		if (StringUtils.isNotEmpty(showCaseComponent.getTitle()))
+		{
+			title = showCaseComponent.getTitle();
+		}
+		showCaseComponentJson.put("title", title);
+		final JSONArray subComponentJsonArray = new JSONArray();
+
+		if (CollectionUtils.isNotEmpty(showCaseComponent.getShowcaseItems()))
+		{
+
+			String brandLogoUrl = "";
+			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
+			{
+				final JSONObject showCaseItemJson = new JSONObject();
+				showCaseItemJson.put("compId", showcaseItem.getUid());
+				if (null != showCaseComponent.getLayout() && showCaseComponent.getLayout().equals(ShowCaseLayout.BRANDSHOWCASE))
+				{
+					if (null != showcaseItem.getLogo() && StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
+					{
+						brandLogoUrl = showcaseItem.getLogo().getURL();
+					}
+					showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
+					showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
+				}
+				else
+				{
+					String headerText = "";
+					if (StringUtils.isNotEmpty(showcaseItem.getHeaderText()))
+					{
+						headerText = showcaseItem.getHeaderText();
+					}
+					showCaseItemJson.put("headerText", headerText);
+				}
+				subComponentJsonArray.add(showCaseItemJson);
+			}
+		}
+
+		showCaseComponentJson.put("subComponents", subComponentJsonArray);
+
+		return showCaseComponentJson;
+
+
+	}
+
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLoveContent", method = RequestMethod.GET)
 	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId)
 	{
 		MplShowcaseItemComponentModel showcaseItem = null;
-		final JSONObject showCaseItemJson = new JSONObject();
+		JSONObject showCaseItemJson = new JSONObject();
 		LOG.info("Finding component with id::::" + componentId);
 		try
 		{
@@ -208,37 +222,8 @@ public class HomePageController extends AbstractPageController
 			showcaseItem = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(componentId);
 			LOG.info("Found component with id::::" + componentId);
 
-			ProductData firstProduct = null;
-			ProductData secondProduct = null;
+			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.BRANDSHOWCASE);
 
-			if (showcaseItem.getProduct1() != null)
-			{
-				firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS);
-				showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
-				showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
-				showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
-			}
-			if (showcaseItem.getProduct2() != null)
-			{
-				secondProduct = productFacade.getProductForOptions(showcaseItem.getProduct2(), PRODUCT_OPTIONS);
-				showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct));
-				showCaseItemJson.put("secondProductTitle", secondProduct.getProductTitle());
-				showCaseItemJson.put("secondProductUrl", secondProduct.getUrl());
-			}
-			if (StringUtils.isNotEmpty(showcaseItem.getText()))
-			{
-				showCaseItemJson.put("text", showcaseItem.getText());
-			}
-
-			if (null != showcaseItem.getBannerImage() && StringUtils.isNotEmpty(showcaseItem.getBannerImage().getURL()))
-			{
-				showCaseItemJson.put("bannerImageUrl", showcaseItem.getBannerImage().getURL());
-			}
-
-			if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
-			{
-				showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
-			}
 		}
 		catch (final CMSItemNotFoundException e)
 		{
@@ -249,6 +234,55 @@ public class HomePageController extends AbstractPageController
 		return showCaseItemJson;
 	}
 
+
+	/**
+	 * @param showcaseItem
+	 * @param brandshowcase
+	 * @return
+	 */
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
+	{
+		final JSONObject showCaseItemJson = new JSONObject();
+		ProductData firstProduct = null;
+		ProductData secondProduct = null;
+		if (showcaseItem.getProduct1() != null)
+		{
+			firstProduct = productFacade.getProductForOptions(showcaseItem.getProduct1(), PRODUCT_OPTIONS);
+			showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
+			showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
+			showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
+		}
+		if (null != showcaseLayout && showcaseLayout.equals(ShowCaseLayout.BRANDSHOWCASE))
+		{
+			if (showcaseItem.getProduct2() != null)
+			{
+				secondProduct = productFacade.getProductForOptions(showcaseItem.getProduct2(), PRODUCT_OPTIONS);
+				showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct));
+				showCaseItemJson.put("secondProductTitle", secondProduct.getProductTitle());
+				showCaseItemJson.put("secondProductUrl", secondProduct.getUrl());
+			}
+
+			if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
+			{
+				showCaseItemJson.put("bannerText", showcaseItem.getBannerText());
+			}
+
+		}
+
+
+		if (StringUtils.isNotEmpty(showcaseItem.getText()))
+		{
+			showCaseItemJson.put("text", showcaseItem.getText());
+		}
+
+		if (null != showcaseItem.getBannerImage() && StringUtils.isNotEmpty(showcaseItem.getBannerImage().getURL()))
+		{
+			showCaseItemJson.put("bannerImageUrl", showcaseItem.getBannerImage().getURL());
+		}
+
+		return showCaseItemJson;
+
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
@@ -370,70 +404,6 @@ public class HomePageController extends AbstractPageController
 
 		return newAndExclusiveJson;
 
-	}
-
-
-	/**
-	 * @param productData
-	 * @return imageUrl
-	 */
-	private String getProductPrimaryImageUrl(final ProductData productData)
-	{
-		final List<ImageData> images = (List<ImageData>) productData.getImages();
-		String imageUrl = MISSING_IMAGE_URL;
-		if (images != null)
-		{
-			if (images.get(0).getUrl() != null)
-			{
-				imageUrl = images.get(0).getUrl();
-			}
-
-		}
-
-		return imageUrl;
-	}
-
-	/**
-	 * @description Used to store emailid for newslettersubscription
-	 * @param emailId
-	 * @return String
-	 */
-	@ResponseBody
-	@RequestMapping(value = ModelAttributetConstants.NEWSLETTER, method = RequestMethod.GET)
-	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId)
-	{
-		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
-		emailId = emailId.toLowerCase();
-		if (!validateEmailAddress(emailId))
-		{
-			return "mailFormatError";
-		}
-		else
-		{
-			newsLetter.setEmailId(emailId);
-			final boolean result = brandFacade.checkEmailId(emailId);
-
-			//newsLetter.setIsSaved(Boolean.TRUE);
-
-			if (result)
-			{
-				modelService.save(newsLetter);
-				return "success";
-			}
-			else
-			{
-				return "fail";
-			}
-
-		}
-
-	}
-
-	public boolean validateEmailAddress(final String email)
-	{
-		final Pattern pattern = Pattern.compile(EMAIL_REGEX);
-		final Matcher matcher = pattern.matcher(email);
-		return matcher.matches();
 	}
 
 	/* Home Page Promotional Banner */
@@ -582,4 +552,69 @@ public class HomePageController extends AbstractPageController
 		return displayBanner;
 	}
 
+	/**
+	 * @param productData
+	 * @return imageUrl
+	 */
+	private String getProductPrimaryImageUrl(final ProductData productData)
+	{
+		final List<ImageData> images = (List<ImageData>) productData.getImages();
+		String imageUrl = MISSING_IMAGE_URL;
+		if (images != null)
+		{
+			if (images.get(0).getUrl() != null)
+			{
+				imageUrl = images.get(0).getUrl();
+			}
+
+		}
+
+		return imageUrl;
+	}
+
+	/**
+	 * @description Used to store emailid for newslettersubscription
+	 * @param emailId
+	 * @return String
+	 */
+	@ResponseBody
+	@RequestMapping(value = ModelAttributetConstants.NEWSLETTER, method = RequestMethod.GET)
+	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId)
+	{
+		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
+		emailId = emailId.toLowerCase();
+		if (!validateEmailAddress(emailId))
+		{
+			return "mailFormatError";
+		}
+		else
+		{
+			newsLetter.setEmailId(emailId);
+			final boolean result = brandFacade.checkEmailId(emailId);
+
+			//newsLetter.setIsSaved(Boolean.TRUE);
+
+			if (result)
+			{
+				modelService.save(newsLetter);
+				return "success";
+			}
+			else
+			{
+				return "fail";
+			}
+
+		}
+
+	}
+
+	public boolean validateEmailAddress(final String email)
+	{
+		final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+		final Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
+	}
+
+
 }
+
