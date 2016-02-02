@@ -339,6 +339,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section4B;;ProductCarouselComponent;
 ;Section4C;;ImageCarouselComponent;
 ;Section5;;CMSParagraphComponent;
+;Section6;;MplShowcaseComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
