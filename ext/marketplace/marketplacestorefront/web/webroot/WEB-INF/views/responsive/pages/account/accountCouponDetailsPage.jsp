@@ -292,16 +292,16 @@
 												<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 													<c:choose>
 														<c:when test="${param.pageHistory eq i}">
-															<li class="number first active"><a href="?pageHistory=${i}&pageFor=history" target="#transactionHistory">${i}</a></li>
+															<li class="number first active"><a href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 														</c:when>
 														<c:otherwise>
 															<c:choose>
 																<c:when test="${param.pageHistory eq null and i eq 1}">
 																	<li class="number first active"><a
-																		href="?pageHistory=${i}&pageFor=history" target="#transactionHistory">${i}</a></li>
+																		href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 																</c:when>
 																<c:otherwise>
-																	<li class="number first"><a href="?pageHistory=${i}&pageFor=history" target="#transactionHistory">${i}</a></li>
+																	<li class="number first"><a href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 																</c:otherwise>
 															</c:choose>
 														</c:otherwise>
@@ -389,7 +389,7 @@
 									<!-- Previous link addition -->
 									<c:if
 										test="${param.pageHistory != 1 and not empty param.pageHistory and not empty couponOrderDataDTOList}">
-										<li class="prev" id="historyPrevBtm"><a href="#" target="#transactionHistory"><spring:theme
+										<li class="prev" id="historyPrevBtm"><a href="#nogo"><spring:theme
 													code="text.account.coupons.prev" /> <span
 												class="lookbook-only"></span></a></li>
 									</c:if>
@@ -397,15 +397,15 @@
 									<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 										<c:choose>
 											<c:when test="${param.pageHistory eq i}">
-												<li class="number first active"><a href="?pageHistory=${i}&pageFor=history" target="#transactionHistory">${i}</a></li>
+												<li class="number first active"><a href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 											</c:when>
 											<c:otherwise>
 												<c:choose>
 													<c:when test="${param.pageHistory eq null and i eq 1}">
-														<li class="number first active"><a href="?pageHistory=${i}&pageFor=history" target="#transactionHistory">${i}</a></li>
+														<li class="number first active"><a href="?pageHistory=${i}&pageFor=history#transactionHistory" >${i}</a></li>
 													</c:when>
 													<c:otherwise>
-														<li class="number first"><a href="?pageHistory=${i}&pageFor=history" target="#transactionHistory">${i}</a></li>
+														<li class="number first"><a href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 													</c:otherwise>
 												</c:choose>
 											</c:otherwise>
@@ -421,7 +421,7 @@
 									</c:choose>
 									<!-- Next link addition -->
 									<c:if test="${totalPagesCouponHist gt 1 and param.pageHistory ne totalPagesCouponHist}">
-										<li class="next" id="historyNextBtm"><a href="#" target="#transactionHistory"><spring:theme
+										<li class="next" id="historyNextBtm"><a href="#nogo"><spring:theme
 													code="text.account.coupons.next" /> <span
 												class="lookbook-only"></span></a></li>
 									</c:if>
