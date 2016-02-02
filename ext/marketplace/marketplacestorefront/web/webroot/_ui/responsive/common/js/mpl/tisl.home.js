@@ -382,7 +382,7 @@ function getNewAndExclusiveAjaxCall(){
 											
 
 							});
-		renderHtml += "</div><a href='"+ACC.config.encodedContextPath+"/search/viewOnlineProducts'>View All</a>";
+		renderHtml += "</div><a href='"+ACC.config.encodedContextPath+"/search/viewOnlineProducts' class='new_exclusive_viewAll'>View All</a>";
 			$('#newAndExclusive').html(renderHtml);
 			
 
