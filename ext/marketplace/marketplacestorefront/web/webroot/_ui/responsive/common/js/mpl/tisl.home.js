@@ -378,12 +378,11 @@ function getNewAndExclusiveAjaxCall(){
 								
 									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
 											+ value.productImageUrl
-											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p></div></div>"; 
-												/*+ "'></img></a>" + value.productTitle + value.productTitle + "</div></div>"; */
+											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'>" + value.productPrice + "</p></div></div>"; 
 											
 
 							});
-			renderHtml += "</div><button type='submit'>View All</button>";
+		renderHtml += "</div><a href='"+ACC.config.encodedContextPath+"/search/viewOnlineProducts' class='new_exclusive_viewAll'>View All</a>";
 			$('#newAndExclusive').html(renderHtml);
 			
 
@@ -428,13 +427,24 @@ function getPromoBannerHomepage(){
 		success : function(response) {
 			console.log(response.bannerImage);
 			var defaultHtml = "";
+			var bannerUrlLink = response.bannerUrlLink;
+			var bannerImage = response.bannerImage;
+			var majorPromoText = response.majorPromoText;
+			var minorPromo2Text = response.minorPromo2Text;
+			var bannerAltText = response.bannerAltText;
+			var minorPromo1Text = response.minorPromo1Text;
+			var promoText1 = response.promoText1;
+			var promoText2 = response.promoText2;
+			var promoText3 = response.promoText3;
+			var promoText4 = response.promoText4;
+			
 			//renderHtml = '<img src="' + response.bannerImage +'"/>';
-			renderHtml = '<a href="' + response.bannerUrlLink + '">' + '<img src="' + response.bannerImage +'"/>' +'</a>'; 
+			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
 			$('#promobannerhomepage').html(renderHtml);
 
 		},
 		error : function() {
-			console.log('Failure in Promo!!!');
+			globalErrorPopup('Failure in Promo!!!');
 		}
 	});
 }
@@ -445,3 +455,42 @@ if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').va
 	getPromoBannerHomepage();
 }
 /*Promotional Banner Section Ends*/
+
+
+/*StayQued Section starts*/
+function getStayQuedHomepage(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getStayQuedHomepage",
+
+		success : function(response) {
+			console.log(response.bannerImage);
+			var defaultHtml = "";
+			var bannerUrlLink = response.bannerUrlLink;
+			var bannerImage = response.bannerImage;
+			var majorPromoText = response.majorPromoText;
+			var minorPromo2Text = response.minorPromo2Text;
+			var bannerAltText = response.bannerAltText;
+			var minorPromo1Text = response.minorPromo1Text;
+			var promoText1 = response.promoText1;
+			var promoText2 = response.promoText2;
+			var promoText3 = response.promoText3;
+			var promoText4 = response.promoText4;
+			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
+			$('#stayQued').html(renderHtml);
+
+		},
+		error : function() {
+			globalErrorPopup('Failure in StayQued!!!');
+		}
+	});
+}
+
+
+if ($('#stayQued').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	
+	getStayQuedHomepage();
+}
+/*StayQued Section Ends*/

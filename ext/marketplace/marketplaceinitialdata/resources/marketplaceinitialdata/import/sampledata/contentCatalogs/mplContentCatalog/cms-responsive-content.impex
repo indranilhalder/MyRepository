@@ -335,6 +335,23 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section4CSlot-Homepage;Section4C;;Section4CSlot-Homepage;;;
 
+	## Home Section 5A
+####### StayQued Section ###################
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;UrlLink;SeqNumForStayQued;&componentRef
+;;TMPHomepageStayQuedComponent1;TMP Homepage StayQued Component1;/;1;TMPHomepageStayQuedComponent1
+;;TMPHomepageStayQuedComponent2;TMP Homepage StayQued Component2;/;2;TMPHomepageStayQuedComponent2
+;;TMPHomepageStayQuedComponent3;TMP Homepage StayQued Component3;/;3;TMPHomepageStayQuedComponent3
+
+
+INSERT_UPDATE MplSequentialBannerComponent;$contentCV[unique=true];uid[unique=true];name;bannersList(&componentRef);&componentRef
+;;TMPSequentialHomepageStayQuedComponent;Sequential Homepage StayQued Component;TMPHomepageStayQuedComponent1,TMPHomepageStayQuedComponent2,TMPHomepageStayQuedComponent3;TMPSequentialHomepageStayQuedComponent;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section5ASlot-Homepage;true;Homepage Stay Qued Slot;TMPSequentialHomepageStayQuedComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section5ASlot-Homepage;Section5A;;Section5ASlot-Homepage;;;
+####### StayQued Section Ends ###################
 
 #### Section 5
 ## Home section 2C

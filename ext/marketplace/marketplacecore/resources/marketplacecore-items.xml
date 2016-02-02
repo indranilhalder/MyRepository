@@ -3181,6 +3181,11 @@
 						<persistence type="property" />
 						<description>This is a sequence number of the banner</description>
 					</attribute>
+					<attribute qualifier="SeqNumForStayQued" type="java.lang.Integer"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is a sequence number for the stay qued section</description>
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -3224,7 +3229,11 @@
 						<persistence type="property" />
 						<description>This is a sequence number of the banner</description>
 					</attribute>
-
+					<attribute qualifier="SeqNumForStayQued" type="java.lang.Integer"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is a sequence number for the stay qued section</description>
+					</attribute>
 				</attributes>
 			</itemtype>
 
