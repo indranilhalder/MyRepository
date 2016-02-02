@@ -26,7 +26,7 @@
 	</cms:pageSlot>
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper feature-collections"></div>
 	<div id="promobannerhomepage"></div>
-	<div id="bestPicks" class=""></div>
+	<div id="bestPicks" class="feature-collections"></div>
 	<div id="newAndExclusive" class=""></div>
 	<!-- For Infinite Analytics Start -->
 	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
