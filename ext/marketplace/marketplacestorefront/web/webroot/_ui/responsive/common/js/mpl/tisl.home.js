@@ -357,7 +357,6 @@ function getBestPicksAjaxCall(){
 
 //AJAX CALL BEST PICKS END
 
-
 function getNewAndExclusiveAjaxCall(){
 	
 	$
@@ -379,7 +378,7 @@ function getNewAndExclusiveAjaxCall(){
 								
 									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
 											+ value.productImageUrl
-											+ "'></img></a>" + value.productTitle + "</div></div>"; 
+											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p></div></div>"; 
 												/*+ "'></img></a>" + value.productTitle + value.productTitle + "</div></div>"; */
 											
 
@@ -418,3 +417,31 @@ if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=
 }
 
 
+/*Promotional Banner Section starts*/
+function getPromoBannerHomepage(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getPromoBannerHomepage",
+
+		success : function(response) {
+			console.log(response.bannerImage);
+			var defaultHtml = "";
+			//renderHtml = '<img src="' + response.bannerImage +'"/>';
+			renderHtml = '<a href="' + response.bannerUrlLink + '">' + '<img src="' + response.bannerImage +'"/>' +'</a>'; 
+			$('#promobannerhomepage').html(renderHtml);
+
+		},
+		error : function() {
+			console.log('Failure in Promo!!!');
+		}
+	});
+}
+
+
+if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	
+	getPromoBannerHomepage();
+}
+/*Promotional Banner Section Ends*/

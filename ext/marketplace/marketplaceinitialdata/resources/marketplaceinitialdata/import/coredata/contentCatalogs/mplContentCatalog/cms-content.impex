@@ -330,15 +330,16 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SearchBox;;;searchbox
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
-;Section1;;MplSequentialBannerComponent;
+;Section1;;RotatingImagesComponent;
 ;Section2A;;CMSMediaParagraphComponent;
 ;Section2B;;CMSMediaParagraphComponent;
 ;Section2C;;;wide
 ;Section3;;MplShowcaseComponent;
-;Section4A;;;narrow
+;Section4A;;MplSequentialBannerComponent;
 ;Section4B;;ProductCarouselComponent;
 ;Section4C;;ImageCarouselComponent;
 ;Section5;;CMSParagraphComponent;
+;Section6;;MplShowcaseComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
@@ -1656,4 +1657,3 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-ShopTheCollectionTemplate;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-ShopTheCollectionTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;PlaceholderContentSlot-ShopTheCollectionTemplate;PlaceholderContentSlot;;PlaceholderContentSlot;true
-

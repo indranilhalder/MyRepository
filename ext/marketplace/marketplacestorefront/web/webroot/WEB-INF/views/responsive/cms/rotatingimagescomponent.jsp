@@ -10,9 +10,10 @@ var homePageBannerTimeout='${timeout}';
 
 </script>
 
-<div class="content-block-slider electronic-brand-slider">
+
 <c:choose>
 <c:when test="${empty timeout || timeout == 0}">
+<div class="content-block-slider electronic-brand-slider">
 	<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
 		id="rotatingImage">
@@ -76,8 +77,10 @@ var homePageBannerTimeout='${timeout}';
 			</c:if>
 		</c:forEach>
 	</div>
+	</div>
 	</c:when>
 	<c:otherwise>
+	<div class="timeout-slider">
 	<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference"
 		id="rotatingImageTimeout">
@@ -141,8 +144,9 @@ var homePageBannerTimeout='${timeout}';
 			</c:if>
 		</c:forEach>
 	</div>
+	</div>
 	</c:otherwise>
 	</c:choose>
-</div>
+
 
 

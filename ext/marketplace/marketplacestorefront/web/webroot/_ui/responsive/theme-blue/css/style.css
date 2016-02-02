@@ -29136,6 +29136,59 @@ width:100%;
     border:2px solid rgba(255,255,255,0.8);
 }
 /*New Homepage change ends*/
+footer>ul>li>.toggle>img{
+	width: 160px;
+	}
+@media(min-width:791px){
+	footer>ul>li>.toogle>img{
+	width: 180px;
+    padding: 0 10px;
+	}
+}
+.timeout-slider .carousel,.timeout-slider .carousel .item{
+	padding:0;
+	margin:0;
+}
+.timeout-slider .carousel .item a{
+	color:#fff;
+}
+.timeout-slider .carousel .item .hero .major-promos a:hover{
+	color:#fff;
+}
+#newAndExclusive{
+	width: 50%;
+    float: right;
+    padding: 0 20px;
+}
+#newAndExclusive button{
+	background: transparent;
+    color: #333;
+    border: 1px solid #4a4a4a;
+    font-size: 12px;
+    font-weight: 600;
+    width: 150px;
+    text-decoration: none;
+    margin:0px auto;
+}
+#newAndExclusive .New_Exclusive_title{
+	padding:10px 0;
+}
+footer .footer-text {
+	clear:both;
+}
+footer .footer-text p{
+	border-top: 1px solid #7e7e7e;
+    width: 97%;
+    padding: 10px;
+    margin: auto;
+    overflow: hidden;
+    letter-spacing: .83px;
+    line-height: 17px;
+    text-align: justify;
+    font-size: 12px;
+    font-family: "Avenir Next";
+    color:#333;
+}
 /*--------------maincss-----------*/
 .row
 {
