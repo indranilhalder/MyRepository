@@ -1539,4 +1539,14 @@
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.InternalExternalCampaignAutomationJob"
 		autowire="byName">
 	</bean>
+
+
+	<!-- Tata Cliq Job : Campaign Team -->
+	<bean id="campaignPromoDataService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoDataService">
+		<property name="modelService" ref="modelService" />
+		<property name="sellerBasedPromotionDao" ref="sellerBasedPromotionDao" />
+	</bean>
+
+	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
 </beans>
