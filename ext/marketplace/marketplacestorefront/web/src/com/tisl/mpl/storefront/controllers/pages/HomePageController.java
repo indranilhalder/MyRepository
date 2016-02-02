@@ -19,6 +19,7 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
+import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -26,6 +27,7 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +51,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.core.enums.ShowCaseLayout;
+import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -56,6 +60,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
+import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 
@@ -83,6 +88,11 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
+
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
+
+	private static final String SEQUENCE_NUMBER = "sequenceNumber";
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
@@ -407,6 +417,7 @@ public class HomePageController extends AbstractPageController
 	}
 
 	/* Home Page Promotional Banner */
+	@SuppressWarnings("boxing")
 	@ResponseBody
 	@RequestMapping(value = "/getPromoBannerHomepage", method = RequestMethod.GET)
 	public JSONObject getPromoBannerHomepage()
@@ -617,4 +628,3 @@ public class HomePageController extends AbstractPageController
 
 
 }
-
