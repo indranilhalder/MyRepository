@@ -381,9 +381,7 @@ public class ProductPageController extends AbstractPageController
 				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
 			}
 
-			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel))
-					&& null != productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()
-					&& !productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName().isEmpty())
+			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
 
 			{
 				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
@@ -429,85 +427,91 @@ public class ProductPageController extends AbstractPageController
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
 			if (buyboxdata != null)
 			{
-				if (null != buyboxdata.getAvailable())
+				//				if (null != buyboxdata.getAvailable())
+				//				{
+				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
+						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
 				{
-					if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
-							&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
+							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
 					{
-						for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
-								.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
 						{
-							if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
+							if (response.getIsServicable().equalsIgnoreCase("Y"))
 							{
-								if (response.getIsServicable().equalsIgnoreCase("Y"))
-								{
-									buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
-								}
-								buyboxJson.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY,
-										response.getIsServicable());
-
+								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
 							}
-						}
+							buyboxJson
+									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
 
+						}
 					}
-					else
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-					}
-					if (null != buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValue()
-							&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty())
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
-								.getFormattedValue());
-					}
-					else
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, "0.0");
-					}
-					if (null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
-							&& !buyboxdata.getPrice().getFormattedValue().isEmpty())
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
-					}
-					else
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, "0.0");
-					}
-					if (null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
-							&& !buyboxdata.getMrp().getFormattedValue().isEmpty())
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getFormattedValue());
-					}
-					else
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, "0.0");
-					}
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-					if (null != buyboxdata.getSellerName())
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
-					}
-					else
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, ModelAttributetConstants.EMPTY);
-					}
-					if (null != buyboxdata.getSellerArticleSKU())
-					{
-						buyboxJson
-								.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
-					}
-					else
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, ModelAttributetConstants.EMPTY);
-					}
+
 				}
 				else
 				{
-
-					LOG.debug("***************************Inproper BuyBox data********************");
-					buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
-
+					if (null != buyboxdata.getAvailable())
+					{
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
+					}
+					else
+					{
+						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, ModelAttributetConstants.NOVALUE);
+					}
 				}
+				if (null != buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValue()
+						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
+							.getFormattedValue());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, ModelAttributetConstants.NOVALUE);
+				}
+				if (null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
+						&& !buyboxdata.getPrice().getFormattedValue().isEmpty())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, ModelAttributetConstants.NOVALUE);
+				}
+				if (null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
+						&& !buyboxdata.getMrp().getFormattedValue().isEmpty())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getFormattedValue());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, ModelAttributetConstants.NOVALUE);
+				}
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+				if (null != buyboxdata.getSellerName())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, ModelAttributetConstants.EMPTY);
+				}
+				if (null != buyboxdata.getSellerArticleSKU())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, ModelAttributetConstants.EMPTY);
+				}
+				//				}
+				//				else
+				//				{
+				//
+				//					LOG.debug("***************************Inproper BuyBox data********************");
+				//					buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
+				//
+				//				}
 			}
 			else
 			{
