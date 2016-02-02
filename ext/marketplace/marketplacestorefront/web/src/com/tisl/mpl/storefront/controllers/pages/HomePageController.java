@@ -19,6 +19,7 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
+import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -26,6 +27,7 @@ import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +50,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -55,6 +59,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
+import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 
@@ -82,6 +87,11 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
+
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
+
+	private static final String SEQUENCE_NUMBER = "SequenceNumber";
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
@@ -426,5 +436,150 @@ public class HomePageController extends AbstractPageController
 		return matcher.matches();
 	}
 
+	/* Home Page Promotional Banner */
+	@ResponseBody
+	@RequestMapping(value = "/getPromoBannerHomepage", method = RequestMethod.GET)
+	public JSONObject getPromoBannerHomepage()
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject promoBannerJson = new JSONObject();
+		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section4ASlot-Homepage", "Online");
+		if (CollectionUtils.isNotEmpty(homepageSection4ASlot.getCmsComponents()))
+		{
+			components = homepageSection4ASlot.getCmsComponents();
+		}
+
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			LOG.info("Component>>>>with id :::" + component.getUid());
+			if (component instanceof MplSequentialBannerComponentModel)
+			{
+				final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
+				final int firstSequenceNumber = 1;
+				//Show the default banner for a new session
+				if (sessionService.getAttribute(SEQUENCE_NUMBER) == null)
+				{
+					if (getBannerforSequenceNumber(firstSequenceNumber, promoBanner) instanceof MplBigPromoBannerComponentModel)
+					{
+						final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
+								firstSequenceNumber, promoBanner);
+						promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+
+						promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+					}
+
+					if (getBannerforSequenceNumber(firstSequenceNumber, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
+					{
+						final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
+								firstSequenceNumber, promoBanner);
+						promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+
+						promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+					}
+
+					sessionService.setAttribute(SEQUENCE_NUMBER, firstSequenceNumber);
+				}
+
+
+				else
+				{
+					final int lastSequenceNumber = (int) sessionService.getAttribute(SEQUENCE_NUMBER);
+					final int nextSequenceNumber = lastSequenceNumber + 1;
+
+					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) != null)
+					{
+
+						if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) instanceof MplBigPromoBannerComponentModel)
+						{
+							final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
+									nextSequenceNumber, promoBanner);
+							promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+
+							promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+						}
+
+						if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
+						{
+							final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
+									nextSequenceNumber, promoBanner);
+							promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+
+							promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+						}
+						sessionService.setAttribute(SEQUENCE_NUMBER, nextSequenceNumber);
+					}
+					else
+					{
+						if (getBannerforSequenceNumber(firstSequenceNumber, promoBanner) instanceof MplBigPromoBannerComponentModel)
+						{
+							final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
+									firstSequenceNumber, promoBanner);
+							promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+
+							promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+						}
+
+						if (getBannerforSequenceNumber(firstSequenceNumber, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
+						{
+							final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
+									firstSequenceNumber, promoBanner);
+							promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+
+							promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+						}
+						sessionService.setAttribute(SEQUENCE_NUMBER, firstSequenceNumber);
+					}
+
+				}
+			}
+		}
+		return promoBannerJson;
+
+	}
+
+
+
+
+	/**
+	 * This method takes the sequence number and fetches the banner for that sequence number
+	 *
+	 * @param sequenceNumber
+	 * @param component
+	 * @return displayBanner
+	 */
+	private BannerComponentModel getBannerforSequenceNumber(final int sequenceNumber,
+			final MplSequentialBannerComponentModel component)
+	{
+		BannerComponentModel displayBanner = null;
+		if (component.getBannersList() != null)
+		{
+			for (final BannerComponentModel banner : component.getBannersList())
+			{
+
+				if (banner instanceof MplBigPromoBannerComponentModel)
+				{
+					final MplBigPromoBannerComponentModel promoBanner = (MplBigPromoBannerComponentModel) banner;
+					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
+					{
+						displayBanner = banner;
+					}
+				}
+				if (banner instanceof MplBigFourPromoBannerComponentModel)
+				{
+					final MplBigFourPromoBannerComponentModel promoBanner = (MplBigFourPromoBannerComponentModel) banner;
+
+					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
+					{
+						displayBanner = banner;
+					}
+
+				}
+			}
+
+		}
+		return displayBanner;
+	}
 
 }
