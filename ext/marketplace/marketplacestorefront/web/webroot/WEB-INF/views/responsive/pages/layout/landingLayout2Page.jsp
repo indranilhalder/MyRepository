@@ -25,6 +25,7 @@
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper feature-collections"></div>
+	<div id="promobannerhomepage"></div>
 	<div id="bestPicks" class=""></div>
 	<div id="newAndExclusive" class=""></div>
 	<!-- For Infinite Analytics Start -->

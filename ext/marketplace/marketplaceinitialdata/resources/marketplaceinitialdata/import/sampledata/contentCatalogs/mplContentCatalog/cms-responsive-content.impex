@@ -250,14 +250,33 @@ INSERT_UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];
 ;;TitanBrandShowcaseItem;Titan Brand Showcase;TitanBrandShowcaseItem;false
 ;;CromaBrandShowcaseItem;Croma Brand Showcase;CromaBrandShowcaseItem;false
 
-INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);
-;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;ZaraBrandShowcaseItem,NuonBrandShowcaseItem,LandmarkBrandShowcaseItem,AscotBrandShowcaseItem,TitanBrandShowcaseItem,CromaBrandShowcaseItem
+INSERT_UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;showcaseItems(&componentRef);layout(code)
+;;BrandsYouLoveComponent;Brands You Love Component;BrandsYouLoveComponent;ZaraBrandShowcaseItem,NuonBrandShowcaseItem,LandmarkBrandShowcaseItem,AscotBrandShowcaseItem,TitanBrandShowcaseItem,CromaBrandShowcaseItem;BrandShowCase
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
 ;;Section3Slot-Homepage;BrandsYouLoveComponent
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section3Slot-Homepage;Section3;;Section3Slot-Homepage;;;
+
+
+## Home Section 4A
+####### Promotional Banner ###################
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;UrlLink;SequenceNumber;&componentRef
+;;TMPHomepagePromotionBannerComponent1;TMP Homepage Promotion Banner Component1;/;1;TMPHomepagePromotionBannerComponent1
+;;TMPHomepagePromotionBannerComponent2;TMP Homepage Promotion Banner Component2;/;2;TMPHomepagePromotionBannerComponent2
+;;TMPHomepagePromotionBannerComponent3;TMP Homepage Promotion Banner Component3;/;3;TMPHomepagePromotionBannerComponent3
+
+
+INSERT_UPDATE MplSequentialBannerComponent;$contentCV[unique=true];uid[unique=true];name;bannersList(&componentRef);&componentRef
+;;TMPSequentialHomepagePromotionComponent;Sequential Homepage Promotion Banner;TMPHomepagePromotionBannerComponent1,TMPHomepagePromotionBannerComponent2,TMPHomepagePromotionBannerComponent3;TMPSequentialHomepagePromotionComponent;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
+;;Section4ASlot-Homepage;true;Homepage Promotion Banner Slot;TMPSequentialHomepagePromotionComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section4ASlot-Homepage;Section4A;;Section4ASlot-Homepage;;;
+####### Promotional Banner Ends ###################
 
 ########## New And Exclusive-Section4B ##################
 

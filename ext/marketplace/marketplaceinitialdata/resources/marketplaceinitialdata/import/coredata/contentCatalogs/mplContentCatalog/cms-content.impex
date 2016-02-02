@@ -335,7 +335,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section2B;;CMSMediaParagraphComponent;
 ;Section2C;;;wide
 ;Section3;;MplShowcaseComponent;
-;Section4A;;;narrow
+;Section4A;;MplSequentialBannerComponent;
 ;Section4B;;ProductCarouselComponent;
 ;Section4C;;ImageCarouselComponent;
 ;Section5;;CMSParagraphComponent;
@@ -1656,4 +1656,3 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;TopHeaderSlot-ShopTheCollectionTemplate;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-ShopTheCollectionTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
 ;;PlaceholderContentSlot-ShopTheCollectionTemplate;PlaceholderContentSlot;;PlaceholderContentSlot;true
-

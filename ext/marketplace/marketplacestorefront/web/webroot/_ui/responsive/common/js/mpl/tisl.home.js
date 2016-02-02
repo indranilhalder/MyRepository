@@ -416,3 +416,32 @@ if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=
 	getNewAndExclusiveAjaxCall();
 }
 
+
+/*Promotional Banner Section starts*/
+function getPromoBannerHomepage(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getPromoBannerHomepage",
+
+		success : function(response) {
+			console.log(response.bannerImage);
+			var defaultHtml = "";
+			//renderHtml = '<img src="' + response.bannerImage +'"/>';
+			renderHtml = '<a href="' + response.bannerUrlLink + '">' + '<img src="' + response.bannerImage +'"/>' +'</a>'; 
+			$('#promobannerhomepage').html(renderHtml);
+
+		},
+		error : function() {
+			globalErrorPopup('Failure in Promo!!!');
+		}
+	});
+}
+
+
+if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	
+	getPromoBannerHomepage();
+}
+/*Promotional Banner Section Ends*/
