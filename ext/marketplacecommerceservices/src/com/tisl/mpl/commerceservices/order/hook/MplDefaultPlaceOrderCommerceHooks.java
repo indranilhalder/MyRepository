@@ -382,10 +382,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				sellerOrderList.setDeliveryCost(Double.valueOf(totalDeliveryPrice));
 				totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
 						- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
+				final DecimalFormat decimalFormat = new DecimalFormat("#.00");
+				totalPrice = Double.valueOf(decimalFormat.format(totalPrice)).doubleValue();
+				totalConvChargeForCOD = Double.valueOf(decimalFormat.format(totalConvChargeForCOD)).doubleValue();
 				sellerOrderList.setTotalPrice(Double.valueOf(totalPrice));
 				sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice));
 				sellerOrderList.setConvenienceCharges(Double.valueOf(totalConvChargeForCOD));
-
 				modelService.save(sellerOrderList);
 			}
 		}
