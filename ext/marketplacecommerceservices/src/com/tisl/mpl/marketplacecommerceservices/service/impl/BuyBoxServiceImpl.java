@@ -65,10 +65,10 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	 * @param - productCode
 	 */
 	@Override
-	public Integer getBuyboxInventoryForSearch(final String productCode, final String productType)
+	public Integer getBuyboxInventoryForSearch(final String productCode)
 	{
 
-		return buyBoxDao.getBuyboxAvailableInventoryForSearch(productCode, productType);
+		return buyBoxDao.getBuyboxAvailableInventoryForSearch(productCode);
 	}
 
 	/*
