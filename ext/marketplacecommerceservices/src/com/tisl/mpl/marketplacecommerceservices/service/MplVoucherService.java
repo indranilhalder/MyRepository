@@ -91,7 +91,14 @@ public interface MplVoucherService
 	 * @throws JaloPriceFactoryException
 	 */
 	VoucherDiscountData checkCartAfterApply(VoucherModel lastVoucher, CartModel cartModel,
-			List<AbstractOrderEntryModel> applicableOrderEntryList)
-					throws ModelSavingException, VoucherOperationException, CalculationException, NumberFormatException,
-					JaloInvalidParameterException, JaloSecurityException, JaloPriceFactoryException;
+			List<AbstractOrderEntryModel> applicableOrderEntryList) throws ModelSavingException, VoucherOperationException,
+			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException,
+			JaloPriceFactoryException;
+
+	/**
+	 * @param voucherCode
+	 * @param cartModel
+	 * @throws VoucherOperationException
+	 */
+	void releaseVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
 }
