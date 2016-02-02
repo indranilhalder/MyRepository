@@ -378,12 +378,11 @@ function getNewAndExclusiveAjaxCall(){
 								
 									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
 											+ value.productImageUrl
-											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p></div></div>"; 
-												/*+ "'></img></a>" + value.productTitle + value.productTitle + "</div></div>"; */
+											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'>" + value.productPrice + "</p></div></div>"; 
 											
 
 							});
-			renderHtml += "</div><button type='submit'>View All</button>";
+		renderHtml += "</div><a href='"+ACC.config.encodedContextPath+"/search/viewOnlineProducts'>View All</a>";
 			$('#newAndExclusive').html(renderHtml);
 			
 
