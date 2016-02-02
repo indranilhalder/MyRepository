@@ -12,23 +12,23 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${not empty component.urlLink}">
-			<a href="${bannerUrl}"><div class="hero">
+			<a href="${bannerUrl}?icid=${component.pk}"><div class="hero">
 					<div class="image">
 						<img src="${component.bannerImage.URL}">
 					</div>
 					<c:if test="${not empty component.majorPromoText}">
 						<ul class="major-promos">
-							<li>${component.majorPromoText}</li>
+							<li data-bannerid="${component.pk}">${component.majorPromoText}</li>
 						</ul>
 					</c:if>
 					<c:if
 						test="${not empty (component.minorPromo1Text) || (component.minorPromo2Text)}">
 						<ul class="minor-promos">
 							<c:if test="${not empty component.minorPromo1Text }">
-								<li>${component.minorPromo1Text}</li>
+								<li data-bannerid="${component.pk}">${component.minorPromo1Text}</li>
 							</c:if>
 							<c:if test="${not empty component.minorPromo2Text }">
-								<li>${component.minorPromo2Text}</li>
+								<li data-bannerid="${component.pk}">${component.minorPromo2Text}</li>
 							</c:if>
 						</ul>
 					</c:if>
@@ -41,17 +41,17 @@
 				</div>
 				<c:if test="${not empty component.majorPromoText}">
 					<ul class="major-promos">
-						<li>${component.majorPromoText}</li>
+						<li data-bannerid="${component.pk}">${component.majorPromoText}</li>
 					</ul>
 				</c:if>
 				<c:if
 					test="${not empty (component.minorPromo1Text) || (component.minorPromo2Text)}">
 					<ul class="minor-promos">
 						<c:if test="${not empty component.minorPromo1Text }">
-							<li>${component.minorPromo1Text}</li>
+							<li data-bannerid="${component.pk}">${component.minorPromo1Text}</li>
 						</c:if>
 						<c:if test="${not empty component.minorPromo2Text }">
-							<li>${component.minorPromo2Text}</li>
+							<li data-bannerid="${component.pk}">${component.minorPromo2Text}</li>
 						</c:if>
 					</ul>
 				</c:if>
@@ -59,3 +59,14 @@
 		</c:otherwise>
 	</c:choose>
 </c:if>
+<script>
+$(document).ready(function(){
+	
+	$("li[data-bannerid=${component.pk}]").each(function(){
+		var x = $(this).find("a").attr("href");
+		if(typeof(x) != "undefined"){
+			$(this).find("a").attr("href",x+"?icid=${component.pk}");
+		}
+	});
+});
+</script>

@@ -251,6 +251,8 @@ public class MarketplaceBasketCartWidgetRenderer extends
 			return;
 		((BasketController) widget.getWidgetController()).clearCart();
 
+		((MarketPlaceBasketController)widget.getWidgetController()).releaseVoucher();
+		
 		((BasketController) widget.getWidgetController()).dispatchEvent(null,
 				widget, null);
 		
