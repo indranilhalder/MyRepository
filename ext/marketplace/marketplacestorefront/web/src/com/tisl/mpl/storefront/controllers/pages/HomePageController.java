@@ -56,11 +56,13 @@ import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
+import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
+import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 
@@ -91,6 +93,9 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
+
+	@Resource(name = "buyBoxFacade")
+	private BuyBoxFacade buyBoxFacade;
 
 	private static final String SEQUENCE_NUMBER = "sequenceNumber";
 
@@ -398,23 +403,60 @@ public class HomePageController extends AbstractPageController
 					{
 						final JSONObject newAndExclusiveProductJson = new JSONObject();
 						ProductData product = null;
+						final BuyBoxData buyBoxData = null;
 
 						product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
 						newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
 						newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 						newAndExclusiveProductJson.put("productUrl", product.getUrl());
-						//newAndExclusiveJson.put("ProductPrice", product.getProductMOP());
-						newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
-					}
-				}
 
-				newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+						newAndExclusiveProductJson.put("productPrice", getProductPrice(buyBoxData, product));
+
+						newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+
+					}
+
+					newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
+				}
 			}
 		}
-
 		return newAndExclusiveJson;
 
+
+
 	}
+
+	//product-price
+
+	/**
+	 * @param buyBoxData
+	 * @param product
+	 * @return productPrice
+	 */
+	private String getProductPrice(BuyBoxData buyBoxData, final ProductData product)
+	{
+		buyBoxData = buyBoxFacade.buyboxPrice(product.getCode());
+		String productPrice = null;
+		if (buyBoxData != null)
+		{
+
+			if (buyBoxData.getSpecialPrice() != null)
+			{
+				productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+			}
+			else if (buyBoxData.getPrice() != null)
+			{
+				productPrice = buyBoxData.getPrice().getFormattedValue();
+			}
+			else
+			{
+				productPrice = buyBoxData.getMrp().getFormattedValue();
+			}
+		}
+		LOG.info("ProductPrice>>>>>>>" + productPrice);
+		return productPrice;
+	}
+
 
 	/* Home Page Promotional Banner */
 	@SuppressWarnings("boxing")
