@@ -259,7 +259,7 @@
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
-				Update MplSellerPriority;ListingId[unique=true][allownull=true](code,$catalogversion);CategoryId[unique=true][allownull=true](code,$catalogversion);SellerId(id);isActive;priorityStartDate[dateformat=dd/MM/yyyy];priorityEndDate[dateformat=dd/MM/yyyy] 
+				Update MplSellerPriority;ListingId[unique=true][allownull=true](code,$catalogversion);CategoryId[unique=true][allownull=true](code,$catalogversion);SellerId(id);isActive;priorityStartDate[dateformat=dd/MM/yyyy HH:mm:ss];priorityEndDate[dateformat=dd/MM/yyyy HH:mm:ss] 
 			</value>
         </property>
 		<property name="impexRow">
