@@ -301,7 +301,7 @@ function focusOnElement() {
 		  	    }	 
 		  	    }
 	  	tbodycontent+="<input type='hidden' size='1' id='stock' name='stock' value="+stock+">";
-	  	tbodycontent+="<input type='hidden' size='1' id='ussid'  value="+ussid+">";
+	  	tbodycontent+="<input type='hidden' size='1' id='ussid' name='ussid' value="+ussid+">";
 	  
 	    //if(stockUssidIds.indexOf(sellersArray[i]['ussid'])==-1){
 	  	 if($("#isPinCodeChecked").val()!="true"){
@@ -400,7 +400,7 @@ function focusOnElement() {
 	}
 
 	 function fetchAllSellers(stockDataArrayList) {
-		 var buyboxSeller = $(".ussidPdp").val();
+		 var buyboxSeller = $("#ussid").val();
 		    var modifiedData="";
 			var isproductPage = $("#isproductPage").val();
 			var productCode = $("#product").val();
@@ -465,7 +465,7 @@ function focusOnElement() {
 		 /*sellerPageCount=1;*/
 	 }
 	 function sortPrice(sellerPageCount){
-		 var buyboxSeller = $(".ussidPdp").val();
+		 var buyboxSeller = $("#ussid").val();
 		     var aFinalPrice="";
 		     var bFinalPrice="";
 		
@@ -489,7 +489,7 @@ function focusOnElement() {
 	
 	 
 	 function sortPriceDesc(sellerPageCount){
-		 var buyboxSeller = $(".ussidPdp").val();
+		 var buyboxSeller = $("#ussid").val();
 		 var aFinalPrice="";
 	     var bFinalPrice="";
 		 sellerDetailsArray.sort(function(a, b){
