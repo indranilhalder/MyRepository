@@ -383,7 +383,9 @@ var allSellers='${allsellers}';
 				<product:productPricePanel product="${product}" /> <!-- Displaying buybox price -->
 			</ycommerce:testId>
 			<div class="fullfilled-by">
-			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span><span id="fulFilledBySship"  style="display:none;"></span>
+			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
+			<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+			<span id="fulFilledBySship"  style="display:none;"></span>
 			</div>
 			<!-- Returning to the PDP page -->
 			<p class="other-sellers back">

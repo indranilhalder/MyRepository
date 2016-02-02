@@ -37,6 +37,8 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	{
 		final String value1 = sizeData1.getDimensionSize().replaceAll("\\s+", "").toUpperCase();
 		final String value2 = sizeData2.getDimensionSize().replaceAll("\\s+", "").toUpperCase();
+		System.out.println("*********************sizeguide" + value1 + value2);
+
 		if (value1 == null || value2 == null)
 		{
 			return 0;

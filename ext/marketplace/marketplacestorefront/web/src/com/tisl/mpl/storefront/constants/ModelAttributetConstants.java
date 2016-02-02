@@ -64,6 +64,9 @@ public final class ModelAttributetConstants
 	public static final String ADDRESS_FORM = "addressForm";
 	public static final String ADDRESS_DATA = "addressData";
 	public static final String PAGE = "page";
+	public static final String PAGE_VOUCHER = "pageVoucher";
+	public static final String PAGE_HISTORY = "pageHistory";
+	public static final String PAGE_FOR = "pageFor";
 	public static final String PAGE_VAL = "Page";
 	public static final String PAGE_ALL = "All";
 	public static final String SHOW = "show";
@@ -174,7 +177,25 @@ public final class ModelAttributetConstants
 	public static final String BASE_URL = "baseUrl";
 
 
-
+	//review page
+	public static final String CATEGORY_ID = "categoryID";
+	public static final String CATEGORY_ID_VAL = "";
+	public static final String STREAM_ID = "streamID";
+	public static final String STREAM_ID_VAL = "";
+	public static final String COMMENT_ID = "commentID";
+	public static final String COMMENT_ID_VAL = "";
+	public static final String COMMENT_TEXT = "commentText";
+	public static final String COMMENT_TEXT_VAL = "";
+	public static final String COMMENT_TITLE = "commentTitle";
+	public static final String COMMENT_TITLE_VAL = "";
+	public static final String RATINGS = "ratings";
+	public static final String RATINGS_VAL = "";
+	public static final String COMMENTS = "comments";
+	public static final String START_INDEX = "startIndex";
+	public static final String END_INDEX = "endIndex";
+	public static final String PURCHASED_PRODUCT = "productDataModifyMap";
+	public static final String TOTAL_PAGES = "totalPages";
+	public static final String COMMENT_LIST_SIZE = "commentsListSize";
 	//	pdp changes
 	public static final String CLOTHING = "Clothing";
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
@@ -275,6 +296,7 @@ public final class ModelAttributetConstants
 	public static final String K_T_Brands = "KToTBrands";
 	public static final String P_Z_Brands = "PToZBrands";
 
+
 	public static final String FIRST_LEVEL_CATEGORY = "firstLevelCategory";
 	public static final String SECOND_LEVEL_CATEGORY = "secondLevelCategoryMap";
 	public static final String THIRD_LEVEL_CATEGORY = "thirdLevelCategoryMap";
@@ -293,6 +315,7 @@ public final class ModelAttributetConstants
 	public static final String GENDER = "gender";
 	public static final String FIRST_NAME = "first_name";
 	public static final String ZERO_VAL = "0";
+	public static final String ONE_VAL = "1";
 	public static final String HASH_VAL = "#";
 	public static final String ORDER_NUMBER_SYNTAX = "Order {0}";
 	public static final String ANONYMOUS = "anonymous";
@@ -312,6 +335,8 @@ public final class ModelAttributetConstants
 	public static final String COLLECTION_NAME = "collectionName";
 	public static final String PRODUCT_SIZE_GUIDE = "sizeguideData";
 	public static final String HEADER_SIZE_GUIDE = "sizeguideHeader";
+	public static final String SIZE_CHART_HEADER_BRAND = "brand";
+	public static final String SIZE_CHART_HEADER_CAT = "category";
 	public static final int SHOP_BY_LOOK_PAGE_SIZE = 1;
 	//comments and review changes
 	public static final String GIGYA_API_KEY = "gigyaAPIKey";
@@ -637,5 +662,39 @@ public final class ModelAttributetConstants
 	// TISPRO-48 - added new constants for pagination with lazy loading
 	public static final String PAGE_INDEX = "pageIndex";
 	public static final String PAGE_SIZE = "pageSize";
+
+	//for Coupons
+	public static final String OPEN_VOUCHER_DISPLAY_LIST = "openVoucherDisplayList";
+	public static final String CLOSED_VOUCHER_DISPLAY_LIST = "closedVoucherDisplayList";
+	public static final String COUPON_ORDER_DATA_DTO_LIST = "couponOrderDataDTOList";
+	public static final String TOTAL_SAVED_SUM = "totalSavedSum";
+	public static final String COUPONS_REDEEMED_COUNT = "couponsRedeemedCount";
+	public static final String TOTAL_PAGES_COUPONS = "totalPagesCoupon";
+	public static final String TOTAL_PAGES_COUPONS_HIST = "totalPagesCouponHist";
+	public static final String COUPONS_LIST_SIZE = "couponListSize";
+	public static final String COUPONS_HIST_LIST_SIZE = "couponHistListSize";
+	public static final String START_INDEX_COUPONS = "startIndexCoupon";
+	public static final String END_INDEX_COUPONS = "endIndexCoupon";
+	public static final String START_INDEX_COUPONS_HIST = "startIndexHist";
+	public static final String END_INDEX_COUPONS_HIST = "endIndexHist";
+	public static final String ONE_VAL_COUPONS = "1";
+	public static final String FOOTWEAR = "Footwear";
+	public static final String PINCODE_DETAILS = "pincodeData";
+	public static final String CLOSED_COUPON_LIST = "closedCouponList";
+	public static final String ACCOUNT_VOUCHER = "voucher";
+	public static final String ACCOUNT_HISTORY = "history";
+	public static final String PAGINATED_DATA_COUPON_UNUSED = "paginated_data_coupon_unused";
+	public static final String PAGINATED_DATA_COUPON_USED = "paginated_data_coupon_used";
+
+
+	//for bell notification
+
+	public static final String NOTIFICATION_MESSAGE_LIST = "notificationMessagelist";
+	public static final String NOTIFICATION_COUNT = "notificationCount";
+	public static final String IS_SIGNED_IN = "isSignedInUser";
+	//sizeguide
+
+	public static final String SELECTEDSIZE = "sizeSelectedSizeGuide";
+	public static final String NOVALUE = "0.0";
 
 }

@@ -142,6 +142,9 @@
 
 		<!-- Added for OMS_BUC -->	 
 	        <extension name="tataomsbackoffice" />
+	    
+	    <!-- Extension for Coupon -->
+	     <extension name="marketplacecoupon" />
 
 	</extensions>
 </hybrisconfig>

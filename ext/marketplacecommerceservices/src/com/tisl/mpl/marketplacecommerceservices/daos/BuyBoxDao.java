@@ -28,6 +28,8 @@ public interface BuyBoxDao
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
+	List<BuyBoxModel> buyBoxForSizeGuide(String productCode, String sellerId);
+
 	Integer getBuyboxAvailableInventoryForSearch(String productCode, String productType) throws EtailNonBusinessExceptions;
 
 	//if all the sellers has zero stock
@@ -40,6 +42,7 @@ public interface BuyBoxDao
 	//get seller details
 	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
 
+	public List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
 
 	/**
 	 * @param ussid

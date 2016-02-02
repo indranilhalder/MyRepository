@@ -140,6 +140,7 @@ public interface ControllerConstants
 				String AccountPaymentInfoPage = "pages/account/accountPaymentInfoPage";
 				String AccountRegisterPage = "pages/account/accountRegisterPage";
 				String ChangePassword = "/my-account/update-password";
+
 			}
 
 			interface Oauth2callback
@@ -178,6 +179,7 @@ public interface ControllerConstants
 				String AccountMyInterestPage = "pages/account/myInterest";
 				String AccountMyStyleProfilePage = "pages/account/myStyleProfile";
 				String AccountInviteFriendPage = "pages/account/inviteFriends";
+				String AccountCouponsPage = "pages/account/accountCouponDetailsPage";
 			}
 
 
@@ -295,6 +297,7 @@ public interface ControllerConstants
 				String ReviewsTab = "fragments/product/reviewsTab";
 				String StorePickupSearchResults = "fragments/product/storePickupSearchResults";
 				String SELLER_ID = "sellerId";
+				String PINCODE_SERVICABILITY = "isPinCodeServicable";
 				public static final String MIN_PRICE = "minPrice";
 				public static final String FULFILLMENT = "fulfillment";
 				public static final String OTHERS_SELLERS_COUNT = "othersSellersCount";
@@ -309,6 +312,7 @@ public interface ControllerConstants
 				public static final String OTHERSELLERS_PAGE_LIMIT = "othersellers.pageLimit";
 				public static final String VIEW_SELLERS = "viewSellers";
 				public static final String PRODUCT_CODE = "productCode";
+				public static final String SIZESELECTED = "sizeSelected";
 				public static final String BUYBOXUSSID = "buyboxussid";
 				public static final String ALLSELLERS = "allsellers";
 				public static final String PAGE_LIMIT = "pageLimit";
@@ -318,10 +322,12 @@ public interface ControllerConstants
 				public static final String CHECK_PINCODE = "/checkPincode";
 				public static final String SIZE_GUIDE = "/sizeGuide";
 				public static final String NO_SELLERS = "No Sellers Defined For This Product";
+				public static final String NO_PRODUCT = "Selected Size is not available for this Seller";
 				public static final String PRODUCT_CODE_PATH_VARIABLE_PATTERN = "/{productCode:.*}";
 				public static final String REVIEWS_PATH_VARIABLE_PATTERN = "{numberOfReviews:.*}";
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
+				public static final String BUYBOZFORSIZEGUIDEAJAX = "buyboxDataForSizeGuide";
 			}
 		}
 	}

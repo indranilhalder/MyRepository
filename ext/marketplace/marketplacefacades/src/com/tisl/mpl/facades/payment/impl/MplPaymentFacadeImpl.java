@@ -4,11 +4,16 @@
 package com.tisl.mpl.facades.payment.impl;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.BusinessProcessService;
@@ -515,6 +520,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void saveCart(final CartModel cart)
 	{
 		//saving cartmodel
+		final Double deliveryCost = cart.getDeliveryCost();
+		getModelService().save(cart);
+		cart.setDeliveryCost(deliveryCost);
 		getModelService().save(cart);
 	}
 
@@ -561,20 +569,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			juspayOrderId = getMplPaymentService().createPaymentId();
 			LOG.debug("Order Id created by key generator is " + juspayOrderId);
-
-			//			while (!juspayOrderStatus.equalsIgnoreCase("NOT_FOUND"))
-			//			{
-			//				juspayOrderId = getMplPaymentService().createPaymentId();
-			//				LOG.debug("Order Id created by key generator is " + juspayOrderId);
-			//
-			//				//creating OrderStatusRequest
-			//				final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-			//				orderStatusRequest.withOrderId(juspayOrderId);
-			//
-			//				//getting the response by calling get Order Status service
-			//				juspayOrderStatus = juspayService.getOrderStatus(orderStatusRequest).getStatus();
-			//			}
-
 
 			//Create entry in Audit table
 			flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
@@ -1334,11 +1328,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#applyPromotions()
 	 */
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
+	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException
 	{
 		return getMplPaymentService().applyPromotions(cartData, cart);
 	}

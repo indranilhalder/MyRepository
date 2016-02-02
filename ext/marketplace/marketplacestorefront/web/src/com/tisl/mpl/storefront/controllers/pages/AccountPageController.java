@@ -51,6 +51,7 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.commercefacades.user.data.TitleData;
 import de.hybris.platform.commercefacades.user.exceptions.PasswordMismatchException;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
@@ -86,8 +87,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -121,6 +125,7 @@ import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.AddressType;
 import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
@@ -131,7 +136,10 @@ import com.tisl.mpl.core.model.MarketplacePreferenceModel;
 import com.tisl.mpl.core.model.MyRecommendationsBrandsModel;
 import com.tisl.mpl.core.model.MyRecommendationsConfigurationModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
+import com.tisl.mpl.data.CouponHistoryData;
+import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.ExistingWishlistData;
 import com.tisl.mpl.data.FriendsInviteData;
@@ -141,6 +149,7 @@ import com.tisl.mpl.data.RemoveWishlistData;
 import com.tisl.mpl.data.ReturnLogisticsResponseData;
 import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.data.SendTicketRequestData;
+import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -157,6 +166,7 @@ import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
+import com.tisl.mpl.facades.account.reviews.impl.DefaultMplReviewFacade;
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
@@ -179,6 +189,8 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MyWishListInHeaderComponentModel;
 import com.tisl.mpl.order.facade.GetOrderDetailsFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.service.GigyaService;
+import com.tisl.mpl.service.MplGigyaReviewCommentService;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -199,6 +211,7 @@ import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 
 
 /**
@@ -229,6 +242,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String PAYMENT_DETAILS_CMS_PAGE = "payment-details";
 	private static final String ORDER_HISTORY_CMS_PAGE = "orders";
 	private static final String ORDER_DETAIL_CMS_PAGE = "order";
+	private static final String ACCOUNT_CMS_COUPONS = "coupons";
 	private static final String WISHLIST_CMS_PAGE = "wishlist";
 	private static final String PRODUCT_CODE_PATH_VARIABLE_PATTERN = "/{productCode:.*}";
 	private static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
@@ -239,7 +253,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String MARKETPLACE_PREFERENCE = "marketplacePreference";
 	private static final String MY_INTEREST = "myInterest";
 	private static final String MY_STYLE_PROFILE = "myStyleProfile";
-
+	private static final String REVIEW_CMS_PAGE = "reviews";
 	private static final Logger LOG = Logger.getLogger(AccountPageController.class);
 	private String dateDOB = MarketplacecommerceservicesConstants.EMPTY;
 	private String dateDOAnn = MarketplacecommerceservicesConstants.EMPTY;
@@ -249,7 +263,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private static final String ERROR_MSG = "errorMsg";
 	private static final String ERROR_OCCURED = "errorOccured";
 	private static final String UTF = "UTF-8";
-
+	public static final String ERROR_RESP = "gigys response error.";
+	public static final String UNUSED = "unused";
+	public static final String STATUS = "status";
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -318,6 +334,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
 	private MplCustomerProfileFacade mplCustomerProfileFacade;
 	@Autowired
+	private MplCouponFacade mplCouponFacade;
+	@Autowired
 	private MplEnumerationHelper mplEnumerationHelper;
 	@Autowired
 	private MplCustomerProfileFormValidator mplCustomerProfileFormValidator;
@@ -327,6 +345,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private RegisterCustomerFacade registerCustomerFacade;
 	@Autowired
 	private MplPasswordValidator mplPasswordValidator;
+	@Autowired
+	private GigyaService gigyaService;
+
 	//	@Autowired Critical Sonar fixes Unused private Field
 	//	private BaseSiteService baseSiteService;
 	//	@Autowired
@@ -355,7 +376,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private BuyBoxFacade buyBoxFacade;
 	@Autowired
 	private ProductDetailsHelper productDetailsHelper;
-
+	@Autowired
+	private MplGigyaReviewCommentService gigyaCommentService;
+	@Autowired
+	private DefaultMplReviewFacade mplReviewrFacade;
 
 	@Autowired
 	private MyStyleProfileFacade myStyleProfileFacade;
@@ -1047,6 +1071,301 @@ public class AccountPageController extends AbstractMplSearchPageController
 		return getViewForPage(model);
 	}
 
+
+
+	/**
+	 *
+	 * @description This method returns the account management coupon details page along with offers & discounts with
+	 *              coupon codes, transaction history and a user guide on how coupons are redeemed
+	 * @param model
+	 * @param page
+	 * @return String
+	 * @throws CMSItemNotFoundException
+	 * @throws VoucherOperationException
+	 * @throws NullPointerException
+	 */
+
+
+	@SuppressWarnings("boxing")
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_COUPONS, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String getCoupons(
+			@RequestParam(value = ModelAttributetConstants.PAGE_HISTORY, defaultValue = ModelAttributetConstants.ONE_VAL_COUPONS) final int pageHistory,
+			@RequestParam(value = ModelAttributetConstants.PAGE_VOUCHER, defaultValue = ModelAttributetConstants.ONE_VAL_COUPONS) final int pageVoucher,
+			@RequestParam(value = ModelAttributetConstants.PAGE_FOR, defaultValue = "") final String pageFor, final Model model)
+			throws CMSItemNotFoundException, VoucherOperationException
+	{
+		try
+		{
+			/* for getting the logged in user */
+			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+
+			/* getting all voucher in a list */
+
+			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons(customer);
+			//final List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
+			//final List<VoucherDisplayData> closedVoucherListModified = new ArrayList<VoucherDisplayData>();
+			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
+			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
+
+
+			/* getting all voucher transactions along with the order placed in a DTO */
+			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
+
+			if (null != couponHistoryStoreDTO)
+			{
+				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
+			}
+
+			if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_VOUCHER))
+			{
+				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
+				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0,
+						pageVoucher, model);
+				//model = (Model) returnMapVoucher.get("model_attr_unused");
+				if (null != returnMapVoucher.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
+				{
+					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMapVoucher
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
+					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
+				}
+				// Auxiliary pagination with default 1 page
+				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
+				final Map<String, Object> returnMapHistory = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, 1, model);
+				//model = (Model) returnMapHistory.get("model_attr_used");
+				if (null != returnMapHistory.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
+				{
+					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMapHistory
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
+					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
+				}
+			}
+			else if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_HISTORY))
+			{
+				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
+				final Map<String, Object> returnMap = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, pageHistory,
+						model);
+				//model = (Model) returnMap.get("model_attr_used");
+				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
+				{
+					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMap
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
+					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
+				}
+				// Auxiliary pagination with default 1 page
+				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
+				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0, 1, model);
+				//model = (Model) returnMapVoucher.get("model_attr_unused");
+				if (null != returnMapVoucher.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
+				{
+					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMapVoucher
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
+					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
+				}
+			}
+			else
+			{
+				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
+				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
+				final Map<String, Object> returnMap = couponPagation(closedVoucherDataList, couponHistoryDTOList, pageSizeCoupon,
+						pageSizeHistory, 1, model);
+				//model = (Model) returnMap.get("model_attr_unused");
+				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
+				{
+					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMap
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
+					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
+				}
+				//model = (Model) returnMap.get("model_attr_used");
+				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
+				{
+					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMap
+							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
+					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
+				}
+
+			}
+
+
+
+			if (null != couponHistoryStoreDTO.getSavedSum())
+			{
+
+				model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, couponHistoryStoreDTO.getSavedSum());
+			}
+
+			if (null != Integer.valueOf(couponHistoryStoreDTO.getCouponsRedeemedCount()))
+			{
+
+				model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT,
+						Integer.valueOf(couponHistoryStoreDTO.getCouponsRedeemedCount()));
+
+			}
+
+
+
+			storeCmsPageInModel(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
+			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
+			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
+					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_COUPONDETAILS));
+			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+			return ControllerConstants.Views.Pages.Account.AccountCouponsPage;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+	}
+
+	/*
+	 *
+	 */
+	public Map<String, Object> couponPagation(List<VoucherDisplayData> closedVoucherDataList,
+			List<CouponHistoryData> couponHistoryDTOList, final double pageSizeCoupon, final double pageSizeHistory, final int page,
+			final Model model)
+	{
+
+		int start = 0;
+		int end = 0;
+		int listSize = 0;
+		int startIndex = 0;
+		int endIndex = 0;
+		final Map<String, Object> returnMap = new HashMap<String, Object>();
+		if (null != closedVoucherDataList && !CollectionUtils.isEmpty(closedVoucherDataList))
+		{
+			listSize = closedVoucherDataList.size();
+			final double pages = Math.ceil(listSize / pageSizeCoupon);
+			final int totalPages = (int) pages;
+			//change
+			model.addAttribute(ModelAttributetConstants.TOTAL_PAGES_COUPONS, Integer.valueOf(totalPages));
+			model.addAttribute(ModelAttributetConstants.COUPONS_LIST_SIZE, Integer.valueOf(listSize));
+			returnMap.put("model_attr_unused", model);
+
+			if (page != 0)
+			{
+				start = (int) ((page - 1) * pageSizeCoupon);
+				end = (int) (start + pageSizeCoupon);
+			}
+			else
+			{
+				start = 1;
+				end = (int) (start + pageSizeCoupon);
+			}
+
+			if (start > listSize)
+			{
+				start = 1;
+				end = (int) (start + pageSizeCoupon);
+			}
+
+			if (end > listSize)
+			{
+				closedVoucherDataList = closedVoucherDataList.subList(start, listSize);
+			}
+			else
+			{
+
+				closedVoucherDataList = closedVoucherDataList.subList(start, end);
+			}
+			if (page > 1)
+			{
+				startIndex = ((page - 1) * (int) pageSizeCoupon) + 1;
+				endIndex = ((page - 1) * (int) pageSizeCoupon) + (int) pageSizeCoupon;
+			}
+			else
+			{
+				if (listSize > pageSizeCoupon)
+				{
+					startIndex = 1;
+					endIndex = (int) pageSizeCoupon;
+				}
+				else
+				{
+					startIndex = 1;
+					endIndex = listSize;
+				}
+			}
+			if (endIndex >= listSize)
+			{
+				endIndex = listSize;
+			}
+			returnMap.put("paginated_data_coupon_unused", closedVoucherDataList);
+			model.addAttribute(ModelAttributetConstants.START_INDEX_COUPONS, Integer.valueOf(startIndex));
+			model.addAttribute(ModelAttributetConstants.END_INDEX_COUPONS, Integer.valueOf(endIndex));
+		}
+		// used section
+		if (null != couponHistoryDTOList && !CollectionUtils.isEmpty(couponHistoryDTOList))
+		{
+			listSize = couponHistoryDTOList.size();
+			final double pages = Math.ceil(listSize / pageSizeHistory);
+			final int totalPages = (int) pages;
+			//change
+			model.addAttribute(ModelAttributetConstants.TOTAL_PAGES_COUPONS_HIST, Integer.valueOf(totalPages));
+			model.addAttribute(ModelAttributetConstants.COUPONS_HIST_LIST_SIZE, Integer.valueOf(listSize));
+			returnMap.put("model_attr_used", model);
+
+			if (page != 0)
+			{
+				start = (int) ((page - 1) * pageSizeHistory);
+				end = (int) (start + pageSizeHistory);
+			}
+			else
+			{
+				start = 1;
+				end = (int) (start + pageSizeHistory);
+			}
+
+			if (start > listSize)
+			{
+				start = 1;
+				end = (int) (start + pageSizeHistory);
+			}
+
+			if (end > listSize)
+			{
+				couponHistoryDTOList = couponHistoryDTOList.subList(start, listSize);
+			}
+			else
+			{
+
+				couponHistoryDTOList = couponHistoryDTOList.subList(start, end);
+			}
+			if (page > 1)
+			{
+				startIndex = ((page - 1) * (int) pageSizeHistory) + 1;
+				endIndex = ((page - 1) * (int) pageSizeHistory) + (int) pageSizeHistory;
+			}
+			else
+			{
+				if (listSize > pageSizeHistory)
+				{
+					startIndex = 1;
+					endIndex = (int) pageSizeHistory;
+				}
+				else
+				{
+					startIndex = 1;
+					endIndex = listSize;
+				}
+			}
+			if (endIndex >= listSize)
+			{
+				endIndex = listSize;
+			}
+			returnMap.put("paginated_data_coupon_used", couponHistoryDTOList);
+			model.addAttribute(ModelAttributetConstants.START_INDEX_COUPONS_HIST, Integer.valueOf(startIndex));
+			model.addAttribute(ModelAttributetConstants.END_INDEX_COUPONS_HIST, Integer.valueOf(endIndex));
+		}
+		return returnMap;
+
+	}
+
 	/**
 	 * This method returns the return/refund request page
 	 *
@@ -1134,6 +1453,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
+
+
 
 
 	/**
@@ -1387,7 +1708,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_CANCEL_SUCCESS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody String cancelSuccess(final String orderCode, @SuppressWarnings("unused") final String transactionId,
+	public @ResponseBody String cancelSuccess(final String orderCode, @SuppressWarnings(UNUSED) final String transactionId,
 			final String reasonCode, final String ticketTypeCode, final String ussid, final Model model)
 			throws CMSItemNotFoundException
 	{
@@ -2169,7 +2490,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 				newAuthentication.setDetails(oldAuthentication.getDetails());
 				SecurityContextHolder.getContext().setAuthentication(newAuthentication);
 				mplCustomerProfileData.setDisplayUid(newUid);
+				// NOTIFY GIGYA OF THE USER PROFILE CHANGES
+				final String gigyaServiceSwitch = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
+
+				if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MessageConstants.NO))
+				{
+					final String gigyaMethod = configurationService.getConfiguration().getString(
+							MarketplacecclientservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+
+					gigyaService.notifyGigya(mplCustomerProfileData.getUid(), null, mplCustomerProfileData.getFirstName().trim(),
+							mplCustomerProfileData.getLastName().trim(), mplCustomerProfileData.getEmailId().trim(), gigyaMethod);
+
+				}
 			}
+
 			storeCmsPageInModel(model, getContentPageForLabelOrId(UPDATE_PROFILE_CMS_PAGE));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(UPDATE_PROFILE_CMS_PAGE));
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -5177,7 +5511,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.MY_INTEREST_SUBCATEGORIES, method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, CategoryData>> getBrandSubCategory(
-			@SuppressWarnings("unused") @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
+			@SuppressWarnings(UNUSED) @RequestParam(value = ModelAttributetConstants.CATEGORYDATA, required = false) final String categoryData,
 			@RequestParam(value = "subCategoryData") final String subCategoryData,
 			@RequestParam(value = "selectedCategory") final String selectedCategory, final Model model)
 			throws CMSItemNotFoundException, NullPointerException, JSONException
@@ -5915,6 +6249,295 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		this.mplOrderFacade = mplOrderFacade;
 	}
+
+	/**
+	 * @Description: Fetching Reviews given by user
+	 * @param page
+	 *           ,show,sort,sortcode,model
+	 * @return String
+	 * @throws Exception
+	 */
+	@SuppressWarnings(UNUSED)
+	@RequestMapping(value = "/reviews", method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String review(
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL) final int page,
+			final Model model) throws Exception
+	{
+		final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE, 5);
+		final Map<String, ProductData> productDataMap = new LinkedHashMap<String, ProductData>();
+		final Map<String, ProductData> productDataModifyMap = new LinkedHashMap<String, ProductData>();
+		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
+		final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
+		final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
+				ProductOption.VARIANT_FULL, ProductOption.CATEGORIES);
+		ProductData productData = new ProductData();
+		List<GigyaProductReviewWsDTO> commentsWithProductDataModified = new ArrayList<GigyaProductReviewWsDTO>();
+		int startIndex = 0;
+		int endIndex = 0;
+		int commentListSize = 0;
+		try
+		{
+			if (CollectionUtils.isNotEmpty(orderModels))
+			{
+				final List<OrderModel> modifiableOrderList = new ArrayList<OrderModel>();
+				modifiableOrderList.addAll(orderModels);
+
+				Collections.sort(modifiableOrderList, new Comparator<OrderModel>()
+				{
+					@Override
+					public int compare(final OrderModel o1, final OrderModel o2)
+					{
+						final int compare = o1.getCreationtime().compareTo(o2.getCreationtime());
+						return compare;
+					}
+				});
+				Collections.reverse(modifiableOrderList);
+				for (final OrderModel order : modifiableOrderList)
+				{
+					for (final OrderModel sellerOrder : order.getChildOrders())
+					{
+						for (final AbstractOrderEntryModel entry : sellerOrder.getEntries())
+						{
+							final ProductModel productmodel = entry.getProduct();
+							final Double netPrice = entry.getNetAmountAfterAllDisc();
+							final PriceData price = productDetailsHelper.formPriceData(netPrice);
+							try
+							{
+								if (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS) != null)
+								{
+									productData = (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS));
+									productData.setPrice(price);
+								}
+							}
+							catch (final Exception exception)
+							{
+								LOG.error("Review  exception: " + exception);
+								throw new EtailNonBusinessExceptions(exception);
+							}
+							productDataMap.put(productData.getCode(), productData);
+
+							LOG.debug("**********ProductDataMap************** " + productDataMap);
+						}
+					}
+				}
+			}
+
+			if (!productDataMap.isEmpty())
+			{
+				final Iterator productDataMapIterator = productDataMap.entrySet().iterator();
+				while (productDataMapIterator.hasNext())
+				{
+					final Map.Entry productEntry = (Map.Entry) productDataMapIterator.next();
+					final ProductData productDataValue = (ProductData) productEntry.getValue();
+					final boolean isCommented = gigyaCommentService.getReviewsByCategoryProductId(productDataValue.getRootCategory(),
+							productDataValue.getCode(), customerModel.getUid());
+					if (!isCommented)
+					{
+						productDataModifyMap.put(productDataValue.getCode(), productDataValue);
+						if (productDataModifyMap.size() == 10)
+						{
+							break;
+						}
+					}
+
+				}
+			}
+			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
+					.getReviewsByUID(customerModel.getUid());
+			//commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
+			/* TISSTRT-119 fix */
+			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
+			if (!CollectionUtils.isEmpty(commentsWithProductDataModified))
+			{
+				Collections.sort(commentsWithProductDataModified, new Comparator<GigyaProductReviewWsDTO>()
+				{
+
+					@Override
+					public int compare(final GigyaProductReviewWsDTO arg0, final GigyaProductReviewWsDTO arg1)
+					{
+						return arg0.getCommentDate().compareTo(arg1.getCommentDate());
+					}
+				});
+				Collections.reverse(commentsWithProductDataModified);
+			}
+
+			/* pagination logic */
+
+			if (!commentsWithProductDataModified.isEmpty())
+			{
+				int start = 0;
+				int end = 0;
+				final int commentsListSize = commentsWithProductDataModified.size();
+				commentListSize = commentsListSize;
+				final double pages = Math.ceil(commentsListSize / pageSize);
+				final int totalPages = (int) pages;
+				model.addAttribute(ModelAttributetConstants.TOTAL_PAGES, Integer.valueOf(totalPages));
+				model.addAttribute(ModelAttributetConstants.COMMENT_LIST_SIZE, Integer.valueOf(commentsListSize));
+				if (page != 0)
+				{
+					start = (int) ((page - 1) * pageSize);
+					end = (int) (start + pageSize);
+				}
+				else
+				{
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (start > commentsListSize)
+				{
+					start = 1;
+					end = (int) (start + pageSize);
+				}
+
+				if (end > commentsListSize)
+				{
+					commentsWithProductDataModified = commentsWithProductDataModified.subList(start, commentsListSize);
+				}
+				else
+				{
+
+					commentsWithProductDataModified = commentsWithProductDataModified.subList(start, end);
+				}
+			}
+			if (page > 1)
+			{
+				startIndex = ((page - 1) * (int) pageSize) + 1;
+				endIndex = ((page - 1) * (int) pageSize) + (int) pageSize;
+			}
+
+			else
+			{
+				if (commentListSize > pageSize)
+				{
+					startIndex = 1;
+					endIndex = (int) pageSize;
+				}
+				else
+				{
+					startIndex = 1;
+					endIndex = commentListSize;
+				}
+			}
+			if (endIndex >= commentListSize)
+			{
+				endIndex = commentListSize;
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		catch (final Exception e)
+		{
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+		}
+		storeCmsPageInModel(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(REVIEW_CMS_PAGE));
+		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
+				accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_REVIEWS));
+		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+		model.addAttribute(ModelAttributetConstants.COMMENTS, commentsWithProductDataModified);
+		model.addAttribute(ModelAttributetConstants.START_INDEX, Integer.valueOf(startIndex));
+		model.addAttribute(ModelAttributetConstants.END_INDEX, Integer.valueOf(endIndex));
+		model.addAttribute(ModelAttributetConstants.PURCHASED_PRODUCT, productDataModifyMap);
+		return getViewForPage(model);
+
+	}
+
+	/**
+	 * @Description: Deleting and updating Reviews given by user
+	 * @param categoryID
+	 *           ,streamID,commentID,commentText,commentTitle,ratings,model
+	 * @return Map
+	 * @throws Exception
+	 */
+	@SuppressWarnings(UNUSED)
+	@RequestMapping(value = "/review/{operation}", method = RequestMethod.POST)
+	@RequireHardLogIn
+	@ResponseBody
+	public Map<String, String> modifyReview(
+			@PathVariable("operation") final String operation,
+			@RequestParam(value = ModelAttributetConstants.CATEGORY_ID, defaultValue = ModelAttributetConstants.CATEGORY_ID_VAL) final String categoryID,
+			@RequestParam(value = ModelAttributetConstants.STREAM_ID, defaultValue = ModelAttributetConstants.STREAM_ID_VAL) final String streamID,
+			@RequestParam(value = ModelAttributetConstants.COMMENT_ID, defaultValue = ModelAttributetConstants.COMMENT_ID_VAL) final String commentID,
+			@RequestParam(value = ModelAttributetConstants.COMMENT_TEXT, defaultValue = ModelAttributetConstants.COMMENT_TEXT_VAL) final String commentText,
+			@RequestParam(value = ModelAttributetConstants.COMMENT_TITLE, defaultValue = ModelAttributetConstants.COMMENT_TITLE_VAL) final String commentTitle,
+			@RequestParam(value = ModelAttributetConstants.RATINGS, defaultValue = ModelAttributetConstants.RATINGS_VAL) final String ratings,
+			final Model model) throws Exception
+	{
+		/**
+		 * Edit comment service call
+		 */
+		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
+		final Map<String, String> jsonMap = new HashMap<String, String>();
+
+		try
+		{
+			if (null != operation && operation.equals("edit"))
+			{
+				final String gigyaEditResponse = gigyaCommentService.editComment(categoryID, streamID, commentID, commentText,
+						commentTitle, ratings, customerModel.getUid());
+
+				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
+				{
+					jsonMap.put(STATUS, "success");
+					return jsonMap;
+				}
+				else
+				{
+					jsonMap.put(STATUS, "failed");
+					return jsonMap;
+				}
+			}
+
+			if (null != operation && operation.equals("delete"))
+			{
+				final String gigyaEditResponse = gigyaCommentService.deleteComment(categoryID, streamID, commentID);
+
+				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
+				{
+					jsonMap.put(STATUS, "success");
+					return jsonMap;
+				}
+				else
+				{
+					jsonMap.put(STATUS, "failed");
+					return jsonMap;
+				}
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+			callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			jsonMap.put(ERROR_OCCURED, ERROR_RESP);
+		}
+		return null;
+	}
+
+
+
 
 
 }

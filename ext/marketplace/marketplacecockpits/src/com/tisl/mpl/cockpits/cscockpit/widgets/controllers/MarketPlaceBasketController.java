@@ -1,5 +1,6 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.controllers;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -104,5 +105,14 @@ public interface MarketPlaceBasketController extends BasketController {
 
 	boolean validateWithOMS(TypedObject cartEntry, TypedObject deliveryMode)
 			throws ValidationException;
+
+
+	String applyVoucher(String voucherCode);
+
+
+	String releaseVoucher();
+
+
+	Collection<String> getAppliedVoucherCodesList();
  
 }

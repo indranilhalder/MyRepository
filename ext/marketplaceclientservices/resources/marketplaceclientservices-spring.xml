@@ -139,6 +139,8 @@
 			class="com.tisl.mpl.service.CancellableServiceImpl"/>		
 		<bean id="returnLogistics"
 			class="com.tisl.mpl.service.ReturnLogisticsServiceImpl"/>
-		<bean id="mplClickToCallService" class="com.tisl.mpl.service.MplClickToCallWebServiceImpl" />			
+		<bean id="mplClickToCallService" class="com.tisl.mpl.service.MplClickToCallWebServiceImpl" />		
+		<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl">
+</bean>		
 </beans>
 

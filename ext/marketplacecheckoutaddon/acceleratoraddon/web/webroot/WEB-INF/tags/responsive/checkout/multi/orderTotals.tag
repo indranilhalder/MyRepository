@@ -67,6 +67,12 @@
 
 	</li> 
      
+    <li id="couponApplied" >
+	<button class="remove-coupon-button"></button>
+		<spring:theme code="basket.page.totals.coupons"/>
+		<span id="couponValue" style="float: right"> </span>
+
+	</li>
     
     
 	<li class="total" id="total">
@@ -86,6 +92,7 @@
 	</c:if>
 	
 	<li id="promotionMessage" />
+	<li id="couponMessage" />
 	<!-- Commented to hide your order includes %tax  
 	<c:if test="${not cartData.net}">
 		<li class="realTotals">

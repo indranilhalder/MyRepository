@@ -76,6 +76,12 @@
 								code="header.flyout.recommendations" /></a></li>
 				</ul>
 				<ul>
+				<li class="header-SignInShare"><h3><spring:theme
+									code="header.flyout.credits" /></h3></li>
+						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>
+				</ul>
+				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.share" />
 						</h3></li>
@@ -149,9 +155,9 @@
 								<h3>Total:</h3>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
-											/> <span> <format:price
+											/>  <format:price
 												priceData="${subOrder.subTotal}" />
-									</span></li>
+									</li>
 									<li><spring:theme code="text.account.order.delivery"
 											text="Delivery" /><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"
@@ -165,13 +171,22 @@
 										</span></li>
 									</c:if>
 									<!-- TISEE-2672 -->
+									
+									<!-- TISSTRT-136 -->
+									<c:if test="${subOrder.couponDiscount.value > 0}">
+										<li><spring:theme code="text.account.order.coupon"
+												text="Coupon" /> <span class="amt"> -<format:price
+													priceData="${subOrder.couponDiscount}" />
+										</span></li>
+									</c:if>
+									<!-- TISSTRT-136 -->
 
 									<c:if test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
 										<li><spring:theme
 												code="text.account.order.convinienceCharges"
-												text="Convenience Charges" /> <span> <format:price
+												text="Convenience Charges" /> <format:price
 													priceData="${subOrder.convenienceChargeForCOD}" />
-										</span></li>
+										</li>
 									</c:if>
 									<%-- <li><spring:theme text="Gift Wrap:" /><span><format:price
 												priceData="${subOrder.deliveryCost}"

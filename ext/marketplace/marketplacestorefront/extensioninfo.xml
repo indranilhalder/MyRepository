@@ -27,7 +27,8 @@
         <requires-extension name="acceleratorservices"/>	
         <requires-extension name="marketplaceJuspayServices"/>
         <requires-extension name="marketplaceclientservices"/>	
-        <requires-extension name="commercesearch"/>		
+        <requires-extension name="commercesearch"/>	
+         <requires-extension name="marketplacecoupon"/>	
 		<webmodule jspcompile="false" webroot="/marketplacestorefront"/>
 			
 		

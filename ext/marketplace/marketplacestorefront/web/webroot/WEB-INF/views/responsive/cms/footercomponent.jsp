@@ -6,6 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
+
 <!-- This is used for NewsLetter SignUp Section in footer -->
 <div class="right">
 	<div class="newsletter">
@@ -127,3 +128,14 @@
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+<!-- /.modal -->
+<div class="modal size-guide fade" id="popUpModalNew" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
+	<div class="overlay"></div>
+		<div class="modal-content content" style="width:90%; max-width:90%;">
+			
+		</div>
+		<!-- /.modal-content -->
+	
+	<!-- /.modal-dialog -->
+</div>

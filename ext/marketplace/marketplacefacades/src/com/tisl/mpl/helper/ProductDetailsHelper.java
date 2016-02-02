@@ -5,7 +5,12 @@ package com.tisl.mpl.helper;
 
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.catalog.model.classification.ClassificationAttributeValueModel;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.classification.ClassificationService;
+import de.hybris.platform.classification.features.Feature;
+import de.hybris.platform.classification.features.FeatureList;
+import de.hybris.platform.classification.features.FeatureValue;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -19,6 +24,7 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.Constants.USER;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -94,7 +100,8 @@ public class ProductDetailsHelper
 	 *
 	 */
 	private static final String N_A = "n/a";
-
+	@Resource
+	private ClassificationService classificationService;
 	/*
 	 * private MplCheckoutFacade mplCheckoutFacade;
 	 *//**
@@ -181,8 +188,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -383,12 +390,17 @@ public class ProductDetailsHelper
 			Wishlist2Model existingWishlist = wishlistFacade.getWishlistForName(wishName);
 			//  boolean add=
 			//checking whether the wishlist with given name exists or not
+			LOG.debug("addToWishListInPopup: *****productCode: " + productCode + " **** ussid: " + ussid + " *** wishName: "
+					+ wishName);
 			if (null != existingWishlist)
 			{
 				add = wishlistFacade.addProductToWishlist(existingWishlist, productCode, ussid, sizeSelected.booleanValue());
+
+				LOG.debug("addToWishListInPopup: ***** existingWishlist: add" + add);
 			}
 			else
 			{
+				LOG.debug("addToWishListInPopup: ***** New Create");
 				final UserModel user = userService.getCurrentUser();
 				final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, wishName, productCode);
 				add = wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, sizeSelected.booleanValue());
@@ -832,15 +844,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -917,5 +929,35 @@ public class ProductDetailsHelper
 
 	}
 
+	/**
+	 * get
+	 *
+	 * @param product
+	 * @return String
+	 */
+	public String getSizeType(final ProductModel product)
+	{
+		String sizeGuideCode = null;
+		//get size chart feature
+		final FeatureList featureList = classificationService.getFeatures(product);
+		for (final Feature feature : featureList)
+		{
+			final String featureName = feature.getName().replaceAll("\\s+", "");
 
+			final String sizeChart = configurationService.getConfiguration().getString("product.sizetype.value")
+					.replaceAll("\\s+", "");
+			if (featureName.equalsIgnoreCase(sizeChart))
+			{
+				if (null != feature.getValue())
+				{
+					final FeatureValue sizeGuidefeatureVal = feature.getValue();
+					sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode()
+							.replaceAll("sizetype", ""));
+					break;
+				}
+			}
+		}
+
+		return sizeGuideCode;
+	}
 }

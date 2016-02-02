@@ -1,9 +1,15 @@
 package com.tisl.mpl.facades.payment;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -240,8 +246,17 @@ public interface MplPaymentFacade
 
 	/**
 	 * @return MplPromoPriceData
+	 * @throws CalculationException
+	 * @throws JaloPriceFactoryException
+	 * @throws JaloSecurityException
+	 * @throws VoucherOperationException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
+	 * @throws ModelSavingException
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart);
+	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
+			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
+			CalculationException, JaloSecurityException, JaloPriceFactoryException;
 
 
 	/**

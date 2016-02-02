@@ -181,9 +181,55 @@
 	$(document).ready(function() {
 				
 		getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
-		
 	});
-	
+	/*Review description 5000 characters limit*/
+	$(document).on("keypress",".gig-composebox-textarea",function(){
+	$(".gig-composebox-error").hide();
+	if($(this).text().length <= 4998)
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+		return true;
+		}
+	else
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").text('Review description can contain upto 5000 characters').show();
+		return false;
+	}
+	});
+	$(document).on("paste",".gig-composebox-textarea",function(){
+		var that = $(this);
+		var text_length=0;
+		setTimeout(function () {
+	text_length = that.text().length;		
+		if(text_length <= 4998)
+		{
+			that.parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+			return true;
+			}
+		else
+		{
+			that.parents(".gig-composebox-open").find(".gig-composebox-error").text('Review description can contain upto 5000 characters').show();
+			return false;
+		}
+		},100);
+	});
+	/*Review title 250 characters limit*/
+	$(document).on("focus",".gig-composebox-summary-input",function(){
+	$(this).attr("maxlength","250");
+	});
+	$(document).on("keypress",".gig-composebox-summary-input",function(){
+	$(".gig-composebox-error").hide();
+	if($(this).val().length <= 249)
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+		return true;
+		}
+	else
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").text('Review title can contain upto 250 characters').show();
+		return false;
+	}
+	});
 	//function onGigyaServiceReady(serviceName) {
 		/* var shareUserAction = new gigya.socialize.UserAction(); 
 		shareUserAction.setSubtitle("This is my sub title");  */
@@ -282,6 +328,75 @@ font-weight: normal;
 *.gig-comments-linksContainer *.gig-comments-link-lastVisible {
     margin-right: 0;
     display: none;
+} 
+#ratingDiv .gig-rating-button {
+	border: 0;
+	border-radius: 0;
+	color: #fff;
+	background-color: #ffb810;
+	text-decoration: none;
+	height: 45px;
+	line-height: 45px;
+	padding: 0 60px;
+}
+#ratingDiv .gig-rating-button:hover {
+    background: #cc8600;
+}
+#ratingDiv div.gig-rating-star.gig-rating-star-full:before, .gig-comment-rating-star.gig-comment-rating-star-full:before {
+	color: #00cbe9;
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f005";
+}
+*.gig-comment-rating-star, *.gig-selfreview-rating-star, *.gig-rating-star-full, *.gig-rating-star, *.gig-rating-dimensions div.gig-rating-star, *.gig-comment-rating-star-full, *.gig-selfreview-rating-star-full {
+	background-image: none;
+}
+#ratingDiv div.gig-rating-star.gig-rating-star-empty:before, .gig-comment-rating-star:before {
+	color: #00cbe9;
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f006";
+}
+.gig-rating-stars {
+	top: 0px;
+}
+#ratingDiv div.gig-rating-star.gig-rating-star-half:before {
+	color: #00cbe9;
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 100;
+    content: "\f123";
+}
+#ReviewSecion {
+	font-family: 'Avenir Next';
+}
+.gig-rating *, div.gig-rating {
+	color: #000;
+}
+*.gig-comment-title * {
+	vertical-align: middle;
+}
+#ReviewSecion {
+	background-color: #f8f9fb;
+}
+.gig-comment {
+	margin: 20px 0px;
+    border: 1px solid #EBEBEB;
+    padding: 5px;
+    background-color: white;
+}
+.gig-comment-footer {
+	border: none;
+}
+
+*.gig-composebox-follow
+{
+display: none;
 } 
 
 </style> 

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<!--
+	ATTENTION: This is just an example file. You have to edit it according to your needs.
+-->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+	<bean class="com.tisl.mpl.data.VoucherDiscountData">
+    	<property name="voucher" type="java.util.List&lt;de.hybris.platform.commercefacades.voucher.data.VoucherData>" />
+    	<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="totalPrice" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="couponRedeemed" type="boolean"/>
+    	<property name="couponReleased" type="boolean"/>
+    	<property name="redeemErrorMsg" type="String"/>
+    </bean>
+    
+      <bean class="com.tisl.mpl.data.VoucherDisplayData">
+    	<property name="couponDiscount" type="double" />
+    	<property name="voucherCode" type="String"/>
+    	<property name="voucherType" type="String" />
+    	<property name="reedemCouponCount" type="String" />
+		<property name="voucherDescription" type="String" />
+		<property name="voucherExpiryDate" type="String" />
+		<property name="voucherCreationDate" type="java.util.Date" />
+		<property name="productsCoupon" type="java.util.List&lt;de.hybris.platform.core.model.product.ProductModel>" />
+		<property name="categoryBasedCoupon" type="java.util.List&lt;de.hybris.platform.category.model.CategoryModel>" />
+    </bean>
+    
+    <bean class="com.tisl.mpl.data.AllVoucherListData">
+    	<property name="closedVoucherList" type="java.util.List" />
+    	<property name="openVoucherList" type="java.util.List"/>
+    	<property name="semiClosedVoucherList" type="java.util.List"/>
+    </bean>
+    
+          
+    <bean class="com.tisl.mpl.data.CouponHistoryData">
+		<property name="couponCode" type="String"/>
+		<property name="couponDescription" type="String"/>
+		<property name="orderCode" type="String"/>
+		<property name="redeemedDate" type="String"/>
+	</bean>
+		
+	<bean class="com.tisl.mpl.data.CouponHistoryStoreDTO">
+		<property name="couponHistoryDTOList" type="java.util.List&lt;com.tisl.mpl.data.CouponHistoryData>"/>
+		<property name="savedSum" type="String"/>
+		<property name="couponsRedeemedCount" type="int"/>
+	</bean>
+
+</beans>

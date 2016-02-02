@@ -151,6 +151,7 @@ public final class MessageConstants
 	public static final String LOGIN_PAGE_TITLE = "Sign In or Register";
 	public static final String TEXT_ACCOUNT_PREFERENCE_SAVE_SUCCESS = "text.account.preference.save.success";
 	public static final String TEXT_ACCOUNT_PREFERENCE_SAVE_FAILURE = "text.account.preference.save.failure";
+	public static final String TEXT_ACCOUNT_COUPONDETAILS = "text.account.couponsDetails";
 
 	//Rating Review
 	public static final String USE_GIGYA = "gigya.use".intern();
@@ -175,4 +176,11 @@ public final class MessageConstants
 	public static final String BOGO_CANCEL = "cancel.bogo.message".intern();
 	public static final String ORDER_HISTORY_PAGEBLEDATA_COUNT = "orderHistory.pagebleData.count";
 
+	//coupons
+	public static final String PAZE_SIZE_COUPONS = "mpl.account.coupon.pazesize";
+	//closed coupon
+	public static final String PAZE_SIZE_VOUCHER = "mpl.account.voucher.pazesize";
+	//reviews
+	public static final String TEXT_ACCOUNT_REVIEWS = "text.account.reviews";
+	public static final String PAZE_SIZE = "mpl.account.review.pazesize";
 }
