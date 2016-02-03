@@ -1177,55 +1177,56 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		if (null != entries)
 		{
-			//final int cartSize = entries.size();
+			double totalPrice = 0;
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				if (!entry.getGiveAway().booleanValue())
+				{
+					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					{
+						totalPrice += entry.getNetAmountAfterAllDisc().doubleValue();
+					}
+					else
+					{
+						totalPrice += entry.getTotalPrice().doubleValue();
+					}
+				}
+			}
 
 			//amtTobeDeductedAtlineItemLevel is a variable to check total apportioned COD charge is equal to total convenience charge
 			//final double amtTobeDeductedAtlineItemLevel = MarketplacecommerceservicesConstants.AMOUNTTOBEDEDUCTED;
 			for (final AbstractOrderEntryModel entry : entries)
 			{
-				//Setting formattedCODCharge while cartSize is greater than 1
-				//if (cartSize > 1)
-				//{
-				double entryTotals = 0;
-				if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+				if (!entry.getGiveAway().booleanValue())
 				{
-					entryTotals = entry.getNetAmountAfterAllDisc().doubleValue();
-				}
-				else
-				{
-					entryTotals = entry.getTotalPrice().doubleValue();
-				}
-				final Long quantity = entry.getQuantity();
+					double entryTotals = 0;
+					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					{
+						entryTotals = entry.getNetAmountAfterAllDisc().doubleValue();
+					}
+					else
+					{
+						entryTotals = entry.getTotalPrice().doubleValue();
+					}
+					final Long quantity = entry.getQuantity();
 
-				//calculating ratio of convenience charge for cart entry
-				final Double codChargePercent = Double.valueOf(entryTotals / cartModel.getTotalPrice().doubleValue());
-				final Double codChargePerEntry = Double.valueOf(totalCODCharge.doubleValue() * codChargePercent.doubleValue());
-				final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
-						codChargePerEntry));
-				final Double appCODChargeForEachItem = Double.valueOf(formattedCODCharge.doubleValue() / quantity.doubleValue());
-				entry.setConvenienceChargeApportion(appCODChargeForEachItem);
-				//amtTobeDeductedAtlineItemLevel += formattedCODCharge.doubleValue();
-				//cartSize--;
-				//}
+					//calculating ratio of convenience charge for cart entry
+					final Double codChargePercent = Double.valueOf(entryTotals / totalPrice);
+					final Double codChargePerEntry = Double.valueOf(totalCODCharge.doubleValue() * codChargePercent.doubleValue());
+					final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
+							codChargePerEntry));
+					final Double appCODChargeForEachItem = Double.valueOf(formattedCODCharge.doubleValue() / quantity.doubleValue());
+					entry.setConvenienceChargeApportion(appCODChargeForEachItem);
 
-				//Setting formattedCODCharge while cartSize is equal to 1
-				//else
-				//{
-				//final Long quantity = entry.getQuantity();
-				//final Double codChargePerEntry = Double.valueOf((totalCODCharge.doubleValue() - amtTobeDeductedAtlineItemLevel)
-				//	/ quantity.doubleValue());
-				//final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
-				//	codChargePerEntry));
-				//entry.setConvenienceChargeApportion(formattedCODCharge);
-				//}
-				try
-				{
-					getModelService().save(entry);
-				}
-				catch (final ModelSavingException e)
-				{
-					LOG.error("Exception while saving abstract order entry model with " + e);
-					throw new ModelSavingException(e + " :Exception while saving abstract order entry model with");
+					try
+					{
+						getModelService().save(entry);
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error("Exception while saving abstract order entry model with " + e);
+						throw new ModelSavingException(e + " :Exception while saving abstract order entry model with");
+					}
 				}
 
 			}
@@ -1724,7 +1725,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	private PriceData calculateTotalDiscount(final CartModel cart)
 	{
-		double discount = 0.0d;
+		BigDecimal discount = null;
 		double totalPrice = 0.0D;
 		if (null != cart && CollectionUtils.isNotEmpty(cart.getEntries()))
 		{
@@ -1746,11 +1747,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 			}
 
-			discount = (totalPrice + cart.getDeliveryCost().doubleValue() + cart.getConvenienceCharges().doubleValue())
-					- cart.getTotalPriceWithConv().doubleValue() - voucherDiscount;
+			discount = BigDecimal.valueOf(
+					(totalPrice + cart.getDeliveryCost().doubleValue() + cart.getConvenienceCharges().doubleValue())).subtract(
+					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));
 		}
 
-		return getDiscountUtility().createPrice(cart, Double.valueOf(discount));
+		return getDiscountUtility().createPrice(cart, Double.valueOf(discount != null ? discount.doubleValue() : 0.0));
 	}
 
 	/**
