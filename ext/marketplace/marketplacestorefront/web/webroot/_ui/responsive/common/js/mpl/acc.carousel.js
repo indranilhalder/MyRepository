@@ -84,7 +84,8 @@ ACC.carousel = {
 			autoPlay: timeout,
 			navigationText : [],
 			pagination:true,
-			singleItem:true
+			singleItem:true,
+			autoHeight : true
 		});
 	},
 	shopByLookCarousel: function(){

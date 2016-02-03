@@ -1015,7 +1015,7 @@ h2 {
             margin-right: 5px;
             top: 3px;
             position: relative;
-            font-weight: bold; }
+            font-weight: 500; }
           header .content .right > ul > li.bag .mini-bag {
             position: absolute;
             overflow: hidden;
@@ -1142,7 +1142,7 @@ h2 {
           margin-right: 5px;
           top: 3px;
           position: relative;
-          font-weight: bold; }
+          font-weight: 500; }
         header .content .right > ul > li.dropdown.sign-in-dropdown.sign-in > a:before,
         header .content .right > ul > li.logged_in.dropdown > a:before {
           font-family: 'FontAwesome';
@@ -8273,7 +8273,7 @@ div.wishlist-content .pagination {
 
   @media(min-width:790px) {
 	   .body-Content {
-	 	padding-bottom:373px;
+	 	padding-bottom:430px;
 	 }
 	  body.page-productDetails .body-Content {
 	 	padding-bottom:0px;
@@ -8488,7 +8488,7 @@ footer .banner {
 		}
 	}
 	footer>ul>li ul li {
-		height: 25px;
+		height: 30px;
 	}
 	footer .banner {
 		float: left;
@@ -28903,7 +28903,7 @@ height:30px;
     height:46px;
     top: 2px;
     position: relative;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 body .account .right-account .order-history .bottom .pagination.mobile{
@@ -29213,7 +29213,7 @@ footer .footer-text p{
 .home-brands-you-love-carousel{
 	display: table;
 	width:100%;
-	padding: 20px 0;
+	margin: 20px 0;
 }
 .home-brands-you-love-carousel-brands {
     display: table-cell;
@@ -29289,6 +29289,7 @@ width:100%;
     font-weight: 600;
     letter-spacing: 1.5px;
     margin:0px auto;
+    display: block;
 }
 
 .home-brands-you-love-wrapper h1{
@@ -29321,6 +29322,13 @@ padding:20px;
 }
 .home-brands-you-love-side-image.right{
 padding-top:20px;
+}
+}
+
+@media (max-width: 1050px){
+.home-brands-you-love-main-image-wrapper .text {
+    font-size: 30px;
+    line-height:30px;
 }
 }
 /*brands you love css ends*/
@@ -29377,6 +29385,331 @@ display:block;
 div#promobannerhomepage a img{
 width:100%;
 height:80px;
+}
+
+.showcase {
+    height: auto;
+    background: #F7F8FA;
+    overflow: hidden;
+    clear:both;
+    margin:20px 0;
+}
+.showcase h1 {
+    text-align: center;
+    padding: 30px 0;
+    font-weight: 500;
+    font-size: 24px;
+}
+.showcase-switch> div{
+width:33.33%;
+float:left;
+text-align:center;
+}
+.showcase-border{border-bottom: 1px solid;}
+.showcase-heading {
+   text-align: center;
+    color: #2d2e32;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 600;
+	    overflow: hidden;
+    padding-bottom: 30px;
+}
+
+.showcase section {
+    margin: 40px 20px;
+    text-align: center;
+    overflow: hidden;
+}
+
+p.showcase-para {
+    width: 80%;
+    text-align: center;
+    font-size: 16px;
+    line-height: 21px;
+    margin-left: 26px;
+}
+
+.showcase-heading > div {
+    margin: 20px 0px;
+}
+
+.showcase-center {
+    margin: 20px 0px;
+}
+.showcase-center h3, .showcase-center p{line-height: 20px;}
+.showcase-section .desc-section{
+width:33.33%;
+float:left;
+text-align:center;
+padding: 0px 5px 10px;
+}
+a.button.trending-button {
+    background: transparent;
+    color: #333;
+    border: 1px solid #4a4a4a;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+	width: 80%;
+    display: block;
+    margin: 0px auto;
+    height: 50px;
+    line-height: 1;
+    padding-top:18px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+a.button.maroon {
+    color: #FBF4F6;
+    background-color: #a9143c;
+    font-size: 12px !important;
+    text-decoration: none;
+	width: 70%;
+    display: block;
+    margin: 20px auto;
+    height: 50px;
+    line-height: 1;
+    padding-top:18px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+@media(max-width:938px) and (min-width:651px){
+a.button.trending-button {
+padding-top:13px;
+}
+}
+@media(max-width:828px) and (min-width:651px){
+a.button.maroon {
+padding-top:13px;
+}
+}
+.desc-section img{
+max-width:100%;
+margin: 0px auto;
+}
+.showcase-switch> div a:hover{
+cursor:pointer;
+color:#a9143c;
+}
+@media(max-width:650px){
+.showcase-section .desc-section,.showcase-switch> div{
+width:100%;
+float:none;
+}
+.showcase-section .desc-section{
+padding: 15px 0;
+}
+}
+#newAndExclusive h1{
+    text-align: center;
+    font-size: 24px;
+    padding: 40px 0;
+    font-weight: 500;
+}
+#stayQued{
+width:50%; 
+float:left;
+}
+#stayQued > a{
+    display: block;
+    text-align: center;
+}
+#stayQued > a > img{
+    max-width:100%;
+}
+
+@media (max-width: 790px){
+#stayQued,#newAndExclusive{
+width:100%; 
+float:none;
+margin:20px 0;
+}
+.timeout-slider .carousel .item .major-promos a,.timeout-slider .carousel .item .minor-promos a{
+color:#000;
+}
+.owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
+    background: transparent;
+    border: 2px solid rgba(169,20,60,0.8);
+}
+.owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page span {
+        background: rgba(169,20,60,0.8);
+}
+.owl-carousel#rotatingImageTimeout .item ul.minor-promos {
+    padding-bottom: 30px;
+}
+}
+
+.buy-banner {
+    overflow: hidden;
+    width: 100%;
+    float: left;
+}
+.buy-banner p {
+    padding: 35px;
+    line-height: 20px;
+    color: #fff;
+    text-transform: uppercase;
+    background: #a9143c;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-align: center;
+}
+
+/*Tata cliq Stay Queu css starts*/
+.qued {
+    background-color: #e4E4E4;
+    height: auto;
+    padding-bottom: 20px;
+	width:50%;
+	overflow:hidden;
+}
+.qued h1 {
+    text-align: center;
+    font-size: 24px;
+    padding: 40px 0;
+    font-weight: 500;
+	}
+.h1-qued {
+    position: relative;
+    top: -15px;
+    color: #2e2e2e;
+}
+.qued .qued-content h5, .qued .qued-content h2, 
+.qued .qued-content h3 {
+    color: #A9133B;
+}
+.qued-content h5 {
+    font-size: 17px;
+    line-height: 20px;
+    text-align: left;
+	    margin: 0px;
+}
+.qued-content h2 {
+    font-size: 43px;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 50px;
+    text-align: left;
+	    margin: 0px;
+}
+.qued-content h3 {
+    text-transform: uppercase;
+    font-size: 41px;
+    line-height: 50px;
+    text-align: left;
+	    margin: 0px;
+}
+.qued-content {
+    width: 50%;
+	    position: relative;
+    min-height: 1px;
+	float:left;
+    padding-left: 10px;
+    padding-right: 10px;
+	box-sizing:border-box;
+  
+}
+.qued-content p {
+    font-size: 14px;
+    color: #2e2e2e;
+    margin: 20px 0px;
+    text-align: left;
+}
+.qued-content a.button.maroon {
+    margin-top: 90px;
+    width: 200px;
+    padding-bottom: 20px;
+}
+a.button.maroon, button.maroon, button.maroon:hover {
+    color: #FBF4F6;
+    background-color: #a9143c;
+    font-size: 12px !important;
+    text-decoration: none;
+}
+a.button, button {
+    border: none;
+    display: block;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 24px;
+    text-align: center;
+	 padding: 13px 18px;
+    font-family: "Avenir Next";
+    letter-spacing: 1px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    -webkit-transition: background 0.3s;
+    -moz-transition: background 0.3s;
+    transition: background 0.3s;
+}
+.qued-image{
+	width:50%;
+	position: relative;
+	float: left;
+    min-height: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+	box-sizing:border-box;
+}
+.qued-image img {
+    float: right;
+}
+.qued-image img:nth-child(2) {
+    position: relative;
+    margin-top: -136px;
+    right: 129px;
+}
+.qued-image .img-responsive{
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+@media (max-width:790px){
+.qued{
+width:100%;}
+}
+@media (max-width:650px){
+	.qued-content, .qued-image{
+	width:100%;}
+	.qued-content *, .qued-image{
+	text-align:center;}
+	.qued-content a.button.maroon {
+      margin: 0 auto;
+   }
+   .qued h1 {
+       padding: 10px 0;
+   }
+   .qued-image img {
+    float: none;
+    margin: 0px auto;
+}
+} 
+
+/*Tata cliq  qued css ends*/
+#bestPicks>h1{
+clear:both;
+}
+@media (min-width: 791px){
+header .content .marketplace, header .content .brand-logo {
+       width: 130px;
+       margin-right: 110px;
+  }
+header .content .bottom.active .marketplace a img {
+width: 100px !important;
+    height: 50px !important;
+    margin-top: 12px;}
+    header .content .bottom.active .marketplace {
+   margin-right: 0px;    }
+#rotatingImageTimeout {
+    margin-top: 21px;
+}
+.marketplace img {
+    height: 70px;
+}
 }
 /*--------------maincss-----------*/
 .row
