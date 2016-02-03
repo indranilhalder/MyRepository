@@ -617,5 +617,18 @@
 	</bean>
 	<!-- Seller Priority Report Headers Data Ends -->
 	
+	<!--  Report for Internal Campaign Data-->
+	<bean class="com.tisl.mpl.data.InternalCampaignReportData">
+	<property name ="assetName" type="String"/>
+	<property name ="category" type = "String" />
+	<property name ="mediaType" type = "String" />
+	<property name ="size" type="String"/>
+	<property name ="sourcePage" type = "String" />
+	<property name ="icid" type = "String" />
+	</bean>
+	
+	
+	
+	
 </beans>
 
