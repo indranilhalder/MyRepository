@@ -59,7 +59,7 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -83,14 +83,6 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 					notificationData.setProductUrl(productUrl);
 
 				}
-			}
-			if (!VoucherStatusNotificationModel.getCategoryAssociated().isEmpty())
-			{
-
-				productUrl = "/v/" + (VoucherStatusNotificationModel.getVoucherIdentifier());
-				notificationData.setProductUrl(productUrl);
-
-
 			}
 
 			notificationData.setCouponCode(VoucherStatusNotificationModel.getVoucherCode());
