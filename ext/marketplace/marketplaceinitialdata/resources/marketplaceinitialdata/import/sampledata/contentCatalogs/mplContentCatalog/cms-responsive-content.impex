@@ -337,7 +337,7 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 	## Home Section 5A
 ####### StayQued Section ###################
-INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;UrlLink;SeqNumForStayQued;&componentRef
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;UrlLink;SequenceNumber;&componentRef
 ;;TMPHomepageStayQuedComponent1;TMP Homepage StayQued Component1;/;1;TMPHomepageStayQuedComponent1
 ;;TMPHomepageStayQuedComponent2;TMP Homepage StayQued Component2;/;2;TMPHomepageStayQuedComponent2
 ;;TMPHomepageStayQuedComponent3;TMP Homepage StayQued Component3;/;3;TMPHomepageStayQuedComponent3
