@@ -94,7 +94,7 @@ $(document).ready(function(){
 		value="${product.code}" />
 	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost"
 		value="N" />
-	<input type="hidden" maxlength="3" size="" id="ussid" name="ussid"
+	<input type="hidden" maxlength="3" size="" id="ussid" name="ussid" class="ussidPdp"
 		value="" />
 	<%-- <span id="inventory" style="display: none"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
