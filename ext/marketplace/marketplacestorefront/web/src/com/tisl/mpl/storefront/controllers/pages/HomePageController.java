@@ -267,6 +267,7 @@ public class HomePageController extends AbstractPageController
 			showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
 			showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
 			showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
+			showCaseItemJson.put("firstProductPrice", getProductPrice(firstProduct));
 		}
 		if (null != showcaseLayout && showcaseLayout.equals(ShowCaseLayout.BRANDSHOWCASE))
 		{
@@ -276,6 +277,7 @@ public class HomePageController extends AbstractPageController
 				showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct));
 				showCaseItemJson.put("secondProductTitle", secondProduct.getProductTitle());
 				showCaseItemJson.put("secondProductUrl", secondProduct.getUrl());
+				showCaseItemJson.put("secondProductPrice", getProductPrice(secondProduct));
 			}
 
 			if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
@@ -426,14 +428,12 @@ public class HomePageController extends AbstractPageController
 					{
 						final JSONObject newAndExclusiveProductJson = new JSONObject();
 						ProductData product = null;
-						final BuyBoxData buyBoxData = null;
-
 						product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
 						newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
 						newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 						newAndExclusiveProductJson.put("productUrl", product.getUrl());
 
-						newAndExclusiveProductJson.put("productPrice", getProductPrice(buyBoxData, product));
+						newAndExclusiveProductJson.put("productPrice", getProductPrice(product));
 
 						newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
 
@@ -456,9 +456,9 @@ public class HomePageController extends AbstractPageController
 	 * @param product
 	 * @return productPrice
 	 */
-	private String getProductPrice(BuyBoxData buyBoxData, final ProductData product)
+	private String getProductPrice(final ProductData product)
 	{
-		buyBoxData = buyBoxFacade.buyboxPrice(product.getCode());
+		final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(product.getCode());
 		String productPrice = null;
 		if (buyBoxData != null)
 		{
