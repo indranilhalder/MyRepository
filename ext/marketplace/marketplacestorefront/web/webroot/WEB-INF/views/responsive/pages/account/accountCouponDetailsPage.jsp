@@ -135,11 +135,9 @@
 
 
 				<div class="your-activity coupon-listing">
-					<h2>Coupons</h2>
-					<p>Listing of offers &amp; discounts with coupon codes, which
-						helps you to save money and smart shopping!</p>
-					<p class="mobile">Enter the coupon code in your cart to receive
-						your discount.</p>
+					<h2><spring:theme code="text.account.coupons.title" /></h2>
+					<p><spring:theme code="text.account.coupons.display.description" /></p>
+					<p class="mobile"><spring:theme code="text.account.coupons.display.description.mobile" /></p>
 					<ul class="coupon-container">
 						<c:choose>
 							<c:when test="${empty closedCouponList}">
