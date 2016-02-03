@@ -174,7 +174,7 @@ function getBrandsYouLoveAjaxCall() {
 					getBrandsYouLoveContentAjaxCall(defaultComponentId);
 				},
 				error : function() {
-					//globalErrorPopup('Failure!!!');
+					// globalErrorPopup('Failure!!!');
 					console.log("Error while getting brands you love");
 				}
 			});
@@ -286,7 +286,7 @@ setInterval(function() {
 
 
 
-//AJAX CALL BEST PICKS START
+// AJAX CALL BEST PICKS START
 if ($('#bestPicks').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
 	getBestPicksAjaxCall();
 }
@@ -331,7 +331,7 @@ function getBestPicksAjaxCall(){
 				});
 			renderHtml += "</div> <a href='/store/o/all' class='view-cliq-offers'> View Cliq Offers </a>";	
 			$("#bestPicks").html(renderHtml);
-			//console.log()
+			// console.log()
 		},
 		
 		error : function() {
@@ -355,7 +355,7 @@ function getBestPicksAjaxCall(){
 	});
 }
 
-//AJAX CALL BEST PICKS END
+// AJAX CALL BEST PICKS END
 
 function getNewAndExclusiveAjaxCall(){
 	
@@ -416,7 +416,7 @@ if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=
 }
 
 
-/*Promotional Banner Section starts*/
+/* Promotional Banner Section starts */
 function getPromoBannerHomepage(){
 	$
 	.ajax({
@@ -438,13 +438,13 @@ function getPromoBannerHomepage(){
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
 			
-			//renderHtml = '<img src="' + response.bannerImage +'"/>';
+			// renderHtml = '<img src="' + response.bannerImage +'"/>';
 			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
 			$('#promobannerhomepage').html(renderHtml);
 
 		},
 		error : function() {
-			globalErrorPopup('Failure in Promo!!!');
+			console.log('Failure in Promo!!!');
 		}
 	});
 }
@@ -454,10 +454,11 @@ if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').va
 	
 	getPromoBannerHomepage();
 }
-/*Promotional Banner Section Ends*/
+/* Promotional Banner Section Ends */
 
 
-/*StayQued Section starts*/
+
+/* StayQued Section starts */
 function getStayQuedHomepage(){
 	$
 	.ajax({
@@ -483,7 +484,7 @@ function getStayQuedHomepage(){
 
 		},
 		error : function() {
-			globalErrorPopup('Failure in StayQued!!!');
+			console.log('Failure in StayQued!!!');
 		}
 	});
 }
@@ -493,4 +494,137 @@ if ($('#stayQued').children().length == 0 && $('#ia_site_page_id').val()=='homep
 	
 	getStayQuedHomepage();
 }
-/*StayQued Section Ends*/
+/* StayQued Section Ends */
+
+if ($('#showcase').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	if (window.localStorage) {
+		for ( var key in localStorage) {
+			if (key.indexOf("showcaseContent") >= 0) {
+				window.localStorage.removeItem(key);
+				console.log("Deleting.." + key);
+			}
+		}
+	}
+	getShowCaseAjaxCall();
+}
+
+// AJAX call for Showcase
+function getShowCaseAjaxCall() {
+	$
+			.ajax({
+				type : "GET",
+				dataType : "json",
+				url : ACC.config.encodedContextPath + "/getCollectionShowcase",
+
+				success : function(response) {
+					console.log(response.subComponents);
+					defaultComponentId="";
+					renderHtml = "<h1>" + response.title + "</h1>"
+							+ "<div class='showcase-heading showcase-switch'>";
+					$
+							.each(
+									response.subComponents,
+									function(k, v) {
+										if (!v.showByDefault) {
+											renderHtml += "<div class='showcaseItem'><a id='"
+													+ v.compId
+													+ "'>"+v.headerText+"</a></div>";
+										} else {
+											renderHtml += "<div class='showcaseItem'><a id='"
+												+ v.compId
+												+ "' class='showcase-border'>"+v.headerText+"</a></div>";
+											defaultComponentId= v.compId;
+										}
+
+									});
+					renderHtml += "</div>";
+					$('#showcase').html(renderHtml);
+					
+					getShowcaseContentAjaxCall(defaultComponentId);
+				},
+				error : function() {
+					// globalErrorPopup('Failure!!!');
+					console.log("Error while getting showcase");
+				}
+			});
+}
+// Get Showcase Content AJAX
+function getShowcaseContentAjaxCall(id) {
+	if (window.localStorage
+			&& (html = window.localStorage.getItem("showcaseContent-" + id)) && html != "") {
+		// console.log("Local");
+		$('.about-one showcase-section').remove();
+		$('#showcase').append(decodeURI(html));
+	}
+	else{
+		
+	$
+			.ajax({
+				type : "GET",
+				dataType : "json",
+				
+				url : ACC.config.encodedContextPath
+						+ "/getShowcaseContent",
+				data : {
+					"id" : id
+				},
+				success : function(response) {
+					$('.about-one.showcase-section').remove();
+					defaultHtml = "<div class='about-one showcase-section'>";
+					if (typeof response.bannerImageUrl !=="undefined") {
+						defaultHtml += "<div class='desc-section'><img src='"+ response.bannerImageUrl
+						+ "'></img></div>";		
+					}
+					
+				
+					if (typeof response.text !== "undefined") {
+						defaultHtml += "<div class='desc-section'>"+response.text+"</div>"
+						
+					}
+					
+					if (typeof response.firstProductImageUrl !== "undefined") {
+						
+						defaultHtml += " <div class='desc-section'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
+								+ response.firstProductImageUrl
+								+ "'></img></a>";
+						
+							defaultHtml +="<div class='showcase-center'>" ;
+							if (typeof response.firstProductTitle !== "undefined"){
+								defaultHtml +="<h3 class='product-name'>"+response.firstProductTitle+"</h3>";
+							}
+							if (typeof response.firstProductPrice !== "undefined"){
+								defaultHtml +="<div class='price price'><p class='normal'>"+response.firstProductPrice+"</p></div>";
+				                  
+							}	
+			                
+							defaultHtml +="</div>";
+			                  
+						}
+					
+
+					defaultHtml += "</div>";
+					
+					$('#showcase').append(defaultHtml);
+					
+					window.localStorage.setItem("showcaseContent-" + id,
+							encodeURI(defaultHtml));
+
+				},
+				error : function() {
+					console.log("Error while getting showcase content");
+				}
+			});
+	}
+}
+// ENd AJAX CALL
+
+$(document).on("click", ".showcaseItem",
+		function() {
+			var id=$(this).find('a').attr("id");
+			$(".showcaseItem").find("a").removeClass("showcase-border");
+			$(this).find('a').addClass('showcase-border');
+			
+			$('.about-one.showcase-section').remove();
+			 getShowcaseContentAjaxCall(id);
+		});
+

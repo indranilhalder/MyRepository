@@ -196,6 +196,7 @@ public class HomePageController extends AbstractPageController
 			{
 				final JSONObject showCaseItemJson = new JSONObject();
 				showCaseItemJson.put("compId", showcaseItem.getUid());
+				showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
 				if (null != showCaseComponent.getLayout() && showCaseComponent.getLayout().equals(ShowCaseLayout.BRANDSHOWCASE))
 				{
 					if (null != showcaseItem.getLogo() && StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
@@ -203,7 +204,6 @@ public class HomePageController extends AbstractPageController
 						brandLogoUrl = showcaseItem.getLogo().getURL();
 					}
 					showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
-					showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
 				}
 				else
 				{
@@ -267,6 +267,7 @@ public class HomePageController extends AbstractPageController
 			showCaseItemJson.put("firstProductImageUrl", getProductPrimaryImageUrl(firstProduct));
 			showCaseItemJson.put("firstProductTitle", firstProduct.getProductTitle());
 			showCaseItemJson.put("firstProductUrl", firstProduct.getUrl());
+			showCaseItemJson.put("firstProductPrice", getProductPrice(firstProduct));
 		}
 		if (null != showcaseLayout && showcaseLayout.equals(ShowCaseLayout.BRANDSHOWCASE))
 		{
@@ -276,6 +277,7 @@ public class HomePageController extends AbstractPageController
 				showCaseItemJson.put("secondproductImageUrl", getProductPrimaryImageUrl(secondProduct));
 				showCaseItemJson.put("secondProductTitle", secondProduct.getProductTitle());
 				showCaseItemJson.put("secondProductUrl", secondProduct.getUrl());
+				showCaseItemJson.put("secondProductPrice", getProductPrice(secondProduct));
 			}
 
 			if (StringUtils.isNotEmpty(showcaseItem.getBannerText()))
@@ -426,14 +428,12 @@ public class HomePageController extends AbstractPageController
 					{
 						final JSONObject newAndExclusiveProductJson = new JSONObject();
 						ProductData product = null;
-						final BuyBoxData buyBoxData = null;
-
 						product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS);
 						newAndExclusiveProductJson.put("productImageUrl", getProductPrimaryImageUrl(product));
 						newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 						newAndExclusiveProductJson.put("productUrl", product.getUrl());
 
-						newAndExclusiveProductJson.put("productPrice", getProductPrice(buyBoxData, product));
+						newAndExclusiveProductJson.put("productPrice", getProductPrice(product));
 
 						newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
 
@@ -456,9 +456,9 @@ public class HomePageController extends AbstractPageController
 	 * @param product
 	 * @return productPrice
 	 */
-	private String getProductPrice(BuyBoxData buyBoxData, final ProductData product)
+	private String getProductPrice(final ProductData product)
 	{
-		buyBoxData = buyBoxFacade.buyboxPrice(product.getCode());
+		final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(product.getCode());
 		String productPrice = null;
 		if (buyBoxData != null)
 		{
@@ -655,6 +655,62 @@ public class HomePageController extends AbstractPageController
 		}
 		return displayBanner;
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getCollectionShowcase", method = RequestMethod.GET)
+	public JSONObject getCollectionShowcase()
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		JSONObject collectionShowcase = new JSONObject();
+		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section6Slot-Homepage", "Online");
+		if (CollectionUtils.isNotEmpty(homepageSection6Slot.getCmsComponents()))
+		{
+			components = homepageSection6Slot.getCmsComponents();
+		}
+
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			LOG.info("Found Component>>>>with id :::" + component.getUid());
+
+			if (component instanceof MplShowcaseComponentModel)
+			{
+				final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
+				collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
+			}
+		}
+
+
+		return collectionShowcase;
+
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getShowcaseContent", method = RequestMethod.GET)
+	public JSONObject getShowcaseContent(@RequestParam(value = "id") final String componentId)
+	{
+		MplShowcaseItemComponentModel showcaseItem = null;
+		JSONObject showCaseItemJson = new JSONObject();
+		LOG.info("Finding component with id::::" + componentId);
+		try
+		{
+
+			showcaseItem = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(componentId);
+			LOG.info("Found component with id::::" + componentId);
+
+			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.COLLECTIONSHOWCASE);
+
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			LOG.error(e.getStackTrace());
+			LOG.error("Could not find component with id::::" + componentId);
+
+		}
+		return showCaseItemJson;
+	}
+
 
 	/**
 	 * @param productData
