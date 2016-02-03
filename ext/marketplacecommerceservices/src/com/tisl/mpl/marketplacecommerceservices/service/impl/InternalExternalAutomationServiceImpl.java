@@ -62,8 +62,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	 * All banner components are scanned and results are returned as Map
 	 */
 	@Override
-	//public Map<String, String> automationGetAllBanner()
-	//public void automationGetAllBanner()
 	public List<InternalCampaignReportData> automationGetAllBanner()
 	{
 		final CatalogVersionModel catalogmodel = catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
@@ -73,9 +71,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 		final Collection<CatalogVersionModel> catalogmodelCollection = new ArrayList<CatalogVersionModel>();
 		catalogmodelCollection.add(catalogmodel);
-		//final Collection<ContentPageModel> contentPages = cmsPageService.getAllContentPages(catalogmodel);
 
-		//final Collection<ContentPageModel> contentPages = cmsPageService.getAllContentPages(catalogmodelCollection);
 		final Collection<ContentPageModel> contentPages = mplCmsPageService.getAllContentPages(catalogmodelCollection);
 		final List<InternalCampaignReportData> CampaignDataList = new ArrayList<InternalCampaignReportData>();
 
@@ -246,12 +242,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			file.getParentFile().mkdirs();
 			populateCSV(campaignDataConsolidatedList, path, file);
 
-			//final Map.Entry<String, String> pair = (Map.Entry) it.next();
-			/*
-			 * System.out.println("#########################################" + pair.getValue() +
-			 */
-			//writer.write(pair.getValue());
-			//writer.close();
 		}
 
 		catch (final Exception e)
@@ -264,17 +254,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	public String getCategoryOnAnchorTag(final String categoryId)
 	{
-		//String html = "foo <a href='link1'>bar</a> baz <a href='link2'>qux</a> foo";
 		final Pattern p = Pattern.compile("<a href='(.*?)'>");
 		final Matcher m = p.matcher(categoryId);
-		/*
-		 * while(m.find()) { System.out.println(m.group(0));
-		 */
-		//System.out.println(m.group(1));
 		return m.group(1);
-		//}
-
-
 	}
 
 	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final String path, final File file)
@@ -290,12 +272,11 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			fileWriter.append(CSVHeader);
 			fileWriter.append(NEW_LINE_SEPARATOR);
 
-			//final ArrayList tempList = null;
 
 			//for (final Map.Entry<String, String> entry : exportMap.entrySet())
 			for (final InternalCampaignReportData internalCampaignData : campaignDataConsolidatedList)
 			{
-				//if (entry.getKey().equals("asset_name"))
+
 				if (internalCampaignData.getAssetName() == null)
 				{
 					fileWriter.append("").append(COMMA_DELIMITER);
@@ -303,14 +284,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				else
 				{
 					fileWriter.append(internalCampaignData.getAssetName()).append(COMMA_DELIMITER);
-					//	System.out.println("###########" + entry.getValue() + "#########");
 				}
 
 
-
-				//if (entry.getKey().equals("category_id"))
-				//if ("category_id".equalsIgnoreCase(entry.getKey()))
-				//{
 				if (internalCampaignData.getCategory() == null)
 				{
 					fileWriter.append("").append(COMMA_DELIMITER);
@@ -319,13 +295,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				{
 					fileWriter.append("\"").append(internalCampaignData.getCategory()).append("\"").append(COMMA_DELIMITER);
 				}
-				//fileWriter.append(COMMA_DELIMITER);
-				//System.out.println("###########" + entry.getValue() + "#########");
 
-				//}
-
-				//if (entry.getKey().equals("media_type"))
-				//{
 				if (internalCampaignData.getMediaType() == null)
 				{
 					fileWriter.append("").append(COMMA_DELIMITER);
@@ -334,13 +304,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				{
 					fileWriter.append(internalCampaignData.getMediaType()).append(COMMA_DELIMITER);
 				}
-				//fileWriter.append(COMMA_DELIMITER);
-				//System.out.println("###########" + entry.getValue() + "#########");
 
-				//}
-
-				//if (entry.getKey().equals("size"))
-				//{
 				if (internalCampaignData.getSize() == null)
 				{
 					fileWriter.append("").append(COMMA_DELIMITER);
@@ -349,14 +313,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				{
 					fileWriter.append(internalCampaignData.getSize()).append(COMMA_DELIMITER);
 				}
-				//fileWriter.append(COMMA_DELIMITER);
-				//System.out.println("###########" + entry.getValue() + "#########");
 
-				//}
-
-
-				//if (entry.getKey().equals("source_page"))
-				//{
 				if (internalCampaignData.getSourcePage() == null)
 				{
 					fileWriter.append("").append(COMMA_DELIMITER);
@@ -374,10 +331,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				{
 					fileWriter.append(internalCampaignData.getIcid()).append(COMMA_DELIMITER);
 				}
-
-				//fileWriter.append(COMMA_DELIMITER);
-				//System.out.println("###########" + entry.getValue() + "#########");
-				//}
 
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}
@@ -416,15 +369,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	public String findCategoryLink(final String categoryId)
 	{
 		String finalCategoryId = "";
-		//System.out.println(catId.indexOf("href='"));
 		final int ind1 = categoryId.indexOf("href='");
-		//System.out.println("ind1 : " + ind1);
+
 		if (ind1 != -1)
 		{
 			final int ind2 = categoryId.indexOf("'", ind1 + 6);
-			//System.out.println("ind2 : " + ind2);
 			finalCategoryId = categoryId.substring(ind1 + 6, ind2);
-			//System.out.println("Final : " + finalString);
 		}
 		else
 		{
