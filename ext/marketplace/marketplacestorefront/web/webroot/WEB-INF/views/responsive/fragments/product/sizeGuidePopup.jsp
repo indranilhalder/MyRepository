@@ -348,7 +348,7 @@
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
 																								<c:choose>
 											    <c:when test="${empty sizeSelectedSizeGuide}">
-													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</option>
 												</c:when>
 												<c:otherwise>
 													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
@@ -501,7 +501,7 @@
 </div>
 <script>
 $(document).ready(function(){
-
+	setTimeout(function(){ $('#popUpModal').modal('show'); }, 500);
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,
@@ -525,11 +525,15 @@ $("#add_to_wishlist-sizeguide").click(function(){
 	 $(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
 	return false;
 });
-
-$("#noProductForSelectedSeller").hide();
-$("#productDetails").show();
-$("#price").show();
-
+	$("#noProductForSelectedSeller").hide();
+	$("#productDetails").show();
+	$("#price").show();
+	
+	/* $('body').on('hidden.bs.modal', '#popUpModal', function () {
+		  $(this).removeData('bs.modal');
+		}); */
+	
+	
 });
 
 
@@ -763,4 +767,6 @@ function loadDefaultWishListName_SizeGuide() {
 		$('input.wishlist#add_to_wishlist-sizeguide').popover('hide');
 		}, 1500);
 	}
+	
+
 </script> 	
