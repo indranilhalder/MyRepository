@@ -97,7 +97,8 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
 
-	private static final String SEQUENCE_NUMBER = "sequenceNumber";
+	private static final String SEQUENCE_NUMBER = "SequenceNumber";
+	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
@@ -195,6 +196,7 @@ public class HomePageController extends AbstractPageController
 			{
 				final JSONObject showCaseItemJson = new JSONObject();
 				showCaseItemJson.put("compId", showcaseItem.getUid());
+				showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
 				if (null != showCaseComponent.getLayout() && showCaseComponent.getLayout().equals(ShowCaseLayout.BRANDSHOWCASE))
 				{
 					if (null != showcaseItem.getLogo() && StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
@@ -202,7 +204,6 @@ public class HomePageController extends AbstractPageController
 						brandLogoUrl = showcaseItem.getLogo().getURL();
 					}
 					showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
-					showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
 				}
 				else
 				{
@@ -331,34 +332,56 @@ public class HomePageController extends AbstractPageController
 				{
 					String imageURL = "";
 					String text = "";
-					String linkUrl = "";
+					String linkUrl = "#";
 
 					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getCollectionItems())
 					{
 						final JSONObject bestPickItemJson = new JSONObject();
 
-						if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
+						if (null != bestPickItem)
 						{
-							imageURL = bestPickItem.getMedia().getURL();
+							if (null != bestPickItem.getMedia())
+							{
+								if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
+								{
+									imageURL = bestPickItem.getMedia().getURL();
+								}
+
+							}
+							else
+							{
+								LOG.info("No Media for this item");
+								imageURL = MISSING_IMAGE_URL;
+							}
+
+							bestPickItemJson.put("imageUrl", imageURL);
+
+							if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
+							{
+								text = bestPickItem.getContent();
+							}
+							else
+							{
+								LOG.info("No text for this item");
+							}
+							bestPickItemJson.put("text", text);
+
+							if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
+							{
+								linkUrl = bestPickItem.getUrl();
+							}
+							else
+							{
+								LOG.info("No URL for this item");
+							}
+							bestPickItemJson.put("url", linkUrl);
+							subComponentJsonArray.add(bestPickItemJson);
+
 						}
-
-						bestPickItemJson.put("imageUrl", imageURL);
-
-						if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
+						else
 						{
-							text = bestPickItem.getContent();
+							LOG.info("No instance of bestPickCarouselComponent found!!!");
 						}
-
-						bestPickItemJson.put("text", text);
-
-						if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
-						{
-							linkUrl = bestPickItem.getUrl();
-						}
-
-						bestPickItemJson.put("url", linkUrl);
-
-						subComponentJsonArray.add(bestPickItemJson);
 					}
 				}
 				bestPicks.put("subItems", subComponentJsonArray);
@@ -459,20 +482,45 @@ public class HomePageController extends AbstractPageController
 
 
 	/* Home Page Promotional Banner */
-	@SuppressWarnings("boxing")
 	@ResponseBody
 	@RequestMapping(value = "/getPromoBannerHomepage", method = RequestMethod.GET)
 	public JSONObject getPromoBannerHomepage()
 	{
-		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
-		final JSONObject promoBannerJson = new JSONObject();
 		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
 				"Section4ASlot-Homepage", "Online");
-		if (CollectionUtils.isNotEmpty(homepageSection4ASlot.getCmsComponents()))
-		{
-			components = homepageSection4ASlot.getCmsComponents();
-		}
 
+		return getJsonBanner(homepageSection4ASlot, "promo");
+	}
+
+	/* Home Page StayQued */
+	@ResponseBody
+	@RequestMapping(value = "/getStayQuedHomepage", method = RequestMethod.GET)
+	public JSONObject getStayQuedHomepage()
+	{
+		final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section5ASlot-Homepage", "Online");
+		return getJsonBanner(homepageSection5ASlot, "stayQued");
+
+	}
+
+
+	public JSONObject getJsonBanner(final ContentSlotModel slot, final String compType)
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject bannerJson = new JSONObject();
+		String seqNum = null;
+		if ("promo".equalsIgnoreCase(compType))
+		{
+			seqNum = SEQUENCE_NUMBER;
+		}
+		else
+		{
+			seqNum = SEQUENCE_NUMBER_STAYQUED;
+		}
+		if (CollectionUtils.isNotEmpty(slot.getCmsComponents()))
+		{
+			components = slot.getCmsComponents();
+		}
 
 		for (final AbstractCMSComponentModel component : components)
 		{
@@ -480,88 +528,70 @@ public class HomePageController extends AbstractPageController
 			if (component instanceof MplSequentialBannerComponentModel)
 			{
 				final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
-				final int firstSequenceNumber = 1;
+				//final int firstSequenceNumber = 1;
 				//Show the default banner for a new session
-				if (sessionService.getAttribute(SEQUENCE_NUMBER) == null)
+				int setNum = 0;
+				LOG.info("Session value :::" + sessionService.getAttribute(seqNum));
+				if (sessionService.getAttribute(seqNum) == null)
 				{
-					if (getBannerforSequenceNumber(firstSequenceNumber, promoBanner) instanceof MplBigPromoBannerComponentModel)
-					{
-						final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
-								firstSequenceNumber, promoBanner);
-						promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-
-						promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					}
-
-					if (getBannerforSequenceNumber(firstSequenceNumber, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
-					{
-						final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
-								firstSequenceNumber, promoBanner);
-						promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-
-						promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					}
-
-					sessionService.setAttribute(SEQUENCE_NUMBER, firstSequenceNumber);
+					setNum = 1;
 				}
-
-
 				else
 				{
-					final int lastSequenceNumber = (int) sessionService.getAttribute(SEQUENCE_NUMBER);
+					final int lastSequenceNumber = (int) sessionService.getAttribute(seqNum);
 					final int nextSequenceNumber = lastSequenceNumber + 1;
 
-					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) != null)
+					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner, compType) != null)
 					{
-
-						if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) instanceof MplBigPromoBannerComponentModel)
-						{
-							final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
-									nextSequenceNumber, promoBanner);
-							promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-
-							promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-						}
-
-						if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
-						{
-							final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
-									nextSequenceNumber, promoBanner);
-							promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-
-							promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-						}
-						sessionService.setAttribute(SEQUENCE_NUMBER, nextSequenceNumber);
+						setNum = nextSequenceNumber;
 					}
 					else
 					{
-						if (getBannerforSequenceNumber(firstSequenceNumber, promoBanner) instanceof MplBigPromoBannerComponentModel)
-						{
-							final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
-									firstSequenceNumber, promoBanner);
-							promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-
-							promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-						}
-
-						if (getBannerforSequenceNumber(firstSequenceNumber, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
-						{
-							final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
-									firstSequenceNumber, promoBanner);
-							promoBannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-
-							promoBannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-						}
-						sessionService.setAttribute(SEQUENCE_NUMBER, firstSequenceNumber);
+						setNum = 1;
 					}
 
+
 				}
+
+
+				if (getBannerforSequenceNumber(setNum, promoBanner, compType) instanceof MplBigPromoBannerComponentModel)
+				{
+					final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
+							setNum, promoBanner, compType);
+
+					bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+					bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+					bannerJson.put("majorPromoText", bannerImage.getMajorPromoText());
+					bannerJson.put("minorPromo1Text", bannerImage.getMinorPromo1Text());
+					bannerJson.put("minorPromo2Text", bannerImage.getMinorPromo2Text());
+
+				}
+
+				if (getBannerforSequenceNumber(setNum, promoBanner, compType) instanceof MplBigFourPromoBannerComponentModel)
+				{
+					final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
+							setNum, promoBanner, compType);
+
+					bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+					bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+					bannerJson.put("promoText1", bannerImage.getPromoText1());
+					bannerJson.put("promoText2", bannerImage.getPromoText2());
+					bannerJson.put("promoText3", bannerImage.getPromoText3());
+					bannerJson.put("promoText4", bannerImage.getPromoText4());
+				}
+
+				sessionService.setAttribute(seqNum, setNum);
+
+
+
 			}
 		}
-		return promoBannerJson;
 
+
+		return bannerJson;
 	}
-
 
 
 
@@ -573,7 +603,7 @@ public class HomePageController extends AbstractPageController
 	 * @return displayBanner
 	 */
 	private BannerComponentModel getBannerforSequenceNumber(final int sequenceNumber,
-			final MplSequentialBannerComponentModel component)
+			final MplSequentialBannerComponentModel component, final String sq)
 	{
 		BannerComponentModel displayBanner = null;
 		if (component.getBannersList() != null)
@@ -584,18 +614,39 @@ public class HomePageController extends AbstractPageController
 				if (banner instanceof MplBigPromoBannerComponentModel)
 				{
 					final MplBigPromoBannerComponentModel promoBanner = (MplBigPromoBannerComponentModel) banner;
-					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
+					if ("stayQued".equalsIgnoreCase(sq))
 					{
-						displayBanner = banner;
+						if (promoBanner.getSeqNumForStayQued() == Integer.valueOf(sequenceNumber))
+						{
+							displayBanner = banner;
+						}
 					}
+					else
+					{
+						if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
+						{
+							displayBanner = banner;
+						}
+					}
+
 				}
 				if (banner instanceof MplBigFourPromoBannerComponentModel)
 				{
 					final MplBigFourPromoBannerComponentModel promoBanner = (MplBigFourPromoBannerComponentModel) banner;
 
-					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
+					if ("stayQued".equalsIgnoreCase(sq))
 					{
-						displayBanner = banner;
+						if (promoBanner.getSeqNumForStayQued() == Integer.valueOf(sequenceNumber))
+						{
+							displayBanner = banner;
+						}
+					}
+					else
+					{
+						if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
+						{
+							displayBanner = banner;
+						}
 					}
 
 				}
@@ -604,6 +655,62 @@ public class HomePageController extends AbstractPageController
 		}
 		return displayBanner;
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getCollectionShowcase", method = RequestMethod.GET)
+	public JSONObject getCollectionShowcase()
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		JSONObject collectionShowcase = new JSONObject();
+		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section6Slot-Homepage", "Online");
+		if (CollectionUtils.isNotEmpty(homepageSection6Slot.getCmsComponents()))
+		{
+			components = homepageSection6Slot.getCmsComponents();
+		}
+
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			LOG.info("Found Component>>>>with id :::" + component.getUid());
+
+			if (component instanceof MplShowcaseComponentModel)
+			{
+				final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
+				collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
+			}
+		}
+
+
+		return collectionShowcase;
+
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getShowcaseContent", method = RequestMethod.GET)
+	public JSONObject getShowcaseContent(@RequestParam(value = "id") final String componentId)
+	{
+		MplShowcaseItemComponentModel showcaseItem = null;
+		JSONObject showCaseItemJson = new JSONObject();
+		LOG.info("Finding component with id::::" + componentId);
+		try
+		{
+
+			showcaseItem = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(componentId);
+			LOG.info("Found component with id::::" + componentId);
+
+			showCaseItemJson = getJSONForShowCaseItem(showcaseItem, ShowCaseLayout.COLLECTIONSHOWCASE);
+
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			LOG.error(e.getStackTrace());
+			LOG.error("Could not find component with id::::" + componentId);
+
+		}
+		return showCaseItemJson;
+	}
+
 
 	/**
 	 * @param productData

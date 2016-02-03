@@ -18,6 +18,7 @@ $storefrontContextRoot=$config-storefrontContextRoot
 
 #Brands You Love Media
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+;;tata_new_footer_logo.png;$siteResource/images/banners/homepage/tata_new_footer_logo.png;tata_new_footer_logo.png;"Tata CLiQ";
 ;;ascotlogo.png;$siteResource/images/logo/ascot.png;ascot.png;"Ascot Logo"
 ;;cromalogo.png;$siteResource/images/logo/croma.png;croma.png;"Croma Logo";
 ;;lovlogo.png;$siteResource/images/logo/L.O.V.png;L.O.V.png;"LOV Logo";
@@ -32,7 +33,10 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;;brandbanner4.png;$siteResource/images/banners/homepage/responsive/brandbanner4.png;brandbanner4.png;;
 ;;brandbanner5.png;$siteResource/images/banners/homepage/responsive/brandbanner5.png;brandbanner5.png;;
 ;;brandbanner6.png;$siteResource/images/banners/homepage/responsive/brandbanner6.png;brandbanner6.png;;
-
+#showcasebanner
+;;showcase1.png;$siteResource/images/banners/homepage/responsive/showcase1.png;showcase1.png;;
+;;showcase2.png;$siteResource/images/banners/homepage/responsive/showcase2.png;showcase2.png;;
+;;showcase3.png;$siteResource/images/banners/homepage/responsive/showcase3.png;showcase3.png;;
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];logo(code, $contentCV);bannerImage(code, $contentCV)
 ;;ZaraBrandShowcaseItem;zaralogo.png;brandbanner1.png
 ;;NuonBrandShowcaseItem;nuonlogo.jpg;brandbanner2.png
@@ -40,7 +44,10 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];logo(co
 ;;AscotBrandShowcaseItem;ascotlogo.png;brandbanner6.png
 ;;TitanBrandShowcaseItem;titanlogo.png;brandbanner5.png
 ;;CromaBrandShowcaseItem;cromalogo.png;brandbanner4.png
-
+#CollectionShowcase
+;;PrettyInPetalsShowCaseitem;;showcase1.png
+;;CelebrationOfColorShowCaseitem;;showcase2.png
+;;IndigoSpectrumShowCaseitem;;showcase3.png
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];text;bannerText
 ;;ZaraBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Zara Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Zara Collections SS16</p>:
 <button class='visit-store'>visit the store</button>"
@@ -54,9 +61,17 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];text;ba
 <button class='visit-store'>visit the store</button>"
 ;;CromaBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Croma Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Croma Collections SS16</p>:
 <button class='visit-store'>visit the store</button>"
+#CollectionShowcase
+;;PrettyInPetalsShowCaseitem;"<h1>Colour is everything...</h1><p class='showcase-para'>Find excusive collections only at Tata Cliq</p><a class='button maroon btn-red'>Read the full story</a>
+ <a class='button trending-button btn-trans'>View more showcase story</a>"
+;;CelebrationOfColorShowCaseitem;"<h1>Colour is everything...</h1><p class='showcase-para'>Find excusive collections only at Tata Cliq</p><a class='button maroon btn-red'>Read the full story</a>
+ <a class='button trending-button btn-trans'>View more showcase story</a>"
+;;IndigoSpectrumShowCaseitem;"<h1>Colour is everything...</h1><p class='showcase-para'>Find excusive collections only at Tata Cliq</p><a class='button maroon btn-red'>Read the full story</a>
+ <a class='button trending-button btn-trans'>View more showcase story</a>"
 
 UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];title
 ;;BrandsYouLoveComponent;"The Brands You Love"
+;;ShowcaseComponent;"Showcase"
 
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];product1(code,$productCV);product2(code,$productCV)
 ;;ZaraBrandShowcaseItem;98765432;98765433
@@ -65,7 +80,9 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];product
 ;;AscotBrandShowcaseItem;98765432;98765433
 ;;TitanBrandShowcaseItem;98765432;98765433
 ;;CromaBrandShowcaseItem;98765432;98765433
-
+;;PrettyInPetalsShowCaseitem;98765432
+;;CelebrationOfColorShowCaseitem;98765433
+;;IndigoSpectrumShowCaseitem;98765432
 
 ###### Best Picks carousel component
 
@@ -104,6 +121,13 @@ UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];banne
 ;;TMPHomepagePromotionBannerComponent3;banner3.jpg;
 
 #### Promotion Banner Ends#########
+
+##########Showcase###################
+UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerText
+;;PrettyInPetalsShowCaseitem;"Pretty in Petals"
+;;CelebrationOfColorShowCaseitem;"The Celebration of Colour"
+;;IndigoSpectrumShowCaseitem;"Indigo Spectrum"
+###########Showcase Ends#############
 UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 #;;TMPHomepageCategoryCarousel;The products you care about.;
 ;;TMPWomenMainCategoriesCarouselComponent;We all have a story to tell
@@ -841,7 +865,22 @@ INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=tr
 INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
 ;;ApparelUKHompageServiceBannerComponent;apparel-uk-homepage-service-en
 
+####Home Page Section 5A
+#### StayQued Section #########
 
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+# Added the Multiple Homepage Banners for TMP only for desktop and widescreen resolution
+;;stayQuedBanner1.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Men_EN_01_350W.jpg;Appa_350x430_Men_EN_01_350W.jpg;"StayQued Banner1";
+;;stayQuedBanner2.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Women_EN_01_350W.jpg;Appa_350x430_Women_EN_01_350W.jpg;"StayQued Banner2";
+;;stayQuedBanner3.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Youth_EN_01_350W.jpg;Appa_350x430_Youth_EN_01_350W.jpg;"StayQued Banner3";
+
+#Added this line
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;TMPHomepageStayQuedComponent1;stayQuedBanner1.jpg;
+;;TMPHomepageStayQuedComponent2;stayQuedBanner2.jpg;
+;;TMPHomepageStayQuedComponent3;stayQuedBanner3.jpg;
+
+#### StayQued Ends#########
 
 
 
@@ -874,6 +913,9 @@ INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$pi
 #;;TwitterImageComponent;twitter.png
 #;;PinterestImageComponent;pinterest.png
 
+### Added Footer Logo in Navigation Node###
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];media(code,$contentCV)[lang=$lang]
+;TataMarketplaceNavNode;;tata_new_footer_logo.png
 
 # Media Content
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];

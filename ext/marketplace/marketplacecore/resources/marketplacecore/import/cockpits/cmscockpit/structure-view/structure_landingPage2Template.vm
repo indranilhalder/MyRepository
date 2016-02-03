@@ -64,7 +64,12 @@
 			</tr>
 			<tr>
 				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Section5" />
+					<cockpit code="Section5A" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Section6" />
 				</td>
 			</tr>
 			<tr>
@@ -78,3 +83,4 @@
 		<cockpit code="editor" />
 	</div>
 </div>
+

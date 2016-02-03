@@ -329,7 +329,7 @@ function getBestPicksAjaxCall(){
 							
 						
 				});
-			renderHtml += "</div> <a href='#' class='view-cliq-offers'> View Cliq Offers </a>";	
+			renderHtml += "</div> <a href='/store/o/all' class='view-cliq-offers'> View Cliq Offers </a>";	
 			$("#bestPicks").html(renderHtml);
 			//console.log()
 		},
@@ -427,13 +427,24 @@ function getPromoBannerHomepage(){
 		success : function(response) {
 			console.log(response.bannerImage);
 			var defaultHtml = "";
+			var bannerUrlLink = response.bannerUrlLink;
+			var bannerImage = response.bannerImage;
+			var majorPromoText = response.majorPromoText;
+			var minorPromo2Text = response.minorPromo2Text;
+			var bannerAltText = response.bannerAltText;
+			var minorPromo1Text = response.minorPromo1Text;
+			var promoText1 = response.promoText1;
+			var promoText2 = response.promoText2;
+			var promoText3 = response.promoText3;
+			var promoText4 = response.promoText4;
+			
 			//renderHtml = '<img src="' + response.bannerImage +'"/>';
-			renderHtml = '<a href="' + response.bannerUrlLink + '">' + '<img src="' + response.bannerImage +'"/>' +'</a>'; 
+			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
 			$('#promobannerhomepage').html(renderHtml);
 
 		},
 		error : function() {
-			console.log('Failure in Promo!!!');
+			globalErrorPopup('Failure in Promo!!!');
 		}
 	});
 }
@@ -444,3 +455,156 @@ if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').va
 	getPromoBannerHomepage();
 }
 /*Promotional Banner Section Ends*/
+
+
+
+/*StayQued Section starts*/
+function getStayQuedHomepage(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getStayQuedHomepage",
+
+		success : function(response) {
+			console.log(response.bannerImage);
+			var defaultHtml = "";
+			var bannerUrlLink = response.bannerUrlLink;
+			var bannerImage = response.bannerImage;
+			var majorPromoText = response.majorPromoText;
+			var minorPromo2Text = response.minorPromo2Text;
+			var bannerAltText = response.bannerAltText;
+			var minorPromo1Text = response.minorPromo1Text;
+			var promoText1 = response.promoText1;
+			var promoText2 = response.promoText2;
+			var promoText3 = response.promoText3;
+			var promoText4 = response.promoText4;
+			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
+			$('#stayQued').html(renderHtml);
+
+		},
+		error : function() {
+			globalErrorPopup('Failure in StayQued!!!');
+		}
+	});
+}
+
+
+if ($('#stayQued').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	
+	getStayQuedHomepage();
+}
+/*StayQued Section Ends*/
+
+if ($('#showcase').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	
+	getShowCaseAjaxCall();
+}
+
+//AJAX call for Showcase
+function getShowCaseAjaxCall() {
+	$
+			.ajax({
+				type : "GET",
+				dataType : "json",
+				url : ACC.config.encodedContextPath + "/getCollectionShowcase",
+
+				success : function(response) {
+					console.log(response.subComponents);
+					defaultComponentId="";
+					renderHtml = "<h1>" + response.title + "</h1>"
+							+ "<div class='showcase-heading showcase-switch'>";
+					$
+							.each(
+									response.subComponents,
+									function(k, v) {
+										if (!v.showByDefault) {
+											renderHtml += "<div class='showcaseItem'><a id='"
+													+ v.compId
+													+ "'>"+v.headerText+"</a></div>";
+										} else {
+											renderHtml += "<div class='showcaseItem'><a id='"
+												+ v.compId
+												+ "' class='showcase-border'>"+v.headerText+"</a></div>";
+											defaultComponentId= v.compId;
+										}
+
+									});
+					renderHtml += "</div>";
+					$('#showcase').html(renderHtml);
+					
+					getShowcaseContentAjaxCall(defaultComponentId);
+				},
+				error : function() {
+					//globalErrorPopup('Failure!!!');
+					console.log("Error while getting showcase");
+				}
+			});
+}
+//Get Showcase Content AJAX
+function getShowcaseContentAjaxCall(id) {
+	if (window.localStorage
+			&& (html = window.localStorage.getItem("showcaseContent-" + id)) && html != "") {
+		// console.log("Local");
+		$('.about-one showcase-section').remove();
+		$('#showcase').append(decodeURI(html));
+	}
+	else{
+		
+	$
+			.ajax({
+				type : "GET",
+				dataType : "json",
+				
+				url : ACC.config.encodedContextPath
+						+ "/getShowcaseContent",
+				data : {
+					"id" : id
+				},
+				success : function(response) {
+					$('.about-one.showcase-section').remove();
+					defaultHtml = "<div class='about-one showcase-section'>";
+					if (typeof response.bannerImageUrl !=="undefined") {
+						defaultHtml += "<div class='desc-section'><img src='"+ response.bannerImageUrl
+						+ "'></img></div>";		
+					}
+					
+				
+					if (typeof response.text !== "undefined") {
+						defaultHtml += "<div class='desc-section'>"+response.text+"</div>"
+						
+					}
+					
+					if (typeof response.firstProductImageUrl !== "undefined") {
+						
+						defaultHtml += " <div class='desc-section'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
+								+ response.firstProductImageUrl
+								+ "'></img></a></div>";
+					}
+
+					defaultHtml += "</div>";
+					
+					$('#showcase').append(defaultHtml);
+					
+					window.localStorage.setItem("showcaseContent-" + id,
+							encodeURI(defaultHtml));
+
+				},
+				error : function() {
+					console.log("Error while getting showcase content");
+				}
+			});
+	}
+}
+// ENd AJAX CALL
+
+$(document).on("click", ".showcaseItem",
+		function() {
+			var id=$(this).find('a').attr("id");
+			$(".showcaseItem").find("a").removeClass("showcase-border");
+			$(this).find('a').addClass('showcase-border');
+			
+			$('.about-one.showcase-section').remove();
+			 getShowcaseContentAjaxCall(id);
+		});
+

@@ -29,7 +29,10 @@
 					<td><cockpit code="property" value="MplBigPromoBannerComponent.SequenceNumber"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
-				
+				<tr>
+					<td><cockpit code="property" value="MplBigPromoBannerComponent.SeqNumForStayQued"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
 			</tbody>
 		</table>
 	]]>
