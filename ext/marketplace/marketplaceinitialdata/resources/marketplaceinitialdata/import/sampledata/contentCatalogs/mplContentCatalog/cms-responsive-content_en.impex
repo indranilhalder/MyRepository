@@ -128,6 +128,22 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerT
 ;;CelebrationOfColorShowCaseitem;"The Celebration of Colour"
 ;;IndigoSpectrumShowCaseitem;"Indigo Spectrum"
 ###########Showcase Ends#############
+####Home Page Section 5A
+#### StayQued Section #########
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+# Added the Multiple Homepage Banners for TMP only for desktop and widescreen resolution
+;;stayQuedBanner1.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Men_EN_01_350W.jpg;Appa_350x430_Men_EN_01_350W.jpg;"StayQued Banner1";
+;;stayQuedBanner2.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Women_EN_01_350W.jpg;Appa_350x430_Women_EN_01_350W.jpg;"StayQued Banner2";
+;;stayQuedBanner3.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Youth_EN_01_350W.jpg;Appa_350x430_Youth_EN_01_350W.jpg;"StayQued Banner3";
+
+#Added this line
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;TMPHomepageStayQuedComponent1;stayQuedBanner1.jpg;
+;;TMPHomepageStayQuedComponent2;stayQuedBanner2.jpg;
+;;TMPHomepageStayQuedComponent3;stayQuedBanner3.jpg;
+
+#### StayQued Ends#########
 UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 #;;TMPHomepageCategoryCarousel;The products you care about.;
 ;;TMPWomenMainCategoriesCarouselComponent;We all have a story to tell
@@ -865,22 +881,7 @@ INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=tr
 INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];$mediaContainer
 ;;ApparelUKHompageServiceBannerComponent;apparel-uk-homepage-service-en
 
-####Home Page Section 5A
-#### StayQued Section #########
 
-INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
-# Added the Multiple Homepage Banners for TMP only for desktop and widescreen resolution
-;;stayQuedBanner1.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Men_EN_01_350W.jpg;Appa_350x430_Men_EN_01_350W.jpg;"StayQued Banner1";
-;;stayQuedBanner2.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Women_EN_01_350W.jpg;Appa_350x430_Women_EN_01_350W.jpg;"StayQued Banner2";
-;;stayQuedBanner3.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Youth_EN_01_350W.jpg;Appa_350x430_Youth_EN_01_350W.jpg;"StayQued Banner3";
-
-#Added this line
-UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
-;;TMPHomepageStayQuedComponent1;stayQuedBanner1.jpg;
-;;TMPHomepageStayQuedComponent2;stayQuedBanner2.jpg;
-;;TMPHomepageStayQuedComponent3;stayQuedBanner3.jpg;
-
-#### StayQued Ends#########
 
 
 

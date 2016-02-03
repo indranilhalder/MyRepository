@@ -444,7 +444,7 @@ function getPromoBannerHomepage(){
 
 		},
 		error : function() {
-			globalErrorPopup('Failure in Promo!!!');
+			console.log('Failure in Promo!!!');
 		}
 	});
 }
@@ -484,7 +484,7 @@ function getStayQuedHomepage(){
 
 		},
 		error : function() {
-			globalErrorPopup('Failure in StayQued!!!');
+			console.log('Failure in StayQued!!!');
 		}
 	});
 }
