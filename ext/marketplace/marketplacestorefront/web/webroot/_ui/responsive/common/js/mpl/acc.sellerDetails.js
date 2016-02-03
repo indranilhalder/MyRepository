@@ -1,25 +1,25 @@
   var sellerDetailsArray=[];
 /*Display next list of sellers after clicking next link*/
-  var pageCount=1;
+  var sellerPageCount=1;
 function nextPage()
 {
-		++pageCount;
-		if(pageCount>1)
+		++sellerPageCount;
+		if(sellerPageCount>1)
 		{
 			$("#previousPageDev").show();	
 		}
-		setSellerLimits(pageCount);	
+		setSellerLimits(sellerPageCount);	
 		focusOnElement();
 }
 /*Display previous list of sellers after clicking previous link*/	
 function previousPage()
 {
-	pageCount= pageCount-1;
-	if(pageCount<Math.ceil((sellerDetailsArray.length)/pageLimit))
+	sellerPageCount= sellerPageCount-1;
+	if(sellerPageCount<Math.ceil((sellerDetailsArray.length)/pageLimit))
 	{
 		$("#nextPageDev").show();	
 	}
-	setSellerLimits(pageCount);
+	setSellerLimits(sellerPageCount);
 	focusOnElement();
 }
 	
@@ -455,16 +455,16 @@ function focusOnElement() {
 	 function sortSellers(value)
 	 {
 		 if(value == 1)
-	    	 sortPrice(pageCount);
+	    	 sortPrice(sellerPageCount);
 	     else if(value ==2)
-	    	 sortPriceDesc(pageCount);
+	    	 sortPriceDesc(sellerPageCount);
 	     else if(value ==3)
-	    	 sellerNameAsc(pageCount);
+	    	 sellerNameAsc(sellerPageCount);
 	     else if(value == 4)
-	    	 sellerNameDesc(pageCount);
-		 /*pageCount=1;*/
+	    	 sellerNameDesc(sellerPageCount);
+		 /*sellerPageCount=1;*/
 	 }
-	 function sortPrice(pageCount){
+	 function sortPrice(sellerPageCount){
 		 var buyboxSeller = $("#ussid").val();
 		     var aFinalPrice="";
 		     var bFinalPrice="";
@@ -484,11 +484,11 @@ function focusOnElement() {
 			  return aFinalPrice - bFinalPrice;
 		});
 		      fetchSellers(sellerDetailsArray,buyboxSeller)
-			  setSellerLimits(pageCount);
+			  setSellerLimits(sellerPageCount);
 	 }
 	
 	 
-	 function sortPriceDesc(pageCount){
+	 function sortPriceDesc(sellerPageCount){
 		 var buyboxSeller = $("#ussid").val();
 		 var aFinalPrice="";
 	     var bFinalPrice="";
@@ -508,7 +508,7 @@ function focusOnElement() {
 			 
 			});
 		  fetchSellers(sellerDetailsArray,buyboxSeller)
-		  setSellerLimits(pageCount);
+		  setSellerLimits(sellerPageCount);
 		 }
 
 	 $(document).ready(function(){

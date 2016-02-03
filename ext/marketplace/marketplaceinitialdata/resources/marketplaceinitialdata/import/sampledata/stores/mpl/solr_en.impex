@@ -145,3 +145,43 @@ UPDATE SolrSort;indexedType(identifier)[unique=true];code[unique=true];name[lang
 ;$solrIndexedType;price-desc;Price Descending
 ;$solrIndexedType;isOffersExisting;Discount
 ;$solrIndexedType;isProductNew;Newest
+
+
+
+# for footwear
+# Solr Indexed Property
+UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
+ ;$solrIndexedType		   ;stylecodefootwear						   ;"Style Code"
+ ;$solrIndexedType		   ;brandcolorfootwear					       ;"Brand Colour"
+ ;$solrIndexedType		   ;collectionname						       ;"Collection Name"
+ ;$solrIndexedType		   ;seasonfootwear					           ;"Season"
+ ;$solrIndexedType		   ;colorfamilyfootwear						   ;"Color Family"
+ ;$solrIndexedType		   ;unisex						   			   ;"Unisex"
+ ;$solrIndexedType		   ;occasion					       		   ;"Occasion"
+ ;$solrIndexedType		   ;stylenotefootwear						   ;"Style Note"
+ ;$solrIndexedType		   ;sizetype					       		   ;"Size Type"
+ ;$solrIndexedType		   ;footsize						   		   ;"Foot Size"
+ ;$solrIndexedType		   ;sizechart					               ;"Size Chart"
+ ;$solrIndexedType		   ;accessoriessize						       ;"Accessories Size"
+ ;$solrIndexedType		   ;uppermaterial					           ;"Upper Material"
+ ;$solrIndexedType		   ;liningmaterial						       ;"Lining Material"
+ ;$solrIndexedType		   ;solematerial					           ;"Sole Material"
+ ;$solrIndexedType		   ;shoeheight						           ;"Shoe Height"
+ ;$solrIndexedType		   ;heelheightcategory					       ;"Heel Height Category"
+ ;$solrIndexedType		   ;heeltype						           ;"Heel Type"
+ ;$solrIndexedType		   ;heelheight					               ;"Heel Height"
+ ;$solrIndexedType		   ;fastening						           ;"Fastening"
+ ;$solrIndexedType		   ;character					               ;"Character"
+ ;$solrIndexedType		   ;careinstructionfootwear					   ;"Care Instructions"
+ ;$solrIndexedType		   ;technologyusedfootwear					   ;"Technology Used" 
+ ;$solrIndexedType		   ;agekids					                   ;"Age Kids"
+ ;$solrIndexedType		   ;recommendedfor						       ;"Recommended For"
+ ;$solrIndexedType		   ;weightfootwear					           ;"Weight of Product"
+ ;$solrIndexedType		   ;sandaltype						           ;"Sandal Type"
+ ;$solrIndexedType		   ;shoeboottype					           ;"Shoe/Boot Type"
+ ;$solrIndexedType		   ;clogflipfloptype						   ;"Clog/Flip Flop Type"
+ ;$solrIndexedType		   ;tipshape					               ;"Tip Shape"
+ ;$solrIndexedType		   ;shoeaccessoriestype						   ;"Shoe Accessories Type"
+ ;$solrIndexedType		   ;shoecaretype					           ;"Shoe Care Type"
+ ;$solrIndexedType		   ;suitablefor						           ;"Suitable for"
+ ;$solrIndexedType		   ;weightsportsfootwear					   ;"Weight of Product"
