@@ -174,7 +174,7 @@ function getBrandsYouLoveAjaxCall() {
 					getBrandsYouLoveContentAjaxCall(defaultComponentId);
 				},
 				error : function() {
-					//globalErrorPopup('Failure!!!');
+					// globalErrorPopup('Failure!!!');
 					console.log("Error while getting brands you love");
 				}
 			});
@@ -208,7 +208,15 @@ function getBrandsYouLoveContentAjaxCall(id) {
 						
 						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></a></div>";
+								+ "'></img></a>";
+						if (typeof response.firstProductTitle !== "undefined"){
+							defaultHtml +="<p class='product-name'>"+response.firstProductTitle+"</p>";
+						}
+						if (typeof response.firstProductPrice !== "undefined"){
+							defaultHtml +="<p class='price price'><p class='normal'>"+response.firstProductPrice+"</p>";
+			                  
+						}
+						defaultHtml +="</div>"
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
 					if (typeof response.text !== "undefined") {
@@ -228,7 +236,15 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					if (typeof response.secondproductImageUrl !== "undefined") {
 						defaultHtml += "<div class='home-brands-you-love-side-image right'><a href='"+ACC.config.encodedContextPath+response.secondProductUrl+"'><img src='"
 								+ response.secondproductImageUrl
-								+ "'></img></a></div>";
+								+ "'></img></a>";
+						if (typeof response.secondProductTitle !== "undefined"){
+							defaultHtml +="<p class='product-name'>"+response.secondProductTitle+"</p>";
+						}
+						if (typeof response.secondProductPrice !== "undefined"){
+							defaultHtml +="<p class='price price'><p class='normal'>"+response.secondProductPrice+"</p>";
+			                  
+						}
+						defaultHtml +="</div>"
 					}
 
 					defaultHtml += "</div>";
@@ -286,7 +302,7 @@ setInterval(function() {
 
 
 
-//AJAX CALL BEST PICKS START
+// AJAX CALL BEST PICKS START
 if ($('#bestPicks').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
 	getBestPicksAjaxCall();
 }
@@ -331,7 +347,7 @@ function getBestPicksAjaxCall(){
 				});
 			renderHtml += "</div> <a href='/store/o/all' class='view-cliq-offers'> View Cliq Offers </a>";	
 			$("#bestPicks").html(renderHtml);
-			//console.log()
+			// console.log()
 		},
 		
 		error : function() {
@@ -355,7 +371,7 @@ function getBestPicksAjaxCall(){
 	});
 }
 
-//AJAX CALL BEST PICKS END
+// AJAX CALL BEST PICKS END
 
 function getNewAndExclusiveAjaxCall(){
 	
@@ -416,7 +432,7 @@ if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=
 }
 
 
-/*Promotional Banner Section starts*/
+/* Promotional Banner Section starts */
 function getPromoBannerHomepage(){
 	$
 	.ajax({
@@ -429,17 +445,16 @@ function getPromoBannerHomepage(){
 			var defaultHtml = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
-			var majorPromoText = response.majorPromoText;
-			var minorPromo2Text = response.minorPromo2Text;
 			var bannerAltText = response.bannerAltText;
-			var minorPromo1Text = response.minorPromo1Text;
 			var promoText1 = response.promoText1;
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
 			
+
 			//renderHtml = '<img src="' + response.bannerImage +'"/>';
-			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
+			renderHtml = promoText1; 
+
 			$('#promobannerhomepage').html(renderHtml);
 
 		},
@@ -454,11 +469,11 @@ if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').va
 	
 	getPromoBannerHomepage();
 }
-/*Promotional Banner Section Ends*/
+/* Promotional Banner Section Ends */
 
 
 
-/*StayQued Section starts*/
+/* StayQued Section starts */
 function getStayQuedHomepage(){
 	$
 	.ajax({
@@ -471,15 +486,12 @@ function getStayQuedHomepage(){
 			var defaultHtml = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
-			var majorPromoText = response.majorPromoText;
-			var minorPromo2Text = response.minorPromo2Text;
 			var bannerAltText = response.bannerAltText;
-			var minorPromo1Text = response.minorPromo1Text;
 			var promoText1 = response.promoText1;
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
-			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
+			renderHtml = '<h1><span><img src="stay-qued.png"></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+bannerUrlLink+'" class="button maroon">Read Article</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},
@@ -494,14 +506,21 @@ if ($('#stayQued').children().length == 0 && $('#ia_site_page_id').val()=='homep
 	
 	getStayQuedHomepage();
 }
-/*StayQued Section Ends*/
+/* StayQued Section Ends */
 
 if ($('#showcase').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
-	
+	if (window.localStorage) {
+		for ( var key in localStorage) {
+			if (key.indexOf("showcaseContent") >= 0) {
+				window.localStorage.removeItem(key);
+				console.log("Deleting.." + key);
+			}
+		}
+	}
 	getShowCaseAjaxCall();
 }
 
-//AJAX call for Showcase
+// AJAX call for Showcase
 function getShowCaseAjaxCall() {
 	$
 			.ajax({
@@ -536,12 +555,12 @@ function getShowCaseAjaxCall() {
 					getShowcaseContentAjaxCall(defaultComponentId);
 				},
 				error : function() {
-					//globalErrorPopup('Failure!!!');
+					// globalErrorPopup('Failure!!!');
 					console.log("Error while getting showcase");
 				}
 			});
 }
-//Get Showcase Content AJAX
+// Get Showcase Content AJAX
 function getShowcaseContentAjaxCall(id) {
 	if (window.localStorage
 			&& (html = window.localStorage.getItem("showcaseContent-" + id)) && html != "") {
@@ -579,8 +598,21 @@ function getShowcaseContentAjaxCall(id) {
 						
 						defaultHtml += " <div class='desc-section'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></a></div>";
-					}
+								+ "'></img></a>";
+						
+							defaultHtml +="<div class='showcase-center'>" ;
+							if (typeof response.firstProductTitle !== "undefined"){
+								defaultHtml +="<h3 class='product-name'>"+response.firstProductTitle+"</h3>";
+							}
+							if (typeof response.firstProductPrice !== "undefined"){
+								defaultHtml +="<div class='price price'><p class='normal'>"+response.firstProductPrice+"</p></div>";
+				                  
+							}	
+			                
+							defaultHtml +="</div>";
+			                  
+						}
+					
 
 					defaultHtml += "</div>";
 					
