@@ -28,7 +28,7 @@ public interface BuyBoxDao
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
-	Integer getBuyboxAvailableInventoryForSearch(String productCode, String productType) throws EtailNonBusinessExceptions;
+	Integer getBuyboxAvailableInventoryForSearch(String productCode) throws EtailNonBusinessExceptions;
 
 	//if all the sellers has zero stock
 	List<BuyBoxModel> buyBoxPriceNoStock(String productCode) throws EtailNonBusinessExceptions;

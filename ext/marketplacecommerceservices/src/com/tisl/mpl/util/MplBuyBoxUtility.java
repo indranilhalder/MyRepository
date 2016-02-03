@@ -60,6 +60,11 @@ public class MplBuyBoxUtility
 		return mrpPrice;
 	}
 
+	public Integer getBuyBoxAvailableInventory(final ProductModel productModel) throws EtailNonBusinessExceptions
+	{
+		return getBuyBoxInventory(productModel);
+	}
+
 	public String getLeastSizeProduct(final ProductModel productModel) throws EtailNonBusinessExceptions
 	{
 		final BuyBoxModel buyBoxWinnerModel = getBuyBoxPrice(productModel);
@@ -108,6 +113,47 @@ public class MplBuyBoxUtility
 
 		return buyBoxWinnerModel;
 	}
+
+
+
+	public Integer getBuyBoxInventory(final ProductModel productModel) throws EtailNonBusinessExceptions
+	{
+
+		String productCode = productModel.getCode();
+
+		// Run comparator and Get list of products codes for variants.
+		List<PcmProductVariantModel> sortedVariantsList = new ArrayList<PcmProductVariantModel>();
+		if (productModel instanceof PcmProductVariantModel)
+		{
+			final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
+			final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
+
+			if (baseProduct != null && baseProduct.getVariants() != null && baseProduct.getVariants().size() > 0)
+			{
+				sortedVariantsList = compareVariants(baseProduct, selectedVariantModel);
+				String variantProductsInCondition = "";
+				for (final PcmProductVariantModel pcmProductVariantModel : sortedVariantsList)
+				{
+					variantProductsInCondition = getInConditionProductCodes(pcmProductVariantModel.getCode(),
+							variantProductsInCondition);
+				}
+				productCode = variantProductsInCondition;
+			}
+
+		}
+
+		//Get simple product code other than variant
+		if (sortedVariantsList.size() == 0)
+		{
+			productCode = getInConditionProductCodes(productModel.getCode(), "");
+		}
+
+		//Get buybox inventory for simple/variant products
+		final Integer availableInventory = buyBoxService.getBuyboxInventoryForSearch(productCode);
+
+		return availableInventory;
+	}
+
 
 	public List<PcmProductVariantModel> compareVariants(final ProductModel baseProduct,
 			final PcmProductVariantModel selectedVariantModel)

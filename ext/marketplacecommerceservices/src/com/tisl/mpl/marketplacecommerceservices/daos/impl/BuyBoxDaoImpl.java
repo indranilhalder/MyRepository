@@ -162,8 +162,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public Integer getBuyboxAvailableInventoryForSearch(final String productCode, final String productType)
-			throws EtailNonBusinessExceptions
+	public Integer getBuyboxAvailableInventoryForSearch(final String productCode) throws EtailNonBusinessExceptions
 	{
 		try
 		{
@@ -171,22 +170,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			//Integer available = new Integer(0);
 			Integer available = Integer.valueOf(0);
 			final StringBuffer inventoryQuery = new StringBuffer(500);
-			inventoryQuery.append("SELECT SUM({bb.available}) FROM {BuyBox AS bb} where ");
 
-			if (productType.equalsIgnoreCase("simple"))
-			{
-				inventoryQuery
-						.append("{bb.product} = ?product AND ( {bb.delisted}  IS NULL or {bb.delisted} =0 )and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})  ");
-			}
-			if (productType.equalsIgnoreCase("variant"))
-			{
-				inventoryQuery
-						.append("{bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod} where {pprod.baseProduct} IN (	{{"
-
-								+ " 	select distinct{p.baseProduct} from {PcmProductVariant as p} where {p.code} = ?product"
-
-								+ " 	}})}})");
-			}
+			inventoryQuery.append("SELECT SUM({bb.available}) FROM {BuyBox AS bb} where {bb.product} IN (" + productCode
+					+ ")  AND ({bb.delisted}  IS NULL OR {bb.delisted} =0  ) and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate}) ");
 
 			final FlexibleSearchQuery instockQuery = new FlexibleSearchQuery(inventoryQuery.toString());
 			final List resultClassList = new ArrayList();

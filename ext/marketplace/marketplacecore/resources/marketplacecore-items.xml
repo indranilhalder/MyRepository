@@ -1108,7 +1108,6 @@
 			<itemtype code="Media" extends="AbstractMedia"
 				jaloclass="de.hybris.platform.jalo.media.Media" autocreate="false"
 				generate="true">
-
 				<attributes>
 					<attribute qualifier="mediaStatus" type="mediaStatusEnum">
 						<description>Used to define Media Status.</description>
@@ -1135,6 +1134,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="MEDIASIDIDX">
+						<key attribute="owner"/>
+					</index>
+				</indexes>
 			</itemtype>
 
 			<itemtype code="GlobalIdentifier" autocreate="true"
@@ -4858,6 +4862,11 @@
 				<indexes>
 					<index name="SellerIDX">
 						<key attribute="sellerArticleSKU" />
+					</index>
+					<index name="MPLZONEDELVYMODEVALIDX">
+						<key attribute="deliveryMode"/>
+						<key attribute="sellerArticleSKU" />
+						<key attribute="currency"/>
 					</index>
 				</indexes>
 			</itemtype>
