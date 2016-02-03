@@ -7,6 +7,8 @@
     height: auto;
     background: #F7F8FA;
     overflow: hidden;
+    clear:both;
+    padding:20px 0;
 }
 .showcase h1 {
     text-align: center;
@@ -69,7 +71,7 @@ a.button.trending-button {
     display: block;
     margin: 0px auto;
     height: 50px;
-    line-height: 50px;
+    line-height: 28px;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -82,7 +84,7 @@ a.button.maroon {
     display: block;
     margin: 20px auto;
     height: 50px;
-    line-height: 50px;
+    line-height: 28px;
     letter-spacing: 1px;
     font-weight: bold;
     text-transform: uppercase;
@@ -103,6 +105,10 @@ float:none;
 .showcase-section .desc-section{
 padding: 15px 0;
 }
+}
+#newAndExclusive h1{
+    font-size: 30px;
+    text-align: center;
 }
 </style>
 <template:page pageTitle="${pageTitle}">
@@ -131,7 +137,7 @@ padding: 15px 0;
 
 	<div id="bestPicks" class="feature-collections"></div>
 	<div class="feature-categories" id="ia_categories_favorites"></div>
-	<div id="stayQued" class=""></div>
+	<div id="stayQued" class="" style="width:50%; float:left;"></div>
 
 	<div id="newAndExclusive" class=""></div>
 	<!-- For Infinite Analytics Start -->
