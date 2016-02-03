@@ -1534,6 +1534,8 @@
     <bean id="automationService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.InternalExternalAutomationServiceImpl">
 	</bean>
+	
+	
 		
 	<bean id="CampaignAutomationJob" parent="abstractJobPerformable"
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.InternalExternalCampaignAutomationJob"
