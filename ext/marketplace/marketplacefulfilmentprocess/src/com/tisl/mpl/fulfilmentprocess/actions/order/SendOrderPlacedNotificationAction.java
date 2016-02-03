@@ -13,7 +13,7 @@
  */
 package com.tisl.mpl.fulfilmentprocess.actions.order;
 
-import de.hybris.platform.orderprocessing.events.OrderPlacedEvent;
+import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
 import de.hybris.platform.servicelayer.event.EventService;
