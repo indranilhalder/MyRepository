@@ -116,9 +116,9 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 
 #Added this line
 UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
-;;TMPHomepagePromotionBannerComponent1;banner1.jpg;
-;;TMPHomepagePromotionBannerComponent2;banner2.jpg;
-;;TMPHomepagePromotionBannerComponent3;banner3.jpg;
+;;TMPHomepagePromotionBannerComponent1;;"<p>buy online and get them today with fast track same day delivery or in-store collection</p>";
+;;TMPHomepagePromotionBannerComponent2;;"<p>buy online and get them today with fast track same day delivery or in-store collection..</p>";
+;;TMPHomepagePromotionBannerComponent3;;"<p>buy online and get them today with fast track same day delivery or in-store collection....</p>";
 
 #### Promotion Banner Ends#########
 
@@ -133,15 +133,16 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerT
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
 # Added the Multiple Homepage Banners for TMP only for desktop and widescreen resolution
-;;stayQuedBanner1.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Men_EN_01_350W.jpg;Appa_350x430_Men_EN_01_350W.jpg;"StayQued Banner1";
-;;stayQuedBanner2.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Women_EN_01_350W.jpg;Appa_350x430_Women_EN_01_350W.jpg;"StayQued Banner2";
-;;stayQuedBanner3.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Youth_EN_01_350W.jpg;Appa_350x430_Youth_EN_01_350W.jpg;"StayQued Banner3";
+#;;stayQuedBanner1.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Men_EN_01_350W.jpg;Appa_350x430_Men_EN_01_350W.jpg;"StayQued Banner1";
+#;;stayQuedBanner2.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Women_EN_01_350W.jpg;Appa_350x430_Women_EN_01_350W.jpg;"StayQued Banner2";
+#;;stayQuedBanner3.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Youth_EN_01_350W.jpg;Appa_350x430_Youth_EN_01_350W.jpg;"StayQued Banner3";
+;;stayQuedBanner4.PNG;$siteResource/images/banners/homepage/responsive/casual03.PNG;casual03.PNG;"StayQued Banner";
 
 #Added this line
 UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
-;;TMPHomepageStayQuedComponent1;stayQuedBanner1.jpg;
-;;TMPHomepageStayQuedComponent2;stayQuedBanner2.jpg;
-;;TMPHomepageStayQuedComponent3;stayQuedBanner3.jpg;
+;;TMPHomepageStayQuedComponent1;stayQuedBanner4.PNG;"<h5>How to dress</h5><h2>Casual</h2><h3>Yet Formal</h3><p>Read our tips on how to dress. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam congue ante ac venenatis faucibus. Donec eu orci sit amet purus consectetur scelerisque non id mi. Maecenas congue dictum nunc non eleifend. </p>"; 
+;;TMPHomepageStayQuedComponent2;stayQuedBanner4.PNG;"<h5>How to dress</h5><h2>Casual</h2><h3>Yet Formal</h3><p>Read our tips on how to dress. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam congue ante ac venenatis faucibus. Donec eu orci sit amet purus consectetur scelerisque non id mi......... </p>";
+;;TMPHomepageStayQuedComponent3;stayQuedBanner4.PNG;"<h5>How to dress</h5><h2>Casual...</h2><h3>Yet Formal</h3><p>Read our tips on how to dress. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam congue ante ac venenatis faucibus. Donec eu orci sit amet purus consectetur scelerisque non id mi..</p>";
 
 #### StayQued Ends#########
 UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]

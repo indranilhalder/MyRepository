@@ -558,10 +558,18 @@ public class HomePageController extends AbstractPageController
 				{
 					final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
 							setNum, promoBanner);
+					if (bannerImage.getBannerImage() != null)
+					{
+						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+					}
+					else
+					{
+						bannerJson.put("bannerImage", "");
+						bannerJson.put("bannerAltText", "");
+					}
 
-					bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
 					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
 					bannerJson.put("promoText1", bannerImage.getMajorPromoText());
 					bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
 					bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
@@ -573,9 +581,17 @@ public class HomePageController extends AbstractPageController
 					final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
 							setNum, promoBanner);
 
-					bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+					if (bannerImage.getBannerImage() != null)
+					{
+						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+					}
+					else
+					{
+						bannerJson.put("bannerImage", "");
+						bannerJson.put("bannerAltText", "");
+					}
 					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
 					bannerJson.put("promoText1", bannerImage.getPromoText1());
 					bannerJson.put("promoText2", bannerImage.getPromoText2());
 					bannerJson.put("promoText3", bannerImage.getPromoText3());
