@@ -703,12 +703,12 @@ function loadDefaultWishListName_SizeGuide() {
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/addToWishListInPDP";
 	var sizeSelected=true;
-	if( $("#variant,#sizevariant option:selected").val()=="#"){
+	if( $("#variant.size-g option:selected").val()=="#"){
 		sizeSelected=false;
 	}
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
-
+  
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
