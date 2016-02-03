@@ -130,7 +130,7 @@ padding: 15px 0;
 	<div id="promobannerhomepage"></div>
 
 	<div id="bestPicks" class="feature-collections"></div>
-
+	<div class="feature-categories" id="ia_categories_favorites"></div>
 	<div id="stayQued" class=""></div>
 
 	<div id="newAndExclusive" class=""></div>
