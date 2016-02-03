@@ -29025,7 +29025,23 @@ body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-capti
 #loginDivsiginflyout > table > tbody > tr > td table td:first-child{
 	width: 10% !important;
 } 
+#commentsDiv {
+    width: 80% !important;
+    clear: both;
+}
+#reviewPluginContainer .modal-header {
+	    padding-right: 35px;
+} 
+@media(max-width:790px){
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+    padding-top: 0px;
+	position:relative;}
 
+body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
+    padding-top: 40px;}
+body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
+	padding-left:0px;}
+}
 /*--------------maincss-----------*/
 .row
 {
