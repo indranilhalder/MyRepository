@@ -91,8 +91,11 @@ public class SearchPageController extends AbstractSearchPageController
 	/**
 	 *
 	 */
-	private static final String ALL_CATEGORY = "MSH1";
+	private static final String ALL = "all";
 
+	/**
+	 *
+	 */
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(SearchPageController.class);
 
@@ -183,7 +186,7 @@ public class SearchPageController extends AbstractSearchPageController
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
 		final String dropDownText = "";
 		boolean allSearchFlag = false;
-		String searchCategory = "all";
+		String searchCategory = ALL;
 		String micrositeDropDownText = "";
 		final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
 
@@ -272,7 +275,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 								.textSearch(searchStateAll, pageableData);
-						searchCategory = "all";
+						searchCategory = ALL;
 					}
 
 				}
@@ -518,13 +521,12 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 	/**
-	 * ONLINE and NEW
+	 * DISPLAY ONLINE and NEW TRENDING PRODUCTS
 	 *
 	 * @param searchQuery
 	 * @param page
 	 * @param showMode
 	 * @param sortCode
-	 * @return
 	 * @throws CMSItemNotFoundException
 	 */
 
@@ -568,8 +570,6 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @param showMode
 	 * @param sortCode
 	 * @param searchPageSize
-	 * @param commerceCategoryService
-	 * @return
 	 */
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> performSearchForOnlineProducts(
 			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
@@ -577,11 +577,10 @@ public class SearchPageController extends AbstractSearchPageController
 		// YTODO Auto-generated method stub
 		final PageableData pageableData = createPageableData(page, page, null, ShowMode.Page);
 		final SearchStateData searchState = new SearchStateData();
-		final CategoryModel category = categoryService.getCategoryForCode(ALL_CATEGORY);
 		final SearchQueryData searchQueryData = new SearchQueryData();
-		searchQueryData.setValue(category.getCode());
+		searchQueryData.setValue(ALL);
 		searchState.setQuery(searchQueryData);
-		return searchFacade.mplOnlineAndNewProductSearch(category.getCode(), searchState, pageableData);
+		return searchFacade.mplOnlineAndNewProductSearch(searchState, pageableData);
 
 	}
 
