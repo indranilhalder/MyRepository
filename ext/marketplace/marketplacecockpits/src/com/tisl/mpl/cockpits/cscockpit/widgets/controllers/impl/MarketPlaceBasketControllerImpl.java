@@ -988,8 +988,11 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		{
 			for (String voucherCode : voucherList) {
 				try {
+					final VoucherModel voucher = getVoucherModel(voucherCode);
 					voucherService.releaseVoucher(voucherCode, cartModel);
-					for (final AbstractOrderEntryModel entry : mplVoucherService.getOrderEntryModelFromVouEntries((VoucherModel) cartModel.getDiscounts().get(0), cartModel))//cartModel.getEntries()
+					
+					for (final AbstractOrderEntryModel entry : mplVoucherService.getOrderEntryModelFromVouEntries(voucher, cartModel))
+						
 					{
 						entry.setCouponCode("");
 						entry.setCouponValue(Double.valueOf(0.00D));
