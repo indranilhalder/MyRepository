@@ -35,8 +35,8 @@ INSERT_UPDATE OrderRefundReportJob;code[unique=true];job(code);sessionLanguage(i
 ;orderRefundReportCronJob;orderRefundReportJob;en;2015-07-01;2015-08-31;
 
 ###For Internal Campaign Report Job####
-INSERT_UPDATE IntExtCampaignAutomationJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
-;campaignReportCronJob;CampaignAutomationJob;en;2016-02-01;2016-03-01;
+INSERT_UPDATE IntExtCampaignAutomationJob;code[unique=true];job(code);sessionLanguage(isocode);
+;campaignReportCronJob;CampaignAutomationJob;en;
 
 
 
