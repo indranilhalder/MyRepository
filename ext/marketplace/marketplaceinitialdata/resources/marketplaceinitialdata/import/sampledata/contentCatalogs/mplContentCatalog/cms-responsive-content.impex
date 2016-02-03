@@ -105,7 +105,7 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;;BestCollection.png;$siteResource/images/banners/homepage/responsive/BestCollection.png;BestCollection.png;"Homepage Best Collection Banner";
 ;;CustomerFirst.png;$siteResource/images/banners/homepage/responsive/CustomerFirst.png;CustomerFirst.png;"Homepage Customer First Banner";
 ;;DeliveryOnTime.png;$siteResource/images/banners/homepage/responsive/DeliveryOnTime.png;DeliveryOnTime.png;"Homepage Delivery On-Time Banner";
-#;;Everywhere.png;$siteResource/images/banners/homepage/responsive/Everywhere.png;Everywhere.png;"Homepage Everywhere Banner";
+;;Everywhere.png;$siteResource/images/banners/homepage/responsive/Everywhere.png;Everywhere.png;"Homepage Everywhere Banner";
 ;;callus.png;$siteResource/images/banners/homepage/responsive/callus.png;callus.png;"Call us";
 ;;chatwidus.png;$siteResource/images/banners/homepage/responsive/chatwidus.png;chatwidus.png;"Chat With Us";
 
