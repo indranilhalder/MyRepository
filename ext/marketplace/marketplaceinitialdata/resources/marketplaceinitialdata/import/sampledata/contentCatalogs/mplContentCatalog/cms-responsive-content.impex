@@ -88,7 +88,7 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 ;;BestCollectionMediaParagraphComponent;Best Collection Media Paragraph Component;BestCollectionMediaParagraphComponent;"<span>Best Collections</span>";BestCollection.png;"#";
 ;;CustomerFirstMediaParagraphComponent;Customer First Media Paragraph Component;CustomerFirstMediaParagraphComponent;"<span>Customer First</span>";CustomerFirst.png;"/store/mpl/en/contact";
 ;;DeliveryOnTimeMediaParagraphComponent;Delivery On Time Media Paragraph Component;DeliveryOnTimeMediaParagraphComponent;"<span>Delivery On-time</span>";DeliveryOnTime.png;"/store/mpl/en/trackorders";
-#;;EveryWhereMediaParagraphComponent;EveryWhere Media Paragraph Component;EveryWhereMediaParagraphComponent;
+;;EveryWhereMediaParagraphComponent;EveryWhere Media Paragraph Component;EveryWhereMediaParagraphComponent;"<span>Everywhere</span>";Everywhere.png;"#";
 ;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<div>Call Us,24/7</div><div><a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a></div>";callus.png
 ;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<div>Chat with us</div><a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available Now</a>";chatwidus.png
 
@@ -206,7 +206,7 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 #### Home Pge and Help and Service slot 2B #######
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section2BSlot-Homepage;true;Small Icons Section 2;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent
+;;Section2BSlot-Homepage;true;Small Icons Section 2;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent,
 ;;Section2BSlot-helpservices;true;;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
