@@ -74,15 +74,15 @@ UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];title
 ;;ShowcaseComponent;"Showcase"
 
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];product1(code,$productCV);product2(code,$productCV)
-;;ZaraBrandShowcaseItem;98765432;98765433
-;;NuonBrandShowcaseItem;98765432;98765433
-;;LandmarkBrandShowcaseItem;98765432;98765433
-;;AscotBrandShowcaseItem;98765432;98765433
-;;TitanBrandShowcaseItem;98765432;98765433
-;;CromaBrandShowcaseItem;98765432;98765433
-;;PrettyInPetalsShowCaseitem;98765432
-;;CelebrationOfColorShowCaseitem;98765433
-;;IndigoSpectrumShowCaseitem;98765432
+;;ZaraBrandShowcaseItem;987654321;987654322
+;;NuonBrandShowcaseItem;987654322;987654321
+;;LandmarkBrandShowcaseItem;987654321;987654322
+;;AscotBrandShowcaseItem;987654322;987654321
+;;TitanBrandShowcaseItem;987654321;987654322
+;;CromaBrandShowcaseItem;987654322;987654321
+;;PrettyInPetalsShowCaseitem;987654322
+;;CelebrationOfColorShowCaseitem;987654321
+;;IndigoSpectrumShowCaseitem;987654322
 
 ###### Best Picks carousel component
 
