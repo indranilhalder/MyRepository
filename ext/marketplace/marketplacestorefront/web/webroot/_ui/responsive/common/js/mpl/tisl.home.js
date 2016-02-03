@@ -208,7 +208,15 @@ function getBrandsYouLoveContentAjaxCall(id) {
 						
 						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></a></div>";
+								+ "'></img></a>";
+						if (typeof response.firstProductTitle !== "undefined"){
+							defaultHtml +="<p class='product-name'>"+response.firstProductTitle+"</p>";
+						}
+						if (typeof response.firstProductPrice !== "undefined"){
+							defaultHtml +="<p class='price price'><p class='normal'>"+response.firstProductPrice+"</p>";
+			                  
+						}
+						defaultHtml +="</div>"
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
 					if (typeof response.text !== "undefined") {
@@ -228,7 +236,15 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					if (typeof response.secondproductImageUrl !== "undefined") {
 						defaultHtml += "<div class='home-brands-you-love-side-image right'><a href='"+ACC.config.encodedContextPath+response.secondProductUrl+"'><img src='"
 								+ response.secondproductImageUrl
-								+ "'></img></a></div>";
+								+ "'></img></a>";
+						if (typeof response.secondProductTitle !== "undefined"){
+							defaultHtml +="<p class='product-name'>"+response.secondProductTitle+"</p>";
+						}
+						if (typeof response.secondProductPrice !== "undefined"){
+							defaultHtml +="<p class='price price'><p class='normal'>"+response.secondProductPrice+"</p>";
+			                  
+						}
+						defaultHtml +="</div>"
 					}
 
 					defaultHtml += "</div>";
