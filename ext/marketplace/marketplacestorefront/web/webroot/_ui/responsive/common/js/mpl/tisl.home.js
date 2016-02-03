@@ -429,17 +429,16 @@ function getPromoBannerHomepage(){
 			var defaultHtml = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
-			var majorPromoText = response.majorPromoText;
-			var minorPromo2Text = response.minorPromo2Text;
 			var bannerAltText = response.bannerAltText;
-			var minorPromo1Text = response.minorPromo1Text;
 			var promoText1 = response.promoText1;
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
 			
-			// renderHtml = '<img src="' + response.bannerImage +'"/>';
-			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
+
+			//renderHtml = '<img src="' + response.bannerImage +'"/>';
+			renderHtml = promoText1; 
+
 			$('#promobannerhomepage').html(renderHtml);
 
 		},
@@ -471,15 +470,12 @@ function getStayQuedHomepage(){
 			var defaultHtml = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
-			var majorPromoText = response.majorPromoText;
-			var minorPromo2Text = response.minorPromo2Text;
 			var bannerAltText = response.bannerAltText;
-			var minorPromo1Text = response.minorPromo1Text;
 			var promoText1 = response.promoText1;
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
-			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
+			renderHtml = '<h1><span><img src="stay-qued.png"></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+bannerUrlLink+'" class="button maroon">Read Article</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},
