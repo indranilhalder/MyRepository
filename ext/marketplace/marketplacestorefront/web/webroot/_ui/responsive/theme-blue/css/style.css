@@ -8273,7 +8273,7 @@ div.wishlist-content .pagination {
 
   @media(min-width:790px) {
 	   .body-Content {
-	 	padding-bottom:373px;
+	 	padding-bottom:400px;
 	 }
 	  body.page-productDetails .body-Content {
 	 	padding-bottom:0px;
@@ -29213,7 +29213,7 @@ footer .footer-text p{
 .home-brands-you-love-carousel{
 	display: table;
 	width:100%;
-	padding: 20px 0;
+	margin: 20px 0;
 }
 .home-brands-you-love-carousel-brands {
     display: table-cell;
@@ -29289,6 +29289,7 @@ width:100%;
     font-weight: 600;
     letter-spacing: 1.5px;
     margin:0px auto;
+    display: block;
 }
 
 .home-brands-you-love-wrapper h1{
@@ -29321,6 +29322,13 @@ padding:20px;
 }
 .home-brands-you-love-side-image.right{
 padding-top:20px;
+}
+}
+
+@media (max-width: 1050px){
+.home-brands-you-love-main-image-wrapper .text {
+    font-size: 30px;
+    line-height:30px;
 }
 }
 /*brands you love css ends*/
@@ -29377,6 +29385,161 @@ display:block;
 div#promobannerhomepage a img{
 width:100%;
 height:80px;
+}
+
+.showcase {
+    height: auto;
+    background: #F7F8FA;
+    overflow: hidden;
+    clear:both;
+    margin:20px 0;
+}
+.showcase h1 {
+    text-align: center;
+    padding: 30px 0;
+    font-weight: 500;
+    font-size: 24px;
+}
+.showcase-switch> div{
+width:33.33%;
+float:left;
+text-align:center;
+}
+.showcase-border{border-bottom: 1px solid;}
+.showcase-heading {
+   text-align: center;
+    color: #2d2e32;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 600;
+	    overflow: hidden;
+    padding-bottom: 30px;
+}
+
+.showcase section {
+    margin: 40px 20px;
+    text-align: center;
+    overflow: hidden;
+}
+
+p.showcase-para {
+    width: 80%;
+    text-align: center;
+    font-size: 16px;
+    line-height: 21px;
+    margin-left: 26px;
+}
+
+.showcase-heading > div {
+    margin: 20px 0px;
+}
+
+.showcase-center {
+    margin: 20px 0px;
+}
+.showcase-center h3, .showcase-center p{line-height: 20px;}
+.showcase-section .desc-section{
+width:33.33%;
+float:left;
+text-align:center;
+padding: 0px 5px 10px;
+}
+a.button.trending-button {
+    background: transparent;
+    color: #333;
+    border: 1px solid #4a4a4a;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+	width: 80%;
+    display: block;
+    margin: 0px auto;
+    height: 50px;
+    line-height: 1;
+    padding-top:18px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+a.button.maroon {
+    color: #FBF4F6;
+    background-color: #a9143c;
+    font-size: 12px !important;
+    text-decoration: none;
+	width: 70%;
+    display: block;
+    margin: 20px auto;
+    height: 50px;
+    line-height: 1;
+    padding-top:18px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+@media(max-width:938px) and (min-width:651px){
+a.button.trending-button {
+padding-top:13px;
+}
+}
+@media(max-width:828px) and (min-width:651px){
+a.button.maroon {
+padding-top:13px;
+}
+}
+.desc-section img{
+max-width:100%;
+margin: 0px auto;
+}
+.showcase-switch> div a:hover{
+cursor:pointer;
+color:#a9143c;
+}
+@media(max-width:650px){
+.showcase-section .desc-section,.showcase-switch> div{
+width:100%;
+float:none;
+}
+.showcase-section .desc-section{
+padding: 15px 0;
+}
+}
+#newAndExclusive h1{
+    text-align: center;
+    font-size: 24px;
+    padding: 40px 0;
+    font-weight: 500;
+}
+#stayQued{
+width:50%; 
+float:left;
+}
+#stayQued > a{
+    display: block;
+    text-align: center;
+}
+#stayQued > a > img{
+    max-width:100%;
+}
+
+@media (max-width: 790px){
+#stayQued,#newAndExclusive{
+width:100%; 
+float:none;
+margin:20px 0;
+}
+.timeout-slider .carousel .item .major-promos a,.timeout-slider .carousel .item .minor-promos a{
+color:#000;
+}
+.owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
+    background: transparent;
+    border: 2px solid rgba(169,20,60,0.8);
+}
+.owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page span {
+        background: rgba(169,20,60,0.8);
+}
+.owl-carousel#rotatingImageTimeout .item ul.minor-promos {
+    padding-bottom: 30px;
+}
 }
 /*--------------maincss-----------*/
 .row
