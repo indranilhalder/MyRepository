@@ -674,7 +674,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		{
 			double netAmountAfterAllDisc = 0.0D;
 			double productPrice = 0.0D;
-			boolean flag = false;
+			//boolean flag = false;
 
 			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
 			{
@@ -685,7 +685,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
 					{
 						netAmountAfterAllDisc += entry.getNetAmountAfterAllDisc().doubleValue();
-						flag = true;
+						//flag = true;
+					}
+					else
+					{
+						netAmountAfterAllDisc += entry.getTotalPrice().doubleValue();
 					}
 
 					productPrice += entry.getTotalPrice().doubleValue();
@@ -694,8 +698,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				LOG.debug("Step 14:::netAmountAfterAllDisc is " + netAmountAfterAllDisc + " & productPrice is " + productPrice);
 
 
-				if ((productPrice < 1) || (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
-						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
+				if ((productPrice < 1) || (/* flag && */voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
+				/* || (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0) */)
 				{
 					LOG.debug("Step 15:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 					releaseVoucherAfterCheck(cartModel, voucherCode);
