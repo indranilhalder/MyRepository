@@ -226,7 +226,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='product-name'>"+response.firstProductTitle+"</p>";
 						}
 						if (typeof response.firstProductPrice !== "undefined"){
-							defaultHtml +="<p class='price price'><p class='normal'>"+response.firstProductPrice+"</p>";
+							defaultHtml +="<p class='price normal'>"+response.firstProductPrice+"</p>";
 			                  
 						}
 						defaultHtml +="</div>"
@@ -254,7 +254,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='product-name'>"+response.secondProductTitle+"</p>";
 						}
 						if (typeof response.secondProductPrice !== "undefined"){
-							defaultHtml +="<p class='price price'><p class='normal'>"+response.secondProductPrice+"</p>";
+							defaultHtml +="<p class='normal price'>"+response.secondProductPrice+"</p>";
 			                  
 						}
 						defaultHtml +="</div>"

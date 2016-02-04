@@ -1525,7 +1525,7 @@ h2 {
             margin-right: 0;
             width: 145px; }
             header .content nav > ul > li > .toggle {
-              font-size: 12px; }
+              font-size: 9px; }
               header .content nav > ul > li > .toggle:after {
 			    margin-left: 3px;
 			    top: 2px;
@@ -3793,7 +3793,7 @@ h2 {
 		text-align: center;
 	}
 	.shop-promos .promos li span {
-		font-size: 14px;
+		font-size: 13px;
 		margin-bottom: 0;
 		letter-spacing: 1.1px;
 	}
@@ -17104,7 +17104,7 @@ font-weight:normal;
   		}		
   		.marketplace img		
 		  {		
-		  	width:70%;		
+		  	height:40px;		
 		  }		
 		 
   } 		
