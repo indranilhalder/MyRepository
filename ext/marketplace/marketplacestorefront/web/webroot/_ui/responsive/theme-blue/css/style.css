@@ -10150,6 +10150,7 @@ body .account .right-account .order-history .pagination li{
       }
       #productYouCare .home-product-you-care-carousel-img img {
       	 max-width: 100%;
+      	 padding-left:30px;
       }
       @media (min-width:650px){
     .short-info .star-review {

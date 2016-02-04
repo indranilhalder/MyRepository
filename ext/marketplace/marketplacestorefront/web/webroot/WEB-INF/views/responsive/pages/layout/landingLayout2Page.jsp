@@ -30,7 +30,7 @@
 	
 	<div id="productYouCare" class="feature-collections grey-bg"></div>
 	
-	<div class="feature-categories" id="ia_categories_favorites"></div>
+	<!-- <div class="feature-categories" id="ia_categories_favorites"></div> -->
 	<div class="feature-collections">
 	<div id="stayQued" class="qued"></div>
 	<div id="newAndExclusive" class=""></div>
