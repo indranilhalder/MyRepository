@@ -29285,7 +29285,7 @@ width:100%;
     background: #fff;
     border: none;
     height: 40px;
-    line-height:18px;
+    line-height:40px;
     width: 150px;
     text-transform: uppercase;
     font-size: 11px;
@@ -29610,7 +29610,7 @@ color:#000;
 	    position: relative;
     min-height: 1px;
 	float:left;
-    padding-left: 10px;
+    padding-left: 30px;
     padding-right: 10px;
 	box-sizing:border-box;
   
@@ -29625,6 +29625,7 @@ color:#000;
     margin-top: 90px;
     width: 200px;
     padding-bottom: 20px;
+    margin:90px 0 20px 0;
 }
 a.button.maroon, button.maroon, button.maroon:hover {
     color: #FBF4F6;
