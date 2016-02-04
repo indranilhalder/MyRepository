@@ -153,13 +153,13 @@ function getBrandsYouLoveAjaxCall() {
 										console.log(v.brandLogoUrl);
 										
 										if (!v.showByDefault) {
-											renderHtml += "<div class='home-brands-you-love-carousel-brands' id='"
+											renderHtml += "<div class='home-brands-you-love-carousel-brands item' id='"
 													+ v.compId
 													+ "'><img src='"
 													+ v.brandLogoUrl
 													+ "'></img></div>";
 										} else {
-											renderHtml += "<div class='home-brands-you-love-carousel-brands active' id='"
+											renderHtml += "<div class='home-brands-you-love-carousel-brands item active' id='"
 													+ v.compId
 													+ "'><img src='"
 													+ v.brandLogoUrl
@@ -176,6 +176,19 @@ function getBrandsYouLoveAjaxCall() {
 				error : function() {
 					// globalErrorPopup('Failure!!!');
 					console.log("Error while getting brands you love");
+				},
+				complete : function() {
+					$(".home-brands-you-love-carousel").owlCarousel({
+						navigation:true,
+						navigationText : [],
+						pagination:false,
+						itemsDesktop : [5000,5], 
+						itemsDesktopSmall : [1400,5], 
+						itemsTablet: [650,2], 
+						itemsMobile : [480,2], 
+						rewindNav: false,
+						lazyLoad:false
+					});
 				}
 			});
 }
@@ -213,7 +226,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='product-name'>"+response.firstProductTitle+"</p>";
 						}
 						if (typeof response.firstProductPrice !== "undefined"){
-							defaultHtml +="<p class='price price'><p class='normal'>"+response.firstProductPrice+"</p>";
+							defaultHtml +="<p class='price normal'>"+response.firstProductPrice+"</p>";
 			                  
 						}
 						defaultHtml +="</div>"
@@ -241,7 +254,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='product-name'>"+response.secondProductTitle+"</p>";
 						}
 						if (typeof response.secondProductPrice !== "undefined"){
-							defaultHtml +="<p class='price price'><p class='normal'>"+response.secondProductPrice+"</p>";
+							defaultHtml +="<p class='normal price'>"+response.secondProductPrice+"</p>";
 			                  
 						}
 						defaultHtml +="</div>"
