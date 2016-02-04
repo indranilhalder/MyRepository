@@ -14,6 +14,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
@@ -25,6 +26,7 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -53,6 +55,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -150,8 +153,8 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		JSONObject brandsYouLoveJson = new JSONObject();
-		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section3Slot-Homepage", "Online");
+		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage", "Section3Slot-Homepage",
+				"Online");
 		if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
 		{
 			components = homepageSection3Slot.getCmsComponents();
@@ -256,7 +259,8 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem,
+			final ShowCaseLayout showcaseLayout)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
@@ -392,6 +396,102 @@ public class HomePageController extends AbstractPageController
 		}
 		return bestPicks;
 	}
+
+
+	@ResponseBody
+	@RequestMapping(value = "/getProductsYouCare", method = RequestMethod.GET)
+	public JSONObject getProductsYouCare()
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject productYouCare = new JSONObject();
+		final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section4DSlot-Homepage", "Online");
+
+		if (CollectionUtils.isNotEmpty(homepageSection4DSlot.getCmsComponents()))
+		{
+			components = homepageSection4DSlot.getCmsComponents();
+		}
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			if (component instanceof MplCategoryCarouselComponentModel)
+			{
+				final MplCategoryCarouselComponentModel productYouCareCarouselComponent = (MplCategoryCarouselComponentModel) component;
+				String title = "";
+				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
+				{
+					title = productYouCareCarouselComponent.getTitle();
+				}
+
+				productYouCare.put("title", title);
+
+				final JSONArray subComponentJsonArray = new JSONArray();
+				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
+				{
+					String categoryName = "";
+					String categoryCode = "";
+
+
+					for (final CategoryModel category : productYouCareCarouselComponent.getCategories())
+					{
+						final JSONObject youCareCategoryJSON = new JSONObject();
+						if (null != category.getName())
+						{
+							categoryName = category.getName();
+
+						}
+						youCareCategoryJSON.put("categoryName", categoryName);
+
+						if (null != category.getCode())
+						{
+							categoryCode = category.getCode();
+
+						}
+						youCareCategoryJSON.put("categoryCode", categoryCode);
+
+						boolean mediaFound = false;
+						if (null != category.getMedias())
+						{
+							for (final MediaModel categoryMedia : category.getMedias())
+							{
+								if (null != categoryMedia.getMediaFormat()
+										&& categoryMedia.getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H")
+										&& null != categoryMedia.getURL2())
+								{
+									youCareCategoryJSON.put("mediaURL", categoryMedia.getURL2());
+									mediaFound = true;
+								}
+							}
+
+							if (!mediaFound)
+							{
+								youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
+							}
+
+
+						}
+						else
+						{
+
+							youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
+						}
+
+						subComponentJsonArray.add(youCareCategoryJSON);
+					}
+				}
+				else
+				{
+					LOG.error("No Category found for productYouCareCarouselComponent");
+				}
+
+				productYouCare.put("categories", subComponentJsonArray);
+
+			}
+		}
+		return productYouCare;
+	}
+
+
 
 	@ResponseBody
 	@RequestMapping(value = "/getNewAndExclusive", method = RequestMethod.GET)
@@ -670,8 +770,8 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		JSONObject collectionShowcase = new JSONObject();
-		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section6Slot-Homepage", "Online");
+		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage("homepage", "Section6Slot-Homepage",
+				"Online");
 		if (CollectionUtils.isNotEmpty(homepageSection6Slot.getCmsComponents()))
 		{
 			components = homepageSection6Slot.getCmsComponents();
