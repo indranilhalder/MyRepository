@@ -28637,8 +28637,13 @@ padding-top: 10px;
     clear: both;
 }
 body .account .right-account.rewards>div.couponHistoryLinkDiv{
-    text-align: right;
+    text-align: left;
     border:none;
+}
+.your-activity.coupon-history>div>h2,.coupon-container>div>h2{
+	text-align: center;
+    color: #00cbe9;
+    font-weight: 500;
 }
 .couponHistoryLink{
     height: 20px;
