@@ -8651,10 +8651,10 @@ footer .banner {
 
 
 .top.checkout-top .content ul li a.active {
-	  color: #09C9EE;
+	  color: #a9143c;
 }
 .top.checkout-top .content ul li a.active:hover {
-	  color: #09C9EE !important;
+	  color: #a9143c !important;
 }
 
 .top.checkout-top .content ul li a {
@@ -8726,7 +8726,7 @@ footer .banner {
       transition: opacity 0.3s; }
     .sign-in.tab-view .nav li.active {
       background: #fff;
-      color:#09C9EE;
+      color:#a9143c;
       -webkit-transition: background 0.3s;
       -moz-transition: background 0.3s;
       transition: background 0.3s;
@@ -10011,8 +10011,12 @@ body .account .right-account .order-history .pagination li{
     .product-tile .image .new {
       position: absolute;
       height: 31%;
-      top: 0;
-      left: -15px; }
+     top: 10px;
+      background-color: #a9143c;
+    height: 35px;
+      right:10px;
+      background-image: url(../images/new.png); 
+      background-position: 7px;}
       .shop-sale.wrapper .product-tile .image .new {
       width: 38%;
     height: 39%;
@@ -10022,39 +10026,49 @@ body .account .right-account .order-history .pagination li{
     .product-tile .image .online-exclusive, .product-tile .image .on-sale {
       position: absolute;
       /*bottom: -20px;*/
-      bottom:4px;
-      left: -10px; }
+      /* bottom:4px;
+       left: -10px; */
+       top:10px;
+       right:10px; }
+       .product-tile .image .online-exclusive img.brush-strokes-sprite, .product-tile .image .on-sale img.brush-strokes-sprite{
+     display:none;
+       } 
    .shop-sale.wrapper .product-tile .image .online-exclusive, .shop-sale.wrapper .product-tile .image .on-sale {
       bottom: -5px; }
       .product-tile .image .online-exclusive span, .product-tile .image .on-sale span {
-        position: absolute;
         color: #fff;
+        display: table-cell;
+    	vertical-align: middle;
         font-size: 10px;
         font-weight: 500;
         letter-spacing: 1px;
         padding-left: 5%;
         text-transform: uppercase;
-        -webkit-transform: translateY(-50%);
-        -moz-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-        -o-transform: translateY(-50%);
-        transform: translateY(-50%); }
+        line-height:normal;
+      }
     .product-tile .image .online-exclusive {
-      width: 85%;
-      min-width: 200px; }
+      width: 80%;
+     background-color: #ffb810;
+     /* min-width: 200px; */
+     height: 35px;
+     text-align: center;
+     display: table;}
       .product-tile .image .online-exclusive span {
         left: 0;
         top: 45%; }
         	@media (max-width: 650px) {		
     .product-tile .image .online-exclusive {		
-        min-width: 150px;		
+        /* min-width: 150px;	 */	
     }		
     .product-tile .image .online-exclusive span {		
         font-size: 8px;	}	
         	}
     .product-tile .image .on-sale {
       width: 50%;
-      min-width: 120px; }
+     background-color: #ffb810;
+     height: 35px;
+     text-align: center;
+     display: table; }
       .product-tile .image .on-sale span {
         left: 3px;
         top: 40%; }
@@ -29163,7 +29177,7 @@ footer>ul>li>.toggle>img{
 }
 #newAndExclusive{
 	width: 50%;
-    float: right;
+    float: left;
     padding: 0 20px;
 }
 #newAndExclusive a.new_exclusive_viewAll{
@@ -29176,7 +29190,7 @@ footer>ul>li>.toggle>img{
     width: 150px;
     text-decoration: none;
     margin: 0px auto;
-    padding: 20px;
+    padding: 13px;
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 1.5px;
@@ -29368,7 +29382,7 @@ margin: 10px 0px;
     width: 100%;
 }
 #bestPicks .view-cliq-offers {
-	padding: 20px;
+	padding: 13px;
     border: 1px solid #4a4a4a;
     color: #333;
     font-size: 12px;
@@ -29461,9 +29475,9 @@ a.button.trending-button {
 	width: 80%;
     display: block;
     margin: 0px auto;
-    height: 50px;
+    height: 40px;
     line-height: 1;
-    padding-top:18px;
+    padding-top:14px;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -29475,9 +29489,9 @@ a.button.maroon {
 	width: 70%;
     display: block;
     margin: 20px auto;
-    height: 50px;
+    height: 40px;
     line-height: 1;
-    padding-top:18px;
+    padding-top:14px;
     letter-spacing: 1px;
     font-weight: bold;
     text-transform: uppercase;
@@ -29517,7 +29531,7 @@ padding: 15px 0;
 }
 #stayQued{
 width:50%; 
-float:left;
+float:right;
 }
 #stayQued > a{
     display: block;
@@ -29708,7 +29722,7 @@ header .content .marketplace, header .content .brand-logo {
 header .content .bottom.active .marketplace a img {
 width: 100px !important;
     height: 50px !important;
-    margin-top: 12px;}
+    /* margin-top: 12px; */}
     header .content .bottom.active .marketplace {
    margin-right: 0px;    }
 #rotatingImageTimeout {
@@ -29733,6 +29747,17 @@ width: 100px !important;
 
 .home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name {
 	margin-top: 10px;
+}
+li.store-locator-header a:before{
+	font-family: FontAwesome;
+    font-weight: lighter;
+    color: #A9143C;
+    content: "\f041";
+    font-size: 16px;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 1px;
+    position: relative;
 }
 /*--------------maincss-----------*/
 .row

@@ -297,7 +297,7 @@ font-weight: normal;
     background: #cc8600;
 }
 #ratingDiv div.gig-rating-star.gig-rating-star-full:before, .gig-comment-rating-star.gig-comment-rating-star-full:before {
-	color: #00cbe9;
+	color: #a9143c;
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -308,7 +308,7 @@ font-weight: normal;
 	background-image: none;
 }
 #ratingDiv div.gig-rating-star.gig-rating-star-empty:before, .gig-comment-rating-star:before {
-	color: #00cbe9;
+	color: #a9143c;
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -319,7 +319,7 @@ font-weight: normal;
 	top: 0px;
 }
 #ratingDiv div.gig-rating-star.gig-rating-star-half:before {
-	color: #00cbe9;
+	color: #a9143c;
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
