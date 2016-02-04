@@ -424,9 +424,9 @@ function getProductsYouCareAjaxCall(){
 							+ v.mediaURL
 							+ "'></img></div>";
 						
-						renderHtml += "<div class='short-info'>"
+						renderHtml += "<div class='short-info'><h3 class='product-name'><span>"
 							+ v.categoryName
-							+ "</div>";
+							+ "</span></h3></div>";
 						
 						renderHtml += "</a>";
 						

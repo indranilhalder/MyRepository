@@ -28,7 +28,7 @@
 
 	<div id="bestPicks" class="feature-collections"></div>
 	
-	<div id="productYouCare" class="feature-collections"></div>
+	<div id="productYouCare" class="feature-collections grey-bg"></div>
 	
 	<div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections">
