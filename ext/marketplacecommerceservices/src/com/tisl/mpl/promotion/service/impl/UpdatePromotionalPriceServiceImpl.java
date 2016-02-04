@@ -57,7 +57,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.promotion.service.UpdatePromotionalPriceService#updatePromotionalPrice(java.util.Collection,
 	 * java.util.Collection, java.lang.Double, java.util.Date, java.util.Date, boolean)
 	 */
@@ -109,6 +109,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 				for (final PriceRowModel price : priceRow)
 				{
 					//updating price row
+					boolean isEligibletoDisable = false;
 					if (sellers.isEmpty())
 					{
 						updateSpecialPrice = true;//set the flag true if there is no seller restriction
@@ -116,6 +117,10 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					else
 					{
 						updateSpecialPrice = isPriceToUpdate(price, sellers);
+						if (!updateSpecialPrice)
+						{
+							isEligibletoDisable = true;
+						}
 					}
 
 					if (updateSpecialPrice)
@@ -134,6 +139,17 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 							price.setIsPercentage(Boolean.valueOf(percent));
 							price.setPromotionValue(value);
 						}
+						modelService.save(price);
+					}
+					else if (!updateSpecialPrice && isEligibletoDisable)
+					{
+						LOG.debug("Removing Promotion Details from the Price Row : USSID not eligible for Promotion");
+						price.setPromotionStartDate(null);
+						price.setPromotionEndDate(null);
+						price.setIsPercentage(null);
+						price.setPromotionValue(null);
+
+						LOG.debug("Saving Price Row ");
 						modelService.save(price);
 					}
 
