@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -88,7 +89,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 					for (final Product itrProduct : category.getProducts())
 					{
-						if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))////call same method for product
+						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))////call same method for product
 						{
 							product.add(itrProduct.getAttribute("pk").toString());
 						}
@@ -214,7 +215,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 				{
 					for (final Product itrProduct : category.getProducts())
 					{
-						if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))//call same method for product
+						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))//call same method for product
 						{
 							product.add(itrProduct.getAttribute("pk").toString());
 						}
@@ -303,6 +304,93 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 		return false;
 	}
+
+
+	private boolean validateCategoryProductData(final Product product, final Integer priority)
+	{
+		try
+		{
+			int maxPriority = priority.intValue();
+			final List<ProductPromotion> promotionData = new ArrayList<ProductPromotion>();
+			final List<Category> categoriesList = getImmediateSuperCategory(product);
+
+			final List<ProductPromotion> productPromoData = (List<ProductPromotion>) product.getAttribute("promotions");
+			if (CollectionUtils.isNotEmpty(categoriesList))
+			{
+				for (final Category category : categoriesList)
+				{
+					promotionData.addAll(checkCategoryData(category));
+				}
+
+				if (CollectionUtils.isNotEmpty(productPromoData))
+				{
+					promotionData.addAll(productPromoData);
+				}
+
+				if (CollectionUtils.isNotEmpty(promotionData))
+				{
+					for (final ProductPromotion promotion : promotionData)
+					{
+						if (promotion instanceof BuyAPercentageDiscount && null != promotion.getAttribute("quantity")
+								&& Integer.parseInt(promotion.getAttribute("quantity").toString()) == 1)
+						{
+							if (maxPriority < Integer.parseInt(promotion.getAttribute("priority").toString())
+									&& promotion.isEnabled().booleanValue())
+							{
+								maxPriority = Integer.parseInt(promotion.getAttribute("priority").toString());
+								//	isHigherPromotionExists = false;
+								break;
+							}
+						}
+
+					}
+					if ((priority.intValue() == maxPriority) || (priority.intValue() > maxPriority))
+					{
+						return true;
+					}
+
+
+				}
+
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return false;
+
+	}
+
+	/**
+	 * @param category
+	 */
+	private List<ProductPromotion> checkCategoryData(final Category category)
+	{
+		List<ProductPromotion> promotionData = new ArrayList<ProductPromotion>();
+		try
+		{
+			if (null != category && null != category.getAttribute("promotions"))
+			{
+				promotionData = (List<ProductPromotion>) category.getAttribute("promotions");
+			}
+		}
+		catch (final JaloInvalidParameterException exception)
+		{
+			throw new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final JaloSecurityException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return promotionData;
+
+	}
+
 
 	//SONAR Fixes
 	//	@Deprecated
