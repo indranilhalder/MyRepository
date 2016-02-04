@@ -515,7 +515,7 @@
 				</div>
 				<div class="commentcontent" style="width:100%;padding: 5px;">
 				<input type="hidden" name="user_logged">
-				<div style="float:left; width: 20%;">		
+				<div style="width: 30%; margin: 5px auto; padding: 15px 0;">		
 					<img class="review-image" style="width: 60%;">		
 					<div class="popUpProductBrand" style="padding: 5px;"></div>		
 					<div class="popUpProductTitle"></div>		

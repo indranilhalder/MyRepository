@@ -1578,10 +1578,10 @@ function buyboxDetailsForSizeGuide(productCode){
 				
 				//$("#sizeSelectedVal").val(sizeSelected);
 				
-				if(sellerName=="undefined" || sellerName==null)
+				if(sellerName=="undefined" || sellerName==null || sellerName=="")
 				{
 					$("#productDetails").hide();
-					$("#price").hide();
+					$("#sizePrice").hide();
 					$("#addToCartSizeGuide").hide();
 					$("#noProductForSelectedSeller").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");

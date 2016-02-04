@@ -135,11 +135,9 @@
 
 
 				<div class="your-activity coupon-listing">
-					<h2>Coupons</h2>
-					<p>Listing of offers &amp; discounts with coupon codes, which
-						helps you to save money and smart shopping!</p>
-					<p class="mobile">Enter the coupon code in your cart to receive
-						your discount.</p>
+					<h2><spring:theme code="text.account.coupons.title" /></h2>
+					<p><spring:theme code="text.account.coupons.display.description" /></p>
+					<p class="mobile"><spring:theme code="text.account.coupons.display.description.mobile" /></p>
 					<ul class="coupon-container">
 						<c:choose>
 							<c:when test="${empty closedCouponList}">
@@ -285,7 +283,7 @@
 												<!-- Previous link addition -->
 												<c:if
 													test="${param.pageHistory != 1 and not empty param.pageHistory and not empty couponOrderDataDTOList}">
-													<li class="prev" id="historyPrev"><a href="#" target="#transactionHistory"><spring:theme
+													<li class="prev" id="historyPrev"><a href="#" ><spring:theme
 																code="text.account.coupons.prev" /> <span
 															class="lookbook-only"></span></a></li>
 												</c:if>
@@ -317,7 +315,7 @@
 												</c:choose>
 												<!-- Next link addition -->
 												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory and param.pageHistory ne totalPagesCouponHist}">
-													<li class="next" id="historyNext"><a href="#" target="#transactionHistory"><spring:theme
+													<li class="next" id="historyNext"><a href="#"><spring:theme
 																code="text.account.coupons.next" /> <span
 															class="lookbook-only"></span></a></li>
 												</c:if>

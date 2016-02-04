@@ -195,7 +195,7 @@
     <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
 
 </span>
- <div class="price">
+ <div class="price" id="sizePrice">
          <!--  <p class="normal"><div id="specialSelPrice"></div></p> -->
 	<p class="old" id="sizemrpPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
@@ -348,7 +348,7 @@
 													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
 																								<c:choose>
 											    <c:when test="${empty sizeSelectedSizeGuide}">
-													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</option>
 												</c:when>
 												<c:otherwise>
 													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
@@ -501,7 +501,7 @@
 </div>
 <script>
 $(document).ready(function(){
-
+	setTimeout(function(){ $('#popUpModal').modal('show'); }, 500);
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,
@@ -525,11 +525,15 @@ $("#add_to_wishlist-sizeguide").click(function(){
 	 $(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
 	return false;
 });
-
-$("#noProductForSelectedSeller").hide();
-$("#productDetails").show();
-$("#price").show();
-
+	$("#noProductForSelectedSeller").hide();
+	$("#productDetails").show();
+	$("#sizePrice").show();
+	
+	/* $('body').on('hidden.bs.modal', '#popUpModal', function () {
+		  $(this).removeData('bs.modal');
+		}); */
+	
+	
 });
 
 
@@ -705,6 +709,7 @@ function loadDefaultWishListName_SizeGuide() {
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
 
+
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
@@ -763,4 +768,6 @@ function loadDefaultWishListName_SizeGuide() {
 		$('input.wishlist#add_to_wishlist-sizeguide').popover('hide');
 		}, 1500);
 	}
+	
+
 </script> 	
