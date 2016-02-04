@@ -1180,7 +1180,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			double totalPrice = 0;
 			for (final AbstractOrderEntryModel entry : entries)
 			{
-				if (!entry.getGiveAway().booleanValue())
+				if (!getDiscountUtility().isFreebieOrBOGOApplied(entry))
 				{
 					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
 					{
@@ -1190,14 +1190,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						totalPrice += entry.getTotalPrice().doubleValue();
 					}
+
+					totalPrice -= 0.01 * entry.getFreeCount().intValue();
 				}
 			}
 
 			//amtTobeDeductedAtlineItemLevel is a variable to check total apportioned COD charge is equal to total convenience charge
-			//final double amtTobeDeductedAtlineItemLevel = MarketplacecommerceservicesConstants.AMOUNTTOBEDEDUCTED;
 			for (final AbstractOrderEntryModel entry : entries)
 			{
-				if (!entry.getGiveAway().booleanValue())
+				if (!getDiscountUtility().isFreebieOrBOGOApplied(entry))
 				{
 					double entryTotals = 0;
 					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
@@ -1208,14 +1209,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						entryTotals = entry.getTotalPrice().doubleValue();
 					}
-					final Long quantity = entry.getQuantity();
+					entryTotals -= 0.01 * entry.getFreeCount().intValue();
+					final long quantity = entry.getQualifyingCount().longValue();
+
 
 					//calculating ratio of convenience charge for cart entry
 					final Double codChargePercent = Double.valueOf(entryTotals / totalPrice);
 					final Double codChargePerEntry = Double.valueOf(totalCODCharge.doubleValue() * codChargePercent.doubleValue());
 					final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
 							codChargePerEntry));
-					final Double appCODChargeForEachItem = Double.valueOf(formattedCODCharge.doubleValue() / quantity.doubleValue());
+					final Double appCODChargeForEachItem = Double.valueOf(formattedCODCharge.doubleValue() / quantity);
 					entry.setConvenienceChargeApportion(appCODChargeForEachItem);
 
 					try
@@ -1248,8 +1251,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.error("Exception while saving cod payment info with " + e);
 			throw new ModelSavingException(e + " :Exception while saving cod payment info with");
 		}
-		//getting the session cart
-		//final CartModel cart = getCartService().getSessionCart();
 		//setting CODPaymentInfoModel in cartmodel
 		cartModel.setPaymentInfo(cODPaymentInfoModel);
 		cartModel.setPaymentAddress(cartModel.getDeliveryAddress());
@@ -1264,7 +1265,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			throw new ModelSavingException(e + " :Exception while saving cart with");
 		}
 	}
-
 
 	/**
 	 * This method is used set the saved card details in SavedCardModel
@@ -2506,7 +2506,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		return jusModelLast;
 	}
-
 
 
 	//Getters and Setters
