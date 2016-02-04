@@ -15,36 +15,35 @@
        http://www.springframework.org/schema/integration/file
        http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
 
- <bean id="baseDirectoryMarketplaceCategory" class="java.lang.String">
+ <bean id="baseDirectoryMarketplaceBin" class="java.lang.String">
         <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-bin" />
     </bean>
  
     <!-- 1) Scan for files -->
     
-    <file:inbound-channel-adapter id="batchFilesMarketplaceCategory" directory="#{baseDirectoryMarketplaceCategory}"
+    <file:inbound-channel-adapter id="batchFilesMarketplaceBin" directory="#{baseDirectoryMarketplaceBin}"
         filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" >
         <int:poller fixed-rate="1000" />
     </file:inbound-channel-adapter>
  
     <!-- 2) move the file to processing and setup header -->
     
-    <file:outbound-gateway request-channel="batchFilesMarketplaceCategory" reply-channel="batchFilesMarketplaceCategoryProc"
-        directory="#{baseDirectoryMarketplaceCategory}/processing" delete-source-files="true" />
+    <file:outbound-gateway request-channel="batchFilesMarketplaceBin" reply-channel="batchFilesMarketplaceBinProc"
+        directory="#{baseDirectoryMarketplaceBin}/processing" delete-source-files="true" />
 
 	<!-- 3) transform csv to impex file -->
 	
- 	<int:service-activator input-channel="batchFilesMarketplaceCategoryProc" output-channel="batchFilesHeaderInit"
-        ref="MarketplaceCategoryHeaderSetupTask" method="execute" />
+ 	<int:service-activator input-channel="batchFilesMarketplaceBinProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplaceBinHeaderSetupTask" method="execute" />
  
- 	<bean id="MarketplaceCategoryHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+ 	<bean id="MarketplaceBinHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
         <property name="catalog" value="mplProductCatalog" />
         <property name="net" value="false" />
-        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceCategory" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceBin" />
     </bean>   
 
 	<!-- Transformer converters mappings -->
 
-	<!-- Transformer for Category Import -->
 	<bean id="batchBinConverterMapping"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
 		p:mapping="bins_iso_9_4" p:converter-ref="batchBinConverter" />
