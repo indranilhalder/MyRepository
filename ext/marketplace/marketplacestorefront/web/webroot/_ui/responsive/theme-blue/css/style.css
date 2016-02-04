@@ -29206,7 +29206,7 @@ footer>ul>li>.toggle>img{
 footer .footer-text {
 	clear:both;
 }
-footer .footer-text p{
+footer .footer-text {
 	border-top: 1px solid #7e7e7e;
     width: 97%;
     padding: 10px;
@@ -29356,6 +29356,7 @@ padding-top:20px;
 /*best picks start*/
 #bestPicks{
 padding: 0 20px;
+    clear: both;
 }
 .home-best-pick-carousel{
 margin: 10px 0px;
@@ -29400,7 +29401,12 @@ div#promobannerhomepage{
 margin:30px 0;
 }
 div#promobannerhomepage a{
-display:block;
+color:#fff;
+text-decoration: underline;
+}
+div#promobannerhomepage a:hover{
+color:#fff;
+cursor:pointer;
 }
 div#promobannerhomepage a img{
 width:100%;
