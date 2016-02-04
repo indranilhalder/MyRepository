@@ -5725,8 +5725,8 @@ text-transform: uppercase;
               display: inline;
               margin-top: 0; } }
       .cart.wrapper .left-block .payments.tab-view .pay .button, .confirmation .left-block .payments.tab-view .pay .button {
-        background-color: #ff2c43;
-        border-color: #ff2c43; }
+        background-color: #a9143c;
+        border-color: #a9143c; }
         .cart.wrapper .left-block .payments.tab-view .pay .button:hover,
 .confirmation .left-block .payments.tab-view .pay .button:hover {
     background: #e8002c;
@@ -10388,10 +10388,15 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .main-image .online-exclusive {
     position: absolute;
-    width: 60%;
+    width: 50%;
     bottom: -5px;
     left: -10px;
-    min-width: 200px
+    height: 35px;
+    /* min-width: 200px */
+    background-color: #ffb810;
+}
+.product-info .product-image-container .main-image .brush-strokes-sprite{
+	display: none;
 }
 .product-info .product-image-container .main-image .online-exclusive span {
     position: absolute;
@@ -10401,7 +10406,7 @@ body .account .right-account .order-history .pagination li{
     left: 0;
     font-weight: 500;
     letter-spacing: 1px;
-    padding-left: 5%;
+    padding-left: 16%;
     text-transform: uppercase;
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
@@ -18082,7 +18087,7 @@ width: 12px;
 	font-weight:bold;
 }
 .checkout.wrapper .left-block .payment-button:hover{
-	background-color: #e8002c !important;
+	background-color: #88102C !important;
 }
 
 @media(max-width:650px){
@@ -18200,8 +18205,8 @@ body .account .right-account form .half.account-profileEmail,body .account .righ
 .cart.wrapper .right-block .block .checkout-types .checkout-button a.button:hover,		
 .confirmation .right-block .block .checkout-types .checkout-button a.button:hover {			
    color: #fff !important;			
-  background-color: #e8002c !important;		
-  border-color: #ff2c43;		
+  background-color: #88102C !important;		
+  border-color: #88102C;		
   line-height: 30px;		
 }		}
 			
@@ -20399,7 +20404,7 @@ box-shadow:none;
 box-shadow:none;
 }
 .cart.wrapper button.cod-otp-button{
-	background-color: rgb(255, 28, 71);
+	background-color: #a9143c;
 	color:#fff;
 font-weight:bold;
 padding:10px;
@@ -27490,7 +27495,7 @@ header > .content .bottom .bag{
 word-break: break-word;
 }
 .cart.wrapper button.cod-otp-button:hover {
-	background-color: rgb(232, 0, 44);
+	background-color: #88102C;
 	
 }
 .feature-categories .item.slide > li {
@@ -29206,7 +29211,7 @@ footer>ul>li>.toggle>img{
 footer .footer-text {
 	clear:both;
 }
-footer .footer-text p{
+footer .footer-text {
 	border-top: 1px solid #7e7e7e;
     width: 97%;
     padding: 10px;
@@ -29356,6 +29361,7 @@ padding-top:20px;
 /*best picks start*/
 #bestPicks{
 padding: 0 20px;
+    clear: both;
 }
 .home-best-pick-carousel{
 margin: 10px 0px;
@@ -29400,7 +29406,12 @@ div#promobannerhomepage{
 margin:30px 0;
 }
 div#promobannerhomepage a{
-display:block;
+color:#fff;
+text-decoration: underline;
+}
+div#promobannerhomepage a:hover{
+color:#fff;
+cursor:pointer;
 }
 div#promobannerhomepage a img{
 width:100%;
@@ -29753,11 +29764,24 @@ li.store-locator-header a:before{
     font-weight: lighter;
     color: #A9143C;
     content: "\f041";
-    font-size: 16px;
+    font-size: 18px;
     line-height: 18px;
     margin-right: 5px;
     top: 1px;
     position: relative;
+}
+
+#stayQued>h1>span:first-child{
+	display: inline-block;
+    height: 45px;
+    width: 50px;
+    background-image: url("../images/stay-qued.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    margin-right: 15px;
+}
+#addToCartFormTitleSuccess font{
+	color:#a9143c !important;
 }
 /*--------------maincss-----------*/
 .row
@@ -35432,7 +35456,7 @@ input#otpMobileNUMField:focus {
 }
 
 .make_payment, #paymentFormButton button {
-	background-color: rgb(255, 28, 71) !important;
+	background-color: #a9143c !important;
 	
 	border-radius: 0 !important;
 	/* padding: 15px !important; */
@@ -35444,7 +35468,7 @@ input#otpMobileNUMField:focus {
 }
 
 .make_payment:hover, #paymentFormButton button:hover {
-	background-color: rgb(232, 0, 44) !important;
+	background-color: #88102C !important;
 }
 
 #billingAddress input[type="text"] {

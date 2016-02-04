@@ -836,7 +836,7 @@ $(document).ready(function(){
 		$(".checkout-shipping #addressForm input[type='checkbox']").change(function () {
 		    if ($(this).prop( "checked" )===true) {
 		        // checked
-		       $(this).parent().css("color","#00cbe9");
+		       $(this).parent().css("color","#a9143c");
 		       $(this).parent().addClass('checkbox-checked');
 		       
 		    }
