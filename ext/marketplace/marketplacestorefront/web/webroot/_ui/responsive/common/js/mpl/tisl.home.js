@@ -386,6 +386,75 @@ function getBestPicksAjaxCall(){
 
 // AJAX CALL BEST PICKS END
 
+//AJAX CALL PRODUCTS YOU CARE START
+if ($('#productYouCare').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	getProductsYouCareAjaxCall();
+}
+
+function getProductsYouCareAjaxCall(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getProductsYouCare",
+		
+		success : function(response) {
+			
+			renderHtml = "<h1>" + response.title + "</h1>";
+			renderHtml += "<div class='home-product-you-care-carousel'>";
+			$
+				.each(
+						response.categories,function(k, v){
+							
+						console.log('Category name: '+v.categoryName);
+						console.log('Category code: '+v.categoryCode);
+						console.log('Category media url: '+v.mediaURL);
+						
+						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c/"+v.categoryCode;
+						//for url
+						renderHtml += "<a href='"
+							+ URL
+							+ "' class='item'>";
+						//for image
+						renderHtml += "<div class='home-product-you-care-carousel-img'> <img src='"
+							+ v.mediaURL
+							+ "'></img></div>";
+						
+						renderHtml += "<div class='short-info'>"
+							+ v.categoryName
+							+ "</div>";
+						
+						renderHtml += "</a>";
+						
+				});
+		
+			renderHtml += "</div>";	
+			$("#productYouCare").html(renderHtml);
+		},
+		
+		error : function() {
+			console.log('Error while getting getProductsYouCare');
+		},
+		
+		complete: function() {
+			$(".home-product-you-care-carousel").owlCarousel({
+				navigation:true,
+				navigationText : [],
+				pagination:false,
+				itemsDesktop : [5000,4], 
+				itemsDesktopSmall : [1400,4], 
+				itemsTablet: [650,2], 
+				itemsMobile : [480,2], 
+				rewindNav: false,
+				lazyLoad:true
+			});
+		}
+
+	});
+}
+
+//AJAX CALL PRODUCTS YOU CARE END
+
 function getNewAndExclusiveAjaxCall(){
 	
 	$

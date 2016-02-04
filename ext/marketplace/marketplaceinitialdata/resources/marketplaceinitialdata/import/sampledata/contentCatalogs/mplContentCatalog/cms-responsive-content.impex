@@ -1,4 +1,4 @@
-# 
+#
 # ImpEx for Responsive Tata marketplace Site CMS Content 
 # 
 $contentCatalog=mplContentCatalog 
@@ -334,6 +334,20 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section4CSlot-Homepage;Section4C;;Section4CSlot-Homepage;;;
+
+##### Home section 4D
+#The Products You Care About
+
+#MplCategoryCarouselComponent changes starts
+INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
+;;TMPProductsCareCategoriesCarouselComponent;Products You Care About Categories Carousel Component;MSH1011,MSH1111,MSH13,MSH12,MSH1010102,MSH1112103;TMPProductsCareCategoriesCarouselComponent;thumbnail
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;Section4DSlot-Homepage;TMPProductsCareCategoriesCarouselComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section4DSlot-Homepage;Section4D;;Section4DSlot-Homepage;;;
+
 
 	## Home Section 5A
 ####### StayQued Section ###################
