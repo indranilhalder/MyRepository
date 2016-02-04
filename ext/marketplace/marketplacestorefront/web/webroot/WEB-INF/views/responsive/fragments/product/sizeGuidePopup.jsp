@@ -61,7 +61,7 @@
 								</c:forEach>
 							</ul>
 						</li>
-					
+					</ul>
 						<c:choose>
 					    <c:when test="${product.rootCategory=='Clothing'}">
 						<c:forEach items="${sizeguideData}" var="sizeGuide" >
@@ -501,7 +501,6 @@
 </div>
 <script>
 $(document).ready(function(){
-	setTimeout(function(){ $('#popUpModal').modal('show'); }, 500);
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,
@@ -514,21 +513,19 @@ $(document).ready(function(){
 	/* if(category!='Footwear'){ */
 	
 	var numLi= $(".modal.size-guide .sizes .tables li.header > ul").children().length;
-	
 	var sizeWidth= 88/(numLi-1) + "%";
 
 	$(".modal.size-guide .sizes .tables li > ul > li").css("width",sizeWidth);
 	$(".modal.size-guide .sizes .tables li > ul > li:first-child").css("width","12%");
 /* 	} */
 
-$("#add_to_wishlist-sizeguide").click(function(){
-	 $(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
-	return false;
-});
+	$("#add_to_wishlist-sizeguide").click(function(){
+	 	$(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
+		return false;
+	});
 	$("#noProductForSelectedSeller").hide();
 	$("#productDetails").show();
 	$("#sizePrice").show();
-	
 	/* $('body').on('hidden.bs.modal', '#popUpModal', function () {
 		  $(this).removeData('bs.modal');
 		}); */
