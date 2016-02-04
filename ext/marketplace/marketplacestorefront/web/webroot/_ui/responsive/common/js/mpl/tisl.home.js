@@ -299,6 +299,9 @@ $(document).on("click", ".home-brands-you-love-carousel-brands",
 			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 		});
 
+if($('#ia_site_page_id').val()=='homepage'){
+	
+
 setInterval(function() {
 
 	$(".home-brands-you-love-carousel-brands").removeClass('active');
@@ -312,6 +315,7 @@ setInterval(function() {
 	}
 
 }, 20000);
+}
 
 
 
