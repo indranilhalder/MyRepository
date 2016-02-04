@@ -1863,7 +1863,7 @@ h2 {
       margin-left: -2px;
       margin-right: -2px;
       width: 140px;
-      z-index: 2;
+      z-index: 3;
       -webkit-transition: border 0.3s;
       -moz-transition: border 0.3s;
       transition: border 0.3s; }
@@ -28342,6 +28342,9 @@ body .account .right-account.rewards>div.your-activity.coupon-history>p span
 	color: #00cbe9;
 	font-weight: 500
 }
+body .account .right-account.rewards>div.your-activity.coupon-history>ul{
+	border-bottom: 1px solid #f0f4f5;
+}
 
 body .account .right-account.rewards>div.your-activity.coupon-history>ul>li,
 	body .account .right-account.rewards>div.your-activity.coupon-history>ul>li.header
@@ -28714,7 +28717,6 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
 #loginDivCheckout,#loginDivCheckout td, #loginDivCheckout table, #loginDivCheckout tr, #loginDivCheckout tbody, #loginDivCheckout div,
-#loginDivsiginflyout,#loginDivsiginflyout td, #loginDivsiginflyout table, #loginDivsiginflyout tr, #loginDivsiginflyout tbody, #loginDivsiginflyout div,
 #loginDivRegisterCheckOut,#loginDivRegisterCheckOut td, #loginDivRegisterCheckOut table, #loginDivRegisterCheckOut tr, #loginDivRegisterCheckOut tbody, #loginDivRegisterCheckOut div {
     display: block;
     width: 100% !important;
@@ -29003,6 +29005,42 @@ position: absolute;
 	font-weight:600;
 	display:block;
 	
+}
+
+body.page-productDetails .gig-comment .gig-media-thumbnail,
+body.page-reviews .gig-comment .gig-media-thumbnail {
+	height: auto !important;
+}
+
+body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image,
+body.page-reviews .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
+	height: auto !important;
+	width: 50px !important;
+}
+
+body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-caption a {
+	display: none;
+}  
+
+#loginDivsiginflyout > table > tbody > tr > td table td:first-child{
+	width: 10% !important;
+} 
+#commentsDiv {
+    width: 80% !important;
+    clear: both;
+}
+#reviewPluginContainer .modal-header {
+	    padding-right: 35px;
+} 
+@media(max-width:790px){
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+    padding-top: 0px;
+	position:relative;}
+
+body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
+    padding-top: 40px;}
+body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
+	padding-left:0px;}
 }
 /*--------------maincss-----------*/
 .row

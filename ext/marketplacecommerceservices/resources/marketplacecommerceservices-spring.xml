@@ -1530,4 +1530,15 @@
 	<bean id="mplVoucherService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
 	</bean>
+	
+    <bean id="automationService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.InternalExternalAutomationServiceImpl">
+	</bean>
+	
+	
+		
+	<bean id="CampaignAutomationJob" parent="abstractJobPerformable"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.InternalExternalCampaignAutomationJob"
+		autowire="byName">
+	</bean>
 </beans>

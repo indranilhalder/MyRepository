@@ -70,9 +70,9 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 		{
 
 			List<ProductModel> productsCoupon = new ArrayList<ProductModel>();
-			List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
+			//List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
 			productsCoupon = VoucherStatusNotificationModel.getProductAssociated();
-			categoryBasedCoupon = VoucherStatusNotificationModel.getCategoryAssociated();
+			//categoryBasedCoupon = VoucherStatusNotificationModel.getCategoryAssociated();
 
 			String productUrl = "";
 			if (null != productsCoupon)
@@ -82,16 +82,6 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 					productUrl = getProductModelUrlResolver().resolve(p);
 					notificationData.setProductUrl(productUrl);
 
-				}
-			}
-			if (null != categoryBasedCoupon)
-			{
-
-				for (final CategoryModel c : categoryBasedCoupon)
-				{
-					productUrl = getCategoryModelUrlResolver().resolve(c);
-
-					notificationData.setProductUrl(productUrl);
 				}
 			}
 

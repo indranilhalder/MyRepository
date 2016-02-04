@@ -52,25 +52,31 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 	@Override
 	public List<GigyaProductReviewWsDTO> getReviewedProductPrice(final List<GigyaProductReviewWsDTO> commentsWithProductData)
 	{
-
 		ProductData productData = null;
 		PriceData priceFinal = null;
 		final List<GigyaProductReviewWsDTO> modifiedDTOList = new ArrayList<GigyaProductReviewWsDTO>();
-		try
+
+		for (final GigyaProductReviewWsDTO list : commentsWithProductData)
 		{
-			for (final GigyaProductReviewWsDTO list : commentsWithProductData)
+			try
 			{
 				productData = list.getProductData();
 				final BuyBoxData productPrice = buyBoxFacade.buyboxPrice(productData.getCode());
 				PriceData price = null;
-				if (productPrice.getSpecialPrice() != null)
+				final Double zeroValue = new Double(0.0);
+				if (productPrice.getSpecialPrice() != null && productPrice.getSpecialPrice().getDoubleValue() != zeroValue)
 				{
 					price = productPrice.getSpecialPrice();
 				}
-				else
+				else if (null != productPrice.getPrice() && productPrice.getPrice().getDoubleValue() != zeroValue)
 				{
 					price = productPrice.getPrice();
 				}
+				else
+				{
+					price = productPrice.getMrp();
+				}
+
 				priceFinal = priceDataFactory.create(price.getPriceType(), price.getValue(), price.getCurrencyIso());
 				LOG.debug("price :" + priceFinal);
 				productData.setProductMOP(priceFinal);
@@ -78,12 +84,15 @@ public class DefaultMplReviewFacade implements MplReviewFacade
 				list.setProductData(productData);
 				modifiedDTOList.add(list);
 			}
-			return modifiedDTOList;
+			catch (final Exception ex)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.E0000 + ex.getMessage());
+				list.setProductData(productData);
+				modifiedDTOList.add(list);
+			}
 		}
-		catch (final Exception ex)
-		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
-		}
+
+		return modifiedDTOList;
 	}
 
 	/*
