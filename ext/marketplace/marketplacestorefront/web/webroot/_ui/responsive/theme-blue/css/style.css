@@ -10044,6 +10044,7 @@ body .account .right-account .order-history .pagination li{
         letter-spacing: 1px;
         padding-left: 5%;
         text-transform: uppercase;
+        line-height:normal;
       }
     .product-tile .image .online-exclusive {
       width: 80%;
@@ -29189,7 +29190,7 @@ footer>ul>li>.toggle>img{
     width: 150px;
     text-decoration: none;
     margin: 0px auto;
-    padding: 20px;
+    padding: 13px;
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 1.5px;
@@ -29381,7 +29382,7 @@ margin: 10px 0px;
     width: 100%;
 }
 #bestPicks .view-cliq-offers {
-	padding: 20px;
+	padding: 13px;
     border: 1px solid #4a4a4a;
     color: #333;
     font-size: 12px;
@@ -29474,9 +29475,9 @@ a.button.trending-button {
 	width: 80%;
     display: block;
     margin: 0px auto;
-    height: 50px;
+    height: 40px;
     line-height: 1;
-    padding-top:18px;
+    padding-top:14px;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -29488,9 +29489,9 @@ a.button.maroon {
 	width: 70%;
     display: block;
     margin: 20px auto;
-    height: 50px;
+    height: 40px;
     line-height: 1;
-    padding-top:18px;
+    padding-top:14px;
     letter-spacing: 1px;
     font-weight: bold;
     text-transform: uppercase;
@@ -29721,7 +29722,7 @@ header .content .marketplace, header .content .brand-logo {
 header .content .bottom.active .marketplace a img {
 width: 100px !important;
     height: 50px !important;
-    margin-top: 12px;}
+    /* margin-top: 12px; */}
     header .content .bottom.active .marketplace {
    margin-right: 0px;    }
 #rotatingImageTimeout {
@@ -29746,6 +29747,17 @@ width: 100px !important;
 
 .home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name {
 	margin-top: 10px;
+}
+li.store-locator-header a:before{
+	font-family: FontAwesome;
+    font-weight: lighter;
+    color: #A9143C;
+    content: "\f041";
+    font-size: 16px;
+    line-height: 18px;
+    margin-right: 5px;
+    top: 1px;
+    position: relative;
 }
 /*--------------maincss-----------*/
 .row

@@ -179,7 +179,7 @@ function registerUser(eventObject)
 								<cms:pageSlot position="MiniCart" var="component">
 									<cms:component component="${component}" />
 								</cms:pageSlot>
-								<li><a href="#">Our Stores</a></li>
+								<li class="store-locator-header"><a href="#">Our Stores</a></li>
 							</c:if>
 						</c:if>
 						<!--Using this tag for Track Order Link in header navigation pane and it will navigate to 'My Order page'  -->
