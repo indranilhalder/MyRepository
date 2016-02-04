@@ -195,7 +195,7 @@
     <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
 
 </span>
- <div class="price">
+ <div class="price" id="sizePrice">
          <!--  <p class="normal"><div id="specialSelPrice"></div></p> -->
 	<p class="old" id="sizemrpPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
@@ -527,7 +527,7 @@ $("#add_to_wishlist-sizeguide").click(function(){
 });
 	$("#noProductForSelectedSeller").hide();
 	$("#productDetails").show();
-	$("#price").show();
+	$("#sizePrice").show();
 	
 	/* $('body').on('hidden.bs.modal', '#popUpModal', function () {
 		  $(this).removeData('bs.modal');
@@ -703,12 +703,13 @@ function loadDefaultWishListName_SizeGuide() {
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/addToWishListInPDP";
 	var sizeSelected=true;
-	if( $("#variant.size-g option:selected").val()=="#"){
+	if( $("#variant,#sizevariant option:selected").val()=="#"){
 		sizeSelected=false;
 	}
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
-  
+
+
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
