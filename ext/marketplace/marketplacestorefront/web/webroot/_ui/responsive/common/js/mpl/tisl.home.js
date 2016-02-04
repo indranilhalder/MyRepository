@@ -492,6 +492,9 @@ if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').va
 
 /* StayQued Section starts */
 function getStayQuedHomepage(){
+	//alert("1111="+ACC.config.commonResourcePath);
+	//alert("222222="+ACC.config.themeResourcePath);
+	//alert("33333="+ACC.config.siteResourcePath);
 	$
 	.ajax({
 		type : "GET",
@@ -508,7 +511,7 @@ function getStayQuedHomepage(){
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
-			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">Read Article</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
+			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">'+$(promoText2).text()+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},
