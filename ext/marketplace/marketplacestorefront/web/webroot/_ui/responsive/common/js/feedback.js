@@ -308,7 +308,7 @@ $(document).ready(function(){
 					 $("li.short.words").siblings("li.long.words").hide();
 					 $("li.short.words").unbind('click');
 					  $("li.short.words").click(function(){
-
+						$(this).toggleClass('active');
 					    $(this).nextAll().each(function(){
 
 					      if($(this).hasClass("short")) {
@@ -1094,7 +1094,7 @@ $(document).ready(function(){
 				 $("li.short.words").siblings("li.long.words").hide();
 				 $("li.short.words").unbind('click');
 				  $("li.short.words").click(function(){
-
+					  $(this).toggleClass('active');
 				    $(this).nextAll().each(function(){
 
 				      if($(this).hasClass("short")) {
