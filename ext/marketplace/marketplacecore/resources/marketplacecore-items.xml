@@ -3346,7 +3346,7 @@
 					<attribute qualifier="footerText" type="localized:java.lang.String" generate="true" autocreate="true">
 						<persistence type="property">
 							<columntype database="oracle">
-								<value>varchar2(4000)</value>
+								<value>CLOB</value>
 							</columntype>
 							<columntype database="mysql">
 								<value>text</value>
