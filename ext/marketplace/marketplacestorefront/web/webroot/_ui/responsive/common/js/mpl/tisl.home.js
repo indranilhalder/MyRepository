@@ -153,13 +153,13 @@ function getBrandsYouLoveAjaxCall() {
 										console.log(v.brandLogoUrl);
 										
 										if (!v.showByDefault) {
-											renderHtml += "<div class='home-brands-you-love-carousel-brands' id='"
+											renderHtml += "<div class='home-brands-you-love-carousel-brands item' id='"
 													+ v.compId
 													+ "'><img src='"
 													+ v.brandLogoUrl
 													+ "'></img></div>";
 										} else {
-											renderHtml += "<div class='home-brands-you-love-carousel-brands active' id='"
+											renderHtml += "<div class='home-brands-you-love-carousel-brands item active' id='"
 													+ v.compId
 													+ "'><img src='"
 													+ v.brandLogoUrl
@@ -176,6 +176,19 @@ function getBrandsYouLoveAjaxCall() {
 				error : function() {
 					// globalErrorPopup('Failure!!!');
 					console.log("Error while getting brands you love");
+				},
+				complete : function() {
+					$(".home-brands-you-love-carousel").owlCarousel({
+						navigation:true,
+						navigationText : [],
+						pagination:false,
+						itemsDesktop : [5000,5], 
+						itemsDesktopSmall : [1400,5], 
+						itemsTablet: [650,2], 
+						itemsMobile : [480,2], 
+						rewindNav: false,
+						lazyLoad:false
+					});
 				}
 			});
 }
@@ -185,7 +198,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 	if (window.localStorage
 			&& (html = window.localStorage.getItem("brandContent-" + id)) && html != "") {
 		// console.log("Local");
-		$('.home-brands-you-love-desc').empty();
+		$('.home-brands-you-love-desc').remove();
 		$('#brandsYouLove').append(decodeURI(html));
 	}
 	else{
@@ -201,14 +214,22 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					"id" : id
 				},
 				success : function(response) {
-					$('.home-brands-you-love-desc').empty();
+					$('.home-brands-you-love-desc').remove();
 					defaultHtml = "<div class='home-brands-you-love-desc'>";
 					
 					if (typeof response.firstProductImageUrl !== "undefined") {
 						
 						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></a></div>";
+								+ "'></img></a>";
+						if (typeof response.firstProductTitle !== "undefined"){
+							defaultHtml +="<p class='product-name'>"+response.firstProductTitle+"</p>";
+						}
+						if (typeof response.firstProductPrice !== "undefined"){
+							defaultHtml +="<p class='price normal'>"+response.firstProductPrice+"</p>";
+			                  
+						}
+						defaultHtml +="</div>"
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
 					if (typeof response.text !== "undefined") {
@@ -228,7 +249,15 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					if (typeof response.secondproductImageUrl !== "undefined") {
 						defaultHtml += "<div class='home-brands-you-love-side-image right'><a href='"+ACC.config.encodedContextPath+response.secondProductUrl+"'><img src='"
 								+ response.secondproductImageUrl
-								+ "'></img></a></div>";
+								+ "'></img></a>";
+						if (typeof response.secondProductTitle !== "undefined"){
+							defaultHtml +="<p class='product-name'>"+response.secondProductTitle+"</p>";
+						}
+						if (typeof response.secondProductPrice !== "undefined"){
+							defaultHtml +="<p class='normal price'>"+response.secondProductPrice+"</p>";
+			                  
+						}
+						defaultHtml +="</div>"
 					}
 
 					defaultHtml += "</div>";
@@ -261,12 +290,12 @@ if ($('#brandsYouLove').children().length == 0 && $('#ia_site_page_id').val()=='
 }
 
 var bulCount = $(".home-brands-you-love-carousel-brands.active").index() - 1;
-$(document).on("mouseover", ".home-brands-you-love-carousel-brands",
+$(document).on("click", ".home-brands-you-love-carousel-brands",
 		function() {
 			$(".home-brands-you-love-carousel-brands").removeClass('active');
 			$(this).addClass('active');
-			$('.home-brands-you-love-desc').empty();
-			bulCount = $(this).index();
+			$('.home-brands-you-love-desc').remove();
+			bulCount = $(this).parent().index();
 			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 		});
 
@@ -429,17 +458,16 @@ function getPromoBannerHomepage(){
 			var defaultHtml = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
-			var majorPromoText = response.majorPromoText;
-			var minorPromo2Text = response.minorPromo2Text;
 			var bannerAltText = response.bannerAltText;
-			var minorPromo1Text = response.minorPromo1Text;
 			var promoText1 = response.promoText1;
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
 			
-			// renderHtml = '<img src="' + response.bannerImage +'"/>';
-			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
+
+			//renderHtml = '<img src="' + response.bannerImage +'"/>';
+			renderHtml = promoText1; 
+
 			$('#promobannerhomepage').html(renderHtml);
 
 		},
@@ -471,15 +499,12 @@ function getStayQuedHomepage(){
 			var defaultHtml = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
-			var majorPromoText = response.majorPromoText;
-			var minorPromo2Text = response.minorPromo2Text;
 			var bannerAltText = response.bannerAltText;
-			var minorPromo1Text = response.minorPromo1Text;
 			var promoText1 = response.promoText1;
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
-			renderHtml = '<a href="' + bannerUrlLink + '">' + '<img src="' + bannerImage +'"/>' +'</a>'; 
+			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">Read Article</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},

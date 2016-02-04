@@ -50,17 +50,17 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];logo(co
 ;;IndigoSpectrumShowCaseitem;;showcase3.png
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];text;bannerText
 ;;ZaraBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Zara Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Zara Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;NuonBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Nuon Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Nuon Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;LandmarkBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Landmark Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Landmark Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;AscotBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Ascot Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Ascot Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;TitanBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Titan Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Titan Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;CromaBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Croma Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Croma Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 #CollectionShowcase
 ;;PrettyInPetalsShowCaseitem;"<h1>Colour is everything...</h1><p class='showcase-para'>Find excusive collections only at Tata Cliq</p><a class='button maroon btn-red'>Read the full story</a>
  <a class='button trending-button btn-trans'>View more showcase story</a>"
@@ -74,15 +74,15 @@ UPDATE MplShowcaseComponent;$contentCV[unique=true];uid[unique=true];title
 ;;ShowcaseComponent;"Showcase"
 
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];product1(code,$productCV);product2(code,$productCV)
-;;ZaraBrandShowcaseItem;98765432;98765433
-;;NuonBrandShowcaseItem;98765432;98765433
-;;LandmarkBrandShowcaseItem;98765432;98765433
-;;AscotBrandShowcaseItem;98765432;98765433
-;;TitanBrandShowcaseItem;98765432;98765433
-;;CromaBrandShowcaseItem;98765432;98765433
-;;PrettyInPetalsShowCaseitem;98765432
-;;CelebrationOfColorShowCaseitem;98765433
-;;IndigoSpectrumShowCaseitem;98765432
+;;ZaraBrandShowcaseItem;987654321;987654322
+;;NuonBrandShowcaseItem;987654322;987654321
+;;LandmarkBrandShowcaseItem;987654321;987654322
+;;AscotBrandShowcaseItem;987654322;987654321
+;;TitanBrandShowcaseItem;987654321;987654322
+;;CromaBrandShowcaseItem;987654322;987654321
+;;PrettyInPetalsShowCaseitem;987654322
+;;CelebrationOfColorShowCaseitem;987654321
+;;IndigoSpectrumShowCaseitem;987654322
 
 ###### Best Picks carousel component
 
@@ -116,10 +116,9 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 
 #Added this line
 UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
-;;TMPHomepagePromotionBannerComponent1;banner1.jpg;
-;;TMPHomepagePromotionBannerComponent2;banner2.jpg;
-;;TMPHomepagePromotionBannerComponent3;banner3.jpg;
-
+;;TMPHomepagePromotionBannerComponent1;;"<p>buy online and get them today with fast track same day delivery or in-store collection</p>";
+;;TMPHomepagePromotionBannerComponent2;;"<p>THREE WAYS TO WEAR THE TREND</p>";
+;;TMPHomepagePromotionBannerComponent3;;"<p>buy online and get Exclusive Offers</p>";
 #### Promotion Banner Ends#########
 
 ##########Showcase###################
@@ -133,15 +132,18 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerT
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
 # Added the Multiple Homepage Banners for TMP only for desktop and widescreen resolution
-;;stayQuedBanner1.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Men_EN_01_350W.jpg;Appa_350x430_Men_EN_01_350W.jpg;"StayQued Banner1";
-;;stayQuedBanner2.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Women_EN_01_350W.jpg;Appa_350x430_Women_EN_01_350W.jpg;"StayQued Banner2";
-;;stayQuedBanner3.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Youth_EN_01_350W.jpg;Appa_350x430_Youth_EN_01_350W.jpg;"StayQued Banner3";
+#;;stayQuedBanner1.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Men_EN_01_350W.jpg;Appa_350x430_Men_EN_01_350W.jpg;"StayQued Banner1";
+#;;stayQuedBanner2.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Women_EN_01_350W.jpg;Appa_350x430_Women_EN_01_350W.jpg;"StayQued Banner2";
+#;;stayQuedBanner3.jpg;$siteResource/images/banners/homepage/responsive/Appa_350x430_Youth_EN_01_350W.jpg;Appa_350x430_Youth_EN_01_350W.jpg;"StayQued Banner3";
+;;stayQuedBanner4.PNG;$siteResource/images/banners/homepage/responsive/casual03.PNG;casual03.PNG;"StayQued Banner";
+;;stayQued1.jpg;$siteResource/images/banners/homepage/responsive/stayQued1.jpg;stayQued1.jpg;"StayQued Banner";
+;;stayQued2.jpg;$siteResource/images/banners/homepage/responsive/stayQued2.jpg;stayQued2.jpg;"StayQued Banner";
 
 #Added this line
 UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
-;;TMPHomepageStayQuedComponent1;stayQuedBanner1.jpg;
-;;TMPHomepageStayQuedComponent2;stayQuedBanner2.jpg;
-;;TMPHomepageStayQuedComponent3;stayQuedBanner3.jpg;
+;;TMPHomepageStayQuedComponent1;stayQuedBanner4.PNG;"<h5>How to dress</h5><h2>Casual</h2><h3>Yet Formal</h3><p>Read our tips on how to dress. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam congue ante ac venenatis faucibus. Donec eu orci sit amet purus consectetur scelerisque non id mi. Maecenas congue dictum nunc non eleifend. </p>"; 
+;;TMPHomepageStayQuedComponent2;stayQued1.jpg;"<h5>How to rock</h5><h2>denim</h2><h3>on denim</h3><p>Let’s just say it – these are dark, unpredictable times and there’s not much to hold on to. Thankfully, when it comes to sartorial issues, denim is our only hope.</p>";
+;;TMPHomepageStayQuedComponent3;stayQued2.jpg;"<h5>Denim</h5><h2>Duo</h2><h3>Men</h3><p>Don’t be surprised if this fabric is all you’re seeing everywhere. Like the sands through the hourglass, so are the days of denim upcycling. </p>";
 
 #### StayQued Ends#########
 UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]

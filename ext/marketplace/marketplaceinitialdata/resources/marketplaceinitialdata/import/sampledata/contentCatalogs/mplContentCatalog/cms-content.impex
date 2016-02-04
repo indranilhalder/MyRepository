@@ -286,7 +286,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;HeaderLinksSlot;ContactInfo,HelpMeShopSearch
 #;;SearchBoxSlot;SearchBox
 #;;HomepageNavLinkSlot;HomepageNavLink
-;;MiniCartSlot;MiniCart,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder 
+;;MiniCartSlot;MiniCart,MyWishList,SignInFlyOut,TrackOrder 
 ;;SideContentSlot;MobileAppBanner
 ;;SiteLogoSlot;SiteLogoComponent
 ;;TabsSlot;TabPanelContainer

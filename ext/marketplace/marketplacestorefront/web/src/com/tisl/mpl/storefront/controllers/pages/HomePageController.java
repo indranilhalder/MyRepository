@@ -541,7 +541,7 @@ public class HomePageController extends AbstractPageController
 					final int lastSequenceNumber = (int) sessionService.getAttribute(seqNum);
 					final int nextSequenceNumber = lastSequenceNumber + 1;
 
-					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner, compType) != null)
+					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) != null)
 					{
 						setNum = nextSequenceNumber;
 					}
@@ -554,28 +554,44 @@ public class HomePageController extends AbstractPageController
 				}
 
 
-				if (getBannerforSequenceNumber(setNum, promoBanner, compType) instanceof MplBigPromoBannerComponentModel)
+				if (getBannerforSequenceNumber(setNum, promoBanner) instanceof MplBigPromoBannerComponentModel)
 				{
 					final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
-							setNum, promoBanner, compType);
+							setNum, promoBanner);
+					if (bannerImage.getBannerImage() != null)
+					{
+						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+					}
+					else
+					{
+						bannerJson.put("bannerImage", "");
+						bannerJson.put("bannerAltText", "");
+					}
 
-					bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
 					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
-					bannerJson.put("majorPromoText", bannerImage.getMajorPromoText());
-					bannerJson.put("minorPromo1Text", bannerImage.getMinorPromo1Text());
-					bannerJson.put("minorPromo2Text", bannerImage.getMinorPromo2Text());
+					bannerJson.put("promoText1", bannerImage.getMajorPromoText());
+					bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
+					bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
 
 				}
 
-				if (getBannerforSequenceNumber(setNum, promoBanner, compType) instanceof MplBigFourPromoBannerComponentModel)
+				if (getBannerforSequenceNumber(setNum, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
 				{
 					final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
-							setNum, promoBanner, compType);
+							setNum, promoBanner);
 
-					bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+					if (bannerImage.getBannerImage() != null)
+					{
+						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+					}
+					else
+					{
+						bannerJson.put("bannerImage", "");
+						bannerJson.put("bannerAltText", "");
+					}
 					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
 					bannerJson.put("promoText1", bannerImage.getPromoText1());
 					bannerJson.put("promoText2", bannerImage.getPromoText2());
 					bannerJson.put("promoText3", bannerImage.getPromoText3());
@@ -603,7 +619,7 @@ public class HomePageController extends AbstractPageController
 	 * @return displayBanner
 	 */
 	private BannerComponentModel getBannerforSequenceNumber(final int sequenceNumber,
-			final MplSequentialBannerComponentModel component, final String sq)
+			final MplSequentialBannerComponentModel component)
 	{
 		BannerComponentModel displayBanner = null;
 		if (component.getBannersList() != null)
@@ -614,40 +630,32 @@ public class HomePageController extends AbstractPageController
 				if (banner instanceof MplBigPromoBannerComponentModel)
 				{
 					final MplBigPromoBannerComponentModel promoBanner = (MplBigPromoBannerComponentModel) banner;
-					if ("stayQued".equalsIgnoreCase(sq))
+
+					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
 					{
-						if (promoBanner.getSeqNumForStayQued() == Integer.valueOf(sequenceNumber))
-						{
-							displayBanner = banner;
-						}
+						displayBanner = banner;
 					}
-					else
-					{
-						if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
-						{
-							displayBanner = banner;
-						}
-					}
+
+					/*
+					 * if ("stayQued".equalsIgnoreCase(sq)) { if (promoBanner.getSeqNumForStayQued() ==
+					 * Integer.valueOf(sequenceNumber)) { displayBanner = banner; } } else { if
+					 * (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber)) { displayBanner = banner; } }
+					 */
 
 				}
 				if (banner instanceof MplBigFourPromoBannerComponentModel)
 				{
 					final MplBigFourPromoBannerComponentModel promoBanner = (MplBigFourPromoBannerComponentModel) banner;
 
-					if ("stayQued".equalsIgnoreCase(sq))
+					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
 					{
-						if (promoBanner.getSeqNumForStayQued() == Integer.valueOf(sequenceNumber))
-						{
-							displayBanner = banner;
-						}
+						displayBanner = banner;
 					}
-					else
-					{
-						if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
-						{
-							displayBanner = banner;
-						}
-					}
+					/*
+					 * if ("stayQued".equalsIgnoreCase(sq)) { if (promoBanner.getSeqNumForStayQued() ==
+					 * Integer.valueOf(sequenceNumber)) { displayBanner = banner; } } else { if
+					 * (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber)) { displayBanner = banner; } }
+					 */
 
 				}
 			}
