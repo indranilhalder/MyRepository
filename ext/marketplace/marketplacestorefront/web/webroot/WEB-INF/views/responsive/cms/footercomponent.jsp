@@ -120,7 +120,7 @@
 </script>
 <!-- This is used for displaying text in footer -->
 <div class="footer-text">
-	<p>${footerText}</p>
+	${footerText}
 </div>
 <!-- This is used for displaying copyright in footer -->
 <div class="banner">

@@ -61,7 +61,7 @@ function editAddress(addressId) {
     		var style=null;
     		if($(this).is(":checked")) {
     			$(this).parent().css("color","#000");
-    			$(this).parent().find('label').css("color","#00cbe9");
+    			$(this).parent().find('label').css("color","#a9143c");
     		} else {
     			$(this).parent().css("color","#a9a9a9");
     			$(this).parent().find('label').css("color","#a9a9a9");

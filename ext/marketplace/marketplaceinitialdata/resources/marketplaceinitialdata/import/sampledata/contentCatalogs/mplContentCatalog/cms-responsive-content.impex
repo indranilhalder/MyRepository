@@ -263,9 +263,9 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ## Home Section 4A
 ####### Promotional Banner ###################
 INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;UrlLink;SequenceNumber;&componentRef
-;;TMPHomepagePromotionBannerComponent1;TMP Homepage Promotion Banner Component1;/;1;TMPHomepagePromotionBannerComponent1
-;;TMPHomepagePromotionBannerComponent2;TMP Homepage Promotion Banner Component2;/;2;TMPHomepagePromotionBannerComponent2
-;;TMPHomepagePromotionBannerComponent3;TMP Homepage Promotion Banner Component3;/;3;TMPHomepagePromotionBannerComponent3
+;;TMPHomepagePromotionBannerComponent1;TMP Homepage Promotion Banner Component1;#;1;TMPHomepagePromotionBannerComponent1
+;;TMPHomepagePromotionBannerComponent2;TMP Homepage Promotion Banner Component2;#;2;TMPHomepagePromotionBannerComponent2
+;;TMPHomepagePromotionBannerComponent3;TMP Homepage Promotion Banner Component3;#;3;TMPHomepagePromotionBannerComponent3
 
 
 INSERT_UPDATE MplSequentialBannerComponent;$contentCV[unique=true];uid[unique=true];name;bannersList(&componentRef);&componentRef
@@ -352,9 +352,9 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 	## Home Section 5A
 ####### StayQued Section ###################
 INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;UrlLink;SequenceNumber;&componentRef
-;;TMPHomepageStayQuedComponent1;TMP Homepage StayQued Component1;/;1;TMPHomepageStayQuedComponent1
-;;TMPHomepageStayQuedComponent2;TMP Homepage StayQued Component2;/;2;TMPHomepageStayQuedComponent2
-;;TMPHomepageStayQuedComponent3;TMP Homepage StayQued Component3;/;3;TMPHomepageStayQuedComponent3
+;;TMPHomepageStayQuedComponent1;TMP Homepage StayQued Component1;"/store/mpl/en";1;TMPHomepageStayQuedComponent1
+;;TMPHomepageStayQuedComponent2;TMP Homepage StayQued Component2;"/store/mpl/en";2;TMPHomepageStayQuedComponent2
+;;TMPHomepageStayQuedComponent3;TMP Homepage StayQued Component3;"/store/mpl/en";3;TMPHomepageStayQuedComponent3
 
 
 INSERT_UPDATE MplSequentialBannerComponent;$contentCV[unique=true];uid[unique=true];name;bannersList(&componentRef);&componentRef
