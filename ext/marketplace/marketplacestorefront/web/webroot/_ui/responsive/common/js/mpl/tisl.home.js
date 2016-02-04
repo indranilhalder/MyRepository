@@ -198,7 +198,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 	if (window.localStorage
 			&& (html = window.localStorage.getItem("brandContent-" + id)) && html != "") {
 		// console.log("Local");
-		$('.home-brands-you-love-desc').empty();
+		$('.home-brands-you-love-desc').remove();
 		$('#brandsYouLove').append(decodeURI(html));
 	}
 	else{
@@ -214,7 +214,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					"id" : id
 				},
 				success : function(response) {
-					$('.home-brands-you-love-desc').empty();
+					$('.home-brands-you-love-desc').remove();
 					defaultHtml = "<div class='home-brands-you-love-desc'>";
 					
 					if (typeof response.firstProductImageUrl !== "undefined") {
@@ -290,12 +290,12 @@ if ($('#brandsYouLove').children().length == 0 && $('#ia_site_page_id').val()=='
 }
 
 var bulCount = $(".home-brands-you-love-carousel-brands.active").index() - 1;
-$(document).on("mouseover", ".home-brands-you-love-carousel-brands",
+$(document).on("click", ".home-brands-you-love-carousel-brands",
 		function() {
 			$(".home-brands-you-love-carousel-brands").removeClass('active');
 			$(this).addClass('active');
-			$('.home-brands-you-love-desc').empty();
-			bulCount = $(this).index();
+			$('.home-brands-you-love-desc').remove();
+			bulCount = $(this).parent().index();
 			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 		});
 
@@ -504,7 +504,7 @@ function getStayQuedHomepage(){
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
-			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+bannerUrlLink+'" class="button maroon">Read Article</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
+			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">Read Article</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},

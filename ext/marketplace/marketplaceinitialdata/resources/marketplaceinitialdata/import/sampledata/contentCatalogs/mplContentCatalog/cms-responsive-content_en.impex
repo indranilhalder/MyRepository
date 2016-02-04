@@ -50,17 +50,17 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];logo(co
 ;;IndigoSpectrumShowCaseitem;;showcase3.png
 UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];text;bannerText
 ;;ZaraBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Zara Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Zara Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;NuonBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Nuon Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Nuon Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;LandmarkBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Landmark Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Landmark Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;AscotBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Ascot Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Ascot Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;TitanBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Titan Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Titan Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 ;;CromaBrandShowcaseItem;"<p class='home-brands-you-love-main-image-heading'>Croma Store is exclusive to Tata CLIQ</p><p class='home-brands-you-love-main-image-desc'>With a variety of designs and styles and exclusively designed merchandise </p>";"<p class='text'>Croma Collections SS16</p>:
-<button class='visit-store'>visit the store</button>"
+<a class='visit-store' href='/store/mpl/en/c/MBH11A00048'>visit the store</a>"
 #CollectionShowcase
 ;;PrettyInPetalsShowCaseitem;"<h1>Colour is everything...</h1><p class='showcase-para'>Find excusive collections only at Tata Cliq</p><a class='button maroon btn-red'>Read the full story</a>
  <a class='button trending-button btn-trans'>View more showcase story</a>"
