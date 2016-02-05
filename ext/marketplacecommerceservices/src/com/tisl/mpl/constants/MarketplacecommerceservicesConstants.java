@@ -855,22 +855,25 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
-	public static final String ORDER_ERROR = "Order not found in current BaseStore";
-	public static final String CSV_ERROR = "Error in CsvFileWriter !!!";
-	public static final String FILE_WRITER_ERROR = "Error while flushing/closing fileWriter !!!";
-	public static final String ORDER_CURRENCY_ERROR = "source order currency must not be null";
+	public static final String ORDER_ERROR = "B8000";
+	public static final String CSV_ERROR = "B8001";
+	public static final String FILE_WRITER_ERROR = "B8002";
+	public static final String ORDER_CURRENCY_ERROR = "B8003";
+	public static final String PROMOTION_FEED_ERROR = "B8004";
 
+
+	public static final String PROMOTIONS_REPORT_FILE_EXTENSION = "promotions.report.extension";
 	public static final String FILE_PATH = "_";
 	public static final String SALES_REPORT_INCREMENTAL = "incremental";
 	public static final String SALES_REPORT_FULL = "full";
 	public static final String SALES_REPORT_QUERY = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE + "} WHERE {"
-			+ OrderModel.TYPE + "}=?type";
+			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 	public static final String SALES_REPORT_QUERY_START = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
-			+ "} WHERE " + "{" + OrderModel.CREATIONTIME + "} >=?fromDate AND {" + OrderModel.TYPE + "}=?type";
+			+ "} WHERE " + "{" + OrderModel.CREATIONTIME + "} >=?fromDate AND {" + OrderModel.TYPE + "}=?type order by {"
+			+ OrderModel.CODE + "} desc";
 	public static final String SALES_REPORT_QUERY_START_END = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
 			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate AND {"
-			+ OrderModel.TYPE + "}=?type";
-
+			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
 	public static final String NOEMITERMKLIST = "EMI Term list is not available , Please Enter the correct data";
@@ -1284,6 +1287,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
 
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
+	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
+	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

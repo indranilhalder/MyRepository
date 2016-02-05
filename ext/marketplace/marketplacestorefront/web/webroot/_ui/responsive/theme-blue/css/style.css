@@ -21793,8 +21793,8 @@ body .lookbook_wrapper div.share-link {
     top: -35px;
 }
 .lookbooks {
-    margin: 60px auto;
-}
+    margin: 60px auto 0px auto;
+    }
 .lookbooks .lookbook .simple-banner-component {
     float: left;
     width: 50%;
@@ -24991,7 +24991,7 @@ height:100px;
 max-height:100%;
 }
 }
-@media(max-width:790px){
+@media(max-width:791px){
 .brand-content-grid .brand-trySomethingNew , .apparel-brand div.brand-content-grid ul li .video-wrapper{
 margin-bottom:10px;
 }
@@ -27374,9 +27374,11 @@ body .account .account-header select.menu-select optgroup option{
 	.cart.wrapper .product-block li.item > ul.desktop > li.price{
 	    position: absolute;
     left: calc(30% + 10px);
-    top: 140px;
-    text-align:left;
-    padding-top:0px;
+    top: 110px;
+    text-align: left;
+    padding-top: 0px;
+    font-size: 12px;
+    width: 70%;
 	}
 	.cart.wrapper .product-block li.item ul .item-edit-details{
 	bottom: -75px;
@@ -27415,6 +27417,9 @@ body .account .account-header select.menu-select optgroup option{
 	}
 }
 }
+.cart.wrapper .product-block li.item > ul.desktop > li.price{
+	line-height:18px;
+	}
 
 	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
 	    width: 100px;
@@ -27461,7 +27466,6 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
 #loginDivCheckout,#loginDivCheckout td, #loginDivCheckout table, #loginDivCheckout tr, #loginDivCheckout tbody, #loginDivCheckout div,
-#loginDivsiginflyout,#loginDivsiginflyout td, #loginDivsiginflyout table, #loginDivsiginflyout tr, #loginDivsiginflyout tbody, #loginDivsiginflyout div,
 #loginDivRegisterCheckOut,#loginDivRegisterCheckOut td, #loginDivRegisterCheckOut table, #loginDivRegisterCheckOut tr, #loginDivRegisterCheckOut tbody, #loginDivRegisterCheckOut div {
     display: block;
     width: 100% !important;
@@ -27490,6 +27494,9 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDivsiginflyout{
 	margin-top:15px;
 }
+#loginDivsiginflyout > table > tbody > tr > td table td:first-child{
+	width: 10% !important;
+}  
 @media (max-width: 1050px) and (min-width: 901px){
 header .content .bottom.active nav > ul > li:first-child > ul {
     left: 200px;
@@ -27558,6 +27565,22 @@ position: absolute;
 	font-weight:600;
 	display:block;
 	
+}
+@media(max-width:790px){
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+    padding-top: 0px;
+	position:relative;}
+
+body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
+    padding-top: 40px;}
+} 
+
+.electronics-brand .feature-categories.custom-feature {
+	    padding: 0;
+    background: #e6e6e6;
+}
+ .electronics-brand .feature-categories.custom-feature h1 {
+	background: #fff;
 }
 /*--------------maincss-----------*/
 .row
@@ -33006,6 +33029,36 @@ div.MSDQuickView, div.MSDQuickView:before {
 	}
 }
 
+ 
+.global-alerts button.close
+{
+	float:left;
+	top: -20px;
+  opacity: 1;
+  left: 0px;
+  margin-right: 10px;
+}
+.global-alerts 
+{
+	  font-family: 'Avenir Next';
+	  font-size:14px;
+	   opacity: 1;
+}
+/* TISEE-6257 starts */
+a#checkout-enabled.checkout-disabled, a#checkout-enabled.checkout-disabled:hover  {
+	background-color: rgb(255,118,133) !important;
+	cursor: default !important;
+}
+button#expressCheckoutButtonId.express-checkout-disabled {
+	opacity: 0.5;
+	cursor: default !important;
+}
+button#expressCheckoutButtonId.express-checkout-disabled:hover {
+	background: #fff;
+	color: #00cbe9;
+}
+/* TISEE-6257 ends */
+
  /*for MSD*/  
 span.sizesAvailableMSD { 
 	display: none; 
@@ -33041,32 +33094,3 @@ span.sizesAvailableMSD {
  line-height: 30px;
  }
   /*End MSD*/  
-  
-.global-alerts button.close
-{
-	float:left;
-	top: -20px;
-  opacity: 1;
-  left: 0px;
-  margin-right: 10px;
-}
-.global-alerts 
-{
-	  font-family: 'Avenir Next";
-	  font-size:14px;
-	   opacity: 1;
-}
-/* TISEE-6257 starts */
-a#checkout-enabled.checkout-disabled, a#checkout-enabled.checkout-disabled:hover  {
-	background-color: rgb(255,118,133) !important;
-	cursor: default !important;
-}
-button#expressCheckoutButtonId.express-checkout-disabled {
-	opacity: 0.5;
-	cursor: default !important;
-}
-button#expressCheckoutButtonId.express-checkout-disabled:hover {
-	background: #fff;
-	color: #00cbe9;
-}
-/* TISEE-6257 ends */

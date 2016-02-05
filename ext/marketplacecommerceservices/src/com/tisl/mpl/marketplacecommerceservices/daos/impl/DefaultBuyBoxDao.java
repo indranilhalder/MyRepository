@@ -56,11 +56,11 @@ public class DefaultBuyBoxDao extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -101,11 +101,11 @@ public class DefaultBuyBoxDao extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -124,60 +124,64 @@ public class DefaultBuyBoxDao extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the inventory for a buybox wining seller against a product code.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public Integer getBuyboxAvailableInventoryForSearch(final String productCode, final String productType)
-			throws EtailNonBusinessExceptions
+	public Integer getBuyboxAvailableInventoryForSearch(final String productCode) throws EtailNonBusinessExceptions
 	{
-
-		//Integer available = new Integer(0);  Critical Sonar fixes
-		Integer available = Integer.valueOf(0);
-
-
-		final StringBuffer inventoryQuery = new StringBuffer(350);
-		inventoryQuery.append("SELECT SUM({bb.available}) FROM {BuyBox AS bb} where ");
-
-		if (productType.equalsIgnoreCase("simple"))
+		try
 		{
-			inventoryQuery.append("{bb.product} = ?product");
+
+			//Integer available = new Integer(0);
+			Integer available = Integer.valueOf(0);
+			final StringBuffer inventoryQuery = new StringBuffer(500);
+
+			inventoryQuery.append("SELECT SUM({bb.available}) FROM {BuyBox AS bb} where {bb.product} IN (" + productCode
+					+ ")  AND ({bb.delisted}  IS NULL OR {bb.delisted} =0  ) and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate}) ");
+
+			final FlexibleSearchQuery instockQuery = new FlexibleSearchQuery(inventoryQuery.toString());
+			final List resultClassList = new ArrayList();
+			resultClassList.add(Integer.class);
+			instockQuery.setResultClassList(resultClassList);
+			instockQuery.addQueryParameter(PRODUCT, productCode);
+			final List<Integer> instockResultList = flexibleSearchService.<Integer> search(instockQuery).getResult();
+			if (instockResultList != null && instockResultList.size() > 0)
+			{
+				available = instockResultList.get(0);
+			}
+
+			return available;
 		}
-		if (productType.equalsIgnoreCase("variant"))
+		catch (final FlexibleSearchException e)
 		{
-			inventoryQuery
-					.append("{bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod} where {pprod.baseProduct} IN (	{{"
-
-							+ " 	select distinct{p.baseProduct} from {PcmProductVariant as p} where {p.code} = ?product"
-
-							+ " 	}})}})");
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
-
-		final FlexibleSearchQuery instockQuery = new FlexibleSearchQuery(inventoryQuery.toString());
-		final List resultClassList = new ArrayList();
-		resultClassList.add(Integer.class);
-		instockQuery.setResultClassList(resultClassList);
-		instockQuery.addQueryParameter(PRODUCT, productCode);
-		final List<Integer> instockResultList = getFlexibleSearchService().<Integer> search(instockQuery).getResult();
-		if (instockResultList != null && instockResultList.size() > 0)
+		catch (final UnknownIdentifierException e)
 		{
-			available = instockResultList.get(0);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
-
-		return available;
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 	/*
 	 * This method is responsible for invalidating pk of the buybox sellers in the cache.
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -228,9 +232,9 @@ public class DefaultBuyBoxDao extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given product code if all the seller has stock zero
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -271,7 +275,7 @@ public class DefaultBuyBoxDao extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getRichAttributeData(java.lang.String)
 	 */
 	@Override
@@ -378,9 +382,9 @@ public class DefaultBuyBoxDao extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given ussid if all the seller has stock zero
-	 * 
+	 *
 	 * @param productCode
-	 * 
+	 *
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -403,7 +407,7 @@ public class DefaultBuyBoxDao extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#priceForUssid(java.lang.String)
 	 */
 

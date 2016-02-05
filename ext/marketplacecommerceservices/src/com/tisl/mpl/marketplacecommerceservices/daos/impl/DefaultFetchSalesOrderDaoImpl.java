@@ -177,7 +177,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	@Override
 	public List<OrderModel> fetchSpecifiedCancelData(final Date earlierDate, final Date presentDate)
 	{
-
+		//TISPRO-129
 		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		LOG.debug("********inside dao for selecting specified cancel order data**********");
 		final String query = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
@@ -197,6 +197,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		{
 			for (final OrderModel orderModel : searchRes.getResult())
 			{
+				//TISPRO-129
 				if (orderModel.getVersionID() == null)
 				{
 					orderlist.add(orderModel);

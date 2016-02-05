@@ -291,10 +291,20 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								paymentTransactionEntryModel.setTransactionStatusDetails(MarketplacecommerceservicesConstants.SUCCESS);
 								paymentTransactionEntryModel.setType(PaymentTransactionType.REFUND_STANDALONE);
 
-								final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse()
-										.getCardType());
-								setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
-
+								//TISPRO-130
+								PaymentTypeModel paymentTypeModel = getModelService().create(PaymentTypeModel.class);
+								if (null != hook.getOrderStatus().getPaymentMethodType()
+										&& hook.getOrderStatus().getPaymentMethodType()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+								{
+									paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getPaymentMethodType());
+									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+								}
+								else
+								{
+									paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse().getCardType());
+									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+								}
 								modelService.save(paymentTransactionEntryModel);
 
 								entries.add(paymentTransactionEntryModel);
@@ -342,10 +352,25 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 								paymentTransactionEntryModel.setTransactionStatusDetails(MarketplacecommerceservicesConstants.FAILURE);
 								paymentTransactionEntryModel.setType(PaymentTransactionType.REFUND_STANDALONE);
 
-								final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse()
-										.getCardType());
-								setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+								//								final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse()
+								//										.getCardType());
+								//								setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+								//
 
+								//TISPRO-130
+								PaymentTypeModel paymentTypeModel = getModelService().create(PaymentTypeModel.class);
+								if (null != hook.getOrderStatus().getPaymentMethodType()
+										&& hook.getOrderStatus().getPaymentMethodType()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+								{
+									paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getPaymentMethodType());
+									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+								}
+								else
+								{
+									paymentTypeModel = getPaymentModeDetails(hook.getOrderStatus().getCardResponse().getCardType());
+									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
+								}
 								modelService.save(paymentTransactionEntryModel);
 
 								entries.add(paymentTransactionEntryModel);
@@ -424,14 +449,20 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		String paymentMode = MarketplacecommerceservicesConstants.EMPTY;
 		if (StringUtils.isNotEmpty(paymentType))
 		{
-			if (paymentType.equalsIgnoreCase("CREDIT"))
+			if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_CREDIT))
 			{
-				paymentMode = "Credit Card";
+				paymentMode = MarketplacecommerceservicesConstants.CREDIT;
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
-			else if (paymentType.equalsIgnoreCase("DEBIT"))
+			else if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_DEBIT))
 			{
-				paymentMode = "Debit Card";
+				paymentMode = MarketplacecommerceservicesConstants.DEBIT;
+				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+			}
+			//TISPRO-130
+			else if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+			{
+				paymentMode = MarketplacecommerceservicesConstants.NETBANKING;
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
 		}
@@ -681,9 +712,22 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						{
 							try
 							{
-								//calling refund service where there will be cart only
-								getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
-										oModel.getOrderStatus().getCardResponse().getCardType());
+								//TISPRO-130
+								if (null != oModel.getOrderStatus().getPaymentMethodType()
+										&& oModel.getOrderStatus().getPaymentMethodType()
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
+								{
+									//calling refund service where there will be cart only for NB
+									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+											oModel.getOrderStatus().getPaymentMethodType());
+								}
+								else
+								{
+									//calling refund service where there will be cart only for CARD
+									getMplJusPayRefundService().doRefund(auditDataModel.getAuditId(),
+											oModel.getOrderStatus().getCardResponse().getCardType());
+								}
+
 							}
 							catch (final Exception e)
 							{

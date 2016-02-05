@@ -12,7 +12,7 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${not empty component.urlLink}">
-			<a href="${bannerUrl}"><div class="hero">
+			<a class="homebanner_${component.sequenceNumber}" href="${bannerUrl}"><div class="homebanner_${component.sequenceNumber} hero">
 					<div class="image">
 						<img src="${component.bannerImage.URL}">
 					</div>
@@ -35,7 +35,7 @@
 				</div></a>
 		</c:when>
 		<c:otherwise>
-			<div class="hero">
+			<div class="homebanner_${component.sequenceNumber} hero">
 				<div class="image">
 					<img src="${component.bannerImage.URL}">
 				</div>

@@ -1,3 +1,32 @@
+var headerLoggedinStatus = false;
+$(function() {
+	
+	$.ajax({
+		url: ACC.config.encodedContextPath + "/setheader",
+		type: 'GET',
+		success: function (data)
+		{
+			headerLoggedinStatus = data.loggedInStatus;
+			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").html(data.cartcount);
+			if (!headerLoggedinStatus) {
+				$("a.headeruserdetails").html("Sign In");
+			}
+			else {
+				var firstName = data.userFirstName;
+				if (firstName == null || firstName.trim() == '') {
+					$("a.headeruserdetails").html("Hi!");
+				} else {
+					$("a.headeruserdetails").html("Hi, " + firstName + "!");
+				}
+			}
+			$("input[name='CSRFToken']").each(function(){
+			//	console.log("old value ---"+this.value + "---new value--"+data.dts);
+		        	this.value = data.dts;          
+		    });
+		}
+	});
+});
+
 $("div.departmenthover").on("mouseover touchend", function() {
 	
 	var id = this.id;
@@ -58,7 +87,7 @@ $(".A-ZBrands").on("mouseover touchend", function(e) {
 				type: 'GET',
 				success: function (html)
 				{
-					console.log(html)
+					//console.log(html)
 					if ($("div#appendedAtoZBrands") == null || $("div#appendedAtoZBrands").length == 0) {
 						$("li#atozbrandsdiplay").append(html);
 					}
@@ -89,28 +118,83 @@ $("span.helpmeshopbanner").on("click touchend", function() {
 
 $("a#tracklink").on("mouseover touchend", function(e) {
     e.stopPropagation();
+    if (headerLoggedinStatus) {
 	
-	$.ajax({
-		url: ACC.config.encodedContextPath + "/headerTrackOrder",
-		type: 'GET',
-		success: function (html)
-		{
-			$("ul.trackorder-dropdown").html(html);
-		}
-	});
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/headerTrackOrder",
+			type: 'GET',
+			success: function (html)
+			{
+
+				$("ul.trackorder-dropdown").html(html);
+			}
+		});
+    }
+
+
 });
 
 
 $("a#myWishlistHeader").on("mouseover touchend", function(e) {
     e.stopPropagation();
+    if (headerLoggedinStatus) {
 	
-	$.ajax({
-		url: ACC.config.encodedContextPath + "/headerWishlist",
-		type: 'GET',
- 	    data: "&productCount="+$(this).attr("data-count"),
-		success: function (html)
-		{
-			$("div.wishlist-info").html(html);
-		}
-	});
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/headerWishlist",
+			type: 'GET',
+	 	    data: "&productCount="+$(this).attr("data-count"),
+			success: function (html)
+			{
+
+				$("div.wishlist-info").html(html);
+			}
+		});
+    }
 });
+
+
+$("li.ajaxloginhi").on("mouseover touchend", function(e) {
+    e.stopPropagation();
+	if ($("ul.ajaxflyout").html().trim().length <= 0) {
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/headerloginhi",
+			type: 'GET',
+			success: function (html)
+			{
+				$("ul.ajaxflyout").html(html);
+			}
+		});
+	}
+});
+
+$(function() {
+    var count = $("#bannersCount").val()
+	hideAllBanners(count);
+    if(window.sessionStorage && (seq = window.sessionStorage.getItem("bannersequence"))) {
+        seq = parseInt(seq);
+    	if (seq == '' || seq >= count || seq < 1) {
+    		seq = 1;
+    	} else {
+    		seq=seq+1;
+    	}
+		showBanner(seq);
+		window.sessionStorage.setItem("bannersequence", seq);
+	} else {
+		showBanner(1);
+		if(window.sessionStorage) {
+			window.sessionStorage.setItem("bannersequence", 1);
+		}
+	}
+    $(".homepage-banner").removeAttr("style");
+
+});
+
+function hideAllBanners(count) {
+	for (i = 0; i <=count; i++) { 
+		$(".homebanner_"+i).hide();
+	}
+}
+
+function showBanner(seq) {
+	$(".homebanner_"+seq).show();
+}
