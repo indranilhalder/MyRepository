@@ -18,8 +18,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -312,16 +315,17 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	@Override
 	public void createCSVExcel(final List<InternalCampaignReportData> campaignDataConsolidatedList)
 	{
-		final String path = "D:\\Arunava\\tmp2\\Internal_Campaign2\\internalCampaign.csv";
+		//final String path = "D:\\Arunava\\tmp2\\Internal_Campaign2\\internalCampaign.csv";
 
 		//final String path = configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path");
 
 		try
 		{
-			final File file = new File(path);
+			//final File file = new File(path);
+			final File file = new File(getOutputFilePath());
 			file.getParentFile().mkdirs();
-			populateCSV(campaignDataConsolidatedList, path, file);
-
+			//populateCSV(campaignDataConsolidatedList, path, file);
+			populateCSV(campaignDataConsolidatedList, file);
 		}
 
 		catch (final Exception e)
@@ -339,7 +343,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		return m.group(1);
 	}
 
-	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final String path, final File file)
+	//public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final String path, final File file)
+	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final File file)
 	{
 		FileWriter fileWriter = null;
 		String CSVHeader = "";
@@ -422,7 +427,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
-			 *
+			 * 
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
@@ -466,6 +471,22 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	protected String getCSVHeaderLine()
 	{
 		return configurationService.getConfiguration().getString("internal.campaign.report.header", "");
+	}
+
+	protected String getOutputFilePath()
+	{
+
+		final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
+		final String timestamp = df.format(new Date());
+		final StringBuilder output_file_path = new StringBuilder();
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path", ""));
+		output_file_path.append(File.separator);
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix", ""));
+		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
+		output_file_path.append(timestamp);
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension", ""));
+
+		return output_file_path.toString();
 	}
 
 }
