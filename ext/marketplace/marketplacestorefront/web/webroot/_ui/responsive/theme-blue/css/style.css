@@ -29824,7 +29824,8 @@ li.store-locator-header a:before{
     background-repeat: no-repeat;
     margin-right: 15px;
 }
-#addToCartFormTitleSuccess font{
+#addToCartFormTitleSuccess font,
+#addToCartFormQuickTitleSuccess font, .addToCartFormTitleSuccessWl font{
 	color:#a9143c !important;
 }
 

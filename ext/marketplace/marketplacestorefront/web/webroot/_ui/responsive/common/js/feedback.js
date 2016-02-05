@@ -132,7 +132,7 @@ $(document).ready(function(){
 			  
 			  $("#js-site-search-input").keypress(function(){
 	
-				  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css("border","1px solid #dbeafa");
+				  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css("border","1px solid #dfd1d5");
 				});
 	
 				if($('body').hasClass("template-pages-layout-micrositePage1")){
