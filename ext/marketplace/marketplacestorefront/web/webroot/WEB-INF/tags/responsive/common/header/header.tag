@@ -116,6 +116,7 @@ function registerUser(eventObject)
 	<input type="hidden" id="ecompanyForIA" value="${ecompanyForIA}">
 	<input type="hidden" id="DamMediaHost" value="${DamMediaHost}">
 	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
+	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
 	<!-- For Infinite Analytics End -->
 	
 	<div class="row header-row"></div>
