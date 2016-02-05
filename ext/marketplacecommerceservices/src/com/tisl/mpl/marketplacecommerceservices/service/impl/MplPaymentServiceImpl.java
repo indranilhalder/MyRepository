@@ -1211,8 +1211,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						entryTotals = entry.getTotalPrice().doubleValue();
 					}
 					entryTotals -= (null != entry.getFreeCount() ? entry.getFreeCount().intValue() : 0);
-					final double quantity = null != entry.getQualifyingCount() ? entry.getQualifyingCount().doubleValue() : entry
-							.getQuantity().doubleValue();
+					final double quantity = (entry.getQualifyingCount().intValue() > 0) ? entry.getQualifyingCount().doubleValue()
+							: entry.getQuantity().doubleValue();
 
 					LOG.debug("Entry totals is>>>>>" + entryTotals + "<<<<<<&& quantity is>>>>>" + quantity);
 
@@ -1221,9 +1221,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					final Double codChargePerEntry = Double.valueOf(totalCODCharge.doubleValue() * codChargePercent.doubleValue());
 					final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
 							codChargePerEntry));
-					final Double appCODChargeForEachItem = Double.valueOf(formattedCODCharge.doubleValue() / quantity);
-					LOG.debug("Entry level Conv charge is>>>>>>>" + appCODChargeForEachItem.doubleValue());
-					entry.setConvenienceChargeApportion(appCODChargeForEachItem);
+					double appCODChargeForEachItem = 0.00D;
+					if (quantity > 0)
+					{
+						appCODChargeForEachItem = formattedCODCharge.doubleValue() / quantity;
+					}
+					LOG.debug("Entry level Conv charge is>>>>>>>" + appCODChargeForEachItem);
+					entry.setConvenienceChargeApportion(Double.valueOf(appCODChargeForEachItem));
 
 					try
 					{
