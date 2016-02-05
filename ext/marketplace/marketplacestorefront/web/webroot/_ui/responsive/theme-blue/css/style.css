@@ -8793,10 +8793,10 @@ footer .banner {
           height: 30px;
           line-height: 30px; } }
           .sign-in.tab-view .tabs > li .left form input:hover {		
-    border-color: #afd1f4;		
+    border-color: #AB8791;		
 }		
 .sign-in.tab-view .tabs > li .left form input:focus {		
-    border-color: #82b7ed;		
+    border-color: #AB8791;		
 }
     .sign-in.tab-view .tabs > li .left form button {
       width: 100%;
@@ -10158,7 +10158,7 @@ body .account .right-account .order-history .pagination li{
       }
       #productYouCare .home-product-you-care-carousel-img img {
       	 max-width: 100%;
-      	 padding-left:30px;
+      	 padding: 0 10px;
       }
       @media (min-width:650px){
     .short-info .star-review {
@@ -12585,7 +12585,7 @@ div.pdp .reviews .toolbar select.white {
       z-index: 5; }
       .modal .content > .close:before {
         content: "\00d7";
-        color: #000;
+        color: #a9143c;
         font-family: "Avenir Next";
         font-size: 24px;
         font-weight: 500;
@@ -17927,7 +17927,7 @@ header .content .bottom .search .select-list select
 #variantForm .select-size {
     float: left;
     text-align: left;
-    border: 1px solid #f0f4f5;
+    border: 1px solid #DFD1D5;
     position: relative;
     margin-top: 5px;
     padding-top: 26px;
@@ -17946,12 +17946,12 @@ header .content .bottom .search .select-list select
       left: 0;
       height: 30px;
       width: 100%;
-      width: -webkit-calc(100% + 4px);
-      width: calc(100% + 4px);
+      width: -webkit-calc(100% + 2px);
+      width: calc(100% + 2px);
       line-height: 30px;
       padding-left: 20px;
       font-size: 12px;
-      margin: -2px;
+      margin: -2px -1px -2px;
       background-color: transparent; }
       
      #variantForm .select-size > .selected:after {
@@ -17968,9 +17968,9 @@ header .content .bottom .search .select-list select
          #variantForm .select-size ul {
       max-height: 0;
       overflow: hidden;
-      width: -webkit-calc(100% + 4px);
-      width: calc(100% + 4px);
-      margin: 2px -2px -2px;
+      width: -webkit-calc(100% + 2px);
+      width: calc(100% + 2px);
+      margin: 2px -1px -2px;
       border-right: 1px solid transparent;
       border-left: 1px solid transparent;
       border-bottom: 1px solid transparent;
@@ -17993,16 +17993,16 @@ header .content .bottom .search .select-list select
         font-weight: 600; }
      
      #variantForm .select-size:hover {
-      border-color: #f0f4f5;
+      border-color: #DFD1D5;
       z-index: 1;
       -webkit-transition: border 0.15s;
       -moz-transition: border 0.15s;
       transition: border 0.15s; }
        #variantForm .select-size:hover > .selected {
-        border-bottom: 1px solid #f0f4f5; }
+        border-bottom: 1px solid #DFD1D5; }
        #variantForm .select-size:hover ul {
         max-height: 500px;
-        border-color: #f0f4f5;
+        border-color: #DFD1D5;
         -webkit-transition: max-height 0.15s, border 0s;
         -moz-transition: max-height 0.15s, border 0s;
         transition: max-height 0.15s, border 0s; }
@@ -19346,8 +19346,8 @@ header .content .marketplace.compact {
   z-index: -1;
 }
 header .content .marketplace.compact a img{
- width: 200px;
-  margin-top: -7px;
+ width: 130px;
+  margin-top: 7px;
 }
 body.template-pages-layout-micrositePage1 header .content .marketplace.compact a img{
 	 margin-top: 3px;
@@ -22404,7 +22404,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
        }
       #colorbox #cboxClose:before {
         content: "\00d7";
-        color: #000;
+        color: #a9143c;
         font-family: "Avenir Next";
         font-size: 24px;
         font-weight: 500;
@@ -22412,6 +22412,11 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
         -webkit-transition: font-weight 0.15s;
         -moz-transition: font-weight 0.15s;
         transition: font-weight 0.15s; }
+        #colorbox #cboxClose:focus{
+        box-shadow: none;
+    	border: none;
+    	outline: none;
+        }
       #colorbox #cboxClose:hover:before {
         font-weight: bold;
         -webkit-transition: font-weight 0.3s;
@@ -28758,11 +28763,12 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
 
 
 	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
-	    max-width: 100px;
-    display: block;
+	    max-width: 60px;
+    display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
 	}
+
 @media(min-width:791px) and (max-width:1080px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
@@ -29277,7 +29283,7 @@ footer .footer-text {
 	display: table;
 	width:100%;
 	margin: 20px 0;
-	padding: 0 20px;
+	padding: 0 40px;
 }
 .home-brands-you-love-carousel-brands {
     display: block;
@@ -29792,10 +29798,6 @@ width: 100px !important;
 	padding: 0 20px;
 }
 
-.home-brands-you-love-carousel .owl-wrapper-outer {
-	padding: 0 40px;
-}
-
 .home-brands-you-love-wrapper .home-brands-you-love-desc p {
 	padding-top: 10px;
 }
@@ -29861,6 +29863,15 @@ li.logged_in.dropdown{
 padding-left: 13px !important;
 }
 }
+
+.home-product-you-care-carousel{
+    padding-bottom: 70px;
+}
+header.compact .content .top{
+height:95px;}
+header.compact .content span.material-icons{
+	 margin-top: -44px;
+	}
 /*--------------maincss-----------*/
 .row
 {
@@ -35661,12 +35672,7 @@ width: 40px;
 
 
 /**/
-#brandsYouLove .home-brands-you-love-carousel-brands .owl-wrapper
-	{
-		display: block;
-		transition: all 0.3s ease;
-	}
-	
+
 #brandsYouLove .bulprev, #brandsYouLove .bulnext	
 	{
 		cursor: pointer;
@@ -35702,10 +35708,6 @@ width: 40px;
 	
 	#brandsYouLove .bulprev {
 		 left: 20px;
-	}
-	
-	#brandsYouLove .bulprev.disabled, #brandsYouLove .bulnext.disabled {
-		    background: #ccc;
 	}
 	 #brandsYouLove .bulnext {
 	 	right: 20px;

@@ -197,7 +197,7 @@ function firstToUpperCase( str ) {
 	background-color: #fff;
 	padding: 5px 10px;
 	border-collapse: separate;
-	box-shadow: 0 0 9px rgb(0, 203, 246);
+	box-shadow: 0 0 9px #a9143c;
 	visibility: hidden;
 }
 .tooltip_pop:after {
@@ -211,7 +211,7 @@ function firstToUpperCase( str ) {
 	-moz-transform: rotate(45deg);
 	transform: rotate(45deg);
 	border-collapse: separate;
-	box-shadow: 1px 1px 0px rgb(0, 203, 246);
+	box-shadow: 1px 1px 0px #a9143c;
 	position: absolute;
 	left: 50%;
 	margin-left: -4px;
