@@ -1173,9 +1173,9 @@ $("#otpMobileNUMField").focus(function(){
  
   function createJuspayOrderForSavedCard(){
 	  // TISPRO-153
-	  utag.link(
+	  /*utag.link(
 			  { "link_name": 'Final Checkout', "event_type": 'PayNow', "payment_method": "" + payment_mode + "|" + payment_type, "product_id": utag.data.product_id }
-	  );
+	  );*/
 	  	$(".pay button").prop("disabled",true);
 		$(".pay button").css("opacity","0.5");
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
@@ -1257,9 +1257,9 @@ $("#otpMobileNUMField").focus(function(){
   
   function createJuspayOrderForNewCard(){
 	  // TISPRO-153
-	  utag.link(
+	  /*utag.link(
 			  { "link_name": 'Final Checkout', "event_type": 'PayNow', "payment_method": "" + payment_mode + "|" + payment_type, "product_id": utag.data.product_id }
-	  );
+	  );*/
 	  	$(".pay button").prop("disabled",true);
 		$(".pay button").css("opacity","0.5");
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
