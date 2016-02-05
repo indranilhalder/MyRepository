@@ -33,6 +33,7 @@
 				</c:if>
 
 				<li class="logged_in dropdown" >
+				<span class="material-icons">&#xE8A6;</span>
 				<ycommerce:testId code="header_LoggedUser">
 					<c:set var="userName" value="${user.firstName}"/>
 						<c:if test="${not empty userName}">
@@ -179,7 +180,9 @@
 				<div class="content">
 				<div class="right">
 					<ul>
-						<li class="dropdown sign-in-dropdown sign-in"><ycommerce:testId
+						<li class="dropdown sign-in-dropdown sign-in">
+						<span class="material-icons">&#xE8A6;</span>
+						<ycommerce:testId
 						code="header_Login_link">
 						<a id="socialLogin" href="<c:url value="/login"/>" role="button"
 							aria-expanded="false"><spring:theme
@@ -281,3 +284,4 @@
 			</sec:authorize>
 		</c:if>
 	</li>
+	
