@@ -9,6 +9,7 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 
@@ -49,6 +50,8 @@ public class MplCouponController
 	private SessionService sessionService;
 	@Autowired
 	private BaseStoreService baseStoreService;
+	@Autowired
+	private ModelService modelService;
 
 
 	/**
@@ -68,13 +71,16 @@ public class MplCouponController
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
 			final String bankNameSelected) throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException,
-					NumberFormatException, JaloInvalidParameterException, JaloSecurityException
+			NumberFormatException, JaloInvalidParameterException, JaloSecurityException
 	{
 		LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
+		//		cartModel.setCouponErrorMsg("");
+		//		modelService.save(cartModel);
+
 
 		LOG.debug("The bank selected is  ::: " + bankNameSelected);
-		//		getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
+		getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
 		//
 		//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
 		//		if (StringUtils.isEmpty(bankNameSelected))
@@ -133,7 +139,10 @@ public class MplCouponController
 			{
 				data.setRedeemErrorMsg("Freebie");
 			}
-
+			else if (e.getMessage().contains("User not valid"))
+			{
+				data.setRedeemErrorMsg("User_Invalid");
+			}
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
 			data.setCouponRedeemed(false);
 			return data;
@@ -156,6 +165,7 @@ public class MplCouponController
 				}
 			}
 		}
+		getSessionService().removeAttribute("paymentModeForPromotion");
 		//getSessionService().removeAttribute("bank");
 
 		return data;
@@ -173,10 +183,21 @@ public class MplCouponController
 	 */
 	@RequestMapping(value = "/release", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode)
-			throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException
+	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode) throws EtailNonBusinessExceptions,
+			JaloPriceFactoryException, CalculationException
 	{
 		LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
+		final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+		if (null != paymentInfo)
+		{
+			for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
+			{
+				if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+				{
+					getSessionService().setAttribute("paymentModeForPromotion", entry.getKey());
+				}
+			}
+		}
 		final CartModel cartModel = getCartService().getSessionCart();
 		boolean couponRelStatus = false;
 		final boolean redeem = false;
@@ -204,7 +225,7 @@ public class MplCouponController
 		{
 			data = getMplCouponFacade().calculateValues(cartModel, couponRelStatus, redeem);
 
-			final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+			//final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
 			final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
 			if (null != paymentInfo)
 			{
@@ -218,6 +239,8 @@ public class MplCouponController
 				}
 			}
 		}
+
+		getSessionService().removeAttribute("paymentModeForPromotion");
 
 		return data;
 	}

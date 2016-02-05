@@ -211,7 +211,7 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		final List<OrderStatusNotificationModel> notificationList = getNotificationDao().getModelforDetails(customerId, orderNo,
 				consignmentNo, shopperStatus);
-		final List<VoucherStatusNotificationModel> voucherList = getModelForVoucher(orderNo);
+		final List<VoucherStatusNotificationModel> voucherList = getModelForVoucherIdentifier(orderNo);
 		final Boolean isRead = Boolean.TRUE;
 		for (final OrderStatusNotificationModel osn : notificationList)
 		{
@@ -378,7 +378,21 @@ public class NotificationServiceImpl implements NotificationService
 	@Override
 	public List<VoucherStatusNotificationModel> getVoucher()
 	{
-		return getNotificationDao().findVoucher();
+		List<VoucherStatusNotificationModel> voucherList = new ArrayList<>();
+		voucherList = getNotificationDao().findVoucher();
+		if (null != voucherList)
+		{
+			for (final VoucherStatusNotificationModel v : voucherList)
+			{
+				if (v.getVoucherEndDate().before(new Date()))
+				{
+					modelService.remove(v);
+				}
+			}
+		}
+
+
+		return voucherList;
 
 	}
 
@@ -544,14 +558,18 @@ public class NotificationServiceImpl implements NotificationService
 		final Voucher voucherJalo = (Voucher) item;
 		final VoucherModel voucher = ((VoucherModel) getModelService().get(voucherJalo));
 		String voucherCode = "";
+		String voucherIndentifier = "";
 
 		if (voucher instanceof PromotionVoucherModel)
 		{
 			final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
 			voucherCode = promoVoucher.getVoucherCode();
+			voucherIndentifier = promoVoucher.getCode();
+			LOG.debug("voucher identifier :" + voucherIndentifier);
 		}
 
 		Date voucherStartDate = null;
+		Date voucherEndDate = null;
 		final Set<RestrictionModel> restrictionList = voucher.getRestrictions();
 
 		final List<PrincipalModel> userList = new ArrayList<PrincipalModel>();
@@ -569,6 +587,7 @@ public class NotificationServiceImpl implements NotificationService
 			if (restrictionModel instanceof DateRestrictionModel)
 			{
 				voucherStartDate = ((DateRestrictionModel) restrictionModel).getStartDate();
+				voucherEndDate = ((DateRestrictionModel) restrictionModel).getEndDate();
 				dateRestrExists = true;
 
 			}
@@ -617,10 +636,10 @@ public class NotificationServiceImpl implements NotificationService
 				}
 			}
 
-			if (null != voucherCode)
+			if (null != voucherIndentifier && null != voucherCode)
 			{
 
-				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherCode);
+				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
 
 				if (existingVoucherList.isEmpty())
 				{
@@ -643,14 +662,18 @@ public class NotificationServiceImpl implements NotificationService
 						MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
 
 				//Setting values in model
+				voucherStatus.setVoucherIdentifier(voucherIndentifier);
 				voucherStatus.setVoucherCode(voucherCode);
 				voucherStatus.setCustomerUidList(userUidList);
 				voucherStatus.setVoucherStartDate(voucherStartDate);
+				voucherStatus.setVoucherEndDate(voucherEndDate);
 				voucherStatus.setIsRead(isRead);
 				voucherStatus.setCustomerStatus(customerStatus);
 				voucherStatus.setCategoryAssociated(categoryAssociated);
 				voucherStatus.setProductAssociated(productAssociated);
 				modelService.save(voucherStatus);
+
+
 
 			}
 		}
@@ -661,10 +684,18 @@ public class NotificationServiceImpl implements NotificationService
 
 
 
-	private List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherCode)
+	private List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherIndentifier)
 	{
 
-		return getNotificationDao().getModelForVoucher(voucherCode);
+		return getNotificationDao().getModelForVoucher(voucherIndentifier);
+
+
+	}
+
+	private List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode)
+	{
+
+		return getNotificationDao().getModelForVoucherIdentifier(voucherCode);
 
 
 	}

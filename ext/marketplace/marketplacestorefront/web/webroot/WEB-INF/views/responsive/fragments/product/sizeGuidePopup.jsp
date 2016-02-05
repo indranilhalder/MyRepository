@@ -11,11 +11,11 @@
 <span id="wishlistnotblank_sizeGuide" style="display:none"><spring:theme code="wishlist.notblank"/></span>
 
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
-
 <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true"></button>
 
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
+
 <div class="sizes">
 	
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
@@ -61,7 +61,7 @@
 								</c:forEach>
 							</ul>
 						</li>
-					
+					</ul>
 						<c:choose>
 					    <c:when test="${product.rootCategory=='Clothing'}">
 						<c:forEach items="${sizeguideData}" var="sizeGuide" >
@@ -195,7 +195,7 @@
     <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
 
 </span>
- <div class="price">
+ <div class="price" id="sizePrice">
          <!--  <p class="normal"><div id="specialSelPrice"></div></p> -->
 	<p class="old" id="sizemrpPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
@@ -224,13 +224,15 @@
 						<c:url value="/p/sizeGuide?productCode=${variantOption.code}" 
 								var="variantUrl" />
 						
-								<c:choose><c:when test="${empty selectedSize}">
-													 <a href="${variantUrl}" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
-												</c:when>
-											  <c:otherwise>
-													 <a href="${variantUrl}?selectedSize=true" data-target="#popUpModals" data-productcode="${variantOption.code}" data-toggle="modal">
-												</c:otherwise>
-											</c:choose>
+							 <c:choose>
+							<%-- 	<c:when test="${empty selectedSize}"> --%>
+							 <c:when test="${empty sizeSelectedSizeGuide}">
+								<a href="${variantUrl}&sizeSelected=" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
+							 </c:when>
+							 <c:otherwise>
+								<a href="${variantUrl}&sizeSelected=true" data-target="#popUpModal" data-productcode="${variantOption.code}" data-toggle="modal">
+						     </c:otherwise>
+							 </c:choose>
 											
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
@@ -277,16 +279,23 @@
 		</c:otherwise>
 	</c:choose>	
 			</ul>			
-<div class="size">				
+<div class="size">	
+				<%-- <c:when test="${sizeSelectedSizeGuide == true}"> --%>
+					<%-- ${sizeSelectedSizeGuide} --%>
+				<%-- </c:when> --%>
+
 <c:if test="${noVariant!=true&&notApparel!=true}">
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
-	
-	
-	
-	
-	
 		<select id="variant" class="variant-select size-g">
-			<option value="#" id="select-option"><spring:theme code="text.select.size" /></option>
+			<c:choose>
+				<c:when test="${empty sizeSelectedSizeGuide}">
+					<option value="#" data-target="#popUpModal" selected="selected"><spring:theme code="text.select.size" /></option>
+				</c:when>
+				<c:otherwise>
+					<option value="#"><spring:theme code="text.select.size" /></option>
+				</c:otherwise>
+			</c:choose>
+			<%-- <option value="#" id="select-option"><spring:theme code="text.select.size" /></option> --%>
 			<%-- <option value="#" data-target="#popUpModalNew"><spring:theme code="text.select.size" /></option> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
@@ -300,10 +309,22 @@
 								<c:set var="code" value="${variantOption.code}"/>
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
-											<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option>
+										
+											<c:choose>
+											    <c:when test="${empty sizeSelectedSizeGuide}">
+													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+												</c:otherwise>
+											</c:choose>
+										
+										
+										
+											<%-- <option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option> --%>
 										</c:when>
 										<c:otherwise>
-											<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option>
+											<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -324,10 +345,18 @@
 											<c:url value="/p/sizeGuide?productCode=${variantOption.code}" var="link" />
 												<c:choose>
 													<c:when test="${(variantOption.code eq product.code)}">
-														<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option>
+													<%-- 	<option selected="selected" data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option> --%>
+																								<c:choose>
+											    <c:when test="${empty sizeSelectedSizeGuide}">
+													<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=">${entry.value}</option>
+												</c:when>
+												<c:otherwise>
+													<option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
+												</c:otherwise>
+												</c:choose>
 													</c:when>
 													<c:otherwise>
-														<option data-productcode1="${variantOption.code}" data-producturl="${link}">${entry.value}</option>
+														<option data-productcode1="${variantOption.code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
 													</c:otherwise>
 												</c:choose>
 											</c:forEach>
@@ -472,7 +501,6 @@
 </div>
 <script>
 $(document).ready(function(){
-
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,
@@ -481,21 +509,28 @@ $(document).ready(function(){
 				}
 			});
 		  }
-	var category=$("#categoryType").val();
+	var category=$("#categoryType").val(); 
 	/* if(category!='Footwear'){ */
 	
 	var numLi= $(".modal.size-guide .sizes .tables li.header > ul").children().length;
-	
 	var sizeWidth= 88/(numLi-1) + "%";
 
 	$(".modal.size-guide .sizes .tables li > ul > li").css("width",sizeWidth);
 	$(".modal.size-guide .sizes .tables li > ul > li:first-child").css("width","12%");
 /* 	} */
 
-$("#add_to_wishlist-sizeguide").click(function(){
-	 $(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
-	return false;
-});
+	$("#add_to_wishlist-sizeguide").click(function(){
+	 	$(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
+		return false;
+	});
+	$("#noProductForSelectedSeller").hide();
+	$("#productDetails").show();
+	$("#sizePrice").show();
+	/* $('body').on('hidden.bs.modal', '#popUpModal', function () {
+		  $(this).removeData('bs.modal');
+		}); */
+	
+	
 });
 
 
@@ -513,7 +548,7 @@ function openPop() {
 	//} else {
 	//	ussidValue = ussidfromSeller;
 	//}
-	var productCode = ${product.code};//$("#product").val();
+	var productCode = '${product.code}';//$("#product").val();
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/viewWishlistsInPDP";
@@ -637,7 +672,7 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 
 	function addToWishlist_SizeGuide() {
-	var productCodePost = ${product.code};
+	var productCodePost = '${product.code}'; //$("#productCode").val();
 	//var productCodePost = $("#productCodePostQuick").val();
 	//alert(productCodePost);
 	var wishName = "";
@@ -665,11 +700,12 @@ function loadDefaultWishListName_SizeGuide() {
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/addToWishListInPDP";
 	var sizeSelected=true;
-	if( $("#variant,#sizevariant option:selected").val()=="#"){
+	if( $("#variant.size-g option:selected").val()=="#"){
 		sizeSelected=false;
 	}
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
+
 
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
@@ -729,4 +765,6 @@ function loadDefaultWishListName_SizeGuide() {
 		$('input.wishlist#add_to_wishlist-sizeguide').popover('hide');
 		}, 1500);
 	}
+	
+
 </script> 	

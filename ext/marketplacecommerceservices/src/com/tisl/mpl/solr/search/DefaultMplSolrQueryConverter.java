@@ -97,8 +97,8 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 
 			final String[] convertedQueryFilters = convertQueryFields(filterQueries, facetInfoMap);
 			final String[] convertedCatalogVersionFilters = convertCoupledQueryFields(catalogVersionFilters);
-			final String[] combinedFilterFields = (String[]) ArrayUtils
-					.addAll(convertedQueryFilters, convertedCatalogVersionFilters);
+			final String[] combinedFilterFields = (String[]) ArrayUtils.addAll(convertedQueryFilters,
+					convertedCatalogVersionFilters);
 
 			solrQuery.setFilterQueries(combinedFilterFields);
 
@@ -171,9 +171,8 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 		for (final String coupleId : couplesKeySet)
 		{
 			final List list = (List) couples.get(coupleId);
-			joinedQueries.add("("
-					+ combine((String[]) list.toArray(new String[list.size()]),
-							((SearchQuery.Operator) operatorMapping.get(coupleId)).getName()) + ")");
+			joinedQueries.add("(" + combine((String[]) list.toArray(new String[list.size()]),
+					((SearchQuery.Operator) operatorMapping.get(coupleId)).getName()) + ")");
 		}
 
 		return ((String[]) joinedQueries.toArray(new String[joinedQueries.size()]));
@@ -208,7 +207,8 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 			populatedFacetDetails(searchQuery, results, 0, indexedType, "snsCategory");
 			populatedFacetDetails(searchQuery, results, 1, indexedType, "brand");
 			populatedFacetDetails(searchQuery, results, 2, indexedType, "micrositeSnsCategory");
-
+			populatedFacetDetails(searchQuery, results, 3, indexedType, "allCategories");
+			populatedFacetDetails(searchQuery, results, 4, indexedType, "sellerId");
 			return results;
 		}
 		else

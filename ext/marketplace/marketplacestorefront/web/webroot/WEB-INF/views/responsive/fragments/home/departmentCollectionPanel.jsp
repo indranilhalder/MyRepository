@@ -1,6 +1,8 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<c:url value="/${firstLevelCategory.name}/c/${firstLevelCategory.code}" var="departmentUrl" />
+<li><a href="${departmentUrl}" class="view_dept">View ${firstLevelCategory.name}</a></li>
 <c:forEach items="${secondLevelCategoryMap}" var="entry">
 
 	<c:set var="values" value="${entry.value}" />

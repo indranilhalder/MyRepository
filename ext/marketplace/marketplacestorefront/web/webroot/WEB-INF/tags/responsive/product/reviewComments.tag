@@ -181,9 +181,55 @@
 	$(document).ready(function() {
 				
 		getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
-		
 	});
-	
+	/*Review description 5000 characters limit*/
+	$(document).on("keypress",".gig-composebox-textarea",function(){
+	$(".gig-composebox-error").hide();
+	if($(this).text().length <= 4998)
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+		return true;
+		}
+	else
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").text('Review description can contain upto 5000 characters').show();
+		return false;
+	}
+	});
+	$(document).on("paste",".gig-composebox-textarea",function(){
+		var that = $(this);
+		var text_length=0;
+		setTimeout(function () {
+	text_length = that.text().length;		
+		if(text_length <= 4998)
+		{
+			that.parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+			return true;
+			}
+		else
+		{
+			that.parents(".gig-composebox-open").find(".gig-composebox-error").text('Review description can contain upto 5000 characters').show();
+			return false;
+		}
+		},100);
+	});
+	/*Review title 250 characters limit*/
+	$(document).on("focus",".gig-composebox-summary-input",function(){
+	$(this).attr("maxlength","250");
+	});
+	$(document).on("keypress",".gig-composebox-summary-input",function(){
+	$(".gig-composebox-error").hide();
+	if($(this).val().length <= 249)
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").hide();
+		return true;
+		}
+	else
+	{
+		$(this).parents(".gig-composebox-open").find(".gig-composebox-error").text('Review title can contain upto 250 characters').show();
+		return false;
+	}
+	});
 	//function onGigyaServiceReady(serviceName) {
 		/* var shareUserAction = new gigya.socialize.UserAction(); 
 		shareUserAction.setSubtitle("This is my sub title");  */
@@ -304,7 +350,7 @@ font-weight: normal;
     font-weight: 100;
     content: "\f005";
 }
-*.gig-comment-rating-star, *.gig-composebox-rating-star, *.gig-selfreview-rating-star, *.gig-rating-star-full, *.gig-rating-star, *.gig-rating-dimensions div.gig-rating-star, *.gig-comment-rating-star-full, *.gig-composebox-rating-star-full, *.gig-selfreview-rating-star-full {
+*.gig-comment-rating-star, *.gig-selfreview-rating-star, *.gig-rating-star-full, *.gig-rating-star, *.gig-rating-dimensions div.gig-rating-star, *.gig-comment-rating-star-full, *.gig-selfreview-rating-star-full {
 	background-image: none;
 }
 #ratingDiv div.gig-rating-star.gig-rating-star-empty:before, .gig-comment-rating-star:before {

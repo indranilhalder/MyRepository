@@ -11,6 +11,12 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   font: inherit;
   vertical-align: baseline;
   }
+    b{
+  font-weight:bold;
+  }
+  i{
+  font-style:italic;
+  }
 html,body,main {
 	height:100%;
 }
@@ -1628,7 +1634,7 @@ h2 {
             header .content nav > ul > li > ul > li > ul {
               position: absolute;
               top: 0;
-              left: 190px;
+              left: 189px;
               height: 450px;
               padding-top: 10px;
               padding-left: 40px;
@@ -1857,7 +1863,7 @@ h2 {
       margin-left: -2px;
       margin-right: -2px;
       width: 140px;
-      z-index: 2;
+      z-index: 3;
       -webkit-transition: border 0.3s;
       -moz-transition: border 0.3s;
       transition: border 0.3s; }
@@ -9978,7 +9984,7 @@ body .account .right-account .order-history .pagination li{
       margin-bottom: 5px; }
     .product-tile .image .new {
       position: absolute;
-      width: 30%;
+      height: 31%;
       top: 0;
       left: -15px; }
       .shop-sale.wrapper .product-tile .image .new {
@@ -10497,7 +10503,8 @@ body .account .right-account .order-history .pagination li{
     float: left;
 }
 .promo-block .promo-img img {
-    position: relative
+    position: relative;
+     width: 90%;
 }
 .promo-block .promo-img img.sprite-icon {
     position: absolute;
@@ -13152,6 +13159,9 @@ font-size:14px;
 }
 .customer-service .content * {
     font-family: avenir next !important;
+}
+.customer-service .content h3 {
+    text-align:center;
 }
 .content b {
     font-weight: 600;
@@ -18666,7 +18676,7 @@ input[type="checkbox"]#brandSelectAll + label{
 	margin: 0px;
 }
  .quick-view-popup .size-guide {
-  width: 100%;
+ /*  width: 100%; */
   text-transform: uppercase;
 	float:left;
   font-weight: 600;
@@ -18676,6 +18686,9 @@ input[type="checkbox"]#brandSelectAll + label{
   bottom:0;
   left:0;
 } 
+.select_height_toggle{
+display: block !important;
+}
 .quick-view-popup .size-guide:before {
   font-family: 'icomoon';
   -webkit-font-smoothing: antialiased;
@@ -22528,7 +22541,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
     margin: 10px 0;
     text-align: center;
 }
-@media(min-width:651px){
+@media(min-width:791px){
 .product-tile:hover .image .quickview {
     opacity: 1;
     -webkit-transition: opacity 0.3s;
@@ -28101,6 +28114,8 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	margin: 0 0 10px;
 	line-height: 15px;
 	font-weight:500;
+	text-align:center;
+	word-break: break-word;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
@@ -28326,6 +28341,9 @@ body .account .right-account.rewards>div.your-activity.coupon-history>p span
 	{
 	color: #00cbe9;
 	font-weight: 500
+}
+body .account .right-account.rewards>div.your-activity.coupon-history>ul{
+	border-bottom: 1px solid #f0f4f5;
 }
 
 body .account .right-account.rewards>div.your-activity.coupon-history>ul>li,
@@ -28619,8 +28637,13 @@ padding-top: 10px;
     clear: both;
 }
 body .account .right-account.rewards>div.couponHistoryLinkDiv{
-    text-align: right;
+    text-align: left;
     border:none;
+}
+.your-activity.coupon-history>div>h2,.coupon-container>div>h2{
+	text-align: center;
+    color: #00cbe9;
+    font-weight: 500;
 }
 .couponHistoryLink{
     height: 20px;
@@ -28699,7 +28722,6 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
 #loginDivCheckout,#loginDivCheckout td, #loginDivCheckout table, #loginDivCheckout tr, #loginDivCheckout tbody, #loginDivCheckout div,
-#loginDivsiginflyout,#loginDivsiginflyout td, #loginDivsiginflyout table, #loginDivsiginflyout tr, #loginDivsiginflyout tbody, #loginDivsiginflyout div,
 #loginDivRegisterCheckOut,#loginDivRegisterCheckOut td, #loginDivRegisterCheckOut table, #loginDivRegisterCheckOut tr, #loginDivRegisterCheckOut tbody, #loginDivRegisterCheckOut div {
     display: block;
     width: 100% !important;
@@ -28919,7 +28941,7 @@ body .account .right-account .order-history .bottom .pagination.mobile{
 	font-weight: 600;
 } 
 
-.ShoeBrandLandingLayoutPage .feature-categories h1{
+.page-shoe .feature-categories h1{
     text-transform: capitalize;
 }
 @media(max-width:650px){
@@ -28959,6 +28981,71 @@ body .account .right-account .reviews .toolbar .account-only h2{
   
   body .account .right-account .order-history .product-block li.header>ul>li span.amt {
     background-color: transparent;
+}
+.modal.size-guide .sizes .details .price p {
+    display: inline-block;
+    margin: 0 5px;
+}
+body.page-reviews .commentcontent .gig-composebox-logout, .commentcontent .gig-composebox-follow {
+	display: none;
+}
+body.page-reviews ul.gig-comments-header-right.gig-comments-linksContainer{
+	display: none;
+}
+body.page-reviews .gig-comment-footer-left ul.gig-comments-linksContainer li.gig-comment-shareLink{
+   display: none;
+}
+header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+	display:none;}
+header .content nav > ul > li > ul > li > ul.words > li:nth-child(2){
+	margin-top:0px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+	padding-top:40px;
+}
+body.touchDevice header .content nav > ul > li > ul > li > ul > li > a.view_dept{
+position: absolute;
+    top: 0;
+	font-size:18px;
+	font-weight:600;
+	display:block;
+	
+}
+
+body.page-productDetails .gig-comment .gig-media-thumbnail,
+body.page-reviews .gig-comment .gig-media-thumbnail {
+	height: auto !important;
+}
+
+body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image,
+body.page-reviews .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
+	height: auto !important;
+	width: 50px !important;
+}
+
+body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-caption a {
+	display: none;
+}  
+
+#loginDivsiginflyout > table > tbody > tr > td table td:first-child{
+	width: 10% !important;
+} 
+#commentsDiv {
+    width: 80% !important;
+    clear: both;
+}
+#reviewPluginContainer .modal-header {
+	    padding-right: 35px;
+} 
+@media(max-width:790px){
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+    padding-top: 0px;
+	position:relative;}
+
+body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
+    padding-top: 40px;}
+body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
+	padding-left:0px;}
 }
 /*--------------maincss-----------*/
 .row
@@ -34462,7 +34549,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	#mobileNoError,.saved-card-button, #netbankingError, #ebsErrorSavedCard, #juspayconnErrorDiv,
 	#netbankingIssueError, #cvvErrorSavedCard, #maestroMessage, #newMaestroMessage, #invalidCouponError, 
 	#couponApplied, #expiredCouponError, #issueCouponError, #priceCouponError, #appliedCouponError, #emptyCouponError,
-	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError {
+	#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError {
 	display: none;
 }
 

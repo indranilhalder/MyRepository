@@ -19,11 +19,10 @@
 <%@ taglib prefix="storepickup"
 	tagdir="/WEB-INF/tags/responsive/storepickup"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
 
 <c:url var="sizeGuideUrl"
-	value="/p/sizeGuide?productCode=${product.code}" scope="request"></c:url>
+	value="/p/sizeGuide?productCode=${product.code}&sizeSelected=${selectedSize}" scope="request"></c:url>
 <style>
 #variant, .productCount select {
 	border-radius: 0;
@@ -183,7 +182,6 @@ $("#variant").change(function() {
 <!-- displaying sizes based on color selected -->
 <!-- currentcolor refers to the variable where the current color of the selected variant is stored -->
 <!-- currentcolor is populated on selecting color swatch -->
-
 <div class="size" style="font-size: 12px;">
 
 	<c:if test="${noVariant!=true&&notApparel!=true}">
@@ -260,9 +258,10 @@ $("#variant").change(function() {
 				</c:forEach>
 			</c:forEach>
 		</select>
+		
 		<!-- Size guide Pop-up -->
 		<a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}"> <spring:theme
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 		</a>
 		<!-- <span id="selectSizeId" style="display: none;color: red">Please select a size!</span> -->

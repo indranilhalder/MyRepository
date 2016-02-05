@@ -470,13 +470,15 @@ public class GigyaServiceImpl implements GigyaService
 
 				LOG.debug("GigyaServiceImpl, notifyGigya Gigya Method" + gigyaMethod);
 				final String FIRSTNAME = "{firstName:" + "'";
+				final String LASTNAME = ",lastName: ";
+				final String EMAIL = ",email:";
 				// NOTIFY GIGYA WHEN USER LOGIN USING SOCIAL NETWORKS
 				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.notifyRegistration"))
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
 					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
 					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
-					if (fName != null)
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
 						loginUserInfo = FIRSTNAME + fName + "'" + "}";
 					}
@@ -500,10 +502,20 @@ public class GigyaServiceImpl implements GigyaService
 				{
 					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
 					request.setParam(MarketplacecclientservicesConstants.UID, siteUid);
-					if (fName != null || lName != null || eMail != null)
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
-						loginUserInfo = FIRSTNAME + fName + "'" + ",lastName: " + "'" + lName + "'" + ",email:" + "'" + eMail + "'"
-								+ "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+
+					else
+					{
+						final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+						fName = splitList[0];
+						if (fName.contains("."))
+						{
+							fName = fName.replace('.', ' ');
+						}
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 				}
 
@@ -514,9 +526,9 @@ public class GigyaServiceImpl implements GigyaService
 					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
 					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
 
-					if (fName != null)
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
 					{
-						loginUserInfo = FIRSTNAME + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
 					else
 					{
@@ -529,8 +541,9 @@ public class GigyaServiceImpl implements GigyaService
 								fName = fName.replace('.', ' ');
 							}
 						}
-						loginUserInfo = FIRSTNAME + fName + "'" + "}";
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
 					}
+
 
 				}
 
@@ -557,7 +570,8 @@ public class GigyaServiceImpl implements GigyaService
 					}
 					else
 					{
-						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + "MESSAGE ->" + (response.getErrorMessage()));
+						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->"
+								+ (response.getErrorMessage()));
 					}
 
 				}
@@ -578,6 +592,4 @@ public class GigyaServiceImpl implements GigyaService
 		}
 
 	}
-
-
 }

@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -46,6 +47,8 @@ public class ManualRefundOrderStatusInterceptor implements LoadInterceptor, Prep
 
 	@Autowired
 	private GlobalCodeService globalCodeService;
+
+	private static final Logger LOG = Logger.getLogger(ManualRefundOrderStatusInterceptor.class);
 
 	@Override
 	public void onLoad(final Object model, final InterceptorContext ctx) throws InterceptorException
@@ -79,65 +82,69 @@ public class ManualRefundOrderStatusInterceptor implements LoadInterceptor, Prep
 				if (arg1.isModified(type, type.STATUS)
 						&& imp.getValueHistory().isValueLoaded(type.STATUS)
 						&& imp.getValueHistory().getOriginalValue(type.STATUS) != null
-						&& imp.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.REFUND_IN_PROGRESS)
+						// TISPRO-94 Code fixes start
+						&& (imp.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.REFUND_IN_PROGRESS)
+								|| imp.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.CANCELLATION_INITIATED) || imp
+								.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.REFUND_INITIATED))
+						// TISPRO-94 Code fixes end
 						&& (consignmentStatusObject.equals(ConsignmentStatus.RETURN_COMPLETED)
 								|| consignmentStatusObject.equals(ConsignmentStatus.CANCELLED) || consignmentStatusObject
 									.equals(ConsignmentStatus.ORDER_CANCELLED)))
 				{
-					//					if (imp.getValueHistory().isValueLoaded(type.STATUS)
-					//							&& imp.getValueHistory().getOriginalValue(type.STATUS) != null
-					//							&& imp.getValueHistory().getOriginalValue(type.STATUS).equals(ConsignmentStatus.REFUND_IN_PROGRESS))
-					//					{
-					//						if (consignmentStatusObject.equals(ConsignmentStatus.RETURN_COMPLETED)
-					//								|| consignmentStatusObject.equals(ConsignmentStatus.CANCELLED))
-					//						{
-
-					//Refund OMS Call
-
-					final PaymentTransactionModel paymentModel = modelService.create(PaymentTransactionModel.class);
-
-					paymentModel.setTransactionId(consignmentCodeObject);
-
-					final PaymentTransactionModel paymentTransactionModel = flexibleSearchService.getModelByExample(paymentModel);
-
-					final AbstractOrderEntryModel orderEntry = consignmentModelObject.getConsignmentEntries().iterator().next()
-							.getOrderEntry();
-
-					if (orderEntry != null)
+					try
 					{
-						final RefundInfo refundInfo = new RefundInfo();
+						//Refund OMS Call
 
-						if (paymentTransactionModel != null)
+						final PaymentTransactionModel paymentModel = modelService.create(PaymentTransactionModel.class);
+
+						paymentModel.setTransactionId(consignmentCodeObject);
+						PaymentTransactionModel paymentTransactionModel = null;
+
+
+						paymentTransactionModel = flexibleSearchService.getModelByExample(paymentModel);
+
+						final AbstractOrderEntryModel orderEntry = consignmentModelObject.getConsignmentEntries().iterator().next()
+								.getOrderEntry();
+
+						if (orderEntry != null)
 						{
-							refundInfo.setRefundedBankTrxID(paymentTransactionModel.getCode());
-							//TISSIT-1768
-							//refundInfo.setRefundedBankTrxStatus(paymentTransactionModel.getStatus());
-							refundInfo.setRefundedBankTrxStatus(MarketplacecommerceservicesConstants.SUCCESS.toUpperCase());
-							refundInfo.setRefundedAmt(paymentTransactionModel.getEntries().iterator().next().getAmount().floatValue());
-						}
-						else
-						{
-							refundInfo.setRefundedBankTrxID(StringUtils.EMPTY);
-							refundInfo.setRefundedBankTrxStatus(StringUtils.EMPTY);
-							refundInfo.setRefundedAmt(NumberUtils.FLOAT_ZERO.floatValue());
-						}
-						refundInfo.setRefundedBy("CsAgent");//TODO
-						refundInfo.setRefundType("Back to Source");//TODO
-						refundInfo.setRefundTriggeredDate(new Date());
+							final RefundInfo refundInfo = new RefundInfo();
 
-						final List<RefundInfo> refundInfos = new ArrayList<RefundInfo>(2);
-						refundInfos.add(refundInfo);
+							if (paymentTransactionModel != null)
+							{
+								refundInfo.setRefundedBankTrxID(paymentTransactionModel.getCode());
+								//TISSIT-1768
+								refundInfo.setRefundedBankTrxStatus(MarketplacecommerceservicesConstants.SUCCESS.toUpperCase());
+								refundInfo
+										.setRefundedAmt(paymentTransactionModel.getEntries().iterator().next().getAmount().floatValue());
+							}
+							else
+							{
+								refundInfo.setRefundedBankTrxID(StringUtils.EMPTY);
+								refundInfo.setRefundedBankTrxStatus(StringUtils.EMPTY);
+								refundInfo.setRefundedAmt(NumberUtils.FLOAT_ZERO.floatValue());
+							}
+							refundInfo.setRefundedBy("CsAgent");//TODO
+							refundInfo.setRefundType("Back to Source");//TODO
+							refundInfo.setRefundTriggeredDate(new Date());
 
-						final String referenceNumber = ((OrderModel) orderEntry.getOrder()).getParentReference().getCode();
-						mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber, orderEntry.getTransactionID(),
-								globalCodeService.getGlobalMasterCode(consignmentStatusObject.toString()).getGlobalCode());
-						//Create Log History TISEE-5545
-						createHistoryLog("RETURN_COMPLETED", ((OrderModel) orderEntry.getOrder()), orderEntry.getTransactionID());
+							final List<RefundInfo> refundInfos = new ArrayList<RefundInfo>(2);
+							refundInfos.add(refundInfo);
+
+							final String referenceNumber = ((OrderModel) orderEntry.getOrder()).getParentReference().getCode();
+							mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber, orderEntry.getTransactionID(),
+									globalCodeService.getGlobalMasterCode(consignmentStatusObject.toString()).getGlobalCode());
+							//Create Log History TISEE-5545
+							createHistoryLog("RETURN_COMPLETED", ((OrderModel) orderEntry.getOrder()), orderEntry.getTransactionID());
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Some issue Occured while Saving Consignment :" + e.getMessage());
 					}
 
 				}
-				//					}
-				//				}
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -149,7 +156,6 @@ public class ManualRefundOrderStatusInterceptor implements LoadInterceptor, Prep
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 	}
-
 
 	private void createHistoryLog(final String description, final OrderModel order, final String lineId)
 	{

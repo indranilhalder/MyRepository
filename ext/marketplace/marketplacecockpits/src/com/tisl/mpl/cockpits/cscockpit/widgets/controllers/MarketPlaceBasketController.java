@@ -110,7 +110,7 @@ public interface MarketPlaceBasketController extends BasketController {
 	String applyVoucher(String voucherCode);
 
 
-	void releaseVoucher();
+	String releaseVoucher();
 
 
 	Collection<String> getAppliedVoucherCodesList();

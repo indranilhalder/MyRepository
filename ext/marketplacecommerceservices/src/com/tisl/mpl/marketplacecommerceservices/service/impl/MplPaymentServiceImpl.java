@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
@@ -20,7 +21,11 @@ import de.hybris.platform.core.model.order.payment.NetbankingPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -39,6 +44,8 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.DiscountValue;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -74,6 +81,7 @@ import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.MplPromotionData;
+import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.CardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
@@ -82,6 +90,7 @@ import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculation
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentTransactionService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
@@ -134,6 +143,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private PersistentKeyGenerator codCodeGenerator;
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
+	@Autowired
+	private MplVoucherService mplVoucherService;
 
 	//@Autowired
 	//private ExtendedUserService extendedUserService;
@@ -1166,55 +1177,59 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		if (null != entries)
 		{
-			//final int cartSize = entries.size();
-
-			//amtTobeDeductedAtlineItemLevel is a variable to check total apportioned COD charge is equal to total convenience charge
-			//final double amtTobeDeductedAtlineItemLevel = MarketplacecommerceservicesConstants.AMOUNTTOBEDEDUCTED;
+			double totalPrice = 0;
 			for (final AbstractOrderEntryModel entry : entries)
 			{
-				//Setting formattedCODCharge while cartSize is greater than 1
-				//if (cartSize > 1)
-				//{
-				double entryTotals = 0;
-				if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+				if (!getDiscountUtility().isFreebieOrBOGOApplied(entry))
 				{
-					entryTotals = entry.getNetAmountAfterAllDisc().doubleValue();
-				}
-				else
-				{
-					entryTotals = entry.getTotalPrice().doubleValue();
-				}
-				final Long quantity = entry.getQuantity();
+					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					{
+						totalPrice += entry.getNetAmountAfterAllDisc().doubleValue();
+					}
+					else
+					{
+						totalPrice += entry.getTotalPrice().doubleValue();
+					}
 
-				//calculating ratio of convenience charge for cart entry
-				final Double codChargePercent = Double.valueOf(entryTotals / cartModel.getTotalPrice().doubleValue());
-				final Double codChargePerEntry = Double.valueOf(totalCODCharge.doubleValue() * codChargePercent.doubleValue());
-				final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
-						codChargePerEntry));
-				final Double appCODChargeForEachItem = Double.valueOf(formattedCODCharge.doubleValue() / quantity.doubleValue());
-				entry.setConvenienceChargeApportion(appCODChargeForEachItem);
-				//amtTobeDeductedAtlineItemLevel += formattedCODCharge.doubleValue();
-				//cartSize--;
-				//}
-
-				//Setting formattedCODCharge while cartSize is equal to 1
-				//else
-				//{
-				//final Long quantity = entry.getQuantity();
-				//final Double codChargePerEntry = Double.valueOf((totalCODCharge.doubleValue() - amtTobeDeductedAtlineItemLevel)
-				//	/ quantity.doubleValue());
-				//final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
-				//	codChargePerEntry));
-				//entry.setConvenienceChargeApportion(formattedCODCharge);
-				//}
-				try
-				{
-					getModelService().save(entry);
+					totalPrice -= 0.01 * entry.getFreeCount().intValue();
 				}
-				catch (final ModelSavingException e)
+			}
+
+			//amtTobeDeductedAtlineItemLevel is a variable to check total apportioned COD charge is equal to total convenience charge
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				if (!getDiscountUtility().isFreebieOrBOGOApplied(entry))
 				{
-					LOG.error("Exception while saving abstract order entry model with " + e);
-					throw new ModelSavingException(e + " :Exception while saving abstract order entry model with");
+					double entryTotals = 0;
+					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					{
+						entryTotals = entry.getNetAmountAfterAllDisc().doubleValue();
+					}
+					else
+					{
+						entryTotals = entry.getTotalPrice().doubleValue();
+					}
+					entryTotals -= 0.01 * entry.getFreeCount().intValue();
+					final long quantity = entry.getQualifyingCount().longValue();
+
+
+					//calculating ratio of convenience charge for cart entry
+					final Double codChargePercent = Double.valueOf(entryTotals / totalPrice);
+					final Double codChargePerEntry = Double.valueOf(totalCODCharge.doubleValue() * codChargePercent.doubleValue());
+					final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
+							codChargePerEntry));
+					final Double appCODChargeForEachItem = Double.valueOf(formattedCODCharge.doubleValue() / quantity);
+					entry.setConvenienceChargeApportion(appCODChargeForEachItem);
+
+					try
+					{
+						getModelService().save(entry);
+					}
+					catch (final ModelSavingException e)
+					{
+						LOG.error("Exception while saving abstract order entry model with " + e);
+						throw new ModelSavingException(e + " :Exception while saving abstract order entry model with");
+					}
 				}
 
 			}
@@ -1236,8 +1251,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.error("Exception while saving cod payment info with " + e);
 			throw new ModelSavingException(e + " :Exception while saving cod payment info with");
 		}
-		//getting the session cart
-		//final CartModel cart = getCartService().getSessionCart();
 		//setting CODPaymentInfoModel in cartmodel
 		cartModel.setPaymentInfo(cODPaymentInfoModel);
 		cartModel.setPaymentAddress(cartModel.getDeliveryAddress());
@@ -1252,7 +1265,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			throw new ModelSavingException(e + " :Exception while saving cart with");
 		}
 	}
-
 
 	/**
 	 * This method is used set the saved card details in SavedCardModel
@@ -1514,13 +1526,36 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cartData
 	 * @param cart
 	 * @return MplPromoPriceData
+	 * @throws JaloPriceFactoryException
+	 * @throws JaloSecurityException
+	 * @throws CalculationException
+	 * @throws VoucherOperationException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
+	 * @throws ModelSavingException
 	 *
 	 */
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
+	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException
 	{
+		//Reset Voucher Apportion
+		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+		{
+			for (final AbstractOrderEntryModel entry : getMplVoucherService().getOrderEntryModelFromVouEntries(
+					(VoucherModel) cart.getDiscounts().get(0), cart))
+			{
+				entry.setCouponCode("");
+				entry.setCouponValue(Double.valueOf(0.00D));
+				getModelService().save(entry);
+			}
+		}
+
+
 		final MplPromoPriceData promoPriceData = new MplPromoPriceData();
 		MplPromotionData responseData = new MplPromotionData();
+		VoucherDiscountData discData = new VoucherDiscountData();
 		final List<MplPromotionData> responseDataList = new ArrayList<MplPromotionData>();
 		calculatePromotion(cart, cartData);
 
@@ -1561,7 +1596,18 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 		}
 
+		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+		{
+			final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
+			final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
+					voucher, cart);
+			discData = getMplVoucherService().checkCartAfterApply(voucher, cart, applicableOrderEntryList);
+			getMplVoucherService().setApportionedValueForVoucher(voucher, cart, voucher.getVoucherCode(), applicableOrderEntryList);
+			getMplCommerceCartService().setTotalWithConvCharge(cart, cartData);
+
+		}
 		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
+
 		//getting the promotion data
 		final Set<PromotionResultModel> promotion = cart.getAllPromotionResults();
 		if (null != promotion && !promotion.isEmpty())
@@ -1635,6 +1681,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			promoPriceData.setDeliveryCost(cartData.getDeliveryCost());
 		}
 
+		promoPriceData.setVoucherDiscount(discData);
+
 		return promoPriceData;
 	}
 
@@ -1677,7 +1725,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	private PriceData calculateTotalDiscount(final CartModel cart)
 	{
-		double discount = 0.0d;
+		BigDecimal discount = null;
 		double totalPrice = 0.0D;
 		if (null != cart && CollectionUtils.isNotEmpty(cart.getEntries()))
 		{
@@ -1699,11 +1747,12 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 			}
 
-			discount = (totalPrice + cart.getDeliveryCost().doubleValue() + cart.getConvenienceCharges().doubleValue())
-					- cart.getTotalPriceWithConv().doubleValue() - voucherDiscount;
+			discount = BigDecimal.valueOf(
+					(totalPrice + cart.getDeliveryCost().doubleValue() + cart.getConvenienceCharges().doubleValue())).subtract(
+					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));
 		}
 
-		return getDiscountUtility().createPrice(cart, Double.valueOf(discount));
+		return getDiscountUtility().createPrice(cart, Double.valueOf(discount != null ? discount.doubleValue() : 0.0));
 	}
 
 	/**
@@ -2459,7 +2508,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
-
 	//Getters and Setters
 
 	/**
@@ -2782,6 +2830,30 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.flexibleSearchService = flexibleSearchService;
 	}
+
+
+	/**
+	 * @return the mplVoucherService
+	 */
+	public MplVoucherService getMplVoucherService()
+	{
+		return mplVoucherService;
+	}
+
+
+	/**
+	 * @param mplVoucherService
+	 *           the mplVoucherService to set
+	 */
+	public void setMplVoucherService(final MplVoucherService mplVoucherService)
+	{
+		this.mplVoucherService = mplVoucherService;
+	}
+
+
+
+
+
 
 
 

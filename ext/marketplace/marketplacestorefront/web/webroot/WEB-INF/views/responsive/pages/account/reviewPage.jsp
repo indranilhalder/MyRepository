@@ -97,7 +97,7 @@
 							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel">
 							
 								<c:forEach items="${productDataModifyMap}" var="product">
-								<div class="slide item"><a
+								<div class="slide item" id="no-image-link${product.value.code}"><a
 									class="product-tile" href='<c:url value="${product.value.url}"></c:url>'>
 										<div class="image">
 											
@@ -224,7 +224,7 @@
 						</div>
 						<div class="review">
 							<div class="details">
-							<div class="rating-stars-wrapper">
+							<div class="rating-stars-wrapper" data-rating-all="${count.index}">
 								<ul class="rating-stars" data-rating-name${count.index}="_overall">
 								
   											<li><img src="${commonResourcePath}/images/star.png"><span></span></li>
@@ -515,7 +515,7 @@
 				</div>
 				<div class="commentcontent" style="width:100%;padding: 5px;">
 				<input type="hidden" name="user_logged">
-				<div style="float:left; width: 20%;">		
+				<div style="width: 30%; margin: 5px auto; padding: 15px 0;">		
 					<img class="review-image" style="width: 60%;">		
 					<div class="popUpProductBrand" style="padding: 5px;"></div>		
 					<div class="popUpProductTitle"></div>		
@@ -555,3 +555,4 @@ $(".prev a").click(function(){
 });	
 		
 </script>
+
