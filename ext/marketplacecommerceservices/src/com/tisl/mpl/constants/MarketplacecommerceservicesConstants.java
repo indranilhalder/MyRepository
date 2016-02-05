@@ -18,6 +18,8 @@ import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
 import de.hybris.platform.returns.model.ReturnOrderModel;
 
+import java.util.Date;
+
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -51,7 +53,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CHANNEL_MOBILE = "MOBILE";
 	public static final String CHANNEL_CALLCENTER = "CALLCENTER";
 	public static final String Already_Have_Wishlists = "You already have the following whishlists:";
-
+	public static final String PRODUCT_PRIORITY = "7";
 	public static final String CART_DELISTED_STATUS = "Cart Delisted Status :";
 
 	//SONAR FIX
@@ -81,6 +83,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EXCEPTION_IS = "Exception is : ";
 	public static final String DMY_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DMY_DATE_FORMAT_INT = "yyyyMMdd";
+	public static final String COUPONS_DATE_FORMAT = "MMM dd, YYYY";
 	public static final String TRUE = "true";
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
@@ -143,7 +146,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String EMPTYSTRING = "".intern();
 	public final static String BANKFROMBIN = "bank".intern();
 	public final static String VALID = "VALID".intern();
-
+	public final static Date EMPTYDATE = null;
 	//PAYMENT SERVICE
 	public static final String MPLPAYMENTSERVICE = "mplPaymentService";
 	//public static final String CALLINGPAYUSERVICE = "Calling PAYU service:::::::";
@@ -570,6 +573,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CSV_FILE_HEADER = "date,customerId,emailId,ipAddress,name,phoneNo";
 	public static final String FILE_LOCATION = "cod.blacklist.report.path";
 	public static final String REPORT = "report";
+	public static final String SELLERPRIORITYREPORT = "sellerPriorityReport";
 
 	public static final String ORDER_NOT_CONFIRMED = "Order Not Confirmed";
 	public static final String INVALIDORDERID = "Please Enter valid Order number";
@@ -647,6 +651,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WISHLIST_DISPLAY_QUANTITY = "mpl.cart.wishlist.display.quantity";
 	public static final String OUT_OF_INVENTORY = "outofinventory";
 	public static final String INVENTORY_WIIL_EXCEDE = "willexceedeinventory";
+
+	//For SellerPriority Report
+	public static final String CSVFILEHEADER_SELLERPRIORITY = "Modified Time, User ID, Seller ID, Seller Name, Category ID, Product ID, Start Date, End Date, Active?, Newly_Created?, Modified_Start Date, Modified_End Date, Modified_Active Flag";
 
 	//System/Non Business constants
 	public static final String E0000 = "E0000";
@@ -974,6 +981,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FOR TRACK ORDER NOTIFICATION
 	public static final String NOTIFICATION_COUNT = "notification.count";
 	public static final String NOTIFICATION_COUNT_MOBILE = "notification.count.mobile";
+	public static final String CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION = "notification.coupon.status";
 
 	public static final String BASESTORE_UID = "mpl".intern();
 	public static final String WEBHOOK_ENTRY_EXPIRED = "0".intern();
@@ -1279,11 +1287,34 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CART_HOME_DELIVERY = "Home Delivery".intern();
 	public static final String CART_EXPRESS_DELIVERY = "Express Delivery ".intern();
+	// Seler Priority Report Query
+	// Within date range
+	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValues as s}, {MplSellerPriority as sp },{SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {s.modifieditem}={sp.pk} and {s.creationtime} BETWEEN ?startDate and ?endDate order by {s.Timestamp} desc";
+	//	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValueEntry as se},{SavedValues as s}, {Bin as bk }, {SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {st.code} = 'changed'and {s.modifieditem}={bk.pk} and {s.pk} = {se.Parent} and {s.creationtime} BETWEEN ?startDate and ?endDate ";
+
+	// full data
+	public static final String SELLERPRIORITYQUERY = "Select {s.pk} from {SavedValues as s}, {MplSellerPriority as sp },{SavedValueEntryType as st} where {s.modificationtype}={st.pk}  and {s.modifieditem}={sp.pk} order by {s.Timestamp} desc";
+
+	public static final String SELLERPRIORITYDATAQUERY = "Select {sp.pk} from  {MplSellerPriority as sp }";
+
 
 	public static final String CARTQUERY = "select {c:pk} from {Cart As c} where {c.guid}=?guid".intern();
 	public static final String ISBUYAGETPROMO = "isBuyAGetPromo".intern();
 
+	public static final String VOUCHERWITHINDATEQUERY = "select {d.voucher} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
+
+	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate} and {immutableKeyHash} is null";
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
+
+	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
+	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
+
+	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
+
+
+	//Coupon
+	public static final String ZEROPOINTZEROONE = "0.01".intern();
+
 
 	private MarketplacecommerceservicesConstants()
 	{

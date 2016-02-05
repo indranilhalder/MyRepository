@@ -1,7 +1,7 @@
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
-//var promoAvailable=$("#promoAvailable").val();
-//var bankAvailable=$("#bankAvailable").val();
+var couponApplied=false;
+var bankNameSelected;
 
 //Display forms based on mode button click
 $("#viewPaymentCredit").click(function(){
@@ -197,7 +197,7 @@ function displayCODForm()
 						}
 						else
 						{
-							document.getElementById("convChargeField").innerHTML="FREE";
+							document.getElementById("convChargeField").innerHTML="Free"; //TISPRD-146
 							$("#convChargeMessage").css("display","none");
 						}
 						//document.getElementById("totalWithConvField").innerHTML=totalPrice; TISPT-29
@@ -2319,6 +2319,8 @@ function setBankForSavedCard(bankName){
 //			$("#no-click").remove();
 //		}
 //	});	
+	
+	bankNameSelected=bankName;
 	applyPromotion(bankName);	
 
 }
@@ -2351,6 +2353,38 @@ function applyPromotion(bankName)
 				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
+				
+				//Coupon
+				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
+				{
+					if(response.voucherDiscount.couponDiscount.doubleValue<=0)
+					{
+		 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+		 						" #expiredCouponError, #issueCouponError, #freebieCouponError").css("display","none");
+		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
+		 				$('#couponFieldId').attr('readonly', false);
+		 				var selection = $("#voucherDisplaySelection").val();
+		 				$("#couponFieldId").val(selection);
+		 				$("#couponMessage").html("Coupon has been removed after applying promotion");
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(2000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 5000); 	
+					}
+					else
+					{
+						$("#couponApplied").css("display","block");
+		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
+		 				//$("#couponFieldId").attr('disabled','disabled');
+		 				$('#couponFieldId').attr('readonly', true);
+		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(2000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 5000);
+					}
+				}
+				
+				
+				//Promotion
 				if(response.mplPromo==null || response.mplPromo==[])
 				{
 					$("#promotionApplied,#promotionMessage").css("display","none");
@@ -3445,3 +3479,159 @@ function clearDisable()
 	$("#no-click").remove();
 	$(".make_payment").removeAttr('disabled');
 }
+
+
+//Coupon
+$("#couponSubmitButton").click(function(){
+	$(this).prop('disabled', true);
+	$(this).css("opacity","0.5");
+	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
+			"#invalidCouponError, #expiredCouponError, #issueCouponError, " +
+			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError").css("display","none");
+	if($("#couponFieldId").val()==""){
+		$("#emptyCouponError").css("display","block");	
+		//document.getElementById("couponError").innerHTML="Please enter a Coupon Code";
+		$(this).prop('disabled', false);
+		$(this).css("opacity","1");
+	}
+	else if($("#couponFieldId").val()!="" && $('#couponFieldId').prop('readonly') == true)
+	{
+		$("#appliedCouponError").css("display","block");	
+		//document.getElementById("couponError").innerHTML="Coupon is already applied";
+		$(this).prop('disabled', false);
+		$(this).css("opacity","1");
+	}
+	else{
+		var couponCode=$("#couponFieldId").val();
+		var paymentMode=$("#paymentMode").val();
+		$.ajax({
+	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
+	 		type: "GET",
+	 		cache: false,
+	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected},
+	 		success : function(response) {
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			if(response.redeemErrorMsg!=null){
+	 				if(response.redeemErrorMsg=="Price_exceeded")
+	 				{
+	 					$("#priceCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Invalid")
+	 				{
+	 					$("#invalidCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Expired")
+	 				{
+	 					$("#expiredCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Issue")
+	 				{
+	 					$("#issueCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Not_Applicable")
+	 				{
+	 					$("#notApplicableCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Not_Reservable")
+	 				{
+	 					$("#notReservableCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="Freebie")
+	 				{
+	 					$("#freebieCouponError").css("display","block");
+	 				}
+	 				else if(response.redeemErrorMsg=="User_Invalid")
+	 				{
+	 					$("#userInvalidCouponError").css("display","block");
+	 				}
+	 				//$("#couponError").css("display","block");	
+	 				//document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
+	 			}
+	 			else{
+		 			if(response.couponRedeemed==true){
+		 				couponApplied=true;
+		 			}
+		 			if(couponApplied==true){
+		 				if(response.couponDiscount.doubleValue>0)
+			 			{
+			 				$("#couponApplied").css("display","block");
+			 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
+			 				//$("#couponFieldId").attr('disabled','disabled');
+			 				$('#couponFieldId').attr('readonly', true);
+			 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
+			 				$('#couponMessage').show();
+			 				$('#couponMessage').delay(2000).fadeOut('slow');
+			 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);		 		
+			 			}
+		 				else
+		 				{
+		 					$("#issueCouponError").css("display","block");
+		 				}
+		 			}
+	 			}
+	 			$("#couponSubmitButton").prop('disabled', false);
+	 			$("#couponSubmitButton").css("opacity","1");
+	 		},
+	 		error : function(resp) {
+	 			$("#couponSubmitButton").prop('disabled', false);
+	 			$("#couponSubmitButton").css("opacity","1");
+	 		}
+	 	});	 
+	}
+});
+
+$("#couponFieldId").focus(function(){
+	//$("#couponError").css("display","none");	
+	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+			" #expiredCouponError, #issueCouponError, #notApplicableCouponError," +
+			" #notReservableCouponError, #freebieCouponError, #userInvalidCouponError").css("display","none");
+});
+
+
+$(".remove-coupon-button").click(function(){
+	var couponCode=$("#couponFieldId").val();
+	$.ajax({
+ 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
+ 		type: "GET",
+ 		cache: false,
+ 		data: { 'couponCode' : couponCode },
+ 		success : function(response) {
+ 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+ 			//alert(response.totalPrice.formattedValue);
+ 			if(response.couponReleased==true){
+ 				couponApplied=true;
+ 			}
+ 			if(couponApplied==true){
+ 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+ 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError").css("display","none");
+ 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
+ 				//$("#couponFieldId").attr('disabled','enabled');
+ 				$('#couponFieldId').attr('readonly', false);
+ 				var selection = $("#voucherDisplaySelection").val();
+ 				$("#couponFieldId").val(selection);
+ 				//$("#couponFieldId").val("");
+ 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
+ 				$('#couponMessage').show();
+ 				$('#couponMessage').delay(2000).fadeOut('slow');
+ 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
+ 		},
+ 		error : function(resp) {
+ 		}
+ 	});	 
+});
+
+
+$(document).ready(function(){
+	if($('#couponFieldId').prop('readonly') == false)
+	{
+		var selection = $("#voucherDisplaySelection").val();
+		$("#couponFieldId").val(selection);
+	}
+});
+$("#voucherDisplaySelection").change(function(){
+	if($('#couponFieldId').prop('readonly') == false)
+	{
+		var selection = $(this).val();
+		$("#couponFieldId").val(selection);
+	}
+});

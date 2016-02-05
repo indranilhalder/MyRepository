@@ -5,7 +5,6 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
-<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -13,12 +12,35 @@
 
 <!-- <ul class="header-trackOrder"> -->
 
-
+<c:set var="urlToAccess" value="#" />
+<c:if test="${isSignedInUser eq 'no'  }">
+<c:set var="urlToAccess" value="/login" />
+  <c:url var="urlToAccess" value="${urlToAccess }"></c:url>
+</c:if>
+<c:choose>
+<c:when test="${isSignedInUser eq 'yes' }">
 	<li class="track trackOrder">
-	<a id="tracklink" href="<c:url value="/my-account/orders"/>"><spring:theme code="header.trackorder" /></a>
+	<a id="tracklink" href="${urlToAccess }"><span class="bell-icon"></span>&nbsp;(<span >${notificationCount}</span>)</a>
 		 <span id="mobile-menu-toggle"></span>
-		<ul class="trackorder-dropdown"></ul>
+		<ul class="trackorder-dropdown"></ul> 
 		</li>
+		
+		</c:when>
+		<c:otherwise>
+		<c:if test="${ empty notificationCount }">
+		
+		<li class="track trackOrder">
+	<a id="tracklink" href="${urlToAccess}"><span class="bell-icon"></span>&nbsp;</a>
+		 <span id="mobile-menu-toggle"></span>
+		<ul class="trackorder-dropdown"></ul> 
+		</li>
+		</c:if>
+
+		</c:otherwise>
+		
+		</c:choose>
+	
+		
 			
 
 

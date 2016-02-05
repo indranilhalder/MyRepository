@@ -21,5 +21,6 @@ public interface GigyaService
 
 	public boolean validateSignature(final String uid, final String timestamp, final String signature);
 
-	public void notifyGigyaOfRegistration(final String siteUid, final String gigyaUid, final String fName, final String lName);
+	public void notifyGigya(final String siteUid, final String gigyaUid, final String fName, final String lName,
+			final String eMail, String gigyaMethod);
 }

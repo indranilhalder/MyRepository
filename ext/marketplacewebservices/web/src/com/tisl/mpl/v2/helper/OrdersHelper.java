@@ -84,8 +84,8 @@ public class OrdersHelper extends AbstractHelper
 		if (statuses != null)
 		{
 			final Set<OrderStatus> statusSet = extractOrderStatuses(statuses);
-			orderHistoriesData = createOrderHistoriesData(orderFacade.getPagedOrderHistoryForStatuses(pageableData,
-					statusSet.toArray(new OrderStatus[statusSet.size()])));
+			orderHistoriesData = createOrderHistoriesData(
+					orderFacade.getPagedOrderHistoryForStatuses(pageableData, statusSet.toArray(new OrderStatus[statusSet.size()])));
 		}
 		else
 		{
@@ -114,8 +114,8 @@ public class OrdersHelper extends AbstractHelper
 
 		final PageableData pageableData = createPageableData(currentPage, pageSize, sort);
 		//showing all orders
-		final int MAX_PAGE_LIMIT = Integer.parseInt(configurationService.getConfiguration().getString(
-				MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY, "500"));
+		final int MAX_PAGE_LIMIT = Integer
+				.parseInt(configurationService.getConfiguration().getString(MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY, "500"));
 		pageableData.setPageSize(MAX_PAGE_LIMIT);
 		//	final CustomerModel customer = mplPaymentWebFacade.getCustomer(userId);
 

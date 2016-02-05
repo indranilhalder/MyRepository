@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+--><extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+
+   <extension abstractclassprefix="Generated" classprefix="Marketplacecoupon" managername="MarketplacecouponManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="marketplacecoupon">
+               
+      <!-- you should add all required extensions to this list, except platform extensions which are automatically required -->         
+      <!-- <requires-extension name="cms"/> -->   
+       <requires-extension name="commerceservices" />
+		<!--<requires-extension name="commercefacades" />
+		<requires-extension name="promotions" />
+		<requires-extension name="wishlist" />
+		<requires-extension name="marketplaceclientservices"/>
+		<requires-extension name="acceleratorservices"/>
+		<requires-extension name="marketplaceJuspayServices" />    -->
+		 <requires-extension name="voucher" />   
+		 <requires-extension name="marketplacecommerceservices" />
+		  <requires-extension name="marketplacefacades" />
+      
+
+      <coremodule generated="true" manager="com.tisl.mpl.coupon.jalo.MarketplacecouponManager" packageroot="com.tisl.mpl.coupon"/>
+
+      <webmodule jspcompile="false" webroot="/marketplacecoupon"/>
+	
+
+   </extension>
+      
+</extensioninfo>

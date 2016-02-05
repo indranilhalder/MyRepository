@@ -396,6 +396,23 @@
 	</bean>
 	<!-- Blacklist Service and DAO Implementation ends -->
 
+
+	<!-- SellerReport Service and Service Implementation  -->
+	
+	<bean id="mplSellerPriorityReportService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplSellerPriorityReportServiceImpl">
+	</bean>
+	<!-- SellerReport Service and Service Implementation  ends -->
+	
+	<!-- SellerReport Service and DAO Implementation -->
+		
+	<bean id="mplSellerPriorityReportDAO"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerPriorityReportDAOImpl">
+	</bean>
+	
+	<!-- SellerReport Service and DAO Implementation  ends -->
+	
+	
 	<alias alias="cODPaymentService" name="mplCODPaymentServiceImpl" />
 	<bean id="mplCODPaymentServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.CODPaymentServiceImpl">
@@ -461,7 +478,7 @@
 
 	<alias name="mplCommerceCartService" alias="commerceCartService" />
 	<bean id="mplCommerceCartService"
-		class="com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl"
 		parent="defaultCommerceCartService">
 		<property name="keyGenerator"
 			ref="#{configurationService.configuration.getProperty('commerceservices.orderCode.keyGenerator')}" />
@@ -1460,6 +1477,33 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="addPriorityStatusInterceptor" class="com.tisl.mpl.interceptor.AddSellerPriorityInterceptor" /> 
+	<bean id="SellerPriorityStatusInterceptorMapping" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+  <property name="interceptor" ref="addPriorityStatusInterceptor" /> 
+  <property name="typeCode" value="MplSellerPriority" /> 
+  </bean>
+	
+	
+	<!-- pdp seller priority interceptor starts -->
+	<bean id="sellerPriorityInterceptor" class="com.tisl.mpl.interceptor.SellerPriorityInterceptor">
+	</bean>
+
+	<bean id="SellerPriorityInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="sellerPriorityInterceptor" />
+		<property name="typeCode" value="MplSellerPriority" />
+	</bean>
+  
+	<!--pdp seller priority interceptor ends -->
+	<!-- pdp seller priority starts -->
+	<bean id="mplSellerPriorityDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerPriorityDaoImpl">
+	</bean>
+	<bean id="mplSellerPriorityService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplSellerPriorityServiceImpl">
+	</bean>
+	<!-- pdp seller priority ends -->
+	
+	
 	<!-- End -->
 	
 	<!-- <bean id="mplPromotionService"
@@ -1469,4 +1513,30 @@
 	<bean id="mplPromotionDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPromotionDaoImpl">
 	</bean> -->
+	
+	
+	<!-- <bean id="findOrderDiscountValuesStrategy"
+		class="com.tisl.mpl.order.impl.MplFindOrderDiscountValuesStrategy"
+		parent="abstractBusinessService"/> -->
+		
+
+		 <!--  pdp seller priority report cron job -->
+
+    <bean id="sellerPriorityReportJob" parent="abstractJobPerformable" class="com.tisl.mpl.marketplacecommerceservices.jobs.SellerPriorityReportJob" autowire="byName">
+    </bean>
+	  <!--  pdp seller priority report cron job ends -->
+	  
+	  <alias name="mplVoucherService" alias="mplVoucherService" />
+	<bean id="mplVoucherService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
+	</bean>
+	
+    <bean id="automationService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.InternalExternalAutomationServiceImpl">
+	</bean>
+		
+	<bean id="CampaignAutomationJob" parent="abstractJobPerformable"
+		class="com.tisl.mpl.marketplacecommerceservices.jobs.InternalExternalCampaignAutomationJob"
+		autowire="byName">
+	</bean>
 </beans>

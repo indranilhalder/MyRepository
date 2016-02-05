@@ -131,6 +131,45 @@ ACC.productDetail = {
 				window.location.href = url;
 			}
 		});
+		
+		// Sise Guide Select Color
+		   
+		$(document).on("click.size-guide", 'a[data-target=#popUpModal]',
+			function() {
+			   var target = $(this).attr("href");
+			   console.log(target);
+			   var productcode= $(this).attr("data-productcode");
+			   console.log(productcode);
+		 	   //$("#popUpModal").modal('hide');
+			   $('body').on('hidden.bs.modal', '#popUpModal', function () {
+					  $(this).removeData('bs.modal');
+					});
+
+			   // load the url and show modal on success
+			   $("#popUpModal .modal-content").load(target, function() { 
+			         $("#popUpModal").modal("show"); 
+					   buyboxDetailsForSizeGuide(productcode);
+			    }); 
+		});
+		//End
+		
+		// Sise Guide Select Size
+		$(document).on("change", '.variant-select',function(){
+			console.log($(this).find('option:selected').data('productcode1'));
+//			var value = $("#variant .dsa").attr("value");
+			var value = $(this).find('option:selected').data('producturl');
+			
+			console.log(value);
+			var productcode = $(this).find('option:selected').data('productcode1')
+			console.log(productcode);
+			
+		    // load the url and show modal on success
+		    $("#popUpModal .modal-content").load(value, function() { 
+		         $("#popUpModal").modal("show");
+		     	buyboxDetailsForSizeGuide(productcode);
+		    });
+		});
+		//End
 
 	},
 
@@ -146,7 +185,6 @@ ACC.productDetail = {
 		if (currentStyle != null) {
 			styleSpan.text(": " + currentStyle);
 		}
-
 	},
 
 	bindCurrentSize : function() {
@@ -943,8 +981,13 @@ function fetchPrice() {
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
 					var sellerName = data['sellerName'];
-
+					var sellerID = data['sellerId'];
+					
 					$("#sellerNameId").html(sellerName);
+					$("#sellerSelId").val(sellerID);
+					
+					/*alert(sellerName +"  sellerName");
+					alert(sellerID +"  sellerID");*/
 
 					// js change ends
 
@@ -1277,7 +1320,9 @@ function getRating(key,productCode,category)
 		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
 		ratingArray  = ratingArray.reverse();
 		
-		  $(".rate-details .after").each(function(count){	  
+
+		  $(".rate-details .after").each(function(count){			  
+
 				
 				var countIndiv=ratingArray[count];								
 				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
@@ -1454,3 +1499,125 @@ function validEmail(email) {
 	  }	  
 	  return true;	  
 	}
+function dispPriceForSizeGuide(mrp, mop, spPrice) {
+	//alert("mrp: "+mrp +" Mop: "+mop+" spPrice: "+spPrice);
+	if(null!= mrp){
+		$("#sizemrpPriceId").append(mrp);
+	}
+	if(null!= mop){
+		$("#sizemopPriceId").append(mop);
+	}
+	if(null!= spPrice){
+		$("#sizespPriceId").append(spPrice);
+	} 
+
+	if (null!=spPrice && spPrice != 0) {
+
+		if (mop == mrp) {
+			$('#sizemrpPriceId').css('text-decoration', 'line-through');
+			$("#sizemrpPriceId").show();
+			$("#sizespPriceId").show();
+		} else {
+			//alert("mop!=mrp sp");
+			$('#sizemrpPriceId').css('text-decoration', 'line-through');
+			$("#sizemrpPriceId").show();
+			$("#sizespPriceId").show();
+		}
+
+	} else {
+		if (null!=mop && mop != 0) {
+			if (mop == mrp) {
+				$("#sizemrpPriceId").removeClass("old").addClass("sale");
+				$("#sizemrpPriceId").show();
+			} else {
+				//alert("mop!=mrp");
+				$('#sizemrpPriceId').css('text-decoration', 'line-through');
+				$("#sizemrpPriceId").show();
+				$("#sizemopPriceId").show();
+			}
+		} else {
+			$("#sizemrpPriceId").show();
+		}
+	}
+	if (mrp == "") {
+		$("#sizemrpPriceId").hide();
+	} else {
+		$("#sizemrpPriceId").show();
+	}
+
+}
+function buyboxDetailsForSizeGuide(productCode){
+	var sellerID= $("#sellerSelId").val();
+	var productCode = productCode;//$("#product").val();
+	
+	console.log(sellerID +" "+productCode);
+	var requiredUrl = ACC.config.encodedContextPath + "/p/buyboxDataForSizeGuide";
+	var dataString = 'productCode=' + productCode+'&sellerId='+sellerID;
+	
+		$.ajax({
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",
+			success : function(data) {
+				var sellerName = data['sellerName'];
+				var sellerID = data['sellerId'];
+				var mopPrice = data['price'];
+				var mrpPrice = data['mrp'];
+				var specialPrice = data['specialPrice'];
+				var availableStock = data['availablestock'];
+				var ussid = data['sellerArticleSKU'];
+				var nosellerData = data['noseller'];
+				//var sizeSelected=true;
+				
+				var count =0;
+
+
+//				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
+//					$('#variant option#select-option').attr("selected", "selected");
+//					sizeSelected=false;
+//				}
+				
+				//$("#sizeSelectedVal").val(sizeSelected);
+				
+				if(sellerName=="undefined" || sellerName==null)
+				{
+					$("#productDetails").hide();
+					$("#price").hide();
+					$("#addToCartSizeGuide").hide();
+					$("#noProductForSelectedSeller").show();
+					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+				}
+//				if (specialPrice != null){
+//					$("#specialSelPrice").html(specialPrice);
+//				}
+//				else{
+//					$("#specialSelPrice").html(mopPrice);
+//				}
+				if(data['isPinCodeServicable']=='N'){
+					$("#pinNotServicableSizeGuide").show();
+					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
+				}
+				else{
+					$("#addToCartSizeGuide #addToCartButton").removeAttr('disabled');
+				}
+				$("#sellerSelName").html(sellerName);
+				$("#sellerIdSizeGuide").html(sellerID);
+				$("#mopSelPrice").html(mopPrice);
+				$("#mrpSelPrice").html(mrpPrice);
+				$("#sizeStock").val(availableStock);
+				$("#sellerSelArticleSKU").html(ussid);
+				$("#sellerSelArticleSKUVal").val(ussid);
+				$("#nosellerVal").val(nosellerData);
+				dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice);
+				if(availableStock==0){
+					$("#outOfStockText").html("<font color='#ff1c47'>" + $('#outOfStockText').text() + "</font>");
+					$("#addToCartSizeGuideTitleoutOfStockId").show();
+					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
+				}
+				else{
+					$("#addToCartSizeGuide #addToCartButton").removeAttr('style');
+				} 
+			}
+		});
+}

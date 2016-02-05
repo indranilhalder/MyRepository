@@ -89,12 +89,19 @@
 	
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
-	
-						<%--<li><a href="<c:url value="/my-account/review"/>"><spring:theme
-										code="header.flyout.review" /></a></li> --%>
+	<!-- Release 2 changes -->
+						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li> 
 										
 							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 										code="header.flyout.myInterest" /></a></li>
+							
+							
+							<li class="header-SignInShare"><spring:theme
+									code="header.flyout.credits" /></li>
+
+						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>
 							
 							<li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li>
@@ -136,12 +143,19 @@
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
 	
-						<%--<li><a href="<c:url value="/my-account/review"/>"><spring:theme
-										code="header.flyout.review" /></a></li> --%>
+						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li> 
+
 										
 							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 										code="header.flyout.myInterest" /></a></li>
 							
+												<li class="header-SignInShare"><spring:theme
+									code="header.flyout.credits" /></li>
+
+						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>
+									
 							<li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li>
 	

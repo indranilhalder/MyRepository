@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -27,6 +28,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplWishlistService;
  */
 public class MplWishlistServiceImpl implements MplWishlistService
 {
+	protected static final Logger LOG = Logger.getLogger(MplWishlistServiceImpl.class);
 	@Autowired
 	private ModelService modelService;
 	@Deprecated
@@ -43,6 +45,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 	{
 		try
 		{
+
 			final Wishlist2EntryModel entry = new Wishlist2EntryModel();
 			entry.setProduct(product);
 			entry.setDesired(desired);
@@ -71,12 +74,14 @@ public class MplWishlistServiceImpl implements MplWishlistService
 			if (saveWishlist(wishlist))
 			{
 				getModelService().save(entry);
+				LOG.debug("MyWishListServiceImpl : addWishlistEntry: saved true");
 			}
 			final List entries = new ArrayList(wishlist.getEntries());
 			entries.add(entry);
 			wishlist.setEntries(entries);
 			if (!(saveWishlist(wishlist)))
 			{
+				LOG.debug("MyWishListServiceImpl : addWishlistEntry: saved false");
 				return;
 			}
 			getModelService().save(wishlist);
@@ -98,6 +103,7 @@ public class MplWishlistServiceImpl implements MplWishlistService
 	 */
 	private boolean saveWishlist(final Wishlist2Model wishlist)
 	{
+		LOG.debug("MyWishListServiceImpl : saveWishlist: " + wishlist);
 		final UserModel user = wishlist.getUser();
 		return saveWishlist(user);
 	}

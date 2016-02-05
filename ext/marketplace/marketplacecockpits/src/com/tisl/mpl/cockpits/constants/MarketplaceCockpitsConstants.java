@@ -159,5 +159,7 @@ public final class MarketplaceCockpitsConstants extends
 			ConsignmentStatus.OUT_FOR_DELIVERY,ConsignmentStatus.REACHED_NEAREST_HUB,ConsignmentStatus.DELIVERED
 			);	
 	
+	public static final String COUPON_REDEEM = "coupon_redeem";
+	
 	
 }

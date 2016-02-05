@@ -27,6 +27,13 @@
 			</li>
 		</c:if>
 		
+		<c:if test="${order.couponDiscount.value > 0}">
+			<li>
+				<spring:theme code="text.account.order.couponSavings" text="Coupon"/>
+				<span class="amt"> -<format:price priceData="${order.couponDiscount}"/></span>
+			</li>
+		</c:if>
+		
 		<li>
 			<spring:theme code="text.account.order.delivery" text="Delivery"/>
 			<span class="amt"><format:price priceData="${order.deliveryCost}" displayFreeForZero="true"/></span>
