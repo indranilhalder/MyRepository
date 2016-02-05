@@ -235,7 +235,7 @@
 	  										
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
-								<span class="review-date"> ${comment.reviewDate} </span>
+								<span class="review-date"> - ${comment.reviewDate} </span>
 								</div>
 								<!-- Ratings -->
 								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
