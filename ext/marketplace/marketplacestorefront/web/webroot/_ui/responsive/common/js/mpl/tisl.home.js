@@ -291,14 +291,14 @@ if ($('#brandsYouLove').children().length == 0 && $('#ia_site_page_id').val()=='
 }
 
 var bulCount = $(".home-brands-you-love-carousel-brands.active").index() - 1;
-$(document).on("click", ".home-brands-you-love-carousel-brands",
+/*$(document).on("click", ".home-brands-you-love-carousel-brands",
 		function() {
 			$(".home-brands-you-love-carousel-brands").removeClass('active');
 			$(this).addClass('active');
 			$('.home-brands-you-love-desc').remove();
 			bulCount = $(this).parent().index();
 			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
-		});
+		});*/
 
 
 
