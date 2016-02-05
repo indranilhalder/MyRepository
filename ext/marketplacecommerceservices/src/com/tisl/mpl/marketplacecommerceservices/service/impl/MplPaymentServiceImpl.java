@@ -1194,6 +1194,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					totalPrice -= 0.01 * (null != entry.getFreeCount() ? entry.getFreeCount().intValue() : 0);
 				}
 			}
+			LOG.debug("Total cart price is>>>>>>>>>" + totalPrice);
 
 			//amtTobeDeductedAtlineItemLevel is a variable to check total apportioned COD charge is equal to total convenience charge
 			for (final AbstractOrderEntryModel entry : entries)
@@ -1213,6 +1214,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					final double quantity = null != entry.getQualifyingCount() ? entry.getQualifyingCount().doubleValue() : entry
 							.getQuantity().doubleValue();
 
+					LOG.debug("Entry totals is>>>>>" + entryTotals + "<<<<<<&& quantity is>>>>>" + quantity);
 
 					//calculating ratio of convenience charge for cart entry
 					final Double codChargePercent = Double.valueOf(entryTotals / totalPrice);
@@ -1220,6 +1222,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					final Double formattedCODCharge = Double.valueOf(String.format(MarketplacecommerceservicesConstants.FORMAT,
 							codChargePerEntry));
 					final Double appCODChargeForEachItem = Double.valueOf(formattedCODCharge.doubleValue() / quantity);
+					LOG.debug("Entry level Conv charge is>>>>>>>" + appCODChargeForEachItem.doubleValue());
 					entry.setConvenienceChargeApportion(appCODChargeForEachItem);
 
 					try
