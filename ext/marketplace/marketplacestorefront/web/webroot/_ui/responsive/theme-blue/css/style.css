@@ -29283,7 +29283,7 @@ footer .footer-text {
 	display: table;
 	width:100%;
 	margin: 20px 0;
-	padding: 0 20px;
+	padding: 0 40px;
 }
 .home-brands-you-love-carousel-brands {
     display: block;
@@ -29796,10 +29796,6 @@ width: 100px !important;
 
 .home-brands-you-love-wrapper {
 	padding: 0 20px;
-}
-
-.home-brands-you-love-carousel .owl-wrapper-outer {
-	padding: 0 40px;
 }
 
 .home-brands-you-love-wrapper .home-brands-you-love-desc p {
@@ -35676,12 +35672,7 @@ width: 40px;
 
 
 /**/
-#brandsYouLove .home-brands-you-love-carousel-brands .owl-wrapper
-	{
-		display: block;
-		transition: all 0.3s ease;
-	}
-	
+
 #brandsYouLove .bulprev, #brandsYouLove .bulnext	
 	{
 		cursor: pointer;
@@ -35717,10 +35708,6 @@ width: 40px;
 	
 	#brandsYouLove .bulprev {
 		 left: 20px;
-	}
-	
-	#brandsYouLove .bulprev.disabled, #brandsYouLove .bulnext.disabled {
-		    background: #ccc;
 	}
 	 #brandsYouLove .bulnext {
 	 	right: 20px;
