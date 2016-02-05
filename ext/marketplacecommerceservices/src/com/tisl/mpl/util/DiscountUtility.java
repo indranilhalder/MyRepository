@@ -669,6 +669,24 @@ public class DiscountUtility
 	}
 
 
+	/**
+	 * Checks whether the entry is a bogo or a freebiw
+	 * 
+	 * @param entry
+	 * @return boolean
+	 */
+	public boolean isFreebieOrBOGOApplied(final AbstractOrderEntryModel entry)
+	{
+		boolean flag = false;
+		if (entry.getGiveAway().booleanValue()
+				|| (entry.getIsBOGOapplied().booleanValue() && entry.getQuantity().intValue() == entry.getFreeCount().intValue()))
+		{
+			flag = true;
+		}
+		return flag;
+	}
+
+
 
 
 
