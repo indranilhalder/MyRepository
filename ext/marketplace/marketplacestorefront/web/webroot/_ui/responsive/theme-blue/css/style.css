@@ -35661,8 +35661,8 @@ width: 40px;
 		 left: 20px;
 	}
 	
-	#brandsYouLove .bulprev.disabled {
-		background: #a9143c;
+	#brandsYouLove .bulprev.disabled, #brandsYouLove .bulnext.disabled {
+		    background: #ccc;
 	}
 	 #brandsYouLove .bulnext {
 	 	right: 20px;
