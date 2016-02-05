@@ -35615,3 +35615,97 @@ width: 40px;
 	right:0;
 }
 /* caraousel arrow end */
+
+
+/**/
+#brandsYouLove .home-brands-you-love-carousel-brands .owl-wrapper
+	{
+		display: block;
+		transition: all 0.3s ease;
+	}
+	
+#brandsYouLove .bulprev, #brandsYouLove .bulnext	
+	{
+		cursor: pointer;
+    position: absolute !important;
+    top: 110px !important;
+       
+    display: table;
+        width: 40px;
+    background: #a9143c;
+    height: 40px;
+    border-radius: 100%;
+    text-align: center;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    -o-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 120px;
+    overflow: hidden;
+    -webkit-transition: 0.3s ease-out;
+    -o-transition: 0.3s ease-out;
+    transition: 0.3s ease-out;
+	}
+	
+	#brandsYouLove .bulprev {
+		 left: 20px;
+	}
+	
+	#brandsYouLove .bulprev.disabled {
+		background: #a9143c;
+	}
+	 #brandsYouLove .bulnext {
+	 	right: 20px;
+	 }
+	 
+	 #brandsYouLove .bulnext:after, #brandsYouLove .bulprev:after{
+		    content: "";
+    display: block;
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-transform-origin: 50% 25%;
+    -moz-transform-origin: 50% 25%;
+    -ms-transform-origin: 50% 25%;
+    -o-transform-origin: 50% 25%;
+    transform-origin: 50% 25%;
+    -webkit-transition: -webkit-transform 0.3s;
+    -moz-transition: -moz-transform 0.3s;
+    transition: transform 0.3s;
+    top: 1px;
+    right: 0;
+    bottom: 0;
+    margin: auto !important;
+    left: 0;
+    border-top: 1px solid #fff;
+    border-right: 1px solid #fff;
+	}
+	
+	#brandsYouLove .bulprev:after {
+	    top: 7px;
+	-webkit-transform: rotate(-135deg);
+    -moz-transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    -o-transform: rotate(-135deg);
+    transform: rotate(-135deg);
+	}
+.social .links img {
+	width: 20px;
+	
+	
+}
