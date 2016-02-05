@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 
@@ -37,3 +38,4 @@ public interface MplCmsPageService extends CMSPageService
 	// Collection<ContentPageModel> getAllContentPages(final CatalogVersionModel catalogmodel);
 	Collection<ContentPageModel> getAllContentPages(final Collection<CatalogVersionModel> catalogmodel);
 }
+

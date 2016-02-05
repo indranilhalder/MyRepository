@@ -164,6 +164,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
+	private static final String ALL = "all";
 
 	/**
 	 *
@@ -1001,6 +1002,69 @@ public class SearchPageController extends AbstractSearchPageController
 		return competingProductsSearchState;
 	}
 
+	/**
+	 * DISPLAY ONLINE and NEW TRENDING PRODUCTS
+	 *
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @throws CMSItemNotFoundException
+	 */
+
+
+	@RequestMapping(value = "/viewOnlineProducts", method = RequestMethod.GET)
+	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
+			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
+			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = "sort", required = false) final String sortCode, final HttpServletRequest request,
+			final Model model) throws CMSItemNotFoundException
+	{
+		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForOnlineProducts(
+				searchQuery, page, showMode, sortCode, getSearchPageSize());
+		storeContinueUrl(request);
+		updatePageTitle(searchPageData.getFreeTextSearch(), model);
+		populateModel(model, searchPageData, ShowMode.Page);
+		getRequestContextData(request).setSearch(searchPageData);
+		model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
+		model.addAttribute(WebConstants.BREADCRUMBS_KEY, searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData));
+		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
+		model.addAttribute("searchPageData", searchPageData);
+		if (searchPageData.getResults().isEmpty())
+		{
+			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
+		}
+		else
+		{
+			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
+		}
+		updatePageTitle(searchPageData.getFreeTextSearch(), model);
+		return getViewForPage(model);
+	}
+
+
+
+
+
+	/**
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @param searchPageSize
+	 */
+	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> performSearchForOnlineProducts(
+			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
+	{
+		// YTODO Auto-generated method stub
+		final PageableData pageableData = createPageableData(page, page, null, ShowMode.Page);
+		final SearchStateData searchState = new SearchStateData();
+		final SearchQueryData searchQueryData = new SearchQueryData();
+		searchQueryData.setValue(ALL);
+		searchState.setQuery(searchQueryData);
+		return searchFacade.mplOnlineAndNewProductSearch(searchState, pageableData);
+
+	}
 	/* Storing the user preferred search results count - END */
 
 }

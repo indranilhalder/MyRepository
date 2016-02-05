@@ -47,6 +47,14 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	 */
 	private static final String ONLINE_EXCLUSIVE = "onlineExclusive";
 	private MplProductSearchService<SolrSearchQueryData, SearchResultValueData, ProductCategorySearchPageData<SolrSearchQueryData, SearchResultValueData, CategoryModel>> mplProductSearchService;
+	/**
+	 *
+	 */
+	private static final String IS_PRODUCT_NEW = "isProductNew";
+	/**
+	 *
+	 */
+	private static final String ONLINE_EXCLUSIVE = "onlineExclusive";
 
 	/**
 	 * @return the mplProductSearchService
@@ -883,14 +891,6 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		return searchQueryData;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplOnlineAndNewProductSearch(de.hybris.platform.commercefacades
-	 * .search.data.SearchStateData, java.lang.String, de.hybris.platform.commerceservices.search.pagedata.PageableData)
-	 */
-
 
 	/**
 	 * check for online and exclusibve products
@@ -942,5 +942,6 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 		return searchQueryData;
 	}
+
 
 }

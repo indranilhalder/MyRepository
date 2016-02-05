@@ -116,16 +116,17 @@ function registerUser(eventObject)
 	<input type="hidden" id="ecompanyForIA" value="${ecompanyForIA}">
 	<input type="hidden" id="DamMediaHost" value="${DamMediaHost}">
 	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
+	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
 	<!-- For Infinite Analytics End -->
 	
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
 			<div class="banner">
-				<span class="toggle desktop helpmeshopbanner"> <spring:theme
-						code="header.helpmeshop.howcanwehelpyou.title" /></span> <span
-					class="toggle mobile helpmeshopbanner"> <spring:theme
-						code="header.helpmeshop.howcanwehelpyou.mobile" /></span>
+				<span class="toggle desktop helpmeshopbanner"><p><spring:theme
+						code="header.helpmeshop.howcanwehelpyou.title" /></p></span> <span
+					class="toggle mobile helpmeshopbanner"> <p><spring:theme
+						code="header.helpmeshop.howcanwehelpyou.mobile" /></p></span>
 				<div class="content" id="helpmeshopcontent"></div>
 				<%-- <cms:pageSlot position="HeaderLinks" var="link">
 					<cms:component component="${link}" element="" />
@@ -179,6 +180,7 @@ function registerUser(eventObject)
 								<cms:pageSlot position="MiniCart" var="component">
 									<cms:component component="${component}" />
 								</cms:pageSlot>
+								<li class="store-locator-header"><a href="#">Our Stores</a></li>
 							</c:if>
 						</c:if>
 						<!--Using this tag for Track Order Link in header navigation pane and it will navigate to 'My Order page'  -->

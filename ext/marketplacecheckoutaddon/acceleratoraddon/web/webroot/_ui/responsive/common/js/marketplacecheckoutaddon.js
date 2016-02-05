@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
 var couponApplied=false;
