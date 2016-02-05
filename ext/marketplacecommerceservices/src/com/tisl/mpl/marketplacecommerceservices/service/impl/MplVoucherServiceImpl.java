@@ -431,7 +431,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 			if (voucherObj.isAbsoluteAsPrimitive())
 			{
-				percentageDiscount = BigDecimal.valueOf((discountValue / totalApplicablePrice) * 100);
+				percentageDiscount = BigDecimal.valueOf(discountValue / totalApplicablePrice).multiply(BigDecimal.valueOf(100));
 			}
 			else
 			{
@@ -442,8 +442,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				if (totalMaxDiscount != 0.0D && totalSavings > totalMaxDiscount)
 				{
-					percentageDiscount = BigDecimal
-							.valueOf((voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice) * 100);
+					percentageDiscount = BigDecimal.valueOf(voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice)
+							.multiply(BigDecimal.valueOf(100));
 
 				}
 
@@ -455,30 +455,46 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 			for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 			{
-				double entryLevelApportionedPrice = 0.00D;
+				BigDecimal entryLevelApportionedPrice = null;
 				double currNetAmtAftrAllDisc = 0.00D;
 
 				final double entryTotalPrice = entry.getTotalPrice().doubleValue();
 
 				if (entryTotalPrice > 1) //For freebie & bogo, 0.01 priced product, isBogoApplied can't be checked as same product might be free and non free for BOGO
 				{
-					if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+
+					if (voucherObj.isAbsoluteAsPrimitive())
 					{
-						final double discountPriceValue = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(
-								BigDecimal.valueOf(totalApplicablePrice)).doubleValue();
-						entryLevelApportionedPrice = discountPriceValue - totalAmtDeductedOnItemLevel;
+						if (checkTotalIteminCart(applicableOrderEntryList))
+						{
+							entryLevelApportionedPrice = BigDecimal.valueOf(discountValue);
+						}
+						else
+						{
+							if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+							{
+								//final BigDecimal discountPriceValue = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(BigDecimal.valueOf(totalApplicablePrice));
+								final BigDecimal discountPriceValue = BigDecimal.valueOf(discountValue);
+								entryLevelApportionedPrice = discountPriceValue.subtract(BigDecimal.valueOf(totalAmtDeductedOnItemLevel));
+							}
+							else
+							{
+								entryLevelApportionedPrice = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(BigDecimal
+										.valueOf(entryTotalPrice));
+								totalAmtDeductedOnItemLevel += entryLevelApportionedPrice.doubleValue();
+							}
+						}
 					}
 					else
 					{
-						entryLevelApportionedPrice = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(
-								BigDecimal.valueOf(entryTotalPrice)).doubleValue();
-						totalAmtDeductedOnItemLevel += entryLevelApportionedPrice;
+						entryLevelApportionedPrice = (percentageDiscount.divide(BigDecimal.valueOf(100))).multiply(BigDecimal
+								.valueOf(entryTotalPrice));
 					}
 
 					LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
 
 					entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
-					entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice));
+					entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
 
 					if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
 							|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
@@ -486,9 +502,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
 								.doubleValue() : 0.00D;
 
-						if (netAmtAftrAllDisc > entryLevelApportionedPrice)
+						if (netAmtAftrAllDisc > entryLevelApportionedPrice.doubleValue())
 						{
-							currNetAmtAftrAllDisc = netAmtAftrAllDisc - entryLevelApportionedPrice;
+							currNetAmtAftrAllDisc = netAmtAftrAllDisc - entryLevelApportionedPrice.doubleValue();
 
 						}
 						else
@@ -499,9 +515,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					}
 					else
 					{
-						if (entryTotalPrice > entryLevelApportionedPrice)
+						if (entryTotalPrice > entryLevelApportionedPrice.doubleValue())
 						{
-							currNetAmtAftrAllDisc = entryTotalPrice - entryLevelApportionedPrice;
+							currNetAmtAftrAllDisc = entryTotalPrice - entryLevelApportionedPrice.doubleValue();
 
 						}
 						else
@@ -520,6 +536,32 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	}
+
+	/**
+	 * @param applicableOrderEntryList
+	 * @return
+	 */
+	private boolean checkTotalIteminCart(final List<AbstractOrderEntryModel> applicableOrderEntryList)
+	{
+		// YTODO Auto-generated method stub
+		int count = 0;
+		for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+		{
+			if (entry.getTotalPrice().doubleValue() > 1)
+			{
+				count++;
+			}
+
+
+		}
+		if (count < 2)
+		{
+			return true;
+		}
+		return false;
+	}
+
+
 
 	/**
 	 * @return the mplDefaultCalculationService
