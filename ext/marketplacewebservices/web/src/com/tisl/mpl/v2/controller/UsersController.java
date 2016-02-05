@@ -441,7 +441,10 @@ public class UsersController extends BaseCommerceController
 		MplUserResultWsDto userResult = new MplUserResultWsDto();
 		try
 		{
-			userResult = mobileUserService.registerNewMplUser(emailId, password);
+			if (StringUtils.isNotEmpty(emailId) && StringUtils.isNotEmpty(password))
+			{
+				userResult = mobileUserService.registerNewMplUser(emailId.toLowerCase(), password);
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -493,7 +496,10 @@ public class UsersController extends BaseCommerceController
 		{
 			LOG.debug("****************** User Login mobile web service ***********" + emailId);
 			//Login user with username and password
-			result = mobileUserService.loginUser(emailId, password);
+			if (StringUtils.isNotEmpty(emailId) && StringUtils.isNotEmpty(password))
+			{
+				result = mobileUserService.loginUser(emailId.toLowerCase(), password);
+			}
 			//Return result
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -554,13 +560,15 @@ public class UsersController extends BaseCommerceController
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
 			}
-			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+			else if (StringUtils.isNotEmpty(emailId)
+					&& StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
 			{
-				result = mobileUserService.socialFbRegistration(socialMediaToken, emailId);
+				result = mobileUserService.socialFbRegistration(socialMediaToken, emailId.toLowerCase());
 			}
-			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			else if (StringUtils.isNotEmpty(emailId)
+					&& StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
 			{
-				result = mobileUserService.socialGoogleRegistration(socialMediaToken, emailId, socialUserId);
+				result = mobileUserService.socialGoogleRegistration(socialMediaToken, emailId.toLowerCase(), socialUserId);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -623,13 +631,15 @@ public class UsersController extends BaseCommerceController
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9020);
 			}
-			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
+			else if (StringUtils.isNotEmpty(emailId)
+					&& StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.FACEBOOK))
 			{
-				result = mobileUserService.loginSocialFbUser(socialMediaToken, emailId);
+				result = mobileUserService.loginSocialFbUser(socialMediaToken, emailId.toLowerCase());
 			}
-			else if (StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
+			else if (StringUtils.isNotEmpty(emailId)
+					&& StringUtils.equalsIgnoreCase(socialMedia.toLowerCase(), MarketplacewebservicesConstants.GOOGLEPLUS))
 			{
-				result = mobileUserService.loginSocialGoogleUser(socialMediaToken, emailId, socialUserId);
+				result = mobileUserService.loginSocialGoogleUser(socialMediaToken, emailId.toLowerCase(), socialUserId);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)

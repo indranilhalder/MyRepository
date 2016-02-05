@@ -128,8 +128,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@SuppressWarnings("javadoc")
 	@Override
-	public MplUserResultWsDto registerNewMplUser(final String login, final String password)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	public MplUserResultWsDto registerNewMplUser(final String login, final String password) throws EtailBusinessExceptions,
+			EtailNonBusinessExceptions
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -202,8 +202,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @return MplUserResultWsDto
 	 */
 	@Override
-	public MplUserResultWsDto loginUser(final String login, final String password)
-			throws EtailNonBusinessExceptions, EtailBusinessExceptions
+	public MplUserResultWsDto loginUser(final String login, final String password) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
 	{
 		final MplUserResultWsDto output = new MplUserResultWsDto();
 		String result = null;
@@ -266,8 +266,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 				if (!StringUtils.isEmpty(login) && !StringUtils.isEmpty(isTemporaryPassword(login)))
 				{
 					output.setIsTemporaryPassword(isTemporaryPassword(login));
-					LOG.debug(
-							"*********** Mobile web service isTemporaryPassword for" + login + " is >>> " + isTemporaryPassword(login));
+					LOG.debug("*********** Mobile web service isTemporaryPassword for" + login + " is >>> "
+							+ isTemporaryPassword(login));
 				}
 			}
 		}
@@ -303,8 +303,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 * @throws AuthenticationServiceException
 	 * @throws AuthenticationException
 	 */
-	public UserDetails retrieveUserforMarketplace(final String username)
-			throws DataAccessException, EtailBusinessExceptions, AuthenticationException
+	public UserDetails retrieveUserforMarketplace(final String username) throws DataAccessException, EtailBusinessExceptions,
+			AuthenticationException
 	{
 		//Try to load user with username
 		UserDetails loadedUser;
@@ -395,7 +395,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		String customerId = null;
 		CustomerModel custModel = null;
 		custModel = getCustomerDetails(emailId);
-		if (null != custModel.getUid())
+		if (null != custModel && null != custModel.getUid())
 		{
 			customerId = custModel.getUid();
 		}
@@ -544,22 +544,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		catch (final EtailNonBusinessExceptions e)
 		{
 			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
@@ -649,22 +649,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		catch (final EtailNonBusinessExceptions e)
 		{
 			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
@@ -765,22 +765,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Set success flag as false
 			successflag = false;
 			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
@@ -855,22 +855,22 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Set success flag as false
 			successflag = false;
 			if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_400_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_401_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
 			}
 			else if (null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR)
-					&& e.toString()
-							.contains(Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
+					&& e.toString().contains(
+							Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_403_ERROR))
 					&& null != Localization.getLocalizedString(MarketplacewebservicesConstants.SOCIAL_RESPONSE_CODE_ERROR_MSG))
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9021);
@@ -929,19 +929,19 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		String actualGoogleUserId = null;
 		try
 		{
-			final String proxyEnableStatus = getConfigurationService().getConfiguration()
-					.getString(MarketplacewebservicesConstants.PROXYENABLED);
-			final String configuration = getConfigurationService().getConfiguration()
-					.getString(MarketplacewebservicesConstants.SOCIAL_GOOGLEAPI_ME_INFO) + socialMediaToken;
+			final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+					MarketplacewebservicesConstants.PROXYENABLED);
+			final String configuration = getConfigurationService().getConfiguration().getString(
+					MarketplacewebservicesConstants.SOCIAL_GOOGLEAPI_ME_INFO)
+					+ socialMediaToken;
 			final URL googleurl = new URL(configuration);
 			HttpURLConnection urlConnection = null;
 			//Proxy added
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
-				final SocketAddress addr = new InetSocketAddress(
-						getConfigurationService().getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY),
-						Integer.parseInt(getConfigurationService().getConfiguration()
-								.getString(MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY_PORT)));
+				final SocketAddress addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString(
+						MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY), Integer.parseInt(getConfigurationService()
+						.getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_DEV_LOGIN_PROXY_PORT)));
 				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
 				urlConnection = (HttpURLConnection) googleurl.openConnection(proxy);
 			}
@@ -979,20 +979,20 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		try
 		{
 
-			final String config = getConfigurationService().getConfiguration()
-					.getString(MarketplacewebservicesConstants.SOCIAL_FB_ME_INFO) + accessToken
+			final String config = getConfigurationService().getConfiguration().getString(
+					MarketplacewebservicesConstants.SOCIAL_FB_ME_INFO)
+					+ accessToken
 					+ getConfigurationService().getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_FBAPI_ME_FIELDS);
 			final URL fburl = new URL(config);
-			final String proxyEnableStatus = getConfigurationService().getConfiguration()
-					.getString(MarketplacewebservicesConstants.PROXYENABLED);
+			final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+					MarketplacewebservicesConstants.PROXYENABLED);
 			HttpURLConnection htypConnection = null;
 			//proxy added
 			if (proxyEnableStatus.equalsIgnoreCase("true"))
 			{
-				final SocketAddress addr = new InetSocketAddress(
-						getConfigurationService().getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY),
-						Integer.parseInt(getConfigurationService().getConfiguration()
-								.getString(MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY_PORT)));
+				final SocketAddress addr = new InetSocketAddress(getConfigurationService().getConfiguration().getString(
+						MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY), Integer.parseInt(getConfigurationService()
+						.getConfiguration().getString(MarketplacewebservicesConstants.SOCIAL_LOGIN_PROXY_PORT)));
 				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
 				htypConnection = (HttpURLConnection) fburl.openConnection(proxy);
 			}
