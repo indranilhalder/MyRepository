@@ -127,6 +127,16 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerT
 ;;CelebrationOfColorShowCaseitem;"The Celebration of Colour"
 ;;IndigoSpectrumShowCaseitem;"Indigo Spectrum"
 ###########Showcase Ends#############
+
+###### Home section 4D
+####The Products You Care About
+
+#MplCategoryCarouselComponent changes starts
+INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title
+;;TMPProductsCareCategoriesCarouselComponent;Products You Care About
+########
+
+
 ####Home Page Section 5A
 #### StayQued Section #########
 

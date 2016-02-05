@@ -390,6 +390,75 @@ function getBestPicksAjaxCall(){
 
 // AJAX CALL BEST PICKS END
 
+//AJAX CALL PRODUCTS YOU CARE START
+if ($('#productYouCare').children().length == 0 && $('#ia_site_page_id').val()=='homepage') {
+	getProductsYouCareAjaxCall();
+}
+
+function getProductsYouCareAjaxCall(){
+	$
+	.ajax({
+		type : "GET",
+		dataType : "json",
+		url : ACC.config.encodedContextPath + "/getProductsYouCare",
+		
+		success : function(response) {
+			
+			renderHtml = "<h1>" + response.title + "</h1>";
+			renderHtml += "<div class='home-product-you-care-carousel'>";
+			$
+				.each(
+						response.categories,function(k, v){
+							
+						console.log('Category name: '+v.categoryName);
+						console.log('Category code: '+v.categoryCode);
+						console.log('Category media url: '+v.mediaURL);
+						
+						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c/"+v.categoryCode;
+						//for url
+						renderHtml += "<a href='"
+							+ URL
+							+ "' class='item'>";
+						//for image
+						renderHtml += "<div class='home-product-you-care-carousel-img'> <img src='"
+							+ v.mediaURL
+							+ "'></img></div>";
+						
+						renderHtml += "<div class='short-info'><h3 class='product-name'><span>"
+							+ v.categoryName
+							+ "</span></h3></div>";
+						
+						renderHtml += "</a>";
+						
+				});
+		
+			renderHtml += "</div>";	
+			$("#productYouCare").html(renderHtml);
+		},
+		
+		error : function() {
+			console.log('Error while getting getProductsYouCare');
+		},
+		
+		complete: function() {
+			$(".home-product-you-care-carousel").owlCarousel({
+				navigation:true,
+				navigationText : [],
+				pagination:false,
+				itemsDesktop : [5000,4], 
+				itemsDesktopSmall : [1400,4], 
+				itemsTablet: [650,2], 
+				itemsMobile : [480,2], 
+				rewindNav: false,
+				lazyLoad:true
+			});
+		}
+
+	});
+}
+
+//AJAX CALL PRODUCTS YOU CARE END
+
 function getNewAndExclusiveAjaxCall(){
 	
 	$
@@ -511,7 +580,7 @@ function getStayQuedHomepage(){
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
-			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">'+$(promoText2).text()+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
+			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">'+promoText2+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},
