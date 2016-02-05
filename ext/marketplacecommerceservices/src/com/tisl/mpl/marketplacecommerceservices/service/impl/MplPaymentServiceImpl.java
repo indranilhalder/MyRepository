@@ -1191,7 +1191,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						totalPrice += entry.getTotalPrice().doubleValue();
 					}
 
-					totalPrice -= 0.01 * entry.getFreeCount().intValue();
+					totalPrice -= 0.01 * (null != entry.getFreeCount() ? entry.getFreeCount().intValue() : 0);
 				}
 			}
 
@@ -1209,8 +1209,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						entryTotals = entry.getTotalPrice().doubleValue();
 					}
-					entryTotals -= 0.01 * entry.getFreeCount().intValue();
-					final long quantity = entry.getQualifyingCount().longValue();
+					entryTotals -= (null != entry.getFreeCount() ? entry.getFreeCount().intValue() : 0);
+					final double quantity = null != entry.getQualifyingCount() ? entry.getQualifyingCount().doubleValue() : entry
+							.getQuantity().doubleValue();
 
 
 					//calculating ratio of convenience charge for cart entry
