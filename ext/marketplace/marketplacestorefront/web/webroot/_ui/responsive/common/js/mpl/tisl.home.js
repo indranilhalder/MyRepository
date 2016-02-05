@@ -169,6 +169,7 @@ function getBrandsYouLoveAjaxCall() {
 
 									});
 					renderHtml += "</div>";
+					renderHtml +='<div class="bulprev"></div><div class="bulnext"></div>';
 					$('#brandsYouLove').html(renderHtml);
 					
 					getBrandsYouLoveContentAjaxCall(defaultComponentId);
@@ -179,11 +180,11 @@ function getBrandsYouLoveAjaxCall() {
 				},
 				complete : function() {
 					$(".home-brands-you-love-carousel").owlCarousel({
-						navigation:true,
+						navigation:false,
 						navigationText : [],
 						pagination:false,
-						itemsDesktop : [5000,5], 
-						itemsDesktopSmall : [1400,5], 
+						itemsDesktop : [5000,7], 
+						itemsDesktopSmall : [1400,7], 
 						itemsTablet: [650,2], 
 						itemsMobile : [480,2], 
 						rewindNav: false,
@@ -299,10 +300,68 @@ $(document).on("click", ".home-brands-you-love-carousel-brands",
 			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 		});
 
+
+
+
+
+$(document).on("click", ".home-brands-you-love-carousel-brands",
+		function() {
+			$(".home-brands-you-love-carousel-brands").removeClass('active');
+			$(this).addClass('active');
+			$('.home-brands-you-love-desc').remove();
+			//bulCount = $(this).parent().index();
+			var index = $(this).parents('.owl-item').index();
+			var iw = $(".home-brands-you-love-carousel .owl-wrapper .owl-item").outerWidth();
+			
+			if(index > 3 && index < $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-3) {
+				$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(-"+iw*(index - 3)+"px, 0px, 0px)");
+			} else if( index <= 3) {
+				$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(0px, 0px, 0px)");
+			} else if( index >= $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-3) {
+				$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(-"+iw*($(".home-brands-you-love-carousel .owl-wrapper .owl-item").length - 7)+"px, 0px, 0px)");
+			}
+			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
+		});
+$(document).on("click",".bulprev",function(){
+
+	var index = $(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands.active").parents('.owl-item').index();
+	var iw = $(".home-brands-you-love-carousel .owl-wrapper .owl-item").outerWidth();
+
+	if(index != 0) {
+		 $(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
+		$(".home-brands-you-love-carousel .owl-item").eq(index-1).find('.home-brands-you-love-carousel-brands').addClass('active');
+		if(index > 3 && index < $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-3) {
+			$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(-"+iw*(index - 4)+"px, 0px, 0px)");
+		}
+	}
+	 var componentId = $(".home-brands-you-love-carousel-brands").eq(index-1).attr('id');
+getBrandsYouLoveContentAjaxCall(componentId);
+}); 
+
+$(document).on("click",".bulnext",function(){
+
+	var index = $(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands.active").parents('.owl-item').index();
+	var iw = $(".home-brands-you-love-carousel .owl-wrapper .owl-item").outerWidth();
+
+	if(index != $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-1) {
+		 $(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
+		$(".home-brands-you-love-carousel .owl-item").eq(index+1).find('.home-brands-you-love-carousel-brands').addClass('active');
+		if(index > 2 && index < $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-4) {
+			$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(-"+iw*(index - 2)+"px, 0px, 0px)");
+		}
+	}
+
+	var componentId = $(".home-brands-you-love-carousel-brands").eq(index+1).attr('id');
+getBrandsYouLoveContentAjaxCall(componentId);
+}); 
+
+
+
+
 if($('#ia_site_page_id').val()=='homepage'){
 	
 
-setInterval(function() {
+/*setInterval(function() {
 
 	$(".home-brands-you-love-carousel-brands").removeClass('active');
 	$(".home-brands-you-love-carousel-brands").eq(bulCount).addClass('active');
@@ -314,7 +373,7 @@ setInterval(function() {
 		bulCount = 0;
 	}
 
-}, 20000);
+}, 20000);*/
 }
 
 
