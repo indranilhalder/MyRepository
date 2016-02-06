@@ -352,16 +352,16 @@ function editAddress(addressId) {
     					success: function(data){
     						if(data=="success"){
     							$('#friendsEmail').val("");
-    							document.getElementById("errfemail").innerHTML = "<font color='green' size='2'><b>Invite is sent successfully</b></font>";
+    							document.getElementById("errfemail").innerHTML = "<font color='green' size='2'>Invite is sent successfully</font>";
     						}
     						if(data=="error_email_sending"){
-    							document.getElementById("errfemail").innerHTML = "<font color='red' size='2'><b>Error in email sending</b></font>";
+    							document.getElementById("errfemail").innerHTML = "<font color='red' size='2'>Error in email sending</font>";
     						}
     						if(data=="already_registered_email"){
-    							document.getElementById("errfemail").innerHTML = "<font color='red' size='2'><b>One or more entered email id is/are already registered</b></font>";
+    							document.getElementById("errfemail").innerHTML = "<font color='red' size='2'>One or more entered email id is/are already registered</font>";
     						}
     						if(data=="customer_email"){
-    							document.getElementById("errfemail").innerHTML = "<font color='red' size='2'><b>One or more email is/are same as user's email id</b></font>";
+    							document.getElementById("errfemail").innerHTML = "<font color='red' size='2'>One or more email is/are same as user's email id</font>";
     						}
     					},
     					error: function(){
@@ -370,11 +370,11 @@ function editAddress(addressId) {
     				});
     			}
     			else{
-    				document.getElementById("errfemail").innerHTML = "<font color='red' size='2'><b>Please enter one or more valid email id(s) (for multiple - Separated with commas (,))</b></font>";
+    				document.getElementById("errfemail").innerHTML = "<font color='red' size='2'>Please enter one or more valid email id(s) (for multiple - Separated with commas (,))</font>";
     			}
     		}
     		else{
-    			document.getElementById("errfemail").innerHTML = "<font color='red' size='2'><b>Please enter one or more email id(s)</b></font>";
+    			document.getElementById("errfemail").innerHTML = "<font color='red' size='2'>Please enter one or more email id(s)</font>";
     		}
     	});
     });
@@ -391,7 +391,7 @@ function editAddress(addressId) {
     	}
     	else if(emailRegex.test(email)){
     		if(email.length>140){
-    			document.getElementById("errfemail").innerHTML = "<font color='red' size='2'><b>Please enter valid length for email id </b></font>";
+    			document.getElementById("errfemail").innerHTML = "<font color='red' size='2'>Please enter valid length for email id </font>";
     			return false;
     		}
     		else{
@@ -453,7 +453,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errfn").innerHTML = "<font color='red' size='2'><b>First name should contain alphabates and space only</b></font>";
+				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should contain alphabates and space only</font>";
 				proceed = false;
 			}
 		}
@@ -464,7 +464,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errln").innerHTML = "<font color='red' size='2'><b>Last name should contain alphabates and space only</b></font>";
+				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should contain alphabates and space only</font>";
 				proceed = false;
 			}
 		}
@@ -475,7 +475,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errEmail").innerHTML = "<font color='red' size='2'><b>Please enter a valid Email ID</b></font>";
+				document.getElementById("errEmail").innerHTML = "<font color='red' size='2'>Please enter a valid Email ID</font>";
 				proceed = false;
 			}
 		}
@@ -490,7 +490,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"padding-top" : "40px"
 				});
-				document.getElementById("errMob").innerHTML = "<font color='red' size='2'><b>Mobile number should contain 10 digit numbers only</b></font>";
+				document.getElementById("errMob").innerHTML = "<font color='red' size='2'>Mobile number should contain 10 digit numbers only</font>";
 				proceed = false;
 			}
 		}
@@ -546,7 +546,7 @@ function editAddress(addressId) {
 						"display" : "block",
 						"margin-top" : "10px"
 					});
-					document.getElementById("errdobDay").innerHTML = "<font color='red' size='2'><b>Please Enter Valid Date </b></font>";
+					document.getElementById("errdobDay").innerHTML = "<font color='red' size='2'>Please Enter Valid Date </font>";
 					proceed = false;
 				} 
 //				else if (tempFinalDateDOB > todaydateFormat){
@@ -555,7 +555,7 @@ function editAddress(addressId) {
 						"display" : "block",
 						"margin-top" : "10px"
 					});
-					document.getElementById("errdobDay").innerHTML = "<font color='red' size='2'><b>Date of Birth cannot be Future Date</b></font>";
+					document.getElementById("errdobDay").innerHTML = "<font color='red' size='2'>Date of Birth cannot be Future Date</font>";
 					proceed = false;
 					
 				} else {
@@ -564,7 +564,7 @@ function editAddress(addressId) {
 							"display" : "block",
 							"margin-top" : "10px"
 						});
-						document.getElementById("errdobDay").innerHTML = "<font color='red' size='2'><b>Please Enter Valid Date </b></font>";
+						document.getElementById("errdobDay").innerHTML = "<font color='red' size='2'>Please Enter Valid Date </font>";
 						proceed = false;
 					}
 
@@ -582,11 +582,11 @@ function editAddress(addressId) {
 						"display" : "block",
 						"margin-top" : "10px"
 					});
-					document.getElementById("errdoaDay").innerHTML = "<font color='red' size='2'><b>Please Enter Valid Date </b></font>";
+					document.getElementById("errdoaDay").innerHTML = "<font color='red' size='2'>Please Enter Valid Date </font>";
 					proceed = false;
 				} 
 				else if (tempFinalDateDOA > todaydateFormat){
-					document.getElementById("errdoaDay").innerHTML = "<font color='red' size='2'><b>Date of Anniversary cannot be Future Date</b></font>";
+					document.getElementById("errdoaDay").innerHTML = "<font color='red' size='2'>Date of Anniversary cannot be Future Date</font>";
 					proceed = false;
 					//return proceed;
 				}
@@ -596,7 +596,7 @@ function editAddress(addressId) {
 						"display" : "block",
 						"margin-top" : "10px"
 					});
-					document.getElementById("errdoaDay").innerHTML = "<font color='red' size='2'><b>Date of Anniversary cannot be Future Date</b></font>";
+					document.getElementById("errdoaDay").innerHTML = "<font color='red' size='2'>Date of Anniversary cannot be Future Date</font>";
 					proceed = false;
 				}
 				else 
@@ -607,7 +607,7 @@ function editAddress(addressId) {
 							"display" : "block",
 							"margin-top" : "10px"
 						});
-						document.getElementById("errdoaDay").innerHTML = "<font color='red' size='2'><b>Please Enter Valid Date </b></font>";
+						document.getElementById("errdoaDay").innerHTML = "<font color='red' size='2'>Please Enter Valid Date </font>";
 						proceed = false;
 						
 					}
@@ -619,7 +619,7 @@ function editAddress(addressId) {
 								"display" : "block",
 								"margin-top" : "10px"
 							});
-							document.getElementById("errdata").innerHTML = "<font color='red' size='2'><b>Date of birth and Anniversary date cannot be same.</b></font>";
+							document.getElementById("errdata").innerHTML = "<font color='red' size='2'>Date of birth and Anniversary date cannot be same.</font>";
 							proceed = false;
 							
 							} 
@@ -629,7 +629,7 @@ function editAddress(addressId) {
 								"display" : "block",
 								"margin-top" : "10px"
 							});
-							document.getElementById("errdata").innerHTML = "<font color='red' size='2'><b>Date of Birth cannot be after Anniversary Date.</b></font>";
+							document.getElementById("errdata").innerHTML = "<font color='red' size='2'>Date of Birth cannot be after Anniversary Date.</font>";
 							proceed = false;
 						} 
 						else 
@@ -682,7 +682,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errnn").innerHTML = "<font color='red' size='2'><b>Nick name should contain alphabates and space only</b></font>";
+				document.getElementById("errnn").innerHTML = "<font color='red' size='2'>Nick name should contain alphabates and space only</font>";
 				return false;
 			}
 		}
@@ -707,7 +707,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errCurpwd").innerHTML = "<font color='red' size='2'><b>Please enter Current Password</b></font>";
+			document.getElementById("errCurpwd").innerHTML = "<font color='red' size='2'>Please enter Current Password</font>";
 			flag = false;
 		}
 		if (document.getElementById("newPassword").value == null
@@ -725,7 +725,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errCnfNewpwd").innerHTML = "<font color='red' size='2'><b>Please Confirm New Password</b></font>";
+			document.getElementById("errCnfNewpwd").innerHTML = "<font color='red' size='2'>Please Confirm New Password</font>";
 			flag = false;
 		}
 
@@ -735,7 +735,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errNewpwd").innerHTML = "<font color='red' size='2'><b>Password should contain more than 8 and less than 16 characters</b></font>";
+			document.getElementById("errNewpwd").innerHTML = "<font color='red' size='2'>Password should contain more than 8 and less than 16 characters</font>";
 			flag = false;
 		}
 
@@ -745,7 +745,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errNewpwd").innerHTML = "<font color='red' size='2'><b>Please enter a valid password according to Password Policy (Password should meet the basic criteria of minimum 8 characters long up to 16 characters. Password should consist of atleast one alphabet, one numeric, one special symbols and Password doesn't consist of spaces and password should consists of atleast one UPPER and one LOWER case alphabet )</b></font>";
+			document.getElementById("errNewpwd").innerHTML = "<font color='red' size='2'>Please enter a valid password according to Password Policy (Password should meet the basic criteria of minimum 8 characters long up to 16 characters. Password should consist of atleast one alphabet, one numeric, one special symbols and Password doesn't consist of spaces and password should consists of atleast one UPPER and one LOWER case alphabet )</font>";
 			flag = false;
 		}
 		else if (document.getElementById("newPassword").value != document
@@ -754,7 +754,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errCnfNewpwd").innerHTML = "<font color='red' size='2'><b>Passwords do not match</b></font>";
+			document.getElementById("errCnfNewpwd").innerHTML = "<font color='red' size='2'>Passwords do not match</font>";
 			flag = false;
 		}
 		else{
@@ -787,13 +787,13 @@ function editAddress(addressId) {
 				success: function(data){
 					
 					if(data=="invalidPassword"){
-						document.getElementById("errCurpwd").innerHTML = "<font color='red' size='2'><b>Oops! This password is incorrect.</b></font>";
+						document.getElementById("errCurpwd").innerHTML = "<font color='red' size='2'>Oops! This password is incorrect.</font>";
 						flag = false;
 					}
 					else if(data=="validPassword"){
 						if(currentPassword==newPassword)
 						{
-							document.getElementById("errCurpwd").innerHTML = "<font color='red' size='2'><b>Current and New Password cannot be same</b></font>";
+							document.getElementById("errCurpwd").innerHTML = "<font color='red' size='2'>Current and New Password cannot be same</font>";
 							flag = false;
 						}
 						else
@@ -855,82 +855,82 @@ function editAddress(addressId) {
         var flagMob = true;
         
         if ((addressForm.addressRadioType[0].checked == false) && (addressForm.addressRadioType[1].checked == false )){
-        	document.getElementById("errtype").innerHTML = "<font color='red' size='2'><b>Please select an address type</b></font>";
+        	document.getElementById("errtype").innerHTML = "<font color='red' size='2'>Please select an address type</font>";
         	flagFn = false;
         }
         if (addressForm.firstName.value == null || addressForm.firstName.value == "") { 
         	$("#erraddressfn").css({"display":"block"});
-            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'><b>Please enter first name</b></font>";
+            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>Please enter first name</font>";
             flagFn = false;
         }
         else if (!regexCharSpace.test(document.getElementById("firstName").value)) { 
         	$("#errddressfn").css({"display":"block"});
-            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'><b>First name should contain alphabates and space only</b></font>";
+            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should contain alphabates and space only</font>";
             flagFn = false;
         }
         if (addressForm.lastName.value == null || addressForm.lastName.value == "") {
         	$("#errddressln").css({"display":"block"});
-        	document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'><b>Please enter last name</b></font>";
+        	document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Please enter last name</font>";
         	flagLn = false;
         }
         else if (!regexCharSpace.test(document.getElementById("lastName").value)) { 
         	$("#errddressln").css({"display":"block"});
-            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'><b>Last name should contain alphabates and space only</b></font>";
+            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should contain alphabates and space only</font>";
             flagLn = false;
         }
         if (addressForm.line1.value == null || addressForm.line1.value == "") {
         	$("#errddressline1").css({"display":"block"});
-        	document.getElementById("erraddressline1").innerHTML = "<font color='red' size='2'><b>Please enter address line 1</b></font>";
+        	document.getElementById("erraddressline1").innerHTML = "<font color='red' size='2'>Please enter address line 1</font>";
         	flagAd1 = false;
         }
         if (addressForm.line2.value == null || addressForm.line2.value == "") {
         	$("#errddressline2").css({"display":"block"});
-        	document.getElementById("erraddressline2").innerHTML = "<font color='red' size='2'><b>Please enter address line 2</b></font>";
+        	document.getElementById("erraddressline2").innerHTML = "<font color='red' size='2'>Please enter address line 2</font>";
         	flagAd2 = false;
         }
         if (addressForm.line3.value == null || addressForm.line3.value == "") {
         	$("#errddressline3").css({"display":"block"});
-        	document.getElementById("erraddressline3").innerHTML = "<font color='red' size='2'><b>Please enter landmark</b></font>";
+        	document.getElementById("erraddressline3").innerHTML = "<font color='red' size='2'>Please enter landmark</font>";
         	flagAd3 = false;
         }
         if (addressForm.postcode.value == null || addressForm.postcode.value == "") {
         	$("#errddressPost").css({"display":"block"});
-        	document.getElementById("erraddressPost").innerHTML = "<font color='red' size='2'><b>Please enter post code</b></font>";
+        	document.getElementById("erraddressPost").innerHTML = "<font color='red' size='2'>Please enter post code</font>";
         	flagPost = false;
         }
         else if (addressForm.postcode.value.length > 6 || addressForm.postcode.value.length < 6 || isNaN(addressForm.postcode.value) || regexSpace.test(addressForm.postcode.value)) {
         	$("#errddressPost").css({"display":"block"});
-        	document.getElementById("erraddressPost").innerHTML = "<font color='red' size='2'><b>Post code should contain 6 digit numeric characters only</b></font>";
+        	document.getElementById("erraddressPost").innerHTML = "<font color='red' size='2'>Post code should contain 6 digit numeric characters only</font>";
         	flagPost = false;
         }
         if (addressForm.townCity.value == null || addressForm.townCity.value == "") {
         	$("#errddressCity").css({"display":"block"});
-        	document.getElementById("erraddressCity").innerHTML = "<font color='red' size='2'><b>Please enter city</b></font>";
+        	document.getElementById("erraddressCity").innerHTML = "<font color='red' size='2'>Please enter city</font>";
         	flagCity = false;
         }
         else if (!regexCharSpace.test(document.getElementById("townCity").value)) { 
         	$("#errddressCity").css({"display":"block"});
-        	document.getElementById("erraddressCity").innerHTML = "<font color='red' size='2'><b>City should contain alphabets only</b></font>";
+        	document.getElementById("erraddressCity").innerHTML = "<font color='red' size='2'>City should contain alphabets only</font>";
         	flagCity = false;
         }
         if (selectedValueState == 0) {
         	$("#errddressState").css({"display":"block"});
-        	document.getElementById("erraddressState").innerHTML = "<font color='red' size='2'><b>Please select state</b></font>";
+        	document.getElementById("erraddressState").innerHTML = "<font color='red' size='2'>Please select state</font>";
         	flagState = false;
         }
         if (addressForm.mobileNo.value == null || addressForm.mobileNo.value == "") {
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='red' size='2'><b>Please enter mobile number</b></font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='red' size='2'>Please enter mobile number</font>";
         	flagMob = false;
         }
         else if (addressForm.mobileNo.value.length > 10 || addressForm.mobileNo.value.length < 10 || isNaN(addressForm.mobileNo.value)) {
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='red' size='2'><b>Mobile number should contain 10 digit numbers only</b></font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='red' size='2'>Mobile number should contain 10 digit numbers only</font>";
         	flagMob = false;
         }
         else if (regexSpace.test(addressForm.mobileNo.value)) {
         	$("#errddressMob").css({"display":"block"});
-        	document.getElementById("erraddressMob").innerHTML = "<font color='red' size='2'><b>Mobile number should contain 10 digit numbers only</b></font>";
+        	document.getElementById("erraddressMob").innerHTML = "<font color='red' size='2'>Mobile number should contain 10 digit numbers only</font>";
         	flagMob = false;
         }
         
