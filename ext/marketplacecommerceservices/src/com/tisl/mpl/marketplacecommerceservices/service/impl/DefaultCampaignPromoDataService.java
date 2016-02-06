@@ -106,7 +106,7 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 
 		final File rootFolder = new File(configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_LOCATION), MarketplacecommerceservicesConstants.CAMPAIGN_FILE_NAME
-				+ datePrefix + configurationService.getConfiguration().getString("cronjob.campaign.extension"));
+				+ datePrefix + configurationService.getConfiguration().getString("cronjob.campaign.extension", ".csv"));
 
 		try
 		{
@@ -302,11 +302,12 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 			else
 			{
 				final StringBuilder promoURL = new StringBuilder();
-				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE);
-				promoURL.append("/o/");
+				promoURL.append(configurationService.getConfiguration().getString("campaign.website.environment",
+						MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
+				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
 				promoURL.append("/");
-				promoURL.append("?offer=");
+				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 				promoURL.append(promotion.getCode());
 
 				url = promoURL.toString();
@@ -337,11 +338,12 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 				if ((i != (urlDataList.size() - 1)))
 				{
 					final StringBuilder promoURL = new StringBuilder();
-					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE);
-					promoURL.append("/o/");
+					promoURL.append(configurationService.getConfiguration().getString("campaign.website.environment",
+							MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
+					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 					promoURL.append(urlDataList.get(i));
 					promoURL.append("/");
-					promoURL.append("?offer=");
+					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 					promoURL.append(promotion.getCode());
 
 					url = url + promoURL.toString() + MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
@@ -349,11 +351,12 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 				else
 				{
 					final StringBuilder promoURL = new StringBuilder();
-					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE);
-					promoURL.append("/o/");
+					promoURL.append(configurationService.getConfiguration().getString("campaign.website.environment",
+							MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
+					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 					promoURL.append(urlDataList.get(i));
 					promoURL.append("/");
-					promoURL.append("?offer=");
+					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 					promoURL.append(promotion.getCode());
 
 					url = url + promoURL.toString();
