@@ -413,7 +413,7 @@ input:focus, button:focus, textarea:focus, select:focus {
   outline: none; }
 
 input[type="text"], input[type="password"],input[type="email"],input[type="tel"] {
-  border: 1px solid #50e8ff;
+  border: 1px solid #DFD1D5;
   line-height: 1;
   padding: 0px;
   height: 40px;
@@ -13218,7 +13218,7 @@ font-size:14px;
 	width: auto !important;
     line-height: 20px;
     padding: 5px 2px !important;
-    border: 2px solid #f0f4f5 !important;
+    border: 2px solid #dfd1d5 !important;
 }
 
 .customer-service .content table th:nth-of-type(n+2) {
@@ -13227,7 +13227,7 @@ font-size:14px;
 
 .customer-service .content table td {
 	background-color: #fff;
-	border: 2px solid #f0f4f5 !important;
+	border: 2px solid #dfd1d5 !important;
 	width: auto !important;
     padding: 5px 2px !important;
     line-height: 20px;
@@ -15923,7 +15923,7 @@ body .account .right-account .order-history .product-block li.header {
     background-color:#DFD1D5;
     display: table;
     width: 100%;
-    border: 1px solid rgb(230,245,248)
+    border: 1px solid #dfd1d5;
 }
 body .account .right-account .order-history .product-block li.header>ul {
     width: 100%;
@@ -15935,18 +15935,18 @@ body .account .right-account .order-history .product-block li.header>ul>li {
     font-weight: 600;
     line-height: 30px;
     text-align: center;
-   border-bottom: 1px solid rgb(230,245,248);
+   border-bottom: 1px solid #dfd1d5;
     border-right: 1px solid #fff;
     display: table-cell;
     background-color: #fff;
-    border-right-color: rgb(230,245,248);
+    border-right-color: #dfd1d5;
 }
 body .account .right-account .order-history .product-block li.header>ul>li span:not(.no-display),
 body .account .right-account .order-history .product-block li.header>ul>li a {
     display: block
 }
 body .account .right-account .order-history .product-block li.header>ul>li span {
-    background-color: rgb(230,245,248);
+    background-color: #dfd1d5;
     position: relative;
     border-right: 2px solid #fff;
     margin-right: -2px;
@@ -16252,7 +16252,7 @@ body .account .right-account .order-history.order-details li.item .item-header {
 }
 body .account .right-account .order-history.order-details li.item .item-header h3 {
     width: 100%;
-    background-color: rgb(237,242,245);
+    background-color: #dfd1d5;
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 500
@@ -17882,8 +17882,9 @@ header .content .bottom .search .select-list select
     font-size: 12px;
     font-family: "Avenir Next";
     text-align: center;
-    margin-left: 25px;
+   margin-left: 39px;
     font-weight: 600;
+    margin-top: 30px;
 }
 .js-shopping-button:hover
 {
@@ -25579,12 +25580,12 @@ body .account .right-account .order-history.order-details li.item .actions a:vis
 	display: none;
 }
 .search-empty.no-results h3{
-	background: -webkit-linear-gradient(91deg, #A9143C 0%, #21f7ff 99%);
+/* 	background: -webkit-linear-gradient(91deg, #A9143C 0%, #21f7ff 99%);
     background: linear-gradient(91deg, #A9143C 0%, #21f7ff 99%);
       background: -moz-linear-gradient(transparent, transparent);
       background: -ms-linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 95%);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color: transparent; */
 }
 
 @media(max-width:650px){
@@ -31491,6 +31492,7 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 .alert {
 	padding: 15px;
 	margin-bottom: 20px;
+	margin-top: 10px;
 	border: 1px solid transparent;
 	border-radius: 0;
 }
@@ -35509,7 +35511,7 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 }
 input#otpMobileNUMField
 {
-	height:25px;
+	height:30px;
 	border-radius:0px;
 	border:1px solid #DFD1D5;
 }
