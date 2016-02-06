@@ -370,19 +370,11 @@ $(document).on("click", ".home-brands-you-love-carousel-brands",
 if($('#ia_site_page_id').val()=='homepage'){
 	
 
-/*setInterval(function() {
+setInterval(function() {
 
-	$(".home-brands-you-love-carousel-brands").removeClass('active');
-	$(".home-brands-you-love-carousel-brands").eq(bulCount).addClass('active');
-	componentId = $(".home-brands-you-love-carousel-brands").eq(bulCount).attr(
-			'id');
-	getBrandsYouLoveContentAjaxCall(componentId);
-	bulCount++;
-	if (bulCount == $(".home-brands-you-love-carousel-brands").length) {
-		bulCount = 0;
-	}
+$('.bulnext').click();
 
-}, 20000);*/
+}, 20000);
 }
 
 
