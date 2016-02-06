@@ -1,3 +1,4 @@
+
 /*
  * [y] hybris Platform
  *
@@ -1336,3 +1337,4 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
+

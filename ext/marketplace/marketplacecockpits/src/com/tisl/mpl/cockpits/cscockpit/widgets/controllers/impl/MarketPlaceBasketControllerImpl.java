@@ -1100,9 +1100,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	public void setVoucherModelService(VoucherModelService voucherModelService) {
 		this.voucherModelService = voucherModelService;
 	}
-	
-	
-	
-	
+		
 	
 }
