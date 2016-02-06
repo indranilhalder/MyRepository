@@ -188,23 +188,29 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
 		{
 			LOG.debug("Step 12:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0 block");
-			return releaseVoucherAfterCheck(cartModel, voucherCode);
+			return releaseVoucherAfterCheck(cartModel, voucherCode, null, applicableOrderEntryList, voucherList);
 		}
 
 		else
 		{
 			double netAmountAfterAllDisc = 0.0D;
 			double productPrice = 0.0D;
-			final boolean flag = false;
+			//final boolean flag = false;
 
 			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
 			{
 				LOG.debug("Step 13:::applicableOrderEntryList is not empty");
 				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 				{
-					netAmountAfterAllDisc += (null != entry.getCartLevelDisc() && StringUtils.isNotEmpty(entry.getCartLevelDisc()
-							.toString())) ? (entry.getTotalPrice().doubleValue() - entry.getCartLevelDisc().doubleValue()) : entry
-							.getTotalPrice().doubleValue();
+					if ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry.getProductPromoCode()))
+							|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
+					{
+						netAmountAfterAllDisc += entry.getNetAmountAfterAllDisc().doubleValue();
+					}
+					else
+					{
+						netAmountAfterAllDisc += entry.getTotalPrice().doubleValue();
+					}
 
 					productPrice += entry.getTotalPrice().doubleValue();
 				}
@@ -212,18 +218,18 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				LOG.debug("Step 14:::netAmountAfterAllDisc is " + netAmountAfterAllDisc + " & productPrice is " + productPrice);
 
 
-				if ((productPrice < 1) || (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
-						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
+				if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0))
 				{
 					LOG.debug("Step 15:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
-					return releaseVoucherAfterCheck(cartModel, voucherCode);
+					return releaseVoucherAfterCheck(cartModel, voucherCode, Double.valueOf(productPrice), applicableOrderEntryList,
+							voucherList);
 				}
 			}
 
 			else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
 			{
 				LOG.debug("Step 13,14,15/1:::applicable entries empty");
-				return releaseVoucherAfterCheck(cartModel, voucherCode);
+				return releaseVoucherAfterCheck(cartModel, voucherCode, null, applicableOrderEntryList, voucherList);
 			}
 
 			discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(voucherCalcValue)));
@@ -235,7 +241,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	}
 
 
-
 	/**
 	 *
 	 * @param cartModel
@@ -245,8 +250,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @throws JaloPriceFactoryException
 	 * @throws CalculationException
 	 */
-	private VoucherDiscountData releaseVoucherAfterCheck(final CartModel cartModel, final String voucherCode)
-			throws VoucherOperationException, JaloPriceFactoryException, CalculationException
+	private VoucherDiscountData releaseVoucherAfterCheck(final CartModel cartModel, final String voucherCode,
+			final Double productPrice, final List<AbstractOrderEntryModel> applicableOrderEntryList,
+			final List<DiscountModel> voucherList) throws VoucherOperationException, JaloPriceFactoryException, CalculationException
 	{
 		final VoucherDiscountData discountData = new VoucherDiscountData();
 		releaseVoucher(voucherCode, cartModel);
@@ -255,7 +261,18 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		getModelService().save(cartModel);
 
 		discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(0)));
-		discountData.setRedeemErrorMsg("Price_exceeded");
+		if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
+		{
+			discountData.setRedeemErrorMsg("not_applicable");
+		}
+		else if (null != productPrice && productPrice.doubleValue() < 1)
+		{
+			discountData.setRedeemErrorMsg("freebie");
+		}
+		else
+		{
+			discountData.setRedeemErrorMsg("Price_exceeded");
+		}
 
 		return discountData;
 	}
