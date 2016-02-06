@@ -206,7 +206,7 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 #### Home Pge and Help and Service slot 2B #######
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section2BSlot-Homepage;true;Small Icons Section 2;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent,
+;;Section2BSlot-Homepage;true;Small Icons Section 2;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent,EveryWhereMediaParagraphComponent
 ;;Section2BSlot-helpservices;true;;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
