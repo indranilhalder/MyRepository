@@ -134,7 +134,7 @@ ACC.productDetail = {
 		
 		// Sise Guide Select Color
 		   
-		$(document).on("click.size-guide", 'a[data-target=#popUpModal]',
+		$(document).on("click", 'a[data-target=#popUpModal] ',
 			function() {
 			   var target = $(this).attr("href");
 			   console.log(target);
@@ -147,9 +147,10 @@ ACC.productDetail = {
 
 			   // load the url and show modal on success
 			   $("#popUpModal .modal-content").load(target, function() { 
-			         $("#popUpModal").modal("show"); 
+				   	   $("#popUpModal").modal("show");
 					   buyboxDetailsForSizeGuide(productcode);
-			    }); 
+			    });
+			  
 		});
 		//End
 		
@@ -1578,10 +1579,10 @@ function buyboxDetailsForSizeGuide(productCode){
 				
 				//$("#sizeSelectedVal").val(sizeSelected);
 				
-				if(sellerName=="undefined" || sellerName==null)
+				if(sellerName=="undefined" || sellerName==null || sellerName=="")
 				{
 					$("#productDetails").hide();
-					$("#price").hide();
+					$("#sizePrice").hide();
 					$("#addToCartSizeGuide").hide();
 					$("#noProductForSelectedSeller").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");

@@ -53,6 +53,7 @@
 				
 				if(ratingcount)
 					{
+					$(".product-detail ul.star-review").find("span").remove();
 					$(".product-detail ul.star-review").append($("<a href='#customer' />").text(ratingcount+" Reviews"));
 					}
 				else

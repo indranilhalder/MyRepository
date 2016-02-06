@@ -3,7 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import java.util.Map;
+import java.util.List;
+
+import com.tisl.mpl.data.InternalCampaignReportData;
 
 
 /**
@@ -12,7 +14,9 @@ import java.util.Map;
  */
 public interface InternalExternalAutomationService
 {
-	public Map<String, String> automationGetAllBanner();
+	public List<InternalCampaignReportData> automationGetAllBanner();
 
-	public boolean createCSVExcel(Map<String, String> exportMap);
+	//public void automationGetAllBanner();
+
+	public void createCSVExcel(List<InternalCampaignReportData> campaignDataConsolidatedList);
 }

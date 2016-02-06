@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -57,10 +58,10 @@ public class MarketplacePriceFactoryManager extends GeneratedMarketplacePriceFac
 
 	/*
 	 * Some important tips for development:
-	 *
+	 * 
 	 * Do NEVER use the default constructor of manager's or items. => If you want to do something whenever the manger is
 	 * created use the init() or destroy() methods described below
-	 *
+	 * 
 	 * Do NEVER use STATIC fields in your manager or items! => If you want to cache anything in a "static" way, use an
 	 * instance variable in your manager, the manager is created only once in the lifetime of a "deployment" or tenant.
 	 */
@@ -120,8 +121,7 @@ public class MarketplacePriceFactoryManager extends GeneratedMarketplacePriceFac
 
 	/**
 	 * @Description : Return Price Row For a USSID
-	 * @param :
-	 *           List<PriceRow> priceRows
+	 * @param : List<PriceRow> priceRows
 	 * @return : List<PriceRow>
 	 */
 	//Filtering Price Rows for Seller Article SKU from Product Page Controller.Price is displayed as per the USSID.
@@ -197,7 +197,7 @@ public class MarketplacePriceFactoryManager extends GeneratedMarketplacePriceFac
 			final List<BuyBoxModel> buyBoxModelList = buyBoxDao.getBuyBoxPriceForUssId(ussid);
 
 			Double finalPrice = Double.valueOf(0.0);
-			if (buyBoxModelList != null)
+			if (CollectionUtils.isNotEmpty(buyBoxModelList))
 			{
 				//final Double specialPrice = buyBoxModelList.get(0).getSpecialPrice();
 				final Double mopPrice = buyBoxModelList.get(0).getPrice();
