@@ -13248,9 +13248,6 @@ font-size:14px;
 .customer-service .content * {
     font-family: avenir next !important;
 }
-.customer-service .content h3 {
-    text-align:center;
-}
 .content b {
     font-weight: 600;
 }
@@ -13264,7 +13261,12 @@ font-size:14px;
     word-break: break-word;
     white-space: normal !important;
 }
-@media ( min-width : 790px) {
+@media ( max-width : 790px) {
+.customer-service .content h3 {
+    text-align:center;
+}	
+}
+@media ( min-width : 791px) {
 	.customer-service .side-nav {
 		padding: 50px 60px;
 	}
