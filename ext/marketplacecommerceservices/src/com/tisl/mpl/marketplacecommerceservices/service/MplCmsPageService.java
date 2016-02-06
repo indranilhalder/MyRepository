@@ -37,5 +37,7 @@ public interface MplCmsPageService extends CMSPageService
 
 	// Collection<ContentPageModel> getAllContentPages(final CatalogVersionModel catalogmodel);
 	Collection<ContentPageModel> getAllContentPages(final Collection<CatalogVersionModel> catalogmodel);
+
+	ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId, final String catalogVersion);
 }
 
