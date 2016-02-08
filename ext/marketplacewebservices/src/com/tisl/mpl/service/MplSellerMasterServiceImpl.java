@@ -828,6 +828,18 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			{
 				setMasterModelForPaymentInfo(sellerMasterWsDTO.getPaymentInfo());
 			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getCollectionDays()))
+			{
+				masterModel.setCollectionDays(sellerMasterWsDTO.getCollectionDays());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getDaysToExtend()))
+			{
+				masterModel.setDaysToExtend(sellerMasterWsDTO.getDaysToExtend());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getExtensionTimes()))
+			{
+				masterModel.setExtensionTimes(sellerMasterWsDTO.getExtensionTimes());
+			}
 			modelService.saveAll(masterModel);
 			//resModel.setSellerMaster(masterModel);
 			//modelService.save(resModel);
@@ -1144,6 +1156,20 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			{
 				masterModelUpdate.setPayoutPeriod(sellerMasterWsDTO.getPayoutPeriod());
 			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getCollectionDays()))
+			{
+				masterModelUpdate.setCollectionDays(sellerMasterWsDTO.getCollectionDays());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getDaysToExtend()))
+			{
+				masterModelUpdate.setDaysToExtend(sellerMasterWsDTO.getDaysToExtend());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getExtensionTimes()))
+			{
+				masterModelUpdate.setExtensionTimes(sellerMasterWsDTO.getExtensionTimes());
+			}
+			
+			
 
 			if (null != sellerMasterWsDTO.getRegisterAddress())
 			{

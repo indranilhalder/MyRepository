@@ -56,12 +56,22 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	/**
 	 *
 	 */
+	private static final String CLICK_AND_COLLECT = "Click And Collect";
+
+	/**
+	 *
+	 */
 	private static final String ED = "ED";
 
 	/**
 	 *
 	 */
 	private static final String HD = "HD";
+
+	/**
+	 *
+	 */
+	private static final String CNC = "CNC";
 
 	/**
 	 *
@@ -155,12 +165,26 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 								{
 									deliveryModes.add(ED);
 								}
+								if (deliveryMode.equalsIgnoreCase(CLICK_AND_COLLECT))
+								{
+									deliveryModes.add(CNC);
+								}
 							}
 							pincodereqObj.setDeliveryMode(deliveryModes);
 						}
 						if (null != reqData.get(i).getIsDeliveryDateRequired())
 						{
 							pincodereqObj.setIsDeliveryDateRequired(reqData.get(i).getIsDeliveryDateRequired());
+						}
+
+						if (null != reqData.get(i).getStore())
+						{
+							final List<String> reqStreNames = new ArrayList<String>();
+							for (final String storeName : reqData.get(i).getStore())
+							{
+								reqStreNames.add(storeName);
+							}
+							pincodereqObj.setStore(reqStreNames);
 						}
 
 						pincodeList.add(pincodereqObj);
