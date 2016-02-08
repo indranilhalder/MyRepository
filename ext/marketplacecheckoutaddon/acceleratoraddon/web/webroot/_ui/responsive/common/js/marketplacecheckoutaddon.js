@@ -2367,8 +2367,8 @@ function applyPromotion(bankName)
 		 				$("#couponFieldId").val(selection);
 		 				$("#couponMessage").html("Coupon has been removed after applying promotion");
 		 				$('#couponMessage').show();
-		 				$('#couponMessage').delay(2000).fadeOut('slow');
-		 				setTimeout(function(){ $("#couponMessage").html(""); }, 5000); 	
+		 				$('#couponMessage').delay(5000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000); 	
 					}
 					else
 					{
@@ -2378,8 +2378,8 @@ function applyPromotion(bankName)
 		 				$('#couponFieldId').attr('readonly', true);
 		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
 		 				$('#couponMessage').show();
-		 				$('#couponMessage').delay(2000).fadeOut('slow');
-		 				setTimeout(function(){ $("#couponMessage").html(""); }, 5000);
+		 				$('#couponMessage').delay(5000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
 					}
 				}
 				
@@ -3511,6 +3511,7 @@ $("#couponSubmitButton").click(function(){
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected},
 	 		success : function(response) {
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
 	 				if(response.redeemErrorMsg=="Price_exceeded")
 	 				{
@@ -3597,6 +3598,7 @@ $(".remove-coupon-button").click(function(){
  		data: { 'couponCode' : couponCode },
  		success : function(response) {
  			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+ 			$("#codAmount").text(response.totalPrice.formattedValue);
  			//alert(response.totalPrice.formattedValue);
  			if(response.couponReleased==true){
  				couponApplied=true;
