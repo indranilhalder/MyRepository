@@ -122,6 +122,7 @@
 		});
 	
 	$("#triggerLoginAjax").on('click touch',function(){
+		
 		var emailPattern=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 		if($("input[name=j_username]").val() == ""){
 		$("#errorHolder").text("Username cannot be left empty");
@@ -134,6 +135,9 @@
 		$("#errorHolder").text("Password cannot be left empty");
 		return false;
 		}else{
+			// TISPRO-153
+			utag.link({ "event_type" : "Login", "link_name" : "Login" });
+			
 			//TISSIT-1703
 			var hostName=window.location.host;
 			if(hostName.indexOf(':') >=0)
@@ -147,7 +151,6 @@
 				document.flyOutloginForm.action="https://"+hostName+"/store/mpl/en/j_spring_security_check";
 				document.flyOutloginForm.submit();
 			}
-			
 			return true;
 			
 			//formation of url as a part of solution for VAPT issues(TISSIT-1703)
