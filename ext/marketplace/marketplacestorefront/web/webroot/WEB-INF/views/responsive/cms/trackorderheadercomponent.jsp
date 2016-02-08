@@ -30,7 +30,7 @@
 		<c:if test="${ empty notificationCount }">
 		
 		<li class="track trackOrder">
-	<a id="tracklink" href="${urlToAccess}"><span class="bell-icon"></span>&nbsp;</a>
+	<a id="tracklink" href="${urlToAccess}"><span class="bell-icon"></span>&nbsp;Notifications</a>
 		 <span id="mobile-menu-toggle"></span>
 		<ul class="trackorder-dropdown"></ul> 
 		</li>
