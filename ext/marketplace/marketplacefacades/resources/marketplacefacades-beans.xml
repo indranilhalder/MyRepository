@@ -103,6 +103,7 @@
 		<property name="isDeliveryDateRequired" type="String"></property>
 		<property name="productCode" type="String"></property>
 		<property name="cartId" type="String"></property>
+		<property name="store" type="java.util.List&lt;java.lang.String>"></property>
 	</bean>
 
 
