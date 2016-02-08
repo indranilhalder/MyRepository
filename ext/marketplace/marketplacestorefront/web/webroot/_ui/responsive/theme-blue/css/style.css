@@ -10019,47 +10019,50 @@ body .account .right-account .order-history .pagination li{
       margin-bottom: 5px; }
     .product-tile .image .new {
       position: absolute;
-      height: 31%;
-     top: 10px;
-      background-color: #a9143c;
-    height: 35px;
-      right:10px;
-      background-image: url(../images/new.png); 
-      background-position: 7px;}
+    top: 0px;
+    background-color: #a9143c;
+    height: 25px;
+    right: 10px;
+    background-image: none;
+    display: table;
+    width: 35%;
+        text-align: center;}
       .shop-sale.wrapper .product-tile .image .new {
-      width: 38%;
+     /*  width: 38%;
     height: 39%;
     min-width:71px;
-    min-height:72px;
+    min-height:72px; */
       }
     .product-tile .image .online-exclusive, .product-tile .image .on-sale {
       position: absolute;
       /*bottom: -20px;*/
       /* bottom:4px;
        left: -10px; */
-       top:10px;
+       top:0px;
        right:10px; }
-       .product-tile .image .online-exclusive img.brush-strokes-sprite, .product-tile .image .on-sale img.brush-strokes-sprite{
+       .product-tile .image .online-exclusive img.brush-strokes-sprite, .product-tile .image .on-sale img.brush-strokes-sprite,
+       .product-tile .image .new img.brush-strokes-sprite{
      display:none;
        } 
    .shop-sale.wrapper .product-tile .image .online-exclusive, .shop-sale.wrapper .product-tile .image .on-sale {
       bottom: -5px; }
-      .product-tile .image .online-exclusive span, .product-tile .image .on-sale span {
+      .product-tile .image .online-exclusive span, .product-tile .image .on-sale span,.product-tile .image .new span,
+       .product-info .product-image-container .new span{
         color: #fff;
         display: table-cell;
     	vertical-align: middle;
-        font-size: 10px;
-        font-weight: 500;
-        letter-spacing: 1px;
+      font-size: 10.5px !important;
+    letter-spacing: 1.5px;
+    font-weight: 600;
         padding-left: 5%;
         text-transform: uppercase;
         line-height:normal;
       }
     .product-tile .image .online-exclusive {
       width: 80%;
-     background-color: #ffb810;
+     background-color: #fbba21;
      /* min-width: 200px; */
-     height: 35px;
+     height: 25px;
      text-align: center;
      display: table;}
       .product-tile .image .online-exclusive span {
@@ -10431,31 +10434,27 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .main-image .online-exclusive {
     position: absolute;
-    width: 50%;
+    width: 40%;
     bottom: -5px;
-    left: -10px;
-    height: 35px;
+    left: 0px;
+       text-align: center;
+    height: 25px;
     /* min-width: 200px */
-    background-color: #ffb810;
+    background-color: #fbba21;
 }
 .product-info .product-image-container .main-image .brush-strokes-sprite{
 	display: none;
 }
 .product-info .product-image-container .main-image .online-exclusive span {
-    position: absolute;
-    top: 55%;
+   position: static;
+    vertical-align: middle;
+    display: table-cell;
     color: #fff;
-    font-size: 12px;
+    font-size: 10.5px;
     left: 0;
-    font-weight: 500;
-    letter-spacing: 1px;
-    padding-left: 16%;
+    font-weight: 600;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%)
 }
 .sprite-Vector_Smart_Object {
     width: 216px;
@@ -17170,7 +17169,10 @@ font-weight:normal;
 		  {		
 		  	height:40px;		
 		  }		
-		 
+		 header.compact	.marketplace img {
+		height: 35px;
+		margin-top:5px;
+	}
   } 		
   @media (min-width:315px) and  (max-width:375px)		
   {		
@@ -22752,6 +22754,9 @@ span.sizesAvailable {
 	font-weight:600 !important;
 	font-size:18px !important ;
 }
+.IAQuickView span{
+	color:#a9143c !important;
+}
 .IAQuickView span:before{
     font-family: 'icomoon';
     -webkit-font-smoothing: antialiased;
@@ -23896,9 +23901,15 @@ span.brand-subdesc {
     background-position: -100px -5px;
 }
 .product-info .product-image-container .new {
-      position: absolute;
-      top: 0;
-      left: 20px; 
+     position: absolute;
+    top: 0px;
+    background-color: #a9143c;
+    height: 25px;
+    left: 10px;
+    background-image: none;
+    display: table;
+    width: 20%;
+    text-align: center;
  }
 
  .page-productGrid .slider.product .prev:after, .page-productGrid .slider.product .next:after{
@@ -27576,6 +27587,11 @@ table.track-table tr td{
 	.marketplace img {
 		height: 40px;
 	}
+header.compact	.marketplace img {
+		height: 35px;
+		margin-top:5px;
+	}
+	
 }
 @media ( min-width : 651px) {
 	.marketplace-checkout img.image {
@@ -28772,16 +28788,20 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
     text-overflow: ellipsis;
 	}
 
-@media(min-width:791px) and (max-width:1080px){
+@media(min-width:791px) and (max-width:1150px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
-    	left: 120px;
+    	left: 110px;
 	}
-	header.compact .content .marketplace.compact a img{
+	header.compact .content .marketplace.compact + .right > ul > li.store-locator-header{
+	    position: absolute;
+    	left: 10px;
+	}
+	/* header.compact .content .marketplace.compact a img{
 	width:180px;
-	}
+	} */
 	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
-	    width: 65px;
+	    max-width: 75px;
 	}
 	header.compact .content .marketplace.compact + .right > ul > li{
 	    padding:0 10px;
@@ -29373,11 +29393,11 @@ text-align: center;
 }
 
 .home-brands-you-love-carousel-brands.active img{
-border-bottom: 1px solid #000;
+border-bottom: 2px solid #ccc;
     padding: 5px;
 }
 .home-brands-you-love-carousel-brands img{
-border-bottom: 1px solid transparent;
+border-bottom: 2px solid transparent;
     padding: 5px;
     height: 35px;
 }
@@ -29489,7 +29509,10 @@ width:33.33%;
 float:left;
 text-align:center;
 }
-.showcase-border{border-bottom: 1px solid;}
+.showcaseItem > a.showcase-border{
+	border-bottom: 1px solid #000;
+	color:#000;
+}
 .showcase-heading {
    text-align: center;
     color: #2d2e32;
@@ -29521,6 +29544,9 @@ p.showcase-para {
 
 .showcase-center {
     margin: 20px 0px;
+}
+.showcaseItem > a{
+	color:#bbb;
 }
 .showcase-center h3, .showcase-center p{line-height: 20px;}
 .showcase-section .desc-section{
@@ -29873,7 +29899,15 @@ padding-left: 13px !important;
 header.compact .content .top{
 height:95px;}
 header.compact .content span.material-icons{
-	 margin-top: -44px;
+	 height: 50px;
+    vertical-align: top;
+    line-height: 53px;
+	}
+header.compact .content li.logged_in.dropdown{
+	 height: 50px;
+	}
+header.compact .content li.logged_in.dropdown .dropdown-menu{
+	 top: 50px;
 	}
 /*--------------maincss-----------*/
 .row
