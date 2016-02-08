@@ -10,6 +10,9 @@ import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commercefacades.voucher.impl.DefaultVoucherFacade;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -25,6 +28,7 @@ import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.DiscountValue;
@@ -111,6 +115,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private MplDefaultCalculationService mplDefaultCalculationService;
 	@Autowired
 	private MplVoucherService mplVoucherService;
+
+
+	@Autowired
+	private Converter<VoucherModel, VoucherDisplayData> voucherDisplayConverter;
 
 
 	final SimpleDateFormat sdf = new SimpleDateFormat(MarketplacecommerceservicesConstants.COUPONS_DATE_FORMAT);
@@ -261,6 +269,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					if (voucher instanceof PromotionVoucherModel)
 					{
 						final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
+
+
 						final DateRestrictionModel dateRestriction = mapEntry.getValue();
 						final String voucherCode = promoVoucher.getVoucherCode() != null ? promoVoucher.getVoucherCode() : "";
 
@@ -853,33 +863,33 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * closedVoucherDataList = new ArrayList<VoucherDisplayData>(); final AllVoucherListData allVoucherListData = new
 	 * AllVoucherListData(); for (final VoucherModel voucherModel : voucherList) { if (voucherModel instanceof
 	 * PromotionVoucherModel) {
-	 *
+	 * 
 	 * final PromotionVoucherModel VoucherObj = (PromotionVoucherModel) voucherModel;
-	 *
+	 * 
 	 * final Set<RestrictionModel> restrictionList = voucherModel.getRestrictions(); if
 	 * (CollectionUtils.isNotEmpty(restrictionList)) { boolean dateRestrExists = false; boolean userRestrExists = false;
 	 * final boolean semiClosedRestrExists = false;
-	 *
+	 * 
 	 * DateRestrictionModel dateRestrObj = null; UserRestrictionModel userRestrObj = null; //SemiClosedRestrictionModel
 	 * semiClosedRestrObj = null;
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final RestrictionModel restrictionModel : restrictionList) {
-	 *
+	 * 
 	 * //final VoucherDisplayData voucherDisplayData = new VoucherDisplayData(); if (restrictionModel instanceof
 	 * DateRestrictionModel) { dateRestrExists = true; dateRestrObj = (DateRestrictionModel) restrictionModel; } if
 	 * (restrictionModel instanceof UserRestrictionModel) { userRestrExists = true; userRestrObj = (UserRestrictionModel)
 	 * restrictionModel; } //TODO: Semi Closed Restriction-----Commented as functionality out of scope of R2.1 Uncomment
 	 * when in scope // if (restrictionModel instanceof SemiClosedRestrictionModel) // { // semiClosedRestrExists = true;
 	 * // //semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel; // }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * // if (restrictionModel instanceof SemiClosedRestrictionModel) // { // semiClosedRestrExists = false; //
 	 * semiClosedRestrObj = (SemiClosedRestrictionModel) restrictionModel; // } }
-	 *
+	 * 
 	 * if (dateRestrExists) { final String voucherCode = VoucherObj.getVoucherCode();
-	 *
+	 * 
 	 * if (dateRestrExists && voucherModelService.isReservable(voucherModel, voucherCode, customer)) { final
 	 * VoucherDisplayData voucherDisplayData = new VoucherDisplayData(); if (userRestrExists) { // final
 	 * Collection<PrincipalModel> userList = userRestrObj != null ? userRestrObj.getUsers() // : new
@@ -1179,7 +1189,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			final Months monthsBetween = Months.monthsBetween(startDate, endDate);
 			final int monthsBetweenInt = monthsBetween.getMonths();
 
-			if (monthsBetweenInt <= 6)
+			if (monthsBetweenInt < 6)
 			{
 				isDateValid = true;
 			}
@@ -1483,7 +1493,32 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 
 
+	@Override
+	public SearchPageData<VoucherDisplayData> getAllClosedCoupons(final CustomerModel customer, final PageableData pageableData)
+	{
+		final SearchPageData<VoucherModel> searchVoucherModel = getMplCouponService().getClosedVoucher(customer, pageableData);
+		final List<VoucherModel> voucherList = searchVoucherModel.getResults();
 
+		for (final VoucherModel voucher : voucherList)
+		{
+			System.out.println("---" + voucher.getCode());
+		}
+
+
+		final SearchPageData<VoucherDisplayData> searchPageDataVoucher = convertPageData(searchVoucherModel,
+				voucherDisplayConverter);
+
+		return searchPageDataVoucher;
+	}
+
+	protected <S, T> SearchPageData<T> convertPageData(final SearchPageData<S> source, final Converter<S, T> converter)
+	{
+		final SearchPageData<T> result = new SearchPageData<T>();
+		result.setPagination(source.getPagination());
+		result.setSorts(source.getSorts());
+		result.setResults(Converters.convertAll(source.getResults(), converter));
+		return result;
+	}
 
 
 

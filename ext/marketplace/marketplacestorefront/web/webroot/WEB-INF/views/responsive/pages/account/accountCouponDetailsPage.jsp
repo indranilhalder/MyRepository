@@ -186,7 +186,15 @@
 								<spring:theme code="text.account.coupons.coupons" />
 							</p>
 						</c:if>
-					
+						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
+							supportShowAll="${isShowAllAllowed}"
+							searchPageData="${searchPageData}"
+							searchUrl="/my-account/coupons?sort=${searchPageData.pagination.sort}"
+							numberPagesShown="${numberPagesShown}" />
+							
+							
+							
+							
 							<c:if test="${totalPagesCoupon ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
@@ -382,7 +390,7 @@
 										</p>
 						</c:if>
 						
-							<c:if test="${totalPagesCouponHist ne 1 }">
+							<%-- <c:if test="${totalPagesCouponHist ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
 									<c:if
@@ -425,7 +433,7 @@
 									</c:if>
 
 								</ul>
-							</c:if>
+							</c:if> --%>
 					
 					</div>
 				</div>

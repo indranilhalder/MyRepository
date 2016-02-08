@@ -4,6 +4,8 @@
 package com.tisl.mpl.coupon.facade;
 
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
@@ -135,4 +137,9 @@ public interface MplCouponFacade
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList);
+
+
+	@SuppressWarnings("javadoc")
+	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
+
 }
