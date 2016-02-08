@@ -29917,6 +29917,13 @@ height:95px;}
 header.compact .content span.material-icons{
 	 margin-top: -44px;
 	}
+	
+	#couponMessage{
+	line-height:16px;
+	}
+	#couponMessage b{
+	word-break:break-word;
+	}
 /*--------------maincss-----------*/
 .row
 {

@@ -128,41 +128,54 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											bigPromoBanner.getMajorPromoText() + "|" + bigPromoBanner.getMinorPromo1Text() + "|"
 													+ bigPromoBanner.getMinorPromo2Text());
 									campaignDataSeqBanner.setCategory(CategorySeqBanner);
-
-
-
-
-									if (null != bigPromoBanner.getBannerImage())
+									try
 									{
-										String ImageUrl = bigPromoBanner.getBannerImage().getURL();
-
-										if (!ImageUrl.startsWith("http://"))
+										if (null != bigPromoBanner.getBannerImage())
 										{
-											ImageUrl = "http:" + ImageUrl;
+											String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+											//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+											LOG.debug("+++++++++++++ 1111 Image URL:::::" + ImageUrl);
 
+											if (!ImageUrl.startsWith("http://"))
+											{
+												ImageUrl = "http:" + ImageUrl;
+												LOG.debug("1111.1 Image URL with http::::::::" + ImageUrl);
+
+											}
+											else if (!ImageUrl.startsWith("https://"))
+											{
+
+												ImageUrl = "https:" + ImageUrl;
+												LOG.debug("1111.11  Image URL with https:::::" + ImageUrl);
+											}
+
+
+											try
+											{
+												final URL url = new URL(ImageUrl);
+
+												final BufferedImage bimg = ImageIO.read(url);
+												final int width = bimg.getWidth();
+												final int height = bimg.getHeight();
+
+												final String size = String.valueOf(width) + " X " + String.valueOf(height);
+
+												automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+												automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
+
+												campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+												campaignDataSeqBanner.setSize(size);
+											}
+											catch (final Exception e)
+											{
+												e.getMessage();
+											}
 										}
-										else if (!ImageUrl.startsWith("https://"))
-										{
+									}
 
-											ImageUrl = "https:" + ImageUrl;
-										}
-
-										final URL url = new URL(ImageUrl);
-
-										final BufferedImage bimg = ImageIO.read(url);
-										final int width = bimg.getWidth();
-										final int height = bimg.getHeight();
-
-										final String size = String.valueOf(width) + " X " + String.valueOf(height);
-
-										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-										automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
-
-										campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-										campaignDataSeqBanner.setSize(size);
-
-
-
+									catch (final Exception e)
+									{
+										LOG.error(e.getMessage());
 									}
 								}
 								else if (null != banner && banner instanceof MplBigFourPromoBannerComponentModel)
@@ -199,39 +212,59 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataBigPromoBanner.setAssetName(componentItr.getName());
 							campaignDataBigPromoBanner.setCategory(CategoryBigPromoBanner);
 
-							if (null != bigPromoBanner.getBannerImage())
+							try
 							{
-								String ImageUrl = bigPromoBanner.getBannerImage().getURL();
-								if (!ImageUrl.startsWith("http://"))
+
+								if (null != bigPromoBanner.getBannerImage())
 								{
-									ImageUrl = "http:" + ImageUrl;
+									String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+									LOG.debug("+++++++++++++2222 +Image URL:::::" + ImageUrl);
+									//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+									if (!ImageUrl.startsWith("http://"))
+									{
 
+										ImageUrl = "http:" + ImageUrl;
+										LOG.debug("2222.2+++++++++++++Image URL:::::" + ImageUrl);
+
+									}
+									else if (!ImageUrl.startsWith("https://"))
+									{
+										ImageUrl = "https:" + ImageUrl;
+										LOG.debug("2222.22+++++++++++++Image URL:::::" + ImageUrl);
+									}
+
+									try
+									{
+
+										final URL url = new URL(ImageUrl);
+
+
+										final BufferedImage bimg = ImageIO.read(url);
+										final int width = bimg.getWidth();
+										final int height = bimg.getHeight();
+
+										final String size = String.valueOf(width) + " X " + String.valueOf(height);
+
+
+
+										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+										automationMap.put("size", bigPromoBanner.getBannerImage().getInternalURL().toString());
+
+										campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+										campaignDataBigPromoBanner.setSize(size);
+
+
+										CampaignDataList.add(campaignDataBigPromoBanner);
+									}
+									catch (final Exception e)
+									{
+										LOG.error(e.getMessage());
+									}
 								}
-								else if (!ImageUrl.startsWith("https://"))
-								{
-
-									ImageUrl = "https:" + ImageUrl;
-								}
-
-								final URL url = new URL(ImageUrl);
-
-
-								final BufferedImage bimg = ImageIO.read(url);
-								final int width = bimg.getWidth();
-								final int height = bimg.getHeight();
-
-								final String size = String.valueOf(width) + " X " + String.valueOf(height);
-
-
-
-								automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-								automationMap.put("size", bigPromoBanner.getBannerImage().getInternalURL().toString());
-
-								campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-								campaignDataBigPromoBanner.setSize(size);
-
-
-								CampaignDataList.add(campaignDataBigPromoBanner);
+							}
+							catch (final Exception e)
+							{
+								LOG.error(e.getMessage());
 							}
 						}
 						//3. Mpl BigFour PromoBanner ComponentModel
@@ -256,55 +289,75 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataBigFourPromoBanner.setAssetName(componentItr.getName());
 							campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
 							campaignDataBigFourPromoBanner.setCategory(CategoryBigFourPromoBanner);
-
-							if (null != bigPromoBanner.getBannerImage())
+							try
 							{
-								String ImageUrl = bigPromoBanner.getBannerImage().getURL();
 
-								if (!ImageUrl.startsWith("http://"))
+								if (null != bigPromoBanner.getBannerImage())
 								{
-									ImageUrl = "http:" + ImageUrl;
+									String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+									//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+									LOG.debug("++++++++ 3333 +++++Image URL:::::" + ImageUrl);
 
+									if (!ImageUrl.startsWith("http://"))
+									{
+										ImageUrl = "http:" + ImageUrl;
+										LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl);
+									}
+									else if (!ImageUrl.startsWith("https://"))
+									{
+										ImageUrl = "https:" + ImageUrl;
+										LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
+
+									}
+
+									try
+									{
+
+										final URL url = new URL(ImageUrl);
+
+
+										final BufferedImage bimg = ImageIO.read(url);
+										final int width = bimg.getWidth();
+										final int height = bimg.getHeight();
+
+										final String size = String.valueOf(width) + " X " + String.valueOf(height);
+
+										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+										automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
+
+										campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+										campaignDataBigFourPromoBanner.setSize(size);
+
+									}
+									catch (final Exception e)
+									{
+										LOG.error(e.getMessage());
+									}
 								}
-								else if (!ImageUrl.startsWith("https://"))
-								{
-
-									ImageUrl = "https:" + ImageUrl;
-								}
-
-								final URL url = new URL(ImageUrl);
-
-
-								final BufferedImage bimg = ImageIO.read(url);
-								final int width = bimg.getWidth();
-								final int height = bimg.getHeight();
-
-								final String size = String.valueOf(width) + " X " + String.valueOf(height);
-
-								automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-								automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
-
-								campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-								campaignDataBigFourPromoBanner.setSize(size);
-
-
-
 
 							}
+
+							catch (final Exception e)
+							{
+								LOG.error(e.getMessage());
+							}
+							LOG.info("componentItr.getName() " + componentItr.getName());
 						}
-						LOG.info("componentItr.getName() " + componentItr.getName());
 					}
+					//LOG.info("banner componenets found " + contentPageItr.getco);
+
 				}
-				//LOG.info("banner componenets found " + contentPageItr.getco);
+
+				createCSVExcel(CampaignDataList);
 
 			}
-
-			createCSVExcel(CampaignDataList);
-
 		}
+		/*
+		 * catch (final IOException e) { LOG.error(e); }
+		 */
 		catch (final Exception e)
 		{
-			LOG.error(e);
+			LOG.error(e.getMessage());
 		}
 		return CampaignDataList;
 	}
@@ -331,7 +384,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		catch (final Exception e)
 		{
 			// YTODO Auto-generated catch block
-			LOG.info("Exception writing" + e);
+			LOG.info("Exception writing" + e.getMessage());
 		}
 		//` false;
 	}
@@ -427,7 +480,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
-			 * 
+			 *
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
