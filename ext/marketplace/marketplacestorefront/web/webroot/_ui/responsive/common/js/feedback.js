@@ -132,7 +132,7 @@ $(document).ready(function(){
 			  
 			  $("#js-site-search-input").keypress(function(){
 	
-				  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css("border","1px solid #dbeafa");
+				  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css("border","1px solid #dfd1d5");
 				});
 	
 				if($('body').hasClass("template-pages-layout-micrositePage1")){
@@ -308,7 +308,7 @@ $(document).ready(function(){
 					 $("li.short.words").siblings("li.long.words").hide();
 					 $("li.short.words").unbind('click');
 					  $("li.short.words").click(function(){
-
+						$(this).toggleClass('active');
 					    $(this).nextAll().each(function(){
 
 					      if($(this).hasClass("short")) {
@@ -868,7 +868,7 @@ $(document).ready(function(){
 		$(".checkout-shipping #addressForm input[type='checkbox']").change(function () {
 		    if ($(this).prop( "checked" )===true) {
 		        // checked
-		       $(this).parent().css("color","#00cbe9");
+		       $(this).parent().css("color","#a9143c");
 		       $(this).parent().addClass('checkbox-checked');
 		       
 		    }
@@ -1094,7 +1094,7 @@ $(document).ready(function(){
 				 $("li.short.words").siblings("li.long.words").hide();
 				 $("li.short.words").unbind('click');
 				  $("li.short.words").click(function(){
-
+					  $(this).toggleClass('active');
 				    $(this).nextAll().each(function(){
 
 				      if($(this).hasClass("short")) {
