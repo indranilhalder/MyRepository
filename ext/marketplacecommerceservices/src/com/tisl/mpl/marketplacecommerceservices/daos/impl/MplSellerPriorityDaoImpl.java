@@ -64,7 +64,7 @@ public class MplSellerPriorityDaoImpl implements MplSellerPriorityDao
 		return prioritySellerModels;
 	}
 
-
+	@Override
 	public List<ProductModel> getProductListForCategory(final CategoryModel categoryModel)
 	{
 
@@ -76,6 +76,7 @@ public class MplSellerPriorityDaoImpl implements MplSellerPriorityDao
 		return result.getResult();
 
 	}
+
 
 
 	/**

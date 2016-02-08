@@ -16,7 +16,7 @@ INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 #; promoReportCreationJob; 0 0 0 * * ?
 #; salesReportCreationJob; 0 0 0 * * ?
 #; salesOrderCanRetInfoPopulateJob; 0 0 0 * * ?
-
+;campaignReportCronJob;0 0/5 * * * ?
 
 
 INSERT_UPDATE BulkPromotionCreationJob;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
@@ -33,3 +33,14 @@ INSERT_UPDATE SalesReportCreationJob;code[unique=true];job(code);sessionLanguage
 ###For Order Refund Report Job####
 INSERT_UPDATE OrderRefundReportJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
 ;orderRefundReportCronJob;orderRefundReportJob;en;2015-07-01;2015-08-31;
+
+###For Internal Campaign Report Job####
+INSERT_UPDATE IntExtCampaignAutomationJob;code[unique=true];job(code);sessionLanguage(isocode);
+;campaignReportCronJob;CampaignAutomationJob;en;
+
+
+
+
+
+
+

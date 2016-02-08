@@ -132,7 +132,7 @@ $(document).ready(function(){
 			  
 			  $("#js-site-search-input").keypress(function(){
 	
-				  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css("border","1px solid #dbeafa");
+				  $("#js-site-search-input").parents('form#search_form').next('.ui-autocomplete.ui-front.links.ui-menu').css("border","1px solid #dfd1d5");
 				});
 	
 				if($('body').hasClass("template-pages-layout-micrositePage1")){
@@ -250,7 +250,7 @@ $(document).ready(function(){
 			$(".toggle-filterSerp").click(function(){
 				$(".product-facet.js-product-facet.listing-leftmenu").slideToggle();
 				$(this).toggleClass("active");
-				$(".facet-name.js-facet-name h4").removeClass("active");
+				$(".facet-name.js-facet-name h4").toggleClass("active");
 				$(".product-facet.js-product-facet.listing-leftmenu").find('.facet-list.js-facet-list').removeClass('active');
 				$(".product-facet.js-product-facet.listing-leftmenu").find('div#searchPageDeptHierTree').hide();
 				
@@ -294,6 +294,38 @@ $(document).ready(function(){
 			    } else {
 			      p.addClass('active');
 			    }
+			    var style=null;
+				if($(window).width() < 773) {
+					$("span#mobile-menu-toggle").unbind('click');
+					$("span#mobile-menu-toggle").click(function(){
+						$(this).parent('li').siblings().find('#mobile-menu-toggle').removeClass("menu-dropdown-arrow");
+						$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
+						$(this).next().slideToggle();
+						$(this).toggleClass("menu-dropdown-arrow");
+					});
+					/*--- Mobile view shop by brand and department ---*/
+
+					 $("li.short.words").siblings("li.long.words").hide();
+					 $("li.short.words").unbind('click');
+					  $("li.short.words").click(function(){
+						$(this).toggleClass('active');
+					    $(this).nextAll().each(function(){
+
+					      if($(this).hasClass("short")) {
+					        return false;
+					      }
+
+					      $(this).toggle(200);
+					    });
+
+					  });
+
+					/*--- Mobile view shop by brand and department ---*/ 
+				}
+				else {
+					$("#mobile-menu-toggle").next().attr("style",style);
+					$("li.short.words,li.long.words").next().attr("style",style); 
+				} 
 			});
 			$("footer h3.toggle").click(function(e){
 				
@@ -836,7 +868,7 @@ $(document).ready(function(){
 		$(".checkout-shipping #addressForm input[type='checkbox']").change(function () {
 		    if ($(this).prop( "checked" )===true) {
 		        // checked
-		       $(this).parent().css("color","#00cbe9");
+		       $(this).parent().css("color","#a9143c");
 		       $(this).parent().addClass('checkbox-checked');
 		       
 		    }
@@ -1062,7 +1094,7 @@ $(document).ready(function(){
 				 $("li.short.words").siblings("li.long.words").hide();
 				 $("li.short.words").unbind('click');
 				  $("li.short.words").click(function(){
-
+					  $(this).toggleClass('active');
 				    $(this).nextAll().each(function(){
 
 				      if($(this).hasClass("short")) {
