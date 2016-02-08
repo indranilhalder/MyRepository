@@ -366,6 +366,21 @@
 	</bean>
 	<bean id="otpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.OTPDaoImpl" />
+		
+		
+		
+		<!-- ============== configure beans for pincode ============== -->
+		
+		<alias name="pincodeService" alias="pincodeService" />
+	<bean id="pincodeService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.PincodeServiceImpl">
+		<property name="pincodeDao" ref="pincodeDao" />
+		
+	</bean>
+	<bean id="pincodeDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PincodeDaoImpl" >
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+	</bean>
 
 
 	<!-- Payment DAO and Service Implementation -->
