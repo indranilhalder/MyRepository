@@ -61,7 +61,7 @@
 								</c:forEach>
 							</ul>
 						</li>
-					
+					</ul>
 						<c:choose>
 					    <c:when test="${product.rootCategory=='Clothing'}">
 						<c:forEach items="${sizeguideData}" var="sizeGuide" >
@@ -195,7 +195,7 @@
     <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
 
 </span>
- <div class="price">
+ <div class="price" id="sizePrice">
          <!--  <p class="normal"><div id="specialSelPrice"></div></p> -->
 	<p class="old" id="sizemrpPriceId" style="display:none">
 		<%-- <spring:theme code="product.currency"></spring:theme> --%>
@@ -501,7 +501,6 @@
 </div>
 <script>
 $(document).ready(function(){
-	setTimeout(function(){ $('#popUpModal').modal('show'); }, 500);
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,
@@ -514,21 +513,19 @@ $(document).ready(function(){
 	/* if(category!='Footwear'){ */
 	
 	var numLi= $(".modal.size-guide .sizes .tables li.header > ul").children().length;
-	
 	var sizeWidth= 88/(numLi-1) + "%";
 
 	$(".modal.size-guide .sizes .tables li > ul > li").css("width",sizeWidth);
 	$(".modal.size-guide .sizes .tables li > ul > li:first-child").css("width","12%");
 /* 	} */
 
-$("#add_to_wishlist-sizeguide").click(function(){
-	 $(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
-	return false;
-});
+	$("#add_to_wishlist-sizeguide").click(function(){
+	 	$(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
+		return false;
+	});
 	$("#noProductForSelectedSeller").hide();
 	$("#productDetails").show();
-	$("#price").show();
-	
+	$("#sizePrice").show();
 	/* $('body').on('hidden.bs.modal', '#popUpModal', function () {
 		  $(this).removeData('bs.modal');
 		}); */
@@ -703,11 +700,12 @@ function loadDefaultWishListName_SizeGuide() {
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/addToWishListInPDP";
 	var sizeSelected=true;
-	if( $("#variant,#sizevariant option:selected").val()=="#"){
+	if( $("#variant.size-g option:selected").val()=="#"){
 		sizeSelected=false;
 	}
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
 			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
+
 
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
