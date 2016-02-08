@@ -35711,6 +35711,13 @@ width: 40px;
 
 /**/
 
+
+#brandsYouLove .owl-wrapper{
+	display: block;
+	transform:translate3d(0px, 0px, 0px);
+	transition: all 0.5s ease;
+}
+
 #brandsYouLove .bulprev, #brandsYouLove .bulnext	
 	{
 		cursor: pointer;
