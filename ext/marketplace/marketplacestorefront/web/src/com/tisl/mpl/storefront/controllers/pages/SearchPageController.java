@@ -42,6 +42,7 @@ import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.impl.DefaultProductService;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -131,8 +132,8 @@ public class SearchPageController extends AbstractSearchPageController
 	//@Resource(name = "cmsSiteService") Avoid unused private fields
 	//private CMSSiteService cmsSiteService;
 
-	//@Resource(name = "configurationService")
-	//private ConfigurationService configurationService;
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 	//	@Resource(name = "mplCategoryServiceImpl") Avoid unused private fields
 	//	private MplCategoryService mplCategoryService;
@@ -354,6 +355,9 @@ public class SearchPageController extends AbstractSearchPageController
 				}
 			}
 			model.addAttribute("searchCode", searchCategory);
+			//Fix defect for TISPRD-176
+			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number", "1800-208-8282");
+			model.addAttribute("cliqCareNumber", cliqCareNumber);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
