@@ -342,7 +342,7 @@ font-weight: normal;
 #ratingDiv .gig-rating-button:hover {
     background: #cc8600;
 }
-#ratingDiv div.gig-rating-star.gig-rating-star-full:before, .gig-comment-rating-star.gig-comment-rating-star-full:before, .gig-selfreview-rating-star-full:before {
+#ratingDiv div.gig-rating-star.gig-rating-star-full:before, .gig-comment-rating-star.gig-comment-rating-star-full:before, .gig-selfreview-rating-star.gig-selfreview-rating-star-full:before {
 	color: #00cbe9;
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
@@ -398,7 +398,12 @@ font-weight: normal;
 {
 display: none;
 } 
-
+*.gig-comment-rating-title{
+vertical-align:top;
+}
+*.gig-selfreview-ratings{
+margin-top:10px;
+}
 </style> 
 
 </c:if>	
