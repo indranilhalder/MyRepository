@@ -14964,3 +14964,9 @@ body .account .right-account.rewards>div.your-activity.coupon-history>ul{
 #loginDivsiginflyout > table > tbody > tr > td table td:first-child{
 	width: 10% !important;
 } 
+	#couponMessage{
+	line-height:16px;
+	}
+	#couponMessage b{
+	word-break:break-word;
+	}
