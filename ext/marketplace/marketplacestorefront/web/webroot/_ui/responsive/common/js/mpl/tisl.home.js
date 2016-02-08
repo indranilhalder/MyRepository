@@ -224,7 +224,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 			&& (html = window.localStorage.getItem("brandContent-" + id)) && html != "") {
 		// console.log("Local");
 		$(".home-brands-you-love-carousel").css("margin-bottom","20px");
-		$('#brandsYouLove').append(defaultHtml);
+		//$('#brandsYouLove').append(defaultHtml);
 		$('.home-brands-you-love-desc').remove();
 		$('#brandsYouLove').append(decodeURI(html));
 	}
@@ -236,7 +236,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 				dataType : "json",
 				beforeSend: function(){
 					$(".home-brands-you-love-carousel").css("margin-bottom","120px");
-					$("#brandsYouLove").append("<div id='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 49%;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
+					$("#brandsYouLove").append("<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
                 },
 				url : ACC.config.encodedContextPath
 						+ "/getBrandsYouLoveContent",
@@ -292,7 +292,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					}
 
 					defaultHtml += "</div>";
-					$('#loaderDiv').remove();
+					$('#brandsYouLove .loaderDiv').remove();
 					$(".home-brands-you-love-carousel").css("margin-bottom","20px");
 					
 					$('#brandsYouLove').append(defaultHtml);
@@ -302,7 +302,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 
 				},
 				error : function() {
-					$('#loaderDiv').remove();
+					$('#brandsYouLove .loaderDiv').remove();
 					$(".home-brands-you-love-carousel").css("margin-bottom","20px");
 					console.log("Error while getting brands you love content");
 				}
@@ -767,7 +767,10 @@ function getShowcaseContentAjaxCall(id) {
 			.ajax({
 				type : "GET",
 				dataType : "json",
-				
+				beforeSend: function(){
+					$(".showcase-switch").css("margin-bottom","80px");
+					$("#showcase").append("<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
+                },
 				url : ACC.config.encodedContextPath
 						+ "/getShowcaseContent",
 				data : {
@@ -809,6 +812,8 @@ function getShowcaseContentAjaxCall(id) {
 
 					defaultHtml += "</div>";
 					
+					$('#showcase .loaderDiv').remove();
+					$(".showcase-switch").css("margin-bottom","0px");
 					$('#showcase').append(defaultHtml);
 					
 					window.localStorage.setItem("showcaseContent-" + id,
@@ -817,6 +822,8 @@ function getShowcaseContentAjaxCall(id) {
 				},
 				error : function() {
 					console.log("Error while getting showcase content");
+					$('#showcase .loaderDiv').remove();
+					$(".showcase-switch").css("margin-bottom","0px");
 				}
 			});
 	}
