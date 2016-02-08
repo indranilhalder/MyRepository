@@ -2308,6 +2308,43 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+					
+					<!--Newly Added R2 Three More Attributes In Seller Master -->
+				
+					<attribute autocreate="true" qualifier="isupdate"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="collectionDays"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="daysToExtend"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="extensionTimes"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="clicknCollect"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					
 				</attributes>
 			</itemtype>	
 	</itemtypes>
