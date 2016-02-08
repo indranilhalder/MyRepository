@@ -650,83 +650,92 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			if (orderDetail.getMplPaymentInfo() != null)
 			{
 				paymentInfo = orderDetail.getMplPaymentInfo();
-				reportDTO.setPaymentMethod(paymentInfo.getPaymentOption());
+				if (null != paymentInfo.getPaymentOption())
+				{
+					reportDTO.setPaymentMethod(paymentInfo.getPaymentOption());
 
-				if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT))
-				{
-					reportDTO.setBankName(paymentInfo.getCardCardType());
-					reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-				}
-				else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
-				{
-					reportDTO.setBankName(paymentInfo.getCardCardType());
-					if (paymentInfo.getEmiInfo() != null)
+					if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT))
 					{
-						reportDTO.setTenure(paymentInfo.getEmiInfo().getTerm());
+						reportDTO.setBankName(paymentInfo.getCardCardType());
+						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
 					}
-				}
-				else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
-				{
-					reportDTO.setBankName(paymentInfo.getBank());
-					reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-				}
-				else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT))
-				{
-					reportDTO.setBankName(paymentInfo.getCardCardType());
-					reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-				}
-				else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
-				{
-					reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
-					reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-				}
-
-				else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.WALLET))
-				{
-					reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
-					reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-				}
-				//TODO
-				//Find the correct juspay orderid(auditid) model for sucess //AT
-				for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
-				{
-					if (!auditId.equalsIgnoreCase(MarketplacecommerceservicesConstants.NA))
+					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
 					{
-						break;
-					}
-					for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
-					{
-						if (PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType())
-								&& "success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
+						reportDTO.setBankName(paymentInfo.getCardCardType());
+						if (paymentInfo.getEmiInfo() != null)
 						{
-							auditId = paymentTransactionEntry.getRequestToken();
-							transactionRefGateway = auditId;
-							if (null != paymentTransactionEntry.getPaymentTransaction())
+							reportDTO.setTenure(paymentInfo.getEmiInfo().getTerm());
+						}
+					}
+					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
+					{
+						reportDTO.setBankName(paymentInfo.getBank());
+						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
+					}
+					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT))
+					{
+						reportDTO.setBankName(paymentInfo.getCardCardType());
+						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
+					}
+					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+					{
+						reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
+						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
+					}
+
+					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.WALLET))
+					{
+						reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
+						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
+					}
+					//TODO
+					//Find the correct juspay orderid(auditid) model for sucess //AT
+					if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+					{
+						for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
+						{
+							if (!auditId.equalsIgnoreCase(MarketplacecommerceservicesConstants.NA))
 							{
-								transactionRef = paymentTransactionEntry.getPaymentTransaction().getCode();
+								break;
 							}
-							break;
+							for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
+							{
+								if (PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType())
+										&& "success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
+								{
+									auditId = paymentTransactionEntry.getRequestToken();
+									transactionRefGateway = auditId;
+									if (null != paymentTransactionEntry.getPaymentTransaction())
+									{
+										transactionRef = paymentTransactionEntry.getPaymentTransaction().getCode();
+									}
+									break;
+								}
+							}
 						}
-					}
-				}
 
-				if (!auditId.equalsIgnoreCase(MarketplacecommerceservicesConstants.NA))
-				{
-					try
-					{
-						final JuspayEBSResponseModel jusPay = mplPaymentService.getEntryInAuditByOrder(auditId);
-						if (null != jusPay && null != jusPay.getEbsRiskLevel())
+						if (!auditId.equalsIgnoreCase(MarketplacecommerceservicesConstants.NA))
 						{
-							riskScore = jusPay.getEbsRiskLevel().getCode();
-							LOG.debug("-----------Payment Jusp Pay Risk");
+							try
+							{
+								final JuspayEBSResponseModel jusPay = mplPaymentService.getEntryInAuditByOrder(auditId);
+								if (null != jusPay && null != jusPay.getEbsRiskLevel())
+								{
+									riskScore = jusPay.getEbsRiskLevel().getCode();
+									LOG.debug("-----------Payment Jusp Pay Risk");
+								}
+							}
+							catch (final Exception e)
+							{
+								LOG.debug("-----------JuspPay audit exception");
+							}
 						}
 					}
-					catch (final Exception e)
-					{
-						LOG.debug("-----------JuspPay audit exception");
-					}
 				}
-
+				else
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.ORDER_PAYMENT_ERROR);
+				}
 				reportDTO.setTransactionRefNo(transactionRef);
 				reportDTO.setRiskScore(riskScore);
 				reportDTO.setTransactionRefNumber(transactionRefGateway);
