@@ -544,10 +544,11 @@ display:none;
 		  </div>
 	 </c:if> --%>
 		<c:if test="${isNew=='true'}">
-	 	   <div style="z-index: 1;" class="new-product">
-	  		<span><img  id ="newProduct" class="new brush-strokes-sprite sprite-New" style="z-index:1; " src="${commonResourcePath}/images/transparent.png"></span> 
-	 	   </div>
-	 	  </c:if>
+		 <div id ="newProduct" style="z-index: 1;display:none;" class="new new-product">
+					<img class="brush-strokes-sprite sprite-New"
+					src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
+					</div>
+	 	   </c:if> 
 	   <c:if test="${isOnline=='true'}">
 		 	<div style="z-index: 1;" class="online-exclusive">
 					<img class="brush-strokes-sprite sprite-Vector_Smart_Object"

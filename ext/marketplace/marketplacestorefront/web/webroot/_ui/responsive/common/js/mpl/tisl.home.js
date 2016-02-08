@@ -134,6 +134,11 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
 });
 //
 
+var activePos = 0;
+$(window).on("resize load",function(){
+	activePos = ($(window).width() > 790)?3:1;
+});
+
 function getBrandsYouLoveAjaxCall() {
 	$
 			.ajax({
@@ -185,7 +190,7 @@ function getBrandsYouLoveAjaxCall() {
 						pagination:false,
 						itemsDesktop : [5000,7], 
 						itemsDesktopSmall : [1400,7], 
-						itemsTablet: [650,3], 
+						itemsTablet: [790,3], 
 						itemsMobile : [480,3], 
 						rewindNav: false,
 						lazyLoad:false,
@@ -195,12 +200,15 @@ function getBrandsYouLoveAjaxCall() {
 					
 					
 					var index = $(".home-brands-you-love-carousel-brands.active").parents('.owl-item').index()
-					if(index > 3) {
-						for(var i = 0; i < index - 3;i++) {
+					
+					
+					
+					if(index > activePos) {
+						for(var i = 0; i < index - activePos;i++) {
 							$(".home-brands-you-love-carousel .owl-wrapper").append($(".home-brands-you-love-carousel .owl-item").first());
 						}
-					} else if (index < 3) {
-						for(var i = 0; i < 3 - index;i++) {
+					} else if (index < activePos) {
+						for(var i = 0; i < activePos - index;i++) {
 							$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
 						}
 					}
@@ -335,15 +343,27 @@ $(document).on("click", ".home-brands-you-love-carousel-brands",
 			$(".home-brands-you-love-carousel-brands").removeClass('active');
 			$(this).addClass('active');
 			$('.home-brands-you-love-desc').remove();
-			//bulCount = $(this).parent().index();
+			var iw = $('.home-brands-you-love-carousel .owl-item').outerWidth();
 			var index = $(this).parents('.owl-item').index();
-			if(index > 3) {
-				for(var i = 0; i < index - 3;i++) {
+			if(index > activePos) {
+				for(var i = 0; i < index - activePos;i++) {
+					$("#brandsYouLove .owl-wrapper").css('transition','all 0.2s linear');
+					$("#brandsYouLove .owl-wrapper").css('transform','translate3d(-'+iw+'px, 0px, 0px)');
+					setTimeout(function(){
 					$(".home-brands-you-love-carousel .owl-wrapper").append($(".home-brands-you-love-carousel .owl-item").first());
+					$("#brandsYouLove .owl-wrapper").css('transition','all 0s linear');
+					$("#brandsYouLove .owl-wrapper").css('transform','translate3d(0px, 0px, 0px)');
+					},200);
 				}
-			} else if (index < 3) {
-				for(var i = 0; i < 3 - index;i++) {
+			} else if (index < activePos) {
+				for(var i = 0; i < activePos - index;i++) {
+					$("#brandsYouLove .owl-wrapper").css('transition','all 0.2s linear');
+					$("#brandsYouLove .owl-wrapper").css('transform','translate3d('+iw+'px, 0px, 0px)');
+					setTimeout(function(){
 					$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
+					$("#brandsYouLove .owl-wrapper").css('transition','all 0s linear');
+					$("#brandsYouLove .owl-wrapper").css('transform','translate3d(0px, 0px, 0px)');
+					},200);
 				}
 			}
 			var index = $(this).parents('.owl-item').index();
@@ -351,31 +371,55 @@ $(document).on("click", ".home-brands-you-love-carousel-brands",
 		});
 
 	$(document).on("click",".bulprev",function(){
-		$('.home-brands-you-love-desc').remove();
+		/*$('.home-brands-you-love-desc').remove();
 		$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
 		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
-		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(3).addClass('active');
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(activePos).addClass('active');
+		getBrandsYouLoveContentAjaxCall($(".home-brands-you-love-carousel-brands.active").attr('id'));*/
+	
+		var iw = $('.home-brands-you-love-carousel .owl-item').outerWidth();
+		$('.home-brands-you-love-desc').remove();
+		$("#brandsYouLove .owl-wrapper").css('transition','all 0.3s ease');
+		$("#brandsYouLove .owl-wrapper").css('transform','translate3d('+iw+'px, 0px, 0px)');
+		setTimeout(function(){
+		$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(activePos).addClass('active');
 		getBrandsYouLoveContentAjaxCall($(".home-brands-you-love-carousel-brands.active").attr('id'));
+		$("#brandsYouLove .owl-wrapper").css('transition','all 0s ease');
+		$("#brandsYouLove .owl-wrapper").css('transform','translate3d(0px, 0px, 0px)');
+		},300);
+	
 	}); 
 	
 	$(document).on("click",".bulnext",function(){
+		
+		var iw = $('.home-brands-you-love-carousel .owl-item').outerWidth();
 		$('.home-brands-you-love-desc').remove();
+		$("#brandsYouLove .owl-wrapper").css('transition','all 0.3s ease');
+		$("#brandsYouLove .owl-wrapper").css('transform','translate3d(-'+iw+'px, 0px, 0px)');
+		setTimeout(function(){
 		$(".home-brands-you-love-carousel .owl-wrapper").append($(".home-brands-you-love-carousel .owl-item").first());
 		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
-		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(3).addClass('active');
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(activePos).addClass('active');
 		getBrandsYouLoveContentAjaxCall($(".home-brands-you-love-carousel-brands.active").attr('id'));
+		$("#brandsYouLove .owl-wrapper").css('transition','all 0s ease');
+		$("#brandsYouLove .owl-wrapper").css('transform','translate3d(0px, 0px, 0px)');
+		},300);
+		
+		
 	});
 
 
 if($('#ia_site_page_id').val()=='homepage'){
 	
 
-setInterval(function() {
+/*setInterval(function() {
 
 $('.bulnext').click();
 
 }, 20000);
-}
+*/}
 
 
 
