@@ -60,9 +60,8 @@ import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
-import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
-import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -99,6 +98,9 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
+
+	@Resource(name = "homepageComponentService")
+	private HomepageComponentService homepageComponentService;
 
 	private static final String SEQUENCE_NUMBER = "SequenceNumber";
 	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
@@ -155,6 +157,8 @@ public class HomePageController extends AbstractPageController
 		JSONObject brandsYouLoveJson = new JSONObject();
 		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage",
 				"Section3Slot-Homepage", version);
+
+
 		if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
 		{
 			components = homepageSection3Slot.getCmsComponents();
@@ -309,91 +313,11 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
 	public JSONObject getBestPicks(@RequestParam("version") final String version)
 	{
-		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
-		final JSONObject bestPicks = new JSONObject();
+
+
 		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage("homepage",
 				"Section4CSlot-Homepage", version);
-
-		if (CollectionUtils.isNotEmpty(homepageSection4CSlot.getCmsComponents()))
-		{
-			components = homepageSection4CSlot.getCmsComponents();
-		}
-
-		for (final AbstractCMSComponentModel component : components)
-		{
-			if (component instanceof ImageCarouselComponentModel)
-			{
-				final ImageCarouselComponentModel bestPickCarouselComponent = (ImageCarouselComponentModel) component;
-				String title = "";
-				if (StringUtils.isNotEmpty(bestPickCarouselComponent.getTitle()))
-				{
-					title = bestPickCarouselComponent.getTitle();
-				}
-
-				bestPicks.put("title", title);
-
-				final JSONArray subComponentJsonArray = new JSONArray();
-				if (CollectionUtils.isNotEmpty(bestPickCarouselComponent.getCollectionItems()))
-				{
-					String imageURL = "";
-					String text = "";
-					String linkUrl = "#";
-
-					for (final CMSMediaParagraphComponentModel bestPickItem : bestPickCarouselComponent.getCollectionItems())
-					{
-						final JSONObject bestPickItemJson = new JSONObject();
-
-						if (null != bestPickItem)
-						{
-							if (null != bestPickItem.getMedia())
-							{
-								if (null != bestPickItem.getMedia().getURL() && StringUtils.isNotEmpty(bestPickItem.getMedia().getURL()))
-								{
-									imageURL = bestPickItem.getMedia().getURL();
-								}
-
-							}
-							else
-							{
-								LOG.info("No Media for this item");
-								imageURL = MISSING_IMAGE_URL;
-							}
-
-							bestPickItemJson.put("imageUrl", imageURL);
-
-							if (null != bestPickItem.getContent() && StringUtils.isNotEmpty(bestPickItem.getContent()))
-							{
-								text = bestPickItem.getContent();
-							}
-							else
-							{
-								LOG.info("No text for this item");
-							}
-							bestPickItemJson.put("text", text);
-
-							if (null != bestPickItem.getUrl() && StringUtils.isNotEmpty(bestPickItem.getUrl()))
-							{
-								linkUrl = bestPickItem.getUrl();
-							}
-							else
-							{
-								LOG.info("No URL for this item");
-							}
-							bestPickItemJson.put("url", linkUrl);
-							subComponentJsonArray.add(bestPickItemJson);
-
-						}
-						else
-						{
-							LOG.info("No instance of bestPickCarouselComponent found!!!");
-						}
-					}
-				}
-				bestPicks.put("subItems", subComponentJsonArray);
-
-			}
-		}
-		return bestPicks;
+		return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
 	}
 
 
