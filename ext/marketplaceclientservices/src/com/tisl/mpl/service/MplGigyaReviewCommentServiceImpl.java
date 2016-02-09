@@ -440,6 +440,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		int years = 0;
 		int months = 0;
 		int days = 0;
+		int updatedDays = 0;
 		//create calendar object for review day
 		final Calendar reviewDay = Calendar.getInstance();
 		//reviewDay.setTime(commentDateObj);
@@ -489,24 +490,32 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				months = 0;
 			}
 		}
-		if (days == 0)
+
+		if (months == 0)
 		{
-			formatedDate = "today";
-		}
-		else if (days == 1)
-		{
-			formatedDate = "a day ago";
+			if (days == 0)
+			{
+				formatedDate = "today";
+			}
+			else if (days == 1)
+			{
+				formatedDate = "a day ago";
+			}
+			else
+			{
+				final String fullDate = days + " " + "days ago" + updatedDays + " " + "months ago" + years + " " + "years ago";
+				LOG.debug(">>fullDate>> " + fullDate);
+				formatedDate = (days + " " + "days ago");
+			}
 		}
 		else
 		{
-			formatedDate = String.valueOf(days) + " " + "days ago";
-			final String fullDate = String.valueOf(days) + " " + "days ago" + months + " " + "months ago" + years + " "
-					+ "years ago";
+			updatedDays = (months * 30);
+			final String fullDate = days + " " + "days ago" + updatedDays + " " + "months ago" + years + " " + "years ago";
 			LOG.debug(">>fullDate>> " + fullDate);
+			formatedDate = (days + updatedDays) + " " + "days ago";
 		}
-
 		return formatedDate;
-
 	}
 
 	/**
