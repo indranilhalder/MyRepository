@@ -91,21 +91,17 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, sellerPriority.getIsActive().booleanValue(),
 								priorityMap, priorityMapList));
 
-						final int productPriorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
+						//	final int productPriorityLevel =
+						priorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
 						ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
 								sellerPriority.getSellerId())));
 						if (isValid)
 						{
 							priorityMapList.addAll(ussidList);
 						}
-						priorityMap
-								.putAll(getPriorityLevelData(ussidList, productPriorityLevel, isValid, priorityMap, priorityMapList));
+						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, isValid, priorityMap, priorityMapList));
 
 						priorityModelList.add(sellerPriority);
-
-						log.info(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
-								.append("prioritylevel").append(priorityLevel).toString());
-
 
 						//	validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel);
 
