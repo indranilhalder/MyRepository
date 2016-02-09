@@ -444,7 +444,7 @@
 																					</span>
 																					<c:if test="${not empty entryCancel.imeiDetails}"><span><b>Serial Number:</b> ${entryCancel.imeiDetails.serialNum}</span></c:if>
 																					<span class="sellerOrderNo"><b>
-																					<spring:theme code="text.orderHistory.seller.order.number" />:</b> 
+																					<spring:theme code="text.orderHistory.seller.order.number" /></b> 
 																					${subOrder.code}
 																					</span>
 																				</p>
@@ -558,7 +558,7 @@
 																					</span>
 																					<c:if test="${not empty entryCancel.imeiDetails}"><span><b>Serial Number:</b> ${entryCancel.imeiDetails.serialNum}</span></c:if>
 																					<span class="sellerOrderNo"><b>
-																					<spring:theme code="text.orderHistory.seller.order.number" />:</b> 
+																					<spring:theme code="text.orderHistory.seller.order.number" /></b> 
 																					${sellerOrder.code}
 																					</span>
 																				</p>
