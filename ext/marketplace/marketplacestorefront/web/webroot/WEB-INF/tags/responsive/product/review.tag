@@ -14,9 +14,10 @@
 		                 	<div class="image">
 			
 			            	 <c:if test="${product.isProductNew eq true}">
-					<img class="new brush-strokes-sprite sprite-New"
-					style="z-index: 1; display: block;"
-					src="/store/_ui/responsive/common/images/transparent.png"> </c:if> <a
+					<div style="z-index: 1;" class="new">
+					<img class="brush-strokes-sprite sprite-New"
+					src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
+					</div>  </c:if> <a
 					class="thumb" href="${productUrl}" title="${product.productTitle}"> <product:productPrimaryImage
 						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
 

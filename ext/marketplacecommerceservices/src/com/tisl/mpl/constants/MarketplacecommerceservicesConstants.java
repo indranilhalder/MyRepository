@@ -1331,6 +1331,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CAMPAIGN_URL_OFFER_IDENTIFIER = "/o/".intern();
 	public static final String CAMPAIGN_URL_OFFER_ID_URL = "?offer=".intern();
+	public static final String CAMPAIGN_FILE_PATH = "${HYBRIS_DATA_DIR}/feed/campaign".intern();
+
+
+	//For Special Price Updation
+	public static final String SPECIALPRICE_PROMOTIONS = "promotions".intern();
+	public static final String SPECIALPRICE_QUANTITY = "quantity".intern();
+	public static final String SPECIALPRICE_PRIORITY = "priority".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{
