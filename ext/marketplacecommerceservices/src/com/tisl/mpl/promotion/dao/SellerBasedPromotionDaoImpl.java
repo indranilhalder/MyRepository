@@ -31,6 +31,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	private static final String PRM = "{prm.";
 	private static final String PROMO = "{promo.";
 	private static final String APM = "{apm.";
+	private static final String QUERY_FROM = "FROM {";
 
 
 	@Autowired
@@ -48,7 +49,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		final String queryString = //
 		"SELECT {p:" + SellerInformationModel.PK
 				+ "} "//
-				+ "FROM {" + SellerInformationModel._TYPECODE + " AS p } where" + P + SellerInformationModel.SELLERARTICLESKU
+				+ QUERY_FROM + SellerInformationModel._TYPECODE + " AS p } where" + P + SellerInformationModel.SELLERARTICLESKU
 				+ "} = ?code and " + P + SellerInformationModel.CATALOGVERSION + "} = ?oModel";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
@@ -69,7 +70,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		final String queryString = //
 		"SELECT {prm:" + PriceRowModel.PK
 				+ "} "//
-				+ "FROM {" + PriceRowModel._TYPECODE + " AS prm } where" + PRM + PriceRowModel.SELLERARTICLESKU + "} = ?code and "
+				+ QUERY_FROM + PriceRowModel._TYPECODE + " AS prm } where" + PRM + PriceRowModel.SELLERARTICLESKU + "} = ?code and "
 				+ PRM + PriceRowModel.CATALOGVERSION + "} = ?oModel";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
@@ -90,7 +91,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		final String queryString = //
 		"SELECT {promo:" + AbstractPromotionModel.PK
 				+ "} "//
-				+ "FROM {" + AbstractPromotionModel._TYPECODE + " AS promo } where" + PROMO + AbstractPromotionModel.CODE
+				+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS promo } where" + PROMO + AbstractPromotionModel.CODE
 				+ "} = ?code";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
@@ -108,7 +109,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		final String queryString = //
 		"SELECT {apm:" + AbstractPromotionModel.PK
 				+ "} "//
-				+ "FROM {" + AbstractPromotionModel._TYPECODE + " AS apm } where" + APM + AbstractPromotionModel.ENABLED
+				+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS apm } where" + APM + AbstractPromotionModel.ENABLED
 				+ "} = ?true";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
