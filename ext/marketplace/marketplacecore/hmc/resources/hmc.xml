@@ -1115,14 +1115,39 @@
 			</editor>
 		</organizer>
 	</type>
-
+<type name="ProductPromotion" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.promotion.properties" mode="append">
+					<section name="section.promotion.products">
+						<listlayout>
+							<text name="text.productpromotion.productcodelisttitledescription" />
+							<attribute name="productCodeList" />
+							</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.media" mode="append">
+					<section name="section.promotion.media" mode="append">
+						<columnlayout>
+							<row>
+								<attribute name="productBanner" labelwidth="100">
+									<mediaeditor/>
+								</attribute>
+								<text name="text.productpromotion.productbanner" />
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
 
 	<!-- Tata Etail For Buy A get y Free -->
 	<type name="BuyXItemsofproductAgetproductBforfree" mode="append">
 		<organizer>
 			<editor mode="append">
 				<tab name="tab.promotion.properties" mode="append">
-					<section name="section.promotion.products">
+					<section name="section.promotion.products">							
 						<listlayout>
 							<text name="text.productpromotion.qualifyingproductscategories" />
 							<attribute name="products" labelwidth="100">
