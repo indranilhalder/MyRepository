@@ -206,7 +206,7 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 #### Home Pge and Help and Service slot 2B #######
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;name;cmsComponents(&componentRef)
-;;Section2BSlot-Homepage;true;Small Icons Section 2;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent,
+;;Section2BSlot-Homepage;true;Small Icons Section 2;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent,EveryWhereMediaParagraphComponent
 ;;Section2BSlot-helpservices;true;;CustomerFirstMediaParagraphComponent,DeliveryOnTimeMediaParagraphComponent
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
@@ -568,8 +568,8 @@ INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];masterTempla
 ;;StreetCategoryPage;ProductGridPageTemplate;
 
 # Site Logo
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
-;;/images/theme/logo-hybris-demo.png;logo-hybris-demo.png;$siteResource/images/theme/logo-hybris-demo.png;image/png;Tata Marketplace;
+#INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
+#;;/images/theme/logo-hybris-demo.png;logo-hybris-demo.png;$siteResource/images/theme/logo-hybris-demo.png;image/png;Tata Marketplace;
 
 
 ################## WESTSIDE BRAND LANDING PAGE #############################

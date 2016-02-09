@@ -134,13 +134,25 @@ $("a#myWishlistHeader").on("mouseover touchend", function(e) {
 });
 //
 
+var activePos = 0;
+$(window).on("resize load",function(){
+	activePos = ($(window).width() > 790)?3:1;
+});
+
 function getBrandsYouLoveAjaxCall() {
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 			.ajax({
 				type : "GET",
 				dataType : "json",
 				url : ACC.config.encodedContextPath + "/getBrandsYouLove",
-
+				data : dataString,
+				
 				success : function(response) {
 					console.log(response.subComponents);
 					defaultComponentId="";
@@ -185,13 +197,30 @@ function getBrandsYouLoveAjaxCall() {
 						pagination:false,
 						itemsDesktop : [5000,7], 
 						itemsDesktopSmall : [1400,7], 
-						itemsTablet: [650,3], 
+						itemsTablet: [790,3], 
 						itemsMobile : [480,3], 
 						rewindNav: false,
 						lazyLoad:false,
 						mouseDrag: false,
 						touchDrag: false
 					});
+					
+					
+					var index = $(".home-brands-you-love-carousel-brands.active").parents('.owl-item').index()
+					
+					
+					
+					if(index > activePos) {
+						for(var i = 0; i < index - activePos;i++) {
+							$(".home-brands-you-love-carousel .owl-wrapper").append($(".home-brands-you-love-carousel .owl-item").first());
+						}
+					} else if (index < activePos) {
+						for(var i = 0; i < activePos - index;i++) {
+							$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
+						}
+					}
+					
+					
 				}
 			});
 }
@@ -202,7 +231,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 			&& (html = window.localStorage.getItem("brandContent-" + id)) && html != "") {
 		// console.log("Local");
 		$(".home-brands-you-love-carousel").css("margin-bottom","20px");
-		$('#brandsYouLove').append(defaultHtml);
+		//$('#brandsYouLove').append(defaultHtml);
 		$('.home-brands-you-love-desc').remove();
 		$('#brandsYouLove').append(decodeURI(html));
 	}
@@ -214,7 +243,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 				dataType : "json",
 				beforeSend: function(){
 					$(".home-brands-you-love-carousel").css("margin-bottom","120px");
-					$("#brandsYouLove").append("<div id='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 49%;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
+					$("#brandsYouLove").append("<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
                 },
 				url : ACC.config.encodedContextPath
 						+ "/getBrandsYouLoveContent",
@@ -270,7 +299,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					}
 
 					defaultHtml += "</div>";
-					$('#loaderDiv').remove();
+					$('#brandsYouLove .loaderDiv').remove();
 					$(".home-brands-you-love-carousel").css("margin-bottom","20px");
 					
 					$('#brandsYouLove').append(defaultHtml);
@@ -280,7 +309,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 
 				},
 				error : function() {
-					$('#loaderDiv').remove();
+					$('#brandsYouLove .loaderDiv').remove();
 					$(".home-brands-you-love-carousel").css("margin-bottom","20px");
 					console.log("Error while getting brands you love content");
 				}
@@ -321,76 +350,72 @@ $(document).on("click", ".home-brands-you-love-carousel-brands",
 			$(".home-brands-you-love-carousel-brands").removeClass('active');
 			$(this).addClass('active');
 			$('.home-brands-you-love-desc').remove();
-			//bulCount = $(this).parent().index();
+			var iw = $('.home-brands-you-love-carousel .owl-item').outerWidth();
 			var index = $(this).parents('.owl-item').index();
-			var iw = $(".home-brands-you-love-carousel .owl-wrapper .owl-item").outerWidth();
-			
-			if(index > 3 && index < $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-3) {
-				$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(-"+iw*(index - 3)+"px, 0px, 0px)");
-			} else if( index <= 3) {
-				$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(0px, 0px, 0px)");
-			} else if( index >= $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-3) {
-				$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(-"+iw*($(".home-brands-you-love-carousel .owl-wrapper .owl-item").length - 7)+"px, 0px, 0px)");
+			if(index > activePos) {
+				for(var i = 0; i < index - activePos;i++) {
+					$("#brandsYouLove .owl-wrapper").css('transition','all 0.2s linear');
+					$("#brandsYouLove .owl-wrapper").css('transform','translate3d(-'+iw+'px, 0px, 0px)');
+					setTimeout(function(){
+					$(".home-brands-you-love-carousel .owl-wrapper").append($(".home-brands-you-love-carousel .owl-item").first());
+					$("#brandsYouLove .owl-wrapper").css('transition','all 0s linear');
+					$("#brandsYouLove .owl-wrapper").css('transform','translate3d(0px, 0px, 0px)');
+					},200);
+				}
+			} else if (index < activePos) {
+				for(var i = 0; i < activePos - index;i++) {
+					$("#brandsYouLove .owl-wrapper").css('transition','all 0.2s linear');
+					$("#brandsYouLove .owl-wrapper").css('transform','translate3d('+iw+'px, 0px, 0px)');
+					setTimeout(function(){
+					$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
+					$("#brandsYouLove .owl-wrapper").css('transition','all 0s linear');
+					$("#brandsYouLove .owl-wrapper").css('transform','translate3d(0px, 0px, 0px)');
+					},200);
+				}
 			}
+			var index = $(this).parents('.owl-item').index();
 			getBrandsYouLoveContentAjaxCall($(this).attr("id"));
 		});
-$(document).on("click",".bulprev",function(){
-	
-	var index = $(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands.active").parents('.owl-item').index();
-	var iw = $(".home-brands-you-love-carousel .owl-wrapper .owl-item").outerWidth();
 
-	if(index != 0) {
-		$(this).removeClass('disabled')
+	$(document).on("click",".bulprev",function(){
+		/*$('.home-brands-you-love-desc').remove();
+		$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(activePos).addClass('active');
+		getBrandsYouLoveContentAjaxCall($(".home-brands-you-love-carousel-brands.active").attr('id'));*/
+	
+		var iw = $('.home-brands-you-love-carousel .owl-item').outerWidth();
 		$('.home-brands-you-love-desc').remove();
-		 $(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
-		$(".home-brands-you-love-carousel .owl-item").eq(index-1).find('.home-brands-you-love-carousel-brands').addClass('active');
-		if(index > 3 && index < $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-3) {
-			$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(-"+iw*(index - 4)+"px, 0px, 0px)");
-		}
-		 var componentId = $(".home-brands-you-love-carousel-brands").eq(index-1).attr('id');
-		 getBrandsYouLoveContentAjaxCall(componentId);
-	}
-
+		$("#brandsYouLove .owl-wrapper").css('transition','all 0.3s ease');
+		$("#brandsYouLove .owl-wrapper").css('transform','translate3d('+iw+'px, 0px, 0px)');
+		setTimeout(function(){
+		$(".home-brands-you-love-carousel .owl-wrapper").prepend($(".home-brands-you-love-carousel .owl-item").last());
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(activePos).addClass('active');
+		getBrandsYouLoveContentAjaxCall($(".home-brands-you-love-carousel-brands.active").attr('id'));
+		$("#brandsYouLove .owl-wrapper").css('transition','all 0s ease');
+		$("#brandsYouLove .owl-wrapper").css('transform','translate3d(0px, 0px, 0px)');
+		},300);
 	
-	/*if(index < 2) {
-		$(this).removeClass('disabled');
-	} else {
-		$('.bulnext').removeClass('disabled');
-		$(this).addClass('disabled');
-	}
-	*/
-}); 
-
-$(document).on("click",".bulnext",function(){
+	}); 
 	
-	var index = $(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands.active").parents('.owl-item').index();
-	var iw = $(".home-brands-you-love-carousel .owl-wrapper .owl-item").outerWidth();
-
-	if(index != $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-1) {
+	$(document).on("click",".bulnext",function(){
 		
+		var iw = $('.home-brands-you-love-carousel .owl-item').outerWidth();
 		$('.home-brands-you-love-desc').remove();
-		 $(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
-		$(".home-brands-you-love-carousel .owl-item").eq(index+1).find('.home-brands-you-love-carousel-brands').addClass('active');
-		if(index > 2 && index < $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-4) {
-			$(".home-brands-you-love-carousel .owl-wrapper").css("transform","translate3d(-"+iw*(index - 2)+"px, 0px, 0px)");
-		}
+		$("#brandsYouLove .owl-wrapper").css('transition','all 0.3s ease');
+		$("#brandsYouLove .owl-wrapper").css('transform','translate3d(-'+iw+'px, 0px, 0px)');
+		setTimeout(function(){
+		$(".home-brands-you-love-carousel .owl-wrapper").append($(".home-brands-you-love-carousel .owl-item").first());
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").removeClass('active');
+		$(".home-brands-you-love-carousel .home-brands-you-love-carousel-brands").eq(activePos).addClass('active');
+		getBrandsYouLoveContentAjaxCall($(".home-brands-you-love-carousel-brands.active").attr('id'));
+		$("#brandsYouLove .owl-wrapper").css('transition','all 0s ease');
+		$("#brandsYouLove .owl-wrapper").css('transform','translate3d(0px, 0px, 0px)');
+		},300);
 		
-		var componentId = $(".home-brands-you-love-carousel-brands").eq(index+1).attr('id');
-		getBrandsYouLoveContentAjaxCall(componentId);
-	
-	}
-	
-	/*if(index > $(".home-brands-you-love-carousel .owl-wrapper .owl-item").length-2) {
-		$(this).removeClass('disabled')
-	} else {
-		$('.bulprev').removeClass('disabled');
-		$(this).addClass('disabled');
-	}*/
-
-	
-}); 
-
-
+		
+	});
 
 
 if($('#ia_site_page_id').val()=='homepage'){
@@ -398,18 +423,10 @@ if($('#ia_site_page_id').val()=='homepage'){
 
 /*setInterval(function() {
 
-	$(".home-brands-you-love-carousel-brands").removeClass('active');
-	$(".home-brands-you-love-carousel-brands").eq(bulCount).addClass('active');
-	componentId = $(".home-brands-you-love-carousel-brands").eq(bulCount).attr(
-			'id');
-	getBrandsYouLoveContentAjaxCall(componentId);
-	bulCount++;
-	if (bulCount == $(".home-brands-you-love-carousel-brands").length) {
-		bulCount = 0;
-	}
+$('.bulnext').click();
 
-}, 20000);*/
-}
+}, 20000);
+*/}
 
 
 
@@ -420,11 +437,18 @@ if ($('#bestPicks').children().length == 0 && $('#ia_site_page_id').val()=='home
 
 
 function getBestPicksAjaxCall(){
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getBestPicks",
+		data : dataString,
 		
 		success : function(response) {
 			renderHtml = "<h1>" + response.title + "</h1>"
@@ -490,11 +514,18 @@ if ($('#productYouCare').children().length == 0 && $('#ia_site_page_id').val()==
 }
 
 function getProductsYouCareAjaxCall(){
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getProductsYouCare",
+		data : dataString,
 		
 		success : function(response) {
 			
@@ -554,13 +585,19 @@ function getProductsYouCareAjaxCall(){
 //AJAX CALL PRODUCTS YOU CARE END
 
 function getNewAndExclusiveAjaxCall(){
-	
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getNewAndExclusive",
-
+		data : dataString,
+		
 		success : function(response) {
 			
 		
@@ -614,11 +651,18 @@ if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=
 
 /* Promotional Banner Section starts */
 function getPromoBannerHomepage(){
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getPromoBannerHomepage",
+		data : dataString,
 
 		success : function(response) {
 			console.log(response.bannerImage);
@@ -655,18 +699,23 @@ if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').va
 
 /* StayQued Section starts */
 function getStayQuedHomepage(){
-	//alert("1111="+ACC.config.commonResourcePath);
-	//alert("222222="+ACC.config.themeResourcePath);
-	//alert("33333="+ACC.config.siteResourcePath);
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getStayQuedHomepage",
-
+		data : dataString,
+		
 		success : function(response) {
 			console.log(response.bannerImage);
 			var defaultHtml = "";
+			var linkText = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
 			var bannerAltText = response.bannerAltText;
@@ -674,7 +723,12 @@ function getStayQuedHomepage(){
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
-			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">'+promoText2+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
+			if($(promoText2).is('p')){
+				linkText = $(promoText2).text();
+			} else {
+				linkText = promoText2;
+			}
+			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">'+linkText+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},
@@ -705,12 +759,19 @@ if ($('#showcase').children().length == 0 && $('#ia_site_page_id').val()=='homep
 
 // AJAX call for Showcase
 function getShowCaseAjaxCall() {
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 			.ajax({
 				type : "GET",
 				dataType : "json",
 				url : ACC.config.encodedContextPath + "/getCollectionShowcase",
-
+				data : dataString,
+				
 				success : function(response) {
 					console.log(response.subComponents);
 					defaultComponentId="";
@@ -757,7 +818,10 @@ function getShowcaseContentAjaxCall(id) {
 			.ajax({
 				type : "GET",
 				dataType : "json",
-				
+				beforeSend: function(){
+					$(".showcase-switch").css("margin-bottom","80px");
+					$("#showcase").append("<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
+                },
 				url : ACC.config.encodedContextPath
 						+ "/getShowcaseContent",
 				data : {
@@ -799,6 +863,8 @@ function getShowcaseContentAjaxCall(id) {
 
 					defaultHtml += "</div>";
 					
+					$('#showcase .loaderDiv').remove();
+					$(".showcase-switch").css("margin-bottom","0px");
 					$('#showcase').append(defaultHtml);
 					
 					window.localStorage.setItem("showcaseContent-" + id,
@@ -807,6 +873,8 @@ function getShowcaseContentAjaxCall(id) {
 				},
 				error : function() {
 					console.log("Error while getting showcase content");
+					$('#showcase .loaderDiv').remove();
+					$(".showcase-switch").css("margin-bottom","0px");
 				}
 			});
 	}
