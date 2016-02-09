@@ -13,23 +13,18 @@ import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,26 +145,48 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											}
 
 
-											try
-											{
-												final URL url = new URL(ImageUrl);
+											/*
+											 * try {
+											 */
 
-												final BufferedImage bimg = ImageIO.read(url);
-												final int width = bimg.getWidth();
-												final int height = bimg.getHeight();
+											// Sets the authenticator that will be used by the networking code
+											// when a proxy or an HTTP server asks for authentication.
 
-												final String size = String.valueOf(width) + " X " + String.valueOf(height);
+											/*
+											 * Authenticator.setDefault(new Authenticator() {
+											 *
+											 * @Override public PasswordAuthentication getPasswordAuthentication() { final String
+											 * username = "siteadmin"; final String password = "ASDF!@#$asdf1234";
+											 * LOG.info("Authenticating Login......"); return new PasswordAuthentication(username,
+											 * password.toCharArray());
+											 *
+											 * } });
+											 */
 
-												automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-												automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
 
-												campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-												campaignDataSeqBanner.setSize(size);
-											}
-											catch (final Exception e)
-											{
-												e.getMessage();
-											}
+											//	final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
+											/*
+											 * final URL url = new URL(ImageUrl);
+											 * 
+											 * LOG.info("Trying to access url:::::" + url.toString() + "URI" + url.toURI());
+											 * 
+											 * final BufferedImage bimg = ImageIO.read(url.openStream()); final int width =
+											 * bimg.getWidth(); final int height = bimg.getHeight();
+											 * 
+											 * final String size = String.valueOf(width) + " X " + String.valueOf(height);
+											 * 
+											 * automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
+											 */
+											automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+
+											campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+											//campaignDataSeqBanner.setSize(size);
+											//}
+											/*
+											 * catch (final MalformedURLException e) { LOG.error("Malformed URL: " +
+											 * e.getMessage()); } catch (final IOException e) { LOG.error("IO Exception: " +
+											 * e.getMessage()); }
+											 */
 										}
 									}
 
@@ -236,14 +253,23 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									try
 									{
 
-										final URL url = new URL(ImageUrl);
+										// Sets the authenticator that will be used by the networking code
+										// when a proxy or an HTTP server asks for authentication.
+										Authenticator.setDefault(new CustomAuthenticator());
 
 
-										final BufferedImage bimg = ImageIO.read(url);
-										final int width = bimg.getWidth();
-										final int height = bimg.getHeight();
 
-										final String size = String.valueOf(width) + " X " + String.valueOf(height);
+										//final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
+
+										/*
+										 * final URL url = new URL(ImageUrl);
+										 *
+										 * final BufferedImage bimg = ImageIO.read(url.openStream());
+										 *
+										 * final int width = bimg.getWidth(); final int height = bimg.getHeight();
+										 *
+										 * final String size = String.valueOf(width) + " X " + String.valueOf(height);
+										 */
 
 
 
@@ -251,11 +277,15 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										automationMap.put("size", bigPromoBanner.getBannerImage().getInternalURL().toString());
 
 										campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-										campaignDataBigPromoBanner.setSize(size);
+										//campaignDataBigPromoBanner.setSize(size);
 
 
 										CampaignDataList.add(campaignDataBigPromoBanner);
 									}
+									/*
+									 * catch (final MalformedURLException e) { LOG.error("Malformed URL: " + e.getMessage()); }
+									 * catch (final IOException e) { LOG.error("IO Exception: " + e.getMessage()); }
+									 */
 									catch (final Exception e)
 									{
 										LOG.error(e.getMessage());
@@ -313,22 +343,38 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									try
 									{
 
-										final URL url = new URL(ImageUrl);
+										// Sets the authenticator that will be used by the networking code
+										// when a proxy or an HTTP server asks for authentication.
+										//CustomAuthenticator.getPasswordAuthentication();
+										//final CustomAuthenticator customAuth = new CustomAuthenticator();
+										//Authenticator.setDefault(new CustomAuthenticator());
 
 
-										final BufferedImage bimg = ImageIO.read(url);
-										final int width = bimg.getWidth();
-										final int height = bimg.getHeight();
 
-										final String size = String.valueOf(width) + " X " + String.valueOf(height);
+										//final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
+										/*
+										 * final URL url = new URL(ImageUrl);
+										 * 
+										 * 
+										 * final BufferedImage bimg = ImageIO.read(url.openStream());
+										 * 
+										 * LOG.info("Connection Successful!!!!!!!"); final int width = bimg.getWidth(); final int
+										 * height = bimg.getHeight();
+										 * 
+										 * final String size = String.valueOf(width) + " X " + String.valueOf(height);
+										 */
 
 										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
 										automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
 
 										campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-										campaignDataBigFourPromoBanner.setSize(size);
+										//campaignDataBigFourPromoBanner.setSize(size);
 
 									}
+									/*
+									 * catch (final MalformedURLException e) { LOG.error("Malformed URL: " + e.getMessage()); }
+									 * catch (final IOException e) { LOG.error("IO Exception: " + e.getMessage()); }
+									 */
 									catch (final Exception e)
 									{
 										LOG.error(e.getMessage());
@@ -529,17 +575,43 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	protected String getOutputFilePath()
 	{
 
-		final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
-		final String timestamp = df.format(new Date());
+		//final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
+		//final String timestamp = df.format(new Date());
 		final StringBuilder output_file_path = new StringBuilder();
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path", ""));
 		output_file_path.append(File.separator);
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix", ""));
 		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
-		output_file_path.append(timestamp);
+		//output_file_path.append(timestamp);
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension", ""));
 
 		return output_file_path.toString();
+	}
+
+	public static class CustomAuthenticator extends Authenticator
+	{
+
+		// Called when password authorization is needed
+		@Override
+		protected PasswordAuthentication getPasswordAuthentication()
+		{
+			System.out.println("=======+++++++++===============================");
+
+			// Get information about the request
+
+
+
+
+
+			final String username = "siteadmin";
+			final String password = "ASDF!@#$asdf1234";
+
+
+			// Return the information (a data holder that is used by Authenticator)
+			return new PasswordAuthentication(username, password.toCharArray());
+
+		}
+
 	}
 
 }
