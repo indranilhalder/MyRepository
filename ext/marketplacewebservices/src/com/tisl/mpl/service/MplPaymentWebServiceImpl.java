@@ -310,9 +310,9 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * "getPaymentMode : paymentMode  JSON Response : " + paymentMode); // Payment Mode Map final Map<String, Double>
 	 * paymentModeMap = new HashMap<String, Double>(); try { final JSONObject rec_paymode = (JSONObject)
 	 * JSONValue.parse(paymentMode);
-	 * 
+	 *
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response : " + rec_paymode);
-	 * 
+	 *
 	 * // Fetch Details from Json final String debit = rec_paymode.get(MarketplacewebservicesConstants.DEBIT) != null ?
 	 * rec_paymode.get( MarketplacewebservicesConstants.DEBIT).toString() :
 	 * MarketplacewebservicesConstants.DECIMALULLCHK; final String credit =
@@ -322,10 +322,10 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * MarketplacewebservicesConstants.EMI).toString() : MarketplacewebservicesConstants.DECIMALULLCHK; final String
 	 * netBanking = rec_paymode.get(MarketplacewebservicesConstants.NETBANKING) != null ? rec_paymode.get(
 	 * MarketplacewebservicesConstants.NETBANKING).toString() : MarketplacewebservicesConstants.DECIMALULLCHK;
-	 * 
+	 *
 	 * // Get data in Double value final Double debit_amt = new Double(debit); final Double credit_amt = new
 	 * Double(credit); final Double emi_amt = new Double(emi); final Double net_amt = new Double(netBanking);
-	 * 
+	 *
 	 * // Validate Payment Mode Value and set value into map if (debit != MarketplacewebservicesConstants.DECIMALULLCHK)
 	 * { paymentModeMap.put(MarketplacewebservicesConstants.DEBIT, debit_amt); } if (credit !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.CREDIT,
@@ -333,7 +333,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * paymentModeMap.put(MarketplacewebservicesConstants.EMI, emi_amt); } if (netBanking !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.NETBANKING,
 	 * net_amt); }
-	 * 
+	 *
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response paymentModeMap : " + paymentModeMap); } catch (final
 	 * EtailBusinessExceptions | EtailNonBusinessExceptions e) { throw e; } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } // returns a Map return
@@ -476,7 +476,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 
 				// Validate Payment Mode not null
 				if (!paymentMode.contains(MarketplacewebservicesConstants.COD)
-						&& !paymentMode.contains(MarketplacewebservicesConstants.INPUTNULL))
+						&& !paymentMode.contains(MarketplacewebservicesConstants.INPUTNULLDATA))
 				{
 					final UserModel user = getExtendedUserService().getUserForOriginalUid(userID);
 
@@ -558,10 +558,12 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 		}
 		catch (final EtailBusinessExceptions | EtailNonBusinessExceptions e)
 		{
+			LOG.error("updateCardTransactionDetails mobile WS " + e.getMessage());
 			throw e;
 		}
 		catch (final Exception e)
 		{
+			LOG.error("updateCardTransactionDetails mobile WS " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 

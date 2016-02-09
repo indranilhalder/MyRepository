@@ -844,6 +844,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9210 = "B9210";
 	public static final String B9211 = "B9211";
 	public static final String B9212 = "B9212";
+	public static final String B9213 = "B9213";
+	public static final String B9214 = "B9214";
+	public static final String B9215 = "B9215";
+	public static final String B9216 = "B9216";
+	public static final String B9217 = "B9217";
+	public static final String B9218 = "B9218";
 
 
 	//Search error codes ends
