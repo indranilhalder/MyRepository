@@ -1882,6 +1882,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final String ebsDowntime = getConfigurationService().getConfiguration().getString("payment.ebs.downtime");
 			final Map<String, Double> paymentMode = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.PAYMENTMODE);
+			if (null != paymentMode)
+			{
+				LOG.debug("updateAuditEntry method" + paymentMode);
+			}
+			else
+			{
+
+				LOG.error("payment mode is null    ------->" + orderStatusResponse.getOrderId());
+			}
 
 			if (null != auditModel)
 			{
@@ -1902,12 +1911,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//Condition when RiskResponse is available in OrderStatusResponse
 				if (null != orderStatusResponse.getRiskResponse())
 				{
+					LOG.debug("orderStatusResponse status ------> " + orderStatusResponse.getStatus());
 					//Condition when PG Response status is available and charged
 					if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
 							&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
 					{
 						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
 						{
+							LOG.debug("orderStatusResponse getRiskResponse ------> "
+									+ orderStatusResponse.getRiskResponse().getEbsRiskLevel());
+
 							//Condition when RiskLevel is GREEN
 							if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
 									.equalsIgnoreCase(MarketplacecommerceservicesConstants.GREEN))
@@ -1956,7 +1969,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						auditEntry.setStatus(MplPaymentAuditStatusEnum.DECLINED);
 						auditModel.setIsExpired(Boolean.TRUE);
 					}
-
+					LOG.debug("auditEntry status risk ne null------> " + auditEntry.getStatus());
 
 					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry()))
 					{
@@ -2024,6 +2037,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 								if (entry.getKey() != null
 										&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
 								{
+									LOG.debug("Payment mode netbanking ------> " + orderStatusResponse.getOrderId());
+
 									auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
 									auditModel.setIsExpired(Boolean.TRUE);
 									netBanking = true;
@@ -2033,6 +2048,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							// For credit card/debit card and emi , if risk block is not available
 							if (!netBanking)
 							{
+								LOG.debug("Payment mode not netbanking and no risk block present ------> "
+										+ orderStatusResponse.getOrderId());
+
 								auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
 								juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
 							}
@@ -2047,6 +2065,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 
 				auditEntry.setResponseDate(new Date());
+
+				LOG.debug("auditEntry status risk null------> " + auditEntry.getStatus());
 
 				getModelService().save(auditEntry);
 				auditEntryList.add(auditEntry);
