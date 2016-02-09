@@ -20,7 +20,6 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
-import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
@@ -53,8 +52,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.core.enums.ShowCaseLayout;
-import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
-import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
@@ -63,7 +60,6 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
-import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
@@ -512,7 +508,8 @@ public class HomePageController extends AbstractPageController
 		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
 				"Section4ASlot-Homepage", version);
 
-		return getJsonBanner(homepageSection4ASlot, "promo");
+		//return getJsonBanner(homepageSection4ASlot, "promo");
+		return homepageComponentService.getJsonBanner(homepageSection4ASlot, "promo");
 	}
 
 	/* Home Page StayQued */
@@ -522,170 +519,11 @@ public class HomePageController extends AbstractPageController
 	{
 		final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
 				"Section5ASlot-Homepage", version);
-		return getJsonBanner(homepageSection5ASlot, "stayQued");
+		//return getJsonBanner(homepageSection5ASlot, "stayQued");
+		return homepageComponentService.getJsonBanner(homepageSection5ASlot, "stayQued");
 
 	}
 
-
-	public JSONObject getJsonBanner(final ContentSlotModel slot, final String compType)
-	{
-		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
-		final JSONObject bannerJson = new JSONObject();
-		String seqNum = null;
-		if ("promo".equalsIgnoreCase(compType))
-		{
-			seqNum = SEQUENCE_NUMBER;
-		}
-		else
-		{
-			seqNum = SEQUENCE_NUMBER_STAYQUED;
-		}
-		if (CollectionUtils.isNotEmpty(slot.getCmsComponents()))
-		{
-			components = slot.getCmsComponents();
-		}
-
-		for (final AbstractCMSComponentModel component : components)
-		{
-			LOG.info("Component>>>>with id :::" + component.getUid());
-			if (component instanceof MplSequentialBannerComponentModel)
-			{
-				final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
-				//final int firstSequenceNumber = 1;
-				//Show the default banner for a new session
-				int setNum = 0;
-				LOG.info("Session value :::" + sessionService.getAttribute(seqNum));
-				if (sessionService.getAttribute(seqNum) == null)
-				{
-					setNum = 1;
-				}
-				else
-				{
-					final int lastSequenceNumber = (int) sessionService.getAttribute(seqNum);
-					final int nextSequenceNumber = lastSequenceNumber + 1;
-
-					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) != null)
-					{
-						setNum = nextSequenceNumber;
-					}
-					else
-					{
-						setNum = 1;
-					}
-
-
-				}
-
-
-				if (getBannerforSequenceNumber(setNum, promoBanner) instanceof MplBigPromoBannerComponentModel)
-				{
-					final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
-							setNum, promoBanner);
-					if (bannerImage.getBannerImage() != null)
-					{
-						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
-					}
-					else
-					{
-						bannerJson.put("bannerImage", "");
-						bannerJson.put("bannerAltText", "");
-					}
-
-					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					bannerJson.put("promoText1", bannerImage.getMajorPromoText());
-					bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
-					bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
-
-				}
-
-				if (getBannerforSequenceNumber(setNum, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
-				{
-					final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
-							setNum, promoBanner);
-
-					if (bannerImage.getBannerImage() != null)
-					{
-						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
-					}
-					else
-					{
-						bannerJson.put("bannerImage", "");
-						bannerJson.put("bannerAltText", "");
-					}
-					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
-					bannerJson.put("promoText1", bannerImage.getPromoText1());
-					bannerJson.put("promoText2", bannerImage.getPromoText2());
-					bannerJson.put("promoText3", bannerImage.getPromoText3());
-					bannerJson.put("promoText4", bannerImage.getPromoText4());
-				}
-
-				sessionService.setAttribute(seqNum, setNum);
-
-
-
-			}
-		}
-
-
-		return bannerJson;
-	}
-
-
-
-	/**
-	 * This method takes the sequence number and fetches the banner for that sequence number
-	 *
-	 * @param sequenceNumber
-	 * @param component
-	 * @return displayBanner
-	 */
-	private BannerComponentModel getBannerforSequenceNumber(final int sequenceNumber,
-			final MplSequentialBannerComponentModel component)
-	{
-		BannerComponentModel displayBanner = null;
-		if (component.getBannersList() != null)
-		{
-			for (final BannerComponentModel banner : component.getBannersList())
-			{
-
-				if (banner instanceof MplBigPromoBannerComponentModel)
-				{
-					final MplBigPromoBannerComponentModel promoBanner = (MplBigPromoBannerComponentModel) banner;
-
-					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
-					{
-						displayBanner = banner;
-					}
-
-					/*
-					 * if ("stayQued".equalsIgnoreCase(sq)) { if (promoBanner.getSeqNumForStayQued() ==
-					 * Integer.valueOf(sequenceNumber)) { displayBanner = banner; } } else { if
-					 * (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber)) { displayBanner = banner; } }
-					 */
-
-				}
-				if (banner instanceof MplBigFourPromoBannerComponentModel)
-				{
-					final MplBigFourPromoBannerComponentModel promoBanner = (MplBigFourPromoBannerComponentModel) banner;
-
-					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
-					{
-						displayBanner = banner;
-					}
-					/*
-					 * if ("stayQued".equalsIgnoreCase(sq)) { if (promoBanner.getSeqNumForStayQued() ==
-					 * Integer.valueOf(sequenceNumber)) { displayBanner = banner; } } else { if
-					 * (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber)) { displayBanner = banner; } }
-					 */
-
-				}
-			}
-
-		}
-		return displayBanner;
-	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getCollectionShowcase", method = RequestMethod.GET)

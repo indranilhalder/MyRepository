@@ -5,11 +5,15 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
+import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -17,10 +21,13 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
 import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
+import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 
 
 /**
@@ -29,6 +36,8 @@ import com.tisl.mpl.model.cms.components.ImageCarouselComponentModel;
  */
 public class HomepageComponentServiceImpl implements HomepageComponentService
 {
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
 
 	private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
@@ -146,14 +155,6 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 
 	@Override
-	public JSONObject getStayQuedComponentJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
-	{
-		// YTODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
 	public JSONObject getNewandExclusiveJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
 	{
 		// YTODO Auto-generated method stub
@@ -169,11 +170,164 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	}
 
 
+
 	@Override
-	public JSONObject getPromoBannerJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
+	public JSONObject getJsonBanner(final ContentSlotModel slot, final String compType)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject bannerJson = new JSONObject();
+		String seqNum = null;
+		if ("promo".equalsIgnoreCase(compType))
+		{
+			seqNum = SEQUENCE_NUMBER;
+		}
+		else
+		{
+			seqNum = SEQUENCE_NUMBER_STAYQUED;
+		}
+		if (CollectionUtils.isNotEmpty(slot.getCmsComponents()))
+		{
+			components = slot.getCmsComponents();
+		}
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			LOG.info("Component>>>>with id :::" + component.getUid());
+			if (component instanceof MplSequentialBannerComponentModel)
+			{
+				final MplSequentialBannerComponentModel promoBanner = (MplSequentialBannerComponentModel) component;
+				//final int firstSequenceNumber = 1;
+				//Show the default banner for a new session
+				int setNum = 0;
+				LOG.info("Session value :::" + sessionService.getAttribute(seqNum));
+				if (sessionService.getAttribute(seqNum) == null)
+				{
+					setNum = 1;
+				}
+				else
+				{
+					final int lastSequenceNumber = (int) sessionService.getAttribute(seqNum);
+					final int nextSequenceNumber = lastSequenceNumber + 1;
+
+					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) != null)
+					{
+						setNum = nextSequenceNumber;
+					}
+					else
+					{
+						setNum = 1;
+					}
+
+
+				}
+
+
+				if (getBannerforSequenceNumber(setNum, promoBanner) instanceof MplBigPromoBannerComponentModel)
+				{
+					final MplBigPromoBannerComponentModel bannerImage = (MplBigPromoBannerComponentModel) getBannerforSequenceNumber(
+							setNum, promoBanner);
+					if (bannerImage.getBannerImage() != null)
+					{
+						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+					}
+					else
+					{
+						bannerJson.put("bannerImage", "");
+						bannerJson.put("bannerAltText", "");
+					}
+
+					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+					bannerJson.put("promoText1", bannerImage.getMajorPromoText());
+					bannerJson.put("promoText2", bannerImage.getMinorPromo1Text());
+					bannerJson.put("promoText3", bannerImage.getMinorPromo2Text());
+
+				}
+
+				if (getBannerforSequenceNumber(setNum, promoBanner) instanceof MplBigFourPromoBannerComponentModel)
+				{
+					final MplBigFourPromoBannerComponentModel bannerImage = (MplBigFourPromoBannerComponentModel) getBannerforSequenceNumber(
+							setNum, promoBanner);
+
+					if (bannerImage.getBannerImage() != null)
+					{
+						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+					}
+					else
+					{
+						bannerJson.put("bannerImage", "");
+						bannerJson.put("bannerAltText", "");
+					}
+					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
+					bannerJson.put("promoText1", bannerImage.getPromoText1());
+					bannerJson.put("promoText2", bannerImage.getPromoText2());
+					bannerJson.put("promoText3", bannerImage.getPromoText3());
+					bannerJson.put("promoText4", bannerImage.getPromoText4());
+				}
+
+				sessionService.setAttribute(seqNum, setNum);
+
+
+
+			}
+		}
+
+
+		return bannerJson;
+	}
+
+	/**
+	 * This method takes the sequence number and fetches the banner for that sequence number
+	 *
+	 * @param sequenceNumber
+	 * @param component
+	 * @return displayBanner
+	 */
+	private BannerComponentModel getBannerforSequenceNumber(final int sequenceNumber,
+			final MplSequentialBannerComponentModel component)
+	{
+		BannerComponentModel displayBanner = null;
+		if (component.getBannersList() != null)
+		{
+			for (final BannerComponentModel banner : component.getBannersList())
+			{
+
+				if (banner instanceof MplBigPromoBannerComponentModel)
+				{
+					final MplBigPromoBannerComponentModel promoBanner = (MplBigPromoBannerComponentModel) banner;
+
+					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
+					{
+						displayBanner = banner;
+					}
+
+					/*
+					 * if ("stayQued".equalsIgnoreCase(sq)) { if (promoBanner.getSeqNumForStayQued() ==
+					 * Integer.valueOf(sequenceNumber)) { displayBanner = banner; } } else { if
+					 * (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber)) { displayBanner = banner; } }
+					 */
+
+				}
+				if (banner instanceof MplBigFourPromoBannerComponentModel)
+				{
+					final MplBigFourPromoBannerComponentModel promoBanner = (MplBigFourPromoBannerComponentModel) banner;
+
+					if (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber))
+					{
+						displayBanner = banner;
+					}
+					/*
+					 * if ("stayQued".equalsIgnoreCase(sq)) { if (promoBanner.getSeqNumForStayQued() ==
+					 * Integer.valueOf(sequenceNumber)) { displayBanner = banner; } } else { if
+					 * (promoBanner.getSequenceNumber() == Integer.valueOf(sequenceNumber)) { displayBanner = banner; } }
+					 */
+
+				}
+			}
+
+		}
+		return displayBanner;
 	}
 
 }
