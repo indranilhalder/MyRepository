@@ -428,6 +428,10 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 							{
 								data.setPhNumber(orderModel.getDeliveryAddress().getCellphone());
 							}
+							else if (null != orderModel.getDeliveryAddress() && orderModel.getDeliveryAddress().getPhone1() != null)
+							{
+								data.setPhNumber(orderModel.getDeliveryAddress().getPhone1());
+							}
 							else
 							{
 								data.setPhNumber(MarketplacecommerceservicesConstants.NA);
