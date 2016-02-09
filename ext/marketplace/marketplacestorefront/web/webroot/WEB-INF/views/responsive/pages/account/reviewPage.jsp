@@ -64,13 +64,13 @@
 						code="header.flyout.recommendations" /></a></li>
 						
 		</ul>
-		<ul>
+		<%-- <ul>
 					<li><h3>
 							<spring:theme code="header.flyout.credits" />
 						</h3></li>
 					<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 								code="header.flyout.coupons" /></a></li>
-				</ul>
+				</ul> --%>
 		<ul>
 			<li><h3>
 					<spring:theme code="header.flyout.share" />
@@ -235,7 +235,7 @@
 	  										
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
-								<span class="review-date"> ${comment.reviewDate} </span>
+								<span class="review-date"> - ${comment.reviewDate} </span>
 								</div>
 								<!-- Ratings -->
 								<div class="rating-div${count.index} rating-wrapper" style="display: none;">

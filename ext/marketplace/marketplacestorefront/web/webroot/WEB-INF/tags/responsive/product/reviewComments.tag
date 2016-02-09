@@ -255,7 +255,7 @@
 			onCommentSubmitted:reviewCount, 
 			cid : '',
 			enabledShareProviders : 'facebook,twitter',
-			enabledProviders : 'facebook,google', // login providers that should be displayed when click post
+			enabledProviders : 'facebook,google,twitter', // login providers that should be displayed when click post
 			onLoad :commentBox,
 			//userAction: shareUserAction
 		}
@@ -342,7 +342,7 @@ font-weight: normal;
 #ratingDiv .gig-rating-button:hover {
     background: #cc8600;
 }
-#ratingDiv div.gig-rating-star.gig-rating-star-full:before, .gig-comment-rating-star.gig-comment-rating-star-full:before {
+#ratingDiv div.gig-rating-star.gig-rating-star-full:before, .gig-comment-rating-star.gig-comment-rating-star-full:before, .gig-selfreview-rating-star.gig-selfreview-rating-star-full:before {
 	color: #00cbe9;
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
@@ -350,10 +350,10 @@ font-weight: normal;
     font-weight: 100;
     content: "\f005";
 }
-*.gig-comment-rating-star, *.gig-selfreview-rating-star, *.gig-rating-star-full, *.gig-rating-star, *.gig-rating-dimensions div.gig-rating-star, *.gig-comment-rating-star-full, *.gig-selfreview-rating-star-full {
+*.gig-comment-rating-star, *.gig-selfreview-rating-star, *.gig-rating-star-full, *.gig-rating-star, *.gig-rating-dimensions div.gig-rating-star, *.gig-comment-rating-star-full, *.gig-selfreview-rating-star-full,*.gig-selfreview-rating-_overall .gig-selfreview-rating-star-full,*.gig-selfreview-rating-_overall .gig-selfreview-rating-star {
 	background-image: none;
 }
-#ratingDiv div.gig-rating-star.gig-rating-star-empty:before, .gig-comment-rating-star:before {
+#ratingDiv div.gig-rating-star.gig-rating-star-empty:before, .gig-comment-rating-star:before, .gig-selfreview-rating-star:before {
 	color: #00cbe9;
     font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
@@ -398,7 +398,12 @@ font-weight: normal;
 {
 display: none;
 } 
-
+*.gig-comment-rating-title{
+vertical-align:top;
+}
+*.gig-selfreview-ratings{
+margin-top:10px;
+}
 </style> 
 
 </c:if>	

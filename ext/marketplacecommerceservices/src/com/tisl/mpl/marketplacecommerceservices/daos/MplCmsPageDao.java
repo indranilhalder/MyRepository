@@ -1,9 +1,11 @@
+
 /**
  *
  */
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.daos.CMSPageDao;
 
@@ -31,4 +33,7 @@ public interface MplCmsPageDao extends CMSPageDao
 	MplShopByLookModel getShopByLookModelForCollection(String collectionId);
 
 	ContentPageModel getSellerLandingPageForMobile(SellerMasterModel sellerMasterModel, CMSChannel cms);
+
+	ContentSlotModel getContentSlotByUidForPage(String pageId, String contentSlotId, String catalogVersion);
 }
+

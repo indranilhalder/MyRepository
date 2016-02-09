@@ -13,16 +13,23 @@ import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,15 +128,54 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											bigPromoBanner.getMajorPromoText() + "|" + bigPromoBanner.getMinorPromo1Text() + "|"
 													+ bigPromoBanner.getMinorPromo2Text());
 									campaignDataSeqBanner.setCategory(CategorySeqBanner);
-									if (null != bigPromoBanner.getBannerImage())
+									try
 									{
-										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-										automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
+										if (null != bigPromoBanner.getBannerImage())
+										{
+											String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+											//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+											LOG.debug("+++++++++++++ 1111 Image URL:::::" + ImageUrl);
 
-										campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-										campaignDataSeqBanner.setSize(bigPromoBanner.getBannerImage().getSize().toString());
-										CampaignDataList.add(campaignDataSeqBanner);
+											if (!ImageUrl.startsWith("http://"))
+											{
+												ImageUrl = "http:" + ImageUrl;
+												LOG.debug("1111.1 Image URL with http::::::::" + ImageUrl);
 
+											}
+											else if (!ImageUrl.startsWith("https://"))
+											{
+
+												ImageUrl = "https:" + ImageUrl;
+												LOG.debug("1111.11  Image URL with https:::::" + ImageUrl);
+											}
+
+
+											try
+											{
+												final URL url = new URL(ImageUrl);
+
+												final BufferedImage bimg = ImageIO.read(url);
+												final int width = bimg.getWidth();
+												final int height = bimg.getHeight();
+
+												final String size = String.valueOf(width) + " X " + String.valueOf(height);
+
+												automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+												automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
+
+												campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+												campaignDataSeqBanner.setSize(size);
+											}
+											catch (final Exception e)
+											{
+												e.getMessage();
+											}
+										}
+									}
+
+									catch (final Exception e)
+									{
+										LOG.error(e.getMessage());
 									}
 								}
 								else if (null != banner && banner instanceof MplBigFourPromoBannerComponentModel)
@@ -166,15 +212,59 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataBigPromoBanner.setAssetName(componentItr.getName());
 							campaignDataBigPromoBanner.setCategory(CategoryBigPromoBanner);
 
-							if (null != bigPromoBanner.getBannerImage())
+							try
 							{
-								automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-								automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
 
-								campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-								campaignDataBigPromoBanner.setSize(bigPromoBanner.getBannerImage().getSize().toString());
+								if (null != bigPromoBanner.getBannerImage())
+								{
+									String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+									LOG.debug("+++++++++++++2222 +Image URL:::::" + ImageUrl);
+									//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+									if (!ImageUrl.startsWith("http://"))
+									{
 
-								CampaignDataList.add(campaignDataBigPromoBanner);
+										ImageUrl = "http:" + ImageUrl;
+										LOG.debug("2222.2+++++++++++++Image URL:::::" + ImageUrl);
+
+									}
+									else if (!ImageUrl.startsWith("https://"))
+									{
+										ImageUrl = "https:" + ImageUrl;
+										LOG.debug("2222.22+++++++++++++Image URL:::::" + ImageUrl);
+									}
+
+									try
+									{
+
+										final URL url = new URL(ImageUrl);
+
+
+										final BufferedImage bimg = ImageIO.read(url);
+										final int width = bimg.getWidth();
+										final int height = bimg.getHeight();
+
+										final String size = String.valueOf(width) + " X " + String.valueOf(height);
+
+
+
+										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+										automationMap.put("size", bigPromoBanner.getBannerImage().getInternalURL().toString());
+
+										campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+										campaignDataBigPromoBanner.setSize(size);
+
+
+										CampaignDataList.add(campaignDataBigPromoBanner);
+									}
+									catch (final Exception e)
+									{
+										LOG.error(e.getMessage());
+									}
+								}
+							}
+							catch (final Exception e)
+							{
+								LOG.error(e.getMessage());
 							}
 						}
 						//3. Mpl BigFour PromoBanner ComponentModel
@@ -199,29 +289,75 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataBigFourPromoBanner.setAssetName(componentItr.getName());
 							campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
 							campaignDataBigFourPromoBanner.setCategory(CategoryBigFourPromoBanner);
-							if (null != bigPromoBanner.getBannerImage())
+							try
 							{
-								automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-								automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
 
-								campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-								campaignDataBigFourPromoBanner.setSize(bigPromoBanner.getBannerImage().getSize().toString());
-								CampaignDataList.add(campaignDataBigFourPromoBanner);
+								if (null != bigPromoBanner.getBannerImage())
+								{
+									String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+									//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+									LOG.debug("++++++++ 3333 +++++Image URL:::::" + ImageUrl);
+
+									if (!ImageUrl.startsWith("http://"))
+									{
+										ImageUrl = "http:" + ImageUrl;
+										LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl);
+									}
+									else if (!ImageUrl.startsWith("https://"))
+									{
+										ImageUrl = "https:" + ImageUrl;
+										LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
+
+									}
+
+									try
+									{
+
+										final URL url = new URL(ImageUrl);
+
+
+										final BufferedImage bimg = ImageIO.read(url);
+										final int width = bimg.getWidth();
+										final int height = bimg.getHeight();
+
+										final String size = String.valueOf(width) + " X " + String.valueOf(height);
+
+										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+										automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
+
+										campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+										campaignDataBigFourPromoBanner.setSize(size);
+
+									}
+									catch (final Exception e)
+									{
+										LOG.error(e.getMessage());
+									}
+								}
+
 							}
+
+							catch (final Exception e)
+							{
+								LOG.error(e.getMessage());
+							}
+							LOG.info("componentItr.getName() " + componentItr.getName());
 						}
-						LOG.info("componentItr.getName() " + componentItr.getName());
 					}
+					//LOG.info("banner componenets found " + contentPageItr.getco);
+
 				}
-				//LOG.info("banner componenets found " + contentPageItr.getco);
+
+				createCSVExcel(CampaignDataList);
 
 			}
-
-			createCSVExcel(CampaignDataList);
-
 		}
+		/*
+		 * catch (final IOException e) { LOG.error(e); }
+		 */
 		catch (final Exception e)
 		{
-			LOG.error(e);
+			LOG.error(e.getMessage());
 		}
 		return CampaignDataList;
 	}
@@ -232,22 +368,23 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	@Override
 	public void createCSVExcel(final List<InternalCampaignReportData> campaignDataConsolidatedList)
 	{
-		//	final String path = "D:\\Arunava\\tmp2\\Internal_Campaign2\\internalCampaign.csv";
+		//final String path = "D:\\Arunava\\tmp2\\Internal_Campaign2\\internalCampaign.csv";
 
-		final String path = configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path");
+		//final String path = configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path");
 
 		try
 		{
-			final File file = new File(path);
+			//final File file = new File(path);
+			final File file = new File(getOutputFilePath());
 			file.getParentFile().mkdirs();
-			populateCSV(campaignDataConsolidatedList, path, file);
-
+			//populateCSV(campaignDataConsolidatedList, path, file);
+			populateCSV(campaignDataConsolidatedList, file);
 		}
 
 		catch (final Exception e)
 		{
 			// YTODO Auto-generated catch block
-			LOG.info("Exception writing" + e);
+			LOG.info("Exception writing" + e.getMessage());
 		}
 		//` false;
 	}
@@ -259,7 +396,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		return m.group(1);
 	}
 
-	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final String path, final File file)
+	//public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final String path, final File file)
+	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final File file)
 	{
 		FileWriter fileWriter = null;
 		String CSVHeader = "";
@@ -341,8 +479,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("source_page"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
-			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("size"));
-			 * 
+			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
+			 *
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
@@ -386,6 +524,22 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	protected String getCSVHeaderLine()
 	{
 		return configurationService.getConfiguration().getString("internal.campaign.report.header", "");
+	}
+
+	protected String getOutputFilePath()
+	{
+
+		final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
+		final String timestamp = df.format(new Date());
+		final StringBuilder output_file_path = new StringBuilder();
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path", ""));
+		output_file_path.append(File.separator);
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix", ""));
+		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
+		output_file_path.append(timestamp);
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension", ""));
+
+		return output_file_path.toString();
 	}
 
 }

@@ -435,8 +435,10 @@ public class ProductPageController extends AbstractPageController
 					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
 							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
 					{
+						LOG.debug("response.getUssid()********************  " + response.getUssid());
 						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
 						{
+							LOG.debug("response.getIsServicable()********************  " + response.getIsServicable());
 							if (response.getIsServicable().equalsIgnoreCase("Y"))
 							{
 								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
