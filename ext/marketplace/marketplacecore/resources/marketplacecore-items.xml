@@ -6726,7 +6726,7 @@
 					type="SellerMaster">
 					<description>priority seller</description>
 					<persistence type="property" />
-					<modifiers read="true" write="true" search="true" unique="true"
+					<modifiers read="true" write="true" search="true" unique="false"
 							optional="false" />
 				</attribute> 
 				<attribute autocreate="true"  qualifier="priorityStartDate" type="java.util.Date">
@@ -7067,6 +7067,10 @@
 					</attribute>
 				
 				</attributes>
+			</itemtype>
+			<itemtype code="IntExtCampaignAutomationJob" extends="CronJob"
+				autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.IntExtCampaignAutomationJob">
 			</itemtype>
 		</typegroup>
 		<!--End of CRM Ticket Detail -->

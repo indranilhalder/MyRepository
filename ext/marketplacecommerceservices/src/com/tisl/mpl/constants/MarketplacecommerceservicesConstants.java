@@ -1290,11 +1290,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_EXPRESS_DELIVERY = "Express Delivery ".intern();
 	// Seler Priority Report Query
 	// Within date range
-	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValues as s}, {MplSellerPriority as sp },{SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {s.modifieditem}={sp.pk} and {s.creationtime} BETWEEN ?startDate and ?endDate";
+	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValues as s}, {MplSellerPriority as sp },{SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {s.modifieditem}={sp.pk} and {s.creationtime} BETWEEN ?startDate and ?endDate order by {s.Timestamp} desc";
 	//	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValueEntry as se},{SavedValues as s}, {Bin as bk }, {SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {st.code} = 'changed'and {s.modifieditem}={bk.pk} and {s.pk} = {se.Parent} and {s.creationtime} BETWEEN ?startDate and ?endDate ";
 
 	// full data
-	public static final String SELLERPRIORITYQUERY = "Select {s.pk} from {SavedValues as s}, {MplSellerPriority as sp },{SavedValueEntryType as st} where {s.modificationtype}={st.pk}  and {s.modifieditem}={sp.pk}";
+	public static final String SELLERPRIORITYQUERY = "Select {s.pk} from {SavedValues as s}, {MplSellerPriority as sp },{SavedValueEntryType as st} where {s.modificationtype}={st.pk}  and {s.modifieditem}={sp.pk} order by {s.Timestamp} desc";
 
 	public static final String SELLERPRIORITYDATAQUERY = "Select {sp.pk} from  {MplSellerPriority as sp }";
 
@@ -1311,6 +1311,26 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
+
+
+	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
+	public static final String CAMPAIGN_FREEBIE = "FREEBIE OFFER".intern();
+	public static final String CAMPAIGN_SHIPPING = "SHIPPING DISCOUNT OFFER".intern();
+	public static final String CAMPAIGN_BOGO = "BOGOF OFFER".intern();
+	public static final String CAMPAIGN_CASHBACK = "CASHBACK OFFER".intern();
+	public static final String CAMPAIGN_CHANNEL = "WEB|WEBMOBILE|MOBILE|CALLCENTER|KIOSK".intern();
+	public static final String CAMPAIGN_MULTIDATA_SEPERATOR = "|".intern();
+	public static final String CAMPAIGN_FILE_LOCATION = "campaign.promotion.csv.path".intern();
+	public static final String CAMPAIGN_HEADER = "OFFER_ID,OFFER_NAME,OFFER_ACTIVE,OFFER_TYPE,OFFER_CHANNEL,OFFER_STARTDATE,OFFER_ENDDATE,URL,CREATION_DATE,MODIFIED_DATE"
+			.intern();
+	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
+	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
+	public static final String CAMPAIGN_FILE_NAME = "campaign".intern();
+	public static final String CAMPAIGN_WEBSITE = "http://tatacliq.com/store".intern();
+	public static final String CAMPAIGN_URL_ALL = "all".intern();
+
+	public static final String CAMPAIGN_URL_OFFER_IDENTIFIER = "/o/".intern();
+	public static final String CAMPAIGN_URL_OFFER_ID_URL = "?offer=".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

@@ -176,6 +176,7 @@ UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];tit
 
 
 UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+;; NewAndExclusiveProductCarouselComponent;"Discover New & Exclusive"
 #;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
 
 UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]

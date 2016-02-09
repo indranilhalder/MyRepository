@@ -681,6 +681,10 @@ public final class ModelAttributetConstants
 	public static final String FOOTWEAR = "Footwear";
 	public static final String PINCODE_DETAILS = "pincodeData";
 	public static final String CLOSED_COUPON_LIST = "closedCouponList";
+	public static final String ACCOUNT_VOUCHER = "voucher";
+	public static final String ACCOUNT_HISTORY = "history";
+	public static final String PAGINATED_DATA_COUPON_UNUSED = "paginated_data_coupon_unused";
+	public static final String PAGINATED_DATA_COUPON_USED = "paginated_data_coupon_used";
 
 
 	//for bell notification
@@ -691,6 +695,6 @@ public final class ModelAttributetConstants
 	//sizeguide
 
 	public static final String SELECTEDSIZE = "sizeSelectedSizeGuide";
-
+	public static final String NOVALUE = "0.0";
 
 }

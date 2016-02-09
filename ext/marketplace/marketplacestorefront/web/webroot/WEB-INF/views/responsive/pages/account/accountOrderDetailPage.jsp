@@ -504,7 +504,7 @@
 																								${entryCancel.imeiDetails.serialNum}</span>
 																						</c:if>
 																						<span class="sellerOrderNo"><b> <spring:theme
-																									code="text.orderHistory.seller.order.number" />:
+																									code="text.orderHistory.seller.order.number" />
 																						</b> ${sellerOrder.code} </span>
 																					</p>
 																					<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
@@ -625,7 +625,7 @@
 																								${entryCancel.imeiDetails.serialNum}</span>
 																						</c:if>
 																						<span class="sellerOrderNo"><b> <spring:theme
-																									code="text.orderHistory.seller.order.number" />:
+																									code="text.orderHistory.seller.order.number" />
 																						</b> ${sellerOrder.code} </span>
 																					</p>
 																					<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
