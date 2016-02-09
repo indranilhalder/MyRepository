@@ -106,6 +106,9 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						log.info(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
 								.append("prioritylevel").append(priorityLevel).toString());
 
+
+						//	validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel);
+
 						//chceking for current valid priorities
 						for (final String ussid : ussidList)
 						{
@@ -267,6 +270,47 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 
 		}
 		return isUpadated;
+	}
+
+	/**
+	 * @param validSellerPriorityMap
+	 * @param ussidList
+	 * @param priorityLevel
+	 * @return
+	 */
+	private Map<String, List<Integer>> getValidPrioritiesAgainstUssid(final Map<String, List<Integer>> validSellerPriorityMap,
+			final List<String> ussidList, final int priorityLevel)
+	{
+		for (final String ussid : ussidList)
+		{
+			if (validSellerPriorityMap.isEmpty())
+			{
+				validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+			}
+			else
+			{
+
+				if (validSellerPriorityMap.containsKey(ussid))
+				{
+					final List<Integer> validPriorities = new ArrayList<Integer>(validSellerPriorityMap.get(ussid));
+					if (CollectionUtils.isNotEmpty(validPriorities))
+					{
+						validPriorities.add(Integer.valueOf(priorityLevel));
+						validSellerPriorityMap.put(ussid, validPriorities);
+					}
+					else
+					{
+						validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+					}
+
+				}
+				else
+				{
+					validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+				}
+			}
+		}
+		return validSellerPriorityMap;
 	}
 
 	/**
