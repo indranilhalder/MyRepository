@@ -693,8 +693,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
 					}
 					//TODO
-					//Find the correct juspay orderid(auditid) model for sucess //AT
-					if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+					//Find the correct juspay orderid(auditid) model for sucess //AT TISPRO-133
+					if (!paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
 					{
 						for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
 						{
