@@ -76,6 +76,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Resource;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -95,6 +97,9 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.data.ATSResponseData;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
+import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
@@ -125,8 +130,9 @@ import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
 import com.tisl.mpl.wsdto.ReservationItemWsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
-
-import net.sourceforge.pmd.util.StringUtil;
+import com.tisl.mpl.wsdto.StoreLocatorAtsResponse;
+import com.tisl.mpl.wsdto.StoreLocatorAtsResponseObject;
+import com.tisl.mpl.wsdto.StoreLocatorResponseItem;
 
 
 /**
@@ -476,11 +482,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								{
 									deliveryMode = MarketplacecommerceservicesConstants.EXPRESS_DELIVERY;
 								}
-								//else if (deliveryData.getType() != null
-								//		&& deliveryData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
-								//{
-								//	deliveryMode = MarketplacecommerceservicesConstants.CLICK_COLLECT;
-								//}
+								else if (deliveryData.getType() != null
+										&& deliveryData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+								{
+									deliveryMode = MarketplacecommerceservicesConstants.CLICK_COLLECT;
+								}
 
 								final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService()
 										.getDeliveryCost(deliveryMode, MarketplacecommerceservicesConstants.INR, pincodeRes.getUssid());
@@ -3092,6 +3098,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						LOG.debug("populateDataForSoftReservation :  entryModel.getQuantity() is null or empty");
 					}
 
+					
+					if (entryModel.getDeliveryPointOfService() != null)
+					{
+						cartSoftReservationData.setStoreId(entryModel.getDeliveryPointOfService().getSlaveId());
+					}
 					if (entryModel.getAssociatedItems() != null && entryModel.getAssociatedItems().size() > 0
 							&& entryModel.getGiveAway().booleanValue())
 					{
@@ -3161,8 +3172,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										+ entryModel.getSelectedUSSID());
 							}
 						}
+						
 					}
-
+					
+					
 					cartSoftReservationDataList.add(cartSoftReservationData);
 
 				}
@@ -3867,7 +3880,55 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 
 
-	/*
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 	 * @desc use to save freebie delivery mode
 	 *
 	 * @param cartModel
@@ -3897,8 +3958,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			}
 		}
 	}
-
-
 	/**
 	 * This method saves delivery modes for freebie order entries
 	 * 
@@ -3965,8 +4024,57 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 	}
 
+	/**
+	 * This method prepares object with ats and ussid.
+	 * @param storeLocationRequestDataList
+	 * return stores with inventories.
+	 * 
+	 */
+	@Override
+	public List<StoreLocationResponseData> getStoreLocationsforCnC(
+			final List<StoreLocationRequestData> storeLocationRequestDataList)
+	{
+		LOG.debug("from getStoreLocationsforCnC method in serice");
+		final List<StoreLocationResponseData> responseList = new ArrayList<StoreLocationResponseData>();
+		try
+		{
+			//calls service with stores 
+			final StoreLocatorAtsResponseObject responseObject = pinCodeDeliveryModeService
+					.prepStoreLocationsToOMS(storeLocationRequestDataList);
+			if (null != responseObject.getItem())
+			{
+				for (final StoreLocatorResponseItem storeLocatorResponse : responseObject.getItem())
+				{
+					final StoreLocationResponseData responseData = new StoreLocationResponseData();
+					List<ATSResponseData> atsResponseDataList = null;
+					if (null != storeLocatorResponse.getATS())
+					{
+						atsResponseDataList = new ArrayList<ATSResponseData>();
+						for (final StoreLocatorAtsResponse storeLoctorMode : storeLocatorResponse.getATS())
+						{
+							final ATSResponseData data = new ATSResponseData();
 
+							data.setStoreId(storeLoctorMode.getStoreId());
+							data.setQuantity(storeLoctorMode.getQuantity());
 
-
+							atsResponseDataList.add(data);
+						}
+					}
+					responseData.setUssId(storeLocatorResponse.getUssId());
+					responseData.setAts(atsResponseDataList);
+					responseList.add(responseData);
+				}
+			}
+			return responseList;
+		}
+		catch (final ClientEtailNonBusinessExceptions ex)
+		{
+			LOG.error("********* Pincode serviceability exception :");
+			final StoreLocationResponseData responseData = new StoreLocationResponseData();
+			// responseData.setIsServicable(MarketplacecommerceservicesConstants.NOT_APPLICABLE);
+			responseList.add(responseData);
+		}
+		return responseList;
+	}
 
 }
