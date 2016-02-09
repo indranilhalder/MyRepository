@@ -192,6 +192,27 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 								return null;
 							}
 						});
+		
+		modelService.save(cart);
+		
+		if (CollectionUtils.isNotEmpty(cart.getDiscounts())){
+			final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
+			final String voucherCode=voucher.getVoucherCode();
+			final List<AbstractOrderEntryModel> applicableOrderEntryList = mplVoucherService.getOrderEntryModelFromVouEntries(voucher,
+					cart);
+			try {
+				//checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
+				mplVoucherService.checkCartAfterApply(voucher, cart, applicableOrderEntryList);
+			} catch (JaloInvalidParameterException | NumberFormatException
+					| JaloSecurityException | CalculationException
+					| JaloPriceFactoryException | ModelSavingException | VoucherOperationException e) {
+				LOG.error("Exception calculating cart ["
+						+ cart + "]", e);
+			}
+			
+			mplVoucherService.setApportionedValueForVoucher(voucher, cart, voucherCode, applicableOrderEntryList);
+
+	} 
 
 		return isItemAddedToCart;
 	}
