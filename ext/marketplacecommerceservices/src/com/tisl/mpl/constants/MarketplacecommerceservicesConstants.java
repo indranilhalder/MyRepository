@@ -459,7 +459,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INR = "INR";
 	public static final String HD = "HD";
 	public static final String ED = "ED";
-	public static final String CnC = "CnC";
+	public static final String CnC = "CNC";
 	public static final String CC = "CC";
 
 	public static final String X = "X";

@@ -21,28 +21,54 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMe
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.commercefacades.storelocator.data.TimeData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.commerceservices.store.data.GeoPoint;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.PincodeModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.storelocator.GPS;
+import de.hybris.platform.storelocator.location.Location;
+import de.hybris.platform.storelocator.location.impl.LocationDTO;
+import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
+import de.hybris.platform.util.Config;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -50,6 +76,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,6 +88,7 @@ import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -71,10 +99,22 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
+import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.service.MplSlaveMasterService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -84,6 +124,9 @@ import com.tisl.mpl.util.ExceptionUtil;
 @RequestMapping(value = "/checkout/multi/delivery-method")
 public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepController
 {
+	
+	private final static String PICKUP_LOCATION = "pickup-location";
+	
 	@Resource
 	private MplCheckoutFacade mplCheckoutFacade;
 
@@ -114,9 +157,27 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Autowired
 	private CommerceCartService commerceCartService;
 
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
+
+	@Resource(name = "accProductFacade")
+	private ProductFacade productFacade;
+	
+	@Resource(name = "productService")
+	private ProductService productService;
+	
+	@Resource(name = "modelService")
+	private ModelService modelService;
+
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
-
+	
+	@Resource(name="addressConverter")
+	private Converter<AddressModel, AddressData> addressConverter;
+	
+	@Resource(name = "mplSlaveMasterService")
+	private MplSlaveMasterService mplSlaveMasterService;
+	
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
 
@@ -124,6 +185,24 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	private final String checkoutPageName1 = "New Address";
 	private final String selectAddress = "Select Address";
+	
+	@Autowired
+	private MplSellerInformationService mplSellerInformationService;
+	
+	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
+	private SessionService sessionService;
+
+	@Resource(name = "pinCodeFacade")
+	private PinCodeServiceAvilabilityFacade pinCodeFacade;
+	 
+	@Resource(name = "productDetailsHelper")
+	private ProductDetailsHelper productDetailsHelper;
+	 
+	@Resource(name = "pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
+	 
+	@Resource(name="timeDataConverter")
+	private Converter<Date, TimeData> timeDataConverter;
 
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
 
@@ -229,12 +308,42 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL)
 	@RequireHardLogIn
-	public String doSelectDeliveryMode(final DeliveryMethodForm deliveryMethodForm, final BindingResult bindingResult,
-			final Model model) throws CMSItemNotFoundException
+	public String doSelectDeliveryMode(@ModelAttribute("deliveryMethodForm")DeliveryMethodForm deliveryMethodForm, final BindingResult bindingResult,
+			final Model model, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		Double finalDeliveryCost = Double.valueOf(0.0);
 		String returnPage = "";
+		int count =0;
+		Boolean selectPickupDetails = false;
+		final CartModel cartModel = getCartService().getSessionCart();
+		if (deliveryMethodForm.getDeliveryMethodEntry() == null)
+		{
+			//if cart contains cnc and home/express delivery modes 
+			count++;
+			HttpSession session = request.getSession();
+			deliveryMethodForm =(DeliveryMethodForm)session.getAttribute("deliveryMethodForm");
+			/*** Inventory Soft Reservation Start ***/
 
+			final boolean inventoryReservationStatus = getMplCartFacade()
+					.isInventoryReserved(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+			if (!inventoryReservationStatus)
+			{
+				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			}
+			/*** Inventory Soft Reservation Start ***/
+
+			LOG.debug(">>>>>>>>>>  Step 4:  Inventory soft reservation status  " + inventoryReservationStatus);
+			final String pickupPersonName = cartModel.getPickupPersonName();
+			final String pickupPersonMobile = cartModel.getPickupPersonMobile();
+			if ((pickupPersonName == null) && (pickupPersonMobile == null))
+			{
+				selectPickupDetails = true;
+				model.addAttribute("selectPickupDetails", selectPickupDetails);
+				return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+			}
+		}
+		
 		try
 		{
 			if (getUserFacade().isAnonymousUser())
@@ -242,32 +351,35 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				return getCheckoutStep().previousStep();
 			}
 
+			
 			//TISST-13012
 			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
 			if (cartItemDelistedStatus)
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
-
+			String deliveryCode = null;
 			if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
 			{
 				for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
 				{
-					final String deliveryCode = deliveryEntry.getDeliveryCode();
+					deliveryCode = deliveryEntry.getDeliveryCode();
 					if (StringUtils.isNotEmpty(deliveryCode))
 					{
-						final Double deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-								deliveryEntry.getSellerArticleSKU());
-
+						Double deliveryCost = 0.0;
+						if (deliveryCode.equalsIgnoreCase("click-and-collect"))
+						{
+							deliveryCost = 0.0;
+						}else {
+							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+									deliveryEntry.getSellerArticleSKU());
+						}
 						finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 					}
 				}
 			}
 
 			LOG.debug(">>>>>>>>>>  Step 1 :Delivery cost before applying any promotion :  " + finalDeliveryCost);
-
-
-			final CartModel cartModel = getCartService().getSessionCart();
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
@@ -310,8 +422,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			/*** Inventory Soft Reservation Start ***/
 
 			LOG.debug(">>>>>>>>>>  Step 4:  Inventory soft reservation status  " + inventoryReservationStatus);
-
-
 			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 			List<PinCodeResponseData> responseData = null;
 			final CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
@@ -399,10 +509,295 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
-
-
 		return returnPage;
+	}
 
+	/**
+	 * @author TECH
+	 * This method first checks the delivery modes if it has only home or express then it forwards to doSelectDeliveryMode method
+	 * and if it contains all the modes then first process cnc mode and then at jsp level using continue link forward to doSelectDeliveryMode method.
+	 * @param deliveryMethodForm
+	 * @param bindingResult
+	 * @param model
+	 * @param redirectAttributes
+	 * @param request
+	 * @param response1
+	 * @param session
+	 * @return string
+	 * @throws CMSItemNotFoundException
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYCHECKURL, method = RequestMethod.POST)
+	@RequireHardLogIn
+	public String doFindDelivaryMode(final DeliveryMethodForm deliveryMethodForm, final BindingResult bindingResult,
+			final Model model,final RedirectAttributes redirectAttributes, final HttpServletRequest request,
+		   final HttpServletResponse response1,final HttpSession session) throws CMSItemNotFoundException
+	{
+		LOG.debug("from doFindDelivaryMode methodin Controller");
+		List<StoreLocationResponseData> response = null;
+		redirectAttributes.addFlashAttribute("deliveryMethodForm", deliveryMethodForm);
+		//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
+		session.setAttribute("deliveryMethodForm" , deliveryMethodForm);
+		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+		if (cartData.getDeliveryAddress() != null)
+		{
+			LOG.debug("Express checkout : ");
+			return getCheckoutStep().nextStep();
+		}		
+		model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+		this.prepareDataForPage(model);
+		
+			final CartModel cartModel = getCartService().getSessionCart();
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+			int count=0;
+			int delModeCount =0;
+			String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+			if (cartModel != null && cartModel.getEntries() != null)
+			{
+				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+				{
+					final ProductModel productModel = cartEntryModel.getProduct();
+					final ProductData productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+					final String deliveryCode = deliveryMethodForm.getDeliveryMethodEntry().get(cartEntryModel.getEntryNumber()).getDeliveryCode();
+					if (deliveryCode.equalsIgnoreCase("click-and-collect"))
+					{
+						count++;
+						//retrieve latitude and longitude for given pincode from db
+						PincodeModel pinCodeModelObj = null;
+						if (null != defaultPincode)
+						{
+							pinCodeModelObj = pincodeService.getLatAndLongForPincode(defaultPincode);
+						}
+						//read radius from local properties file which is configurable.
+						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+						LOG.info("configurableRadius**********." + Double.parseDouble(configurableRadius));
+						//this dto holds latitude and longitude
+						final LocationDTO dto = new LocationDTO();
+						if (null != pinCodeModelObj)
+						{
+							dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+							dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						}
+						final Location myLocation = new LocationDtoWrapper(dto);
+						//first calls commerce to get all the stores for a sellerId based on the given pincode
+						final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequesrData(
+								cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), Double.parseDouble(configurableRadius));
+						storeLocationRequestDataList.add(storeLocationRequestData);
+					}
+					else {
+						//count other modes 
+						delModeCount++;
+					}
+				}
+				//if entry does not have any click and collect
+				if (count == 0)
+				{ 
+					LOG.info("Cart Enties does not have any CNC mode");
+					//redirect to select address
+					return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/select";
+				}
+				if (count >0 && delModeCount == 0)
+				{
+					/*** Inventory Soft Reservation Start ***/
+
+					final boolean inventoryReservationStatus = getMplCartFacade()
+							.isInventoryReserved(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+					if (!inventoryReservationStatus)
+					{
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+						return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+					}
+					/*** Inventory Soft Reservation Start ***/
+
+				}
+				if (count>0)
+				{
+					//cart has CNC.
+					LOG.info("Cart Entries contain CNC mode");
+					//calls oms to get inventories for given stores.
+					response = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
+					List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
+					//populates oms response to data object
+					productWithPOS = getProductWdPos(response,model);
+	
+					model.addAttribute("delModeCount",delModeCount);
+					model.addAttribute("defaultPincode", defaultPincode);
+					model.addAttribute("pwpos", productWithPOS);
+				}
+			}
+			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
+			setCheckoutStepLinksForModel(model, getCheckoutStep());
+			return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChoosePickupLocationPage;
+		}
+	/**
+	 * @author TECH
+	 * This method populates List of Ats and ussid to the data object.
+	 * @param response
+	 * @return list of pos with product.
+	 */
+		private List<ProudctWithPointOfServicesData> getProductWdPos(final List<StoreLocationResponseData> response, final Model model)
+		{
+			LOG.debug("from getProductWdPos method which gets product with pos");
+			List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
+			final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+			//iterate over response
+			for (StoreLocationResponseData storeLocationResponseData : response)
+			{
+				ProudctWithPointOfServicesData pwPOS = new ProudctWithPointOfServicesData();
+				List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+				List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
+				String ussId = storeLocationResponseData.getUssId();
+				
+				LOG.debug("call to commerce db to get the seller details");
+				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
+				if (sellerInfoModel != null)
+				{
+					String sellerName = sellerInfoModel.getSellerName();
+					model.addAttribute("sellerName", sellerName);
+					model.addAttribute("sellerId",sellerInfoModel.getSellerID());
+					final ProductModel productModel = sellerInfoModel.getProductSource();
+					final ProductData productData = productFacade.getProductForOptions(productModel,
+							Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+					
+					LOG.debug("get stores from commerce based on SellerId and StoredId(slaveId)");
+					for (int i = 0; i < storeLocationResponseData.getAts().size(); i++)
+					{
+						PointOfServiceModel posModel = mplSlaveMasterService.findPOSBySellerAndSlave(sellerInfoModel.getSellerID(),storeLocationResponseData.getAts().get(i).getStoreId());
+						posModelList.add(posModel);
+					}
+					for (PointOfServiceModel pointOfServiceModel : posModelList)
+					{
+						//prepare pos data objects
+						PointOfServiceData posData = new PointOfServiceData();
+						GeoPoint geo = new GeoPoint();
+						AddressData addData = new AddressData();
+						if (null != pointOfServiceModel)
+						{
+							posData.setDisplayName(pointOfServiceModel.getName());
+							if (pointOfServiceModel.getLatitude() != null)
+							{
+								geo.setLatitude(pointOfServiceModel.getLatitude());
+							}
+							if (pointOfServiceModel.getLongitude() != null)
+							{
+								geo.setLongitude(pointOfServiceModel.getLongitude());
+							}
+							posData.setGeoPoint(geo);
+							addData = addressConverter.convert(pointOfServiceModel.getAddress());
+							posData.setAddress(addData);
+							
+							if (null != pointOfServiceModel.getOpeningTime())
+							{
+								final Date openingTime = pointOfServiceModel.getOpeningTime();
+								posData.setMplClosingTime(timeDataConverter.convert(openingTime));
+								
+							}
+							if (null != pointOfServiceModel.getClosingTime())
+							{
+								final Date closingTime = pointOfServiceModel.getClosingTime();
+								posData.setMplClosingTime(timeDataConverter.convert(closingTime));
+								
+							}
+							
+							posDataList.add(posData);
+						}
+					}
+					pwPOS.setProduct(productData);
+					pwPOS.setPointOfServices(posDataList);
+					productWithPOS.add(pwPOS);
+				}
+			}
+			return productWithPOS;
+		}
+	
+	/**
+	 * @author TECH
+	 * This is an ajax call to save store for chossen cart entry.
+	 * @param productCode
+	 * @param posName
+	 * @return yes if it saves successfully else no.
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/addPosToOrderEntry", method = RequestMethod.GET)
+	public String addPosToOrderEntry(@RequestParam("productCode") final String productCode,@RequestParam("posName") final String posName)
+	{
+		LOG.debug("from addPosToOrderEntry method ");
+		String status = "yes";
+		//get ProductModel for given product code
+		final ProductModel pModel = productService.getProduct(productCode);
+		
+		//call service to retrieve POSModel for given posName
+		final PointOfServiceModel posModel = mplSlaveMasterService.findPOSByName(posName);
+		final String pcode = pModel.getCode();
+		try
+		{
+			final CartModel cartModel = getCartService().getSessionCart();
+			if (cartModel != null && cartModel.getEntries() != null)
+			{
+				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+				{
+					if (cartEntryModel != null)
+					{
+						if (cartEntryModel.getProduct().getCode().equalsIgnoreCase(pcode))
+						{
+							cartEntryModel.setDeliveryPointOfService(posModel);
+							modelService.save(cartEntryModel);
+						}
+					}
+				}
+			}
+			
+		}
+		catch (EtailNonBusinessExceptions e)
+		{
+			LOG.error("Errors while saving pos for cart entry");
+			status = "no";
+			e.printStackTrace();
+		}
+		return status;
+	}
+	
+	/**
+	 * This method stores pickup person details to the cart.
+	 * @author TECH
+	 * @param pickupPersonName
+	 * @param pickupPersonMobile
+	 * @return success if pickupperson details is successfully saved else returns failure
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/addPickupPersonDetails", method = RequestMethod.GET)
+	public String addPickupPersonDetails(@RequestParam("pickupPersonName") final String pickupPersonName,@RequestParam("pickupPersonMobile") final String pickupPersonMobile)
+	{
+		LOG.debug("from addPickupPersonDetails method, ajax call");
+		String status = "";
+		//get session cart
+		try
+		{
+			final CartModel cartModel = getCartService().getSessionCart();
+			if (null != pickupPersonName)
+			{
+				cartModel.setPickupPersonName(pickupPersonName);
+			}
+			if (null != pickupPersonMobile)
+			{
+				cartModel.setPickupPersonMobile(pickupPersonMobile);
+				
+			}
+			modelService.save(cartModel);
+			status = "success";
+		}
+		catch (Exception e)
+		{
+			status="failure";
+			LOG.error("Exception while saving cartModel to db");
+			e.printStackTrace();
+		}
+		
+		return status;
+		
 	}
 
 	/**
@@ -1071,6 +1466,209 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 	}
 
+
+	/**
+	 * This method gets store locations for given seller.
+	 * @param sellerUssId
+	 * @param gps
+	 * @param configurableRadius
+	 * @return list of stores wrapped in StoreLocationRequestData obj.
+	 */
+	public StoreLocationRequestData papulateClicknCollectRequesrData(final String sellerUssId, final GPS gps,
+			final Double configurableRadius)
+	{
+		LOG.debug("from papulateClicknCollectRequesrData method");
+		//reads seller id from ussid which is first six digits
+		final String sellerId = sellerUssId.substring(0, 6);
+		final StoreLocationRequestData storeLocationRequestData = new StoreLocationRequestData();
+		
+		List<Location> storeList = new ArrayList<Location>();
+		try
+		{
+			//calls commerce db to get all the stores in sorting order.
+			storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, sellerId);
+		}
+		catch (Exception e)
+		{
+			storeLocationRequestData.setStoreId(null);
+			LOG.error("Exception while retrieving all the stores based on gps,sellerId and radius");
+		}
+		if (null != storeList && storeList.size() > 0)
+		{
+			final List<String> locationList = new ArrayList<String>();
+			for (final Location location : storeList)
+			{
+				locationList.add(location.getName());
+			}
+			LOG.debug("Total number of Stores :" + locationList.size() + " for Seller" +sellerId);
+			storeLocationRequestData.setStoreId(locationList);
+		}
+		storeLocationRequestData.setUssId(sellerUssId);
+		return storeLocationRequestData;
+	}
+
+	/**
+	 * This method is called when a user select change pincode at cnc page.
+	 * 
+	 * @param pin
+	 * @param productCode
+	 * @param sellerId
+	 * @return if successful retursn list of pos for a prouct else null.
+	 * @throws CMSItemNotFoundException
+	 */
+	@ResponseBody
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.UPDATE_CHECK_PINCODE, method = RequestMethod.GET)
+	public List<PointOfServiceData> upDatePincodeServicabilityCheck(@RequestParam(value = "pin") final String pin,
+			@RequestParam(value = "productCode") final String productCode, @RequestParam(value = "sellerId") final String sellerId, final Model model)
+			throws CMSItemNotFoundException
+	{
+		LOG.debug("from upDatePincodeServicabilityCheck method when customer change pincode at cnc page");
+		List<PointOfServiceData> stores = new ArrayList<PointOfServiceData>();
+		List<StoreLocationResponseData> omsResponse = new ArrayList<StoreLocationResponseData>();
+		List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
+		//call to check pincode serviceability
+		boolean status = false;
+
+		status = pincodeServiceFacade.checkPincodeServiceble(pin, productCode);
+		if (status)
+		{
+			//call service to get list of ATS and ussid
+			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, sellerId, productCode);
+			productWithPOS = getProductWdPos(omsResponse,model);
+			if (productWithPOS.size() > 0)
+			{
+				stores = productWithPOS.get(0).getPointOfServices();
+			}
+
+		}
+		else
+		{
+			stores = null;
+		}
+		return stores;
+	}
+
+	 /**
+	  * populating the request data to be send to oms
+	  *
+	  * @param productCode
+	  * @param finalStoreList
+	  * @return requestData
+	  */
+	 private List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps,
+	   final Double configurableRadius)
+	 {
+
+	  final List<PincodeServiceData> requestData = new ArrayList<PincodeServiceData>();
+	  PincodeServiceData data = null;
+	  MarketplaceDeliveryModeData deliveryModeData = null;
+	  try
+	  {
+	   final ProductModel productModel = productService.getProductForCode(productCode);
+	   final ProductData productData = productFacade.getProductForOptions(productModel,
+	     Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+
+	   for (final SellerInformationData seller : productData.getSeller())
+	   {
+	    final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>();
+	    data = new PincodeServiceData();
+	    if ((null != seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty()))
+	    {
+	     for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
+	     {
+	      deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+	      deliveryModeList.add(deliveryModeData);
+	     }
+	     data.setDeliveryModes(deliveryModeList);
+	    }
+	    if (null != seller.getFullfillment() && StringUtils.isNotEmpty(seller.getFullfillment()))
+	    {
+	     data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase()));
+	    }
+	    if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode())))
+	    {
+	     data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase()));
+	    }
+	    if (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY)))
+	    {
+	     data.setPrice(new Double(seller.getSpPrice().getValue().doubleValue()));
+	    }
+	    else if (null != seller.getMopPrice() && !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY)))
+	    {
+	     data.setPrice(new Double(seller.getMopPrice().getValue().doubleValue()));
+	    }
+	    else if (null != seller.getMrpPrice() && !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY)))
+	    {
+	     data.setPrice(new Double(seller.getMrpPrice().getValue().doubleValue()));
+	    }
+	    else
+	    {
+	     LOG.debug("No price avaiable for seller :" + seller.getSellerID());
+	     continue;
+	    }
+	    if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod()))
+	    {
+	     data.setIsCOD(seller.getIsCod());
+	    }
+
+	    LOG.debug("Current locations for Seller Id**********" + seller.getSellerID());
+	    @SuppressWarnings("boxing")
+	    final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
+	      seller.getSellerID());
+	    LOG.debug("StoreList size is :" + storeList.size());
+	    if (storeList.size() > 0)
+	    {
+	     final List<String> locationList = new ArrayList<String>();
+	     for (final Location location : storeList)
+	     {
+	      locationList.add(location.getName());
+	     }
+	     LOG.debug("locationList:" + locationList.size());
+	     data.setStore(locationList);
+	    }
+	    data.setSellerId(seller.getSellerID());
+	    LOG.debug("seller.getSellerID():" + seller.getSellerID());
+	    LOG.debug("seller.getUssid():" + seller.getUssid());
+	    LOG.debug("seller.getUssid():" + seller.getUssid());
+	    data.setUssid(seller.getUssid());
+	    data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N);
+	    requestData.add(data);
+	   }
+	  }
+	  catch (final EtailBusinessExceptions e)
+	  {
+	   ExceptionUtil.etailBusinessExceptionHandler(e, null);
+	  }
+
+	  catch (final Exception e)
+	  {
+
+	   throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+	  }
+	  return requestData;
+	 }
+
+	 /**
+	  * @param deliveryMode
+	  * @param ussid
+	  * @return deliveryModeData
+	  */
+	 private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid)
+	 {
+	  final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
+	  final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
+	    .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
+
+	  final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
+	  deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
+	  deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
+	  deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
+	  deliveryModeData.setSellerArticleSKU(ussid);
+	  deliveryModeData.setDeliveryCost(priceData);
+	  return deliveryModeData;
+	 }
+	
+	
 	/**
 	 * @param model
 	 */

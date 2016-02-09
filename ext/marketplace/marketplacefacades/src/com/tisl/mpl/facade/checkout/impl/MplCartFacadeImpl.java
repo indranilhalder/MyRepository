@@ -26,6 +26,7 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
@@ -38,7 +39,11 @@ import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
+import de.hybris.platform.storelocator.location.Location;
+import de.hybris.platform.storelocator.location.impl.LocationDTO;
+import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
+import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -52,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.annotation.Resource;
 
 import net.sourceforge.pmd.util.StringUtil;
 
@@ -69,9 +76,12 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
+import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
@@ -113,6 +123,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Autowired
 	private CatalogService catalogService;
+	
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
 
 	/*
 	 * @Desc fetching cartdata with selected ussid
@@ -517,7 +530,19 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		List<PinCodeResponseData> pinCodeResponseData = null;
 		final List<PincodeServiceData> pincodeServiceReqDataList = new ArrayList<PincodeServiceData>();
 		for (final OrderEntryData entryData : cartData.getEntries())
-		{
+   	{
+			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
+   
+   		final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+   		LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
+   		final LocationDTO dto = new LocationDTO();
+   		dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+   		dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+   		final Location myLocation = new LocationDtoWrapper(dto);
+   		LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+   		LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+
+			
 			if (!entryData.isGiveAway())
 			{
 				final PincodeServiceData pincodeServiceData = new PincodeServiceData();
@@ -619,6 +644,21 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						pincodeServiceData.setPrice(Double.valueOf(entryData.getBasePrice().getValue().doubleValue()));
 					}
 					pincodeServiceData.setDeliveryModes(sellerData.getDeliveryModes());
+					
+					final List<Location> storeList = pincodeService.getSortedLocationsNearby(myLocation.getGPS(),
+							Double.parseDouble(configurableRadius), sellerData.getSellerID());
+
+					LOG.debug("StoreList size is :" + storeList.size());
+
+					if (storeList.size() > 0)
+					{
+						final List<String> locationList = new ArrayList<String>();
+						for (final Location location : storeList)
+						{
+							locationList.add(location.getName());
+						}
+						pincodeServiceData.setStore(locationList);
+					}
 				}
 				else
 				{
@@ -1740,5 +1780,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 
 		return giftYourselfDeliveryModeDataMap;
+	}
+
+	/**
+	 * this method calls service to get inventories for stores.
+	 * 
+	 * @param storeLocationRequestDataList
+	 * @return returns Stores with inventories.
+	 */
+	@Override
+	public List<StoreLocationResponseData> getStoreLocationsforCnC(
+			final List<StoreLocationRequestData> storeLocationRequestDataList)
+	{
+
+		LOG.debug("from getStoreLocationforCnC");
+		return mplCommerceCartService.getStoreLocationsforCnC(storeLocationRequestDataList);
 	}
 }
