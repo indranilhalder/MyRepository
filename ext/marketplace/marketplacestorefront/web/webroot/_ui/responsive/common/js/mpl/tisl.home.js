@@ -140,12 +140,19 @@ $(window).on("resize load",function(){
 });
 
 function getBrandsYouLoveAjaxCall() {
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 			.ajax({
 				type : "GET",
 				dataType : "json",
 				url : ACC.config.encodedContextPath + "/getBrandsYouLove",
-
+				data : dataString,
+				
 				success : function(response) {
 					console.log(response.subComponents);
 					defaultComponentId="";
@@ -430,11 +437,18 @@ if ($('#bestPicks').children().length == 0 && $('#ia_site_page_id').val()=='home
 
 
 function getBestPicksAjaxCall(){
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getBestPicks",
+		data : dataString,
 		
 		success : function(response) {
 			renderHtml = "<h1>" + response.title + "</h1>"
@@ -500,11 +514,18 @@ if ($('#productYouCare').children().length == 0 && $('#ia_site_page_id').val()==
 }
 
 function getProductsYouCareAjaxCall(){
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getProductsYouCare",
+		data : dataString,
 		
 		success : function(response) {
 			
@@ -564,13 +585,19 @@ function getProductsYouCareAjaxCall(){
 //AJAX CALL PRODUCTS YOU CARE END
 
 function getNewAndExclusiveAjaxCall(){
-	
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getNewAndExclusive",
-
+		data : dataString,
+		
 		success : function(response) {
 			
 		
@@ -624,11 +651,18 @@ if ($('#newAndExclusive').children().length == 0 && $('#ia_site_page_id').val()=
 
 /* Promotional Banner Section starts */
 function getPromoBannerHomepage(){
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getPromoBannerHomepage",
+		data : dataString,
 
 		success : function(response) {
 			console.log(response.bannerImage);
@@ -665,18 +699,23 @@ if ($('#promobannerhomepage').children().length == 0 && $('#ia_site_page_id').va
 
 /* StayQued Section starts */
 function getStayQuedHomepage(){
-	//alert("1111="+ACC.config.commonResourcePath);
-	//alert("222222="+ACC.config.themeResourcePath);
-	//alert("33333="+ACC.config.siteResourcePath);
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 	.ajax({
 		type : "GET",
 		dataType : "json",
 		url : ACC.config.encodedContextPath + "/getStayQuedHomepage",
-
+		data : dataString,
+		
 		success : function(response) {
 			console.log(response.bannerImage);
 			var defaultHtml = "";
+			var linkText = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
 			var bannerAltText = response.bannerAltText;
@@ -684,7 +723,12 @@ function getStayQuedHomepage(){
 			var promoText2 = response.promoText2;
 			var promoText3 = response.promoText3;
 			var promoText4 = response.promoText4;
-			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">'+promoText2+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
+			if($(promoText2).is('p')){
+				linkText = $(promoText2).text();
+			} else {
+				linkText = promoText2;
+			}
+			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">'+linkText+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},
@@ -715,12 +759,19 @@ if ($('#showcase').children().length == 0 && $('#ia_site_page_id').val()=='homep
 
 // AJAX call for Showcase
 function getShowCaseAjaxCall() {
+	var env = $("#previewVersion").val();
+	if(env == "true"){
+		var dataString = 'version=Staged';
+	} else {
+		var dataString = 'version=Online';
+	}
 	$
 			.ajax({
 				type : "GET",
 				dataType : "json",
 				url : ACC.config.encodedContextPath + "/getCollectionShowcase",
-
+				data : dataString,
+				
 				success : function(response) {
 					console.log(response.subComponents);
 					defaultComponentId="";
