@@ -255,7 +255,7 @@
 			onCommentSubmitted:reviewCount, 
 			cid : '',
 			enabledShareProviders : 'facebook,twitter',
-			enabledProviders : 'facebook,google', // login providers that should be displayed when click post
+			enabledProviders : 'facebook,google,twitter', // login providers that should be displayed when click post
 			onLoad :commentBox,
 			//userAction: shareUserAction
 		}
