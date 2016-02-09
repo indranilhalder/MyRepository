@@ -1,4 +1,3 @@
-
 /*
  * [y] hybris Platform
  *
@@ -1327,8 +1326,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
 	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
 	public static final String CAMPAIGN_FILE_NAME = "campaign".intern();
-	public static final String CAMPAIGN_WEBSITE = "https://tatacliq.com/store".intern();
+	public static final String CAMPAIGN_WEBSITE = "http://tatacliq.com/store".intern();
 	public static final String CAMPAIGN_URL_ALL = "all".intern();
+
+	public static final String CAMPAIGN_URL_OFFER_IDENTIFIER = "/o/".intern();
+	public static final String CAMPAIGN_URL_OFFER_ID_URL = "?offer=".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{
@@ -1337,4 +1339,3 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
-
