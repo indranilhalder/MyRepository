@@ -149,12 +149,12 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLove", method = RequestMethod.GET)
-	public JSONObject getBrandsYouLove()
+	public JSONObject getBrandsYouLove(@RequestParam("version") final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		JSONObject brandsYouLoveJson = new JSONObject();
-		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage", "Section3Slot-Homepage",
-				"Online");
+		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section3Slot-Homepage", version);
 		if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
 		{
 			components = homepageSection3Slot.getCmsComponents();
@@ -259,8 +259,7 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem,
-			final ShowCaseLayout showcaseLayout)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
@@ -308,12 +307,12 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
-	public JSONObject getBestPicks()
+	public JSONObject getBestPicks(@RequestParam("version") final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject bestPicks = new JSONObject();
 		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section4CSlot-Homepage", "Online");
+				"Section4CSlot-Homepage", version);
 
 		if (CollectionUtils.isNotEmpty(homepageSection4CSlot.getCmsComponents()))
 		{
@@ -400,12 +399,12 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getProductsYouCare", method = RequestMethod.GET)
-	public JSONObject getProductsYouCare()
+	public JSONObject getProductsYouCare(@RequestParam("version") final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject productYouCare = new JSONObject();
 		final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section4DSlot-Homepage", "Online");
+				"Section4DSlot-Homepage", version);
 
 		if (CollectionUtils.isNotEmpty(homepageSection4DSlot.getCmsComponents()))
 		{
@@ -495,12 +494,12 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getNewAndExclusive", method = RequestMethod.GET)
-	public JSONObject getNewAndExclusive()
+	public JSONObject getNewAndExclusive(@RequestParam("version") final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject newAndExclusiveJson = new JSONObject();
 		final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section4BSlot-Homepage", "Online");
+				"Section4BSlot-Homepage", version);
 		if (CollectionUtils.isNotEmpty(homepageSection4BSlot.getCmsComponents()))
 		{
 			components = homepageSection4BSlot.getCmsComponents();
@@ -584,10 +583,10 @@ public class HomePageController extends AbstractPageController
 	/* Home Page Promotional Banner */
 	@ResponseBody
 	@RequestMapping(value = "/getPromoBannerHomepage", method = RequestMethod.GET)
-	public JSONObject getPromoBannerHomepage()
+	public JSONObject getPromoBannerHomepage(@RequestParam("version") final String version)
 	{
 		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section4ASlot-Homepage", "Online");
+				"Section4ASlot-Homepage", version);
 
 		return getJsonBanner(homepageSection4ASlot, "promo");
 	}
@@ -595,10 +594,10 @@ public class HomePageController extends AbstractPageController
 	/* Home Page StayQued */
 	@ResponseBody
 	@RequestMapping(value = "/getStayQuedHomepage", method = RequestMethod.GET)
-	public JSONObject getStayQuedHomepage()
+	public JSONObject getStayQuedHomepage(@RequestParam("version") final String version)
 	{
 		final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section5ASlot-Homepage", "Online");
+				"Section5ASlot-Homepage", version);
 		return getJsonBanner(homepageSection5ASlot, "stayQued");
 
 	}
@@ -766,12 +765,12 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getCollectionShowcase", method = RequestMethod.GET)
-	public JSONObject getCollectionShowcase()
+	public JSONObject getCollectionShowcase(@RequestParam("version") final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		JSONObject collectionShowcase = new JSONObject();
-		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage("homepage", "Section6Slot-Homepage",
-				"Online");
+		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage("homepage",
+				"Section6Slot-Homepage", version);
 		if (CollectionUtils.isNotEmpty(homepageSection6Slot.getCmsComponents()))
 		{
 			components = homepageSection6Slot.getCmsComponents();
