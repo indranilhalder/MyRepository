@@ -306,7 +306,8 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 						MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
 				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
-				promoURL.append("/");
+
+				promoURL.append('/');
 				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 				promoURL.append(promotion.getCode());
 
@@ -342,7 +343,7 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 							MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
 					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 					promoURL.append(urlDataList.get(i));
-					promoURL.append("/");
+					promoURL.append('/');
 					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 					promoURL.append(promotion.getCode());
 
@@ -355,7 +356,7 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 							MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
 					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 					promoURL.append(urlDataList.get(i));
-					promoURL.append("/");
+					promoURL.append('/');
 					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 					promoURL.append(promotion.getCode());
 
