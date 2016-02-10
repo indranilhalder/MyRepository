@@ -4329,6 +4329,23 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<attribute qualifier="collectionDays" autocreate="true"
+						type="java.lang.Integer">
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<description>Seller specific collection Days for CNC products</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="slaveId" autocreate="true"
+						type="java.lang.String">
+						<description>Store id for Click and collect</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
