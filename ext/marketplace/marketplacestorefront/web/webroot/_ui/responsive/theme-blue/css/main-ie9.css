@@ -401,7 +401,7 @@ header .content nav > ul > li > ul > li > ul > li.short
   padding:10px 0;
 }
 
-.owl-pagination .owl-page  {
+/* .owl-pagination .owl-page  {
   margin:0 6px;
   width: 11px; 
   height: 11px;
@@ -415,8 +415,8 @@ header .content nav > ul > li > ul > li > ul > li.short
   -o-border-radius: 20px; 
   border-radius: 20px; 
   box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
-}
-.owl-pagination .owl-page:hover { 
+} */
+/* .owl-pagination .owl-page:hover { 
   background: #333; 
   background: rgba(0,0,0,0.7); 
 }
@@ -424,7 +424,7 @@ header .content nav > ul > li > ul > li > ul > li.short
   background: #000; 
   background: rgba(0,0,0,0.9); 
   cursor: default; 
-}
+} */
 
 
  .owl-prev::after {
@@ -2511,7 +2511,7 @@ display:none;
 }
 
 .hero .major-promos span{
-	font-size:42px;
+	/* font-size:42px; */
 }
 .select-list ul li{
 	font-size:16px;
@@ -6516,24 +6516,24 @@ a img{
 }
   .hero .major-promos span.bannercontent-headerdescription
 {
-	font-family: "Avenir Next";
+	/* font-family: "Avenir Next";
 	font-style: normal;
 	font-weight: 100;
 	line-height:22px;
-	font-size:14px;
+	font-size:14px; */
 	margin-bottom:10px;
-	text-transform:Uppercase;
-	letter-spacing:0px;
+	/* text-transform:Uppercase;
+	letter-spacing:0px; */
 }
 .hero .major-promos  span:first-child+span.banner-contentDescription
 {
-	font-family: "Avenir Next";
+	/* font-family: "Avenir Next";
 	font-style: normal;
 	font-weight: 100;
 	line-height:22px;
 	font-size:14px;
 	letter-spacing:0px;
-	text-transform:inherit;
+	text-transform:inherit; */
 	
 }
 .brandLanding-shopButton
@@ -11074,17 +11074,17 @@ header .banner.active span.toggle.mobile::before,header .banner.active span.togg
 }
 @media (max-width:650px) {
 	.hero .major-promos span:first-child {
-		font-family: "Avenir Next";
+		/* font-family: "Avenir Next";
 	font-style: normal;
 	font-weight: 100;
 	line-height:20px;
 	font-size:14px;
 	letter-spacing:0px;
-	text-transform:inherit;
+	text-transform:inherit; */
 	padding:0 15px;
 	}
 	.hero .major-promos li a, .hero .minor-promos li a {
-  	  font-size: 12px;
+  	  /* font-size: 12px; */
 	}
 	body .account .right-account div.new-address input[type="radio"]+label {
 		padding-right:0px;
@@ -11354,8 +11354,8 @@ div.content-block-slider.electronic-brand-slider{
 @media ( max-width : 650px) {
 	.hero .major-promos li a.button {
 		height: 40px;
-		line-height: 17px;
-		font-weight: bold;
+		/* line-height: 17px;
+		font-weight: bold; */
 	}
 	.apparel-brand div.brand-content-grid>ul li:last-child {
 		padding: 0px 20px;
@@ -15696,7 +15696,7 @@ float:none;
 margin:20px 0;
 }
 .timeout-slider .carousel .item .major-promos a,.timeout-slider .carousel .item .minor-promos a{
-color:#000;
+/* color:#000; */
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
     background: transparent;
@@ -15942,6 +15942,8 @@ li.store-locator-header a:before{
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'liga';
+    font-smoothing: antialiased;
 }
 span.material-icons {
     font-style: normal;
