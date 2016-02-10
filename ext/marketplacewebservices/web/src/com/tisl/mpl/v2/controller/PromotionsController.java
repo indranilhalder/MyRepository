@@ -93,7 +93,7 @@ public class PromotionsController extends BaseController
 	@Cacheable(value = "promotionCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(false,true,'getPromotions',#type,#promotionGroup,#fields)")
 	public PromotionListWsDTO getPromotions(@RequestParam final String type,
 			@RequestParam(required = false) final String promotionGroup, @RequestParam(defaultValue = "BASIC") final String fields)
-					throws RequestParameterException
+			throws RequestParameterException
 	{
 		validateTypeParameter(type);
 
@@ -124,9 +124,8 @@ public class PromotionsController extends BaseController
 	{
 		if (!ORDER_PROMOTION.equals(type) && !PRODUCT_PROMOTION.equals(type) && !ALL_PROMOTIONS.equals(type))
 		{
-			throw new RequestParameterException(
-					"Parameter type=" + sanitize(type)
-							+ " is not supported. Permitted values for this parameter are : 'order', 'product' or 'all'",
+			throw new RequestParameterException("Parameter type=" + sanitize(type)
+					+ " is not supported. Permitted values for this parameter are : 'order', 'product' or 'all'",
 					RequestParameterException.INVALID, "type");
 		}
 	}
