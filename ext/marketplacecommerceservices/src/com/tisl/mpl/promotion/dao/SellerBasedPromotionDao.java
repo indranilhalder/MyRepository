@@ -24,4 +24,6 @@ public interface SellerBasedPromotionDao
 
 	List<AbstractPromotionModel> fetchPromotionDetails(String code);
 
+	List<AbstractPromotionModel> getPromoDetails();
+
 }

@@ -90,4 +90,20 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		query.addQueryParameter("code", code);
 		return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
 	}
+
+	/**
+	 * Fetch Promotion Details
+	 */
+	@Override
+	public List<AbstractPromotionModel> getPromoDetails()
+	{
+		LOG.debug("Fetching Promotion Details");
+		final String queryString = //
+		"SELECT {p:" + AbstractPromotionModel.PK + "} "//
+				+ "FROM {" + AbstractPromotionModel._TYPECODE + " AS p } where" + P + AbstractPromotionModel.ENABLED + "} = ?true";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("true", Boolean.TRUE);
+		return flexibleSearchService.<AbstractPromotionModel> search(query).getResult();
+	}
 }
