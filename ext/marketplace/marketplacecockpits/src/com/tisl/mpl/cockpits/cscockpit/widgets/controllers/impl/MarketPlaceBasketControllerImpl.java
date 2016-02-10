@@ -843,7 +843,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				final List<AbstractOrderEntryModel> applicableOrderEntryList = mplVoucherService.getOrderEntryModelFromVouEntries(voucher,
 						cartModel);
 				
-				final String checkMsg = checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
+//				final String checkMsg = mplVoucherService.checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
 //				if(!checkMsg.equalsIgnoreCase("success"))
 //				{
 //					LOG.error("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");

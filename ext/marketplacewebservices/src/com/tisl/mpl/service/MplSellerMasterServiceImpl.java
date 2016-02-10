@@ -700,7 +700,7 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 	{
 		final SellerMasterResponseWsDTO sellerMasterResWsDTO = new SellerMasterResponseWsDTO();
 		String status = MarketplacecommerceservicesConstants.SUCCESSS_RESP;
-		//final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder();
 		try
 		{
 
@@ -948,8 +948,8 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			{
 				resModel.setSellerMaster(masterModel);
 			}
-			final CatalogVersionModel catalogVersionModel = catalogService.getCatalogVersion(configurationService.getConfiguration()
-					.getString("DEFAULT_IMPORT_CATALOG_ID"),
+			final CatalogVersionModel catalogVersionModel = catalogService.getCatalogVersion(
+					configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_ID"),
 					configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_VERSION"));
 			if (null != catalogVersionModel)
 			{
