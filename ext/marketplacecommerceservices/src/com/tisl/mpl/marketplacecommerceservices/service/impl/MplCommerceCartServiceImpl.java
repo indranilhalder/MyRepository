@@ -3138,7 +3138,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						}
 						else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
 						{
-							deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CC;
+							deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
 						}
 
 						if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
