@@ -42,9 +42,9 @@ public class PromotionCreationJob extends AbstractJobPerformable<BulkPromotionCr
 	private final static Logger LOG = Logger.getLogger(PromotionCreationJob.class.getName());
 
 	@SuppressWarnings("unused")
-	private static String ERROR_PREFIX = "ERROR_";
+	private static final String ERROR_PREFIX = "ERROR_";
 	@SuppressWarnings("unused")
-	private static String PROCESSED_PREFIX = "PROCESSED_";
+	private static final String PROCESSED_PREFIX = "PROCESSED_";
 
 	@Autowired
 	private ConfigurationService configurationService;
