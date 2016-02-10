@@ -282,7 +282,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * To get all categories shop by department
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getallCategories()
 	 */
 	@Override
@@ -424,7 +424,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getAboutusBanner()
 	 */
 	@Override
@@ -496,7 +496,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getHelpnServices()
 	 */
 	@Override
@@ -972,13 +972,9 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 						}
 					}
 				}
-
 				catch (final CMSItemNotFoundException e)
 				{
-					// YTODO Auto-generated catch block
-					//LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-
-					e.printStackTrace();
+					LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
 					throw new EtailNonBusinessExceptions(e);
 				}
 			}
@@ -986,9 +982,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 		catch (final Exception e)
 		{
-			// YTODO Auto-generated catch block
-			//LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-			e.printStackTrace();
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
 			throw new EtailNonBusinessExceptions(e);
 		}
 

@@ -160,14 +160,12 @@ public class MplPaymentWebHookServiceImpl implements MplPaymentWebHookService
 		}
 		catch (final ModelSavingException e)
 		{
-			e.printStackTrace();
-
-			LOG.error("Exception while saving payment info model with " + e);
+			LOG.error("Exception while saving payment info model with ", e);
 			throw new ModelSavingException(e + " :Exception while saving payment info model with");
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("General Exception while saving payment info model with ", e);
 		}
 
 	}

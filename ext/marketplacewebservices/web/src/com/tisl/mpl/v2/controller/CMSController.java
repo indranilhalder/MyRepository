@@ -19,6 +19,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,7 +57,7 @@ public class CMSController extends BaseController
 {
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 *
+	 * 
 	 * static { OPTIONS = getOptions(); }
 	 */
 
@@ -80,6 +81,8 @@ public class CMSController extends BaseController
 
 	private static final String CHANNEL = "mobile";
 
+	private static final Logger LOG = Logger.getLogger(CMSController.class);
+
 
 	@RequestMapping(value = "/category/{categoryId}", method = RequestMethod.GET)
 	@ResponseBody
@@ -101,7 +104,8 @@ public class CMSController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error(" getCatalog Exception is : ", e);
 
 			final PageData contentData = mplCmsFacade.populatePageType(categoryId, false, "listing");
 
@@ -225,12 +229,14 @@ public class CMSController extends BaseController
 		catch (final CMSItemNotFoundException e)
 		{
 			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("CMSItemNotFoundException : ", e);
 		}
 		catch (final NullPointerException e)
 		{
 			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("NullPointerException : ", e);
 		}
 		//Removed Finally block for sonar fixes
 		return dto;
@@ -258,7 +264,8 @@ public class CMSController extends BaseController
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error(" getCatalogForSeller Exception : ", e);
 
 			final PageData contentData = mplCmsFacade.populateSellerPageType(sellerId, "listing");
 

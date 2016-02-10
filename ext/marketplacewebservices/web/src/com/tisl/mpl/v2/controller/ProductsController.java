@@ -965,16 +965,16 @@ public class ProductsController extends BaseController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-			e.printStackTrace();
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			//e.printStackTrace();
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
 
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-			e.printStackTrace();
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
+			//e.printStackTrace();
 			productSearchPage.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			productSearchPage.setError(MarketplacecommerceservicesConstants.EXCEPTION_IS + ":" + e);
 		}
