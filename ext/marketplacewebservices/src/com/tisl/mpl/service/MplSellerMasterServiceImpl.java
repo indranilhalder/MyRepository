@@ -720,10 +720,12 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 							.append(sellerMasterWsDTO.getLastname());
 					//resModel.setSellerName(stringBuilder.toString());
 				}
-				else
-				{
-					//	resModel.setSellerName(sellerMasterWsDTO.getFirstname());
-				}
+
+				//Blocked for Sonar Fix
+				//				else
+				//				{
+				//					//	resModel.setSellerName(sellerMasterWsDTO.getFirstname());
+				//				}
 
 				masterModel.setFirstname(sellerMasterWsDTO.getFirstname());
 			}
