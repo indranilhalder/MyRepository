@@ -21,7 +21,8 @@
 <!--[if gte IE 9]>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/main-ie9.css"/>
 <![endif]-->
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 <%--  AddOn Theme CSS files --%>
 <c:forEach items="${addOnThemeCssPaths}" var="addOnThemeCss">
 	<link rel="stylesheet" type="text/css" media="all" href="${addOnThemeCss}"/>
