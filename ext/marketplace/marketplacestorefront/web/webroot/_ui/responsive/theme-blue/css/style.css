@@ -20,6 +20,9 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 html,body,main {
 	height:100%;
 }
+body *{
+	 word-break: break-word;
+}
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block; }
@@ -3367,18 +3370,17 @@ h2 {
 }
 
 .hero .minor-promos a:after, .hero .top-promos a:after , .hero .bottom-promos a:after  {
-	content: "";
-	display: inline-block;
-	height: 0;
-	width: 0;
-	border-bottom: 4.5px solid transparent;
-	border-left: 4.5px solid #000;
-	border-top: 4.5px solid transparent;
-	margin-left: 10px;
-	margin-bottom: 0px;
-	-webkit-transition: border-color 0.3s;
-	-moz-transition: border-color 0.3s;
-	transition: border-color 0.3s;
+	font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f105";
+    font-size: 18px;
+    vertical-align: top;
+    padding-left: 5px;
+    font-weight: lighter;
+    border: none;
+    position: relative;
+    top: -1px;
 }
 
 .hero .minor-promos a:hover ,.hero .top-promos a:hover ,.hero .bottom-promos a:hover {
@@ -29506,7 +29508,7 @@ div#promobannerhomepage{
 margin:30px 0;
 }
 div#promobannerhomepage a{
-color:#fff;
+color:inherit;
 text-decoration: underline;
 }
 div#promobannerhomepage a:hover{
@@ -29718,6 +29720,7 @@ color:#000;
 .qued .qued-content h5, .qued .qued-content h2, 
 .qued .qued-content h3 {
     color: #A9133B;
+    
 }
 .qued-content h5 {
     font-size: 17px;
@@ -29756,6 +29759,7 @@ color:#000;
     margin: 20px 0px;
     text-align: left;
     line-height: 20px;
+     word-break: break-word;
 }
 .qued-content a.button.maroon {
     margin-top: 90px;
