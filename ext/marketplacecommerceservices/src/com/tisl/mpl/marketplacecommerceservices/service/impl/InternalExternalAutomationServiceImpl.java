@@ -9,6 +9,7 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -139,7 +140,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									/*
 									 * String CategorySeqBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|" +
 									 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
-									 *
+									 * 
 									 * CategorySeqBanner = CategorySeqBanner.substring(CategorySeqBanner.lastIndexOf("/") + 1,
 									 * CategorySeqBanner.length());
 									 */
@@ -188,12 +189,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 										/*
 										 * Authenticator.setDefault(new Authenticator() {
-										 *
+										 * 
 										 * @Override public PasswordAuthentication getPasswordAuthentication() { final String
 										 * username = "siteadmin"; final String password = "ASDF!@#$asdf1234";
 										 * LOG.info("Authenticating Login......"); return new PasswordAuthentication(username,
 										 * password.toCharArray());
-										 *
+										 * 
 										 * } });
 										 */
 
@@ -201,14 +202,14 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										//	final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
 										/*
 										 * final URL url = new URL(ImageUrl);
-										 *
+										 * 
 										 * LOG.info("Trying to access url:::::" + url.toString() + "URI" + url.toURI());
-										 *
+										 * 
 										 * final BufferedImage bimg = ImageIO.read(url.openStream()); final int width =
 										 * bimg.getWidth(); final int height = bimg.getHeight();
-										 *
+										 * 
 										 * final String size = String.valueOf(width) + " X " + String.valueOf(height);
-										 *
+										 * 
 										 * automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
 										 */
 										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
@@ -299,9 +300,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
 									/*
 									 * if (!ImageUrl.startsWith("http://")) {
-									 * 
+									 *
 									 * ImageUrl = "http:" + ImageUrl; LOG.debug("2222.2+++++++++++++Image URL:::::" + ImageUrl);
-									 * 
+									 *
 									 * } else if (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
 									 * LOG.debug("2222.22+++++++++++++Image URL:::::" + ImageUrl); }
 									 */
@@ -319,11 +320,11 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 										/*
 										 * final URL url = new URL(ImageUrl);
-										 *
+										 * 
 										 * final BufferedImage bimg = ImageIO.read(url.openStream());
-										 *
+										 * 
 										 * final int width = bimg.getWidth(); final int height = bimg.getHeight();
-										 *
+										 * 
 										 * final String size = String.valueOf(width) + " X " + String.valueOf(height);
 										 */
 
@@ -366,7 +367,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							 * String CategoryBigFourPromoBanner = findCategoryLink(bigPromoBanner.getPromoText1() + "|" +
 							 * bigPromoBanner.getPromoText2() + "|" + bigPromoBanner.getPromoText3() + "" +
 							 * bigPromoBanner.getPromoText4());
-							 *
+							 * 
 							 * CategoryBigFourPromoBanner = CategoryBigFourPromoBanner.substring(
 							 * CategoryBigFourPromoBanner.lastIndexOf("/") + 1, CategoryBigFourPromoBanner.length());
 							 */
@@ -415,7 +416,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									 * LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl); } else if
 									 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
 									 * LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
-									 *
+									 * 
 									 * }
 									 */
 
@@ -433,13 +434,13 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										//final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
 										/*
 										 * final URL url = new URL(ImageUrl);
-										 *
-										 *
+										 * 
+										 * 
 										 * final BufferedImage bimg = ImageIO.read(url.openStream());
-										 *
+										 * 
 										 * LOG.info("Connection Successful!!!!!!!"); final int width = bimg.getWidth(); final int
 										 * height = bimg.getHeight();
-										 *
+										 * 
 										 * final String size = String.valueOf(width) + " X " + String.valueOf(height);
 										 */
 
@@ -609,7 +610,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
-			 *
+			 * 
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
