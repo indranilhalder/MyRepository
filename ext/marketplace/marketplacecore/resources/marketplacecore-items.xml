@@ -149,6 +149,12 @@
 			<value code="SELLER_ACCEPTED" />
 			<value code="RETURN_COMPLETED" />
 			<value code="ORDER_CANCELLED" />
+            <value code="ORDER_REALLOCATED"/>
+			<value code="CNC_INITIATED"/>
+			<value code="READY_FOR_COLLECTION"/>
+			<value code="ORDER_COLLECTED"/>
+			<value code="ORDER_UNCOLLECTED"/>
+			<value code="RETURNINITIATED_BY_RTO"/>	
 		</enumtype>
 
 		<enumtype code="OrderStatus" autocreate="false" generate="false"
@@ -234,6 +240,12 @@
 			<value code="PICK_LIST_GENERATED" />
 			<value code="SELLER_ACCEPTED" />
 			<value code="RETURN_COMPLETED" />
+			<value code="ORDER_REALLOCATED"/>
+			<value code="CNC_INITIATED"/>
+			<value code="READY_FOR_COLLECTION"/>
+			<value code="ORDER_COLLECTED"/>
+			<value code="ORDER_UNCOLLECTED"/>
+			<value code="RETURNINITIATED_BY_RTO"/>	
 		</enumtype>
 
 		<!-- pcm changes! -->
@@ -2691,6 +2703,13 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" optional="true" />
 					</attribute>
+					
+					<attribute qualifier="landmark" type="java.lang.String">
+					<description>Address Landmark </description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 
