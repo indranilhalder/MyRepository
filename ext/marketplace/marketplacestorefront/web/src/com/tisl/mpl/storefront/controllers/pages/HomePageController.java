@@ -28,7 +28,6 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,17 +88,12 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
-
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
 
 	@Resource(name = "homepageComponentService")
 	private HomepageComponentService homepageComponentService;
 
-	private static final String SEQUENCE_NUMBER = "SequenceNumber";
-	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
 	private static final String VERSION = "version";
 	private static final String HOMEPAGE = "homepage";
 	private static final String TITLE = "title";
@@ -593,13 +587,9 @@ public class HomePageController extends AbstractPageController
 	{
 		final List<ImageData> images = (List<ImageData>) productData.getImages();
 		String imageUrl = MISSING_IMAGE_URL;
-		if (images != null)
+		if (images != null && images.get(0).getUrl() != null)
 		{
-			if (images.get(0).getUrl() != null)
-			{
-				imageUrl = images.get(0).getUrl();
-			}
-
+			imageUrl = images.get(0).getUrl();
 		}
 
 		return imageUrl;
