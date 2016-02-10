@@ -9,7 +9,6 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
-import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -45,12 +44,10 @@ import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 public class InternalExternalAutomationServiceImpl implements InternalExternalAutomationService
 {
 
-	//static Logger LOG = Logger.getLogger(this.getClass());
-	private static final Logger LOG = Logger.getLogger(InternalExternalAutomationServiceImpl.class);
-
-	@Autowired
-	private CMSPageService cmsPageService;
-
+	Logger LOG = Logger.getLogger(this.getClass());
+	/*
+	 * @Autowired private CMSPageService cmsPageService;
+	 */
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -72,9 +69,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 		final Collection<CatalogVersionModel> catalogmodelCollection = new ArrayList<CatalogVersionModel>();
 		final List<InternalCampaignReportData> CampaignDataList = new ArrayList<InternalCampaignReportData>();
+
 		InternalCampaignReportData campaignDataSeqBanner = null;
 		InternalCampaignReportData campaignDataBigPromoBanner = null;
 		InternalCampaignReportData campaignDataBigFourPromoBanner = null;
+		StringBuffer sb = null;
+		String imageUrl = MarketplacecommerceservicesConstants.EMPTY;
 		//final InternalCampaignReportData campaignDataSeqBanner = new InternalCampaignReportData();
 		//final InternalCampaignReportData campaignDataBigPromoBanner = new InternalCampaignReportData();
 		//final InternalCampaignReportData campaignDataBigFourPromoBanner = new InternalCampaignReportData();
@@ -93,6 +93,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 			for (final ContentPageModel contentPageItr : contentPages)
 			{
+
 				final Map<String, String> automationMap = new HashMap<String, String>();
 				//final Map<String, String> automationMap = new HashMap<String, String>();
 				@SuppressWarnings("deprecation")
@@ -167,6 +168,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
 										{
 											LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
+											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+											imageUrl = sb.append("http:").toString();
+											LOG.info("Sequntial Banner Image URl: " + imageUrl);
 											//TODO : add method for checking the image size
 
 										}
@@ -176,6 +180,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										{
 
 											LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
+											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+											imageUrl = sb.append("https:").toString();
+											LOG.info("Sequntial Banner Image URl: " + imageUrl);
 											//TODO add method for checking the image size
 										}
 
@@ -238,7 +245,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								}
 								else
 								{
-									LOG.info("" + banner.getMedia());
+									LOG.info("MplBigFourPromoBannerComponentModel ......" + banner.getMedia());
 								}
 							}
 
@@ -265,7 +272,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 							else
 							{
-
 								CategoryBigPromoBanner = "";
 							}
 
@@ -293,61 +299,68 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							try
 							{
 
-								if (null != bigPromoBanner.getBannerImage())
+								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
 								{
-									final String ImageUrl = bigPromoBanner.getBannerImage().getURL();
-									LOG.debug("+++++++++++++2222 +Image URL:::::" + ImageUrl);
-									//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
-									/*
-									 * if (!ImageUrl.startsWith("http://")) {
-									 *
-									 * ImageUrl = "http:" + ImageUrl; LOG.debug("2222.2+++++++++++++Image URL:::::" + ImageUrl);
-									 *
-									 * } else if (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
-									 * LOG.debug("2222.22+++++++++++++Image URL:::::" + ImageUrl); }
-									 */
+									LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									imageUrl = sb.append("http:").toString();
+									//TODO : add method for checking the image size
 
-									try
-									{
-
-										// Sets the authenticator that will be used by the networking code
-										// when a proxy or an HTTP server asks for authentication.
-										Authenticator.setDefault(new CustomAuthenticator());
-
-
-
-										//final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
-
-										/*
-										 * final URL url = new URL(ImageUrl);
-										 * 
-										 * final BufferedImage bimg = ImageIO.read(url.openStream());
-										 * 
-										 * final int width = bimg.getWidth(); final int height = bimg.getHeight();
-										 * 
-										 * final String size = String.valueOf(width) + " X " + String.valueOf(height);
-										 */
-
-
-
-										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-										automationMap.put("size", bigPromoBanner.getBannerImage().getInternalURL().toString());
-
-										campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-										//campaignDataBigPromoBanner.setSize(size);
-
-
-										CampaignDataList.add(campaignDataBigPromoBanner);
-									}
-									/*
-									 * catch (final MalformedURLException e) { LOG.error("Malformed URL: " + e.getMessage()); }
-									 * catch (final IOException e) { LOG.error("IO Exception: " + e.getMessage()); }
-									 */
-									catch (final Exception e)
-									{
-										LOG.error(e.getMessage());
-									}
 								}
+								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith("https://"))
+								{
+
+									LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									imageUrl = sb.append("https:").toString();
+									//TODO add method for checking the image size
+								}
+								//final String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+								//LOG.debug("+++++++++++++2222 +Image URL:::::" + ImageUrl);
+								//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+								/*
+								 * if (!ImageUrl.startsWith("http://")) { ImageUrl = "http:" + ImageUrl;
+								 * LOG.debug("2222.2+++++++++++++Image URL:::::" + ImageUrl); } else if
+								 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
+								 * LOG.debug("2222.22+++++++++++++Image URL:::::" + ImageUrl); }
+								 */
+
+								try
+								{
+
+									// Sets the authenticator that will be used by the networking code
+									// when a proxy or an HTTP server asks for authentication.
+									Authenticator.setDefault(new CustomAuthenticator());
+
+
+									//final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
+									/*
+									 * final URL url = new URL(ImageUrl); final BufferedImage bimg =
+									 * ImageIO.read(url.openStream()); final int width = bimg.getWidth(); final int height =
+									 * bimg.getHeight(); final String size = String.valueOf(width) + " X " +
+									 * String.valueOf(height);
+									 */
+
+									automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+									automationMap.put("size", bigPromoBanner.getBannerImage().getInternalURL().toString());
+
+									campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+									//campaignDataBigPromoBanner.setSize(size);
+
+
+									CampaignDataList.add(campaignDataBigPromoBanner);
+								}
+								/*
+								 * catch (final MalformedURLException e) { LOG.error("Malformed URL: " + e.getMessage()); }
+								 * catch (final IOException e) { LOG.error("IO Exception: " + e.getMessage()); }
+								 */
+								catch (final Exception e)
+								{
+									LOG.error(e.getMessage());
+								}
+								//}
 							}
 							catch (final Exception e)
 							{
@@ -362,14 +375,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataBigFourPromoBanner = new InternalCampaignReportData();
 							final MplBigFourPromoBannerComponentModel bigPromoBanner = (MplBigFourPromoBannerComponentModel) componentItr;
 							String CategoryBigFourPromoBanner = "";
-
 							/*
 							 * String CategoryBigFourPromoBanner = findCategoryLink(bigPromoBanner.getPromoText1() + "|" +
 							 * bigPromoBanner.getPromoText2() + "|" + bigPromoBanner.getPromoText3() + "" +
-							 * bigPromoBanner.getPromoText4());
-							 * 
-							 * CategoryBigFourPromoBanner = CategoryBigFourPromoBanner.substring(
-							 * CategoryBigFourPromoBanner.lastIndexOf("/") + 1, CategoryBigFourPromoBanner.length());
+							 * bigPromoBanner.getPromoText4()); CategoryBigFourPromoBanner =
+							 * CategoryBigFourPromoBanner.substring( CategoryBigFourPromoBanner.lastIndexOf("/") + 1,
+							 * CategoryBigFourPromoBanner.length());
 							 */
 							if (contentPageItr.getCategoryAssociated() != null)
 							{
@@ -378,7 +389,6 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 							else
 							{
-
 								CategoryBigFourPromoBanner = "";
 							}
 
@@ -405,66 +415,73 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							try
 							{
 
-								if (null != bigPromoBanner.getBannerImage())
+								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
 								{
-									final String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+									//final String ImageUrl = bigPromoBanner.getBannerImage().getURL();
 									//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
-									LOG.debug("++++++++ 3333 +++++Image URL:::::" + ImageUrl);
-
-									/*
-									 * if (!ImageUrl.startsWith("http://")) { ImageUrl = "http:" + ImageUrl;
-									 * LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl); } else if
-									 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
-									 * LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
-									 * 
-									 * }
-									 */
-
-									try
-									{
-
-										// Sets the authenticator that will be used by the networking code
-										// when a proxy or an HTTP server asks for authentication.
-										//CustomAuthenticator.getPasswordAuthentication();
-										//final CustomAuthenticator customAuth = new CustomAuthenticator();
-										//Authenticator.setDefault(new CustomAuthenticator());
-
-
-
-										//final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
-										/*
-										 * final URL url = new URL(ImageUrl);
-										 * 
-										 * 
-										 * final BufferedImage bimg = ImageIO.read(url.openStream());
-										 * 
-										 * LOG.info("Connection Successful!!!!!!!"); final int width = bimg.getWidth(); final int
-										 * height = bimg.getHeight();
-										 * 
-										 * final String size = String.valueOf(width) + " X " + String.valueOf(height);
-										 */
-
-										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-										automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
-
-										campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-										//campaignDataBigFourPromoBanner.setSize(size);
-
-
-									}
-
-									/*
-									 * catch (final MalformedURLException e) { LOG.error("Malformed URL: " + e.getMessage()); }
-									 * catch (final IOException e) { LOG.error("IO Exception: " + e.getMessage()); }
-									 */
-									catch (final Exception e)
-									{
-										LOG.error(e.getMessage());
-									}
+									//LOG.debug("++++++++ 3333 +++++Image URL:::::" + ImageUrl);
+									LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									imageUrl = sb.append("http:").toString();
+									//TODO : add method for checking the image size
 								}
 
-							}
+								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith("https://"))
+								{
 
+									LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									imageUrl = sb.append("https:").toString();
+									//TODO add method for checking the image size
+								}
+
+
+								/*
+								 * if (!ImageUrl.startsWith("http://")) { ImageUrl = "http:" + ImageUrl;
+								 * LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl); } else if
+								 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
+								 * LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
+								 *
+								 * }
+								 */
+
+								try
+								{
+
+									// Sets the authenticator that will be used by the networking code
+									// when a proxy or an HTTP server asks for authentication.
+									//CustomAuthenticator.getPasswordAuthentication();
+									//final CustomAuthenticator customAuth = new CustomAuthenticator();
+									//Authenticator.setDefault(new CustomAuthenticator());
+
+
+									//final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
+									/*
+									 * final URL url = new URL(ImageUrl); final BufferedImage bimg =
+									 * ImageIO.read(url.openStream()); LOG.info("Connection Successful!!!!!!!"); final int width
+									 * = bimg.getWidth(); final int height = bimg.getHeight(); final String size =
+									 * String.valueOf(width) + " X " + String.valueOf(height);
+									 */
+
+									automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
+									automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
+
+									campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
+									//campaignDataBigFourPromoBanner.setSize(size);
+
+								}
+
+								/*
+								 * catch (final MalformedURLException e) { LOG.error("Malformed URL: " + e.getMessage()); }
+								 * catch (final IOException e) { LOG.error("IO Exception: " + e.getMessage()); }
+								 */
+								catch (final Exception e)
+								{
+									LOG.error(e.getMessage());
+								}
+							}
 							catch (final Exception e)
 							{
 								LOG.error(e.getMessage());
@@ -679,15 +696,20 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		@Override
 		protected PasswordAuthentication getPasswordAuthentication()
 		{
-			String username = "";
-			String password = "";
-			username = "siteadmin";
-			password = "ASDF!@#$asdf1234";
+			final String username = "";
+			final String password = "";
+			//System.out.println("=======+++++++++===============================");
+
+			// Get information about the request
+
+			//	username = "siteadmin";
+			//password = "ASDF!@#$asdf1234";
 
 			// Return the information (a data holder that is used by Authenticator)
 			return new PasswordAuthentication(username, password.toCharArray());
 
 		}
+
 	}
 
 }
