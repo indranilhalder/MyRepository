@@ -1823,6 +1823,11 @@ h2 {
       width: -webkit-calc(100% - 585px);
     width: calc(100% - 585px); 
         }}
+           @media  (min-width: 791px) and (max-width: 901px) {
+			header .content .search {
+      width: -webkit-calc(100% - 530px);
+    width: calc(100% - 530px); 
+        }}
            @media (min-width: 791px) {
     header .content .search form {
       height: 50px;
@@ -9296,7 +9301,7 @@ footer .banner {
   @media (min-width: 651px) {
     .listing.wrapper .left-block {
       width: 30%;
-      padding-top: 15px; 
+      padding-top: 5px; 
       margin-top:2px;
      }
       .listing.wrapper .left-block .listing-leftmenu:first-child {
@@ -9768,7 +9773,9 @@ body .account .right-account .order-history .pagination li{
   position: relative;
     padding: 10px 0;
     word-break: break-word;
-    padding-right: 15px; }
+    padding-right: 15px;
+    height: 14px;
+    line-height: 11px; }
   .listing-leftmenu h4:after {
 	font-family: 'FontAwesome';
 	-webkit-font-smoothing: antialiased;
@@ -29538,6 +29545,7 @@ text-align:center;
 .showcaseItem > a.showcase-border{
 	border-bottom: 1px solid #000;
 	color:#000;
+	 word-break: break-word;
 }
 .showcase-heading {
    text-align: center;
@@ -29717,6 +29725,7 @@ color:#000;
 .qued .qued-content h5, .qued .qued-content h2, 
 .qued .qued-content h3 {
     color: #A9133B;
+    word-break: break-word;
     
 }
 .qued-content h5 {
@@ -29945,6 +29954,11 @@ left: auto;
 
 header:not(.compact) .content .marketplace.compact{
 	display:none;
+}
+@media (min-width:1081px){
+	header .content nav > ul > li > .toggle{
+	letter-spacing: 1.5px;
+	white-space: nowrap;}
 }
 /*--------------maincss-----------*/
 .row
