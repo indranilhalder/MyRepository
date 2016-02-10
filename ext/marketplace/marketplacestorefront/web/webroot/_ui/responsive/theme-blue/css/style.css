@@ -29493,6 +29493,37 @@ margin: 10px 0px;
     padding: 4px;
     width: 100%;
 }
+#bestPicks .short-info a {
+    font-size: 12px;
+    font-family: "Avenir Next";
+    font-weight: 600;
+    text-align: center;
+    line-height: 1;
+    display: inline-block;
+    padding: 4px;
+    width: 100%;
+}
+#bestPicks .short-info a span {
+    font-size: 12px;
+    font-family: "Avenir Next";
+    color:inherit;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1;
+    display: inline-block;
+    width: 100%;
+    padding: 0;
+}
+#bestPicks .short-info span a {
+    font-size: 12px;
+    font-family: "Avenir Next";
+    font-weight: 600;
+    text-align: center;
+    line-height: 1;
+    display: inline-block;
+    width: 100%;
+    padding: 0;
+}
 #bestPicks .view-cliq-offers {
 	padding: 13px;
     border: 1px solid #4a4a4a;
