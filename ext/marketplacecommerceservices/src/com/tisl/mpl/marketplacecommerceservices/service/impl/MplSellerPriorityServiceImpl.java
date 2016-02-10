@@ -525,8 +525,10 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						if (seller.getSellerID().equals(sellerMasterModel.getId()))
 						{
 
-							System.out.println("***************#######ussid for product in category" + ussidList + "product" + products
+							//System.out.println("***************#######ussid for product in category" + ussidList + "product" + products+ "category" + category.getCode());
+							log.debug("***************#######ussid for product in category" + ussidList + "product" + products
 									+ "category" + category.getCode());
+
 
 							ussidList.add(seller.getSellerArticleSKU());
 							break;

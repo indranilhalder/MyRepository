@@ -650,7 +650,8 @@ public class MiscsController extends BaseController
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("IOException : ", e);
 		}
 	}
 
@@ -692,7 +693,8 @@ public class MiscsController extends BaseController
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("postOnlyXML1 : ", e);
 		}
 
 
@@ -809,9 +811,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1003,8 +1005,8 @@ public class MiscsController extends BaseController
 					String substr = "";
 					substr = searchString.substring(0, searchString.length() - 1);
 
-					wsData.setSuggestions(
-							subList(productSearchFacade.getAutocompleteSuggestions(substr), component.getMaxSuggestions().intValue()));
+					wsData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(substr), component
+							.getMaxSuggestions().intValue()));
 
 				}
 				final SearchStateData searchState = new SearchStateData();
@@ -1261,7 +1263,7 @@ public class MiscsController extends BaseController
 					 * Arrays.asList(ProductOption.BASIC, ProductOption.PRICE)); } else { throw new
 					 * EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037); } PincodeServiceData data = null;
 					 * MarketplaceDeliveryModeData deliveryModeData = null; List<PinCodeResponseData> response = null;
-					 *
+					 * 
 					 * if (null != productData && null != productData.getSeller()) { for (final SellerInformationData seller
 					 * : productData.getSeller()) { final List<MarketplaceDeliveryModeData> deliveryModeList = new
 					 * ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if
@@ -1270,7 +1272,7 @@ public class MiscsController extends BaseController
 					 * seller.getUssid()) { deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(),
 					 * seller.getUssid()); } deliveryModeList.add(deliveryModeData); }
 					 * data.setDeliveryModes(deliveryModeList); }
-					 *
+					 * 
 					 * if (StringUtils.isNotEmpty(seller.getFullfillment())) {
 					 * data.setFullFillmentType(seller.getFullfillment()); } if
 					 * (StringUtils.isNotEmpty(seller.getShippingMode())) { data.setTransportMode(seller.getShippingMode());
@@ -1402,7 +1404,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1415,7 +1417,7 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; }
 	 */
 	/**
@@ -1555,7 +1557,7 @@ public class MiscsController extends BaseController
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		String returnValue = null;
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();
