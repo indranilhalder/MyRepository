@@ -322,18 +322,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			count++;
 			HttpSession session = request.getSession();
 			deliveryMethodForm =(DeliveryMethodForm)session.getAttribute("deliveryMethodForm");
-			/*** Inventory Soft Reservation Start ***/
-
-			final boolean inventoryReservationStatus = getMplCartFacade()
-					.isInventoryReserved(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
-			if (!inventoryReservationStatus)
-			{
-				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
-				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
-			}
-			/*** Inventory Soft Reservation Start ***/
-
-			LOG.debug(">>>>>>>>>>  Step 4:  Inventory soft reservation status  " + inventoryReservationStatus);
 			final String pickupPersonName = cartModel.getPickupPersonName();
 			final String pickupPersonMobile = cartModel.getPickupPersonMobile();
 			if ((pickupPersonName == null) && (pickupPersonMobile == null))
@@ -342,6 +330,55 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute("selectPickupDetails", selectPickupDetails);
 				return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 			}
+			String deliveryCode = null;
+			if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
+			{
+				for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
+				{
+					deliveryCode = deliveryEntry.getDeliveryCode();
+					if (StringUtils.isNotEmpty(deliveryCode))
+					{
+						Double deliveryCost = 0.0;
+						if (deliveryCode.equalsIgnoreCase("click-and-collect"))
+						{
+							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+									deliveryEntry.getSellerArticleSKU());
+							deliveryCost = 0.0;
+						}else {
+							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+									deliveryEntry.getSellerArticleSKU());
+						}
+						finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
+					}
+				}
+			}
+
+		}
+		else 
+		{
+			String deliveryCode = null;
+			if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
+			{
+				for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
+				{
+					deliveryCode = deliveryEntry.getDeliveryCode();
+					if (StringUtils.isNotEmpty(deliveryCode))
+					{
+						Double deliveryCost = 0.0;
+						if (deliveryCode.equalsIgnoreCase("click-and-collect"))
+						{
+							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+									deliveryEntry.getSellerArticleSKU());
+							deliveryCost = 0.0;
+						}else {
+							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+									deliveryEntry.getSellerArticleSKU());
+						}
+						finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
+					}
+				}
+			}
+
 		}
 		
 		try
@@ -358,28 +395,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
-			String deliveryCode = null;
-			if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
-			{
-				for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
-				{
-					deliveryCode = deliveryEntry.getDeliveryCode();
-					if (StringUtils.isNotEmpty(deliveryCode))
-					{
-						Double deliveryCost = 0.0;
-						if (deliveryCode.equalsIgnoreCase("click-and-collect"))
-						{
-							deliveryCost = 0.0;
-						}else {
-							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-									deliveryEntry.getSellerArticleSKU());
-						}
-						finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
-					}
-				}
-			}
-
-			LOG.debug(">>>>>>>>>>  Step 1 :Delivery cost before applying any promotion :  " + finalDeliveryCost);
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
@@ -600,16 +615,24 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				}
 				if (count >0 && delModeCount == 0)
 				{
-					/*** Inventory Soft Reservation Start ***/
-
-					final boolean inventoryReservationStatus = getMplCartFacade()
-							.isInventoryReserved(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
-					if (!inventoryReservationStatus)
+					String deliveryCode = null;
+					if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
 					{
-						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
-						return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+						for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
+						{
+							deliveryCode = deliveryEntry.getDeliveryCode();
+							if (StringUtils.isNotEmpty(deliveryCode))
+							{
+								Double deliveryCost = 0.0;
+								if (deliveryCode.equalsIgnoreCase("click-and-collect"))
+								{
+									deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+											deliveryEntry.getSellerArticleSKU());
+									deliveryCost = 0.0;
+								}
+							}
+						}
 					}
-					/*** Inventory Soft Reservation Start ***/
 
 				}
 				if (count>0)
@@ -1546,6 +1569,27 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			stores = null;
 		}
 		return stores;
+	}
+
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYCNCINVRESV)
+	@RequireHardLogIn
+	public String cncCartReservation(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
+	{
+		/*** Inventory Soft Reservation Start ***/
+
+		final boolean inventoryReservationStatus = getMplCartFacade()
+				.isInventoryReserved(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+		if (!inventoryReservationStatus)
+		{
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
+			return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+		}
+		/*** Inventory Soft Reservation Start ***/
+		if (inventoryReservationStatus)
+		{
+			return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/payment-method/add";
+		}
+		return null;
 	}
 
 	 /**
