@@ -45,7 +45,9 @@ import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 public class InternalExternalAutomationServiceImpl implements InternalExternalAutomationService
 {
 
-	Logger LOG = Logger.getLogger(this.getClass());
+	//static Logger LOG = Logger.getLogger(this.getClass());
+	private static final Logger LOG = Logger.getLogger(InternalExternalAutomationServiceImpl.class);
+
 	@Autowired
 	private CMSPageService cmsPageService;
 	@Autowired
@@ -595,7 +597,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		@Override
 		protected PasswordAuthentication getPasswordAuthentication()
 		{
-			System.out.println("=======+++++++++===============================");
+			//System.out.println("=======+++++++++===============================");
+			LOG.debug("=======+++++++++===============================");
 
 			// Get information about the request
 
