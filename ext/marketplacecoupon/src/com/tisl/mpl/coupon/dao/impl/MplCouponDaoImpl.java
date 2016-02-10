@@ -133,12 +133,22 @@ public class MplCouponDaoImpl implements MplCouponDao
 			//queryParams.put("store",
 			//store); //queryParams.put("type", "Parent"); //queryParams.put("creationtime", fromDate);
 
-			final String CLOSED_VOUCHER_ = "select {v.pk} from {voucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} "
-					+ " AND {ur.users} like ('%"
+			final String CLOSED_VOUCHER_ = "select {v.pk} from {Promotionvoucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} "
+					+ " AND ( {ur.users} like ('%"
 					+ customer.getPk().getLongValue()
 					+ "%')"
 					+ groupBiulder.toString()
+					//check voucher invalidation table
+					+ " ) AND {v.redemptionQuantityLimitPerUser} >"
+					+ " ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} "
+					+ " AND  {vin.user}='"
+					+ customer.getPk().getLongValue()
+					+ "' "
+					+ " }})"
+					+ " AND {v.redemptionQuantityLimit} >"
+					+ " ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})"
 					+ " ORDER BY {dr.startdate} ASC";
+
 			System.out.println("Query :::::::::::::::" + CLOSED_VOUCHER_);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData("byDate", CLOSED_VOUCHER_
@@ -163,5 +173,18 @@ public class MplCouponDaoImpl implements MplCouponDao
 		result.setQuery(query);
 		return result;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.coupon.dao.MplCouponDao#findClosedVoucher(de.hybris.platform.core.model.user.CustomerModel,
+	 * de.hybris.platform.commerceservices.search.pagedata.PageableData)
+	 */
+	//	@Override
+	//	public SearchPageData<VoucherModel> findClosedVoucher(final CustomerModel customer, final PageableData pageableData)
+	//	{
+	//		// YTODO Auto-generated method stub
+	//		return null;
+	//	}
 
 }

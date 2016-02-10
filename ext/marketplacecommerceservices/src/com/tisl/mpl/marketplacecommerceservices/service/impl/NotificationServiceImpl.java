@@ -589,6 +589,8 @@ public class NotificationServiceImpl implements NotificationService
 		}
 
 		VoucherStatusNotificationModel voucherStatus = null;
+		final String customerStatus = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
 
 		if (dateRestrExists && userRestrExists)
 		{
@@ -644,10 +646,8 @@ public class NotificationServiceImpl implements NotificationService
 
 				}
 
-				final String customerStatus = getConfigurationService().getConfiguration().getString(
-						MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
-
 				//Setting values in model
+				voucherStatus.setIfUserRestrictionExist(Boolean.TRUE);
 				voucherStatus.setVoucherIdentifier(voucherIndentifier);
 				voucherStatus.setVoucherCode(voucherCode);
 				voucherStatus.setCustomerUidList(userUidList);
@@ -657,10 +657,29 @@ public class NotificationServiceImpl implements NotificationService
 				voucherStatus.setCustomerStatus(customerStatus);
 				voucherStatus.setCategoryAssociated(categoryAssociated);
 				voucherStatus.setProductAssociated(productAssociated);
-				modelService.save(voucherStatus);
-				//modelService.saveAll();
+				modelService.save(voucherStatus);				
 			}
 		}
+        else if (dateRestrExists && !userRestrExists)
+		{
+			final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
+			if (!existingVoucherList.isEmpty())
+			{
+				voucherStatus = existingVoucherList.get(0);
+				voucherStatus.setVoucherIdentifier(voucherIndentifier);
+				voucherStatus.setVoucherCode(voucherCode);
+				voucherStatus.setVoucherStartDate(voucherStartDate);
+				voucherStatus.setVoucherEndDate(voucherEndDate);
+				voucherStatus.setIsRead(isRead);
+				voucherStatus.setCustomerStatus(customerStatus);
+				voucherStatus.setCategoryAssociated(categoryAssociated);
+				voucherStatus.setProductAssociated(productAssociated);
+				voucherStatus.setIfUserRestrictionExist(Boolean.FALSE);
+				modelService.save(voucherStatus);
+
+			}
+		}
+	 } 
 
 	}
 
