@@ -177,19 +177,25 @@ public class MplPaymentWebHookServiceImpl implements MplPaymentWebHookService
 	 */
 	protected Double getDoubleValue(final Object inputObject)
 	{
+		Double doubleValue = null;
+
 		if (inputObject instanceof Long)
 		{
-			return new Double(((Long) inputObject).doubleValue());
+			//return new Double(((Long) inputObject).doubleValue());
+			doubleValue = new Double(((Long) inputObject).doubleValue());
 		}
 		else if (inputObject instanceof Double)
 		{
-			return ((Double) inputObject);
+			//return ((Double) inputObject);
+			doubleValue = ((Double) inputObject);
 		}
 		else
 		{
 			LOG.error(MarketplacewebservicesConstants.DECIMALERROR);
-			return null;
+			//return null;
 		}
+
+		return doubleValue;
 	}
 
 
