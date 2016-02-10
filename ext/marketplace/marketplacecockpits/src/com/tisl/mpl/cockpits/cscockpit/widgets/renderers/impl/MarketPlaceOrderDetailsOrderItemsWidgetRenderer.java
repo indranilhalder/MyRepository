@@ -3,9 +3,11 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.zkoss.zk.ui.event.Event;
@@ -14,27 +16,40 @@ import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listhead;
+import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
+import com.sun.xml.internal.ws.api.pipe.Engine;
+import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.PropertyDescriptor;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.services.config.ColumnGroupConfiguration;
+import de.hybris.platform.cockpit.services.config.impl.DefaultColumnGroupConfiguration;
 import de.hybris.platform.cockpit.services.values.ObjectValueContainer;
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
 import de.hybris.platform.cockpit.widgets.Widget;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.utils.ObjectGetValueUtils;
+import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
 import de.hybris.platform.cscockpit.widgets.popup.PopupWindowCreator;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.OrderDetailsOrderItemsWidgetRenderer;
@@ -42,6 +57,8 @@ import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.i18n.FormatFactory;
 import de.hybris.platform.servicelayer.session.SessionExecutionBody;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		OrderDetailsOrderItemsWidgetRenderer {
@@ -62,9 +79,12 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 	private CommonI18NService commonI18NService;
 	private SessionService sessionService;
 
+	// Added 
+	boolean cncOrderPresent = Boolean.FALSE;
+
 	@Autowired
 	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;
-	
+
 	protected FormatFactory getFormatFactory() {
 		return this.formatFactory;
 	}
@@ -95,9 +115,79 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 	@Autowired
 	private PopupWindowCreator popupWindowCreator;
 
+	// Added
+
+	protected Listhead populateHeaderRow(
+			ListboxWidget<OrderItemWidgetModel, OrderController> widget,
+			Listhead row) {
+
+		Listheader listheader = new Listheader(LabelUtils.getLabel(widget,
+				"entryNumber", new Object[0]));
+		listheader.setWidth("20px");
+		row.appendChild(listheader);
+
+		List<? extends ColumnGroupConfiguration> columns = getMasterColumns();
+		if (CollectionUtils.isNotEmpty(columns)) {
+
+			for (ColumnGroupConfiguration col : columns) {
+				String label = (col instanceof DefaultColumnGroupConfiguration) ? ((DefaultColumnGroupConfiguration) col)
+						.getLabelWithFallback() : col.getLabel();
+				row.appendChild(new Listheader(label));
+			}
+		}
+		// Added
+
+		final TypedObject order = widget.getWidgetController()
+				.getCurrentOrder();
+		final OrderModel orderModel = (OrderModel) order.getObject();
+		List<AbstractOrderEntryModel> orderentries = orderModel.getEntries();
+		int orderEntrySize = orderentries.size();
+		try {
+			if (orderEntrySize > 0 ) {
+				cncOrderPresent=false;
+				for (int Size = 0; Size < orderEntrySize; Size++) {
+					String deliveryMode = orderentries.get(Size)
+							.getMplDeliveryMode().getDeliveryMode().getName();
+					if (deliveryMode
+							.equalsIgnoreCase(MarketplaceCockpitsConstants.delNameMap
+									.get("CnC")) && orderentries.get(Size).getDeliveryPointOfService() != null) {
+						cncOrderPresent = true;
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			LOG.error("deliveryMode is null");
+		}
+
+		if (cncOrderPresent) {
+			listheader = new Listheader(LabelUtils.getLabel(widget,
+					"storeAddress", new Object[0]));
+			listheader.setWidth("100px");
+			row.appendChild(listheader);
+		}
+
+		listheader = new Listheader(LabelUtils.getLabel(widget, "basePrice",
+				new Object[0]));
+		listheader.setWidth("80px");
+		row.appendChild(listheader);
+
+		listheader = new Listheader(LabelUtils.getLabel(widget, "totalPrice",
+				new Object[0]));
+		listheader.setWidth("80px");
+		row.appendChild(listheader);
+
+		listheader = new Listheader(LabelUtils.getLabel(widget, "qty",
+				new Object[0]));
+		listheader.setWidth("40px");
+		row.appendChild(listheader);
+
+		return row;
+	}
+
 	protected void populateMasterRow(ListboxWidget widget, Listitem row,
 			Object context, TypedObject item) {
-
+		row.setHeight("80px");
 		PropertyDescriptor entryNumberPD = getCockpitTypeService()
 				.getPropertyDescriptor("AbstractOrderEntry.entryNumber");
 		PropertyDescriptor basePricePD = getCockpitTypeService()
@@ -111,17 +201,23 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 				item,
 				Arrays.asList(new PropertyDescriptor[] { entryNumberPD,
 						basePricePD, totalPricePD, qtyPD }));
-
+		valueContainer.getObject();
 		Integer entryNumber = ObjectGetValueUtils.getIntegerValue(
 				valueContainer, entryNumberPD);
 		String entryNumberString = (entryNumber != null) ? entryNumber
 				.toString() : "";
+
 		row.appendChild(new Listcell(entryNumberString));
+
+		// Added by Prasad
+		AbstractOrderEntryModel entrymodel = (AbstractOrderEntryModel) item
+				.getObject();
 
 		List<ColumnGroupConfiguration> columns = (List<ColumnGroupConfiguration>) getMasterColumns();
 		if (CollectionUtils.isNotEmpty(columns)) {
 			for (ColumnGroupConfiguration col : columns) {
 				Listcell cell = new Listcell();
+
 				cell.setSclass("csMasterContentCell");
 				row.appendChild(cell);
 				getPropertyRendererHelper().buildMasterValue(item, col, cell);
@@ -141,6 +237,112 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 								.getFormatFactory().createCurrencyFormat();
 					}
 				});
+
+		// added
+		
+		if (cncOrderPresent) {
+
+			String deliveryMode = entrymodel.getMplDeliveryMode()
+					.getDeliveryMode().getName();
+			PointOfServiceModel pointOfService = entrymodel
+					.getDeliveryPointOfService();
+		
+			if (deliveryMode
+					.equalsIgnoreCase(MarketplaceCockpitsConstants.delNameMap
+							.get("CnC")) && null != entrymodel
+									.getDeliveryPointOfService()) {
+
+				Listcell listcell = new Listcell();
+				try {
+					if (pointOfService.getBaseStore().getName() != null) {
+						Label label = new Label();
+						label.setValue(pointOfService.getName().concat(","));
+						label.setParent(listcell);
+						Div div = new Div();
+						div.setParent(listcell);
+						listcell.setParent(row);
+					}
+				} catch (Exception e) {
+					LOG.error("PointOfService Store Name  is null");
+
+				}
+				try {
+					if (pointOfService.getAddress().getLine1() != null) {
+						listcell.setParent(row);
+						Label label = new Label();
+						label.setValue(pointOfService.getAddress().getLine1().concat(","));
+						label.setParent(listcell);
+						Div div = new Div();
+						div.setParent(listcell);
+						listcell.setParent(row);
+					}
+				} catch (Exception e) {
+					LOG.error("PointOfService Address Line1 is null");
+
+				}
+				try {
+					if (pointOfService.getAddress().getLine2() != null) {
+						listcell.setParent(row);
+						Label label = new Label();
+						label.setValue(pointOfService.getAddress().getLine2().concat(","));
+						label.setParent(listcell);
+						Div div = new Div();
+						div.setParent(listcell);
+						listcell.setParent(row);
+					}
+				} catch (Exception e) {
+					LOG.error("PointOfService Address Line2 is null");
+
+				}
+				try {
+					if (pointOfService.getAddress().getDistrict() != null) {
+						Label label = new Label();
+						label.setValue(pointOfService.getAddress()
+								.getDistrict().concat(","));
+						label.setParent(listcell);
+						Div div = new Div();
+						div.setParent(listcell);
+						listcell.setParent(row);
+					}
+				} catch (Exception e) {
+					LOG.error("PointOfService Address District is null");
+				}
+
+				try {
+					if (pointOfService.getAddress().getCountry().getName() != null) {
+						Label label = new Label();
+						label.setValue(pointOfService.getAddress().getCountry()
+								.getName().concat(","));
+						label.setParent(listcell);
+						listcell.setParent(row);
+					}
+				} catch (Exception e) {
+					LOG.error("PointOfService Address Country is null");
+
+				}
+
+				try {
+					if (pointOfService.getAddress().getPostalcode() != null) {
+						Label label = new Label();
+						label.setValue(pointOfService.getAddress()
+								.getPostalcode().concat(" :"));
+						label.setParent(listcell);
+						Div div = new Div();
+						div.setParent(listcell);
+						listcell.setParent(row);
+
+					}
+				} catch (Exception e) {
+					LOG.error("PointOfService Address Postalcode is null");
+				}
+			} 
+			
+			else {
+
+				row.appendChild(new Listcell(" "));
+			}
+			
+		}
 
 		Double basePriceValue = ObjectGetValueUtils.getDoubleValue(
 				valueContainer, basePricePD);
@@ -254,8 +456,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 				"promotions", new Object[0]));
 		promotionslabel1.setSclass("asslabel");
 		dataRow2.appendChild(promotionslabel1);
-		
-		
+
 		String promotionString = (null != orderEntry.getTotalProductLevelDisc()) ? currencyInstance
 				.format(orderEntry.getTotalProductLevelDisc()) : "";
 		final Label promotionslabel2 = new Label(promotionString);
@@ -263,26 +464,28 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		dataRow2.appendChild(promotionslabel2);
 		table.appendChild(dataRow2);
 
-		
 		Hbox dataRow3 = new Hbox();
 		dataRow3.setSclass("dataRowNew");
 		final Label deliveryChargeslabel1 = new Label(LabelUtils.getLabel(
 				widget, "deliveryCharges", new Object[0]));
 		deliveryChargeslabel1.setSclass("asslabel");
 		dataRow3.appendChild(deliveryChargeslabel1);
-		
 		//String deliveryChargesString = (null != orderEntry.getCurrDelCharge()) ? currencyInstance			.format(orderEntry.getCurrDelCharge() + (orderEntry.getRefundedDeliveryChargeAmt() !=null ? orderEntry.getRefundedDeliveryChargeAmt():0d)) : "";
 		//TISEE-5583
-		
+				
 		//Double deliveryCost = (null != orderEntry.getCurrDelCharge() && null != orderEntry.getPrevDelCharge() )? ((orderEntry.getPrevDelCharge() > orderEntry.getCurrDelCharge()) ? orderEntry.getPrevDelCharge() : orderEntry.getCurrDelCharge()) : 0d;
 		//String deliveryChargesString =  currencyInstance.format(deliveryCost + (orderEntry.getRefundedDeliveryChargeAmt() !=null ? orderEntry.getRefundedDeliveryChargeAmt():0d)) ;
-		
-		Double currDeliveryCost = (null != orderEntry.getCurrDelCharge()) ? ((orderEntry.getRefundedDeliveryChargeAmt()!=null && orderEntry.getRefundedDeliveryChargeAmt()> orderEntry.getCurrDelCharge())? orderEntry.getRefundedDeliveryChargeAmt(): orderEntry.getCurrDelCharge() ) : 0d;  
-		Double deliveryCost = (null != orderEntry.getPrevDelCharge())? ((orderEntry.getPrevDelCharge() > currDeliveryCost) ? orderEntry.getPrevDelCharge() : currDeliveryCost) : 0d;
-		String deliveryChargesString =  currencyInstance
-				.format(deliveryCost) ;
+				
+		Double currDeliveryCost = (null != orderEntry.getCurrDelCharge()) ? ((orderEntry
+				.getRefundedDeliveryChargeAmt() != null && orderEntry
+				.getRefundedDeliveryChargeAmt() > orderEntry.getCurrDelCharge()) ? orderEntry
+				.getRefundedDeliveryChargeAmt() : orderEntry.getCurrDelCharge())
+				: 0d;
+		Double deliveryCost = (null != orderEntry.getPrevDelCharge()) ? ((orderEntry
+				.getPrevDelCharge() > currDeliveryCost) ? orderEntry
+				.getPrevDelCharge() : currDeliveryCost) : 0d;
+		String deliveryChargesString = currencyInstance.format(deliveryCost);
 
-		
 		final Label deliveryChargeslabel2 = new Label(deliveryChargesString);
 		deliveryChargeslabel2.setSclass("asslabel");
 		dataRow3.appendChild(deliveryChargeslabel2);
@@ -294,12 +497,18 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 				widget, "deliveryDiscount", new Object[0]));
 		deliveryDiscountlabel1.setSclass("asslabel");
 		dataRow4.appendChild(deliveryDiscountlabel1);
-		
+
 		Double deliveryDiscountString = 0D;
-		final Double deliveryCostDisc = Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
+		final Double deliveryCostDisc = Double.valueOf(orderEntry
+				.getPrevDelCharge().doubleValue()
+				- orderEntry.getCurrDelCharge().doubleValue());
 		deliveryDiscountString = deliveryDiscountString
-						+ (mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())?0d:deliveryCostDisc);
-		final Label deliveryDiscountlabel2 = new Label(currencyInstance.format(deliveryDiscountString > 0 ? deliveryDiscountString : 0d));		
+				+ (mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry
+						.getSelectedUSSID()) ? 0d : deliveryCostDisc);
+		final Label deliveryDiscountlabel2 = new Label(
+				currencyInstance
+						.format(deliveryDiscountString > 0 ? deliveryDiscountString
+								: 0d));
 		deliveryDiscountlabel2.setSclass("asslabel");
 		dataRow4.appendChild(deliveryDiscountlabel2);
 		table.appendChild(dataRow4);
@@ -335,15 +544,13 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		dataRow7.appendChild(totalPricelabel2);
 		table.appendChild(dataRow7);
 
-
 		Hbox dataRow6 = new Hbox();
 		dataRow6.setSclass("dataRowNew");
 		final Label codChargeslabel1 = new Label(LabelUtils.getLabel(widget,
 				"codCharges", new Object[0]));
 		codChargeslabel1.setSclass("asslabel");
 		dataRow6.appendChild(codChargeslabel1);
-		
-		
+
 		String codChargesString = (null != orderEntry
 				.getConvenienceChargeApportion()) ? currencyInstance
 				.format(orderEntry.getConvenienceChargeApportion()*orderEntry.getQuantity()) : "";
@@ -352,8 +559,6 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		dataRow6.appendChild(codChargeslabel2);
 		table.appendChild(dataRow6);
 
-		
-		
 		Hbox dataRow8 = new Hbox();
 		dataRow8.setSclass("dataRowNew");
 		final Label totalRefundAmountlabel1 = new Label(LabelUtils.getLabel(
@@ -399,7 +604,5 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		
 		return deliveryChargesString;
 	}
-	
-	
-	
+
 }
