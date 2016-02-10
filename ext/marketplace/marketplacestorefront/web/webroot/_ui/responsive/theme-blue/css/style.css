@@ -29500,6 +29500,7 @@ margin: 10px 0px;
     display: inline-block;
     padding: 4px;
     width: 100%;
+    word-break: break-word;
 }
 #bestPicks .short-info a {
     font-size: 12px;
