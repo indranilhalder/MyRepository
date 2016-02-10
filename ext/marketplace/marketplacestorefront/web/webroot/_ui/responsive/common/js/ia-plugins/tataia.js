@@ -40,7 +40,7 @@ if (searchCategory_id){
 		}else if(searchCategory_id !== 'all'){
 			seller_id = searchCategory_id;	
 		}else{
-			category_id = 'all';
+			category_id = '';
 		}
 }
 if (searchCategory_idFromMicrosite){ // only for microsite search
@@ -48,7 +48,7 @@ if (searchCategory_idFromMicrosite){ // only for microsite search
 		brand_id = searchCategory_idFromMicrosite;
 		}
 		else{
-				category_id = 'all';
+				category_id = '';
 			}
 }
 // Array[productCode] for wishlist and cart pages
@@ -511,6 +511,9 @@ function popupwindow(productId) {
 			$(".imageList ul li img").css("height", "102px");
 		}
 });
+	  params = {'count' : '0', 'site_product_id': productId};
+	  params = buildParams(params);
+	  callRecApi(params, rootEP + '/SocialGenomix/recommendations/products/jsonp');
 }
 function compareDateWithToday(SaleDate) {
 	var today = new Date();
@@ -997,17 +1000,17 @@ function updatePage(response, widgetMode) {
     		/*Animate Carousel*/
     	      $("#" + widgetElement + "_list").owlCarousel({
     	    	  
-    	        items : 4,
-    	        scrollPerPage: true,
-    	        itemsDesktop : [1199,4],
-    	        itemsDesktopSmall : [980,3],
-    	        itemsTablet: [768,2],
-    	        itemsMobile : [479,1],
-    	        navigation: true,
-    	        navigationText : [],
-    	        pagination:false,
-    	        rewindNav : false
-    	      });
+    	    	  items : 4,
+    	          scrollPerPage: true,
+    	          itemsDesktop : [1199,3],
+    	          itemsDesktopSmall : [980,2],
+    	          itemsTablet: [768,2],
+    	          itemsMobile : [479,1],
+    	          navigation: true,
+    	          navigationText : [],
+    	          pagination:false,
+    	          rewindNav : false
+    	        });
     	} 
       /*Animate Carousel*/
       $("#" + widgetElement + "_list").owlCarousel({
@@ -1212,10 +1215,10 @@ var carousel = $("#mplCategoryCarousel");
 			navigation:true,
 			navigationText : [],
 			pagination:false,
-			itemsDesktop : [5000,4], 
-			itemsDesktopSmall : [1400,4], 
-			itemsTablet: [650,2], 
-			itemsMobile : [480,2], 
+			itemsDesktop : [1199,3],
+            itemsDesktopSmall : [980,2],
+            itemsTablet: [768,2],
+            itemsMobile : [479,1], 
 			rewindNav: false,
 			lazyLoad:true,
 			navigation : true,	        
