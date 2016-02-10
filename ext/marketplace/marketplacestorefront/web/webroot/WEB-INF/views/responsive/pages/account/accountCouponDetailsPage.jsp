@@ -479,6 +479,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$(".page-coupons .totalResults").hide(); //for 0 products found issue
 		$("#couponHistory").click(function() {
 			$(".your-activity.coupon-history").slideDown();
 			$(this).hide();
