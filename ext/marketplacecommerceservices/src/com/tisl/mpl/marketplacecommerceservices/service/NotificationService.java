@@ -5,7 +5,6 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.jalo.Item;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -53,10 +52,6 @@ public interface NotificationService
 
 	AllVoucherListData getAllVoucherList(CustomerModel currentCustomer, List<VoucherModel> voucherList);
 
-	/**
-	 * @param item
-	 */
-	void saveToVoucherStatusNotification(Item item);
-
+	void saveToVoucherStatusNotification(VoucherModel voucher);
 
 }
