@@ -232,6 +232,13 @@
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
+				<attribute qualifier="productCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion to be applied for list of products separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
 			</attributes>
 		</itemtype>
 

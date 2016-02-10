@@ -866,7 +866,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FILE_WRITER_ERROR = "B8002";
 	public static final String ORDER_CURRENCY_ERROR = "B8003";
 	public static final String PROMOTION_FEED_ERROR = "B8004";
-
+	public static final String ORDER_PAYMENT_ERROR = "B8005";
 
 	public static final String PROMOTIONS_REPORT_FILE_EXTENSION = "promotions.report.extension";
 	public static final String FILE_PATH = "_";
