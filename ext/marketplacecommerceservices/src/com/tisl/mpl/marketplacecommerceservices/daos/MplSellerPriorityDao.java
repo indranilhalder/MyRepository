@@ -25,4 +25,6 @@ public interface MplSellerPriorityDao
 	public List<MplSellerPriorityLevelModel> loadExistingUssid(String ussid);
 
 	public List<ProductModel> getProductListForCategory(final CategoryModel categoryModel);
+
+	public List<MplSellerPriorityLevelModel> loadExistingUssids();
 }

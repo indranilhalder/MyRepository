@@ -77,7 +77,32 @@ public class MplSellerPriorityDaoImpl implements MplSellerPriorityDao
 
 	}
 
+	@Override
+	public List<MplSellerPriorityLevelModel> loadExistingUssids()
+	{
+		List<MplSellerPriorityLevelModel> mplSellerPriority = null;
+		try
+		{
+			final FlexibleSearchQuery query = new FlexibleSearchQuery("SELECT {p:" + MplSellerPriorityLevelModel.PK + "}" //
+					+ "FROM {" + MplSellerPriorityLevelModel._TYPECODE + " AS p} ");
+			final SearchResult<MplSellerPriorityLevelModel> result = flexibleSearchService.search(query);
 
+			mplSellerPriority = result.getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return mplSellerPriority;
+	}
 
 	/**
 	 * check whether a seller priority already exits for a given ussid or not
