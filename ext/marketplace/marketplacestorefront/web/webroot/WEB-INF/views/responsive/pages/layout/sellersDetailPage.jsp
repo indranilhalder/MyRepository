@@ -197,7 +197,7 @@ function firstToUpperCase( str ) {
 	background-color: #fff;
 	padding: 5px 10px;
 	border-collapse: separate;
-	box-shadow: 0 0 9px rgb(0, 203, 246);
+	box-shadow: 0 0 9px #a9143c;
 	visibility: hidden;
 }
 .tooltip_pop:after {
@@ -211,7 +211,7 @@ function firstToUpperCase( str ) {
 	-moz-transform: rotate(45deg);
 	transform: rotate(45deg);
 	border-collapse: separate;
-	box-shadow: 1px 1px 0px rgb(0, 203, 246);
+	box-shadow: 1px 1px 0px #a9143c;
 	position: absolute;
 	left: 50%;
 	margin-left: -4px;
@@ -456,7 +456,7 @@ var allSellers='${allsellers}';
 		<p><span id="otherSellersCount"></span>&nbsp;<span class="other-sellers-info"><spring:theme code="product.othersellers"></spring:theme></span>&nbsp;<spring:theme code="product.available"></spring:theme>&nbsp;<span id="minPrice" ></span></p>
 		</div>
 		<div id="sort" class="sort-by" style="display:none"><label><spring:theme code="seller.sort"/></label>
-		<select id="sort" onchange="sort(this.value);">
+		<select id="sellerSort" onchange="sortSellers(this.value);">
 				<%-- <option><spring:theme code="product.select"/></option> --%>
 				<option value="1"><spring:theme code="seller.sort.priceasc"/></option>
 				<option value="2"><spring:theme code="seller.sort.pricedesc"/></option>

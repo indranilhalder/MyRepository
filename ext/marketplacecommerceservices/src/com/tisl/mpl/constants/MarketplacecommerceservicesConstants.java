@@ -1316,6 +1316,31 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 
 
+	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
+	public static final String CAMPAIGN_FREEBIE = "FREEBIE OFFER".intern();
+	public static final String CAMPAIGN_SHIPPING = "SHIPPING DISCOUNT OFFER".intern();
+	public static final String CAMPAIGN_BOGO = "BOGOF OFFER".intern();
+	public static final String CAMPAIGN_CASHBACK = "CASHBACK OFFER".intern();
+	public static final String CAMPAIGN_CHANNEL = "WEB|WEBMOBILE|MOBILE|CALLCENTER|KIOSK".intern();
+	public static final String CAMPAIGN_MULTIDATA_SEPERATOR = "|".intern();
+	public static final String CAMPAIGN_FILE_LOCATION = "campaign.promotion.csv.path".intern();
+	public static final String CAMPAIGN_HEADER = "OFFER_ID,OFFER_NAME,OFFER_ACTIVE,OFFER_TYPE,OFFER_CHANNEL,OFFER_STARTDATE,OFFER_ENDDATE,URL,CREATION_DATE,MODIFIED_DATE"
+			.intern();
+	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
+	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
+	public static final String CAMPAIGN_FILE_NAME = "campaign".intern();
+	public static final String CAMPAIGN_WEBSITE = "http://tatacliq.com/store".intern();
+	public static final String CAMPAIGN_URL_ALL = "all".intern();
+
+	public static final String CAMPAIGN_URL_OFFER_IDENTIFIER = "/o/".intern();
+	public static final String CAMPAIGN_URL_OFFER_ID_URL = "?offer=".intern();
+	public static final String CAMPAIGN_FILE_PATH = "${HYBRIS_DATA_DIR}/feed/campaign".intern();
+
+
+	//For Special Price Updation
+	public static final String SPECIALPRICE_PROMOTIONS = "promotions".intern();
+	public static final String SPECIALPRICE_QUANTITY = "quantity".intern();
+	public static final String SPECIALPRICE_PRIORITY = "priority".intern();
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class

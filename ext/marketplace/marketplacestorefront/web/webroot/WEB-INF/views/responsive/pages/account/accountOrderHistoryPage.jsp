@@ -98,12 +98,13 @@
 					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
 				</ul>
-				<ul>
+				<%-- <ul>
+
 				<li class="header-SignInShare"><h3><spring:theme
 									code="header.flyout.credits" /></h3></li>
 						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 									code="header.flyout.coupons" /></a></li>
-				</ul>
+				</ul> --%>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.share" />
@@ -444,7 +445,7 @@
 																					</span>
 																					<c:if test="${not empty entryCancel.imeiDetails}"><span><b>Serial Number:</b> ${entryCancel.imeiDetails.serialNum}</span></c:if>
 																					<span class="sellerOrderNo"><b>
-																					<spring:theme code="text.orderHistory.seller.order.number" />:</b> 
+																					<spring:theme code="text.orderHistory.seller.order.number" /></b> 
 																					${subOrder.code}
 																					</span>
 																				</p>
@@ -558,7 +559,7 @@
 																					</span>
 																					<c:if test="${not empty entryCancel.imeiDetails}"><span><b>Serial Number:</b> ${entryCancel.imeiDetails.serialNum}</span></c:if>
 																					<span class="sellerOrderNo"><b>
-																					<spring:theme code="text.orderHistory.seller.order.number" />:</b> 
+																					<spring:theme code="text.orderHistory.seller.order.number" /></b> 
 																					${sellerOrder.code}
 																					</span>
 																				</p>
@@ -631,4 +632,3 @@
 		</div>
 	</div>
 </template:page>
-

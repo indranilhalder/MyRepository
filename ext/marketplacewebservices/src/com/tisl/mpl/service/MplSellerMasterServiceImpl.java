@@ -714,11 +714,18 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getFirstname()))
 			{
-				/*
-				 * if (sellerMasterWsDTO.getLastname() != null && sellerMasterWsDTO.getMidname() != null) {
-				 * stringBuilder.append(sellerMasterWsDTO.getFirstname()).append(sellerMasterWsDTO.getMidname())
-				 * .append(sellerMasterWsDTO.getLastname()); }
-				 */
+				if (sellerMasterWsDTO.getLastname() != null && sellerMasterWsDTO.getMidname() != null)
+				{
+					stringBuilder.append(sellerMasterWsDTO.getFirstname()).append(sellerMasterWsDTO.getMidname())
+							.append(sellerMasterWsDTO.getLastname());
+					//resModel.setSellerName(stringBuilder.toString());
+				}
+
+				//Blocked for Sonar Fix
+				//				else
+				//				{
+				//					//	resModel.setSellerName(sellerMasterWsDTO.getFirstname());
+				//				}
 
 				masterModel.setFirstname(sellerMasterWsDTO.getFirstname());
 			}

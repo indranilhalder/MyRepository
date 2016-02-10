@@ -39,8 +39,7 @@
 			<select class="menu-select"
 				onchange="window.location=this.options[this.selectedIndex].value;">
 				<optgroup label="<spring:theme code="header.flyout.myaccount" />">
-					<option value=/store/mpl/en/my-account
-						/ data-href="/store/mpl/en/my-account/"><spring:theme
+					<option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme
 							code="header.flyout.overview" /></option>
 					<option value=/store/mpl/en/my-account/marketplace-preference
 						data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme
@@ -136,11 +135,9 @@
 
 
 				<div class="your-activity coupon-listing">
-					<h2>Coupons</h2>
-					<p>Listing of offers &amp; discounts with coupon codes, which
-						helps you to save money and smart shopping!</p>
-					<p class="mobile">Enter the coupon code in your cart to receive
-						your discount.</p>
+					<h2><spring:theme code="text.account.coupons.title" /></h2>
+					<p><spring:theme code="text.account.coupons.display.description" /></p>
+					<p class="mobile"><spring:theme code="text.account.coupons.display.description.mobile" /></p>
 					<ul class="coupon-container">
 						<c:choose>
 							<c:when test="${empty closedCouponList}">
@@ -181,7 +178,6 @@
 						</c:choose>
 						
 					</ul>
-					</ul>
 					<!--  pagination for upper section  -->
 					<div class="bottom btn-placement">
 						<c:if test="${not empty closedCouponList}">
@@ -190,7 +186,15 @@
 								<spring:theme code="text.account.coupons.coupons" />
 							</p>
 						</c:if>
-					
+						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
+							supportShowAll="${isShowAllAllowed}"
+							searchPageData="${searchPageData}"
+							searchUrl="/my-account/coupons?sort=${searchPageData.pagination.sort}"
+							numberPagesShown="${numberPagesShown}" />
+							
+							
+							
+							
 							<c:if test="${totalPagesCoupon ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
@@ -250,7 +254,7 @@
 					<c:choose>
 						<c:when test="${not empty couponOrderDataDTOList}">
 
-							<h2>
+							<h2><a id="transactionHistory" name="transactionHistory" style="position:absolute; top:100px;"></a>
 								<spring:theme code="text.account.coupons.couponHistory" />
 							</h2>
 
@@ -287,23 +291,23 @@
 												<!-- Previous link addition -->
 												<c:if
 													test="${param.pageHistory != 1 and not empty param.pageHistory and not empty couponOrderDataDTOList}">
-													<li class="prev" id="historyPrev"><a href="#nogo"><spring:theme
+													<li class="prev" id="historyPrev"><a href="#" ><spring:theme
 																code="text.account.coupons.prev" /> <span
 															class="lookbook-only"></span></a></li>
 												</c:if>
 												<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 													<c:choose>
 														<c:when test="${param.pageHistory eq i}">
-															<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+															<li class="number first active"><a href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 														</c:when>
 														<c:otherwise>
 															<c:choose>
 																<c:when test="${param.pageHistory eq null and i eq 1}">
 																	<li class="number first active"><a
-																		href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+																		href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 																</c:when>
 																<c:otherwise>
-																	<li class="number first"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+																	<li class="number first"><a href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 																</c:otherwise>
 															</c:choose>
 														</c:otherwise>
@@ -319,7 +323,7 @@
 												</c:choose>
 												<!-- Next link addition -->
 												<c:if test="${totalPagesCouponHist gt 1 and totalPagesCouponHist gt pageHistory and param.pageHistory ne totalPagesCouponHist}">
-													<li class="next" id="historyNext"><a href="#nogo"><spring:theme
+													<li class="next" id="historyNext"><a href="#"><spring:theme
 																code="text.account.coupons.next" /> <span
 															class="lookbook-only"></span></a></li>
 												</c:if>
@@ -386,7 +390,7 @@
 										</p>
 						</c:if>
 						
-							<c:if test="${totalPagesCouponHist ne 1 }">
+							<%-- <c:if test="${totalPagesCouponHist ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
 									<c:if
@@ -399,15 +403,15 @@
 									<c:forEach begin="1" end="${totalPagesCouponHist}" var="i">
 										<c:choose>
 											<c:when test="${param.pageHistory eq i}">
-												<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+												<li class="number first active"><a href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 											</c:when>
 											<c:otherwise>
 												<c:choose>
 													<c:when test="${param.pageHistory eq null and i eq 1}">
-														<li class="number first active"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+														<li class="number first active"><a href="?pageHistory=${i}&pageFor=history#transactionHistory" >${i}</a></li>
 													</c:when>
 													<c:otherwise>
-														<li class="number first"><a href="?pageHistory=${i}&pageFor=history">${i}</a></li>
+														<li class="number first"><a href="?pageHistory=${i}&pageFor=history#transactionHistory">${i}</a></li>
 													</c:otherwise>
 												</c:choose>
 											</c:otherwise>
@@ -429,7 +433,7 @@
 									</c:if>
 
 								</ul>
-							</c:if>
+							</c:if> --%>
 					
 					</div>
 				</div>
@@ -485,6 +489,23 @@
 			$(this).hide();
 			$("#couponHistory").show();
 		});
+		var x = $(".coupon-container li").length;
+		console.log(x);
+		if (x == 0) {
+			$("#transactionHistory").css("top", "10px");
+		}
+		else if (0 < x && x < 4 ) {
+			$("#transactionHistory").css("top", "230px");
+		}
+		else if (3 < x && x < 7 ) {
+			$("#transactionHistory").css("top", "370px");
+		}
+		else if (6 < x && x < 10 ) {
+			$("#transactionHistory").css("top", "515px");
+		}
+		else  {
+			$("#transactionHistory").css("top", "640px");
+		}
 	});
 
 	//voucher list 
@@ -528,7 +549,7 @@
 		var totalPages = '${totalPagesCouponHist}';
 		if(totalPages!="" && pageNo <= totalPages)
 			{
-			window.location.href="?pageHistory="+pageNo+"&pageFor=history";
+			window.location.href="?pageHistory="+pageNo+"&pageFor=history#transactionHistory";
 			}
 	});
 	
@@ -539,7 +560,7 @@
 		var totalPages = '${totalPagesCouponHist}';
 		if(pageNo!=0 && totalPages!="" && pageNo <= totalPages)
 			{
-			window.location.href="?pageHistory="+pageNo+"&pageFor=history";
+			window.location.href="?pageHistory="+pageNo+"&pageFor=history#transactionHistory";
 			}
 	});
 	

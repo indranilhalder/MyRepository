@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.coupon.service.impl;
 
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -77,6 +80,20 @@ public class MplCouponServiceImpl implements MplCouponService
 	{
 		return getMplCouponDao().findClosedVoucher();
 
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.coupon.service.MplCouponService#getClosedVoucher(de.hybris.platform.core.model.user.CustomerModel,
+	 * de.hybris.platform.commerceservices.search.pagedata.PageableData)
+	 */
+	@Override
+	public SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, final PageableData pageableData)
+	{
+		return mplCouponDao.findClosedVoucher(customer, pageableData);
 	}
 
 

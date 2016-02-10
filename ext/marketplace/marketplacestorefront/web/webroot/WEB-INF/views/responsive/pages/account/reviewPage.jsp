@@ -29,9 +29,9 @@
 						<option value=/store/mpl/en/my-account/myInterest data-href="account-addresses.php"><spring:theme code="header.flyout.recommendations" /></option>
               </optgroup>
               
-               <optgroup label="Credits">
+             <%--   <optgroup label="Credits">
                   <option value=/store/mpl/en/my-account/coupons data-href="account-invite.php"><spring:theme code="header.flyout.coupons" /></option>
-              </optgroup>
+              </optgroup> --%>
          
           <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
@@ -64,13 +64,13 @@
 						code="header.flyout.recommendations" /></a></li>
 						
 		</ul>
-		<ul>
+		<%-- <ul>
 					<li><h3>
 							<spring:theme code="header.flyout.credits" />
 						</h3></li>
 					<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 								code="header.flyout.coupons" /></a></li>
-				</ul>
+				</ul> --%>
 		<ul>
 			<li><h3>
 					<spring:theme code="header.flyout.share" />
@@ -235,7 +235,7 @@
 	  										
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
-								<span class="review-date"> ${comment.reviewDate} </span>
+								<span class="review-date"> - ${comment.reviewDate} </span>
 								</div>
 								<!-- Ratings -->
 								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
@@ -515,7 +515,7 @@
 				</div>
 				<div class="commentcontent" style="width:100%;padding: 5px;">
 				<input type="hidden" name="user_logged">
-				<div style="float:left; width: 20%;">		
+				<div style="width: 30%; margin: 5px auto; padding: 15px 0;">		
 					<img class="review-image" style="width: 60%;">		
 					<div class="popUpProductBrand" style="padding: 5px;"></div>		
 					<div class="popUpProductTitle"></div>		

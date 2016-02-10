@@ -216,7 +216,7 @@ INSERT_UPDATE BuyboxUpdateLog;last_run_time[dateformat=yyyy-MM-dd HH:mm];proc_na
 
 #buybox insert the weightage values
 INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue
-;priceweightage;-0.7
+;priceweightage;-0.00000001
 ;invweightage;0.3
 
 INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
@@ -224,6 +224,7 @@ INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLangua
 #For Payment Job (Web Hook Integration)
 ;juspayWebHookCronJob;juspayWebHookJob;false;en
 ;juspayEBSCronJob;juspayEBSJob;false;en
+;campaignPromoDataCronJob;campaignPromoDataJob;false;en
 
 INSERT_UPDATE DelistingJobHelper;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
 								;DelistingHelperJob;delistingJob;en;seller;csv;
@@ -235,6 +236,7 @@ INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ; juspayEBSCronJob; 0 0/15 * 1/1 * ? *
 ; juspayWebHookCronJob; 0 0/15 * 1/1 * ? *
 
+;sellerPriorityCronJob;0 0/15 * 1/1 * ? *
 
 
 # Validation constraints - Customer
@@ -12600,3 +12602,15 @@ INSERT_UPDATE BankforNetbanking;name(bankName)[unique=true];nbCode;isAvailable;p
 ###For Webhook Report Job
 INSERT_UPDATE MplWebhookReportJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
 ;webhookReportCreationJob;webhookReportJob;en;;;
+
+###For Seller priority Report Job
+INSERT_UPDATE MplSellerPriorityJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
+;sellerPriorityJob;sellerPriorityReportJob;en;;;
+
+###update seller priority 
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;sellerPriorityCronJob;updateSellerPriorityCronJob;false;en
+
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+;sellerPriorityJob;0 0/15 * 1/1 * ? *

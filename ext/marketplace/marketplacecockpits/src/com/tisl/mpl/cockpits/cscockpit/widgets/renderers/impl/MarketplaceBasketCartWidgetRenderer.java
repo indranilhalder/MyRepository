@@ -22,6 +22,7 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceSearchCommandController;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
+import com.tisl.mpl.util.DiscountUtility;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.session.UISessionUtils;
@@ -63,7 +64,10 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	@Autowired
 	private MarketplaceSearchCommandController marketplaceSearchCommandController;
 	
+	@Autowired
+	private DiscountUtility discountUtility;
 	
+
 	/* (non-Javadoc)
 	 * @see de.hybris.platform.cscockpit.widgets.renderers.impl.BasketCartWidgetRenderer#createPickupCartButton(de.hybris.platform.cockpit.widgets.ListboxWidget)
 	 */
@@ -219,7 +223,8 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	    discountsTotalSpan.setParent(summary);
 	    Label discountsTotalLabel = new Label(LabelUtils.getLabel(widget, "summary.discountTotal", new Object[0]));
 	    discountsTotalLabel.setParent(discountsTotalSpan);
-	    Label discountsTotal = new Label((Double.valueOf(orderDiscount)).toString());
+		//Label discountsTotal = new Label((Double.valueOf(orderDiscount)).toString());
+	    Label discountsTotal = new Label((discountUtility.createPrice(cartModel, Double.valueOf(orderDiscount))).getFormattedValue());
 	    discountsTotal.setSclass("csCartPriceRowValue");
 	    discountsTotal.setParent(discountsTotalSpan);
 	    
@@ -228,7 +233,8 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	    couponDiscountTotalSpan.setParent(summary);
 	    Label couponDiscountTotalLabel = new Label(LabelUtils.getLabel(widget, "summary.couponDiscountTotal", new Object[0]));
 	    couponDiscountTotalLabel.setParent(couponDiscountTotalSpan);
-	    Label couponDiscountTotal = new Label((Double.valueOf(couponDiscount)).toString());
+	   // Label couponDiscountTotal = new Label((Double.valueOf(couponDiscount)).toString());
+	    Label couponDiscountTotal = new Label((discountUtility.createPrice(cartModel, Double.valueOf(couponDiscount))).getFormattedValue());
 	    couponDiscountTotal.setSclass("csCartPriceRowValue");
 	    couponDiscountTotal.setParent(couponDiscountTotalSpan);
 
@@ -251,6 +257,8 @@ public class MarketplaceBasketCartWidgetRenderer extends
 			return;
 		((BasketController) widget.getWidgetController()).clearCart();
 
+		((MarketPlaceBasketController)widget.getWidgetController()).releaseVoucher();
+		
 		((BasketController) widget.getWidgetController()).dispatchEvent(null,
 				widget, null);
 		
@@ -279,3 +287,4 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	
 	
 }
+

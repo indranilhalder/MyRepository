@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -434,6 +435,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 									LOG.debug("Inside PENDING case for refund================");
 									paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.PENDING_VAL);
 									//paymentTransactionModel.setCode(UUID.randomUUID().toString());
+
 									paymentTransactionModel.setCode(uniqueId);
 									//paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
 									paymentTransactionEntryModel.setCode(uniqueId);

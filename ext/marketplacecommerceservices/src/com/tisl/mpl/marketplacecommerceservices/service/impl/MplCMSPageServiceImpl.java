@@ -3,13 +3,18 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSPageService;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import java.util.Collection;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -28,6 +33,8 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 {
 
 	private MplCmsPageDao mplCmsPageDao;
+	@Autowired
+	private ConfigurationService configurationService;
 
 	/**
 	 * @return the mplCmsPageDao
@@ -174,4 +181,29 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return landingPage;
 
 	}
+
+	//public Collection<ContentPageModel> getAllContentPages(final CatalogVersionModel catalogmodel)
+	@Override
+	public Collection<ContentPageModel> getAllContentPages(final Collection<CatalogVersionModel> catalogmodel)
+	{
+		return mplCmsPageDao.findAllContentPagesByCatalogVersions(catalogmodel);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getContentSlotByUidForPage(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId,
+			final String catalogVersion)
+	{
+		final ContentSlotModel contentSlot = mplCmsPageDao.getContentSlotByUidForPage(pageId, contentSlotId, catalogVersion);
+		return contentSlot;
+	}
+
+
+
 }
