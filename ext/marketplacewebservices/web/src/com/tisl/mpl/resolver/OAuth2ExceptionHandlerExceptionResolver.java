@@ -18,8 +18,7 @@ import de.hybris.platform.commercewebservicescommons.dto.error.ErrorListWsDTO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpResponse;
@@ -45,7 +44,7 @@ public class OAuth2ExceptionHandlerExceptionResolver extends AbstractRestHandler
 {
 	private static final int DEFAULT_ORDER = -1;
 	//protected final Log logger = LogFactory.getLog(getClass()); Sonar fix
-	private static final Log logger = LogFactory.getLog(OAuth2ExceptionHandlerExceptionResolver.class);
+	private static final Logger logger = Logger.getLogger(OAuth2ExceptionHandlerExceptionResolver.class);
 
 	private WebResponseExceptionTranslator webResponseExceptionTranslator = new DefaultWebResponseExceptionTranslator();
 
