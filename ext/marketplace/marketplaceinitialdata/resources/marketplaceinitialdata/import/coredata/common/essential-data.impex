@@ -224,6 +224,7 @@ INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLangua
 #For Payment Job (Web Hook Integration)
 ;juspayWebHookCronJob;juspayWebHookJob;false;en
 ;juspayEBSCronJob;juspayEBSJob;false;en
+;campaignPromoDataCronJob;campaignPromoDataJob;false;en
 
 INSERT_UPDATE DelistingJobHelper;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
 								;DelistingHelperJob;delistingJob;en;seller;csv;

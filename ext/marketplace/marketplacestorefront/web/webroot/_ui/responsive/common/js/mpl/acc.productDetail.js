@@ -134,7 +134,7 @@ ACC.productDetail = {
 		
 		// Sise Guide Select Color
 		   
-		$(document).on("click", '#popUpModal a[data-target=#popUpModal] ',
+		$(document).on("click", 'a[data-target=#popUpModal] ',
 			function() {
 			   var target = $(this).attr("href");
 			   console.log(target);
@@ -147,8 +147,8 @@ ACC.productDetail = {
 
 			   // load the url and show modal on success
 			   $("#popUpModal .modal-content").load(target, function() { 
+				   	   $("#popUpModal").modal("show");
 					   buyboxDetailsForSizeGuide(productcode);
-					   $("#popUpModal").modal("show"); 
 			    });
 			  
 		});
@@ -1587,19 +1587,19 @@ function buyboxDetailsForSizeGuide(productCode){
 					$("#noProductForSelectedSeller").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}
-//				if (specialPrice != null){
-//					$("#specialSelPrice").html(specialPrice);
-//				}
-//				else{
-//					$("#specialSelPrice").html(mopPrice);
-//				}
-				if(data['isPinCodeServicable']=='N'){
-					$("#pinNotServicableSizeGuide").show();
-					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
+				if (specialPrice != null){
+					$("#specialSelPrice").html(specialPrice);
 				}
 				else{
-					$("#addToCartSizeGuide #addToCartButton").removeAttr('disabled');
+					$("#specialSelPrice").html(mopPrice);
 				}
+//				if(data['isPinCodeServicable']=='N'){
+//					$("#pinNotServicableSizeGuide").show();
+//					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
+//				}
+//				else{
+//					$("#addToCartSizeGuide #addToCartButton").removeAttr('disabled');
+//				}
 				$("#sellerSelName").html(sellerName);
 				$("#sellerIdSizeGuide").html(sellerID);
 				$("#mopSelPrice").html(mopPrice);
