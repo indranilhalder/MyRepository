@@ -67,7 +67,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.coupon.dao.MplCouponDao#findClosedVoucher()
 	 */
 	@Override
@@ -108,7 +108,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.coupon.dao.MplCouponDao#findClosedVoucher(de.hybris.platform.core.model.user.CustomerModel,
 	 * de.hybris.platform.commerceservices.search.pagedata.PageableData)
 	 */
@@ -139,7 +139,9 @@ public class MplCouponDaoImpl implements MplCouponDao
 					+ "%')"
 					+ groupBiulder.toString()
 					+ " ORDER BY {dr.startdate} ASC";
-			System.out.println("Query :::::::::::::::" + CLOSED_VOUCHER_);
+			//System.out.println("Query :::::::::::::::" + CLOSED_VOUCHER_);
+			LOG.debug("Query :::::::::::::::" + CLOSED_VOUCHER_);
+
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData("byDate", CLOSED_VOUCHER_
 			//"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type AND {creationtime} >= ?creationtime ORDER BY {creationtime} DESC, {pk}"

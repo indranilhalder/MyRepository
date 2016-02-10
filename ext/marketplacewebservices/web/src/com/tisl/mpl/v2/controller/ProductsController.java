@@ -1297,7 +1297,8 @@ public class ProductsController extends BaseController
 
 			for (final String filter : searchPageData.getDepartmentHierarchyData().getHierarchyList())
 			{
-				System.out.println("\n\n\nFilter:" + filter);
+				//System.out.println("\n\n\nFilter:" + filter);
+				LOG.debug("\n\n\nFilter:" + filter);
 			}
 			return searchSuggestUtilityMethods
 					.getDepartmentHierarchy(searchPageData.getDepartmentHierarchyData().getHierarchyList());

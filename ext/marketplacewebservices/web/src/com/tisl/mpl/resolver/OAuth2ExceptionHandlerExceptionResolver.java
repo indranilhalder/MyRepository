@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.resolver;
 
@@ -44,7 +44,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class OAuth2ExceptionHandlerExceptionResolver extends AbstractRestHandlerExceptionResolver
 {
 	private static final int DEFAULT_ORDER = -1;
-	protected final Log logger = LogFactory.getLog(getClass());
+	//protected final Log logger = LogFactory.getLog(getClass()); Sonar fix
+	private static final Log logger = LogFactory.getLog(OAuth2ExceptionHandlerExceptionResolver.class);
+
 	private WebResponseExceptionTranslator webResponseExceptionTranslator = new DefaultWebResponseExceptionTranslator();
 
 	public OAuth2ExceptionHandlerExceptionResolver()

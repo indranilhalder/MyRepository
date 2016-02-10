@@ -273,7 +273,8 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		for (final String promoManufacturer : promotionManufacturerList)
 		{
-			if (promoManufacturer.toLowerCase().equalsIgnoreCase(brand.getName().toLowerCase()))
+			//if (promoManufacturer.toLowerCase().equalsIgnoreCase(brand.getName().toLowerCase())) Sonar fix
+			if (promoManufacturer.equalsIgnoreCase(brand.getName()))
 			{
 				isValid = true;
 				break;
