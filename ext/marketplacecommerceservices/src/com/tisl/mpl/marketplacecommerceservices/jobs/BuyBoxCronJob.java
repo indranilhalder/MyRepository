@@ -15,6 +15,7 @@ import de.hybris.platform.util.Utilities;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -61,7 +62,8 @@ public class BuyBoxCronJob extends AbstractJobPerformable<CronJobModel>
 
 		final List<BuyBoxModel> invalidatepksList = buyBoxService.invalidatePkofBuybox(time.getTime());
 
-		if (null != invalidatepksList && invalidatepksList.size() > 0)
+		//if (null != invalidatepksList && invalidatepksList.size() > 0)
+		if (CollectionUtils.isNotEmpty(invalidatepksList))
 		{
 			LOG.debug("Pks size :" + invalidatepksList.size());
 			for (final BuyBoxModel buyboxModel : invalidatepksList)
