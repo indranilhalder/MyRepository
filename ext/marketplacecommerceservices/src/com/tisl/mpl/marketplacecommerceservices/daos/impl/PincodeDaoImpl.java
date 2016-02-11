@@ -33,6 +33,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao;
 @Component(value = "pincodeDao")
 public class PincodeDaoImpl implements PincodeDao
 {
+	private final String clicknCollect = "y";
 
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
@@ -54,10 +55,9 @@ public class PincodeDaoImpl implements PincodeDao
 	public Collection<PointOfServiceModel> getAllGeocodedPOS(final GPS center, final double radius, final String sellerId)
 	{
 
-		LOG.info("center:" + center.getDecimalLatitude() + "---" + center.getDecimalLongitude());
-
+		LOG.debug("center for given Pincode:" + center.getDecimalLatitude() + "---" + center.getDecimalLongitude());
 		final FlexibleSearchQuery fQuery = buildQuery(center, radius, sellerId);
-		LOG.info("fQuery:" + fQuery);
+		LOG.debug("FlexibleSearchQuery :" + fQuery);
 		final SearchResult result = this.flexibleSearchService.search(fQuery);
 		return result.getResult();
 	}
@@ -68,16 +68,19 @@ public class PincodeDaoImpl implements PincodeDao
 		PincodeModel pincodeModel = null;
 		try
 		{
-			System.out.println("getPincode:" + pincode);
 			final StringBuilder query = new StringBuilder();
 			query.append("SELECT {PK} FROM {").append(PincodeModel._TYPECODE).append("} WHERE {").append("pincode")
 					.append("} = ?pincode");
-			System.out.println("PincodeModel Query:" + query.toString());
+			LOG.debug(" Query for Pincode Service:" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
 			fQuery.addQueryParameter("pincode", pincode);
 			final SearchResult result = this.flexibleSearchService.search(fQuery);
-			System.out.println("result for Pincode  Query:" + result.getResult());
-			pincodeModel = (PincodeModel) result.getResult().get(0);
+			LOG.debug("Result for Pincode  Service:" + result.getResult());
+			if (null != result.getResult() && result.getResult().size() > 0)
+			{
+				pincodeModel = (PincodeModel) result.getResult().get(0);
+				return pincodeModel;
+			}
 			return pincodeModel;
 		}
 		catch (final FlexibleSearchException e)
@@ -110,15 +113,16 @@ public class PincodeDaoImpl implements PincodeDao
 					.append("latitude").append("} is not null AND {").append("longitude").append("} is not null AND {")
 					.append("latitude").append("} >= ?latMin AND {").append("latitude").append("} <= ?latMax AND {")
 					.append("longitude").append("} >= ?lonMin AND {").append("longitude").append("} <= ?lonMax ")
-					.append(" AND {sellerid").append("} = ?sellerId");
-
-			LOG.info("query.toString():" + query.toString());
+					.append(" AND {sellerid").append("} = ?sellerId AND {").append("clicknCollect").append("} = ?clicknCollect ");
+			//
+			LOG.debug("Query for get SlaveIds from PointofService :" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
 			fQuery.addQueryParameter("latMax", latMax);
 			fQuery.addQueryParameter("latMin", latMin);
 			fQuery.addQueryParameter("lonMax", lonMax);
 			fQuery.addQueryParameter("lonMin", lonMin);
 			fQuery.addQueryParameter("sellerId", sellerId);
+			fQuery.addQueryParameter("clicknCollect", clicknCollect);
 			return fQuery;
 		}
 		catch (final GeoLocatorException e)
