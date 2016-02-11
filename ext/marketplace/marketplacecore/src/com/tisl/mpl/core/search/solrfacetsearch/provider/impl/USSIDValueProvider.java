@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
@@ -75,7 +76,8 @@ public class USSIDValueProvider extends AbstractPropertyFieldValueProvider imple
 
 		final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productModel.getCode());
 
-		if (buyBoxModelList != null && buyBoxModelList.size() > 0)
+		//if (buyBoxModelList != null && buyBoxModelList.size() > 0)
+		if (CollectionUtils.isNotEmpty(buyBoxModelList))
 		{
 			BuyBoxModel buyBoxWinnerModel = buyBoxModelList.get(0);
 

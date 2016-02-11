@@ -230,14 +230,14 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 
 				}
 
-				modelService.saveAll(priorityModelList);
+				//	modelService.saveAll(priorityModelList);
 				updateNonExistingPriorities(priorityMap, validSellerPriorityMap);
 				modelService.saveAll(new ArrayList(priorityMap.values()));
 			}
 		}
 		catch (final Exception ex)
 		{
-			updateNonProcessedPriorities(priorityModelList, sellerPriorityModels);
+			//updateNonProcessedPriorities(priorityModelList, sellerPriorityModels);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 
 		}
@@ -421,47 +421,66 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	 */
 	private List<String> getUssidsFromSellers(final CategoryModel category, final SellerMasterModel sellerMasterModel)
 	{
-
 		final List<String> ussidList = new ArrayList<String>();
-		try
+		final List<ProductModel> productList = mplSellerPriorityDao.getProductListForCategory(category);
+		for (final ProductModel product : productList)
 		{
-			if (!(category.getProducts().isEmpty()))
+			//			if (product.getCatalogVersion().equals(getCatalogVersion()))
+			//			{
+			for (final SellerInformationModel seller : product.getSellerInformationRelator())
 			{
-				for (final ProductModel productList : category.getProducts())
+				if (seller.getSellerID().equals(sellerMasterModel.getId()))
 				{
-					for (final SellerInformationModel seller : productList.getSellerInformationRelator())
-					{
-						if (seller.getSellerID().equals(sellerMasterModel.getId()))
-						{
-							ussidList.add(seller.getSellerArticleSKU());
-							break;
-						}
-					}
+					ussidList.add(seller.getSellerArticleSKU());
+					//					isExits = true;
+					//					break;
 				}
 			}
-			else
-			{
-				if (!(category.getCategories().isEmpty()))
-				{
-					for (final CategoryModel cat : category.getCategories())
-					{
-						final List<String> ussids = findUssidsByRecursion(cat, sellerMasterModel);
-						ussidList.addAll(ussids);
-					}
-				}
-				else
-				{
-					final List<String> ussids = findUssidsByRecursion(category, sellerMasterModel);
-					ussidList.addAll(ussids);
-				}
-			}
+			//}
 		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
+
+		//		final List<String> ussidList = new ArrayList<String>();
+		//		try
+		//		{
+		//			if (!(category.getProducts().isEmpty()))
+		//			{
+		//				for (final ProductModel productList : category.getProducts())
+		//				{
+		//					for (final SellerInformationModel seller : productList.getSellerInformationRelator())
+		//					{
+		//						if (seller.getSellerID().equals(sellerMasterModel.getId()))
+		//						{
+		//							ussidList.add(seller.getSellerArticleSKU());
+		//							break;
+		//						}
+		//					}
+		//				}
+		//			}
+		//			else
+		//			{
+		//				if (!(category.getCategories().isEmpty()))
+		//				{
+		//					for (final CategoryModel cat : category.getCategories())
+		//					{
+		//						final List<String> ussids = findUssidsByRecursion(cat, sellerMasterModel);
+		//						ussidList.addAll(ussids);
+		//					}
+		//				}
+		//				else
+		//				{
+		//					final List<String> ussids = findUssidsByRecursion(category, sellerMasterModel);
+		//					ussidList.addAll(ussids);
+		//				}
+		//			}
+		//		}
+		//		catch (final Exception e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		//		}
 		return ussidList;
 	}
+
+
 
 	/**
 	 * finding a category level corresponding to a category id
@@ -525,8 +544,10 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						if (seller.getSellerID().equals(sellerMasterModel.getId()))
 						{
 
-							System.out.println("***************#######ussid for product in category" + ussidList + "product" + products
+							//System.out.println("***************#######ussid for product in category" + ussidList + "product" + products+ "category" + category.getCode());
+							log.debug("***************#######ussid for product in category" + ussidList + "product" + products
 									+ "category" + category.getCode());
+
 
 							ussidList.add(seller.getSellerArticleSKU());
 							break;
