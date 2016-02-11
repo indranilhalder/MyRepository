@@ -7,12 +7,10 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
-import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -23,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
@@ -44,7 +43,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 	private static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
-	private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
+	//private static final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.GALLERY);
 
 	private static final String SEQUENCE_NUMBER = "SequenceNumber";
 	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
@@ -315,13 +314,19 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							setNum, promoBanner);
 					if (bannerImage.getBannerImage() != null)
 					{
-						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+						/*
+						 * bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
+						 * bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+						 */
+						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage().getURL());
+						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage().getAltText());
 					}
 					else
 					{
-						bannerJson.put("bannerImage", "");
-						bannerJson.put("bannerAltText", "");
+						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
+								MarketplacecommerceservicesConstants.EMPTYSPACE);
+						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
+								MarketplacecommerceservicesConstants.EMPTYSPACE);
 					}
 
 					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
@@ -338,13 +343,15 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 					if (bannerImage.getBannerImage() != null)
 					{
-						bannerJson.put("bannerImage", bannerImage.getBannerImage().getURL());
-						bannerJson.put("bannerAltText", bannerImage.getBannerImage().getAltText());
+						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE, bannerImage.getBannerImage().getURL());
+						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT, bannerImage.getBannerImage().getAltText());
 					}
 					else
 					{
-						bannerJson.put("bannerImage", "");
-						bannerJson.put("bannerAltText", "");
+						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_IMAGE,
+								MarketplacecommerceservicesConstants.EMPTYSPACE);
+						bannerJson.put(MarketplacecommerceservicesConstants.BANNER_ALTTEXT,
+								MarketplacecommerceservicesConstants.EMPTYSPACE);
 					}
 					bannerJson.put("bannerUrlLink", bannerImage.getUrlLink());
 					bannerJson.put("promoText1", bannerImage.getPromoText1());

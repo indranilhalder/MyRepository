@@ -1256,7 +1256,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	private Double checkMinimumValue(final List<Double> priceList)
 	{
 		Double minPrice = Double.valueOf(0);
-		if (null != priceList && priceList.size() > 0)
+		//if (null != priceList && priceList.size() > 0)
+		if (CollectionUtils.isNotEmpty(priceList))
 		{
 			for (final Double value : priceList)
 			{

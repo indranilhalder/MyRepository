@@ -1343,6 +1343,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 
+
+	public static final String BANNER_IMAGE = "bannerImage";
+	public static final String BANNER_ALTTEXT = "bannerAltText";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class

@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.MplShopByLookModel;
@@ -28,8 +29,8 @@ import com.tisl.mpl.core.model.MplShopByLookModel;
  *
  */
 //Index collectionId for a PcmProductVariantModel
-public class MplShopByCollectionValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplShopByCollectionValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
@@ -53,27 +54,19 @@ public class MplShopByCollectionValueProvider extends AbstractPropertyFieldValue
 
 		final List<MplShopByLookModel> shopByLookModels = (List<MplShopByLookModel>) productModel.getMplShopByLook();
 		final List<String> collectionIds = new ArrayList<String>();
-		if (shopByLookModels != null && shopByLookModels.size() > 0)
+		//if (shopByLookModels != null && shopByLookModels.size() > 0)
+		if (CollectionUtils.isNotEmpty(shopByLookModels))
 		{
 			//Fetch occasion Id in all the Variants
 			for (final MplShopByLookModel mplShopByLook : shopByLookModels)
 			{
-
 				final MplShopByLookModel shopByLookModel = mplShopByLook;
-
 				if (shopByLookModel.getCollectionId() != null)
 				{
-
 					collectionIds.add(shopByLookModel.getCollectionId());
-
 				}
-
 			}
-
-
 		}
-
-
 		final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
 		{
