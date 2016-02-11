@@ -44,7 +44,8 @@ import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 public class InternalExternalAutomationServiceImpl implements InternalExternalAutomationService
 {
 
-	Logger LOG = Logger.getLogger(this.getClass());
+	//Logger LOG = Logger.getLogger(this.getClass());
+	private static final Logger LOG = Logger.getLogger(InternalExternalAutomationServiceImpl.class);
 	/*
 	 * @Autowired private CMSPageService cmsPageService;
 	 */
