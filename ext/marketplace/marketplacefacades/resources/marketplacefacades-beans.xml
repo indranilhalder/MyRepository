@@ -342,6 +342,8 @@
 		extends="de.hybris.platform.commercefacades.order.data.AbstractOrderData">
 		<property name="sellerOrderList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
+			<property name="pickupName" type="String"/>
+			<property name="pickupPhoneNumber" type="String"/>		
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.OrderDataTransactionForXML">
@@ -758,4 +760,3 @@
 		<property name="sns" type="boolean"/>
 	</bean>
 </beans>
-
