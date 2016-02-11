@@ -3,10 +3,12 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import org.json.simple.JSONObject;
 
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
@@ -45,6 +48,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 	private static final String SEQUENCE_NUMBER = "SequenceNumber";
 	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
+	private static final String TITLE = "title";
 
 	private static final Logger LOG = Logger.getLogger(HomepageComponentServiceImpl.class);
 
@@ -149,8 +153,91 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	@Override
 	public JSONObject getProductsYouCareJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject productYouCare = new JSONObject();
+
+		if (CollectionUtils.isNotEmpty(contentSlot.getCmsComponents()))
+		{
+			components = contentSlot.getCmsComponents();
+		}
+
+		for (final AbstractCMSComponentModel component : components)
+		{
+			if (component instanceof MplCategoryCarouselComponentModel)
+			{
+				final MplCategoryCarouselComponentModel productYouCareCarouselComponent = (MplCategoryCarouselComponentModel) component;
+				String title = "";
+				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
+				{
+					title = productYouCareCarouselComponent.getTitle();
+				}
+
+				productYouCare.put(TITLE, title);
+
+				final JSONArray subComponentJsonArray = new JSONArray();
+				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
+				{
+					String categoryName = "";
+					String categoryCode = "";
+
+
+					for (final CategoryModel category : productYouCareCarouselComponent.getCategories())
+					{
+						final JSONObject youCareCategoryJSON = new JSONObject();
+						if (null != category.getName())
+						{
+							categoryName = category.getName();
+
+						}
+						youCareCategoryJSON.put("categoryName", categoryName);
+
+						if (null != category.getCode())
+						{
+							categoryCode = category.getCode();
+
+						}
+						youCareCategoryJSON.put("categoryCode", categoryCode);
+
+						boolean mediaFound = false;
+						if (null != category.getMedias())
+						{
+							for (final MediaModel categoryMedia : category.getMedias())
+							{
+								if (null != categoryMedia.getMediaFormat()
+										&& categoryMedia.getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H")
+										&& null != categoryMedia.getURL2())
+								{
+									youCareCategoryJSON.put("mediaURL", categoryMedia.getURL2());
+									mediaFound = true;
+								}
+							}
+
+							if (!mediaFound)
+							{
+								youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
+							}
+
+
+						}
+						else
+						{
+
+							youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
+						}
+
+						subComponentJsonArray.add(youCareCategoryJSON);
+					}
+				}
+				else
+				{
+					LOG.error("No Category found for productYouCareCarouselComponent");
+				}
+
+				productYouCare.put("categories", subComponentJsonArray);
+
+			}
+		}
+		return productYouCare;
 	}
 
 
@@ -206,7 +293,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 				}
 				else
 				{
-					final int lastSequenceNumber = (int) sessionService.getAttribute(seqNum);
+					final int lastSequenceNumber = Integer.parseInt(sessionService.getAttribute(seqNum).toString());
 					final int nextSequenceNumber = lastSequenceNumber + 1;
 
 					if (getBannerforSequenceNumber(nextSequenceNumber, promoBanner) != null)
@@ -266,7 +353,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 					bannerJson.put("promoText4", bannerImage.getPromoText4());
 				}
 
-				sessionService.setAttribute(seqNum, setNum);
+				sessionService.setAttribute(seqNum, Integer.valueOf(setNum));
 
 
 
