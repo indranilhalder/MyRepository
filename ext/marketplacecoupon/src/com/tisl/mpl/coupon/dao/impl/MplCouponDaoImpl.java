@@ -11,13 +11,11 @@ import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
-import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,44 +63,44 @@ public class MplCouponDaoImpl implements MplCouponDao
 		this.flexibleSearchService = flexibleSearchService;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.coupon.dao.MplCouponDao#findClosedVoucher()
-	 */
-	@Override
-	public Set<Map<VoucherModel, DateRestrictionModel>> findClosedVoucher()
-	{
-		final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap = new LinkedHashSet<Map<VoucherModel, DateRestrictionModel>>();
-
-		final String queryString = MarketplacecouponConstants.CLOSED_VOUCHER;
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.setResultClassList(Arrays.asList(VoucherModel.class, DateRestrictionModel.class));
-
-		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
-
-
-		for (final List<Object> row : result.getResult())
-		{
-			final Map<VoucherModel, DateRestrictionModel> resultMap = new HashMap<VoucherModel, DateRestrictionModel>();
-			final VoucherModel voucher = (VoucherModel) row.get(0);
-			final DateRestrictionModel dateRestriction = (DateRestrictionModel) row.get(1);
-
-			if (null != dateRestriction.getStartDate())
-			{
-				try
-				{
-					resultMap.put(voucher, dateRestriction);
-					voucherWithStartDateMap.add(resultMap);
-				}
-				catch (final Exception e)
-				{
-					LOG.debug(e.getMessage());
-				}
-			}
-		}
-		return voucherWithStartDateMap;
-	}
+	//	/*
+	//	 * (non-Javadoc)
+	//	 *
+	//	 * @see com.tisl.mpl.coupon.dao.MplCouponDao#findClosedVoucher()
+	//	 */
+	//	@Override
+	//	public Set<Map<VoucherModel, DateRestrictionModel>> findClosedVoucher()
+	//	{
+	//		final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap = new LinkedHashSet<Map<VoucherModel, DateRestrictionModel>>();
+	//
+	//		final String queryString = MarketplacecouponConstants.CLOSED_VOUCHER;
+	//		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+	//		query.setResultClassList(Arrays.asList(VoucherModel.class, DateRestrictionModel.class));
+	//
+	//		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+	//
+	//
+	//		for (final List<Object> row : result.getResult())
+	//		{
+	//			final Map<VoucherModel, DateRestrictionModel> resultMap = new HashMap<VoucherModel, DateRestrictionModel>();
+	//			final VoucherModel voucher = (VoucherModel) row.get(0);
+	//			final DateRestrictionModel dateRestriction = (DateRestrictionModel) row.get(1);
+	//
+	//			if (null != dateRestriction.getStartDate())
+	//			{
+	//				try
+	//				{
+	//					resultMap.put(voucher, dateRestriction);
+	//					voucherWithStartDateMap.add(resultMap);
+	//				}
+	//				catch (final Exception e)
+	//				{
+	//					LOG.debug(e.getMessage());
+	//				}
+	//			}
+	//		}
+	//		return voucherWithStartDateMap;
+	//	}
 
 
 
@@ -173,6 +171,18 @@ public class MplCouponDaoImpl implements MplCouponDao
 		result.setSortCode(sortCode);
 		result.setQuery(query);
 		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.coupon.dao.MplCouponDao#findClosedVoucher()
+	 */
+	@Override
+	public Set<Map<VoucherModel, DateRestrictionModel>> findClosedVoucher()
+	{
+		// YTODO Auto-generated method stub
+		return null;
 	}
 
 	/*
