@@ -70,6 +70,7 @@ import javax.annotation.Resource;
 import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -825,7 +826,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		try
 		{
 			cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
-			if (null != cartModelList && cartModelList.size() > 0)
+			//if (null != cartModelList && cartModelList.size() > 0)
+			if (CollectionUtils.isNotEmpty(cartModelList))
 			{
 				for (final CartModel cartModel : cartModelList)
 				{
@@ -1932,7 +1934,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					}
 				}
 
-				if ((pincode == null || pincode.isEmpty()) || (!pincode.isEmpty() && deliveryModeDataMap.size() == 0))
+				//if ((pincode == null || pincode.isEmpty()) || (!pincode.isEmpty() && deliveryModeDataMap.size() == 0))
+				if (StringUtils.isEmpty(pincode) || (StringUtils.isNotEmpty(pincode) && MapUtils.isEmpty(deliveryModeDataMap)))
 				{
 					isServicable = MarketplacecommerceservicesConstants.N;
 				}
