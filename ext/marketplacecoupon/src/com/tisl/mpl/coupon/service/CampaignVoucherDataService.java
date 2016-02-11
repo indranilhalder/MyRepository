@@ -9,5 +9,7 @@ package com.tisl.mpl.coupon.service;
  */
 public interface CampaignVoucherDataService
 {
-	//Content
+
+	void generateCSV();
+
 }
