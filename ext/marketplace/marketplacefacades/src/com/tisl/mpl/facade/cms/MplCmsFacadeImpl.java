@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.CMSChannel;
@@ -109,6 +110,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	private MplSellerMasterService sellerMasterService;
 
+	private static final Logger LOG = Logger.getLogger(MplCmsFacadeImpl.class);
 
 	/**
 	 * @return the sellerMasterService
@@ -298,8 +300,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
-	public PageData getCategoryLandingPageForMobile(final String categoryCode)
-			throws CMSItemNotFoundException, NullPointerException
+	public PageData getCategoryLandingPageForMobile(final String categoryCode) throws CMSItemNotFoundException,
+			NullPointerException
 	{
 		final CategoryModel category = getCategoryService().getCategoryForCode(categoryCode);
 		final ContentPageModel contentPage = getMplCMSPageService().getCategoryLandingPageForMobile(category, CMSChannel.MOBILE);
@@ -342,8 +344,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						final MobileBannerComponentModel mobileBannerComponent = (MobileBannerComponentModel) abstractCMSComponentModel;
 						final HomePageComponentData homePageData = new HomePageComponentData();
-						homePageData
-								.setImage(mobileBannerComponent.getMedia() != null ? mobileBannerComponent.getMedia().getURL() : null);
+						homePageData.setImage(mobileBannerComponent.getMedia() != null ? mobileBannerComponent.getMedia().getURL()
+								: null);
 						homePageData.setContentId(mobileBannerComponent.getUid());
 						if (mobileBannerComponent.getAssociatedCategory() != null
 								&& !mobileBannerComponent.getAssociatedCategory().isEmpty())
@@ -447,11 +449,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final Date today = new Date();
 						if ((null != promotion.getStartDate() && null != promotion.getEndDate()
 								&& promotion.getStartDate().before(today) && promotion.getEndDate().after(today))
-								|| (null == promotion.getStartDate() && null != promotion.getEndDate()
-										&& promotion.getEndDate().after(today))
-								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today)
-										&& null == promotion.getEndDate())
-								|| null == promotion.getStartDate() && null == promotion.getEndDate())
+								|| (null == promotion.getStartDate() && null != promotion.getEndDate() && promotion.getEndDate().after(
+										today))
+								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today) && null == promotion
+										.getEndDate()) || null == promotion.getStartDate() && null == promotion.getEndDate())
 
 						{
 							promotionComponentData.setTitle(promotion.getName());
@@ -616,8 +617,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						collectionSectionData = new CollectionSectionData();
 						final MobileCollectionBannerComponentModel mobileCollectionComponent = (MobileCollectionBannerComponentModel) abstractCMSComponentModel;
-						final CollectionComponentData collectionData = getMobileCollectionComponentConverter()
-								.convert(mobileCollectionComponent);
+						final CollectionComponentData collectionData = getMobileCollectionComponentConverter().convert(
+								mobileCollectionComponent);
 						collectionSectionData.setComponents(collectionData);
 						collectionSectionData.setSequence(contentSlotForPage.getSequenceNumber());
 						collectionSectionDatas.add(collectionSectionData);
@@ -630,11 +631,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final LinkedCollectionsData previousCollectionData = new LinkedCollectionsData();
 						final LinkedCollectionsData nextCollectionData = new LinkedCollectionsData();
 						previousCollectionData.setName(mobileCollectionLinkComponent.getPreviousCollectionName());
-						previousCollectionData.setTargetCollection(mobileCollectionLinkComponent.getPreviousCollection() != null
-								? mobileCollectionLinkComponent.getPreviousCollection().getCollectionId() : null);
+						previousCollectionData
+								.setTargetCollection(mobileCollectionLinkComponent.getPreviousCollection() != null ? mobileCollectionLinkComponent
+										.getPreviousCollection().getCollectionId() : null);
 						nextCollectionData.setName(mobileCollectionLinkComponent.getNextCollectionName());
-						nextCollectionData.setTargetCollection(mobileCollectionLinkComponent.getNextCollection() != null
-								? mobileCollectionLinkComponent.getNextCollection().getCollectionId() : null);
+						nextCollectionData
+								.setTargetCollection(mobileCollectionLinkComponent.getNextCollection() != null ? mobileCollectionLinkComponent
+										.getNextCollection().getCollectionId() : null);
 						collectionPageData.setPreviousCollection(previousCollectionData);
 						collectionPageData.setNextCollection(nextCollectionData);
 
@@ -769,7 +772,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 		}
 		catch (final MalformedURLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("MalformedURLException ", e);
 		}
 		return collectionUrl;
 	}
@@ -846,11 +850,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final Date today = new Date();
 						if ((null != promotion.getStartDate() && null != promotion.getEndDate()
 								&& promotion.getStartDate().before(today) && promotion.getEndDate().after(today))
-								|| (null == promotion.getStartDate() && null != promotion.getEndDate()
-										&& promotion.getEndDate().after(today))
-								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today)
-										&& null == promotion.getEndDate())
-								|| null == promotion.getStartDate() && null == promotion.getEndDate())
+								|| (null == promotion.getStartDate() && null != promotion.getEndDate() && promotion.getEndDate().after(
+										today))
+								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today) && null == promotion
+										.getEndDate()) || null == promotion.getStartDate() && null == promotion.getEndDate())
 
 						{
 							promotionComponentData.setTitle(promotion.getName());

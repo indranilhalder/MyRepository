@@ -156,7 +156,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -878,8 +878,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		}
 		catch (final Exception e)
 		{
-			LOG.debug(MarketplacecommerceservicesConstants.CSV_ERROR);
-			e.printStackTrace();
+			LOG.debug(MarketplacecommerceservicesConstants.CSV_ERROR, e);
 		}
 		finally
 		{
@@ -890,12 +889,10 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			}
 			catch (final IOException e)
 			{
-				LOG.debug(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR);
-				e.printStackTrace();
+				LOG.debug(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR, e);
+				//e.printStackTrace();
 			}
 		}
-
-
 	}
 
 

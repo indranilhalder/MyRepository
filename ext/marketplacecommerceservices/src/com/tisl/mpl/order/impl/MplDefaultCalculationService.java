@@ -11,6 +11,7 @@ import de.hybris.platform.util.TaxValue;
 
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MplDefaultCalculationService extends DefaultCalculationService
 {
 
+	private static final Logger LOG = Logger.getLogger(MplDefaultCalculationService.class);
+
 	@Autowired
 	private FindPaymentCostStrategy findPaymentCostStrategy;
 
@@ -28,7 +31,9 @@ public class MplDefaultCalculationService extends DefaultCalculationService
 	protected void resetAdditionalCosts(final AbstractOrderModel order, final Collection<TaxValue> relativeTaxValues)
 	{
 
-		System.out.println("order total including delivery charges" + order.getTotalPrice());
+		//System.out.println("order total including delivery charges" + order.getTotalPrice());
+		LOG.debug("order total including delivery charges" + order.getTotalPrice());
+
 		//order.setDeliveryCost(Double.valueOf(deliveryCostValue));
 		// -----------------------------
 		// set payment cost - convert if net or currency is different

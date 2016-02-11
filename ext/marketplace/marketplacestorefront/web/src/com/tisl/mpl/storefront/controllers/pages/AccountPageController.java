@@ -1123,10 +1123,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 			populateModelForCoupon(model, searchPageDataVoucher, showMode);
 
 			final List<VoucherDisplayData> closedVoucherDataList = searchPageDataVoucher.getResults();
-			System.out.println("-------------------------------------" + closedVoucherDataList);
+			//System.out.println("-------------------------------------" + closedVoucherDataList);
+			LOG.debug("-------------------------------------" + closedVoucherDataList);
 			for (final VoucherDisplayData voucher : closedVoucherDataList)
 			{
-				System.out.println("----------Final data-----" + voucher.getVoucherCode());
+				//System.out.println("----------Final data-----" + voucher.getVoucherCode());
+				LOG.debug("----------Final data-----" + voucher.getVoucherCode());
 			}
 			//test ends
 

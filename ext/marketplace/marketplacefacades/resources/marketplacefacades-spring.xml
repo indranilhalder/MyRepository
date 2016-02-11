@@ -1240,7 +1240,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
              <map> 
              </map> 
            </constructor-arg>   -->
-		<property name="pattern" value="^[0-9]+$"/>
+		<property name="pattern" value="[0-9]+(\.[0-9])*"/>
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1271,7 +1271,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	<bean id="sizeGuideComparator"
 	      class="com.tisl.mpl.facade.comparator.SizeGuideComparator">
-		<property name="pattern" value="^[0-9]+$"/>
+		<property name="pattern" value="[0-9]+(\.[0-9])*"/>
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>

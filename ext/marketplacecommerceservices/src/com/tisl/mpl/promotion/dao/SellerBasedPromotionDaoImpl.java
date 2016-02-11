@@ -28,6 +28,12 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	private static final Logger LOG = Logger.getLogger(SellerBasedPromotionDaoImpl.class);
 
 	private static final String P = "{p.";
+	private static final String PRM = "{prm.";
+	private static final String PROMO = "{promo.";
+	private static final String APM = "{apm.";
+	private static final String QUERY_FROM = "FROM {";
+
+
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
@@ -43,7 +49,7 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 		final String queryString = //
 		"SELECT {p:" + SellerInformationModel.PK
 				+ "} "//
-				+ "FROM {" + SellerInformationModel._TYPECODE + " AS p } where" + P + SellerInformationModel.SELLERARTICLESKU
+				+ QUERY_FROM + SellerInformationModel._TYPECODE + " AS p } where" + P + SellerInformationModel.SELLERARTICLESKU
 				+ "} = ?code and " + P + SellerInformationModel.CATALOGVERSION + "} = ?oModel";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
@@ -62,10 +68,10 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	{
 		LOG.debug("Fetching Price Information Data Corresponding to a USSID");
 		final String queryString = //
-		"SELECT {p:" + PriceRowModel.PK
+		"SELECT {prm:" + PriceRowModel.PK
 				+ "} "//
-				+ "FROM {" + PriceRowModel._TYPECODE + " AS p } where" + P + PriceRowModel.SELLERARTICLESKU + "} = ?code and " + P
-				+ PriceRowModel.CATALOGVERSION + "} = ?oModel";
+				+ QUERY_FROM + PriceRowModel._TYPECODE + " AS prm } where" + PRM + PriceRowModel.SELLERARTICLESKU + "} = ?code and "
+				+ PRM + PriceRowModel.CATALOGVERSION + "} = ?oModel";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("code", code);
@@ -83,8 +89,10 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	{
 		LOG.debug("Fetching Promotion Details");
 		final String queryString = //
-		"SELECT {p:" + AbstractPromotionModel.PK + "} "//
-				+ "FROM {" + AbstractPromotionModel._TYPECODE + " AS p } where" + P + AbstractPromotionModel.CODE + "} = ?code";
+		"SELECT {promo:" + AbstractPromotionModel.PK
+				+ "} "//
+				+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS promo } where" + PROMO + AbstractPromotionModel.CODE
+				+ "} = ?code";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("code", code);
@@ -99,8 +107,10 @@ public class SellerBasedPromotionDaoImpl implements SellerBasedPromotionDao
 	{
 		LOG.debug("Fetching Promotion Details");
 		final String queryString = //
-		"SELECT {p:" + AbstractPromotionModel.PK + "} "//
-				+ "FROM {" + AbstractPromotionModel._TYPECODE + " AS p } where" + P + AbstractPromotionModel.ENABLED + "} = ?true";
+		"SELECT {apm:" + AbstractPromotionModel.PK
+				+ "} "//
+				+ QUERY_FROM + AbstractPromotionModel._TYPECODE + " AS apm } where" + APM + AbstractPromotionModel.ENABLED
+				+ "} = ?true";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("true", Boolean.TRUE);

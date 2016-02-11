@@ -47,6 +47,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import atg.taglib.json.util.JSONException;
+import atg.taglib.json.util.JSONObject;
+
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -64,9 +67,6 @@ import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.util.ExceptionUtil;
-
-import atg.taglib.json.util.JSONException;
-import atg.taglib.json.util.JSONObject;
 
 
 
@@ -178,8 +178,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	@RequestMapping(method = RequestMethod.GET)
 	public String oauth2callback(@RequestHeader(value = ModelAttributetConstants.REFERER, required = false) final String referer,
 			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel)
-					throws CMSItemNotFoundException, IOException, JSONException
+			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException,
+			IOException, JSONException
 	{
 		try
 		{
@@ -202,8 +202,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			}
 			else if (request.getParameter(ModelAttributetConstants.CODE) != null
 					&& request.getParameter(ModelAttributetConstants.STATE) != null
-					&& request.getParameter(ModelAttributetConstants.STATE)
-							.equals(request.getSession().getAttribute(ModelAttributetConstants.STATE)))
+					&& request.getParameter(ModelAttributetConstants.STATE).equals(
+							request.getSession().getAttribute(ModelAttributetConstants.STATE)))
 			{
 				//Google code
 				request.getSession().removeAttribute(ModelAttributetConstants.STATE);
@@ -222,8 +222,9 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				}
 				final String socialLogin = ModelAttributetConstants.GOOGLE;
 				session.setAttribute(ModelAttributetConstants.SOCIAL_LOGIN, ModelAttributetConstants.SOCIAL_LOGIN);
-				return processRegisterUserRequestForOAuth2(referer, form, bindingResult, model, request, response, redirectModel,
-						socialLogin);
+				//return processRegisterUserRequestForOAuth2(referer, form, bindingResult, model, request, response, redirectModel,socialLogin);
+
+				return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
 			}
 			else if (request.getParameter(ModelAttributetConstants.CODE) != null)
 			{
@@ -242,15 +243,14 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				}
 				final String socialLogin = ModelAttributetConstants.FACEBOOK;
 				session.setAttribute(ModelAttributetConstants.SOCIAL_LOGIN, ModelAttributetConstants.SOCIAL_LOGIN);
-				return processRegisterUserRequestForOAuth2(referer, form, bindingResult, model, request, response, redirectModel,
-						socialLogin);
+				return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
 			}
 			return ControllerConstants.Views.Pages.Oauth2callback.oauth2callback;
 		}
 		catch (final IllegalArgumentException e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0012));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0012));
 			session.removeAttribute(ModelAttributetConstants.SOCIAL_LOGIN);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
@@ -357,8 +357,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 			if (gigyaservice.validateSignature(getGigyaUID(), getTimestamp(), getSignature()))
 			{
-				return processRegisterUserRequestForOAuth2(referer, form, bindingResult, model, request, response, redirectModel,
-						socialLogin);
+				return processRegisterUserRequestForOAuth2(form, bindingResult, model, request, response, socialLogin);
 			}
 
 			return "Invalid Signature";
@@ -421,7 +420,6 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 
 	/**
 	 * @description this method is internally called for registration using social media
-	 * @param referer
 	 * @param form
 	 * @param bindingResult
 	 * @param model
@@ -432,10 +430,15 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 */
-	private String processRegisterUserRequestForOAuth2(final String referer, final RegisterForm form,
-			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel, final String socialLogin)
-					throws CMSItemNotFoundException
+	/*
+	 * private String processRegisterUserRequestForOAuth2(final RegisterForm form, final BindingResult bindingResult,
+	 * final Model model, final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes
+	 * redirectModel, final String socialLogin) throws CMSItemNotFoundException
+	 */
+
+	private String processRegisterUserRequestForOAuth2(final RegisterForm form, final BindingResult bindingResult,
+			final Model model, final HttpServletRequest request, final HttpServletResponse response, final String socialLogin)
+			throws CMSItemNotFoundException
 	{
 		try
 		{
