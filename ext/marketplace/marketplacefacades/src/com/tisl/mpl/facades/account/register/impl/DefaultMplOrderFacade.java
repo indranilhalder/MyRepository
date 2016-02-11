@@ -3,9 +3,11 @@
 // */
 package com.tisl.mpl.facades.account.register.impl;
 
+import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
@@ -19,6 +21,7 @@ import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
@@ -31,6 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -42,17 +47,26 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
+import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.service.ReturnLogisticsService;
+import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
 
 /**
@@ -78,6 +92,24 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	private ConfigurationService configurationService;
 	@Autowired
 	private CustomerAccountService customerAccountService;
+
+	@Autowired
+	CustomOmsOrderService customOmsOrderService;
+
+	@Autowired
+	CustomerFacade customerFacade;
+
+	@Autowired
+	private OrderModelService orderModelService;
+
+	@Autowired
+	private ReturnLogisticsService returnLogistics;
+
+	@Autowired
+	private TicketCreationCRMservice ticketCreate;
+
+	@Autowired
+	private ModelService modelService;
 
 	protected static final Logger LOG = Logger.getLogger(DefaultMplOrderFacade.class);
 
@@ -706,6 +738,157 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	public void setMplSellerInformationService(final MplSellerInformationService mplSellerInformationService)
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
+	}
+
+
+
+	@Override
+	public String editPickUpInfo(final String orderId, final String name, final String mobile)
+	{
+
+		LOG.debug("Send PickUpDetails Based On OrderId");
+		try
+		{
+
+			orderModelService.updatePickUpDetailService(orderId, name, mobile);
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			LOG.error("Update PickDetails that time Error Rasing");
+		}
+		orderModelService.updatePickUpDetailService(orderId, name, mobile);
+		LOG.info("Update PickUp Details successfully");
+		return MarketplaceFacadesConstants.Status_Sucess;
+	}
+
+
+
+	@Override
+	public void createCrmTicketUpdatePickDetails(final String orderId, final String name, final String mobile)
+	{
+
+		final OrderModel orderModel = orderModelService.updatePickUpDetailService(orderId, name, mobile);
+
+		try
+		{
+
+			if (orderModel != null)
+			{
+
+				LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
+
+
+				customOmsOrderService.upDatePickUpDetails(orderModel);
+
+
+
+				final SendTicketRequestData ticket = new SendTicketRequestData();
+				final CustomerData customerData = customerFacade.getCurrentCustomer();
+
+				if (null != customerData)
+				{
+					ticket.setCustomerID(customerData.getUid());
+				}
+
+				ticket.setOrderId(orderModel.getCode());
+
+				final List<OrderModel> subOrderId = orderModel.getChildOrders();
+				String suborder = null;
+				for (final OrderModel subId : subOrderId)
+				{
+					suborder = subId.getCode();
+				}
+				ticket.setSubOrderId(suborder);
+				ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+				ticket.setAlternateContactName(orderModel.getPickupPersonName());
+				ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
+
+				LOG.info(" ****** Before CRM Ticket Creatin *********");
+				ticketCreate.ticketCreationModeltoWsDTO(ticket);
+				LOG.info(" ******* After CRM Ticket Creatin ********");
+
+				LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
+				saveTicketDetailsInCommerce(ticket);
+				LOG.info("************ PickUpDetails Ticket Saved ********");
+				// final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode, refundType, ussid, customerData, subOrderModel);
+
+			}
+
+		}
+		catch (final Exception e)
+		{
+
+			e.printStackTrace();
+			LOG.error("<<<<<<<<<<<Exception Rasing convert OrderModel to SendTicketRequestData Wto of class>>>>>>>>" + e);
+		}
+
+
+
+	}
+
+
+	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)
+	{
+		String crmRequest = null;
+
+		final CRMTicketDetailModel ticket = modelService.create(CRMTicketDetailModel.class);
+		if (null != sendTicketRequestData.getCustomerID())
+		{
+			ticket.setCustomerID(sendTicketRequestData.getCustomerID());
+			LOG.debug("ticket create: customer Id>>>>> " + sendTicketRequestData.getCustomerID());
+		}
+		if (null != sendTicketRequestData.getOrderId())
+		{
+			ticket.setOrderId(sendTicketRequestData.getOrderId());
+			LOG.debug("ticket create:order Id>>>>> " + sendTicketRequestData.getOrderId());
+		}
+		if (null != sendTicketRequestData.getSubOrderId())
+		{
+			ticket.setSubOrderId(sendTicketRequestData.getSubOrderId());
+			LOG.debug("ticket create:suborder Id>>>>> " + sendTicketRequestData.getSubOrderId());
+		}
+
+		if (null != sendTicketRequestData.getTicketType())
+		{
+			ticket.setTicketType(sendTicketRequestData.getTicketType());
+		}
+		if (null != sendTicketRequestData.getRefundType())
+		{
+			ticket.setRefundType(sendTicketRequestData.getRefundType());
+		}
+		if (null != sendTicketRequestData.getReturnCategory())
+		{
+			ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
+		}
+
+
+		if (null != sendTicketRequestData.getAlternateContactName())
+		{
+			ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+		}
+		if (null != sendTicketRequestData.getAlternatePhoneNo())
+		{
+			ticket.setAlternateContactName(sendTicketRequestData.getAlternatePhoneNo());
+		}
+
+
+
+		final TicketMasterXMLData ticketXmlData = ticketCreate.ticketCreationModeltoXMLData(sendTicketRequestData);
+		if (ticketXmlData != null)
+		{
+			try
+			{
+				crmRequest = ticketCreate.createCRMRequestXml(ticketXmlData);
+			}
+			catch (final JAXBException ex)
+			{
+				LOG.info(MarketplacecclientservicesConstants.EXCEPTION_IS);
+
+			}
+			ticket.setCRMRequest(crmRequest);
+		}
+		modelService.save(ticket);
 	}
 
 }
