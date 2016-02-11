@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.conv;
 
@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
  */
 public class StringValueConverter implements SingleValueConverter
 {
-	private static int LIMIT_NO_DEFINED = Integer.MAX_VALUE;
+	private static final int LIMIT_NO_DEFINED = Integer.MAX_VALUE;
 
 	private int limit = LIMIT_NO_DEFINED;
 
