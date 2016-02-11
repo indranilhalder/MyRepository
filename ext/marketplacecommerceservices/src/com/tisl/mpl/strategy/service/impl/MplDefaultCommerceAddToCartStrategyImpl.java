@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,11 +54,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Adding product to cart
-	 *
+	 * 
 	 * @param parameter
-	 *
+	 * 
 	 * @return CommerceCartModification
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -191,19 +192,19 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Fetching eligible quantity for a ussid which can be added in cart
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param productModel
-	 *
+	 * 
 	 * @param quantityToAdd
-	 *
+	 * 
 	 * @param pointOfServiceModel
-	 *
+	 * 
 	 * @param ussid
-	 *
+	 * 
 	 * @return long
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAllowedCartAdjustmentForProduct(final CartModel cartModel, final ProductModel productModel,
@@ -232,11 +233,11 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 
 	/*
 	 * @Desc Fetching available stock information for a ussid from Stock Level
-	 *
+	 * 
 	 * @param ussid
-	 *
+	 * 
 	 * @return long
-	 *
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	private long getAvailableStockLevel(final String ussid) throws CommerceCartModificationException
@@ -245,7 +246,8 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends AbstractCommerceAdd
 		if (ussid != null)
 		{
 			final List<StockLevelModel> stockLevelList = mplStockDao.getStockDetail(ussid);
-			if (stockLevelList != null && stockLevelList.size() > 0)
+			//if (stockLevelList != null && stockLevelList.size() > 0)
+			if (CollectionUtils.isNotEmpty(stockLevelList))
 			{
 				availableStockLevel = Long.valueOf(stockLevelList.get(0).getAvailable());
 			}
