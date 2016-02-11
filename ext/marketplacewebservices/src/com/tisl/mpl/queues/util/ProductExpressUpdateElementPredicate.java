@@ -9,17 +9,16 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.queues.util;
-
-import com.tisl.mpl.queues.data.ProductExpressUpdateElementData;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Predicate;
+import com.tisl.mpl.queues.data.ProductExpressUpdateElementData;
 
 
 public class ProductExpressUpdateElementPredicate implements Predicate<ProductExpressUpdateElementData>
@@ -47,14 +46,16 @@ public class ProductExpressUpdateElementPredicate implements Predicate<ProductEx
 	protected boolean areElementsEqual(final ProductExpressUpdateElementData element1,
 			final ProductExpressUpdateElementData element2)
 	{
-		if (element1 == element2)
-		{
-			return true;
-		}
 
 		if (element1 == null || element2 == null)
 		{
 			return false;
+		}
+
+		//if (element1 == element2) //Sonar fix
+		if (element1.equals(element2))
+		{
+			return true;
 		}
 
 		if (!StringUtils.equals(element1.getCode(), element2.getCode()))
