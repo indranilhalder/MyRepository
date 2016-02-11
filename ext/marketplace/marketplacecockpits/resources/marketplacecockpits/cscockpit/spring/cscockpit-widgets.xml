@@ -593,8 +593,7 @@
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponWidgetRenderer">
 	</bean>
 	
-	
-	<!-- checkout  coupon widget -->
+	<!-- checkout  coupon widget -->	
 	<alias alias="csCouponCheckoutWidgetConfig" name="csCouponCheckoutWidgetConfig" />
 	<bean id="csCouponCheckoutWidgetConfig" parent="csBaseWidgetConfig">
 		<property name="widgetTitle" value="cscockpit.widget.checkout.appliedCoupon" />
@@ -623,7 +622,6 @@
 	<bean id="csCouponOrderWidgetRenderer" parent="abstractWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponOrderWidgetRenderer">
 	</bean> 
-	
 	
 	
 </beans>

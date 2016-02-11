@@ -69,13 +69,19 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 			String listingId = null;
 
 			LOG.debug("modified row  *********** categoryId : " + categoryId + " ************** listingId" + listingId);
-
 			if (null == priority.getSellerId())
 			{
 				throw new InterceptorException(SELLERIDBLANK);
 			}
-			if (null != priority.getListingId() || (null != priority.getListingId() && null != priority.getCategoryId())
-					&& null != priority.getSellerId())
+			if (null != priority.getListingId() && null != priority.getCategoryId() && null != priority.getSellerId())
+			{
+				listingId = priority.getListingId().getCode();
+				if (!checkSellerExistsForUssid(Collections.singletonList(priority.getListingId()), priority.getSellerId().getId()))
+				{
+					throw new InterceptorException(SELLER_NOT_MAPPED_PRODUCT);
+				}
+			}
+			else if (null != priority.getListingId())
 			{
 				listingId = priority.getListingId().getCode();
 				if (!checkSellerExistsForUssid(Collections.singletonList(priority.getListingId()), priority.getSellerId().getId()))
