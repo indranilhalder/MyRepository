@@ -17,69 +17,72 @@ import org.springframework.util.Assert;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+
 /**
- * Validates one specific string property specified by {@link #fieldPath} in any object
- * if it is valid against given regular expression
+ * Validates one specific string property specified by {@link #fieldPath} in any object if it is valid against given
+ * regular expression
  */
-public class RegexpValidator  implements Validator {
+public class RegexpValidator implements Validator
+{
 
-    private String fieldPath;
-    private String regularExpression;
-    private String errorMessageID;
+	private String fieldPath;
+	private String regularExpression;
+	private String errorMessageID;
 
-    @Override
-    public boolean supports(Class<?> aClass)
-    {
-        return true;
-    }
+	@Override
+	public boolean supports(final Class<?> aClass)
+	{
+		return true;
+	}
 
-    @Override
-    public void validate(Object o, Errors errors) {
-        Assert.notNull(errors, "Errors object must not be null");
-        final String fieldValue = (String) errors.getFieldValue(getFieldPath());
+	@Override
+	public void validate(final Object o, final Errors errors)
+	{
+		Assert.notNull(errors, "Errors object must not be null");
+		final String fieldValue = (String) errors.getFieldValue(getFieldPath());
 
-        RegexValidator validator = new RegexValidator(getRegularExpression());
+		final RegexValidator validator = new RegexValidator(getRegularExpression());
 
-        if (!validator.isValid(fieldValue))
-        {
-            errors.rejectValue(getFieldPath(), getErrorMessageID(), new String[]
-                    { getFieldPath() }, null);
-        }
-    }
+		if (!validator.isValid(fieldValue))
+		{
+			errors.rejectValue(getFieldPath(), getErrorMessageID(), new String[]
+			{ getFieldPath() }, null);
+		}
+	}
 
 
-    @Required
-    public void setFieldPath(final String fieldPath)
-    {
-        this.fieldPath = fieldPath;
-    }
+	@Required
+	public void setFieldPath(final String fieldPath)
+	{
+		this.fieldPath = fieldPath;
+	}
 
-    public String getFieldPath()
-    {
-        return this.fieldPath;
-    }
+	public String getFieldPath()
+	{
+		return this.fieldPath;
+	}
 
-    @Required
-    public void setRegularExpression(final String regularExpression)
-    {
-        this.regularExpression = regularExpression;
-    }
+	@Required
+	public void setRegularExpression(final String regularExpression)
+	{
+		this.regularExpression = regularExpression;
+	}
 
-    public String getRegularExpression()
-    {
-        return this.regularExpression;
-    }
+	public String getRegularExpression()
+	{
+		return this.regularExpression;
+	}
 
-    @Required
-    public void setErrorMessageID(final String errorMessageID)
-    {
-        this.errorMessageID = errorMessageID;
-    }
+	@Required
+	public void setErrorMessageID(final String errorMessageID)
+	{
+		this.errorMessageID = errorMessageID;
+	}
 
-    public String getErrorMessageID()
-    {
-        return this.errorMessageID;
-    }
+	public String getErrorMessageID()
+	{
+		return this.errorMessageID;
+	}
 
 
 

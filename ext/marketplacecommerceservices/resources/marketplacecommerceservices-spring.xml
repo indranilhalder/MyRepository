@@ -1531,6 +1531,9 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
 	</bean>
 	
+	<bean id="homepageComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.HomepageComponentServiceImpl">
+	</bean>
+	
     <bean id="automationService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.InternalExternalAutomationServiceImpl">
 	</bean>

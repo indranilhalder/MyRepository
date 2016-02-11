@@ -3065,7 +3065,8 @@ public class UsersController extends BaseCommerceController
 								for (final ImageData img : productData1.getImages())
 								{
 									if (null != img && StringUtils.isNotEmpty(img.getFormat())
-											&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL))
+									//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
+											&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
 									{
 										wldpDTO.setImageURL(img.getUrl());
 									}

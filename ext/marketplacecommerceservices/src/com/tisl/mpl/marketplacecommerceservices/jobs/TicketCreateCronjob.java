@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,8 @@ public class TicketCreateCronjob extends AbstractJobPerformable<CRMTicketCreatio
 		LOG.info("Fetching all ticket Detail for those which have not been created in CRM");
 		final List<CRMTicketDetailModel> unCreatedtickets = mplTicketService.findCRMTicketDetail(false);
 		LOG.info("Found " + unCreatedtickets.size() + " tickets which has not been created!!!");
-		if (unCreatedtickets.size() > 0)
+		//if (unCreatedtickets.size() > 0)
+		if (CollectionUtils.isNotEmpty(unCreatedtickets))
 		{
 			for (final CRMTicketDetailModel ticketDetail : unCreatedtickets)
 			{

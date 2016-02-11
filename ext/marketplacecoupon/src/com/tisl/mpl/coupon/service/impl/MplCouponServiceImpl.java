@@ -82,13 +82,9 @@ public class MplCouponServiceImpl implements MplCouponService
 
 	}
 
-
-
-
-
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.coupon.service.MplCouponService#getClosedVoucher(de.hybris.platform.core.model.user.CustomerModel,
 	 * de.hybris.platform.commerceservices.search.pagedata.PageableData)

@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -56,7 +57,8 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				classAttrAssignmentList.addAll(indexedProperty.getClassificationAttributeAssignments());
 			}
 
-			if (classAttrAssignmentList.size() > 0)
+			//if (classAttrAssignmentList.size() > 0)
+			if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
 			{
 
 				final Product product = (Product) this.modelService.getSource(model);
@@ -107,8 +109,8 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(
-							getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues() : featureValues));
+					result.addAll(getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+							: featureValues));
 				}
 				finally
 				{
@@ -137,8 +139,8 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				value = ((ClassificationAttributeValue) value).getCode();
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
-			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
-					(language == null) ? null : language.getIsocode());
+			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, (language == null) ? null
+					: language.getIsocode());
 
 			// Construct colour hexcode here
 			final String colour = (String) value;

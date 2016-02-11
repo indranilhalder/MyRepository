@@ -645,7 +645,6 @@ public class NotificationServiceImpl implements NotificationService
 					userUidList.addAll(customerUidSet);
 
 				}
-
 				//Setting values in model
 				voucherStatus.setIfUserRestrictionExist(Boolean.TRUE);
 				voucherStatus.setVoucherIdentifier(voucherIndentifier);
@@ -679,7 +678,6 @@ public class NotificationServiceImpl implements NotificationService
 
 			}
 		}
-	 //} 
 
 	}
 
