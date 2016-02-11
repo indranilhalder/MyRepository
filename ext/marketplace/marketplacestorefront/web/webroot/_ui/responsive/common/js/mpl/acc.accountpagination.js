@@ -29,7 +29,7 @@ $(document).ready(function (){
 
 	
 	$(document).ready(function (){
-		// -----------*** TISPRD-630 --- Pagination with Lazy loading ***----------------
+		// -----------*** TISSRT-630 --- Pagination with Lazy loading ***----------------
 		var pageIndexC = $('#pageIndexC').val();
 		var pagableSizeC = $('#pagableSizeC').val();
 		var pageNumC = parseInt(pageIndexC)+1;
