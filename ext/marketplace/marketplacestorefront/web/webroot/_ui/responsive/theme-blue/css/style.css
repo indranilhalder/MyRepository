@@ -12967,7 +12967,8 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .tables li.item {		
   border-bottom: 1px solid #f0f4f5;
   border-left: 1px solid #f0f4f5;
-  border-right: 1px solid #f0f4f5;	
+  border-right: 1px solid #f0f4f5;
+  list-style: none;	
 }		
 @media (min-width: 950px) {		
     .modal.size-guide .sizes .tables li.item > ul > li {		

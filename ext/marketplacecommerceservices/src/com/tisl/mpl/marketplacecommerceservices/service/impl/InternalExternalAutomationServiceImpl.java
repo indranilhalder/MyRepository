@@ -50,7 +50,7 @@ import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 public class InternalExternalAutomationServiceImpl implements InternalExternalAutomationService
 {
 
-	//Logger LOG = Logger.getLogger(this.getClass());
+	//final Logger LOG = Logger.getLogger(this.getClass());
 	private static final Logger LOG = Logger.getLogger(InternalExternalAutomationServiceImpl.class);
 	/*
 	 * @Autowired private CMSPageService cmsPageService;
@@ -174,7 +174,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										{
 											LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
-											sb.insert(0, "http:");
+											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 											imageUrl = sb.toString();
 											LOG.info("Sequntial Banner Image URl: " + imageUrl);
 											imageSize = findIamgeSize(imageUrl);
@@ -190,7 +190,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 											//imageUrl = sb.append("https:").toString();
-											sb.insert(0, "http:");
+											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 											imageUrl = sb.toString();
 											LOG.info("Sequntial Banner Image URl: " + imageUrl);
 											imageSize = findIamgeSize(imageUrl);
@@ -306,7 +306,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									//imageUrl = sb.append("http:").toString();
-									sb.insert(0, "http:");
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 									imageUrl = sb.toString();
 									LOG.info("Big Promo BannerComponent URl: " + imageUrl);
 									imageSize = findIamgeSize(imageUrl);
@@ -321,7 +321,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									//imageUrl = sb.append("https:").toString();
-									sb.insert(0, "http:");
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
 									LOG.info("Big Promo BannerComponent URl: " + imageUrl);
 									imageSize = findIamgeSize(imageUrl);
@@ -419,7 +419,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									//imageUrl = sb.append("http:").toString();
-									sb.insert(0, "http:");
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 									imageUrl = sb.toString();
 									LOG.info("BigFour PromoBanner URl: " + imageUrl);
 									imageSize = findIamgeSize(imageUrl);
@@ -434,7 +434,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									//imageUrl = sb.append("https:").toString();
-									sb.insert(0, "http:");
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
 									LOG.info("BigFour PromoBanner URl: " + imageUrl);
 									imageSize = findIamgeSize(imageUrl);
@@ -655,8 +655,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
 			final int width = bimg.getWidth();
 			final int height = bimg.getHeight();
+			size = width + " X " + height;
 
-			size = String.valueOf(width) + " X " + String.valueOf(height);
+			//size = String.valueOf(width) + " X " + String.valueOf(height);
 			LOG.info("Size is :::::::" + size);
 
 
