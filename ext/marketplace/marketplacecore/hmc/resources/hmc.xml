@@ -3081,6 +3081,64 @@
          </itemlayout>
       </defaultreference>
    </type>
+   
+   <type name="PromotionVoucher" icon="ext/voucher/images/e_voucher.gif" mode="append">
+	   <organizer>
+	      <search>
+	         <condition attribute="voucherCode"/>
+	      </search>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.promotionvoucher.common" width="353"/>
+	               <attribute name="code" maxlength="3"/>
+	               <attribute name="name"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="tab.common" position="0">
+	            <section name="section.voucher.description" mode="replace">
+	            	<listlayout>
+                     	<attribute name="description"/>
+                  	</listlayout>
+	               <listlayout>
+	                  <text name="text.promotionvoucher.vouchercode" width="353"/>
+	                  <table>
+	                     <tr>
+	                        <td>
+	                           <attribute name="voucherCode"/>
+	                        </td>
+	                        <td>
+	                           <action type="item" classname="com.tisl.mpl.core.hmc.MplGeneratePromotionVoucherCodeAction" name="btn.generate.voucher.code.action"/>
+	                        </td>
+	                     </tr>
+	                  </table>
+	               </listlayout>
+	            </section>
+	         </tab>
+	         <tab name="tab.voucher.restrictions" position="1">
+	            <section name="section.voucher.restrictions">
+	               <listlayout>
+	               	<text name="text.voucher.restrictions" width="595"/>
+                     <attribute name="restrictions">
+                        <referencecollectioneditor presetattribute="voucher"
+                        									create="true"
+                        									add="true"
+                        									remove="true"
+                        									autosave="true">
+                           <itemlayout>
+                              <attribute name="restrictionType" width="194"/>
+                              <attribute name="description" width="357"/>
+                           </itemlayout> 
+                        </referencecollectioneditor>
+                     </attribute>
+	                  <attribute name="redemptionQuantityLimit" position="0"/>
+	                  <attribute name="redemptionQuantityLimitPerUser" position="1"/>
+	               </listlayout>
+	            </section>
+	         </tab>                  
+	      </editor>
+	   </organizer>
+	</type>
  <!-- Voucher HMC Modification ends -->
 
 </configuration>

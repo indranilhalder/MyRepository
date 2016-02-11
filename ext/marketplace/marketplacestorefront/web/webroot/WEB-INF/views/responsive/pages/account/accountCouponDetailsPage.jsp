@@ -180,11 +180,19 @@
 					</ul>
 					<!--  pagination for upper section  -->
 					<div class="bottom btn-placement">
-						<c:if test="${not empty closedCouponList}">
+						<%-- <c:if test="${not empty closedCouponList}">
 							<p>${startIndexCoupon}-${endIndexCoupon}
 								of ${couponListSize} &nbsp;
 								<spring:theme code="text.account.coupons.coupons" />
 							</p>
+						</c:if> --%>
+						<c:if test="${not empty searchPageData.results}">
+						<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination -->
+							<input type="hidden" id="pageIndex" value="${pageIndex}" />
+							<input type="hidden" id="pagableSize" value="${pageSize}" />
+							<input type="hidden" id="totalNumberOfResults"
+								value="${searchPageData.pagination.totalNumberOfResults}" />
+							<div id="displayPaginationCountUp"></div>
 						</c:if>
 						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
 							supportShowAll="${isShowAllAllowed}"
@@ -479,6 +487,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$(".page-coupons .totalResults").hide();
 		$("#couponHistory").click(function() {
 			$(".your-activity.coupon-history").slideDown();
 			$(this).hide();
