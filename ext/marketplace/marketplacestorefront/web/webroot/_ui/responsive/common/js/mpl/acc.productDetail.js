@@ -597,7 +597,7 @@ function refreshSellers(dataArray, ussid) {
 	var priceDataList = [];
 	var skuIdsForED = [];
 	var skuIdsForHD = [];
-	var skuIdsForCnC = [];
+	var skuIdForCNC = [];
 	var skuForCodList = [];
 	var stockDataArrayList = [];
 	var stockIndx = -1;
@@ -631,7 +631,7 @@ function refreshSellers(dataArray, ussid) {
 						skuIdsForED[++indx] = "'" + dataArray[i]['ussid'] + "'";
 					}
 					if (mode == 'CNC') {
-						skuIdsForCnC[++indx] = "'" + dataArray[i]['ussid'] + "'";
+						skuIdForCNC[++indx] = "'" + dataArray[i]['ussid'] + "'";
 					}
 					// var stockDataArray=new Object();
 					var stockDataArray = {}
@@ -667,6 +667,7 @@ function refreshSellers(dataArray, ussid) {
 	$("#sellersSkuListId").val(nonservicableussids);
 	$("#skuIdForED").val(skuIdsForED);
 	$("#skuIdForHD").val(skuIdsForHD);
+	$("#skuIdForCNC").val(skuIdForCNC);
 	$("#skuIdForCod").val(skuForCodList);
 	$("#skuIdsWithNoStock").val(ussidListWithNoStock);
 	$("#isPinCodeChecked").val("true");
