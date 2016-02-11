@@ -558,32 +558,65 @@ public class PaymentServicesController extends BaseController
 		PaymentServiceWsData updateTransactionDtls = new PaymentServiceWsData();
 
 		LOG.debug(String.format("updateTransactionDetailsforCOD : CartId: %s | UserId : %s |", cartId, userId));
-		getSessionService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODE, MarketplacewebservicesConstants.COD);
+		//getSesonService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODE, MarketplacewebservicesConstants.COD);
 		try
 		{
 			updateTransactionDtls = getMplPaymentWebFacade().updateCODTransactionDetails(cartId, userId);
 		}
-		catch (final EtailNonBusinessExceptions ex)
+		catch (final EtailNonBusinessExceptions cusEx)
 		{
 			// Error message for All Exceptions
-			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			ExceptionUtil.etailNonBusinessExceptionHandler(cusEx);
+
+			if (null != cusEx.getErrorMessage())
+			{
+				updateTransactionDtls.setError(cusEx.getErrorMessage());
+			}
+			if (null != cusEx.getErrorCode())
+			{
+				updateTransactionDtls.setErrorCode(cusEx.getErrorCode());
+			}
+			return updateTransactionDtls;
 		}
 		catch (final EtailBusinessExceptions ex)
 		{
 			// Error message for All Exceptions
 			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
+			if (null != ex.getErrorMessage())
+			{
+				updateTransactionDtls.setError(ex.getErrorMessage());
+			}
+			if (null != ex.getErrorCode())
+			{
+				updateTransactionDtls.setErrorCode(ex.getErrorCode());
+			}
+			return updateTransactionDtls;
 		}
 		catch (final Exception ex)
 		{
 			// Error message for All Exceptions
 			//updateTransactionDtls.setError(MarketplacecommerceservicesConstants.ORDER_ERROR);
 			LOG.error(MarketplacewebservicesConstants.UPDATE_COD_TRAN_FAILED, ex);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9216);
+			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9216);
+
+			final EtailNonBusinessExceptions cusEx = new EtailNonBusinessExceptions(ex);
+			cusEx.setErrorCode(MarketplacecommerceservicesConstants.B9216);
+			ExceptionUtil.etailNonBusinessExceptionHandler(cusEx);
+			if (null != cusEx.getErrorMessage())
+			{
+				updateTransactionDtls.setError(cusEx.getErrorMessage());
+			}
+			if (null != cusEx.getErrorCode())
+			{
+				updateTransactionDtls.setErrorCode(cusEx.getErrorCode());
+			}
+			updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			return updateTransactionDtls;
 		}
 
 		try
 		{
-			if (StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
+			if (null != updateTransactionDtls && StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
 					&& updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.UPDATE_SUCCESS))
 			{
 				final UserModel user = getExtUserService().getUserForOriginalUid(userId);
@@ -656,6 +689,7 @@ public class PaymentServicesController extends BaseController
 		{
 			// Error message for All Exceptions
 			final EtailNonBusinessExceptions cusEx = new EtailNonBusinessExceptions(ex);
+			cusEx.setErrorCode(MarketplacecommerceservicesConstants.B9216);
 			ExceptionUtil.etailNonBusinessExceptionHandler(cusEx);
 			if (null != cusEx.getErrorMessage())
 			{
@@ -696,24 +730,72 @@ public class PaymentServicesController extends BaseController
 
 		LOG.debug(String.format("Order Status Response : %s ", juspayOrderID));
 		LOG.debug(String.format("PaymentMode: %s | CartId: %s | UserId : %s", paymentMode, cartId, userId));
-		getSessionService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODE, paymentMode);
+		//		getSessionService().setAttribute(MarketplacewebservicesConstants.PAYMENTMODE, paymentMode);
 		try
 		{
 			updateTransactionDtls = getMplPaymentWebFacade()
 					.updateCardTransactionDetails(juspayOrderID, paymentMode, cartId, userId);
-
-			LOG.debug(String.format("Update transaction details status %s ",
-					((null != updateTransactionDtls.getStatus()) ? updateTransactionDtls.getStatus() : "")));
 		}
-		catch (final Exception e)
+		catch (final EtailNonBusinessExceptions cusEx)
 		{
-			//updateTransactionDtls.setError(MarketplacewebservicesConstants.UPDATE_CARD_TRAN_FAILED);
-			LOG.error(MarketplacewebservicesConstants.UPDATE_CARD_TRAN_FAILED, e);
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9039);
+			// Error message for All Exceptions
+			ExceptionUtil.etailNonBusinessExceptionHandler(cusEx);
+
+			if (null != cusEx.getErrorMessage())
+			{
+				updateTransactionDtls.setError(cusEx.getErrorMessage());
+			}
+			if (null != cusEx.getErrorCode())
+			{
+				updateTransactionDtls.setErrorCode(cusEx.getErrorCode());
+			}
+			return updateTransactionDtls;
 		}
+		catch (final EtailBusinessExceptions ex)
+		{
+			// Error message for All Exceptions
+			ExceptionUtil.etailBusinessExceptionHandler(ex, null);
+			if (null != ex.getErrorMessage())
+			{
+				updateTransactionDtls.setError(ex.getErrorMessage());
+			}
+			if (null != ex.getErrorCode())
+			{
+				updateTransactionDtls.setErrorCode(ex.getErrorCode());
+			}
+			return updateTransactionDtls;
+		}
+		catch (final Exception ex)
+		{
+			// Error message for All Exceptions
+			//updateTransactionDtls.setError(MarketplacecommerceservicesConstants.ORDER_ERROR);
+			LOG.error(MarketplacewebservicesConstants.UPDATE_CARD_TRAN_FAILED, ex);
+			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9216);
+
+			final EtailNonBusinessExceptions cusEx = new EtailNonBusinessExceptions(ex);
+			cusEx.setErrorCode(MarketplacecommerceservicesConstants.B9216);
+			ExceptionUtil.etailNonBusinessExceptionHandler(cusEx);
+			if (null != cusEx.getErrorMessage())
+			{
+				updateTransactionDtls.setError(cusEx.getErrorMessage());
+			}
+			if (null != cusEx.getErrorCode())
+			{
+				updateTransactionDtls.setErrorCode(cusEx.getErrorCode());
+			}
+			updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			return updateTransactionDtls;
+		}
+
 		try
 		{
-			if (StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
+			if (null != updateTransactionDtls)
+			{
+				LOG.debug(String.format("Update transaction details status %s ",
+						((null != updateTransactionDtls.getStatus()) ? updateTransactionDtls.getStatus() : "")));
+			}
+
+			if (null != updateTransactionDtls && StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
 					&& updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.UPDATE_SUCCESS))
 			{
 				final OrderData orderData = getMplCheckoutFacade().placeOrderByCartId(cartId, userId);
@@ -727,13 +809,13 @@ public class PaymentServicesController extends BaseController
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9216);
 				}
 			}
-			else if (StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
+			else if (null != updateTransactionDtls && StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
 					&& updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.JUSPAY_DECLINED))
 			{
 				//updateTransactionDtls.setError(MarketplacewebservicesConstants.JUSPAY_DECLINED_ERROR);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9215);
 			}
-			else if (StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
+			else if (null != updateTransactionDtls && StringUtils.isNotEmpty(updateTransactionDtls.getStatus())
 					&& (updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.AUTHORIZATION_FAILED))
 					|| updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.AUTHENTICATION_FAILED)
 					|| updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.PENDING_VBV))
@@ -781,6 +863,7 @@ public class PaymentServicesController extends BaseController
 			// Error message for All Exceptions
 
 			final EtailNonBusinessExceptions cusEx = new EtailNonBusinessExceptions(ex);
+			cusEx.setErrorCode(MarketplacecommerceservicesConstants.B9216);
 			ExceptionUtil.etailNonBusinessExceptionHandler(cusEx);
 			if (null != cusEx.getErrorMessage())
 			{
