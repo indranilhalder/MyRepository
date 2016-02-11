@@ -74,6 +74,17 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			{
 				ticket.setTicketType(sendTicketRequestData.getTicketType());
 			}
+
+			if (null != sendTicketRequestData.getAlternateContactName())
+			{
+				ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+			}
+
+			if (null != sendTicketRequestData.getAlternatePhoneNo())
+			{
+				ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
+			}
+
 			if (null != sendTicketRequestData.getRefundType())
 			{
 				ticket.setRefundType(sendTicketRequestData.getRefundType());
@@ -132,14 +143,13 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
 		{
-			final String password = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
-			final String userId = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
+			final String password = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
+			final String userId = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
 			client.addFilter(new HTTPBasicAuthFilter(userId, password));
-			webResource = client.resource(UriBuilder
-					.fromUri(configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
-					.build());
+			webResource = client.resource(UriBuilder.fromUri(
+					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL)).build());
 			LOG.debug("::::::::::::::::::::::::::::::::::::webResource:::" + webResource);
 		}
 		final JAXBContext context = JAXBContext.newInstance(TicketMasterXMLData.class);
@@ -148,6 +158,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		LOG.info("Marshalling to file!!!!");
 		final StringWriter sw = new StringWriter();
 		m.marshal(ticketMasterXml, sw);
+		System.out.println(" %%%%%%%%%%%%%%%% XML File %%%%%%%%%%%%%%%% " + m);
 		final String xmlString = sw.toString();
 		LOG.debug(xmlString);
 		if (null != xmlString && webResource != null)
@@ -163,7 +174,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#ticketCreationModeltoXMLData(com.tisl.mpl.data.
 	 * SendTicketRequestData)
 	 */
@@ -202,6 +213,16 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
 			}
 
+
+			if (null != sendTicketRequestData.getAlternateContactName())
+			{
+				ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+			}
+			if (null != sendTicketRequestData.getAlternatePhoneNo())
+			{
+				ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
+			}
+
 			final List<SendTicketLineItemData> sendTicketLineItemDataList = sendTicketRequestData.getLineItemDataList();
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
 			if (null != sendTicketLineItemDataList)
@@ -238,7 +259,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.TicketCreationCRMservice#createTicketInCRM(com.tisl.mpl.wsdto.TicketMasterXMLData)
 	 */
 	@Override
@@ -251,14 +272,13 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
 		{
-			final String password = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
-			final String userId = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
+			final String password = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
+			final String userId = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
 			client.addFilter(new HTTPBasicAuthFilter(userId, password));
-			webResource = client.resource(UriBuilder
-					.fromUri(configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
-					.build());
+			webResource = client.resource(UriBuilder.fromUri(
+					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL)).build());
 			LOG.debug("::::::::::::::::::::::::::::::::::::webResource:::" + webResource);
 		}
 		LOG.debug(xmlString);
