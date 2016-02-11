@@ -104,15 +104,19 @@ public class FrontEndErrorHelper
 
 	protected String getViewForPage(final Model model)
 	{
+		String pageName = null;
+
 		if (model.containsAttribute(CMS_PAGE_MODEL))
 		{
 			final AbstractPageModel page = (AbstractPageModel) model.asMap().get(CMS_PAGE_MODEL);
 			if (page != null)
 			{
-				return getViewForPage(page);
+				//return getViewForPage(page);
+				pageName = getViewForPage(page);
 			}
 		}
-		return null;
+		//return null;
+		return pageName;
 	}
 
 	protected String getViewForPage(final AbstractPageModel page)
