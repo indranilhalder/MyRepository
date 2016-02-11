@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -46,6 +47,7 @@ import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
  */
 public class DiscountUtility
 {
+	private static final Logger LOG = Logger.getLogger(DiscountUtility.class);
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
@@ -671,22 +673,22 @@ public class DiscountUtility
 
 	/**
 	 * Checks whether the entry is a bogo or a freebiw
-	 * 
+	 *
 	 * @param entry
 	 * @return boolean
 	 */
 	public boolean isFreebieOrBOGOApplied(final AbstractOrderEntryModel entry)
 	{
 		boolean flag = false;
-		if (entry.getGiveAway().booleanValue()
-				|| (entry.getIsBOGOapplied().booleanValue() && entry.getQuantity().intValue() == entry.getFreeCount().intValue()))
+		if ((null != entry.getGiveAway() && entry.getGiveAway().booleanValue())
+				|| (null != entry.getIsBOGOapplied() && entry.getIsBOGOapplied().booleanValue() && null != entry.getQuantity()
+						&& null != entry.getFreeCount() && entry.getQuantity().intValue() == entry.getFreeCount().intValue()))
 		{
 			flag = true;
 		}
+		LOG.debug("Flag for bogoOrFreebie is " + flag);
 		return flag;
 	}
-
-
 
 
 

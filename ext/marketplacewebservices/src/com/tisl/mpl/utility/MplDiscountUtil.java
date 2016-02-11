@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -99,7 +100,8 @@ public class MplDiscountUtil
 		////////////////////////////////////////
 		else if (productPromotion instanceof BuyAandBgetCModel)
 		{
-			promoData = getBuyAandBgetCData(productPromotion, cart);
+			//promoData = getBuyAandBgetCData(productPromotion, cart);
+			promoData = getBuyAandBgetCData(productPromotion);
 		}
 		else if (productPromotion instanceof BuyAandBGetPromotionOnShippingChargesModel)
 		{
@@ -571,7 +573,8 @@ public class MplDiscountUtil
 					priceRowList.addAll(discountPriceRows);
 				}
 
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 						&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 				{
 					final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
@@ -635,7 +638,8 @@ public class MplDiscountUtil
 					priceRowList.addAll(discountPriceRows);
 				}
 
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 						&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 				{
 					final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
@@ -771,7 +775,8 @@ public class MplDiscountUtil
 			if (null != discountPriceRows)
 			{
 				priceRowList.addAll(discountPriceRows);
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getPrice())
 				{
 					final Double cashbBackVal = priceRowList.get(0).getPrice();
 					final PriceData discountPrice = createPrice(cart, cashbBackVal);
@@ -822,7 +827,8 @@ public class MplDiscountUtil
 				if (null != discountPriceRows)
 				{
 					priceRowList.addAll(discountPriceRows);
-					if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+					//if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+					if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getPrice())
 					{
 						final Double cashbBackVal = priceRowList.get(0).getPrice();
 						final PriceData discountPrice = createPrice(cart, cashbBackVal);
@@ -914,7 +920,8 @@ public class MplDiscountUtil
 					priceRowList.addAll(discountPriceRows);
 				}
 
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 						&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 				{
 					final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
@@ -979,7 +986,8 @@ public class MplDiscountUtil
 					priceRowList.addAll(discountPriceRows);
 				}
 
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 						&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 				{
 					final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
@@ -1016,7 +1024,8 @@ public class MplDiscountUtil
 	 * @param cart
 	 * @return responseData
 	 */
-	private MplPromotionData getBuyAandBgetCData(final ProductPromotionModel productPromotion, final CartModel cart)
+	//private MplPromotionData getBuyAandBgetCData(final ProductPromotionModel productPromotion, final CartModel cart)
+	private MplPromotionData getBuyAandBgetCData(final ProductPromotionModel productPromotion)
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 		final BuyAandBgetCModel oModel = (BuyAandBgetCModel) productPromotion;
@@ -1084,7 +1093,8 @@ public class MplDiscountUtil
 				priceRowList.addAll(discountPriceRows);
 			}
 
-			if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+			//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+			if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 					&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 			{
 				final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
@@ -1148,7 +1158,8 @@ public class MplDiscountUtil
 				priceRowList.addAll(discountPriceRows);
 			}
 
-			if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+			//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+			if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 					&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 			{
 				final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
@@ -1232,7 +1243,8 @@ public class MplDiscountUtil
 				priceRowList.addAll(discountPriceRows);
 			}
 
-			if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+			//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+			if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 					&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 			{
 				final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());

@@ -1091,8 +1091,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String getCoupons(
 			@RequestParam(value = ModelAttributetConstants.PAGE_HISTORY, defaultValue = ModelAttributetConstants.ONE_VAL_COUPONS) final int pageHistory,
-			@RequestParam(value = ModelAttributetConstants.PAGE_VOUCHER, defaultValue = ModelAttributetConstants.ONE_VAL_COUPONS) final int pageVoucher,
-			@RequestParam(value = ModelAttributetConstants.PAGE_FOR, defaultValue = "") final String pageFor, final Model model)
+			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int pageVoucher,
+			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = ModelAttributetConstants.PAGE_FOR, defaultValue = "") final String pageFor, final Model model,
+			@RequestParam(value = ModelAttributetConstants.SORT, required = false) final String sortCode)
 			throws CMSItemNotFoundException, VoucherOperationException
 	{
 		try
@@ -1102,7 +1104,34 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			/* getting all voucher in a list */
 
-			final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons(customer);
+			//final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons(customer);
+
+			//test
+			final int pageSize = Integer.valueOf(configurationService.getConfiguration()
+					.getString(MessageConstants.PAZE_SIZE_VOUCHER, "12").trim());
+			final int page = pageVoucher;
+			//			final String sortCode = "sort";
+
+			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
+			//	final SearchPageData<VoucherDisplayData> searchPageDataVoucher = getMplOrderFacade().getPagedFilteredParentOrderHistory(
+			//	pageableData);
+
+			final SearchPageData<VoucherDisplayData> searchPageDataVoucher = mplCouponFacade.getAllClosedCoupons(customer,
+					pageableData);
+
+
+			populateModelForCoupon(model, searchPageDataVoucher, showMode);
+
+			final List<VoucherDisplayData> closedVoucherDataList = searchPageDataVoucher.getResults();
+			//System.out.println("-------------------------------------" + closedVoucherDataList);
+			LOG.debug("-------------------------------------" + closedVoucherDataList);
+			for (final VoucherDisplayData voucher : closedVoucherDataList)
+			{
+				//System.out.println("----------Final data-----" + voucher.getVoucherCode());
+				LOG.debug("----------Final data-----" + voucher.getVoucherCode());
+			}
+			//test ends
+
 			//final List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
 			//final List<VoucherDisplayData> closedVoucherListModified = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
@@ -1206,6 +1235,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
+			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
+			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_COUPONDETAILS));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
@@ -1222,6 +1253,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
+
+
 
 	/*
 	 *

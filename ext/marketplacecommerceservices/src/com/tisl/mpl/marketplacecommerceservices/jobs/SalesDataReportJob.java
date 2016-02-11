@@ -43,6 +43,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,7 +157,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -466,7 +467,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 										LOG.debug("----Product Category---" + product.getCode());
 										final List<CategoryModel> productCategoryList = defaultPromotionManager
 												.getPrimarycategoryData(productModel);
-										if (null != productCategoryList && productCategoryList.size() > 0)
+										//if (null != productCategoryList && productCategoryList.size() > 0)
+										if (CollectionUtils.isNotEmpty(productCategoryList))
 										{
 											categoryList = new ArrayList<String>();
 											for (final CategoryModel category : productCategoryList)
@@ -477,7 +479,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 													categoryList.add(category.getName());
 												}
 											}
-											if (categoryList.size() > 0)
+											//if (categoryList.size() > 0)
+											if (CollectionUtils.isNotEmpty(categoryList))
 											{
 												Collections.sort(categoryList, new Comparator()
 												{
@@ -878,8 +881,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		}
 		catch (final Exception e)
 		{
-			LOG.debug(MarketplacecommerceservicesConstants.CSV_ERROR);
-			e.printStackTrace();
+			LOG.debug(MarketplacecommerceservicesConstants.CSV_ERROR, e);
 		}
 		finally
 		{
@@ -890,12 +892,10 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			}
 			catch (final IOException e)
 			{
-				LOG.debug(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR);
-				e.printStackTrace();
+				LOG.debug(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR, e);
+				//e.printStackTrace();
 			}
 		}
-
-
 	}
 
 

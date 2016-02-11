@@ -7,6 +7,7 @@
 		<tbody>
 		<tr><td><div style="height:6px"/></td></tr>
 		<tr><td style="text-align:left"><cockpit code="list" value="RotatingImagesComponent.banners"/></td></tr>
+		<tr><td style="text-align:left"><cockpit code="property" value="RotatingImagesComponent.timeout"/></td></tr>
 		</tbody>
 		</table>
 	]]>
