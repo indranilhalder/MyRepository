@@ -188,11 +188,11 @@
 						</c:if> --%>
 						<c:if test="${not empty searchPageData.results}">
 						<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination -->
-							<input type="hidden" id="pageIndex" value="${pageIndex}" />
-							<input type="hidden" id="pagableSize" value="${pageSize}" />
-							<input type="hidden" id="totalNumberOfResults"
+							<input type="hidden" id="pageIndexC" value="${pageIndex}" />
+							<input type="hidden" id="pagableSizeC" value="${pageSize}" />
+							<input type="hidden" id="totalNumberOfResultsC"
 								value="${searchPageData.pagination.totalNumberOfResults}" />
-							<div id="displayPaginationCountUp"></div>
+							<div id="displayPaginationCountUpCoupon"></div>
 						</c:if>
 						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
 							supportShowAll="${isShowAllAllowed}"
