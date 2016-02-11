@@ -20,7 +20,7 @@ public class CorporateAddressWsDTO
 	private String CorporateAddCity;
 	private int CorporateAddPin;
 	private String CorporateEmail;
-	private Long CorporatePhone;
+	private String CorporatePhone;
 	private Long CorporateMobile;
 
 	/**
@@ -142,10 +142,12 @@ public class CorporateAddressWsDTO
 		CorporateEmail = corporateEmail;
 	}
 
+
+
 	/**
 	 * @return the corporatePhone
 	 */
-	public Long getCorporatePhone()
+	public String getCorporatePhone()
 	{
 		return CorporatePhone;
 	}
@@ -154,7 +156,7 @@ public class CorporateAddressWsDTO
 	 * @param corporatePhone
 	 *           the corporatePhone to set
 	 */
-	public void setCorporatePhone(final Long corporatePhone)
+	public void setCorporatePhone(final String corporatePhone)
 	{
 		CorporatePhone = corporatePhone;
 	}

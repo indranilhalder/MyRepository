@@ -4366,7 +4366,7 @@
 							optional="true" />
 					</attribute>
 					<attribute autocreate="true" qualifier="CorporatePhone"
-						type="java.lang.Long">
+						type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
