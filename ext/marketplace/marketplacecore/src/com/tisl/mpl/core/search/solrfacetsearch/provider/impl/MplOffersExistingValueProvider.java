@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
@@ -28,7 +29,8 @@ import com.tisl.mpl.core.model.PcmProductVariantModel;
  * @author 361234
  *
  */
-public class MplOffersExistingValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
+public class MplOffersExistingValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
@@ -51,8 +53,6 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-
-
 		boolean offersExist = false;
 		if (model instanceof PcmProductVariantModel)
 		{
@@ -61,7 +61,8 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 
 			final List<ProductPromotionModel> offers = (List<ProductPromotionModel>) productModel.getPromotions();
 
-			if (offers != null && offers.size() > 0)
+			//if (offers != null && offers.size() > 0)
+			if (CollectionUtils.isNotEmpty(offers))
 			{
 				final Calendar cal = Calendar.getInstance();
 				for (final ProductPromotionModel productPromotion : offers)
