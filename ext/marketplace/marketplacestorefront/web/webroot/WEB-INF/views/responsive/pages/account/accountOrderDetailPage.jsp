@@ -303,8 +303,6 @@
 						</li>
 
 
-
-
 						<li class="item delivered first">
 							<div class="item-header">
 								<c:set var="entryCount" value="0"></c:set>
@@ -340,7 +338,7 @@
 									<br>
 									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
 								</address>
-							</div> <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
+								</div> <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 								varStatus="status">
 								<input type="hidden" id="subOrderCode"
 									value="${sellerOrder.code}" />
@@ -413,6 +411,83 @@
 											<c:if test="${not empty entry.imeiDetails}">
 												<p>Serial Number: ${entry.imeiDetails.serialNum}</p>
 											</c:if>
+											
+		                 <c:set var="entrySize" value="${sellerOrder.entries}"></c:set>
+						<c:set var="size" value="${entrySize.size()}"></c:set>	 	
+						<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">				
+						    
+						       
+						        
+									<div class="orderBox address">
+								    <h2>Store Address</h2>
+							 <c:forEach items="${subOrder.entries}" var="subOrderentry"
+									varStatus="entryStatus">
+								   <c:set var="storeAddress" value="${subOrderentry.deliveryPointOfService.address}" />
+					                <address>  ${storeAddress.firstName}&nbsp; ${storeAddress.lastName}<br>
+							    	           ${storeAddress.companyName}<br>
+							    	           ${storeAddress.line1} &nbsp;
+								               ${storeAddress.line2} &nbsp;
+								               ${storeAddress.town}, <br>
+								               ${storeAddress.state},
+								               ${storeAddress.country.name},
+								               ${storeAddress.postalCode} 
+								               ${storeAddress.country.isocode}<br>                
+								              +91&nbsp;${storeAddress.phone} <br>          
+						    		</address> 
+		                       <br>	
+		                      
+		                       </c:forEach>
+		                        <c:if test="${entry.entryNumber eq size-1}">
+		                        <h3>PickUp Details</h3>        
+		                         <div id="pickName">  ${sellerOrder.pickupName}<br></div>
+		                          <div id="pickNo"> ${sellerOrder.pickupPhoneNumber}<br> </div>         
+                               <a type="button" id="button" class="pickupeditbtn" style="i">Edit </a>
+                               </c:if>
+		                       </div> 
+		                       
+		        					<div class="container">
+		        					<div class="row">
+		        					<c:if test="${entry.entryNumber eq size-1}">
+		                          <div class="pickup_Edit">
+		                          <div class="col-md-5">
+		                          <div class="row" style="float: left; z-index: 999;">
+		                          
+		                          <div class="col-md-5">
+			                          <label class="pickup_name" style="padding-top: 12px;">PickUpName</label>
+			                       </div>   
+			                       <div class="col-md-7" style="z-index: 99999 !important;">
+			                       		 <input id="pickUpName" class="pickUpName" type="Text" name="pickUpName1" style="height: 28px;
+margin-top: 6px;z-index: 119;" value="${sellerOrder.getPickupName()}" /> <br/>
+			                       		 <div class="error_text pickupPersonNameError" style="width: 115px;" ></div>
+			                       </div>
+			                       </div>
+			                       </div>
+			                           <div class="col-md-5" style="z-index: 99;">
+			                          <div class="row" style="z-index: 99;">
+			                          <div class="col-md-5">
+			                          <label class="pickup_mob" style="margin-left: 165px;
+padding-top: 14px;
+width: 67px;" >Mobile No</label> 
+			                          </div>
+			                          <div class="col-md-7">
+			                          <input id="pickMobileNo" class="pickMobileNo" type="Text" name="mobileNo" style="margin-left: 197px;
+height: 28px;
+margin-top: 7px; z-index: 10;" value="${sellerOrder.getPickupPhoneNumber()}" />
+<div class="error_text pickupPersonMobileError" style="margin-left: 198px;
+width: 123px;" ></div>
+			                         </div>
+			                         
+			                         </div></div>
+			                         <div class="col-md-2">
+		                           		 <input type="button" value="Save" class="savebtn"
+																onclick="editPickUpDetails('${subOrder.code}')" /> 
+																</div>
+		           				</div>
+		           				</c:if>
+		           				</div>
+		           				</div>
+		                         </c:if>
+		                        
 
 										</div>
 										<div class="actions">
@@ -1358,4 +1433,73 @@ $(function() {
 			$("#" + divId).stop(true, true).fadeOut();
 		}
 	}
-</script>
+	
+	function editPickUpDetails(orderId) {
+		      var name=$("#pickUpName").val();
+		      var mobile=$("#pickMobileNo").val(); 	 
+		  
+		      var isString = isNaN(mobile);
+		      //alert(isString);  
+		      $(".pickupPersonNameError, .pickupPersonMobileError").hide();
+		       if(name.length <= 3 ){    
+		    	     $(".pickupPersonNameError").show();
+		    	     $(".pickupPersonNameError").text("Enter Atleast 4 Letters");
+		      } 
+		       else if(isNaN(name)== false){
+		    	     $(".pickupPersonNameError").show();
+		    	     $(".pickupPersonNameError").text("Enter only Alphabet");
+		       }
+		       else if (isString==true){
+		    	  $(".pickupPersonMobileError").show();
+		          $(".pickupPersonMobileError").text("Enter only numbers");
+		      }else if(mobile.length<=9 || mobile.length >= 11) {   
+		    	  $(".pickupPersonMobileError").show();
+		          $(".pickupPersonMobileError").text("Enter 10 Digit Number");
+		      }	
+		      else 
+		      {     
+		      $.ajax({	  
+					type: "POST",
+					url: ACC.config.encodedContextPath + "/my-account/updatepickUp_Details",
+				    data: "orderId="+orderId + "&name=" + name+ "&mobile="+mobile,
+					success: function (response) {
+					    	var status=response; 	 	
+					    	alert(status);
+					    	$('.pickup_Edit').hide();
+					    	$('.pickupeditbtn').show();
+					    	if(status="sucess"){
+					 	      document.getElementById("pickName").innerHTML=name;
+						      document.getElementById("pickNo").innerHTML=mobile;  
+					    	 }
+						}
+				});
+		      
+		      
+		      $.ajax({	  
+					type: "POST",
+					url: ACC.config.encodedContextPath + "/my-account/crmTicketCreateUpdatePickUpDetail",
+				    data: "orderId="+orderId + "&name=" + name+ "&mobile="+mobile,
+					success: function () {
+					    	   		    	
+					}
+				});
+		      
+		      } 
+	}
+	
+	$(document).ready(function(){
+		 $(".pickupeditbtn").click(function(){	 
+			$(".pickup_Edit").css("display","block");
+			$(".pickupeditbtn").css("display","none");		
+		});
+		 $(".savebtn").click(function(){	
+			 		 
+		 });
+			 
+	 });	 
+	
+	</script>
+	
+	
+	
+
