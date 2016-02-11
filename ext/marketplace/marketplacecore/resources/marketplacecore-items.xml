@@ -6678,6 +6678,12 @@
 							unique="false" />
 						<persistence type="property" />
 					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="ifUserRestrictionExist ">
+						<description>If UserRestriction Exist</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property"></persistence>
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
