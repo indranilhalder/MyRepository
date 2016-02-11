@@ -87,7 +87,8 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/orders') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/order/*') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnRequest') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/coupons')}">
 	<script type="text/javascript"
 		src="${commonResourcePath}/js/mpl/acc.accountpagination.js"></script>
 </c:if>

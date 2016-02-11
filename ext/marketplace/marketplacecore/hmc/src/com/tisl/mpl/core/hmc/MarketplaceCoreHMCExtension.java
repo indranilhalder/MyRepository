@@ -34,7 +34,6 @@ import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.jalo.PromotionPriceRow;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.util.localization.Localization;
-import de.hybris.platform.voucher.jalo.Voucher;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -320,10 +319,10 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 				getPromotionSendMailService().sendMail(item);
 			}
 
-			if (null != item && item instanceof Voucher)
-			{
-				getNotificationService().saveToVoucherStatusNotification(item);
-			}
+			//			if (null != item && item instanceof Voucher)
+			//			{
+			//				getNotificationService().saveToVoucherStatusNotification(item);
+			//			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{

@@ -17,3 +17,4 @@ INSERT_UPDATE CouponMailJob;code[unique=true];job(code);singleExecutable;session
 ##### GENERATE CUSTOMER LIST FOR OPEN COUPONS #####
 INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
 ;customerListGenerationJob;customerListGenerationJob;false;en
+;campaignVoucherCronJob;campaignVoucherJob;false;en
