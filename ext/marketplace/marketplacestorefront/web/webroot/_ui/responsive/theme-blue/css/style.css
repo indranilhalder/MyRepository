@@ -2306,32 +2306,7 @@ h2 {
           line-height: 14px;
           height: auto;
           margin-left: 10px; }
-              @media(max-width:650px){
-    header .banner .content form{
-    text-align:left;
-    margin-left:10px;
-    margin-right:10px;}
-    header .banner .content form select{
-    padding-left:10px;
-    padding-right:20px;
-    font-size:12px;}
-    header .banner .content form select#reasonOrEvent{
-    padding-left:5px;
-    width:65%;}
-    header .banner .content form span{
-    font-size:14px;
-    margin:0 3px;}
-    #typeOfProduct{
-    width:65%;
-    font-size:12px !important;}
-    header .banner .content form button{
-    width: 60%;
-    margin-left: 20%;
-    margin-right: 20%;}
-    .ui-autocomplete.ui-front li{
-    font-size:12px !important;}
-    }
-          
+  
     header .banner.active > span {
       top: -40px;
       -webkit-transition: top 0.15s;
@@ -29599,7 +29574,7 @@ text-align:center;
 .showcaseItem > a.showcase-border{
 	border-bottom: 1px solid #000;
 	color:#000;
-	 word-break: break-word;
+	
 }
 .showcase-heading {
    text-align: center;
@@ -29635,6 +29610,7 @@ p.showcase-para {
 }
 .showcaseItem > a{
 	color:#bbb;
+	 word-break: break-word;
 }
 .showcase-center h3, .showcase-center p{line-height: 20px;}
 .showcase-section .desc-section{
@@ -29888,6 +29864,8 @@ width:100%;}
 	text-align:center;}
 	.qued-content a.button.maroon {
       margin: 0 auto;
+      left:0;
+      right:0;
    }
    .qued h1 {
        padding: 10px 0;
@@ -30063,6 +30041,32 @@ header:not(.compact) .content .marketplace.compact{
 	#couponMessage b{
 	word-break:break-word;
 	}
+              @media(max-width:650px){
+    header .banner .content form{
+    text-align:left;
+    margin-left:10px;
+    margin-right:10px;}
+    header .banner .content form select{
+    padding-left:10px;
+    padding-right:20px;
+    font-size:12px;}
+    header .banner .content form select#reasonOrEvent{
+    padding-left:5px;
+    width:65%;}
+    header .banner .content form span{
+    font-size:14px;
+    margin:0 3px;}
+    #typeOfProduct{
+    width:65%;
+    font-size:12px !important;}
+    header .banner .content form button{
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;}
+    .ui-autocomplete.ui-front li{
+    font-size:12px !important;}
+    }
+        
 /*--------------maincss-----------*/
 .row
 {
@@ -31736,9 +31740,12 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 }
 
 .alert-info {
-	background-color: #d9edf7;
+	/* background-color: #d9edf7;
 	border-color: #bce8f1;
-	color: #31708f;
+	color: #31708f; */
+	background-color: #f2dede;
+	border-color: #ebccd1;
+	color:#000;
 }
 
 .alert-info hr {
