@@ -689,15 +689,34 @@
 													<li>Cancel</li>
 												</c:if>
 
+												 <c:choose >
+                                                <c:when test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+												<c:if test="${fn:length(cancelStatus) eq 0}">
+													<li>READY for PickUp</li>
+												</c:if>
+												</c:when>
+												<c:otherwise>
 												<c:if test="${fn:length(cancelStatus) eq 0}">
 													<li>Shipping</li>
 												</c:if>
+												</c:otherwise>
+												</c:choose>
 
 												<!-- For RTO handling productDelivered -->
+												  <c:choose >
+                                                <c:when test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li>Delivery</li>
+													<li>PickedUp</li>
 												</c:if>
+												</c:when>
+												<c:otherwise>
+												<c:if test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+													<li>Delivery</li>
+													</c:if>
+												</c:otherwise>
+												
+												</c:choose>
 
 												<c:if test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
 													<li>Return</li>

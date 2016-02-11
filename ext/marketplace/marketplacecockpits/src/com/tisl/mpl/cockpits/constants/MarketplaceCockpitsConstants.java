@@ -100,6 +100,9 @@ public final class MarketplaceCockpitsConstants extends
 	/** The Constant CSCOCKPIT_USER_GROUP_REPLACECSAGENTGROUP. */
 	public static final String CSCOCKPIT_USER_GROUP_REPLACECSAGENTGROUP = "cscockpit.user.group.replacecsagentgroup";
 
+	//added for new User Group
+	/** The Constant CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP. */
+	public static final String CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP="cscockpit.user.group.alternatecontactcsagentgroup";
 	
 	/** The Constant NO_SELLER_COD. */
 	public static final String NO_SELLER_COD = "noSellerCOD";
