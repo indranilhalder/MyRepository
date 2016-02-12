@@ -192,7 +192,7 @@
  <h3 class="company">
               ${product.brand.brandname}&nbsp;&nbsp;<span id="sellerSelName"></span></h3> <%-- <spring:theme code="product.by"/> --%>
              
-    <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
+    <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>		
 
 </span>
  <div class="price" id="sizePrice">
@@ -501,6 +501,19 @@
 </div>
 <script>
 $(document).ready(function(){
+	
+		//alert($("#cartQty").val());
+		$("#sizeGuideQty").val($("#cartQty").val());
+		//alert($("#sizeGuideQty").val());
+		
+		
+	var currentColour = '${product.colour}';
+	$(".color-swatch li span").each(function(){
+		var title = $(this).attr("title");
+		if(currentColour == title){
+			$(this).parent().parent().addClass("active");
+		}			
+	});
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,
