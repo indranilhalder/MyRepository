@@ -1587,19 +1587,19 @@ function buyboxDetailsForSizeGuide(productCode){
 					$("#noProductForSelectedSeller").show();
 					$("#addToCartSizeGuide #addToCartButton").attr("style", "display:none");
 				}
-//				if (specialPrice != null){
-//					$("#specialSelPrice").html(specialPrice);
-//				}
-//				else{
-//					$("#specialSelPrice").html(mopPrice);
-//				}
-				if(data['isPinCodeServicable']=='N'){
-					$("#pinNotServicableSizeGuide").show();
-					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
+				if (specialPrice != null){
+					$("#specialSelPrice").html(specialPrice);
 				}
 				else{
-					$("#addToCartSizeGuide #addToCartButton").removeAttr('disabled');
+					$("#specialSelPrice").html(mopPrice);
 				}
+//				if(data['isPinCodeServicable']=='N'){
+//					$("#pinNotServicableSizeGuide").show();
+//					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
+//				}
+//				else{
+//					$("#addToCartSizeGuide #addToCartButton").removeAttr('disabled');
+//				}
 				$("#sellerSelName").html(sellerName);
 				$("#sellerIdSizeGuide").html(sellerID);
 				$("#mopSelPrice").html(mopPrice);

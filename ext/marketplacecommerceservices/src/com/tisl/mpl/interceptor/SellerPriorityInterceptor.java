@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 
-import com.tisl.mpl.core.enums.SellerPriorityEnum;
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -155,8 +154,11 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					}
 				}
 				// if new value already	 exist throw error
-				if (priority.getIsActive().booleanValue() && null != priority.getPriorityStatus()
-						&& SellerPriorityEnum.NEW.equals(priority.getPriorityStatus()))
+				if (priority.getIsActive().booleanValue())
+				//						&& null != priority.getPriorityStatus()
+				//						&& SellerPriorityEnum.NEW.equals(priority.getPriorityStatus())
+				//						|| (priority.getIsActive().booleanValue() && null != priority.getPriorityStatus() && SellerPriorityEnum.PROCESSED
+				//								.equals(priority.getPriorityStatus())))
 				{
 					if (null != categoryId && categoryList.contains(categoryId))
 					{
@@ -167,6 +169,7 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 						throw new InterceptorException(ERROR_SAME_SKU);
 					}
 				}
+
 			}
 		}
 	}

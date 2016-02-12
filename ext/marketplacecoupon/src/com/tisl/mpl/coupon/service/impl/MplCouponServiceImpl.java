@@ -90,21 +90,6 @@ public class MplCouponServiceImpl implements MplCouponService
 	 * com.tisl.mpl.coupon.service.MplCouponService#getClosedVoucher(de.hybris.platform.core.model.user.CustomerModel,
 	 * de.hybris.platform.commerceservices.search.pagedata.PageableData)
 	 */
-	//@Override
-	//public SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, final PageableData pageableData)
-	{
-		// YTODO Auto-generated method stub
-		//	return null;
-	}
-
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.tisl.mpl.coupon.service.MplCouponService#getClosedVoucher(de.hybris.platform.core.model.user.CustomerModel,
-	 * de.hybris.platform.commerceservices.search.pagedata.PageableData)
-	 */
 	@Override
 	public SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, final PageableData pageableData)
 	{

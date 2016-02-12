@@ -273,7 +273,8 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		for (final String promoManufacturer : promotionManufacturerList)
 		{
-			if (promoManufacturer.toLowerCase().equalsIgnoreCase(brand.getName().toLowerCase()))
+			//if (promoManufacturer.toLowerCase().equalsIgnoreCase(brand.getName().toLowerCase())) Sonar fix
+			if (promoManufacturer.equalsIgnoreCase(brand.getName()))
 			{
 				isValid = true;
 				break;
@@ -1255,7 +1256,8 @@ public class DefaultPromotionManager extends PromotionsManager
 	private Double checkMinimumValue(final List<Double> priceList)
 	{
 		Double minPrice = Double.valueOf(0);
-		if (null != priceList && priceList.size() > 0)
+		//if (null != priceList && priceList.size() > 0)
+		if (CollectionUtils.isNotEmpty(priceList))
 		{
 			for (final Double value : priceList)
 			{

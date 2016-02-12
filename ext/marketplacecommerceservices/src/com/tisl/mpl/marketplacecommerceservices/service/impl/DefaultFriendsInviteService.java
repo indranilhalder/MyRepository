@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -116,7 +117,8 @@ public class DefaultFriendsInviteService implements FriendsInviteService
 			final List<FriendsModel> invitedFriendsList = customer.getFriendsEmailList();
 			final List<String> friendListToInvite = friendsInviteData.getFriendsEmailList();
 			FriendsModel itrFriendsModel = new FriendsModel();
-			if (null != invitedFriendsList && invitedFriendsList.size() > 0)
+			//if (null != invitedFriendsList && invitedFriendsList.size() > 0)
+			if (CollectionUtils.isNotEmpty(invitedFriendsList))
 			{
 				for (final String email : friendListToInvite)
 				{
@@ -382,7 +384,8 @@ public class DefaultFriendsInviteService implements FriendsInviteService
 			final List<FriendsModel> friendsInvitedByAffId = this.getAlreadyInvitedFriendsForAffiliatedId(friendsModel);
 
 			FriendsModel friendsModelNew = new FriendsModel();
-			if (null != friendsInvitedByAffId && friendsInvitedByAffId.size() > 0)
+			//if (null != friendsInvitedByAffId && friendsInvitedByAffId.size() > 0)
+			if (CollectionUtils.isNotEmpty(friendsInvitedByAffId))
 			{
 				friendsModelNew = friendsInvitedByAffId.get(0);
 				friendsModelNew.setRegistered(Boolean.TRUE);
