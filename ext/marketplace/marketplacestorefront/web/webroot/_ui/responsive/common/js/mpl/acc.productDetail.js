@@ -1619,4 +1619,20 @@ function buyboxDetailsForSizeGuide(productCode){
 				} 
 			}
 		});
+	
 }
+$(document).on("keyup","#defaultWishName",function() {
+	validateWishEnteredName();
+});
+
+function validateWishEnteredName() {
+	var defaultWishName=$('#defaultWishName').val();
+	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
+	var isValid = re.test(defaultWishName);
+	if (!isValid) {
+		defaultWishName = defaultWishName.substring(0, defaultWishName.length - 1);
+		$('#defaultWishName').val(defaultWishName);
+		$("#addedMessage").html("<font color='#ff1c47'><b>*</b>Special charecters are not allowed</font>");
+		$("#addedMessage").show().fadeOut(3000);
+	}
+} 
