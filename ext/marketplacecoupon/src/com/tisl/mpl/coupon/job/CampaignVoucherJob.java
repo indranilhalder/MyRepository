@@ -66,6 +66,8 @@ public class CampaignVoucherJob extends AbstractJobPerformable<CronJobModel>
 	{
 		LOG.debug("Generating the .CSV for Campaign Team ");
 
+		campaignVoucherDataService.generateCSV();
+
 		LOG.debug("CampaignVoucherCronJob : CronJob Ends");
 	}
 

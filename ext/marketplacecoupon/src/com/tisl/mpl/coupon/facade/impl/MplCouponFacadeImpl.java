@@ -17,10 +17,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
-import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserGroupModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -231,98 +228,98 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		return voucherList;
 	}
 
-	/**
-	 * This method returns list of all Vouchers corresponding to a specific customer
-	 *
-	 * @return List of VoucherDisplayData
-	 *
-	 */
-	@Override
-	public List<VoucherDisplayData> getAllClosedCoupons(final CustomerModel customer)
-	{
-		List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
-		final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap = getMplCouponService().getClosedVoucher();
-
-		if (null != voucherWithStartDateMap)
-		{
-			closedVoucherDataList = iterateSetToCreateList(voucherWithStartDateMap, customer);
-		}
-		return closedVoucherDataList;
-	}
-
-	/**
-	 * @param voucherWithStartDateMap
-	 * @return
-	 */
-	private List<VoucherDisplayData> iterateSetToCreateList(
-			final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap, final CustomerModel customer)
-	{
-		{
-
-			final List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
-			for (final Map<VoucherModel, DateRestrictionModel> entry : voucherWithStartDateMap)
-			{
-				for (final Map.Entry<VoucherModel, DateRestrictionModel> mapEntry : entry.entrySet())
-				{
-					final VoucherModel voucher = mapEntry.getKey();
-
-					if (voucher instanceof PromotionVoucherModel)
-					{
-						final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
-
-
-						final DateRestrictionModel dateRestriction = mapEntry.getValue();
-						final String voucherCode = promoVoucher.getVoucherCode() != null ? promoVoucher.getVoucherCode() : "";
-
-						final List<RestrictionModel> restrictionList = new ArrayList<RestrictionModel>(promoVoucher.getRestrictions());
-						UserRestrictionModel userRestrObj = null;
-						final List<PrincipalModel> restrCustomerList = new ArrayList<PrincipalModel>();
-
-						for (final RestrictionModel restrictionModel : restrictionList)
-						{
-							if (restrictionModel instanceof UserRestrictionModel)
-							{
-								userRestrObj = (UserRestrictionModel) restrictionModel;
-
-								for (final PrincipalModel user : userRestrObj.getUsers())
-								{
-									if (user instanceof UserGroupModel)
-									{
-										restrCustomerList.addAll(((UserGroupModel) user).getMembers());
-									}
-									else if (user instanceof UserModel)
-									{
-										restrCustomerList.add(user);
-									}
-								}
-
-								break;
-							}
-						}
-
-						if (voucherModelService.isReservable(promoVoucher, voucherCode, customer)
-								&& restrCustomerList.contains(customer))
-						{
-
-							final Date endDate = dateRestriction.getEndDate() != null ? dateRestriction.getEndDate() : new Date();
-							final Date startDate = dateRestriction.getStartDate();
-
-							final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
-
-							voucherDisplayData.setVoucherCode(voucherCode);
-							voucherDisplayData.setVoucherDescription(promoVoucher.getDescription());
-							voucherDisplayData.setReedemCouponCount(String.valueOf(promoVoucher.getRedemptionQuantityLimitPerUser()));
-							voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
-							voucherDisplayData.setVoucherCreationDate(startDate);
-
-							closedVoucherDataList.add(voucherDisplayData);
-						}
-					}
-				}
-			}
-			return closedVoucherDataList;
-		}
-	}
+	//	/**
+	//	 * This method returns list of all Vouchers corresponding to a specific customer
+	//	 *
+	//	 * @return List of VoucherDisplayData
+	//	 *
+	//	 */
+	//	@Override
+	//	public List<VoucherDisplayData> getAllClosedCoupons(final CustomerModel customer)
+	//	{
+	//		List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
+	//		final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap = getMplCouponService().getClosedVoucher();
+	//
+	//		if (null != voucherWithStartDateMap)
+	//		{
+	//			closedVoucherDataList = iterateSetToCreateList(voucherWithStartDateMap, customer);
+	//		}
+	//		return closedVoucherDataList;
+	//	}
+	//
+	//	/**
+	//	 * @param voucherWithStartDateMap
+	//	 * @return
+	//	 */
+	//	private List<VoucherDisplayData> iterateSetToCreateList(
+	//			final Set<Map<VoucherModel, DateRestrictionModel>> voucherWithStartDateMap, final CustomerModel customer)
+	//	{
+	//		{
+	//
+	//			final List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
+	//			for (final Map<VoucherModel, DateRestrictionModel> entry : voucherWithStartDateMap)
+	//			{
+	//				for (final Map.Entry<VoucherModel, DateRestrictionModel> mapEntry : entry.entrySet())
+	//				{
+	//					final VoucherModel voucher = mapEntry.getKey();
+	//
+	//					if (voucher instanceof PromotionVoucherModel)
+	//					{
+	//						final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
+	//
+	//
+	//						final DateRestrictionModel dateRestriction = mapEntry.getValue();
+	//						final String voucherCode = promoVoucher.getVoucherCode() != null ? promoVoucher.getVoucherCode() : "";
+	//
+	//						final List<RestrictionModel> restrictionList = new ArrayList<RestrictionModel>(promoVoucher.getRestrictions());
+	//						UserRestrictionModel userRestrObj = null;
+	//						final List<PrincipalModel> restrCustomerList = new ArrayList<PrincipalModel>();
+	//
+	//						for (final RestrictionModel restrictionModel : restrictionList)
+	//						{
+	//							if (restrictionModel instanceof UserRestrictionModel)
+	//							{
+	//								userRestrObj = (UserRestrictionModel) restrictionModel;
+	//
+	//								for (final PrincipalModel user : userRestrObj.getUsers())
+	//								{
+	//									if (user instanceof UserGroupModel)
+	//									{
+	//										restrCustomerList.addAll(((UserGroupModel) user).getMembers());
+	//									}
+	//									else if (user instanceof UserModel)
+	//									{
+	//										restrCustomerList.add(user);
+	//									}
+	//								}
+	//
+	//								break;
+	//							}
+	//						}
+	//
+	//						if (voucherModelService.isReservable(promoVoucher, voucherCode, customer)
+	//								&& restrCustomerList.contains(customer))
+	//						{
+	//
+	//							final Date endDate = dateRestriction.getEndDate() != null ? dateRestriction.getEndDate() : new Date();
+	//							final Date startDate = dateRestriction.getStartDate();
+	//
+	//							final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
+	//
+	//							voucherDisplayData.setVoucherCode(voucherCode);
+	//							voucherDisplayData.setVoucherDescription(promoVoucher.getDescription());
+	//							voucherDisplayData.setReedemCouponCount(String.valueOf(promoVoucher.getRedemptionQuantityLimitPerUser()));
+	//							voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
+	//							voucherDisplayData.setVoucherCreationDate(startDate);
+	//
+	//							closedVoucherDataList.add(voucherDisplayData);
+	//						}
+	//					}
+	//				}
+	//			}
+	//			return closedVoucherDataList;
+	//		}
+	//	}
 
 
 	/**
@@ -1519,6 +1516,22 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		result.setSorts(source.getSorts());
 		result.setResults(Converters.convertAll(source.getResults(), converter));
 		return result;
+	}
+
+
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.coupon.facade.MplCouponFacade#getAllClosedCoupons(de.hybris.platform.core.model.user.CustomerModel)
+	 */
+	@Override
+	public List<VoucherDisplayData> getAllClosedCoupons(final CustomerModel customer)
+	{
+		// YTODO Auto-generated method stub
+		return null;
 	}
 
 
