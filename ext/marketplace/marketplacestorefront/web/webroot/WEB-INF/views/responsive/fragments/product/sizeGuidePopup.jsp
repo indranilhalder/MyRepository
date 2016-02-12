@@ -192,7 +192,7 @@
  <h3 class="company">
               ${product.brand.brandname}&nbsp;&nbsp;<span id="sellerSelName"></span></h3> <%-- <spring:theme code="product.by"/> --%>
              
-    <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
+    <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>		
 
 </span>
  <div class="price" id="sizePrice">
