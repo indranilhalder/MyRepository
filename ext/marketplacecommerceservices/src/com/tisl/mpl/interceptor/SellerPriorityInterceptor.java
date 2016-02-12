@@ -135,20 +135,20 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					{
 						// Addding Category id and listing id into a list for the rows not modified
 						if (!arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYSTARTDATE)
-								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)) //&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE)
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)
+								&& null != priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue()
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE))
 						{
 							LOG.debug("no modification *********** categoryId : " + priorityValue.getCategoryId()
 									+ " **************   listingId" + priorityValue.getListingId());
-							if (null != priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue())
+
+							if (null != priorityValue.getCategoryId())
 							{
-								if (null != priorityValue.getCategoryId())
-								{
-									categoryList.add(priorityValue.getCategoryId().getCode());
-								}
-								if (null != priorityValue.getListingId())
-								{
-									skuIdList.add(priorityValue.getListingId().getCode());
-								}
+								categoryList.add(priorityValue.getCategoryId().getCode());
+							}
+							if (null != priorityValue.getListingId())
+							{
+								skuIdList.add(priorityValue.getListingId().getCode());
 							}
 						}
 					}

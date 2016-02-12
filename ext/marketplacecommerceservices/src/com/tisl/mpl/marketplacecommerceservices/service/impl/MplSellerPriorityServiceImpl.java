@@ -5,7 +5,6 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -360,30 +359,31 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	 * @param priorityModelList
 	 * @param sellerPriorityModels
 	 */
-	private void updateNonProcessedPriorities(final List<MplSellerPriorityModel> priorityModelList,
-			final List<MplSellerPriorityModel> sellerPriorityModels)
-	{
-		final List<MplSellerPriorityModel> sellerPriorities = new ArrayList<MplSellerPriorityModel>();
-		if (CollectionUtils.isEmpty(priorityModelList) && CollectionUtils.isEmpty(sellerPriorityModels))
-		{
-			try
-			{
-				for (final MplSellerPriorityModel priority : priorityModelList)
-				{
-					if (!(sellerPriorityModels.contains(priority)))
-					{
-						priority.setPriorityStatus(SellerPriorityEnum.ERROR);
-						sellerPriorities.add(priority);
-					}
-				}
-				modelService.saveAll(sellerPriorities);
-			}
-			catch (final ModelSavingException e)
-			{
-				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-			}
-		}
-	}
+	//Sonar Fix
+	//	private void updateNonProcessedPriorities(final List<MplSellerPriorityModel> priorityModelList,
+	//			final List<MplSellerPriorityModel> sellerPriorityModels)
+	//	{
+	//		final List<MplSellerPriorityModel> sellerPriorities = new ArrayList<MplSellerPriorityModel>();
+	//		if (CollectionUtils.isEmpty(priorityModelList) && CollectionUtils.isEmpty(sellerPriorityModels))
+	//		{
+	//			try
+	//			{
+	//				for (final MplSellerPriorityModel priority : priorityModelList)
+	//				{
+	//					if (!(sellerPriorityModels.contains(priority)))
+	//					{
+	//						priority.setPriorityStatus(SellerPriorityEnum.ERROR);
+	//						sellerPriorities.add(priority);
+	//					}
+	//				}
+	//				modelService.saveAll(sellerPriorities);
+	//			}
+	//			catch (final ModelSavingException e)
+	//			{
+	//				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * get ussids corresponding to listing id/sku id
@@ -530,7 +530,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	 * @param sellerMasterModel
 	 * @return product
 	 */
-	private List<String> findUssidsByRecursion(final CategoryModel category, final SellerMasterModel sellerMasterModel)
+	public List<String> findUssidsByRecursion(final CategoryModel category, final SellerMasterModel sellerMasterModel)
 	{
 		final List<String> ussidList = new ArrayList<String>();
 		try
