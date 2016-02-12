@@ -173,6 +173,16 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 								if (deliveryMode.equalsIgnoreCase(CLICK_AND_COLLECT))
 								{
 									deliveryModes.add(CNC);
+
+									if (null != reqData.get(i).getStore())
+									{
+										final List<String> reqStreNames = new ArrayList<String>();
+										for (final String storeName : reqData.get(i).getStore())
+										{
+											reqStreNames.add(storeName);
+										}
+										pincodereqObj.setStore(reqStreNames);
+									}
 								}
 							}
 							pincodereqObj.setDeliveryMode(deliveryModes);
@@ -181,17 +191,6 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						{
 							pincodereqObj.setIsDeliveryDateRequired(reqData.get(i).getIsDeliveryDateRequired());
 						}
-
-						if (null != reqData.get(i).getStore())
-						{
-							final List<String> reqStreNames = new ArrayList<String>();
-							for (final String storeName : reqData.get(i).getStore())
-							{
-								reqStreNames.add(storeName);
-							}
-							pincodereqObj.setStore(reqStreNames);
-						}
-
 						pincodeList.add(pincodereqObj);
 					}
 				}
@@ -208,7 +207,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				{
 					pincodeRequest.setItem(pincodeList);
 				}
-				LOG.info("****************sendPinCodeDeliveryModetoOMS****pincodeRequest*************");
+				LOG.debug("****************sendPinCodeDeliveryModetoOMS for this pincode:" + pin);
 				pincodeResfromOMS = sendPinCodeDeliveryModetoOMS(pincodeRequest);
 			}
 		}
@@ -232,7 +231,6 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 		PinCodeDeliveryModeListResponse responsefromOMS = new PinCodeDeliveryModeListResponse();
 		try
 		{
-			LOG.info("****************sendPinCodeDeliveryModetoOMS*****************");
 			final String omsPincodeServiceability = configurationService.getConfiguration()
 					.getString(MarketplacecclientservicesConstants.PIN_CODE_DELIVERY_MODE_OMS_MOCK).trim();
 			String mockXMLFirstPhase = configurationService.getConfiguration()
@@ -257,11 +255,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					mockXMLFirstPhase += mockXMLSecond;
 				}
 				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
-				LOG.info("*********************** Pincode serviceability response xml :" + output);
-
+				LOG.debug("****** Pincode serviceability response for non-real time call :" + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
 				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-				LOG.info("*********************** Pincode serviceability response xml  In If:" + output);
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (PinCodeDeliveryModeListResponse) unmarshaller.unmarshal(reader);
 			}
@@ -280,13 +276,12 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				m.marshal(pincodeRequest, sw);
 				final String xmlString = sw.toString();
 
-				LOG.info("*********************** Pincode serviceability request xml :" + xmlString);
+				LOG.debug("********Pincode serviceability  request  :" + xmlString);
 				final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml")
 						.header("X-tenantId", "single").entity(xmlString).post(ClientResponse.class);
 
 				final String output = response.getEntity(String.class);
-				LOG.info("*********************** Pincode serviceability response xml :" + output);
-				LOG.info("*********************** Pincode serviceability response xml  In Else:" + output);
+				LOG.debug("****** Pincode serviceability response for real time call:" + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
 				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
@@ -304,10 +299,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 
 	/**
 	 * this method prepares request object and calls oms to get inventories for stores.
-	 * 
+	 *
 	 * @param storeLocationRequestDataList
 	 * @return StoreLocatorAtsResponseObject
-	 * 
+	 *
 	 */
 	@Override
 	public StoreLocatorAtsResponseObject prepStoreLocationsToOMS(final List<StoreLocationRequestData> storeLocationRequestDataList)
@@ -360,7 +355,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 
 	/**
 	 * This method calls to oms to get inventories for stores.
-	 * 
+	 *
 	 * @param storeLocatorRequest
 	 * @return StoreLocatorAtsResponseObject
 	 * @throws JAXBException

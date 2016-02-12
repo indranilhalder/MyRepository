@@ -126,4 +126,23 @@ public interface MplOrderFacade
 	 */
 	boolean isChildCancelleable(final OrderData orderData, final String transactionId) throws EtailNonBusinessExceptions;
 
+
+
+	/**
+	 * Update PickUpDEetails
+	 *
+	 * @param orderId
+	 * @param name
+	 * @param mobile
+	 * @return String
+	 */
+	String editPickUpInfo(String orderId, String name, String mobile);
+
+	/**
+	 *
+	 * Create Ticket CRM For UpdatePickUpDetails
+	 */
+	public void createCrmTicketUpdatePickDetails(String orderId, String name, String mobile);
+
+
 }

@@ -1312,7 +1312,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
 
-
+	//CRM Ticket Type
+	public static final String Ticket_Type = "AC";
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 
