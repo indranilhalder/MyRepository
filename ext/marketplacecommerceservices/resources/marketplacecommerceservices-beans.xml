@@ -261,6 +261,9 @@
 		<property name="emailId" type="String"/>
 		<property name="actionType" type="String"/>
 		<property name="ticketStatus" type="String"/>
+        <property name="alternateContactName" type="String"/>
+        <property name="alternatePhoneNo" type="String"/>
+        <property name="commerce" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
@@ -618,4 +621,3 @@
 	<!-- Seller Priority Report Headers Data Ends -->
 	
 </beans>
-

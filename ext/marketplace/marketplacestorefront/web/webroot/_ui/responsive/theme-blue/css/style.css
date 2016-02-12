@@ -39,6 +39,32 @@ img[src='']{
     width:0px;
 }
 
+
+.pickup_Edit{
+	display: none;
+}
+.pickupeditbtn{
+	height: 32px;
+	width: 68px;
+	padding-top: 7px;
+	margin-left: 125px;
+	margin-top: -28px;
+	border: medium none;
+	color: rgb(0, 203, 233);
+	font-size: 15px;
+	}
+
+	
+.savebtn{
+ 	margin-left: 336px;
+	margin-top: 7px; 
+	height: 28px;
+	padding-top: 6px;
+	background-color: rgb(0, 203, 233);
+	color: #fff;
+	border: none;
+	}
+
  .header2{width:37%}
 .header5{width:29%}
 

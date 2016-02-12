@@ -6886,6 +6886,22 @@
 							</columntype>
 						</persistence>
 					</attribute>
+					
+					<attribute qualifier="alternateContactName" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute qualifier="alternatePhoneNo" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute qualifier="commerce" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
 
 					<attribute type="java.lang.String" qualifier="CRMResponse">
 						<modifiers read="true" write="true" search="true"
