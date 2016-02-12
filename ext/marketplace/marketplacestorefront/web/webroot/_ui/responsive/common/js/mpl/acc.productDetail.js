@@ -1276,8 +1276,11 @@ function CheckonReload()
 					if(!data)							
 						{
 							//Hiding the Comment Box if the User is not Logged In
-						$('#commentsDiv .gig-comments-composebox').hide();
 							//$('.gig-comments-composebox').hide();
+							
+							//TISUATPII-470 fix
+							//$('#commentsDiv .gig-comments-composebox').hide();
+							$('#commentsDiv .gig-comments-composebox').show();
 						
 						}
 						else
