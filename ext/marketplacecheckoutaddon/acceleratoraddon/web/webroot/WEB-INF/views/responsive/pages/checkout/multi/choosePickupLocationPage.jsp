@@ -134,15 +134,30 @@
 						    color: #000;
 						    margin-top: -15px;
 						}
+						
+						@media (max-width:650px){
+							
+						}
+						
+						@media (min-width: 1024px) and (max-width: 1366px) {
 						.checkout.wrapper .product-block li.header > ul li:first-child, .checkout.wrapper .product-block li.item > ul li:first-child {
 						  width: 38% !important; }
 						  .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
 						  width: 28% !important;
 						  }		
+						  #pickup {
+						  	width: 920px !important;
+						  }
+						  .savenewid {
+						  	background: #333 !important;
+						  	border-color: #333 !important;
+						  	height: 40px !important;
+						  }
+						  
+						 }
 						  .checkout.wrapper .product-block li.header > ul li.delivery li label:after, .checkout.wrapper .product-block li.item > ul li.delivery li label:after {
 						  	display: none !important;
 						  } 
-						  
 						  .radio_color {
 						  	color: #ADA6A6;
 						  }	
@@ -150,6 +165,16 @@
 						  .colorChange {
 						  	color: #000 !important;
 						  }	
+						  .productCount {
+						  	font-size: 12px;
+						  	font-weight: bold;
+						  	margin-top: -10px;
+    						margin-bottom: 12px;
+						  }
+						  .submitPincode {
+					  	    width: 98px !important;
+						    margin-left: 88px;
+						  }
 						 	
 					</style>
 					<script>
@@ -274,15 +299,11 @@
 					<spring:theme code="checkout.multi.cnc.header"></spring:theme>
 					<br>
 			</h1>
-			<p>
-				<spring:theme code="checkout.multi.cnc.showing.delivery.options.pincode"></spring:theme>
-				
-					<c:if test="${not empty defaultPincode}">
-						<span>
-							${defaultPincode}
-						</span>	
-					</c:if>
-			</p>
+			
+			
+			<div class="productCount">
+				(for ${cnccount} out of ${delModeCount + cnccount} items in your bag)
+			</div>
 			
 			<ul id="deliveryradioul" class="checkout-table product-block">
 						
@@ -328,7 +349,7 @@
 										</div>
 									</div>
 									<div class="row" style="text-align: center; height: 50px; padding-bottom: 15px; padding-left: 100px;">	
-										<button class="submitPincodedelivery${status1.index}" name="submitDlivery" style="margin-bottom: 10px; width: 50%">Submit</button>
+										<button class="submitPincodedelivery${status1.index}" name="submitDlivery" style="margin-bottom: 10px; width: 50%;">Submit</button>
 									</div>	
 									
 									<a href="#0" class="cd-popup-close img-replace closepp${status1.index}">Close</a>
@@ -416,7 +437,7 @@
 											<%-- <input class="radio_btn" type="radio" name="address" id="address${status.index}" value="address${status.index}"> --%>
 											<input class="radio_btn" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
 												<div class='pin bounce'>
-													<span class="text_in">${status.index}</span>
+													<span class="text_in">${status.count}</span>
 														</div>
 															<label class="radio_sel${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
 															</label>
@@ -445,7 +466,7 @@
 												var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
 												$(".continue_btn").click(function(e){
 													var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
-													if(checked${status1.index}=="address${status1.index}" || checked${status1.index}=="address${status.index}" || checked${status1.index}=="address1" || checked${status1.index}=="address0" || checked${status1.index}=="address2") {
+													if(checked${status1.index}=="address${status1.index}" || checked${status1.index}=="address${status.index}" || checked${status1.index}=="address1" || checked${status1.index}=="address0" || checked${status1.index}=="address2" || checked${status1.index}=="address3" || checked${status1.index}=="address4" || checked${status1.index}=="address5" || checked${status1.index}=="address6" || checked${status1.index}=="address7") {
 														if($('#pickupPersonName').val().length <= "3" || $('#pickupPersonMobile').val().length <= "9") {
 															$(".pickupDetails").show();
 															e.preventDefault();
@@ -468,7 +489,7 @@
 							</ul>
 								</li>
 							
-							<li style="width: 31%">
+							<li>
 													<ul id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
@@ -477,7 +498,7 @@
 																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" placeholder="Enter Pincode to Change.">
 															</div>
 															<div class="col-md-4 col-sm-4 col-xs-4">
-																<button class="submitPincode${status1.index}" name="submitPincode${status1.index}">Submit</button>
+																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #333 !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>
 															</div>
 														</div>
 													</div>	
@@ -491,6 +512,65 @@
 									$(".input${status1.index}").show();
 								});
 								
+								var loc${status1.index} = $(".latlng${status1.index}").text();
+								loc${status1.index} = loc${status1.index}.split("@");
+								
+								var length${status1.index} = loc${status1.index}.length;
+								
+								for(var i=0;i<length${status1.index};i++){
+									loc${status1.index}[i] = loc${status1.index}[i].split(",");
+									for(var j=0;j<loc${status1.index}[i].length;j++) {
+									}
+								}
+								
+								 // Setup the different icons and shadows
+							    var iconURLPrefix${status1.index} = '${request.contextPath}/_ui/responsive/theme-blue/images/storemarkericons/';
+							    
+							    iconURLPrefix${status1.index} = iconURLPrefix${status1.index}.replace("/mpl/en/","/");
+							    
+							    console.log(iconURLPrefix${status1.index});
+							    
+							    
+							    var icons = [
+														      iconURLPrefix${status1.index} + 'markergrey1.png',
+														      iconURLPrefix${status1.index} + 'markergrey2.png',
+														      iconURLPrefix${status1.index} + 'markergrey3.png',
+														      iconURLPrefix${status1.index} + 'markergrey4.png',
+														      iconURLPrefix${status1.index} + 'markergrey5.png',
+														      iconURLPrefix${status1.index} + 'markergrey6.png'
+														    ]
+							    
+							    var icons${status1.index} = [
+							      iconURLPrefix${status1.index} + 'markergrey1.png',
+							      iconURLPrefix${status1.index} + 'markergrey2.png',
+							      iconURLPrefix${status1.index} + 'markergrey3.png',
+							      iconURLPrefix${status1.index} + 'markergrey4.png',
+							      iconURLPrefix${status1.index} + 'markergrey5.png',
+							      iconURLPrefix${status1.index} + 'markergrey6.png'
+							    ]
+							    var iconsLength = icons${status1.index}.length;
+							    
+							    $(".radio_btn").click(function(){
+							    	var number = $(this).val();
+							    	icons${status1.index} = [
+														      iconURLPrefix${status1.index} + 'markergrey1.png',
+														      iconURLPrefix${status1.index} + 'markergrey2.png',
+														      iconURLPrefix${status1.index} + 'markergrey3.png',
+														      iconURLPrefix${status1.index} + 'markergrey4.png',
+														      iconURLPrefix${status1.index} + 'markergrey5.png',
+														      iconURLPrefix${status1.index} + 'markergrey6.png'
+														    ]
+							    	number = number.replace("address","");
+							    	//number++;
+							    	var myCounter = "1";
+							    	var iconNumber = parseInt(number) + parseInt(myCounter);
+							    	var url =  iconURLPrefix${status1.index} + 'marker' + parseInt(iconNumber) +'.png';
+							    	icons${status1.index}[number] = url;
+							    	processMap${status1.index}();
+							    	//console.log(url);
+							    });
+								
+							    
 								$(".submitPincode${status1.index}").click(function(){
 									var pinvalue${status1.index} = $(".changepin${status1.index}").val();
 									var productcode${status1.index} = "${poses.product.code}";
@@ -534,33 +614,10 @@
 									$(".input${status1.index}").hide();
 								});
 								processMap${status1.index}();
-
-								function processMap${status1.index}() {
-								var loc${status1.index} = $(".latlng${status1.index}").text();
-								loc${status1.index} = loc${status1.index}.split("@");
 								
-								var length${status1.index} = loc${status1.index}.length;
-								
-								for(var i=0;i<length${status1.index};i++){
-									loc${status1.index}[i] = loc${status1.index}[i].split(",");
-									for(var j=0;j<loc${status1.index}[i].length;j++) {
-									}
-								}
-								
-							    // Setup the different icons and shadows
-							    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+							   
 							    
-							    var icons = [
-							      iconURLPrefix + 'red-dot.png',
-							      iconURLPrefix + 'green-dot.png',
-							      iconURLPrefix + 'blue-dot.png',
-							      iconURLPrefix + 'orange-dot.png',
-							      iconURLPrefix + 'purple-dot.png',
-							      iconURLPrefix + 'pink-dot.png',      
-							      iconURLPrefix + 'yellow-dot.png'
-							    ]
-							    var iconsLength = icons.length;
-
+						    function processMap${status1.index}() {	
 							    var map = new google.maps.Map(document.getElementById('map${status1.index}'), {
 							      zoom: 10,
 							      center: new google.maps.LatLng(-37.92, 151.25),
@@ -586,7 +643,7 @@
 							      var marker = new google.maps.Marker({
 							        position: new google.maps.LatLng(loc${status1.index}[i][1], loc${status1.index}[i][2]),
 							        map: map,
-							        icon: icons[iconCounter]
+							        icon: icons${status1.index}[iconCounter]
 							      });
 
 							      markers.push(marker);
@@ -629,7 +686,7 @@
 			<span class="select_store error_txt" style="text-align: left;font-size: 15px;">
 			<spring:theme code="checkout.multi.cnc.select.products.validate.msg"/></span>
 			<div class="container" id='pickup'>
-       		<div class="panel panel-default" style="height: auto!important; width: 100%!important;">
+       		<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
      			 <div class="panel panel-body" style="margin-top: 14px;">
      			 	<div class="col-md-12 pickupDetails error_txt">
      			 	<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
@@ -647,14 +704,17 @@
 							<div class="error_txt pickupPersonMobileError"></div>
         			    </div>
 			             <div class="col-md-3">
-			             <button type="button"  class="savenewid" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+			             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+			            </div>
+			            <div class="col-md-12" style="padding-top: 10px;">
+			            	<spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/>
 			            </div>
 					</div>
 			</div>
 		</div>
 		</div>
 		
-		<div class="right-block shipping" style="margin-top: 94px;">
+		<div class="right-block shipping" style="margin-top: 74px;">
 				<div class="checkout-order-summary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
@@ -675,7 +735,7 @@
 				
 				<c:otherwise>
 					<div class="continue_btn">
-						<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/payment-method/add">CONTINUE</a>
+						<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation">CONTINUE</a>
 					</div>
 				</c:otherwise>
 			</c:choose>
