@@ -28,6 +28,9 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_INVOICE = "/order/requestInvoice";
 	public static final String LINK_PROFILE = "/profile";
 	public static final String LINK_COUPONS = "/coupons";
+	public static final String UPDATE_PICKUP_DETAILS = "/updatepickUp_Details";
+	public static final String CREATE_TICKET_CRA_UPDATE_PICKUP_DETAILS = "crmTicketCreateUpdatePickUpDetail";
+
 
 	public static final String LINK_UPDATE_EMAIL = "/update-email";
 	public static final String LINK_UPDATE_PROFILE = "/update-profile";
