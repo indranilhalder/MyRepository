@@ -37,7 +37,8 @@ public class CouponSaveInterceptor implements PrepareInterceptor
 	@Override
 	public void onPrepare(final Object param, final InterceptorContext paramInterceptorContext) throws InterceptorException
 	{
-		if (null != param && param instanceof VoucherModel)
+		//Sonar Fix
+		if (param instanceof VoucherModel)
 		{
 			final VoucherModel voucher = (VoucherModel) param;
 			notificationService.saveToVoucherStatusNotification(voucher);
