@@ -145,21 +145,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			storeLocationRequestDataList.add(storeLocationRequestData);
 			//call to OMS get the storelocations for given pincode
 			storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
-			if (null != storeLocationResponseDataList && storeLocationResponseDataList.size() > 0)
-			{
-				for (final StoreLocationResponseData data : storeLocationResponseDataList)
-				{
-					LOG.info("USSID:" + data.getUssId());
-					for (final ATSResponseData resData : data.getAts())
-					{
-						LOG.info("StoreId:" + resData.getStoreId());
-						LOG.info("Quantity:" + resData.getQuantity());
-					}
-					LOG.info("------------------------------");
-				}
-
-				// code is required to get locations for each store
-			}
+			return storeLocationResponseDataList;
 		}
 		catch (final Exception e)
 		{
