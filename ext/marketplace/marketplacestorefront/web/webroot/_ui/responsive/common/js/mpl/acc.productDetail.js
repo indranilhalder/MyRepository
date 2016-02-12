@@ -1326,7 +1326,15 @@ function getRating(key,productCode,category)
 			
 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
 			
-			/*$('#ratingDiv.gig-button-container.gig-clr.gig-rating-readReviewsLink').text(data.streamInfo.ratingCount);*/
+			//TISUATPII-471 fix
+			var count=data.streamInfo.ratingCount;
+			if(count == 1){
+			$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
+			}
+			else
+				{
+				$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
+				}
 			
 			
 	  });
