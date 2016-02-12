@@ -1055,6 +1055,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setCartPromoCode(abstractOrderEntryModel.getCartPromoCode());
 			}
 
+			if (abstractOrderEntryModel.getDeliveryPointOfService() != null)
+			{
+				orderEntryModel.setDeliveryPointOfService(abstractOrderEntryModel.getDeliveryPointOfService());
+			}
+			if (abstractOrderEntryModel.getCollectionDays() != null)
+			{
+				orderEntryModel.setCollectionDays(abstractOrderEntryModel.getCollectionDays());
+			}
 			if (abstractOrderEntryModel.getMplDeliveryMode() != null)
 			{
 				orderEntryModel.setMplDeliveryMode(abstractOrderEntryModel.getMplDeliveryMode());
