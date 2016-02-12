@@ -24291,17 +24291,17 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
     font-size:12px;
 }
 
-.product-content .popover-content, .item-edit-details .popover-content, table#sellerTable.other-sellers-table .popover-content{
+.product-content .popover-content, .item-edit-details .popover-content, table#sellerTable.other-sellers-table .popover-content,.modal.size-guide .popover-content{
 	padding:0px !important;
 }
-.product-content .title-popover, .item-edit-details .title-popover, table#sellerTable.other-sellers-table .title-popover {
+.product-content .title-popover, .item-edit-details .title-popover, table#sellerTable.other-sellers-table .title-popover,.modal.size-guide .title-popover {
 	background-color: #fff;
     border-bottom: 0px;
     font-size: 12px;
     font-weight: 600;
     padding: 8px 10px;
 }
-.product-content .popover.bottom, .item-edit-details .popover.bottom, table#sellerTable.other-sellers-table .popover.bottom{
+.product-content .popover.bottom, .item-edit-details .popover.bottom, table#sellerTable.other-sellers-table .popover.bottom, .modal.size-guide .popover.bottom{
 	 min-width:250px;
 	 z-index: 1;
 }
@@ -24312,7 +24312,7 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
     margin:5px 0px;
 }
 
-.popover-content .savetowishlistbutton, .cart.wrapper .popover-content .savetowishlistbutton, table#sellerTable.other-sellers-table .savetowishlistbutton{
+.popover-content .savetowishlistbutton, .cart.wrapper .popover-content .savetowishlistbutton, table#sellerTable.other-sellers-table .savetowishlistbutton,.modal.size-guide .savetowishlistbutton{
 	margin: 4px auto;
 	color: #fff;
 	background-color: #A9143C;
@@ -24336,7 +24336,7 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
     text-align: center;
     font-size:12px;
 	}
-	#wishlistTbodyId #defaultWishName{
+	#wishlistTbodyId #defaultWishName,#wishlistTbodyId_sizeGuide #defaultWishName_sizeGuide{
 	    width: 100%;
     border: 1px solid #A9143C;
     height: 25px;
@@ -28783,7 +28783,7 @@ body .account .right-account.rewards>div.couponHistoryLinkDiv{
 }
 .your-activity.coupon-history>div>h2,.coupon-container>div>h2{
 	text-align: center;
-    color: #00cbe9;
+    color: #A9143C;
     font-weight: 500;
 }
 .couponHistoryLink{
@@ -28909,6 +28909,7 @@ header .content .bottom.active nav > ul > li:first-child + li > ul {
 }
 .modal.size-guide .sizes .details .attributes #addToCartButton,#add_to_wishlist-sizeguide{
 height:30px;
+min-width: 150px;
 }
 
 #add_to_wishlist-sizeguide{
@@ -30063,6 +30064,9 @@ header:not(.compact) .content .marketplace.compact{
 	}
 	#couponMessage b{
 	word-break:break-word;
+	}
+	.add-to-wishlist-container-sizeguide{
+	display:none;
 	}
 /*--------------maincss-----------*/
 .row
