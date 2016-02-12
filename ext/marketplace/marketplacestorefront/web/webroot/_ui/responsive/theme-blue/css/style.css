@@ -2306,32 +2306,7 @@ h2 {
           line-height: 14px;
           height: auto;
           margin-left: 10px; }
-              @media(max-width:650px){
-    header .banner .content form{
-    text-align:left;
-    margin-left:10px;
-    margin-right:10px;}
-    header .banner .content form select{
-    padding-left:10px;
-    padding-right:20px;
-    font-size:12px;}
-    header .banner .content form select#reasonOrEvent{
-    padding-left:5px;
-    width:65%;}
-    header .banner .content form span{
-    font-size:14px;
-    margin:0 3px;}
-    #typeOfProduct{
-    width:65%;
-    font-size:12px !important;}
-    header .banner .content form button{
-    width: 60%;
-    margin-left: 20%;
-    margin-right: 20%;}
-    .ui-autocomplete.ui-front li{
-    font-size:12px !important;}
-    }
-          
+  
     header .banner.active > span {
       top: -40px;
       -webkit-transition: top 0.15s;
@@ -3589,14 +3564,14 @@ h2 {
 		display: inline-block;
 		background-color: #A9143C;
 		/* color: #fff; */
-		padding: 0px;
-		/* line-height: 50px; */
-		padding: 0 25px;
+		padding: 10px 25px;
+    	line-height: normal;
+    	height: auto;
 	}
 
 
 	.hero .major-promos a:hover {
-		background: #88102C;
+		background:  #f7bbcb;
 	}
 	.hero .major-promos a:after {
 		height: 0;
@@ -4423,7 +4398,7 @@ h2 {
 	transition: color 0.15s;
 }
 
-.feature-collections ul.collections li.chef a.shop_link:hover:after,.feature-collections ul.collections li .simple-banner-component span a:hover:after,.feature-collections ul.collections li.chef .brand-description a:hover:after{
+/* .feature-collections ul.collections li.chef a.shop_link:hover:after,.feature-collections ul.collections li .simple-banner-component span a:hover:after,.feature-collections ul.collections li.chef .brand-description a:hover:after{
 	height: 0;
 	width: 0;
 	border-bottom: 4.5px solid transparent;
@@ -4432,7 +4407,7 @@ h2 {
 	-webkit-transition: border-color 0.15s;
 	-moz-transition: border-color 0.15s;
 	transition: border-color 0.15s;
-}
+} */
 
  .feature-collections ul.collections li.sub:last-child {
 	padding-top: 45px;
@@ -4459,13 +4434,13 @@ text-transform: uppercase;
 	font-size: 10px
 }
 
-.feature-collections ul.collections li.black a:after {
+/* .feature-collections ul.collections li.black a:after {
 	height: 0;
 	width: 0;
 	border-bottom: 4.5px solid transparent;
 	border-left: 4.5px solid #000;
 	border-top: 4.5px solid transparent;
-}
+} */
 
 @media (max-width: 650px) {		
     .feature-collections ul.collections li.black h3 {		
@@ -24291,17 +24266,17 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
     font-size:12px;
 }
 
-.product-content .popover-content, .item-edit-details .popover-content, table#sellerTable.other-sellers-table .popover-content{
+.product-content .popover-content, .item-edit-details .popover-content, table#sellerTable.other-sellers-table .popover-content,.modal.size-guide .popover-content{
 	padding:0px !important;
 }
-.product-content .title-popover, .item-edit-details .title-popover, table#sellerTable.other-sellers-table .title-popover {
+.product-content .title-popover, .item-edit-details .title-popover, table#sellerTable.other-sellers-table .title-popover,.modal.size-guide .title-popover {
 	background-color: #fff;
     border-bottom: 0px;
     font-size: 12px;
     font-weight: 600;
     padding: 8px 10px;
 }
-.product-content .popover.bottom, .item-edit-details .popover.bottom, table#sellerTable.other-sellers-table .popover.bottom{
+.product-content .popover.bottom, .item-edit-details .popover.bottom, table#sellerTable.other-sellers-table .popover.bottom, .modal.size-guide .popover.bottom{
 	 min-width:250px;
 	 z-index: 1;
 }
@@ -24312,7 +24287,7 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
     margin:5px 0px;
 }
 
-.popover-content .savetowishlistbutton, .cart.wrapper .popover-content .savetowishlistbutton, table#sellerTable.other-sellers-table .savetowishlistbutton{
+.popover-content .savetowishlistbutton, .cart.wrapper .popover-content .savetowishlistbutton, table#sellerTable.other-sellers-table .savetowishlistbutton,.modal.size-guide .savetowishlistbutton{
 	margin: 4px auto;
 	color: #fff;
 	background-color: #A9143C;
@@ -24336,7 +24311,7 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
     text-align: center;
     font-size:12px;
 	}
-	#wishlistTbodyId #defaultWishName{
+	#wishlistTbodyId #defaultWishName,#wishlistTbodyId_sizeGuide #defaultWishName_sizeGuide{
 	    width: 100%;
     border: 1px solid #A9143C;
     height: 25px;
@@ -24397,9 +24372,9 @@ body .account .right-account .mpl-addressPopup.modal .confirm-deletionButton
  body .account .right-account .mpl-addressPopup.modal .closeColorBox
  {
  	margin-top:10px;
-    background-color: red;
+    background-color: #ffb810;
     opacity: 0.7;
-    color:#fff;
+    color:#000;
  }
 .moveToWishlistMsg {
     text-align: center;
@@ -26446,9 +26421,9 @@ li#savedCVVError{
     vertical-align: top;
 }
 #deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo, #updateReview .updateReviewConfirmationNo{
-	background-color: red;
+	background-color: #ffb810;
     opacity: 0.7;
-    color: #fff;
+    color: #000;
     text-transform: uppercase;
     display: inline-block;
     padding: 0px 10px;
@@ -26467,6 +26442,9 @@ li#savedCVVError{
 	    font-size: 24px;
     margin-bottom: 15px;
     line-height: 24px;
+}
+#deleteConfirmation .modal-title b,#removeProductConfirmation .modal-title b{
+	    font-weight: 500;
 }
 #deleteConfirmation .modal-content,#removeProductConfirmation .modal-content{
 	border:1px solid;
@@ -27749,8 +27727,9 @@ body .account .right-account .reviews .review-list .wrapper>li .review .details 
     
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
-    background: red;
+    background: #ffb810;
     opacity: 0.7;
+    color:#000;
 }
 #deleteReview .deleteReviewConfirmation{
 max-width:80px;
@@ -28783,7 +28762,7 @@ body .account .right-account.rewards>div.couponHistoryLinkDiv{
 }
 .your-activity.coupon-history>div>h2,.coupon-container>div>h2{
 	text-align: center;
-    color: #00cbe9;
+    color: #A9143C;
     font-weight: 500;
 }
 .couponHistoryLink{
@@ -28828,11 +28807,11 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
 @media(min-width:791px) and (max-width:1150px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
-    	left: 110px;
+    	left: 210px;
 	}
 	header.compact .content .marketplace.compact + .right > ul > li.store-locator-header{
 	    position: absolute;
-    	left: 10px;
+    	left: 120px;
 	}
 	/* header.compact .content .marketplace.compact a img{
 	width:180px;
@@ -28909,6 +28888,7 @@ header .content .bottom.active nav > ul > li:first-child + li > ul {
 }
 .modal.size-guide .sizes .details .attributes #addToCartButton,#add_to_wishlist-sizeguide{
 height:30px;
+min-width: 150px;
 }
 
 #add_to_wishlist-sizeguide{
@@ -29600,7 +29580,7 @@ text-align:center;
 .showcaseItem > a.showcase-border{
 	border-bottom: 1px solid #000;
 	color:#000;
-	 word-break: break-word;
+	
 }
 .showcase-heading {
    text-align: center;
@@ -29636,6 +29616,7 @@ p.showcase-para {
 }
 .showcaseItem > a{
 	color:#bbb;
+	 word-break: break-word;
 }
 .showcase-center h3, .showcase-center p{line-height: 20px;}
 .showcase-section .desc-section{
@@ -29889,6 +29870,8 @@ width:100%;}
 	text-align:center;}
 	.qued-content a.button.maroon {
       margin: 0 auto;
+      left:0;
+      right:0;
    }
    .qued h1 {
        padding: 10px 0;
@@ -30064,6 +30047,35 @@ header:not(.compact) .content .marketplace.compact{
 	#couponMessage b{
 	word-break:break-word;
 	}
+	.add-to-wishlist-container-sizeguide{
+	display:none;
+	}
+              @media(max-width:650px){
+    header .banner .content form{
+    text-align:left;
+    margin-left:10px;
+    margin-right:10px;}
+    header .banner .content form select{
+    padding-left:10px;
+    padding-right:20px;
+    font-size:12px;}
+    header .banner .content form select#reasonOrEvent{
+    padding-left:5px;
+    width:65%;}
+    header .banner .content form span{
+    font-size:14px;
+    margin:0 3px;}
+    #typeOfProduct{
+    width:65%;
+    font-size:12px !important;}
+    header .banner .content form button{
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;}
+    .ui-autocomplete.ui-front li{
+    font-size:12px !important;}
+    }
+        
 #addToCartSizeGuideTitleSuccess:after {
     content: "";
     display: inline-block;
@@ -30097,6 +30109,22 @@ header:not(.compact) .content .marketplace.compact{
 }
 .modal.size-guide .sizes .details .price .sale {
 	color: #cc3827;
+}
+@media(max-width:650px){
+	.sizeGuide-message{
+	position:static;
+}
+.modal.size-guide .sizes .details .attributes #addToCartSizeGuide{
+	float: none;
+    margin: 0px auto;
+    width: 80%;
+    clear: both;
+    padding-top: 20px;
+}
+.modal.size-guide .sizes .details .attributes #addToCartButton, #add_to_wishlist-sizeguide{
+	max-width: 250px;
+    margin: 0px auto;
+}
 }
 /*--------------maincss-----------*/
 .row
@@ -31771,9 +31799,12 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 }
 
 .alert-info {
-	background-color: #d9edf7;
+	/* background-color: #d9edf7;
 	border-color: #bce8f1;
-	color: #31708f;
+	color: #31708f; */
+	background-color: #f2dede;
+	border-color: #ebccd1;
+	color:#000;
 }
 
 .alert-info hr {

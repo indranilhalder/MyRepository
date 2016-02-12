@@ -274,3 +274,25 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 	});
 }
 
+$(document).ready(function() {
+
+	
+	$(document).on("keyup","#editWishList",function() {
+
+		validateEnteredName('editWishList',"errRename");
+	});
+	$('#editWishList').blur(function() {
+		validateEnteredName('editWishList',"errRename");
+	});
+});
+function validateEnteredName(divId,errorDivId) {
+	var value=$('#'+divId).val();
+	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
+	var isValid = re.test(value);
+	if (!isValid) {
+		value = value.substring(0, value.length - 1);
+		$("#"+errorDivId).html("<font color='#ff1c47'><b>*</b>Special charecters are not allowed</font>");
+		$("#"+errorDivId).show().fadeOut(3000);
+	}
+	$('#'+divId).val(value);
+} 
