@@ -11932,9 +11932,9 @@ body .account .right-account form .full.span input#currentPassword{
     vertical-align: top;
 }
 #deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo, #updateReview .updateReviewConfirmationNo{
-	background-color: red;
+	background-color: #ffb810;
     opacity: 0.7;
-    color: #fff;
+    color: #000;
     text-transform: uppercase;
     display: inline-block;
     padding: 0px 10px;
@@ -11950,6 +11950,9 @@ body .account .right-account form .full.span input#currentPassword{
 	    font-size: 24px;
     margin-bottom: 15px;
     line-height: 24px;
+}
+#deleteConfirmation .modal-title b,#removeProductConfirmation .modal-title b{
+	    font-weight: 500;
 }
 #deleteConfirmation .modal-content,#removeProductConfirmation .modal-content{
 	border:1px solid;
@@ -14802,8 +14805,9 @@ body .account .right-account .reviews .review-list .wrapper>li .review .details 
     
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
-    background: #ff1c47;
-    opacity: 0.9;
+    background: #ffb810;
+    opacity: 0.7;
+    color:#000;
 }
 body.page-coupons .pagination li:not(.next):not(.prev):not(.active) span,body.page-coupons .pagination li:not(.next):not(.prev):not(.active) a {
     opacity: 0.5;
