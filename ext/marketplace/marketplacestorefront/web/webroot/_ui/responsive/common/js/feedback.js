@@ -109,8 +109,11 @@
 
 
 $(document).ready(function(){
-	
-		
+	$(document).keydown(function(e){
+		if(e.which == 27) {
+			$('.modal').modal('hide');
+		}
+	}); 
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;

@@ -404,6 +404,12 @@ vertical-align:top;
 *.gig-selfreview-ratings{
 margin-top:10px;
 }
+.gig-selfreview-rating-_overall .gig-selfreview-rating-star {
+    font-size: 16px;
+}
+.gig-selfreview-rating-_overall .gig-comment-rating-value {
+	margin-top: -3px;
+}
 </style> 
 
 </c:if>	

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -44,6 +45,7 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 	private ModelService modelService;
 	@Autowired
 	private CategoryService categoryService;
+
 	//	private static final Logger LOG = Logger.getLogger(DefaultMplMyFavBrandCategoryService.class);
 
 	/**
@@ -268,14 +270,16 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				styleProfileModelToSave = styleProfileModel;
 				selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
 				final List<CategoryModel> newEntries = fetchCategoryData(codeList);
-				if (null != selectedCategory && selectedCategory.size() > 0)
+				//if (null != selectedCategory && selectedCategory.size() > 0)
+				if (CollectionUtils.isNotEmpty(selectedCategory))
 				{
 					for (final CategoryModel oldEntry : selectedCategory)
 					{
 						newListCategory.add(oldEntry);
 					}
 				}
-				if (null != newEntries && newEntries.size() > 0)
+				//if (null != newEntries && newEntries.size() > 0)
+				if (CollectionUtils.isNotEmpty(newEntries))
 				{
 					for (final CategoryModel entry : newEntries)
 					{
@@ -329,14 +333,16 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 				styleProfileModelToSave = styleProfileModel;
 				selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
 				final List<CategoryModel> newEntries = fetchCategoryData(codeList);
-				if (null != selectedBrands && selectedBrands.size() > 0)
+				//if (null != selectedBrands && selectedBrands.size() > 0)
+				if (CollectionUtils.isNotEmpty(selectedBrands))
 				{
 					for (final CategoryModel oldEntry : selectedBrands)
 					{
 						newListBrand.add(oldEntry);
 					}
 				}
-				if (null != newEntries && newEntries.size() > 0)
+				//if (null != newEntries && newEntries.size() > 0)
+				if (CollectionUtils.isNotEmpty(newEntries))
 				{
 					for (final CategoryModel entry : newEntries)
 					{
@@ -392,7 +398,8 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			{
 				styleProfileModelToSave = styleProfileModel;
 				selectedCategory = (List<CategoryModel>) styleProfileModelToSave.getPreferredCategory();
-				if (null != selectedCategory && selectedCategory.size() > 0)
+				//if (null != selectedCategory && selectedCategory.size() > 0)
+				if (CollectionUtils.isNotEmpty(selectedCategory))
 				{
 					for (final CategoryModel entry : selectedCategory)
 					{
@@ -437,7 +444,8 @@ public class DefaultMplMyFavBrandCategoryService implements MplMyFavBrandCategor
 			{
 				styleProfileModelToSave = styleProfileModel;
 				selectedBrands = (List<CategoryModel>) styleProfileModelToSave.getPreferredBrand();
-				if (null != selectedBrands && selectedBrands.size() > 0)
+				//if (null != selectedBrands && selectedBrands.size() > 0)
+				if (CollectionUtils.isNotEmpty(selectedBrands))
 				{
 					for (final CategoryModel entry : selectedBrands)
 					{
