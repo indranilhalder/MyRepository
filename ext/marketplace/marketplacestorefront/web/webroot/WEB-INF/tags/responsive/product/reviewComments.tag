@@ -410,6 +410,9 @@ margin-top:10px;
 .gig-selfreview-rating-_overall .gig-comment-rating-value {
 	margin-top: -3px;
 }
+.gig-selfreview-header, .gig-selfreview-summary-container, .gig-selfreview-body-container {
+	display: none;
+  } 
 </style> 
 
 </c:if>	
