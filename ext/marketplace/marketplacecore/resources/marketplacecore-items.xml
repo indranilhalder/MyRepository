@@ -3938,6 +3938,13 @@
 
 						</persistence>
 					</attribute>
+					
+					<attribute type="java.lang.String" qualifier="bannerUrl"
+						autocreate="true" generate="true">
+						<description>This attribute is for storing the banner url</description>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
 
 				</attributes>
 			</itemtype>
