@@ -100,6 +100,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -646,6 +647,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					productWithPOS = getProductWdPos(response,model);
 	
 					model.addAttribute("delModeCount",delModeCount);
+					model.addAttribute("cnccount",count);
 					model.addAttribute("defaultPincode", defaultPincode);
 					model.addAttribute("pwpos", productWithPOS);
 				}
@@ -671,8 +673,33 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				ProudctWithPointOfServicesData pwPOS = new ProudctWithPointOfServicesData();
 				List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+				List<ATSResponseData> listAts = new ArrayList<ATSResponseData>();
 				List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
 				String ussId = storeLocationResponseData.getUssId();
+				final CartModel cartModel = getCartService().getSessionCart();
+				int countStoreQuant = 0;
+				//get only those stores which have quantity greater or equal to selected user quantity
+				final CartModel cartModel1 = getCartService().getSessionCart();
+				for (AbstractOrderEntryModel abstractCartEntry : cartModel1.getEntries())
+				{
+					if (null != abstractCartEntry)
+					{
+						if (abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
+						{
+							int quan = abstractCartEntry.getQuantity().intValue();
+							for (ATSResponseData ats : storeLocationResponseData.getAts())
+							{
+								int quant = ats.getQuantity();
+								if (quant >= quan)
+								{
+									listAts.add(ats);
+								}
+								
+							}
+						}
+					}
+				}
+				storeLocationResponseData.setAts(listAts);
 				
 				LOG.debug("call to commerce db to get the seller details");
 				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
@@ -681,6 +708,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					String sellerName = sellerInfoModel.getSellerName();
 					model.addAttribute("sellerName", sellerName);
 					model.addAttribute("sellerId",sellerInfoModel.getSellerID());
+					model.addAttribute("ussid", ussId);
 					final ProductModel productModel = sellerInfoModel.getProductSource();
 					final ProductData productData = productFacade.getProductForOptions(productModel,
 							Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
@@ -1781,7 +1809,5 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	{
 		this.mplCouponFacade = mplCouponFacade;
 	}
-
-
 
 }
