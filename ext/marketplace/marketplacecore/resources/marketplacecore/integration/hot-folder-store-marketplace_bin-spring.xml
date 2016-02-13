@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- [y] hybris Platform Copyright (c) 2000-2014 hybris AG All rights reserved. 
 	This software is the confidential and proprietary information of hybris ("Confidential 
 	Information"). You shall not disclose such Confidential Information and shall 
@@ -68,4 +69,75 @@
 		</property>
 	</bean> 
 
+=======
+<!-- [y] hybris Platform Copyright (c) 2000-2014 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:file="http://www.springframework.org/schema/integration/file"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+
+ <bean id="baseDirectoryMarketplaceBin" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-bin" />
+    </bean>
+ 
+    <!-- 1) Scan for files -->
+    
+    <file:inbound-channel-adapter id="batchFilesMarketplaceBin" directory="#{baseDirectoryMarketplaceBin}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" >
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    
+    <file:outbound-gateway request-channel="batchFilesMarketplaceBin" reply-channel="batchFilesMarketplaceBinProc"
+        directory="#{baseDirectoryMarketplaceBin}/processing" delete-source-files="true" />
+
+	<!-- 3) transform csv to impex file -->
+	
+ 	<int:service-activator input-channel="batchFilesMarketplaceBinProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplaceBinHeaderSetupTask" method="execute" />
+ 
+ 	<bean id="MarketplaceBinHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceBin" />
+    </bean>   
+
+	<!-- Transformer converters mappings -->
+
+	<bean id="batchBinConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="bins_iso_9_4" p:converter-ref="batchBinConverter" />
+
+	<!-- <bean id="batchisDomesticMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="domestic_bin" p:converter-ref="batchisDomesticConverter" /> -->
+
+	<!-- Converters -->
+
+	 <bean id="batchBinConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>#{defaultImpexProductHeader}
+				# Insert BIN Data
+				INSERT_UPDATE Bin;BinNo[unique=true];CardBrand;bank(bankName);CardType;Category;IssuingCountry;ISOA2;ISOA3;ISONumber;IssuingOrgWebsite;IssuingOrgPhoneNo
+			</value>
+		</property>
+		<property name="impexRow">
+			<value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}</value>
+		</property>
+	</bean> 
+
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 </beans>

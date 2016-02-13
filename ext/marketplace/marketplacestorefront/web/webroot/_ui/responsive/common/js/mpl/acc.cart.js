@@ -15,4 +15,26 @@ ACC.cart = {
 		})
 	}
 
+<<<<<<< HEAD
 };
+=======
+};
+
+$(function() {
+
+	if ($("ul#giftYourselfProducts").length) {
+		
+		$.ajax({
+			url: ACC.config.encodedContextPath + "/cart/giftlist",
+			type: 'GET',
+			success: function (data)
+			{
+				if (data != '') {
+				    $("div#wishlistBanner").removeAttr("style");
+				    $("ul#giftYourselfProducts").html(data);
+				}
+			}
+		});
+	}
+});
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38

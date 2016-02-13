@@ -76,9 +76,9 @@ public class BuyBoxServiceImplTest
 	{
 		final List<BuyBoxModel> buyBoxList = new ArrayList<BuyBoxModel>();
 		final String productCode = "987654321";
-		assertNotNull(buyBoxDao.getBuyboxAvailableInventoryForSearch(productCode, "variant"));
-		assertNotNull(buyBoxDao.getBuyboxAvailableInventoryForSearch(productCode, "variant"));
-		assertEquals(buyBoxList, buyBoxDao.getBuyboxAvailableInventoryForSearch(productCode, "variant"));
+		assertNotNull(buyBoxDao.getBuyboxAvailableInventoryForSearch("'" + productCode + "'"));
+		assertNotNull(buyBoxDao.getBuyboxAvailableInventoryForSearch(("'" + productCode + "'")));
+		assertEquals(buyBoxList, buyBoxDao.getBuyboxAvailableInventoryForSearch(("'" + productCode + "'")));
 	}
 
 	@Test

@@ -332,6 +332,11 @@
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
+	
+	<bean id="orderConfirmationPushNotificationEventListener" class="com.tisl.mpl.core.event.OrderConfirmationPushNotificationEventListener"
+		parent="abstractSiteEventListener">
+		<property name="notificationService" ref="notificationService" />
+	</bean>
 	<bean id="orderConfirmationRiskEventListener" class="com.tisl.mpl.core.event.OrderConfirmationRiskEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
@@ -759,14 +764,14 @@
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="commerceStockService" ref="commerceStockService" />
-		<property name="buyBoxService" ref="buyBoxService" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 
 	<bean id="mplStockLevelStatusValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplStockLevelStatusValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
-		<property name="buyBoxService" ref="buyBoxService" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 
 	<bean id="mplSwatchColorValueProvider"

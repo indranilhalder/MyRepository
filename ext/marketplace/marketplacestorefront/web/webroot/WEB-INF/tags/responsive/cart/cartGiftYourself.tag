@@ -29,7 +29,7 @@ var productCode = '${product.code}';
 	fetchPrice();		
  }); */
   
-$( document ).ready(function() {
+/* $( document ).ready(function() {
 	$(".selectQty").change(function() {	
 		$("#qty").val($(".selectQty :selected").val());
 	});
@@ -74,19 +74,19 @@ $( document ).ready(function() {
 	});	
 			
 		
-});
+}); */
 </script>
 
 
-<c:if test="${fn:length(ProductDatas)>0}">
-	<div class="wishlist-banner">
+<%-- <c:if test="${fn:length(ProductDatas)>0}"> --%>
+	<div class="wishlist-banner" id="wishlistBanner" style="display:none">
 		<h2>
 			<spring:theme code="Treat Yourself" />
 			<span><spring:theme code="mpl.gift.Yourself" /></span>
 		</h2>
 	</div>
 	<ul class="product-block wishlist" id="giftYourselfProducts">
-		<c:forEach items="${ProductDatas}" var="product">
+		<%-- <c:forEach items="${ProductDatas}" var="product">
 			<li class="item" id="${product.code}">
 				<ul class="desktop">
 					<li>
@@ -157,7 +157,7 @@ $( document ).ready(function() {
 						<ul>
 						
 							
-								<%-- <c:if test="${not empty giftYourselfDeliveryModeDataMap}"> --%>
+								<c:if test="${not empty giftYourselfDeliveryModeDataMap}">
 									<c:forEach items="${giftYourselfDeliveryModeDataMap}"
 										var="giftYourselfDeliveryModeDataMap">
 										<c:if
@@ -168,7 +168,7 @@ $( document ).ready(function() {
 											</c:forEach>
 										</c:if>
 									</c:forEach>
-								<%-- </c:if> --%>
+								</c:if>
 							
 
 						</ul>
@@ -179,9 +179,9 @@ $( document ).ready(function() {
 				</ul>
 				
 			</li>
-		</c:forEach>
+		</c:forEach> --%>
 	</ul>
-</c:if>
+<%-- </c:if> --%>
 <div class="modal fade in" id="addedToBag">
 <div class="content">
 <div class="">Successfully Added to Bag</div>

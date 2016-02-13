@@ -22129,8 +22129,8 @@ body .lookbook_wrapper div.share-link {
     top: -35px;
 }
 .lookbooks {
-    margin: 60px auto;
-}
+    margin: 60px auto 0px auto;
+    }
 .lookbooks .lookbook .simple-banner-component {
     float: left;
     width: 50%;
@@ -25344,7 +25344,7 @@ height:100px;
 max-height:100%;
 }
 }
-@media(max-width:790px){
+@media(max-width:791px){
 .brand-content-grid .brand-trySomethingNew , .apparel-brand div.brand-content-grid ul li .video-wrapper{
 margin-bottom:10px;
 }
@@ -27825,9 +27825,11 @@ body .account .account-header select.menu-select optgroup option{
 	.cart.wrapper .product-block li.item > ul.desktop > li.price{
 	    position: absolute;
     left: calc(30% + 10px);
-    top: 140px;
-    text-align:left;
-    padding-top:0px;
+    top: 110px;
+    text-align: left;
+    padding-top: 0px;
+    font-size: 12px;
+    width: 70%;
 	}
 	.cart.wrapper .product-block li.item ul .item-edit-details{
 	bottom: -75px;
@@ -27866,10 +27868,39 @@ body .account .account-header select.menu-select optgroup option{
 	}
 }
 }
+<<<<<<< HEAD
 .reviews .review-list>.wrapper>li .review .details h3 input {
 	width: 100%;
 	border-color: #DFD1D5;
 	height: 30px;
+=======
+.cart.wrapper .product-block li.item > ul.desktop > li.price{
+	line-height:18px;
+	}
+
+	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
+	    width: 100px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	}
+@media(min-width:791px) and (max-width:1080px){
+	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
+	    position: absolute;
+    	left: 120px;
+	}
+	header.compact .content .marketplace.compact a img{
+	width:180px;
+	}
+	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
+	    width: 65px;
+	}
+	header.compact .content .marketplace.compact + .right > ul > li{
+	    padding:0 10px;
+	}
+	header.compact .content .right>ul>li.sign-in .sign-in-info {
+    max-width: 268px;
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 }
 .reviews .review-list>.wrapper>li .review .details p textarea {
     width: 100%;
@@ -27900,10 +27931,22 @@ body .account .right-account .reviews .review-list .wrapper>li .review .details 
 body .account .right-account .reviews .update-wrapper{
 	text-align: center;
 }
+<<<<<<< HEAD
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="update"]{
     margin-right: 2%;
     background: #A9143C;
     
+=======
+@media(min-width:791px){
+#loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
+#loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
+#loginDivCheckout,#loginDivCheckout td, #loginDivCheckout table, #loginDivCheckout tr, #loginDivCheckout tbody, #loginDivCheckout div,
+#loginDivRegisterCheckOut,#loginDivRegisterCheckOut td, #loginDivRegisterCheckOut table, #loginDivRegisterCheckOut tr, #loginDivRegisterCheckOut tbody, #loginDivRegisterCheckOut div {
+    display: block;
+    width: 100% !important;
+    background-size: 200% 30px;
+    max-width: 245px;
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
     background: red;
@@ -27924,6 +27967,7 @@ body .account .right-account .reviews div.blockUI.blockMsg.blockElement{
 	right:0 !important;
 	margin:auto !important;
 }
+<<<<<<< HEAD
 
 .cart.wrapper .right-block .block.top button.remove-coupon-button{
 min-width: 12px;
@@ -27931,6 +27975,14 @@ min-width: 12px;
     height: 12px !important;
     background-color: transparent;
     margin-right: 5px;
+=======
+#loginDivsiginflyout > table > tbody > tr > td table td:first-child{
+	width: 10% !important;
+}  
+@media (max-width: 1050px) and (min-width: 901px){
+header .content .bottom.active nav > ul > li:first-child > ul {
+    left: 200px;
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 }
 .cart.wrapper .right-block .block.top li#couponApplied{
 color: #A9143C;
@@ -27960,12 +28012,36 @@ color: #A9143C;
 	position: relative;
 	padding-top: 104px;
 }
+<<<<<<< HEAD
 .footwearCountFive h1,.footwearCountFive h3 {
 	    position: absolute;
     top: 0;
     width: 100%;
     left: 0;
     text-align: center;
+=======
+@media(max-width:790px){
+body.touchDevice header .content nav > ul > li > ul > li > ul.words{
+    padding-top: 0px;
+	position:relative;}
+
+body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
+    padding-top: 40px;}
+} 
+
+.electronics-brand .feature-categories.custom-feature {
+	    padding: 0;
+    background: #e6e6e6;
+}
+ .electronics-brand .feature-categories.custom-feature h1 {
+	background: #fff;
+}
+/*--------------maincss-----------*/
+.row
+{
+	margin-left:0px !important;
+	margin-right:0px !important;
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 }
 
 .footwearCountFive>li {
@@ -35597,6 +35673,36 @@ div.MSDQuickView, div.MSDQuickView:before {
 	}
 }
 
+ 
+.global-alerts button.close
+{
+	float:left;
+	top: -20px;
+  opacity: 1;
+  left: 0px;
+  margin-right: 10px;
+}
+.global-alerts 
+{
+	  font-family: 'Avenir Next';
+	  font-size:14px;
+	   opacity: 1;
+}
+/* TISEE-6257 starts */
+a#checkout-enabled.checkout-disabled, a#checkout-enabled.checkout-disabled:hover  {
+	background-color: rgb(255,118,133) !important;
+	cursor: default !important;
+}
+button#expressCheckoutButtonId.express-checkout-disabled {
+	opacity: 0.5;
+	cursor: default !important;
+}
+button#expressCheckoutButtonId.express-checkout-disabled:hover {
+	background: #fff;
+	color: #00cbe9;
+}
+/* TISEE-6257 ends */
+
  /*for MSD*/  
 span.sizesAvailableMSD { 
 	display: none; 
@@ -35632,6 +35738,7 @@ span.sizesAvailableMSD {
  line-height: 30px;
  }
   /*End MSD*/  
+<<<<<<< HEAD
   
 .global-alerts button.close
 {
@@ -36073,3 +36180,5 @@ width: 40px;
 	
 	
 }
+=======
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38

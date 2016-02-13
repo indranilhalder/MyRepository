@@ -27,6 +27,7 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 		<div class="product-tile">
 			<div class="image">
 			
+<<<<<<< HEAD
 				<c:if test="${product.isProductNew eq true}">
 				<div style="z-index: 1;" class="new">
 					<img class="brush-strokes-sprite sprite-New"
@@ -34,6 +35,14 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 					</div>  </c:if>  <a
 					class="thumb" href="${productUrl}" title="${product.name}"> <product:productPrimaryImage
 						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
+=======
+				 <c:if test="${product.isProductNew eq true}">
+					<img class="new brush-strokes-sprite sprite-New"
+					style="z-index: 1; display: block;"
+					src="/store/_ui/responsive/common/images/transparent.png"> </c:if> <a
+					class="thumb" href="${productUrl}" title="${product.name}"> <%-- <product:productPrimaryImage
+						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 
 				</a>
 				

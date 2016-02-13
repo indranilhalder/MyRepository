@@ -359,6 +359,7 @@ public class SearchPageController extends AbstractSearchPageController
 			model.addAttribute("searchCode", searchCategory);
 			//Fix defect for TISPRD-176
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number", "1800-208-8282");
+
 			model.addAttribute("cliqCareNumber", cliqCareNumber);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -795,7 +796,10 @@ public class SearchPageController extends AbstractSearchPageController
 						+ " " + getSiteName());
 		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(typeOfProduct);
 		setUpMetaData(model, metaKeywords, metaDescription);
+		//Fix defect for TISPRD-176
+		final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number", "1800-208-8282");
 
+		model.addAttribute("cliqCareNumber", cliqCareNumber);
 		return getViewForPage(model);
 
 

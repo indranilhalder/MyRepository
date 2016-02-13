@@ -370,6 +370,7 @@
 	<bean class="com.tisl.mpl.data.SalesReportData">
 		<property name="orderNo" type="String"/>
 		<property name="orderDate" type="String"/>
+		<property name="orderTime" type="String"/>
 		<property name="listingId" type="String"/>
 		<property name="USSID" type="String"/>
 		<property name="sellerName" type="String"/>

@@ -26,6 +26,7 @@
 	
 
 			<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+<<<<<<< HEAD
 				<c:set var="maxNumberChars" value="25" />
 				<c:if test="${fn:length(user.firstName) gt maxNumberChars}">
 					<c:set target="${user}" property="firstName"
@@ -36,13 +37,28 @@
 				<span class="material-icons">&#xE8A6;</span>
 				<ycommerce:testId code="header_LoggedUser">
 					<c:set var="userName" value="${user.firstName}"/>
+=======
+				<%-- <c:set var="maxNumberChars" value="25" />
+				<c:if test="${fn:length(user.firstName) gt maxNumberChars}">
+					<c:set target="${user}" property="firstName"
+						value="${fn:substring(user.firstName, 0, maxNumberChars)}..." />
+				</c:if> --%>
+
+				<li class="logged_in dropdown ajaxloginhi" >
+				<ycommerce:testId code="header_LoggedUser">
+					<%-- <c:set var="userName" value="${user.firstName}"/>
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 						<c:if test="${not empty userName}">
 							<c:choose>
 								<c:when test="${!fn:contains(userName, '@')}">
 									<c:choose>
 										<c:when test="${fn:contains(userName, 'Anonymous')}">
+<<<<<<< HEAD
 											<a href="<c:url value="/logout"/>"
 												class=""><spring:theme
+=======
+											<a href="<c:url value="/logout"/>"><spring:theme
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 													code="header.hi.blank" arguments="${userName}"
 													htmlEscape="true" />!</a>
 										</c:when>
@@ -64,6 +80,7 @@
 							<a href="<c:url value="/my-account"/>"
 								class="account-userTitle account-userTitle-custom"><spring:theme
 									code="header.hi.blank" arguments="${userName}" htmlEscape="true" />!</a>
+<<<<<<< HEAD
 						</c:if>
 						<span id="mobile-menu-toggle"></span>
 					</ycommerce:testId>
@@ -171,6 +188,15 @@
 							</li>
 						</ul>
 					</c:if>
+=======
+						</c:if> --%>
+						<a href="<c:url value="/my-account"/>"
+												class="headeruserdetails account-userTitle account-userTitle-custom"></a>
+						<span id="mobile-menu-toggle"></span>
+					</ycommerce:testId>
+						<ul class="dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout" role="menu">
+						</ul>
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 				</li>
 			</sec:authorize>
 
@@ -180,6 +206,7 @@
 				<div class="content">
 				<div class="right">
 					<ul>
+<<<<<<< HEAD
 						<li class="dropdown sign-in-dropdown sign-in">
 						<span class="material-icons">&#xE8A6;</span>
 						<ycommerce:testId
@@ -278,6 +305,16 @@
 											</li>
 							
 	
+=======
+						<li class="dropdown sign-in-dropdown sign-in ajaxloginhi" ><ycommerce:testId
+						code="header_Login_link">
+						<a id="socialLogin" class="headeruserdetails" href="<c:url value="/login"/>" role="button"
+							aria-expanded="false"><%-- <spring:theme
+								code="header.link.flylogin" /> --%></a>
+					</ycommerce:testId>
+
+							<ul class="sign-in-info signin-dropdown-body ajaxflyout" id="signIn">
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 							</ul></li>
 					</ul>
 				</div></div>
@@ -285,3 +322,7 @@
 		</c:if>
 	</li>
 	
+<<<<<<< HEAD
+=======
+	
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38

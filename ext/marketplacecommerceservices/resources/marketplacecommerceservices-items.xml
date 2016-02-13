@@ -1298,6 +1298,9 @@
 				<index name="sellerNameIDX" unique="false">
 					<key attribute="sellerName" />
 				</index>
+				<index name="SLINFO_ARTICLESKU_IDX" unique="false">
+					<key attribute="sellerArticleSKU"/>
+				</index>
 			</indexes>
 		</itemtype>
 

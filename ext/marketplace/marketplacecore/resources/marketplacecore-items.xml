@@ -1146,7 +1146,6 @@
 			<itemtype code="Media" extends="AbstractMedia"
 				jaloclass="de.hybris.platform.jalo.media.Media" autocreate="false"
 				generate="true">
-
 				<attributes>
 					<attribute qualifier="mediaStatus" type="mediaStatusEnum">
 						<description>Used to define Media Status.</description>
@@ -1173,6 +1172,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="MEDIASIDIDX">
+						<key attribute="owner"/>
+					</index>
+				</indexes>
 			</itemtype>
 
 			<itemtype code="GlobalIdentifier" autocreate="true"
@@ -1749,6 +1753,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="SELLERARTICLESKU_IDX">
+						<key attribute="sellerArticleSKU"/>
+					</index>
+				</indexes>
 			</itemtype>
 
 			<itemtype code="RichAttribute" autocreate="true" generate="true"
@@ -2648,6 +2657,11 @@
 					</attribute>
 					<!-- Push notification save device key web service ends -->
 				</attributes>
+				<indexes>
+					<index name="ORIGINALUID_IDX" unique="true">
+						<key attribute="originalUid"/>
+					</index>
+				</indexes>
 			</itemtype>
 			<itemtype code="Address" autocreate="false" generate="false">
 				<description>Extending the Address type from core with additional attributes.</description>
@@ -4550,6 +4564,10 @@
 							optional="true" partof="true" />
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="ipAddress" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -5130,6 +5148,11 @@
 					<index name="SellerIDX">
 						<key attribute="sellerArticleSKU" />
 					</index>
+					<index name="MPLZONEDELVYMODEVALIDX">
+						<key attribute="deliveryMode"/>
+						<key attribute="sellerArticleSKU" />
+						<key attribute="currency"/>
+					</index>
 				</indexes>
 			</itemtype>
 
@@ -5204,6 +5227,37 @@
 						<persistence type="property" />
 					</attribute>
 
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="SolrFacetSearchConfig" autocreate="false" generate="false">
+				<description>Extending the SolrFacetSearchConfig type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedType" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedType type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="SolrIndexedProperty" autocreate="false" generate="false">
+				<description>Extending the SolrIndexedProperty type from core with additional attributes.</description>
+				<attributes>
+					<attribute qualifier="queryType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
@@ -6064,6 +6118,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="AUDITENTRYID_IDX">
+						<key attribute="auditId"/>
+					</index>	
+				</indexes>
 			</itemtype>
 
 			<itemtype code="MplPaymentAudit" autocreate="true" generate="true"
@@ -6124,6 +6183,11 @@
 						<persistence type="property" />
 					</attribute>
 				</attributes>
+				<indexes>
+					<index name="AUDITID_IDX">
+						<key attribute="auditId"/>
+					</index>	
+				</indexes>
 			</itemtype>
 		</typegroup>
 
@@ -7083,6 +7147,7 @@
 		</typegroup>
 		<!--End of CRM Ticket Detail -->
 		
+<<<<<<< HEAD
 		<!-- Tata Etail change - Apportioned value for coupon starts -->
 		<typegroup name="MarketplaceCoupon">
 			<itemtype code="AbstractOrderEntry" autocreate="false"
@@ -7114,6 +7179,9 @@
 			</itemtype>
 					
 		</typegroup>
+=======
+		
+>>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 	</itemtypes>
 </items>
 
