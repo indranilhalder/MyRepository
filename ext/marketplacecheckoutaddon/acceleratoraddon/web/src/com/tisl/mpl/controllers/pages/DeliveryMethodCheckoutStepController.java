@@ -109,6 +109,7 @@ import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.service.MplSlaveMasterService;
@@ -764,8 +765,23 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					if (cartEntryModel != null)
 					{
+						final String ussid = cartEntryModel.getSelectedUSSID();
+						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
+						String collDays = "";
+						if (sellerInfoModel != null)
+						{
+							final SellerMasterModel sellerMaster = sellerInfoModel.getSellerMaster();
+							if (sellerMaster != null)
+							{
+								collDays = sellerMaster.getCollectionDays();
+							}
+						}
 						if (cartEntryModel.getProduct().getCode().equalsIgnoreCase(pcode))
 						{
+							if (collDays != null)
+							{
+								cartEntryModel.setCollectionDays(Integer.valueOf(collDays));
+							}
 							cartEntryModel.setDeliveryPointOfService(posModel);
 							modelService.save(cartEntryModel);
 						}
@@ -1781,7 +1797,5 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	{
 		this.mplCouponFacade = mplCouponFacade;
 	}
-
-
 
 }
