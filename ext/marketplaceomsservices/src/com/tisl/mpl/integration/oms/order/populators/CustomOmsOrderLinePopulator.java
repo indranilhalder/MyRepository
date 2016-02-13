@@ -237,7 +237,17 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			locationRoles.add(locationRole);
 			target.setLocationRoles(locationRoles);
 			target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
-			target.setStoreID(source.getSlaveId());
+
+			if (source.getDeliveryPointOfService() != null)
+			{
+				target.setStoreID(source.getDeliveryPointOfService().getSlaveId());
+			}
+
+			if (source.getCollectionDays() != null)
+			{
+				target.setCollectionDays(String.valueOf(source.getCollectionDays()));
+			}
+
 			//source.getCollectionDays()
 			target.setUnitTax(new Amount(source.getOrder().getCurrency().getIsocode(), Double
 					.valueOf(getOndemandTaxCalculationService().calculatePreciseUnitTax(
