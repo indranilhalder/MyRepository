@@ -149,6 +149,43 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailappConfSlot;EmailAppImage;
 
 
+# Order Collected By PickUp Person Email Template
+# Media
+INSERT_UPDATE Media	;$contentCV[unique=true];code[unique=true]		;realfilename		;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]	;mime[default='image/jpg']
+			;			;mail_top_banner		;mailTopContentBody	;$siteResource/images/email/header4.jpg							;	
+			;			;mail_track-button		;trackOrderButton	;$siteResource/images/email/track-btn.jpg							;
+			;			;mail_tip-image			;tipsImageComponent	;$siteResource/images/email/tip.jpg								;
+			;			;mail_click-app_download	;clicktoDownloadApp	;$siteResource/images/email/click-app.jpg							;
+			;			;mail_happyShopping_banner	;happyShopping		;$siteResource/images/email/happy-shopping.jpg						;
+			;			;mail_facebook_link		;facebooklink		;$siteResource/images/email/f.jpg								;
+			;			;mail_twitter_link		;twitterlink		;$siteResource/images/email/t.jpg								;
+			;			;mail_youtube_link		;youtubelink		;$siteResource/images/email/y.jpg								;
+			;			;mail_socialnetwork_link	;socialnetworklin	;$siteResource/images/email/p.jpg								;
+
+# CMS Images Component For PickUp Person 
+INSERT_UPDATE CMSImageComponent	;$contentCV[unique=true]	;uid[unique=true]	;$picture[lang=$lang]
+				;				;mail_topContent_cms	;mail_top_banner
+				;				;mail_trackOrder_cms	;mail_track-button
+				;				;mail_tipsImage_cms	;mail_tip-image
+				;				;mail_clickApp_cms	;mail_click-app_download
+				;				;mail_happyShopping_cms	;mail_happyShopping_banner
+				;				;mail_facebook_cms	;mail_facebook_link
+				;				;mail_twitter_cms	;mail_twitter_link
+				;				;mail_youtube_cms	;mail_youtube_link
+				;				;mail_socialNewtwork_cms;mail_socialnetwork_link
+				
+			
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]		;cmsComponents(uid,$contentCV) 	;name 			;active
+				;			;emailTopContSlot  	;mail_topContent_cms		;Logo Slot		;true
+				;			;emailTrackOrderContSlot  	;mail_trackOrder_cms		;Track Order Slot	;true
+				;			;emailTipsContSlot	  	;mail_tipsImage_cms		;Tips Slot		;true
+				;			;emailClickAppDownContSlot  	;mail_clickApp_cms		;App Download Slot	;true
+				;			;emailHappyShopContSlot  	;mail_happyShopping_cms		;Happy Shop Slot	;true
+				;			;emailFacebookContSlot  	;mail_facebook_cms		;Facebook Slot		;true
+				;			;emailTwitterContSlot	  	;mail_twitter_cms		;Twitter Slot		;true
+				;			;emailYoutubeContSlot  		;mail_youtube_cms		;Youtube Slot		;true
+				;			;emailSocialContSlot  		;mail_socialNewtwork_cms	;Social Network Slot	;true
+
 # Order Delivery Email
 
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
@@ -284,6 +321,41 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailfbOrderRejectSlot;EmailfbImage
 ;;EmailgplusOrderRejectSlot;EmailgplusImage
 ;;EmailsmileyimgOrderRejectSlot;EmailsmileyImage
+
+# Media fOr Order refund
+INSERT_UPDATE Media	;$contentCV[unique=true];code[unique=true]		;realfilename		;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]	;mime[default='image/jpg']
+			;			;mailRefundCredit-Logo		;mailTopContentBody	;$siteResource/images/email/header4.jpg							;	
+			;			;mail_RefundCredit-tip		;tipsImageComponent	;$siteResource/images/email/tip.jpg								;
+			;			;mail_RefundCredit-app_download	;clicktoDownloadApp	;$siteResource/images/email/click-app.jpg							;
+			;			;mail_RefundCredit_banner	;happyShopping		;$siteResource/images/email/happy-shopping.jpg						;
+			;			;mail_RefundCredit_fb		;facebooklink		;$siteResource/images/email/f.jpg								;
+			;			;mail_RefundCredit_twitter	;twitterlink		;$siteResource/images/email/t.jpg								;
+			;			;mail_RefundCredit_youtube	;youtubelink		;$siteResource/images/email/y.jpg								;
+			;			;mail_RefundCredit_gplus	;socialnetworklin	;$siteResource/images/email/p.jpg								;
+
+			
+# CMS Image Components forOrder Refund  
+INSERT_UPDATE CMSImageComponent	;$contentCV[unique=true]	;uid[unique=true]		;$picture[lang=$lang]
+				;				;mail_topContent_refund		;mailRefundCredit-Logo
+				;				;mail_tips_refund		;mail_RefundCredit-tip
+				;				;mail_clickApp_refund		;mail_RefundCredit-app_download
+				;				;mail_happyshopping		;mail_RefundCredit_banner
+				;				;mail_facebook_refund		;mail_RefundCredit_fb
+				;				;mail_twitter_refund		;mail_RefundCredit_twitter
+				;				;mail_youtube_refund		;mail_RefundCredit_youtube
+				;				;mail_socialNewtwork_refund	;mail_RefundCredit_gplus
+
+
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]			;cmsComponents(uid,$contentCV) 	;name 			;active
+				;			;emailTopContSlotrefund  		;mail_topContent_refund		;Logo Slot		;true
+				;			;emailTipsContSlotrefund	  	;mail_tips_refund		;Tips Slot		;true
+				;			;emailClickAppDownContSlotrefund  	;mail_clickApp_refund		;App Download Slot	;true
+				;			;emailHappyShopContSlotrefund  		;mail_happyshopping		;Happy Shop Slot	;true
+				;			;emailFacebookContSlotrefund  		;mail_facebook_refund		;Facebook Slot		;true
+				;			;emailTwitterContSlotrefund	  	;mail_twitter_refund		;Twitter Slot		;true
+				;			;emailYoutubeContSlotrefund  		;mail_youtube_refund		;Youtube Slot		;true
+				;			;emailSocialContSlotrefund  		;mail_socialNewtwork_refund	;Social Network Slot	;true
+
 
 
 # Forget Password Email
