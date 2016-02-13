@@ -211,9 +211,12 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			target.setUsername(((CustomerModel) source.getUser()).getCustomerID());
 		}
 
-		//stubbed as there is not there in user or address table
-		target.setFirstName(source.getDeliveryAddress().getFirstname());
-		target.setLastName(source.getDeliveryAddress().getLastname());
+		if (source.getDeliveryAddress() != null)
+		{
+			//stubbed as there is not there in user or address table
+			target.setFirstName(source.getDeliveryAddress().getFirstname());
+			target.setLastName(source.getDeliveryAddress().getLastname());
+		}
 
 		//target.setCancellable(true);
 	}
