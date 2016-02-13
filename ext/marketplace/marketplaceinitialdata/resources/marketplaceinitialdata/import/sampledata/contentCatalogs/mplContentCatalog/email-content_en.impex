@@ -82,18 +82,24 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 
 
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
-;;/images/theme/OrderConfirmationBanner1.jpg;OrderConfirmationBanner1.jpg;$siteResource/images/theme/OrderConfirmationBanner1.jpg;;
+;;/images/theme/OrderConfirmationBanner1.jpg;OrderConfirmationBanner1.jpg;$siteResource/images/theme/header4.jpg;;
 ;;/images/theme/OrderConfirmationBanner2.jpg;OrderConfirmationBanner2.jpg;$siteResource/images/theme/OrderConfirmationBanner2.jpg;;
 ;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
-;;/images/theme/Track1.jpg;Track1.jpg;$siteResource/images/theme/Track1.jpg;;
-;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/Track2.jpg;;
+;;/images/theme/Track1.jpg;Track1.jpg;$siteResource/images/theme/track-btn.jpg;;
+;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/track2.jpg;;
 ;;/images/theme/ConfDescription.jpg;ConfDescription.jpg;$siteResource/images/theme/ConfDescription.jpg;;
 ;;/images/theme/OrderReferenceNumberOne.jpg;OrderReferenceNumberOne.jpg;$siteResource/images/theme/OrderReferenceNumberOne.jpg;;
 ;;/images/theme/OrderReferenceNumberTwo.jpg;OrderReferenceNumberTwo.jpg;$siteResource/images/theme/OrderReferenceNumberTwo.jpg;;
-;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/Tip.jpg;;
-;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/fb.jpg;;
-;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/gplus.jpg;;
-;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
+;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/happy-shopping.jpg;;
+;;/images/theme/app.jpg;app.jpg;$siteResource/images/theme/app.jpg;;
+;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/tip.jpg;;
+;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/f.jpg;;
+;;/images/theme/twitter.jpg;twitter.jpg;$siteResource/images/theme/t.jpg;;
+;;/images/theme/youtube.jpg;youtube.jpg;$siteResource/images/theme/y.jpg;;
+;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/p.jpg;;
+
+
+
 
 
 # CMS Image Components
@@ -110,6 +116,10 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;EmailfbImage;/images/theme/fb.jpg;
 ;;EmailgplusImage;/images/theme/gplus.jpg;
 ;;EmailsmileyImage;/images/theme/smileyimg.jpg;
+;;EmailTipsImage;/images/theme/Tip.jpg;
+;;EmailAppImage;/images/theme/app.jpg;
+;;Emailyoutube;/images/theme/youtube.jpg;
+;;Emailtwitter;/images/theme/twitter.jpg;
 
 
 ## reset password changes
@@ -134,7 +144,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailsmileyimgConfSlot;EmailsmileyImage
 ;;EmailfbConfSlot;EmailfbImage
 ;;EmailgplusConfSlot;EmailgplusImage
-
+;;EmailtwitterConfSlot;Emailtwitter
+;;EmailyoutubeConfSlot;Emailyoutube
+;;EmailappConfSlot;EmailAppImage;
 
 
 # Order Delivery Email
