@@ -806,9 +806,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						}
 						if (cartEntryModel.getProduct().getCode().equalsIgnoreCase(pcode))
 						{
-							if (collDays != null)
+							if (StringUtils.isEmpty(collDays))
 							{
 								cartEntryModel.setCollectionDays(Integer.valueOf(collDays));
+							}
+							else
+							{
+								cartEntryModel.setCollectionDays(Integer.valueOf(0));
 							}
 							cartEntryModel.setDeliveryPointOfService(posModel);
 							modelService.save(cartEntryModel);
