@@ -218,8 +218,11 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$(".pickUpPersonAjax").hide();
-		
+			$(".pickupPersonSubmitError").hide();
+			
+			$("#pickupPersonSubmit").hide();
 			$("#savePickupPersondDetails").click(function(){
+				$(".pickupPersonSubmitError").hide();
 				$(".pickUpPersonAjax").hide();
 				//alert("hello")
 				$(".pickupPersonMobileError").hide();
@@ -258,6 +261,7 @@
 						data : dataString,
 						success : function(data) {
 							console.log("success call for pickup person details"+data);
+							$("#pickupPersonSubmit").text("1");
 							$(".pickUpPersonAjax").fadeIn(100);
 							$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
 	
@@ -465,6 +469,19 @@
 												
 												var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
 												$(".continue_btn").click(function(e){
+													$(".pickupDetails").hide();
+													$(".pickupPersonSubmitError").hide();
+													var pickupPersonSubmit = $("#pickupPersonSubmit").text();
+													if(pickupPersonSubmit == "1") {
+														$(".pickupPersonSubmitError").show();
+														$(".pickupPersonSubmitError").text("Pickup Person Details Have Been Successfully Added");
+														//console.log("Pickup Person Details Have Been Successfully Added");
+														} else {
+														e.preventDefault();
+														$(".pickupPersonSubmitError").show();
+														$(".pickupPersonSubmitError").text("Please Submit Pickup Person Details");
+														//console.log("Please Submit Pickup Person Details");
+														}
 													var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
 													if(checked${status1.index}=="address${status1.index}" || checked${status1.index}=="address${status.index}" || checked${status1.index}=="address1" || checked${status1.index}=="address0" || checked${status1.index}=="address2" || checked${status1.index}=="address3" || checked${status1.index}=="address4" || checked${status1.index}=="address5" || checked${status1.index}=="address6" || checked${status1.index}=="address7") {
 														if($('#pickupPersonName').val().length <= "3" || $('#pickupPersonMobile').val().length <= "9") {
@@ -475,6 +492,7 @@
 														$(".select_store").show();
 														e.preventDefault();
 													}
+													
 												});
 												$("#address${status1.index}${status.index}").click(function(){
 													$(".radio_color").removeClass("colorChange");
@@ -705,6 +723,8 @@
         			    </div>
 			             <div class="col-md-3">
 			             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+			          <div id="pickupPersonSubmit"></div>
+			          <div class="error_txt pickupPersonSubmitError"></div>
 			            </div>
 			            <div class="col-md-12" style="padding-top: 10px;">
 			            	<spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/>
