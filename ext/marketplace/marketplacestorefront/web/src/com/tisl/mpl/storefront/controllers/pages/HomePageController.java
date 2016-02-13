@@ -15,7 +15,6 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
@@ -26,10 +25,8 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
-import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +50,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.core.enums.ShowCaseLayout;
-import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.facade.brand.BrandFacade;
@@ -90,17 +86,15 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
-
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
 
 	@Resource(name = "homepageComponentService")
 	private HomepageComponentService homepageComponentService;
 
-	private static final String SEQUENCE_NUMBER = "SequenceNumber";
-	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
+	private static final String VERSION = "version";
+	private static final String HOMEPAGE = "homepage";
+	private static final String TITLE = "title";
 
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
@@ -148,12 +142,12 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLove", method = RequestMethod.GET)
-	public JSONObject getBrandsYouLove(@RequestParam("version") final String version)
+	public JSONObject getBrandsYouLove(@RequestParam(VERSION) final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		JSONObject brandsYouLoveJson = new JSONObject();
-		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section3Slot-Homepage", version);
+		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section3Slot-Homepage",
+				version);
 
 
 		if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
@@ -189,7 +183,7 @@ public class HomePageController extends AbstractPageController
 		{
 			title = showCaseComponent.getTitle();
 		}
-		showCaseComponentJson.put("title", title);
+		showCaseComponentJson.put(TITLE, title);
 		final JSONArray subComponentJsonArray = new JSONArray();
 
 		if (CollectionUtils.isNotEmpty(showCaseComponent.getShowcaseItems()))
@@ -302,17 +296,22 @@ public class HomePageController extends AbstractPageController
 			showCaseItemJson.put("bannerImageUrl", showcaseItem.getBannerImage().getURL());
 		}
 
+		if (null != showcaseItem.getBannerUrl() && StringUtils.isNotEmpty(showcaseItem.getBannerUrl()))
+		{
+			showCaseItemJson.put("bannerUrl", showcaseItem.getBannerUrl());
+		}
+
 		return showCaseItemJson;
 
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
-	public JSONObject getBestPicks(@RequestParam("version") final String version)
+	public JSONObject getBestPicks(@RequestParam(VERSION) final String version)
 	{
 
 
-		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage("homepage",
+		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 				"Section4CSlot-Homepage", version);
 		return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
 	}
@@ -320,106 +319,22 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getProductsYouCare", method = RequestMethod.GET)
-	public JSONObject getProductsYouCare(@RequestParam("version") final String version)
+	public JSONObject getProductsYouCare(@RequestParam(VERSION) final String version)
 	{
-		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
-		final JSONObject productYouCare = new JSONObject();
-		final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage("homepage",
+		final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 				"Section4DSlot-Homepage", version);
-
-		if (CollectionUtils.isNotEmpty(homepageSection4DSlot.getCmsComponents()))
-		{
-			components = homepageSection4DSlot.getCmsComponents();
-		}
-
-		for (final AbstractCMSComponentModel component : components)
-		{
-			if (component instanceof MplCategoryCarouselComponentModel)
-			{
-				final MplCategoryCarouselComponentModel productYouCareCarouselComponent = (MplCategoryCarouselComponentModel) component;
-				String title = "";
-				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
-				{
-					title = productYouCareCarouselComponent.getTitle();
-				}
-
-				productYouCare.put("title", title);
-
-				final JSONArray subComponentJsonArray = new JSONArray();
-				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
-				{
-					String categoryName = "";
-					String categoryCode = "";
-
-
-					for (final CategoryModel category : productYouCareCarouselComponent.getCategories())
-					{
-						final JSONObject youCareCategoryJSON = new JSONObject();
-						if (null != category.getName())
-						{
-							categoryName = category.getName();
-
-						}
-						youCareCategoryJSON.put("categoryName", categoryName);
-
-						if (null != category.getCode())
-						{
-							categoryCode = category.getCode();
-
-						}
-						youCareCategoryJSON.put("categoryCode", categoryCode);
-
-						boolean mediaFound = false;
-						if (null != category.getMedias())
-						{
-							for (final MediaModel categoryMedia : category.getMedias())
-							{
-								if (null != categoryMedia.getMediaFormat()
-										&& categoryMedia.getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H")
-										&& null != categoryMedia.getURL2())
-								{
-									youCareCategoryJSON.put("mediaURL", categoryMedia.getURL2());
-									mediaFound = true;
-								}
-							}
-
-							if (!mediaFound)
-							{
-								youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
-							}
-
-
-						}
-						else
-						{
-
-							youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
-						}
-
-						subComponentJsonArray.add(youCareCategoryJSON);
-					}
-				}
-				else
-				{
-					LOG.error("No Category found for productYouCareCarouselComponent");
-				}
-
-				productYouCare.put("categories", subComponentJsonArray);
-
-			}
-		}
-		return productYouCare;
+		return homepageComponentService.getProductsYouCareJSON(homepageSection4DSlot);
 	}
 
 
 
 	@ResponseBody
 	@RequestMapping(value = "/getNewAndExclusive", method = RequestMethod.GET)
-	public JSONObject getNewAndExclusive(@RequestParam("version") final String version)
+	public JSONObject getNewAndExclusive(@RequestParam(VERSION) final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject newAndExclusiveJson = new JSONObject();
-		final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage("homepage",
+		final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 				"Section4BSlot-Homepage", version);
 		if (CollectionUtils.isNotEmpty(homepageSection4BSlot.getCmsComponents()))
 		{
@@ -440,7 +355,7 @@ public class HomePageController extends AbstractPageController
 				{
 					title = newAndExclusiveComponent.getTitle();
 				}
-				newAndExclusiveJson.put("title", title);
+				newAndExclusiveJson.put(TITLE, title);
 				final JSONArray newAndExclusiveJsonArray = new JSONArray();
 				if (CollectionUtils.isNotEmpty(newAndExclusiveComponent.getProducts()))
 				{
@@ -504,9 +419,9 @@ public class HomePageController extends AbstractPageController
 	/* Home Page Promotional Banner */
 	@ResponseBody
 	@RequestMapping(value = "/getPromoBannerHomepage", method = RequestMethod.GET)
-	public JSONObject getPromoBannerHomepage(@RequestParam("version") final String version)
+	public JSONObject getPromoBannerHomepage(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
+		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 				"Section4ASlot-Homepage", version);
 
 		//return getJsonBanner(homepageSection4ASlot, "promo");
@@ -516,9 +431,9 @@ public class HomePageController extends AbstractPageController
 	/* Home Page StayQued */
 	@ResponseBody
 	@RequestMapping(value = "/getStayQuedHomepage", method = RequestMethod.GET)
-	public JSONObject getStayQuedHomepage(@RequestParam("version") final String version)
+	public JSONObject getStayQuedHomepage(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage("homepage",
+		final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
 				"Section5ASlot-Homepage", version);
 		//return getJsonBanner(homepageSection5ASlot, "stayQued");
 		return homepageComponentService.getJsonBanner(homepageSection5ASlot, "stayQued");
@@ -528,12 +443,12 @@ public class HomePageController extends AbstractPageController
 
 	@ResponseBody
 	@RequestMapping(value = "/getCollectionShowcase", method = RequestMethod.GET)
-	public JSONObject getCollectionShowcase(@RequestParam("version") final String version)
+	public JSONObject getCollectionShowcase(@RequestParam(VERSION) final String version)
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		JSONObject collectionShowcase = new JSONObject();
-		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage("homepage",
-				"Section6Slot-Homepage", version);
+		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section6Slot-Homepage",
+				version);
 		if (CollectionUtils.isNotEmpty(homepageSection6Slot.getCmsComponents()))
 		{
 			components = homepageSection6Slot.getCmsComponents();
@@ -590,13 +505,9 @@ public class HomePageController extends AbstractPageController
 	{
 		final List<ImageData> images = (List<ImageData>) productData.getImages();
 		String imageUrl = MISSING_IMAGE_URL;
-		if (images != null)
+		if (images != null && images.get(0).getUrl() != null)
 		{
-			if (images.get(0).getUrl() != null)
-			{
-				imageUrl = images.get(0).getUrl();
-			}
-
+			imageUrl = images.get(0).getUrl();
 		}
 
 		return imageUrl;

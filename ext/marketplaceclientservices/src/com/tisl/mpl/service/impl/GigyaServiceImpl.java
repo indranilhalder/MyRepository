@@ -437,17 +437,14 @@ public class GigyaServiceImpl implements GigyaService
 		}
 		catch (final InvalidKeyException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("InvalidKeyException ", e);
 		}
 		catch (final UnsupportedEncodingException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("UnsupportedEncodingException ", e);
 		}
-
 		return false;
-
 	}
 
 	@Override

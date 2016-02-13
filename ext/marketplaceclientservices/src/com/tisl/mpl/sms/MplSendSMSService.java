@@ -102,16 +102,8 @@ public class MplSendSMSService implements SendSmsService
 					//Putting values in the map SMSECommReq
 
 
-					/*
-					 * final String contactNumber = getConfigurationService().getConfiguration().getString(
-					 * MarketplacecommerceservicesConstants.SMS_SERVICE_CONTACTNO);
-					 */
 
-					//sendSmsWsMap.put(MarketplacecclientservicesConstants.SMS_SENDER_TAG, request.getSenderID());
-
-					sendSmsWsMap.put(MarketplacecclientservicesConstants.SMS_SENDER_TAG, configurationService.getConfiguration()
-							.getString(MarketplacecclientservicesConstants.SMS_SENDER_ID));
-
+					sendSmsWsMap.put(MarketplacecclientservicesConstants.SMS_SENDER_TAG, request.getSenderID());
 					sendSmsWsMap.put(MarketplacecclientservicesConstants.SMS_MOBILE_NO_TAG, request.getRecipientPhoneNumber());
 
 					/*

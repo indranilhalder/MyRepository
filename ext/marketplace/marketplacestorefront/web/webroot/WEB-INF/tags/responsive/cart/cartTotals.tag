@@ -124,7 +124,7 @@ function isNumber(evt) {
                     <p id="expresscheckoutErrorDiv" style="display: none ; color: red;"><spring:theme code="cart.express.checkout.validation"/>  </p>
                     
                     
-				     <select id="addressListSelectId" onclick="checkExpressCheckoutPincodeService('typeExpressCheckoutDD')" onchange="checkExpressCheckoutPincodeService('typeExpressCheckoutDD')">
+				     <select id="addressListSelectId" onclick="checkExpressCheckoutPincodeService('typeExpressCheckoutDD')">
 				              <%--  <option value="" disabled><spring:theme code="cart.express.checkout.address"/></option> --%>
 				               <c:forEach items="${Addresses}"  var="Address">
 					                  <option value="${Address.key}" id="${Address.key}">

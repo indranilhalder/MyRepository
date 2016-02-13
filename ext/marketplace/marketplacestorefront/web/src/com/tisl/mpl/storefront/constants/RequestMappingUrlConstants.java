@@ -128,7 +128,6 @@ public final class RequestMappingUrlConstants
 
 	public static final String HEADER_TRACK_ORDER = "/headerTrackOrder";
 	public static final String HEADER_WISHLIST = "/headerWishlist";
-	public static final String HEADER_LOGIN_HI = "/headerloginhi";
 
 	public static final String HELP_ME_SHOP_SEARCH = "/helpmeshop";
 

@@ -28,13 +28,9 @@ public interface BuyBoxDao
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
 
-<<<<<<< HEAD
 	List<BuyBoxModel> buyBoxForSizeGuide(String productCode, String sellerId);
 
 	Integer getBuyboxAvailableInventoryForSearch(String productCode, String productType) throws EtailNonBusinessExceptions;
-=======
-	Integer getBuyboxAvailableInventoryForSearch(String productCode) throws EtailNonBusinessExceptions;
->>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38
 
 	//if all the sellers has zero stock
 	List<BuyBoxModel> buyBoxPriceNoStock(String productCode) throws EtailNonBusinessExceptions;

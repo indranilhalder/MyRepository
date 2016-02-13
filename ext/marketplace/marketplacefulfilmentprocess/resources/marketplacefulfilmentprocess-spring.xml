@@ -63,15 +63,6 @@
 		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/mpl-oms-submitorder-process.xml"/>
 	</bean>
 	
-	<bean id="omsSubmitOrderProcessDefinitionResourceV2" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource" >
-		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/mpl-oms-submitorder-process-v2.xml"/>
-	</bean>
-	
-	<!-- <alias name="omsSubmitOrderProcessDefinitionResourceV2" alias="omsSubmitOrderProcessDefinitionResource"/>
-	<bean id="omsSubmitOrderProcessDefinitionResourceV2" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource" >
-		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/mpl-oms-submitorder-process-v2.xml"/>
-	</bean> -->
-	
 	<import resource="marketplacefulfilmentprocess/process/mpl-omsorders-spring-process.xml" />
 
 	<!-- Process Actions -->

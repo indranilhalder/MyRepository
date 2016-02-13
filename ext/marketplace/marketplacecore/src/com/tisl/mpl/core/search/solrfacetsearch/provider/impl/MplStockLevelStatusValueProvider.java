@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
-import com.tisl.mpl.util.MplBuyBoxUtility;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
 
 /**
@@ -33,7 +33,7 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 
 	private FieldNameProvider fieldNameProvider;
 
-	private MplBuyBoxUtility mplBuyBoxUtility;
+	private BuyBoxService buyBoxService;
 
 	/*
 	 * (non-Javadoc)
@@ -46,25 +46,30 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 	public Collection<FieldValue> getFieldValues(final IndexConfig indexConfig, final IndexedProperty indexedProperty,
 			final Object model) throws FieldValueProviderException
 	{
-
+		String productType = "";
+		String productCode = "";
 		if (model instanceof PcmProductVariantModel)
 		{
+			productType = "variant";
 			final PcmProductVariantModel product = (PcmProductVariantModel) model;
-			return getFieldValues(product, indexedProperty);
+			productCode = product.getCode();
+			return getFieldValues(productCode, productType, indexedProperty);
 		}
 		else if (model instanceof ProductModel)
 		{
+			productType = "simple";
 			final ProductModel product = (ProductModel) model;
-			return getFieldValues(product, indexedProperty);
+			productCode = product.getCode();
+			return getFieldValues(productCode, productType, indexedProperty);
 		}
 		return Collections.emptyList();
 	}
 
-	public Collection getFieldValues(final ProductModel product, final IndexedProperty indexedProperty)
+	public Collection getFieldValues(final String productCode, final String productType, final IndexedProperty indexedProperty)
 	{
 		final Collection fieldValues = new ArrayList();
 
-		final Integer availableStock = mplBuyBoxUtility.getBuyBoxAvailableInventory(product);
+		final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
 
 		StockLevelStatus stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
 
@@ -114,20 +119,21 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 	}
 
 	/**
-	 * @return the mplBuyBoxUtility
+	 * @return the buyBoxService
 	 */
-	public MplBuyBoxUtility getMplBuyBoxUtility()
+	public BuyBoxService getBuyBoxService()
 	{
-		return mplBuyBoxUtility;
+		return buyBoxService;
 	}
 
 	/**
-	 * @param mplBuyBoxUtility
-	 *           the mplBuyBoxUtility to set
+	 * @param buyBoxService
+	 *           the buyBoxService to set
 	 */
-	public void setMplBuyBoxUtility(final MplBuyBoxUtility mplBuyBoxUtility)
+	public void setBuyBoxService(final BuyBoxService buyBoxService)
 	{
-		this.mplBuyBoxUtility = mplBuyBoxUtility;
+		this.buyBoxService = buyBoxService;
 	}
+
 
 }

@@ -43,12 +43,12 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.MplPaymentInfoData;
@@ -114,7 +114,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			//getting all the Orders details based on type
 			if (getSalesType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SALES_REPORT_INCREMENTAL))
 			{
-				lastendTime = reportModel.getEndTime();
+				lastendTime = cronJobService.getCronJob(reportModel.getCode()).getEndTime();
 				//fetch cronjob last run time from where it will fetch the next order list
 				if (lastendTime != null)
 				{
@@ -131,8 +131,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			}
 			if (orderModels.size() <= 0)
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.ORDER_ERROR);
-				//return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
+				LOG.debug(MarketplacecommerceservicesConstants.ORDER_ERROR);
+				return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.ABORTED);
 			}
 			else
 			{
@@ -157,7 +157,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -357,16 +357,12 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		String consignmentStatus = MarketplacecommerceservicesConstants.NA;
 		List<String> categoryList = new ArrayList<String>();
 		OrderData orderDetail = null;
-		ProductModel productModel = null;
-		String orderDate = MarketplacecommerceservicesConstants.EMPTY, orderTime = MarketplacecommerceservicesConstants.EMPTY;
 		//final Date today = new Date();
 		//"Orderno,OrderDate,Orderstatus,ListingId,USSID,SellerSKUId,CustomerName,TransactionRef,TransactinRefId,SellerName,Brand,productPrice,Quantity,Itemcategory,
 		//Itemsubcategory,PaymentMethod,BankName,Tenure(only if eMI),Shippingcity,zipcode,ShippingState,address,phnumber,producttype,CustomerRegisterDate,TransactionRefNumberasgateway,
 		//Ipadddress,Totalprice,Email,Riskscore,MrpPrice,Mopprice,deliverytype";
 		try
 		{
-			final SimpleDateFormat smdfDate = new SimpleDateFormat(MarketplacecclientservicesConstants.DMY_DATE_FORMAT);
-			final SimpleDateFormat smdfTime = new SimpleDateFormat(MarketplacecclientservicesConstants.TIME_FORMAT_AWB);
 			//iterating through the list and adding the rows in the list of the pojo class
 			for (final OrderModel orderModel : orderModels)
 			{
@@ -383,29 +379,21 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				}
 				if (orderDetail != null)
 				{
-					final List<OrderData> subOrders = orderDetail.getSellerOrderList();
-					for (final OrderData subOrderDetail : subOrders)
+					final List<OrderData> subOrder = orderDetail.getSellerOrderList();
+					for (final OrderData subOrderDetail : subOrder)
 					{
 						for (final OrderEntryData entry : subOrderDetail.getEntries())
 						{
 							data = new SalesReportData();
 							data.setOrderNo(orderDetail.getCode());
-							if (orderDetail.getCreated() != null)
-							{
-								orderDate = smdfDate.format(orderDetail.getCreated());
-								data.setOrderDate(orderDate);
-
-								orderTime = smdfTime.format(orderDetail.getCreated());
-								data.setOrderTime(orderTime);
-							}
-
+							data.setOrderDate(orderDetail.getCreated().toString());
 							data.setTransactionRefId(entry.getTransactionId());
 							LOG.debug("-----------Fetching consignment status----" + entry.getTransactionId());
 							if (null != entry.getConsignment() && null != entry.getConsignment().getStatus())
 							{
 								consignmentStatus = entry.getConsignment().getStatus().getCode();
 							}
-							else if (null != subOrderDetail.getStatus() && subOrderDetail.getStatus().getCode() != null)
+							else if (null != orderDetail.getStatus() && orderDetail.getStatus().getCode() != null)
 							{
 								consignmentStatus = subOrderDetail.getStatus().getCode();
 							}
@@ -443,15 +431,9 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								data.setEmail(subOrderDetail.getCustomerData().getEmail());
 							}
 							//TODO IPaddress track by Order / Customer
-							if (orderModel.getIpAddress() != null)
-							{
-								data.setIpAdddress(orderModel.getIpAddress());
-							}
-							else
-							{
-								data.setIpAdddress(configurationService.getConfiguration().getString(
-										MarketplacecommerceservicesConstants.SALES_DATA_REPORT_JOB_IP, ""));
-							}
+							data.setIpAdddress(configurationService.getConfiguration().getString(
+									MarketplacecommerceservicesConstants.SALES_DATA_REPORT_JOB_IP, ""));
+
 							//check delivery address and set
 							LOG.debug("-----------Order Delivery Address----" + subOrderDetail.getCode());
 							setDeliveryAddress(subOrderDetail, data);
@@ -472,10 +454,12 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								{
 									data.setListingId(product.getListingId());
 								}
+
+
 								try
 								{
 									LOG.debug("-----------Fetching Order product model----" + product.getCode());
-									productModel = mplOrderService.findProductsByCode(product.getCode());
+									final ProductModel productModel = mplOrderService.findProductsByCode(product.getCode());
 									String primaryCategory = MarketplacecommerceservicesConstants.NA;
 									String secondaryCategory = MarketplacecommerceservicesConstants.NA;
 									if (productModel != null)
@@ -483,7 +467,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 										LOG.debug("----Product Category---" + product.getCode());
 										final List<CategoryModel> productCategoryList = defaultPromotionManager
 												.getPrimarycategoryData(productModel);
-										if (null != productCategoryList && productCategoryList.size() > 0)
+										//if (null != productCategoryList && productCategoryList.size() > 0)
+										if (CollectionUtils.isNotEmpty(productCategoryList))
 										{
 											categoryList = new ArrayList<String>();
 											for (final CategoryModel category : productCategoryList)
@@ -494,7 +479,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 													categoryList.add(category.getName());
 												}
 											}
-											if (categoryList.size() > 0)
+											//if (categoryList.size() > 0)
+											if (CollectionUtils.isNotEmpty(categoryList))
 											{
 												Collections.sort(categoryList, new Comparator()
 												{
@@ -533,22 +519,20 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								}
 								catch (final Exception e)
 								{
-									LOG.debug("-----------Order Product Exception----" + subOrderDetail.getCode());
+									LOG.debug("-----------Order Product Exception----" + orderModels.size());
 									continue;
 								}
 							}
 							else
 							{
-								LOG.debug("-----------Order Product Not found Exception----" + subOrderDetail.getCode());
+								LOG.debug("-----------Order Product Exception----" + orderModels.size());
 								continue;
 							}
 							//data.setQuantity(entry.getQuantity().toString());
 							data.setQuantity("1");
-							//Setting all prices
-							setPrices(subOrderDetail, orderModel, data, entry, productModel);
 							//Checking payment type and then setting payment info
 							//TISUAT-4850 moved prices in this method
-							setPaymentInfo(subOrderDetail, orderModel, data);
+							setPaymentInfo(subOrderDetail, orderModel, data, entry);
 							if (entry.getMplDeliveryMode() != null)
 							{
 								mplDeliveryMode = entry.getMplDeliveryMode();
@@ -561,6 +545,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 							LOG.debug("-----------Order Entry seller" + entry.getTransactionId());
 							setSellerInfo(entry, data);
+
 							dataList.add(data);
 						}
 					}
@@ -637,16 +622,20 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 	}
 
 	/* Checking payment type and then setting payment info */
-	protected void setPaymentInfo(final OrderData orderDetail, final OrderModel orderModel, final SalesReportData reportDTO)
+	protected void setPaymentInfo(final OrderData orderDetail, final OrderModel orderModel, final SalesReportData reportDTO,
+			final OrderEntryData entry)
 	{
 		MplPaymentInfoData paymentInfo = null;
 		String auditId = MarketplacecommerceservicesConstants.NA;
 		String riskScore = MarketplacecommerceservicesConstants.NA;
 		String transactionRef = MarketplacecommerceservicesConstants.NA;
 		String transactionRefGateway = MarketplacecommerceservicesConstants.NA;
+		double totalPrice = 0d;
+		String mrp = MarketplacecommerceservicesConstants.NA;
+		String mop = MarketplacecommerceservicesConstants.NA;
+		String productPrice = MarketplacecommerceservicesConstants.NA;
 		try
 		{
-			LOG.debug("-----------Payment set started---" + orderModel.getCode());
 			if (orderDetail.getMplPaymentInfo() != null)
 			{
 				paymentInfo = orderDetail.getMplPaymentInfo();
@@ -712,24 +701,35 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 				if (!auditId.equalsIgnoreCase(MarketplacecommerceservicesConstants.NA))
 				{
-					try
+					final JuspayEBSResponseModel jusPay = mplPaymentService.getEntryInAuditByOrder(auditId);
+					if (null != jusPay && null != jusPay.getEbsRiskLevel())
 					{
-						final JuspayEBSResponseModel jusPay = mplPaymentService.getEntryInAuditByOrder(auditId);
-						if (null != jusPay && null != jusPay.getEbsRiskLevel())
-						{
-							riskScore = jusPay.getEbsRiskLevel().getCode();
-							LOG.debug("-----------Payment Jusp Pay Risk");
-						}
-					}
-					catch (final Exception e)
-					{
-						LOG.debug("-----------JuspPay audit exception");
+						riskScore = jusPay.getEbsRiskLevel().getCode();
+						LOG.debug("-----------Payment Jusp Pay Risk");
 					}
 				}
 
 				reportDTO.setTransactionRefNo(transactionRef);
 				reportDTO.setRiskScore(riskScore);
 				reportDTO.setTransactionRefNumber(transactionRefGateway);
+
+				//TISUAT-4850
+				LOG.debug("-----------Order Prices--" + orderModel.getCode());
+				if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD)
+						&& null != orderModel.getTotalPriceWithConv())
+				{
+					totalPrice = orderModel.getTotalPriceWithConv() == null ? 0.0d : orderModel.getTotalPriceWithConv().doubleValue();
+				}
+				else
+				{
+					totalPrice = orderModel.getTotalPrice() == null ? 0.0d : orderModel.getTotalPrice().doubleValue();
+					// Add the taxes to the total price if the cart is net; if the total was null taxes should be null as well
+					if (Boolean.TRUE.equals(orderModel.getNet()) && totalPrice != 0.0d)
+					{
+						totalPrice += orderModel.getTotalTax() == null ? 0.0d : orderModel.getTotalTax().doubleValue();
+					}
+				}
+				reportDTO.setTotalPrice(String.valueOf(totalPrice));
 			}
 			else
 			{
@@ -739,51 +739,12 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				reportDTO.setTransactionRefNo(MarketplacecommerceservicesConstants.NA);
 				reportDTO.setRiskScore(MarketplacecommerceservicesConstants.NA);
 				reportDTO.setTransactionRefNumber(MarketplacecommerceservicesConstants.NA);
-				//reportDTO.setTotalPrice(MarketplacecommerceservicesConstants.NA);
+				reportDTO.setTotalPrice(MarketplacecommerceservicesConstants.NA);
 			}
-		}
-		catch (final Exception e)
-		{
-			LOG.debug("-----------Order Data Payment Exception" + orderDetail.getCode());
-			reportDTO.setPaymentMethod(MarketplacecommerceservicesConstants.NA);
-			reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
-			reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-			reportDTO.setTransactionRefNo(MarketplacecommerceservicesConstants.NA);
-			reportDTO.setRiskScore(MarketplacecommerceservicesConstants.NA);
-			reportDTO.setTransactionRefNumber(MarketplacecommerceservicesConstants.NA);
-		}
-	}
 
-	/* setting prices */
-	protected void setPrices(final OrderData orderDetail, final OrderModel orderModel, final SalesReportData reportDTO,
-			final OrderEntryData entry, final ProductModel product)
-	{
-		double totalPrice = 0d;
-		String mrp = MarketplacecommerceservicesConstants.NA;
-		String mop = MarketplacecommerceservicesConstants.NA;
-		String productPrice = MarketplacecommerceservicesConstants.NA;
-		//TISUAT-4850
-		LOG.debug("-----------Order Prices--" + orderModel.getCode());
-		try
-		{
-			if (null != orderModel.getTotalPriceWithConv())
+			if (entry.getBasePrice() != null)
 			{
-				totalPrice = orderModel.getTotalPriceWithConv() == null ? 0.0d : orderModel.getTotalPriceWithConv().doubleValue();
-			}
-			else
-			{
-				totalPrice = orderModel.getTotalPrice() == null ? 0.0d : orderModel.getTotalPrice().doubleValue();
-				// Add the taxes to the total price if the cart is net; if the total was null taxes should be null as well
-				if (Boolean.TRUE.equals(orderModel.getNet()) && totalPrice != 0.0d)
-				{
-					totalPrice += orderModel.getTotalTax() == null ? 0.0d : orderModel.getTotalTax().doubleValue();
-				}
-			}
-			reportDTO.setTotalPrice(String.valueOf(totalPrice));
-			//change the MRP to product MRP TISEE-5153
-			if (null != product && null != product.getMrp())
-			{
-				mrp = product.getMrp().toString();
+				mrp = entry.getBasePrice().getValue().toPlainString();
 			}
 			reportDTO.setMrpPrice(mrp);
 
@@ -797,10 +758,12 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				productPrice = entry.getAmountAfterAllDisc().getValue().toPlainString();
 			}
 			reportDTO.setProductPrice(productPrice);
+
+
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("-----------Order Data Prices Exception" + orderDetail.getCode());
+			LOG.debug("-----------Order Data Payment Exception" + orderDetail.getCode());
 		}
 
 		//TODO Need to remove Hard code
@@ -843,8 +806,6 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				fileWriter.append(report.getOrderNo());
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append(report.getOrderDate());
-				fileWriter.append(COMMA_DELIMITER);
-				fileWriter.append(report.getOrderTime());
 				fileWriter.append(COMMA_DELIMITER);
 				fileWriter.append(report.getTotalPrice());
 				fileWriter.append(COMMA_DELIMITER);
@@ -920,7 +881,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		}
 		catch (final Exception e)
 		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.CSV_ERROR);
+			LOG.debug(MarketplacecommerceservicesConstants.CSV_ERROR, e);
 		}
 		finally
 		{
@@ -931,11 +892,10 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			}
 			catch (final IOException e)
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR);
+				LOG.debug(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR, e);
+				//e.printStackTrace();
 			}
 		}
-
-
 	}
 
 

@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
@@ -32,6 +34,9 @@ public class MplSellerPriorityDaoImpl implements MplSellerPriorityDao
 	private FlexibleSearchService flexibleSearchService;
 	private static final String SELECT_CLASS = "SELECT {bb.PK} FROM {";
 	private static final String AS_CLASS = " AS bb}";
+	@Autowired
+	private CatalogVersionService catalogVersionService;
+	private static final String MPL_CONTENT_CATALOG = "mplProductCatalog";
 
 	/**
 	 * This method returns list of seller priorities
@@ -70,11 +75,19 @@ public class MplSellerPriorityDaoImpl implements MplSellerPriorityDao
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery("SELECT {p.PK} "
 				+ "FROM {Product as p JOIN CategoryProductRelation as rel " + "ON {p.PK} = {rel.target} } "
-				+ "WHERE {rel.source} IN ( ?cat, ?cat.allSubCategories )");
+				+ "WHERE {rel.source} IN ( ?cat, ?cat.allSubCategories ) and {p.catalogVersion}=?catVersion ");
 		query.addQueryParameter("cat", categoryModel);
+		query.addQueryParameter("catVersion", getCatalogVersion());
 		final SearchResult<ProductModel> result = flexibleSearchService.search(query);
 		return result.getResult();
 
+	}
+
+	private CatalogVersionModel getCatalogVersion()
+	{
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(MPL_CONTENT_CATALOG,
+				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+		return catalogVersionModel;
 	}
 
 	@Override

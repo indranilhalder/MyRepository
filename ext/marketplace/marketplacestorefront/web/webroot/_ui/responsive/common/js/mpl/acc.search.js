@@ -2,7 +2,7 @@
 	function constructDepartmentHierarchy(inputArray) {
 		var output = [];
 		for (var i = 0; i < inputArray.length; i++) {
-			var categoryArray = inputArray[i].split("|");
+			var categoryArray = inputArray[i].split("/");
 			var currentNode = output;
 			//Construct 'All' tree node initially for search page
 			if(i==0 && $('#isCategoryPage').val() == '') {
@@ -90,16 +90,4 @@
 			}
 	);
 		
-<<<<<<< HEAD
 	}
-=======
-	}
-
-	$(function() {
-	    img = document.querySelectorAll('[data-searchimgsrc]');
-	    for (var i = 0; i < img.length; i++) {
-	        var self = img[i];
-	          self.src = self.getAttribute('data-searchimgsrc');
-	      }
-	});
->>>>>>> BRANCH_TCS-HYCOMM-R1PS-BN-38

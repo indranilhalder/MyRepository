@@ -18,7 +18,7 @@
 			<spring:theme code="product.configureproductscount.qty"></spring:theme>
 		</p>
 
-			<select class=" ">
+			<select class=" " id="cartQty">
 				<c:forEach  var="i" varStatus="varStatus" begin="1" end="${qtycount}">
 					<option value="${i}">${i}</option>
 				</c:forEach>

@@ -3,6 +3,10 @@
  */
 package com.tisl.mpl.storefront.controllers.cms;
 
+import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
+import de.hybris.platform.servicelayer.session.SessionService;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.annotation.Scope;
@@ -10,7 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 
 
@@ -25,10 +32,10 @@ public class MplSequentialBannerComponentController extends AbstractCMSComponent
 {
 
 
-	//@Resource(name = "sessionService")
-	//private SessionService sessionService;
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
 
-	//private static final String SEQUENCE_NUMBER = "sequenceNumber";
+	private static final String SEQUENCE_NUMBER = "sequenceNumber";
 
 	/**
 	 * This method calculates the sequence number and fetches the appropriate banner for the sequence number.
@@ -45,8 +52,7 @@ public class MplSequentialBannerComponentController extends AbstractCMSComponent
 	@Override
 	protected void fillModel(final HttpServletRequest request, final Model model, final MplSequentialBannerComponentModel component)
 	{
-		model.addAttribute("banners", component.getBannersList());
-		/*final int firstSequenceNumber = 1;
+		final int firstSequenceNumber = 1;
 		//Show the default banner for a new session
 		if (sessionService.getAttribute(SEQUENCE_NUMBER) == null)
 		{
@@ -72,7 +78,7 @@ public class MplSequentialBannerComponentController extends AbstractCMSComponent
 				sessionService.setAttribute(SEQUENCE_NUMBER, firstSequenceNumber);
 			}
 
-		}*/
+		}
 
 	}
 
@@ -83,7 +89,7 @@ public class MplSequentialBannerComponentController extends AbstractCMSComponent
 	 * @param component
 	 * @return displayBanner
 	 */
-/*	private BannerComponentModel getBannerforSequenceNumber(final int sequenceNumber,
+	private BannerComponentModel getBannerforSequenceNumber(final int sequenceNumber,
 			final MplSequentialBannerComponentModel component)
 	{
 		BannerComponentModel displayBanner = null;
@@ -115,5 +121,5 @@ public class MplSequentialBannerComponentController extends AbstractCMSComponent
 		}
 
 		return displayBanner;
-	}*/
+	}
 }

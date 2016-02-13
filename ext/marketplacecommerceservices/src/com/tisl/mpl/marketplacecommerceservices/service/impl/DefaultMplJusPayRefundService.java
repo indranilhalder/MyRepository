@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
+import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -397,10 +397,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 								case MarketplacecommerceservicesConstants.SUCCESS_VAL:
 									LOG.debug("Inside SUCCESS case for refund================");
 									paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS_VAL);
-									//paymentTransactionModel.setCode(UUID.randomUUID().toString());
-									paymentTransactionModel.setCode(uniqueId);
-									//paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
-									paymentTransactionEntryModel.setCode(uniqueId);
+									paymentTransactionModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
 									bigAmount = new BigDecimal(refundResponse.getAmount().doubleValue(), MathContext.DECIMAL64);
 									paymentTransactionEntryModel.setAmount(bigAmount);
 									paymentTransactionEntryModel.setTime(new Date());
@@ -434,11 +432,9 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 								case MarketplacecommerceservicesConstants.PENDING_VAL:
 									LOG.debug("Inside PENDING case for refund================");
 									paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.PENDING_VAL);
-									//paymentTransactionModel.setCode(UUID.randomUUID().toString());
+									paymentTransactionModel.setCode(UUID.randomUUID().toString());
 
-									paymentTransactionModel.setCode(uniqueId);
-									//paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
-									paymentTransactionEntryModel.setCode(uniqueId);
+									paymentTransactionEntryModel.setCode(UUID.randomUUID().toString());
 									bigAmount = new BigDecimal(refundResponse.getAmount().doubleValue(), MathContext.DECIMAL64);
 									paymentTransactionEntryModel.setAmount(bigAmount);
 									paymentTransactionEntryModel.setTime(new Date());
@@ -521,20 +517,14 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		String paymentMode = MarketplacecommerceservicesConstants.EMPTY;
 		if (StringUtils.isNotEmpty(paymentType))
 		{
-			if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_CREDIT))
+			if (paymentType.equalsIgnoreCase("CREDIT"))
 			{
-				paymentMode = MarketplacecommerceservicesConstants.CREDIT;
+				paymentMode = "Credit Card";
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
-			else if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.CARD_TYPE_DEBIT))
+			else if (paymentType.equalsIgnoreCase("DEBIT"))
 			{
-				paymentMode = MarketplacecommerceservicesConstants.DEBIT;
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
-			}
-			//TISPRO-130
-			else if (paymentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.PAYMENT_METHOD_NB))
-			{
-				paymentMode = MarketplacecommerceservicesConstants.NETBANKING;
+				paymentMode = "Debit Card";
 				oModel = mplPaymentDao.getPaymentMode(paymentMode);
 			}
 		}

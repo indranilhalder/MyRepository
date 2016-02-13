@@ -93,9 +93,6 @@ ACC.refinements = {
 
 
 		$(document).on("change",".js-product-facet .js-facet-checkbox",function(){
-			
-			$("body").append("<div id='wrapper' style='width:100%; height:100%; position: fixed; top: 0; left:0; z-index: 100000000;'><div id='no-click' style='background:rgba(0,0,0,0.4); z-index: 100000000; width:100%; height:100%; position: absolute; top: 0; left:0;'></div><img src='/store/_ui/responsive/common/images/spinner.gif' class='spinner' style='position: absolute; right: 50%;top: 50%; height: 30px;'></div>"); 
-
 			$(this).parents("form").submit();
 		})
 		

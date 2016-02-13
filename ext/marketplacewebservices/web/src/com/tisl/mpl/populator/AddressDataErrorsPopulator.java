@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.populator;
 
@@ -24,31 +24,36 @@ import java.util.Map;
 import org.springframework.util.Assert;
 import org.springframework.validation.Errors;
 
+
 /**
  * Populates Errors for AddressData
  *
  * @author grzegorz lebek
  */
 
-public class AddressDataErrorsPopulator implements Populator<AddressVerificationResult<AddressVerificationDecision>, Errors> {
+public class AddressDataErrorsPopulator implements Populator<AddressVerificationResult<AddressVerificationDecision>, Errors>
+{
 
-    private final Map<String, String> attributeMappingMap;
+	private final Map<String, String> attributeMappingMap;
 
-    public AddressDataErrorsPopulator(final Map<String, String> attributeMappingMap)
-    {
-        this.attributeMappingMap = attributeMappingMap;
-    }
+	public AddressDataErrorsPopulator(final Map<String, String> attributeMappingMap)
+	{
+		this.attributeMappingMap = attributeMappingMap;
+	}
 
-    @Override
-    public void populate(final AddressVerificationResult<AddressVerificationDecision> source, final Errors target)
-            throws ConversionException {
-        Assert.notNull(source, "Parameter source cannot be null.");
-        Assert.notNull(target, "Parameter target cannot be null.");
+	@Override
+	public void populate(final AddressVerificationResult<AddressVerificationDecision> source, final Errors target)
+			throws ConversionException
+	{
+		Assert.notNull(source, "Parameter source cannot be null.");
+		Assert.notNull(target, "Parameter target cannot be null.");
 
-        for (Map.Entry<String, AddressVerificationErrorField> entry : source.getErrors().entrySet()) {
-            target.rejectValue(
-                    attributeMappingMap.containsKey(entry.getKey()) ? attributeMappingMap.get(entry.getKey()) : entry.getKey(),
-                    (entry.getValue().isInvalid() ? "field.invalid": "field.required"), new Object[] {entry.getKey()}, "");
-        }
-    }
+		for (final Map.Entry<String, AddressVerificationErrorField> entry : source.getErrors().entrySet()) //sonar fix
+		{
+			target.rejectValue(
+					attributeMappingMap.containsKey(entry.getKey()) ? attributeMappingMap.get(entry.getKey()) : entry.getKey(), (entry
+							.getValue().isInvalid() ? "field.invalid" : "field.required"), new Object[]
+					{ entry.getKey() }, "");
+		}
+	}
 }

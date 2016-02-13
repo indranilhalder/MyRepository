@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -60,11 +61,6 @@ public class MplBuyBoxUtility
 		return mrpPrice;
 	}
 
-	public Integer getBuyBoxAvailableInventory(final ProductModel productModel) throws EtailNonBusinessExceptions
-	{
-		return getBuyBoxInventory(productModel);
-	}
-
 	public String getLeastSizeProduct(final ProductModel productModel) throws EtailNonBusinessExceptions
 	{
 		final BuyBoxModel buyBoxWinnerModel = getBuyBoxPrice(productModel);
@@ -98,7 +94,8 @@ public class MplBuyBoxUtility
 		}
 
 		//Get simple product code other than variant
-		if (sortedVariantsList.size() == 0)
+		//if (sortedVariantsList.size() == 0)
+		if (CollectionUtils.isEmpty(sortedVariantsList))
 		{
 			productCode = getInConditionProductCodes(productModel.getCode(), "");
 		}
@@ -113,47 +110,6 @@ public class MplBuyBoxUtility
 
 		return buyBoxWinnerModel;
 	}
-
-
-
-	public Integer getBuyBoxInventory(final ProductModel productModel) throws EtailNonBusinessExceptions
-	{
-
-		String productCode = productModel.getCode();
-
-		// Run comparator and Get list of products codes for variants.
-		List<PcmProductVariantModel> sortedVariantsList = new ArrayList<PcmProductVariantModel>();
-		if (productModel instanceof PcmProductVariantModel)
-		{
-			final PcmProductVariantModel selectedVariantModel = (PcmProductVariantModel) productModel;
-			final ProductModel baseProduct = selectedVariantModel.getBaseProduct();
-
-			if (baseProduct != null && baseProduct.getVariants() != null && baseProduct.getVariants().size() > 0)
-			{
-				sortedVariantsList = compareVariants(baseProduct, selectedVariantModel);
-				String variantProductsInCondition = "";
-				for (final PcmProductVariantModel pcmProductVariantModel : sortedVariantsList)
-				{
-					variantProductsInCondition = getInConditionProductCodes(pcmProductVariantModel.getCode(),
-							variantProductsInCondition);
-				}
-				productCode = variantProductsInCondition;
-			}
-
-		}
-
-		//Get simple product code other than variant
-		if (sortedVariantsList.size() == 0)
-		{
-			productCode = getInConditionProductCodes(productModel.getCode(), "");
-		}
-
-		//Get buybox inventory for simple/variant products
-		final Integer availableInventory = buyBoxService.getBuyboxInventoryForSearch(productCode);
-
-		return availableInventory;
-	}
-
 
 	public List<PcmProductVariantModel> compareVariants(final ProductModel baseProduct,
 			final PcmProductVariantModel selectedVariantModel)
@@ -204,13 +160,14 @@ public class MplBuyBoxUtility
 
 	public BuyBoxModel getBuyBoxWinnerModel(final List<BuyBoxModel> buyBoxModelList,
 			final List<PcmProductVariantModel> sortedVariantsList, final Map<String, List<BuyBoxModel>> buyBoxMap)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 
 
 		BuyBoxModel buyBoxWinnerModel = new BuyBoxModel();
 
-		if (sortedVariantsList.size() > 0)
+		//if (sortedVariantsList.size() > 0)
+		if (CollectionUtils.isNotEmpty(sortedVariantsList))
 		{
 			buyBoxWinnerModel = getLeastVariantSizeModel(sortedVariantsList, buyBoxMap);
 		}
@@ -242,7 +199,8 @@ public class MplBuyBoxUtility
 		for (final PcmProductVariantModel variantOptionData : sortedVariantsList)
 		{
 			final List<BuyBoxModel> productBBModelList = buyBoxMap.get(variantOptionData.getCode());
-			if (productBBModelList != null && productBBModelList.size() > 0)
+			//if (productBBModelList != null && productBBModelList.size() > 0)
+			if (CollectionUtils.isNotEmpty(productBBModelList))
 			{
 				if (leastVariant == 0)
 				{
@@ -286,7 +244,8 @@ public class MplBuyBoxUtility
 		final Map<String, List<BuyBoxModel>> buyBoxMap = new HashMap<String, List<BuyBoxModel>>();
 
 		// Iterate BuyBox results and add into Map<ProductCode,List<BuyBoxModel>> format
-		if (buyBoxModelList != null && buyBoxModelList.size() > 0)
+		//if (buyBoxModelList != null && buyBoxModelList.size() > 0)
+		if (CollectionUtils.isNotEmpty(buyBoxModelList))
 		{
 			for (final BuyBoxModel buyBoxModel : buyBoxModelList)
 			{

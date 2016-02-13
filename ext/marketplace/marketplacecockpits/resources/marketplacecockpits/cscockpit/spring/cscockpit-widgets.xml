@@ -623,6 +623,7 @@
 	<bean id="csCouponOrderWidgetRenderer" parent="abstractWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponOrderWidgetRenderer">
 	</bean> 
-	 -->	
+	 -->
+	
 	
 </beans>

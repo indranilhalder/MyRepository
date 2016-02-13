@@ -23,14 +23,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
-import com.tisl.mpl.util.MplBuyBoxUtility;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
 
 public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueProvider
 {
 	private FieldNameProvider fieldNameProvider;
 	private CommerceStockService commerceStockService;
-	private MplBuyBoxUtility mplBuyBoxUtility;
+
+	private BuyBoxService buyBoxService;
 
 	@Override
 	protected FieldNameProvider getFieldNameProvider()
@@ -64,21 +65,27 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 	{
 
 
+		String productType = "";
+		String productCode = "";
 		if (model instanceof PcmProductVariantModel)
 		{
+			productType = "variant";
 			final PcmProductVariantModel product = (PcmProductVariantModel) model;
-			return getFieldValues(product, indexedProperty, indexConfig);
+			productCode = product.getCode();
+			return getFieldValues(productCode, productType, indexedProperty, indexConfig);
 		}
 		else if (model instanceof ProductModel)
 		{
+			productType = "simple";
 			final ProductModel product = (ProductModel) model;
-			return getFieldValues(product, indexedProperty, indexConfig);
+			productCode = product.getCode();
+			return getFieldValues(productCode, productType, indexedProperty, indexConfig);
 		}
 		return Collections.emptyList();
 
 	}
 
-	public Collection getFieldValues(final ProductModel productModel, final IndexedProperty indexedProperty,
+	public Collection getFieldValues(final String productCode, final String productType, final IndexedProperty indexedProperty,
 			final IndexConfig indexConfig)
 	{
 		final Collection fieldValues = new ArrayList();
@@ -88,27 +95,27 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		if ((baseSiteModel != null) && (baseSiteModel.getStores() != null) && (!(baseSiteModel.getStores().isEmpty()))
 				&& (getCommerceStockService().isStockSystemEnabled(baseSiteModel.getStores().get(0))))
 		{
-			fieldValues.addAll(createFieldValue(productModel, indexConfig.getBaseSite().getStores().get(0), indexedProperty));
+			fieldValues
+					.addAll(createFieldValue(productCode, productType, indexConfig.getBaseSite().getStores().get(0), indexedProperty));
 		}
 		else
 		{
-			fieldValues.addAll(createFieldValue(productModel, null, indexedProperty));
+			fieldValues.addAll(createFieldValue(productCode, productType, null, indexedProperty));
 		}
 		return fieldValues;
 	}
 
-	@Override
-	protected List<FieldValue> createFieldValue(final ProductModel productCode, final BaseStoreModel baseStore,
+	protected List<FieldValue> createFieldValue(final String productCode, final String productType, final BaseStoreModel baseStore,
 			final IndexedProperty indexedProperty)
 	{
 		final List fieldValues = new ArrayList();
 		if (baseStore != null)
 		{
-			addFieldValues(fieldValues, indexedProperty, Boolean.valueOf(isInStock(productCode, baseStore)));
+			addFieldValues(fieldValues, indexedProperty, Boolean.valueOf(isInStock(productCode, productType, baseStore)));
 		}
 		else
 		{
-			addFieldValues(fieldValues, indexedProperty, Boolean.valueOf(isInStock(productCode, baseStore)));
+			addFieldValues(fieldValues, indexedProperty, Boolean.valueOf(isInStock(productCode, productType, baseStore)));
 		}
 
 		return fieldValues;
@@ -130,25 +137,24 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		return getCommerceStockService().getStockLevelStatusForProductAndBaseStore(product, baseStore);
 	}
 
-	@Override
-	protected boolean isInStock(final ProductModel productModel, final BaseStoreModel baseStore)
+	protected boolean isInStock(final String productCode, final String productType, final BaseStoreModel baseStore)
 	{
 		if (baseStore != null)
 		{
 			// OOTB Base store product inventory logic is commented and Buybox is used for Inventory
 			//return isInStock(getProductStockLevelStatus(product, baseStore));
-			return isInStock(getBuyBoxStockLevelStatus(productModel));
+			return isInStock(getBuyBoxStockLevelStatus(productCode, productType));
 		}
 		else
 		{
-			return isInStock(getBuyBoxStockLevelStatus(productModel));
+			return isInStock(getBuyBoxStockLevelStatus(productCode, productType));
 		}
 	}
 
-	protected StockLevelStatus getBuyBoxStockLevelStatus(final ProductModel productModel)
+	protected StockLevelStatus getBuyBoxStockLevelStatus(final String productCode, final String productType)
 	{
 
-		final Integer availableStock = mplBuyBoxUtility.getBuyBoxInventory(productModel);
+		final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
 
 		StockLevelStatus stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
 
@@ -167,20 +173,19 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 	}
 
 	/**
-	 * @return the mplBuyBoxUtility
+	 * @return the buyBoxService
 	 */
-	public MplBuyBoxUtility getMplBuyBoxUtility()
+	public BuyBoxService getBuyBoxService()
 	{
-		return mplBuyBoxUtility;
+		return buyBoxService;
 	}
 
 	/**
-	 * @param mplBuyBoxUtility
-	 *           the mplBuyBoxUtility to set
+	 * @param buyBoxService
+	 *           the buyBoxService to set
 	 */
-	public void setMplBuyBoxUtility(final MplBuyBoxUtility mplBuyBoxUtility)
+	public void setBuyBoxService(final BuyBoxService buyBoxService)
 	{
-		this.mplBuyBoxUtility = mplBuyBoxUtility;
+		this.buyBoxService = buyBoxService;
 	}
-
 }

@@ -99,7 +99,6 @@
 								code="header.flyout.recommendations" /></a></li>
 				</ul>
 				<%-- <ul>
-
 				<li class="header-SignInShare"><h3><spring:theme
 									code="header.flyout.credits" /></h3></li>
 						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme

@@ -9,7 +9,6 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -120,7 +119,6 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	@Override
 	public List<OrderModel> fetchCancelOrderDetails()
 	{
-		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
 		LOG.debug("db call fetch all details: cancel 1 st time call");
 		final String queryString = //
 		SELECT_CLASS + OrderModel.PK + "} "//
@@ -130,18 +128,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(TYPE, SUB);
 		LOG.debug("********** fetch order details query " + query);
-		final List<OrderModel> orderList = flexibleSearchService.<OrderModel> search(query).getResult();
-		if (orderList != null && orderList.size() > 0)
-		{
-			for (final OrderModel orderModel : orderList)
-			{
-				if (orderModel.getVersionID() == null)
-				{
-					orderlist.add(orderModel);
-				}
-			}
-		}
-		return orderlist;
+		return flexibleSearchService.<OrderModel> search(query).getResult();
 
 	}
 
@@ -177,9 +164,9 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	@Override
 	public List<OrderModel> fetchSpecifiedCancelData(final Date earlierDate, final Date presentDate)
 	{
-		//TISPRO-129
-		final List<OrderModel> orderlist = new ArrayList<OrderModel>();
+
 		LOG.debug("********inside dao for selecting specified cancel order data**********");
+
 		final String query = "SELECT DISTINCT {cur:" + OrderModel.PK + "} " + " FROM {" + OrderModel._TYPECODE + " AS cur "
 				+ "LEFT JOIN " + OrderHistoryEntryModel._TYPECODE + "  AS adr  ON {cur:" + OrderModel.PK + "}={adr:"
 				+ OrderHistoryEntryModel.ORDER + "} " + "} WHERE ({cur:" + OrderModel.MODIFIEDTIME
@@ -195,16 +182,9 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 		final SearchResult<OrderModel> searchRes = flexibleSearchService.search(query, params);// removing toString SONAR Analysis
 		if (searchRes != null && searchRes.getCount() > 0)
 		{
-			for (final OrderModel orderModel : searchRes.getResult())
-			{
-				//TISPRO-129
-				if (orderModel.getVersionID() == null)
-				{
-					orderlist.add(orderModel);
-				}
-			}
+			return searchRes.getResult();
 		}
-		return orderlist;
+		return null;
 	}
 
 }

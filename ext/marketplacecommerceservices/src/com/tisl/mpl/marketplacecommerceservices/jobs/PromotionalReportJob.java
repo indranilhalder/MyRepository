@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -96,25 +97,21 @@ public class PromotionalReportJob extends AbstractJobPerformable<PromotionalRepo
 	 * @return : PerformResult
 	 */
 	@Override
-	public PerformResult perform(final PromotionalReportCreationJobModel report)
+	public PerformResult perform(final PromotionalReportCreationJobModel arg0)
 	{
 		try
 		{
-			if (report.getStartDate() != null && report.getEndDate() != null)
-			{
-				//getting all the blacklisted customer details
-				final Set<Map<AbstractPromotionModel, SavedValuesModel>> promotionWithCreatedBymap = promotionalReportCreationService
-						.getAllPromotions(report.getStartDate(), report.getEndDate());
+			final Date StartDate = arg0.getStartDate();
+			final Date endDate = arg0.getEndDate();
 
-				if (null != promotionWithCreatedBymap)
-				{
-					//put customer data in the POJO class
-					writeDataIntoCsv(promotionWithCreatedBymap);
-				}
-			}
-			else
+			//getting all the blacklisted customer details
+			final Set<Map<AbstractPromotionModel, SavedValuesModel>> promotionWithCreatedBymap = promotionalReportCreationService
+					.getAllPromotions(StartDate, endDate);
+
+			if (null != promotionWithCreatedBymap)
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.PROMOTION_FEED_ERROR);
+				//put customer data in the POJO class
+				writeDataIntoCsv(promotionWithCreatedBymap);
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -185,10 +182,7 @@ public class PromotionalReportJob extends AbstractJobPerformable<PromotionalRepo
 		FileWriter fileWriter = null;
 		final File rootFolder1 = new File(configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.PROMOTIONS_REPORT_FILE_LOCATION),
-				MarketplacecommerceservicesConstants.PROMOTION_REPORT
-						+ System.currentTimeMillis()
-						+ configurationService.getConfiguration().getString(
-								MarketplacecommerceservicesConstants.PROMOTIONS_REPORT_FILE_EXTENSION));
+				MarketplacecommerceservicesConstants.PROMOTION_REPORT + System.currentTimeMillis());
 		try
 		{
 			rootFolder1.getParentFile().mkdirs();

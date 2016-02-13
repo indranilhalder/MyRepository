@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MplConstants;
@@ -117,7 +118,8 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 			}
 			for (final List categoryPath : pathsForCategory)
 			{
-				if (categoryPath != null && categoryPath.size() > 0
+				//if (categoryPath != null && categoryPath.size() > 0 && ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+				if (CollectionUtils.isNotEmpty(categoryPath)
 						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);
@@ -147,7 +149,7 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 			}
 
 			final int rankingValue = (category.getRanking() != null) ? category.getRanking() : 0;
-			accumulator.append(MplConstants.PIPE).append(category.getCode()).append(MplConstants.COLON)
+			accumulator.append(MplConstants.FORWARD_SLASH).append(category.getCode()).append(MplConstants.COLON)
 					.append(category.getName()).append(":L").append(level).append(MplConstants.COLON).append(department)
 					.append(MplConstants.COLON).append(rankingValue);
 			output.add(accumulator.toString());

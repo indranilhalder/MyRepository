@@ -45,7 +45,7 @@ $(document).ready(function() {
 				<%-- <a href="#">${contactNumber}</a> --%>
 			<a href="${request.contextPath}/clickto/call" id="callMe"
 					data-title="<div class='headline'><span class='headline-text'>Click 2 Call</span></div>">
-					${cliqCareNumber}
+					1-800-123-4567
 				</a>
 			</li>
 

@@ -178,13 +178,8 @@ public class ExtSearchSolrQueryPopulator<INDEXED_PROPERTY_TYPE, INDEXED_TYPE_SOR
 
 	protected FacetSearchConfig getFacetSearchConfig() throws NoValidSolrConfigException
 	{
-
-		final SolrFacetSearchConfigModel solrFacetSearchConfigModel = getSolrFacetSearchConfigSelectionStrategy()
-				.getCurrentSolrFacetSearchConfig();
-
-		solrFacetSearchConfigModel.setQueryType("SEARCH");
-
-		return (getFacetSearchConfigConverter().convert(solrFacetSearchConfigModel));
+		return (getFacetSearchConfigConverter()
+				.convert(getSolrFacetSearchConfigSelectionStrategy().getCurrentSolrFacetSearchConfig()));
 	}
 
 	protected IndexedType getIndexedType(final FacetSearchConfig config)

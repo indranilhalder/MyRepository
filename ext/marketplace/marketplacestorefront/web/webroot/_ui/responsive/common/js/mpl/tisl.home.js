@@ -265,7 +265,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='product-name'>"+response.firstProductTitle+"</p>";
 						}
 						if (typeof response.firstProductPrice !== "undefined"){
-							defaultHtml +="<p class='price normal'>"+response.firstProductPrice+"</p>";
+							defaultHtml +="<p class='price normal'><span class='priceFormat'>"+response.firstProductPrice+"</span></p>";
 			                  
 						}
 						defaultHtml +="</div>"
@@ -293,7 +293,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='product-name'>"+response.secondProductTitle+"</p>";
 						}
 						if (typeof response.secondProductPrice !== "undefined"){
-							defaultHtml +="<p class='normal price'>"+response.secondProductPrice+"</p>";
+							defaultHtml +="<p class='normal price'><span class='priceFormat'>"+response.secondProductPrice+"</span></p>";
 			                  
 						}
 						defaultHtml +="</div>"
@@ -612,7 +612,7 @@ function getNewAndExclusiveAjaxCall(){
 								
 									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
 											+ value.productImageUrl
-											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'>" + value.productPrice + "</p></div></div>"; 
+											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'><span class='priceFormat'>" + value.productPrice + "</span></p></div></div>"; 
 											
 
 							});
@@ -853,7 +853,7 @@ function getShowcaseContentAjaxCall(id) {
 								defaultHtml +="<h3 class='product-name'>"+response.firstProductTitle+"</h3>";
 							}
 							if (typeof response.firstProductPrice !== "undefined"){
-								defaultHtml +="<div class='price price'><p class='normal'>"+response.firstProductPrice+"</p></div>";
+								defaultHtml +="<div class='price'><p class='normal'><span class='priceFormat'>"+response.firstProductPrice+"</span></p></div>";
 				                  
 							}	
 			                

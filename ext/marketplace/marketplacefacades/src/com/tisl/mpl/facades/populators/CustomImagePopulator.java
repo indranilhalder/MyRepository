@@ -149,6 +149,8 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 
 	protected MediaModel getMediaWithImageFormat(final MediaContainerModel mediaContainer, final String imageFormat)
 	{
+		MediaModel mediaModel = null;
+
 		if (mediaContainer != null && imageFormat != null)
 		{
 			final String mediaFormatQualifier = getMplImageFormatMapping().getMediaFormatQualifierForImageFormat(imageFormat);
@@ -157,11 +159,13 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 				final MediaFormatModel mediaFormat = getMediaService().getFormat(mediaFormatQualifier);
 				if (mediaFormat != null)
 				{
-					return getMediaContainerService().getMediaForFormat(mediaContainer, mediaFormat);
+					//return getMediaContainerService().getMediaForFormat(mediaContainer, mediaFormat);
+					mediaModel = getMediaContainerService().getMediaForFormat(mediaContainer, mediaFormat);
 				}
 			}
 		}
-		return null;
+		//return null;
+		return mediaModel;
 	}
 
 	protected TypeService getTypeService()
@@ -213,12 +217,14 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 
 	protected MediaContainerModel getPrimaryImageMediaContainer(final VariantProductModel variantProductModel)
 	{
-		final MediaModel picture = variantProductModel.getPicture();
-		if (picture != null)
-		{
-			return picture.getMediaContainer();
-		}
-		return null;
+		// Sonar Fix
+		//		final MediaModel picture = variantProductModel.getPicture();
+		//		if (picture != null)
+		//		{
+		//			return picture.getMediaContainer();
+		//		}
+		//		return null;
+		return (variantProductModel != null && variantProductModel.getPicture() != null && variantProductModel.getPicture()
+				.getMediaContainer() != null) ? variantProductModel.getPicture().getMediaContainer() : null;
 	}
-
 }

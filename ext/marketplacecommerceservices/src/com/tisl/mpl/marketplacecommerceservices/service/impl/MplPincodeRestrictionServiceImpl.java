@@ -1,13 +1,18 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.constants.CatalogConstants;
+import de.hybris.platform.catalog.jalo.CatalogVersion;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -499,33 +504,37 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 	private List<String> getCategoryCodeList(final String listingID)
 	{
 
+
 		final List<String> categoryList = new ArrayList<String>();
-		//		final JaloSession session = JaloSession.getCurrentSession();
-		//		session.createLocalSessionContext();
+		final JaloSession session = JaloSession.getCurrentSession();
+		session.createLocalSessionContext();
 		try
 		{
 
-			/*
-			 * Collection<CatalogVersion> vers = null;
-			 *
-			 * final Collection<CatalogVersion> cvs = (Collection<CatalogVersion>) session
-			 * .getAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS);
-			 *
-			 * for (final CatalogVersion ver : cvs) { if (VERSION_ONLINE.equals(ver.getVersion()) &&
-			 * CATALOG_ID.equals(ver.getCatalog().getId())) { vers = Collections.singleton(ver); break; } }
-			 * session.setAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS, vers);
-			 */
+			Collection<CatalogVersion> vers = null;
+
+			final Collection<CatalogVersion> cvs = (Collection<CatalogVersion>) session
+					.getAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS);
+
+			for (final CatalogVersion ver : cvs)
+			{
+				if (VERSION_ONLINE.equals(ver.getVersion()) && CATALOG_ID.equals(ver.getCatalog().getId()))
+				{
+					vers = Collections.singleton(ver);
+					break;
+				}
+			}
+			session.setAttribute(CatalogConstants.SESSION_CATALOG_VERSIONS, vers);
 
 			final ProductModel productModel = productService.getProductForCode(listingID);
-			final List<CategoryModel> categories = defaultPromotionManager.getcategoryData(productModel);
-			for (final CategoryModel c : categories)
+			for (final CategoryModel c : defaultPromotionManager.getcategoryData(productModel))
 			{
 				categoryList.add(c.getCode());
 			}
 		}
-		catch (final Exception e)
+		finally
 		{
-			LOG.error("Exception while retrieving category list", e);
+			session.removeLocalSessionContext();
 		}
 		return categoryList;
 
