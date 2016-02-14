@@ -35,7 +35,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -168,8 +167,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			final Double configurableRadius)
 	{
 		LOG.debug("sellerUssId:" + sellerUssId);
+		final String pincodeSellerId = sellerUssId.substring(0, 6);
 		final StoreLocationRequestData storeLocationRequestData = new StoreLocationRequestData();
-		final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, sellerUssId);
+		final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, pincodeSellerId);
 		LOG.debug("StoreList size is :" + storeList.size());
 		if (null != storeList && storeList.size() > 0)
 		{
