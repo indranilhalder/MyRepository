@@ -19,6 +19,7 @@ $(document).ready(function() {
         else  
         {  
         	$("#defaultPinCodeIds").css("color","red");
+        	$('#unsevisablePin').hide();
             $( "#errorId").show();
              
             return false;  
@@ -51,10 +52,13 @@ function isNumber(evt) {
 		<h2><spring:theme code="cart.delivery.options" /></h2>
 		<p><spring:theme code="product.pincode" /></p>
 		
+		
+		
 		<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeId" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" /> 
 
 		<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="product.submit"/></button>
 		
+		<div id="unsevisablePin" style="display:none;color:red;padding-top: 38px;"><spring:theme code="pincode.unsevisable"/></div>
 		<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
 		<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 		
