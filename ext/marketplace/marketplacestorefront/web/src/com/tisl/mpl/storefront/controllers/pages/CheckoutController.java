@@ -65,6 +65,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
@@ -410,6 +411,7 @@ public class CheckoutController extends AbstractCheckoutController
 
 
 
+	@SuppressWarnings("boxing")
 	protected String processOrderCode(final String orderCode, final Model model, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
@@ -427,7 +429,7 @@ public class CheckoutController extends AbstractCheckoutController
 					(CustomerModel) getUserService().getCurrentUser(), orderCode, baseStoreModel);
 
 			long totalItemCount = 0L;
-
+			
 			final List<OrderEntryData> orderEntryList = orderDetails.getEntries();
 
 			if (orderDetails.isGuestCustomer()
@@ -474,9 +476,12 @@ public class CheckoutController extends AbstractCheckoutController
 
 			for (final OrderEntryData entry : orderEntryList)
 			{
-				if (entry != null)
+				if (entry != null && entry.getMplDeliveryMode() !=null)
 				{
-					totalItemCount += entry.getQuantity();
+					if (!entry.getMplDeliveryMode().getCode().equals(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+					{
+						totalItemCount += entry.getQuantity();
+					}
 				}
 			}
 
@@ -556,16 +561,13 @@ public class CheckoutController extends AbstractCheckoutController
 			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
 			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, trackingUrl), mobileNumber);
 			 */
-			/*try
-			{
-				//mplCheckoutFacade.triggerEmailAndSmsOnOrderConfirmation(orderModel, orderDetails, trackorderurl);
-				//mplCheckoutFacade.sendMobileNotifications(orderDetails);
-
-			}
-			catch (final EtailNonBusinessExceptions ex)
-			{
-				LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex.getMessage());
-			}*/
+			/*
+			 * try { //mplCheckoutFacade.triggerEmailAndSmsOnOrderConfirmation(orderModel, orderDetails, trackorderurl);
+			 * //mplCheckoutFacade.sendMobileNotifications(orderDetails);
+			 *
+			 * } catch (final EtailNonBusinessExceptions ex) {
+			 * LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex.getMessage()); }
+			 */
 			// TODO: TIS-1178: Email & SMS ********* On Hold Due to Risks
 
 		}

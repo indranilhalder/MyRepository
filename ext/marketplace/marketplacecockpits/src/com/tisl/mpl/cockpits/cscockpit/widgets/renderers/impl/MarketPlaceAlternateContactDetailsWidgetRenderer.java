@@ -107,10 +107,6 @@ final boolean hidden, final boolean overwriteWidth)
 		}//createHbox
 
 
-
-
-
-
 private Textbox createTextbox(final Hbox parent)
 		{
 					final Textbox textBox = new Textbox();
@@ -118,11 +114,6 @@ private Textbox createTextbox(final Hbox parent)
 					textBox.setParent(parent);
 					return textBox;
 		}//Textbox
-
-
-
-
-
 
 
 protected HtmlBasedComponent createContentInternal(
@@ -134,15 +125,17 @@ protected HtmlBasedComponent createContentInternal(
 					content.setClass("customerDetails");
 				try{
 					if (valid)
-							{	
+							{	    
 								final OrderModel ordermodel = (OrderModel) order.getObject();
-		
+								OrderModel mainOrder = ordermodel.getParentReference();
+								
+								ordermodel.getItemModelContext().getSource();
 								final Hbox pickupNameHbox = createHbox(widget, "PickupName", false, true);
 								final Textbox pickupNameFieldTextBox = createTextbox(pickupNameHbox);
 									try{
 										if (ordermodel.getPickupPersonName() != null)
 											{	
-											pickupNameFieldTextBox.setValue(ordermodel.getPickupPersonName());
+											pickupNameFieldTextBox.setValue(mainOrder.getPickupPersonName());
 											}//if
 										}//try
 									catch (final Exception e) {
@@ -155,7 +148,7 @@ protected HtmlBasedComponent createContentInternal(
 									try{
 										if (ordermodel.getPickupPersonMobile() != null)
 											{
-											pickupPhoneFieldTextBox.setValue(ordermodel.getPickupPersonMobile());
+											pickupPhoneFieldTextBox.setValue(mainOrder.getPickupPersonMobile());
 											pickupPhoneFieldTextBox.setSclass("pickupNameFieldTextBox");
 											pickupPhoneFieldTextBox.setMaxlength(10);
 											String errorMsgMobile = LabelUtils.getLabel(widget, "error.msg.mobile",
@@ -178,7 +171,7 @@ protected HtmlBasedComponent createContentInternal(
 						actionContainer.setAlign("center");
 						update.addEventListener(
 								Events.ON_CLICK,
-								createUpdateDetailsEventListener(widget,ordermodel, pickupNameFieldTextBox, pickupPhoneFieldTextBox));
+								createUpdateDetailsEventListener(widget,ordermodel,mainOrder, pickupNameFieldTextBox, pickupPhoneFieldTextBox));
 					   }//if
 				
 				}//try
@@ -190,8 +183,6 @@ protected HtmlBasedComponent createContentInternal(
 				
 		}//createContentInternal
 	
-
-
 	
 /**
  * 		        
@@ -202,25 +193,27 @@ protected HtmlBasedComponent createContentInternal(
  * @return
  */
 private EventListener createUpdateDetailsEventListener(Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
-	final OrderModel orderModel, final Textbox pickupNameFieldTextBox, final Textbox pickupPhoneFieldTextBox)
+	final OrderModel orderModel, final OrderModel mainOrder,final Textbox pickupNameFieldTextBox, final Textbox pickupPhoneFieldTextBox)
 	{
-		return new UpdateDetailsEventListener(widget, orderModel, pickupNameFieldTextBox, pickupPhoneFieldTextBox);
+		return new UpdateDetailsEventListener(widget, orderModel,mainOrder, pickupNameFieldTextBox, pickupPhoneFieldTextBox);
 	}//createUpdateDetailsEventListener
 
 	protected class UpdateDetailsEventListener implements EventListener{	
 						final Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget;	
 						private static final String PICKUP_PHONE_REGEX = "^[0-9]{10}";
 						private final OrderModel orderModel;
+						private final OrderModel mainOrder;
 						private final Textbox pickupNameFieldTextBox;
 						private final Textbox pickupPhoneFieldTextBox;
 
 				public UpdateDetailsEventListener(
 						
 						final Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
-						final OrderModel orderModel, final Textbox pickupNameFieldTextBox,
+						final OrderModel orderModel,final OrderModel mainOrder, final Textbox pickupNameFieldTextBox,
 						final Textbox pickupPhoneFieldTextBox) {
 								this.widget = widget;
 								this.orderModel = orderModel;
+								this.mainOrder = mainOrder;
 								this.pickupNameFieldTextBox = pickupNameFieldTextBox;
 								this.pickupPhoneFieldTextBox = pickupPhoneFieldTextBox;
 								}//UpdateDetailsEventListener()
@@ -229,7 +222,7 @@ private EventListener createUpdateDetailsEventListener(Widget<DefaultItemWidgetM
 			public void onEvent(final Event event) throws InterruptedException, ParseException
 				{
 					try{
-						handleUpdateDetails(widget, orderModel, pickupNameFieldTextBox, pickupPhoneFieldTextBox);	
+						handleUpdateDetails(widget, orderModel,mainOrder, pickupNameFieldTextBox, pickupPhoneFieldTextBox);	
 						}
 					catch(final Exception e){
 							LOG.error("unable to render listner", e);
@@ -240,7 +233,7 @@ private EventListener createUpdateDetailsEventListener(Widget<DefaultItemWidgetM
 			
 			
 			
-			private void handleUpdateDetails(final Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget, final OrderModel order, 
+			private void handleUpdateDetails(final Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget, final OrderModel order, final OrderModel mainOrder,
 					final Textbox pickupNameFieldTextBox,final Textbox pickupPhoneFieldTextBox) throws InterruptedException,
 					ParseException
 					{
@@ -301,16 +294,18 @@ private EventListener createUpdateDetailsEventListener(Widget<DefaultItemWidgetM
 							if (changedPickupName != null && !changedPickupName.isEmpty())
 							{
 								order.setPickupPersonName(changedPickupName);
-					
+					            mainOrder.setPickupPersonName(changedPickupName);
 							}
 							else
 							{
 								orderModel.setPickupPersonName(MarketplacecommerceservicesConstants.EMPTY);
+								
 							}
 					
 							if (changedPickupPhone != null && !changedPickupPhone.isEmpty())
 							{
 								order.setPickupPersonMobile(changedPickupPhone);
+								mainOrder.setPickupPersonMobile(changedPickupPhone);
 							}
 							else
 							{
@@ -319,7 +314,7 @@ private EventListener createUpdateDetailsEventListener(Widget<DefaultItemWidgetM
 						
 							itemModificationHistoryService.logItemModification(itemModificationHistoryService.createModificationInfo(order));
 							modelService.save(order);
-					
+					        modelService.save(mainOrder);
 							Messagebox.show(LabelUtils.getLabel(widget, CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO, Messagebox.OK,
 									Messagebox.INFORMATION);
 					
@@ -331,8 +326,5 @@ private EventListener createUpdateDetailsEventListener(Widget<DefaultItemWidgetM
 		}//class UpdateDetailsEventListener()
 
 }//class MarketPlaceAlternateContactDetailsWidgetRenderer
-
-
-
 
 

@@ -25,7 +25,27 @@
 <spring:url value="/my-account/orders" var="ordersUrl" />
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
+<style>
+.ordermargingalignment{
+	height: 41px;
+	padding-top: 7px;
+	font-size: 12px;
+	font-weight: 300;
+}
+.orderheadingalignment{
+	font-size: 12px;
+}
+.orderbodyalignment{
+	font-size: 12px;
+}
+.attributes{
+	font-size: 12px;
+}
+.actions{
+	font-size: 12px;
 
+}
+</style>
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
@@ -117,11 +137,11 @@
 						<li class="header">
 
 							<ul>
-								<li><span><spring:theme
+								<li><span class="ordermargingalignment"><spring:theme
 											code="text.orderHistory.order.placed" /></span> <c:if
 										test="${not empty orderDate}">${orderDate}</c:if> <%-- <fmt:formatDate
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
-								<li><span>Total: </span> 
+								<li><span class="ordermargingalignment">Total: </span> 
 								<!-- TISSIT-1773 -->
 								<%-- <format:price	priceData="${subOrder.totalPrice}" /> --%>
 								
@@ -138,7 +158,7 @@
 								
 								
 								</li>
-								<li class="recipient"><span><spring:theme
+								<li class="recipient"><span class="ordermargingalignment"><spring:theme
 											code="text.orderHistory.recipient" /></span> <c:choose>
 										<c:when test="${subOrder.deliveryAddress != null}">
 												${subOrder.deliveryAddress.firstName}&nbsp;${subOrder.deliveryAddress.lastName}
@@ -147,19 +167,19 @@
 												${subOrder.mplPaymentInfo.cardAccountHolderName}
 												</c:otherwise>
 									</c:choose></li>
-								<li><span>Order Reference Number: </span> ${subOrder.code}</li>
+								<li><span class="ordermargingalignment">Order Reference Number: </span> ${subOrder.code}</li>
 							</ul>
 
 
-							<div class="totals">
-								<h3>Total:</h3>
+							<div class="totals" style="margin-left: 44px;">
+								<h3 class="orderheadingalignment">Total:</h3>
 								<ul>
-									<li><spring:theme code="text.account.order.subtotal"
+									<li class="orderbodyalignment"><spring:theme code="text.account.order.subtotal"
 											/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
-									<li><spring:theme code="text.account.order.delivery"
-											text="Delivery" /><span class="amt"> <format:price
+									<li class="orderbodyalignment"><spring:theme code="text.account.order.delivery"
+											text="Delivery" /><span class="amt orderbodyalignment"> <format:price
 												priceData="${subOrder.deliveryCost}"
 												displayFreeForZero="true" />
 									</span></li>
@@ -191,7 +211,7 @@
 									<%-- <li><spring:theme text="Gift Wrap:" /><span><format:price
 												priceData="${subOrder.deliveryCost}"
 												displayFreeForZero="true" /></span></li> --%>
-									<li class="grand-total">
+									<li class="grand-total orderheadingalignment">
 										<spring:theme code="text.account.order.total.new" text="Total" />
 										<c:choose>
 											<c:when test="${subOrder.net}">
@@ -206,8 +226,8 @@
 								</ul>
 
 							</div>
-							<div class="payment-method">
-								<h3>Payment Method:
+							<div class="payment-method " style="margin-left: 44px">
+								<h3 class="orderheadingalignment">Payment Method:
 									${subOrder.mplPaymentInfo.paymentOption}</h3>
 								<c:set var="cardNumberMasked"
 									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
@@ -222,12 +242,12 @@
 										value="${subOrder.mplPaymentInfo.billingAddress}" />
 								</c:if>
 								<!--  TISBOX-1182 -->
-								<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								<p class="orderbodyalignment">${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 								<c:if
 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
-									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
+									<p class="orderbodyalignment">${subOrder.mplPaymentInfo.cardCardType} ending in
 										${cardNumEnd}</p>
-									<p>Expires on:
+									<p class="orderbodyalignment">Expires on:
 										${subOrder.mplPaymentInfo.cardExpirationMonth}/${subOrder.mplPaymentInfo.cardExpirationYear}</p>
 								</c:if>
 								<c:if
@@ -259,10 +279,10 @@
 									orderWsDTO.setPaymentCardExpire("NA");
 								} -->
 							</div>
-							<div class="delivery-address">
+							<div class="delivery-address" style="margin-left: 44px;">
 								<c:if test="${not empty creditCardBillingAddress.firstName}">
-									<h3>Billing Address:</h3>
-									<address>
+									<h3 class="orderheadingalignment">Billing Address:</h3>
+									<address style="font-size: 12px">
 										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
 										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
 										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
@@ -310,7 +330,11 @@
 									varStatus="status">
 									<c:forEach items="${sellerOrder.entries}" var="entry"
 										varStatus="entryStatus">
-										<c:set var="entryCount" value="${entryCount +1 }"></c:set>
+										<c:set var="entryCount" value="${entryCount +1 }"></c:set>	
+										<c:set var="deliveryMode" value="${entry.mplDeliveryMode.code}"/>
+									     <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+											<c:set var="flag" value="true"/>
+										 </c:if>  
 									</c:forEach>
 								</c:forEach>
 								<c:if test="${entryCount > 1}">
@@ -322,6 +346,7 @@
 										Shipping Address:
 									</h3>
 								</c:if>
+								<c:if test="${flag eq true}">
 								<address>
 									${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
 									${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
@@ -338,6 +363,7 @@
 									<br>
 									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
 								</address>
+								</c:if>
 								</div> <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 								varStatus="status">
 								<input type="hidden" id="subOrderCode"
@@ -414,16 +440,14 @@
 											
 		                 <c:set var="entrySize" value="${sellerOrder.entries}"></c:set>
 						<c:set var="size" value="${entrySize.size()}"></c:set>	 	
-						<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">				
-						    
-						       
-						        
+						<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">				      
 									<div class="orderBox address">
-								    <h2>Store Address</h2>
-							 <c:forEach items="${subOrder.entries}" var="subOrderentry"
-									varStatus="entryStatus">
+								    <h3 style="font-weight: 600;">Store Address</h3>
+						     <c:forEach items="${subOrder.entries}" var="subOrderentry"
+								varStatus="entryStatus">
+								<c:if test="${subOrderentry.product.code eq entry.product.code}">
 								   <c:set var="storeAddress" value="${subOrderentry.deliveryPointOfService.address}" />
-					                <address>  ${storeAddress.firstName}&nbsp; ${storeAddress.lastName}<br>
+					                <address style="line-height: 18px;font-size: 12px;padding-top: 5px;">  ${storeAddress.firstName}&nbsp; ${storeAddress.lastName}<br>
 							    	           ${storeAddress.companyName}<br>
 							    	           ${storeAddress.line1} &nbsp;
 								               ${storeAddress.line2} &nbsp;
@@ -435,13 +459,13 @@
 								              +91&nbsp;${storeAddress.phone} <br>          
 						    		</address> 
 		                       <br>	
-		                      
+		                      </c:if>
 		                       </c:forEach>
 		                        <c:if test="${entry.entryNumber eq size-1}">
-		                        <h3>PickUp Details</h3>        
-		                         <div id="pickName">  ${sellerOrder.pickupName}<br></div>
-		                          <div id="pickNo"> ${sellerOrder.pickupPhoneNumber}<br> </div>         
-                               <a type="button" id="button" class="pickupeditbtn" style="i">Edit </a>
+		                        <h3 style="font-weight: 600;">PickUp Details</h3>        
+		                         <div id="pickName" style="font-size: 12px;padding-top: 5px;">  ${sellerOrder.pickupName}<br></div>
+		                          <div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div>         
+                               <a type="button" id="button" class="pickupeditbtn" style="width: 11px">Edit </a>
                                </c:if>
 		                       </div> 
 		                       
@@ -490,7 +514,7 @@ width: 123px;" ></div>
 		                        
 
 										</div>
-										<div class="actions">
+										<div class="actions" style="margin-left: -8px;">
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 												<c:set var="bogoCheck"
@@ -1437,7 +1461,6 @@ $(function() {
 	function editPickUpDetails(orderId) {
 		      var name=$("#pickUpName").val();
 		      var mobile=$("#pickMobileNo").val(); 	 
-		  
 		      var isString = isNaN(mobile);
 		      //alert(isString);  
 		      $(".pickupPersonNameError, .pickupPersonMobileError").hide();
@@ -1464,26 +1487,27 @@ $(function() {
 				    data: "orderId="+orderId + "&name=" + name+ "&mobile="+mobile,
 					success: function (response) {
 					    	var status=response; 	 	
-					    	alert(status);
 					    	$('.pickup_Edit').hide();
 					    	$('.pickupeditbtn').show();
 					    	if(status="sucess"){
 					 	      document.getElementById("pickName").innerHTML=name;
 						      document.getElementById("pickNo").innerHTML=mobile;  
 					    	 }
+					    	
+					    	if(status="sucess"){
+					    		$.ajax({	  
+									type: "POST",
+									url: ACC.config.encodedContextPath + "/my-account/crmTicketCreateUpdatePickUpDetail",
+								    data: "orderId="+orderId,
+									success: function () {
+									    	   		    	
+									}
+								});
+					    		
+					    	}
 						}
 				});
-		      
-		      
-		      $.ajax({	  
-					type: "POST",
-					url: ACC.config.encodedContextPath + "/my-account/crmTicketCreateUpdatePickUpDetail",
-				    data: "orderId="+orderId + "&name=" + name+ "&mobile="+mobile,
-					success: function () {
-					    	   		    	
-					}
-				});
-		      
+		       
 		      } 
 	}
 	
@@ -1502,4 +1526,3 @@ $(function() {
 	
 	
 	
-

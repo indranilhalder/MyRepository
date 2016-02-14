@@ -11,6 +11,11 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 
+<style>
+.summaryalignment{
+	margin-left: 15px;
+}
+</style>
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>	
@@ -20,7 +25,7 @@
 		
 	    <%-- <c:forEach items="${orderGroup.entries}" var="entry"> --%>
 	      
-			<c:forEach items="${orderData.entries}" var="entry">
+			<c:forEach items="${orderData.entries}" var="entry"> 
 				<c:url value="${entry.product.url}" var="productUrl"/>
 				<li class="item">
 				<ul class="desktop">
@@ -125,11 +130,11 @@
 					</ul>
 		        <c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 			    <div class="orderBoxes clearfix addressThankyou">
-				<h1>Store Details</h1>
-			    <div class="orderBox address">
-				<h4>Store Address</h4>	
+				<h1 style="margin-left: 15px">Store Details</h1>
+			    <div class="orderBox address"> 
+				<h4 class="summaryalignment">Store Address</h4>	
 					 <c:set var="storeAddress" value="${entry.deliveryPointOfService.address}" />
-					                <address>  ${storeAddress.firstName}&nbsp; ${storeAddress.lastName}<br>
+					                <address class="summaryalignment">  ${storeAddress.firstName}&nbsp; ${storeAddress.lastName}<br>
 							    	           ${storeAddress.companyName}<br>
 							    	           ${storeAddress.line1} &nbsp;
 								               ${storeAddress.line2} &nbsp;

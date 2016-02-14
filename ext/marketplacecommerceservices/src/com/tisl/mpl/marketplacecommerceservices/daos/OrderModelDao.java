@@ -57,7 +57,6 @@ public interface OrderModelDao
 	OrderModel getOrderPushNotification(final String code);
 
 
-
 	/**
 	 *
 	 * It get OrderModel based on orderId and save update information in data base
@@ -66,5 +65,15 @@ public interface OrderModelDao
 	 * @return OrderModel
 	 */
 	OrderModel updatePickUpDetailsDao(final String orderId, final String name, final String mobile);
+
+	
+	/**
+	 * 
+	 * @param orderId
+	 * @return order Model
+	 */
+
+	OrderModel getOrderModel(final String orderId);
+
 
 }

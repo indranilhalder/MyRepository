@@ -1078,8 +1078,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
 	@ResponseBody
 	@Post
-	public String updatePickUpDetails(@RequestParam(value = "orderId") final String orderId,
-			@RequestParam(value = "name") final String name, @RequestParam(value = "mobile") final String mobile)
+	public String string(@RequestParam(value = "orderId") final String orderId, @RequestParam(value = "name") final String name,
+			@RequestParam(value = "mobile") final String mobile)
 	{
 		String status = null;
 		if (orderId != null && name != null && mobile != null)
@@ -1093,17 +1093,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.CREATE_TICKET_CRA_UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
 	@ResponseBody
 	@Post
-	public void crmTicketUpdetaPickUpDetails(@RequestParam(value = "orderId") final String orderId,
-			@RequestParam(value = "name") final String name, @RequestParam(value = "mobile") final String mobile)
+	public void crmTicketUpdetaPickUpDetails(@RequestParam(value = "orderId") final String orderId)
 	{
-
-		if (orderId != null && name != null && mobile != null)
+		if (orderId != null)
 		{
-
-			mplOrderFacade.createCrmTicketUpdatePickDetails(orderId, name, mobile);
+		   LOG.info("Create CRM  Ticket For UpdatePickUpDetails ");
+			mplOrderFacade.createCrmTicketUpdatePickDetails(orderId);
 		}
-
-
 	}
 
 
@@ -6572,9 +6568,5 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		return null;
 	}
-
-
-
-
 
 }
