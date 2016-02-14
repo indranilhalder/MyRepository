@@ -58,6 +58,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
+import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -94,10 +95,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	private CustomerAccountService customerAccountService;
 
 	@Autowired
-	CustomOmsOrderService customOmsOrderService;
+	private CustomOmsOrderService customOmsOrderService;
 
 	@Autowired
-	CustomerFacade customerFacade;
+	private CustomerFacade customerFacade;
 
 	@Autowired
 	private OrderModelService orderModelService;
@@ -110,6 +111,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	@Autowired
 	private ModelService modelService;
+
+	@Autowired
+	private OrderModelDao orderModelDao;
 
 	protected static final Logger LOG = Logger.getLogger(DefaultMplOrderFacade.class);
 
@@ -376,7 +380,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -427,9 +431,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 * 
+	 *
 	 * @return Map<String, Map<String, String>>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -466,11 +470,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 * 
+	 *
 	 * @param : orderModelList
-	 * 
+	 *
 	 * @return Map<String, Boolean>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -504,11 +508,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 * 
+	 *
 	 * @param : orderEntryData
-	 * 
+	 *
 	 * @return OrderEntryData
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -746,18 +750,18 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	public String editPickUpInfo(final String orderId, final String name, final String mobile)
 	{
 
-		LOG.debug("Send PickUpDetails Based On OrderId");
+
 		try
 		{
-
+			LOG.debug("Send PickUpDetails Based On OrderId");
 			orderModelService.updatePickUpDetailService(orderId, name, mobile);
 		}
 		catch (final Exception e)
 		{
 			e.printStackTrace();
 			LOG.error("Update PickDetails that time Error Rasing");
+			return MarketplaceFacadesConstants.Status_Failure;
 		}
-		orderModelService.updatePickUpDetailService(orderId, name, mobile);
 		LOG.info("Update PickUp Details successfully");
 		return MarketplaceFacadesConstants.Status_Sucess;
 	}
@@ -765,23 +769,17 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 
 	@Override
-	public void createCrmTicketUpdatePickDetails(final String orderId, final String name, final String mobile)
+	public void createCrmTicketUpdatePickDetails(final String orderId)
 	{
-
-		final OrderModel orderModel = orderModelService.updatePickUpDetailService(orderId, name, mobile);
-
+		OrderModel orderModel = null;
 		try
 		{
+			orderModel = orderModelDao.getOrderModel(orderId);
 
 			if (orderModel != null)
 			{
-
 				LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
-
-
-				customOmsOrderService.upDatePickUpDetails(orderModel);
-
-
+				/* customOmsOrderService.upDatePickUpDetails(orderModel); */
 
 				final SendTicketRequestData ticket = new SendTicketRequestData();
 				final CustomerData customerData = customerFacade.getCurrentCustomer();
