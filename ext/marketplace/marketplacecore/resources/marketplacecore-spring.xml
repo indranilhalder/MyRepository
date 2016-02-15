@@ -887,6 +887,18 @@
 	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplInStockFacetDisplayNameProvider">
 	</bean>
 	
+	<bean id="mplPromotedProductValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPromotedProductValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	</bean>
+	
+	<bean id="mplPromotedProductPriorityValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPromotedProductPriorityValueProvider"
+		parent="abstractPropertyFieldValueProvider">
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	</bean>
+	
 	<!-- Added for Reviews and Ratings - End -->
 
 	<!-- Display Name Providers -->

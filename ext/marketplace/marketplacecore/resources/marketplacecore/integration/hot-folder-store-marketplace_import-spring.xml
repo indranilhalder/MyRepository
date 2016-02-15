@@ -53,6 +53,7 @@
 				<entry key="sales_category" value="0" />
 				<entry key="online_exclusive" value="0" />
 				<entry key="priority_seller" value="0"/>
+				<entry key="promoted_product" value="0"/>
 					</map>
 		</property>
 	</bean>
@@ -245,6 +246,12 @@
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="priority_seller"
     p:converter-ref="batchSellerPriorityConverter"/>
+    
+     <!-- Transformer for PromotedProduct update -->
+    <bean id="batchPromotedProductConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="promoted_product"
+    p:converter-ref="batchPromotedProductConverter"/>
     
       <!-- Converter for seller Import -->
   	<bean id="batchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
@@ -795,6 +802,20 @@ $language=language(isocode)[default='en'][unique=true];
         </property>
         <property name="impexRow">
             <value>;{+0};{+0};{+1};</value>
+        </property>
+        </bean>
+        
+                  <!-- Converter for Promoted Product Import --> 
+    <bean id="batchPromotedProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				UPDATE Product;code[unique=true];isPromotedProduct;promotedProductPriority;$catalogVersion 
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{2};</value>
         </property>
         </bean>
         
