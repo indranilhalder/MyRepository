@@ -826,7 +826,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 
 		// organizing the DTO with necessary data
-		couponHistoryStoreDTO.setCouponHistoryDTOList(couponHistoryDTOList);
+		couponHistoryStoreDTO.setCouponHistoryDataList(couponHistoryDTOList);
 		couponHistoryStoreDTO.setCouponsRedeemedCount(couponsRedeemedCount);
 		couponHistoryStoreDTO.setSavedSum(savedSum);
 

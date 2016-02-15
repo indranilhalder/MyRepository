@@ -130,7 +130,88 @@ public class MplCouponDaoImpl implements MplCouponDao
 		}
 
 	}
+	
+	/**
+	 * Method used to find orders with redeemed vouchers for a user
+	 *
+	 * @param customer
+	 * @return Set<Map<OrderModel, VoucherModel>>
+	 */
+	@Override
+	public Set<Map<OrderModel, VoucherModel>> findVoucherRedeemedOrder(final CustomerModel customer)
+	{
 
+		final Set<Map<OrderModel, VoucherModel>> voucherRedeemedOrderMap = new LinkedHashSet<Map<OrderModel, VoucherModel>>();
+
+		final String queryString = "select {or.pk} as Order_Model ,{v.pk} as Voucher_Model from "
+				+ "{voucher as v JOIN VoucherInvalidation as ur ON  {v.pk}={ur.voucher} JOIN order "
+				+ "as or ON {ur.order}={or.pk}} where {ur.user} like ('%" + customer.getPk().getLongValue() + "%') "
+				+ "ORDER BY {or.creationtime} DESC";
+
+		LOG.debug("Query :::::::::::::::   " + queryString);
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.setResultClassList(Arrays.asList(OrderModel.class, VoucherModel.class));
+		final Map<OrderModel, VoucherModel> resultMap = new HashMap<OrderModel, VoucherModel>();
+
+		final SearchResult<List<Object>> result = flexibleSearchService.search(query);
+
+
+		for (final List<Object> row : result.getResult())
+		{
+			final OrderModel order = (OrderModel) row.get(0);
+			final VoucherModel voucher = (VoucherModel) row.get(1);
+
+			if (null != order.getDate() && order.getType().equalsIgnoreCase(PARENT))
+			{
+				try
+				{
+					resultMap.put(order, voucher);
+					voucherRedeemedOrderMap.add(resultMap);
+				}
+				catch (final Exception e)
+				{
+					LOG.debug(e.getMessage());
+				}
+			}
+		}
+		return voucherRedeemedOrderMap;
+	}
+	
+	/**
+	 * Method used to find voucher invalidations for a user
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherInvalidationModel>
+	 */
+	@Override
+	public SearchPageData<VoucherInvalidationModel> findVoucherHistoryRedeemedOrders(final CustomerModel customer,
+			final PageableData pageableData)
+	{
+		try
+		{
+
+			final Map queryParams = new HashMap();
+			queryParams.put("customerPk", customer);
+
+			final String VOUCHER_HISTORY_QUERY = "select {vi.pk} from {VoucherInvalidation as vi JOIN voucher as v ON  {v.pk}={vi.voucher}  "
+					+ "JOIN order as or ON {vi.order}={or.pk}} where  {vi.user} like"
+					+ "('%"
+					+ customer.getPk().getLongValue()
+					+ "%') ORDER BY {vi.creationtime} DESC";
+
+			System.out.println("Query :::::::::::::::" + VOUCHER_HISTORY_QUERY);
+			final List sortQueries = Arrays.asList(new SortQueryData[]
+			{ createSortQueryData("byDate", VOUCHER_HISTORY_QUERY) });
+
+			return pagedFlexibleSearchService.search(sortQueries, "byDate", queryParams, pageableData);
+
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	/**
 	 * Method used to create sort query data

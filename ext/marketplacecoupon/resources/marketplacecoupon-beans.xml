@@ -50,10 +50,11 @@
 		<property name="couponDescription" type="String"/>
 		<property name="orderCode" type="String"/>
 		<property name="redeemedDate" type="String"/>
+		<property name="couponDiscountAmount" type="String"/>
 	</bean>
 		
 	<bean class="com.tisl.mpl.data.CouponHistoryStoreDTO">
-		<property name="couponHistoryDTOList" type="java.util.List&lt;com.tisl.mpl.data.CouponHistoryData>"/>
+		<property name="couponHistoryDataList" type="java.util.List&lt;com.tisl.mpl.data.CouponHistoryData>"/>
 		<property name="savedSum" type="String"/>
 		<property name="couponsRedeemedCount" type="int"/>
 	</bean>
