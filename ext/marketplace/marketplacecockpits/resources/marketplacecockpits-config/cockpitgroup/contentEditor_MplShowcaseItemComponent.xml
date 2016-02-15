@@ -34,6 +34,10 @@
 					<td><div style="height:6px"/></td>
 				</tr>
 				<tr>
+					<td><cockpit code="property" value="MplShowcaseItemComponent.bannerUrl"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
 					<td><cockpit code="property" value="MplShowcaseItemComponent.showByDefault"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>

@@ -279,6 +279,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml += "<div class='visit-store-wrapper'>"
 									+ response.bannerText + "</div>";
 						}
+						
 						defaultHtml += "<img src='" + response.bannerImageUrl
 								+ "'></img></div></div>";
 
@@ -831,8 +832,16 @@ function getShowcaseContentAjaxCall(id) {
 					$('.about-one.showcase-section').remove();
 					defaultHtml = "<div class='about-one showcase-section'>";
 					if (typeof response.bannerImageUrl !=="undefined") {
-						defaultHtml += "<div class='desc-section'><img src='"+ response.bannerImageUrl
-						+ "'></img></div>";		
+						defaultHtml +="<div class='desc-section'>";
+						if(typeof response.bannerUrl !=="undefined"){
+							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"'>";
+						}
+						defaultHtml += "<img src='"+ response.bannerImageUrl
+						+ "'></img>";	
+						if(typeof response.bannerUrl !=="undefined"){
+							defaultHtml+="</a>";
+						}
+						defaultHtml +="</div>";
 					}
 					
 				
