@@ -1303,8 +1303,12 @@ function CheckonReload()
 
 }
 
+
+
 function getRating(key,productCode,category)
 {
+	
+	
 	
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
 	  $.getJSON(url, function(data){
@@ -1330,6 +1334,7 @@ function getRating(key,productCode,category)
 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
 			
 			//TISUATPII-471 fix
+			
 			var count=data.streamInfo.ratingCount;
 			if(count == 1){
 			$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
@@ -1340,7 +1345,21 @@ function getRating(key,productCode,category)
 				}
 			
 			
+			
+			
 	  });
+	  
+	//TISUATPII-471 fix
+	  var ratingsParams = {
+		categoryID : category,
+		streamID : productCode,
+		containerID : 'ratingDiv',
+		linkedCommentsUI : 'commentsDiv',
+		showCommentButton : 'true',
+		onAddReviewClicked:reviewClick,
+	 }
+			
+	 gigya.comments.showRatingUI(ratingsParams);
 	  
 	  
 	
