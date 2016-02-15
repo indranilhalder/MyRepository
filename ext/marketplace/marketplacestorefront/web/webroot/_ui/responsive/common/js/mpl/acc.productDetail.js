@@ -1365,13 +1365,14 @@ function getRating(key,productCode,category)
 		containerID : 'ratingDiv',
 		linkedCommentsUI : 'commentsDiv',
 		showCommentButton : 'true',
-		onAddReviewClicked:reviewClick,
+		onAddReviewClicked:	function(response) {
+			CheckUserLogedIn();
 	 }
 			
-	 gigya.comments.showRatingUI(ratingsParams);
-	  
-	  
 	
+	  }  
+	  
+	  gigya.comments.showRatingUI(ratingsParams);
 //	$.getJSON("https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=hello",
 //	         function(data) {
 //		
