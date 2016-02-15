@@ -116,17 +116,6 @@
 	
 <!-- 	<bean id="couponMailJob" class="com.tisl.mpl.coupon.facade.job.CouponMailJob" autowire="byName"/> -->
 	
-	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.facade.job.CustomerListGenerationJob" autowire="byName"/>
-
-	<!-- CouponSaveInterceptor starts -->
-	<bean id="CouponSaveInterceptor" class="com.tisl.mpl.interceptor.CouponSaveInterceptor" />
-
-	<bean id="CouponSaveInterceptorMapping"
-		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-		<property name="interceptor" ref="CouponSaveInterceptor" />
-		<property name="typeCode" value="Voucher" />
-	</bean>
-	<!-- CouponSaveInterceptor ends -->
-			
+	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.facade.job.CustomerListGenerationJob" autowire="byName"/>			
 			
 </beans>
