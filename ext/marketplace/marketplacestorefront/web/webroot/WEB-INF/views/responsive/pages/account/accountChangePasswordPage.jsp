@@ -5,6 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/desktop/formElement" %>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <spring:url value="/my-account/profile" var="profileUrl"/>
 <spring:url value="/my-account/update-profile" var="updateProfileUrl"/>
@@ -36,7 +37,7 @@
       </select>
 </h1>
 <div class="wrapper">
-			<div class="left-nav">
+			<%-- <div class="left-nav">
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -65,7 +66,8 @@
 								code="header.flyout.invite" /></a></li>
 								
 				</ul>
-			</div>
+			</div> --%>
+			<user:accountLeftNav pageName="changePwd"/>
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account">
