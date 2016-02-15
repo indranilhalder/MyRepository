@@ -226,7 +226,7 @@
 						
 	<script type="text/javascript">
 		function allLetter(inputtxt) { 
-	        var letters = new RegExp(/^[A-Za-z]+$/);
+	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
 	        if(inputtxt.value.match(letters))
 	        {
 	            return true;
@@ -242,6 +242,37 @@
 			$(".pickupPersonSubmitError").hide();
 			
 			$("#pickupPersonSubmit").hide();
+			$("#pickupPersonName").keyup(function(){
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
+				var statusName = allLetter(pickUpPersonNam);
+				if(statusName == false) {
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
+				}
+				else {
+					$(".pickupPersonNameError").hide();
+				}
+			});
+			$("#pickupPersonMobile").keyup(function(){
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				if($('#pickupPersonMobile').val().length <= "9") {
+					if(isString==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+					else if(isString==false) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
+					}
+				} else if($('#pickupPersonMobile').val().length >= "11") {
+					$(".pickupPersonMobileError").show();
+					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+				} else {
+					$(".pickupPersonMobileError").hide();
+				}
+			});
 			$("#savePickupPersondDetails").click(function(){
 				$(".pickupPersonSubmitError").hide();
 				$(".pickUpPersonAjax").hide();
@@ -275,6 +306,10 @@
 						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
 					}
 				}
+				else if($('#pickupPersonMobile').val().length > "10") {
+					$(".pickupPersonMobileError").show();
+					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+				}
 				else if(isString==true) {
 					$(".pickupPersonMobileError").show();
 					$(".pickupPersonMobileError").text("Enter only numbers");
@@ -286,7 +321,7 @@
 						url : requiredUrl,
 						data : dataString,
 						success : function(data) {
-							console.log("success call for pickup person details"+data);
+							//console.log("success call for pickup person details"+data);
 							$("#pickupPersonSubmit").text("1");
 							$(".pickUpPersonAjax").fadeIn(100);
 							$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
@@ -344,7 +379,7 @@
 								<li class="store header5"><spring:theme code="checkout.multi.cnc.store.closeto"/>
 								
 								<c:if test="${not empty defaultPincode}">
-									<span style="color: #00cbe9!important;">
+									<span style="color: #00cbe9!important;" id="changeValue${status1.index}">
 										${defaultPincode}
 									</span>	
 								</c:if>
@@ -504,8 +539,8 @@
 													$(".pickupPersonSubmitError").hide();
 													var pickupPersonSubmit = $("#pickupPersonSubmit").text();
 													if(pickupPersonSubmit == "1") {
-														$(".pickupPersonSubmitError").show();
-														$(".pickupPersonSubmitError").text("Pickup Person Details Have Been Successfully Added");
+														//$(".pickupPersonSubmitError").show();
+														//$(".pickupPersonSubmitError").text("Pickup Person Details Have Been Successfully Added");
 														//console.log("Pickup Person Details Have Been Successfully Added");
 														} else {
 														e.preventDefault();
@@ -646,10 +681,12 @@
 									        	 //console.log(data);
 										          var response${status1.index} = JSON.stringify(data);
 										          var jsonObject${status1.index} = JSON.parse(response${status1.index});
+										          $("#changeValue${status1.index}").text(pinvalue${status1.index});
 										          //console.log(jsonObject${status1.index});
 										          //console.log(jsonObject${status1.index}.length);
 										          if(jsonObject${status1.index}.length != "0") {
 										        	  $("input[name='address${status1.index}']").prop('checked', false);
+										        	  $(".radio_color").removeClass("colorChange");
 										        	  icons${status1.index} = icons;
 										        	  processMap${status1.index}();
 										        	  $(".delivered${status1.index}").show();
