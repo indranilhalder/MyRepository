@@ -369,6 +369,9 @@ tr.d0 td {
  	
  }
  $( document ).ready(function() {
+	 
+	 getRating_Qview('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
+	 
 	$(document).on("click","#variantForm div ul li a,.color-swatch-container .color-swatch li a",function(){
 		setTimeout(function(){
 		$(".zoomContainer").remove();
@@ -458,6 +461,67 @@ tr.d0 td {
 			return $(this).parents().find('.add-to-wishlist-container_quick').html();
 		}
 	});
+ 
+ function getRating_Qview(key,productCode,category)
+ {
+ 	
+ 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
+ 	  $.getJSON(url, function(data){
+ 	  	var totalCount=data.streamInfo.ratingCount;
+ 		//Reverse the source array
+ 		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
+ 		ratingArray  = ratingArray.reverse();
+ 		
+ 		  $(".rate-details .after").each(function(count){			  
+ 				
+ 				var countIndiv=ratingArray[count];	
+ 				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
+ 				$(".rate-details .after").eq(count).text(ratingArray[count]);
+ 				
+ 			})
+ 			
+ 			var avgreview=data.streamInfo.avgRatings._overall;
+ 			var raingcount=data.streamInfo.ratingCount;
+ 			$(".product-detail ul.star-review a").empty();
+ 			$(".product-detail ul.star-review li").attr("class","empty");
+ 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
+ 			//$("#gig-rating-readReviewsLink_quick").html(raingcount);
+ 		//	alert("count"+data.streamInfo.ratingCount);
+ 			//rating(avgreview,raingcount);
+ 			
+ 			
+ 			var rating = Math.floor(avgreview);
+	 		var ratingDec = avgreview - rating;
+	 		for(var i = 0; i < rating; i++) {
+	 			$("#quick_view_rating"+" li").eq(i).removeClass("empty").addClass("full");
+	 			}
+	 		if(ratingDec!=0)
+	 			{
+	 			$("#quick_view_rating"+" li").eq(rating).removeClass("empty").addClass("half");
+	 			} 
+ 		
+ 		
+ 			//TISUATPII-471 fix
+ 			var count=data.streamInfo.ratingCount;
+ 			if(count!= 0 && count == 1){
+ 				//$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
+ 				$('.gig-rating-readReviewsLink_quick').text(count+" REVIEW")
+ 			}
+ 			else if(count!= 0){
+ 				//$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
+ 				$('.gig-rating-readReviewsLink_quick').text(count+" REVIEWS")
+ 			}
+ 			
+ 			
+ 			
+ 			
+ 	  });
+ 	  
+ 	// var avgrating = '${product.averageRating}';
+ 		//alert(":-:"+avgrating);
+ 		
+ }
+ 	  
  </script>
  <style type="text/css">
 tr.d0 td {
@@ -643,28 +707,28 @@ display:none;
      </c:otherwise>
     </c:choose>
   </div>   
-
+<a href="#" class="gig--readReviewsLink"></a>
+	<span id="gig-rating-readReviewsLink_quick" ></span>	
   <input type="hidden" id="rating_review" value="${product.code}">
-		<%-- <ul class="star-review" id="quick_view_rating">
+		 <ul class="star-review" id="quick_view_rating">
 				<li class="empty"></li>
 				<li class="empty"></li>
 				<li class="empty"></li>
 				<li class="empty"></li>
 				<li class="empty"></li>
-				
-			<c:choose>
+		
+		<%-- 	<c:choose>
 				<c:when test="${not empty product.ratingCount}">
-					<span>${product.ratingCount}  <spring:theme code="rating.reviews"/></span>
+			
+					<span id="gig-rating-readReviewsLink_quick" >  <spring:theme code="rating.reviews"/></span>
 				</c:when>
-				<c:otherwise>
-					<span> <spring:theme code="rating.noreviews"/></span>
-				</c:otherwise>
-			</c:choose>
-			</ul> --%>
+				<c:otherwise> --%>
+					<span class="gig-rating-readReviewsLink_quick"> <spring:theme code="rating.noreviews"/></span>
+				<%-- </c:otherwise>
+			</c:choose> --%>
+			</ul> 
 			
-			
-			
-			<!-- <script>
+<!-- 			 <script>
 				var avgrating = '${product.averageRating}';
 				//alert(":-:"+avgrating);
 				var rating = Math.floor(${product.averageRating});
@@ -679,7 +743,7 @@ display:none;
 					$("#quick_view_rating"+" li").eq(rating).removeClass("empty").addClass("half");
 					} 
 				
-			</script> -->
+			</script>  -->
  
  	<div class="fullfilled-by">
 		<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
@@ -1071,5 +1135,7 @@ function validateWishEnteredNameQuick(divId,errorDivId) {
 	}
 	$('#'+divId).val(value);
 
-} 
+}
+
+
 </script>
