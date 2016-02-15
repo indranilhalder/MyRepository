@@ -18,10 +18,13 @@ public class LatestOrderModelCompare implements Comparator<OrderModel>
 {
 	private static final Logger LOG = Logger.getLogger(LatestOrderModelCompare.class);
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * This method compares two orderModel for sorting
 	 *
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+	 * @param o1
+	 * @param o2
+	 * @return int
+	 *
 	 */
 	@Override
 	public int compare(final OrderModel o1, final OrderModel o2)

@@ -6,7 +6,6 @@ package com.tisl.mpl.interceptor;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
 import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
-import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import javax.annotation.Resource;
@@ -24,9 +23,6 @@ public class CouponSaveInterceptor implements PrepareInterceptor
 	@Resource(name = "notificationService")
 	private NotificationService notificationService;
 
-	@Resource(name = "modelService")
-	private ModelService modelService;
-
 
 	/**
 	 * @Description : This Method is evaluated when voucher is created
@@ -40,17 +36,31 @@ public class CouponSaveInterceptor implements PrepareInterceptor
 		if (null != param && param instanceof VoucherModel)
 		{
 			final VoucherModel voucher = (VoucherModel) param;
-			notificationService.saveToVoucherStatusNotification(voucher);
+			getNotificationService().saveToVoucherStatusNotification(voucher);
 		}
 	}
 
+
 	/**
-	 * @return the modelService
+	 * @return the notificationService
 	 */
-	public ModelService getModelService()
+	public NotificationService getNotificationService()
 	{
-		return modelService;
+		return notificationService;
 	}
+
+
+	/**
+	 * @param notificationService
+	 *           the notificationService to set
+	 */
+	public void setNotificationService(final NotificationService notificationService)
+	{
+		this.notificationService = notificationService;
+	}
+
+
+
 
 
 }
