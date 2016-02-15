@@ -127,7 +127,8 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 				data.setVoucherCode(promoVoucher.getVoucherCode());
 			}
 
-			if (null != promoVoucher.getMaxDiscountValue() && promoVoucher.getMaxDiscountValue().doubleValue() > 0)
+			if (null == voucher.getCurrency() && null != promoVoucher.getMaxDiscountValue()
+					&& promoVoucher.getMaxDiscountValue().doubleValue() > 0)
 			{
 				data.setMaxDiscount(promoVoucher.getMaxDiscountValue().toString());
 			}
@@ -174,7 +175,6 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	}
 
 
-
 	/**
 	 * Populate data from Voucher Restriction to Data Class
 	 *
@@ -199,17 +199,20 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 			{
 				final ProductRestrictionModel productModel = (ProductRestrictionModel) restriction;
 				campaignData.setProducts(populateProductData(productModel));
+				campaignData.setForSelProducts(populatePositiveCheck(restriction));
 			}
 			else if ((restriction instanceof ProductRestrictionModel) && (restriction instanceof ProductCategoryRestrictionModel))
 			{
 				final ProductCategoryRestrictionModel oModel = (ProductCategoryRestrictionModel) restriction;
-				campaignData.setCategories(populateCampaignData(oModel));
+				campaignData.setCategories(populateCategoryData(oModel));
+				campaignData.setForSelCategories(populatePositiveCheck(restriction));
 			}
 			else if (restriction instanceof UserRestrictionModel)
 			{
 				final UserRestrictionModel userModel = (UserRestrictionModel) restriction;
 				campaignData.setUserGrp(populateUserGrp(userModel));
 				campaignData.setUsers(populateUser(userModel));
+				campaignData.setForSelUsers(populatePositiveCheck(restriction));
 
 			}
 		}
@@ -269,13 +272,14 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 			if ((i != (userDataList.size() - 1)))
 			{
 				userdata = userdata
-						+ (userDataList.get(i).getName() == null ? userDataList.get(i).getUid() : userDataList.get(i).getName())
-						+ MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
+				//+ (userDataList.get(i).getName() == null ? userDataList.get(i).getUid() : userDataList.get(i).getName())
+						+ userDataList.get(i).getUid() + MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
 			}
 			else
 			{
 				userdata = userdata
-						+ (userDataList.get(i).getName() == null ? userDataList.get(i).getUid() : userDataList.get(i).getName());
+				//+ (userDataList.get(i).getName() == null ? userDataList.get(i).getUid() : userDataList.get(i).getName());
+						+ userDataList.get(i).getUid();
 			}
 		}
 
@@ -353,7 +357,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	 * @param oModel
 	 * @return String
 	 */
-	private String populateCampaignData(final ProductCategoryRestrictionModel oModel)
+	private String populateCategoryData(final ProductCategoryRestrictionModel oModel)
 	{
 		String categorydata = MarketplacecouponConstants.EMPTYSPACE;
 		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
@@ -435,8 +439,35 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 		data.setUserGrp(MarketplacecouponConstants.EMPTYSPACE);
 		data.setUsers(MarketplacecouponConstants.EMPTYSPACE);
 		data.setMaxDiscount(MarketplacecouponConstants.EMPTYSPACE);
+		data.setForSelUsers(MarketplacecouponConstants.EMPTYSPACE);
+		data.setForSelCategories(MarketplacecouponConstants.EMPTYSPACE);
+		data.setForSelProducts(MarketplacecouponConstants.EMPTYSPACE);
 
 		return data;
+	}
+
+
+
+	/**
+	 * This method checks whether the product/Category/Brand restriction is for the selected
+	 * products/categories/users/userGroups
+	 *
+	 * @param restriction
+	 * @return String
+	 */
+	private String populatePositiveCheck(final RestrictionModel restriction)
+	{
+		String restCheckdata = MarketplacecouponConstants.EMPTYSPACE;
+		if (null != restriction)
+		{
+			final Boolean check = restriction.getPositive();
+			if (null != check)
+			{
+				restCheckdata = check.toString();
+			}
+		}
+
+		return restCheckdata;
 	}
 
 
@@ -505,13 +536,22 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 				fileWriter.append(data.getProducts());
 				fileWriter.append(MarketplacecouponConstants.CAMPAIGN_FILE_DELIMITTER);
 
+				fileWriter.append(data.getForSelProducts());
+				fileWriter.append(MarketplacecouponConstants.CAMPAIGN_FILE_DELIMITTER);
+
 				fileWriter.append(data.getCategories());
+				fileWriter.append(MarketplacecouponConstants.CAMPAIGN_FILE_DELIMITTER);
+
+				fileWriter.append(data.getForSelCategories());
 				fileWriter.append(MarketplacecouponConstants.CAMPAIGN_FILE_DELIMITTER);
 
 				fileWriter.append(data.getUserGrp());
 				fileWriter.append(MarketplacecouponConstants.CAMPAIGN_FILE_DELIMITTER);
 
 				fileWriter.append(data.getUsers());
+				fileWriter.append(MarketplacecouponConstants.CAMPAIGN_FILE_DELIMITTER);
+
+				fileWriter.append(data.getForSelUsers());
 				fileWriter.append(MarketplacecouponConstants.CAMPAIGN_FILE_DELIMITTER);
 
 
