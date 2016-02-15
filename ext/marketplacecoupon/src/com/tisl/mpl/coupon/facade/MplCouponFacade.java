@@ -122,12 +122,6 @@ public interface MplCouponFacade
 	 */
 	void releaseVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
 
-	/*
-	 * @return
-	 */
-	@SuppressWarnings("javadoc")
-	List<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer);
-
 
 	/**
 	 * @param voucher
@@ -139,7 +133,12 @@ public interface MplCouponFacade
 			List<AbstractOrderEntryModel> applicableOrderEntryList);
 
 
-	@SuppressWarnings("javadoc")
+	/**
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherDisplayData>
+	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
 
 }

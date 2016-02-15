@@ -79,6 +79,13 @@
 				</ul>
 				<ul>
 					<li><h3>
+							<spring:theme code="header.flyout.credits" />
+						</h3></li>
+					<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+								code="header.flyout.coupons" /></a></li>
+				</ul>
+				<ul>
+					<li><h3>
 							<spring:theme code="header.flyout.share" />
 						</h3></li>
 					<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme

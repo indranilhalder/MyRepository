@@ -114,8 +114,21 @@
      <!-- Coupon Helper Class -->
 	<bean id="mplCouponHelper" class="com.tisl.mpl.helper.MplCouponHelper" />
 	
-<!-- 	<bean id="couponMailJob" class="com.tisl.mpl.coupon.facade.job.CouponMailJob" autowire="byName"/> -->
+<!-- 	<bean id="couponMailJob" class="com.tisl.mpl.coupon.job.CouponMailJob" autowire="byName"/> -->	
+
+	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" autowire="byName"/>	
 	
-	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.facade.job.CustomerListGenerationJob" autowire="byName"/>			
-			
+	<!-- Tata Cliq Job : Campaign Team -->
+	<bean id="campaignVoucherDataService"
+		class="com.tisl.mpl.coupon.service.impl.DefaultCampaignVoucherDataService">
+		<property name="modelService" ref="modelService" />
+		<property name="mplCouponDao" ref="mplCouponDao" />
+	</bean>
+	<bean id="campaignVoucherData" class="com.tisl.mpl.coupon.pojo.CampaignVoucherData" />
+	
+	<!-- Tata Cliq : For Campaign Team   -->
+   	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob"
+   		autowire="byName" >
+   	</bean>				
+
 </beans>

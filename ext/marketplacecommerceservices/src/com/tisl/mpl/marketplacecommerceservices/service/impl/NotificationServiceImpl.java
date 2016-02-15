@@ -623,7 +623,6 @@ public class NotificationServiceImpl implements NotificationService
 
 			if (null != voucherIndentifier && null != voucherCode)
 			{
-
 				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
 
 				if (existingVoucherList.isEmpty())
@@ -635,10 +634,9 @@ public class NotificationServiceImpl implements NotificationService
 					voucherStatus = existingVoucherList.get(0);
 				}
 
-				userUidList.addAll(restrUserUidList);
+				userUidList.addAll(restrUserUidList)			
 
-				//Setting values in model
-				//voucherStatus.setIfUserRestrictionExist(Boolean.TRUE);
+				//Setting values in model				
 				voucherStatus.setVoucherIdentifier(voucherIndentifier);
 				voucherStatus.setVoucherCode(voucherCode);
 				voucherStatus.setCustomerUidList(userUidList);
@@ -658,10 +656,12 @@ public class NotificationServiceImpl implements NotificationService
 			{
 				voucherStatus = existingVoucherList.get(0);
 				modelService.remove(voucherStatus);
-
 			}
 		}
-	}
+
+ }
+
+
 
 	private List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherIndentifier)
 	{

@@ -99,7 +99,8 @@ public class MplDiscountUtil
 		////////////////////////////////////////
 		else if (productPromotion instanceof BuyAandBgetCModel)
 		{
-			promoData = getBuyAandBgetCData(productPromotion, cart);
+			//promoData = getBuyAandBgetCData(productPromotion, cart);
+			promoData = getBuyAandBgetCData(productPromotion);
 		}
 		else if (productPromotion instanceof BuyAandBGetPromotionOnShippingChargesModel)
 		{
@@ -1016,7 +1017,8 @@ public class MplDiscountUtil
 	 * @param cart
 	 * @return responseData
 	 */
-	private MplPromotionData getBuyAandBgetCData(final ProductPromotionModel productPromotion, final CartModel cart)
+	//private MplPromotionData getBuyAandBgetCData(final ProductPromotionModel productPromotion, final CartModel cart)
+	private MplPromotionData getBuyAandBgetCData(final ProductPromotionModel productPromotion)
 	{
 		final MplPromotionData promoData = new MplPromotionData();
 		final BuyAandBgetCModel oModel = (BuyAandBgetCModel) productPromotion;

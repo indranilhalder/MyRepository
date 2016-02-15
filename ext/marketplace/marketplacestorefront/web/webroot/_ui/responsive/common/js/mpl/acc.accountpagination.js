@@ -28,7 +28,21 @@ $(document).ready(function (){
 	// -----------*** TISPRO-48 --- Pagination with Lazy loading ***----------------
 
 	
-	
+	$(document).ready(function (){
+		// -----------*** TISSRT-630 --- Pagination with Lazy loading ***----------------
+		var pageIndexC = $('#pageIndexC').val();
+		var pagableSizeC = $('#pagableSizeC').val();
+		var pageNumC = parseInt(pageIndexC)+1;
+		var endCountC = pageNumC*pagableSizeC;
+		var startCountC = endCountC-pagableSizeC+1;
+		var totalNumberOfResultsC = $('#totalNumberOfResultsC').val();
+		if(endCountC>totalNumberOfResultsC){
+			endCountC = totalNumberOfResultsC;
+		}
+
+		var displayCoupon = startCountC+"-"+endCountC+ " of " + totalNumberOfResultsC + " Coupons";
+		$("#displayPaginationCountUpCoupon").html(displayCoupon);
+	});
 	
 	
 	
