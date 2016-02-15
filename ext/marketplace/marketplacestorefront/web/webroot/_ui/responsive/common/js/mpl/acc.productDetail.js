@@ -1329,6 +1329,17 @@ function getRating(key,productCode,category)
 			var raingcount=data.streamInfo.ratingCount;
 			$(".product-detail ul.star-review a").empty();
 			$(".product-detail ul.star-review li").attr("class","empty");
+			
+ 			var rating = Math.floor(avgreview);
+	 		var ratingDec = avgreview - rating;
+	 		for(var i = 0; i < rating; i++) {
+	 			$("#pdp_rating"+" li").eq(i).removeClass("empty").addClass("full");
+	 			}
+	 		if(ratingDec!=0)
+	 			{
+	 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
+	 			} 
+	 		
 			rating(avgreview,raingcount);
 			
 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
