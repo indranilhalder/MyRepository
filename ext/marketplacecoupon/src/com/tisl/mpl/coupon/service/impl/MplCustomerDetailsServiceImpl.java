@@ -5,7 +5,6 @@ package com.tisl.mpl.coupon.service.impl;
 
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class MplCustomerDetailsServiceImpl implements MplCustomerDetailsService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.CustomerDetailsService#getCustomer()
 	 */
 	@Override
@@ -54,19 +53,7 @@ public class MplCustomerDetailsServiceImpl implements MplCustomerDetailsService
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.CustomerDetailsService#getVoucher()
-	 */
-	@Override
-	public List<VoucherModel> getVoucher()
-	{
-		LOG.debug("Inside get Voucher in DefaultCustomerDetailsImpl");
-		return customerDetailsDao.findVoucher();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.CustomerDetailsService#getCartDetails()
 	 */
 	@Override
