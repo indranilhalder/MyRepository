@@ -168,7 +168,7 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 
 
 				final PaymentInfoModel paymentInfoSource = source.getPaymentInfo();
-				Address billingAddress = new Address();
+				Address billingAddress = null;
 				if (paymentMode != null && !paymentMode.equalsIgnoreCase(MarketplaceomsordersConstants.COD))
 				{
 					if (paymentInfoSource != null)
@@ -185,7 +185,14 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 								billingAddress = getAddressConverter().convert(address);
 							}
 						}
-						paymentInfo.setBillingAddress(billingAddress);
+						if(billingAddress != null)
+						{
+						  paymentInfo.setBillingAddress(billingAddress);
+						}
+						else
+						{
+							LOG.debug("Billing address is null");
+						}
 					}
 				}
 				else
@@ -194,7 +201,14 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 					{
 						billingAddress = getAddressConverter().convert(address);
 					}
-					paymentInfo.setBillingAddress(billingAddress);
+					if(billingAddress != null)
+					{
+					    paymentInfo.setBillingAddress(billingAddress);
+					}
+					else
+					{
+						LOG.debug("Billing address is null");
+					}
 				}
 				paymentInfos.add(paymentInfo);
 
