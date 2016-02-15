@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MplConstants;
@@ -116,7 +117,8 @@ public class MplDepartmentsValueProvider extends AbstractPropertyFieldValueProvi
 			}
 			for (final List categoryPath : pathsForCategory)
 			{
-				if (categoryPath != null && categoryPath.size() > 0
+				//if (categoryPath != null && categoryPath.size() > 0 && ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
+				if (CollectionUtils.isNotEmpty(categoryPath)
 						&& ((CategoryModel) categoryPath.get(0)).getCode().contains(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE))
 				{
 					accumulateCategoryPaths(categoryPath, allPaths);

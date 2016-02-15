@@ -192,7 +192,7 @@
  <h3 class="company">
               ${product.brand.brandname}&nbsp;&nbsp;<span id="sellerSelName"></span></h3> <%-- <spring:theme code="product.by"/> --%>
              
-    <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
+    <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>		
 
 </span>
  <div class="price" id="sizePrice">
@@ -430,7 +430,7 @@
 			<span id="outOfStockText" class="sizeGuide-message">
 			<spring:theme code="product.product.outOfStock" />
 			</span>
-		<input type="button" onClick="openPop();" id="add_to_wishlist-sizeguide" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
+		<input type="button" onClick="openPop_SizeGuide();" id="add_to_wishlist-sizeguide" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			<!-- <font color="#ff1c47">Product is out of stock for the selected size</font> -->
 		</p></span>
 		
@@ -501,6 +501,51 @@
 </div>
 <script>
 $(document).ready(function(){
+	var qtyData = $("#pdpQty").val();
+	localStorage.setItem("sizeguideselectvaluePdp", qtyData);
+	
+	var qtyData1 = $("#quantity").val();
+	localStorage.setItem("sizeguideselectvalueQview", qtyData1);
+	
+	$("select#sizeGuideQty").on("change", function(){
+		var x = $("select#sizeGuideQty").val();
+		localStorage.setItem("sizeguideselectvalue", x);
+	});
+	var sizeGuide = localStorage.getItem('sizeguideselectvalue');
+	var pdp = localStorage.getItem('sizeguideselectvaluePdp');
+	var qview = localStorage.getItem('sizeguideselectvalueQview');
+	
+	if(sizeGuide == null || sizeGuide==undefined)
+	{
+		
+		if(pdp == null || pdp == 'undefined')
+		{
+			if(qview == null || qview == 'undefined')
+			{
+				$("#sizeGuideQty").val("1");
+			}
+			else
+			{
+				$("#sizeGuideQty").val(qview);
+			}
+		}
+		else
+		{
+			 $("#sizeGuideQty").val(pdp);
+		}
+		
+	}
+	else
+	{
+		$("#sizeGuideQty").val(sizeGuide);
+	}
+	var currentColour = '${product.colour}';
+	$(".color-swatch li span").each(function(){
+		var title = $(this).attr("title");
+		if(currentColour == title){
+			$(this).parent().parent().addClass("active");
+		}			
+	});
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,
@@ -526,245 +571,16 @@ $(document).ready(function(){
 	$("#noProductForSelectedSeller").hide();
 	$("#productDetails").show();
 	$("#sizePrice").show();
-	/* $('body').on('hidden.bs.modal', '#popUpModal', function () {
-		  $(this).removeData('bs.modal');
-		}); */
+	
+	
+	$('body').on('hidden.bs.modal', '#popUpModal', function () {
+		 localStorage.removeItem('sizeguideselectvaluePdp');
+		 localStorage.removeItem('sizeguideselectvalueqview');
+		 localStorage.removeItem('sizeguideselectvalue');
+		 
+		 });
 	
 	
 });
-
-
-
-function openPop() {
-	//alert("sellerSelArticleSKUVal local: "+ $("#sellerSelArticleSKUVal").val());
-	
-	var loggedIn=$("loggedIn").val();
-	
-	//alert(ussidfromSeller);
-	
-	$('#addedMessage_sizeGuide').hide();
-	//if (ussidfromSeller == null || ussidfromSeller == "") {
-		ussidValue = $("#sellerSelArticleSKUVal").val();
-	//} else {
-	//	ussidValue = ussidfromSeller;
-	//}
-	var productCode = '${product.code}';//$("#product").val();
-
-	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/viewWishlistsInPDP";
-
-	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
-	//alert("localdata: "+dataString);
-	// for
-	// ussid
-
-	$.ajax({
-		contentType : "application/json; charset=utf-8",
-		url : requiredUrl,
-		data : dataString,
-		dataType : "json",
-		success : function(data) {
-		if (data==null) {
-				$("#wishListNonLoggedInId_sizeGuide").show();
-				$("#wishListDetailsId_sizeGuide").hide();
-			}
-
-			else if (data == "" || data == []) {
-				//alert("fasle");
-				loadDefaultWishListName_SizeGuide();
-
-			} else {
-				LoadWishLists_SizeGuide(ussidValue, data, productCode);
-				//alert("true");
-			}
-		},
-		error : function(xhr, status, error) {
-			$("#wishListNonLoggedInId_sizeGuide").show();
-			$("#wishListDetailsId_sizeGuide").hide();
-		}
-	});
-} 
-
-
-function LoadWishLists_SizeGuide(ussid, data, productCode) {
-	// modified for ussid
-	
-	//alert(ussid+" : "+data+" : "+productCode);
-	
-	var wishListContent = "";
-	var wishName = "";
-	$this = this;
-	$("#wishListNonLoggedInId_sizeGuide").hide();
-	$("#wishListDetailsId_sizeGuide").show();
-
-	for ( var i in data) {
-		var index = -1;
-		var checkExistingUssidInWishList = false;
-		var wishList = data[i];
-		wishName = wishList['particularWishlistName'];
-		
-		//alert(wishName+" : wishName");
-		
-		wishListList[i] = wishName;
-		var entries = wishList['ussidEntries'];
-		for ( var j in entries) {
-			var entry = entries[j];
-
-			if (entry == ussid) {
-
-				checkExistingUssidInWishList = true;
-				break;
-
-			}
-		}
-		//alert("checkExistingUssidInWishList : "+checkExistingUssidInWishList);
-	
-		if (checkExistingUssidInWishList) {
-			index++;
-            
-			wishListContent = wishListContent
-					+ "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_"
-					+ i
-					+ "' style='display: none' onclick='selectWishlist_SizeGuide("
-					+ i + ")' disabled><label for='radio_"
-					+ i + "'>"+wishName+"</label></td></tr>";
-		} else {
-			index++;
-		  
-			wishListContent = wishListContent
-					+ "<tr><td><input type='radio' name='wishlistradio' id='radio_"
-					+ i
-					+ "' style='display: none' onclick='selectWishlist_SizeGuide("
-					+ i + ")'><label for='radio_"
-					+ i + "'>"+wishName+"</label></td></tr>";
-					
-		}
-
-	}
-
-	$("#wishlistTbodyId_sizeGuide").html(wishListContent);
-
-}
-
-function loadDefaultWishListName_SizeGuide() {
-	var wishListContent = "";
-	var wishName = $("#defaultWishId_sizeGuide").text();
-	
-
-	
-	$("#wishListNonLoggedInId_sizeGuide").hide();
-	$("#wishListDetailsId_sizeGuide").show();
-
-	wishListContent = wishListContent
-			+ "<tr><td><input type='text' id='defaultWishName_sizeGuide' value='"
-			+ wishName + "'/></td></td></tr>";
-	$("#wishlistTbodyId_sizeGuide").html(wishListContent);
-	//alert(wishListContent+" wishListContent");
-
-	}
-
-
-
-	function selectWishlist_SizeGuide(i) {
-		//alert(i+" : sizeguide");
-	$("#hidWishlist_sizeGuide").val(i);
-
-	}
-
-	function addToWishlist_SizeGuide() {
-	var productCodePost = '${product.code}'; //$("#productCode").val();
-	//var productCodePost = $("#productCodePostQuick").val();
-	//alert(productCodePost);
-	var wishName = "";
-
-
-	if (wishListList == "") {
-		wishName = $("#defaultWishName_sizeGuide").val();
-	} else {
-		wishName = wishListList[$("#hidWishlist_sizeGuide").val()];
-	}
-	
-	//alert("wishListList add: "+wishListList);
-	
-	if(wishName==""){
-		var msg=$('#wishlistnotblank_sizeGuide').text();
-		$('#addedMessage_sizeGuide').show();
-		$('#addedMessage_sizeGuide').html(msg);
-		//alert("1");
-		return false;
-	}
-	if(wishName==undefined||wishName==null){
-		//alert("2");
-		return false;
-	}
-	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/addToWishListInPDP";
-	var sizeSelected=true;
-	if( $("#variant.size-g option:selected").val()=="#"){
-		sizeSelected=false;
-	}
-	var dataString = 'wish=' + wishName + '&product=' + productCodePost
-			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
-
-
-	$.ajax({
-		contentType : "application/json; charset=utf-8",
-		url : requiredUrl,
-		data : dataString,
-		dataType : "json",
-		success : function(data) {
-			if (data == true) {
-				$("#radio_" + $("#hidWishlist_sizeGuide").val()).prop("disabled", true);
-				var msg=$('#wishlistSuccess_sizeGuide').text();
-				$('#addedMessage_sizeGuide').show();
-				$('#addedMessage_sizeGuide').html(msg);
-				setTimeout(function() {
-					  $("#addedMessage_sizeGuide").fadeOut().empty();
-					}, 1500);
-				populateMyWishlistFlyOut(wishName);
-				
-				
-				//For MSD
-				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
-				if(isMSDEnabled === 'true')
-				{
-				console.log(isMSDEnabled);
-				var isApparelExist  = $("input[name=isApparelExist]").val();
-				console.log(isApparelExist);				
-				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-				console.log(salesHierarchyCategoryMSD);
-				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-				console.log(rootCategoryMSD);				
-				var productCodeMSD =  $("input[name=productCodeMSD]").val();
-				console.log(productCodeMSD);				
-				var priceformad =  $("input[id=price-for-mad]").val();
-				console.log(priceformad);				
-				
-				if(typeof isMSDEnabled === 'undefined')
-				{
-					isMSDEnabled = false;						
-				}
-				
-				if(typeof isApparelExist === 'undefined')
-				{
-					isApparelExist = false;						
-				}	
-				
-				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
-					{					
-					ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
-					}	
-				}
-				//End MSD
-			}
-		},
-	});
-
-	setTimeout(function() {
-		$('a.wishlist#wishlist').popover('hide');
-		$('input.wishlist#add_to_wishlist-sizeguide').popover('hide');
-		}, 1500);
-	}
-	
 
 </script> 	

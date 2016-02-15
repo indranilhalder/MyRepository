@@ -180,13 +180,29 @@
 					</ul>
 					<!--  pagination for upper section  -->
 					<div class="bottom btn-placement">
-						<c:if test="${not empty closedCouponList}">
+						<%-- <c:if test="${not empty closedCouponList}">
 							<p>${startIndexCoupon}-${endIndexCoupon}
 								of ${couponListSize} &nbsp;
 								<spring:theme code="text.account.coupons.coupons" />
 							</p>
+						</c:if> --%>
+						<c:if test="${not empty searchPageData.results}">
+						<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination -->
+							<input type="hidden" id="pageIndexC" value="${pageIndex}" />
+							<input type="hidden" id="pagableSizeC" value="${pageSize}" />
+							<input type="hidden" id="totalNumberOfResultsC"
+								value="${searchPageData.pagination.totalNumberOfResults}" />
+							<div id="displayPaginationCountUpCoupon"></div>
 						</c:if>
-					
+						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
+							supportShowAll="${isShowAllAllowed}"
+							searchPageData="${searchPageData}"
+							searchUrl="/my-account/coupons?sort=${searchPageData.pagination.sort}"
+							numberPagesShown="${numberPagesShown}" />
+							
+							
+							
+							
 							<c:if test="${totalPagesCoupon ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
@@ -382,7 +398,7 @@
 										</p>
 						</c:if>
 						
-							<c:if test="${totalPagesCouponHist ne 1 }">
+							<%-- <c:if test="${totalPagesCouponHist ne 1 }">
 								<ul class="pagination">
 									<!-- Previous link addition -->
 									<c:if
@@ -425,7 +441,7 @@
 									</c:if>
 
 								</ul>
-							</c:if>
+							</c:if> --%>
 					
 					</div>
 				</div>
@@ -471,6 +487,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$(".page-coupons .totalResults").hide();
 		$("#couponHistory").click(function() {
 			$(".your-activity.coupon-history").slideDown();
 			$(this).hide();

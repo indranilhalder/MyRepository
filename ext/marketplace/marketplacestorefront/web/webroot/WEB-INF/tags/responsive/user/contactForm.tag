@@ -10,7 +10,7 @@
 	width: 100%;
 	border: none !important;
 	cursor: default;
-	color: #00bce9;
+	color: #A9143C;
 }
 </style>
 <form:form action="${uploadUrl}" method="POST"

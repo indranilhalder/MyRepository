@@ -25,7 +25,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.InternalExternalAutomati
 public class InternalExternalCampaignAutomationJob extends AbstractJobPerformable<IntExtCampaignAutomationJobModel>
 {
 
-	Logger LOG = Logger.getLogger(this.getClass());
+	private static final Logger LOG = Logger.getLogger(InternalExternalCampaignAutomationJob.class);
+
 	@Autowired
 	private InternalExternalAutomationService automationService;
 

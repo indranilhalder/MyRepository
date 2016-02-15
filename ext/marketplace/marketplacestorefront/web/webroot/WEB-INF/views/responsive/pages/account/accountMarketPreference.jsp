@@ -92,12 +92,12 @@
 								<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
 				</ul>
-				<ul>
+				<%-- <ul>
 				<li class="header-SignInShare"><h3><spring:theme
 									code="header.flyout.credits" /></h3></li>
 						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 									code="header.flyout.coupons" /></a></li>
-				</ul>
+				</ul> --%>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.share" />
@@ -295,5 +295,4 @@
 <script type="text/javascript" src="${commonResourcePath}/js/acc.accountaddress.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/feedback.js"></script> --%>
+<script type="text/javascript"	src="${commonResourcePath}/js/feedback.js"></script> --%>

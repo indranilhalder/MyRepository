@@ -9,7 +9,6 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
-import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -17,12 +16,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Authenticator;
+import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,9 +51,11 @@ import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 public class InternalExternalAutomationServiceImpl implements InternalExternalAutomationService
 {
 
-	Logger LOG = Logger.getLogger(this.getClass());
-	@Autowired
-	private CMSPageService cmsPageService;
+	//final Logger LOG = Logger.getLogger(this.getClass());
+	private static final Logger LOG = Logger.getLogger(InternalExternalAutomationServiceImpl.class);
+	/*
+	 * @Autowired private CMSPageService cmsPageService;
+	 */
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -71,22 +74,37 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	@Override
 	public List<InternalCampaignReportData> automationGetAllBanner()
 	{
-		final CatalogVersionModel catalogmodel = catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
-				.getString("internal.campaign.catelog"),
-				configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
-
 
 		final Collection<CatalogVersionModel> catalogmodelCollection = new ArrayList<CatalogVersionModel>();
-		catalogmodelCollection.add(catalogmodel);
-
-		final Collection<ContentPageModel> contentPages = mplCmsPageService.getAllContentPages(catalogmodelCollection);
 		final List<InternalCampaignReportData> CampaignDataList = new ArrayList<InternalCampaignReportData>();
 
+		InternalCampaignReportData campaignDataSeqBanner = null;
+		InternalCampaignReportData campaignDataBigPromoBanner = null;
+		InternalCampaignReportData campaignDataBigFourPromoBanner = null;
+		StringBuffer sb = null;
+		String imageUrl = MarketplacecommerceservicesConstants.EMPTY;
+		String imageSize = MarketplacecommerceservicesConstants.EMPTY;
+		//final InternalCampaignReportData campaignDataSeqBanner = new InternalCampaignReportData();
+		//final InternalCampaignReportData campaignDataBigPromoBanner = new InternalCampaignReportData();
+		//final InternalCampaignReportData campaignDataBigFourPromoBanner = new InternalCampaignReportData();
+		//final Map<String, String> automationMap = new HashMap<String, String>();
 		try
 		{
+
+			final CatalogVersionModel catalogmodel = catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
+					.getString("internal.campaign.catelog"),
+					configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
+
+			catalogmodelCollection.add(catalogmodel);
+
+			final Collection<ContentPageModel> contentPages = mplCmsPageService.getAllContentPages(catalogmodelCollection);
+
+
 			for (final ContentPageModel contentPageItr : contentPages)
 			{
+
 				final Map<String, String> automationMap = new HashMap<String, String>();
+				//final Map<String, String> automationMap = new HashMap<String, String>();
 				@SuppressWarnings("deprecation")
 				final List<ContentSlotForPageModel> allSlots = contentPageItr.getContentSlots();
 				for (final ContentSlotForPageModel eachSlot : allSlots)
@@ -98,213 +116,375 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 					{
 
 						// 1.For Mpl Sequntial Banners only
-						if (null != componentItr && componentItr instanceof MplSequentialBannerComponentModel)
+						//if (null != componentItr && componentItr instanceof MplSequentialBannerComponentModel)
+						if (componentItr instanceof MplSequentialBannerComponentModel)
 						{
-							final InternalCampaignReportData campaignDataSeqBanner = new InternalCampaignReportData();
+							campaignDataSeqBanner = new InternalCampaignReportData();
 							automationMap.put("asset_name", componentItr.getName());
 							automationMap.put("source_page", contentPageItr.getLabel());
+							//contentPageItr.getUid()
 
 							// Storing data for generating Internal Report
 							campaignDataSeqBanner.setAssetName(componentItr.getName());
-							campaignDataSeqBanner.setSourcePage(contentPageItr.getLabel());
+							if (contentPageItr.getLabel().contains("/m/"))
+							{
+								campaignDataSeqBanner.setSourcePage(contentPageItr.getLabel().substring(
+										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
+							}
+							else
+							{
+								campaignDataSeqBanner.setSourcePage(contentPageItr.getLabel());
+							}
 							campaignDataSeqBanner.setIcid(componentItr.getPk().toString());
 
 							final MplSequentialBannerComponentModel seqBannerComponent = (MplSequentialBannerComponentModel) componentItr;
 							final Collection<BannerComponentModel> bannerComponentModels = seqBannerComponent.getBannersList();
 							for (final BannerComponentModel banner : bannerComponentModels)
 							{
-								if (null != banner && banner instanceof MplBigPromoBannerComponentModel)
+								//if (null != banner && banner instanceof MplBigPromoBannerComponentModel)
+								if (banner instanceof MplBigPromoBannerComponentModel)
 								{
+									//final InternalCampaignReportData campaignDataSeqBanner = new InternalCampaignReportData();
+									String CategorySeqBanner = "";
 									final MplBigPromoBannerComponentModel bigPromoBanner = (MplBigPromoBannerComponentModel) banner;
 
-									String CategorySeqBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|"
-											+ bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
-
-									CategorySeqBanner = CategorySeqBanner.substring(CategorySeqBanner.lastIndexOf("/") + 1,
-											CategorySeqBanner.length());
-
-
-									automationMap.put("category_id",
-											bigPromoBanner.getMajorPromoText() + "|" + bigPromoBanner.getMinorPromo1Text() + "|"
-													+ bigPromoBanner.getMinorPromo2Text());
-									campaignDataSeqBanner.setCategory(CategorySeqBanner);
-
-
-
-
-									if (null != bigPromoBanner.getBannerImage())
+									/*
+									 * String CategorySeqBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|" +
+									 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
+									 * 
+									 * CategorySeqBanner = CategorySeqBanner.substring(CategorySeqBanner.lastIndexOf("/") + 1,
+									 * CategorySeqBanner.length());
+									 */
+									if (contentPageItr.getCategoryAssociated() != null)
 									{
-										String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+										CategorySeqBanner = contentPageItr.getCategoryAssociated().getCode();
+									}
+									else
+									{
+										CategorySeqBanner = "";
+									}
+									/*
+									 * automationMap.put("category_id", bigPromoBanner.getMajorPromoText() + "|" +
+									 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
+									 */
 
-										if (!ImageUrl.startsWith("http://"))
+									campaignDataSeqBanner.setCategory(CategorySeqBanner);
+									try
+									{
+										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+												&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
 										{
-											ImageUrl = "http:" + ImageUrl;
+											LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
+											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+											imageUrl = sb.toString();
+											LOG.info("Sequntial Banner Image URl: " + imageUrl);
+											imageSize = findIamgeSize(imageUrl);
+											LOG.info("Sequntial Banners size :::::::::::::" + imageSize);
+											//TODO : add method for checking the image size
 
 										}
-										else if (!ImageUrl.startsWith("https://"))
+										else if (null != bigPromoBanner.getBannerImage()
+												&& null != bigPromoBanner.getBannerImage().getURL()
+												&& !bigPromoBanner.getBannerImage().getURL().startsWith("https://"))
 										{
 
-											ImageUrl = "https:" + ImageUrl;
+											LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
+											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+											//imageUrl = sb.append("https:").toString();
+											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+											imageUrl = sb.toString();
+											LOG.info("Sequntial Banner Image URl: " + imageUrl);
+											imageSize = findIamgeSize(imageUrl);
+											LOG.info("Sequntial Banners size ===========" + imageSize);
+											//TODO add method for checking the image size
 										}
 
-										final URL url = new URL(ImageUrl);
 
-										final BufferedImage bimg = ImageIO.read(url);
-										final int width = bimg.getWidth();
-										final int height = bimg.getHeight();
+										/*
+										 * try {
+										 */
 
-										final String size = String.valueOf(width) + " X " + String.valueOf(height);
+										// Sets the authenticator that will be used by the networking code
+										// when a proxy or an HTTP server asks for authentication.
 
+										/*
+										 * Authenticator.setDefault(new Authenticator() {
+										 * 
+										 * @Override public PasswordAuthentication getPasswordAuthentication() { final String
+										 * username = "siteadmin"; final String password = "ASDF!@#$asdf1234";
+										 * LOG.info("Authenticating Login......"); return new PasswordAuthentication(username,
+										 * password.toCharArray());
+										 * 
+										 * } });
+										 */
+
+										/*
+										 * automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
+										 */
 										automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
-										automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
 
 										campaignDataSeqBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-										campaignDataSeqBanner.setSize(size);
+										campaignDataSeqBanner.setSize(imageSize);
+										//}
+										/*
+										 * catch (final MalformedURLException e) { LOG.error("Malformed URL: " + e.getMessage());
+										 * } catch (final IOException e) { LOG.error("IO Exception: " + e.getMessage()); }
+										 */
 
+										CampaignDataList.add(campaignDataSeqBanner);
+									}
 
-
+									catch (final Exception e)
+									{
+										LOG.error(e.getMessage());
 									}
 								}
-								else if (null != banner && banner instanceof MplBigFourPromoBannerComponentModel)
+								//else if (null != banner && banner instanceof MplBigFourPromoBannerComponentModel)
+								else if (banner instanceof MplBigFourPromoBannerComponentModel)
 								{
 									final MplBigFourPromoBannerComponentModel bigFourBanner = (MplBigFourPromoBannerComponentModel) banner;
 									LOG.info("MplBigFourPromoBannerComponentModel -->> " + bigFourBanner.getBannerImage());
 								}
 								else
 								{
-									LOG.info("" + banner.getMedia());
+									LOG.info("MplBigFourPromoBannerComponentModel ......" + banner.getMedia());
 								}
 							}
+
 						}
 						//2.Mpl Big Promo BannerComponent Model only
-						if (null != componentItr && componentItr instanceof MplBigPromoBannerComponentModel)
+						//if (null != componentItr && componentItr instanceof MplBigPromoBannerComponentModel)
+						if (componentItr instanceof MplBigPromoBannerComponentModel)
 						{
-							final InternalCampaignReportData campaignDataBigPromoBanner = new InternalCampaignReportData();
+							campaignDataBigPromoBanner = new InternalCampaignReportData();
 							final MplBigPromoBannerComponentModel bigPromoBanner = (MplBigPromoBannerComponentModel) componentItr;
+							String CategoryBigPromoBanner = "";
 
-							String CategoryBigPromoBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|"
-									+ bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
-							CategoryBigPromoBanner = CategoryBigPromoBanner.substring(CategoryBigPromoBanner.lastIndexOf("/") + 1,
-									CategoryBigPromoBanner.length());
+							/*
+							 * String CategoryBigPromoBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|" +
+							 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
+							 * CategoryBigPromoBanner =
+							 * CategoryBigPromoBanner.substring(CategoryBigPromoBanner.lastIndexOf("/") + 1,
+							 * CategoryBigPromoBanner.length());
+							 */
+							if (contentPageItr.getCategoryAssociated() != null)
+							{
+								CategoryBigPromoBanner = contentPageItr.getCategoryAssociated().getCode();
+							}
+
+							else
+							{
+								CategoryBigPromoBanner = "";
+							}
 
 							automationMap.put("asset_name", componentItr.getName());
 							automationMap.put("source_page", contentPageItr.getLabel());
-							automationMap.put(
-									"category_id",
-									bigPromoBanner.getMajorPromoText() + "|" + bigPromoBanner.getMinorPromo1Text() + "|"
-											+ bigPromoBanner.getMinorPromo2Text());
+							/*
+							 * automationMap.put( "category_id", bigPromoBanner.getMajorPromoText() + "|" +
+							 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
+							 */
 
 							campaignDataBigPromoBanner.setIcid(componentItr.getPk().toString());
-							campaignDataBigPromoBanner.setSourcePage(contentPageItr.getLabel());
+
+							if (contentPageItr.getLabel().contains("/m/"))
+							{
+								campaignDataBigPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
+										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
+							}
+							else
+							{
+								campaignDataBigPromoBanner.setSourcePage(contentPageItr.getLabel());
+							}
 							campaignDataBigPromoBanner.setAssetName(componentItr.getName());
 							campaignDataBigPromoBanner.setCategory(CategoryBigPromoBanner);
 
-							if (null != bigPromoBanner.getBannerImage())
+							try
 							{
-								String ImageUrl = bigPromoBanner.getBannerImage().getURL();
-								if (!ImageUrl.startsWith("http://"))
+
+								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
 								{
-									ImageUrl = "http:" + ImageUrl;
+									LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									//imageUrl = sb.append("http:").toString();
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+									imageUrl = sb.toString();
+									LOG.info("Big Promo BannerComponent URl: " + imageUrl);
+									imageSize = findIamgeSize(imageUrl);
+									LOG.info("Big Promo BannerComponent  size ===========" + imageSize);
+									//TODO : add method for checking the image size
 
 								}
-								else if (!ImageUrl.startsWith("https://"))
+								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith("https://"))
 								{
 
-									ImageUrl = "https:" + ImageUrl;
+									LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									//imageUrl = sb.append("https:").toString();
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+									imageUrl = sb.toString();
+									LOG.info("Big Promo BannerComponent URl: " + imageUrl);
+									imageSize = findIamgeSize(imageUrl);
+									LOG.info("Big Promo BannerComponent  size ===========" + imageSize);
+
+									//TODO add method for checking the image size
 								}
+								//final String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+								//LOG.debug("+++++++++++++2222 +Image URL:::::" + ImageUrl);
+								//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+								/*
+								 * if (!ImageUrl.startsWith("http://")) { ImageUrl = "http:" + ImageUrl;
+								 * LOG.debug("2222.2+++++++++++++Image URL:::::" + ImageUrl); } else if
+								 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
+								 * LOG.debug("2222.22+++++++++++++Image URL:::::" + ImageUrl); }
+								 */
 
-								final URL url = new URL(ImageUrl);
-
-
-								final BufferedImage bimg = ImageIO.read(url);
-								final int width = bimg.getWidth();
-								final int height = bimg.getHeight();
-
-								final String size = String.valueOf(width) + " X " + String.valueOf(height);
-
-
+								//final URL url = new URL("https://assetssprint.tataunistore.com/medias/sys_master/images/8802948644894.png");
+								/*
+								 * final URL url = new URL(ImageUrl); final BufferedImage bimg = ImageIO.read(url.openStream());
+								 * final int width = bimg.getWidth(); final int height = bimg.getHeight(); final String size =
+								 * String.valueOf(width) + " X " + String.valueOf(height);
+								 */
 
 								automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
 								automationMap.put("size", bigPromoBanner.getBannerImage().getInternalURL().toString());
 
 								campaignDataBigPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-								campaignDataBigPromoBanner.setSize(size);
+								campaignDataBigPromoBanner.setSize(imageSize);
 
 
 								CampaignDataList.add(campaignDataBigPromoBanner);
+
+
 							}
+							catch (final Exception e)
+							{
+								LOG.error(e.getMessage());
+							}
+							CampaignDataList.add(campaignDataBigPromoBanner);
 						}
 						//3. Mpl BigFour PromoBanner ComponentModel
-						if (null != componentItr && componentItr instanceof MplBigFourPromoBannerComponentModel)
+						//if (null != componentItr && componentItr instanceof MplBigFourPromoBannerComponentModel)
+						if (componentItr instanceof MplBigFourPromoBannerComponentModel)
 						{
-							final InternalCampaignReportData campaignDataBigFourPromoBanner = new InternalCampaignReportData();
+							campaignDataBigFourPromoBanner = new InternalCampaignReportData();
 							final MplBigFourPromoBannerComponentModel bigPromoBanner = (MplBigFourPromoBannerComponentModel) componentItr;
+							String CategoryBigFourPromoBanner = "";
+							/*
+							 * String CategoryBigFourPromoBanner = findCategoryLink(bigPromoBanner.getPromoText1() + "|" +
+							 * bigPromoBanner.getPromoText2() + "|" + bigPromoBanner.getPromoText3() + "" +
+							 * bigPromoBanner.getPromoText4()); CategoryBigFourPromoBanner =
+							 * CategoryBigFourPromoBanner.substring( CategoryBigFourPromoBanner.lastIndexOf("/") + 1,
+							 * CategoryBigFourPromoBanner.length());
+							 */
+							if (contentPageItr.getCategoryAssociated() != null)
+							{
+								CategoryBigFourPromoBanner = contentPageItr.getCategoryAssociated().getCode();
+							}
 
-							String CategoryBigFourPromoBanner = findCategoryLink(bigPromoBanner.getPromoText1() + "|"
-									+ bigPromoBanner.getPromoText2() + "|" + bigPromoBanner.getPromoText3() + ""
-									+ bigPromoBanner.getPromoText4());
-
-							CategoryBigFourPromoBanner = CategoryBigFourPromoBanner.substring(
-									CategoryBigFourPromoBanner.lastIndexOf("/") + 1, CategoryBigFourPromoBanner.length());
+							else
+							{
+								CategoryBigFourPromoBanner = "";
+							}
 
 							automationMap.put("asset_name", componentItr.getName());
 							automationMap.put("source_page", contentPageItr.getLabel());
-							automationMap.put("category_id", bigPromoBanner.getPromoText1() + "|" + bigPromoBanner.getPromoText2() + "|"
-									+ bigPromoBanner.getPromoText3() + "" + bigPromoBanner.getPromoText4());
+							/*
+							 * automationMap.put("category_id", bigPromoBanner.getPromoText1() + "|" +
+							 * bigPromoBanner.getPromoText2() + "|" + bigPromoBanner.getPromoText3() + "" +
+							 * bigPromoBanner.getPromoText4());
+							 */
 
 							campaignDataBigFourPromoBanner.setIcid(componentItr.getPk().toString());
 							campaignDataBigFourPromoBanner.setAssetName(componentItr.getName());
-							campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
-							campaignDataBigFourPromoBanner.setCategory(CategoryBigFourPromoBanner);
-
-							if (null != bigPromoBanner.getBannerImage())
+							if (contentPageItr.getLabel().contains("/m/"))
 							{
-								String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+								campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
+										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
+							}
+							else
+							{
+								campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel());
+							}
+							campaignDataBigFourPromoBanner.setCategory(CategoryBigFourPromoBanner);
+							try
+							{
 
-								if (!ImageUrl.startsWith("http://"))
+								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
 								{
-									ImageUrl = "http:" + ImageUrl;
-
+									//final String ImageUrl = bigPromoBanner.getBannerImage().getURL();
+									//System.out.println("url is +++++++++++++++++++++++" + ImageUrl);
+									//LOG.debug("++++++++ 3333 +++++Image URL:::::" + ImageUrl);
+									LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									//imageUrl = sb.append("http:").toString();
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
+									imageUrl = sb.toString();
+									LOG.info("BigFour PromoBanner URl: " + imageUrl);
+									imageSize = findIamgeSize(imageUrl);
+									LOG.info("BigFour PromoBanner  size ===========" + imageSize);
+									//TODO : add method for checking the image size
 								}
-								else if (!ImageUrl.startsWith("https://"))
+
+								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith("https://"))
 								{
 
-									ImageUrl = "https:" + ImageUrl;
+									LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
+									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
+									//imageUrl = sb.append("https:").toString();
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
+									imageUrl = sb.toString();
+									LOG.info("BigFour PromoBanner URl: " + imageUrl);
+									imageSize = findIamgeSize(imageUrl);
+									LOG.info("BigFour PromoBanner  size ===========" + imageSize);
+									//TODO add method for checking the image size
 								}
 
-								final URL url = new URL(ImageUrl);
 
-
-								final BufferedImage bimg = ImageIO.read(url);
-								final int width = bimg.getWidth();
-								final int height = bimg.getHeight();
-
-								final String size = String.valueOf(width) + " X " + String.valueOf(height);
+								/*
+								 * if (!ImageUrl.startsWith("http://")) { ImageUrl = "http:" + ImageUrl;
+								 * LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl); } else if
+								 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
+								 * LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
+								 *
+								 * }
+								 */
 
 								automationMap.put("media_type", bigPromoBanner.getBannerImage().getMime());
 								automationMap.put("size", bigPromoBanner.getBannerImage().getSize().toString());
 
 								campaignDataBigFourPromoBanner.setMediaType(bigPromoBanner.getBannerImage().getMime());
-								campaignDataBigFourPromoBanner.setSize(size);
-
-
-
+								campaignDataBigFourPromoBanner.setSize(imageSize);
 
 							}
+							catch (final Exception e)
+							{
+								LOG.error(e.getMessage());
+							}
+							LOG.info("componentItr.getName() " + componentItr.getName());
+							CampaignDataList.add(campaignDataBigFourPromoBanner);
 						}
-						LOG.info("componentItr.getName() " + componentItr.getName());
+
 					}
+					//LOG.info("banner componenets found " + contentPageItr.getco);
+
 				}
-				//LOG.info("banner componenets found " + contentPageItr.getco);
+
+
 
 			}
-
 			createCSVExcel(CampaignDataList);
-
 		}
+		/*
+		 * catch (final IOException e) { LOG.error(e); }
+		 */
 		catch (final Exception e)
 		{
-			LOG.error(e);
+			LOG.error(e.getMessage());
 		}
 		return CampaignDataList;
 	}
@@ -331,7 +511,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		catch (final Exception e)
 		{
 			// YTODO Auto-generated catch block
-			LOG.info("Exception writing" + e);
+			LOG.info("Exception writing" + e.getMessage());
 		}
 		//` false;
 	}
@@ -344,11 +524,49 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	}
 
 	//public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final String path, final File file)
-	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final File file)
+	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedTmpList, final File file)
 	{
 		FileWriter fileWriter = null;
 		String CSVHeader = "";
+		//final HashSet<InternalCampaignReportData> set = new HashSet<InternalCampaignReportData>();
+		//final List<InternalCampaignReportData> tmpIRList = new ArrayList<InternalCampaignReportData>();
+		final List<InternalCampaignReportData> campaignDataConsolidatedList = new ArrayList<InternalCampaignReportData>();
 
+
+		for (final InternalCampaignReportData internalCampaignReportData : campaignDataConsolidatedTmpList)
+		{
+			if (CollectionUtils.isEmpty(campaignDataConsolidatedList))
+			{
+				campaignDataConsolidatedList.add(internalCampaignReportData);
+			}
+			else
+			{
+				boolean isPresent = false;
+				for (final InternalCampaignReportData finalData : campaignDataConsolidatedList)
+				{
+					if (finalData.getIcid() != null && internalCampaignReportData.getIcid() != null
+							&& finalData.getIcid().equalsIgnoreCase(internalCampaignReportData.getIcid()))
+					{
+						isPresent = true;
+						break;
+					}
+				}
+				if (!isPresent)
+				{
+					campaignDataConsolidatedList.add(internalCampaignReportData);
+				}
+			}
+		}
+
+
+		/*
+		 * for (final InternalCampaignReportData item : campaignDataConsolidatedTmpList) { if (!set.contains(item)) {
+		 * set.add(item); campaignDataConsolidatedList.add(item);
+		 * 
+		 * }
+		 * 
+		 * }
+		 */
 		try
 		{
 			fileWriter = new FileWriter(file, false);
@@ -427,7 +645,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
-			 * 
+			 *
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
@@ -449,6 +667,59 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				LOG.debug(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR + e);
 			}
 		}
+	}
+
+	public String findIamgeSize(final String urlString)
+	{
+
+		final String username = "siteadmin";
+		final String password = "ASDF!@#$asdf1234";
+		String size = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{
+			//final String urlString = "https://upload.wikimedia.org/wikipedia/commons/7/7a/Pollock_to_Hussey.jpg";
+			final URL object = new URL(urlString);
+
+			//final HttpsURLConnection connection = (HttpsURLConnection) object.openConnection();
+			final URLConnection connection = object.openConnection();
+			// int timeOut = connection.getReadTimeout();
+			connection.setReadTimeout(60 * 1000);
+			connection.setConnectTimeout(60 * 1000);
+			final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+			final String authorization = username + ":" + password;
+			final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
+			connection.setRequestProperty("Authorization", encodedAuth);
+			//final int responseCode = connection.getResponseCode();
+			//final int responseCode = connection.
+			//System.out.println("" + responseCode);
+			//final BufferedImage bimg = ImageIO.read(openURLForInput(url,username,password));
+			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
+			final int width = bimg.getWidth();
+			final int height = bimg.getHeight();
+			size = width + " X " + height;
+
+			//size = String.valueOf(width) + " X " + String.valueOf(height);
+			LOG.info("Size is :::::::" + size);
+
+
+		}
+		catch (final MalformedURLException e)
+		{
+			LOG.info("Malformed URL: " + e.getMessage());
+		}
+		catch (final IOException e)
+		{
+			LOG.info("IO Exception: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (final Exception e)
+		{
+			LOG.info("Exception is: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return size;
+
+
 	}
 
 	public String findCategoryLink(final String categoryId)
@@ -476,17 +747,40 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	protected String getOutputFilePath()
 	{
 
-		final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
-		final String timestamp = df.format(new Date());
+		//final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
+		//final String timestamp = df.format(new Date());
 		final StringBuilder output_file_path = new StringBuilder();
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path", ""));
 		output_file_path.append(File.separator);
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix", ""));
 		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
-		output_file_path.append(timestamp);
+		//output_file_path.append(timestamp);
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension", ""));
 
 		return output_file_path.toString();
+	}
+
+	public static class CustomAuthenticator extends Authenticator
+	{
+
+		// Called when password authorization is needed
+		@Override
+		protected PasswordAuthentication getPasswordAuthentication()
+		{
+			final String username = "";
+			final String password = "";
+			//System.out.println("=======+++++++++===============================");
+
+			// Get information about the request
+
+			//	username = "siteadmin";
+			//password = "ASDF!@#$asdf1234";
+
+			// Return the information (a data holder that is used by Authenticator)
+			return new PasswordAuthentication(username, password.toCharArray());
+
+		}
+
 	}
 
 }

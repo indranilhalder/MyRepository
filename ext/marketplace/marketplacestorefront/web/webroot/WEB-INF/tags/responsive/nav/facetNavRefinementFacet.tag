@@ -12,6 +12,7 @@
 <c:if test="${facetData.code ne 'deptType'}">
 <c:if test="${facetData.code ne 'sellerId'}">
 <c:if test="${facetData.code ne 'allMobilePromotions'}">
+<c:if test="${facetData.code ne 'vouchers'}">
 
 <c:if test="${not empty facetData.values && facetData.code == 'inStockFlag'}">
 
@@ -234,6 +235,7 @@
 		</div>
 	</li>
 			</ycommerce:testId>
+			</c:if>
 			</c:if>
 			</c:if>
 			</c:if>

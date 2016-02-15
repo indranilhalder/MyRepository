@@ -5,7 +5,6 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -62,6 +61,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 
 			sellerPriorityModels = mplSellerPriorityDao.getAllSellerPriorities();
 			final Map<String, MplSellerPriorityLevelModel> priorityMap = new HashMap<String, MplSellerPriorityLevelModel>();
+			Map<String, List<Integer>> validSellerPriorityMap = new HashMap<String, List<Integer>>();
 			final List<String> priorityMapList = new ArrayList<String>();
 			if (CollectionUtils.isEmpty(priorityModelList))
 			{
@@ -82,28 +82,33 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						final int count = 1;
 						priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
 						ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
+						if (ussidList != null)
+						{
+							ussidList.removeAll(Collections.singletonList(null));
+						}
+						if (isValid)
+						{
+							priorityMapList.addAll(ussidList);
+						}
+						validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel,
+								isValid);
+						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, sellerPriority.getIsActive().booleanValue(),
+								priorityMap, priorityMapList));
+
+						//	final int productPriorityLevel =
+						priorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
+						ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
+								sellerPriority.getSellerId())));
 						ussidList.removeAll(Collections.singletonList(null));
 						if (isValid)
 						{
 							priorityMapList.addAll(ussidList);
 						}
-						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, sellerPriority.getIsActive().booleanValue(),
-								priorityMap, priorityMapList));
-
-						final int productPriorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
-						ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
-								sellerPriority.getSellerId())));
-						if (isValid)
-						{
-							priorityMapList.addAll(ussidList);
-						}
-						priorityMap
-								.putAll(getPriorityLevelData(ussidList, productPriorityLevel, isValid, priorityMap, priorityMapList));
-
+						validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel,
+								isValid);
+						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, isValid, priorityMap, priorityMapList));
 						priorityModelList.add(sellerPriority);
 
-						log.info(new StringBuilder("###########ussid present in both category and product level").append(ussidList)
-								.append("prioritylevel").append(priorityLevel).toString());
 					}
 					else
 					{
@@ -114,21 +119,56 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							final int count = 1;
 							priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
 							ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
+
 							log.info(new StringBuilder("###########ussid for category level").append(ussidList).append("prioritylevel")
 									.append(priorityLevel).toString());
-							if (isValid)
-							{
-								priorityMapList.addAll(ussidList);
-							}
-							if (null != ussidList && ussidList.contains(null) || ussidList == null || ussidList.isEmpty())
-							{
-								sellerPriority.setPriorityStatus(SellerPriorityEnum.ERROR);
-							}
 							if (ussidList != null)
 							{
 								ussidList.removeAll(Collections.singletonList(null));
 							}
+							if (isValid)
+							{
+								priorityMapList.addAll(ussidList);
+							}
+							if (ussidList.isEmpty())
+							{
+								sellerPriority.setPriorityStatus(SellerPriorityEnum.ERROR);
+							}
 							priorityModelList.add(sellerPriority);
+							//chceking for current valid priorities
+							if (isValid)
+							{
+								for (final String ussid : ussidList)
+								{
+									if (validSellerPriorityMap.isEmpty())
+									{
+										validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+									}
+									else
+									{
+
+										if (validSellerPriorityMap.containsKey(ussid))
+										{
+											final List<Integer> validPriorities = new ArrayList<Integer>(validSellerPriorityMap.get(ussid));
+											if (CollectionUtils.isNotEmpty(validPriorities))
+											{
+												validPriorities.add(Integer.valueOf(priorityLevel));
+												validSellerPriorityMap.put(ussid, validPriorities);
+											}
+											else
+											{
+												validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+											}
+
+										}
+										else
+										{
+											validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+										}
+									}
+								}
+							}
+							//chceking for current valid priorities
 						}
 						//if only listing id level priority exist
 						else if (null != sellerPriority.getListingId())
@@ -139,6 +179,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							{
 								ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
 										sellerPriority.getSellerId())));
+								ussidList.removeAll(Collections.singletonList(null));
 								if (isValid)
 								{
 									priorityMapList.addAll(ussidList);
@@ -151,6 +192,40 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 								sellerPriority.setPriorityStatus(SellerPriorityEnum.ERROR);
 							}
 							priorityModelList.add(sellerPriority);
+							//chceking for current valid priorities
+							if (isValid)
+							{
+								for (final String ussid : ussidList)
+								{
+									if (validSellerPriorityMap.isEmpty())
+									{
+										validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+									}
+									else
+									{
+
+										if (validSellerPriorityMap.containsKey(ussid))
+										{
+											final List<Integer> validPriorities = new ArrayList<Integer>(validSellerPriorityMap.get(ussid));
+											if (CollectionUtils.isNotEmpty(validPriorities))
+											{
+												validPriorities.add(Integer.valueOf(priorityLevel));
+												validSellerPriorityMap.put(ussid, validPriorities);
+											}
+											else
+											{
+												validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+											}
+
+										}
+										else
+										{
+											validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+										}
+									}
+								}
+							}
+							//chceking for current valid priorities
 						}
 						if (ussidList != null)
 						{
@@ -159,13 +234,15 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 					}
 
 				}
-				modelService.saveAll(priorityModelList);
+
+				//	modelService.saveAll(priorityModelList);
+				updateNonExistingPriorities(priorityMap, validSellerPriorityMap);
 				modelService.saveAll(new ArrayList(priorityMap.values()));
 			}
 		}
 		catch (final Exception ex)
 		{
-			updateNonProcessedPriorities(priorityModelList, sellerPriorityModels);
+			//updateNonProcessedPriorities(priorityModelList, sellerPriorityModels);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 
 		}
@@ -173,33 +250,146 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	}
 
 	/**
-	 * @param priorityModelList
-	 * @param sellerPriorityModels
+	 * @param validSellerPriorityMap
+	 * @param ussidList
+	 * @param priorityLevel
+	 * @param isValid
+	 * @return
 	 */
-	private void updateNonProcessedPriorities(final List<MplSellerPriorityModel> priorityModelList,
-			final List<MplSellerPriorityModel> sellerPriorityModels)
+	private Map<String, List<Integer>> getValidPrioritiesAgainstUssid(final Map<String, List<Integer>> validSellerPriorityMap,
+			final List<String> ussidList, final int priorityLevel, final boolean isValid)
 	{
-		final List<MplSellerPriorityModel> sellerPriorities = new ArrayList<MplSellerPriorityModel>();
-		if (CollectionUtils.isEmpty(priorityModelList) && CollectionUtils.isEmpty(sellerPriorityModels))
+		if (isValid)
 		{
-			try
+			for (final String ussid : ussidList)
 			{
-				for (final MplSellerPriorityModel priority : priorityModelList)
+				if (validSellerPriorityMap.isEmpty())
 				{
-					if (!(sellerPriorityModels.contains(priority)))
+					validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+				}
+				else
+				{
+
+					if (validSellerPriorityMap.containsKey(ussid))
 					{
-						priority.setPriorityStatus(SellerPriorityEnum.ERROR);
-						sellerPriorities.add(priority);
+						final List<Integer> validPriorities = new ArrayList<Integer>(validSellerPriorityMap.get(ussid));
+						if (CollectionUtils.isNotEmpty(validPriorities))
+						{
+							validPriorities.add(Integer.valueOf(priorityLevel));
+							validSellerPriorityMap.put(ussid, validPriorities);
+						}
+						else
+						{
+							validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
+						}
+
+					}
+					else
+					{
+						validSellerPriorityMap.put(ussid, Collections.singletonList(Integer.valueOf(priorityLevel)));
 					}
 				}
-				modelService.saveAll(sellerPriorities);
 			}
-			catch (final ModelSavingException e)
+		}
+		return validSellerPriorityMap;
+	}
+
+	/**
+	 * @param priorityMap
+	 * @param validSellerPriorityMap
+	 */
+	private void updateNonExistingPriorities(final Map<String, MplSellerPriorityLevelModel> priorityMap,
+			final Map<String, List<Integer>> validSellerPriorityMap)
+	{
+		// YTODO Auto-generated method stub
+		//for (final Map.Entry<String, MplSellerPriorityLevelModel> priority : priorityMap.entrySet())
+		final List<MplSellerPriorityLevelModel> sellerPriorityList = new ArrayList<MplSellerPriorityLevelModel>();
+		for (final String ussid : priorityMap.keySet())
+		{
+			if (!mplSellerPriorityDao.loadExistingUssid(ussid).isEmpty() && !(validSellerPriorityMap.containsKey(ussid)))
 			{
-				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+				final MplSellerPriorityLevelModel sellerPriority = priorityMap.get(ussid);
+				sellerPriority.setL1Priority(Integer.valueOf(0));
+				sellerPriority.setL2Priority(Integer.valueOf(0));
+				sellerPriority.setL3Priority(Integer.valueOf(0));
+				sellerPriority.setL4Priority(Integer.valueOf(0));
+				sellerPriority.setProductPriority(Integer.valueOf(0));
+				sellerPriority.setIsValidPriority(Boolean.FALSE);
+			}
+			else if (!mplSellerPriorityDao.loadExistingUssid(ussid).isEmpty() && validSellerPriorityMap.containsKey(ussid))
+			{
+				final MplSellerPriorityLevelModel sellerPriority = priorityMap.get(ussid);
+				sellerPriorityList.add(sellerPriority);
+				final List<Integer> priorities = validSellerPriorityMap.get(ussid);
+				if (!priorities.contains(sellerPriority.getL1Priority()))
+				{
+					sellerPriority.setL1Priority(Integer.valueOf(0));
+				}
+				if (!priorities.contains(sellerPriority.getL2Priority()))
+				{
+					sellerPriority.setL2Priority(Integer.valueOf(0));
+				}
+				if (!priorities.contains(sellerPriority.getL3Priority()))
+				{
+					sellerPriority.setL3Priority(Integer.valueOf(0));
+				}
+				if (!priorities.contains(sellerPriority.getL4Priority()))
+				{
+					sellerPriority.setL4Priority(Integer.valueOf(0));
+				}
+				if (!priorities.contains(sellerPriority.getProductPriority()))
+				{
+					sellerPriority.setProductPriority(Integer.valueOf(0));
+				}
+			}
+		}
+		final List<MplSellerPriorityLevelModel> existingUssidList = mplSellerPriorityDao.loadExistingUssids();
+		final List<MplSellerPriorityLevelModel> nonValidUssidList = new ArrayList<MplSellerPriorityLevelModel>(
+				CollectionUtils.disjunction(existingUssidList, sellerPriorityList));
+		if (CollectionUtils.isNotEmpty(nonValidUssidList))
+		{
+			for (final MplSellerPriorityLevelModel nonValidPriority : nonValidUssidList)
+			{
+				nonValidPriority.setL1Priority(Integer.valueOf(0));
+				nonValidPriority.setL2Priority(Integer.valueOf(0));
+				nonValidPriority.setL3Priority(Integer.valueOf(0));
+				nonValidPriority.setL4Priority(Integer.valueOf(0));
+				nonValidPriority.setProductPriority(Integer.valueOf(0));
+				nonValidPriority.setIsValidPriority(Boolean.FALSE);
+				priorityMap.put(nonValidPriority.getUssid(), nonValidPriority);
 			}
 		}
 	}
+
+	/**
+	 * @param priorityModelList
+	 * @param sellerPriorityModels
+	 */
+	//Sonar Fix
+	//	private void updateNonProcessedPriorities(final List<MplSellerPriorityModel> priorityModelList,
+	//			final List<MplSellerPriorityModel> sellerPriorityModels)
+	//	{
+	//		final List<MplSellerPriorityModel> sellerPriorities = new ArrayList<MplSellerPriorityModel>();
+	//		if (CollectionUtils.isEmpty(priorityModelList) && CollectionUtils.isEmpty(sellerPriorityModels))
+	//		{
+	//			try
+	//			{
+	//				for (final MplSellerPriorityModel priority : priorityModelList)
+	//				{
+	//					if (!(sellerPriorityModels.contains(priority)))
+	//					{
+	//						priority.setPriorityStatus(SellerPriorityEnum.ERROR);
+	//						sellerPriorities.add(priority);
+	//					}
+	//				}
+	//				modelService.saveAll(sellerPriorities);
+	//			}
+	//			catch (final ModelSavingException e)
+	//			{
+	//				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * get ussids corresponding to listing id/sku id
@@ -235,52 +425,68 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	 * @param category
 	 * @return skuList
 	 */
-
-
-
 	private List<String> getUssidsFromSellers(final CategoryModel category, final SellerMasterModel sellerMasterModel)
 	{
-
 		final List<String> ussidList = new ArrayList<String>();
-		try
+		final List<ProductModel> productList = mplSellerPriorityDao.getProductListForCategory(category);
+		for (final ProductModel product : productList)
 		{
-			if (!(category.getProducts().isEmpty()))
+			//			if (product.getCatalogVersion().equals(getCatalogVersion()))
+			//			{
+			for (final SellerInformationModel seller : product.getSellerInformationRelator())
 			{
-				for (final ProductModel productList : category.getProducts())
+				if (seller.getSellerID().equals(sellerMasterModel.getId()))
 				{
-					for (final SellerInformationModel seller : productList.getSellerInformationRelator())
-					{
-						if (seller.getSellerID().equals(sellerMasterModel.getId()))
-						{
-							ussidList.add(seller.getSellerArticleSKU());
-							break;
-						}
-					}
+					ussidList.add(seller.getSellerArticleSKU());
+					//					isExits = true;
+					//					break;
 				}
 			}
-			else
-			{
-				if (!(category.getCategories().isEmpty()))
-				{
-					for (final CategoryModel cat : category.getCategories())
-					{
-						final List<String> ussids = findUssidsByRecursion(cat, sellerMasterModel);
-						ussidList.addAll(ussids);
-					}
-				}
-				else
-				{
-					final List<String> ussids = findUssidsByRecursion(category, sellerMasterModel);
-					ussidList.addAll(ussids);
-				}
-			}
+			//}
 		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
+
+		//		final List<String> ussidList = new ArrayList<String>();
+		//		try
+		//		{
+		//			if (!(category.getProducts().isEmpty()))
+		//			{
+		//				for (final ProductModel productList : category.getProducts())
+		//				{
+		//					for (final SellerInformationModel seller : productList.getSellerInformationRelator())
+		//					{
+		//						if (seller.getSellerID().equals(sellerMasterModel.getId()))
+		//						{
+		//							ussidList.add(seller.getSellerArticleSKU());
+		//							break;
+		//						}
+		//					}
+		//				}
+		//			}
+		//			else
+		//			{
+		//				if (!(category.getCategories().isEmpty()))
+		//				{
+		//					for (final CategoryModel cat : category.getCategories())
+		//					{
+		//						final List<String> ussids = findUssidsByRecursion(cat, sellerMasterModel);
+		//						ussidList.addAll(ussids);
+		//					}
+		//				}
+		//				else
+		//				{
+		//					final List<String> ussids = findUssidsByRecursion(category, sellerMasterModel);
+		//					ussidList.addAll(ussids);
+		//				}
+		//			}
+		//		}
+		//		catch (final Exception e)
+		//		{
+		//			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		//		}
 		return ussidList;
 	}
+
+
 
 	/**
 	 * finding a category level corresponding to a category id
@@ -330,7 +536,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	 * @param sellerMasterModel
 	 * @return product
 	 */
-	private List<String> findUssidsByRecursion(final CategoryModel category, final SellerMasterModel sellerMasterModel)
+	public List<String> findUssidsByRecursion(final CategoryModel category, final SellerMasterModel sellerMasterModel)
 	{
 		final List<String> ussidList = new ArrayList<String>();
 		try
@@ -344,8 +550,10 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						if (seller.getSellerID().equals(sellerMasterModel.getId()))
 						{
 
-							System.out.println("***************#######ussid for product in category" + ussidList + "product" + products
+							//System.out.println("***************#######ussid for product in category" + ussidList + "product" + products+ "category" + category.getCode());
+							log.debug("***************#######ussid for product in category" + ussidList + "product" + products
 									+ "category" + category.getCode());
+
 
 							ussidList.add(seller.getSellerArticleSKU());
 							break;
@@ -409,46 +617,13 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						{
 							updateInvalidPriorityLevel(priorityLevel, sellerPriorityLevel);
 						}
-						//sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
 					}
 					else if (isActive)
 					{
 						setPriorityLevel(priorityLevel, sellerPriorityLevel);
 						sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
 					}
-					//					if (!isActive && null != priorityLevelMap.get(ussid)
-					//							&& !priorityLevelMap.get(ussid).getIsValidPriority().booleanValue()
-					//							&& priorityList.contains(Integer.valueOf(priorityLevel)))
-					//					{
-					//						updateInvalidPriorityLevel(priorityLevel, sellerPriorityLevel);
-					//					}
-					//					else if (!isActive && null != priorityLevelMap.get(ussid)
-					//							&& !(priorityList.contains(Integer.valueOf(priorityLevel))))
-					//					{
-					//						updateInvalidPriorityLevel(priorityLevel, sellerPriorityLevel);
-					//					}
-					//					else if (!isActive && priorityLevelMap.get(ussid) == null)
-					//					{
-					//						updateInvalidPriorityLevel(priorityLevel, sellerPriorityLevel);
-					//					}
-					//					else if (isActive)
-					//					{
-					//						setPriorityLevel(priorityLevel, sellerPriorityLevel);
-					//						sellerPriorityLevel.setIsValidPriority(Boolean.valueOf(isActive));
-					//					}
-					//					else if (!isActive && null != priorityLevelMap.get(ussid)
-					//							&& !priorityLevelMap.get(ussid).getIsValidPriority().booleanValue())
-					//					{
-					//						updateInvalidPriorityLevel(priorityLevel, sellerPriorityLevel);
-					//					}
-					//					if (sellerPriorityLevel.getL1Priority() == Integer.valueOf(0)
-					//							&& sellerPriorityLevel.getL2Priority() == Integer.valueOf(0)
-					//							&& sellerPriorityLevel.getL3Priority() == Integer.valueOf(0)
-					//							&& sellerPriorityLevel.getL4Priority() == Integer.valueOf(0)
-					//							&& sellerPriorityLevel.getProductPriority() == Integer.valueOf(0))
-					//					{
-					//						sellerPriorityLevel.setIsValidPriority(Boolean.FALSE);
-					//					}
+
 					priorityLevelMap.put(ussid, sellerPriorityLevel);
 
 				}

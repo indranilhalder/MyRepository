@@ -650,7 +650,8 @@ public class MiscsController extends BaseController
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("IOException : ", e);
 		}
 	}
 
@@ -692,7 +693,8 @@ public class MiscsController extends BaseController
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("postOnlyXML1 : ", e);
 		}
 
 
@@ -994,7 +996,8 @@ public class MiscsController extends BaseController
 				final List<AutocompleteSuggestionData> suggestions = subList(
 						productSearchFacade.getAutocompleteSuggestions(searchString), component.getMaxSuggestions().intValue());
 
-				if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+				//if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+				if (CollectionUtils.isNotEmpty(suggestions))
 				{
 					wsData.setSuggestions(suggestions);
 				}
@@ -1003,8 +1006,8 @@ public class MiscsController extends BaseController
 					String substr = "";
 					substr = searchString.substring(0, searchString.length() - 1);
 
-					wsData.setSuggestions(
-							subList(productSearchFacade.getAutocompleteSuggestions(substr), component.getMaxSuggestions().intValue()));
+					wsData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(substr), component
+							.getMaxSuggestions().intValue()));
 
 				}
 				final SearchStateData searchState = new SearchStateData();
@@ -1555,7 +1558,7 @@ public class MiscsController extends BaseController
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		String returnValue = null;
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();

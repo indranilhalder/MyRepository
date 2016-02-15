@@ -26,6 +26,7 @@ import java.net.URLEncoder;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 
@@ -36,6 +37,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 	private String searchPath;
 	private UrlResolver<CategoryData> categoryDataUrlResolver;
 	private Converter<SolrSearchQueryData, SearchQueryData> searchQueryConverter;
+	private static final Logger LOG = Logger.getLogger(MplSolrSearchStatePopulator.class);
 
 	protected String getSearchPath()
 	{
@@ -161,17 +163,14 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 			try
 			{
 				encodedOfferId = URLEncoder.encode(source.getOfferID(), "UTF-8");
-				target.setUrl(
-						"/o/" + offerCategoryID + "?offer=" + encodedOfferId + buildUrlQueryString(source, target).replace("?", "&"));
+				target.setUrl("/o/" + offerCategoryID + "?offer=" + encodedOfferId
+						+ buildUrlQueryString(source, target).replace("?", "&"));
 			}
 			catch (final UnsupportedEncodingException e)
 			{
-				// YTODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				LOG.error("UnsupportedEncodingException ", e);
 			}
-
 		}
-
-
 	}
 }

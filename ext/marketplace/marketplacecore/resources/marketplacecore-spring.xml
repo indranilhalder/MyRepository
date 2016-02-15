@@ -1271,5 +1271,11 @@
 		
 	</bean>
 	   <!--  pdp seller priority cron job ends -->
+	   
+	   <!-- Tata Cliq : For Campaign Team   -->
+   	<bean id="campaignPromoDataJob" class="com.tisl.mpl.core.campaign.jobs.CampaignPromoDataJob"
+   		autowire="byName" >
+   	</bean>
+   	
 </beans>
 

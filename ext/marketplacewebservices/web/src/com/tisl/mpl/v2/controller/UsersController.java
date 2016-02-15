@@ -2293,7 +2293,8 @@ public class UsersController extends BaseCommerceController
 				else
 				{
 
-					if (!allWishlists.isEmpty() && allWishlists.size() > 0)
+					//if (!allWishlists.isEmpty() && allWishlists.size() > 0)
+					if (CollectionUtils.isNotEmpty(allWishlists))
 					{
 						final List<String> wishlistnames = new ArrayList<String>();
 						for (final Wishlist2Model wishlist2Model : allWishlists)
@@ -3065,7 +3066,8 @@ public class UsersController extends BaseCommerceController
 								for (final ImageData img : productData1.getImages())
 								{
 									if (null != img && StringUtils.isNotEmpty(img.getFormat())
-											&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL))
+									//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
+											&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
 									{
 										wldpDTO.setImageURL(img.getUrl());
 									}
@@ -5705,7 +5707,8 @@ public class UsersController extends BaseCommerceController
 				while (categoryEntries.hasNext())
 				{
 					final Map.Entry<String, MplFavBrandCategoryData> entry = categoryEntries.next();
-					if (null != selectedCategoryList && selectedCategoryList.size() > 0)
+					//if (null != selectedCategoryList && selectedCategoryList.size() > 0)
+					if (CollectionUtils.isNotEmpty(selectedCategoryList))
 					{
 						for (final CategoryModel catagory : selectedCategoryList)
 						{
@@ -5745,7 +5748,8 @@ public class UsersController extends BaseCommerceController
 				while (categoryEntries.hasNext())
 				{
 					final Map.Entry<String, MplFavBrandCategoryData> entry = categoryEntries.next();
-					if (null != selectedBrandList && selectedBrandList.size() > 0)
+					//if (null != selectedBrandList && selectedBrandList.size() > 0)
+					if (CollectionUtils.isNotEmpty(selectedBrandList))
 					{
 						for (final CategoryModel catagory : selectedBrandList)
 						{
@@ -5770,7 +5774,8 @@ public class UsersController extends BaseCommerceController
 				}
 			}
 
-			if (favBrandCategoryDtoForCategory.size() > 0 && favBrandCategoryDtoForBrand.size() > 0)
+			//if (favBrandCategoryDtoForCategory.size() > 0 && favBrandCategoryDtoForBrand.size() > 0)
+			if (CollectionUtils.isNotEmpty(favBrandCategoryDtoForCategory))
 			{
 				mplAllFavouritePreferenceWsDTO.setFavCategoryList(favBrandCategoryDtoForCategory);
 				mplAllFavouritePreferenceWsDTO.setFavBrandList(favBrandCategoryDtoForBrand);
