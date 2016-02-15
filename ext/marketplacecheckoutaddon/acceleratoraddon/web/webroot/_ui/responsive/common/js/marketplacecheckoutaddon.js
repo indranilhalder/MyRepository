@@ -2770,12 +2770,6 @@ function populatePincodeDeliveryMode(response,buttonType){
 	var isServicable=values[0];
 	var selectedPincode=values[1];
 	var deliveryModeJsonMap=values[2];
-	if(deliveryModeJsonMap=="null"){
-		$('#unsevisablePin').show();
-	}else{
-		$('#unsevisablePin').hide();
-	}
-	
 	var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
 	var length = Object.keys(deliveryModeJsonObj).length;
 	var isStockAvailable="Y";
@@ -2845,7 +2839,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 				}
 				else if(deliveryType==='CNC'/* && parseFloat(inventory) >= parseFloat(quantityValue)*/){
 					var newLi = document.createElement("li");
-					newLi.setAttribute("class", "click-collect");
+					newLi.setAttribute("class", "methodClick");
 					var text = document.createTextNode("Click and Collect");
 					newLi.appendChild(text);
 					newUi.appendChild(newLi);
