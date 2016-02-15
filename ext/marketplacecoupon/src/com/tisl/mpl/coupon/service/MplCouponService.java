@@ -32,6 +32,12 @@ public interface MplCouponService
 	List<VoucherDisplayData> getSortedVoucher(List<VoucherDisplayData> voucherDataList);
 
 
+	/**
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherModel>
+	 */
 	SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, PageableData pageableData);
 
 }

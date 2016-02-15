@@ -31,6 +31,8 @@ public class MplCouponServiceImpl implements MplCouponService
 	private MplCouponDao mplCouponDao;
 
 	/**
+	 * This method returns all active vouchers
+	 *
 	 * return List<VoucherModel>
 	 */
 	@Override
@@ -41,6 +43,7 @@ public class MplCouponServiceImpl implements MplCouponService
 
 
 	/**
+	 * This method sorts the voucher data
 	 *
 	 * @param voucherDataList
 	 * @return ArrayList<VoucherDisplayData>
@@ -56,6 +59,23 @@ public class MplCouponServiceImpl implements MplCouponService
 
 
 
+	/**
+	 * This method returns all active and closed vouchers
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherModel>
+	 *
+	 */
+	@Override
+	public SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, final PageableData pageableData)
+	{
+		return mplCouponDao.findClosedVoucher(customer, pageableData);
+	}
+
+
+
+
 	public MplCouponDao getMplCouponDao()
 	{
 		return mplCouponDao;
@@ -65,20 +85,6 @@ public class MplCouponServiceImpl implements MplCouponService
 	{
 		this.mplCouponDao = mplCouponDao;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.tisl.mpl.coupon.service.MplCouponService#getClosedVoucher(de.hybris.platform.core.model.user.CustomerModel,
-	 * de.hybris.platform.commerceservices.search.pagedata.PageableData)
-	 */
-	@Override
-	public SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, final PageableData pageableData)
-	{
-		return mplCouponDao.findClosedVoucher(customer, pageableData);
-	}
-
 
 
 }

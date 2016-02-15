@@ -12,8 +12,17 @@ import java.util.List;
 public interface MplCustomerDetailsService
 {
 
+	/**
+	 *
+	 * @return List<CustomerModel>
+	 */
 	List<CustomerModel> getCustomer();
 
+
+	/**
+	 *
+	 * @return List<CartModel>
+	 */
 	List<CartModel> getCartDetails();
 
 }
