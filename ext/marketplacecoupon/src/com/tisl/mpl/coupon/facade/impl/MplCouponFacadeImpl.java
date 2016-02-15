@@ -620,8 +620,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 	}
 
-
-
 	/**
 	 * This method returns list of all CouponTransactions corresponding to a specific customer
 	 *

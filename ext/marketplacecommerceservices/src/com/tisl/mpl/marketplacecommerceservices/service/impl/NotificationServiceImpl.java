@@ -29,7 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -539,12 +538,9 @@ public class NotificationServiceImpl implements NotificationService
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#saveToVoucherStatusNotification(de.hybris
-	 * .platform.jalo.Item)
+	/**
+	 * @Description This method saves data into VoucherStatusNotificationModel while creating voucher
+	 * @param VoucherModel
 	 */
 	@Override
 	public void saveToVoucherStatusNotification(final VoucherModel voucher)
@@ -561,14 +557,15 @@ public class NotificationServiceImpl implements NotificationService
 		final List<PrincipalModel> userList = new ArrayList<PrincipalModel>();
 		boolean userRestrExists = false;
 		boolean dateRestrExists = false;
+		UserRestrictionModel userRestrObj = null;
 
 		for (final RestrictionModel restrictionModel : restrictionList)
 		{
 			if (restrictionModel instanceof UserRestrictionModel)
 			{
-				userList.addAll(((UserRestrictionModel) restrictionModel).getUsers());
+				userRestrObj = (UserRestrictionModel) restrictionModel;
+				userList.addAll((userRestrObj).getUsers());
 				userRestrExists = true;
-
 			}
 			else if (restrictionModel instanceof DateRestrictionModel)
 			{
@@ -592,19 +589,19 @@ public class NotificationServiceImpl implements NotificationService
 		final String customerStatus = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
 
-		if (dateRestrExists && userRestrExists)
+		if (voucher instanceof PromotionVoucherModel)
 		{
-			if (voucher instanceof PromotionVoucherModel)
-			{
-				final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
-				voucherCode = promoVoucher.getVoucherCode();
-				voucherIndentifier = promoVoucher.getCode();
-				LOG.debug("voucher identifier :" + voucherIndentifier);
-			}
+			final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
+			voucherCode = promoVoucher.getVoucherCode();
+			voucherIndentifier = promoVoucher.getCode();
+			LOG.debug("voucher identifier :" + voucherIndentifier);
+		}
 
+		final List<String> userUidList = new ArrayList<String>();
+
+		if (dateRestrExists && userRestrExists && userRestrObj != null && userRestrObj.getPositive().booleanValue())
+		{
 			final List<String> restrUserUidList = new ArrayList<String>();
-
-			final List<String> userUidList = new ArrayList<String>();
 
 			for (final PrincipalModel user : userList)
 			{
@@ -626,27 +623,20 @@ public class NotificationServiceImpl implements NotificationService
 
 			if (null != voucherIndentifier && null != voucherCode)
 			{
-
 				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
 
 				if (existingVoucherList.isEmpty())
 				{
 					voucherStatus = modelService.create(VoucherStatusNotificationModel.class);
-					userUidList.addAll(restrUserUidList);
-					//voucherStatus.setCustomerUidList(userUidList);
 				}
 				else
 				{
 					voucherStatus = existingVoucherList.get(0);
-					//voucherStatus.setCustomerUidList(voucherStatus.getCustomerUidList());
-					final Set customerUidSet = new HashSet(restrUserUidList);
-					customerUidSet.add(restrUserUidList);
-
-					userUidList.addAll(customerUidSet);
-
 				}
-				//Setting values in model
-				voucherStatus.setIfUserRestrictionExist(Boolean.TRUE);
+
+				userUidList.addAll(restrUserUidList)			
+
+				//Setting values in model				
 				voucherStatus.setVoucherIdentifier(voucherIndentifier);
 				voucherStatus.setVoucherCode(voucherCode);
 				voucherStatus.setCustomerUidList(userUidList);
@@ -656,32 +646,20 @@ public class NotificationServiceImpl implements NotificationService
 				voucherStatus.setCustomerStatus(customerStatus);
 				voucherStatus.setCategoryAssociated(categoryAssociated);
 				voucherStatus.setProductAssociated(productAssociated);
-				modelService.save(voucherStatus);				
+				modelService.save(voucherStatus);
 			}
 		}
-        else if (dateRestrExists && !userRestrExists)
+		else if (dateRestrExists && (!userRestrExists || userRestrObj == null || !userRestrObj.getPositive().booleanValue()))
 		{
 			final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
 			if (!existingVoucherList.isEmpty())
 			{
 				voucherStatus = existingVoucherList.get(0);
-				voucherStatus.setVoucherIdentifier(voucherIndentifier);
-				voucherStatus.setVoucherCode(voucherCode);
-				voucherStatus.setVoucherStartDate(voucherStartDate);
-				voucherStatus.setVoucherEndDate(voucherEndDate);
-				voucherStatus.setIsRead(isRead);
-				voucherStatus.setCustomerStatus(customerStatus);
-				voucherStatus.setCategoryAssociated(categoryAssociated);
-				voucherStatus.setProductAssociated(productAssociated);
-				voucherStatus.setIfUserRestrictionExist(Boolean.FALSE);
-				modelService.save(voucherStatus);
-
+				modelService.remove(voucherStatus);
 			}
 		}
 
-	}
-
-
+ }
 
 
 
