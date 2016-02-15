@@ -1303,6 +1303,8 @@ function CheckonReload()
 
 }
 
+
+
 function getRating(key,productCode,category)
 {
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
@@ -1325,11 +1327,23 @@ function getRating(key,productCode,category)
 			var raingcount=data.streamInfo.ratingCount;
 			$(".product-detail ul.star-review a").empty();
 			$(".product-detail ul.star-review li").attr("class","empty");
+			
+ 			var rating = Math.floor(avgreview);
+	 		var ratingDec = avgreview - rating;
+	 		for(var i = 0; i < rating; i++) {
+	 			$("#pdp_rating"+" li").eq(i).removeClass("empty").addClass("full");
+	 			}
+	 		if(ratingDec!=0)
+	 			{
+	 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
+	 			} 
+	 		
 			rating(avgreview,raingcount);
 			
 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
 			
 			//TISUATPII-471 fix
+			
 			var count=data.streamInfo.ratingCount;
 			if(count == 1){
 			$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
@@ -1340,7 +1354,21 @@ function getRating(key,productCode,category)
 				}
 			
 			
+			
+			
 	  });
+	  
+	//TISUATPII-471 fix
+	  var ratingsParams = {
+		categoryID : category,
+		streamID : productCode,
+		containerID : 'ratingDiv',
+		linkedCommentsUI : 'commentsDiv',
+		showCommentButton : 'true',
+		onAddReviewClicked:reviewClick,
+	 }
+			
+	 gigya.comments.showRatingUI(ratingsParams);
 	  
 	  
 	
