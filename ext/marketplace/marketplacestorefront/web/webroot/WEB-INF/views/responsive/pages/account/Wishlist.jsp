@@ -32,28 +32,8 @@
 		$('#newWishlistName').blur(function() {
 			validateEnteredName("newWishlistName","errorCreate");
 		});
-		$('#editWishList').keyup(function() {
-			validateEnteredName('editWishList',"errRename");
-		});
-		$('#editWishList').blur(function() {
-			validateEnteredName('editWishList',"errRename");
-		});
 	});
 	
-	
-	
-	/* Validation for stored cross site Scripting-TISSIT-1704 */
-	function validateEnteredName(divId,errorDivId) {
-		var value=$('#'+divId).val();
-		var re = /^[a-zA-Z0-9]*[a-zA-Z0-9]+[a-zA-Z]*$/i;
-		var isValid = re.test(value);
-		if (!isValid) {
-			value = value.substring(0, value.length - 1);
-			$("#"+errorDivId).html("<font color='#ff1c47'><b>*</b>Special charecters are not allowed</font>");
-			$("#"+errorDivId).show().fadeOut(3000);
-		}
-		$('#'+divId).val(value);
-	} 
 	</script>
 
  

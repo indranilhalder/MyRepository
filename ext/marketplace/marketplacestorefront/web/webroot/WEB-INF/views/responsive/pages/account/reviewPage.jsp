@@ -29,9 +29,9 @@
 						<option value=/store/mpl/en/my-account/myInterest data-href="account-addresses.php"><spring:theme code="header.flyout.recommendations" /></option>
               </optgroup>
               
-               <optgroup label="Credits">
+             <%--   <optgroup label="Credits">
                   <option value=/store/mpl/en/my-account/coupons data-href="account-invite.php"><spring:theme code="header.flyout.coupons" /></option>
-              </optgroup>
+              </optgroup> --%>
          
           <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
@@ -555,4 +555,3 @@ $(".prev a").click(function(){
 });	
 		
 </script>
-

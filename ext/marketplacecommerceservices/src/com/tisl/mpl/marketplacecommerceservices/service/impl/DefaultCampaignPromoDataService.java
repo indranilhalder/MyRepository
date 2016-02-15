@@ -104,9 +104,11 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 			datePrefix = GenericUtilityMethods.convertSysDateToString(new Date());
 		}
 
-		final File rootFolder = new File(configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_LOCATION), MarketplacecommerceservicesConstants.CAMPAIGN_FILE_NAME
-				+ datePrefix + configurationService.getConfiguration().getString("cronjob.campaign.extension", ".csv"));
+		final File rootFolder = new File(
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_LOCATION,
+						MarketplacecommerceservicesConstants.CAMPAIGN_FILE_PATH),
+				MarketplacecommerceservicesConstants.CAMPAIGN_FILE_NAME + datePrefix
+						+ configurationService.getConfiguration().getString("cronjob.campaign.extension", ".csv"));
 
 		try
 		{
@@ -117,34 +119,34 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 
 			for (final CampaignData data : campaignDataList)
 			{
-				fileWriter.append(data.getOffer_id());
+				fileWriter.append(data.getOfferid());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				fileWriter.append(data.getOffer_name());
+				fileWriter.append(data.getOffername());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				fileWriter.append(data.getOffer_active());
+				fileWriter.append(data.getOfferactive());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				fileWriter.append(data.getOffer_type());
+				fileWriter.append(data.getOffertype());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				fileWriter.append(data.getOffer_channel());
+				fileWriter.append(data.getOfferchannel());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				fileWriter.append(data.getOffer_startdate());
+				fileWriter.append(data.getOfferstartdate());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				fileWriter.append(data.getOffer_enddate());
+				fileWriter.append(data.getOfferenddate());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
 				fileWriter.append(data.getUrl());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				fileWriter.append(data.getCreation_date());
+				fileWriter.append(data.getCreationdate());
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-				fileWriter.append(data.getModified_date());
+				fileWriter.append(data.getModifieddate());
 
 				fileWriter.append(MarketplacecommerceservicesConstants.CAMPAIGN_FILE_NEW_LINE_SEPARATOR);
 			}
@@ -243,37 +245,37 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 		campaignData = defaultData(campaignData);
 		if (null != promotion && null != promotion.getCreationtime())
 		{
-			campaignData.setCreation_date(formatter.format(promotion.getCreationtime()));
+			campaignData.setCreationdate(formatter.format(promotion.getCreationtime()));
 		}
 
 		if (null != promotion && null != promotion.getModifiedtime())
 		{
-			campaignData.setModified_date(formatter.format(promotion.getModifiedtime()));
+			campaignData.setModifieddate(formatter.format(promotion.getModifiedtime()));
 		}
 
 		if (null != promotion && null != promotion.getCode())
 		{
-			campaignData.setOffer_id(promotion.getCode());
-			campaignData.setOffer_active(MarketplacecommerceservicesConstants.TRUE_UPPER);
+			campaignData.setOfferid(promotion.getCode());
+			campaignData.setOfferactive(MarketplacecommerceservicesConstants.TRUE_UPPER);
 		}
 
 		if (null != promotion && null != promotion.getTitle())
 		{
-			campaignData.setOffer_name(promotion.getTitle());
+			campaignData.setOffername(promotion.getTitle());
 		}
 
 		if (null != promotion && null != promotion.getStartDate())
 		{
-			campaignData.setOffer_startdate(formatter.format(promotion.getStartDate()));
+			campaignData.setOfferstartdate(formatter.format(promotion.getStartDate()));
 		}
 
 		if (null != promotion && null != promotion.getEndDate())
 		{
-			campaignData.setOffer_enddate(formatter.format(promotion.getEndDate()));
+			campaignData.setOfferenddate(formatter.format(promotion.getEndDate()));
 		}
 
-		campaignData.setOffer_type(populateOfferType(promotion));
-		campaignData.setOffer_channel(populateOfferChannel(promotion));
+		campaignData.setOffertype(populateOfferType(promotion));
+		campaignData.setOfferchannel(populateOfferChannel(promotion));
 		campaignData.setUrl(populateOfferURL(promotion));
 
 		return campaignData;
@@ -306,7 +308,8 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 						MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
 				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
-				promoURL.append("/");
+
+				promoURL.append('/');
 				promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 				promoURL.append(promotion.getCode());
 
@@ -342,7 +345,7 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 							MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
 					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 					promoURL.append(urlDataList.get(i));
-					promoURL.append("/");
+					promoURL.append('/');
 					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 					promoURL.append(promotion.getCode());
 
@@ -355,7 +358,7 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 							MarketplacecommerceservicesConstants.CAMPAIGN_WEBSITE));
 					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_IDENTIFIER);
 					promoURL.append(urlDataList.get(i));
-					promoURL.append("/");
+					promoURL.append('/');
 					promoURL.append(MarketplacecommerceservicesConstants.CAMPAIGN_URL_OFFER_ID_URL);
 					promoURL.append(promotion.getCode());
 
@@ -524,16 +527,16 @@ public class DefaultCampaignPromoDataService implements CampaignPromoDataService
 	 */
 	private CampaignData defaultData(final CampaignData data)
 	{
-		data.setOffer_id(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setOffer_name(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setOffer_active(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setOffer_type(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setOffer_channel(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setOffer_startdate(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setOffer_enddate(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setOfferid(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setOffername(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setOfferactive(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setOffertype(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setOfferchannel(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setOfferstartdate(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setOfferenddate(MarketplacecommerceservicesConstants.EMPTYSPACE);
 		data.setUrl(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setCreation_date(MarketplacecommerceservicesConstants.EMPTYSPACE);
-		data.setModified_date(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setCreationdate(MarketplacecommerceservicesConstants.EMPTYSPACE);
+		data.setModifieddate(MarketplacecommerceservicesConstants.EMPTYSPACE);
 
 		return data;
 	}

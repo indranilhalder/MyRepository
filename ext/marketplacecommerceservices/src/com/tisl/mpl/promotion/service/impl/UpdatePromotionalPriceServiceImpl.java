@@ -267,20 +267,25 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	{
 		try
 		{
-			final List<ProductPromotion> promotionData = (List<ProductPromotion>) product.getAttribute("promotions");
+			final List<ProductPromotion> promotionData = (List<ProductPromotion>) product
+					.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS);
 			//	final boolean isHigherPromotionExists = true;
 			int maxPriority = priority.intValue();
 			if (null != promotionData && !promotionData.isEmpty())
 			{
 				for (final ProductPromotion promotion : promotionData)
 				{
-					if (promotion instanceof BuyAPercentageDiscount && null != promotion.getAttribute("quantity")
-							&& Integer.parseInt(promotion.getAttribute("quantity").toString()) == 1)
+					if (promotion instanceof BuyAPercentageDiscount
+							&& null != promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
+							&& Integer.parseInt(promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
+									.toString()) == 1)
 					{
-						if (maxPriority < Integer.parseInt(promotion.getAttribute("priority").toString())
+						if (maxPriority < Integer.parseInt(promotion.getAttribute(
+								MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString())
 								&& promotion.isEnabled().booleanValue())
 						{
-							maxPriority = Integer.parseInt(promotion.getAttribute("priority").toString());
+							maxPriority = Integer.parseInt(promotion.getAttribute(
+									MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString());
 							//	isHigherPromotionExists = false;
 							break;
 						}
@@ -314,7 +319,8 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 			final List<ProductPromotion> promotionData = new ArrayList<ProductPromotion>();
 			final List<Category> categoriesList = getImmediateSuperCategory(product);
 
-			final List<ProductPromotion> productPromoData = (List<ProductPromotion>) product.getAttribute("promotions");
+			final List<ProductPromotion> productPromoData = (List<ProductPromotion>) product
+					.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS);
 			if (CollectionUtils.isNotEmpty(categoriesList))
 			{
 				for (final Category category : categoriesList)
@@ -331,13 +337,17 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 				{
 					for (final ProductPromotion promotion : promotionData)
 					{
-						if (promotion instanceof BuyAPercentageDiscount && null != promotion.getAttribute("quantity")
-								&& Integer.parseInt(promotion.getAttribute("quantity").toString()) == 1)
+						if (promotion instanceof BuyAPercentageDiscount
+								&& null != promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
+								&& Integer.parseInt(promotion.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_QUANTITY)
+										.toString()) == 1)
 						{
-							if (maxPriority < Integer.parseInt(promotion.getAttribute("priority").toString())
+							if (maxPriority < Integer.parseInt(promotion.getAttribute(
+									MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString())
 									&& promotion.isEnabled().booleanValue())
 							{
-								maxPriority = Integer.parseInt(promotion.getAttribute("priority").toString());
+								maxPriority = Integer.parseInt(promotion.getAttribute(
+										MarketplacecommerceservicesConstants.SPECIALPRICE_PRIORITY).toString());
 								//	isHigherPromotionExists = false;
 								break;
 							}
@@ -370,9 +380,10 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		List<ProductPromotion> promotionData = new ArrayList<ProductPromotion>();
 		try
 		{
-			if (null != category && null != category.getAttribute("promotions"))
+			if (null != category && null != category.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS))
 			{
-				promotionData = (List<ProductPromotion>) category.getAttribute("promotions");
+				promotionData = (List<ProductPromotion>) category
+						.getAttribute(MarketplacecommerceservicesConstants.SPECIALPRICE_PROMOTIONS);
 			}
 		}
 		catch (final JaloInvalidParameterException exception)

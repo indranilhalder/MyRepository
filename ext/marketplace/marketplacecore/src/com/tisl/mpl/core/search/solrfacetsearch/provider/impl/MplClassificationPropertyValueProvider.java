@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.collections.CollectionUtils;
+
 
 public class MplClassificationPropertyValueProvider extends ClassificationPropertyValueProvider
 {
@@ -44,7 +46,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				classAttrAssignmentList.addAll(indexedProperty.getClassificationAttributeAssignments());
 			}
 
-			if (classAttrAssignmentList.size() > 0)
+			//if (classAttrAssignmentList.size() > 0)
+			if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
 			{
 
 				final Product product = (Product) this.modelService.getSource(model);
@@ -95,8 +98,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(extractFieldValues(indexedProperty, language,
-							(feature.isLocalized()) ? feature.getValues() : featureValues));
+					result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+							: featureValues));
 				}
 				finally
 				{

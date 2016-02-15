@@ -132,10 +132,17 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 									if (null != validProductUssidMap && !validProductUssidMap.isEmpty())
 									{
 										List<PromotionResult> promotionResultList = new ArrayList<PromotionResult>();
+										/*
+										 * promotionResultList = promotionEvaluation(ctx, promotionEvalCtx, validMultiUssidMap,
+										 * restrictionList, promotionProductList, promotionCategoryList, order,
+										 * productAssociatedItemsFinalMap, validProductFinalList, validProductUssidFinalMap,
+										 * finalDelChrgMap);
+										 */
 										promotionResultList = promotionEvaluation(ctx, promotionEvalCtx, validMultiUssidMap,
-												restrictionList, promotionProductList, promotionCategoryList, order,
-												productAssociatedItemsFinalMap, validProductFinalList, validProductUssidFinalMap,
-												finalDelChrgMap);
+												restrictionList, order, productAssociatedItemsFinalMap, validProductFinalList,
+												validProductUssidFinalMap, finalDelChrgMap);
+
+
 										if (null != promotionResultList && !promotionResultList.isEmpty())
 										{
 											promotionResults.addAll(promotionResultList);
@@ -147,9 +154,15 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 					}
 					else
 					{
-						promotionResults = promotionEvaluation(ctx, promotionEvalCtx, validProductUssidMap, restrictionList,
-								promotionProductList, promotionCategoryList, order, productAssociatedItemsFinalMap,
-								validProductFinalList, validProductUssidFinalMap, finalDelChrgMap);
+						/*
+						 * promotionResults = promotionEvaluation(ctx, promotionEvalCtx, validProductUssidMap,
+						 * restrictionList, promotionProductList, promotionCategoryList, order,
+						 * productAssociatedItemsFinalMap, validProductFinalList, validProductUssidFinalMap, finalDelChrgMap);
+						 */
+
+						promotionResults = promotionEvaluation(ctx, promotionEvalCtx, validProductUssidMap, restrictionList, order,
+								productAssociatedItemsFinalMap, validProductFinalList, validProductUssidFinalMap, finalDelChrgMap);
+
 					}
 				}
 
@@ -311,12 +324,20 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 	 * @param validProductUssidMap
 	 * @return promotionResults
 	 */
+	/*
+	 * private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext, final
+	 * PromotionEvaluationContext paramPromotionEvaluationContext, final Map<String, AbstractOrderEntry>
+	 * validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList, final List<Product>
+	 * promotionProductList, final List<Category> promotionCategoryList, final AbstractOrder order, final Map<String,
+	 * List<String>> productAssociatedItemsFinalMap, final Map<String, Integer> validProductFinalList, final Map<String,
+	 * AbstractOrderEntry> validProductUssidFinalMap, final Map<String, Map<String, Double>> finalDelChrgMap)
+	 */
 	private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext paramPromotionEvaluationContext,
 			final Map<String, AbstractOrderEntry> validProductUssidMap, final List<AbstractPromotionRestriction> restrictionList,
-			final List<Product> promotionProductList, final List<Category> promotionCategoryList, final AbstractOrder order,
-			final Map<String, List<String>> productAssociatedItemsFinalMap, final Map<String, Integer> validProductFinalList,
-			final Map<String, AbstractOrderEntry> validProductUssidFinalMap, final Map<String, Map<String, Double>> finalDelChrgMap)
+			final AbstractOrder order, final Map<String, List<String>> productAssociatedItemsFinalMap,
+			final Map<String, Integer> validProductFinalList, final Map<String, AbstractOrderEntry> validProductUssidFinalMap,
+			final Map<String, Map<String, Double>> finalDelChrgMap)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final PromotionsManager promotionsManager = PromotionsManager.getInstance();

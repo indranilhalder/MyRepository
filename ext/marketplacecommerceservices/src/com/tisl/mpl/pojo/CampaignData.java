@@ -18,135 +18,134 @@ public class CampaignData
 	private final static Logger LOG = Logger.getLogger(PromotionCreationJob.class.getName());
 
 
-	private String offer_id;
-	private String offer_name;
-	private String offer_active;
-	private String offer_type;
-	private String offer_channel;
-	private String offer_startdate;
-	private String offer_enddate;
+	private String offerid;
+	private String offername;
+	private String offeractive;
+	private String offertype;
+	private String offerchannel;
+	private String offerstartdate;
+	private String offerenddate;
 	private String url;
-	private String creation_date;
-	private String modified_date;
-
+	private String creationdate;
+	private String modifieddate;
 
 	/**
-	 * @return the offer_id
+	 * @return the offerid
 	 */
-	public String getOffer_id()
+	public String getOfferid()
 	{
-		return offer_id;
+		return offerid;
 	}
 
 	/**
-	 * @param offer_id
-	 *           the offer_id to set
+	 * @param offerid
+	 *           the offerid to set
 	 */
-	public void setOffer_id(final String offer_id)
+	public void setOfferid(final String offerid)
 	{
-		this.offer_id = offer_id;
+		this.offerid = offerid;
 	}
 
 	/**
-	 * @return the offer_name
+	 * @return the offername
 	 */
-	public String getOffer_name()
+	public String getOffername()
 	{
-		return offer_name;
+		return offername;
 	}
 
 	/**
-	 * @param offer_name
-	 *           the offer_name to set
+	 * @param offername
+	 *           the offername to set
 	 */
-	public void setOffer_name(final String offer_name)
+	public void setOffername(final String offername)
 	{
-		this.offer_name = offer_name;
+		this.offername = offername;
 	}
 
 	/**
-	 * @return the offer_active
+	 * @return the offeractive
 	 */
-	public String getOffer_active()
+	public String getOfferactive()
 	{
-		return offer_active;
+		return offeractive;
 	}
 
 	/**
-	 * @param offer_active
-	 *           the offer_active to set
+	 * @param offeractive
+	 *           the offeractive to set
 	 */
-	public void setOffer_active(final String offer_active)
+	public void setOfferactive(final String offeractive)
 	{
-		this.offer_active = offer_active;
+		this.offeractive = offeractive;
 	}
 
 	/**
-	 * @return the offer_type
+	 * @return the offertype
 	 */
-	public String getOffer_type()
+	public String getOffertype()
 	{
-		return offer_type;
+		return offertype;
 	}
 
 	/**
-	 * @param offer_type
-	 *           the offer_type to set
+	 * @param offertype
+	 *           the offertype to set
 	 */
-	public void setOffer_type(final String offer_type)
+	public void setOffertype(final String offertype)
 	{
-		this.offer_type = offer_type;
+		this.offertype = offertype;
 	}
 
 	/**
-	 * @return the offer_channel
+	 * @return the offerchannel
 	 */
-	public String getOffer_channel()
+	public String getOfferchannel()
 	{
-		return offer_channel;
+		return offerchannel;
 	}
 
 	/**
-	 * @param offer_channel
-	 *           the offer_channel to set
+	 * @param offerchannel
+	 *           the offerchannel to set
 	 */
-	public void setOffer_channel(final String offer_channel)
+	public void setOfferchannel(final String offerchannel)
 	{
-		this.offer_channel = offer_channel;
+		this.offerchannel = offerchannel;
 	}
 
 	/**
-	 * @return the offer_startdate
+	 * @return the offerstartdate
 	 */
-	public String getOffer_startdate()
+	public String getOfferstartdate()
 	{
-		return offer_startdate;
+		return offerstartdate;
 	}
 
 	/**
-	 * @param offer_startdate
-	 *           the offer_startdate to set
+	 * @param offerstartdate
+	 *           the offerstartdate to set
 	 */
-	public void setOffer_startdate(final String offer_startdate)
+	public void setOfferstartdate(final String offerstartdate)
 	{
-		this.offer_startdate = offer_startdate;
+		this.offerstartdate = offerstartdate;
 	}
 
 	/**
-	 * @return the offer_enddate
+	 * @return the offerenddate
 	 */
-	public String getOffer_enddate()
+	public String getOfferenddate()
 	{
-		return offer_enddate;
+		return offerenddate;
 	}
 
 	/**
-	 * @param offer_enddate
-	 *           the offer_enddate to set
+	 * @param offerenddate
+	 *           the offerenddate to set
 	 */
-	public void setOffer_enddate(final String offer_enddate)
+	public void setOfferenddate(final String offerenddate)
 	{
-		this.offer_enddate = offer_enddate;
+		this.offerenddate = offerenddate;
 	}
 
 	/**
@@ -167,37 +166,39 @@ public class CampaignData
 	}
 
 	/**
-	 * @return the creation_date
+	 * @return the creationdate
 	 */
-	public String getCreation_date()
+	public String getCreationdate()
 	{
-		return creation_date;
+		return creationdate;
 	}
 
 	/**
-	 * @param creation_date
-	 *           the creation_date to set
+	 * @param creationdate
+	 *           the creationdate to set
 	 */
-	public void setCreation_date(final String creation_date)
+	public void setCreationdate(final String creationdate)
 	{
-		this.creation_date = creation_date;
+		this.creationdate = creationdate;
 	}
 
 	/**
-	 * @return the modified_date
+	 * @return the modifieddate
 	 */
-	public String getModified_date()
+	public String getModifieddate()
 	{
-		return modified_date;
+		return modifieddate;
 	}
 
 	/**
-	 * @param modified_date
-	 *           the modified_date to set
+	 * @param modifieddate
+	 *           the modifieddate to set
 	 */
-	public void setModified_date(final String modified_date)
+	public void setModifieddate(final String modifieddate)
 	{
-		this.modified_date = modified_date;
+		this.modifieddate = modifieddate;
 	}
+
+
 
 }

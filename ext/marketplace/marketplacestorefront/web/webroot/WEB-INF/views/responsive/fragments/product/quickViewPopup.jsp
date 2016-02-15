@@ -544,10 +544,11 @@ display:none;
 		  </div>
 	 </c:if> --%>
 		<c:if test="${isNew=='true'}">
-	 	   <div style="z-index: 1;" class="new-product">
-	  		<span><img  id ="newProduct" class="new brush-strokes-sprite sprite-New" style="z-index:1; " src="${commonResourcePath}/images/transparent.png"></span> 
-	 	   </div>
-	 	  </c:if>
+		 <div id ="newProduct" style="z-index: 1;display:none;" class="new new-product">
+					<img class="brush-strokes-sprite sprite-New"
+					src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
+					</div>
+	 	   </c:if> 
 	   <c:if test="${isOnline=='true'}">
 		 	<div style="z-index: 1;" class="online-exclusive">
 					<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
@@ -1055,4 +1056,20 @@ $('ul.wish-share a#mailQuick').popover({
 		}
 	}
 });
+$(document).on("keyup","#defaultWishName_quick",function() {
+	validateWishEnteredNameQuick("defaultWishName_quick","addedMessage_quick");
+});
+
+function validateWishEnteredNameQuick(divId,errorDivId) {
+	var value=$('#'+divId).val();
+	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
+	var isValid = re.test(value);
+	if (!isValid) {
+		value = value.substring(0, value.length - 1);
+		$("#"+errorDivId).html("<font color='#ff1c47'><b>*</b>Special charecters are not allowed</font>");
+		$("#"+errorDivId).show().fadeOut(3000);
+	}
+	$('#'+divId).val(value);
+
+} 
 </script>

@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -202,7 +203,8 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 			final List<CustomerModel> customerProfileDetail = mplCustomerProfileDao.getCustomerProfileDetail(oCustomerModel);
 
 			MplCustomerProfileData oMplCustomerProfileData = new MplCustomerProfileData();
-			if (null != customerProfileDetail && customerProfileDetail.size() > 0)
+			//if (null != customerProfileDetail && customerProfileDetail.size() > 0)
+			if (CollectionUtils.isNotEmpty(customerProfileDetail))
 			{
 				for (final CustomerModel customerModelData : customerProfileDetail)
 				{
@@ -406,7 +408,8 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 			final List<GenderData> genderList = new ArrayList<GenderData>();
 
 			final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode(Gender._TYPECODE);
-			if (null != enumList && enumList.size() > 0)
+			//if (null != enumList && enumList.size() > 0)
+			if (CollectionUtils.isNotEmpty(enumList))
 			{
 				for (int i = 0; i < enumList.size(); i++)
 				{

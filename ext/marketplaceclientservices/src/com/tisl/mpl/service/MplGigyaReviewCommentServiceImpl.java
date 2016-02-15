@@ -440,9 +440,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		int years = 0;
 		int months = 0;
 		int days = 0;
+		int updatedDays = 0;
 		//create calendar object for review day
 		final Calendar reviewDay = Calendar.getInstance();
-		//reviewDay.setTime(commentDateObj);
 		reviewDay.setTimeInMillis(commentDateObj.getTime());
 		//create calendar object for current day
 		final long currentTime = System.currentTimeMillis();
@@ -452,6 +452,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		years = now.get(Calendar.YEAR) - reviewDay.get(Calendar.YEAR);
 		final int currMonth = now.get(Calendar.MONTH) + 1;
 		final int reviewMonth = reviewDay.get(Calendar.MONTH) + 1;
+		final String appendDays = "days ago";
+		final String appendDay = "a day ago";
 		//Get difference between months
 		months = currMonth - reviewMonth;
 		//if month difference is in negative then reduce years by one and calculate the number of months.
@@ -489,24 +491,32 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 				months = 0;
 			}
 		}
-		if (days == 0)
+
+		if (months == 0)
 		{
-			formatedDate = "today";
-		}
-		else if (days == 1)
-		{
-			formatedDate = "a day ago";
+			if (days == 0)
+			{
+				formatedDate = "today";
+			}
+			else if (days == 1)
+			{
+				formatedDate = appendDay;
+			}
+			else
+			{
+				final String fullDate = days + " " + appendDays + updatedDays + " " + "months ago" + years + " " + "years ago";
+				LOG.debug(">>fullDate>> " + fullDate);
+				formatedDate = (days + " " + appendDays);
+			}
 		}
 		else
 		{
-			formatedDate = String.valueOf(days) + " " + "days ago";
-			final String fullDate = String.valueOf(days) + " " + "days ago" + months + " " + "months ago" + years + " "
-					+ "years ago";
+			updatedDays = (months * 30);
+			final String fullDate = days + " " + appendDays + updatedDays + " " + "months ago" + years + " " + "years ago";
 			LOG.debug(">>fullDate>> " + fullDate);
+			formatedDate = (days + updatedDays) + " " + appendDays;
 		}
-
 		return formatedDate;
-
 	}
 
 	/**
