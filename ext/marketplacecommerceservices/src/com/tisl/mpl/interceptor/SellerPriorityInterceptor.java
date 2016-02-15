@@ -137,7 +137,8 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 						if (!arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYSTARTDATE)
 								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)
 								&& null != priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue()
-								&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE))
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE)
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.SELLERID))
 						{
 							LOG.debug("no modification *********** categoryId : " + priorityValue.getCategoryId()
 									+ " **************   listingId" + priorityValue.getListingId());

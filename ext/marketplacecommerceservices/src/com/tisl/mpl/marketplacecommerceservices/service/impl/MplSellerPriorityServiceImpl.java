@@ -82,7 +82,10 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						final int count = 1;
 						priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
 						ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
-						ussidList.removeAll(Collections.singletonList(null));
+						if (ussidList != null)
+						{
+							ussidList.removeAll(Collections.singletonList(null));
+						}
 						if (isValid)
 						{
 							priorityMapList.addAll(ussidList);
@@ -96,6 +99,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						priorityLevel = Integer.parseInt(MarketplacecommerceservicesConstants.PRODUCT_PRIORITY);
 						ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
 								sellerPriority.getSellerId())));
+						ussidList.removeAll(Collections.singletonList(null));
 						if (isValid)
 						{
 							priorityMapList.addAll(ussidList);
@@ -115,19 +119,20 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							final int count = 1;
 							priorityLevel = findCategoryLevel(sellerPriority.getCategoryId(), count);
 							ussidList = getUssidsFromSellers(sellerPriority.getCategoryId(), sellerPriority.getSellerId());
+
 							log.info(new StringBuilder("###########ussid for category level").append(ussidList).append("prioritylevel")
 									.append(priorityLevel).toString());
+							if (ussidList != null)
+							{
+								ussidList.removeAll(Collections.singletonList(null));
+							}
 							if (isValid)
 							{
 								priorityMapList.addAll(ussidList);
 							}
-							if (null != ussidList && ussidList.contains(null) || ussidList == null || ussidList.isEmpty())
+							if (ussidList.isEmpty())
 							{
 								sellerPriority.setPriorityStatus(SellerPriorityEnum.ERROR);
-							}
-							if (ussidList != null)
-							{
-								ussidList.removeAll(Collections.singletonList(null));
 							}
 							priorityModelList.add(sellerPriority);
 							//chceking for current valid priorities
@@ -174,6 +179,7 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							{
 								ussidList = new ArrayList<String>(Arrays.asList(getUssidFromSkuId(sellerPriority.getListingId(),
 										sellerPriority.getSellerId())));
+								ussidList.removeAll(Collections.singletonList(null));
 								if (isValid)
 								{
 									priorityMapList.addAll(ussidList);
