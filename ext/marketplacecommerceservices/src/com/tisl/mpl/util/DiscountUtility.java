@@ -259,7 +259,8 @@ public class DiscountUtility
 					priceRowList.addAll(discountPriceRows);
 				}
 
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 						&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 				{
 					final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
@@ -369,7 +370,8 @@ public class DiscountUtility
 			if (null != discountPriceRows)
 			{
 				priceRowList.addAll(discountPriceRows);
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getPrice())
 				{
 					final Double cashbBackVal = priceRowList.get(0).getPrice();
 					final PriceData discountPrice = createPrice(cart, cashbBackVal);
@@ -419,7 +421,8 @@ public class DiscountUtility
 				if (null != discountPriceRows)
 				{
 					priceRowList.addAll(discountPriceRows);
-					if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+					//if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+					if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getPrice())
 					{
 						final Double cashbBackVal = priceRowList.get(0).getPrice();
 						final PriceData discountPrice = createPrice(cart, cashbBackVal);

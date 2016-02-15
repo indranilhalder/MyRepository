@@ -72,7 +72,7 @@ public class MplCouponServiceImpl implements MplCouponService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.coupon.service.MplCouponService#getClosedVoucher()
 	 */
 	@Override
@@ -81,7 +81,6 @@ public class MplCouponServiceImpl implements MplCouponService
 		return getMplCouponDao().findClosedVoucher();
 
 	}
-
 
 	/*
 	 * (non-Javadoc)

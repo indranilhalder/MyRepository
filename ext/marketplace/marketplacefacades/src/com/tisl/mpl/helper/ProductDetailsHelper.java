@@ -24,7 +24,6 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.Constants.USER;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -951,8 +950,19 @@ public class ProductDetailsHelper
 				if (null != feature.getValue())
 				{
 					final FeatureValue sizeGuidefeatureVal = feature.getValue();
-					sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode()
-							.replaceAll("sizetype", ""));
+					if (sizeGuidefeatureVal != null)
+					{
+						//						sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode()
+						//								.replaceAll("sizetype", ""));
+
+						if (StringUtils.isNotEmpty(String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue())
+								.getCode())))
+						{
+							sizeGuideCode = String.valueOf(
+									((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode().replaceAll("sizetype",
+											"")).toUpperCase();
+						}
+					}
 					break;
 				}
 			}

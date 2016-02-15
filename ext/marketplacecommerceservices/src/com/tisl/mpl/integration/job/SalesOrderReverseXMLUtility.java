@@ -30,6 +30,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -320,7 +321,8 @@ public class SalesOrderReverseXMLUtility
 							List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
 							subOrderDataList = getSubOrderData(order.getParentReference().getChildOrders());
 
-							if (subOrderDataList.size() == 0)
+							//if (subOrderDataList.size() == 0)
+							if (CollectionUtils.isEmpty(subOrderDataList))
 							{
 								salesXMLData = null;
 							}
@@ -371,7 +373,8 @@ public class SalesOrderReverseXMLUtility
 			for (final OrderModel order : childOrders)
 			{
 				final Map checkReturnCancelMap = checkCanelReturn(order);
-				if (checkReturnCancelMap != null && checkReturnCancelMap.size() > 0)
+				//if (checkReturnCancelMap != null && checkReturnCancelMap.size() > 0)
+				if (MapUtils.isNotEmpty(checkReturnCancelMap))
 				{
 					if (null != order.getPaymentTransactions())
 					{
@@ -572,7 +575,8 @@ public class SalesOrderReverseXMLUtility
 						LOG.debug(">>>>>>> before prodcatlist");
 						final List<CategoryModel> productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(product);
 
-						if (null != productCategoryList && productCategoryList.size() > 0)
+						//if (null != productCategoryList && productCategoryList.size() > 0)
+						if (CollectionUtils.isNotEmpty(productCategoryList))
 						{
 
 							categoryList = new ArrayList<>();
@@ -587,7 +591,8 @@ public class SalesOrderReverseXMLUtility
 
 							}
 
-							if (categoryList.size() > 0)
+							//if (categoryList.size() > 0)
+							if (CollectionUtils.isNotEmpty(categoryList))
 							{
 								Collections.sort(categoryList, new Comparator()
 								{

@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,7 +51,8 @@ import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 public class InternalExternalAutomationServiceImpl implements InternalExternalAutomationService
 {
 
-	Logger LOG = Logger.getLogger(this.getClass());
+	//final Logger LOG = Logger.getLogger(this.getClass());
+	private static final Logger LOG = Logger.getLogger(InternalExternalAutomationServiceImpl.class);
 	/*
 	 * @Autowired private CMSPageService cmsPageService;
 	 */
@@ -120,6 +122,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataSeqBanner = new InternalCampaignReportData();
 							automationMap.put("asset_name", componentItr.getName());
 							automationMap.put("source_page", contentPageItr.getLabel());
+							//contentPageItr.getUid()
 
 							// Storing data for generating Internal Report
 							campaignDataSeqBanner.setAssetName(componentItr.getName());
@@ -148,7 +151,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									/*
 									 * String CategorySeqBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|" +
 									 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
-									 *
+									 * 
 									 * CategorySeqBanner = CategorySeqBanner.substring(CategorySeqBanner.lastIndexOf("/") + 1,
 									 * CategorySeqBanner.length());
 									 */
@@ -207,12 +210,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 										/*
 										 * Authenticator.setDefault(new Authenticator() {
-										 *
+										 * 
 										 * @Override public PasswordAuthentication getPasswordAuthentication() { final String
 										 * username = "siteadmin"; final String password = "ASDF!@#$asdf1234";
 										 * LOG.info("Authenticating Login......"); return new PasswordAuthentication(username,
 										 * password.toCharArray());
-										 *
+										 * 
 										 * } });
 										 */
 
@@ -447,7 +450,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								 * LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl); } else if
 								 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
 								 * LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
-								 * 
+								 *
 								 * }
 								 */
 
@@ -471,9 +474,10 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				}
 
-				createCSVExcel(CampaignDataList);
+
 
 			}
+			createCSVExcel(CampaignDataList);
 		}
 		/*
 		 * catch (final IOException e) { LOG.error(e); }
@@ -520,11 +524,49 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	}
 
 	//public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final String path, final File file)
-	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final File file)
+	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedTmpList, final File file)
 	{
 		FileWriter fileWriter = null;
 		String CSVHeader = "";
+		//final HashSet<InternalCampaignReportData> set = new HashSet<InternalCampaignReportData>();
+		//final List<InternalCampaignReportData> tmpIRList = new ArrayList<InternalCampaignReportData>();
+		final List<InternalCampaignReportData> campaignDataConsolidatedList = new ArrayList<InternalCampaignReportData>();
 
+
+		for (final InternalCampaignReportData internalCampaignReportData : campaignDataConsolidatedTmpList)
+		{
+			if (CollectionUtils.isEmpty(campaignDataConsolidatedList))
+			{
+				campaignDataConsolidatedList.add(internalCampaignReportData);
+			}
+			else
+			{
+				boolean isPresent = false;
+				for (final InternalCampaignReportData finalData : campaignDataConsolidatedList)
+				{
+					if (finalData.getIcid() != null && internalCampaignReportData.getIcid() != null
+							&& finalData.getIcid().equalsIgnoreCase(internalCampaignReportData.getIcid()))
+					{
+						isPresent = true;
+						break;
+					}
+				}
+				if (!isPresent)
+				{
+					campaignDataConsolidatedList.add(internalCampaignReportData);
+				}
+			}
+		}
+
+
+		/*
+		 * for (final InternalCampaignReportData item : campaignDataConsolidatedTmpList) { if (!set.contains(item)) {
+		 * set.add(item); campaignDataConsolidatedList.add(item);
+		 * 
+		 * }
+		 * 
+		 * }
+		 */
 		try
 		{
 			fileWriter = new FileWriter(file, false);

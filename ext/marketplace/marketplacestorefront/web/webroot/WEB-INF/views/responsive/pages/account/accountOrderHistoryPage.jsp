@@ -93,7 +93,7 @@
 								code="header.flyout.cards" /></a></li>
 					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 								code="header.flyout.address" /></a></li>
-								<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+					<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
 										code="header.flyout.review" /></a></li>
 					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
@@ -631,4 +631,3 @@
 		</div>
 	</div>
 </template:page>
-

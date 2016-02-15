@@ -4801,7 +4801,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			try
 			{
-				if (friendsEmailList.size() > 0)
+				//if (friendsEmailList.size() > 0)
+				if (CollectionUtils.isNotEmpty(friendsEmailList))
 				{
 					if (!friendsInviteFacade.isEmailEqualsToCustomer(friendsEmailList))
 					{
@@ -4912,7 +4913,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				final List<CategoryData> categoryDataList = new ArrayList<CategoryData>();
 				final List<CategoryData> categoryDataBrandList = new ArrayList<CategoryData>();
-				if (preferredCategoryList.size() > 0)
+				//if (preferredCategoryList.size() > 0)
+				if (CollectionUtils.isNotEmpty(preferredCategoryList))
 				{
 					for (final CategoryModel category : preferredCategoryList)
 					{
@@ -4922,7 +4924,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						categoryDataList.add(categoryData);
 					}
 				}
-				if (preferredBrandList.size() > 0)
+				//if (preferredBrandList.size() > 0)
+				if (CollectionUtils.isNotEmpty(preferredBrandList))
 				{
 					for (final CategoryModel categoryBrand : preferredBrandList)
 					{
@@ -5123,7 +5126,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			mplPreferenceData.setSelectedBrand(selectedBrand);
 			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 			final MarketplacePreferenceModel mplPreferenceModel = currentCustomer.getMarketplacepreference();
-			if (selectedFeedBackArea.size() > 0)
+			//if (selectedFeedBackArea.size() > 0)
+			if (CollectionUtils.isNotEmpty(selectedFeedBackArea))
 			{
 				if (selectedFeedBackArea.size() == 1)
 				{
@@ -5514,7 +5518,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			if (!categoryListData.isEmpty() && categoryListData.size() > 0 && ModelAttributetConstants.TRUE.equalsIgnoreCase(modify))
+			//if (!categoryListData.isEmpty() && categoryListData.size() > 0 && ModelAttributetConstants.TRUE.equalsIgnoreCase(modify))
+			if (CollectionUtils.isNotEmpty(categoryListData) && ModelAttributetConstants.TRUE.equalsIgnoreCase(modify))
 			{
 				saveCategoryData(categoryListData);
 			}
@@ -5690,7 +5695,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			if (!brandListData.isEmpty() && brandListData.size() > 0)
+			//if (!brandListData.isEmpty() && brandListData.size() > 0)
+			if (CollectionUtils.isNotEmpty(brandListData))
 			{
 				saveBrandData(brandListData);
 			}
