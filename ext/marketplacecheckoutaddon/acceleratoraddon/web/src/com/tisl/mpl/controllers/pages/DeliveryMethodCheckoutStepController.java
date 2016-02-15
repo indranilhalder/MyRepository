@@ -117,6 +117,7 @@ import com.tisl.mpl.service.MplSlaveMasterService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -651,6 +652,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					model.addAttribute("cnccount",count);
 					model.addAttribute("defaultPincode", defaultPincode);
 					model.addAttribute("pwpos", productWithPOS);
+					model.addAttribute("CSRFToken", CSRFTokenManager.getTokenForSession(request.getSession()));
+					
 				}
 			}
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
@@ -710,10 +713,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					model.addAttribute("sellerName", sellerName);
 					model.addAttribute("sellerId",sellerInfoModel.getSellerID());
 					model.addAttribute("ussid", ussId);
+					
 					final ProductModel productModel = sellerInfoModel.getProductSource();
 					final ProductData productData = productFacade.getProductForOptions(productModel,
 							Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 					
+					pwPOS.setUssId(ussId);
 					LOG.debug("get stores from commerce based on SellerId and StoredId(slaveId)");
 					for (int i = 0; i < storeLocationResponseData.getAts().size(); i++)
 					{
@@ -774,16 +779,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/addPosToOrderEntry", method = RequestMethod.GET)
-	public String addPosToOrderEntry(@RequestParam("productCode") final String productCode,@RequestParam("posName") final String posName)
+	public String addPosToOrderEntry( @RequestParam("ussId") final String ussId, @RequestParam("posName") final String posName)
 	{
 		LOG.debug("from addPosToOrderEntry method ");
 		String status = "yes";
-		//get ProductModel for given product code
-		final ProductModel pModel = productService.getProduct(productCode);
-		
+	
 		//call service to retrieve POSModel for given posName
 		final PointOfServiceModel posModel = mplSlaveMasterService.findPOSByName(posName);
-		final String pcode = pModel.getCode();
+		final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
+		
 		try
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -793,8 +797,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					if (cartEntryModel != null)
 					{
-						final String ussid = cartEntryModel.getSelectedUSSID();
-						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
 						String collDays = "";
 						if (sellerInfoModel != null)
 						{
@@ -804,14 +806,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 								collDays = sellerMaster.getCollectionDays();
 							}
 						}
-						if (cartEntryModel.getProduct().getCode().equalsIgnoreCase(pcode))
+						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussId))
 						{
-							if (collDays != null)
+							if (StringUtils.isNotEmpty(collDays))
 							{
 								cartEntryModel.setCollectionDays(Integer.valueOf(collDays));
 							}
+							else
+							{
+								cartEntryModel.setCollectionDays(Integer.valueOf(0));
+							}
 							cartEntryModel.setDeliveryPointOfService(posModel);
 							modelService.save(cartEntryModel);
+							break;
 						}
 					}
 				}
@@ -1586,7 +1593,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@ResponseBody
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.UPDATE_CHECK_PINCODE, method = RequestMethod.GET)
 	public List<PointOfServiceData> upDatePincodeServicabilityCheck(@RequestParam(value = "pin") final String pin,
-			@RequestParam(value = "productCode") final String productCode, @RequestParam(value = "sellerId") final String sellerId, final Model model)
+			@RequestParam(value = "productCode") final String productCode, @RequestParam(value = "sellerId") final String ussId, final Model model)
 			throws CMSItemNotFoundException
 	{
 		LOG.debug("from upDatePincodeServicabilityCheck method when customer change pincode at cnc page");
@@ -1600,18 +1607,21 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		if (status)
 		{
 			//call service to get list of ATS and ussid
-			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, sellerId, productCode);
+			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
 			productWithPOS = getProductWdPos(omsResponse,model);
 			if (productWithPOS.size() > 0)
 			{
+				status = true;
 				stores = productWithPOS.get(0).getPointOfServices();
 			}
 
 		}
-		else
+		if (! status)
 		{
-			stores = null;
+			stores.clear();
+			return stores;
 		}
+		
 		return stores;
 	}
 
