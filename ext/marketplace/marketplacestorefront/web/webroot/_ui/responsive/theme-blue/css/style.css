@@ -12989,9 +12989,8 @@ div.pdp .reviews .toolbar select.white {
     display: table;		
 }		
 .modal.size-guide .sizes .details .attributes {		
-    width: 80%;		
-   /*  margin: 20px auto; */
-       margin: 10px 30px 20px 140px;		
+   width: 100%;
+    padding: 20px 30px 20px 50px;		
 }		
 @media (min-width: 650px) {		
     .modal.size-guide .sizes .details .attributes {		
@@ -28884,7 +28883,8 @@ header .content .bottom.active nav > ul > li:first-child + li > ul {
 }}
 .modal.size-guide .sizes .details .attributes #addToCartSizeGuide{
 	float: left;
-    width: 15%;
+    width: 22%;
+    position:relative;
 }
 .modal.size-guide .sizes .details .attributes #addToCartButton,#add_to_wishlist-sizeguide{
 height:30px;
@@ -28896,10 +28896,11 @@ min-width: 150px;
 	line-height:30px;
 }
 .sizeGuide-message{
-	width: 143px;
+	width:100%;
+	max-width: 143px;
     position: absolute;
-    bottom: 65px;
-    right: 16.5%;
+    bottom: 45px;
+    left: 0;
 } 
 
 
@@ -30123,7 +30124,7 @@ header:not(.compact) .content .marketplace.compact{
 }
 .modal.size-guide .sizes .details .attributes #addToCartButton, #add_to_wishlist-sizeguide{
 	max-width: 250px;
-    margin: 0px auto;
+    margin: 20px auto 0px;
 }
 }
 /*--------------maincss-----------*/
