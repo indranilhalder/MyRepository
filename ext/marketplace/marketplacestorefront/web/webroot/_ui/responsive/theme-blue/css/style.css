@@ -28956,7 +28956,15 @@ min-width: 150px;
 	font-size: 16px;
 	text-align: center;
 }
-
+.feature-categories .footwear_right span {
+	display: block;
+	line-height: 20px;
+	padding: 15px 0;
+	padding-bottom: 0px;
+	vertical-align: middle;
+	font-size: 16px;
+	text-align: center;
+}
 .feature-categories ul.footwear_left a.shop_link,
 	.feature-categories .footwear_right a.shop_link {
 	display: block;
