@@ -73,8 +73,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	/**
-	 * This method recalculates the cart after redeeming/releasing the voucher
-	 *
+	 * @Description This method recalculates the cart after redeeming/releasing the voucher *
 	 * @param cartModel
 	 *
 	 */
@@ -124,8 +123,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	/**
-	 * Checks the cart after applying the voucher
-	 *
+	 * @Description Checks the cart after applying the voucher
 	 * @param lastVoucher
 	 * @param cartModel
 	 * @throws ModelSavingException
@@ -242,7 +240,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	/**
-	 *
+	 * @Description This is for releasing voucher
 	 * @param cartModel
 	 * @param voucherCode
 	 * @return VoucherDiscountData
@@ -310,8 +308,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	/**
-	 * This method adds global discount
-	 *
+	 * @Description This method adds global discount
 	 * @param discountList
 	 * @param voucherList
 	 * @param cartSubTotal
@@ -340,6 +337,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	}
 
 
+	/**
+	 * @Description This is for releasing voucher
+	 * @param cartModel
+	 * @param voucherCode
+	 * @throws VoucherOperationException
+	 */
 	@Override
 	public void releaseVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException
 	{
@@ -371,7 +374,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	/**
-	 *
+	 * @Description For getting list of applicable AbstractOrderEntryModel from voucherEntrySet
 	 * @param voucherModel
 	 * @param cartModel
 	 * @return public List<AbstractOrderEntryModel>
@@ -402,8 +405,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	/**
-	 * Returns voucher model from the voucher code
-	 *
+	 * @Description Returns voucher model from the voucher code
 	 * @param voucherCode
 	 * @return VoucherModel
 	 * @throws VoucherOperationException
@@ -555,6 +557,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	}
 
 	/**
+	 * @Descriotion This is for checking total items in cart
 	 * @param applicableOrderEntryList
 	 * @return
 	 */

@@ -39,8 +39,8 @@ public class CronJobDataServiceImpl implements CronJobDataService
 	{
 		final Date customerBdate = oCusModel.getDateOfBirth();
 
-		return (null != startDate && null != endDate && null != customerBdate)
-				? CouponUtilityMethods.doDateValidation(startDate, endDate, customerBdate) : false;
+		return (null != startDate && null != endDate && null != customerBdate) ? CouponUtilityMethods.doDateValidation(startDate,
+				endDate, customerBdate) : false;
 	}
 
 	/**
@@ -54,16 +54,19 @@ public class CronJobDataServiceImpl implements CronJobDataService
 	{
 		final Date customerAnnivDate = oCusModel.getDateOfAnniversary();
 
-		return (null != startDate && null != endDate && null != customerAnnivDate)
-				? CouponUtilityMethods.doDateValidation(startDate, endDate, customerAnnivDate) : false;
+		return (null != startDate && null != endDate && null != customerAnnivDate) ? CouponUtilityMethods.doDateValidation(
+				startDate, endDate, customerAnnivDate) : false;
 	}
 
-	/*
-	 * @Description: Purchase Based special Vouchers (non-Javadoc)
+	/**
+	 * @Description: Purchase Based special Vouchers
 	 *
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.CronJobDataService#purchaseBasedVoucherDetails(de.hybris.platform
-	 * .core.model.user.CustomerModel, java.util.Date, java.util.Date, java.lang.Double)
+	 * @param oCusModel
+	 * @param startDate
+	 * @param endDate
+	 * @param specifiedAmount
+	 * @return boolean
+	 *
 	 */
 	@Override
 	public boolean purchaseBasedVoucherDetails(final CustomerModel oCusModel, final Date startDate, final Date endDate,
@@ -105,12 +108,17 @@ public class CronJobDataServiceImpl implements CronJobDataService
 		return flag;
 	}
 
-	/*
-	 * (non-Javadoc)
+
+
+	/**
+	 * @Description: Checks whether the customer has newly registered and has no order placed before
 	 *
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.CronJobDataService#firstTimeRegVoucherDetails(de.hybris.platform
-	 * .core.model.user.CustomerModel, java.util.Date, java.util.Date, int)
+	 * @param oCusModel
+	 * @param restrictionStartDate
+	 * @param restrictionEndDate
+	 * @param noOfDays
+	 * @return boolean
+	 *
 	 */
 	@Override
 	public boolean firstTimeRegVoucherDetails(final CustomerModel oCusModel, final Date restrictionStartDate,
@@ -123,8 +131,9 @@ public class CronJobDataServiceImpl implements CronJobDataService
 			final Date userCreationTime = oCusModel.getCreationtime();
 
 			if (CouponUtilityMethods.doDateValidation(restrictionStartDate, restrictionEndDate, userCreationTime)
-					&& oCusModel.getOrders() != null && oCusModel.getOrders().isEmpty() && (noOfDays == 0
-							|| CouponUtilityMethods.noOfDaysCalculatorBetweenDates(userCreationTime, currentDate) >= noOfDays))
+					&& oCusModel.getOrders() != null
+					&& oCusModel.getOrders().isEmpty()
+					&& (noOfDays == 0 || CouponUtilityMethods.noOfDaysCalculatorBetweenDates(userCreationTime, currentDate) >= noOfDays))
 			{
 				flag = true;
 			}
@@ -132,11 +141,15 @@ public class CronJobDataServiceImpl implements CronJobDataService
 		return flag;
 	}
 
-	/*
-	 * (non-Javadoc)
+
+
+	/**
+	 * @Description: Checks whether the cart is not shopped for specific no of days
 	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.CronJobDataService#cartNotShoppedVoucherDetails(de.hybris.
-	 * platform .core.model.user.CustomerModel, int)
+	 * @param oCusModel
+	 * @param noOfDays
+	 * @return boolean
+	 *
 	 */
 	@Override
 	public boolean cartNotShoppedVoucherDetails(final CustomerModel oCusModel, final int noOfDays)
@@ -173,6 +186,19 @@ public class CronJobDataServiceImpl implements CronJobDataService
 	}
 
 
+
+	/**
+	 * @Description: Checks whether the cart is abandoned at cart page or at payment page
+	 *
+	 * @param oCusModel
+	 * @param startDate
+	 * @param endDate
+	 * @param isForPayment
+	 * @param isGreater
+	 * @param cartValue
+	 * @return boolean
+	 *
+	 */
 	@Override
 	public boolean cartAbandonmentVoucherDetails(final CustomerModel oCusModel, final Date startDate, final Date endDate,
 			final boolean isForPayment, final boolean isGreater, final double cartValue)
@@ -209,6 +235,15 @@ public class CronJobDataServiceImpl implements CronJobDataService
 		return flag;
 	}
 
+
+	/**
+	 * This method checks the cart value and returns whether it is greater than required cart value
+	 *
+	 * @param cart
+	 * @param isGreater
+	 * @param cartValue
+	 * @return boolean
+	 */
 	private boolean checkCartValue(final CartModel cart, final boolean isGreater, final double cartValue)
 	{
 		boolean flag = false;

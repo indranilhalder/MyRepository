@@ -21,10 +21,14 @@ public class MplCouponHelper
 
 	/**
 	 * @Description: validate delivery mode coupon
-	 * @param deliveryModeList
+	 *
+	 * @param restrDelModeList
 	 * @param order
-	 * @return true if satisfies
+	 * @param isPositive
+	 *
+	 * @return List<AbstractOrderEntry>
 	 */
+	@SuppressWarnings("deprecation")
 	public List<AbstractOrderEntry> validateDelliveryMode(final List<DeliveryMode> restrDelModeList, final AbstractOrder order,
 			final boolean isPositive)
 	{
