@@ -82,18 +82,24 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 
 
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
-;;/images/theme/OrderConfirmationBanner1.jpg;OrderConfirmationBanner1.jpg;$siteResource/images/theme/OrderConfirmationBanner1.jpg;;
+;;/images/theme/OrderConfirmationBanner1.jpg;OrderConfirmationBanner1.jpg;$siteResource/images/theme/header4.jpg;;
 ;;/images/theme/OrderConfirmationBanner2.jpg;OrderConfirmationBanner2.jpg;$siteResource/images/theme/OrderConfirmationBanner2.jpg;;
 ;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
-;;/images/theme/Track1.jpg;Track1.jpg;$siteResource/images/theme/Track1.jpg;;
-;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/Track2.jpg;;
+;;/images/theme/Track1.jpg;Track1.jpg;$siteResource/images/theme/track-btn.jpg;;
+;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/track2.jpg;;
 ;;/images/theme/ConfDescription.jpg;ConfDescription.jpg;$siteResource/images/theme/ConfDescription.jpg;;
 ;;/images/theme/OrderReferenceNumberOne.jpg;OrderReferenceNumberOne.jpg;$siteResource/images/theme/OrderReferenceNumberOne.jpg;;
 ;;/images/theme/OrderReferenceNumberTwo.jpg;OrderReferenceNumberTwo.jpg;$siteResource/images/theme/OrderReferenceNumberTwo.jpg;;
-;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/Tip.jpg;;
-;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/fb.jpg;;
-;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/gplus.jpg;;
-;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
+;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/happy-shopping.jpg;;
+;;/images/theme/app.jpg;app.jpg;$siteResource/images/theme/app.jpg;;
+;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/tip.jpg;;
+;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/f.jpg;;
+;;/images/theme/twitter.jpg;twitter.jpg;$siteResource/images/theme/t.jpg;;
+;;/images/theme/youtube.jpg;youtube.jpg;$siteResource/images/theme/y.jpg;;
+;;/images/theme/gplus.jpg;gplus.jpg;$siteResource/images/theme/p.jpg;;
+
+
+
 
 
 # CMS Image Components
@@ -110,6 +116,10 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;EmailfbImage;/images/theme/fb.jpg;
 ;;EmailgplusImage;/images/theme/gplus.jpg;
 ;;EmailsmileyImage;/images/theme/smileyimg.jpg;
+;;EmailTipsImage;/images/theme/Tip.jpg;
+;;EmailAppImage;/images/theme/app.jpg;
+;;Emailyoutube;/images/theme/youtube.jpg;
+;;Emailtwitter;/images/theme/twitter.jpg;
 
 
 ## reset password changes
@@ -134,8 +144,47 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailsmileyimgConfSlot;EmailsmileyImage
 ;;EmailfbConfSlot;EmailfbImage
 ;;EmailgplusConfSlot;EmailgplusImage
+;;EmailtwitterConfSlot;Emailtwitter
+;;EmailyoutubeConfSlot;Emailyoutube
+;;EmailappConfSlot;EmailAppImage;
 
 
+# Order Collected By PickUp Person Email Template
+# Media
+INSERT_UPDATE Media	;$contentCV[unique=true];code[unique=true]		;realfilename		;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]	;mime[default='image/jpg']
+			;			;mail_top_banner		;mailTopContentBody	;$siteResource/images/email/header4.jpg							;	
+			;			;mail_track-button		;trackOrderButton	;$siteResource/images/email/track-btn.jpg							;
+			;			;mail_tip-image			;tipsImageComponent	;$siteResource/images/email/tip.jpg								;
+			;			;mail_click-app_download	;clicktoDownloadApp	;$siteResource/images/email/click-app.jpg							;
+			;			;mail_happyShopping_banner	;happyShopping		;$siteResource/images/email/happy-shopping.jpg						;
+			;			;mail_facebook_link		;facebooklink		;$siteResource/images/email/f.jpg								;
+			;			;mail_twitter_link		;twitterlink		;$siteResource/images/email/t.jpg								;
+			;			;mail_youtube_link		;youtubelink		;$siteResource/images/email/y.jpg								;
+			;			;mail_socialnetwork_link	;socialnetworklin	;$siteResource/images/email/p.jpg								;
+
+# CMS Images Component For PickUp Person 
+INSERT_UPDATE CMSImageComponent	;$contentCV[unique=true]	;uid[unique=true]	;$picture[lang=$lang]
+				;				;mail_topContent_cms	;mail_top_banner
+				;				;mail_trackOrder_cms	;mail_track-button
+				;				;mail_tipsImage_cms	;mail_tip-image
+				;				;mail_clickApp_cms	;mail_click-app_download
+				;				;mail_happyShopping_cms	;mail_happyShopping_banner
+				;				;mail_facebook_cms	;mail_facebook_link
+				;				;mail_twitter_cms	;mail_twitter_link
+				;				;mail_youtube_cms	;mail_youtube_link
+				;				;mail_socialNewtwork_cms;mail_socialnetwork_link
+				
+			
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]		;cmsComponents(uid,$contentCV) 	;name 			;active
+				;			;emailTopContSlot  	;mail_topContent_cms		;Logo Slot		;true
+				;			;emailTrackOrderContSlot  	;mail_trackOrder_cms		;Track Order Slot	;true
+				;			;emailTipsContSlot	  	;mail_tipsImage_cms		;Tips Slot		;true
+				;			;emailClickAppDownContSlot  	;mail_clickApp_cms		;App Download Slot	;true
+				;			;emailHappyShopContSlot  	;mail_happyShopping_cms		;Happy Shop Slot	;true
+				;			;emailFacebookContSlot  	;mail_facebook_cms		;Facebook Slot		;true
+				;			;emailTwitterContSlot	  	;mail_twitter_cms		;Twitter Slot		;true
+				;			;emailYoutubeContSlot  		;mail_youtube_cms		;Youtube Slot		;true
+				;			;emailSocialContSlot  		;mail_socialNewtwork_cms	;Social Network Slot	;true
 
 # Order Delivery Email
 
@@ -272,6 +321,41 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailfbOrderRejectSlot;EmailfbImage
 ;;EmailgplusOrderRejectSlot;EmailgplusImage
 ;;EmailsmileyimgOrderRejectSlot;EmailsmileyImage
+
+# Media fOr Order refund
+INSERT_UPDATE Media	;$contentCV[unique=true];code[unique=true]		;realfilename		;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]	;mime[default='image/jpg']
+			;			;mailRefundCredit-Logo		;mailTopContentBody	;$siteResource/images/email/header4.jpg							;	
+			;			;mail_RefundCredit-tip		;tipsImageComponent	;$siteResource/images/email/tip.jpg								;
+			;			;mail_RefundCredit-app_download	;clicktoDownloadApp	;$siteResource/images/email/click-app.jpg							;
+			;			;mail_RefundCredit_banner	;happyShopping		;$siteResource/images/email/happy-shopping.jpg						;
+			;			;mail_RefundCredit_fb		;facebooklink		;$siteResource/images/email/f.jpg								;
+			;			;mail_RefundCredit_twitter	;twitterlink		;$siteResource/images/email/t.jpg								;
+			;			;mail_RefundCredit_youtube	;youtubelink		;$siteResource/images/email/y.jpg								;
+			;			;mail_RefundCredit_gplus	;socialnetworklin	;$siteResource/images/email/p.jpg								;
+
+			
+# CMS Image Components forOrder Refund  
+INSERT_UPDATE CMSImageComponent	;$contentCV[unique=true]	;uid[unique=true]		;$picture[lang=$lang]
+				;				;mail_topContent_refund		;mailRefundCredit-Logo
+				;				;mail_tips_refund		;mail_RefundCredit-tip
+				;				;mail_clickApp_refund		;mail_RefundCredit-app_download
+				;				;mail_happyshopping		;mail_RefundCredit_banner
+				;				;mail_facebook_refund		;mail_RefundCredit_fb
+				;				;mail_twitter_refund		;mail_RefundCredit_twitter
+				;				;mail_youtube_refund		;mail_RefundCredit_youtube
+				;				;mail_socialNewtwork_refund	;mail_RefundCredit_gplus
+
+
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]			;cmsComponents(uid,$contentCV) 	;name 			;active
+				;			;emailTopContSlotrefund  		;mail_topContent_refund		;Logo Slot		;true
+				;			;emailTipsContSlotrefund	  	;mail_tips_refund		;Tips Slot		;true
+				;			;emailClickAppDownContSlotrefund  	;mail_clickApp_refund		;App Download Slot	;true
+				;			;emailHappyShopContSlotrefund  		;mail_happyshopping		;Happy Shop Slot	;true
+				;			;emailFacebookContSlotrefund  		;mail_facebook_refund		;Facebook Slot		;true
+				;			;emailTwitterContSlotrefund	  	;mail_twitter_refund		;Twitter Slot		;true
+				;			;emailYoutubeContSlotrefund  		;mail_youtube_refund		;Youtube Slot		;true
+				;			;emailSocialContSlotrefund  		;mail_socialNewtwork_refund	;Social Network Slot	;true
+
 
 
 # Forget Password Email
