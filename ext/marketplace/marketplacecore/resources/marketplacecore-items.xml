@@ -704,6 +704,7 @@
 		<enumtype code="sellerPriorityEnum" autocreate="true"
 			generate="true" dynamic="false">
 			<value code="NEW"></value>
+			<value code="PROCESSING"></value>
 			<value code="PROCESSED"></value>
 			<value code="ERROR"></value>
 		</enumtype>
@@ -1339,6 +1340,21 @@
 					</attribute>
 
 					<!-- Added for Reviews and Rating - End -->
+					<!-- Added new attribute to promote a product -->
+					<attribute type="java.lang.Boolean" qualifier="isPromotedProduct"
+						autocreate="true" generate="true">
+						<description>This attribute is for marking a product as promoted.</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<modifiers read="true" write="true" search="true" />
+						<persistence type='property' />
+					</attribute>
+
+					<attribute qualifier="promotedProductPriority" type="java.lang.Integer">
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<!-- End -->
 
 
 
@@ -6727,7 +6743,7 @@
 					</attribute>
 					<attribute qualifier="priorityStatus" type="sellerPriorityEnum">
 						<persistence type="property" />
-						<modifiers read="true" write="true" optional="false" />
+						<modifiers read="true" write="true" optional="true" />
 					</attribute>
 
 					<!-- <attribute qualifier="isActive" type="java.lang.Boolean"> <description>To 
