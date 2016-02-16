@@ -24,6 +24,7 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 {
 
 	private static final String CUSTOMER_NAME = "customerName";
+	private static final String CUSTOMER = "Customer";
 	private static final String ORDER_REFERENCE_NUMBER = "orderReferenceNumber";
 	private static final String ORDER_DATE = "orderDate";
 	private static final String CUSTOMER_FIRST_PAGE = "customerFirstPage";
@@ -42,7 +43,14 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 		put(CUSTOMER_FIRST_PAGE, customerFirstPage);
 		//final String contactUsLink = Localization.getLocalizedString("marketplace.contactus.link");
 		final String contactUsLink = configurationService.getConfiguration().getString("marketplace.contactus.link");
-		put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+		if (deliveryAddress != null)
+		{
+			put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		}
+		else
+		{
+			put(DISPLAY_NAME, CUSTOMER);
+		}
 		put(CONTACT_US_LINK, contactUsLink);
 		if (null != orderProcessModel.getOrder())
 		{
@@ -51,7 +59,14 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 			put(ORDER_DATE, order.getDate());
 			final CustomerModel customer = (CustomerModel) order.getUser();
 			put(EMAIL, customer.getOriginalUid());
-			put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+			if (deliveryAddress != null)
+			{
+				put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+			}
+			else
+			{
+				put(CUSTOMER_NAME, CUSTOMER);
+			}
 			/*
 			 * if (null != customer.getFirstName()) { put(CUSTOMER_NAME, customer.getFirstName()); } else {
 			 * put(CUSTOMER_NAME, "Customer"); }
