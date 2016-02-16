@@ -1392,16 +1392,16 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="priceDataFactory" ref="priceDataFactory"/> -->
 	</bean>
 		<!-- Voucher History converter -->	
-	<bean id="voucherHistoryConverter" parent="abstractPopulatingConverter">
+	<bean id="voucherTransactionConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.data.CouponHistoryData"/>
 		<property name="populators">
 			<list>
-				<ref bean="voucherTransactionConverter"/>
+				<ref bean="voucherTransactionPopulator"/>
 			</list>
 		</property>
 	</bean>
 
-	<bean id="voucherTransactionConverter"
+	<bean id="voucherTransactionPopulator"
 			class="com.tisl.mpl.facades.populators.MplVoucherTransactionHistoryPopulator">
 	</bean>
 </beans>
