@@ -1338,19 +1338,14 @@ function getRating(key,productCode,category)
 	 			{
 	 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
 	 			} 
-	 		if(raingcount!= 0 && raingcount == 1){
- 				$('.gig-rating-readReviewsLink_pdp').text(raingcount+" REVIEW")
- 			}
- 			else{ 
- 			
- 				$('.gig-rating-readReviewsLink_pdp').text(raingcount+" REVIEWS")
- 			}
+	 		
 	 		//TISUATPII-471 fix
+	 		
 	 		if(raingcount == 1){
 				$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEW");
 				$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
 				}
-				else
+				else if(raingcount > 0)
 					{
 					$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEWS");
 					$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
