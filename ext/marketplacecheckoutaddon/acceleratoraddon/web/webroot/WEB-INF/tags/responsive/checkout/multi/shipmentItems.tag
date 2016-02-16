@@ -18,6 +18,11 @@
 <c:set var="defaultPinCode" value="${defaultPincode}"></c:set>
 
 <c:if test="${hasShippedItems}">
+<script>
+	$(document).ready(function(){
+		$(".click-and-collect").addClass("click-collect");
+	});
+</script>
 	<div class="checkout-shipping-items">
 		<h1>
 			

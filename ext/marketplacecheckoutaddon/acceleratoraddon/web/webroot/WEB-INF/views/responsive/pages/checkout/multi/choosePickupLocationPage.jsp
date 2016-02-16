@@ -226,7 +226,7 @@
 						
 	<script type="text/javascript">
 		function allLetter(inputtxt) { 
-	        var letters = new RegExp(/^[A-Za-z]+$/);
+	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
 	        if(inputtxt.value.match(letters))
 	        {
 	            return true;
@@ -242,6 +242,37 @@
 			$(".pickupPersonSubmitError").hide();
 			
 			$("#pickupPersonSubmit").hide();
+			$("#pickupPersonName").keyup(function(){
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
+				var statusName = allLetter(pickUpPersonNam);
+				if(statusName == false) {
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
+				}
+				else {
+					$(".pickupPersonNameError").hide();
+				}
+			});
+			$("#pickupPersonMobile").keyup(function(){
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				if($('#pickupPersonMobile').val().length <= "9") {
+					if(isString==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+					else if(isString==false) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
+					}
+				} else if($('#pickupPersonMobile').val().length >= "11") {
+					$(".pickupPersonMobileError").show();
+					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+				} else {
+					$(".pickupPersonMobileError").hide();
+				}
+			});
 			$("#savePickupPersondDetails").click(function(){
 				$(".pickupPersonSubmitError").hide();
 				$(".pickUpPersonAjax").hide();
@@ -275,6 +306,10 @@
 						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
 					}
 				}
+				else if($('#pickupPersonMobile').val().length > "10") {
+					$(".pickupPersonMobileError").show();
+					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+				}
 				else if(isString==true) {
 					$(".pickupPersonMobileError").show();
 					$(".pickupPersonMobileError").text("Enter only numbers");
@@ -286,7 +321,7 @@
 						url : requiredUrl,
 						data : dataString,
 						success : function(data) {
-							console.log("success call for pickup person details"+data);
+							//console.log("success call for pickup person details"+data);
 							$("#pickupPersonSubmit").text("1");
 							$(".pickUpPersonAjax").fadeIn(100);
 							$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
@@ -344,7 +379,7 @@
 								<li class="store header5"><spring:theme code="checkout.multi.cnc.store.closeto"/>
 								
 								<c:if test="${not empty defaultPincode}">
-									<span style="color: #00cbe9!important;">
+									<span style="color: #00cbe9!important;" id="changeValue${status1.index}">
 										${defaultPincode}
 									</span>	
 								</c:if>
@@ -461,12 +496,12 @@
 							<div class="latlng latlng${status1.index}"><c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status"><c:if test="${(status.index != 0)}">@</c:if> '${pos.displayName}', ${pos.geoPoint.latitude}, ${pos.geoPoint.longitude}</c:forEach>
 							</div>
 							<li class="delivery">
-									<div class="error_txt pincodeServicable" style="width: 200px;font-size: 12px;"></div>
+									<div class="error_txt pincodeServicable${status1.index}" style="width: 200px;font-size: 12px;"></div>
 									<ul class="delivered delivered${status1.index}">
 							<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
 										<li style="width: 240px !important;">
 											<%-- <input class="radio_btn" type="radio" name="address" id="address${status.index}" value="address${status.index}"> --%>
-											<input class="radio_btn" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
+											<input class="radio_btn radio_btn${status1.index}" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
 												<div class='pin bounce'>
 													<span class="text_in">${status.count}</span>
 														</div>
@@ -504,8 +539,8 @@
 													$(".pickupPersonSubmitError").hide();
 													var pickupPersonSubmit = $("#pickupPersonSubmit").text();
 													if(pickupPersonSubmit == "1") {
-														$(".pickupPersonSubmitError").show();
-														$(".pickupPersonSubmitError").text("Pickup Person Details Have Been Successfully Added");
+														//$(".pickupPersonSubmitError").show();
+														//$(".pickupPersonSubmitError").text("Pickup Person Details Have Been Successfully Added");
 														//console.log("Pickup Person Details Have Been Successfully Added");
 														} else {
 														e.preventDefault();
@@ -560,7 +595,7 @@
 						 //alert("Hello");
 							$(document).ready(function() {
 								$(".input${status1.index}").hide();
-								$(".pincodeServicable").hide();
+								$(".pincodeServicable${status1.index}").hide();
 								$("#maphide${status1.index}").hide();
 								$(".txt${status1.index}").click(function(){
 									$(".txt${status1.index}").hide();
@@ -605,7 +640,7 @@
 							    ]
 							    var iconsLength = icons${status1.index}.length;
 							    
-							    $(".radio_btn").click(function(){
+							    $(".radio_btn${status1.index}").click(function(){
 							    	var number = $(this).val();
 							    	icons${status1.index} = [
 														      iconURLPrefix${status1.index} + 'markergrey1.png',
@@ -627,7 +662,7 @@
 								
 							    
 								$(".submitPincode${status1.index}").click(function(){
-									$(".pincodeServicable").hide();
+									$(".pincodeServicable${status1.index}").hide();
 									$(".pincodeValidation").hide();
 									var pinvalue${status1.index} = $(".changepin${status1.index}").val();
 									var pinlength = pinvalue${status1.index}.length;
@@ -646,10 +681,12 @@
 									        	 //console.log(data);
 										          var response${status1.index} = JSON.stringify(data);
 										          var jsonObject${status1.index} = JSON.parse(response${status1.index});
+										          $("#changeValue${status1.index}").text(pinvalue${status1.index});
 										          //console.log(jsonObject${status1.index});
 										          //console.log(jsonObject${status1.index}.length);
 										          if(jsonObject${status1.index}.length != "0") {
 										        	  $("input[name='address${status1.index}']").prop('checked', false);
+										        	  $(".radio_color").removeClass("colorChange");
 										        	  icons${status1.index} = icons;
 										        	  processMap${status1.index}();
 										        	  $(".delivered${status1.index}").show();
@@ -693,11 +730,11 @@
 											          $(".latlng${status1.index}").text(changecordinates${status1.index});
 											          processMap${status1.index}();
 										        	} else {
-										        		$(".pincodeServicable").show();
+										        		$(".pincodeServicable${status1.index}").show();
 										        		$(".delivered${status1.index}").hide();
 										        		$("#map${status1.index}").hide();
 										        		$("#maphide${status1.index}").show();
-										        		$(".pincodeServicable").text("This pincode is not servicable");
+										        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
 										        	}
 				
 									           
