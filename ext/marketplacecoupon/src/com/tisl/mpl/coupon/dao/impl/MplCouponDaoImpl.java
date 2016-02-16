@@ -51,12 +51,19 @@ public class MplCouponDaoImpl implements MplCouponDao
 	@Override
 	public List<VoucherModel> findVoucher()
 	{
-		final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
+		try
+		{
+			final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
 
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		LOG.debug("Query::::::::" + query.toString());
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			LOG.debug("Query::::::::" + query.toString());
 
-		return getFlexibleSearchService().<VoucherModel> search(query).getResult();
+			return getFlexibleSearchService().<VoucherModel> search(query).getResult();
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 	public FlexibleSearchService getFlexibleSearchService()
@@ -112,7 +119,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 					+ " AND {v.redemptionQuantityLimit} >"
 					+ " ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})"
 					+ " ORDER BY {dr.startdate} ASC";
-			
+
 			LOG.debug("Query :::::::::::::::" + CLOSED_VOUCHER_);
 
 			final List sortQueries = Arrays.asList(new SortQueryData[]

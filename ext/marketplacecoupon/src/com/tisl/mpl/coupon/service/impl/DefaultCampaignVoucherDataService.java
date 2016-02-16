@@ -69,7 +69,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	@Override
 	public void generateCSV()
 	{
-		final List<VoucherModel> voucherList = mplCouponDao.findVoucher();
+		final List<VoucherModel> voucherList = getMplCouponDao().findVoucher();
 		List<CampaignVoucherData> campaignDataList = new ArrayList<CampaignVoucherData>();
 		if (CollectionUtils.isNotEmpty(voucherList))
 		{
@@ -81,7 +81,6 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 				generateCSVFile(campaignDataList);
 			}
 		}
-
 	}
 
 
@@ -95,12 +94,10 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	private List<CampaignVoucherData> populateCampaignData(final List<VoucherModel> voucherList)
 	{
 		final List<CampaignVoucherData> campaignDataList = new ArrayList<CampaignVoucherData>();
-
 		for (final VoucherModel voucher : voucherList)
 		{
 			campaignDataList.add(voucherCampaignData(voucher));
 		}
-
 		return campaignDataList;
 	}
 
@@ -116,10 +113,11 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	{
 		CampaignVoucherData data = new CampaignVoucherData();
 
-		data = populateDefaultVal(data);
+		data = populateDefaultVal(data); //Setting up default values
 		if (voucher instanceof PromotionVoucherModel)
 		{
 			final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
+			//Setting voucher details to data
 			data.setIdentifier(voucher.getCode());
 
 			if (StringUtils.isNotEmpty(promoVoucher.getVoucherCode()))
@@ -167,8 +165,6 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 			{
 				data = populateRestrictionData(promoVoucher.getRestrictions(), data);
 			}
-
-
 		}
 		return data;
 	}
@@ -210,7 +206,6 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 				final UserRestrictionModel userModel = (UserRestrictionModel) restriction;
 				campaignData.setUserGrp(populateUserGrp(userModel));
 				campaignData.setUsers(populateUser(userModel));
-
 			}
 		}
 		return campaignData;
@@ -241,8 +236,6 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 					userDataList.add(user);
 				}
 			}
-
-
 			if (CollectionUtils.isNotEmpty(userDataList))
 			{
 				userdata = populateUsrData(userDataList);
@@ -542,11 +535,6 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 			}
 		}
 	}
-
-
-
-
-
 
 
 
