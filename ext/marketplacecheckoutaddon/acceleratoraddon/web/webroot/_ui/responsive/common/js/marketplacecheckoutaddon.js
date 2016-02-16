@@ -2770,6 +2770,11 @@ function populatePincodeDeliveryMode(response,buttonType){
 	var isServicable=values[0];
 	var selectedPincode=values[1];
 	var deliveryModeJsonMap=values[2];
+	if(deliveryModeJsonMap=="null"){
+		  $('#unsevisablePin').show();
+		 }else{
+		  $('#unsevisablePin').hide();
+		 }
 	var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
 	var length = Object.keys(deliveryModeJsonObj).length;
 	var isStockAvailable="Y";
