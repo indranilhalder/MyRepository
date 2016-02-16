@@ -30,11 +30,11 @@ var homePageBannerTimeout='${timeout}';
 									<img src="${banner.bannerImage.url}">
 								</div>
 								<ul class="major-promos">
-									<li>${banner.majorPromoText}</li>
+									<li data-bannerid="${banner.pk}" >${banner.majorPromoText}</li>
 								</ul>
 								<ul class="minor-promos">
-									<li>${banner.minorPromo1Text}</li>
-									<li>${banner.minorPromo2Text}</li>
+									<li data-bannerid="${banner.pk}">${banner.minorPromo1Text}</li>
+									<li data-bannerid="${banner.pk}">${banner.minorPromo2Text}</li>
 								</ul>
 							</div>
 						</c:when>
@@ -46,25 +46,25 @@ var homePageBannerTimeout='${timeout}';
 									<img src="${banner.bannerImage.url}">
 								</div>
 								<ul class="major-promos">
-									<li>${banner.promoText4}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>
 
 								<ul class="minor-promos">
-									<li>${banner.promoText2}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText2}</li>
 								</ul>
 
 								<ul class="top-promos">
-									<li>${banner.promoText1}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText1}</li>
 								</ul>
 								<ul class="bottom-promos">
-									<li>${banner.promoText3}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText3}</li>
 								</ul>
 							</div>
 
 						</c:when>
 
 						<c:otherwise>
-							<a tabindex="-1" href="${encodedUrl}"
+							<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>> <img
 								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
@@ -75,6 +75,16 @@ var homePageBannerTimeout='${timeout}';
 					</c:choose>
 				</div>
 			</c:if>
+			<script>
+$(document).ready(function(){
+	$("li[data-bannerid=${banner.pk}]").each(function(){
+		var x = $(this).find("a").attr("href");
+		if(typeof(x) != "undefined"){
+			$(this).find("a").attr("href",x+"?icid=${banner.pk}");
+		}
+	});
+});
+</script>
 		</c:forEach>
 	</div>
 	</div>
@@ -97,11 +107,11 @@ var homePageBannerTimeout='${timeout}';
 									<img src="${banner.bannerImage.url}">
 								</div>
 								<ul class="major-promos">
-									<li>${banner.majorPromoText}</li>
+									<li data-bannerid="${banner.pk}">${banner.majorPromoText}</li>
 								</ul>
 								<ul class="minor-promos">
-									<li>${banner.minorPromo1Text}</li>
-									<li>${banner.minorPromo2Text}</li>
+									<li data-bannerid="${banner.pk}">${banner.minorPromo1Text}</li>
+									<li data-bannerid="${banner.pk}">${banner.minorPromo2Text}</li>
 								</ul>
 							</div>
 						</c:when>
@@ -113,25 +123,25 @@ var homePageBannerTimeout='${timeout}';
 									Hello<img src="${banner.bannerImage.url}">
 								</div>
 								<ul class="major-promos">
-									<li>${banner.promoText4}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>
 
 								<ul class="minor-promos">
-									<li>${banner.promoText2}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText2}</li>
 								</ul>
 
 								<ul class="top-promos">
-									<li>${banner.promoText1}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText1}</li>
 								</ul>
 								<ul class="bottom-promos">
-									<li>${banner.promoText3}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText3}</li>
 								</ul>
 							</div>
 
 						</c:when>
 
 						<c:otherwise>
-							<a tabindex="-1" href="${encodedUrl}"
+							<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
@@ -142,6 +152,16 @@ var homePageBannerTimeout='${timeout}';
 					</c:choose>
 				</div>
 			</c:if>
+			<script>
+$(document).ready(function(){
+	$("li[data-bannerid=${banner.pk}]").each(function(){
+		var x = $(this).find("a").attr("href");
+		if(typeof(x) != "undefined"){
+			$(this).find("a").attr("href",x+"?icid=${banner.pk}");
+		}
+	});
+});
+</script>
 		</c:forEach>
 	</div>
 	</div>
