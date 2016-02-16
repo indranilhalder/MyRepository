@@ -30143,6 +30143,9 @@ header:not(.compact) .content .marketplace.compact{
 #bestPicks .short-info:hover span {
 	color: #a9143c;
 }
+#wishListNonLoggedInId_sizeGuide {
+	padding: 10px;	
+}
 /*--------------maincss-----------*/
 .row
 {
