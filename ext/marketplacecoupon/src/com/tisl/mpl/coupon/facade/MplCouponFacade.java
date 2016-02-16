@@ -20,6 +20,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
+import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
@@ -140,5 +141,13 @@ public interface MplCouponFacade
 	 * @return SearchPageData<VoucherDisplayData>
 	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
+
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<CouponHistoryData>
+	 */
+	SearchPageData<CouponHistoryData> getAllVoucherInvalidations(CustomerModel customer, PageableData pageableData);
 
 }

@@ -63,6 +63,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.coupon.service.MplCouponService;
+import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
@@ -113,11 +114,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Autowired
 	private Converter<VoucherModel, VoucherDisplayData> voucherDisplayConverter;
 
-
+	@Autowired
+	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
 
 	// Month list
-
-
 	private static final String JANUARY = "January";
 	private static final String FEBRUARY = "February";
 	private static final String MARCH = "March";
@@ -307,10 +307,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		return voucherDataList;
 	}
 
-
-
-
-
 	/**
 	 * Applies the voucher and returns true if successful
 	 *
@@ -403,9 +399,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 		return checkFlag;
 	}
-
-
-
 
 	/**
 	 * This method checks if the voucher is applicable or not
@@ -637,7 +630,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 	/**
 	 * @Description: This method returns list of all CouponTransactions corresponding to a specific customer
-	 * @param customer
+	 * @param voucherRedeemedOrderMap
 	 * @return CouponHistoryStoreDTO
 	 *
 	 */
@@ -1031,10 +1024,34 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		return searchPageDataVoucher;
 	}
 
+	/**
+	 * This method returns all redeemed voucher data
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherDisplayData>
+	 *
+	 */
+	@Override
+	public SearchPageData<CouponHistoryData> getAllVoucherInvalidations(final CustomerModel customer,
+			final PageableData pageableData)
+	{
+		final SearchPageData<VoucherInvalidationModel> searchVoucherModel = getMplCouponService().getVoucherRedeemedOrder(customer,
+				pageableData);
+		final List<VoucherInvalidationModel> voucherInvalidationList = searchVoucherModel.getResults();
+
+		for (final VoucherInvalidationModel voucherInvalidation : voucherInvalidationList)
+		{
+			LOG.debug("---" + voucherInvalidation.getVoucher().getCode());
+		}
+
+		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = null;
+
+		return searchPageDataVoucherHistory;
+
+	}
 
 	/**
-	 *
-	 *
 	 * @param source
 	 * @param converter
 	 * @return <S, T> SearchPageData<T>

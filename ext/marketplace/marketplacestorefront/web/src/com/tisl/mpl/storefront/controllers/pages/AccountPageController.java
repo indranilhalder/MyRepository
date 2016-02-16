@@ -1143,7 +1143,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			if (null != couponHistoryStoreDTO)
 			{
-				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
+				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDataList();
 			}
 
 			if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_VOUCHER))
