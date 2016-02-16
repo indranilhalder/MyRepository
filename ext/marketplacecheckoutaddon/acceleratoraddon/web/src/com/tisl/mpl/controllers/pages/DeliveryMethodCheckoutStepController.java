@@ -746,18 +746,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							addData = addressConverter.convert(pointOfServiceModel.getAddress());
 							posData.setAddress(addData);
 							
-							if (null != pointOfServiceModel.getOpeningTime())
+							/*if (null != pointOfServiceModel.getOpeningTime())
 							{
-								final Date openingTime = pointOfServiceModel.getOpeningTime();
+								final String openingTime = pointOfServiceModel.getOpeningTime();
 								posData.setMplClosingTime(timeDataConverter.convert(openingTime));
 								
-							}
-							if (null != pointOfServiceModel.getClosingTime())
+							}*/
+							/*if (null != pointOfServiceModel.getClosingTime())
 							{
 								final Date closingTime = pointOfServiceModel.getClosingTime();
 								posData.setMplClosingTime(timeDataConverter.convert(closingTime));
 								
-							}
+							}*/
 							
 							posDataList.add(posData);
 						}
