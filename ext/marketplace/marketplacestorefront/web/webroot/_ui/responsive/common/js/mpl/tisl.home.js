@@ -252,6 +252,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 				},
 				success : function(response) {
 					
+					
 					$('.home-brands-you-love-desc').remove();
 					defaultHtml = "<div class='home-brands-you-love-desc'>";
 					
@@ -259,7 +260,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 						
 						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></a>";
+								+ "'></img>";
 						if (typeof response.firstProductTitle !== "undefined"){
 							defaultHtml +="<p class='product-name'>"+response.firstProductTitle+"</p>";
 						}
@@ -267,7 +268,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='price normal'><span class='priceFormat'>"+response.firstProductPrice+"</span></p>";
 			                  
 						}
-						defaultHtml +="</div>"
+						defaultHtml +="</a></div>"
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
 					if (typeof response.text !== "undefined") {
@@ -288,7 +289,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					if (typeof response.secondproductImageUrl !== "undefined") {
 						defaultHtml += "<div class='home-brands-you-love-side-image right'><a href='"+ACC.config.encodedContextPath+response.secondProductUrl+"'><img src='"
 								+ response.secondproductImageUrl
-								+ "'></img></a>";
+								+ "'></img>";
 						if (typeof response.secondProductTitle !== "undefined"){
 							defaultHtml +="<p class='product-name'>"+response.secondProductTitle+"</p>";
 						}
@@ -296,7 +297,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='normal price'><span class='priceFormat'>"+response.secondProductPrice+"</span></p>";
 			                  
 						}
-						defaultHtml +="</div>"
+						defaultHtml +="</a></div>"
 					}
 
 					defaultHtml += "</div>";
@@ -612,7 +613,7 @@ function getNewAndExclusiveAjaxCall(){
 								
 									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
 											+ value.productImageUrl
-											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'><span class='priceFormat'>" + value.productPrice + "</span></p></div></div>"; 
+											+ "'></img><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'><span class='priceFormat'>" + value.productPrice + "</span></p></a></div></div>"; 
 											
 
 							});
@@ -854,7 +855,7 @@ function getShowcaseContentAjaxCall(id) {
 						
 						defaultHtml += " <div class='desc-section'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></a>";
+								+ "'></img>";
 						
 							defaultHtml +="<div class='showcase-center'>" ;
 							if (typeof response.firstProductTitle !== "undefined"){
@@ -865,7 +866,7 @@ function getShowcaseContentAjaxCall(id) {
 				                  
 							}	
 			                
-							defaultHtml +="</div>";
+							defaultHtml +="</a></div>";
 			                  
 						}
 					
