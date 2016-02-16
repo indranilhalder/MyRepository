@@ -76,7 +76,6 @@ public class MplCouponDaoImpl implements MplCouponDao
 	 * @param customer
 	 * @param pageableData
 	 * @return SearchPageData<VoucherModel>
-	 *
 	 */
 	@Override
 	public SearchPageData<VoucherModel> findClosedVoucher(final CustomerModel customer, final PageableData pageableData)
@@ -113,6 +112,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 					+ " AND {v.redemptionQuantityLimit} >"
 					+ " ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})"
 					+ " ORDER BY {dr.startdate} ASC";
+			
 			LOG.debug("Query :::::::::::::::" + CLOSED_VOUCHER_);
 
 			final List sortQueries = Arrays.asList(new SortQueryData[]
@@ -146,5 +146,4 @@ public class MplCouponDaoImpl implements MplCouponDao
 		result.setQuery(query);
 		return result;
 	}
-
 }
