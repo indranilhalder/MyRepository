@@ -1396,12 +1396,12 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="targetClass" value="com.tisl.mpl.data.CouponHistoryData"/>
 		<property name="populators">
 			<list>
-				<ref bean="voucherHistoryPopulator"/>
+				<ref bean="voucherTransactionConverter"/>
 			</list>
 		</property>
 	</bean>
 
-	<bean id="voucherHistoryPopulator"
+	<bean id="voucherTransactionConverter"
 			class="com.tisl.mpl.facades.populators.MplVoucherTransactionHistoryPopulator">
 	</bean>
 </beans>
