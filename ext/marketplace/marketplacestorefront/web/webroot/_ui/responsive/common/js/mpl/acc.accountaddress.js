@@ -1,7 +1,44 @@
 
 /*-------------- For account address --------------*/
 
-
+/*--------------Added to create a common tag for left navigation in my account-----------*/
+ $(document).ready(function(){
+	 /*To highlight the active link*/
+	 
+		var pageName = $("#pageName").val();
+		if(pageName=="overViews"){
+       		$("#lnOverView a").addClass("active"); 		
+       	}
+       	else if(pageName=="mplPref"){
+       		$("#lnMplPref a").addClass("active"); 		
+       	}
+       	else if(pageName=="addressBook"){
+       		$("#lnAddress a").addClass("active"); 		
+       	}
+       	else if(pageName=="orderDetail"){
+       		$("#lnOrder a").addClass("active"); 		
+       	}
+       	else if(pageName=="orderHistory"){
+       		$("#lnOrder a").addClass("active"); 		
+       	}
+       	else if(pageName=="savedCards"){
+       		$("#lnSavedCards a").addClass("active"); 		
+       	}
+       	else if(pageName=="personalInfo"){
+       		$("#lnUpdateProfile a").addClass("active"); 		
+       	}
+       	else if(pageName=="invite"){
+       		$("#lnInvite a").addClass("active"); 		
+       	}
+       	else if(pageName=="coupons"){
+       		$("#lnCoupons a").addClass("active"); 		
+       	}
+       	else if(pageName=="review"){
+       		$("#lnReview a").addClass("active"); 		
+       	}
+ });
+ /*-----------End of Left Nav script -----------------*/
+ 
 function editAddress(addressId) {
        var requiredUrl = ACC.config.encodedContextPath+"/my-account/populateAddressDetail";
        var dataString = "&addressId="+addressId;
