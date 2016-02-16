@@ -85,6 +85,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DMY_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DMY_DATE_FORMAT_INT = "yyyyMMdd";
 	public static final String COUPONS_DATE_FORMAT = "MMM dd, YYYY";
+	public static final String COUPONS_TXN_DATE_FORMAT = "MM";
 	public static final String TRUE = "true";
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
