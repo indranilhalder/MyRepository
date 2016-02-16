@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -34,7 +33,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
  */
 public class MplCouponDaoImpl implements MplCouponDao
 {
-	private static final Logger LOG = Logger.getLogger(MplCouponDaoImpl.class);
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
@@ -54,7 +52,6 @@ public class MplCouponDaoImpl implements MplCouponDao
 		final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		LOG.debug("Query::::::::" + query.toString());
 
 		return getFlexibleSearchService().<VoucherModel> search(query).getResult();
 	}
@@ -83,7 +80,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 		try
 		{
-
+			final StringBuilder queryBiulder = new StringBuilder(500);
 			final StringBuilder groupBiulder = new StringBuilder(200);
 
 			final Set<PrincipalGroupModel> groups = customer.getGroups();
@@ -94,30 +91,27 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			final Map queryParams = new HashMap();
 			queryParams.put("customerPk", customer);
-			//queryParams.put("store",
-			//store); //queryParams.put("type", "Parent"); //queryParams.put("creationtime", fromDate);
 
-			final String CLOSED_VOUCHER_ = "select {v.pk} from {Promotionvoucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} "
-					+ " AND ( {ur.users} like ('%"
-					+ customer.getPk().getLongValue()
-					+ "%')"
-					+ groupBiulder.toString()
+			queryBiulder
+					.append(
+							"select {v.pk} from {Promotionvoucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} ")
+					//for checking current user and user group
+					.append(" AND ( {ur.users} like ('%")
+					.append(customer.getPk().getLongValue())
+					.append("%')")
+					.append(groupBiulder.toString())
 					//check voucher invalidation table
-					+ " ) AND {v.redemptionQuantityLimitPerUser} >"
-					+ " ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} "
-					+ " AND  {vin.user}='"
-					+ customer.getPk().getLongValue()
-					+ "' "
-					+ " }})"
-					+ " AND {v.redemptionQuantityLimit} >"
-					+ " ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})"
-					+ " ORDER BY {dr.startdate} ASC";
-			
-			LOG.debug("Query :::::::::::::::" + CLOSED_VOUCHER_);
+					.append(" )AND {v.redemptionQuantityLimitPerUser} >")
+					.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} ")
+					.append(" AND  {vin.user}='").append(customer.getPk().getLongValue()).append("' ").append(" }})")
+					.append(" AND {v.redemptionQuantityLimit} >")
+					.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})")
+					.append(" ORDER BY {dr.startdate} ASC");
 
+			final String CLOSED_VOUCHER = queryBiulder.toString();
 			final List sortQueries = Arrays.asList(new SortQueryData[]
-			{ createSortQueryData("byDate", CLOSED_VOUCHER_
-			//"SELECT {pk}, {creationtime}, {code} FROM {Order} WHERE {user} = ?customer AND {versionID} IS NULL AND {store} = ?store AND {type} = ?type AND {creationtime} >= ?creationtime ORDER BY {creationtime} DESC, {pk}"
+			{ createSortQueryData("byDate", CLOSED_VOUCHER
+
 			) });
 
 
@@ -130,7 +124,6 @@ public class MplCouponDaoImpl implements MplCouponDao
 		}
 
 	}
-
 
 	/**
 	 * Method used to create sort query data
