@@ -1307,6 +1307,7 @@ function CheckonReload()
 
 function getRating(key,productCode,category)
 {
+	//alert('test');
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
 	 
 	$.getJSON(url, function(data){
@@ -1351,7 +1352,7 @@ function getRating(key,productCode,category)
 				}
 				else
 					{
-					$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEW");
+					$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEWS");
 					$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
 					}
 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
