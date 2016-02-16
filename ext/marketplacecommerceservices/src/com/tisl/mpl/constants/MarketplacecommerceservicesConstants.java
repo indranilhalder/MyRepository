@@ -1311,6 +1311,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
+	public static final String HUNDRED = "100".intern();
 
 
 	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();

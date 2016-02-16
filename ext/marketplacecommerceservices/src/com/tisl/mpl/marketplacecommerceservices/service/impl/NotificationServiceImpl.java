@@ -649,7 +649,7 @@ public class NotificationServiceImpl implements NotificationService
 				modelService.save(voucherStatus);
 			}
 		}
-		else if (dateRestrExists && (!userRestrExists || userRestrObj == null || !userRestrObj.getPositive().booleanValue()))
+		else if (dateRestrExists && (!userRestrExists || !userRestrObj.getPositive().booleanValue()))
 		{
 			final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
 			if (!existingVoucherList.isEmpty())

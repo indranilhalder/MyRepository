@@ -62,13 +62,6 @@ public interface MplVoucherService
 	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, CartModel cartModel);
 
 	/**
-	 * @param voucherCode
-	 * @return VoucherModel
-	 * @throws VoucherOperationException
-	 */
-	VoucherModel getVoucherModel(String voucherCode) throws VoucherOperationException;
-
-	/**
 	 * @param voucher
 	 * @param cartModel
 	 * @param voucherCode

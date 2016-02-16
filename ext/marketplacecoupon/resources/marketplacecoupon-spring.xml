@@ -129,6 +129,16 @@
 	<!-- Tata Cliq : For Campaign Team   -->
    	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob"
    		autowire="byName" >
-   	</bean>				
+   	</bean>	
+   	
+   	<!-- CouponRestrictionSaveInterceptor starts -->
+	<bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor" />
+
+	<bean id="CouponProdRestSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="CouponProdRestSaveInterceptor" />
+		<property name="typeCode" value="ProductRestriction" />
+	</bean>
+	<!-- CouponSaveInterceptor ends -->			
 
 </beans>
