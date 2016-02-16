@@ -1312,6 +1312,56 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 
+
+	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
+	public static final String CAMPAIGN_FREEBIE = "FREEBIE OFFER".intern();
+	public static final String CAMPAIGN_SHIPPING = "SHIPPING DISCOUNT OFFER".intern();
+	public static final String CAMPAIGN_BOGO = "BOGOF OFFER".intern();
+	public static final String CAMPAIGN_CASHBACK = "CASHBACK OFFER".intern();
+	public static final String CAMPAIGN_CHANNEL = "WEB|WEBMOBILE|MOBILE|CALLCENTER|KIOSK".intern();
+	public static final String CAMPAIGN_MULTIDATA_SEPERATOR = "|".intern();
+	public static final String CAMPAIGN_FILE_LOCATION = "campaign.promotion.csv.path".intern();
+	public static final String CAMPAIGN_HEADER = "OFFER_ID,OFFER_NAME,OFFER_ACTIVE,OFFER_TYPE,OFFER_CHANNEL,OFFER_STARTDATE,OFFER_ENDDATE,URL,CREATION_DATE,MODIFIED_DATE"
+			.intern();
+	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
+	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
+	public static final String CAMPAIGN_FILE_NAME = "campaign".intern();
+	public static final String CAMPAIGN_WEBSITE = "http://tatacliq.com/store".intern();
+	public static final String CAMPAIGN_URL_ALL = "all".intern();
+
+	public static final String CAMPAIGN_URL_OFFER_IDENTIFIER = "/o/".intern();
+	public static final String CAMPAIGN_URL_OFFER_ID_URL = "?offer=".intern();
+	public static final String CAMPAIGN_FILE_PATH = "${HYBRIS_DATA_DIR}/feed/campaign".intern();
+
+
+	//For Special Price Updation
+	public static final String SPECIALPRICE_PROMOTIONS = "promotions".intern();
+	public static final String SPECIALPRICE_QUANTITY = "quantity".intern();
+	public static final String SPECIALPRICE_PRIORITY = "priority".intern();
+	public static final String HTTP = "http:".intern();
+	public static final String HTTPS = "https:".intern();
+
+
+
+
+	public static final String BANNER_IMAGE = "bannerImage";
+	public static final String BANNER_ALTTEXT = "bannerAltText";
+
+	//Audit Report
+	public static final String CHANGED = "CHANGED";
+	public static final String PRIORITYSTARTDATE = "priorityStartDate";
+	public static final String PRIORITYENDDATE = "priorityEndDate";
+	public static final String ISACTIVE = "isactive";
+	public static final String ACTIVATE = "Activate";
+	public static final String DEACTIVATED = "Deactivated";
+	public static final String SELLERID = "sellerid";
+	public static final String CATEGORYID = "categoryid";
+	public static final String LISTINGID = "listingid";
+	public static final String SIMPLEDATEFORMAT = "dd-MM-yyyy HH:mm:ss";
+	public static final String SIMPLEDATEFORMATDB = "yyyy-MM-dd HH:mm:ss";
+	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
+	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class

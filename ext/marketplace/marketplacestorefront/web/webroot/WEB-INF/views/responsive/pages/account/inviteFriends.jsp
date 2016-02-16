@@ -4,8 +4,8 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="formElement"
-	tagdir="/WEB-INF/tags/desktop/formElement"%>
+<%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/desktop/formElement"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <span id="googleClientid" style="display:none">${googleClientid}</span>
 <span id="facebookAppid" style="display:none">${facebookAppid}</span>
@@ -43,7 +43,7 @@
       </select>
 </h1>
 	<div class="wrapper">
-		<div class="left-nav">
+		<%-- <div class="left-nav">
 				<!-- <h1>
 					My MarketPlace</h1> -->
 				<ul>
@@ -64,7 +64,8 @@
 								
 				</ul>
 				
-			</div>
+			</div> --%>
+			<user:accountLeftNav pageName="invite"/>
 
 		<!-- Social sharing -->
 

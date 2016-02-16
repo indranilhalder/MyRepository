@@ -85,20 +85,20 @@
 }
 
 .compareBtn.enabled:hover {
-	color: #00cbe9;
-	border: 2px solid #00cbe9;
+	color: #A9143C;
+	border: 2px solid #A9143C;
 	background-color: #fff;
 }
 
 .compareBtn.disabled {
-	background: #00cbe9;
+	background: #A9143C;
 	opacity: 0.5;
 	cursor: default;
 	color: #fff;
 }
 
 .compareBtn.enabled {
-	background: #00cbe9;;
+	background: #A9143C;;
 }
 
 .compareError {

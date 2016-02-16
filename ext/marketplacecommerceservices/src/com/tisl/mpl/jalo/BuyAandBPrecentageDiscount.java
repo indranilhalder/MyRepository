@@ -53,12 +53,9 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param :
-	 *           ctx
-	 * @param :
-	 *           type
-	 * @param :
-	 *           allAttributes
+	 * @param : ctx
+	 * @param : type
+	 * @param : allAttributes
 	 * @return : item
 	 */
 	@Override
@@ -75,8 +72,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 	/**
 	 * @Description : Buy Product A and B to get Percentage or Amount Discount
-	 * @param :
-	 *           SessionContext arg0 ,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0 ,PromotionEvaluationContext arg1
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -203,8 +199,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 						}
 					}
 
-					final Map<String, Integer> qCount = getDefaultPromotionsManager()
-							.getQualifyingCountForABPromotion(eligibleProductList, totalCountFactor);
+					final Map<String, Integer> qCount = getDefaultPromotionsManager().getQualifyingCountForABPromotion(
+							eligibleProductList, totalCountFactor);
 					final Map<String, List<String>> productAssociatedItemsMap = getMplPromotionHelper().getAssociatedData(cart,
 							validProductUssidMap, null);
 
@@ -236,12 +232,14 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 							final Currency currency = cart.getCurrency(arg0);
 
-							final BigDecimal adjustedEntryPrice = Helper.roundCurrencyValue(arg0, currency,
-									originalEntryPrice - (originalEntryPrice * percentageDiscountvalue));
+							final BigDecimal adjustedEntryPrice = Helper.roundCurrencyValue(arg0, currency, originalEntryPrice
+									- (originalEntryPrice * percentageDiscountvalue));
 
-							final BigDecimal adjustedUnitPrice = Helper.roundCurrencyValue(arg0, currency,
-									(adjustedEntryPrice.equals(BigDecimal.ZERO)) ? BigDecimal.ZERO
-											: adjustedEntryPrice.divide(BigDecimal.valueOf(totalCountFactor), RoundingMode.HALF_EVEN));
+							final BigDecimal adjustedUnitPrice = Helper.roundCurrencyValue(
+									arg0,
+									currency,
+									(adjustedEntryPrice.equals(BigDecimal.ZERO)) ? BigDecimal.ZERO : adjustedEntryPrice.divide(
+											BigDecimal.valueOf(totalCountFactor), RoundingMode.HALF_EVEN));
 
 							final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
 							consumed.add(getDefaultPromotionsManager().consume(arg0, this, totalCountFactor, totalCountFactor, entry));
@@ -324,8 +322,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext arg0 ,PromotionResult arg1 ,Locale arg2
+	 * @param : SessionContext arg0 ,PromotionResult arg1 ,Locale arg2
 	 * @return : String
 	 */
 	@Override
@@ -344,13 +341,14 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 				if (arg1.getFired(arg0))
 				{
 					final Double totalDiscount = Double.valueOf(arg1.getTotalDiscount(arg0));
+
+					//TISEEII-229 : Regression Fix
 					if (isPercentageOrAmount().booleanValue())
 					{
 						final Double percentageDiscount = getPercentageDiscount(arg0);
 						final Object[] args =
-						{ percentageDiscount, totalDiscount,
-								Helper.formatCurrencyAmount(arg0, arg2, orderCurrency, totalDiscount.doubleValue()),
-								MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE };
+						{ percentageDiscount, Helper.formatCurrencyAmount(arg0, arg2, orderCurrency, totalDiscount.doubleValue()),
+								totalDiscount, MarketplacecommerceservicesConstants.PERCENTAGE_MESSAGE };
 						return formatMessage(getMessageFired(arg0), args, arg2);
 					}
 					else
@@ -358,17 +356,16 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 						final Double discountPriceValue = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
 								MarketplacecommerceservicesConstants.DISCOUNT_PRICES);
 						final Object[] args =
-						{ discountPriceValue, totalDiscount,
-								Helper.formatCurrencyAmount(arg0, arg2, orderCurrency, totalDiscount.doubleValue()),
-								MarketplacecommerceservicesConstants.DISCOUNT_PRICES_MESSAGE };
+						{ discountPriceValue, Helper.formatCurrencyAmount(arg0, arg2, orderCurrency, totalDiscount.doubleValue()),
+								totalDiscount, MarketplacecommerceservicesConstants.DISCOUNT_PRICES_MESSAGE };
 						return formatMessage(getMessageFired(arg0), args, arg2);
 					}
 				}
 				else if (arg1.getCouldFire(arg0))
 				{
 					final Object[] args = new Object[6];
-					final double minimumCategoryValue = getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null
-							? ((Double) getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
+					final double minimumCategoryValue = getProperty(arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT) != null ? ((Double) getProperty(
+							arg0, MarketplacecommerceservicesConstants.MINIMUM_AMOUNT)).doubleValue() : 0.00D;
 					Double discountPriceValue = Double.valueOf(0.00);
 					Double discountMaxVal = Double.valueOf(0.00);
 					Double percentageDiscount = Double.valueOf(0.00);
@@ -385,9 +382,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 					else
 					{
 						discountPriceValue = getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-								MarketplacecommerceservicesConstants.DISCOUNT_PRICES) == null ? Double.valueOf(0.00D)
-										: getPriceForOrder(arg0, getDiscountPrices(arg0), order,
-												MarketplacecommerceservicesConstants.DISCOUNT_PRICES);
+								MarketplacecommerceservicesConstants.DISCOUNT_PRICES) == null ? Double.valueOf(0.00D) : getPriceForOrder(
+								arg0, getDiscountPrices(arg0), order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES);
 					}
 					final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(
 							getRestrictions());
@@ -635,8 +631,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 	/**
 	 * @Description : Provides List of Products eligible for Promotion
-	 * @param :
-	 *           SessionContext paramSessionContext ,AbstractOrder cart
+	 * @param : SessionContext paramSessionContext ,AbstractOrder cart
 	 * @return : List<Product> validProductListFinal
 	 */
 	private List<String> eligibleForPromotion(final AbstractOrder cart, final SessionContext paramSessionContext)
@@ -777,8 +772,8 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 				//				eligibleCount = getMplPromotionHelper().getEligibleCountForABDiscountPromo(validProductAUssidMap,
 				//						validProductBUssidMap);
 
-				totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size()
-						: validProductListB.size();
+				totalFactorCount = validProductListA.size() < validProductListB.size() ? validProductListA.size() : validProductListB
+						.size();
 				final Set<String> validProdAUssidSet = getDefaultPromotionsManager().populateSortedValidProdUssidMap(
 						validProductAUssidMap, totalFactorCount, paramSessionContext, restrictionList, null);
 
@@ -828,12 +823,10 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 	/**
 	 * @param totalCountFactor
 	 * @Description : Provides Total Price of Promotion Valid Products
-	 * @param :
-	 *           List<Product> eligibleProductList ,AbstractOrder cart
+	 * @param : List<Product> eligibleProductList ,AbstractOrder cart
 	 * @return : totalvalidproductsPricevalue
 	 */
-	private double getvalidProductTotalPrice(final Map<String, AbstractOrderEntry> validProductUssidMap,
-			final int totalCountFactor)
+	private double getvalidProductTotalPrice(final Map<String, AbstractOrderEntry> validProductUssidMap, final int totalCountFactor)
 	{
 		double totalvalidproductsPricevalue = 0.0D;
 		try
@@ -871,8 +864,7 @@ public class BuyAandBPrecentageDiscount extends GeneratedBuyAandBPrecentageDisco
 
 	/**
 	 * @Description : Reset Flag Variables
-	 * @param :
-	 *           no
+	 * @param : no
 	 * @return: void
 	 */
 	private void resetFlag()

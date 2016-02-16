@@ -34,9 +34,20 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 			.intern();
 	public static final String CUSTOMER_LIST_FILE_NAME = "customerList".intern();
 
-	public static final String CLOSED_VOUCHER = "select {v.pk},{dr.pk} from {voucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} ORDER BY {dr.startdate} ASC";
+	public static final String CLOSED_VOUCHER = "select {v.pk} from {voucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} "
+			+ " AND {ur.users} like ('%  ?customerPk %')" + " ORDER BY {dr.startdate} ASC";//,{dr.pk}
 
 	public static final String CUSTOMER_LIST_FILE_EXTENSION = "closedCoupon.customer.list.extension";
+
+	public static final String EMPTYSPACE = "".intern();
+	public static final String CAMPAIGN_MULTIDATA_SEPERATOR = "|".intern();
+	public static final String CAMPAIGN_FILE_LOCATION = "campaign.voucher.csv.path".intern();
+	public static final String CAMPAIGN_FILE_NAME = "campaign_Voucher".intern();
+	public static final String CAMPAIGN_HEADER = "IDENTIFIER,NAME,PROMOTION_TEXT,VOUCHER_CODE,VALUE,CURRENCY,REDEEM_QUANTITY,REDEEM_QUANTITY_USER,MAX_DISCOUNT,STARTDATE,ENDDATE,PRODUCTS,CATEGORIES,USERGROUP,USER"
+			.intern();
+
+	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
+	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
 
 	private MarketplacecouponConstants()
 	{

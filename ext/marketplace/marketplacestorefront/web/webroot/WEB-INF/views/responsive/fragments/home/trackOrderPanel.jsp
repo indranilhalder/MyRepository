@@ -169,12 +169,12 @@
 		
 					<c:set var="coupon" value="${notifylist.couponCode}" />
 					<c:set var="couponIsRead" value="${notifylist.notificationRead}" />
-					  <c:url var="productUrl" value="${notifylist.productUrl}"></c:url>
+					 <!--<c:url var="productUrl" value="${notifylist.productUrl}"></c:url>  --> 
 					
 
-                    <c:if test="${empty productUrl }">
+                   <!--  <c:if test="${empty productUrl }">
 	               <c:set var="productUrl" value="/store/mpl/en/my-account/coupons" />
-                   </c:if>
+                   </c:if> --> 
 					
 				<c:set var="couponStatus"
 					value="${notifylist.notificationCustomerStatus}" />
@@ -182,7 +182,7 @@
 		         
 				<li id="${notifylist.couponCode}"
 					 data-status="${couponStatus}" data-read="${couponIsRead}"> 
-					<a href="${productUrl}">${fn:replace(couponStatus, "@", coupon)}
+					<a href="/store/mpl/en/my-account/coupons">${fn:replace(couponStatus, "@", coupon)}
 				</a>
 				<div id="track_footer" style="float: right;">
 						<h4>
@@ -202,6 +202,7 @@
 
 						<c:set value="${nowDays - otherDays}" var="dateDiff"/>
 						
+						
 					
    			
    						<c:choose>
@@ -210,6 +211,7 @@
 			    			<c:otherwise>
 			    				<fmt:formatDate type="both" pattern="MMM dd yyyy HH:mm" value="${notify}" />
 			    			</c:otherwise>	
+			    			
 			 			</c:choose>
 				
 						</h4>

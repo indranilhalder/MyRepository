@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -29,9 +30,9 @@
 						<option value=/store/mpl/en/my-account/myInterest data-href="account-addresses.php"><spring:theme code="header.flyout.recommendations" /></option>
               </optgroup>
               
-               <optgroup label="Credits">
+             <%--   <optgroup label="Credits">
                   <option value=/store/mpl/en/my-account/coupons data-href="account-invite.php"><spring:theme code="header.flyout.coupons" /></option>
-              </optgroup>
+              </optgroup> --%>
          
           <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
@@ -39,7 +40,7 @@
       </select>
 </h1>
 	<div class="wrapper">
-	<div class="left-nav">
+	<%-- <div class="left-nav">
 		<ul>
 			<li><h3>
 					<spring:theme code="header.flyout.myaccount" />
@@ -79,7 +80,8 @@
 						code="header.flyout.invite" /></a></li>
 
 		</ul>
-	</div>
+	</div> --%>
+	<user:accountLeftNav pageName="review"/>
 
 	<div class="right-account">
 
@@ -235,7 +237,7 @@
 	  										
 								</ul>
 								<%-- <span class="review-date"> - <fmt:formatDate value="${comment.commentDate}"/> </span> --%>
-								<span class="review-date"> ${comment.reviewDate} </span>
+								<span class="review-date"> - ${comment.reviewDate} </span>
 								</div>
 								<!-- Ratings -->
 								<div class="rating-div${count.index} rating-wrapper" style="display: none;">
@@ -555,4 +557,3 @@ $(".prev a").click(function(){
 });	
 		
 </script>
-

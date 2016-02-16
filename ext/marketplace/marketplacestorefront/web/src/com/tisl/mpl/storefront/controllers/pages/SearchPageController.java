@@ -165,6 +165,7 @@ public class SearchPageController extends AbstractSearchPageController
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
 
+
 	/**
 	 *
 	 * @param searchText
@@ -535,11 +536,17 @@ public class SearchPageController extends AbstractSearchPageController
 	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
-			@RequestParam(value = "sort", required = false) final String sortCode, final HttpServletRequest request,
-			final Model model) throws CMSItemNotFoundException
+			@RequestParam(value = "sort", required = false) String sortCode, final HttpServletRequest request, final Model model)
+			throws CMSItemNotFoundException
 	{
+		if (StringUtils.isEmpty(sortCode))
+		{
+			sortCode = "promotedpriority-asc";
+		}
+
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForOnlineProducts(
 				searchQuery, page, showMode, sortCode, getSearchPageSize());
+		searchPageData.setSpellingSuggestion(null);
 		storeContinueUrl(request);
 		updatePageTitle(searchPageData.getFreeTextSearch(), model);
 		populateModel(model, searchPageData, ShowMode.Page);
@@ -575,11 +582,13 @@ public class SearchPageController extends AbstractSearchPageController
 			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
 	{
 		// YTODO Auto-generated method stub
-		final PageableData pageableData = createPageableData(page, page, null, ShowMode.Page);
+		final PageableData pageableData = createPageableData(page, page, sortCode, ShowMode.Page);
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
 		searchQueryData.setValue(ALL);
+
 		searchState.setQuery(searchQueryData);
+
 		return searchFacade.mplOnlineAndNewProductSearch(searchState, pageableData);
 
 	}
@@ -1001,6 +1010,11 @@ public class SearchPageController extends AbstractSearchPageController
 		return competingProductsSearchState;
 	}
 
-	/* Storing the user preferred search results count - END */
+
+
+
+
+
+
 
 }

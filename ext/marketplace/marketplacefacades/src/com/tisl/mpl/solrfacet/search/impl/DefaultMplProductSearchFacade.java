@@ -41,12 +41,15 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	/**
 	 *
 	 */
-	private static final String IS_PRODUCT_NEW = "isProductNew";
+	private MplProductSearchService<SolrSearchQueryData, SearchResultValueData, ProductCategorySearchPageData<SolrSearchQueryData, SearchResultValueData, CategoryModel>> mplProductSearchService;
 	/**
 	 *
 	 */
-	private static final String ONLINE_EXCLUSIVE = "onlineExclusive";
-	private MplProductSearchService<SolrSearchQueryData, SearchResultValueData, ProductCategorySearchPageData<SolrSearchQueryData, SearchResultValueData, CategoryModel>> mplProductSearchService;
+
+	/**
+	 *
+	 */
+	private static final String PROMOTED_PRODUCT = "promotedProduct";
 
 	/**
 	 * @return the mplProductSearchService
@@ -272,7 +275,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -883,14 +886,6 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		return searchQueryData;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplOnlineAndNewProductSearch(de.hybris.platform.commercefacades
-	 * .search.data.SearchStateData, java.lang.String, de.hybris.platform.commerceservices.search.pagedata.PageableData)
-	 */
-
 
 	/**
 	 * check for online and exclusibve products
@@ -931,16 +926,14 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
-		solrSearchQueryTermData.setKey(ONLINE_EXCLUSIVE);
+		solrSearchQueryTermData.setKey(PROMOTED_PRODUCT);
 		solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
-		final SolrSearchQueryTermData solrSearchQueryTermNew = new SolrSearchQueryTermData();
-		solrSearchQueryTermNew.setKey(IS_PRODUCT_NEW);
-		solrSearchQueryTermNew.setValue(Boolean.TRUE.toString());
 		filterTerms.add(solrSearchQueryTermData);
-		filterTerms.add(solrSearchQueryTermNew);
 		searchQueryData.setFilterTerms(filterTerms);
+
 
 		return searchQueryData;
 	}
+
 
 }

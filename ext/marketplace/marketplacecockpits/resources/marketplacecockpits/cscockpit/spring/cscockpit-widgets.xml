@@ -578,7 +578,7 @@
 	
 	
 		<!-- basket cart widget -->
-	<alias alias="csCouponWidgetConfig" name="csCouponWidgetConfig" />
+	<!-- <alias alias="csCouponWidgetConfig" name="csCouponWidgetConfig" />
 	<bean id="csCouponWidgetConfig" parent="csBaseWidgetConfig">
 		<property name="widgetTitle" value="cscockpit.widget.basket.cart.Coupon" />
 		<property name="widgetRenderer" ref="csCouponWidgetRenderer" />
@@ -594,7 +594,7 @@
 	</bean>
 	
 	
-	<!-- checkout  coupon widget -->
+	checkout  coupon widget
 	<alias alias="csCouponCheckoutWidgetConfig" name="csCouponCheckoutWidgetConfig" />
 	<bean id="csCouponCheckoutWidgetConfig" parent="csBaseWidgetConfig">
 		<property name="widgetTitle" value="cscockpit.widget.checkout.appliedCoupon" />
@@ -610,7 +610,7 @@
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponCheckoutWidgetRenderer">
 	</bean> 
 	
-	<!-- Order  coupon widget -->
+	Order  coupon widget
 	<alias alias="csCouponOrderWidgetConfig" name="csCouponOrderWidgetConfig" />
 	<bean id="csCouponOrderWidgetConfig" parent="csBaseWidgetConfig">
 		<property name="widgetTitle" value="cscockpit.widget.Order.appliedCoupon" />
@@ -623,7 +623,7 @@
 	<bean id="csCouponOrderWidgetRenderer" parent="abstractWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponOrderWidgetRenderer">
 	</bean> 
-	
+	 -->
 	
 	
 </beans>

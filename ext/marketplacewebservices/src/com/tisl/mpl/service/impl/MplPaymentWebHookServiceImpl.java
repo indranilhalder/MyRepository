@@ -160,14 +160,12 @@ public class MplPaymentWebHookServiceImpl implements MplPaymentWebHookService
 		}
 		catch (final ModelSavingException e)
 		{
-			e.printStackTrace();
-
-			LOG.error("Exception while saving payment info model with " + e);
+			LOG.error("Exception while saving payment info model with ", e);
 			throw new ModelSavingException(e + " :Exception while saving payment info model with");
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("General Exception while saving payment info model with ", e);
 		}
 
 	}
@@ -179,19 +177,25 @@ public class MplPaymentWebHookServiceImpl implements MplPaymentWebHookService
 	 */
 	protected Double getDoubleValue(final Object inputObject)
 	{
+		Double doubleValue = null;
+
 		if (inputObject instanceof Long)
 		{
-			return new Double(((Long) inputObject).doubleValue());
+			//return new Double(((Long) inputObject).doubleValue());
+			doubleValue = new Double(((Long) inputObject).doubleValue());
 		}
 		else if (inputObject instanceof Double)
 		{
-			return ((Double) inputObject);
+			//return ((Double) inputObject);
+			doubleValue = ((Double) inputObject);
 		}
 		else
 		{
 			LOG.error(MarketplacewebservicesConstants.DECIMALERROR);
-			return null;
+			//return null;
 		}
+
+		return doubleValue;
 	}
 
 

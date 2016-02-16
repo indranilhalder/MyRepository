@@ -1082,7 +1082,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MSH1310108;Sports & Sneakers;MSH1310;mplProductCatalog:Staged;$uidGroup
 ;MSH1310109;Home & Beach Wear;MSH1310;mplProductCatalog:Staged;$uidGroup
 ;MSH1310110;Flip Flop;MSH1310;mplProductCatalog:Staged;$uidGroup
-;MSH1310111;View All;MSH1310;mplProductCatalog:Staged;$uidGroup
+
 
 
 ;MSH1311100;Formal;MSH1311;mplProductCatalog:Staged;$uidGroup
@@ -1096,7 +1096,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MSH1311108;Outdoor;MSH1311;mplProductCatalog:Staged;$uidGroup
 ;MSH1311109;Home & Beach Wear;MSH1311;mplProductCatalog:Staged;$uidGroup
 ;MSH1311110;Flip Flop;MSH1311;mplProductCatalog:Staged;$uidGroup
-;MSH1311111;View All;MSH1311;mplProductCatalog:Staged;$uidGroup
+
 
 
 
@@ -1107,7 +1107,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MSH1312104;Sports & Sneakers;MSH1312;mplProductCatalog:Staged;$uidGroup
 ;MSH1312105;Home & Beach Wear;MSH1312;mplProductCatalog:Staged;$uidGroup
 ;MSH1312106;Flip Flop;MSH1312;mplProductCatalog:Staged;$uidGroup
-;MSH1312107;View All;MSH1312;mplProductCatalog:Staged;$uidGroup
+
 
 
 ;MSH1313100;Party;MSH1313;mplProductCatalog:Staged;$uidGroup
@@ -1118,13 +1118,13 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MSH1313105;Sports & Sneakers;MSH1313;mplProductCatalog:Staged;$uidGroup
 ;MSH1313106;Home & Beach Wear;MSH1313;mplProductCatalog:Staged;$uidGroup
 ;MSH1313107;Flip Flop;MSH1313;mplProductCatalog:Staged;$uidGroup
-;MSH1313108;View All;MSH1313;mplProductCatalog:Staged;$uidGroup
+
 
 
 ;MSH1314100;Fashion;MSH1314;mplProductCatalog:Staged;$uidGroup
 ;MSH1314101;Ethnic;MSH1314;mplProductCatalog:Staged;$uidGroup
 ;MSH1314102;Sandal & Clogs;MSH1314;mplProductCatalog:Staged;$uidGroup
-;MSH1314103;View All;MSH1314;mplProductCatalog:Staged;$uidGroup
+
 
 
 ;MSH1315100;Men;MSH1315;mplProductCatalog:Staged;$uidGroup
@@ -1146,7 +1146,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 
 ;MSH1318100;Shoe accessories;MSH1318;mplProductCatalog:Staged;$uidGroup
 ;MSH1318101;Shoe care ;MSH1318;mplProductCatalog:Staged;$uidGroup
-;MSH1318102;View All;MSH1318;mplProductCatalog:Staged;$uidGroup
+
 
 INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid)
 ;MBH1;Brand;;mplProductCatalog:Staged;admingroup

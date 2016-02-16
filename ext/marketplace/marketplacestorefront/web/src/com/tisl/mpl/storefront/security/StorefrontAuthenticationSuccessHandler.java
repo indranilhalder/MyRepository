@@ -71,8 +71,8 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	private Map<UiExperienceLevel, Boolean> forceDefaultTargetForUiExperienceLevel;
 	private List<String> restrictedPages;
 
-	private static String CHECKOUT_URL = "/checkout";
-	private static String CART_MERGED = "cartMerged";
+	private static final String CHECKOUT_URL = "/checkout";
+	private static final String CART_MERGED = "cartMerged";
 
 	@Autowired
 	private ExtendedUserService extUserService;
@@ -179,7 +179,8 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 			getSessionService().setAttribute(WebConstants.CART_RESTORATION_SHOW_MESSAGE, Boolean.TRUE);
 			try
 			{
-				getSessionService().setAttribute(WebConstants.CART_RESTORATION,
+				getSessionService().setAttribute(
+						WebConstants.CART_RESTORATION,
 						getCartFacade().restoreCartAndMerge(getMostRecentSavedCart(getCartFacade().getSessionCart()).getGuid(),
 								getCartFacade().getSessionCart().getGuid()));
 				request.setAttribute(CART_MERGED, Boolean.TRUE);
@@ -246,8 +247,8 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 				{
 					pw.print(request.getContextPath());
 				}
-				else
-					if (null != referringController && referringController.equalsIgnoreCase(RequestMappingUrlConstants.LINK_CHECKOUT))
+				else if (null != referringController
+						&& referringController.equalsIgnoreCase(RequestMappingUrlConstants.LINK_CHECKOUT))
 				{
 					pw.print(request.getContextPath() + RequestMappingUrlConstants.LINK_CHECKOUT);
 				}

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.payment.JuspayWebhookFacade;
 
@@ -41,7 +42,7 @@ public class WebHookController
 
 	/**
 	 * This code will be removed once webhook is successfully tested.
-	 * 
+	 *
 	 * @param webhookData
 	 * @return
 	 * @throws ParseException
@@ -53,19 +54,21 @@ public class WebHookController
 	{
 		//Inserting data
 		LOG.info("In webhookPost");
-		//Inserting data
+		String status = MarketplacecommerceservicesConstants.EMPTYSPACE;
 		try
 		{
 			juspayWebhookFacade.insertWekhookData(webhookData);
-			return "success";
+			status = "success";
+			//return "success"; Sonar fix
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			LOG.debug(" ERROR :  Webhook Saving Error: " + e);
-			return "failure";
+			status = "failure";
+			//return "failure"; Sonar fix
 		}
+		return status;
 	}
-
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@ResponseBody
@@ -100,13 +103,14 @@ public class WebHookController
 				LOG.debug("No data for webhook from juspay");
 				flag = "No data for webhook from juspay";
 			}
-			return flag;
+			//return flag; Sonar fix
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception while inserting webhook data", e);
-			return flag;
+			//return flag;
 		}
+		return flag;
 	}
 
 }

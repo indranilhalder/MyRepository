@@ -14,7 +14,7 @@
 <%@ taglib prefix="breadcrumb" tagdir="/WEB-INF/tags/responsive/nav/breadcrumb"%>
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address"%>
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement"%>
-
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 	
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
 <spring:url value="/my-account/update-password" var="updatePasswordUrl" />
@@ -66,10 +66,10 @@
 
 		<!----- Left Navigation Starts --------->
 		<div class="wrapper">
-			<div class="left-nav">
-			<%-- 	<h1>
+			<%-- <div class="left-nav">
+				<h1>
 					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1> --%>
+				</h1>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -107,7 +107,8 @@
 
 				</ul>
 
-			</div>
+			</div> --%>
+			<user:accountLeftNav pageName="mplPref"/>
 			<!----- Left Navigation ENDS --------->
 
 
@@ -295,5 +296,4 @@
 <script type="text/javascript" src="${commonResourcePath}/js/acc.accountaddress.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/feedback.js"></script> --%>
+<script type="text/javascript"	src="${commonResourcePath}/js/feedback.js"></script> --%>
