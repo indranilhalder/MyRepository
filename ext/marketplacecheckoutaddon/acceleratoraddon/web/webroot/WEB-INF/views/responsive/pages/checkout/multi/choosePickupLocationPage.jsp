@@ -496,12 +496,12 @@
 							<div class="latlng latlng${status1.index}"><c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status"><c:if test="${(status.index != 0)}">@</c:if> '${pos.displayName}', ${pos.geoPoint.latitude}, ${pos.geoPoint.longitude}</c:forEach>
 							</div>
 							<li class="delivery">
-									<div class="error_txt pincodeServicable" style="width: 200px;font-size: 12px;"></div>
+									<div class="error_txt pincodeServicable${status1.index}" style="width: 200px;font-size: 12px;"></div>
 									<ul class="delivered delivered${status1.index}">
 							<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
 										<li style="width: 240px !important;">
 											<%-- <input class="radio_btn" type="radio" name="address" id="address${status.index}" value="address${status.index}"> --%>
-											<input class="radio_btn" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
+											<input class="radio_btn radio_btn${status1.index}" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
 												<div class='pin bounce'>
 													<span class="text_in">${status.count}</span>
 														</div>
@@ -595,7 +595,7 @@
 						 //alert("Hello");
 							$(document).ready(function() {
 								$(".input${status1.index}").hide();
-								$(".pincodeServicable").hide();
+								$(".pincodeServicable${status1.index}").hide();
 								$("#maphide${status1.index}").hide();
 								$(".txt${status1.index}").click(function(){
 									$(".txt${status1.index}").hide();
@@ -640,7 +640,7 @@
 							    ]
 							    var iconsLength = icons${status1.index}.length;
 							    
-							    $(".radio_btn").click(function(){
+							    $(".radio_btn${status1.index}").click(function(){
 							    	var number = $(this).val();
 							    	icons${status1.index} = [
 														      iconURLPrefix${status1.index} + 'markergrey1.png',
@@ -662,7 +662,7 @@
 								
 							    
 								$(".submitPincode${status1.index}").click(function(){
-									$(".pincodeServicable").hide();
+									$(".pincodeServicable${status1.index}").hide();
 									$(".pincodeValidation").hide();
 									var pinvalue${status1.index} = $(".changepin${status1.index}").val();
 									var pinlength = pinvalue${status1.index}.length;
@@ -730,11 +730,11 @@
 											          $(".latlng${status1.index}").text(changecordinates${status1.index});
 											          processMap${status1.index}();
 										        	} else {
-										        		$(".pincodeServicable").show();
+										        		$(".pincodeServicable${status1.index}").show();
 										        		$(".delivered${status1.index}").hide();
 										        		$("#map${status1.index}").hide();
 										        		$("#maphide${status1.index}").show();
-										        		$(".pincodeServicable").text("This pincode is not servicable");
+										        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
 										        	}
 				
 									           
