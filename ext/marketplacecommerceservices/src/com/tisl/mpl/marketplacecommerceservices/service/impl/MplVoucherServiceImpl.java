@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.VoucherDiscountData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
@@ -79,43 +80,51 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void recalculateCartForCoupon(final CartModel cartModel) throws JaloPriceFactoryException, CalculationException
+	public void recalculateCartForCoupon(final CartModel cartModel)
 	{
-		LOG.debug("Step 5:::Inside recalculating cart after voucher apply");
-		final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
-		final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-
-		if (cartModel != null && cartModel.getEntries() != null)
+		try
 		{
-			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			LOG.debug("Step 5:::Inside recalculating cart after voucher apply");
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+
+			if (cartModel != null && cartModel.getEntries() != null)
 			{
-				if (null != cartEntryModel.getGiveAway() && !cartEntryModel.getGiveAway().booleanValue())
+				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 				{
-					freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-					freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+					if (null != cartEntryModel.getGiveAway() && !cartEntryModel.getGiveAway().booleanValue())
+					{
+						freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+						freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+					}
 				}
 			}
+
+			//recalculating cart
+			final Double deliveryCost = cartModel.getDeliveryCost();
+			//getCommerceCartService().recalculateCart(cartModel);
+
+			final CommerceCartParameter parameter = new CommerceCartParameter();
+			parameter.setEnableHooks(true);
+			parameter.setCart(cartModel);
+			getMplCommerceCartCalculationStrategy().recalculateCart(parameter);
+
+			cartModel.setDeliveryCost(deliveryCost);
+			cartModel.setTotalPrice(Double.valueOf((null != cartModel.getTotalPrice() ? cartModel.getTotalPrice().doubleValue()
+					: 0.0d) + (null != deliveryCost ? deliveryCost.doubleValue() : 0.0d)));
+
+			// Freebie item changes
+			getMplCommerceCartServiceImpl().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+
+			LOG.debug("Step 6:::Recalculation done successfully");
+
+			getModelService().save(cartModel);
 		}
-
-		//recalculating cart
-		final Double deliveryCost = cartModel.getDeliveryCost();
-		//getCommerceCartService().recalculateCart(cartModel);
-
-		final CommerceCartParameter parameter = new CommerceCartParameter();
-		parameter.setEnableHooks(true);
-		parameter.setCart(cartModel);
-		getMplCommerceCartCalculationStrategy().recalculateCart(parameter);
-
-		cartModel.setDeliveryCost(deliveryCost);
-		cartModel.setTotalPrice(Double.valueOf((null != cartModel.getTotalPrice() ? cartModel.getTotalPrice().doubleValue() : 0.0d)
-				+ (null != deliveryCost ? deliveryCost.doubleValue() : 0.0d)));
-
-		// Freebie item changes
-		getMplCommerceCartServiceImpl().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
-
-		LOG.debug("Step 6:::Recalculation done successfully");
-
-		getModelService().save(cartModel);
+		catch (final IllegalStateException e)
+		{
+			LOG.error("IllegalStateException from CalculationException", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0012);
+		}
 
 	}
 
@@ -444,102 +453,108 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	public void setApportionedValueForVoucher(final VoucherModel voucher, final CartModel cartModel, final String voucherCode,
 			final List<AbstractOrderEntryModel> applicableOrderEntryList)
 	{
-		LOG.debug("Step 16:::Inside setApportionedValueForVoucher");
-		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
+		try
 		{
-			final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
-
-			double totalApplicablePrice = 0.0D;
-			BigDecimal percentageDiscount = null;
-
-			for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+			LOG.debug("Step 16:::Inside setApportionedValueForVoucher");
+			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 			{
-				totalApplicablePrice += entry.getTotalPrice() != null ? entry.getTotalPrice().doubleValue() : 0.0D;
-			}
+				final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
 
-			final double discountValue = voucherObj.getValueAsPrimitive();
+				double totalApplicablePrice = 0.0D;
+				BigDecimal percentageDiscount = null;
 
-			if (voucherObj.isAbsoluteAsPrimitive())
-			{
-				percentageDiscount = BigDecimal.valueOf(discountValue / totalApplicablePrice).multiply(
-						BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));//TODo 100 in variable
-			}
-			else
-			{
-				percentageDiscount = BigDecimal.valueOf(discountValue);
-				final double totalSavings = (totalApplicablePrice * percentageDiscount.doubleValue())
-						/ Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED);
-				final double totalMaxDiscount = voucher.getMaxDiscountValue() != null ? voucher.getMaxDiscountValue().doubleValue()
-						: 0.0D;
-
-				if (totalMaxDiscount != 0.0D && totalSavings > totalMaxDiscount)
+				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 				{
-					percentageDiscount = BigDecimal.valueOf(voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice)
-							.multiply(BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));
-
+					totalApplicablePrice += entry.getTotalPrice() != null ? entry.getTotalPrice().doubleValue() : 0.0D;
 				}
 
-			}
+				final double discountValue = voucherObj.getValueAsPrimitive();
 
-			LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
-
-			double totalAmtDeductedOnItemLevel = 0.00D;
-
-			updateAppOrderEntriesForFreebieBogo(applicableOrderEntryList);
-
-			for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
-			{
-				BigDecimal entryLevelApportionedPrice = null;
-				double currNetAmtAftrAllDisc = 0.00D;
-
-				final double entryTotalPrice = entry.getTotalPrice().doubleValue();
-
-				if (entryTotalPrice > 1) //For freebie & bogo, 0.01 priced product, isBogoApplied flag can't be checked as same product might be free and non free for BOGO
+				if (voucherObj.isAbsoluteAsPrimitive())
 				{
-					if (voucherObj.isAbsoluteAsPrimitive())
+					percentageDiscount = BigDecimal.valueOf(discountValue / totalApplicablePrice).multiply(
+							BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));//TODo 100 in variable
+				}
+				else
+				{
+					percentageDiscount = BigDecimal.valueOf(discountValue);
+					final double totalSavings = (totalApplicablePrice * percentageDiscount.doubleValue())
+							/ Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED);
+					final double totalMaxDiscount = voucher.getMaxDiscountValue() != null ? voucher.getMaxDiscountValue()
+							.doubleValue() : 0.0D;
+
+					if (totalMaxDiscount != 0.0D && totalSavings > totalMaxDiscount)
 					{
-						if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+						percentageDiscount = BigDecimal.valueOf(voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice)
+								.multiply(BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));
+					}
+				}
+
+				LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
+
+				double totalAmtDeductedOnItemLevel = 0.00D;
+
+				updateAppOrderEntriesForFreebieBogo(applicableOrderEntryList);
+
+				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
+				{
+					BigDecimal entryLevelApportionedPrice = null;
+					double currNetAmtAftrAllDisc = 0.00D;
+
+					final double entryTotalPrice = entry.getTotalPrice().doubleValue();
+
+					if (entryTotalPrice > 1) //For freebie & bogo, 0.01 priced product, isBogoApplied flag can't be checked as same product might be free and non free for BOGO
+					{
+						if (voucherObj.isAbsoluteAsPrimitive())
 						{
-							final BigDecimal discountPriceValue = BigDecimal.valueOf(discountValue);
-							entryLevelApportionedPrice = getApportionedValueForSingleEntry(discountPriceValue,
-									totalAmtDeductedOnItemLevel);
+							if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+							{
+								final BigDecimal discountPriceValue = BigDecimal.valueOf(discountValue);
+								entryLevelApportionedPrice = getApportionedValueForSingleEntry(discountPriceValue,
+										totalAmtDeductedOnItemLevel);
+							}
+							else
+							{
+								entryLevelApportionedPrice = getApportionedValueForEntry(percentageDiscount, entryTotalPrice);
+								totalAmtDeductedOnItemLevel += entryLevelApportionedPrice.doubleValue();
+							}
 						}
 						else
 						{
 							entryLevelApportionedPrice = getApportionedValueForEntry(percentageDiscount, entryTotalPrice);
-							totalAmtDeductedOnItemLevel += entryLevelApportionedPrice.doubleValue();
 						}
-					}
-					else
-					{
-						entryLevelApportionedPrice = getApportionedValueForEntry(percentageDiscount, entryTotalPrice);
-					}
 
-					LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
+						LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
 
-					entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
-					entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
+						entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
+						entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
 
-					if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
-							|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
-					{
-						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
-								.doubleValue() : 0.00D;
-						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(netAmtAftrAllDisc, entryLevelApportionedPrice);
+						if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
+								|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
+						{
+							final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
+									.doubleValue() : 0.00D;
+							currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(netAmtAftrAllDisc, entryLevelApportionedPrice);
+						}
+						else
+						{
+							currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(entryTotalPrice, entryLevelApportionedPrice);
+						}
+						LOG.debug("Step 19:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
+
+						entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
 					}
-					else
-					{
-						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(entryTotalPrice, entryLevelApportionedPrice);
-					}
-					LOG.debug("Step 19:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
-
-					entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
-					//getModelService().save(entry);
 				}
-			}
 
-			getModelService().saveAll(applicableOrderEntryList);//TODO save outside loop
+				getModelService().saveAll(applicableOrderEntryList);//TODO save outside loop
+			}
 		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("ModelSavingException", e);
+			throw e;
+		}
+
 
 
 	}

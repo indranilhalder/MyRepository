@@ -30,10 +30,9 @@ public interface MplVoucherService
 
 	/**
 	 * @param cartModel
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
+	 *
 	 */
-	void recalculateCartForCoupon(CartModel cartModel) throws JaloPriceFactoryException, CalculationException;
+	void recalculateCartForCoupon(CartModel cartModel);
 
 	/**
 	 * @param voucherModel

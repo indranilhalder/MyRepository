@@ -69,6 +69,7 @@ import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
@@ -148,7 +149,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void recalculateCartForCoupon(final CartModel cartModel) throws JaloPriceFactoryException, CalculationException
+	public void recalculateCartForCoupon(final CartModel cartModel) throws EtailNonBusinessExceptions
 	{
 		getMplVoucherService().recalculateCartForCoupon(cartModel);
 	}
@@ -325,63 +326,60 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param cartModel
 	 * @return boolean
 	 * @throws VoucherOperationException
-	 * @throws CalculationException
-	 * @throws JaloSecurityException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
 	@Override
-	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
-			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException
+	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException
 	{
 		boolean checkFlag = false;
-		if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
+		try
 		{
-			LOG.debug("Step 1:::No voucher is applied to cart");
-
-			//Checks if voucherCode is valid
-			validateVoucherCodeParameter(voucherCode);
-			if (!isVoucherCodeValid(voucherCode))
+			if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
 			{
-				throw new VoucherOperationException("Voucher not found: " + voucherCode);
-			}
-			LOG.debug("Step 2:::Voucher Code is valid");
+				LOG.debug("Step 1:::No voucher is applied to cart");
 
-			//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
-			final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
-			if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
-			{
-				throw new VoucherOperationException("Voucher not found: " + voucherCode);
-			}
-
-			LOG.debug("Step 3:::Voucher is present and value is not negative");
-			if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
-			{
-				LOG.debug("Step 3.1:::Voucher is not applicable");
-				final String error = checkViolatedRestrictions(voucher, cartModel);
-				if (error.equalsIgnoreCase("Date"))
+				//Checks if voucherCode is valid
+				validateVoucherCodeParameter(voucherCode);
+				if (!isVoucherCodeValid(voucherCode))
 				{
-					throw new VoucherOperationException("Voucher cannot be redeemed: " + voucherCode);
+					throw new VoucherOperationException("Voucher not found: " + voucherCode);
 				}
-				else if (error.equalsIgnoreCase("User"))
+				LOG.debug("Step 2:::Voucher Code is valid");
+
+				//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
+				final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
+				if (voucher == null || (null != voucher.getValue() && voucher.getValue().doubleValue() <= 0))
 				{
-					throw new VoucherOperationException("User not valid for : " + voucherCode);
+					throw new VoucherOperationException("Voucher not found: " + voucherCode);
 				}
+
+				LOG.debug("Step 3:::Voucher is present and value is not negative");
+				if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
+				{
+					LOG.debug("Step 3.1:::Voucher is not applicable");
+					final String error = checkViolatedRestrictions(voucher, cartModel);
+					if (error.equalsIgnoreCase("Date"))
+					{
+						throw new VoucherOperationException("Voucher cannot be redeemed: " + voucherCode);
+					}
+					else if (error.equalsIgnoreCase("User"))
+					{
+						throw new VoucherOperationException("User not valid for : " + voucherCode);
+					}
+					else
+					{
+						throw new VoucherOperationException("Voucher is not applicable: " + voucherCode);
+					}
+				}
+
+				else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel)) //Checks whether voucher is reservable
+				{
+					LOG.debug("Step 3.2:::Voucher is not reservable");
+					throw new VoucherOperationException("Voucher is not reservable: " + voucherCode);
+				}
+
 				else
-				{
-					throw new VoucherOperationException("Voucher is not applicable: " + voucherCode);
-				}
-			}
-
-			else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel)) //Checks whether voucher is reservable
-			{
-				LOG.debug("Step 3.2:::Voucher is not reservable");
-				throw new VoucherOperationException("Voucher is not reservable: " + voucherCode);
-			}
-
-			else
-			{
-				try
 				{
 					LOG.debug("Step 4:::Voucher can be redeemed");
 					if (!getVoucherService().redeemVoucher(voucherCode, cartModel))
@@ -389,7 +387,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
 					}
 
-					recalculateCartForCoupon(cartModel); //Recalculates cart after releasing voucher
+					recalculateCartForCoupon(cartModel); //Recalculates cart after applying voucher
 
 					final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, cartModel); //Finds applicable order entries
 
@@ -400,16 +398,39 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					setApportionedValueForVoucher(voucher, cartModel, voucherCode, applicableOrderEntryList);
 					checkFlag = true;
 				}
-				catch (final JaloPriceFactoryException e)
-				{
-					throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
-				}
-				catch (final ModelSavingException e)
-				{
-					throw new VoucherOperationException("Error while saving voucher discount values");
-				}
 			}
 		}
+		catch (final CalculationException e)
+		{
+			LOG.error("CalculationException", e);
+			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
+		}
+		catch (final JaloPriceFactoryException e)
+		{
+			LOG.error("JaloPriceFactoryException", e);
+			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
+		}
+		catch (final ModelSavingException e)
+		{
+			LOG.error("ModelSavingException", e);
+			throw new VoucherOperationException("Error while saving voucher discount values");
+		}
+		catch (final NumberFormatException e)
+		{
+			LOG.error("NumberFormatException", e);
+			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
+		}
+		catch (final JaloInvalidParameterException e)
+		{
+			LOG.error("JaloInvalidParameterException", e);
+			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
+		}
+		catch (final JaloSecurityException e)
+		{
+			LOG.error("JaloSecurityException", e);
+			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
+		}
+
 		return checkFlag;
 	}
 

@@ -10,6 +10,7 @@ import de.hybris.platform.hmc.util.action.ItemAction;
 import de.hybris.platform.jalo.JaloBusinessException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.voucher.jalo.PromotionVoucher;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 
@@ -29,7 +30,7 @@ public class MplGeneratePromotionVoucherCodeAction extends ItemAction
 			voucher.setVoucherCode(voucher.generateVoucherCode());
 			getModelService().save(getModelService().get(voucher));
 
-			//getNotificationService().saveToVoucherStatusNotification((VoucherModel) getModelService().get(voucher));
+			getNotificationService().saveToVoucherStatusNotification((VoucherModel) getModelService().get(voucher));
 
 			return new ActionResult(0, true, false);
 		}
