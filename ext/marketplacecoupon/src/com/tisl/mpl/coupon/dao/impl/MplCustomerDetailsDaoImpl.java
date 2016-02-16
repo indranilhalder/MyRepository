@@ -7,7 +7,6 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
-import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
@@ -27,10 +26,12 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
-	/*
-	 * (non-Javadoc)
+
+	/**
+	 * Returns list of Customer Model
 	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.CustomerDetailsDao#findCustomer()
+	 * @return List<CustomerModel>
+	 *
 	 */
 	@Override
 	public List<CustomerModel> findCustomer()
@@ -46,10 +47,11 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 	}
 
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns cartModel
 	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.CustomerDetailsDao#findCart()
+	 * @return List<CartModel>
+	 *
 	 */
 	@Override
 	public List<CartModel> findCart()
@@ -65,14 +67,6 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 
 		return flexibleSearchService.<CartModel> search(query).getResult();
 	}
-
-	@Override
-	public List<VoucherModel> findVoucher()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 
 }

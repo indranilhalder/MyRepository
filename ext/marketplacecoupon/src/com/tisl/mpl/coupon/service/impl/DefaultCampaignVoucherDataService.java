@@ -178,7 +178,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	/**
 	 * Populate data from Voucher Restriction to Data Class
 	 *
-	 * @param restrictions
+	 * @param restrictionList
 	 * @param data
 	 * @return campaignData
 	 */
@@ -224,7 +224,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	 * The Method is used to populate User Data
 	 *
 	 * @param userModel
-	 * @return userdata
+	 * @return String
 	 */
 	private String populateUser(final UserRestrictionModel userModel)
 	{
@@ -258,7 +258,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	 * The Method is used to populate User Data
 	 *
 	 * @param userDataList
-	 * @return userdata
+	 * @return String
 	 */
 	private String populateUsrData(final List<UserModel> userDataList)
 	{
@@ -288,7 +288,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	 * The Method is used to populate User Grp Data
 	 *
 	 * @param userModel
-	 * @return userdata
+	 * @return String
 	 */
 	private String populateUserGrp(final UserRestrictionModel userModel)
 	{
@@ -321,7 +321,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	 * The Method is used to populate User Grp Data
 	 *
 	 * @param userDataList
-	 * @return userdata
+	 * @return String
 	 */
 	private String populateUsrGrpData(final List<UserGroupModel> userDataList)
 	{
@@ -416,7 +416,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 	 * Set Default Value
 	 *
 	 * @param data
-	 * @return data
+	 * @return CampaignVoucherData
 	 */
 	private CampaignVoucherData populateDefaultVal(final CampaignVoucherData data)
 	{

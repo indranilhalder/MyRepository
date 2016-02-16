@@ -5,7 +5,6 @@ package com.tisl.mpl.coupon.service;
 
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
@@ -13,10 +12,17 @@ import java.util.List;
 public interface MplCustomerDetailsService
 {
 
+	/**
+	 *
+	 * @return List<CustomerModel>
+	 */
 	List<CustomerModel> getCustomer();
 
-	List<VoucherModel> getVoucher();
 
+	/**
+	 *
+	 * @return List<CartModel>
+	 */
 	List<CartModel> getCartDetails();
 
 }

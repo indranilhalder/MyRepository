@@ -16,6 +16,15 @@ import java.util.Date;
 public class CouponUtilityMethods
 {
 
+
+	/**
+	 * This method compares start date and end date with the comparable date
+	 *
+	 * @param start
+	 * @param end
+	 * @param comparableDate
+	 * @return boolean
+	 */
 	public static boolean compareDate(final Date start, final Date end, final Date comparableDate)
 	{
 		boolean status = false;
@@ -35,6 +44,14 @@ public class CouponUtilityMethods
 	}
 
 
+
+	/**
+	 * This method calculates no of days between two dates
+	 *
+	 * @param date1
+	 * @param date2
+	 * @return int
+	 */
 	public static int noOfDaysCalculatorBetweenDates(final Date date1, final Date date2)
 	{
 		int noOfDays = 0;
@@ -61,6 +78,8 @@ public class CouponUtilityMethods
 		}
 		return noOfDays;
 	}
+
+
 
 	/**
 	 * @Description: validate whether comparableDate lies between date1 and date2
