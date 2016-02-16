@@ -1337,21 +1337,25 @@ function getRating(key,productCode,category)
 	 			{
 	 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
 	 			} 
-	 		
-			rating(avgreview,raingcount);
-			
+	 		if(raingcount!= 0 && raingcount == 1){
+ 				$('.gig-rating-readReviewsLink_pdp').text(raingcount+" REVIEW")
+ 			}
+ 			else{ 
+ 			
+ 				$('.gig-rating-readReviewsLink_pdp').text(raingcount+" REVIEWS")
+ 			}
+	 		//TISUATPII-471 fix
+	 		if(raingcount == 1){
+				$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEW");
+				$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
+				}
+				else
+					{
+					$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEW");
+					$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
+					}
 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
 			
-			//TISUATPII-471 fix
-			
-			var count=data.streamInfo.ratingCount;
-			if(count == 1){
-			$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
-			}
-			else
-				{
-				$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
-				}
 			
 			
 			
