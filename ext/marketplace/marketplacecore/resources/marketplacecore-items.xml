@@ -704,6 +704,7 @@
 		<enumtype code="sellerPriorityEnum" autocreate="true"
 			generate="true" dynamic="false">
 			<value code="NEW"></value>
+			<value code="PROCESSING"></value>
 			<value code="PROCESSED"></value>
 			<value code="ERROR"></value>
 		</enumtype>
@@ -6742,7 +6743,7 @@
 					</attribute>
 					<attribute qualifier="priorityStatus" type="sellerPriorityEnum">
 						<persistence type="property" />
-						<modifiers read="true" write="true" optional="false" />
+						<modifiers read="true" write="true" optional="true" />
 					</attribute>
 
 					<!-- <attribute qualifier="isActive" type="java.lang.Boolean"> <description>To 
