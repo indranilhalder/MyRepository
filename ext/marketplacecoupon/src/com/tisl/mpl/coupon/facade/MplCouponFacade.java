@@ -142,12 +142,11 @@ public interface MplCouponFacade
 	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
 
-
 	/**
 	 * @param customer
 	 * @param pageableData
 	 * @return SearchPageData<CouponHistoryData>
 	 */
-	SearchPageData<CouponHistoryData> getAllVoucherInvalidations(CustomerModel customer, PageableData pageableData);
+	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(CustomerModel customer, PageableData pageableData);
 
 }

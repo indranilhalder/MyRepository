@@ -968,7 +968,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 */
 	@Override
-	public SearchPageData<CouponHistoryData> getAllVoucherInvalidations(final CustomerModel customer,
+	public SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(final CustomerModel customer,
 			final PageableData pageableData)
 	{
 		final SearchPageData<VoucherInvalidationModel> searchVoucherModel = getMplCouponService().getVoucherRedeemedOrder(customer,
@@ -980,7 +980,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			LOG.debug("---" + voucherInvalidation.getVoucher().getCode());
 		}
 
-		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = null;
+		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = convertPageData(searchVoucherModel,
+				voucherTransactionConverter);
 
 		return searchPageDataVoucherHistory;
 

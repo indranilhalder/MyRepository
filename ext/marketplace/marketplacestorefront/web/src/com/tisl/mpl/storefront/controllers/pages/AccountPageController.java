@@ -1104,17 +1104,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			/* getting all voucher in a list */
 
-			//final List<VoucherDisplayData> closedVoucherDataList = mplCouponFacade.getAllClosedCoupons(customer);
 
 			//test
 			final int pageSize = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.PAZE_SIZE_VOUCHER, "12").trim());
 			final int page = pageVoucher;
-			//			final String sortCode = "sort";
 
 			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
-			//	final SearchPageData<VoucherDisplayData> searchPageDataVoucher = getMplOrderFacade().getPagedFilteredParentOrderHistory(
-			//	pageableData);
+
 
 			final SearchPageData<VoucherDisplayData> searchPageDataVoucher = mplCouponFacade.getAllClosedCoupons(customer,
 					pageableData);
@@ -1132,14 +1129,30 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			//test ends
 
-			//final List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
-			//final List<VoucherDisplayData> closedVoucherListModified = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 
 
 			/* getting all voucher transactions along with the order placed in a DTO */
 			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
+
+			final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
+					.getString(MessageConstants.PAZE_SIZE_VOUCHER, "20").trim());
+			final PageableData pageableDataVoucherHistory = createPageableData(page, pageSizeVoucherHistory, sortCode, showMode);
+			final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = mplCouponFacade.getVoucherHistoryTransactions(
+					customer, pageableDataVoucherHistory);
+
+			populateModelForCoupon(model, searchPageDataVoucherHistory, showMode);
+
+			final List<CouponHistoryData> couponHistoryDataList = searchPageDataVoucherHistory.getResults();
+
+			for (final CouponHistoryData couponHistoryData : couponHistoryDataList)
+			{
+				LOG.debug(couponHistoryData.getCouponCode());
+				LOG.debug(couponHistoryData.getCouponDescription());
+				LOG.debug(couponHistoryData.getOrderCode());
+				LOG.debug(couponHistoryData.getRedeemedDate());
+			}
 
 			if (null != couponHistoryStoreDTO)
 			{
