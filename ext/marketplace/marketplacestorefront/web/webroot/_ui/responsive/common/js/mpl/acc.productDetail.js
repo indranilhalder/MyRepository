@@ -1307,21 +1307,19 @@ function CheckonReload()
 
 function getRating(key,productCode,category)
 {
-	
-	
-	
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
-	  $.getJSON(url, function(data){
+	 
+	$.getJSON(url, function(data){
+		console.log(data);
 	  	var totalCount=data.streamInfo.ratingCount;
 		//Reverse the source array
 		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
 		ratingArray  = ratingArray.reverse();
 		
-		  $(".rate-details .after").each(function(count){			  
-				
+		  $("div.rate-details div.after").each(function(count){			  
 				var countIndiv=ratingArray[count];								
-				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
-				$(".rate-details .after").eq(count).text(ratingArray[count]);
+				$("div.rate-bar div.rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
+				$("div.rate-details div.after").eq(count).text(ratingArray[count]);
 				
 			})
 			
@@ -1329,6 +1327,17 @@ function getRating(key,productCode,category)
 			var raingcount=data.streamInfo.ratingCount;
 			$(".product-detail ul.star-review a").empty();
 			$(".product-detail ul.star-review li").attr("class","empty");
+			
+ 			var rating = Math.floor(avgreview);
+	 		var ratingDec = avgreview - rating;
+	 		for(var i = 0; i < rating; i++) {
+	 			$("#pdp_rating"+" li").eq(i).removeClass("empty").addClass("full");
+	 			}
+	 		if(ratingDec!=0)
+	 			{
+	 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
+	 			} 
+	 		
 			rating(avgreview,raingcount);
 			
 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
@@ -1356,13 +1365,14 @@ function getRating(key,productCode,category)
 		containerID : 'ratingDiv',
 		linkedCommentsUI : 'commentsDiv',
 		showCommentButton : 'true',
-		onAddReviewClicked:reviewClick,
+		onAddReviewClicked:	function(response) {
+			CheckUserLogedIn();
 	 }
 			
-	 gigya.comments.showRatingUI(ratingsParams);
-	  
-	  
 	
+	  }  
+	  
+	  gigya.comments.showRatingUI(ratingsParams);
 //	$.getJSON("https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=hello",
 //	         function(data) {
 //		

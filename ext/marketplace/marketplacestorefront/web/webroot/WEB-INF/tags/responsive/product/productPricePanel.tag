@@ -65,7 +65,7 @@
 </c:if>
 </div>
 <c:if test="${isGigyaEnabled=='Y'}">
- <ul class="star-review" id="${product.code}">
+ <ul class="star-review" id="pdp_rating">
 				<li class="empty"></li>
 				<li class="empty"></li>
 				<li class="empty"></li>
