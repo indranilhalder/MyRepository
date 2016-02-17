@@ -15460,7 +15460,7 @@ margin: 10px 0px;
 #bestPicks .home-best-pick-carousel-img img{
 	max-width: 100%;
 }
-#bestPicks .short-info span {
+#bestPicks .short-info span , #bestPicks .short-info p{
     font-size: 12px;
     font-family: "Avenir Next";
     color:#333;
@@ -15472,6 +15472,15 @@ margin: 10px 0px;
     width: 100%;
     word-break: break-word;
 }
+#bestPicks .short-info span:last-child,#bestPicks .short-info p:last-child{
+font-family:DejaVu Sans;
+	font-size:98%;
+	display:inline !important;
+	background:transparent !important;
+	border:none;
+	font-weight:500;
+
+}
 #bestPicks .short-info a {
     font-size: 12px;
     font-family: "Avenir Next";
@@ -15482,7 +15491,7 @@ margin: 10px 0px;
     padding: 4px;
     width: 100%;
 }
-#bestPicks .short-info a span {
+#bestPicks .short-info a span,#bestPicks .short-info a p {
     font-size: 12px;
     font-family: "Avenir Next";
     color:inherit;
@@ -15493,7 +15502,7 @@ margin: 10px 0px;
     width: 100%;
     padding: 0;
 }
-#bestPicks .short-info span a {
+#bestPicks .short-info span a,#bestPicks .short-info p a {
     font-size: 12px;
     font-family: "Avenir Next";
     font-weight: 600;
@@ -15503,6 +15512,7 @@ margin: 10px 0px;
     width: 100%;
     padding: 0;
 }
+
 #bestPicks .view-cliq-offers {
 	padding: 13px;
     border: 1px solid #bbb;
