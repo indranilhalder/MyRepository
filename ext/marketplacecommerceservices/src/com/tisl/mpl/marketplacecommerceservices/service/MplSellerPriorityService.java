@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
 /**
@@ -12,5 +11,5 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
  */
 public interface MplSellerPriorityService
 {
-	public boolean updateSellerPriorityDetails() throws EtailNonBusinessExceptions;
+	public boolean updateSellerPriorityDetails();
 }
