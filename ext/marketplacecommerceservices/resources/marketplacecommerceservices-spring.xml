@@ -171,6 +171,15 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+	<bean id="productPromotionInterceptor" class="com.tisl.mpl.interceptor.ProductPromotionInterceptor">
+	</bean>
+
+	<bean id="productPromotionInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="productPromotionInterceptor" />
+		<property name="typeCode" value="ProductPromotion" />
+		<property name="order" value="1"/> 
+	</bean>
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -363,6 +372,7 @@
 		<property name="otpDao" ref="otpDao" />
 		<property name="modelservice" ref="modelService" />
 		<property name="userService" ref="userService" />
+
 	</bean>
 	<bean id="otpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.OTPDaoImpl" />
@@ -1555,3 +1565,4 @@
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
 </beans>
+

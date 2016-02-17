@@ -41,11 +41,11 @@
 
 <!-- Search feed back End -->
 
-<c:if test="${isIAEnabled}">
+<%-- <c:if test="${isIAEnabled}">
 <script type="text/javascript"
 	src="${commonResourcePath}/js/ia_plugin_general.js" defer="defer"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/tataia.js" defer="defer"></script>
-</c:if>
+</c:if> --%>
 
 
 

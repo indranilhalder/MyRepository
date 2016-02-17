@@ -3,6 +3,8 @@ var binStatus= false;
 var couponApplied=false;
 var bankNameSelected;
 
+
+
 //Display forms based on mode button click
 $("#viewPaymentCredit").click(function(){
 	$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -1177,6 +1179,51 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	  // TISPRO-153
+	var payment_method_map = {
+	            "viewPaymentEMI": "EMI",
+	            "viewPaymentCredit": "Credit",
+	            "viewPaymentNetbanking": "Net Banking",
+	            "viewPaymentCOD": "COD",
+	            "viewPaymentDebit": "Debit"
+	        };
+	        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
+	        var payment_mode = payment_method_map[payment];
+	        var payment_type = "",
+	            priority_banks = "";
+	        if (payment_mode === "EMI") {
+
+	            payment_type = jQuery("select#bankNameForEMI").val();
+
+	        } else if (payment_mode === "Credit" || payment_mode === "Debit") {
+
+	            payment_type = jQuery("li.active-card span").attr("class") || "Saved Credit Card";
+
+	        } else if (payment_mode === "Net Banking") {
+
+	            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
+	            if (priority_banks.length > 0) {
+	                payment_type = priority_banks.val();
+	            } else {
+	                jQuery("#netbanking #bankCodeSelection").val();
+	            }
+
+	        } else if (payment_mode === "COD") {
+	            payment_type = "COD";
+	        }
+
+	        if (!payment_type) {
+	            payment_type = "NA";
+	        }
+
+	        utag.link({
+	            "link_name": 'Final Checkout',
+	            "event_type": 'PayNow',
+	            "payment_method": "" + payment_mode + "|" + payment_type,
+	            "product_id": utag.data.product_id
+
+	        });
+	
 		
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
@@ -1191,6 +1238,7 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
+
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -1258,6 +1306,51 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		
+	  // TISPRO-153
+	  var payment_method_map = {
+	            "viewPaymentEMI": "EMI",
+	            "viewPaymentCredit": "Credit",
+	            "viewPaymentNetbanking": "Net Banking",
+	            "viewPaymentCOD": "COD",
+	            "viewPaymentDebit": "Debit"
+	        };
+	        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
+	        var payment_mode = payment_method_map[payment];
+	        var payment_type = "",
+	            priority_banks = "";
+	        if (payment_mode === "EMI") {
+
+	            payment_type = jQuery("select#bankNameForEMI").val();
+
+	        } else if (payment_mode === "Credit" || payment_mode === "Debit") {
+
+	            payment_type = jQuery("li.active-card span").attr("class") || "Saved Credit Card";
+
+	        } else if (payment_mode === "Net Banking") {
+
+	            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
+	            if (priority_banks.length > 0) {
+	                payment_type = priority_banks.val();
+	            } else {
+	                jQuery("#netbanking #bankCodeSelection").val();
+	            }
+
+	        } else if (payment_mode === "COD") {
+	            payment_type = "COD";
+	        }
+
+	        if (!payment_type) {
+	            payment_type = "NA";
+	        }
+
+	        utag.link({
+	            "link_name": 'Final Checkout',
+	            "event_type": 'PayNow',
+	            "payment_method": "" + payment_mode + "|" + payment_type,
+	            "product_id": utag.data.product_id
+
+	        });
+	
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
 		var addressLine1=$("#address1").val();
@@ -2958,6 +3051,7 @@ function activateSignInTab()
 	}
 }
 function checkSignInValidation(path){
+
 	if(path=="Checkout")
 	{
 		var emailId = $("#j_username").val();
@@ -3008,6 +3102,11 @@ function checkSignInValidation(path){
 	}
 	
 	
+
+	// TISPRO-153
+	if(validationResult){
+		utag.link({ "event_type" : "Login", "link_name" : "Login" });
+	}
 	return validationResult;
 }
 
@@ -3084,6 +3183,8 @@ function checkSignUpValidation(path){
 	//Fix for defect TISEE-3986 : handling special character like #	
 	if(validationResult)
 	{
+		// TISPRO-153
+		utag.link({ "event_type" : "Login", "link_name" : "Login" });
 		var encodedPWD= encodeURIComponent(password);
 		var encodedRePWD= encodeURIComponent(rePassword);		
 		if(path=="Checkout"){
@@ -3638,4 +3739,3 @@ $("#voucherDisplaySelection").change(function(){
 		$("#couponFieldId").val(selection);
 	}
 });
-

@@ -1196,18 +1196,27 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			LOG.debug("Total cart price is>>>>>>>>>" + totalPrice);
 
+
 			//amtTobeDeductedAtlineItemLevel is a variable to check total apportioned COD charge is equal to total convenience charge
+
 			for (final AbstractOrderEntryModel entry : entries)
 			{
 				if (!getDiscountUtility().isFreebieOrBOGOApplied(entry))
+
+
+
+
+
 				{
 					double entryTotals = 0;
 					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
 					{
 						entryTotals = entry.getNetAmountAfterAllDisc().doubleValue();
 					}
+
 					else
 					{
+
 						entryTotals = entry.getTotalPrice().doubleValue();
 					}
 					entryTotals -= (null != entry.getFreeCount() ? entry.getFreeCount().intValue() : 0);
@@ -1215,6 +1224,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							: entry.getQuantity().doubleValue();
 
 					LOG.debug("Entry totals is>>>>>" + entryTotals + "<<<<<<&& quantity is>>>>>" + quantity);
+
+
 
 					//calculating ratio of convenience charge for cart entry
 					final Double codChargePercent = Double.valueOf(entryTotals / totalPrice);
@@ -1229,6 +1240,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					LOG.debug("Entry level Conv charge is>>>>>>>" + appCODChargeForEachItem);
 					entry.setConvenienceChargeApportion(Double.valueOf(appCODChargeForEachItem));
 
+
+
+
 					try
 					{
 						getModelService().save(entry);
@@ -1238,7 +1252,25 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						LOG.error("Exception while saving abstract order entry model with " + e);
 						throw new ModelSavingException(e + " :Exception while saving abstract order entry model with");
 					}
+
+
+
+
+
+
+
+
+
+
+
+
+
 				}
+
+
+
+
+
 
 			}
 		}
@@ -1259,6 +1291,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.error("Exception while saving cod payment info with " + e);
 			throw new ModelSavingException(e + " :Exception while saving cod payment info with");
 		}
+
+
 		//setting CODPaymentInfoModel in cartmodel
 		cartModel.setPaymentInfo(cODPaymentInfoModel);
 		cartModel.setPaymentAddress(cartModel.getDeliveryAddress());
@@ -1273,6 +1307,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			throw new ModelSavingException(e + " :Exception while saving cart with");
 		}
 	}
+
 
 	/**
 	 * This method is used set the saved card details in SavedCardModel
@@ -1955,6 +1990,15 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final String ebsDowntime = getConfigurationService().getConfiguration().getString("payment.ebs.downtime");
 			final Map<String, Double> paymentMode = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.PAYMENTMODE);
+			if (null != paymentMode)
+			{
+				LOG.debug("updateAuditEntry method" + paymentMode);
+			}
+			else
+			{
+
+				LOG.error("payment mode is null    ------->" + orderStatusResponse.getOrderId());
+			}
 
 			if (null != auditModel)
 			{
@@ -1975,12 +2019,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				//Condition when RiskResponse is available in OrderStatusResponse
 				if (null != orderStatusResponse.getRiskResponse())
 				{
+					LOG.debug("orderStatusResponse status ------> " + orderStatusResponse.getStatus());
 					//Condition when PG Response status is available and charged
 					if (StringUtils.isNotEmpty(orderStatusResponse.getStatus())
 							&& orderStatusResponse.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.CHARGED))
 					{
 						if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsRiskLevel()))
 						{
+							LOG.debug("orderStatusResponse getRiskResponse ------> "
+									+ orderStatusResponse.getRiskResponse().getEbsRiskLevel());
+
 							//Condition when RiskLevel is GREEN
 							if (orderStatusResponse.getRiskResponse().getEbsRiskLevel()
 									.equalsIgnoreCase(MarketplacecommerceservicesConstants.GREEN))
@@ -2030,6 +2078,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						auditModel.setIsExpired(Boolean.TRUE);
 					}
 
+					LOG.debug("auditEntry status risk ne null------> " + auditEntry.getStatus());
 
 					if (StringUtils.isNotEmpty(orderStatusResponse.getRiskResponse().getEbsBinCountry()))
 					{
@@ -2097,6 +2146,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 								if (entry.getKey() != null
 										&& MarketplacecommerceservicesConstants.NETBANKING.equalsIgnoreCase(entry.getKey().trim()))
 								{
+									LOG.debug("Payment mode netbanking ------> " + orderStatusResponse.getOrderId());
+
 									auditEntry.setStatus(MplPaymentAuditStatusEnum.COMPLETED);
 									auditModel.setIsExpired(Boolean.TRUE);
 									netBanking = true;
@@ -2106,6 +2157,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 							// For credit card/debit card and emi , if risk block is not available
 							if (!netBanking)
 							{
+								LOG.debug("Payment mode not netbanking and no risk block present ------> "
+										+ orderStatusResponse.getOrderId());
+
 								auditEntry.setStatus(MplPaymentAuditStatusEnum.PENDING);
 								juspayEBSResponseModel.setEbsRiskPercentage("-1.0");
 							}
@@ -2120,6 +2174,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 
 				auditEntry.setResponseDate(new Date());
+
+				LOG.debug("auditEntry status risk null------> " + auditEntry.getStatus());
 
 				getModelService().save(auditEntry);
 				auditEntryList.add(auditEntry);
@@ -2516,6 +2572,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	}
 
 
+
 	//Getters and Setters
 
 	/**
@@ -2858,13 +2915,5 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		this.mplVoucherService = mplVoucherService;
 	}
 
-
-
-
-
-
-
-
-
-
 }
+

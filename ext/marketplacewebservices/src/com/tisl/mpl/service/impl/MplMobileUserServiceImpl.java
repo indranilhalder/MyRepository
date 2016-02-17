@@ -395,7 +395,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 		String customerId = null;
 		CustomerModel custModel = null;
 		custModel = getCustomerDetails(emailId);
-		if (null != custModel.getUid())
+		if (null != custModel && null != custModel.getUid())
 		{
 			customerId = custModel.getUid();
 		}
