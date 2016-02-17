@@ -7018,12 +7018,22 @@
 						<modifiers read="true" write="true" search="true"
 							optional="false" />
 					</attribute>
-					<attribute qualifier="openingTime" type="java.util.Date">
+					<!-- <attribute qualifier="openingTime" type="java.lang.String">
 						<modifiers write="true" read="true" optional="true"
 							unique="false" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="closingTime" type="java.util.Date">
+					<attribute qualifier="closingTime" type="java.lang.String">
+						<modifiers initial="true" write="true" read="true"
+							optional="true" unique="false" />
+						<persistence type="property" />
+					</attribute> -->
+					<attribute qualifier="mplOpeningTime" type="java.lang.String">
+						<modifiers write="true" read="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="mplClosingTime" type="java.lang.String">
 						<modifiers initial="true" write="true" read="true"
 							optional="true" unique="false" />
 						<persistence type="property" />
