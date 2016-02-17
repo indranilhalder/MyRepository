@@ -18,11 +18,23 @@
 	
 <!-- This is used for social media images in footer -->
 	
-	 <div class="social">
+	 <div class="social share">
 		<h3><spring:theme code="text.stay.connected"/></h3>
 		<div class="links">
 			<c:forEach items="${component.footerImageList}" var="banner">
 					<a href="${banner.urlLink}"><img src="${banner.media.URL}" ></a>
+			</c:forEach>
+		</div>
+	</div>
+
+
+<!-- This is used for app download images in footer -->
+	
+	 <div class="social app-download">
+		<h3><spring:theme code="text.download.app"/></h3>
+		<div class="links">
+			<c:forEach items="${component.footerAppImageList}" var="banner">
+					<a href="${banner.urlLink}" class="appios"><img src="${banner.media.URL}" ></a>
 			</c:forEach>
 		</div>
 	</div>
