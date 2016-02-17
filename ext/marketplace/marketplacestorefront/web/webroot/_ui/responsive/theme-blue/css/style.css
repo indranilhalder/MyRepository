@@ -379,7 +379,11 @@ button:hover {
   a.button.blue, button.blue {
     color: #fff;
     background-color: #A9143C; }
-  a.button.orange, button.orange {
+  a.button.gray, button.gray {
+    color: #fff;
+    background-color: gray; }
+    
+    a.button.orange, button.orange {
     color: #fff;
     background-color: #ffb810; }
   a.button.red, button.red {
