@@ -6,7 +6,7 @@ package com.tisl.mpl.interceptor;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
-import de.hybris.platform.servicelayer.interceptor.ValidateInterceptor;
+import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.core.enums.SellerPriorityEnum;
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -25,7 +26,8 @@ import com.tisl.mpl.model.SellerInformationModel;
  * @author TCS
  *
  */
-public class SellerPriorityInterceptor implements ValidateInterceptor
+public class SellerPriorityInterceptor implements PrepareInterceptor
+//ValidateInterceptor
 {
 
 
@@ -57,7 +59,8 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 	 * @return: void
 	 */
 	@Override
-	public void onValidate(final Object model, final InterceptorContext arg) throws InterceptorException
+	//	public void onValidate(final Object model, final InterceptorContext arg) throws InterceptorException
+	public void onPrepare(final Object model, final InterceptorContext arg) throws InterceptorException
 	{
 
 		// YTODO Auto-generated method stub
@@ -155,22 +158,30 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					}
 				}
 				// if new value already	 exist throw error
-				if (priority.getIsActive().booleanValue())
-				//						&& null != priority.getPriorityStatus()
-				//						&& SellerPriorityEnum.NEW.equals(priority.getPriorityStatus())
-				//						|| (priority.getIsActive().booleanValue() && null != priority.getPriorityStatus() && SellerPriorityEnum.PROCESSED
-				//								.equals(priority.getPriorityStatus())))
+				if (SellerPriorityEnum.PROCESSING.equals(priority.getPriorityStatus()))
 				{
-					if (null != categoryId && categoryList.contains(categoryId))
-					{
-						throw new InterceptorException(ERROR_SAME_CATEGORY);
-					}
-					if (null != listingId && skuIdList.contains(listingId))
-					{
-						throw new InterceptorException(ERROR_SAME_SKU);
-					}
+					priority.setPriorityStatus(SellerPriorityEnum.PROCESSED);
 				}
+				else if (SellerPriorityEnum.ERROR.equals(priority.getPriorityStatus()))
+				{
+					priority.setPriorityStatus(SellerPriorityEnum.ERROR);
+				}
+				else
+				{
+					if (priority.getIsActive().booleanValue())
 
+					{
+						if (null != categoryId && categoryList.contains(categoryId))
+						{
+							throw new InterceptorException(ERROR_SAME_CATEGORY);
+						}
+						if (null != listingId && skuIdList.contains(listingId))
+						{
+							throw new InterceptorException(ERROR_SAME_SKU);
+						}
+					}
+
+				}
 			}
 		}
 	}
