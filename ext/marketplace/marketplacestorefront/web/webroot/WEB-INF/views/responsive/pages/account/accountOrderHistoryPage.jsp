@@ -13,7 +13,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
-
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -74,7 +74,7 @@
 
 
 			<!----- Left Navigation Starts --------->
-			<div class="left-nav">
+			<%-- <div class="left-nav">
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -98,12 +98,12 @@
 					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
 				</ul>
-				<%-- <ul>
+				<ul>
 				<li class="header-SignInShare"><h3><spring:theme
 									code="header.flyout.credits" /></h3></li>
 						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 									code="header.flyout.coupons" /></a></li>
-				</ul> --%>
+				</ul>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.share" />
@@ -112,7 +112,8 @@
 								code="header.flyout.invite" /></a></li>
 
 				</ul>
-			</div>
+			</div> --%>
+			<user:accountLeftNav pageName="orderHistory"/>
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account">

@@ -390,7 +390,7 @@
 			<!-- <div id="addToCartSizeGuideTitleSuccess" >
 	
 </div -->
-<span id="addToCartSizeGuideTitleSuccess"></span>
+
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
 		
 	<c:if test="${product.purchasable}">
@@ -448,6 +448,7 @@
 		<spring:theme code="basket.add.to.basket" />
 	</button>
 	</span>
+	<span id="addToCartSizeGuideTitleSuccess"></span>
 </form:form>
 <%-- <span id="addToCartSizeGuideTitleaddtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addToCartSizeGuideTitleaddtobagerror" style="display:none"><spring:theme code="product.error"/></span>

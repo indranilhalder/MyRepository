@@ -22,8 +22,6 @@
 		<compressible:mpljs/>
 	</c:otherwise>
 </c:choose>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/feedback.js"></script>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/main-ie8.css"/>
