@@ -179,6 +179,37 @@ UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[l
 ;; NewAndExclusiveProductCarouselComponent;"Discover New & Exclusive"
 #;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
 
+######## Footer image icons starts #######
+
+# Media Content
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;gplus.png;$siteResource/images/banners/homepage/gplus.png;gplus.png;"Google Plus";
+;;facebook.png;$siteResource/images/banners/homepage/facebook.png;facebook.png;"Facebook";
+;;apple.png;$siteResource/images/banners/homepage/apple.png;apple.png;"Apple";
+;;android.png;$siteResource/images/banners/homepage/android.png;android.png;"Android";
+
+
+# Footer Image Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
+;;GoogleImageComponent;Google Image Component;GoogleImageComponent;https://plus.google.com
+;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;https://www.facebook.com
+;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;https://www.play.google.com
+;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;http://www.apple.com
+
+#Footer Image Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];;
+;;GoogleImageComponent;gplus.png;
+;;FacebookImageComponent;facebook.png
+;;AppleImageComponent;apple.png
+;;AndroidImageComponent;android.png
+
+# CMS Footer Component
+INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);&componentRef;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV);
+;;FooterComponent;6;TataMarketplaceNavNode,CustomerServiceNavNode,MyMarketplaceNavNode;FooterComponent;GoogleImageComponent,FacebookImageComponent;AndroidImageComponent,AppleImageComponent;
+
+
+######## Footer image icons ends ########
+
 UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 #;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending
 
