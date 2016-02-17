@@ -1443,7 +1443,7 @@ h2 {
       font-style: italic;
       font-weight: 100; } }
     @media (min-width:791px) and (max-width: 900px) {
-      header .content .marketplace, header .content .brand-logo {
+      header .content .marketplace {
         margin-left: 5px;
         width: 215px;
          } 
@@ -1527,7 +1527,7 @@ h2 {
             font-weight: 100;
             content: "\f107";
             display: inline-block;
-            color: #000;
+            color: #a9143c;
             position: relative;
             margin-left: 5px;
             top: 4px;
@@ -3571,7 +3571,8 @@ h2 {
 
 
 	.hero .major-promos a:hover {
-		background:  #f7bbcb;
+		background:  #88102C;
+		color:inherit;
 	}
 	.hero .major-promos a:after {
 		height: 0;
@@ -18646,7 +18647,9 @@ height: 0;
 }	
 .stockLevelStatus{
   top: 40%;
-    left: 24%;
+    left: 0;
+    right:0;
+    margin:auto;
     font-size:12px;
     font-weight:600;
     position: absolute;
@@ -18668,21 +18671,7 @@ height: 0;
     -moz-opacity: .3 !important;
     -khtml-opacity: .3 !important;
 }
-@media(max-width:420px){
-	.stockLevelStatus{
-    left: 18%;
-	}
-}
-@media(max-width:790px) and (min-width:421px){
-	.stockLevelStatus{
-    left: 28%;
-	}
-}
-@media(max-width:1145px) and (min-width:791px){
-	.stockLevelStatus{
-    left: 24%;
-	}
-}
+
 .productInfo li{
 	margin-bottom:5px;
 }	
@@ -19146,7 +19135,9 @@ header.brand-header .content .bottom .marketplace {
 
 
 header.brand-header .content .bottom nav {
-	color: #fff
+	color: #fff;
+    padding-left: 50px;
+    margin-left: 20px;
 }
 
 header.brand-header .content .bottom nav>ul>li>.toggle {
@@ -19161,6 +19152,7 @@ header.brand-header .content .bottom nav>ul>li:hover {
 header.brand-header .content .bottom nav>ul>li>ul {
 	background-color: #b9b9b9;
 	top: 80px;
+	left: 245px;
 }
 
 @media ( max-width :790px) {
@@ -24305,7 +24297,7 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
 	text-decoration: underline;
 	font-weight: 600;
 	}
-	#wishListNonLoggedInId{
+	#wishListNonLoggedInId, #wishListNonLoggedInId_sizeGuide {
 	    margin: 15px 0px;
     text-align: center;
     font-size:12px;
@@ -28897,6 +28889,7 @@ min-width: 150px;
 }
 .sizeGuide-message{
 	width:100%;
+	min-width: 143px;
     position: absolute;
     bottom: 45px;
     left: 0;
@@ -29867,9 +29860,10 @@ a.button, button {
     max-width: 100%;
     height: auto;
 }
-@media (max-width:790px){
+@media (max-width:650px){
 .qued{
-width:100%;}
+width:100%;
+padding-bottom: 20px;}
 }
 @media (max-width:650px){
 	.qued-content, .qued-image{
@@ -29877,9 +29871,8 @@ width:100%;}
 	.qued-content *, .qued-image{
 	text-align:center;}
 	.qued-content a.button.maroon {
-      margin: 0 auto;
-      left:0;
-      right:0;
+     margin: 0 auto 20px;
+    position: static;
    }
    .qued h1 {
        padding: 10px 0;
@@ -30019,6 +30012,12 @@ body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
     padding-top: 40px;}
 body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
 	padding-left:0px;}
+	span.out_of_stock#outOfStockId {
+    float: none;
+    clear: both;
+    display: block;
+    text-align: center;
+} 
 }
 .home-product-you-care-carousel{
     padding-bottom: 70px;
@@ -30143,9 +30142,12 @@ header:not(.compact) .content .marketplace.compact{
 #bestPicks .short-info:hover span {
 	color: #a9143c;
 }
-#wishListNonLoggedInId_sizeGuide {
+/* #wishListNonLoggedInId_sizeGuide {
 	padding: 10px;	
-}
+} */
+a.size-guide {
+    white-space: nowrap;
+} 
 /*--------------maincss-----------*/
 .row
 {
