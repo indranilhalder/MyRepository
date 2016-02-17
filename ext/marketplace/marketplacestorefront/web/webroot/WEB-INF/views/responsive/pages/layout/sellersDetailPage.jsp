@@ -152,6 +152,7 @@ var hdIndx=-1;
 var edIndx=-1;
 $(document).ready(function() {
 	
+   	getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 var stockMap="${skuIdsWithNoStock}"; 
 	
 	 fetchPrice();

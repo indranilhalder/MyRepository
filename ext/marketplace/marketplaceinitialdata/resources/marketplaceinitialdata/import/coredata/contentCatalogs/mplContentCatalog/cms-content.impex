@@ -486,7 +486,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
 ;Section1;;SimpleBannerComponent,SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent;
-;Section2;;MplCategoryCarouselComponent;
+;Section2;;MplCategoryCarouselComponent,MplAdvancedCategoryCarouselComponent;
 ;Section3A;;CMSParagraphComponent,SimpleResponsiveBannerComponent,SimpleBannerComponent,BannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent;
 ;Section3B;;ProductRefinementComponent;
 ;Section3C;;SimpleBannerComponent
@@ -550,7 +550,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
 ;Section1;;SimpleResponsiveBannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent,SimpleBannerComponent;
-;Section2;;MplCategoryCarouselComponent,SimpleBannerComponent;
+;Section2;;MplCategoryCarouselComponent,SimpleBannerComponent,MplAdvancedCategoryCarouselComponent;
 ;Section3;;CMSParagraphComponent;
 ;Section3A;;MplFootwearComponent,SimpleBannerComponent;
 ;Section3A1;;MplFootwearComponent,SimpleBannerComponent;
@@ -559,7 +559,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section4A1;;MplFootwearComponent,SimpleBannerComponent;
 ;Section5;;CMSParagraphComponent;
 ;Section5A1;;MplFootwearComponent,SimpleBannerComponent;
-;Section6A;;MplCategoryCarouselComponent;
+;Section6A;;MplCategoryCarouselComponent,MplAdvancedCategoryCarouselComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
