@@ -25,6 +25,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 
 
 /**
+ * fetch seller priorities ,categories and subcategories
+ *
  * @author TCS
  *
  */
@@ -72,14 +74,29 @@ public class MplSellerPriorityDaoImpl implements MplSellerPriorityDao
 	@Override
 	public List<ProductModel> getProductListForCategory(final CategoryModel categoryModel)
 	{
+		try
+		{
 
-		final FlexibleSearchQuery query = new FlexibleSearchQuery("SELECT {p.PK} "
-				+ "FROM {Product as p JOIN CategoryProductRelation as rel " + "ON {p.PK} = {rel.target} } "
-				+ "WHERE {rel.source} IN ( ?cat, ?cat.allSubCategories ) and {p.catalogVersion}=?catVersion ");
-		query.addQueryParameter("cat", categoryModel);
-		query.addQueryParameter("catVersion", getCatalogVersion());
-		final SearchResult<ProductModel> result = flexibleSearchService.search(query);
-		return result.getResult();
+			final FlexibleSearchQuery query = new FlexibleSearchQuery("SELECT {p.PK} "
+					+ "FROM {Product as p JOIN CategoryProductRelation as rel " + "ON {p.PK} = {rel.target} } "
+					+ "WHERE {rel.source} IN ( ?cat, ?cat.allSubCategories ) and {p.catalogVersion}=?catVersion ");
+			query.addQueryParameter("cat", categoryModel);
+			query.addQueryParameter("catVersion", getCatalogVersion());
+			final SearchResult<ProductModel> result = flexibleSearchService.search(query);
+			return result.getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 
 	}
 
