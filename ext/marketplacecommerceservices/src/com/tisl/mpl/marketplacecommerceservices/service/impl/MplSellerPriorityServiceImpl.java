@@ -5,7 +5,6 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -108,9 +107,11 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 						{
 							priorityMapList.addAll(ussidList);
 						}
+
 						validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel,
 								isValid);
 						priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, isValid, priorityMap, priorityMapList));
+
 						priorityModelList.add(sellerPriority);
 
 					}
@@ -141,8 +142,13 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							priorityModelList.add(sellerPriority);
 
 							//chceking for current valid priorities
+
 							validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel,
 									isValid);
+							priorityMap.putAll(getPriorityLevelData(ussidList, priorityLevel, isValid, priorityMap, priorityMapList));
+
+							//							validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel,
+							//									isValid);
 
 						}
 						//if only listing id level priority exist
@@ -169,8 +175,11 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 							priorityModelList.add(sellerPriority);
 
 							//chceking for current valid priorities
-							validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel,
-									isValid);
+							if (ussidList != null)
+							{
+								validSellerPriorityMap = getValidPrioritiesAgainstUssid(validSellerPriorityMap, ussidList, priorityLevel,
+										isValid);
+							}
 
 						}
 						if (ussidList != null)
@@ -188,7 +197,8 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 		}
 		catch (final Exception ex)
 		{
-			updateNonProcessedPriorities(priorityModelList, sellerPriorityModels);
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			//updateNonProcessedPriorities(priorityModelList, sellerPriorityModels);
 		}
 		return isUpadated;
 	}
@@ -328,30 +338,30 @@ public class MplSellerPriorityServiceImpl implements MplSellerPriorityService
 	 * @param sellerPriorityModels
 	 */
 	//Sonar Fix
-	private void updateNonProcessedPriorities(final List<MplSellerPriorityModel> priorityModelList,
-			final List<MplSellerPriorityModel> sellerPriorityModels)
-	{
-		final List<MplSellerPriorityModel> sellerPriorities = new ArrayList<MplSellerPriorityModel>();
-		if (CollectionUtils.isEmpty(priorityModelList) && CollectionUtils.isEmpty(sellerPriorityModels))
-		{
-			try
-			{
-				for (final MplSellerPriorityModel priority : priorityModelList)
-				{
-					if (!(sellerPriorityModels.contains(priority)))
-					{
-						priority.setPriorityStatus(SellerPriorityEnum.ERROR);
-						sellerPriorities.add(priority);
-					}
-				}
-				modelService.saveAll(sellerPriorities);
-			}
-			catch (final ModelSavingException e)
-			{
-				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-			}
-		}
-	}
+	//	private void updateNonProcessedPriorities(final List<MplSellerPriorityModel> priorityModelList,
+	//			final List<MplSellerPriorityModel> sellerPriorityModels)
+	//	{
+	//		final List<MplSellerPriorityModel> sellerPriorities = new ArrayList<MplSellerPriorityModel>();
+	//		if (CollectionUtils.isEmpty(priorityModelList) && CollectionUtils.isEmpty(sellerPriorityModels))
+	//		{
+	//			try
+	//			{
+	//				for (final MplSellerPriorityModel priority : priorityModelList)
+	//				{
+	//					if (!(sellerPriorityModels.contains(priority)))
+	//					{
+	//						priority.setPriorityStatus(SellerPriorityEnum.ERROR);
+	//						sellerPriorities.add(priority);
+	//					}
+	//				}
+	//				modelService.saveAll(sellerPriorities);
+	//			}
+	//			catch (final ModelSavingException e)
+	//			{
+	//				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * get ussids corresponding to listing id/sku id
