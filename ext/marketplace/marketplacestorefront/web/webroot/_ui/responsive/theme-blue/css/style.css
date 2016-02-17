@@ -379,7 +379,11 @@ button:hover {
   a.button.blue, button.blue {
     color: #fff;
     background-color: #A9143C; }
-  a.button.orange, button.orange {
+  a.button.gray, button.gray {
+    color: #fff;
+    background-color: gray; }
+    
+    a.button.orange, button.orange {
     color: #fff;
     background-color: #ffb810; }
   a.button.red, button.red {
@@ -910,7 +914,8 @@ h2 {
         padding: 25px 0; }
       header .banner .content form {
         padding: 15px 0 10px;
-        display: inline-block;
+        display: block;
+        margin: auto;
         font-size: 18px;
         line-height: 60px;
         max-width: 780px; }
@@ -1443,7 +1448,7 @@ h2 {
       font-style: italic;
       font-weight: 100; } }
     @media (min-width:791px) and (max-width: 900px) {
-      header .content .marketplace, header .content .brand-logo {
+      header .content .marketplace {
         margin-left: 5px;
         width: 215px;
          } 
@@ -1527,7 +1532,7 @@ h2 {
             font-weight: 100;
             content: "\f107";
             display: inline-block;
-            color: #000;
+            color: #a9143c;
             position: relative;
             margin-left: 5px;
             top: 4px;
@@ -1879,8 +1884,8 @@ h2 {
           font-size: 14px; } }
           @media (min-width: 791px) {
     header .content .search input {
-      line-height: 1;
-       padding-top: 5px;
+      line-height: 50px;
+/*        padding-top: 5px; */
        width: 40%;
       border-radius:0px;
       width: -webkit-calc(100% - 188px);
@@ -1891,8 +1896,8 @@ h2 {
           width: calc(100% - 123px); } }
           @media (min-width: 791px) {
            header .content .search input::-webkit-input-placeholder {
-            line-height:1;		
-        vertical-align: middle;
+            /* line-height:1;		
+        vertical-align: middle; */
            }
     header .content .search .no-results-callout {
       position: absolute;
@@ -3571,7 +3576,8 @@ h2 {
 
 
 	.hero .major-promos a:hover {
-		background:  #f7bbcb;
+		background:  #88102C;
+		color:inherit;
 	}
 	.hero .major-promos a:after {
 		height: 0;
@@ -17272,7 +17278,7 @@ font-weight:normal;
   bottom: 0;
   right: 0;
   color: #fff;
-  background-color: #A9143C;
+  background-color: #961437;
   position: fixed;
   height: 35px;
   width: 126px;
@@ -18646,7 +18652,9 @@ height: 0;
 }	
 .stockLevelStatus{
   top: 40%;
-    left: 24%;
+    left: 0;
+    right:0;
+    margin:auto;
     font-size:12px;
     font-weight:600;
     position: absolute;
@@ -18668,21 +18676,7 @@ height: 0;
     -moz-opacity: .3 !important;
     -khtml-opacity: .3 !important;
 }
-@media(max-width:420px){
-	.stockLevelStatus{
-    left: 18%;
-	}
-}
-@media(max-width:790px) and (min-width:421px){
-	.stockLevelStatus{
-    left: 28%;
-	}
-}
-@media(max-width:1145px) and (min-width:791px){
-	.stockLevelStatus{
-    left: 24%;
-	}
-}
+
 .productInfo li{
 	margin-bottom:5px;
 }	
@@ -19146,7 +19140,9 @@ header.brand-header .content .bottom .marketplace {
 
 
 header.brand-header .content .bottom nav {
-	color: #fff
+	color: #fff;
+    padding-left: 50px;
+    margin-left: 20px;
 }
 
 header.brand-header .content .bottom nav>ul>li>.toggle {
@@ -19161,6 +19157,7 @@ header.brand-header .content .bottom nav>ul>li:hover {
 header.brand-header .content .bottom nav>ul>li>ul {
 	background-color: #b9b9b9;
 	top: 80px;
+	left: 245px;
 }
 
 @media ( max-width :790px) {
@@ -22475,7 +22472,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 	}
 }
 .brandGroupLink{
-	line-height:22px;
+	line-height:25px;
 	height:22px;
 }
 .account-sprite {
@@ -24305,7 +24302,7 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
 	text-decoration: underline;
 	font-weight: 600;
 	}
-	#wishListNonLoggedInId{
+	#wishListNonLoggedInId, #wishListNonLoggedInId_sizeGuide {
 	    margin: 15px 0px;
     text-align: center;
     font-size:12px;
@@ -26700,7 +26697,8 @@ body .account .right-account .order-history.order-details li.item .status .messa
 		padding: 15px 15px 15px 10px;
 	}
 	.help-me-shop-form div{
-			float:left;
+			/* float:left; */
+			display: inline-block;
 		}
 }
 ul.links .product .Best-Sellers {
@@ -28803,7 +28801,7 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
     text-overflow: ellipsis;
 	}
 
-@media(min-width:791px) and (max-width:1150px){
+@media(min-width:791px) and (max-width:1300px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
     	left: 210px;
@@ -28897,7 +28895,7 @@ min-width: 150px;
 }
 .sizeGuide-message{
 	width:100%;
-	max-width: 143px;
+	min-width: 143px;
     position: absolute;
     bottom: 45px;
     left: 0;
@@ -29253,14 +29251,18 @@ width:100%;
     height: 35px;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page span {
-    background: rgba(255,255,255,0.6);
+    background: transparent;
+    border:2px solid rgba(255,255,255,0.6);
     border-radius: 100%;
     width:10px;
     height:10px;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
-    background: transparent;
-    border:2px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.6);
+    border: none;
+    border-radius: 100%;
+    width:10px;
+    height:10px;
 }
 /*New Homepage change ends*/
 footer>ul>li>.toggle>img{
@@ -29310,6 +29312,9 @@ a.button.trending-button:hover{
 #newAndExclusive .newExclusiveElement > a{
     display: block;
     padding-bottom: 5px;
+}
+#newAndExclusive .newExclusiveElement > a:hover *{
+   color:#a9143c;
 }
 #newAndExclusive .New_Exclusive_title{
 	margin:10px 0;
@@ -29485,7 +29490,7 @@ margin: 10px 0px;
 #bestPicks .home-best-pick-carousel-img img{
 	max-width: 100%;
 }
-#bestPicks .short-info span {
+#bestPicks .short-info span , #bestPicks .short-info p{
     font-size: 12px;
     font-family: "Avenir Next";
     color:#333;
@@ -29497,7 +29502,7 @@ margin: 10px 0px;
     width: 100%;
     word-break: break-word;
 }
-#bestPicks .short-info span:last-child{
+#bestPicks .short-info span:last-child,#bestPicks .short-info p:last-child{
 font-family:DejaVu Sans;
 	font-size:98%;
 	display:inline !important;
@@ -29516,7 +29521,7 @@ font-family:DejaVu Sans;
     padding: 4px;
     width: 100%;
 }
-#bestPicks .short-info a span {
+#bestPicks .short-info a span,#bestPicks .short-info a p {
     font-size: 12px;
     font-family: "Avenir Next";
     color:inherit;
@@ -29527,7 +29532,7 @@ font-family:DejaVu Sans;
     width: 100%;
     padding: 0;
 }
-#bestPicks .short-info span a {
+#bestPicks .short-info span a,#bestPicks .short-info p a {
     font-size: 12px;
     font-family: "Avenir Next";
     font-weight: 600;
@@ -29626,6 +29631,7 @@ p.showcase-para {
 .showcaseItem > a{
 	color:#bbb;
 	 word-break: break-word;
+	 line-height: 22px;
 }
 .showcase-center h3, .showcase-center p{line-height: 20px;}
 .showcase-section .desc-section{
@@ -29868,9 +29874,10 @@ a.button, button {
     max-width: 100%;
     height: auto;
 }
-@media (max-width:790px){
+@media (max-width:650px){
 .qued{
-width:100%;}
+width:100%;
+padding-bottom: 20px;}
 }
 @media (max-width:650px){
 	.qued-content, .qued-image{
@@ -29878,9 +29885,8 @@ width:100%;}
 	.qued-content *, .qued-image{
 	text-align:center;}
 	.qued-content a.button.maroon {
-      margin: 0 auto;
-      left:0;
-      right:0;
+     margin: 0 auto 20px;
+    position: static;
    }
    .qued h1 {
        padding: 10px 0;
@@ -30020,6 +30026,12 @@ body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
     padding-top: 40px;}
 body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
 	padding-left:0px;}
+	span.out_of_stock#outOfStockId {
+    float: none;
+    clear: both;
+    display: block;
+    text-align: center;
+} 
 }
 .home-product-you-care-carousel{
     padding-bottom: 70px;
@@ -30107,11 +30119,11 @@ header:not(.compact) .content .marketplace.compact{
     box-shadow: 0px 0px 4px 1px #A9143C;
     position: absolute;
     background-color: #fff;
-    width: 141px;
+    width: 100%;
     padding: 10px;
     text-align: center;
-    bottom: 67px;
-    right: 16.5%;
+    bottom: 100%;
+        left: 0;
     z-index: 200000;
     display: none;
    
@@ -30143,6 +30155,32 @@ header:not(.compact) .content .marketplace.compact{
 #productYouCare .short-info > h3 span:hover:after,
 #bestPicks .short-info:hover span {
 	color: #a9143c;
+}
+/* #wishListNonLoggedInId_sizeGuide {
+	padding: 10px;	
+} */
+.app-download.social {
+	padding-top: 0px;
+}
+.social.share {
+    padding-bottom: 0px;
+}
+
+a.size-guide {
+    white-space: nowrap;
+} 
+form[name='flyOutloginForm'] input::-webkit-input-placeholder {
+	line-height: 18px;
+}
+form[name='flyOutloginForm'] input::-moz-placeholder {
+	line-height: 18px;
+}
+
+form[name='flyOutloginForm'] input:-ms-input-placeholder {
+	line-height: 18px;
+} 
+.select-view .select-list:hover > .selected:after {
+transform: rotate(180deg);
 }
 /*--------------maincss-----------*/
 .row
@@ -36041,7 +36079,6 @@ width: 40px;
     transform: rotate(-135deg);
 	}
 .social .links img {
-	width: 20px;
-	
-	
+	width: 25px;
+	height: 25px;
 }
