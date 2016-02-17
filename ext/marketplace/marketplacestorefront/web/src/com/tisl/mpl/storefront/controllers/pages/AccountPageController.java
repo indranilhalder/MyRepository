@@ -1137,16 +1137,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
 
 			final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
-					.getString(MessageConstants.PAZE_SIZE_VOUCHER, "20").trim());
+					.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
 			final PageableData pageableDataVoucherHistory = createPageableData(page, pageSizeVoucherHistory, sortCode, showMode);
 			final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = mplCouponFacade.getVoucherHistoryTransactions(
 					customer, pageableDataVoucherHistory);
 
 			populateModelForCoupon(model, searchPageDataVoucherHistory, showMode);
 
-			final List<CouponHistoryData> couponHistoryDataList = searchPageDataVoucherHistory.getResults();
+			final List<CouponHistoryData> couponOrderDataDTOList = searchPageDataVoucherHistory.getResults();
 
-			for (final CouponHistoryData couponHistoryData : couponHistoryDataList)
+			for (final CouponHistoryData couponHistoryData : couponOrderDataDTOList)
 			{
 				LOG.debug(couponHistoryData.getCouponCode());
 				LOG.debug(couponHistoryData.getCouponDescription());

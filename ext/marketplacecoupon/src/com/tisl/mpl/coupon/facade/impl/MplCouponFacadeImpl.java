@@ -45,6 +45,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -974,6 +976,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		final SearchPageData<VoucherInvalidationModel> searchVoucherModel = getMplCouponService().getVoucherRedeemedOrder(customer,
 				pageableData);
+		final List<CouponHistoryData> couponOrderDataDTOListFinal = new ArrayList<CouponHistoryData>();
 		final List<VoucherInvalidationModel> voucherInvalidationList = searchVoucherModel.getResults();
 
 		for (final VoucherInvalidationModel voucherInvalidation : voucherInvalidationList)
@@ -981,10 +984,38 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			LOG.debug("---" + voucherInvalidation.getVoucher().getCode());
 		}
 
+
 		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = convertPageData(searchVoucherModel,
 				voucherTransactionConverter);
+		final List<CouponHistoryData> couponOrderDataDTOList = searchPageDataVoucherHistory.getResults();
+		for (final CouponHistoryData couponHistoryData : couponOrderDataDTOList)
+		{
+			if (null != couponHistoryData.getCouponCode() && null != couponHistoryData.getCouponDescription()
+					&& null != couponHistoryData.getOrderCode())
+			{
+				couponOrderDataDTOListFinal.add(couponHistoryData);
+			}
+		}
 
-		return searchPageDataVoucherHistory;
+		Collections.sort(couponOrderDataDTOListFinal, new Comparator<CouponHistoryData>()
+		{
+			@Override
+			public int compare(final CouponHistoryData val1, final CouponHistoryData val2)
+			{
+				if (val2.getRedeemedDate().compareTo(val1.getRedeemedDate()) > 0)
+				{
+					return 1;
+				}
+				else
+				{
+					return -1;
+				}
+			}
+		});
+
+		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = new SearchPageData<CouponHistoryData>();
+		searchPageDataVoucherHistoryFinal.setResults(couponOrderDataDTOListFinal);
+		return searchPageDataVoucherHistoryFinal;
 
 	}
 
