@@ -78,7 +78,7 @@
 		if (mail == "") {
 
 			$("#error_message").css({"display":"block"});
-            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
+            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
 			return false;
 
 		} else {
@@ -88,8 +88,8 @@
 			 {
 
 				$("#error_message").css({"display":"block"});
-	            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
-				return false;
+	            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
+	            return false;
 			}
 
 			$.ajax({
@@ -102,19 +102,19 @@
 					if (data == "fail") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='red'><b>You are already subscribed to NewsLetter!</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='red'>You are already subscribed to NewsLetter!</font>";
 						return false;
 
 					} else if (data == "success") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#00cbe9'><b>Yay! We can't wait to be pen-pals with you.</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#a9143c'>Yay! We can't wait to be pen-pals with you.</font>";
 						return true;
 					}
 					
 					else if(data == "mailFormatError"){
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
 						return false;
 					}
 				},

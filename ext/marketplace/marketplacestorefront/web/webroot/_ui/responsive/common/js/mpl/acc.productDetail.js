@@ -1042,6 +1042,15 @@ function fetchPrice() {
 				 $("#otherSellerInfoId").hide();
 				 $(".wish-share").hide();
 				 $(".fullfilled-by").hide();
+				// TISST-13959 fix
+				 $("#dListedErrorMsg").show();
+				 // TISEE-6552 fix
+				 $("#pdpPincodeCheck").hide();
+				 $("#pin").attr("disabled",true);
+				 $("#pdpPincodeCheckDList").show();
+				 
+				 
+				
 			}
 		}
 
