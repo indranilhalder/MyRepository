@@ -806,11 +806,15 @@ $language=language(isocode)[default='en'][unique=true];
             <value>;{+0};{+0};{+1};</value>
         </property>
         </bean>
+<<<<<<< HEAD
         
 <<<<<<< HEAD
   </beans>
 =======
                   <!-- Converter for Promoted Product Import --> 
+=======
+    <!-- Converter for Promoted Product Import --> 
+>>>>>>> 6081e188f30ff776b26eb394584c6ce86a716fe9
     <bean id="batchPromotedProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
@@ -825,4 +829,8 @@ $language=language(isocode)[default='en'][unique=true];
         </bean>
         
   </beans>
+<<<<<<< HEAD
 >>>>>>> BRANCH_TCS-HYCOMM-R2SPRINT-59_16-02-2016_16-16-35
+=======
+
+>>>>>>> 6081e188f30ff776b26eb394584c6ce86a716fe9
