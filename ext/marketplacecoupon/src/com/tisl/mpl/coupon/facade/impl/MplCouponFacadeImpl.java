@@ -625,6 +625,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final List<String> voucherCodeList = new ArrayList<String>();
 		List<String> amountList = new ArrayList<String>();
 		Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
+		final Map<String, Collection<VoucherInvalidationModel>> voucherInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
 		final CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 		Collection<VoucherInvalidationModel> voucherInvalidations = new ArrayList<VoucherInvalidationModel>();
 		VoucherData voucherData = new VoucherData();
@@ -651,8 +652,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						//type casting to PromotionVoucherModel
 						voucherData = getDefaultVoucherFacade().getVoucher(((PromotionVoucherModel) voucher).getVoucherCode());
 						voucherCodeList.add(((PromotionVoucherModel) voucher).getVoucherCode());
-						voucherCodeInvalidationMap = getVoucherCodeInvalidationMap(voucherInvalidations, voucherData, orderDetailsData,
-								isOrderDateValid);
+						voucherCodeInvalidationMap = getVoucherCodeInvalidationMap(voucherInvalidationMap, voucherInvalidations,
+								voucherData, orderDetailsData, isOrderDateValid);
 					}
 				}
 			}
@@ -771,6 +772,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 
 	/**
+	 * @param voucherInvalidationMap
 	 * @Description: This method maps the voucher invalidations with to a unique-voucher code for a specific customer
 	 * @param voucherInvalidations
 	 * @param voucherData
@@ -779,11 +781,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @return Map<String, Collection<VoucherInvalidationModel>>
 	 */
 	private Map<String, Collection<VoucherInvalidationModel>> getVoucherCodeInvalidationMap(
+			final Map<String, Collection<VoucherInvalidationModel>> voucherInvalidationMap,
 			final Collection<VoucherInvalidationModel> voucherInvalidations, final VoucherData voucherData,
 			final OrderData orderDetailsData, boolean isOrderDateValid)
 	{
-
-		final Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
 
 		if (null != orderDetailsData && null != voucherData)
 		{
@@ -793,21 +794,21 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			if (isOrderDateValid)
 			{
-				if (voucherCodeInvalidationMap.isEmpty())
+				if (voucherInvalidationMap.isEmpty())
 				{
-					voucherCodeInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);//for an empty map
+					voucherInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);//for an empty map
 				}
 				else
 				{
-					if (!(voucherCodeInvalidationMap.containsKey(voucherData.getVoucherCode())))
+					if (!(voucherInvalidationMap.containsKey(voucherData.getVoucherCode())))
 					{
-						voucherCodeInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);//when the map contains other invalidations
+						voucherInvalidationMap.put(voucherData.getVoucherCode(), voucherInvalidations);//when the map contains other invalidations
 					}
 				}
 
 			}
 		}
-		return voucherCodeInvalidationMap;
+		return voucherInvalidationMap;
 	}
 
 	/**

@@ -84,8 +84,9 @@ public class MplVoucherTransactionHistoryPopulator implements Populator<VoucherI
 					voucherData = getDefaultVoucherFacade().getVoucher(((PromotionVoucherModel) voucher).getVoucherCode());
 					final OrderData orderDetailsData = mplCheckoutFacade.getOrderDetailsForCode(source.getOrder().getCode());
 					isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());
+					final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) source.getVoucher();
 
-					if (isOrderDateValid)
+					if (isOrderDateValid && null != promoVoucher.getVoucherCode() && null != orderDetailsData.getCode())
 					{
 						target.setCouponCode(voucherData.getVoucherCode());
 						target.setCouponDescription(voucherData.getDescription());
