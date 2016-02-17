@@ -190,18 +190,12 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 
 
 # Footer Image Component
-INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
-;;GoogleImageComponent;Google Image Component;GoogleImageComponent;https://plus.google.com
-;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;https://www.facebook.com
-;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;https://www.play.google.com
-;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;http://www.apple.com
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
+;;GoogleImageComponent;Google Image Component;GoogleImageComponent;"https://plus.google.com";gplus.png
+;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook.png
+;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"https://www.play.google.com";apple.png
+;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"http://www.apple.com";android.png
 
-#Footer Image Component
-INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];;
-;;GoogleImageComponent;gplus.png;
-;;FacebookImageComponent;facebook.png
-;;AppleImageComponent;apple.png
-;;AndroidImageComponent;android.png
 
 # CMS Footer Component
 INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);&componentRef;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV);

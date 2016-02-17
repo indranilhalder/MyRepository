@@ -119,6 +119,8 @@
 				<entry key="FooterComponent">
 					<list>
 						<value>FooterComponent.navigationNodes</value>
+						<value>FooterComponent.footerImageList</value>
+						<value>FooterComponent.footerAppImageList</value>
 					</list>
 				</entry>
 				<entry key="BrandCollectionComponent">
