@@ -914,7 +914,8 @@ h2 {
         padding: 25px 0; }
       header .banner .content form {
         padding: 15px 0 10px;
-        display: inline-block;
+        display: block;
+        margin: auto;
         font-size: 18px;
         line-height: 60px;
         max-width: 780px; }
@@ -1883,8 +1884,8 @@ h2 {
           font-size: 14px; } }
           @media (min-width: 791px) {
     header .content .search input {
-      line-height: 1;
-       padding-top: 5px;
+      line-height: 50px;
+/*        padding-top: 5px; */
        width: 40%;
       border-radius:0px;
       width: -webkit-calc(100% - 188px);
@@ -1895,8 +1896,8 @@ h2 {
           width: calc(100% - 123px); } }
           @media (min-width: 791px) {
            header .content .search input::-webkit-input-placeholder {
-            line-height:1;		
-        vertical-align: middle;
+            /* line-height:1;		
+        vertical-align: middle; */
            }
     header .content .search .no-results-callout {
       position: absolute;
@@ -22471,7 +22472,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 	}
 }
 .brandGroupLink{
-	line-height:22px;
+	line-height:25px;
 	height:22px;
 }
 .account-sprite {
@@ -26696,7 +26697,8 @@ body .account .right-account .order-history.order-details li.item .status .messa
 		padding: 15px 15px 15px 10px;
 	}
 	.help-me-shop-form div{
-			float:left;
+			/* float:left; */
+			display: inline-block;
 		}
 }
 ul.links .product .Best-Sellers {
@@ -28799,7 +28801,7 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
     text-overflow: ellipsis;
 	}
 
-@media(min-width:791px) and (max-width:1150px){
+@media(min-width:791px) and (max-width:1300px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
     	left: 210px;
@@ -29249,14 +29251,18 @@ width:100%;
     height: 35px;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page span {
-    background: rgba(255,255,255,0.6);
+    background: transparent;
+    border:2px solid rgba(255,255,255,0.6);
     border-radius: 100%;
     width:10px;
     height:10px;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
-    background: transparent;
-    border:2px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.6);
+    border: none;
+    border-radius: 100%;
+    width:10px;
+    height:10px;
 }
 /*New Homepage change ends*/
 footer>ul>li>.toggle>img{
@@ -29306,6 +29312,9 @@ a.button.trending-button:hover{
 #newAndExclusive .newExclusiveElement > a{
     display: block;
     padding-bottom: 5px;
+}
+#newAndExclusive .newExclusiveElement > a:hover *{
+   color:#a9143c;
 }
 #newAndExclusive .New_Exclusive_title{
 	margin:10px 0;
@@ -29481,7 +29490,7 @@ margin: 10px 0px;
 #bestPicks .home-best-pick-carousel-img img{
 	max-width: 100%;
 }
-#bestPicks .short-info span {
+#bestPicks .short-info span , #bestPicks .short-info p{
     font-size: 12px;
     font-family: "Avenir Next";
     color:#333;
@@ -29493,7 +29502,7 @@ margin: 10px 0px;
     width: 100%;
     word-break: break-word;
 }
-#bestPicks .short-info span:last-child{
+#bestPicks .short-info span:last-child,#bestPicks .short-info p:last-child{
 font-family:DejaVu Sans;
 	font-size:98%;
 	display:inline !important;
@@ -29512,7 +29521,7 @@ font-family:DejaVu Sans;
     padding: 4px;
     width: 100%;
 }
-#bestPicks .short-info a span {
+#bestPicks .short-info a span,#bestPicks .short-info a p {
     font-size: 12px;
     font-family: "Avenir Next";
     color:inherit;
@@ -29523,7 +29532,7 @@ font-family:DejaVu Sans;
     width: 100%;
     padding: 0;
 }
-#bestPicks .short-info span a {
+#bestPicks .short-info span a,#bestPicks .short-info p a {
     font-size: 12px;
     font-family: "Avenir Next";
     font-weight: 600;
