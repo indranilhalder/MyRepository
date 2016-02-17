@@ -29,4 +29,18 @@ public interface MplSellerPriorityReportService
 	 */
 	List<SavedValuesModel> getAllSellerPriorityDetails();
 
+	/**
+	 * This Method fetches all modified details in SellerPriority Model within the prescribed date Range
+	 *
+	 * @param startDate
+	 * @param endDate
+	 */
+	public void fetchSpecificDetails(final Date startDate, final Date endDate);
+
+	/**
+	 * This Method fetches all details in SellerPriority Model
+	 *
+	 */
+	public void fetchAllDetails();
+
 }
