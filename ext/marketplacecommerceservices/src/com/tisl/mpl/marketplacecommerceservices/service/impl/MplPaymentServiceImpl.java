@@ -22,10 +22,7 @@ import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -1534,9 +1531,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cartData
 	 * @param cart
 	 * @return MplPromoPriceData
-	 * @throws JaloPriceFactoryException
-	 * @throws JaloSecurityException
-	 * @throws CalculationException
+	 * @throws EtailNonBusinessExceptions
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
@@ -1544,9 +1539,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 */
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException
+	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws VoucherOperationException,
+			EtailNonBusinessExceptions
 	{
 		//Reset Voucher Apportion
 		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
@@ -1575,28 +1569,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI"))
 		{
-			boolean flag = true;
-			if (null != emiBankList && !emiBankList.isEmpty())
-			{
-				for (final EMIBankModel emiBank : emiBankList)
-				{
-					if (null != bankName && null != emiBank.getName() && StringUtils.isNotEmpty(emiBank.getName().getBankName())
-							&& bankName.equals(emiBank.getName()))
-					{
-						flag = true;
-						break;
-					}
-					else
-					{
-						flag = false;
-					}
-				}
-			}
-			else
-			{
-				flag = false;
-			}
-			if (!flag)
+			if (!checkEMIPromo(emiBankList, bankName))
 			{
 				calculatePromotion(cart, cartData);
 				promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
@@ -1692,6 +1665,34 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		promoPriceData.setVoucherDiscount(discData);
 
 		return promoPriceData;
+	}
+
+
+
+
+
+	/**
+	 *
+	 * @param emiBankList
+	 * @param bankName
+	 * @return boolean
+	 */
+	private boolean checkEMIPromo(final List<EMIBankModel> emiBankList, final BankModel bankName)
+	{
+		boolean flag = false;
+		if (CollectionUtils.isNotEmpty(emiBankList))
+		{
+			for (final EMIBankModel emiBank : emiBankList)
+			{
+				if (null != bankName && null != emiBank.getName() && StringUtils.isNotEmpty(emiBank.getName().getBankName())
+						&& bankName.equals(emiBank.getName()))
+				{
+					flag = true;
+					break;
+				}
+			}
+		}
+		return flag;
 	}
 
 

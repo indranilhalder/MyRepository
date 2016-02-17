@@ -64,7 +64,7 @@ public interface MplCouponFacade
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
-	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
+	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -120,10 +120,12 @@ public interface MplCouponFacade
 
 
 	/**
+	 *
 	 * @param voucher
 	 * @param cartModel
 	 * @param voucherCode
 	 * @param applicableOrderEntryList
+	 * @throws EtailNonBusinessExceptions
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList);

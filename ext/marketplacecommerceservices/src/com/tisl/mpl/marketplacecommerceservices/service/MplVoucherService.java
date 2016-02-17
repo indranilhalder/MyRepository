@@ -7,18 +7,14 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
-import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
-import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
 import com.tisl.mpl.data.VoucherDiscountData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
 /**
@@ -32,7 +28,7 @@ public interface MplVoucherService
 	 * @param cartModel
 	 *
 	 */
-	void recalculateCartForCoupon(CartModel cartModel);
+	void recalculateCartForCoupon(CartModel cartModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param voucherModel
@@ -74,18 +70,10 @@ public interface MplVoucherService
 	 * @param cartModel
 	 * @param applicableOrderEntryList
 	 * @return VoucherDiscountData
-	 * @throws ModelSavingException
 	 * @throws VoucherOperationException
-	 * @throws CalculationException
-	 * @throws NumberFormatException
-	 * @throws JaloInvalidParameterException
-	 * @throws JaloSecurityException
-	 * @throws JaloPriceFactoryException
 	 */
 	VoucherDiscountData checkCartAfterApply(VoucherModel lastVoucher, CartModel cartModel,
-			List<AbstractOrderEntryModel> applicableOrderEntryList) throws ModelSavingException, VoucherOperationException,
-			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException,
-			JaloPriceFactoryException;
+			List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 	/**
 	 * @param voucherCode

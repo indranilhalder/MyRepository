@@ -21,7 +21,6 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -63,6 +62,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Months;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.coupon.service.MplCouponService;
 import com.tisl.mpl.data.CouponHistoryData;
@@ -330,14 +330,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @throws NumberFormatException
 	 */
 	@Override
-	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException
+	public boolean applyVoucher(final String voucherCode, final CartModel cartModel) throws VoucherOperationException,
+			EtailNonBusinessExceptions
 	{
 		boolean checkFlag = false;
 		try
 		{
 			if (CollectionUtils.isEmpty(cartModel.getDiscounts()))
 			{
-				LOG.debug("Step 1:::No voucher is applied to cart");
+				LOG.debug("Step 2:::No voucher is applied to cart");
 
 				//Checks if voucherCode is valid
 				validateVoucherCodeParameter(voucherCode);
@@ -345,7 +346,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					throw new VoucherOperationException("Voucher not found: " + voucherCode);
 				}
-				LOG.debug("Step 2:::Voucher Code is valid");
+				LOG.debug("Step 3:::Voucher Code is valid");
 
 				//Finds voucherModel for the code and checks whether it is null or voucher discount value is less than 0
 				final VoucherModel voucher = getVoucherService().getVoucher(voucherCode);
@@ -354,10 +355,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 					throw new VoucherOperationException("Voucher not found: " + voucherCode);
 				}
 
-				LOG.debug("Step 3:::Voucher is present and value is not negative");
+				LOG.debug("Step 4:::Voucher is present and value is not negative");
 				if (!checkVoucherIsApplicable(voucher, voucherCode, cartModel)) //Checks whether voucher is applicable
 				{
-					LOG.debug("Step 3.1:::Voucher is not applicable");
+					LOG.debug("Step 5:::Voucher is not applicable");
 					final String error = checkViolatedRestrictions(voucher, cartModel);
 					if (error.equalsIgnoreCase("Date"))
 					{
@@ -375,13 +376,13 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 				else if (!checkVoucherIsReservable(voucher, voucherCode, cartModel)) //Checks whether voucher is reservable
 				{
-					LOG.debug("Step 3.2:::Voucher is not reservable");
+					LOG.debug("Step 6:::Voucher is not reservable");
 					throw new VoucherOperationException("Voucher is not reservable: " + voucherCode);
 				}
 
 				else
 				{
-					LOG.debug("Step 4:::Voucher can be redeemed");
+					LOG.debug("Step 7:::Voucher can be redeemed");
 					if (!getVoucherService().redeemVoucher(voucherCode, cartModel))
 					{
 						throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
@@ -400,37 +401,26 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				}
 			}
 		}
-		catch (final CalculationException e)
+		catch (final ModelSavingException e)
 		{
-			LOG.error("CalculationException", e);
-			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
+			LOG.error("ModelSavingException", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
 		catch (final JaloPriceFactoryException e)
 		{
 			LOG.error("JaloPriceFactoryException", e);
-			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);
 		}
-		catch (final ModelSavingException e)
+		catch (final VoucherOperationException e)
 		{
-			LOG.error("ModelSavingException", e);
-			throw new VoucherOperationException("Error while saving voucher discount values");
+			LOG.error("VoucherOperationException", e);
+			throw e;
 		}
-		catch (final NumberFormatException e)
+		catch (final Exception e)
 		{
-			LOG.error("NumberFormatException", e);
-			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
+			LOG.error("Exception", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-		catch (final JaloInvalidParameterException e)
-		{
-			LOG.error("JaloInvalidParameterException", e);
-			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
-		}
-		catch (final JaloSecurityException e)
-		{
-			LOG.error("JaloSecurityException", e);
-			throw new VoucherOperationException("Error while applying voucher: " + voucherCode);
-		}
-
 		return checkFlag;
 	}
 
@@ -444,18 +434,15 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param lastVoucher
 	 * @param cartModel
 	 * @param applicableOrderEntryList
+	 * @throws EtailNonBusinessExceptions
 	 * @throws ModelSavingException
 	 * @throws NumberFormatException
 	 * @throws JaloInvalidParameterException
 	 * @throws VoucherOperationException
-	 * @throws CalculationException
-	 * @throws JaloSecurityException
-	 * @throws JaloPriceFactoryException
 	 */
 	protected void checkVoucherApplicability(final String voucherCode, final VoucherModel lastVoucher, final CartModel cartModel,
-			final List<AbstractOrderEntryModel> applicableOrderEntryList) throws ModelSavingException, NumberFormatException,
-			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-			JaloPriceFactoryException
+			final List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException,
+			EtailNonBusinessExceptions
 	{
 		final VoucherDiscountData data = getMplVoucherService().checkCartAfterApply(lastVoucher, cartModel,
 				applicableOrderEntryList);

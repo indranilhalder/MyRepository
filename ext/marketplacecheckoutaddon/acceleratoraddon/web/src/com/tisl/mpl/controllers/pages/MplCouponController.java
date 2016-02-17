@@ -27,6 +27,7 @@ import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 @Controller
@@ -70,11 +71,12 @@ public class MplCouponController
 		final CartModel cartModel = getCartService().getSessionCart();
 		try
 		{
-			LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
-
+			final StringBuilder sb = new StringBuilder();
+			LOG.debug(sb.append("Step 1:::The coupon code entered by the customer is :::").append(couponCode)
+					.append("------The bank selected is  ::: ").append(bankNameSelected));
 			getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
-			LOG.debug("The bank selected is  ::: " + bankNameSelected);
 			//
+			//	Commented-----to be implemented in R2 later
 			//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
 			//		if (StringUtils.isEmpty(bankNameSelected))
 			//		{
@@ -96,10 +98,12 @@ public class MplCouponController
 			final boolean redeem = true;
 			boolean couponRedStatus = false;
 
+			//Apply the voucher
 			couponRedStatus = getMplCouponFacade().applyVoucher(couponCode, cartModel);
 
 			LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
 
+			//Calculate and set data attributes
 			data = getMplCouponFacade().calculateValues(cartModel, couponRedStatus, redeem);
 
 			final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
@@ -116,11 +120,13 @@ public class MplCouponController
 				}
 			}
 			getSessionService().removeAttribute("paymentModeForPromotion");
-			//getSessionService().removeAttribute("bank");
+			//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 		}
-		catch (final VoucherOperationException | NumberFormatException | JaloInvalidParameterException e)
+		catch (final VoucherOperationException e)
 		{
-			LOG.error("Issue with voucher redeem " + e.getMessage());
+			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			//Set the data for exception cases
+			data = setRedDataForException(data, cartModel);
 			if (e.getMessage().contains("total price exceeded"))
 			{
 				data.setRedeemErrorMsg("Price_exceeded");
@@ -153,9 +159,20 @@ public class MplCouponController
 			{
 				data.setRedeemErrorMsg("User_Invalid");
 			}
-			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
-			data.setCouponRedeemed(false);
-			//return data;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//Set the data for exception cases
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			data = setRedDataForException(data, cartModel);
+			data.setRedeemErrorMsg("Issue");
+		}
+		catch (final Exception e)
+		{
+			//Set the data for exception cases
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			data = setRedDataForException(data, cartModel);
+			data.setRedeemErrorMsg("Issue");
 		}
 
 		return data;
@@ -193,9 +210,11 @@ public class MplCouponController
 			boolean couponRelStatus = false;
 			final boolean redeem = false;
 
+			//Release the coupon
 			getMplCouponFacade().releaseVoucher(couponCode, cartModel);
 			couponRelStatus = true;
 
+			//Recalculate cart after releasing coupon
 			getMplCouponFacade().recalculateCartForCoupon(cartModel);
 			LOG.debug("Coupon Release Status is:::" + couponRelStatus);
 
@@ -222,13 +241,20 @@ public class MplCouponController
 		}
 		catch (final VoucherOperationException e)
 		{
-			LOG.error("Issue with voucher release " + e.getMessage());
-			data = setDataForException(data, cartModel);
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			//LOG.error("Issue with voucher release " + e.getMessage());
+			data = setRelDataForException(data, cartModel);
 		}
-		catch (final EtailNonBusinessExceptions ex)
+		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("Issue with voucher release " + ex.getMessage());
-			data = setDataForException(data, cartModel);
+			//LOG.error("Issue with voucher release " + ex.getMessage());
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			data = setRelDataForException(data, cartModel);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			data = setRelDataForException(data, cartModel);
 		}
 		return data;
 	}
@@ -242,12 +268,30 @@ public class MplCouponController
 	 * @param cartModel
 	 * @return VoucherDiscountData
 	 */
-	private VoucherDiscountData setDataForException(final VoucherDiscountData data, final CartModel cartModel)
+	private VoucherDiscountData setRelDataForException(final VoucherDiscountData data, final CartModel cartModel)
 	{
 		final VoucherDiscountData errorData = data;
 		errorData.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
 		errorData.setRedeemErrorMsg("Release Issue");
 		errorData.setCouponReleased(false);
+
+		return errorData;
+	}
+
+
+	/**
+	 *
+	 * This method sets data for erroneous cases for voucher release
+	 *
+	 * @param data
+	 * @param cartModel
+	 * @return VoucherDiscountData
+	 */
+	private VoucherDiscountData setRedDataForException(final VoucherDiscountData data, final CartModel cartModel)
+	{
+		final VoucherDiscountData errorData = data;
+		errorData.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+		errorData.setCouponRedeemed(false);
 
 		return errorData;
 	}
