@@ -17,9 +17,11 @@
 		    	<input id="pin" type="text" placeholder="Pincode" maxlength="6" onkeypress="return isNum(event)"/>
 		    </c:otherwise>
 		 </c:choose>
-			<button class="orange submit"><spring:theme code="text.submit"/></button>
+		   <!-- TISEE-6552 fix  -->
+			<button class="orange submit" id="pdpPincodeCheck"><spring:theme code="text.submit"/></button>
+			<button class="gray submitDList" id="pdpPincodeCheckDList" style="display:none;"><spring:theme code="text.submit"/></button>
 		</div></li>
-		
+		 
 		<span>
 		<span id="emptyPin" style="display:none;color:red"><spring:theme code="product.empty.pincode"/></span>
 		<span id="wrongPin" style="display:none;color:red"><spring:theme code="pincode.invalid"/></span>
