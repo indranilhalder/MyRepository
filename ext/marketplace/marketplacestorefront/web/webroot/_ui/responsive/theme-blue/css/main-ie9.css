@@ -92,10 +92,10 @@ header .content .bottom nav>ul>li>ul>li>ul.words>li {
 	{
 		margin-left:-32px;
 	}
-	header .marketplace img
+	/* header .marketplace img
 	{
 		width:80% !important;
-	}
+	} */
 	.brand header .bottom nav
 	{
 		margin-left:20px;
@@ -214,12 +214,12 @@ body .brand header > .content .bottom .mobile-bag.bag
 	display:none;
 }
 
-@media (max-width: 425px)
+/* @media (max-width: 425px)
   {
 	  .marketplace img {
 	  	width: 70%;
 	  }
-}
+} */
 @media (max-width:790px)
 {
 	header > .content .top.active
@@ -498,11 +498,7 @@ header .content nav > ul > li > ul > li > ul > li.short
 }		
 .product-facet {		
 	margin: 20px 0;		
-}		
-.product-facet .facet {		
-	padding: 10px 0px;		
-	margin: 0 0 20px 0;		
-}		
+}				
 .product-facet .facet:before, .product-facet .facet:after {		
 	content: " ";		
 	display: table;		
@@ -695,9 +691,9 @@ header .content nav > ul > li > ul > li > ul > li.short
 	height:40px;	
 	line-height:20px;
 }	
-.feedbackYes:hover{
+/* .feedbackYes:hover{
 	background-color:#009fb6;
-}	
+} */	
 .feedbackNo {		
 	padding: 12px 38px;		
 	background-color: #ffb810;		
@@ -709,9 +705,9 @@ header .content nav > ul > li > ul > li > ul > li.short
 	height:40px;	
 	line-height:20px;	
 }	
-.feedbackNo:hover{
+/* .feedbackNo:hover{
 	background-color:#cc8600;
-}		
+} */		
 #feedBackFormYes {		
 	margin: 0 41%;		
 	padding-top: 25px;		
@@ -2224,8 +2220,8 @@ header .content .marketplace.compact {
   z-index: -1;
 }
 header .content .marketplace.compact a img{
- width: 200px;
-  margin-top: 0px;
+ width: 130px;
+  margin-top: 7px;
 }
 header .banner .toggle.mobile {
   display: none;
@@ -2234,10 +2230,6 @@ header .banner .toggle.mobile {
    border: none;
 }
 
-
-.brand-microsite header .content .marketplace.compact .simple-banner-component{	
-	 margin-top:-10px; 
-}
 
 
 .brand-microsite header .content .bottom .brand-logo .simple-banner-component img{	
@@ -2446,7 +2438,7 @@ header > .content .bottom .search {
 }
 header > .content .bottom .marketplace {
   text-align: center;
-  padding: 0 25px;
+  padding: 10px 25px;
   vertical-align: middle;
   font-size: 24px;
   text-transform: uppercase;
@@ -2469,22 +2461,11 @@ header.brand-header .content .bottom .bag{
 
 @media (max-width: 855px)
 {
-header .content .marketplace.compact {
+/* header .content .marketplace.compact {
   padding-right: 355px;
-}
+} */
 header .content .right > ul > li {
   padding: 0 10px;
-}
-
-}
-@media (max-width: 1080px)
-{
-header .content .marketplace.compact {
-  padding-right: 420px;
-  padding-left: 220px;
-  -webkit-transition: padding 0.15s;
-  -moz-transition: padding 0.15s;
-  transition: padding 0.15s;
 }
 
 }
@@ -10116,8 +10097,9 @@ body .account .right-account .mpl-addressPopup.modal .confirm-deletionButton, bo
  	    line-height:32px;
  }
   body .account .right-account .mpl-addressPopup.modal .closeColorBox {
- 	background-color:red;
+ 	background-color:#ffb810;
  	opacity:0.7;
+ 	color:#000;
  }
 .progress {
 	filter:none !important;
@@ -14813,21 +14795,26 @@ min-width:80px;
 
 
 	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
-	max-width: 100px;
-    display: block;
+	   max-width: 60px;
+    display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
+    vertical-align:middle;
 	}
-@media(min-width:791px) and (max-width:1080px){
+@media(min-width:791px) and (max-width:1300px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
+	    position: absolute;
+    	left: 210px;
+	}
+	header.compact .content .marketplace.compact + .right > ul > li.store-locator-header{
 	    position: absolute;
     	left: 120px;
 	}
-	header.compact .content .marketplace.compact a img{
+	/* header.compact .content .marketplace.compact a img{
 	width:180px;
-	}
+	} */
 	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
-	    width: 65px;
+	    max-width: 75px;
 	}
 	header.compact .content .marketplace.compact + .right > ul > li{
 	    padding:0 10px;
@@ -14842,6 +14829,7 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
     max-width: 210px;
 }
 }
+
 @media(min-width:791px){
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
@@ -15273,7 +15261,7 @@ footer>ul>li>.toggle>img{
 	display: block;
     background: transparent;
     color: #333;
-    border: 1px solid #4a4a4a;
+    border: 1px solid #bbb;
     font-size: 12px;
     font-weight: 600;
     width: 150px;
@@ -15513,7 +15501,7 @@ margin: 10px 0px;
 }
 #bestPicks .view-cliq-offers {
 	padding: 13px;
-    border: 1px solid #4a4a4a;
+    border: 1px solid #bbb;
     color: #333;
     font-size: 12px;
     font-family: "Avenir Next";
@@ -15610,7 +15598,7 @@ padding: 0px 5px 10px;
 a.button.trending-button {
     background: transparent;
     color: #333;
-    border: 1px solid #4a4a4a;
+    border: 1px solid #bbb;
     font-size: 12px;
     font-weight: 600;
     text-decoration: none;
