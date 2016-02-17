@@ -29309,6 +29309,9 @@ a.button.trending-button:hover{
     display: block;
     padding-bottom: 5px;
 }
+#newAndExclusive .newExclusiveElement > a:hover *{
+   color:#a9143c;
+}
 #newAndExclusive .New_Exclusive_title{
 	margin:10px 0;
 	color:#333;
