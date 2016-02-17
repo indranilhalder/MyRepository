@@ -29245,14 +29245,18 @@ width:100%;
     height: 35px;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page span {
-    background: rgba(255,255,255,0.6);
+    background: transparent;
+    border:2px solid rgba(255,255,255,0.6);
     border-radius: 100%;
     width:10px;
     height:10px;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
-    background: transparent;
-    border:2px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.6);
+    border: none;
+    border-radius: 100%;
+    width:10px;
+    height:10px;
 }
 /*New Homepage change ends*/
 footer>ul>li>.toggle>img{
