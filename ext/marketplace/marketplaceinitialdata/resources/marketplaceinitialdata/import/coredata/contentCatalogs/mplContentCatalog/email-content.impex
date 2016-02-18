@@ -94,7 +94,7 @@ UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTempla
 
 ;;OrderDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderDeliveryEmailTemplate.vm
 ### Order Refund
-;;OrderRefundCreditedEmailTemplate;$jarResourceCms/structure-view/structure_OrderRefundCreditedEmailTemplate.vm
+;;OrderRefundCreditedEmailTemplate;$jarResourceCms/structure-view/structure_orderRefundCreditedEmailTemplate.vm
 ## Order Collected By PickUp Person
 ;;OrderCollectedByPersonEmailTemplate;$jarResourceCms/structure-view/structure_OrderCollectedByPersonEmailTemplate.vm
 
@@ -523,31 +523,6 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;EmailyoutubeConfSlot;Default Email youtube Confimation slot;true
 ;;EmailappConfSlot;Default Email App Confirmation Slot;true
 
-#Order Refund Credit Email
-INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]			;cmsComponents(uid,$contentCV) 	;name 			;active
-				;			;emailTopContSlotrefund  		;mail_topContent_refund		;Logo Slot		;true
-				;			;emailTipsContSlotrefund	  	;mail_tips_refund		;Tips Slot		;true
-				;			;emailClickAppDownContSlotrefund  	;mail_clickApp_refund		;App Download Slot	;true
-				;			;emailHappyShopContSlotrefund  		;mail_happyshopping		;Happy Shop Slot	;true
-				;			;emailFacebookContSlotrefund  		;mail_facebook_refund		;Facebook Slot		;true
-				;			;emailTwitterContSlotrefund	  	;mail_twitter_refund		;Twitter Slot		;true
-				;			;emailYoutubeContSlotrefund  		;mail_youtube_refund		;Youtube Slot		;true
-				;			;emailSocialContSlotrefund  		;mail_socialNewtwork_refund	;Social Network Slot	;true
-
-##Oreder Collected By PickUp Person Email
-INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]		;cmsComponents(uid,$contentCV) 	;name 			;active
-				;			;emailTopContSlot  	;mail_topContent_cms		;Logo Slot		;true
-				;			;emailTrackOrderContSlot  	;mail_trackOrder_cms		;Track Order Slot	;true
-				;			;emailTipsContSlot	  	;mail_tipsImage_cms		;Tips Slot		;true
-				;			;emailClickAppDownContSlot  	;mail_clickApp_cms		;App Download Slot	;true
-				;			;emailHappyShopContSlot  	;mail_happyShopping_cms		;Happy Shop Slot	;true
-				;			;emailFacebookContSlot  	;mail_facebook_cms		;Facebook Slot		;true
-				;			;emailTwitterContSlot	  	;mail_twitter_cms		;Twitter Slot		;true
-				;			;emailYoutubeContSlot  		;mail_youtube_cms		;Youtube Slot		;true
-				;			;emailSocialContSlot  		;mail_socialNewtwork_cms	;Social Network Slot	;true
-
-
-
 #Order Delivery Content Slots
 ;;EmailSiteLogoDlvrySlot; Default Email Site Delivery slot;true
 ;;EmailTopDlvrySlot;Default Email Top Delivery Slot;true
@@ -603,6 +578,31 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;EmailForgotPwdsmileyimgSlot;Default Email Smiley Slot;true
 ;;EmailForgotPwdfbSlot;Default Site Logo Slot;true
 ;;EmailForgotPwdgplusSlot;Default Site Logo Slot;true
+
+#Order Refund Credit Email
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]			;cmsComponents(uid,$contentCV) 	;name 			;active
+				;			;emailTopContSlotrefund  		;mail_topContent_refund		;Logo Slot		;true
+				;			;emailTipsContSlotrefund	  	;mail_tips_refund		;Tips Slot		;true
+				;			;emailClickAppDownContSlotrefund  	;mail_clickApp_refund		;App Download Slot	;true
+				;			;emailHappyShopContSlotrefund  		;mail_happyshopping		;Happy Shop Slot	;true
+				;			;emailFacebookContSlotrefund  		;mail_facebook_refund		;Facebook Slot		;true
+				;			;emailTwitterContSlotrefund	  	;mail_twitter_refund		;Twitter Slot		;true
+				;			;emailYoutubeContSlotrefund  		;mail_youtube_refund		;Youtube Slot		;true
+				;			;emailSocialContSlotrefund  		;mail_socialNewtwork_refund	;Social Network Slot	;true
+
+##Oreder Collected By PickUp Person Email
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]		;cmsComponents(uid,$contentCV) 	;name 			;active
+				;			;emailTopContSlot  	;mail_topContent_cms		;Logo Slot		;true
+				;			;emailTrackOrderContSlot  	;mail_trackOrder_cms		;Track Order Slot	;true
+				;			;emailTipsContSlot	  	;mail_tipsImage_cms		;Tips Slot		;true
+				;			;emailClickAppDownContSlot  	;mail_clickApp_cms		;App Download Slot	;true
+				;			;emailHappyShopContSlot  	;mail_happyShopping_cms		;Happy Shop Slot	;true
+				;			;emailFacebookContSlot  	;mail_facebook_cms		;Facebook Slot		;true
+				;			;emailTwitterContSlot	  	;mail_twitter_cms		;Twitter Slot		;true
+				;			;emailYoutubeContSlot  		;mail_youtube_cms		;Youtube Slot		;true
+				;			;emailSocialContSlot  		;mail_socialNewtwork_cms	;Social Network Slot	;true
+
+
 
 
 
@@ -713,13 +713,13 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 INSERT_UPDATE ContentSlotForTemplate	;$contentCV[unique=true];uid[unique=true]				;position[unique=true]	;pageTemplate(uid,$contentCV)[unique=true][default='OrderRefundCreditedEmailTemplate']	;contentSlot(uid,$contentCV)			;allowOverwrite
 					;			;topContent-orderRefundCreditedEmail		;TopContent		;												;emailTopContSlotrefund				;true
-					;			;tipsOrder-orderRefundCreditedEmail		;Tip			;												;emailTipsContSlotrefund			;true
-					;			;clickApp-orderRefundCreditedEmail		;handpick		;												;emailClickAppDownContSlotrefund		;true
+					;			;tipsOrder-orderRefundCreditedEmail			;Tip			;												;emailTipsContSlotrefund			;true
+					;			;clickApp-orderRefundCreditedEmail			;handpick		;												;emailClickAppDownContSlotrefund		;true
 					;			;happyshopping-orderRefundCreditedEmail		;slashImgOne		;												;emailHappyShopContSlotrefund			;true
-					;			;facebook-orderRefundCreditedEmail		;fb			;												;emailFacebookContSlotrefund			;true
-					;			;twitter-orderRefundCreditedEmail		;twitter		;												;emailTwitterContSlotrefund			;true
+					;			;facebook-orderRefundCreditedEmail			;fb			;												;emailFacebookContSlotrefund			;true
+					;			;twitter-orderRefundCreditedEmail			;twitter		;												;emailTwitterContSlotrefund			;true
 					;			;socialnetwork-orderRefundCreditedEmail		;gplus			;												;emailSocialContSlotrefund			;true
-					;			;youtube-orderRefundCreditedEmai;		;youtube		;												;emailYoutubeContSlotrefund			;true
+					;			;youtube-orderRefundCreditedEmai			;youtube		;												;emailYoutubeContSlotrefund			;true
 	
 
 ##Order Collected By Person Email Context
