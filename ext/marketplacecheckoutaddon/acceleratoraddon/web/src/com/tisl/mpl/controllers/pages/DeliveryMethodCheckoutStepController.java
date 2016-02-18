@@ -92,6 +92,7 @@ import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -1578,6 +1579,63 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			storeLocationRequestData.setStoreId(locationList);
 		}
 		storeLocationRequestData.setUssId(sellerUssId);
+		//populate newly added fields
+		//get SellerInfo based on sellerUssid
+		final SellerInformationModel sellerInfoModel = mplSellerInformationService
+				.getSellerDetail(sellerUssId);
+		ProductModel productModel = null;
+		ProductData productData = null;
+		if (null != sellerInfoModel)
+		{
+			productModel = sellerInfoModel.getProductSource();
+			productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+			storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());
+		}
+		List<RichAttributeModel> richAttributeModel = null;
+		if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+		{
+			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			if (richAttributeModel != null && richAttributeModel.get(0) != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+			{
+				final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+				storeLocationRequestData.setFulfillmentType(fulfillmentType.toUpperCase());
+			}
+			else
+			{
+				LOG.debug("storeLocationRequestData :  Fulfillment type not received for the SellerId"+sellerInfoModel.getSellerArticleSKU());
+			}
+			if (richAttributeModel != null && richAttributeModel.get(0) != null
+					&& richAttributeModel.get(0).getShippingModes() != null
+					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
+			{
+				final String shippingMode = richAttributeModel.get(0).getShippingModes().getCode();
+				storeLocationRequestData.setTransportMode(shippingMode.toUpperCase());
+			}
+			else
+			{
+				LOG.debug("storeLocationRequestData :  ShippingMode type not received for the "+sellerInfoModel.getSellerArticleSKU());
+			}
+			if ((null != productData.getSeller()) && (null != productData.getSeller().get(0)) && (null != productData.getSeller().get(0).getSpPrice()) && !(productData.getSeller().get(0).getSpPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getSpPrice().getValue().doubleValue());
+			}
+			else if ((null != productData.getSeller()) && (null != productData.getSeller().get(0)) && (null != productData.getSeller().get(0).getMopPrice()) && !(productData.getSeller().get(0).getMopPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getMopPrice().getValue().doubleValue());
+			}
+			else if (null != productData.getSeller().get(0).getMrpPrice() && !(productData.getSeller().get(0).getMrpPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getMrpPrice().getValue().doubleValue());
+			}
+			else
+			{
+				LOG.debug("No price avaiable for seller :" + productData.getSeller().get(0).getSellerID());
+			}
+		}
+		
 		return storeLocationRequestData;
 	}
 
