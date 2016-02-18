@@ -17,6 +17,10 @@
 					<td><div style="height:6px"/></td>
 				</tr>
 				<tr>
+					<td style="width:900px"><cockpit code="property" value="FooterComponent.footerAppImageList"/></td>
+					<td><div style="height:6px"/></td>
+				</tr>
+				<tr>
 					<td style="width:900px"><cockpit code="property" value="FooterComponent.notice"/></td>
 					<td><div style="height:6px"/></td>
 				</tr>
