@@ -2875,7 +2875,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 				}
 				else if(deliveryType==='CNC'/* && parseFloat(inventory) >= parseFloat(quantityValue)*/){
 					var newLi = document.createElement("li");
-					newLi.setAttribute("class", "click-collect");
+					newLi.setAttribute("class", "methodClick");
 					var text = document.createTextNode("Click and Collect");
 					newLi.appendChild(text);
 					newUi.appendChild(newLi);
