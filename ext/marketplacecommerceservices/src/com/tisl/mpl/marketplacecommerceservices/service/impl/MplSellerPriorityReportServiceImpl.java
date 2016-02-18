@@ -275,9 +275,9 @@ public class MplSellerPriorityReportServiceImpl implements MplSellerPriorityRepo
 				}
 
 				// User
-				if (null != savedVal.getUser() && null != savedVal.getUser().getName())
+				if (null != savedVal.getUser() && null != savedVal.getUser().getUid())
 				{
-					savedValueData.setChangedBy(savedVal.getUser().getName());
+					savedValueData.setChangedBy(savedVal.getUser().getUid());
 				}
 				//set value according to the Modified Type in SavedVale Model (Created / Changed)
 				checkModifiedType(savedVal, savedValueData);
@@ -529,75 +529,73 @@ public class MplSellerPriorityReportServiceImpl implements MplSellerPriorityRepo
 				});
 				LOG.debug(savedValueDataList);
 			}
-			if (sellerPriorityReportLoc.exists())
+			if (!sellerPriorityReportLoc.exists())
 			{
-				fileWriter = new FileWriter(sellerPriorityReportFile);
+				sellerPriorityReportLoc.mkdirs();
+			}
+			fileWriter = new FileWriter(sellerPriorityReportFile);
 
-				//Write the CSV file header
-				fileWriter.append(FILE_HEADER);
+			//Write the CSV file header
+			fileWriter.append(FILE_HEADER);
 
-				//Add a new line separator after the header
+			//Add a new line separator after the header
+			fileWriter.append(NEW_LINE_SEPARATOR);
+
+			//Write a new student object list to the CSV file
+			for (final SellerPriorityReportData report : savedValueDataList)
+			{ // If value dn put vale else put empty
+				fileWriter.append(null != report.getModifiedTime() ? sdf.format(report.getModifiedTime())
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getChangedBy() ? report.getChangedBy()
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getSellerId() ? report.getSellerId()
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getSellerName() ? report.getSellerName()
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getCategoryId() ? report.getCategoryId()
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getProductId() ? report.getProductId()
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getOldStartDate() ? sdf.format(report.getOldStartDate())
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getOldEndDate() ? sdf.format(report.getOldEndDate())
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getIsActive() ? report.getIsActive()
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getNewlyCreated() ? report.getNewlyCreated()
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getModifiedStartDate() ? sdf.format(report.getModifiedStartDate())
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(null != report.getModifiedEndDate() ? sdf.format(report.getModifiedEndDate())
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
+				fileWriter.append(COMMA_DELIMITER);
+
+				fileWriter.append(null != report.getModifiedActiveFlag() ? report.getModifiedActiveFlag()
+						: MarketplacecommerceservicesConstants.EMPTYSTRING);
 				fileWriter.append(NEW_LINE_SEPARATOR);
-
-				//Write a new student object list to the CSV file
-				for (final SellerPriorityReportData report : savedValueDataList)
-				{ // If value dn put vale else put empty
-					fileWriter.append(null != report.getModifiedTime() ? sdf.format(report.getModifiedTime())
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getChangedBy() ? report.getChangedBy()
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getSellerId() ? report.getSellerId()
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getSellerName() ? report.getSellerName()
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getCategoryId() ? report.getCategoryId()
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getProductId() ? report.getProductId()
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getOldStartDate() ? sdf.format(report.getOldStartDate())
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getOldEndDate() ? sdf.format(report.getOldEndDate())
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getIsActive() ? report.getIsActive()
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getNewlyCreated() ? report.getNewlyCreated()
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getModifiedStartDate() ? sdf.format(report.getModifiedStartDate())
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-					fileWriter.append(null != report.getModifiedEndDate() ? sdf.format(report.getModifiedEndDate())
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(COMMA_DELIMITER);
-
-					fileWriter.append(null != report.getModifiedActiveFlag() ? report.getModifiedActiveFlag()
-							: MarketplacecommerceservicesConstants.EMPTYSTRING);
-					fileWriter.append(NEW_LINE_SEPARATOR);
-				}
 			}
-			else
-			{
-				throw new Exception(MarketplacecommerceservicesConstants.FILEPATHNOTAVAILABLE);
-			}
+
 		}
 		catch (final FileNotFoundException e)
 		{
