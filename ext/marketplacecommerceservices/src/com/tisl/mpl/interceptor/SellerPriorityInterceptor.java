@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 
-import com.tisl.mpl.core.enums.SellerPriorityEnum;
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -27,7 +26,7 @@ import com.tisl.mpl.model.SellerInformationModel;
  *
  */
 public class SellerPriorityInterceptor implements PrepareInterceptor
-//ValidateInterceptor
+
 {
 
 
@@ -120,15 +119,13 @@ public class SellerPriorityInterceptor implements PrepareInterceptor
 
 			final List<String> categoryList = new ArrayList<String>();
 			final List<String> skuIdList = new ArrayList<String>();
-			//			final Map<String, String> sellerCat = new HashMap<String, String>();
-			//			final Map<String, String> sellerProd = new HashMap<String, String>();
 			if (!(mplSellerPriorityDao.getAllSellerPriorities().isEmpty()))
 			{
 				LOG.debug("*********** Priority table size" + mplSellerPriorityDao.getAllSellerPriorities().size());
-
+				final List<MplSellerPriorityModel> sellerPriorityList = new ArrayList<MplSellerPriorityModel>();
 				for (final MplSellerPriorityModel priorityValue : mplSellerPriorityDao.getAllSellerPriorities())
 				{
-					// Cannot modify Category ID or Listing ID
+					sellerPriorityList.add(priorityValue);
 					if (arg.isModified(priorityValue, MplSellerPriorityModel.CATEGORYID)
 							|| arg.isModified(priorityValue, MplSellerPriorityModel.LISTINGID))
 					{
@@ -158,30 +155,31 @@ public class SellerPriorityInterceptor implements PrepareInterceptor
 					}
 				}
 				// if new value already	 exist throw error
-				if (SellerPriorityEnum.PROCESSING.equals(priority.getPriorityStatus()))
+				//				if (SellerPriorityEnum.PROCESSING.equals(priority.getPriorityStatus()))
+				//				{
+				//					priority.setPriorityStatus(SellerPriorityEnum.PROCESSED);
+				//				}
+				//				else if (SellerPriorityEnum.ERROR.equals(priority.getPriorityStatus()))
+				//				{
+				//					priority.setPriorityStatus(SellerPriorityEnum.ERROR);
+				//				}
+				//				else
+				//				{
+				//				if (SellerPriorityEnum.PROCESSING.equals(priority.getPriorityStatus()))
+				//				{
+				if (priority.getIsActive().booleanValue())
 				{
-					priority.setPriorityStatus(SellerPriorityEnum.PROCESSED);
-				}
-				else if (SellerPriorityEnum.ERROR.equals(priority.getPriorityStatus()))
-				{
-					priority.setPriorityStatus(SellerPriorityEnum.ERROR);
-				}
-				else
-				{
-					if (priority.getIsActive().booleanValue())
-
+					if (null != categoryId && categoryList.contains(categoryId))
 					{
-						if (null != categoryId && categoryList.contains(categoryId))
-						{
-							throw new InterceptorException(ERROR_SAME_CATEGORY);
-						}
-						if (null != listingId && skuIdList.contains(listingId))
-						{
-							throw new InterceptorException(ERROR_SAME_SKU);
-						}
+						throw new InterceptorException(ERROR_SAME_CATEGORY);
 					}
-
+					if (null != listingId && skuIdList.contains(listingId))
+					{
+						throw new InterceptorException(ERROR_SAME_SKU);
+					}
 				}
+				//}
+				//	}
 			}
 		}
 	}

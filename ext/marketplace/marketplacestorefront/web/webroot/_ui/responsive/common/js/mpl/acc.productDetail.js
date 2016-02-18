@@ -1042,6 +1042,15 @@ function fetchPrice() {
 				 $("#otherSellerInfoId").hide();
 				 $(".wish-share").hide();
 				 $(".fullfilled-by").hide();
+				// TISST-13959 fix
+				 $("#dListedErrorMsg").show();
+				 // TISEE-6552 fix
+				 $("#pdpPincodeCheck").hide();
+				 $("#pin").attr("disabled",true);
+				 $("#pdpPincodeCheckDList").show();
+				 
+				 
+				
 			}
 		}
 
@@ -1261,14 +1270,13 @@ function getSelectedEMIBankForPDP() {
 
 	}
 }
-/*Gigya code commented for non existence in Release1*/
+
 function CheckonReload()
 {
 	var contentData = '';
 	 $.ajax({
 				url : ACC.config.encodedContextPath + "/p/checkUser",
 				data : {
-					
 				},
 				type : "GET",
 				cache : false,
@@ -1276,31 +1284,20 @@ function CheckonReload()
 					if(!data)							
 						{
 							//Hiding the Comment Box if the User is not Logged In
-							//$('.gig-comments-composebox').hide();
-							
 							//TISUATPII-470 fix
-							//$('#commentsDiv .gig-comments-composebox').hide();
-							$('#commentsDiv .gig-comments-composebox').show();
-						
+							$('#commentsDiv .gig-comments-composebox').hide();
+							//$('#commentsDiv .gig-comments-composebox').show();
 						}
 						else
 						{
-							//Showing the Comment Box if the User is not Logged In
+							//Showing the Comment Box if the User is  Logged In
 							$('#commentsDiv .gig-comments-composebox').show();
-							
 							}
-						
-									
 				},
 				error : function(resp) {
-					//alert("Error Occured");
 					console.log( "Error Occured" );
 				}
 			});
-		
-
-
-
 }
 
 
