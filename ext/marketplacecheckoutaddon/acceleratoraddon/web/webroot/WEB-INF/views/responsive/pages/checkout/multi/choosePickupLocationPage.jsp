@@ -227,9 +227,17 @@
 	<script type="text/javascript">
 		function allLetter(inputtxt) { 
 	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
+	        var number = new RegExp(/\d/g);
 	        if(inputtxt.value.match(letters))
 	        {
-	            return true;
+	        	if(inputtxt.value.match(number))
+		        {
+		            return false;
+		        }
+		        else
+		        {
+		            return true;
+		        }
 	        }
 	        else
 	        {
@@ -257,16 +265,11 @@
 			$("#pickupPersonMobile").keyup(function(){
 				var pickupPersonMobile = $("#pickupPersonMobile").val();
 				var isString = isNaN($('#pickupPersonMobile').val());
-				if($('#pickupPersonMobile').val().length <= "9") {
-					if(isString==true) {
+				if(isString==true) {
 						$(".pickupPersonMobileError").show();
 						$(".pickupPersonMobileError").text("Enter only numbers");
 					}
-					else if(isString==false) {
-						$(".pickupPersonMobileError").show();
-						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
-					}
-				} else if($('#pickupPersonMobile').val().length >= "11") {
+				else if($('#pickupPersonMobile').val().length >= "11") {
 					$(".pickupPersonMobileError").show();
 					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
 				} else {
@@ -499,31 +502,31 @@
 									<div class="error_txt pincodeServicable${status1.index}" style="width: 200px;font-size: 12px;"></div>
 									<ul class="delivered delivered${status1.index}">
 							<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
-										<li style="width: 240px !important;">
+										<li style="width: 240px !important;" class="removeColor${status1.index}">
 											<%-- <input class="radio_btn" type="radio" name="address" id="address${status.index}" value="address${status.index}"> --%>
 											<input class="radio_btn radio_btn${status1.index}" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
 												<div class='pin bounce'>
 													<span class="text_in">${status.count}</span>
 														</div>
-															<label class="radio_sel${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
+															<label class="radio_sel${status1.index}${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
 															</label>
-																<span class="radio_sel${status.index} radio_color displayName${status1.index}${status.index}">${pos.displayName}</span>
-																<span class="radio_sel${status.index} radio_color address1${status1.index}${status.index}">
+																<span class="radio_sel${status1.index}${status.index} radio_color displayName${status1.index}${status.index}">${pos.displayName}</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.line1}">
 																		${fn:escapeXml(pos.address.line1)}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status.index} radio_color address2${status1.index}${status.index}">
+																<span class="radio_sel${status1.index}${status.index} radio_color address2${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.line1}">
 																		${fn:escapeXml(pos.address.line2)}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status.index} radio_color address3${status1.index}${status.index}">
+																<span class="radio_sel${status1.index}${status.index} radio_color address3${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.state}">
 																		${pos.address.state}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status.index} radio_color address4${status1.index}${status.index}">
+																<span class="radio_sel${status1.index}${status.index} radio_color address4${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.postalCode}">
 																		${pos.address.postalCode}
 																	</c:if>
@@ -561,11 +564,11 @@
 													
 												});
 												$("#address${status1.index}${status.index}").click(function(){
-													$(".radio_color").removeClass("colorChange");
+													$(".removeColor${status1.index} .radio_color").removeClass("colorChange");
 													$(".select_store").hide();
 													var name${status.index} = $(".displayName${status1.index}${status.index}").text();
 													openPopForAdddPosToCartEntry('${poses.ussId}',name${status.index});
-													$(".radio_sel${status.index}").addClass("colorChange");
+													$(".radio_sel${status1.index}${status.index}").addClass("colorChange");
 												});
 											});
 										</script>
@@ -594,6 +597,7 @@
 						<script>
 						 //alert("Hello");
 							$(document).ready(function() {
+								$("input[name='address${status1.index}']").prop('checked', false);
 								$(".input${status1.index}").hide();
 								$(".pincodeServicable${status1.index}").hide();
 								$("#maphide${status1.index}").hide();
@@ -686,7 +690,7 @@
 										          //console.log(jsonObject${status1.index}.length);
 										          if(jsonObject${status1.index}.length != "0") {
 										        	  $("input[name='address${status1.index}']").prop('checked', false);
-										        	  $(".radio_color").removeClass("colorChange");
+										        	  $("removeColor${status1.index} .radio_color").removeClass("colorChange");
 										        	  icons${status1.index} = icons;
 										        	  processMap${status1.index}();
 										        	  $(".delivered${status1.index}").show();
