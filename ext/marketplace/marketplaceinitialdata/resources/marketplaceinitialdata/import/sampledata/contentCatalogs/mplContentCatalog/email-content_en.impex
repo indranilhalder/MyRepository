@@ -86,12 +86,12 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@medi
 ;;/images/theme/OrderConfirmationBanner2.jpg;OrderConfirmationBanner2.jpg;$siteResource/images/theme/OrderConfirmationBanner2.jpg;;
 ;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
 ;;/images/theme/Track1.jpg;Track1.jpg;$siteResource/images/theme/track-btn.jpg;;
-;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/track2.jpg;;
+;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/track-btn.jpg;;
 ;;/images/theme/ConfDescription.jpg;ConfDescription.jpg;$siteResource/images/theme/ConfDescription.jpg;;
 ;;/images/theme/OrderReferenceNumberOne.jpg;OrderReferenceNumberOne.jpg;$siteResource/images/theme/OrderReferenceNumberOne.jpg;;
 ;;/images/theme/OrderReferenceNumberTwo.jpg;OrderReferenceNumberTwo.jpg;$siteResource/images/theme/OrderReferenceNumberTwo.jpg;;
 ;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/happy-shopping.jpg;;
-;;/images/theme/app.jpg;app.jpg;$siteResource/images/theme/app.jpg;;
+;;/images/theme/app.jpg;app.jpg;$siteResource/images/theme/click-app.jpg;;
 ;;/images/theme/Tip.jpg;Tip.jpg;$siteResource/images/theme/tip.jpg;;
 ;;/images/theme/fb.jpg;fb.jpg;$siteResource/images/theme/f.jpg;;
 ;;/images/theme/twitter.jpg;twitter.jpg;$siteResource/images/theme/t.jpg;;
@@ -152,15 +152,15 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 # Order Collected By PickUp Person Email Template
 # Media
 INSERT_UPDATE Media	;$contentCV[unique=true];code[unique=true]		;realfilename		;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]	;mime[default='image/jpg']
-			;			;mail_top_banner		;mailTopContentBody	;$siteResource/images/email/header4.jpg							;	
-			;			;mail_track-button		;trackOrderButton	;$siteResource/images/email/track-btn.jpg							;
-			;			;mail_tip-image			;tipsImageComponent	;$siteResource/images/email/tip.jpg								;
-			;			;mail_click-app_download	;clicktoDownloadApp	;$siteResource/images/email/click-app.jpg							;
-			;			;mail_happyShopping_banner	;happyShopping		;$siteResource/images/email/happy-shopping.jpg						;
-			;			;mail_facebook_link		;facebooklink		;$siteResource/images/email/f.jpg								;
-			;			;mail_twitter_link		;twitterlink		;$siteResource/images/email/t.jpg								;
-			;			;mail_youtube_link		;youtubelink		;$siteResource/images/email/y.jpg								;
-			;			;mail_socialnetwork_link	;socialnetworklin	;$siteResource/images/email/p.jpg								;
+			;			;mail_top_banner		;mailTopContentBody	;$siteResource/images/theme/header4.jpg							;	
+			;			;mail_track-button		;trackOrderButton	;$siteResource/images/theme/track-btn.jpg							;
+			;			;mail_tip-image			;tipsImageComponent	;$siteResource/images/theme/tip.jpg								;
+			;			;mail_click-app_download	;clicktoDownloadApp	;$siteResource/images/theme/click-app.jpg							;
+			;			;mail_happyShopping_banner	;happyShopping		;$siteResource/images/theme/happy-shopping.jpg						;
+			;			;mail_facebook_link		;facebooklink		;$siteResource/images/theme/f.jpg								;
+			;			;mail_twitter_link		;twitterlink		;$siteResource/images/theme/t.jpg								;
+			;			;mail_youtube_link		;youtubelink		;$siteResource/images/theme/y.jpg								;
+			;			;mail_socialnetwork_link	;socialnetworklin	;$siteResource/images/theme/p.jpg								;
 
 # CMS Images Component For PickUp Person 
 INSERT_UPDATE CMSImageComponent	;$contentCV[unique=true]	;uid[unique=true]	;$picture[lang=$lang]
@@ -324,14 +324,14 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 
 # Media fOr Order refund
 INSERT_UPDATE Media	;$contentCV[unique=true];code[unique=true]		;realfilename		;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]	;mime[default='image/jpg']
-			;			;mailRefundCredit-Logo		;mailTopContentBody	;$siteResource/images/email/header4.jpg							;	
-			;			;mail_RefundCredit-tip		;tipsImageComponent	;$siteResource/images/email/tip.jpg								;
-			;			;mail_RefundCredit-app_download	;clicktoDownloadApp	;$siteResource/images/email/click-app.jpg							;
-			;			;mail_RefundCredit_banner	;happyShopping		;$siteResource/images/email/happy-shopping.jpg						;
-			;			;mail_RefundCredit_fb		;facebooklink		;$siteResource/images/email/f.jpg								;
-			;			;mail_RefundCredit_twitter	;twitterlink		;$siteResource/images/email/t.jpg								;
-			;			;mail_RefundCredit_youtube	;youtubelink		;$siteResource/images/email/y.jpg								;
-			;			;mail_RefundCredit_gplus	;socialnetworklin	;$siteResource/images/email/p.jpg								;
+			;			;mailRefundCredit-Logo		;mailTopContentBody	;$siteResource/images/theme/header4.jpg							;	
+			;			;mail_RefundCredit-tip		;tipsImageComponent	;$siteResource/images/theme/tip.jpg								;
+			;			;mail_RefundCredit-app_download	;clicktoDownloadApp	;$siteResource/images/theme/click-app.jpg							;
+			;			;mail_RefundCredit_banner	;happyShopping		;$siteResource/images/theme/happy-shopping.jpg						;
+			;			;mail_RefundCredit_fb		;facebooklink		;$siteResource/images/theme/f.jpg								;
+			;			;mail_RefundCredit_twitter	;twitterlink		;$siteResource/images/theme/t.jpg								;
+			;			;mail_RefundCredit_youtube	;youtubelink		;$siteResource/images/theme/y.jpg								;
+			;			;mail_RefundCredit_gplus	;socialnetworklin	;$siteResource/images/theme/p.jpg								;
 
 			
 # CMS Image Components forOrder Refund  
