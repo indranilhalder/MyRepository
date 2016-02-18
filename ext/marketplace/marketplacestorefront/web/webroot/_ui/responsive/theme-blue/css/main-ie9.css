@@ -482,7 +482,7 @@ header .content nav > ul > li > ul > li > ul > li.short
 	  width: auto;
   margin: 10px 0px;
   text-align: center;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .carousel .item {
@@ -2484,7 +2484,7 @@ display:none;
 	/* font-size:42px; */
 }
 .select-list ul li{
-	font-size:16px;
+	font-size:14px;
 }
 
 .glyphicon {
@@ -11177,6 +11177,7 @@ div.variantFormContainer{
 @media (min-width:790px) {
 	 header>.content .bottom .marketplace {
 		display: table;
+		margin-top:-18px;
 	}
 	header>.content .bottom .marketplace .simple-banner-component
 		{
@@ -15002,8 +15003,8 @@ padding-left: 13px !important;
     -ms-transform-origin: center;
     -o-transform-origin: center;
 	transform-origin: center;
-    border-bottom: 2px solid #fff;
-    border-left: 2px solid #fff;
+    border-bottom: 3px solid #fff;
+    border-left: 3px solid #fff;
 
 }
 .owl-next::after{
@@ -15012,14 +15013,14 @@ padding-left: 13px !important;
     bottom: 0;
     margin: auto !important;
     left: 0;
-border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
+border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
     
 	}
 .owl-carousel .owl-controls .owl-buttons .owl-prev, .owl-carousel .owl-controls .owl-buttons .owl-next{
-width: 40px;
+width: 30px;
     background: #a9143c;
-    height: 40px;
+    height: 30px;
     border-radius: 100%;
     
 }
@@ -15105,8 +15106,8 @@ width: 40px;
     bottom: 0;
     margin: auto !important;
     left: 0;
-    border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
 	}
 	
 	#brandsYouLove .bulprev:after {
@@ -15402,8 +15403,9 @@ width:100%;
 	color:#a9143c;
 }
 .home-brands-you-love-wrapper h1{
-text-align: center;
-    font-size: 24px;
+	text-align: center;
+    font-size: 28px;
+    font-weight: 600;
 }
 
 .home-brands-you-love-carousel-brands.active img{
@@ -15794,7 +15796,7 @@ margin:20px 0;
 }
 .qued-content a.button.maroon {
    /*  margin-top: 90px; */
-    width: 220px;
+    width: 200px;
     padding-bottom: 20px;
    /*  margin:90px 0 20px 0; */
     position: absolute;
@@ -15883,7 +15885,8 @@ width: 100px !important;
     height: 50px !important;
     /* margin-top: 12px; */}
     header .content .bottom.active .marketplace {
-   margin-right: 0px;    }
+   margin-right: 0px;
+    margin-top: 0px;    }
 #rotatingImageTimeout {
     margin-top: 21px;
 }
