@@ -6890,6 +6890,8 @@ text-transform: uppercase;
             transition: color 0.3s; }
           .cart.wrapper .product-block li.item > ul > li.delivery li.methodHome:before, .confirmation .product-block li.item > ul > li.delivery li.methodHome:before {
             color: #3f90e4; }
+            .cart.wrapper .product-block li.item > ul > li.delivery li.methodClick:before, .confirmation .product-block li.item > ul > li.delivery li.methodHome:before {
+            color: #FF0000; }
           .cart.wrapper .product-block li.item > ul > li.delivery li.express-delivery.checked span, .cart.wrapper .product-block li.item > ul > li.delivery li.express-delivery.checked input[type="radio"] + label, .cart.wrapper .product-block li.item > ul > li.delivery li.express-delivery.checked:after, .confirmation .product-block li.item > ul > li.delivery li.express.checked span, .confirmation .product-block li.item > ul > li.delivery li.express.checked input[type="radio"] + label, .confirmation .product-block li.item > ul > li.delivery li.express.checked:after {
             color: #ff2c43;
             -webkit-transition: color 0.3s;
