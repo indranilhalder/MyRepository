@@ -263,7 +263,7 @@
 		<property name="ticketStatus" type="String"/>
         <property name="alternateContactName" type="String"/>
         <property name="alternatePhoneNo" type="String"/>
-        <property name="commerce" type="String"/>
+        <property name="source" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
