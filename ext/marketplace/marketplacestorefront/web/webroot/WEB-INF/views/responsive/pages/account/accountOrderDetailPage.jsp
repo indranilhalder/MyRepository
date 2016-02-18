@@ -1540,7 +1540,6 @@ $(function() {
 		      var mobile=$("#pickMobileNo").val(); 	 
 		      var isString = isNaN(mobile);
 		      var nameValidation =/^[a-zA-Z()]+$/.test(name);
-		      
 		      $(".pickupPersonNameError, .pickupPersonMobileError").hide();
 		       if(name.length <= 3 ){    
 		    	     $(".pickupPersonNameError").show();
@@ -1568,24 +1567,24 @@ $(function() {
 					    	$('.pickup_Edit').hide();
 					    	$('.pickupeditbtn').show();
 					    	if(status="sucess"){
-					 	      document.getElementById("pickName").innerHTML=name;
-						      document.getElementById("pickNo").innerHTML=mobile;  
+					    			$("#pickName").text(name);
+					    			$("#pickNo").text(mobile);
+					    			if(status="sucess"){
+							    		$.ajax({	  
+											type: "POST",
+											url: ACC.config.encodedContextPath + "/my-account/crmTicketCreateUpdatePickUpDetail",
+										    data: "orderId="+orderId,
+											success: function () {	
+											}
+										});
+							    		
+							    	}	      
 					    	}
-					    	if(status="sucess"){
-					    		$.ajax({	  
-									type: "POST",
-									url: ACC.config.encodedContextPath + "/my-account/crmTicketCreateUpdatePickUpDetail",
-								    data: "orderId="+orderId,
-									success: function () {
-									    	   		    	
-									}
-								});
-					    		
-					    	}
+					    	
 						}
 				});
 		      } 
-	}
+	}	
 	$(document).ready(function(){
 		 $(".pickupeditbtn").click(function(){	 
 			$(".pickup_Edit").css("display","block");
