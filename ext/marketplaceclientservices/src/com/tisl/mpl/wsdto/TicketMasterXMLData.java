@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "ticketMaster")
 @XmlType(propOrder =
 { "customerID", "orderId", "subOrderId", "ticketType", "refundType", "returnCategory", "lineItemDataList",
-		"alternateContactName", "alternatePhoneNo", "commerce" })
+		"alternateContactName", "alternatePhoneNo", "source" })
 public class TicketMasterXMLData
 {
 	private String customerID;
@@ -29,7 +29,7 @@ public class TicketMasterXMLData
 	private List<TicketlineItemsXMLData> lineItemDataList;
 	private String alternateContactName;
 	private String alternatePhoneNo;
-	private String commerce;
+	private String source;
 
 
 	/**
@@ -177,15 +177,6 @@ public class TicketMasterXMLData
 	}
 
 	/**
-	 * @return the commerce
-	 */
-	@XmlElement(name = "commerce")
-	public String getCommerce()
-	{
-		return commerce;
-	}
-
-	/**
 	 * @param alternateContactName
 	 *           the alternateContactName to set
 	 */
@@ -204,12 +195,20 @@ public class TicketMasterXMLData
 	}
 
 	/**
-	 * @param commerce
-	 *           the commerce to set
+	 * @return the source
 	 */
-	public void setCommerce(final String commerce)
+	@XmlElement(name ="source")
+	public String getSource()
 	{
-		this.commerce = commerce;
+		return source;
+	}
+
+	/**
+	 * @param source the source to set
+	 */
+	public void setSource(String source)
+	{
+		this.source = source;
 	}
 
 }

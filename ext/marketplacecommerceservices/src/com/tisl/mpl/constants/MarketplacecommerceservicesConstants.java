@@ -1316,6 +1316,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String Ticket_Type = "AC";
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
+	//CRM Ticket Source From Commerce
+	public static final String SOURCE = "commerce";
 
 
 	private MarketplacecommerceservicesConstants()

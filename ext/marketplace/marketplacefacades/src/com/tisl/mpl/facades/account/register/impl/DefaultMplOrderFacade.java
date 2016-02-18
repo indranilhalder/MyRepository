@@ -760,10 +760,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			e.printStackTrace();
 			LOG.error("Update PickDetails that time Error Rasing");
-			return MarketplaceFacadesConstants.Status_Failure;
+			return MarketplaceFacadesConstants.STATUS_FAILURE;
 		}
 		LOG.info("Update PickUp Details successfully");
-		return MarketplaceFacadesConstants.Status_Sucess;
+		return MarketplaceFacadesConstants.STATUS_SUCESS;
 	}
 
 
@@ -779,7 +779,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			if (orderModel != null)
 			{
 				LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
-				/* customOmsOrderService.upDatePickUpDetails(orderModel); */
+				
+				 customOmsOrderService.upDatePickUpDetails(orderModel); 
 
 				final SendTicketRequestData ticket = new SendTicketRequestData();
 				final CustomerData customerData = customerFacade.getCurrentCustomer();
@@ -788,16 +789,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				{
 					ticket.setCustomerID(customerData.getUid());
 				}
-
+				ticket.setSource(MarketplacecommerceservicesConstants.SOURCE);
 				ticket.setOrderId(orderModel.getCode());
-
-				final List<OrderModel> subOrderId = orderModel.getChildOrders();
-				String suborder = null;
-				for (final OrderModel subId : subOrderId)
-				{
-					suborder = subId.getCode();
-				}
-				ticket.setSubOrderId(suborder);
 				ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
 				ticket.setAlternateContactName(orderModel.getPickupPersonName());
 				ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
@@ -809,22 +802,15 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
 				saveTicketDetailsInCommerce(ticket);
 				LOG.info("************ PickUpDetails Ticket Saved ********");
-				// final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode, refundType, ussid, customerData, subOrderModel);
-
 			}
 
 		}
-		catch (final Exception e)
+		catch (final JAXBException ex)
 		{
-
-			e.printStackTrace();
-			LOG.error("<<<<<<<<<<<Exception Rasing convert OrderModel to SendTicketRequestData Wto of class>>>>>>>>" + e);
+			LOG.error(" >> Exception occured while CRM ticket creation", ex);
 		}
 
-
-
 	}
-
 
 	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)
 	{
@@ -859,6 +845,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
 		}
+		if(null!=sendTicketRequestData.getSource())
+		{
+			ticket.setSource(sendTicketRequestData.getSource());
+		}
 
 
 		if (null != sendTicketRequestData.getAlternateContactName())
@@ -867,11 +857,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 		if (null != sendTicketRequestData.getAlternatePhoneNo())
 		{
-			ticket.setAlternateContactName(sendTicketRequestData.getAlternatePhoneNo());
+			ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
 		}
-
-
-
+		
 		final TicketMasterXMLData ticketXmlData = ticketCreate.ticketCreationModeltoXMLData(sendTicketRequestData);
 		if (ticketXmlData != null)
 		{
