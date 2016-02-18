@@ -241,7 +241,7 @@ public class MplCouponController
 		}
 		catch (final VoucherOperationException e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 			//LOG.error("Issue with voucher release " + e.getMessage());
 			data = setRelDataForException(data, cartModel);
 		}

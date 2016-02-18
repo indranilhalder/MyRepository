@@ -1756,9 +1756,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 			}
 
-			discount = BigDecimal.valueOf(
-					(totalPrice + cart.getDeliveryCost().doubleValue() + cart.getConvenienceCharges().doubleValue())).subtract(
-					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));
+			discount = (BigDecimal.valueOf(cart.getDeliveryCost().doubleValue())).add(BigDecimal.valueOf(totalPrice))
+					.add(BigDecimal.valueOf(cart.getConvenienceCharges().doubleValue()))
+					.subtract(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()))
+					.subtract(BigDecimal.valueOf(voucherDiscount));
+
+			//			discount = BigDecimal.valueOf(
+			//					(totalPrice + cart.getDeliveryCost().doubleValue() + cart.getConvenienceCharges().doubleValue())).subtract(
+			//					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));
 		}
 
 		return getDiscountUtility().createPrice(cart, Double.valueOf(discount != null ? discount.doubleValue() : 0.0));
