@@ -1027,11 +1027,11 @@ h2 {
             -moz-osx-font-smoothing: grayscale;
             font-weight: 100;
             content: "\e605";
-            font-size: 18px;
+            font-size: 16px;
             color: #A9143C;
             line-height: 18px;
             margin-right: 5px;
-            top: 3px;
+            top: 2px;
             position: relative;
             font-weight: bold; }
           header .content .right > ul > li.bag .mini-bag {
@@ -1876,7 +1876,7 @@ h2 {
     header .content .search input, header .content .search .select-list {
       border-width: 1px;
       border-color: #bbb;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       height: 50px; } }
       @media (min-width: 791px) and (max-width: 990px) {
@@ -4213,7 +4213,7 @@ h2 {
 .feature-collections h1 {
 	text-align: center;
 	font-size: 24px;
-	padding: 30px 0 20px;
+	    padding: 50px 0 50px;
 	font-weight: 500;
 }
 
@@ -8369,10 +8369,10 @@ footer>ul>li h3:after {
 }
 
 footer>ul>li ul li {
-	line-height: 30px;
+	line-height: 40px;
 	vertical-align: middle;
 	height: 0; 
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 500;
 	text-transform: capitalize;
 	padding: 0 20px;
@@ -8484,7 +8484,7 @@ footer .banner {
 		color: #A9143C; */
 	}
 	footer>ul>li h3 {
-		font-size: 14px;
+		font-size: 13px;
 		line-height: 20px;
 		padding: 15px 0 15px 20px;
 		font-weight: 700;
@@ -8498,7 +8498,7 @@ footer .banner {
 		}
 	}
 	footer>ul>li ul li {
-		height: 30px;
+		height: 40px;
 	}
 	footer .banner {
 		float: left;
@@ -29028,11 +29028,11 @@ min-width: 150px;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
    content:"\f0a2";
-    font-size: 16px;
+    font-size: 13px;
     color: #A9143C;
     line-height: 46px;
     height:46px;
-    top: 2px;
+    top: 0px;
     position: relative;
     font-weight: bold;
 }
@@ -29307,14 +29307,14 @@ footer>ul>li>.toggle>img{
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
     background: transparent;
-    color: #333;
-    border: 1px solid #bbb;
+    border: 1px solid #4a4a4a;
     font-size: 12px;
     font-weight: 600;
-    width: 150px;
+    width: 300px;
     text-decoration: none;
     margin: 0px auto;
     padding: 13px;
+    line-height: 24px;
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 1.5px;
@@ -29340,7 +29340,7 @@ footer .footer-text {
 	clear:both;
 }
 footer .footer-text {
-	border-top: 1px solid #7e7e7e;
+	border-top: 2px solid #7e7e7e;
     width: 97%;
     padding: 10px;
     margin: auto;
@@ -29582,7 +29582,7 @@ font-family:DejaVu Sans;
 }
 /*best picks end*/
 div#promobannerhomepage{
-margin:30px 0;
+margin:45px 0 30px;
 }
 div#promobannerhomepage a{
 color:inherit;
@@ -29950,7 +29950,7 @@ width: 100px !important;
 }
 
 .home-brands-you-love-wrapper .home-brands-you-love-desc p {
-	padding-top: 10px;
+	padding-top: 20px;
 }
 
 .home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name {
@@ -30025,7 +30025,7 @@ body.page-reviews .gig-comment .gig-media-thumbnail {
 body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image,
 body.page-reviews .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
 	height: auto !important;
-	width: 50px !important;
+	width: 160px !important;
 }
 
 body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-caption a {
@@ -30205,7 +30205,11 @@ form[name='flyOutloginForm'] input:-ms-input-placeholder {
 	line-height: 18px;
 } 
 
-
+@media ( max-width : 790px){ 
+	footer>ul>li ul li {
+		line-height: 30px;
+	}
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -36030,7 +36034,7 @@ border-top: 3px solid #fff;
 	{
 		cursor: pointer;
     position: absolute !important;
-    top: 110px !important;
+    top:165px !important;
        
     display: table;
         width: 30px;
