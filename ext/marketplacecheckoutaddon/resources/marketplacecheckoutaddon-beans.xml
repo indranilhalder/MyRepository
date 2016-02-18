@@ -28,6 +28,10 @@
 	<bean class="com.tisl.mpl.facades.data.StoreLocationRequestData">
 	  <property name="ussId" type="String" />
 	  <property name="storeId" type="java.util.List&lt;java.lang.String>"></property>
+	  <property name="fulfillmentType" type="String"/>
+	  <property name="transportMode" type="String"/>
+	  <property name="price" type="double"/>
+	   <property name="sellerId" type="String"/>
 </bean>
 
 	<bean class="com.tisl.mpl.facades.data.ATSResponseData">
