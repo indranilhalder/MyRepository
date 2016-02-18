@@ -1027,11 +1027,11 @@ h2 {
             -moz-osx-font-smoothing: grayscale;
             font-weight: 100;
             content: "\e605";
-            font-size: 18px;
+            font-size: 16px;
             color: #A9143C;
             line-height: 18px;
             margin-right: 5px;
-            top: 3px;
+            top: 2px;
             position: relative;
             font-weight: bold; }
           header .content .right > ul > li.bag .mini-bag {
@@ -29028,11 +29028,11 @@ min-width: 150px;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
    content:"\f0a2";
-    font-size: 16px;
+    font-size: 13px;
     color: #A9143C;
     line-height: 46px;
     height:46px;
-    top: 2px;
+    top: 0px;
     position: relative;
     font-weight: bold;
 }
