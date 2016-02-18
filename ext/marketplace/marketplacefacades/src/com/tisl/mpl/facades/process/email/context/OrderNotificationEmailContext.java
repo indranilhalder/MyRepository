@@ -34,6 +34,7 @@ import org.apache.velocity.tools.generic.MathTool;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 
 
 /**
@@ -73,7 +74,6 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				.getTotalPrice().doubleValue();
 		final double convenienceCharges = orderProcessModel.getOrder().getConvenienceCharges() == null ? 0D : orderProcessModel
 				.getOrder().getConvenienceCharges().doubleValue();
-
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 
 		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
@@ -95,24 +95,27 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(SHIPPINGCHARGE, shippingCharge);
 		//Setting first name and last name to NAMEOFPERSON
 		final StringBuilder name = new StringBuilder(150);
-		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
-		List<String> storeAddrList = new ArrayList<String>();
+		final List<AddressModel> storeAddrList = new ArrayList<AddressModel>();
 		final StringBuilder deliveryAddr = new StringBuilder(150);
-		for (AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
+		for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
 		{
-			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase("click-and-collect"))
+			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 			{
-				PointOfServiceModel model = entryModel.getDeliveryPointOfService();
-				AddressModel storeAddr = model.getAddress();
-				final StringBuilder builer = new StringBuilder(150);
-				builer.append(storeAddr.getStreetname()).append(COMMA).append(storeAddr.getStreetnumber()).append(COMMA)
-						.append(storeAddr.getAddressLine3()).append(COMMA).append(storeAddr.getTown()).append(COMMA)
-						.append(storeAddr.getDistrict()).append(COMMA).append(storeAddr.getPostalcode());
-				storeAddrList.add(builer.toString());
+				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
+				final AddressModel storeAddr = model.getAddress();
+				storeAddrList.add(storeAddr);
+				put(CUSTOMER_NAME, CUSTOMER);
+
 			}
-			else if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase("home-delivery")
-					|| entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
+			else if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.HD)
+					|| entryModel.getMplDeliveryMode().getDeliveryMode().getCode()
+							.equalsIgnoreCase(MarketplaceFacadesConstants.EXPRESS))
 			{
+				final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+				if (null != deliveryAddress.getFirstname())
+				{
+					put(CUSTOMER_NAME, deliveryAddress.getFirstname());
+				}
 				if (null != deliveryAddress.getFirstname())
 				{
 					name.append(deliveryAddress.getFirstname());
@@ -123,7 +126,6 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				}
 
 				put(NAMEOFPERSON, (name.length() > 0 ? name : CUSTOMER));
-				put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
 				put(MOBILENUMBER,
 						(null != deliveryAddress.getPhone1() ? deliveryAddress.getPhone1() : deliveryAddress.getCellphone()));
 				put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
@@ -134,7 +136,6 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				put(DELIVERYADDRESS, deliveryAddr);
 
 			}
-
 		}
 		if (storeAddrList.size() > 0)
 		{
