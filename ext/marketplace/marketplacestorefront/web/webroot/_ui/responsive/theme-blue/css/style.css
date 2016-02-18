@@ -29631,6 +29631,7 @@ p.showcase-para {
 .showcaseItem > a{
 	color:#bbb;
 	 word-break: break-word;
+	 line-height: 22px;
 }
 .showcase-center h3, .showcase-center p{line-height: 20px;}
 .showcase-section .desc-section{
@@ -30168,6 +30169,19 @@ header:not(.compact) .content .marketplace.compact{
 a.size-guide {
     white-space: nowrap;
 } 
+form[name='flyOutloginForm'] input::-webkit-input-placeholder {
+	line-height: 18px;
+}
+form[name='flyOutloginForm'] input::-moz-placeholder {
+	line-height: 18px;
+}
+
+form[name='flyOutloginForm'] input:-ms-input-placeholder {
+	line-height: 18px;
+} 
+.select-view .select-list:hover > .selected:after {
+transform: rotate(180deg);
+}
 /*--------------maincss-----------*/
 .row
 {
