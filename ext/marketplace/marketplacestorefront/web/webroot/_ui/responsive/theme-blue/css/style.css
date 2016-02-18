@@ -1532,7 +1532,7 @@ h2 {
             font-weight: 100;
             content: "\f107";
             display: inline-block;
-            color: #a9143c;
+            color: #000;
             position: relative;
             margin-left: 5px;
             top: 4px;
@@ -1787,7 +1787,7 @@ h2 {
           -moz-transition: background-color 0.15s;
           transition: background-color 0.15s; }
           header .content nav > ul > li:hover > .toggle {
-            color: #A9143C;
+            color: #000;
             -webkit-transition: color 0.15s;
             -moz-transition: color 0.15s;
             transition: color 0.15s; }
@@ -3792,13 +3792,14 @@ h2 {
 		margin-left: 10px;
 	}
 	.shop-promos .promos li span, .shop-promos .promos li span:last-child {
-		padding: 10px 0;
+		padding: 18px 0;
 		text-align: center;
 	}
 	.shop-promos .promos li span {
-		font-size: 13px;
+		font-size: 12px;
 		margin-bottom: 0;
-		letter-spacing: 1.1px;
+		/* letter-spacing: 1.1px; */
+		font-weight: normal;
 	}
 /* 	.shop-promos .promos li span:last-child {
 		font-size: 10px;
@@ -29166,18 +29167,21 @@ position: absolute;
 .shop-promos {
     padding: 0;}
 .shop-promos .promos li span{
-color:#aaa;
+color:#7e7e7e;
 position:relative;
 
   }
 .shop-promos .promos li span:after{
-     font-family: 'FontAwesome';
+    font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     content: "\f105";
-    font-size: 23px;
-    vertical-align: text-bottom;
+    font-size: 14px;
     padding-left: 5px;
+    font-weight: 100;
+    color: #000;
+    position: relative;
+    top: 0px;
 }
 .shop-promos .promos li:nth-last-of-type(1) {
     border-right: none;
@@ -29187,7 +29191,7 @@ position:relative;
 .shop-promos .promos li {
 	border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    padding: 65px 0 0 0;
+    padding: 52px 0 0 0;
 	display: table-cell;
     float: none;
     }
@@ -29382,18 +29386,17 @@ vertical-align: middle;
     box-sizing: border-box;
 }
 .home-brands-you-love-side-image.left {
-vertical-align:bottom;
+vertical-align:top;
 }
 .home-brands-you-love-side-image.right {
 	vertical-align:top;
-    padding-top: 50px;
 }
 .home-brands-you-love-main-image {
     width: 48%;
     display: inline-block;
 	padding: 0 10px;
     box-sizing: border-box;
-	    vertical-align: bottom;
+	    vertical-align: top;
 }
 p.home-brands-you-love-main-image-heading {
     text-align: center;
@@ -29483,9 +29486,17 @@ padding-top:20px;
     line-height:30px;
 }
 }
+@media(min-width:791px){
+	p.home-brands-you-love-main-image-desc{
+	width:50%;
+	}
+}
 /*brands you love css ends*/
 
 /*best picks start*/
+#bestPicks{
+	    margin-bottom: 40px;
+}
 #bestPicks, #productYouCare {
 padding: 0 20px;
     clear: both;
@@ -29564,7 +29575,7 @@ font-family:DejaVu Sans;
     font-weight: 600;
 	    margin: 15px auto;
     text-transform: uppercase;
-    display: block;
+    display: none;
     width: 200px;
     text-align: center;
     letter-spacing: 1.5px;
@@ -30193,9 +30204,6 @@ form[name='flyOutloginForm'] input::-moz-placeholder {
 form[name='flyOutloginForm'] input:-ms-input-placeholder {
 	line-height: 18px;
 } 
-.select-view .select-list:hover > .selected:after {
-transform: rotate(180deg);
-}
 
 
 /*--------------maincss-----------*/
