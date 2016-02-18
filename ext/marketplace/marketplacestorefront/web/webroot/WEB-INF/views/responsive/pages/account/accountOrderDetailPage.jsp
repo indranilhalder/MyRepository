@@ -15,7 +15,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
 <spring:url value="/my-account/update-password" var="updatePasswordUrl" />
@@ -26,24 +25,37 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 <style>
-.ordermargingalignment{
+.ordermargingalignment {
 	height: 41px;
 	padding-top: 7px;
 	font-size: 12px;
 	font-weight: 300;
 }
-.orderheadingalignment{
-	font-size: 12px;
-}
-.orderbodyalignment{
-	font-size: 12px;
-}
-.attributes{
-	font-size: 12px;
-}
-.actions{
-	font-size: 12px;
 
+.orderheadingalignment {
+	font-size: 12px;
+}
+
+.orderbodyalignment {
+	font-size: 12px;
+}
+
+.attributes {
+	font-size: 12px;
+}
+
+.actions {
+	font-size: 12px;
+}
+
+.deliverymode {
+	font-size: 12px;
+	font-weight: 600;
+	min-height: 17px;
+}
+
+.error_text {
+	color: red;
 }
 </style>
 
@@ -67,8 +79,6 @@
       </select> --%>
 		</h1>
 		<div class="wrapper">
-
-
 			<!----- Left Navigation Starts --------->
 			<div class="left-nav">
 				<%-- <h1>
@@ -96,10 +106,11 @@
 								code="header.flyout.recommendations" /></a></li>
 				</ul>
 				<ul>
-				<li class="header-SignInShare"><h3><spring:theme
-									code="header.flyout.credits" /></h3></li>
-						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li>
+					<li class="header-SignInShare"><h3>
+							<spring:theme code="header.flyout.credits" />
+						</h3></li>
+					<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+								code="header.flyout.coupons" /></a></li>
 				</ul>
 				<ul>
 					<li><h3>
@@ -128,11 +139,7 @@
 						<h1>
 							<spring:theme text="Order Details" />
 						</h1>
-
-
 					</div>
-
-
 					<ul class="product-block order-details">
 						<li class="header">
 
@@ -141,11 +148,8 @@
 											code="text.orderHistory.order.placed" /></span> <c:if
 										test="${not empty orderDate}">${orderDate}</c:if> <%-- <fmt:formatDate
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
-								<li><span class="ordermargingalignment">Total: </span> 
-								<!-- TISSIT-1773 -->
-								<%-- <format:price	priceData="${subOrder.totalPrice}" /> --%>
-								
-								<c:choose>
+								<li><span class="ordermargingalignment">Total: </span> <!-- TISSIT-1773 -->
+									<%-- <format:price	priceData="${subOrder.totalPrice}" /> --%> <c:choose>
 										<c:when test="${subOrder.net}">
 											<span class="amt"><format:price
 													priceData="${subOrder.totalPriceWithTax}" /></span>
@@ -154,10 +158,7 @@
 											<span class="amt"><format:price
 													priceData="${subOrder.totalPriceWithConvCharge}" /></span>
 										</c:otherwise>
-								</c:choose>
-								
-								
-								</li>
+									</c:choose></li>
 								<li class="recipient"><span class="ordermargingalignment"><spring:theme
 											code="text.orderHistory.recipient" /></span> <c:choose>
 										<c:when test="${subOrder.deliveryAddress != null}">
@@ -167,19 +168,18 @@
 												${subOrder.mplPaymentInfo.cardAccountHolderName}
 												</c:otherwise>
 									</c:choose></li>
-								<li><span class="ordermargingalignment">Order Reference Number: </span> ${subOrder.code}</li>
+								<li><span class="ordermargingalignment">Order
+										Reference Number: </span> ${subOrder.code}</li>
 							</ul>
-
-
 							<div class="totals" style="margin-left: 44px;">
 								<h3 class="orderheadingalignment">Total:</h3>
 								<ul>
-									<li class="orderbodyalignment"><spring:theme code="text.account.order.subtotal"
-											/>  <format:price
-												priceData="${subOrder.subTotal}" />
-									</li>
-									<li class="orderbodyalignment"><spring:theme code="text.account.order.delivery"
-											text="Delivery" /><span class="amt orderbodyalignment"> <format:price
+									<li class="orderbodyalignment"><spring:theme
+											code="text.account.order.subtotal" /> <format:price
+											priceData="${subOrder.subTotal}" /></li>
+									<li class="orderbodyalignment"><spring:theme
+											code="text.account.order.delivery" text="Delivery" /><span
+										class="amt orderbodyalignment"> <format:price
 												priceData="${subOrder.deliveryCost}"
 												displayFreeForZero="true" />
 									</span></li>
@@ -191,7 +191,7 @@
 										</span></li>
 									</c:if>
 									<!-- TISEE-2672 -->
-									
+
 									<!-- TISSTRT-136 -->
 									<c:if test="${subOrder.couponDiscount.value > 0}">
 										<li><spring:theme code="text.account.order.coupon"
@@ -205,24 +205,22 @@
 										<li><spring:theme
 												code="text.account.order.convinienceCharges"
 												text="Convenience Charges" /> <format:price
-													priceData="${subOrder.convenienceChargeForCOD}" />
-										</li>
+												priceData="${subOrder.convenienceChargeForCOD}" /></li>
 									</c:if>
 									<%-- <li><spring:theme text="Gift Wrap:" /><span><format:price
 												priceData="${subOrder.deliveryCost}"
 												displayFreeForZero="true" /></span></li> --%>
-									<li class="grand-total orderheadingalignment">
-										<spring:theme code="text.account.order.total.new" text="Total" />
-										<c:choose>
+									<li class="grand-total orderheadingalignment"><spring:theme
+											code="text.account.order.total.new" text="Total" /> <c:choose>
 											<c:when test="${subOrder.net}">
-													<span class="amt"><format:price
-															priceData="${subOrder.totalPriceWithTax}" /></span>
-												</c:when>
-												<c:otherwise>
-													<span class="amt"><format:price
-															priceData="${subOrder.totalPriceWithConvCharge}" /></span>
-												</c:otherwise>
-											</c:choose></li>
+												<span class="amt"><format:price
+														priceData="${subOrder.totalPriceWithTax}" /></span>
+											</c:when>
+											<c:otherwise>
+												<span class="amt"><format:price
+														priceData="${subOrder.totalPriceWithConvCharge}" /></span>
+											</c:otherwise>
+										</c:choose></li>
 								</ul>
 
 							</div>
@@ -245,8 +243,8 @@
 								<p class="orderbodyalignment">${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 								<c:if
 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
-									<p class="orderbodyalignment">${subOrder.mplPaymentInfo.cardCardType} ending in
-										${cardNumEnd}</p>
+									<p class="orderbodyalignment">${subOrder.mplPaymentInfo.cardCardType}
+										ending in ${cardNumEnd}</p>
 									<p class="orderbodyalignment">Expires on:
 										${subOrder.mplPaymentInfo.cardExpirationMonth}/${subOrder.mplPaymentInfo.cardExpirationYear}</p>
 								</c:if>
@@ -254,11 +252,6 @@
 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Netbanking'}">
 									<p>${subOrder.mplPaymentInfo.bank}</p>
 								</c:if>
-
-
-
-
-
 								<!-- }
 								//TODO
 								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
@@ -323,67 +316,134 @@
 						</li>
 
 
-						<li class="item delivered first">
-							<div class="item-header">
-								<c:set var="entryCount" value="0"></c:set>
-								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
-									varStatus="status">
-									<c:forEach items="${sellerOrder.entries}" var="entry"
-										varStatus="entryStatus">
-										<c:set var="entryCount" value="${entryCount +1 }"></c:set>	
-										<c:set var="deliveryMode" value="${entry.mplDeliveryMode.code}"/>
-									     <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-											<c:set var="flag" value="true"/>
-										 </c:if>  
-									</c:forEach>
-								</c:forEach>
-								<c:if test="${entryCount > 1}">
-									<h3>Shipping Address:</h3>
+						<!-- for ED AND HD Mode -->
+						<c:set var="entryCount" value="0"></c:set>
+						<c:set var="deliveryMode" value="" />
+
+						<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
+							varStatus="status">
+							<c:forEach items="${sellerOrder.entries}" var="entry"
+								varStatus="entryStatus">
+								<c:set var="entryCount" value="${entryCount +1 }"></c:set>
+								<c:set var="deliveryMode" value="${entry.mplDeliveryMode.code}" />
+
+								<c:if test="${deliveryMode ne 'click-and-collect'}">
+									<c:set var="HD_ED_Count" value="${HD_ED_Count +1 }" />
+									<c:set var="flag" value="true" />
 								</c:if>
-								<c:if test="${entryCount  <= 1 }">
-									<h3>
-										<%-- ${entryCount}&nbsp; --%>
-										Shipping Address:
-									</h3>
-								</c:if>
-								<c:if test="${flag eq true}">
-								<address>
-									${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
-									${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
-									${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
-									${fn:escapeXml(subOrder.deliveryAddress.line2)},
-									<c:if test="${not empty subOrder.deliveryAddress.line3}">
+
+							</c:forEach>
+						</c:forEach>
+
+						<c:if test="${flag}">
+							<li class="item delivered first"
+								style="padding-bottom: 0px !important;">
+								<div class="item-header" style="margin-bottom: 0px !important">
+									<c:if test="${entryCount > 1}">
+										<h3>${HD_ED_Count}Product(s)-ShippingAddress:</h3>
+									</c:if>
+									<c:if test="${entryCount  <= 1 }">
+										<h3>${entryCount}&nbsp;ShippingAddress:</h3>
+									</c:if>
+
+
+									<address style="font-size: 12px">
+										${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
+										${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
+										${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
+										${fn:escapeXml(subOrder.deliveryAddress.line2)},
+										<c:if test="${not empty subOrder.deliveryAddress.line3}">
 												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
 											</c:if>
-									<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
-									<c:if test="${not empty subOrder.deliveryAddress.state}">
+										<br>
+										${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
+										<c:if test="${not empty subOrder.deliveryAddress.state}">
 												${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
 											</c:if>
-									${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}
-									<br>
-									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
-								</address>
-								</c:if>
-								</div> <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
-								varStatus="status">
-								<input type="hidden" id="subOrderCode"
-									value="${sellerOrder.code}" />
-								<input type="hidden" id="newCode" value="${subOrder.code}" />
-								<c:forEach items="${sellerOrder.entries}" var="entry"
-									varStatus="entryStatus">
+										${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}
+										<br>
+										91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
+									</address>
+								</div>
+							</li>
+
+
+						</c:if>
+						<!-- End of ED and HD Mode -->
+
+
+						<c:set var="diffrentStore" value="0" />
+						<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
+							varStatus="status">
+							<input type="hidden" id="subOrderCode"
+								value="${sellerOrder.code}" />
+							<input type="hidden" id="newCode" value="${subOrder.code}" />
+							<c:forEach items="${sellerOrder.entries}" var="entry"
+								varStatus="entryStatus">
+								<!-- FOR CnC -->
+								<li class="item delivered first"
+									style="margin-bottom: 10px; margin-top: -10px;">
+									<div class="item-header">
+										<c:if
+											test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+											<div class="orderBox address">
+
+
+												<c:forEach items="${subOrder.entries}" var="subOrderentry"
+													varStatus="entryStatus">
+
+													<c:if
+														test="${storeId ne subOrderentry.deliveryPointOfService.address.id}">
+														<c:if
+															test="${subOrderentry.product.code eq entry.product.code}">
+
+															<c:set var="storeAddress"
+																value="${subOrderentry.deliveryPointOfService.address}" />
+															<c:set var="storeId" value="${storeAddress.id}" />
+															<h3>${entryCount-HD_ED_Count}Product(s)-Collect
+																In-Store</h3>
+															<p style="font-size: 12px; font-weight: 600;">Store
+																Address:</p>
+															<br>
+															<br>
+															<c:set var="editButton" value="enable" />
+															<address
+																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
+																${fn:escapeXml(storeAddress.firstName)}&nbsp;
+																${fn:escapeXml(storeAddress.lastName)}<br>
+																${fn:escapeXml(storeAddress.companyName)} <br>
+																${fn:escapeXml(storeAddress.line1)}&nbsp;
+																${fn:escapeXml(storeAddress.line2)}
+																${fn:escapeXml(storeAddress.town)}, <br>
+																${fn:escapeXml(storeAddress.state)},
+																${fn:escapeXml(storeAddress.country.name)},
+																${fn:escapeXml(storeAddress.postalCode)}
+																${fn:escapeXml(storeAddress.country.isocode)} <br>
+																+91&nbsp; ${fn:escapeXml(storeAddress.phone)} <br>
+															</address>
+															<br>
+														</c:if>
+													</c:if>
+												</c:forEach>
+											</div>
+										</c:if>
+									</div> <!-- End FOR C&C delivery Mode-->
 									<div class="item-fulfillment">
 										<p>
 											<spring:message code="mpl.myBag.fulfillment"></spring:message>
 											<!-- TISEE-6290 -->
 											<c:forEach items="${fullfillmentData}" var="fullfillmentData">
 												<c:if test="${fullfillmentData.key == entry.transactionId}">
-													<c:set var="fulfilmentValue" value="${fn:toLowerCase(fullfillmentData.value)}"> </c:set>
+													<c:set var="fulfilmentValue"
+														value="${fn:toLowerCase(fullfillmentData.value)}">
+													</c:set>
 													<c:choose>
 														<c:when test="${fulfilmentValue eq 'tship'}">
-															<span><spring:theme code="product.default.fulfillmentType"/> </span>
+															<span><spring:theme
+																	code="product.default.fulfillmentType" /> </span>
 														</c:when>
 														<c:otherwise>
-															<span>${entry.selectedSellerInformation.sellername}</span> 
+															<span>${entry.selectedSellerInformation.sellername}</span>
 														</c:otherwise>
 													</c:choose>
 												</c:if>
@@ -394,18 +454,90 @@
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
 										</p>
-									</div>
-									<c:url value="${entry.product.url}" var="productUrl" />
-									<c:set var="orderEntrySellerSKU"
-										value="${entry.mplDeliveryMode.sellerArticleSKU}" />
-									<c:forEach items="${entry.product.seller}" var="seller">
+										<div class="deliverymode">
+											<c:if
+												test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+									${entry.mplDeliveryMode.name}:					  
+		                      <!--   <h3 style="font-weight: 600;">PickUp Details</h3>    -->
+
+												<!--  Edit button and input box for  pickup Person details -->
+												<c:if test="${editButton eq 'enable'}">
+													<div id="pickName"
+														style="font-size: 12px; padding-top: 5px; padding-left: 128px; margin-top: -16px; font-weight: 100;">
+														${sellerOrder.pickupName}<br>
+													</div>
+													<%-- <div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div>  --%>
+
+													<a type="button" id="button" class="pickupeditbtn"
+														style="width: 11px; padding-top: 12px; padding-left: 70px; font-weight: 100;">Edit
+													</a>
+													<c:set var="editButton" value="disable" />
+
+
+													<div class="container"
+														style="margin-left: 181px; margin-top: -22px;">
+														<div class="row">
+
+															<div class="pickup_Edit">
+																<div class="col-md-5">
+																	<div class="row" style="float: left; z-index: 999;">
+
+																		<div class="col-md-5">
+																			<label class="pickup_name"
+																				style="padding-top: 12px; margin-left: -17px;">PickUpName</label>
+																		</div>
+																		<div class="col-md-7"
+																			style="z-index: 99999 !important;">
+																			<input id="pickUpName" class="pickUpName" type="Text"
+																				name="pickUpName1"
+																				style="height: 28px; margin-top: 6px; z-index: 119; margin-right: -63px;"
+																				value="${sellerOrder.getPickupName()}" /> <br />
+																			<div class="error_text pickupPersonNameError"
+																				style="width: 115px; font-size: 9px;"></div>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-md-5" style="z-index: 99;">
+																	<div class="row" style="z-index: 99;">
+																		<div class="col-md-5">
+																			<label class="pickup_mob"
+																				style="margin-left: -74px; padding-top: 14px; width: 71px;">Mobile
+																				No</label>
+																		</div>
+																		<div class="col-md-7">
+																			<input id="pickMobileNo" class="pickMobileNo"
+																				type="Text" name="mobileNo"
+																				style="margin-left: -127px; height: 28px; margin-top: 7px; z-index: 10;"
+																				value="${sellerOrder.getPickupPhoneNumber()}" />
+																			<div class="error_text pickupPersonMobileError"
+																				style="margin-left: -124px; width: 167px; font-size: 9px;"></div>
+																		</div>
+
+																	</div>
+																</div>
+																<div class="col-md-1">
+																	<input type="button" value="Save" class="savebtn"
+																		onclick="editPickUpDetails('${subOrder.code}')"
+																		style="z-index: 99; min-width: 91px;" />
+																</div>
+															</div>
+														</div>
+													</div>
+												</c:if>
+												<!-- End Edit button and input box for  pickup Person details -->
+											</c:if>
+										</div>
+
+									</div> <br> <br> <c:url value="${entry.product.url}"
+										var="productUrl" /> <c:set var="orderEntrySellerSKU"
+										value="${entry.mplDeliveryMode.sellerArticleSKU}" /> <c:forEach
+										items="${entry.product.seller}" var="seller">
 										<c:if
 											test="${entry.mplDeliveryMode.sellerArticleSKU eq orderEntrySellerSKU}">
 											<c:set var="sellerId" value="${seller.sellerID}" />
 											<c:set var="sellerOrderId" value="${sellerOrder.code}" />
 										</c:if>
 									</c:forEach>
-
 									<div class="order">
 										<c:url value="${entry.product.url}" var="productUrl" />
 										<div class="image">
@@ -437,468 +569,444 @@
 											<c:if test="${not empty entry.imeiDetails}">
 												<p>Serial Number: ${entry.imeiDetails.serialNum}</p>
 											</c:if>
-											
-		                 <c:set var="entrySize" value="${sellerOrder.entries}"></c:set>
-						<c:set var="size" value="${entrySize.size()}"></c:set>	 	
-						<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">				      
-									<div class="orderBox address">
-								    <h3 style="font-weight: 600;">Store Address</h3>
-						     <c:forEach items="${subOrder.entries}" var="subOrderentry"
-								varStatus="entryStatus">
-								<c:if test="${subOrderentry.product.code eq entry.product.code}">
-								   <c:set var="storeAddress" value="${subOrderentry.deliveryPointOfService.address}" />
-					                <address style="line-height: 18px;font-size: 12px;padding-top: 5px;">  ${storeAddress.firstName}&nbsp; ${storeAddress.lastName}<br>
-							    	           ${storeAddress.companyName}<br>
-							    	           ${storeAddress.line1} &nbsp;
-								               ${storeAddress.line2} &nbsp;
-								               ${storeAddress.town}, <br>
-								               ${storeAddress.state},
-								               ${storeAddress.country.name},
-								               ${storeAddress.postalCode} 
-								               ${storeAddress.country.isocode}<br>                
-								              +91&nbsp;${storeAddress.phone} <br>          
-						    		</address> 
-		                       <br>	
-		                      </c:if>
-		                       </c:forEach>
-		                        <c:if test="${entry.entryNumber eq size-1}">
-		                        <h3 style="font-weight: 600;">PickUp Details</h3>        
-		                         <div id="pickName" style="font-size: 12px;padding-top: 5px;">  ${sellerOrder.pickupName}<br></div>
-		                          <div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div>         
-                               <a type="button" id="button" class="pickupeditbtn" style="width: 11px">Edit </a>
-                               </c:if>
-		                       </div> 
-		                       
-		        					<div class="container">
-		        					<div class="row">
-		        					<c:if test="${entry.entryNumber eq size-1}">
-		                          <div class="pickup_Edit">
-		                          <div class="col-md-5">
-		                          <div class="row" style="float: left; z-index: 999;">
-		                          
-		                          <div class="col-md-5">
-			                          <label class="pickup_name" style="padding-top: 12px;">PickUpName</label>
-			                       </div>   
-			                       <div class="col-md-7" style="z-index: 99999 !important;">
-			                       		 <input id="pickUpName" class="pickUpName" type="Text" name="pickUpName1" style="height: 28px;
-margin-top: 6px;z-index: 119;" value="${sellerOrder.getPickupName()}" /> <br/>
-			                       		 <div class="error_text pickupPersonNameError" style="width: 115px;" ></div>
-			                       </div>
-			                       </div>
-			                       </div>
-			                           <div class="col-md-5" style="z-index: 99;">
-			                          <div class="row" style="z-index: 99;">
-			                          <div class="col-md-5">
-			                          <label class="pickup_mob" style="margin-left: 165px;
-padding-top: 14px;
-width: 67px;" >Mobile No</label> 
-			                          </div>
-			                          <div class="col-md-7">
-			                          <input id="pickMobileNo" class="pickMobileNo" type="Text" name="mobileNo" style="margin-left: 197px;
-height: 28px;
-margin-top: 7px; z-index: 10;" value="${sellerOrder.getPickupPhoneNumber()}" />
-<div class="error_text pickupPersonMobileError" style="margin-left: 198px;
-width: 123px;" ></div>
-			                         </div>
-			                         
-			                         </div></div>
-			                         <div class="col-md-2">
-		                           		 <input type="button" value="Save" class="savebtn"
-																onclick="editPickUpDetails('${subOrder.code}')" /> 
-																</div>
-		           				</div>
-		           				</c:if>
-		           				</div>
-		           				</div>
-		                         </c:if>
-		                        
 
-										</div>
-										<div class="actions" style="margin-left: -8px;">
-											<c:if
-												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
-												<c:set var="bogoCheck"
-													value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set>
-												<a href="" data-toggle="modal"
-													data-target="#cancelOrder${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}"
-													data-mylist="<spring:theme code="text.help" />"
-													data-dismiss="modal" onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
-														text="Cancel Order" /></a>
-											</c:if>
-											<c:if
-												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
-												<a
-													href="${request.contextPath}/my-account/order/returnReplace?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
-													<spring:theme code="text.account.returnReplace"
-														text="Return Item" />
-												</a>
-											</c:if>
-											<c:if test="${entry.showInvoiceStatus eq 'true'}">
-												<a
-													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
-													onclick="callSendInvoice();"><spring:theme
-														code="text.account.RequestInvoice" text="Request Invoice" /></a>
-											</c:if>
-										</div>
+											<div class="modal cancellation-request fade"
+												id="cancelOrder${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}">
 
-										<div class="modal cancellation-request fade"
-											id="cancelOrder${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}">
-
-											<div class="content">
-												<!-- 	<button type="button" class="close pull-right" 		
+												<div class="content">
+													<!-- 	<button type="button" class="close pull-right" 		
 										           aria-hidden="true" data-dismiss="modal">		
 										            </button> -->
-												<div class="cancellation-request-block">
-													<h2>Request Cancellation</h2>
-													<!-- ../my-account/returnSuccess -->
-													<form:form class="return-form"
-														id="returnRequestForm${entryStatus.index}${sellerOrder.code}"
-														action="../my-account/returnSuccess" method="post"
-														commandName="returnRequestForm">
-														<div class="return-container">
-															<ul class="products">
-																<c:forEach
-																	items="${cancelProductMap[entry.orderLineId]}"
-																	var="entryCancel">
-																	<li class="item look">
-																		<ul class="product-info">
-																			<li>
-																				<div class="product-img">
-																					<a href="${productUrl}"> <product:productPrimaryImage
-																							product="${entryCancel.product}"
-																							format="thumbnail" />
-																					</a>
-																				</div>
-																				<div class="product">
-																					<!-- <p class="company">Nike</p> -->
-																					<h3 class="product-name">
-																						<a href="${productUrl}">${entryCancel.product.name}</a>
-																					</h3>
+													<div class="cancellation-request-block">
+														<h2>Request Cancellation</h2>
+														<!-- ../my-account/returnSuccess -->
+														<form:form class="return-form"
+															id="returnRequestForm${entryStatus.index}${sellerOrder.code}"
+															action="../my-account/returnSuccess" method="post"
+															commandName="returnRequestForm">
+															<div class="return-container">
+																<ul class="products">
+																	<c:forEach
+																		items="${cancelProductMap[entry.orderLineId]}"
+																		var="entryCancel">
+																		<li class="item look">
+																			<ul class="product-info">
+																				<li>
+																					<div class="product-img">
+																						<a href="${productUrl}"> <product:productPrimaryImage
+																								product="${entryCancel.product}"
+																								format="thumbnail" />
+																						</a>
+																					</div>
+																					<div class="product">
+																						<!-- <p class="company">Nike</p> -->
+																						<h3 class="product-name">
+																							<a href="${productUrl}">${entryCancel.product.name}</a>
+																						</h3>
 
-																					<p class="item-info">
-																						<span><b><c:if
-																									test="${entryCancel.quantity > 1}">
-																									<spring:theme code="text.orderHistory.quantity" />
+																						<p class="item-info">
+																							<span><b><c:if
+																										test="${entryCancel.quantity > 1}">
+																										<spring:theme
+																											code="text.orderHistory.quantity" />
 																				&nbsp;${entryCancel.quantity}
 																				</c:if></b> </span>
 
-																						<c:if test="${not empty entryCancel.product.size}">
-																							<span><b>Size:</b>
-																								${entryCancel.product.size}</span>
-																						</c:if>
-																						<c:if
-																							test="${not empty entryCancel.product.colour}">
-																							<span><b>Color:</b>
-																								${entryCancel.product.colour}</span>
-																						</c:if>
+																							<c:if
+																								test="${not empty entryCancel.product.size}">
+																								<span><b>Size:</b>
+																									${entryCancel.product.size}</span>
+																							</c:if>
+																							<c:if
+																								test="${not empty entryCancel.product.colour}">
+																								<span><b>Color:</b>
+																									${entryCancel.product.colour}</span>
+																							</c:if>
 
-																						<span class="price"><b>Price:</b> <ycommerce:testId
-																								code="orderDetails_productTotalPrice_label">
-																								<format:price
-																									priceData="${entryCancel.totalPrice}"
-																									displayFreeForZero="true" />
-																							</ycommerce:testId> </span>
-																						<c:if test="${not empty entryCancel.imeiDetails}">
-																							<span><b>Serial Number:</b>
-																								${entryCancel.imeiDetails.serialNum}</span>
-																						</c:if>
-																						<span class="sellerOrderNo"><b> <spring:theme
-																									code="text.orderHistory.seller.order.number" />:
-																						</b> ${sellerOrder.code} </span>
-																					</p>
-																					<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
-																				</div>
-																			</li>
-																		</ul>
-																	</li>
-																</c:forEach>
-															</ul>
-															<div class="questions">
-																<label>But why?</label>
-																<form:select name="reasonList"
-																	id="cancellationreasonSelectBox_${entry.transactionId}" path="reasonCode" onchange="setDropDownValue(${entry.transactionId})">
-																	<option selected="selected" disabled="disabled" id="defaultReason"><spring:theme
-																			code="text.requestDropdown.selected" /></option>
-																	<c:forEach items="${cancellationReason}" var="reason">
-																		<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
+																							<span class="price"><b>Price:</b> <ycommerce:testId
+																									code="orderDetails_productTotalPrice_label">
+																									<format:price
+																										priceData="${entryCancel.totalPrice}"
+																										displayFreeForZero="true" />
+																								</ycommerce:testId> </span>
+																							<c:if test="${not empty entryCancel.imeiDetails}">
+																								<span><b>Serial Number:</b>
+																									${entryCancel.imeiDetails.serialNum}</span>
+																							</c:if>
+																							<span class="sellerOrderNo"><b> <spring:theme
+																										code="text.orderHistory.seller.order.number" />:
+																							</b> ${sellerOrder.code} </span>
+																						</p>
+																						<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
+																					</div>
+																				</li>
+																			</ul>
+																		</li>
 																	</c:forEach>
-																</form:select>
-															</div>
-															<c:set var="ussidClass" value="${orderEntrySellerSKU}"></c:set>
-															<!-- <c:forEach items="${entry.associatedItems}" var="associatedUssid">
+																</ul>
+																<div class="questions">
+																	<label>But why?</label>
+																	<form:select name="reasonList"
+																		id="cancellationreasonSelectBox_${entry.transactionId}"
+																		path="reasonCode"
+																		onchange="setDropDownValue(${entry.transactionId})">
+																		<option selected="selected" disabled="disabled"
+																			id="defaultReason"><spring:theme
+																				code="text.requestDropdown.selected" /></option>
+																		<c:forEach items="${cancellationReason}" var="reason">
+																			<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
+																		</c:forEach>
+																	</form:select>
+																</div>
+																<c:set var="ussidClass" value="${orderEntrySellerSKU}"></c:set>
+																<!-- <c:forEach items="${entry.associatedItems}" var="associatedUssid">
 															<c:set var="ussidClass" value="${ussidClass},${associatedUssid}" />
 														</c:forEach>  -->
-															<form:hidden path="ticketTypeCode"
-																class="ticketTypeCodeClass" value="C" />
-															<form:hidden path="orderCode" id="orderCode"
-																class="subOrderCodeClass" value="${sellerOrder.code}" />
-															<form:hidden path="transactionId"
-																class="transactionIdClass"
-																value="${entry.transactionId}" />
-															<form:hidden path="ussid" class="ussidClass"
-																value="${ussidClass}" />
+																<form:hidden path="ticketTypeCode"
+																	class="ticketTypeCodeClass" value="C" />
+																<form:hidden path="orderCode" id="orderCode"
+																	class="subOrderCodeClass" value="${sellerOrder.code}" />
+																<form:hidden path="transactionId"
+																	class="transactionIdClass"
+																	value="${entry.transactionId}" />
+																<form:hidden path="ussid" class="ussidClass"
+																	value="${ussidClass}" />
 
-															<input type="hidden" class="entryNumberClass"
-																id="entryNumber" value="${entry.entryNumber}" />
-														</div>
-														<div class="buttons">
-															<a class="close" data-dismiss="modal">Close</a>
-															<button type="button"
-																class="light-red cancel-confirm-detail" id="myaccount"
-																data-dismiss="modal">Confirm Cancellation</button>
-														</div>
-
-													</form:form>
-
-												</div>
-												<!-- <button class="close" data-dismiss="modal"></button> -->
-											</div>
-											<div class="overlay" data-dismiss="modal"></div>
-										</div>
-
-
-
-										<div class=" modal account active fade"
-											id="cancelSuccess${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}">
-											<div class="content">
-												<button type="button" id="returnReject"
-													onclick="reloadOrderDetailPage()" class="close pull-right"
-													aria-hidden="true" data-dismiss="modal"></button>
-												<div class="cancellation-request-block success">
-													<h2>Return Cancellation</h2>
-
-													<div>
-														<h3>
-															<span id="resultTitle"></span>
-														</h3>
-														<div>
-															<span id="resultDesc"></span>
-														</div>
+																<input type="hidden" class="entryNumberClass"
+																	id="entryNumber" value="${entry.entryNumber}" />
+															</div>
+															<div class="buttons">
+																<a class="close" data-dismiss="modal">Close</a>
+																<button type="button"
+																	class="light-red cancel-confirm-detail" id="myaccount"
+																	data-dismiss="modal">Confirm Cancellation</button>
+															</div>
+														</form:form>
 													</div>
-													<form class="return-form">
-														<div class="return-container container">
-															<ul class="products">
-																<c:forEach
-																	items="${cancelProductMap[entry.orderLineId]}"
-																	var="entryCancel">
-																	<li class="item look">
-																		<ul class="product-info">
-																			<li>
-																				<div class="product-img">
-																					<a href="${productUrl}"> <product:productPrimaryImage
-																							product="${entryCancel.product}"
-																							format="thumbnail" />
-																					</a>
-																				</div>
-																				<div class="product">
-																					<!-- <p class="company">Nike</p> -->
-																					<h3 class="product-name">
-																						<a href="${productUrl}">${entryCancel.product.name}</a>
-																					</h3>
+													<!-- <button class="close" data-dismiss="modal"></button> -->
+												</div>
+												<div class="overlay" data-dismiss="modal"></div>
+											</div>
+											<div class=" modal account active fade"
+												id="cancelSuccess${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}">
+												<div class="content">
+													<button type="button" id="returnReject"
+														onclick="reloadOrderDetailPage()" class="close pull-right"
+														aria-hidden="true" data-dismiss="modal"></button>
+													<div class="cancellation-request-block success">
+														<h2>Return Cancellation</h2>
 
-																					<p class="item-info">
-																						<span><b><c:if
-																									test="${entryCancel.quantity > 1}">
-																									<spring:theme code="text.orderHistory.quantity" />
+														<div>
+															<h3>
+																<span id="resultTitle"></span>
+															</h3>
+															<div>
+																<span id="resultDesc"></span>
+															</div>
+														</div>
+														<form class="return-form">
+															<div class="return-container container">
+																<ul class="products">
+																	<c:forEach
+																		items="${cancelProductMap[entry.orderLineId]}"
+																		var="entryCancel">
+																		<li class="item look">
+																			<ul class="product-info">
+																				<li>
+																					<div class="product-img">
+																						<a href="${productUrl}"> <product:productPrimaryImage
+																								product="${entryCancel.product}"
+																								format="thumbnail" />
+																						</a>
+																					</div>
+																					<div class="product">
+																						<!-- <p class="company">Nike</p> -->
+																						<h3 class="product-name">
+																							<a href="${productUrl}">${entryCancel.product.name}</a>
+																						</h3>
+
+																						<p class="item-info">
+																							<span><b><c:if
+																										test="${entryCancel.quantity > 1}">
+																										<spring:theme
+																											code="text.orderHistory.quantity" />
 																				&nbsp;${entryCancel.quantity}
 																				</c:if></b> </span>
 
-																						<c:if test="${not empty entryCancel.product.size}">
-																							<span><b>Size:</b>
-																								${entryCancel.product.size}</span>
-																						</c:if>
-																						<c:if
-																							test="${not empty entryCancel.product.colour}">
-																							<span><b>Color:</b>
-																								${entryCancel.product.colour}</span>
-																						</c:if>
+																							<c:if
+																								test="${not empty entryCancel.product.size}">
+																								<span><b>Size:</b>
+																									${entryCancel.product.size}</span>
+																							</c:if>
+																							<c:if
+																								test="${not empty entryCancel.product.colour}">
+																								<span><b>Color:</b>
+																									${entryCancel.product.colour}</span>
+																							</c:if>
 
-																						<span class="price"><b>Price:</b> <ycommerce:testId
-																								code="orderDetails_productTotalPrice_label">
-																								<format:price
-																									priceData="${entryCancel.totalPrice}"
-																									displayFreeForZero="true" />
-																							</ycommerce:testId> </span>
-																						<c:if test="${not empty entryCancel.imeiDetails}">
-																							<span><b>Serial Number:</b>
-																								${entryCancel.imeiDetails.serialNum}</span>
-																						</c:if>
-																						<span class="sellerOrderNo"><b> <spring:theme
-																									code="text.orderHistory.seller.order.number" />:
-																						</b> ${sellerOrder.code} </span>
-																					</p>
-																					<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
-																				</div>
-																			</li>
-																		</ul>
-																	</li>
-																</c:forEach>
-															</ul>
-															<div class="reason questions">
-																<label id="reasonTitle">Reason for Cancellation:</label>
-																<span id="reasonDesc"></span>
+																							<span class="price"><b>Price:</b> <ycommerce:testId
+																									code="orderDetails_productTotalPrice_label">
+																									<format:price
+																										priceData="${entryCancel.totalPrice}"
+																										displayFreeForZero="true" />
+																								</ycommerce:testId> </span>
+																							<c:if test="${not empty entryCancel.imeiDetails}">
+																								<span><b>Serial Number:</b>
+																									${entryCancel.imeiDetails.serialNum}</span>
+																							</c:if>
+																							<span class="sellerOrderNo"><b> <spring:theme
+																										code="text.orderHistory.seller.order.number" />:
+																							</b> ${sellerOrder.code} </span>
+																						</p>
+																						<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
+																					</div>
+																				</li>
+																			</ul>
+																		</li>
+																	</c:forEach>
+																</ul>
+																<div class="reason questions">
+																	<label id="reasonTitle">Reason for
+																		Cancellation:</label> <span id="reasonDesc"></span>
+																</div>
 															</div>
-														</div>
-														<div class="buttons">
-															<button type="button" class="light-red blue"
-																id="returnReject" onclick="reloadOrderDetailPage()">Close</button>
+															<div class="buttons">
+																<button type="button" class="light-red blue"
+																	id="returnReject" onclick="reloadOrderDetailPage()">Close</button>
 
-														</div>
-													</form>
+															</div>
+														</form>
+													</div>
+
 												</div>
-
+												<div class="overlay fade" data-dismiss="modal"></div>
 											</div>
-											<div class="overlay fade" data-dismiss="modal"></div>
-										</div>
-										<!-- Start Order Tracking diagram -->
+											<!-- Start Order Tracking diagram -->
 
-										<c:set value="${trackStatusMap[entry.orderLineId]}"
-											var="trackStatus" />
-										<c:set value="${trackStatus['APPROVED']}" var="approvedStatus" />
-										<c:set value="${trackStatus['PROCESSING']}"
-											var="processingStatus" />
-										<c:set value="${trackStatus['SHIPPING']}" var="shippingStatus" />
-										<c:set value="${trackStatus['DELIVERY']}" var="deliveryStatus" />
-										<c:set value="${trackStatus['CANCEL']}" var="cancelStatus" />
-										<c:set value="${trackStatus['RETURN']}" var="returnStatus" />
-										<c:set var="productDelivered" value="0"></c:set>
-										 <!-- For RTO handling -->
-										 <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-										 <c:if test="${productStatus.responseCode eq 'DELIVERED'}">
-										 	<c:set var="productDelivered" value="1"></c:set>
-										  </c:if>
-										  </c:forEach>
-										<div class="deliveryTrack status"
-											id="tracker_${entry.transactionId}">
-											<ul class="nav">
-
-												<li>Approval</li>
-
-												<c:choose>
-													<c:when
-														test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
-														<li>Processing</li>
-													</c:when>
-
-												</c:choose>
-
-
-												<c:if test="${fn:length(cancelStatus) gt 0}">
-													<li>Cancel</li>
+											<c:set value="${trackStatusMap[entry.orderLineId]}"
+												var="trackStatus" />
+											<c:set value="${trackStatus['APPROVED']}"
+												var="approvedStatus" />
+											<c:set value="${trackStatus['PROCESSING']}"
+												var="processingStatus" />
+											<c:set value="${trackStatus['SHIPPING']}"
+												var="shippingStatus" />
+											<c:set value="${trackStatus['DELIVERY']}"
+												var="deliveryStatus" />
+											<c:set value="${trackStatus['CANCEL']}" var="cancelStatus" />
+											<c:set value="${trackStatus['RETURN']}" var="returnStatus" />
+											<c:set var="productDelivered" value="0"></c:set>
+											<!-- For RTO handling -->
+											<c:forEach items="${shippingStatus}" var="productStatus"
+												varStatus="loop">
+												<c:if test="${productStatus.responseCode eq 'DELIVERED'}">
+													<c:set var="productDelivered" value="1"></c:set>
 												</c:if>
+											</c:forEach>
+											<div class="deliveryTrack status"
+												id="tracker_${entry.transactionId}">
+												<ul class="nav">
 
-												 <c:choose >
-                                                <c:when test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
-												<c:if test="${fn:length(cancelStatus) eq 0}">
-													<li>READY for PickUp</li>
-												</c:if>
-												</c:when>
-												<c:otherwise>
-												<c:if test="${fn:length(cancelStatus) eq 0}">
-													<li>Shipping</li>
-												</c:if>
-												</c:otherwise>
-												</c:choose>
+													<li>Approval</li>
 
-												<!-- For RTO handling productDelivered -->
-												  <c:choose >
-                                                <c:when test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
-												<c:if
-													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li>PickedUp</li>
-												</c:if>
-												</c:when>
-												<c:otherwise>
-												<c:if test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li>Delivery</li>
+													<c:choose>
+														<c:when
+															test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
+															<li>Processing</li>
+														</c:when>
+													</c:choose>
+													<c:if test="${fn:length(cancelStatus) gt 0}">
+														<li>Cancel</li>
 													</c:if>
-												</c:otherwise>
-												
-												</c:choose>
+													<c:choose>
+														<c:when
+															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+															<c:if test="${fn:length(cancelStatus) eq 0}">
+																<li>READY for PickUp</li>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<c:if test="${fn:length(cancelStatus) eq 0}">
+																<li>Shipping</li>
+															</c:if>
+														</c:otherwise>
+													</c:choose>
 
-												<c:if test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
-													<li>Return</li>
-												</c:if>
+													<!-- For RTO handling productDelivered -->
+													<c:choose>
+														<c:when
+															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+															<c:if
+																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+																<li>PickedUp</li>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<c:if
+																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+																<li>Delivery</li>
+															</c:if>
+														</c:otherwise>
 
-												<%-- <c:if
+													</c:choose>
+
+													<c:if
+														test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
+														<li>Return</li>
+													</c:if>
+
+													<%-- <c:if
 													test="${fn:length(cancelStatus) eq 0 and fn:length(returnStatus) gt 0 }">
 													<li>Delivery</li>
 												</c:if>
 												--%>
-											</ul>
-											<ul class="progtrckr tabs">
-												
-												<!-------------------------------- Approval Block --------------------------------------->
-												<c:set var="displayMsgVar" value="" />
-												<li class="progress progtrckr-done orderStatus processing"
-													orderlineid="${entry.orderLineId}"
-													ordercode="${subOrder.code}">
-													<span class="start"></span>
-													<c:set value="0" var="dotCount" /> 
-													<!-- Show only first and last result to restrict in 2 dots-->
-													<c:forEach items="${approvedStatus}" var="productStatus" varStatus="loop">
+												</ul>
+												<ul class="progtrckr tabs">
 
-														<c:choose>
-															<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> 
-																	<img src="${commonResourcePath}/images/thin_top_arrow_222.png" class="dot-arrow">
-																</span>
-																<c:set var="dotCount" value="${dotCount + 1}" />
-															</c:when>
-														</c:choose>
+													<!-------------------------------- Approval Block --------------------------------------->
+													<c:set var="displayMsgVar" value="" />
+													<li class="progress progtrckr-done orderStatus processing"
+														orderlineid="${entry.orderLineId}"
+														ordercode="${subOrder.code}"><span class="start"></span>
+														<c:set value="0" var="dotCount" /> <!-- Show only first and last result to restrict in 2 dots-->
+														<c:forEach items="${approvedStatus}" var="productStatus"
+															varStatus="loop">
 
-														<!-- Prepare popup message  -->
+															<c:choose>
+																<c:when
+																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																	<span class="dot trackOrder_${productStatus.colorCode}"
+																		index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																	</span>
+																	<c:set var="dotCount" value="${dotCount + 1}" />
+																</c:when>
+															</c:choose>
+
+															<!-- Prepare popup message  -->
 															<c:if test="${productStatus.isEnabled eq true}">
-																<c:set var="displayMsgVar" value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
-																<c:forEach items="${productStatus.statusRecords}" var="statusRecord">
-																	<c:set var="displayMsgVar" value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
+																<c:set var="displayMsgVar"
+																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+																<c:forEach items="${productStatus.statusRecords}"
+																	var="statusRecord">
+																	<c:set var="displayMsgVar"
+																		value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
 																</c:forEach>
 															</c:if>
-															
-														<!-- Prepare popup message  ends -->
 
-														<c:set value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}" var="showBlock" />
+															<!-- Prepare popup message  ends -->
+
+															<c:set
+																value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
+																var="showBlock" />
 
 															<c:if test="${productStatus.isSelected eq true}">
-																<div class="order message trackOrdermessage_${productStatus.colorCode} order-placed-arrow"
+																<div
+																	class="order message trackOrdermessage_${productStatus.colorCode} order-placed-arrow"
 																	id="orderStatus${entry.orderLineId}_${loop.index}"
-																	style="display: ${showBlock};">${displayMsgVar}
-																</div>
+																	style="display: ${showBlock};">${displayMsgVar}</div>
 															</c:if>
 
-														<!-- setting to default if both enabled and selected are true -->
-															<c:if test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+															<!-- setting to default if both enabled and selected are true -->
+															<c:if
+																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
 
-												</c:forEach> 
-												
-												<c:forEach var="i" begin="${dotCount}" end="0">
+														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="0">
 															<span class="dot inactive"></span>
-														</c:forEach> <span class="end "></span>
-												<span class="end "></span>
-											</li>
-											<!--End Approval Block -->
+														</c:forEach> <span class="end "></span> <span class="end "></span></li>
+													<!--End Approval Block -->
 
-												<!-------------------------------------------- Processing Block ---------------------------->
-												<c:set var="displayMsgVar" value="" />
-												<c:if
-													test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
+													<!-------------------------------------------- Processing Block ---------------------------->
+													<c:set var="displayMsgVar" value="" />
+													<c:if
+														test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
 
-													<li
-														class="progress progtrckr-done processingStatus processing"
-														orderlineid="${entry.orderLineId}"
-														ordercode="${subOrder.code}">
-														<c:set value="${0}" var="dotCount" /> 
-														
-														<c:forEach items="${processingStatus}" var="productStatus" varStatus="loop">
-														
-															<c:if test="${loop.last}">
+														<li
+															class="progress progtrckr-done processingStatus processing"
+															orderlineid="${entry.orderLineId}"
+															ordercode="${subOrder.code}"><c:set value="${0}"
+																var="dotCount" /> <c:forEach
+																items="${processingStatus}" var="productStatus"
+																varStatus="loop">
+
+																<c:if test="${loop.last}">
+																	<c:choose>
+																		<c:when
+																			test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																			<span
+																				class="dot  trackOrder_${productStatus.colorCode}"
+																				index="${loop.index}"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
+																			<c:set var="dotCount" value="${dotCount + 1}" />
+																		</c:when>
+																	</c:choose>
+
+																	<!-- Prepare popup message  -->
+																	<c:if test="${productStatus.isEnabled eq true}">
+																		<c:set var="displayMsgVar"
+																			value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+
+																		<c:forEach items="${productStatus.statusRecords}"
+																			var="statusRecord">
+																			<c:set var="displayMsgVar"
+																				value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
+																		</c:forEach>
+																	</c:if>
+																	<!-- Prepare popup message  ends -->
+
+																	<c:set
+																		value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
+																		var="showBlock" />
+
+																	<c:if test="${productStatus.isSelected eq true}">
+																		<div
+																			class="order message trackOrdermessage_${productStatus.colorCode} processing-stage-arrow1"
+																			id="processingStatus${entry.orderLineId}_${loop.index}"
+																			style="display: ${showBlock};">${displayMsgVar}
+
+																		</div>
+
+																	</c:if>
+
+																	<!-- setting to default if both enabled and selected are true -->
+																	<c:if
+																		test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																		<c:set var="displayMsgVar" value="" />
+																	</c:if>
+
+																</c:if>
+
+															</c:forEach> <c:forEach var="i" begin="${dotCount}" end="0">
+																<span class="dot inactive"></span>
+															</c:forEach> <span class="end "></span></li>
+													</c:if>
+													<!--End Processing Block -->
+
+
+													<%-- <c:choose>
+												<c:when test="${fn:length(cancelStatus) gt 0}"> --%>
+
+													<c:if test="${fn:length(cancelStatus) gt 0}">
+														<!--------------------------------------- Cancel Block ------------------------------------------>
+														<c:set var="displayMsgVar" value="" />
+														<li
+															class="progress progtrckr-done cancelStatus processing"
+															orderlineid="${entry.orderLineId}"
+															ordercode="${subOrder.code}"><c:set value="${0}"
+																var="dotCount" /> <c:forEach items="${cancelStatus}"
+																var="productStatus" varStatus="loop">
+
 																<c:choose>
 																	<c:when
 																		test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																		<span class="dot  trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		<span
+																			class="dot trackOrder_${productStatus.colorCode}"
+																			index="${loop.index}"> <img
 																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																			class="dot-arrow">
 																		</span>
@@ -924,12 +1032,10 @@ width: 123px;" ></div>
 																	var="showBlock" />
 
 																<c:if test="${productStatus.isSelected eq true}">
-																	<div class="order message trackOrdermessage_${productStatus.colorCode} processing-stage-arrow1"
-																		id="processingStatus${entry.orderLineId}_${loop.index}"
-																		style="display: ${showBlock};">${displayMsgVar}
-
-																	</div>
-
+																	<div
+																		class="cancellation message trackOrdermessage_${productStatus.colorCode}"
+																		id="cancellation${entry.orderLineId}_${loop.index}"
+																		style="display: ${showBlock}">${displayMsgVar}</div>
 																</c:if>
 
 																<!-- setting to default if both enabled and selected are true -->
@@ -938,196 +1044,140 @@ width: 123px;" ></div>
 																	<c:set var="displayMsgVar" value="" />
 																</c:if>
 
-															</c:if>
-
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="0">
-															<span class="dot inactive"></span>
-														</c:forEach> <span class="end "></span>
-
-													</li>
-												</c:if>
-												<!--End Processing Block -->
-
-
-												<%-- <c:choose>
-												<c:when test="${fn:length(cancelStatus) gt 0}"> --%>
-
-												<c:if test="${fn:length(cancelStatus) gt 0}">
-													<!--------------------------------------- Cancel Block ------------------------------------------>
-													<c:set var="displayMsgVar" value="" />
-													<li class="progress progtrckr-done cancelStatus processing"
-														orderlineid="${entry.orderLineId}"
-														ordercode="${subOrder.code}"><c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${cancelStatus}"
-															var="productStatus" varStatus="loop">
-
-															<c:choose>
-																<c:when
-																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}">
-																		<img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																	</span>
-																	<c:set var="dotCount" value="${dotCount + 1}" />
-																</c:when>
-															</c:choose>
-
-															<!-- Prepare popup message  -->
-															<c:if test="${productStatus.isEnabled eq true}">
-																<c:set var="displayMsgVar"
-																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
-
-																<c:forEach items="${productStatus.statusRecords}"
-																	var="statusRecord">
-																	<c:set var="displayMsgVar"
-																		value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
-																</c:forEach>
-															</c:if>
-															<!-- Prepare popup message  ends -->
-
-															<c:set
-																value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
-																var="showBlock" />
-
-															<c:if test="${productStatus.isSelected eq true}">
-																<div class="cancellation message trackOrdermessage_${productStatus.colorCode}"
-																	id="cancellation${entry.orderLineId}_${loop.index}"
-																	style="display: ${showBlock}">${displayMsgVar}</div>
-															</c:if>
-
-															<!-- setting to default if both enabled and selected are true -->
-															<c:if
-																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																<c:set var="displayMsgVar" value="" />
-															</c:if>
-
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
-															<span class="dot inactive"></span>
-														</c:forEach> <span class="end "></span></li>
-													<!--End Cancel Block -->
-												</c:if>
-												<%-- </c:when>
+															</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+																<span class="dot inactive"></span>
+															</c:forEach> <span class="end "></span></li>
+														<!--End Cancel Block -->
+													</c:if>
+													<%-- </c:when>
 												<c:otherwise> --%>
 
-												<%-- </c:otherwise>
+													<%-- </c:otherwise>
 												</c:choose> --%>
 
+													<!------------------------------- Shipping Block --------------------------------->
+													<c:if test="${fn:length(cancelStatus) eq 0}">
+														<c:set var="displayMsgVar" value="" />
+														<li
+															class="progress progtrckr-done shippingStatus processing"
+															orderlineid="${entry.orderLineId}"
+															ordercode="${subOrder.code}">
+															<!-- <span class="start"></span> --> <c:set value="${0}"
+																var="dotCount" /> <c:forEach items="${shippingStatus}"
+																var="productStatus" varStatus="loop">
 
+																<c:choose>
+																	<c:when
+																		test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																		<span
+																			class="dot trackOrder_${productStatus.colorCode}"
+																			index="${loop.index}"> <img
+																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																			class="dot-arrow">
+																		</span>
+																		<c:set var="dotCount" value="${dotCount + 1}" />
+																	</c:when>
+																</c:choose>
 
-
-												<!------------------------------- Shipping Block --------------------------------->
-												<c:if test="${fn:length(cancelStatus) eq 0}">
-													<c:set var="displayMsgVar" value="" />
-													<li
-														class="progress progtrckr-done shippingStatus processing"
-														orderlineid="${entry.orderLineId}"
-														ordercode="${subOrder.code}">
-														<!-- <span class="start"></span> --> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-
-															<c:choose>
-																<c:when
-																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																	</span>
-																	<c:set var="dotCount" value="${dotCount + 1}" />
-																</c:when>
-															</c:choose>
-
-															<!-- Prepare popup message  -->
-															<c:if test="${productStatus.isEnabled eq true}">
-																<c:set var="displayMsgVar"
-																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
-
-																<c:forEach items="${productStatus.statusRecords}"
-																	var="statusRecord">
+																<!-- Prepare popup message  -->
+																<c:if test="${productStatus.isEnabled eq true}">
 																	<c:set var="displayMsgVar"
-																		value="${displayMsgVar}
+																		value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+
+																	<c:forEach items="${productStatus.statusRecords}"
+																		var="statusRecord">
+																		<c:set var="displayMsgVar"
+																			value="${displayMsgVar}
 																		<ul>
 																		<li>${statusRecord.statusDescription}</li>
 																		</ul>" />
-																</c:forEach>
+																	</c:forEach>
 
-															</c:if>
+																</c:if>
 
-															<!-- Prepare popup message  ends -->
+																<!-- Prepare popup message  ends -->
 
 
-															<c:set
-																value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
-																var="showBlock" />
-															<c:if test="${productStatus.isSelected eq true}">
-																<div class="order message trackOrdermessage_${productStatus.colorCode} shipping tracking-information"
-																	id="shippingStatus${entry.orderLineId}_${loop.index}"
-																	style="display: ${showBlock}">
+																<c:set
+																	value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
+																	var="showBlock" />
+																<c:if test="${productStatus.isSelected eq true}">
+																	<div
+																		class="order message trackOrdermessage_${productStatus.colorCode} shipping tracking-information"
+																		id="shippingStatus${entry.orderLineId}_${loop.index}"
+																		style="display: ${showBlock}">
 
-																	${displayMsgVar}
-																	<!-- TISEE-5433 -->
-																	<c:if test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null'}">
-																 		<p>Logistics: ${logistic[entry.orderLineId]}</p>
-																 	</c:if>
-																 	<c:if test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null'}">
-																 		<c:choose>
-																 		<c:when test="${not empty trackingurl[entry.orderLineId]}">
-																 			<p>AWB No. <a href="${trackingurl[entry.orderLineId]}">${awbNum[entry.orderLineId]}</a>
-																 		</c:when>
-																 		<c:otherwise>
-																 			<p>AWB No. ${awbNum[entry.orderLineId]}</p>
-																 		</c:otherwise>
-																 		</c:choose>	
-																 	</c:if>
-																	
-																	<c:if test="${productStatus.responseCode ne 'DELIVERED'}">
-																		 <div id="track-more-info">
+																		${displayMsgVar}
+																		<!-- TISEE-5433 -->
+																		<c:if
+																			test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null'}">
+																			<p>Logistics: ${logistic[entry.orderLineId]}</p>
+																		</c:if>
+																		<c:if
+																			test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null'}">
+																			<c:choose>
+																				<c:when
+																					test="${not empty trackingurl[entry.orderLineId]}">
+																					<p>
+																						AWB No. <a
+																							href="${trackingurl[entry.orderLineId]}">${awbNum[entry.orderLineId]}</a>
+																				</c:when>
+																				<c:otherwise>
+																					<p>AWB No. ${awbNum[entry.orderLineId]}</p>
+																				</c:otherwise>
+																			</c:choose>
+																		</c:if>
+
+																		<c:if
+																			test="${productStatus.responseCode ne 'DELIVERED'}">
+																			<div id="track-more-info">
 																				<p class="active">
 																					<span class="view-more-consignment"
 																						orderlineid="${entry.orderLineId}"
 																						index="${loop.index}" ordercode="${subOrder.code}">
-																						View more
-																					</span>
+																						View more </span>
 																				</p>
 																				<p>
 																					<span>View less</span>
 																				</p>
-																		  </div>
-																		  <div id="shippingStatusRecord${entry.orderLineId}_${loop.index}" class="view-more-consignment-data"></div>
-																	 </c:if>
-																	
-																	
-																</div>
-															</c:if>
+																			</div>
+																			<div
+																				id="shippingStatusRecord${entry.orderLineId}_${loop.index}"
+																				class="view-more-consignment-data"></div>
+																		</c:if>
 
-															<!-- setting to default if both enabled and selected are true -->
-															<c:if
-																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																<c:set var="displayMsgVar" value="" />
-															</c:if>
-															 
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
-															<span class="dot inactive"></span>
-														</c:forEach> <!-- <span class="end"></span> -->
-													</li>
-												</c:if>
-												<!-- End Shipping Block -->
-												<!------------------------------- Delivery Block ------------------------------------->
-												 <!-- For RTO handling productDelivered -->
-												<c:if
-													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li class="progress progtrckr-done delivery-status">
-														<p> 
-															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
+
+																	</div>
+																</c:if>
+
+																<!-- setting to default if both enabled and selected are true -->
+																<c:if
+																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																	<c:set var="displayMsgVar" value="" />
+																</c:if>
+
+															</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+																<span class="dot inactive"></span>
+															</c:forEach> <!-- <span class="end"></span> -->
+														</li>
+													</c:if>
+													<!-- End Shipping Block -->
+													<!------------------------------- Delivery Block ------------------------------------->
+													<!-- For RTO handling productDelivered -->
+													<c:if
+														test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+														<li class="progress progtrckr-done delivery-status">
+															<p>
+																<c:if
+																	test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
-														</p>
-													</li>
-												</c:if>
-												
-												<!------------------------------- Delivery Block ------------------------------------->
-												<%-- 
+															</p>
+														</li>
+													</c:if>
+
+													<!------------------------------- Delivery Block ------------------------------------->
+													<%-- 
 												 <c:if
 													test="${fn:length(cancelStatus) eq 0 }">
 													<li class="progress progtrckr-done delivery-status">
@@ -1141,69 +1191,80 @@ width: 123px;" ></div>
 													</li>
 												</c:if>
 												--%>
-												<!-- End Delivery Block -->
-												
-												
-												<!-- End Delivery Block -->
+													<!-- End Delivery Block -->
 
-												<c:if test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
-													<!--------------------------------- Return Block -------------------------------------->
-													<c:set var="displayMsgVar" value="" />
-													<li class="progress progtrckr-done returnStatus processing"
-														orderlineid="${entry.orderLineId}"
-														ordercode="${subOrder.code}"><span
-														class="start return-start"></span> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${returnStatus}"
-															var="productStatus" varStatus="loop">
-															<c:choose>
-																<c:when
-																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																	</span>
-																	<c:set var="dotCount" value="${dotCount + 1}" />
-																</c:when>
-															</c:choose>
 
-															<!-- Prepare popup message  -->
-															<c:if test="${productStatus.isEnabled eq true}">
-																<c:set var="displayMsgVar"
-																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+													<!-- End Delivery Block -->
 
-																<c:forEach items="${productStatus.statusRecords}"
-																	var="statusRecord">
+													<c:if
+														test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
+														<!--------------------------------- Return Block -------------------------------------->
+														<c:set var="displayMsgVar" value="" />
+														<li
+															class="progress progtrckr-done returnStatus processing"
+															orderlineid="${entry.orderLineId}"
+															ordercode="${subOrder.code}"><span
+															class="start return-start"></span> <c:set value="${0}"
+																var="dotCount" /> <c:forEach items="${returnStatus}"
+																var="productStatus" varStatus="loop">
+																<c:choose>
+																	<c:when
+																		test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																		<span
+																			class="dot trackOrder_${productStatus.colorCode}"
+																			index="${loop.index}"> <img
+																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																			class="dot-arrow">
+																		</span>
+																		<c:set var="dotCount" value="${dotCount + 1}" />
+																	</c:when>
+																</c:choose>
+
+																<!-- Prepare popup message  -->
+																<c:if test="${productStatus.isEnabled eq true}">
 																	<c:set var="displayMsgVar"
-																		value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
-																</c:forEach>
-															</c:if>
-															<!-- Prepare popup message  ends -->
+																		value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
 
-															<c:set
-																value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
-																var="showBlock" />
+																	<c:forEach items="${productStatus.statusRecords}"
+																		var="statusRecord">
+																		<c:set var="displayMsgVar"
+																			value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
+																	</c:forEach>
+																</c:if>
+																<!-- Prepare popup message  ends -->
 
-															<c:if test="${productStatus.isSelected eq true}">
-																<div class="return message trackOrdermessage_${productStatus.colorCode}"
-																	id="return${entry.orderLineId}_${loop.index}"
-																	style="display: ${showBlock};">
+																<c:set
+																	value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
+																	var="showBlock" />
 
-																	${displayMsgVar}
-																	<!-- TISEE-5433 -->
-																	<c:if test="${not empty returnLogistic[entry.orderLineId] and fn:toLowerCase(returnLogistic[entry.orderLineId]) ne 'null'}">
-																 	<p>Logistic : ${returnLogistic[entry.orderLineId]}</p>
-																 	</c:if>
-																 	<c:if test="${not empty returnAwbNum[entry.orderLineId] and fn:toLowerCase(returnAwbNum[entry.orderLineId]) ne 'null'}">
-																 		<c:choose>
-																 		<c:when test="${not empty trackingurl[entry.orderLineId]}">
-																 			<p>AWB No. <a href="${trackingurl[entry.orderLineId]}">${returnAwbNum[entry.orderLineId]}</a>
-																 		</c:when>
-																 		<c:otherwise>
-																 			<p>AWB No. ${returnAwbNum[entry.orderLineId]}</p>
-																 		</c:otherwise>
-																 		</c:choose>	
-																 	</c:if>
-																	<%-- 		
+																<c:if test="${productStatus.isSelected eq true}">
+																	<div
+																		class="return message trackOrdermessage_${productStatus.colorCode}"
+																		id="return${entry.orderLineId}_${loop.index}"
+																		style="display: ${showBlock};">
+
+																		${displayMsgVar}
+																		<!-- TISEE-5433 -->
+																		<c:if
+																			test="${not empty returnLogistic[entry.orderLineId] and fn:toLowerCase(returnLogistic[entry.orderLineId]) ne 'null'}">
+																			<p>Logistic :
+																				${returnLogistic[entry.orderLineId]}</p>
+																		</c:if>
+																		<c:if
+																			test="${not empty returnAwbNum[entry.orderLineId] and fn:toLowerCase(returnAwbNum[entry.orderLineId]) ne 'null'}">
+																			<c:choose>
+																				<c:when
+																					test="${not empty trackingurl[entry.orderLineId]}">
+																					<p>
+																						AWB No. <a
+																							href="${trackingurl[entry.orderLineId]}">${returnAwbNum[entry.orderLineId]}</a>
+																				</c:when>
+																				<c:otherwise>
+																					<p>AWB No. ${returnAwbNum[entry.orderLineId]}</p>
+																				</c:otherwise>
+																			</c:choose>
+																		</c:if>
+																		<%-- 		
 																	<div id="track-more-info-return">
 																		<p class="active">
 																			<span class="view-more-consignment-return"
@@ -1221,41 +1282,57 @@ width: 123px;" ></div>
 
 																	</div>
 --%>
-																</div>
-															</c:if>
+																	</div>
+																</c:if>
 
-															<!-- setting to default if both enabled and selected are true -->
-															<c:if
-																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																<c:set var="displayMsgVar" value="" />
-															</c:if>
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
-															<span class="dot inactive"></span>
-														</c:forEach> <span class="end return-end"></span></li>
-												</c:if>
-												<!--End Return Block -->
-												
-											</ul>
-
+																<!-- setting to default if both enabled and selected are true -->
+																<c:if
+																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																	<c:set var="displayMsgVar" value="" />
+																</c:if>
+															</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+																<span class="dot inactive"></span>
+															</c:forEach> <span class="end return-end"></span></li>
+													</c:if>
+													<!--End Return Block -->
+												</ul>
+											</div>
+											<!-- End Order Tracking diagram -->
 										</div>
-										<!-- End Order Tracking diagram -->
+										<div class="actions" style="margin-left: -8px;">
+											<c:if
+												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+												<c:set var="bogoCheck"
+													value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set>
+												<a href="" data-toggle="modal"
+													data-target="#cancelOrder${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}"
+													data-mylist="<spring:theme code="text.help" />"
+													data-dismiss="modal"
+													onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
+														text="Cancel Order" /></a>
+											</c:if>
+											<c:if
+												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+												<a
+													href="${request.contextPath}/my-account/order/returnReplace?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+													<spring:theme code="text.account.returnReplace"
+														text="Return Item" />
+												</a>
+											</c:if>
+											<c:if test="${entry.showInvoiceStatus eq 'true'}">
+												<a
+													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
+													onclick="callSendInvoice();"><spring:theme
+														code="text.account.RequestInvoice" text="Request Invoice" /></a>
+											</c:if>
+										</div>
 									</div>
-
-
-								</c:forEach>
 							</c:forEach>
 
-						</li>
-
-
-
+						</c:forEach>
 					</ul>
 				</div>
 			</div>
-
-
-
-
 		</div>
 	</div>
 </template:page>
@@ -1462,16 +1539,17 @@ $(function() {
 		      var name=$("#pickUpName").val();
 		      var mobile=$("#pickMobileNo").val(); 	 
 		      var isString = isNaN(mobile);
-		      //alert(isString);  
+		      var nameValidation =/^[a-zA-Z()]+$/.test(name);
+		      
 		      $(".pickupPersonNameError, .pickupPersonMobileError").hide();
 		       if(name.length <= 3 ){    
 		    	     $(".pickupPersonNameError").show();
 		    	     $(".pickupPersonNameError").text("Enter Atleast 4 Letters");
-		      } 
-		       else if(isNaN(name)== false){
+		      }
+		       else if(nameValidation== false){
 		    	     $(".pickupPersonNameError").show();
 		    	     $(".pickupPersonNameError").text("Enter only Alphabet");
-		       }
+		       }	       
 		       else if (isString==true){
 		    	  $(".pickupPersonMobileError").show();
 		          $(".pickupPersonMobileError").text("Enter only numbers");
@@ -1492,8 +1570,7 @@ $(function() {
 					    	if(status="sucess"){
 					 	      document.getElementById("pickName").innerHTML=name;
 						      document.getElementById("pickNo").innerHTML=mobile;  
-					    	 }
-					    	
+					    	}
 					    	if(status="sucess"){
 					    		$.ajax({	  
 									type: "POST",
@@ -1507,22 +1584,16 @@ $(function() {
 					    	}
 						}
 				});
-		       
 		      } 
 	}
-	
 	$(document).ready(function(){
 		 $(".pickupeditbtn").click(function(){	 
 			$(".pickup_Edit").css("display","block");
 			$(".pickupeditbtn").css("display","none");		
 		});
 		 $(".savebtn").click(function(){	
-			 		 
+			 	 
 		 });
-			 
 	 });	 
 	
 	</script>
-	
-	
-	
