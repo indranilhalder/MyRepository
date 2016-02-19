@@ -19,10 +19,14 @@ if(typeof(arrayrating)!= "undefined"){
 				}
 				$(reviewHeading).html("<input class='inputBox' type='text' name='updateReviewHeading"+indexElement+"' value='"+reviewHeadingText+"'/>");
 				$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
-				if($(".hiddenMediaUrl"+indexElement).val()!= ""){
+				/*if($(".hiddenMediaUrl"+indexElement).val()!= ""){
 					$(reviewMedia).html("<input class='inputBox' type='text' name='updateReviewMedia"+indexElement+"' value='"+$(".hiddenMediaUrl"+indexElement).val()+"'/>");
 					$(reviewMedia).show();
-				}
+				}*/
+				
+				if($("input.hiddenMediaUrl"+indexElement).val()!= ""){
+					$(reviewMedia).html("<input class='inputBox' style='width:100%;' type='text' name='updateReviewMedia"+indexElement+"' value='"+$("input.hiddenMediaUrl"+indexElement).val()+"'/>");
+				}						
 				$(reviewHeading).find('input.inputBox').focus();
 				$(".rating-div"+indexElement).show();
 				$(".rating-div"+indexElement).find("ul").removeClass("rate");
@@ -259,6 +263,27 @@ if(typeof(arrayrating)!= "undefined"){
 			}
 		});
 
+		/*Code for Review Page Video and Image Popup Starts*/
+		$(document).on("click",".comment-img img",function(e){
+			$(this).siblings("iframe").attr("scrolling","no")
+			if ($(this).attr("data-type") == "video") {
+				var url = $(this).siblings("iframe").attr("src");
+				$("#videoReviewFrame").show();
+				$("#videoReviewFrame").attr("src",url);
+				$("#videoReviewModal #videoReviewFrame").attr("src",url);
+				$("#videoReviewModal").modal();
+				$("#videoReviewModal").addClass("active");
+			}
+			else {
+				var url = $(this).attr("src");
+				$("#videoReviewFrame").show();
+				$("#videoReviewFrame").attr("src",url);
+				$("#videoReviewModal #videoReviewFrame").attr("src",url);
+				$("#videoReviewModal").modal();
+				$("#videoReviewModal").addClass("active");
+			}
+		});
+		/*Code for Review Page Video and Image Popup Ends*/
 		$(document).on("mouseleave",".rateEdit li",function() {
 			$(this).parent().find("span").removeClass("full");
 		});
