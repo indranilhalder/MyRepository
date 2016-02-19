@@ -396,9 +396,9 @@ button:hover {
     color: #fff;
     background-color: #A9143C;
      }
-    a.button.light-blue:hover, button.light-blue:hover {
+    /* a.button.light-blue:hover, button.light-blue:hover {
       background-color: #21f7ff;
-       }
+       } */
 
 a {
   text-decoration: none;
