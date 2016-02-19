@@ -30212,6 +30212,14 @@ form[name='flyOutloginForm'] input:-ms-input-placeholder {
 		line-height: 30px;
 	}
 }
+body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img{
+display:inline-block;
+}
+
+body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img img{
+width: 100px !important;
+height: auto !important;
+}
 /*--------------maincss-----------*/
 .row
 {
