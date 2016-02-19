@@ -51,6 +51,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
@@ -779,8 +780,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			if (orderModel != null)
 			{
 				LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
-				
-				 customOmsOrderService.upDatePickUpDetails(orderModel); 
+
+				customOmsOrderService.upDatePickUpDetails(orderModel);
 
 				final SendTicketRequestData ticket = new SendTicketRequestData();
 				final CustomerData customerData = customerFacade.getCurrentCustomer();
@@ -812,6 +813,110 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	}
 
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
+	 */
+	@Override
+	public void createcrmTicketForCockpit(final OrderModel mainOrder, final String costomerId, final String source)
+
+	{
+		/* final OrderModel orderModel = null; */
+		try
+		{
+			customOmsOrderService.upDatePickUpDetails(mainOrder);
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("Excepton at OMS Calling  >>>>>" + e);
+		}
+
+		final String mainOrderId = mainOrder.getCode();
+		try
+		{
+
+			final List<OrderModel> ordermodel = mainOrder.getChildOrders();
+			for (final OrderModel model : ordermodel)
+			{
+				final String subOrderId = model.getCode();
+				final List<AbstractOrderEntryModel> entries = model.getEntries();
+				for (final AbstractOrderEntryModel entry : entries)
+				{
+					final String orderStatus = entry.getOrder().getStatus().getCode();
+					if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+							&& entry.getQuantity().intValue() > 0
+							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_DELIVERED)
+							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_SUCCESSFUL)
+							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_COMPLETED))
+
+					{
+
+						final SendTicketRequestData ticket = new SendTicketRequestData();
+
+						final List<SendTicketLineItemData> lineItemData = new ArrayList<SendTicketLineItemData>();
+						final SendTicketLineItemData reqData = new SendTicketLineItemData();
+						reqData.setLineItemId(entry.getOrderLineId());
+						lineItemData.add(reqData);
+						ticket.setLineItemDataList(lineItemData);
+						if (null != entry.getOrderLineId())
+						{
+							ticket.setOrderId(mainOrderId);
+						}
+						if (null != subOrderId)
+						{
+							ticket.setSubOrderId(subOrderId);
+						}
+						if (null != costomerId)
+						{
+							ticket.setCustomerID(costomerId);
+						}
+						if (null != source)
+						{
+							ticket.setSource(source);
+						}
+
+						ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+
+						if (null != mainOrder.getPickupPersonName())
+						{
+							ticket.setAlternateContactName(mainOrder.getPickupPersonName());
+						}
+						if (null != mainOrder.getPickupPersonMobile())
+						{
+							ticket.setAlternatePhoneNo(mainOrder.getPickupPersonMobile());
+						}
+
+						ticketCreate.ticketCreationModeltoWsDTO(ticket);
+
+						LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
+						saveTicketDetailsInCommerce(ticket);
+						LOG.info("************ PickUpDetails Ticket Saved ********");
+					}
+				}
+			}
+
+
+		}
+		catch (final Exception e)
+		{
+
+			e.printStackTrace();
+			LOG.error("<<<<<<<<<<<Exception Rasing convert OrderModel to SendTicketRequestData Wto of class>>>>>>>>" + e);
+		}
+
+
+
+
+	}
+
+
+
+
+
 	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)
 	{
 		String crmRequest = null;
@@ -836,30 +941,41 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		if (null != sendTicketRequestData.getTicketType())
 		{
 			ticket.setTicketType(sendTicketRequestData.getTicketType());
+			LOG.debug("ticket create: TicketType>>>>> " + sendTicketRequestData.getTicketType());
 		}
 		if (null != sendTicketRequestData.getRefundType())
 		{
 			ticket.setRefundType(sendTicketRequestData.getRefundType());
+			LOG.debug("ticket create: RefundType>>>>> " + sendTicketRequestData.getRefundType());
+
 		}
 		if (null != sendTicketRequestData.getReturnCategory())
 		{
 			ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
+			LOG.debug("ticket create: ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
+
 		}
-		if(null!=sendTicketRequestData.getSource())
+		if (null != sendTicketRequestData.getSource())
 		{
 			ticket.setSource(sendTicketRequestData.getSource());
+			LOG.debug("ticket create: Source>>>>> " + sendTicketRequestData.getSource());
+
 		}
 
 
 		if (null != sendTicketRequestData.getAlternateContactName())
 		{
 			ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+			LOG.debug("ticket create: AlternateContactName>>>>> " + sendTicketRequestData.getAlternateContactName());
+
 		}
 		if (null != sendTicketRequestData.getAlternatePhoneNo())
 		{
 			ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
+			LOG.debug("ticket create: AlternatePhoneNo>>>>> " + sendTicketRequestData.getAlternatePhoneNo());
+
 		}
-		
+
 		final TicketMasterXMLData ticketXmlData = ticketCreate.ticketCreationModeltoXMLData(sendTicketRequestData);
 		if (ticketXmlData != null)
 		{
