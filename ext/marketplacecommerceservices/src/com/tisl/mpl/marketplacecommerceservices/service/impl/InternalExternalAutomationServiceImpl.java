@@ -69,7 +69,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	private MplCmsPageService mplCmsPageService;
 
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	private static final String COMMA_DELIMITER = ",";
+	//private static final String COMMA_DELIMITER = "";
+	private static final String COMMA_DELIMITER = "\t";
 
 	/*
 	 * All banner components are scanned and results are returned as Map
@@ -582,6 +583,14 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//for (final Map.Entry<String, String> entry : exportMap.entrySet())
 			for (final InternalCampaignReportData internalCampaignData : campaignDataConsolidatedList)
 			{
+				if (internalCampaignData.getIcid() == null)
+				{
+					fileWriter.append("").append(COMMA_DELIMITER);
+				}
+				else
+				{
+					fileWriter.append(internalCampaignData.getIcid()).append(COMMA_DELIMITER);
+				}
 
 				if (internalCampaignData.getAssetName() == null)
 				{
@@ -629,14 +638,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 					fileWriter.append(internalCampaignData.getSourcePage()).append(COMMA_DELIMITER);
 				}
 
-				if (internalCampaignData.getIcid() == null)
-				{
-					fileWriter.append("").append(COMMA_DELIMITER);
-				}
-				else
-				{
-					fileWriter.append(internalCampaignData.getIcid()).append(COMMA_DELIMITER);
-				}
+
 
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}

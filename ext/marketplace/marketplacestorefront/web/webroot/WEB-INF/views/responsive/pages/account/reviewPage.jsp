@@ -316,6 +316,7 @@
 								</div>
 								<h3 class="reviewHeading${count.index}">${comment.commentTitle}</h3>
 								<p class="reviewComment${count.index}">${comment.commentText}</p>
+								<p class="reviewMedia${count.index}"></p>
 								<!-- Media addition  -->
 								========================================<br/>
 								<div class="comment-img">${comment.mediaItems}</div>
@@ -323,6 +324,8 @@
 								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>
 								<input type="hidden" class="hiddenReviewComment${count.index}" value="${comment.commentText}"/>
+								<input type="hidden" class="hiddenMediaUrl${count.index}" value="${comment.mediaUrl}"/>
+								<input type="hidden" class="hiddenMediaType${count.index}" value="${comment.mediaType}"/>
 								
 								<input type="hidden" class="categoryID${count.index}" value="${comment.productData.rootCategory}"/>
 								<input type="hidden" class="streamID${count.index}" value="${comment.productData.code}"/>
