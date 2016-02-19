@@ -442,7 +442,8 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			//Customer Create CRM
 			//customerWebService.customerModeltoWsDTO(customerModel);
 			//Customer Create CRM
-			getEventService().publishEvent(initializeEvent(new RegisterEvent(), customerModel));
+			//TISUATPII-615 Fix for Email for  Customer Registration through social login
+			getEventService().publishEvent(initializeEvent(new MplRegisterEvent(), customerModel));
 			return registerData;
 		}
 		catch (final Exception ex)
