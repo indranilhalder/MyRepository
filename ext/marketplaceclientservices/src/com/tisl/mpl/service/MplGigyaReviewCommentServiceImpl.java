@@ -213,6 +213,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 							{
 								reviewDTO.setMediaItems(media.getString("html"));
 								reviewDTO.setMediaUrl(media.getString("url"));
+								reviewDTO.setMediaType(media.getString("type"));
 							}
 						}
 					}
