@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.coupon.facade.job;
+package com.tisl.mpl.coupon.job;
 
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.user.AddressModel;

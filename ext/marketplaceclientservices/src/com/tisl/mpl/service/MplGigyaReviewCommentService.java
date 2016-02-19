@@ -28,4 +28,6 @@ public interface MplGigyaReviewCommentService
 	public String getDate(final Date commentDateObj);
 
 	public boolean checkItemKey(GSObject ratings, String key);
+
+	public boolean checkItemArray(GSObject ratings, String key);
 }

@@ -22,8 +22,6 @@
 		<compressible:mpljs/>
 	</c:otherwise>
 </c:choose>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/feedback.js"></script>
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/main-ie8.css"/>
@@ -87,7 +85,8 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/orders') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/order/*') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnRequest') or
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/coupons')}">
 	<script type="text/javascript"
 		src="${commonResourcePath}/js/mpl/acc.accountpagination.js"></script>
 </c:if>

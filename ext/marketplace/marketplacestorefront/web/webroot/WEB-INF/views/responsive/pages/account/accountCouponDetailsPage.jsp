@@ -16,7 +16,7 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -80,10 +80,10 @@
 
 		<div class="wrapper">
 			<!----- Left Navigation Starts --------->
-			<div class="left-nav">
-				<%-- <h1>
+			<%-- <div class="left-nav">
+				<h1>
 					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1> --%>
+				</h1>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -124,7 +124,10 @@
 
 				</ul>
 
-			</div>
+			</div> --%>
+			
+			<%-- <user:accountLeftNav pageName="coupons"/> --%>
+			
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account rewards">
@@ -180,11 +183,19 @@
 					</ul>
 					<!--  pagination for upper section  -->
 					<div class="bottom btn-placement">
-						<c:if test="${not empty closedCouponList}">
+						<%-- <c:if test="${not empty closedCouponList}">
 							<p>${startIndexCoupon}-${endIndexCoupon}
 								of ${couponListSize} &nbsp;
 								<spring:theme code="text.account.coupons.coupons" />
 							</p>
+						</c:if> --%>
+						<c:if test="${not empty searchPageData.results}">
+						<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination -->
+							<input type="hidden" id="pageIndexC" value="${pageIndex}" />
+							<input type="hidden" id="pagableSizeC" value="${pageSize}" />
+							<input type="hidden" id="totalNumberOfResultsC"
+								value="${searchPageData.pagination.totalNumberOfResults}" />
+							<div id="displayPaginationCountUpCoupon"></div>
 						</c:if>
 						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
 							supportShowAll="${isShowAllAllowed}"
@@ -479,6 +490,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$(".page-coupons .totalResults").hide();
 		$("#couponHistory").click(function() {
 			$(".your-activity.coupon-history").slideDown();
 			$(this).hide();

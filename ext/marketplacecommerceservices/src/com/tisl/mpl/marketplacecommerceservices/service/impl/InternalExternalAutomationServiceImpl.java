@@ -21,8 +21,11 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,7 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,7 +54,7 @@ import com.tisl.mpl.model.cms.components.MplSequentialBannerComponentModel;
 public class InternalExternalAutomationServiceImpl implements InternalExternalAutomationService
 {
 
-	//Logger LOG = Logger.getLogger(this.getClass());
+	//final Logger LOG = Logger.getLogger(this.getClass());
 	private static final Logger LOG = Logger.getLogger(InternalExternalAutomationServiceImpl.class);
 	/*
 	 * @Autowired private CMSPageService cmsPageService;
@@ -121,6 +125,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataSeqBanner = new InternalCampaignReportData();
 							automationMap.put("asset_name", componentItr.getName());
 							automationMap.put("source_page", contentPageItr.getLabel());
+							//contentPageItr.getUid()
 
 							// Storing data for generating Internal Report
 							campaignDataSeqBanner.setAssetName(componentItr.getName());
@@ -174,7 +179,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										{
 											LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
-											sb.insert(0, "http:");
+											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 											imageUrl = sb.toString();
 											LOG.info("Sequntial Banner Image URl: " + imageUrl);
 											imageSize = findIamgeSize(imageUrl);
@@ -190,7 +195,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 											//imageUrl = sb.append("https:").toString();
-											sb.insert(0, "http:");
+											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 											imageUrl = sb.toString();
 											LOG.info("Sequntial Banner Image URl: " + imageUrl);
 											imageSize = findIamgeSize(imageUrl);
@@ -306,7 +311,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									//imageUrl = sb.append("http:").toString();
-									sb.insert(0, "http:");
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 									imageUrl = sb.toString();
 									LOG.info("Big Promo BannerComponent URl: " + imageUrl);
 									imageSize = findIamgeSize(imageUrl);
@@ -321,7 +326,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									//imageUrl = sb.append("https:").toString();
-									sb.insert(0, "http:");
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
 									LOG.info("Big Promo BannerComponent URl: " + imageUrl);
 									imageSize = findIamgeSize(imageUrl);
@@ -419,7 +424,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.debug("1111.1 Image URL with http::::::::" + bigPromoBanner.getBannerImage().getURL());
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									//imageUrl = sb.append("http:").toString();
-									sb.insert(0, "http:");
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
 									imageUrl = sb.toString();
 									LOG.info("BigFour PromoBanner URl: " + imageUrl);
 									imageSize = findIamgeSize(imageUrl);
@@ -434,7 +439,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									LOG.debug("1111.11  Image URL with https:::::" + bigPromoBanner.getBannerImage().getURL());
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									//imageUrl = sb.append("https:").toString();
-									sb.insert(0, "http:");
+									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
 									imageUrl = sb.toString();
 									LOG.info("BigFour PromoBanner URl: " + imageUrl);
 									imageSize = findIamgeSize(imageUrl);
@@ -472,9 +477,10 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				}
 
-				createCSVExcel(CampaignDataList);
+
 
 			}
+			createCSVExcel(CampaignDataList);
 		}
 		/*
 		 * catch (final IOException e) { LOG.error(e); }
@@ -521,11 +527,49 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	}
 
 	//public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final String path, final File file)
-	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedList, final File file)
+	public void populateCSV(final List<InternalCampaignReportData> campaignDataConsolidatedTmpList, final File file)
 	{
 		FileWriter fileWriter = null;
 		String CSVHeader = "";
+		//final HashSet<InternalCampaignReportData> set = new HashSet<InternalCampaignReportData>();
+		//final List<InternalCampaignReportData> tmpIRList = new ArrayList<InternalCampaignReportData>();
+		final List<InternalCampaignReportData> campaignDataConsolidatedList = new ArrayList<InternalCampaignReportData>();
 
+
+		for (final InternalCampaignReportData internalCampaignReportData : campaignDataConsolidatedTmpList)
+		{
+			if (CollectionUtils.isEmpty(campaignDataConsolidatedList))
+			{
+				campaignDataConsolidatedList.add(internalCampaignReportData);
+			}
+			else
+			{
+				boolean isPresent = false;
+				for (final InternalCampaignReportData finalData : campaignDataConsolidatedList)
+				{
+					if (finalData.getIcid() != null && internalCampaignReportData.getIcid() != null
+							&& finalData.getIcid().equalsIgnoreCase(internalCampaignReportData.getIcid()))
+					{
+						isPresent = true;
+						break;
+					}
+				}
+				if (!isPresent)
+				{
+					campaignDataConsolidatedList.add(internalCampaignReportData);
+				}
+			}
+		}
+
+
+		/*
+		 * for (final InternalCampaignReportData item : campaignDataConsolidatedTmpList) { if (!set.contains(item)) {
+		 * set.add(item); campaignDataConsolidatedList.add(item);
+		 *
+		 * }
+		 *
+		 * }
+		 */
 		try
 		{
 			fileWriter = new FileWriter(file, false);
@@ -604,7 +648,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
-			 *
+			 * 
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
@@ -655,8 +699,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
 			final int width = bimg.getWidth();
 			final int height = bimg.getHeight();
+			size = width + " X " + height;
 
-			size = String.valueOf(width) + " X " + String.valueOf(height);
+			//size = String.valueOf(width) + " X " + String.valueOf(height);
 			LOG.info("Size is :::::::" + size);
 
 
@@ -705,16 +750,25 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	protected String getOutputFilePath()
 	{
 
-		//final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
-		//final String timestamp = df.format(new Date());
+		final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
+		final String timestamp = df.format(new Date());
 		final StringBuilder output_file_path = new StringBuilder();
+		/*
+		 * output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path",
+		 * "")); output_file_path.append(File.separator);
+		 * output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix",
+		 * "")); output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
+		 * output_file_path.append(timestamp);
+		 * output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension",
+		 * ""));
+		 */
+
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path", ""));
 		output_file_path.append(File.separator);
-		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix", ""));
+		output_file_path.append(timestamp);
 		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
-		//output_file_path.append(timestamp);
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix", ""));
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension", ""));
-
 		return output_file_path.toString();
 	}
 

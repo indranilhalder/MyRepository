@@ -1,4 +1,3 @@
-
 /**
  *
  */
@@ -16,6 +15,8 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import java.util.List;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
@@ -57,7 +58,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -79,7 +81,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -108,7 +111,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, CMSChannel.DESKTOP.getCode());
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -143,7 +147,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, cms);
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -161,7 +166,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 		final List<MplShopByLookModel> shopByLookList = flexibleSearchService.<MplShopByLookModel> search(query).getResult();
-		if (shopByLookList != null && shopByLookList.size() > 0)
+		//if (shopByLookList != null && shopByLookList.size() > 0)
+		if (CollectionUtils.isNotEmpty(shopByLookList))
 		{
 			return shopByLookList.get(0);
 		}
@@ -185,7 +191,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -214,7 +221,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		query.addQueryParameter("channel", cms.getCode());
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -248,7 +256,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		query.addQueryParameter("catVersion", catalogVersion);
 
 		final List<ContentSlotModel> contentSlots = flexibleSearchService.<ContentSlotModel> search(query).getResult();
-		if (contentSlots != null && contentSlots.size() > 0)
+		//if (contentSlots != null && contentSlots.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentSlots))
 		{
 			return contentSlots.get(0);
 		}
@@ -256,4 +265,3 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		return null;
 	}
 }
-
