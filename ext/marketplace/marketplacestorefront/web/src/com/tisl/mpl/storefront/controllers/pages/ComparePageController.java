@@ -161,7 +161,7 @@ public class ComparePageController extends AbstractPageController
 
 			final Map<String, String> productAttributeMap = new HashMap();
 			productAttributeMap.put(ModelAttributetConstants.PRODUCT_CODE, productData.getCode());
-			productAttributeMap.put(ModelAttributetConstants.PRODUCT_NAME, productData.getName());
+			productAttributeMap.put(ModelAttributetConstants.PRODUCT_NAME, productData.getProductTitle()); // productData.getProductTitle()
 			productAttributeMap.put(ModelAttributetConstants.PRODUCT_BRAND, productData.getBrand().getBrandname());
 			productAttributeMap.put(ModelAttributetConstants.PRODUCT_URL, productData.getUrl());
 
