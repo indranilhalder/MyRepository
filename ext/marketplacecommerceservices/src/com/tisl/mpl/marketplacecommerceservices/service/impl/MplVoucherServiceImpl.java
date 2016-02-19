@@ -238,7 +238,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
 							&& (netAmountAfterAllDisc - voucherCalcValue) < cartTotalThreshold) //When discount value is less than .01*count of applicable entries
 					{
-						LOG.debug("Step 14.1:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) >= 0 < 0.01 block");
+						LOG.debug("Step 16.1:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) >= 0 < 0.01 block");
 						discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher,
 								(netAmountAfterAllDisc - cartTotalThreshold));
 
@@ -411,17 +411,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			}
 		}
 
-		//need to remove code review
-		//		for (final DiscountValue discount : discountList)
-		//		{
-		//			if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
-		//			{
-		//				discountValue = new DiscountValue(discount.getCode(), discountAmt, true, discount.getCurrencyIsoCode());
-		//
-		//				discountList.remove(discount);
-		//				break;
-		//			}
-		//		}
 		discountList.add(discountValue);
 		return discountList;
 	}
@@ -538,7 +527,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	{
 		try
 		{
-			LOG.debug("Step 16:::Inside setApportionedValueForVoucher");
+			LOG.debug("Step 18:::Inside setApportionedValueForVoucher");
 			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 			{
 				//final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
@@ -551,29 +540,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					totalApplicablePrice += entry.getTotalPrice() != null ? entry.getTotalPrice().doubleValue() : 0.0D;
 				}
-
-				//				final double discountValue = voucherObj.getValueAsPrimitive();
-				//
-				//				if (voucherObj.isAbsoluteAsPrimitive())
-				//				{
-				//					percentageDiscount = BigDecimal.valueOf(discountValue / totalApplicablePrice).multiply(
-				//							BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));//TODo 100 in variable
-				//				}
-				//				else
-				//				{
-				//					percentageDiscount = BigDecimal.valueOf(discountValue);
-				//					final double totalSavings = (totalApplicablePrice * percentageDiscount.doubleValue())
-				//							/ Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED);
-				//					final double totalMaxDiscount = voucher.getMaxDiscountValue() != null ? voucher.getMaxDiscountValue()
-				//							.doubleValue() : 0.0D;
-				//
-				//					if (totalMaxDiscount != 0.0D && totalSavings > totalMaxDiscount)
-				//					{
-				//						percentageDiscount = BigDecimal.valueOf(voucher.getMaxDiscountValue().doubleValue() / totalApplicablePrice)
-				//								.multiply(BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));
-				//					}
-				//				}
-
 
 				final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); //Discount values against the cart
 				final List<DiscountModel> voucherList = cartModel.getDiscounts(); //List of discounts against the cart
@@ -591,10 +557,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				final double formattedDiscVal = Math.round(discountValue * 100.0) / 100.0;
 
-				//percentageDiscount = BigDecimal.valueOf(formattedDiscVal / totalApplicablePrice).multiply(
-				//		BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));
-
-				LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
+				LOG.debug("Step 19:::percentageDiscount is " + percentageDiscount);
 
 				BigDecimal totalAmtDeductedOnItemLevel = BigDecimal.valueOf(0);
 
@@ -606,11 +569,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					final double entryTotalPrice = entry.getTotalPrice().doubleValue();
 					final BigDecimal discountPriceValue = BigDecimal.valueOf(formattedDiscVal);
 
-					//					if (entryTotalPrice > 1) //For freebie & bogo, 0.01 priced product, isBogoApplied flag can't be checked as same product might be free and non free for BOGO
-					//					{
-					//entryLevelApportionedPrice = getApportionedValueForEntry(percentageDiscount, entryTotalPrice);
-					//					if (voucherObj.isAbsoluteAsPrimitive())
-					//					{
 					if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
 					{
 						entryLevelApportionedPrice = getApportionedValueForSingleEntry(discountPriceValue, totalAmtDeductedOnItemLevel);
@@ -621,13 +579,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 								totalApplicablePrice);
 						totalAmtDeductedOnItemLevel = totalAmtDeductedOnItemLevel.add(entryLevelApportionedPrice);
 					}
-					//					}
-					//					else
-					//					{
-					//						entryLevelApportionedPrice = getApportionedValueForEntry(percentageDiscount, entryTotalPrice);
-					//					}
 
-					LOG.debug("Step 18:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
+					LOG.debug("Step 20:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
 
 					entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
 					entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
@@ -644,10 +597,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(entryTotalPrice, entryLevelApportionedPrice);
 					}
 
-					LOG.debug("Step 19:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
+					LOG.debug("Step 21:::currNetAmtAftrAllDisc is " + currNetAmtAftrAllDisc);
 
 					entry.setNetAmountAfterAllDisc(Double.valueOf(currNetAmtAftrAllDisc));
-					//}
 				}
 
 				getModelService().saveAll(applicableOrderEntryList);
@@ -668,9 +620,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
-
-
 	}
+
+
 
 	/**
 	 * @Descriotion This is for getting apportioned value for a single entry
@@ -700,7 +652,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	/**
-	 * @Descriotion This is for getting apportioned value for entry
+	 * @Descriotion This is for getting apportioned value for any entry except the last one
 	 * @param discountPriceValue
 	 * @param totalApplicablePrice
 	 * @param entryTotalPrice
@@ -723,8 +675,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			LOG.error("Exception", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-		//return (percentageDiscount.divide(BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED))))
-		//		.multiply(BigDecimal.valueOf(entryTotalPrice));
 	}
 
 
@@ -740,29 +690,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
 	}
 
-
-	/**
-	 * @Descriotion This is for checking total items in cart
-	 * @param applicableOrderEntryList
-	 * @return boolean
-	 */
-	//	private boolean checkTotalIteminCart(final List<AbstractOrderEntryModel> applicableOrderEntryList)
-	//	{
-	//		boolean flag = false;
-	//		int count = 0;
-	//		for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
-	//		{
-	//			if (null != entry.getTotalPrice() && entry.getTotalPrice().doubleValue() > 1)
-	//			{
-	//				count++;
-	//			}
-	//		}
-	//		if (count < 2)
-	//		{
-	//			flag = true;
-	//		}
-	//		return flag;
-	//	}
 
 
 	/**

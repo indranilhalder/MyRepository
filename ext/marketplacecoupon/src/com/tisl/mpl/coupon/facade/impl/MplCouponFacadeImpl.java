@@ -22,7 +22,6 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -595,11 +594,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * This method releases the voucher already applied in the cart automatically
 	 *
 	 * @param cart
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
+	 * @throws VoucherOperationException
 	 */
 	@Override
-	public void releaseVoucherInCheckout(final CartModel cart) throws JaloPriceFactoryException, CalculationException
+	public void releaseVoucherInCheckout(final CartModel cart) throws VoucherOperationException
 	{
 		final List<DiscountModel> discountList = cart.getDiscounts();
 
@@ -609,13 +607,24 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			try
 			{
 				releaseVoucher(couponCode, cart);
+				recalculateCartForCoupon(cart);
 			}
 			catch (final VoucherOperationException e)
 			{
-				LOG.error("Error while releasing voucher with message " + e.getMessage());
+				LOG.error("VoucherOperationException", e);
+				throw e;
+			}
+			catch (final EtailNonBusinessExceptions e)
+			{
+				LOG.error("EtailNonBusinessExceptions", e);
+				throw e;
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception", e);
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 			}
 
-			recalculateCartForCoupon(cart);
 		}
 	}
 
