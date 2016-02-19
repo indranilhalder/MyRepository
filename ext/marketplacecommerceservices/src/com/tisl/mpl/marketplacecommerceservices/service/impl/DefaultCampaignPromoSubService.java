@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.CampaignPromoSubService;
+import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.CartOrderThresholdDiscountCashbackModel;
 import com.tisl.mpl.model.CartOrderThresholdDiscountPromotionModel;
 import com.tisl.mpl.model.DeliveryModePromotionRestrictionModel;
 import com.tisl.mpl.model.EtailExcludeSellerSpecificRestrictionModel;
@@ -103,10 +106,189 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		{
 			campaignData = getCartDiscountPromoData(promotion, campaignData);
 		}
+		else if (promotion instanceof CartOrderThresholdDiscountCashbackModel)
+		{
+			campaignData = getCartDiscountCashBackData(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyAboveXGetPromotionOnShippingChargesModel)
+		{
+			campaignData = getCartShipPromoData(promotion, campaignData);
+		}
 
 		return campaignData;
 	}
 
+
+	/**
+	 * Campaign Data For Model : BuyAboveXGetPromotionOnShippingChargesModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getCartShipPromoData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		final CampaignData data = campaignData;
+		final BuyAboveXGetPromotionOnShippingChargesModel oModel = (BuyAboveXGetPromotionOnShippingChargesModel) promotion;
+
+		data.setIdentifier(promotion.getCode());
+		data.setPromotionGrp(promotion.getPromotionGroup().getIdentifier());
+		data.setPriority(promotion.getPriority().toString());
+		data.setStartDate(formatter.format(promotion.getStartDate()));
+		data.setEndDate(formatter.format(promotion.getEndDate()));
+		data.setUrl(populateOfferURL(promotion));
+
+		if (StringUtils.isNotEmpty(promotion.getTitle()))
+		{
+			data.setTitle(promotion.getTitle());
+		}
+
+		if (StringUtils.isNotEmpty(promotion.getDescription()))
+		{
+			data.setDescription(promotion.getDescription());
+		}
+
+		if (null != promotion.getEnabled())
+		{
+			data.setEnabled(promotion.getEnabled().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
+		{
+			data.setChannel(populateOfferChannel(promotion));
+		}
+
+		if (null != oModel.getDiscTypesOnShippingCharges() && null != oModel.getDiscTypesOnShippingCharges())
+		{
+			data.setDiscountType(oModel.getDiscTypesOnShippingCharges().getCode());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getRestrictions()))
+		{
+			data.setRestrictions(getRestrictionData(oModel.getRestrictions()));
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getThresholdTotals()))
+		{
+			data.setThreshTotals(getDiscount(oModel.getThresholdTotals()));
+		}
+
+		if (null != oModel.getTShip() && oModel.getTShip().booleanValue())
+		{
+			data.setIsTship(MarketplacecommerceservicesConstants.TRUE);
+		}
+
+		if (null != oModel.getSShip() && oModel.getSShip().booleanValue())
+		{
+			data.setIsSShip(MarketplacecommerceservicesConstants.TRUE);
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDeliveryModeDetailsList()))
+		{
+			data.setDeliveryMode(getDeliveryMode(oModel.getDeliveryModeDetailsList()));
+		}
+
+		return data;
+	}
+
+
+
+	/**
+	 * Campaign Data For Model : CartOrderThresholdDiscountCashbackModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getCartDiscountCashBackData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		final CampaignData data = campaignData;
+		final CartOrderThresholdDiscountCashbackModel oModel = (CartOrderThresholdDiscountCashbackModel) promotion;
+
+		data.setIdentifier(promotion.getCode());
+		data.setPromotionGrp(promotion.getPromotionGroup().getIdentifier());
+		data.setPriority(promotion.getPriority().toString());
+		data.setStartDate(formatter.format(promotion.getStartDate()));
+		data.setEndDate(formatter.format(promotion.getEndDate()));
+		data.setUrl(populateOfferURL(promotion));
+
+		if (StringUtils.isNotEmpty(promotion.getTitle()))
+		{
+			data.setTitle(promotion.getTitle());
+		}
+
+		if (StringUtils.isNotEmpty(promotion.getDescription()))
+		{
+			data.setDescription(promotion.getDescription());
+		}
+
+		if (null != promotion.getEnabled())
+		{
+			data.setEnabled(promotion.getEnabled().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
+		{
+			data.setChannel(populateOfferChannel(promotion));
+		}
+
+		if (null != oModel.getPercentageOrAmount())
+		{
+			data.setIsPercentage(oModel.getPercentageOrAmount().toString());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getRestrictions()))
+		{
+			data.setRestrictions(getRestrictionData(oModel.getRestrictions()));
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getThresholdTotals()))
+		{
+			data.setThreshTotals(getDiscount(oModel.getThresholdTotals()));
+		}
+
+		return data;
+	}
 
 	/**
 	 * Campaign Data For Model : CartOrderThresholdDiscountPromotionModel
@@ -190,6 +372,32 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 
 
+
+	/**
+	 * Get Delivery Details Data
+	 *
+	 *
+	 * @param deliveryModeDetailsList
+	 * @return deliverydata
+	 */
+	private String getDeliveryMode(final List<DeliveryModeModel> deliveryModeDetailsList)
+	{
+		String deliverydata = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
+		for (int i = 0; i < deliveryModeDetailsList.size(); i++)
+		{
+			if ((i != (deliveryModeDetailsList.size() - 1)))
+			{
+				deliverydata = deliverydata + (deliveryModeDetailsList.get(i).getCode())
+						+ MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
+			}
+			else
+			{
+				deliverydata = deliverydata + (deliveryModeDetailsList.get(i).getCode());
+			}
+		}
+		return deliverydata;
+	}
 
 
 
