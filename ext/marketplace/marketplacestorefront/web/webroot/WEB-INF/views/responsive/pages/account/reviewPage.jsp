@@ -319,10 +319,7 @@
 								<p class="reviewMedia${count.index}"></p>
 								<!-- Media addition  -->
 								========================================<br/>
-								<div style="width: 120px">
-								${comment.mediaItems}
-								</div>
-								
+								<div class="comment-img">${comment.mediaItems}</div>
 								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
 								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>
