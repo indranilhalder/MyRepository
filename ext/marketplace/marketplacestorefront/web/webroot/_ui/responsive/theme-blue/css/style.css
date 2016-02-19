@@ -396,9 +396,9 @@ button:hover {
     color: #fff;
     background-color: #A9143C;
      }
-    a.button.light-blue:hover, button.light-blue:hover {
+    /* a.button.light-blue:hover, button.light-blue:hover {
       background-color: #21f7ff;
-       }
+       } */
 
 a {
   text-decoration: none;
@@ -29450,7 +29450,7 @@ width:100%;
 }
 
 .home-brands-you-love-carousel-brands.active img{
-border-bottom: 2px solid #ccc;
+/* border-bottom: 2px solid #ccc; */
     padding: 5px;
 }
 .home-brands-you-love-carousel-brands img{
@@ -29949,10 +29949,12 @@ width: 100px !important;
 	padding: 0 20px;
 }
 
-.home-brands-you-love-wrapper .home-brands-you-love-desc p {
+.home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc {
 	padding-top: 20px;
 }
-
+.home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading {
+	padding-top: 6px;
+}
 .home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name {
 	margin-top: 10px;
 }
@@ -30217,6 +30219,14 @@ display:inline-block;
 body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img img{
 width: 100px !important;
 height: auto !important;
+}
+.home-brands-you-love-carousel-brands.active:after {
+	border-bottom: 1px solid #a9143c !important;
+    content: "";
+    display: block;
+    margin: 0 auto;
+    width: 70%;
+    padding-top: 11px;
 }
 /*--------------maincss-----------*/
 .row
@@ -36117,4 +36127,29 @@ border-top: 3px solid #fff;
 .social .links img {
 	width: 25px;
 	height: 25px;
+}
+.modal.size-guide .apparelSizes table{
+width: 100%;
+    float: left;
+    border: 1px solid #ccc;
+    table-layout: fixed;
+    margin-bottom:30px;}
+
+.modal.size-guide .apparelSizes table ul li:first-child{
+	background:#f0f4f5;
+	border-right:1px solid #fff;
+	
+}
+.modal.size-guide .apparelSizes table ul li:last-child{
+	border-right:none;
+	
+}
+.modal.size-guide .apparelSizes table ul li{
+padding:5px;
+height: 30px;
+text-transform: uppercase;
+}
+.modal.size-guide div.sizes.apparelSizes, .modal.size-guide div.footwear-size-table{
+overflow:auto;
+height:200px;
 }
