@@ -36128,3 +36128,28 @@ border-top: 3px solid #fff;
 	width: 25px;
 	height: 25px;
 }
+.modal.size-guide .apparelSizes table{
+width: 100%;
+    float: left;
+    border: 1px solid #ccc;
+    table-layout: fixed;
+    margin-bottom:30px;}
+
+.modal.size-guide .apparelSizes table ul li:first-child{
+	background:#f0f4f5;
+	border-right:1px solid #fff;
+	
+}
+.modal.size-guide .apparelSizes table ul li:last-child{
+	border-right:none;
+	
+}
+.modal.size-guide .apparelSizes table ul li{
+padding:5px;
+height: 30px;
+text-transform: uppercase;
+}
+.modal.size-guide div.sizes.apparelSizes, .modal.size-guide div.footwear-size-table{
+overflow:auto;
+height:200px;
+}
