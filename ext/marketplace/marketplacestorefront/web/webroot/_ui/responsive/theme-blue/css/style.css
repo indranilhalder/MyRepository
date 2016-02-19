@@ -30220,6 +30220,14 @@ body .account .right-account .reviews .review-list .wrapper>li .review .details 
 width: 100px !important;
 height: auto !important;
 }
+.home-brands-you-love-carousel-brands.active:after {
+	border-bottom: 1px solid #a9143c !important;
+    content: "";
+    display: block;
+    margin: 0 auto;
+    width: 70%;
+    padding-top: 11px;
+}
 /*--------------maincss-----------*/
 .row
 {
