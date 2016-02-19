@@ -396,9 +396,9 @@ button:hover {
     color: #fff;
     background-color: #A9143C;
      }
-    a.button.light-blue:hover, button.light-blue:hover {
+    /* a.button.light-blue:hover, button.light-blue:hover {
       background-color: #21f7ff;
-       }
+       } */
 
 a {
   text-decoration: none;
@@ -1027,11 +1027,11 @@ h2 {
             -moz-osx-font-smoothing: grayscale;
             font-weight: 100;
             content: "\e605";
-            font-size: 18px;
+            font-size: 16px;
             color: #A9143C;
             line-height: 18px;
             margin-right: 5px;
-            top: 3px;
+            top: 2px;
             position: relative;
             font-weight: bold; }
           header .content .right > ul > li.bag .mini-bag {
@@ -1532,7 +1532,7 @@ h2 {
             font-weight: 100;
             content: "\f107";
             display: inline-block;
-            color: #a9143c;
+            color: #000;
             position: relative;
             margin-left: 5px;
             top: 4px;
@@ -1787,7 +1787,7 @@ h2 {
           -moz-transition: background-color 0.15s;
           transition: background-color 0.15s; }
           header .content nav > ul > li:hover > .toggle {
-            color: #A9143C;
+            color: #000;
             -webkit-transition: color 0.15s;
             -moz-transition: color 0.15s;
             transition: color 0.15s; }
@@ -1876,7 +1876,7 @@ h2 {
     header .content .search input, header .content .search .select-list {
       border-width: 1px;
       border-color: #bbb;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       height: 50px; } }
       @media (min-width: 791px) and (max-width: 990px) {
@@ -2242,7 +2242,8 @@ h2 {
       background-color: #A9143C;
       /* background: -webkit-linear-gradient(91deg, #A9143C 0%, #21f7ff  99%), url('../images/header-grad.png');
       background: linear-gradient(91deg, #A9143C 0%, #21f7ff  99%), url('../images/header-grad.png'); */
-      text-transform: uppercase;
+      text-transform: none;
+      letter-spacing: 1px;
       display: block;
       line-height: 30px;
       width: 100%;
@@ -3791,13 +3792,14 @@ h2 {
 		margin-left: 10px;
 	}
 	.shop-promos .promos li span, .shop-promos .promos li span:last-child {
-		padding: 10px 0;
+		padding: 18px 0;
 		text-align: center;
 	}
 	.shop-promos .promos li span {
-		font-size: 13px;
+		font-size: 12px;
 		margin-bottom: 0;
-		letter-spacing: 1.1px;
+		/* letter-spacing: 1.1px; */
+		font-weight: normal;
 	}
 /* 	.shop-promos .promos li span:last-child {
 		font-size: 10px;
@@ -4210,8 +4212,8 @@ h2 {
 
 .feature-collections h1 {
 	text-align: center;
-	font-size: 28px;
-	padding: 30px 0 20px;
+	font-size: 24px;
+	    padding: 50px 0 50px;
 	font-weight: 500;
 }
 
@@ -8367,10 +8369,10 @@ footer>ul>li h3:after {
 }
 
 footer>ul>li ul li {
-	line-height: 30px;
+	line-height: 40px;
 	vertical-align: middle;
 	height: 0; 
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 500;
 	text-transform: capitalize;
 	padding: 0 20px;
@@ -8482,7 +8484,7 @@ footer .banner {
 		color: #A9143C; */
 	}
 	footer>ul>li h3 {
-		font-size: 14px;
+		font-size: 13px;
 		line-height: 20px;
 		padding: 15px 0 15px 20px;
 		font-weight: 700;
@@ -8496,7 +8498,7 @@ footer .banner {
 		}
 	}
 	footer>ul>li ul li {
-		height: 30px;
+		height: 40px;
 	}
 	footer .banner {
 		float: left;
@@ -10075,7 +10077,7 @@ body .account .right-account .order-history .pagination li{
     .product-tile .image .on-sale {
       width: 50%;
      background-color: #ffb810;
-     height: 35px;
+     height: 25px;
      text-align: center;
      display: table; }
       .product-tile .image .on-sale span {
@@ -10143,7 +10145,7 @@ body .account .right-account .order-history .pagination li{
       .home-product-you-care-carousel {
       		    margin: 10px 0px;
     text-align: center;
-    padding: 0 20px;
+    padding: 0 10px;
       }
       .grey-bg {
     background: #F7F8FA;
@@ -12892,6 +12894,9 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes .tables {		
     padding: 0 10px;		
     text-align: left;		
+}		
+.modal.size-guide .sizes > p {		
+    padding-bottom:20px;	
 }		
 @media (min-width: 790px) {		
     .modal.size-guide .sizes .tables {		
@@ -17147,7 +17152,8 @@ font-weight:normal;
       margin: 0 -2px -2px -2px;
       white-space: nowrap;
     	text-overflow: ellipsis;
-  		overflow: hidden;  } 		
+  		overflow: hidden; 
+  		color: #666; } 		
       		
   @media(min-width:791px)		
   {		
@@ -17215,14 +17221,17 @@ font-weight:normal;
 	  		left: 135px;		
 	  }		
   }		
+  header .content .right > ul > li.logIn-hi{
+  padding:0px;
+  }
    .logIn-hi .content .sign-in , .brand .logIn-hi .content .sign-in		
    {		
-   			padding:0px;		
-   			margin-right:0px;		
+   			/* padding:0px;		
+   			margin-right:0px;		 */
    }		
    .logged_in.dropdown:hover
    	{
-   		background-color:rgb(250,250,250);
+   		background-color:#fafafa;
    	}
    	
 .sign-in-info .form-group label,.header-signInButton
@@ -24160,7 +24169,7 @@ body #account-invite .right-account>div form .mytextarea {
 	opacity:0.5;
 }
 .owl-carousel .owl-controls .owl-buttons .disabled:after{
-	border-color:gray;
+	border-color:#fff;
 }
 
 .feedBack-block .feed-back-categories,.feedBack-block .feed-back-form{
@@ -24276,6 +24285,10 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
 	 min-width:250px;
 	 z-index: 1;
 }
+.modal.size-guide .popover.bottom{
+	margin-bottom:10px;
+
+	}
 #addedMessage{
 	text-align: center;
     display: block;
@@ -24981,6 +24994,7 @@ div.variantFormContainer{
 @media (min-width:791px) {
 	 header>.content .bottom .marketplace {
 		display: table;
+		margin-top:-18px;
 	}
 	header>.content .bottom .marketplace .simple-banner-component
 		{
@@ -29015,11 +29029,11 @@ min-width: 150px;
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
    content:"\f0a2";
-    font-size: 16px;
+    font-size: 13px;
     color: #A9143C;
     line-height: 46px;
     height:46px;
-    top: 2px;
+    top: 0px;
     position: relative;
     font-weight: bold;
 }
@@ -29154,18 +29168,21 @@ position: absolute;
 .shop-promos {
     padding: 0;}
 .shop-promos .promos li span{
-color:#aaa;
+color:#7e7e7e;
 position:relative;
 
   }
 .shop-promos .promos li span:after{
-     font-family: 'FontAwesome';
+    font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     content: "\f105";
-    font-size: 23px;
-    vertical-align: text-bottom;
+    font-size: 14px;
     padding-left: 5px;
+    font-weight: 100;
+    color: #000;
+    position: relative;
+    top: 0px;
 }
 .shop-promos .promos li:nth-last-of-type(1) {
     border-right: none;
@@ -29175,7 +29192,7 @@ position:relative;
 .shop-promos .promos li {
 	border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    padding: 65px 0 0 0;
+    padding: 52px 0 0 0;
 	display: table-cell;
     float: none;
     }
@@ -29291,17 +29308,21 @@ footer>ul>li>.toggle>img{
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
     background: transparent;
-    color: #333;
-    border: 1px solid #bbb;
+    border: 1px solid #4a4a4a;
     font-size: 12px;
     font-weight: 600;
-    width: 150px;
+    width: 300px;
     text-decoration: none;
     margin: 0px auto;
-    padding: 13px;
+    padding: 7px;
+    line-height: 24px;
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 1.5px;
+    height: 40px;
+    position: absolute;
+         bottom:20px;
+         left: calc(50% - 150px);
 }
 #newAndExclusive a.new_exclusive_viewAll:hover,
 #bestPicks .view-cliq-offers:hover,
@@ -29324,7 +29345,7 @@ footer .footer-text {
 	clear:both;
 }
 footer .footer-text {
-	border-top: 1px solid #7e7e7e;
+	border-top: 2px solid #7e7e7e;
     width: 97%;
     padding: 10px;
     margin: auto;
@@ -29336,11 +29357,11 @@ footer .footer-text {
     font-family: "Avenir Next";
     color:#333;
 }
-@media(min-width:791px){
+/* @media(min-width:791px){
 #rotatingImageTimeout{
 	background: #a9143c;
 }
-}
+} */
 
 /*brands you love css starts*/
 .home-brands-you-love-carousel{
@@ -29370,18 +29391,17 @@ vertical-align: middle;
     box-sizing: border-box;
 }
 .home-brands-you-love-side-image.left {
-vertical-align:bottom;
+vertical-align:top;
 }
 .home-brands-you-love-side-image.right {
 	vertical-align:top;
-    padding-top: 50px;
 }
 .home-brands-you-love-main-image {
     width: 48%;
     display: inline-block;
 	padding: 0 10px;
     box-sizing: border-box;
-	    vertical-align: bottom;
+	    vertical-align: top;
 }
 p.home-brands-you-love-main-image-heading {
     text-align: center;
@@ -29429,12 +29449,13 @@ width:100%;
 	color:#a9143c;
 }
 .home-brands-you-love-wrapper h1{
-text-align: center;
-    font-size: 24px;
+	text-align: center;
+    font-size: 28px;
+    font-weight: 600;
 }
 
 .home-brands-you-love-carousel-brands.active img{
-border-bottom: 2px solid #ccc;
+/* border-bottom: 2px solid #ccc; */
     padding: 5px;
 }
 .home-brands-you-love-carousel-brands img{
@@ -29470,9 +29491,17 @@ padding-top:20px;
     line-height:30px;
 }
 }
+@media(min-width:791px){
+	p.home-brands-you-love-main-image-desc{
+	width:50%;
+	}
+}
 /*brands you love css ends*/
 
 /*best picks start*/
+#bestPicks{
+	    margin-bottom: 40px;
+}
 #bestPicks, #productYouCare {
 padding: 0 20px;
     clear: both;
@@ -29551,14 +29580,14 @@ font-family:DejaVu Sans;
     font-weight: 600;
 	    margin: 15px auto;
     text-transform: uppercase;
-    display: block;
+    display: none;
     width: 200px;
     text-align: center;
     letter-spacing: 1.5px;
 }
 /*best picks end*/
 div#promobannerhomepage{
-margin:30px 0;
+margin:45px 0 30px;
 }
 div#promobannerhomepage a{
 color:inherit;
@@ -29726,11 +29755,11 @@ margin:20px 0;
 color:#000;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
-    background: transparent;
-    border: 2px solid rgba(169,20,60,0.8);
+	background: rgba(169,20,60,0.8); 
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page span {
-        background: rgba(169,20,60,0.8);
+    background: transparent;
+    border: 2px solid rgba(169,20,60,0.8);
 }
 .owl-carousel#rotatingImageTimeout .item ul.minor-promos {
     padding-bottom: 30px;
@@ -29822,7 +29851,7 @@ color:#000;
 }
 .qued-content a.button.maroon {
    /*  margin-top: 90px; */
-    width: 220px;
+    width: 200px;
     padding-bottom: 20px;
    /*  margin:90px 0 20px 0; */
     position: absolute;
@@ -29911,10 +29940,11 @@ width: 100px !important;
     height: 50px !important;
     /* margin-top: 12px; */}
     header .content .bottom.active .marketplace {
-   margin-right: 0px;    }
-#rotatingImageTimeout {
+   margin-right: 0px;  
+   margin-top: 0px;  }
+/* #rotatingImageTimeout {
     margin-top: 21px;
-}
+} */
 .marketplace img {
     height: 70px;
 }
@@ -29924,10 +29954,12 @@ width: 100px !important;
 	padding: 0 20px;
 }
 
-.home-brands-you-love-wrapper .home-brands-you-love-desc p {
-	padding-top: 10px;
+.home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc {
+	padding-top: 20px;
 }
-
+.home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading {
+	padding-top: 6px;
+}
 .home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name {
 	margin-top: 10px;
 }
@@ -30000,7 +30032,7 @@ body.page-reviews .gig-comment .gig-media-thumbnail {
 body.page-productDetails .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image,
 body.page-reviews .gig-comment .gig-media-thumbnail img.gig-media-thumbnail-image{
 	height: auto !important;
-	width: 50px !important;
+	width: 160px !important;
 }
 
 body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-caption a {
@@ -30153,6 +30185,8 @@ header:not(.compact) .content .marketplace.compact{
 }
 #productYouCare .short-info > h3 span:hover,
 #productYouCare .short-info > h3 span:hover:after,
+
+
 #bestPicks .short-info:hover span {
 	color: #a9143c;
 }
@@ -30179,8 +30213,55 @@ form[name='flyOutloginForm'] input::-moz-placeholder {
 form[name='flyOutloginForm'] input:-ms-input-placeholder {
 	line-height: 18px;
 } 
-.select-view .select-list:hover > .selected:after {
-transform: rotate(180deg);
+header div.bottom .marketplace.linear-logo {
+		display: none;
+	}
+@media ( max-width : 790px){ 
+	footer>ul>li ul li {
+		line-height: 30px;
+	}
+	
+	header div.bottom .marketplace {
+		display: none;
+	}
+	
+	header div.bottom .marketplace.linear-logo {
+		display: block;
+	}
+}
+body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img{
+display:inline-block;
+}
+
+body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img img{
+width: 100px !important;
+height: auto !important;
+}
+.home-brands-you-love-carousel-brands.active:after {
+	border-bottom: 1px solid #a9143c !important;
+    content: "";
+    display: block;
+    margin: 0 auto;
+    width: 70%;
+    padding-top: 11px;
+}
+
+input#typeOfProduct::-webkit-input-placeholder {
+ 	line-height: 24px;
+}
+input#typeOfProduct::-moz-placeholder {
+ 	line-height: 24px;
+} 
+input#typeOfProduct:-ms-input-placeholder {
+ 	line-height: 24px;
+}
+
+.footwear_left div, .footwear_right div {
+	padding: 0 10px;
+}
+
+.footwear_left img, .footwear_right img {
+	width: 100%;
 }
 /*--------------maincss-----------*/
 .row
@@ -33349,7 +33430,7 @@ main {
 	width: 100%;
 	margin: 10px 0px;
 	text-align: center;
-	  padding: 0 20px;
+	  padding: 0 10px;
 }
 
 .carousel .item {
@@ -35953,18 +36034,18 @@ button.make_payment[disabled] {
 
 /* caraousel arrows start */
 .owl-prev::after{
-    top: 1px;
+    top: 0px;
     right: 0;
     bottom: 0;
     margin: auto !important;
-    left: 0;
+    left: 1px;
     -webkit-transform-origin: center;
     -moz-transform-origin: center;
     -ms-transform-origin: center;
     -o-transform-origin: center;
 	transform-origin: center;
-    border-bottom: 2px solid #fff;
-    border-left: 2px solid #fff;
+    border-bottom: 3px solid #fff;
+    border-left: 3px solid #fff;
 
 }
 .owl-next::after{
@@ -35973,14 +36054,14 @@ button.make_payment[disabled] {
     bottom: 0;
     margin: auto !important;
     left: 0;
-border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
+border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
     
 	}
 .owl-carousel .owl-controls .owl-buttons .owl-prev, .owl-carousel .owl-controls .owl-buttons .owl-next{
-width: 40px;
+	width: 30px;
     background: #a9143c;
-    height: 40px;
+    height: 30px;
     border-radius: 100%;
     
 }
@@ -36006,12 +36087,12 @@ width: 40px;
 	{
 		cursor: pointer;
     position: absolute !important;
-    top: 110px !important;
+    top:165px !important;
        
     display: table;
-        width: 40px;
+        width: 30px;
     background: #a9143c;
-    height: 40px;
+    height: 30px;
     border-radius: 100%;
     text-align: center;
     -webkit-transform: translate(0, -50%);
@@ -36066,12 +36147,12 @@ width: 40px;
     bottom: 0;
     margin: auto !important;
     left: 0;
-    border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
 	}
 	
 	#brandsYouLove .bulprev:after {
-	    top: 7px;
+	    top: 9px;
 	-webkit-transform: rotate(-135deg);
     -moz-transform: rotate(-135deg);
     -ms-transform: rotate(-135deg);
@@ -36081,4 +36162,29 @@ width: 40px;
 .social .links img {
 	width: 25px;
 	height: 25px;
+}
+.modal.size-guide .apparelSizes table{
+width: 100%;
+    float: left;
+    border: 1px solid #ccc;
+    table-layout: fixed;
+    margin-bottom:30px;}
+
+.modal.size-guide .apparelSizes table ul li:first-child{
+	background:#f0f4f5;
+	border-right:1px solid #fff;
+	
+}
+.modal.size-guide .apparelSizes table ul li:last-child{
+	border-right:none;
+	
+}
+.modal.size-guide .apparelSizes table ul li{
+padding:5px;
+height: 30px;
+text-transform: uppercase;
+}
+.modal.size-guide div.sizes.apparelSizes, .modal.size-guide div.footwear-size-table{
+overflow:auto;
+height:200px;
 }
