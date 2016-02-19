@@ -29305,6 +29305,7 @@ footer>ul>li>.toggle>img{
 	width: 50%;
     float: left;
     padding: 0 20px;
+        position: relative;
 }
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
