@@ -498,10 +498,11 @@ function getBestPicksAjaxCall(){
 				pagination:false,
 				itemsDesktop : [5000,5], 
 				itemsDesktopSmall : [1400,5], 
-				itemsTablet: [650,2], 
-				itemsMobile : [480,2], 
+				itemsTablet: [650,1], 
+				itemsMobile : [480,1], 
 				rewindNav: false,
-				lazyLoad:true
+				lazyLoad:true,
+				scrollPerPage:true
 			});
 		}
 
@@ -577,7 +578,8 @@ function getProductsYouCareAjaxCall(){
 				itemsTablet: [650,2], 
 				itemsMobile : [480,2], 
 				rewindNav: false,
-				lazyLoad:true
+				lazyLoad:true,
+				scrollPerPage:true
 			});
 		}
 
@@ -639,8 +641,15 @@ function getNewAndExclusiveAjaxCall(){
 			itemsDesktop : false, 
 			itemsDesktopSmall : false, 
 			itemsTablet: false, 
-			itemsMobile : false
+			itemsMobile : false,
+			scrollPerPage:true
 		});
+
+			setTimeout(function(){
+				if($(window).width() > 773) {
+					$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
+				}
+			},2000);
 		}
 	});
 }
@@ -901,3 +910,21 @@ $(document).on("click", ".showcaseItem",
 			 getShowcaseContentAjaxCall(id);
 		});
 
+
+$(window).on(
+		'resize',
+		function() {
+			if ($(window).width() > 773) {
+				if ($('#newAndExclusive').height() > $('#stayQued').height()) {
+					$('#stayQued').css('min-height',
+							$('#newAndExclusive').outerHeight() + 'px');
+				} else {
+					$('#newAndExclusive').css('min-height',
+							$('#stayQued').outerHeight() + 'px');
+				}
+
+			} else {
+				$('#newAndExclusive').css('min-height', 'auto');
+				$('#stayQued').css('min-height', 'auto');
+			}
+		});
