@@ -1565,4 +1565,3 @@
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
 </beans>
-

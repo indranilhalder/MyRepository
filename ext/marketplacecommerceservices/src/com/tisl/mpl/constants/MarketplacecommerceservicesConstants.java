@@ -1,4 +1,5 @@
 /*
+
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -888,6 +889,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate AND {"
 			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 
+
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
 	public static final String NOEMITERMKLIST = "EMI Term list is not available , Please Enter the correct data";
 	public static final String NONETBANKINGLIST = "Net Banking is not available , Please Enter the correct data";
@@ -1358,6 +1360,20 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
+//Audit Report
+	public static final String CHANGED = "CHANGED";
+	public static final String PRIORITYSTARTDATE = "priorityStartDate";
+	public static final String PRIORITYENDDATE = "priorityEndDate";
+	public static final String ISACTIVE = "isactive";
+	public static final String ACTIVATE = "Activate";
+	public static final String DEACTIVATED = "Deactivated";
+	public static final String SELLERID = "sellerid";
+	public static final String CATEGORYID = "categoryid";
+	public static final String LISTINGID = "listingid";
+	public static final String SIMPLEDATEFORMAT = "dd-MM-yyyy HH:mm:ss";
+	public static final String SIMPLEDATEFORMATDB = "yyyy-MM-dd HH:mm:ss";
+	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
+	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
 
 	private MarketplacecommerceservicesConstants()
 	{

@@ -3355,6 +3355,12 @@
 						<persistence type="property" />
 						<description>This attribute represents the list of footer images</description>
 					</attribute>
+					
+					<attribute qualifier="footerAppImageList" type="FooterImageCollection"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This attribute represents the list of footer download apps images</description>
+					</attribute>
 
 					<attribute qualifier="footerText" type="localized:java.lang.String"
 						generate="true" autocreate="true">
@@ -4570,10 +4576,13 @@
 							optional="true" partof="true" />
 						<persistence type="property" />
 					</attribute>
-					<attribute qualifier="ipAddress" type="java.lang.String">
+                    <attribute qualifier="ipAddress" type="java.lang.String">
 						<modifiers optional="true" />
 						<persistence type="property" />
 					</attribute>
+
+
+
 				</attributes>
 			</itemtype>
 
@@ -4657,7 +4666,7 @@
 							optional="true" />
 					</attribute>
 					<attribute autocreate="true" qualifier="CorporatePhone"
-						type="java.lang.String">
+						type="java.lang.Long">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
 							optional="true" />

@@ -12,9 +12,6 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.session.SessionService;
-
-import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -69,8 +66,6 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	private CommerceCartService commerceCartService;
 	@Autowired
 	private ExtendedUserService extendedUserService;
-	@Resource(name = "sessionService")
-	private SessionService sessionService;
 
 	//	@Resource(name = "sessionService")
 	//	private SessionService sessionService;
@@ -486,7 +481,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -649,23 +644,6 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	public void setExtendedUserService(final ExtendedUserService extendedUserService)
 	{
 		this.extendedUserService = extendedUserService;
-	}
-
-	/**
-	 * @return the sessionService
-	 */
-	public SessionService getSessionService()
-	{
-		return sessionService;
-	}
-
-	/**
-	 * @param sessionService
-	 *           the sessionService to set
-	 */
-	public void setSessionService(final SessionService sessionService)
-	{
-		this.sessionService = sessionService;
 	}
 
 }

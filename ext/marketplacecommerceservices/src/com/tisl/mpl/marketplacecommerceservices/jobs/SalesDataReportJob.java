@@ -44,6 +44,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,6 +161,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 	 * This method is used to convert the Order Model into Order Data
 
 	 * 
+
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -494,6 +496,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 												.getPrimarycategoryData(productModel);
 										if (null != productCategoryList && productCategoryList.size() > 0)
 
+
 										{
 											categoryList = new ArrayList<String>();
 											for (final CategoryModel category : productCategoryList)
@@ -505,6 +508,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 												}
 											}
 											if (categoryList.size() > 0)
+
 
 											{
 												Collections.sort(categoryList, new Comparator()
@@ -651,12 +655,17 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 	/* Checking payment type and then setting payment info */
 	protected void setPaymentInfo(final OrderData orderDetail, final OrderModel orderModel, final SalesReportData reportDTO)
 
+
 	{
 		MplPaymentInfoData paymentInfo = null;
 		String auditId = MarketplacecommerceservicesConstants.NA;
 		String riskScore = MarketplacecommerceservicesConstants.NA;
 		String transactionRef = MarketplacecommerceservicesConstants.NA;
 		String transactionRefGateway = MarketplacecommerceservicesConstants.NA;
+
+
+
+
 
 
 
@@ -675,6 +684,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 
 
+
 				if (null != paymentInfo.getPaymentOption())
 				{
 					reportDTO.setPaymentMethod(paymentInfo.getPaymentOption());
@@ -685,8 +695,10 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
 					}
 
+
 					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
 					{
+
 						reportDTO.setBankName(paymentInfo.getCardCardType());
 						if (paymentInfo.getEmiInfo() != null)
 						{
@@ -713,9 +725,35 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 						reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
 
+
 					}
 
+
+
+
+
+
+
 					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.WALLET))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -729,11 +767,13 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 						reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
+
 					}
 
 					//TODO
 					//Find the correct juspay orderid(auditid) model for sucess //AT TISPRO-133
 					if (!paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
+
 					{
 
 
@@ -775,15 +815,21 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								}
 							}
 							catch (final Exception e)
+
+
+
 							{
 								LOG.debug("-----------JuspPay audit exception");
+
 							}
+
 						}
 					}
 				}
 
 
 				else
+
 				{
 
 
@@ -792,11 +838,34 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.ORDER_PAYMENT_ERROR);
+
+
+
+
+
+
 				}
 
 				reportDTO.setTransactionRefNo(transactionRef);
 				reportDTO.setRiskScore(riskScore);
 				reportDTO.setTransactionRefNumber(transactionRefGateway);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -869,8 +938,10 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			reportDTO.setTotalPrice(String.valueOf(totalPrice));
 			//change the MRP to product MRP TISEE-5153
 			if (null != product && null != product.getMrp())
+
 			{
 				mrp = product.getMrp().toString();
+
 			}
 			reportDTO.setMrpPrice(mrp);
 
@@ -891,6 +962,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		{
 
 			LOG.debug("-----------Order Data Prices Exception" + orderDetail.getCode());
+
 		}
 
 		//TODO Need to remove Hard code
@@ -1023,6 +1095,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR);
 
+
 			}
 		}
 
@@ -1120,3 +1193,4 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 
 }
+

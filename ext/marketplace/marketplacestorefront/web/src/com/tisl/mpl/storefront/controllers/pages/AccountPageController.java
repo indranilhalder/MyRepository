@@ -6369,7 +6369,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 							catch (final Exception exception)
 							{
 								LOG.error("Review  exception: " + exception);
-								throw new EtailNonBusinessExceptions(exception);
 							}
 							productDataMap.put(productData.getCode(), productData);
 

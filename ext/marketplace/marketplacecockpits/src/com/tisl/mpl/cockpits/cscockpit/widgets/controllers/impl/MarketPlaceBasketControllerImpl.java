@@ -533,6 +533,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 													cartParameter);
 									cart.setCartReservationDate(null);
 									 ((MarketplaceCheckoutControllerImpl) getCheckoutController()).removeCODPayment();
+
+
 								} catch (CommerceCartModificationException | PaymentException | 
 										ValidationException | JaloInvalidParameterException | NumberFormatException e) {
 									LOG.error("Exception calculating cart ["
@@ -564,6 +566,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 		} 
 	
+
 	}
 	
 	
@@ -915,6 +918,112 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		return voucher;
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	@Override
 	public String releaseVoucher()
 	{
@@ -1015,6 +1124,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	public void setVoucherModelService(VoucherModelService voucherModelService) {
 		this.voucherModelService = voucherModelService;
 	}
+
 	
 }
-

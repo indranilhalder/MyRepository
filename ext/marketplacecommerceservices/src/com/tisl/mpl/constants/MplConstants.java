@@ -78,7 +78,6 @@ public final class MplConstants
 	public static final String LEVEL_ONE = ":L1:";
 	public static final String LEVEL_THREE = ":L3:";
 	public static final String FORWARD_SLASH = "/";
-	public static final String PIPE = "|";
 	public static final String COLON = ":";
 	public static final String SALES_HIERARCHY_ROOT_CATEGORY_CODE = "MSH1";
 	public static final String INSTOCKFLAG_QUERY_PATTERN = "inStockFlag:true";

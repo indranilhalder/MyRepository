@@ -140,8 +140,8 @@ function displayCODForm()
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
 	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
-	//$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");	//modified back
-	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing*/
+
+	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");	
 	//setCellNo();
 	if(codEligible=="BLACKLISTED")
 	{
@@ -1179,7 +1179,7 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	  // TISPRO-153
+// TISPRO-153
 	var payment_method_map = {
 	            "viewPaymentEMI": "EMI",
 	            "viewPaymentCredit": "Credit",
@@ -1223,8 +1223,7 @@ $("#otpMobileNUMField").focus(function(){
 	            "product_id": utag.data.product_id
 
 	        });
-	
-		
+
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
 		
@@ -1306,7 +1305,7 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		
-	  // TISPRO-153
+// TISPRO-153
 	  var payment_method_map = {
 	            "viewPaymentEMI": "EMI",
 	            "viewPaymentCredit": "Credit",
@@ -1350,7 +1349,6 @@ $("#otpMobileNUMField").focus(function(){
 	            "product_id": utag.data.product_id
 
 	        });
-	
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
 		var addressLine1=$("#address1").val();
@@ -3101,9 +3099,7 @@ function checkSignInValidation(path){
 		$("#signinPasswordDiv").hide();
 	}
 	
-	
-
-	// TISPRO-153
+		// TISPRO-153
 	if(validationResult){
 		utag.link({ "event_type" : "Login", "link_name" : "Login" });
 	}
@@ -3185,6 +3181,7 @@ function checkSignUpValidation(path){
 	{
 		// TISPRO-153
 		utag.link({ "event_type" : "Login", "link_name" : "Login" });
+		
 		var encodedPWD= encodeURIComponent(password);
 		var encodedRePWD= encodeURIComponent(rePassword);		
 		if(path=="Checkout"){
@@ -3739,3 +3736,4 @@ $("#voucherDisplaySelection").change(function(){
 		$("#couponFieldId").val(selection);
 	}
 });
+

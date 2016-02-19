@@ -1,3 +1,4 @@
+
 /*----------Start of  validate email in feedback-----------*/
 	function validateEmail()
     { 	 var x = document.getElementById("emailField");
@@ -109,8 +110,11 @@
 
 
 $(document).ready(function(){
-	
-		
+	$(document).keydown(function(e){
+		if(e.which == 27) {
+			$('.modal').modal('hide');
+		}
+	}); 
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;
@@ -1094,7 +1098,6 @@ $(document).ready(function(){
 				 $("li.short.words").siblings("li.long.words").hide();
 				 $("li.short.words").unbind('click');
 				  $("li.short.words").click(function(){
-
 					  $(this).toggleClass('active');
 				    $(this).nextAll().each(function(){
 
@@ -1261,14 +1264,4 @@ $(document).ready(function(){
 	 		});
 			}
 		
-			if($('.lookbook_wrapper .bottom-pagination').children().length==0){
-			$('.lookbook_wrapper .bottom-pagination').css('padding','0');
-			}
-			if($('body .lookbook_wrapper .lookbook-pagination').children().length==0){
-				$('body .lookbook_wrapper .lookbook-pagination').css('padding','0');
-			}
-			if($('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').children().length==0){
-			$('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').parents().find('.listing.wrapper').css('height','0px');
-			}
-			
 });

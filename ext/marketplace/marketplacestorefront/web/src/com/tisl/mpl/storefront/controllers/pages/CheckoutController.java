@@ -491,7 +491,9 @@ public class CheckoutController extends AbstractCheckoutController
 				LOG.debug("Exception during IP save" + e.getMessage());
 			}
 			//End saving IP of the Customer
+
 			orderDetails.setNet(true);
+
 			model.addAttribute("totalCount", totalItemCount);
 
 			model.addAttribute("orderCode", orderCode);
@@ -553,26 +555,36 @@ public class CheckoutController extends AbstractCheckoutController
 			 * .getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderReferenceNumber;
 			 *
 			 *
+
+
 			 * // Email ************* Order Placed final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			 * orderProcessModel.setOrder(orderModel); orderProcessModel.setOrderTrackUrl(trackorderurl); final
 			 * OrderPlacedEvent orderplacedEvent = new OrderPlacedEvent(orderProcessModel); try {
 			 * eventService.publishEvent(orderplacedEvent); } catch (final Exception e1) { // YTODO // Auto-generated catch
 			 * block LOG.error("Exception during sending mail >> " + e1.getMessage()); }
 			 *
+
 			 * try { sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
 			 *
+
 			 * MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
 			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, trackingUrl), mobileNumber);
 			 */
 			/*
+
+
 			 * try { //mplCheckoutFacade.triggerEmailAndSmsOnOrderConfirmation(orderModel, orderDetails, trackorderurl);
 			 * //mplCheckoutFacade.sendMobileNotifications(orderDetails);
 			 * 
+
+
 			 * } catch (final EtailNonBusinessExceptions ex) {
+
 			 * LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex.getMessage()); }
 			 */
+
 			// TODO: TIS-1178: Email & SMS ********* On Hold Due to Risks
 
 		}
@@ -639,3 +651,4 @@ public class CheckoutController extends AbstractCheckoutController
 	}
 
 }
+

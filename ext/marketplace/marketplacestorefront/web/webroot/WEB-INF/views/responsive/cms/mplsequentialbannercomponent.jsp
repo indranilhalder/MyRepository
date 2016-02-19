@@ -4,3 +4,5 @@
 
 
 <cms:component component="${banner}" evaluateRestriction="true" />
+
+

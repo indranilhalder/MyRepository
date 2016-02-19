@@ -398,7 +398,6 @@ font-weight: normal;
 {
 display: none;
 } 
-
 *.gig-comment-rating-title{
 vertical-align:top;
 }

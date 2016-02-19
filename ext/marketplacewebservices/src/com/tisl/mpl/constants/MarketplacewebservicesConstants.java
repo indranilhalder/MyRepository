@@ -276,12 +276,11 @@ public class MarketplacewebservicesConstants
 	public final static String BINNOEMPTY = "Please Provide binNo and remove bankName".intern();
 	public final static String BANKNAMEEMPTY = "Please provide bankName and remove binNo".intern();
 	public final static String INPUTNULL = "No PaymentMode Provided".intern();
-	public final static String INPUTNULLDATA = "".intern();
 	public final static String ENTRYEMPTY = "No Entry available against this Cart Model".intern();
 	public final static String PRODUCTMODELEMPTY = "No Product Details available for the mentioned Cart ID".intern();
 	public final static String NODATAAVAILABLE = "No Data Available".intern();
 	public final static String UPDATE_CARD_TRAN_FAILED = "Update card transaction details failed.".intern();
-	public final static String UPDATE_COD_TRAN_FAILED = "Update COD transaction details failed.".intern();
+	public final static String UPDATE_COD_TRAN_FAILED = "Update card transaction details failed.".intern();
 	public final static String PLACE_ORDER_FAILED = "Place order failed.".intern();
 	//Rename Wish List
 	public static final String DUPLICATEWISHLISTNAME = "Duplicate Wish list Name".intern();

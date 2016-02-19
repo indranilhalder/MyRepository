@@ -1,4 +1,3 @@
-
 	function constructDepartmentHierarchy(inputArray) {
 		var output = [];
 		for (var i = 0; i < inputArray.length; i++) {
