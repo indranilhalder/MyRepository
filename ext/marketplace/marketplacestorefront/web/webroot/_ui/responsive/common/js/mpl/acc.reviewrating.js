@@ -76,7 +76,7 @@ if(typeof(arrayrating)!= "undefined"){
 			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
 			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
 			var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
-			var hiddenMediaUrl = $("input[name=hiddenMediaUrl"+indexElement+"]");
+			var hiddenMediaUrl = $(".hiddenMediaUrl"+indexElement).val()
 			
 			if(updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "")		
 			{		
@@ -94,7 +94,7 @@ if(typeof(arrayrating)!= "undefined"){
 				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
 			    isValidated=false;	
 			}
-			if(hiddenMediaUrl!= "" && hiddenMediaUrl.length!= 0){
+			if(hiddenMediaUrl!=""){
 				
 				if(updatedMediaUrl == undefined || updatedMediaUrl.replace(/\s/g, '')  == "")		
 				{		
