@@ -396,9 +396,9 @@ button:hover {
     color: #fff;
     background-color: #A9143C;
      }
-    a.button.light-blue:hover, button.light-blue:hover {
+    /* a.button.light-blue:hover, button.light-blue:hover {
       background-color: #21f7ff;
-       }
+       } */
 
 a {
   text-decoration: none;
@@ -29450,7 +29450,7 @@ width:100%;
 }
 
 .home-brands-you-love-carousel-brands.active img{
-border-bottom: 2px solid #ccc;
+/* border-bottom: 2px solid #ccc; */
     padding: 5px;
 }
 .home-brands-you-love-carousel-brands img{
@@ -29949,10 +29949,12 @@ width: 100px !important;
 	padding: 0 20px;
 }
 
-.home-brands-you-love-wrapper .home-brands-you-love-desc p {
+.home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc {
 	padding-top: 20px;
 }
-
+.home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading {
+	padding-top: 6px;
+}
 .home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name {
 	margin-top: 10px;
 }
