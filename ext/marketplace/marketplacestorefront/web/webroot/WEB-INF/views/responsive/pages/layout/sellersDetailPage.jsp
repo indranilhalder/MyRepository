@@ -152,6 +152,7 @@ var hdIndx=-1;
 var edIndx=-1;
 $(document).ready(function() {
 	
+   	getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 var stockMap="${skuIdsWithNoStock}"; 
 	
 	 fetchPrice();
@@ -376,7 +377,7 @@ var allSellers='${allsellers}';
 		<div class="product-detail">
 			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
 			<h2 class="company">${product.brand.brandname} by <span id="sellerNameId"></span></h2>
-				<h3 class="product-name">${product.name}</h3>
+				<h3 class="product-name">${product.productTitle}</h3>
 			</ycommerce:testId>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">

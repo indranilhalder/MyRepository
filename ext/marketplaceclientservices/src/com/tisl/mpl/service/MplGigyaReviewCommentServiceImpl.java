@@ -202,6 +202,22 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					ProductData productData = null;
 					final GigyaProductReviewWsDTO reviewDTO = new GigyaProductReviewWsDTO();
 					final GSObject gsCommentObject = commentsJson.getObject(i);
+
+					if (checkItemArray(gsCommentObject, "mediaItems"))
+					{
+						final GSArray mediaArray = gsCommentObject.getArray("mediaItems");
+						if (null != mediaArray)
+						{
+							final GSObject media = mediaArray.getObject(0);
+							if (null != media.getString("html") && null != media.getString("url"))
+							{
+								reviewDTO.setMediaItems(media.getString("html"));
+								reviewDTO.setMediaUrl(media.getString("url"));
+								reviewDTO.setMediaType(media.getString("type"));
+							}
+						}
+					}
+
 					final String category = gsCommentObject.getString("categoryId");
 					final GSObject ratings = gsCommentObject.getObject("ratings");
 
@@ -282,9 +298,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						final ProductModel productModel = productService.getProductForCode(gsCommentObject.getString("streamId"));
 
-						productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-								ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-								ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+						productData = productFacade.getProductForOptions(productModel,
+								Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+										ProductOption.GALLERY, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
+										ProductOption.VARIANT_FULL));
 					}
 
 					reviewDTO.setProductData(productData);
@@ -311,7 +328,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 */
 	@Override
 	public String editComment(final String categoryID, final String streamID, final String commentID, final String commentText,
-			final String commentTitle, final String ratings, final String UID)
+			final String commentTitle, final String commentMediaUrl, final String ratings, final String UID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -325,6 +342,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequestAllowEdit = new GSRequest(apiKey, secretKey, setCategoryInfoMethod);
 		gsRequestAllowEdit.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
 		gsRequestAllowEdit.setParam("categorySettings", "{userEditComment : true}");
+		gsRequestAllowEdit.setParam("clientSettings", "{enableMediaItems : true}");
+		GSResponse gsResponse = null;
 		Proxy proxy = null;
 
 		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
@@ -353,6 +372,12 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						gsRequest.setProxy(proxy);
 					}
+					if (null != commentMediaUrl)
+					{
+						final GSArray attachment = new GSArray();
+						attachment.add(commentMediaUrl);
+						gsRequest.setParam("mediaItems", attachment);
+					}
 					gsRequest.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
 					gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, streamID);
 					gsRequest.setParam(MarketplacecclientservicesConstants.COMMENT_ID, commentID);
@@ -361,7 +386,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					gsRequest.setParam(MarketplacecclientservicesConstants.RATINGS, ratings);
 					gsRequest.setParam(MarketplacecclientservicesConstants.UID, UID);
 
-					final GSResponse gsResponse = gsRequest.send();
+					gsResponse = gsRequest.send();
 					if (gsResponse.getErrorCode() == 0)
 					{
 						final GSObject gsObjToEdit = new GSObject(gsResponse.getResponseText());
@@ -375,7 +400,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			LOG.error(MarketplacecclientservicesConstants.REVIEWS_EDIT_EXCEPTION + e.getMessage());
 
 		}
-		return null;
+		return gsResponse.getErrorMessage();
 	}
 
 	/**
@@ -547,4 +572,27 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 
 	}
 
+	/**
+	 * @Description: checks if array key in GSobject is missing or not
+	 * @param ratings
+	 *           ,key
+	 * @return boolean
+	 */
+	@Override
+	public boolean checkItemArray(final GSObject ratings, final String key)
+	{
+		try
+		{
+			ratings.getArray(key);
+			return true;
+		}
+		catch (final GSKeyNotFoundException e)
+		{
+			return false;
+		}
+		catch (final NullPointerException e)
+		{
+			return false;
+		}
+	}
 }

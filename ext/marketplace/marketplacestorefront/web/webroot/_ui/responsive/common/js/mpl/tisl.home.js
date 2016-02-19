@@ -252,14 +252,17 @@ function getBrandsYouLoveContentAjaxCall(id) {
 				},
 				success : function(response) {
 					
+					
 					$('.home-brands-you-love-desc').remove();
 					defaultHtml = "<div class='home-brands-you-love-desc'>";
-					
+					if (typeof response.text !== "undefined") {
+						defaultHtml += response.text;
+					}
 					if (typeof response.firstProductImageUrl !== "undefined") {
 						
 						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></a>";
+								+ "'></img>";
 						if (typeof response.firstProductTitle !== "undefined"){
 							defaultHtml +="<p class='product-name'>"+response.firstProductTitle+"</p>";
 						}
@@ -267,18 +270,17 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='price normal'><span class='priceFormat'>"+response.firstProductPrice+"</span></p>";
 			                  
 						}
-						defaultHtml +="</div>"
+						defaultHtml +="</a></div>"
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
-					if (typeof response.text !== "undefined") {
-						defaultHtml += response.text;
-					}
+					
 					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml += "<div class='home-brands-you-love-main-image-wrapper'>";
 						if (typeof response.bannerText !=="undefined") {
 							defaultHtml += "<div class='visit-store-wrapper'>"
 									+ response.bannerText + "</div>";
 						}
+						
 						defaultHtml += "<img src='" + response.bannerImageUrl
 								+ "'></img></div></div>";
 
@@ -287,7 +289,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					if (typeof response.secondproductImageUrl !== "undefined") {
 						defaultHtml += "<div class='home-brands-you-love-side-image right'><a href='"+ACC.config.encodedContextPath+response.secondProductUrl+"'><img src='"
 								+ response.secondproductImageUrl
-								+ "'></img></a>";
+								+ "'></img>";
 						if (typeof response.secondProductTitle !== "undefined"){
 							defaultHtml +="<p class='product-name'>"+response.secondProductTitle+"</p>";
 						}
@@ -295,7 +297,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 							defaultHtml +="<p class='normal price'><span class='priceFormat'>"+response.secondProductPrice+"</span></p>";
 			                  
 						}
-						defaultHtml +="</div>"
+						defaultHtml +="</a></div>"
 					}
 
 					defaultHtml += "</div>";
@@ -496,10 +498,11 @@ function getBestPicksAjaxCall(){
 				pagination:false,
 				itemsDesktop : [5000,5], 
 				itemsDesktopSmall : [1400,5], 
-				itemsTablet: [650,2], 
-				itemsMobile : [480,2], 
+				itemsTablet: [650,1], 
+				itemsMobile : [480,1], 
 				rewindNav: false,
-				lazyLoad:true
+				lazyLoad:true,
+				scrollPerPage:true
 			});
 		}
 
@@ -575,7 +578,8 @@ function getProductsYouCareAjaxCall(){
 				itemsTablet: [650,2], 
 				itemsMobile : [480,2], 
 				rewindNav: false,
-				lazyLoad:true
+				lazyLoad:true,
+				scrollPerPage:true
 			});
 		}
 
@@ -611,7 +615,7 @@ function getNewAndExclusiveAjaxCall(){
 								
 									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
 											+ value.productImageUrl
-											+ "'></img></a><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'><span class='priceFormat'>" + value.productPrice + "</span></p></div></div>"; 
+											+ "'></img><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'><span class='priceFormat'>" + value.productPrice + "</span></p></a></div></div>"; 
 											
 
 							});
@@ -637,8 +641,15 @@ function getNewAndExclusiveAjaxCall(){
 			itemsDesktop : false, 
 			itemsDesktopSmall : false, 
 			itemsTablet: false, 
-			itemsMobile : false
+			itemsMobile : false,
+			scrollPerPage:true
 		});
+
+			setTimeout(function(){
+				if($(window).width() > 773) {
+					$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
+				}
+			},2000);
 		}
 	});
 }
@@ -831,8 +842,16 @@ function getShowcaseContentAjaxCall(id) {
 					$('.about-one.showcase-section').remove();
 					defaultHtml = "<div class='about-one showcase-section'>";
 					if (typeof response.bannerImageUrl !=="undefined") {
-						defaultHtml += "<div class='desc-section'><img src='"+ response.bannerImageUrl
-						+ "'></img></div>";		
+						defaultHtml +="<div class='desc-section'>";
+						if(typeof response.bannerUrl !=="undefined"){
+							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"'>";
+						}
+						defaultHtml += "<img src='"+ response.bannerImageUrl
+						+ "'></img>";	
+						if(typeof response.bannerUrl !=="undefined"){
+							defaultHtml+="</a>";
+						}
+						defaultHtml +="</div>";
 					}
 					
 				
@@ -845,7 +864,7 @@ function getShowcaseContentAjaxCall(id) {
 						
 						defaultHtml += " <div class='desc-section'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
 								+ response.firstProductImageUrl
-								+ "'></img></a>";
+								+ "'></img>";
 						
 							defaultHtml +="<div class='showcase-center'>" ;
 							if (typeof response.firstProductTitle !== "undefined"){
@@ -856,7 +875,7 @@ function getShowcaseContentAjaxCall(id) {
 				                  
 							}	
 			                
-							defaultHtml +="</div>";
+							defaultHtml +="</a></div>";
 			                  
 						}
 					
@@ -891,3 +910,21 @@ $(document).on("click", ".showcaseItem",
 			 getShowcaseContentAjaxCall(id);
 		});
 
+
+$(window).on(
+		'resize',
+		function() {
+			if ($(window).width() > 773) {
+				if ($('#newAndExclusive').height() > $('#stayQued').height()) {
+					$('#stayQued').css('min-height',
+							$('#newAndExclusive').outerHeight() + 'px');
+				} else {
+					$('#newAndExclusive').css('min-height',
+							$('#stayQued').outerHeight() + 'px');
+				}
+
+			} else {
+				$('#newAndExclusive').css('min-height', 'auto');
+				$('#stayQued').css('min-height', 'auto');
+			}
+		});

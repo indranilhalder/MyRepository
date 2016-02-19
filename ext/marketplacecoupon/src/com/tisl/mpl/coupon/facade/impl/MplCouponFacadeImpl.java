@@ -569,7 +569,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	}
 
 
-
 	/**
 	 * This method adds global discount
 	 *
@@ -618,6 +617,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			recalculateCartForCoupon(cart);
 		}
 	}
+
 
 	/**
 	 * This method returns list of all CouponTransactions corresponding to a specific customer

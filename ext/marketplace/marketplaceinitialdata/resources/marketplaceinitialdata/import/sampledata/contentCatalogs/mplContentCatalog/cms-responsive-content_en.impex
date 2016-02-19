@@ -19,10 +19,12 @@ $storefrontContextRoot=$config-storefrontContextRoot
 # Site Logo
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
 ;;sitelogo.png;sitelogo.png;$siteResource/images/logo/sitelogo.png;image/png;Tata Cliq;
+;;LinearSitelogo.png;LinearSitelogo.png;$siteResource/images/logo/LinearSitelogo.png;image/png;Tata Cliq;
 
 # Site Logo Component
 UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
 ;;SiteLogoComponent;sitelogo.png
+;;ResponsiveSiteLogoComponent;LinearSitelogo.png
 
 #Brands You Love Media
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
@@ -178,6 +180,31 @@ UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];tit
 UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 ;; NewAndExclusiveProductCarouselComponent;"Discover New & Exclusive"
 #;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
+
+######## Footer image icons starts #######
+
+# Media Content
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;gplus.png;$siteResource/images/banners/homepage/gplus.png;gplus.png;"Google Plus";
+;;facebook.png;$siteResource/images/banners/homepage/facebook.png;facebook.png;"Facebook";
+;;apple.png;$siteResource/images/banners/homepage/apple.png;apple.png;"Apple";
+;;android.png;$siteResource/images/banners/homepage/android.png;android.png;"Android";
+
+
+# Footer Image Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
+;;GoogleImageComponent;Google Image Component;GoogleImageComponent;"https://plus.google.com";gplus.png
+;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook.png
+;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"https://www.play.google.com";apple.png
+;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"http://www.apple.com";android.png
+
+
+# CMS Footer Component
+INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);&componentRef;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV);
+;;FooterComponent;6;TataMarketplaceNavNode,CustomerServiceNavNode,MyMarketplaceNavNode;FooterComponent;GoogleImageComponent,FacebookImageComponent;AndroidImageComponent,AppleImageComponent;
+
+
+######## Footer image icons ends ########
 
 UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 #;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending

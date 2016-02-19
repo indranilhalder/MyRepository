@@ -3,6 +3,7 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -38,10 +39,10 @@
 </h1>
 		<div class="wrapper">
 			<!----- Left Navigation Starts --------->
-			<div class="left-nav">
-				<%-- <h1>
+			<%-- <div class="left-nav">
+				<h1>
 					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1> --%>
+				</h1>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -79,7 +80,8 @@
 								code="header.flyout.invite" /></a></li>
 								
 				</ul>
-			</div>
+			</div> --%>
+			<user:accountLeftNav pageName="overViews"/>
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation Starts --------->
 			<div class="right-account">
@@ -99,5 +101,3 @@
 </div>
 	</template:page>
 	
-	
-

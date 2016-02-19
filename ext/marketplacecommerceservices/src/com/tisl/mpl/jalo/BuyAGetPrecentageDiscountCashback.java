@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -259,7 +260,8 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 						}
 
 					}
-					if (promoProductList.size() > 0) // To check that another Product Promotion does not apply on the product
+					//if (promoProductList.size() > 0) // To check that another Product Promotion does not apply on the product
+					if (CollectionUtils.isNotEmpty(promoProductList))
 					{
 						getPromotionUtilityPOJO().setPromoProductList(promoProductList);
 					}
