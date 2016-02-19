@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.CampaignPromoSubService;
+import com.tisl.mpl.model.BuyAPercentageDiscountModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.CartOrderThresholdDiscountCashbackModel;
 import com.tisl.mpl.model.CartOrderThresholdDiscountPromotionModel;
@@ -85,6 +87,11 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		CampaignData campaignData = new CampaignData();
 		campaignData = setDefaultData(campaignData);
 
+		if (promotion instanceof BuyAPercentageDiscountModel)
+		{
+			campaignData = getBuyAPercentageDisData(promotion, campaignData);
+		}
+
 
 		return campaignData;
 	}
@@ -120,6 +127,80 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 
 
 	/**
+	 * Campaign Data For Model : BuyAPercentageDiscountModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getBuyAPercentageDisData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		final BuyAPercentageDiscountModel oModel = (BuyAPercentageDiscountModel) promotion;
+		data = populateDefaultCampData(promotion, campaignData);
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getQuantity() && oModel.getQuantity().longValue() > 0)
+		{
+			data.setQuantity(oModel.getQuantity().toString());
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (null != oModel.getPercentageOrAmount())
+		{
+			data.setIsPercentage(oModel.getPercentageOrAmount().toString());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (null != oModel.getMaxDiscountVal() && oModel.getMaxDiscountVal().doubleValue() > 0)
+		{
+			data.setMaxDiscount(oModel.getMaxDiscountVal().toString());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		return data;
+	}
+
+
+
+
+	/**
 	 * Campaign Data For Model : BuyAboveXGetPromotionOnShippingChargesModel
 	 *
 	 * @param promotion
@@ -128,35 +209,10 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 	 */
 	private CampaignData getCartShipPromoData(final AbstractPromotionModel promotion, final CampaignData campaignData)
 	{
-		final CampaignData data = campaignData;
+		CampaignData data = campaignData;
 		final BuyAboveXGetPromotionOnShippingChargesModel oModel = (BuyAboveXGetPromotionOnShippingChargesModel) promotion;
 
-		data.setIdentifier(promotion.getCode());
-		data.setPromotionGrp(promotion.getPromotionGroup().getIdentifier());
-		data.setPriority(promotion.getPriority().toString());
-		data.setStartDate(formatter.format(promotion.getStartDate()));
-		data.setEndDate(formatter.format(promotion.getEndDate()));
-		data.setUrl(populateOfferURL(promotion));
-
-		if (StringUtils.isNotEmpty(promotion.getTitle()))
-		{
-			data.setTitle(promotion.getTitle());
-		}
-
-		if (StringUtils.isNotEmpty(promotion.getDescription()))
-		{
-			data.setDescription(promotion.getDescription());
-		}
-
-		if (null != promotion.getEnabled())
-		{
-			data.setEnabled(promotion.getEnabled().toString());
-		}
-
-		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
-		{
-			data.setChannel(populateOfferChannel(promotion));
-		}
+		data = populateDefaultCampData(promotion, campaignData);
 
 		if (null != oModel.getDiscTypesOnShippingCharges() && null != oModel.getDiscTypesOnShippingCharges())
 		{
@@ -171,11 +227,6 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
 		{
 			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
-		}
-
-		if (CollectionUtils.isNotEmpty(oModel.getRestrictions()))
-		{
-			data.setRestrictions(getRestrictionData(oModel.getRestrictions()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
@@ -222,36 +273,10 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 	 */
 	private CampaignData getCartDiscountCashBackData(final AbstractPromotionModel promotion, final CampaignData campaignData)
 	{
-		final CampaignData data = campaignData;
+		CampaignData data = campaignData;
 		final CartOrderThresholdDiscountCashbackModel oModel = (CartOrderThresholdDiscountCashbackModel) promotion;
 
-		data.setIdentifier(promotion.getCode());
-		data.setPromotionGrp(promotion.getPromotionGroup().getIdentifier());
-		data.setPriority(promotion.getPriority().toString());
-		data.setStartDate(formatter.format(promotion.getStartDate()));
-		data.setEndDate(formatter.format(promotion.getEndDate()));
-		data.setUrl(populateOfferURL(promotion));
-
-		if (StringUtils.isNotEmpty(promotion.getTitle()))
-		{
-			data.setTitle(promotion.getTitle());
-		}
-
-		if (StringUtils.isNotEmpty(promotion.getDescription()))
-		{
-			data.setDescription(promotion.getDescription());
-		}
-
-		if (null != promotion.getEnabled())
-		{
-			data.setEnabled(promotion.getEnabled().toString());
-		}
-
-		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
-		{
-			data.setChannel(populateOfferChannel(promotion));
-		}
-
+		data = populateDefaultCampData(promotion, campaignData);
 		if (null != oModel.getPercentageOrAmount())
 		{
 			data.setIsPercentage(oModel.getPercentageOrAmount().toString());
@@ -265,11 +290,6 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
 		{
 			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
-		}
-
-		if (CollectionUtils.isNotEmpty(oModel.getRestrictions()))
-		{
-			data.setRestrictions(getRestrictionData(oModel.getRestrictions()));
 		}
 
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
@@ -299,34 +319,9 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 	 */
 	private CampaignData getCartDiscountPromoData(final AbstractPromotionModel promotion, final CampaignData campaignData)
 	{
-		final CampaignData data = campaignData;
+		CampaignData data = campaignData;
 		final CartOrderThresholdDiscountPromotionModel oModel = (CartOrderThresholdDiscountPromotionModel) promotion;
-		data.setIdentifier(promotion.getCode());
-		data.setPromotionGrp(promotion.getPromotionGroup().getIdentifier());
-		data.setPriority(promotion.getPriority().toString());
-		data.setStartDate(formatter.format(promotion.getStartDate()));
-		data.setEndDate(formatter.format(promotion.getEndDate()));
-		data.setUrl(populateOfferURL(promotion));
-
-		if (StringUtils.isNotEmpty(promotion.getTitle()))
-		{
-			data.setTitle(promotion.getTitle());
-		}
-
-		if (StringUtils.isNotEmpty(promotion.getDescription()))
-		{
-			data.setDescription(promotion.getDescription());
-		}
-
-		if (null != promotion.getEnabled())
-		{
-			data.setEnabled(promotion.getEnabled().toString());
-		}
-
-		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
-		{
-			data.setChannel(populateOfferChannel(promotion));
-		}
+		data = populateDefaultCampData(promotion, campaignData);
 
 		if (null != oModel.getPercentageOrAmount())
 		{
@@ -343,11 +338,6 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
 		}
 
-		if (CollectionUtils.isNotEmpty(oModel.getRestrictions()))
-		{
-			data.setRestrictions(getRestrictionData(oModel.getRestrictions()));
-		}
-
 		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
 		{
 			data.setFiredMessage(oModel.getMessageFired());
@@ -357,7 +347,6 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		{
 			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
 		}
-
 
 		if (CollectionUtils.isNotEmpty(oModel.getThresholdTotals()))
 		{
@@ -634,6 +623,98 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		return urlDataList;
 	}
 
+
+	/**
+	 * Populate Product Data
+	 *
+	 * @param products
+	 * @return productData
+	 */
+	private String populateProducts(final Collection<ProductModel> products)
+	{
+		String productData = MarketplacecommerceservicesConstants.EMPTY;
+		final List<ProductModel> productList = new ArrayList<ProductModel>(products);
+		for (int i = 0; i < productList.size(); i++)
+		{
+			if ((i != (productList.size() - 1)))
+			{
+				productData = productData + (productList.get(i).getCode())
+						+ MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
+			}
+			else
+			{
+				productData = productData + (productList.get(i).getCode().toUpperCase());
+			}
+		}
+
+		return productData;
+	}
+
+	/**
+	 * Populate Category Data
+	 *
+	 * @param categories
+	 * @return categoryData
+	 */
+	private String populateCategories(final Collection<CategoryModel> categories)
+	{
+		String categoryData = MarketplacecommerceservicesConstants.EMPTY;
+		final List<CategoryModel> categoryList = new ArrayList<CategoryModel>(categories);
+		for (int i = 0; i < categoryList.size(); i++)
+		{
+			if ((i != (categoryList.size() - 1)))
+			{
+				categoryData = categoryData + (categoryList.get(i).getCode())
+						+ MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
+			}
+			else
+			{
+				categoryData = categoryData + (categoryList.get(i).getCode().toUpperCase());
+			}
+		}
+
+		return categoryData;
+	}
+
+
+	private CampaignData populateDefaultCampData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		final CampaignData data = campaignData;
+
+		data.setIdentifier(promotion.getCode());
+		data.setPromotionGrp(promotion.getPromotionGroup().getIdentifier());
+		data.setPriority(promotion.getPriority().toString());
+		data.setStartDate(formatter.format(promotion.getStartDate()));
+		data.setEndDate(formatter.format(promotion.getEndDate()));
+		data.setUrl(populateOfferURL(promotion));
+
+		if (StringUtils.isNotEmpty(promotion.getTitle()))
+		{
+			data.setTitle(promotion.getTitle());
+		}
+
+		if (StringUtils.isNotEmpty(promotion.getDescription()))
+		{
+			data.setDescription(promotion.getDescription());
+		}
+
+		if (null != promotion.getEnabled())
+		{
+			data.setEnabled(promotion.getEnabled().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
+		{
+			data.setChannel(populateOfferChannel(promotion));
+		}
+
+		if (CollectionUtils.isNotEmpty(promotion.getRestrictions()))
+		{
+			data.setRestrictions(getRestrictionData(promotion.getRestrictions()));
+		}
+
+		return data;
+	}
 
 	/**
 	 * Set Default Values
