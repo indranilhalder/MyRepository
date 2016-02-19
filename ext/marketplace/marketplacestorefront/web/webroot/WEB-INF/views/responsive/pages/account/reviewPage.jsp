@@ -324,7 +324,7 @@
 								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>
 								<input type="hidden" class="hiddenReviewComment${count.index}" value="${comment.commentText}"/>
-								<input type="hidden" class="hiddenMediaUrl${count.index}" value="https://www.youtube.com/watch?v=WHJOf3jQJZ0"/>
+								<input type="hidden" class="hiddenMediaUrl${count.index}" value="${comment.mediaUrl}"/>
 								
 								<input type="hidden" class="categoryID${count.index}" value="${comment.productData.rootCategory}"/>
 								<input type="hidden" class="streamID${count.index}" value="${comment.productData.code}"/>
