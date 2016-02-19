@@ -3355,6 +3355,12 @@
 						<persistence type="property" />
 						<description>This attribute represents the list of footer images</description>
 					</attribute>
+					
+					<attribute qualifier="footerAppImageList" type="FooterImageCollection"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This attribute represents the list of footer download apps images</description>
+					</attribute>
 
 					<attribute qualifier="footerText" type="localized:java.lang.String"
 						generate="true" autocreate="true">

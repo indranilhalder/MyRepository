@@ -202,6 +202,17 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					ProductData productData = null;
 					final GigyaProductReviewWsDTO reviewDTO = new GigyaProductReviewWsDTO();
 					final GSObject gsCommentObject = commentsJson.getObject(i);
+
+					if (checkItemArray(gsCommentObject, "mediaItems"))
+					{
+						final GSArray mediaArray = gsCommentObject.getArray("mediaItems");
+						if (null != mediaArray)
+						{
+							final GSObject media = mediaArray.getObject(0);
+							reviewDTO.setMediaItems(media.getString("html"));
+						}
+					}
+
 					final String category = gsCommentObject.getString("categoryId");
 					final GSObject ratings = gsCommentObject.getObject("ratings");
 
@@ -282,9 +293,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						final ProductModel productModel = productService.getProductForCode(gsCommentObject.getString("streamId"));
 
-						productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-								ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-								ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+						productData = productFacade.getProductForOptions(productModel,
+								Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+										ProductOption.GALLERY, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
+										ProductOption.VARIANT_FULL));
 					}
 
 					reviewDTO.setProductData(productData);
@@ -547,4 +559,27 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 
 	}
 
+	/**
+	 * @Description: checks if array key in GSobject is missing or not
+	 * @param ratings
+	 *           ,key
+	 * @return boolean
+	 */
+	@Override
+	public boolean checkItemArray(final GSObject ratings, final String key)
+	{
+		try
+		{
+			ratings.getArray(key);
+			return true;
+		}
+		catch (final GSKeyNotFoundException e)
+		{
+			return false;
+		}
+		catch (final NullPointerException e)
+		{
+			return false;
+		}
+	}
 }

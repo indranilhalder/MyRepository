@@ -21,8 +21,11 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +154,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									/*
 									 * String CategorySeqBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|" +
 									 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
-									 * 
+									 *
 									 * CategorySeqBanner = CategorySeqBanner.substring(CategorySeqBanner.lastIndexOf("/") + 1,
 									 * CategorySeqBanner.length());
 									 */
@@ -210,12 +213,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 										/*
 										 * Authenticator.setDefault(new Authenticator() {
-										 * 
+										 *
 										 * @Override public PasswordAuthentication getPasswordAuthentication() { final String
 										 * username = "siteadmin"; final String password = "ASDF!@#$asdf1234";
 										 * LOG.info("Authenticating Login......"); return new PasswordAuthentication(username,
 										 * password.toCharArray());
-										 * 
+										 *
 										 * } });
 										 */
 
@@ -450,7 +453,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								 * LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl); } else if
 								 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
 								 * LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
-								 *
+								 * 
 								 * }
 								 */
 
@@ -562,9 +565,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		/*
 		 * for (final InternalCampaignReportData item : campaignDataConsolidatedTmpList) { if (!set.contains(item)) {
 		 * set.add(item); campaignDataConsolidatedList.add(item);
-		 * 
+		 *
 		 * }
-		 * 
+		 *
 		 * }
 		 */
 		try
@@ -645,7 +648,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
-			 *
+			 * 
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
@@ -747,16 +750,25 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	protected String getOutputFilePath()
 	{
 
-		//final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
-		//final String timestamp = df.format(new Date());
+		final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
+		final String timestamp = df.format(new Date());
 		final StringBuilder output_file_path = new StringBuilder();
+		/*
+		 * output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path",
+		 * "")); output_file_path.append(File.separator);
+		 * output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix",
+		 * "")); output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
+		 * output_file_path.append(timestamp);
+		 * output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension",
+		 * ""));
+		 */
+
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.feed.path", ""));
 		output_file_path.append(File.separator);
-		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix", ""));
+		output_file_path.append(timestamp);
 		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
-		//output_file_path.append(timestamp);
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.prefix", ""));
 		output_file_path.append(configurationService.getConfiguration().getString("cronjob.internalcampaign.extension", ""));
-
 		return output_file_path.toString();
 	}
 

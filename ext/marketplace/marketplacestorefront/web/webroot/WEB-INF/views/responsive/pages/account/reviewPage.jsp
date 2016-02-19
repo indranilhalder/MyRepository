@@ -316,6 +316,9 @@
 								</div>
 								<h3 class="reviewHeading${count.index}">${comment.commentTitle}</h3>
 								<p class="reviewComment${count.index}">${comment.commentText}</p>
+								<!-- Media addition  -->
+								========================================<br/>
+								<div class="comment-img">${comment.mediaItems}</div>
 								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
 								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>

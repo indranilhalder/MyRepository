@@ -255,7 +255,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					
 					$('.home-brands-you-love-desc').remove();
 					defaultHtml = "<div class='home-brands-you-love-desc'>";
-					
+					if (typeof response.text !== "undefined") {
+						defaultHtml += response.text;
+					}
 					if (typeof response.firstProductImageUrl !== "undefined") {
 						
 						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
@@ -271,9 +273,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 						defaultHtml +="</a></div>"
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
-					if (typeof response.text !== "undefined") {
-						defaultHtml += response.text;
-					}
+					
 					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml += "<div class='home-brands-you-love-main-image-wrapper'>";
 						if (typeof response.bannerText !=="undefined") {
