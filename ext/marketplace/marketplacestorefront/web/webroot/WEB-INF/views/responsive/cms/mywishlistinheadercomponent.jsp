@@ -15,16 +15,19 @@
 <script >
 function checkWishListName() {
 	var wishlistName = $('#newWishlistName').val();
+	var isValid = false;
 	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
-	var isValid = re.test(wishlistName);
-
-	if (!isValid) {
+	isValid = re.test(wishlistName);
+	if(wishlistName!="" && !isValid){
 		wishlistName = wishlistName.substring(0, wishlistName.length - 1);
 		$('#newWishlistName').val(wishlistName);
 		$("#errorCreate").html("<font color='#ff1c47'><b>*</b>Special charecters are not allowed</font>");
 		$("#errorCreate").show().fadeOut(3000);
+
+	} else {
+		isValid = true;
 	}
-}
+}  
 
 
 $(document).ready(function() {    

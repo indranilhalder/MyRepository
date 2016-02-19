@@ -5,7 +5,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
 <span id="defaultWishId_sizeGuide" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
 <span id="wishlistSuccess_sizeGuide" style="display:none"><spring:theme code="wishlist.success"/></span>
 <span id="wishlistnotblank_sizeGuide" style="display:none"><spring:theme code="wishlist.notblank"/></span>
@@ -15,7 +14,6 @@
 
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
-
 <div class="sizes">
 	
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
@@ -23,21 +21,24 @@
 	<c:when test="${not empty sizeguideData}">	
 		
 		<div class="tables">
-			<div>
+			<div class="footwear-size-table">
 				<%-- <h2>Top</h2> --%>
 					<ul>
 						<li class="header">
 							<ul>
 							   <c:if test="${product.rootCategory!='Footwear'}">
-								<li><spring:theme code="product.variants.size"/></li>
+								<%-- <li><spring:theme code="product.variants.size"/></li> --%>
 								</c:if>
+								
 								<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="Index" end="0">
+								
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue" varStatus="sizeIndex" >
 										<c:if test="${sizeIndex.index eq 0}">
 											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 										</c:if>
 									</c:forEach>
-								</c:forEach>							
+								</c:forEach>
+								<c:if test="${product.rootCategory=='Footwear'}">							
 								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
 								<li>${sizeGuide}</li>
 								<c:if test="${sizeGuide=='Age'}">
@@ -59,12 +60,63 @@
 								<c:set var="us" value="Y"/>
 								</c:if>
 								</c:forEach>
+								</c:if>
 							</ul>
 						</li>
 					</ul>
 						<c:choose>
 					    <c:when test="${product.rootCategory=='Clothing'}">
-						<c:forEach items="${sizeguideData}" var="sizeGuide" >
+                 <div class="sizes apparelSizes">
+                    <table>
+				<%-- <h2>Top</h2> --%>
+					<tr>
+					<td>
+								<ul>								
+								<li style="font-weight: bold"><spring:theme code="product.variants.size"/><br/></li>							
+								
+								<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="sizeGuideIndex" end="0">
+									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue" varStatus="sizeIndex" >
+										<c:if test="${sizeIndex.index eq 0}">
+											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
+										</c:if>
+
+
+									</c:forEach>
+								</c:forEach>
+								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
+										<li>${sizeGuide}</li>
+									</c:forEach>	
+
+							</ul>
+
+					</td>
+
+						 <c:forEach items="${sizeguideData}" var="sizeGuide" >
+							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>	
+							<td>	
+							<ul>
+									<li  style="font-weight: bold">${sizeGuide.key}</li>
+							
+									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
+										<li>${sizeGuideValue.dimensionValue}
+											<c:choose>
+											<c:when test="${fn:containsIgnoreCase(sizeGuideValue.dimensionUnit , 'inch')}">"</c:when> 
+											<c:otherwise>${sizeGuideValue.dimensionUnit}</c:otherwise>
+											</c:choose>
+										</li>
+									</c:forEach>
+									<c:if test="${count gt 1 }">
+									<c:forEach begin="0" end="${count-1}">
+										<li></li>
+									</c:forEach>
+									</c:if>
+								  </ul>
+						</td>	
+						</c:forEach>
+				</tr>	
+			</table> 
+		</div>
+						<%-- <c:forEach items="${sizeguideData}" var="sizeGuide" >
 							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>
 							<li class="item">
 								<ul>
@@ -84,7 +136,7 @@
 									</c:if>
 								</ul>
 							</li>	
-						</c:forEach>
+						</c:forEach> --%>
 						</c:when>
 						 <c:when test="${product.rootCategory=='Footwear'}">
 								<c:forEach items="${sizeguideData}" var="sizeGuide" >
@@ -390,7 +442,7 @@
 			<!-- <div id="addToCartSizeGuideTitleSuccess" >
 	
 </div -->
-<span id="addToCartSizeGuideTitleSuccess"></span>
+
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
 		
 	<c:if test="${product.purchasable}">
@@ -448,6 +500,7 @@
 		<spring:theme code="basket.add.to.basket" />
 	</button>
 	</span>
+	<span id="addToCartSizeGuideTitleSuccess"></span>
 </form:form>
 <%-- <span id="addToCartSizeGuideTitleaddtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
 <span id="addToCartSizeGuideTitleaddtobagerror" style="display:none"><spring:theme code="product.error"/></span>

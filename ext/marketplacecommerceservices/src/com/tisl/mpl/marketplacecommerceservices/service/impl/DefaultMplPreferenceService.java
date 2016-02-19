@@ -14,6 +14,7 @@ import de.hybris.platform.site.BaseSiteService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -440,6 +441,7 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			final CustomerModel customerModel = getCurrentSessionCustomer();
 			customerModel.setMarketplacepreference(mplPreferenceModelToSave);
 			modelService.save(mplPreferenceModelToSave);
+			customerModel.setModifiedtime(new Date());
 			modelService.save(customerModel);
 		}
 		catch (final ModelSavingException ex)
@@ -485,6 +487,7 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			modelService.save(mplPreferenceModelToSave);
 			final CustomerModel customerModel = getCurrentSessionCustomer();
 			customerModel.setMarketplacepreference(mplPreferenceModelToSave);
+			customerModel.setModifiedtime(new Date());
 			modelService.save(customerModel);
 		}
 		catch (final ModelSavingException ex)

@@ -319,11 +319,36 @@ function loadDefaultWishListName() {
 	$("#wishListDetailsId").show();
 
 	wishListContent = wishListContent
+	+ "<tr><td><input type='text' id='defaultWishName' onkeyup='return onKeyUpWishlistNameValidate();' value='"
+	+ wishName + "'/></td></td></tr>"; 
+	/*wishListContent = wishListContent
 			+ "<tr><td><input type='text' id='defaultWishName' value='"
-			+ wishName + "'/></td></td></tr>";
+			+ wishName + "'/></td></td></tr>";*/
 	$("#wishlistTbodyId").html(wishListContent);
    
 }
+
+//TISSTRT-907  WishList Special character implementation
+function onKeyUpWishlistNameValidate(){
+	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
+	var isValid = false;
+	var wishlistname = $("#defaultWishName").val();
+	isValid = re.test(wishlistname);
+	if(wishlistname!="" && !isValid){
+
+		wishlistname = wishlistname.substring(0, wishlistname.length - 1);
+		$('#defaultWishName').val(wishlistname);
+		$('#addedMessage').show();
+		$('#addedMessage').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
+		$("#addedMessage").show().fadeOut(3000);
+
+	}
+	else{
+		isValid = true;
+
+	}
+	return isValid;
+}    
 
 function gotoLogin() {
 	window.open(ACC.config.encodedContextPath + "/login", "_self");
@@ -1042,6 +1067,15 @@ function fetchPrice() {
 				 $("#otherSellerInfoId").hide();
 				 $(".wish-share").hide();
 				 $(".fullfilled-by").hide();
+				// TISST-13959 fix
+				 $("#dListedErrorMsg").show();
+				 // TISEE-6552 fix
+				 $("#pdpPincodeCheck").hide();
+				 $("#pin").attr("disabled",true);
+				 $("#pdpPincodeCheckDList").show();
+				 
+				 
+				
 			}
 		}
 
@@ -1261,14 +1295,13 @@ function getSelectedEMIBankForPDP() {
 
 	}
 }
-/*Gigya code commented for non existence in Release1*/
+
 function CheckonReload()
 {
 	var contentData = '';
 	 $.ajax({
 				url : ACC.config.encodedContextPath + "/p/checkUser",
 				data : {
-					
 				},
 				type : "GET",
 				cache : false,
@@ -1276,48 +1309,40 @@ function CheckonReload()
 					if(!data)							
 						{
 							//Hiding the Comment Box if the User is not Logged In
-							//$('.gig-comments-composebox').hide();
-							
 							//TISUATPII-470 fix
-							//$('#commentsDiv .gig-comments-composebox').hide();
-							$('#commentsDiv .gig-comments-composebox').show();
-						
+							$('#commentsDiv .gig-comments-composebox').hide();
+							//$('#commentsDiv .gig-comments-composebox').show();
 						}
 						else
 						{
-							//Showing the Comment Box if the User is not Logged In
+							//Showing the Comment Box if the User is  Logged In
 							$('#commentsDiv .gig-comments-composebox').show();
-							
 							}
-						
-									
 				},
 				error : function(resp) {
-					//alert("Error Occured");
 					console.log( "Error Occured" );
 				}
 			});
-		
-
-
-
 }
+
+
 
 function getRating(key,productCode,category)
 {
-	
+	//alert('test');
 	var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=?";
-	  $.getJSON(url, function(data){
+	 
+	$.getJSON(url, function(data){
+		console.log(data);
 	  	var totalCount=data.streamInfo.ratingCount;
 		//Reverse the source array
 		var ratingArray = data.streamInfo.ratingDetails._overall.ratings;
 		ratingArray  = ratingArray.reverse();
 		
-		  $(".rate-details .after").each(function(count){			  
-				
+		  $("div.rate-details div.after").each(function(count){			  
 				var countIndiv=ratingArray[count];								
-				$(".rate-bar .rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
-				$(".rate-details .after").eq(count).text(ratingArray[count]);
+				$("div.rate-bar div.rating").eq(count).css({width:countIndiv/totalCount*100+"%"});
+				$("div.rate-details div.after").eq(count).text(ratingArray[count]);
 				
 			})
 			
@@ -1325,25 +1350,51 @@ function getRating(key,productCode,category)
 			var raingcount=data.streamInfo.ratingCount;
 			$(".product-detail ul.star-review a").empty();
 			$(".product-detail ul.star-review li").attr("class","empty");
-			rating(avgreview,raingcount);
 			
+ 			var rating = Math.floor(avgreview);
+	 		var ratingDec = avgreview - rating;
+	 		for(var i = 0; i < rating; i++) {
+	 			$("#pdp_rating"+" li").eq(i).removeClass("empty").addClass("full");
+	 			}
+	 		if(ratingDec!=0)
+	 			{
+	 			$("#pdp_rating"+" li").eq(rating).removeClass("empty").addClass("half");
+	 			} 
+	 		
+	 		//TISUATPII-471 fix
+	 		
+	 		if(raingcount == 1){
+				$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEW");
+				$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
+				}
+				else if(raingcount > 0)
+					{
+					$(".gig-rating-readReviewsLink_pdp").text(raingcount+" REVIEWS");
+					$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
+					}
 			$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
 			
-			//TISUATPII-471 fix
-			var count=data.streamInfo.ratingCount;
-			if(count == 1){
-			$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEW");
-			}
-			else
-				{
-				$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
-				}
+			
+			
 			
 			
 	  });
 	  
-	  
+	//TISUATPII-471 fix
+	  var ratingsParams = {
+		categoryID : category,
+		streamID : productCode,
+		containerID : 'ratingDiv',
+		linkedCommentsUI : 'commentsDiv',
+		showCommentButton : 'true',
+		onAddReviewClicked:	function(response) {
+			CheckUserLogedIn();
+	 }
+			
 	
+	  }  
+	  
+	  gigya.comments.showRatingUI(ratingsParams);
 //	$.getJSON("https://comments.us1.gigya.com/comments.getStreamInfo?apiKey="+key+"&categoryID="+category+"&streamId="+productCode+"&includeRatingDetails=true&format=jsonp&callback=hello",
 //	         function(data) {
 //		

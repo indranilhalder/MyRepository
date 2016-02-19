@@ -6,7 +6,7 @@ package com.tisl.mpl.interceptor;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
-import de.hybris.platform.servicelayer.interceptor.ValidateInterceptor;
+import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,8 @@ import com.tisl.mpl.model.SellerInformationModel;
  * @author TCS
  *
  */
-public class SellerPriorityInterceptor implements ValidateInterceptor
+public class SellerPriorityInterceptor implements PrepareInterceptor
+
 {
 
 
@@ -57,7 +58,8 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 	 * @return: void
 	 */
 	@Override
-	public void onValidate(final Object model, final InterceptorContext arg) throws InterceptorException
+	//	public void onValidate(final Object model, final InterceptorContext arg) throws InterceptorException
+	public void onPrepare(final Object model, final InterceptorContext arg) throws InterceptorException
 	{
 
 		// YTODO Auto-generated method stub
@@ -117,15 +119,13 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 
 			final List<String> categoryList = new ArrayList<String>();
 			final List<String> skuIdList = new ArrayList<String>();
-			//			final Map<String, String> sellerCat = new HashMap<String, String>();
-			//			final Map<String, String> sellerProd = new HashMap<String, String>();
 			if (!(mplSellerPriorityDao.getAllSellerPriorities().isEmpty()))
 			{
 				LOG.debug("*********** Priority table size" + mplSellerPriorityDao.getAllSellerPriorities().size());
-
+				final List<MplSellerPriorityModel> sellerPriorityList = new ArrayList<MplSellerPriorityModel>();
 				for (final MplSellerPriorityModel priorityValue : mplSellerPriorityDao.getAllSellerPriorities())
 				{
-					// Cannot modify Category ID or Listing ID
+					sellerPriorityList.add(priorityValue);
 					if (arg.isModified(priorityValue, MplSellerPriorityModel.CATEGORYID)
 							|| arg.isModified(priorityValue, MplSellerPriorityModel.LISTINGID))
 					{
@@ -155,11 +155,19 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					}
 				}
 				// if new value already	 exist throw error
+				//				if (SellerPriorityEnum.PROCESSING.equals(priority.getPriorityStatus()))
+				//				{
+				//					priority.setPriorityStatus(SellerPriorityEnum.PROCESSED);
+				//				}
+				//				else if (SellerPriorityEnum.ERROR.equals(priority.getPriorityStatus()))
+				//				{
+				//					priority.setPriorityStatus(SellerPriorityEnum.ERROR);
+				//				}
+				//				else
+				//				{
+				//				if (SellerPriorityEnum.PROCESSING.equals(priority.getPriorityStatus()))
+				//				{
 				if (priority.getIsActive().booleanValue())
-				//						&& null != priority.getPriorityStatus()
-				//						&& SellerPriorityEnum.NEW.equals(priority.getPriorityStatus())
-				//						|| (priority.getIsActive().booleanValue() && null != priority.getPriorityStatus() && SellerPriorityEnum.PROCESSED
-				//								.equals(priority.getPriorityStatus())))
 				{
 					if (null != categoryId && categoryList.contains(categoryId))
 					{
@@ -170,7 +178,8 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 						throw new InterceptorException(ERROR_SAME_SKU);
 					}
 				}
-
+				//}
+				//	}
 			}
 		}
 	}

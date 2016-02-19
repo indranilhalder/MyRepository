@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -39,7 +40,7 @@
       </select>
 </h1>
 	<div class="wrapper">
-	<div class="left-nav">
+	<%-- <div class="left-nav">
 		<ul>
 			<li><h3>
 					<spring:theme code="header.flyout.myaccount" />
@@ -64,13 +65,13 @@
 						code="header.flyout.recommendations" /></a></li>
 						
 		</ul>
-		<%-- <ul>
+		<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.credits" />
 						</h3></li>
 					<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 								code="header.flyout.coupons" /></a></li>
-				</ul> --%>
+				</ul>
 		<ul>
 			<li><h3>
 					<spring:theme code="header.flyout.share" />
@@ -79,7 +80,8 @@
 						code="header.flyout.invite" /></a></li>
 
 		</ul>
-	</div>
+	</div> --%>
+	<user:accountLeftNav pageName="review"/>
 
 	<div class="right-account">
 
@@ -314,6 +316,9 @@
 								</div>
 								<h3 class="reviewHeading${count.index}">${comment.commentTitle}</h3>
 								<p class="reviewComment${count.index}">${comment.commentText}</p>
+								<!-- Media addition  -->
+								========================================<br/>
+								<div class="comment-img">${comment.mediaItems}</div>
 								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
 								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>

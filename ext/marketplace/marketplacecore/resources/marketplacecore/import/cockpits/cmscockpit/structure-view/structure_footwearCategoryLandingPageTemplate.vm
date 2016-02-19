@@ -61,15 +61,16 @@
 					<cockpit code="Section4" />
 				</td>
 			</tr>
-				<tr>
+				
+			<tr>
 				<td width="50%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Section4A" />
+					<cockpit code="Section4A1" />
 				</td>
 				
 			</tr>
 			<tr>
 				<td width="50%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Section4A1" />
+					<cockpit code="Section4A" />
 				</td>
 				
 			</tr>
