@@ -674,6 +674,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0016 = "E0016";
 	public static final String E0017 = "E0017";
 	public static final String E0018 = "E0018";
+	public static final String E0019 = "E0019";
 	//System/Non Business constants
 
 	//pdp error constants

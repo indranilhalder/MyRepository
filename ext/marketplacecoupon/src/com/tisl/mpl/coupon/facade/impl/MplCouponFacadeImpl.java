@@ -413,7 +413,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 		catch (final VoucherOperationException e)
 		{
-			LOG.error("VoucherOperationException", e);
+			//LOG.error("VoucherOperationException", e);
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//LOG.error("VoucherOperationException", e);
 			throw e;
 		}
 		catch (final Exception e)

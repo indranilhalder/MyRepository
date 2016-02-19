@@ -544,7 +544,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				//final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
 
 				double totalApplicablePrice = 0.0D;
-				BigDecimal percentageDiscount = null;
+				final BigDecimal percentageDiscount = null;
 				updateAppOrderEntriesForFreebieBogo(applicableOrderEntryList);
 
 				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
@@ -588,14 +588,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						}
 					}
 				}
+
 				final double formattedDiscVal = Math.round(discountValue * 100.0) / 100.0;
 
-				percentageDiscount = BigDecimal.valueOf(formattedDiscVal / totalApplicablePrice).multiply(
-						BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));
+				//percentageDiscount = BigDecimal.valueOf(formattedDiscVal / totalApplicablePrice).multiply(
+				//		BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED)));
 
 				LOG.debug("Step 17:::percentageDiscount is " + percentageDiscount);
 
-				//final double totalAmtDeductedOnItemLevel = 0.00D;
+				BigDecimal totalAmtDeductedOnItemLevel = BigDecimal.valueOf(0);
 
 				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 				{
@@ -603,23 +604,23 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					double currNetAmtAftrAllDisc = 0.00D;
 
 					final double entryTotalPrice = entry.getTotalPrice().doubleValue();
+					final BigDecimal discountPriceValue = BigDecimal.valueOf(formattedDiscVal);
 
 					//					if (entryTotalPrice > 1) //For freebie & bogo, 0.01 priced product, isBogoApplied flag can't be checked as same product might be free and non free for BOGO
 					//					{
-					entryLevelApportionedPrice = getApportionedValueForEntry(percentageDiscount, entryTotalPrice);
+					//entryLevelApportionedPrice = getApportionedValueForEntry(percentageDiscount, entryTotalPrice);
 					//					if (voucherObj.isAbsoluteAsPrimitive())
 					//					{
-					//						if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
-					//						{
-					//							final BigDecimal discountPriceValue = BigDecimal.valueOf(discountValue);
-					//							entryLevelApportionedPrice = getApportionedValueForSingleEntry(discountPriceValue,
-					//									totalAmtDeductedOnItemLevel);
-					//						}
-					//						else
-					//						{
-					//							entryLevelApportionedPrice = getApportionedValueForEntry(percentageDiscount, entryTotalPrice);
-					//							totalAmtDeductedOnItemLevel += entryLevelApportionedPrice.doubleValue();
-					//						}
+					if (applicableOrderEntryList.indexOf(entry) == (applicableOrderEntryList.size() - 1))
+					{
+						entryLevelApportionedPrice = getApportionedValueForSingleEntry(discountPriceValue, totalAmtDeductedOnItemLevel);
+					}
+					else
+					{
+						entryLevelApportionedPrice = getApportionedValueForEntry(discountPriceValue, entryTotalPrice,
+								totalApplicablePrice);
+						totalAmtDeductedOnItemLevel = totalAmtDeductedOnItemLevel.add(entryLevelApportionedPrice);
+					}
 					//					}
 					//					else
 					//					{
@@ -657,6 +658,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			LOG.error("ModelSavingException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception", e);
@@ -675,23 +680,51 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 
 	private BigDecimal getApportionedValueForSingleEntry(final BigDecimal discountPriceValue,
-			final double totalAmtDeductedOnItemLevel)
+			final BigDecimal totalAmtDeductedOnItemLevel)
 	{
-
-		return discountPriceValue.subtract(BigDecimal.valueOf(totalAmtDeductedOnItemLevel));
+		try
+		{
+			return discountPriceValue.subtract(totalAmtDeductedOnItemLevel);
+		}
+		catch (final ArithmeticException e)
+		{
+			LOG.error("ArithmeticException", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0019);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 
 	/**
 	 * @Descriotion This is for getting apportioned value for entry
-	 * @param percentageDiscount
+	 * @param discountPriceValue
+	 * @param totalApplicablePrice
 	 * @param entryTotalPrice
 	 * @return BigDecimal
 	 */
-	private BigDecimal getApportionedValueForEntry(final BigDecimal percentageDiscount, final double entryTotalPrice)
+	private BigDecimal getApportionedValueForEntry(final BigDecimal discountPriceValue, final double entryTotalPrice,
+			final double totalApplicablePrice)
 	{
-		return (percentageDiscount.divide(BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED))))
-				.multiply(BigDecimal.valueOf(entryTotalPrice));
+		try
+		{
+			return discountPriceValue.multiply(BigDecimal.valueOf(entryTotalPrice / totalApplicablePrice));
+		}
+		catch (final ArithmeticException e)
+		{
+			LOG.error("ArithmeticException", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0019);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception", e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		//return (percentageDiscount.divide(BigDecimal.valueOf(Long.parseLong(MarketplacecommerceservicesConstants.HUNDRED))))
+		//		.multiply(BigDecimal.valueOf(entryTotalPrice));
 	}
 
 
