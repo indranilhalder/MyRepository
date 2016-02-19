@@ -318,8 +318,15 @@
 								<p class="reviewComment${count.index}">${comment.commentText}</p>
 								<p class="reviewMedia${count.index}"></p>
 								<!-- Media addition  -->
-								========================================<br/>
-								<div class="comment-img">${comment.mediaItems}</div>
+								<br/>
+																<%-- <div class="comment-img">${comment.mediaItems}</div> --%>
+								<div class="comment-img">
+								<c:if test="${comment.mediaType eq 'video'}">
+								<img style="width:70px !important;" src="${commonResourcePath}/images/video-play.png" class="hiddenMediaUrl${count.index}" data-type="${comment.mediaType}" data-videosrc="${comment.mediaUrl}"/> <!--For Video  -->
+								</c:if>
+							<%-- <c:if test="${not empty comment.mediaType eq 'image'}">	</c:if>  --%><!--For Image  -->
+								${comment.mediaItems}
+								</div>
 								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
 								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>
@@ -534,6 +541,18 @@
 			</div>
 			<div class="overlay" data-dismiss="modal"></div> 
 		  </div>
+		  <div class="modal fade" id="videoReviewModal" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay" data-dismiss="modal" onclick="closing()"></div>
+		<div class="modal-content content"
+			style="width: 53%; height: 60%; overflow: hidden;">
+			<button type="button" class="close pull-right" onclick="closing()"
+				aria-hidden="true" data-dismiss="modal"
+				style="width: 15px; height: 15px; top: 0; right: 0px;"></button>
+			<iframe name="videoReviewFrame" id="videoReviewFrame" width="100%"
+				height="100%" frameborder="0" allowfullscreen></iframe>
+		</div>
+	</div>
 </template:page>
 <script>
 $(".next a").click(function(){
@@ -551,6 +570,10 @@ $(".next a").click(function(){
 		}
 });
 
+function closing() {
+	$("#videoReviewModal").modal('hide');
+	$("#videoReviewFrame")[0].src += "&autoplay=0";
+}
 $(".prev a").click(function(){
 	var pageNo = $(this).closest(".pagination").find("li.active a").text();
 	pageNo = parseInt(pageNo);
@@ -563,3 +586,18 @@ $(".prev a").click(function(){
 });	
 		
 </script>
+<style>
+#videoReviewModal .content > .close:before {
+    content: "\00d7";
+    color: #A9143c;
+    font-family: "Avenir Next";
+    font-size: 17px;
+    font-weight: 600;
+    -webkit-transition: font-weight 0.15s;
+    -moz-transition: font-weight 0.15s;
+    transition: font-weight 0.15s;
+}
+body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img iframe{
+display:none;
+}
+</style>
