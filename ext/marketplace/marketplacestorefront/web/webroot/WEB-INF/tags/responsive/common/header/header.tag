@@ -11,10 +11,10 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 
-<cms:pageSlot position="TopHeaderSlot" var="component" element="div"
+<%-- <cms:pageSlot position="TopHeaderSlot" var="component" element="div"
 	class="container">
 	<cms:component component="${component}" />
-</cms:pageSlot>
+</cms:pageSlot> --%>
 <c:if test="${param.source ne null and param.source eq 'App' }">
 	<c:set var="showOnlySiteLogo" value="true"></c:set>
 	<c:set var="hideSecureTransaction" value="true"></c:set>
