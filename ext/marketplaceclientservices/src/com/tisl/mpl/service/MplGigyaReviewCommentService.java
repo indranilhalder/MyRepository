@@ -21,7 +21,7 @@ public interface MplGigyaReviewCommentService
 	public List<GigyaProductReviewWsDTO> getReviewsByUID(String customerUID);
 
 	public String editComment(final String categoryID, final String streamID, final String commentID, final String commentText,
-			final String commentTitle, final String ratings, String UID);
+			final String commentTitle, final String commentMediaurl, final String ratings, String UID);
 
 	public String deleteComment(String categoryID, String streamID, String commentID);
 

@@ -209,7 +209,11 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						if (null != mediaArray)
 						{
 							final GSObject media = mediaArray.getObject(0);
-							reviewDTO.setMediaItems(media.getString("html"));
+							if (null != media.getString("html") && null != media.getString("url"))
+							{
+								reviewDTO.setMediaItems(media.getString("html"));
+								reviewDTO.setMediaUrl(media.getString("url"));
+							}
 						}
 					}
 
@@ -323,7 +327,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 */
 	@Override
 	public String editComment(final String categoryID, final String streamID, final String commentID, final String commentText,
-			final String commentTitle, final String ratings, final String UID)
+			final String commentTitle, final String commentMediaUrl, final String ratings, final String UID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -337,6 +341,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequestAllowEdit = new GSRequest(apiKey, secretKey, setCategoryInfoMethod);
 		gsRequestAllowEdit.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
 		gsRequestAllowEdit.setParam("categorySettings", "{userEditComment : true}");
+		gsRequestAllowEdit.setParam("clientSettings", "{enableMediaItems : true}");
+		GSResponse gsResponse = null;
 		Proxy proxy = null;
 
 		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
@@ -365,6 +371,12 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						gsRequest.setProxy(proxy);
 					}
+					if (null != commentMediaUrl)
+					{
+						final GSArray attachment = new GSArray();
+						attachment.add(commentMediaUrl);
+						gsRequest.setParam("mediaItems", attachment);
+					}
 					gsRequest.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
 					gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, streamID);
 					gsRequest.setParam(MarketplacecclientservicesConstants.COMMENT_ID, commentID);
@@ -373,7 +385,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					gsRequest.setParam(MarketplacecclientservicesConstants.RATINGS, ratings);
 					gsRequest.setParam(MarketplacecclientservicesConstants.UID, UID);
 
-					final GSResponse gsResponse = gsRequest.send();
+					gsResponse = gsRequest.send();
 					if (gsResponse.getErrorCode() == 0)
 					{
 						final GSObject gsObjToEdit = new GSObject(gsResponse.getResponseText());
@@ -387,7 +399,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			LOG.error(MarketplacecclientservicesConstants.REVIEWS_EDIT_EXCEPTION + e.getMessage());
 
 		}
-		return null;
+		return gsResponse.getErrorMessage();
 	}
 
 	/**

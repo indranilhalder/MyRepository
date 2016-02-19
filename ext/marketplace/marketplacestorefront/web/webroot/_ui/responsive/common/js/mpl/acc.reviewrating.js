@@ -8,6 +8,8 @@ if(typeof(arrayrating)!= "undefined"){
 			if(indexElement!= undefined){
 				var reviewHeading = $(".reviewHeading"+indexElement);
 				var reviewComment = $(".reviewComment"+indexElement);
+				var reviewMedia = $(".reviewMedia"+indexElement);
+				
 				var updateButtons = $(".updateButtons"+indexElement);
 				
 				var reviewCommentText = $(".reviewComment"+indexElement).text();
@@ -17,6 +19,9 @@ if(typeof(arrayrating)!= "undefined"){
 				}
 				$(reviewHeading).html("<input class='inputBox' type='text' name='updateReviewHeading"+indexElement+"' value='"+reviewHeadingText+"'/>");
 				$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
+				if($(".hiddenMediaUrl"+indexElement).val()!= ""){
+					$(reviewMedia).html("<input class='inputBox' type='text' name='updateReviewMedia"+indexElement+"' value='"+$(".hiddenMediaUrl"+indexElement).val()+"'/>");
+				}
 				$(reviewHeading).find('input.inputBox').focus();
 				$(".rating-div"+indexElement).show();
 				$(".rating-div"+indexElement).find("ul").removeClass("rate");
@@ -45,14 +50,17 @@ if(typeof(arrayrating)!= "undefined"){
 			$("div[data-rating-all="+indexElement+"]").show();
 			var reviewHeading = $(".reviewHeading"+indexElement);
 			var reviewComment = $(".reviewComment"+indexElement);
+			var reviewUrl = $(".reviewMedia"+indexElement);
 			
 			if(indexElement != undefined){
 				
 				var originalHeading = $(".hiddenReviewHeading"+indexElement).val();
 				var originalComment = $(".hiddenReviewComment"+indexElement).val();
+				var originalUrl = $(".hiddenMediaUrl"+indexElement).val();
 
 				$(reviewHeading).html(originalHeading);
 				$(reviewComment).html(originalComment);
+				$(reviewUrl).html(originalUrl);
 				$(this).parent().hide();
 			}
 			$(".rating-div"+indexElement).hide();
@@ -67,6 +75,8 @@ if(typeof(arrayrating)!= "undefined"){
 			//alert("inside update");
 			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
 			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
+			var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
+			
 			if(updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "")		
 			{		
 			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment Title cannot be left blank.</p>");		
@@ -81,6 +91,14 @@ if(typeof(arrayrating)!= "undefined"){
 			    isValidated=false;		
 			}else if(updatedCommentTitle.length > 5000){
 				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
+			    isValidated=false;	
+			}
+			if(updatedMediaUrl == undefined || updatedMediaUrl.replace(/\s/g, '')  == "")		
+			{		
+			    $(".errorUpdateReview"+indexElement).html("<p>Please enter attachment URL. Attachment URL cannot be left blank.</p>");		
+			    isValidated=false;		
+			}else if(updatedMediaUrl.length > 100){
+				$(".errorUpdateReview"+indexElement).html("<p>Attachment URL cannot be greater than 100 charecters.</p>");		
 			    isValidated=false;	
 			}
 			//TISSTRT-290 fix
@@ -101,6 +119,7 @@ if(typeof(arrayrating)!= "undefined"){
 		
 		$(document).on("click","button.updateReviewConfirmation",function(){
 			//validate the text first
+			var isReload = true;
 			var isValidated=true;
 			var isValidated_e =true;
 			var indexElement =  $(this).parents("li.review-li").attr("data-index");
@@ -109,6 +128,7 @@ if(typeof(arrayrating)!= "undefined"){
 			
 			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
 			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
+			var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
 			
 			var categoryID = $(".categoryID"+indexElement).val();
 			var streamID = $(".streamID"+indexElement).val();
@@ -140,7 +160,7 @@ if(typeof(arrayrating)!= "undefined"){
 						url:"review/edit",
 						type:"POST",
 						dataType:"JSON",
-						data:{categoryID:categoryID,streamID:streamID,commentID:commentID,commentText:updatedCommentTitle,commentTitle:updatedReviewHeading,ratings:ratings},
+						data:{categoryID:categoryID,streamID:streamID,commentID:commentID,commentText:updatedCommentTitle,commentTitle:updatedReviewHeading,updatedMediaUrl:updatedMediaUrl,ratings:ratings},
 						beforeSend:function(){
 							var msg = "<h1 style='color:white'><span style='line-height:40px;font-size:'>Please Wait...<span></h1>";
 							$(".review-block"+indexElement).block({ message: msg });
@@ -194,6 +214,15 @@ if(typeof(arrayrating)!= "undefined"){
 									}
 								}else if(data.status == "failed"){
 									$("div[data-danger-id="+indexElement+"]").show();
+									if(data.error != ""){
+										console.log(">>> "+data.error);
+										var htmlError = $("div[data-danger-id="+indexElement+"]").html();
+										htmlError = htmlError+"<br><strong><b>Error:</b>"+data.error;
+										$("div[data-danger-id="+indexElement+"]").html(htmlError);
+										isReload = false;
+									}
+									
+									
 								}
 							}
 						},
@@ -202,7 +231,9 @@ if(typeof(arrayrating)!= "undefined"){
 						},
 						complete:function(){
 							$(".review-block"+indexElement).unblock();
-							window.location.reload();
+							if(isReload){
+								window.location.reload();
+							}
 							}
 					});
 				}
