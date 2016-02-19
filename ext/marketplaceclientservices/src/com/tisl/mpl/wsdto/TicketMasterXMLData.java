@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "ticketMaster")
 @XmlType(propOrder =
 { "customerID", "orderId", "subOrderId", "ticketType", "refundType", "returnCategory", "lineItemDataList",
-		"alternateContactName", "alternatePhoneNo", "source" })
+		"alternateContactName", "alternatePhoneNo", "source", "lineItemId" })
 public class TicketMasterXMLData
 {
 	private String customerID;
@@ -30,7 +30,37 @@ public class TicketMasterXMLData
 	private String alternateContactName;
 	private String alternatePhoneNo;
 	private String source;
+	private String lineItemId;
 
+
+
+	/**
+	 * @return the lineItemId
+	 */
+	@XmlElement(name = "lineItemId")
+	public String getLineItemId()
+	{
+		return lineItemId;
+	}
+
+	/**
+	 * @param lineItemId
+	 *           the lineItemId to set
+	 */
+	public void setLineItemId(final String lineItemId)
+	{
+		this.lineItemId = lineItemId;
+	}
+
+	/**
+	 * @param source
+	 *           the source to set
+	 */
+
+	public void setSource(final String source)
+	{
+		this.source = source;
+	}
 
 	/**
 	 * @return the customerID
@@ -177,6 +207,16 @@ public class TicketMasterXMLData
 	}
 
 	/**
+	 * @return the source
+	 */
+
+	@XmlElement(name = "source")
+	public String getSource()
+	{
+		return source;
+	}
+
+	/**
 	 * @param alternateContactName
 	 *           the alternateContactName to set
 	 */
@@ -194,21 +234,5 @@ public class TicketMasterXMLData
 		this.alternatePhoneNo = alternatePhoneNo;
 	}
 
-	/**
-	 * @return the source
-	 */
-	@XmlElement(name ="source")
-	public String getSource()
-	{
-		return source;
-	}
-
-	/**
-	 * @param source the source to set
-	 */
-	public void setSource(String source)
-	{
-		this.source = source;
-	}
 
 }
