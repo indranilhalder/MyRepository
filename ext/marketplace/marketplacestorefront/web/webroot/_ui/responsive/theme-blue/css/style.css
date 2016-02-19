@@ -30180,6 +30180,8 @@ header:not(.compact) .content .marketplace.compact{
 }
 #productYouCare .short-info > h3 span:hover,
 #productYouCare .short-info > h3 span:hover:after,
+
+
 #bestPicks .short-info:hover span {
 	color: #a9143c;
 }
@@ -30206,10 +30208,20 @@ form[name='flyOutloginForm'] input::-moz-placeholder {
 form[name='flyOutloginForm'] input:-ms-input-placeholder {
 	line-height: 18px;
 } 
-
+header div.bottom .marketplace.linear-logo {
+		display: none;
+	}
 @media ( max-width : 790px){ 
 	footer>ul>li ul li {
 		line-height: 30px;
+	}
+	
+	header div.bottom .marketplace {
+		display: none;
+	}
+	
+	header div.bottom .marketplace.linear-logo {
+		display: block;
 	}
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img{
@@ -30228,6 +30240,9 @@ height: auto !important;
     width: 70%;
     padding-top: 11px;
 }
+
+
+
 /*--------------maincss-----------*/
 .row
 {

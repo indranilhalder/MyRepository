@@ -210,6 +210,15 @@ function registerUser(eventObject)
 						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
+						<!-- <div class="mobile-bag bag">
+						TISPRD-32-fix
+							<a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a>
+						</div> -->
+					</div>
+					<div class="marketplace linear-logo">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<cms:component component="${logo}" />
+						</cms:pageSlot>
 						<div class="mobile-bag bag">
 						<!-- TISPRD-32-fix -->
 							<a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a>
