@@ -346,6 +346,7 @@
 
 	function openPopForAdddPosToCartEntry(ussId,posName){
 		//var productCode = $("#product").val();
+		//alert(ussId+"@@@"+posName);
 		var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPosToOrderEntry";
 		var dataString = 'ussId=' + ussId+ '&posName=' + posName;
 			$.ajax({
@@ -508,9 +509,9 @@
 												<div class='pin bounce'>
 													<span class="text_in">${status.count}</span>
 														</div>
-															<label class="radio_sel${status1.index}${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
+															<label class="radio_sel${status1.index}${status.index} displayName${status1.index}${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
 															</label>
-																<span class="radio_sel${status1.index}${status.index} radio_color displayName${status1.index}${status.index}">${pos.displayName}</span>
+																<%-- <span class="radio_sel${status1.index}${status.index} radio_color displayName${status1.index}${status.index}">${pos.displayName}</span> --%>
 																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.line1}">
 																		${fn:escapeXml(pos.address.line1)}
@@ -622,7 +623,7 @@
 							    
 							    iconURLPrefix${status1.index} = iconURLPrefix${status1.index}.replace("/mpl/en/","/");
 							    
-							    console.log(iconURLPrefix${status1.index});
+							    //console.log(iconURLPrefix${status1.index});
 							    
 							    
 							    var icons = [
@@ -666,6 +667,7 @@
 								
 							    
 								$(".submitPincode${status1.index}").click(function(){
+									$(".removeColor${status1.index} .radio_color").removeClass("colorChange");
 									$(".pincodeServicable${status1.index}").hide();
 									$(".pincodeValidation").hide();
 									var pinvalue${status1.index} = $(".changepin${status1.index}").val();
@@ -690,7 +692,7 @@
 										          //console.log(jsonObject${status1.index}.length);
 										          if(jsonObject${status1.index}.length != "0") {
 										        	  $("input[name='address${status1.index}']").prop('checked', false);
-										        	  $("removeColor${status1.index} .radio_color").removeClass("colorChange");
+										        	  $(".removeColor${status1.index} .radio_color").removeClass("colorChange");
 										        	  icons${status1.index} = icons;
 										        	  processMap${status1.index}();
 										        	  $(".delivered${status1.index}").show();
@@ -699,8 +701,8 @@
 											          var changecordinates${status1.index} = " ";
 											          for(var i=0;i<jsonObject${status1.index}.length;i++) {
 											        	  
-											        	  if(jsonObject${status1.index}[i]['name'] != null) {
-											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['name']);
+											        	  if(jsonObject${status1.index}[i]['displayName'] != null) {
+											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['displayName']);
 											        	  } else {
 											        		  $(".displayName${status1.index}"+i).text("");
 											        	  } if(jsonObject${status1.index}[i]['address']['line1'] != null) {
