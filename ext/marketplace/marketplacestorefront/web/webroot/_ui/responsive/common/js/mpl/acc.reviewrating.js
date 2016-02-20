@@ -221,6 +221,8 @@ if(typeof(arrayrating)!= "undefined"){
 										$("div[data-rating"+indexElement+"=quality]").attr("style","width:"+quality+"%");
 										$("div[data-info-id="+indexElement+"]").show();
 									}
+									$("div[data-rating-all="+indexElement+"]").show();
+									
 								}else if(data.status == "failed"){
 									$("div[data-danger-id="+indexElement+"]").show();
 									if(data.error != ""){
