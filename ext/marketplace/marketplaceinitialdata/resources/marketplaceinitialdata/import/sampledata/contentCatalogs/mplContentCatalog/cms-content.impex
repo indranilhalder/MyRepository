@@ -26,6 +26,7 @@ $storefrontContextRoot=$config-storefrontContextRoot
 # Site Logo Component
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
 ;;SiteLogoComponent;Site Logo Component;SiteLogoComponent;"/"
+;;ResponsiveSiteLogoComponent;Responsive Site Logo Component;ResponsiveSiteLogoComponent;"/"
  
  
 # CMS Site Settings 
@@ -289,6 +290,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;MiniCartSlot;MiniCart,MyWishList,SignInFlyOut,TrackOrder 
 ;;SideContentSlot;MobileAppBanner
 ;;SiteLogoSlot;SiteLogoComponent
+;;TopHeaderSlot;ResponsiveSiteLogoComponent
 ;;TabsSlot;TabPanelContainer
 ;;TopContentSlot;FacebookOffersBanner
 ;;ProductLeftRefinements;browseCategoryComponent,RefinementFacetComponent

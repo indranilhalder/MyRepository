@@ -676,7 +676,8 @@ input:focus {
       border: 1px solid transparent;
       margin: 0 -1px -1px -1px; }
       .select-view .select-list li:hover {
-        font-weight: 600; }
+        color: #000;
+        font-weight: 500; }
       @media (max-width: 900px) {
         .select-view .select-list li {
           padding-left: 10px; } }
@@ -17152,7 +17153,8 @@ font-weight:normal;
       margin: 0 -2px -2px -2px;
       white-space: nowrap;
     	text-overflow: ellipsis;
-  		overflow: hidden;  } 		
+  		overflow: hidden; 
+  		color: #666; } 		
       		
   @media(min-width:791px)		
   {		
@@ -29303,6 +29305,7 @@ footer>ul>li>.toggle>img{
 	width: 50%;
     float: left;
     padding: 0 20px;
+        position: relative;
 }
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
@@ -29313,11 +29316,15 @@ footer>ul>li>.toggle>img{
     width: 300px;
     text-decoration: none;
     margin: 0px auto;
-    padding: 13px;
+    padding: 7px;
     line-height: 24px;
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 1.5px;
+    height: 40px;
+    position: absolute;
+         bottom:20px;
+         left: calc(50% - 150px);
 }
 #newAndExclusive a.new_exclusive_viewAll:hover,
 #bestPicks .view-cliq-offers:hover,
@@ -30180,6 +30187,8 @@ header:not(.compact) .content .marketplace.compact{
 }
 #productYouCare .short-info > h3 span:hover,
 #productYouCare .short-info > h3 span:hover:after,
+
+
 #bestPicks .short-info:hover span {
 	color: #a9143c;
 }
@@ -30206,10 +30215,20 @@ form[name='flyOutloginForm'] input::-moz-placeholder {
 form[name='flyOutloginForm'] input:-ms-input-placeholder {
 	line-height: 18px;
 } 
-
+header div.bottom .marketplace.linear-logo {
+		display: none;
+	}
 @media ( max-width : 790px){ 
 	footer>ul>li ul li {
 		line-height: 30px;
+	}
+	
+	header div.bottom .marketplace {
+		display: none;
+	}
+	
+	header div.bottom .marketplace.linear-logo {
+		display: block;
 	}
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img{
@@ -30227,6 +30246,24 @@ height: auto !important;
     margin: 0 auto;
     width: 70%;
     padding-top: 11px;
+}
+
+input#typeOfProduct::-webkit-input-placeholder {
+ 	line-height: 24px;
+}
+input#typeOfProduct::-moz-placeholder {
+ 	line-height: 24px;
+} 
+input#typeOfProduct:-ms-input-placeholder {
+ 	line-height: 24px;
+}
+
+.footwear_left div, .footwear_right div {
+	padding: 0 10px;
+}
+
+.footwear_left img, .footwear_right img {
+	width: 100%;
 }
 /*--------------maincss-----------*/
 .row
