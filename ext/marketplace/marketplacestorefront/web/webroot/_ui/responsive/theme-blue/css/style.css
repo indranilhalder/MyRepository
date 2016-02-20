@@ -8122,7 +8122,7 @@ div.wishlist-content .pagination {
 @media ( min-width : 790px) {
 	.social {
 		padding-left: 0;
-		padding-bottom: 50px;
+		padding-bottom: 15px;
 		text-align: left;
 	}
 	.social h3 {
@@ -8476,7 +8476,7 @@ footer .banner {
 		float: left;
 		width: 33.33%;
 		padding-top: 23px;
-		padding-bottom: 50px;
+		padding-bottom: 5px;
 	}
 	footer>ul>li:first-child h3 {
 		/* font-size: 18px;
