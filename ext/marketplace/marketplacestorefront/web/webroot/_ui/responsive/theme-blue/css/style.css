@@ -972,7 +972,7 @@ h2 {
       content: "";
       display: table; }
   header .content .top {
-    z-index: 100; }
+   /*  z-index: 100; */}
   header .content .left, header .content .right {
     display: inline-block;
     line-height: 50px;
@@ -1140,7 +1140,7 @@ h2 {
                     transition: color 0.15s, background 0.15s; }
           header .content .right > ul > li.bag:hover {
             border-left: 2px solid #f0f4f5;
-            z-index: 2;
+            z-index: 4;
             -webkit-transition: z-index 0s, border 0.3s;
             -moz-transition: z-index 0s, border 0.3s;
             transition: z-index 0s, border 0.3s; }
