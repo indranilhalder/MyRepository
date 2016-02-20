@@ -1661,19 +1661,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//call to check pincode serviceability
 		boolean status = false;
 
-		status = pincodeServiceFacade.checkPincodeServiceble(pin, productCode);
-		if (status)
+		//call service to get list of ATS and ussid
+		omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
+		productWithPOS = getProductWdPos(omsResponse,model);
+		if (productWithPOS.size() > 0)
 		{
-			//call service to get list of ATS and ussid
-			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
-			productWithPOS = getProductWdPos(omsResponse,model);
-			if (productWithPOS.size() > 0)
-			{
-				status = true;
-				stores = productWithPOS.get(0).getPointOfServices();
-			}
-
+			status = true;
+			stores = productWithPOS.get(0).getPointOfServices();
 		}
+
 		if (! status)
 		{
 			stores.clear();
