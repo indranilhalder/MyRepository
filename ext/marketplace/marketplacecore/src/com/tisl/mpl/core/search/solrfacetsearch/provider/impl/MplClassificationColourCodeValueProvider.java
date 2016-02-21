@@ -35,6 +35,9 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 {
 	private FieldNameProvider fieldNameProvider;
 
+	public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
+	public static final String COLORFAMILYFOOTWEARBLANK = "";
+
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -109,8 +112,8 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				try
 				{
 					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
-							: featureValues));
+					result.addAll(
+							getFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues() : featureValues));
 				}
 				finally
 				{
@@ -130,17 +133,24 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 			final List<FeatureValue> list) throws FieldValueProviderException
 	{
 		final List result = new ArrayList();
-
+		//final PcmProductVariantModel pcmVariantProductModel = (PcmProductVariantModel) variantProductModel;
 		for (final FeatureValue featureValue : list)
 		{
 			Object value = featureValue.getValue();
+
 			if (value instanceof ClassificationAttributeValue)
 			{
 				value = ((ClassificationAttributeValue) value).getCode();
+				value = value.toString().toLowerCase();
+				if (value.toString().startsWith(COLORFAMILYFOOTWEAR))
+				{
+					value = value.toString().replaceAll(COLORFAMILYFOOTWEAR, COLORFAMILYFOOTWEARBLANK);
+				}
+
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
-			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, (language == null) ? null
-					: language.getIsocode());
+			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
+					(language == null) ? null : language.getIsocode());
 
 			// Construct colour hexcode here
 			final String colour = (String) value;
