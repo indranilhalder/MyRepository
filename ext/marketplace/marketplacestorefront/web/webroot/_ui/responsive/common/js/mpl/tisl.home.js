@@ -646,10 +646,21 @@ function getNewAndExclusiveAjaxCall(){
 		});
 
 			setTimeout(function(){
-				if($(window).width() > 773) {
+				/*if($(window).width() > 773) {
 					$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
+				}*/
+				//alert($('#newAndExclusive').height() +"|||"+$('#stayQued').height())
+				if ($(window).width() > 773) {
+					if ($('#newAndExclusive').height() > $('#stayQued').height()) {
+						$('#stayQued').css('min-height',
+								$('#newAndExclusive').outerHeight() + 'px');
+					} else {
+						$('#newAndExclusive').css('min-height',
+								$('#stayQued').outerHeight() + 'px');
+					}
 				}
-			},2000);
+				
+			},2500);
 		}
 	});
 }
