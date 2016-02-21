@@ -1264,9 +1264,6 @@ $(document).ready(function(){
 	 		});
 			}
 		
-<<<<<<< HEAD
-});
-=======
 		if($('.lookbook_wrapper .bottom-pagination').children().length==0){
 			$('.lookbook_wrapper .bottom-pagination').css('padding','0');
 			}
@@ -1278,4 +1275,3 @@ $(document).ready(function(){
 			}
 		
 });
->>>>>>> BRANCH_TCS-HYCOMM-R2SPRINT-71_21-02-2016_12-07-28
