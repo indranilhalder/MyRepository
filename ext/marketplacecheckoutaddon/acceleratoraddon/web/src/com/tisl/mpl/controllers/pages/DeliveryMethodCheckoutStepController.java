@@ -92,6 +92,7 @@ import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -100,6 +101,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.ProudctWithPointOfServicesData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
@@ -116,6 +118,7 @@ import com.tisl.mpl.service.MplSlaveMasterService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -647,8 +650,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					productWithPOS = getProductWdPos(response,model);
 	
 					model.addAttribute("delModeCount",delModeCount);
+					model.addAttribute("cnccount",count);
 					model.addAttribute("defaultPincode", defaultPincode);
 					model.addAttribute("pwpos", productWithPOS);
+					model.addAttribute("CSRFToken", CSRFTokenManager.getTokenForSession(request.getSession()));
+					
 				}
 			}
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
@@ -672,8 +678,33 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				ProudctWithPointOfServicesData pwPOS = new ProudctWithPointOfServicesData();
 				List<PointOfServiceModel> posModelList = new ArrayList<PointOfServiceModel>();
+				List<ATSResponseData> listAts = new ArrayList<ATSResponseData>();
 				List<PointOfServiceData> posDataList = new ArrayList<PointOfServiceData>();
 				String ussId = storeLocationResponseData.getUssId();
+				final CartModel cartModel = getCartService().getSessionCart();
+				int countStoreQuant = 0;
+				//get only those stores which have quantity greater or equal to selected user quantity
+				final CartModel cartModel1 = getCartService().getSessionCart();
+				for (AbstractOrderEntryModel abstractCartEntry : cartModel1.getEntries())
+				{
+					if (null != abstractCartEntry)
+					{
+						if (abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
+						{
+							int quan = abstractCartEntry.getQuantity().intValue();
+							for (ATSResponseData ats : storeLocationResponseData.getAts())
+							{
+								int quant = ats.getQuantity();
+								if (quant >= quan)
+								{
+									listAts.add(ats);
+								}
+								
+							}
+						}
+					}
+				}
+				storeLocationResponseData.setAts(listAts);
 				
 				LOG.debug("call to commerce db to get the seller details");
 				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
@@ -682,10 +713,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					String sellerName = sellerInfoModel.getSellerName();
 					model.addAttribute("sellerName", sellerName);
 					model.addAttribute("sellerId",sellerInfoModel.getSellerID());
+					model.addAttribute("ussid", ussId);
+					
 					final ProductModel productModel = sellerInfoModel.getProductSource();
 					final ProductData productData = productFacade.getProductForOptions(productModel,
 							Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 					
+					pwPOS.setUssId(ussId);
 					LOG.debug("get stores from commerce based on SellerId and StoredId(slaveId)");
 					for (int i = 0; i < storeLocationResponseData.getAts().size(); i++)
 					{
@@ -713,18 +747,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							addData = addressConverter.convert(pointOfServiceModel.getAddress());
 							posData.setAddress(addData);
 							
-							if (null != pointOfServiceModel.getOpeningTime())
+							/*if (null != pointOfServiceModel.getOpeningTime())
 							{
-								final Date openingTime = pointOfServiceModel.getOpeningTime();
+								final String openingTime = pointOfServiceModel.getOpeningTime();
 								posData.setMplClosingTime(timeDataConverter.convert(openingTime));
 								
-							}
-							if (null != pointOfServiceModel.getClosingTime())
+							}*/
+							/*if (null != pointOfServiceModel.getClosingTime())
 							{
 								final Date closingTime = pointOfServiceModel.getClosingTime();
 								posData.setMplClosingTime(timeDataConverter.convert(closingTime));
 								
-							}
+							}*/
 							
 							posDataList.add(posData);
 						}
@@ -746,16 +780,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/addPosToOrderEntry", method = RequestMethod.GET)
-	public String addPosToOrderEntry(@RequestParam("productCode") final String productCode,@RequestParam("posName") final String posName)
+	public String addPosToOrderEntry( @RequestParam("ussId") final String ussId, @RequestParam("posName") final String posName)
 	{
 		LOG.debug("from addPosToOrderEntry method ");
 		String status = "yes";
-		//get ProductModel for given product code
-		final ProductModel pModel = productService.getProduct(productCode);
-		
+	
 		//call service to retrieve POSModel for given posName
 		final PointOfServiceModel posModel = mplSlaveMasterService.findPOSByName(posName);
-		final String pcode = pModel.getCode();
+		final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
+		
 		try
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -765,8 +798,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					if (cartEntryModel != null)
 					{
-						final String ussid = cartEntryModel.getSelectedUSSID();
-						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussid);
 						String collDays = "";
 						if (sellerInfoModel != null)
 						{
@@ -776,14 +807,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 								collDays = sellerMaster.getCollectionDays();
 							}
 						}
-						if (cartEntryModel.getProduct().getCode().equalsIgnoreCase(pcode))
+						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussId))
 						{
-							if (collDays != null)
+							if (StringUtils.isNotEmpty(collDays))
 							{
 								cartEntryModel.setCollectionDays(Integer.valueOf(collDays));
 							}
+							else
+							{
+								cartEntryModel.setCollectionDays(Integer.valueOf(0));
+							}
 							cartEntryModel.setDeliveryPointOfService(posModel);
 							modelService.save(cartEntryModel);
+							break;
 						}
 					}
 				}
@@ -1543,6 +1579,63 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			storeLocationRequestData.setStoreId(locationList);
 		}
 		storeLocationRequestData.setUssId(sellerUssId);
+		//populate newly added fields
+		//get SellerInfo based on sellerUssid
+		final SellerInformationModel sellerInfoModel = mplSellerInformationService
+				.getSellerDetail(sellerUssId);
+		ProductModel productModel = null;
+		ProductData productData = null;
+		if (null != sellerInfoModel)
+		{
+			productModel = sellerInfoModel.getProductSource();
+			productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+			storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());
+		}
+		List<RichAttributeModel> richAttributeModel = null;
+		if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+		{
+			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			if (richAttributeModel != null && richAttributeModel.get(0) != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+			{
+				final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+				storeLocationRequestData.setFulfillmentType(fulfillmentType.toUpperCase());
+			}
+			else
+			{
+				LOG.debug("storeLocationRequestData :  Fulfillment type not received for the SellerId"+sellerInfoModel.getSellerArticleSKU());
+			}
+			if (richAttributeModel != null && richAttributeModel.get(0) != null
+					&& richAttributeModel.get(0).getShippingModes() != null
+					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
+			{
+				final String shippingMode = richAttributeModel.get(0).getShippingModes().getCode();
+				storeLocationRequestData.setTransportMode(shippingMode.toUpperCase());
+			}
+			else
+			{
+				LOG.debug("storeLocationRequestData :  ShippingMode type not received for the "+sellerInfoModel.getSellerArticleSKU());
+			}
+			if ((null != productData.getSeller()) && (null != productData.getSeller().get(0)) && (null != productData.getSeller().get(0).getSpPrice()) && !(productData.getSeller().get(0).getSpPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getSpPrice().getValue().doubleValue());
+			}
+			else if ((null != productData.getSeller()) && (null != productData.getSeller().get(0)) && (null != productData.getSeller().get(0).getMopPrice()) && !(productData.getSeller().get(0).getMopPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getMopPrice().getValue().doubleValue());
+			}
+			else if (null != productData.getSeller().get(0).getMrpPrice() && !(productData.getSeller().get(0).getMrpPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getMrpPrice().getValue().doubleValue());
+			}
+			else
+			{
+				LOG.debug("No price avaiable for seller :" + productData.getSeller().get(0).getSellerID());
+			}
+		}
+		
 		return storeLocationRequestData;
 	}
 
@@ -1558,7 +1651,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@ResponseBody
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.UPDATE_CHECK_PINCODE, method = RequestMethod.GET)
 	public List<PointOfServiceData> upDatePincodeServicabilityCheck(@RequestParam(value = "pin") final String pin,
-			@RequestParam(value = "productCode") final String productCode, @RequestParam(value = "sellerId") final String sellerId, final Model model)
+			@RequestParam(value = "productCode") final String productCode, @RequestParam(value = "sellerId") final String ussId, final Model model)
 			throws CMSItemNotFoundException
 	{
 		LOG.debug("from upDatePincodeServicabilityCheck method when customer change pincode at cnc page");
@@ -1568,22 +1661,21 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//call to check pincode serviceability
 		boolean status = false;
 
-		status = pincodeServiceFacade.checkPincodeServiceble(pin, productCode);
-		if (status)
+		//call service to get list of ATS and ussid
+		omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
+		productWithPOS = getProductWdPos(omsResponse,model);
+		if (productWithPOS.size() > 0)
 		{
-			//call service to get list of ATS and ussid
-			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, sellerId, productCode);
-			productWithPOS = getProductWdPos(omsResponse,model);
-			if (productWithPOS.size() > 0)
-			{
-				stores = productWithPOS.get(0).getPointOfServices();
-			}
+			status = true;
+			stores = productWithPOS.get(0).getPointOfServices();
+		}
 
-		}
-		else
+		if (! status)
 		{
-			stores = null;
+			stores.clear();
+			return stores;
 		}
+		
 		return stores;
 	}
 

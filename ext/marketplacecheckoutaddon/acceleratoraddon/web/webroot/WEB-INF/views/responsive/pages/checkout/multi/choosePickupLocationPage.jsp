@@ -134,15 +134,39 @@
 						    color: #000;
 						    margin-top: -15px;
 						}
+						
+						@media (max-width:650px){
+							
+						}
+						
+						@media (min-width: 1024px) {
 						.checkout.wrapper .product-block li.header > ul li:first-child, .checkout.wrapper .product-block li.item > ul li:first-child {
 						  width: 38% !important; }
 						  .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
 						  width: 28% !important;
 						  }		
+						  #pickup {
+						  	width: 920px !important;
+						  }
+						  .savenewid {
+						  	background: #333 !important;
+						  	border-color: #333 !important;
+						  	height: 40px !important;
+						  }
+						  
+						 }
+						 
+						 @media (min-width: 1366px) and (max-width: 2160px) {
+						.checkout.wrapper .product-block li.header > ul li:first-child, .checkout.wrapper .product-block li.item > ul li:first-child {
+						  width: 38% !important; }
+						  .checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
+						  width: 28% !important;
+						  }	
+						  }
+						 
 						  .checkout.wrapper .product-block li.header > ul li.delivery li label:after, .checkout.wrapper .product-block li.item > ul li.delivery li label:after {
 						  	display: none !important;
 						  } 
-						  
 						  .radio_color {
 						  	color: #ADA6A6;
 						  }	
@@ -150,6 +174,16 @@
 						  .colorChange {
 						  	color: #000 !important;
 						  }	
+						  .productCount {
+						  	font-size: 12px;
+						  	font-weight: bold;
+						  	margin-top: -10px;
+    						margin-bottom: 12px;
+						  }
+						  .submitPincode {
+					  	    width: 98px !important;
+						    margin-left: 88px;
+						  }
 						 	
 					</style>
 					<script>
@@ -191,10 +225,59 @@
 					</script>
 						
 	<script type="text/javascript">
+		function allLetter(inputtxt) { 
+	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
+	        var number = new RegExp(/\d/g);
+	        if(inputtxt.value.match(letters))
+	        {
+	        	if(inputtxt.value.match(number))
+		        {
+		            return false;
+		        }
+		        else
+		        {
+		            return true;
+		        }
+	        }
+	        else
+	        {
+	            return false;
+	        }
+	    }
+	
 		$(document).ready(function(){
 			$(".pickUpPersonAjax").hide();
-		
+			$(".pickupPersonSubmitError").hide();
+			
+			$("#pickupPersonSubmit").hide();
+			$("#pickupPersonName").keyup(function(){
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
+				var statusName = allLetter(pickUpPersonNam);
+				if(statusName == false) {
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
+				}
+				else {
+					$(".pickupPersonNameError").hide();
+				}
+			});
+			$("#pickupPersonMobile").keyup(function(){
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				if(isString==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+				else if($('#pickupPersonMobile').val().length >= "11") {
+					$(".pickupPersonMobileError").show();
+					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+				} else {
+					$(".pickupPersonMobileError").hide();
+				}
+			});
 			$("#savePickupPersondDetails").click(function(){
+				$(".pickupPersonSubmitError").hide();
 				$(".pickUpPersonAjax").hide();
 				//alert("hello")
 				$(".pickupPersonMobileError").hide();
@@ -206,10 +289,15 @@
 				
 				var pickupPersonMobile = $("#pickupPersonMobile").val();
 				var isString = isNaN($('#pickupPersonMobile').val());
-				
+				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
+				var statusName = allLetter(pickUpPersonNam);
 				if($('#pickupPersonName').val().length <= "3"){ 
 					$(".pickupPersonNameError").show();
 					$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
+				}
+				else if(statusName == false) {
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
 				}
 				else if($('#pickupPersonMobile').val().length <= "9") {
 					if(isString==true) {
@@ -220,6 +308,10 @@
 						$(".pickupPersonMobileError").show();
 						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
 					}
+				}
+				else if($('#pickupPersonMobile').val().length > "10") {
+					$(".pickupPersonMobileError").show();
+					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
 				}
 				else if(isString==true) {
 					$(".pickupPersonMobileError").show();
@@ -232,7 +324,8 @@
 						url : requiredUrl,
 						data : dataString,
 						success : function(data) {
-							console.log("success call for pickup person details"+data);
+							//console.log("success call for pickup person details"+data);
+							$("#pickupPersonSubmit").text("1");
 							$(".pickUpPersonAjax").fadeIn(100);
 							$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
 	
@@ -251,10 +344,11 @@
 	</script>
 	<script type="text/javascript">
 
-	function openPopForAdddPosToCartEntry(productCode,posName){
+	function openPopForAdddPosToCartEntry(ussId,posName){
 		//var productCode = $("#product").val();
+		//alert(ussId+"@@@"+posName);
 		var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPosToOrderEntry";
-		var dataString = 'productCode=' + productCode+ '&posName=' + posName;
+		var dataString = 'ussId=' + ussId+ '&posName=' + posName;
 			$.ajax({
 			url : requiredUrl,
 			data : dataString,
@@ -274,15 +368,11 @@
 					<spring:theme code="checkout.multi.cnc.header"></spring:theme>
 					<br>
 			</h1>
-			<p>
-				<spring:theme code="checkout.multi.cnc.showing.delivery.options.pincode"></spring:theme>
-				
-					<c:if test="${not empty defaultPincode}">
-						<span>
-							${defaultPincode}
-						</span>	
-					</c:if>
-			</p>
+			
+			
+			<div class="productCount">
+				(for ${cnccount} out of ${delModeCount + cnccount} items in your bag)
+			</div>
 			
 			<ul id="deliveryradioul" class="checkout-table product-block">
 						
@@ -293,13 +383,13 @@
 								<li class="store header5"><spring:theme code="checkout.multi.cnc.store.closeto"/>
 								
 								<c:if test="${not empty defaultPincode}">
-									<span style="color: #00cbe9!important;">
+									<span style="color: #00cbe9!important;" id="changeValue${status1.index}">
 										${defaultPincode}
 									</span>	
 								</c:if>
 								</li>
 								<li class="delivery header4"><a 
-														style="color: #00cbe9 !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
+														onclick="history.go(-1);" style="color: #00cbe9 !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -328,7 +418,7 @@
 										</div>
 									</div>
 									<div class="row" style="text-align: center; height: 50px; padding-bottom: 15px; padding-left: 100px;">	
-										<button class="submitPincodedelivery${status1.index}" name="submitDlivery" style="margin-bottom: 10px; width: 50%">Submit</button>
+										<button class="submitPincodedelivery${status1.index}" name="submitDlivery" style="margin-bottom: 10px; width: 50%;">Submit</button>
 									</div>	
 									
 									<a href="#0" class="cd-popup-close img-replace closepp${status1.index}">Close</a>
@@ -410,28 +500,34 @@
 							<div class="latlng latlng${status1.index}"><c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status"><c:if test="${(status.index != 0)}">@</c:if> '${pos.displayName}', ${pos.geoPoint.latitude}, ${pos.geoPoint.longitude}</c:forEach>
 							</div>
 							<li class="delivery">
-									<ul class="delivered">
+									<div class="error_txt pincodeServicable${status1.index}" style="width: 200px;font-size: 12px;"></div>
+									<ul class="delivered delivered${status1.index}">
 							<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
-										<li style="width: 240px !important;">
+										<li style="width: 240px !important;" class="removeColor${status1.index}">
 											<%-- <input class="radio_btn" type="radio" name="address" id="address${status.index}" value="address${status.index}"> --%>
-											<input class="radio_btn" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
+											<input class="radio_btn radio_btn${status1.index}" type="radio" name="address${status1.index}" id="address${status1.index}${status.index}" value="address${status.index}">
 												<div class='pin bounce'>
-													<span class="text_in">${status.index}</span>
+													<span class="text_in">${status.count}</span>
 														</div>
-															<label class="radio_sel${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
+															<label class="radio_sel${status1.index}${status.index} displayName${status1.index}${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
 															</label>
-																<span class="radio_sel${status.index} radio_color displayName${status1.index}${status.index}">${pos.displayName}</span>
-																<span class="radio_sel${status.index} radio_color address${status1.index}${status.index}">
+																<%-- <span class="radio_sel${status1.index}${status.index} radio_color displayName${status1.index}${status.index}">${pos.displayName}</span> --%>
+																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.line1}">
-																		${pos.address.line1}
+																		${fn:escapeXml(pos.address.line1)}
 																	</c:if>
-																	</span>
-																<span class="radio_sel${status.index} radio_color address${status1.index}${status.index}">
+																</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color address2${status1.index}${status.index}">
+																	<c:if test="${not empty pos.address.line1}">
+																		${fn:escapeXml(pos.address.line2)}
+																	</c:if>
+																</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color address3${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.state}">
 																		${pos.address.state}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status.index} radio_color address${status1.index}${status.index}">
+																<span class="radio_sel${status1.index}${status.index} radio_color address4${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.postalCode}">
 																		${pos.address.postalCode}
 																	</c:if>
@@ -441,11 +537,23 @@
 										<script>
 											$(document).ready(function() {
 												$(".select_store").hide();
-												
 												var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
 												$(".continue_btn").click(function(e){
+													$(".pickupDetails").hide();
+													$(".pickupPersonSubmitError").hide();
+													var pickupPersonSubmit = $("#pickupPersonSubmit").text();
+													if(pickupPersonSubmit == "1") {
+														//$(".pickupPersonSubmitError").show();
+														//$(".pickupPersonSubmitError").text("Pickup Person Details Have Been Successfully Added");
+														//console.log("Pickup Person Details Have Been Successfully Added");
+														} else {
+														e.preventDefault();
+														$(".pickupPersonSubmitError").show();
+														$(".pickupPersonSubmitError").text("Please Submit Pickup Person Details");
+														//console.log("Please Submit Pickup Person Details");
+														}
 													var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
-													if(checked${status1.index}=="address${status1.index}" || checked${status1.index}=="address${status.index}" || checked${status1.index}=="address1" || checked${status1.index}=="address0" || checked${status1.index}=="address2") {
+													if(checked${status1.index}=="address${status1.index}" || checked${status1.index}=="address${status.index}" || checked${status1.index}=="address1" || checked${status1.index}=="address0" || checked${status1.index}=="address2" || checked${status1.index}=="address3" || checked${status1.index}=="address4" || checked${status1.index}=="address5" || checked${status1.index}=="address6" || checked${status1.index}=="address7") {
 														if($('#pickupPersonName').val().length <= "3" || $('#pickupPersonMobile').val().length <= "9") {
 															$(".pickupDetails").show();
 															e.preventDefault();
@@ -454,13 +562,14 @@
 														$(".select_store").show();
 														e.preventDefault();
 													}
+													
 												});
 												$("#address${status1.index}${status.index}").click(function(){
-													$(".radio_color").removeClass("colorChange");
+													$(".removeColor${status1.index} .radio_color").removeClass("colorChange");
 													$(".select_store").hide();
 													var name${status.index} = $(".displayName${status1.index}${status.index}").text();
-													openPopForAdddPosToCartEntry('${poses.product.code}',name${status.index});
-													$(".radio_sel${status.index}").addClass("colorChange");
+													openPopForAdddPosToCartEntry('${poses.ussId}',name${status.index});
+													$(".radio_sel${status1.index}${status.index}").addClass("colorChange");
 												});
 											});
 										</script>
@@ -468,8 +577,9 @@
 							</ul>
 								</li>
 							
-							<li style="width: 31%">
+							<li>
 													<ul id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
+													<ul id="maphide${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">
@@ -477,65 +587,26 @@
 																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" placeholder="Enter Pincode to Change.">
 															</div>
 															<div class="col-md-4 col-sm-4 col-xs-4">
-																<button class="submitPincode${status1.index}" name="submitPincode${status1.index}">Submit</button>
+																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #333 !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>
 															</div>
 														</div>
-													</div>	
+														<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;">
+														
+														</div>
+													</div>
+														
 						<script>
 						 //alert("Hello");
 							$(document).ready(function() {
+								$("input[name='address${status1.index}']").prop('checked', false);
 								$(".input${status1.index}").hide();
-								
+								$(".pincodeServicable${status1.index}").hide();
+								$("#maphide${status1.index}").hide();
 								$(".txt${status1.index}").click(function(){
 									$(".txt${status1.index}").hide();
 									$(".input${status1.index}").show();
 								});
 								
-								$(".submitPincode${status1.index}").click(function(){
-									var pinvalue${status1.index} = $(".changepin${status1.index}").val();
-									var productcode${status1.index} = "${poses.product.code}";
-									var sellerId = ${sellerId};
-									var dataString${status1.index} = "pin=" + pinvalue${status1.index} + "&productCode="+ productcode${status1.index} + "&sellerId="+sellerId;
-									$.ajax({
-								          url :  ACC.config.encodedContextPath +"/checkout/multi/delivery-method/updatePincodeCheck",
-								          type: "GET",
-								          dataType : "json",
-								    	  cache: false,
-								    	  contentType : "application/json; charset=utf-8",
-								          data : dataString${status1.index},   
-								          success : function(data) {
-								          var response${status1.index} = JSON.stringify(data);
-								          var jsonObject${status1.index} = JSON.parse(response${status1.index});
-								          var changecordinates${status1.index} = " ";
-								          for(var i=0;i<jsonObject${status1.index}.length;i++) {
-								        	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['name']);	
-								        	  $(".address${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['line1']);
-								        	  console.log(jsonObject${status1.index}[i]['name']);
-								        	  console.log(jsonObject${status1.index}[i]['address']['line1']);
-								        	  console.log(jsonObject${status1.index}[i]['geoPoint']['latitude']);
-								        	  console.log(jsonObject${status1.index}[i]['geoPoint']['longitude']);
-								        	  if(i!='0') {
-								        		  //console.log("Printing");
-								        		 changecordinates${status1.index} += " @ ";
-								        	  }
-								        	  changecordinates${status1.index} += "'"+jsonObject${status1.index}[i]['name']+"', "+jsonObject${status1.index}[i]['geoPoint']['latitude']+", "+jsonObject${status1.index}[i]['geoPoint']['longitude'];
-								        	  
-								          	}
-								          $(".latlng${status1.index}").text(changecordinates${status1.index});
-								          processMap${status1.index}();
-								           
-								          },
-								          error : function(xhr, data, error) {
-								        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
-											}
-								         });
-									
-									$(".txt${status1.index}").show();
-									$(".input${status1.index}").hide();
-								});
-								processMap${status1.index}();
-
-								function processMap${status1.index}() {
 								var loc${status1.index} = $(".latlng${status1.index}").text();
 								loc${status1.index} = loc${status1.index}.split("@");
 								
@@ -547,20 +618,150 @@
 									}
 								}
 								
-							    // Setup the different icons and shadows
-							    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+								 // Setup the different icons and shadows
+							    var iconURLPrefix${status1.index} = '${request.contextPath}/_ui/responsive/theme-blue/images/storemarkericons/';
+							    
+							    iconURLPrefix${status1.index} = iconURLPrefix${status1.index}.replace("/mpl/en/","/");
+							    
+							    //console.log(iconURLPrefix${status1.index});
+							    
 							    
 							    var icons = [
-							      iconURLPrefix + 'red-dot.png',
-							      iconURLPrefix + 'green-dot.png',
-							      iconURLPrefix + 'blue-dot.png',
-							      iconURLPrefix + 'orange-dot.png',
-							      iconURLPrefix + 'purple-dot.png',
-							      iconURLPrefix + 'pink-dot.png',      
-							      iconURLPrefix + 'yellow-dot.png'
+														      iconURLPrefix${status1.index} + 'markergrey1.png',
+														      iconURLPrefix${status1.index} + 'markergrey2.png',
+														      iconURLPrefix${status1.index} + 'markergrey3.png',
+														      iconURLPrefix${status1.index} + 'markergrey4.png',
+														      iconURLPrefix${status1.index} + 'markergrey5.png',
+														      iconURLPrefix${status1.index} + 'markergrey6.png'
+														    ]
+							    
+							    var icons${status1.index} = [
+							      iconURLPrefix${status1.index} + 'markergrey1.png',
+							      iconURLPrefix${status1.index} + 'markergrey2.png',
+							      iconURLPrefix${status1.index} + 'markergrey3.png',
+							      iconURLPrefix${status1.index} + 'markergrey4.png',
+							      iconURLPrefix${status1.index} + 'markergrey5.png',
+							      iconURLPrefix${status1.index} + 'markergrey6.png'
 							    ]
-							    var iconsLength = icons.length;
-
+							    var iconsLength = icons${status1.index}.length;
+							    
+							    $(".radio_btn${status1.index}").click(function(){
+							    	var number = $(this).val();
+							    	icons${status1.index} = [
+														      iconURLPrefix${status1.index} + 'markergrey1.png',
+														      iconURLPrefix${status1.index} + 'markergrey2.png',
+														      iconURLPrefix${status1.index} + 'markergrey3.png',
+														      iconURLPrefix${status1.index} + 'markergrey4.png',
+														      iconURLPrefix${status1.index} + 'markergrey5.png',
+														      iconURLPrefix${status1.index} + 'markergrey6.png'
+														    ]
+							    	number = number.replace("address","");
+							    	//number++;
+							    	var myCounter = "1";
+							    	var iconNumber = parseInt(number) + parseInt(myCounter);
+							    	var url =  iconURLPrefix${status1.index} + 'marker' + parseInt(iconNumber) +'.png';
+							    	icons${status1.index}[number] = url;
+							    	processMap${status1.index}();
+							    	//console.log(url);
+							    });
+								
+							    
+								$(".submitPincode${status1.index}").click(function(){
+									$(".removeColor${status1.index} .radio_color").removeClass("colorChange");
+									$(".pincodeServicable${status1.index}").hide();
+									$(".pincodeValidation").hide();
+									var pinvalue${status1.index} = $(".changepin${status1.index}").val();
+									var pinlength = pinvalue${status1.index}.length;
+									if(pinlength == "6") {
+										var productcode${status1.index} = "${poses.product.code}";
+										var sellerId = "${poses.ussId}";
+										var dataString${status1.index} = "pin=" + pinvalue${status1.index} + "&productCode="+ productcode${status1.index} + "&sellerId="+sellerId;
+										$.ajax({
+									          url :  ACC.config.encodedContextPath +"/checkout/multi/delivery-method/updatePincodeCheck",
+									          type: "GET",
+									          dataType : "json",
+									    	  cache: false,
+									    	  contentType : "application/json; charset=utf-8",
+									          data : dataString${status1.index},   
+									          success : function(data) {
+									        	 //console.log(data);
+										          var response${status1.index} = JSON.stringify(data);
+										          var jsonObject${status1.index} = JSON.parse(response${status1.index});
+										          $("#changeValue${status1.index}").text(pinvalue${status1.index});
+										          //console.log(jsonObject${status1.index});
+										          //console.log(jsonObject${status1.index}.length);
+										          if(jsonObject${status1.index}.length != "0") {
+										        	  $("input[name='address${status1.index}']").prop('checked', false);
+										        	  $(".removeColor${status1.index} .radio_color").removeClass("colorChange");
+										        	  icons${status1.index} = icons;
+										        	  processMap${status1.index}();
+										        	  $(".delivered${status1.index}").show();
+										        	  $("#map${status1.index}").show();
+										        	  $("#maphide${status1.index}").hide();
+											          var changecordinates${status1.index} = " ";
+											          for(var i=0;i<jsonObject${status1.index}.length;i++) {
+											        	  
+											        	  if(jsonObject${status1.index}[i]['displayName'] != null) {
+											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['displayName']);
+											        	  } else {
+											        		  $(".displayName${status1.index}"+i).text("");
+											        	  } if(jsonObject${status1.index}[i]['address']['line1'] != null) {
+										        			  $(".address1${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['line1']);
+											        	  } else { 
+											        		  $(".address1${status1.index}"+i).text("");
+											        	  } if(jsonObject${status1.index}[i]['address']['line2'] != null) {
+											        	  	$(".address2${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['line2']);
+											        	  } else {
+											        		  $(".address2${status1.index}"+i).text(""); 
+											        	  }if(jsonObject${status1.index}[i]['address']['state'] != null) {
+											        	  	$(".address3${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['state']);
+											        	  } else {
+											        		$(".address3${status1.index}"+i).text("");
+											        	  }if(jsonObject${status1.index}[i]['address']['postalCode'] != null) {
+											        	  	$(".address4${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['postalCode']);
+											        	  } else {
+											        		  $(".address4${status1.index}"+i).text("");  
+											        	  }
+											        	/*   console.log(jsonObject${status1.index}[i]['name']);
+											        	  console.log(jsonObject${status1.index}[i]['address']['line1']);
+											        	  console.log(jsonObject${status1.index}[i]['geoPoint']['latitude']);
+											        	  console.log(jsonObject${status1.index}[i]['geoPoint']['longitude']);
+											        	 */  if(i!='0') {
+											        		  //console.log("Printing");
+											        		 changecordinates${status1.index} += " @ ";
+											        	  }
+											        	  changecordinates${status1.index} += "'"+jsonObject${status1.index}[i]['name']+"', "+jsonObject${status1.index}[i]['geoPoint']['latitude']+", "+jsonObject${status1.index}[i]['geoPoint']['longitude'];
+											        	  
+											          	}
+											          $(".latlng${status1.index}").text(changecordinates${status1.index});
+											          processMap${status1.index}();
+										        	} else {
+										        		$(".pincodeServicable${status1.index}").show();
+										        		$(".delivered${status1.index}").hide();
+										        		$("#map${status1.index}").hide();
+										        		$("#maphide${status1.index}").show();
+										        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+										        	}
+				
+									           
+									          },
+									          error : function(xhr, data, error) {
+									        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
+												}
+									         });
+										
+										$(".txt${status1.index}").show();
+										$(".input${status1.index}").hide();
+									} else {
+										$(".pincodeValidation").show();
+										$(".pincodeValidation").text("Please Enter 6 digits Only");
+									}
+								});
+								processMap${status1.index}();
+								
+							   
+							    
+						    function processMap${status1.index}() {	
 							    var map = new google.maps.Map(document.getElementById('map${status1.index}'), {
 							      zoom: 10,
 							      center: new google.maps.LatLng(-37.92, 151.25),
@@ -586,7 +787,7 @@
 							      var marker = new google.maps.Marker({
 							        position: new google.maps.LatLng(loc${status1.index}[i][1], loc${status1.index}[i][2]),
 							        map: map,
-							        icon: icons[iconCounter]
+							        icon: icons${status1.index}[iconCounter]
 							      });
 
 							      markers.push(marker);
@@ -595,6 +796,7 @@
 							        return function() {
 							          infowindow.setContent(loc${status1.index}[i][0]);
 							          infowindow.open(map, marker);
+							          
 							        }
 							      })(marker, i));
 							      
@@ -602,6 +804,7 @@
 							      // We only have a limited number of possible icon colors, so we may have to restart the counter
 							      if(iconCounter >= iconsLength) {
 							      	iconCounter = 0;
+							      	
 							      }
 							    }
 
@@ -611,11 +814,13 @@
 							      //  Go through each...
 							      for (var i = 0; i < markers.length; i++) {  
 											bounds.extend(markers[i].position);
+											
 							      }
 							      //  Fit these bounds to the map
 							      map.fitBounds(bounds);
 							    }
 							    autoCenter();
+							    
 							}
 							    
 						});
@@ -629,17 +834,18 @@
 			<span class="select_store error_txt" style="text-align: left;font-size: 15px;">
 			<spring:theme code="checkout.multi.cnc.select.products.validate.msg"/></span>
 			<div class="container" id='pickup'>
-       		<div class="panel panel-default" style="height: auto!important; width: 100%!important;">
+       		<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
      			 <div class="panel panel-body" style="margin-top: 14px;">
      			 	<div class="col-md-12 pickupDetails error_txt">
      			 	<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
      			 	</div>
      			 	<div class="pickUpPersonAjax">
      			 	</div>
+     			 	<form name="pickupPersonDetails" action="#">
      				 <div class="col-md-3">
       					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
        					 <div class="col-md-3">
-        					<input type="text" id="pickupPersonName" class="inputname" placeholder="Enter Full Name" /><br/>
+        					<input type="text" id="pickupPersonName" name="pickupPersonName" class="inputname" placeholder="Enter Full Name" /><br/>
         					<div class="error_txt pickupPersonNameError"></div>
             			</div>
             			<div class="col-md-3">
@@ -647,14 +853,20 @@
 							<div class="error_txt pickupPersonMobileError"></div>
         			    </div>
 			             <div class="col-md-3">
-			             <button type="button"  class="savenewid" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+			             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+			          <div id="pickupPersonSubmit"></div>
+			          <div class="error_txt pickupPersonSubmitError"></div>
+			            </div>
+			           </form>
+			            <div class="col-md-12" style="padding-top: 10px;">
+			            	<spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/>
 			            </div>
 					</div>
 			</div>
 		</div>
 		</div>
 		
-		<div class="right-block shipping" style="margin-top: 94px;">
+		<div class="right-block shipping" style="margin-top: 74px;">
 				<div class="checkout-order-summary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
@@ -662,7 +874,7 @@
 			</div>
 			<div>
 				<input type="hidden" name="CSRFToken"
-											value="a4e8152b-c9cd-429c-b88b-87d23391e386">
+											value="${CSRFToken}">
 			</div>
 		<div class="continue_holder">
 			<c:choose>
@@ -675,7 +887,7 @@
 				
 				<c:otherwise>
 					<div class="continue_btn">
-						<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/payment-method/add">CONTINUE</a>
+						<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation">CONTINUE</a>
 					</div>
 				</c:otherwise>
 			</c:choose>

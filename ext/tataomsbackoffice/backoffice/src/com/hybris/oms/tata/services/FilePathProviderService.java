@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package com.hybris.oms.tata.services;
 
 /**
  * @author Saood
- * 
+ *
  */
 public class FilePathProviderService
 {
@@ -14,7 +14,6 @@ public class FilePathProviderService
 	private String pinMstrTmpPath;
 	private String tplInbndCsvPath;
 	private String tplOutbndCsvPath;
-	private String tshipPinUnivsPath;
 	private String validationErrFilePath;
 	private String statesPropFilePath;
 
@@ -101,23 +100,6 @@ public class FilePathProviderService
 	public void setTplOutbndCsvPath(final String tplOutbndCsvPath)
 	{
 		this.tplOutbndCsvPath = tplOutbndCsvPath;
-	}
-
-	/**
-	 * @return the tshipPinUnivsPath
-	 */
-	public String getTshipPinUnivsPath()
-	{
-		return tshipPinUnivsPath;
-	}
-
-	/**
-	 * @param tshipPinUnivsPath
-	 *           the tshipPinUnivsPath to set
-	 */
-	public void setTshipPinUnivsPath(final String tshipPinUnivsPath)
-	{
-		this.tshipPinUnivsPath = tshipPinUnivsPath;
 	}
 
 	/**
