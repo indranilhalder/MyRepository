@@ -51,6 +51,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
@@ -727,22 +728,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		return isCheckChildCancellable;
 	}
 
-	/**
-	 * @return the mplSellerInformationService
-	 */
-	public MplSellerInformationService getMplSellerInformationService()
-	{
-		return mplSellerInformationService;
-	}
-
-	/**
-	 * @param mplSellerInformationService
-	 *           the mplSellerInformationService to set
-	 */
-	public void setMplSellerInformationService(final MplSellerInformationService mplSellerInformationService)
-	{
-		this.mplSellerInformationService = mplSellerInformationService;
-	}
 
 
 
@@ -778,32 +763,55 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 			if (orderModel != null)
 			{
-				LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
-				
-				 customOmsOrderService.upDatePickUpDetails(orderModel); 
 
-				final SendTicketRequestData ticket = new SendTicketRequestData();
-				final CustomerData customerData = customerFacade.getCurrentCustomer();
-
-				if (null != customerData)
+				try
 				{
-					ticket.setCustomerID(customerData.getUid());
+					LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
+					customOmsOrderService.upDatePickUpDetails(orderModel);
+
 				}
-				ticket.setSource(MarketplacecommerceservicesConstants.SOURCE);
-				ticket.setOrderId(orderModel.getCode());
-				ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
-				ticket.setAlternateContactName(orderModel.getPickupPersonName());
-				ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
+				catch (final Exception e)
+				{
+					LOG.error("update pickup_person details then ");
 
-				LOG.info(" ****** Before CRM Ticket Creatin *********");
-				ticketCreate.ticketCreationModeltoWsDTO(ticket);
-				LOG.info(" ******* After CRM Ticket Creatin ********");
+				}
+				for (final OrderModel childOrders : orderModel.getChildOrders())
+				{
+					for (final AbstractOrderEntryModel entry : childOrders.getEntries())
+					{
+						if (null != entry
+								&& entry.getMplDeliveryMode().getDeliveryMode().getCode()
+										.equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+						{
+							final SendTicketRequestData ticket = new SendTicketRequestData();
+							final CustomerData customerData = customerFacade.getCurrentCustomer();
+							if (null != customerData)
+							{
+								ticket.setCustomerID(customerData.getUid());
+							}
+							final List<SendTicketLineItemData> lineItemData = new ArrayList<SendTicketLineItemData>();
+							final SendTicketLineItemData reqData = new SendTicketLineItemData();
+							reqData.setLineItemId(entry.getOrderLineId());
+							lineItemData.add(reqData);
+							ticket.setLineItemDataList(lineItemData);
+							ticket.setSource(MarketplacecommerceservicesConstants.SOURCE);
+							ticket.setOrderId(orderModel.getCode());
+							ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+							ticket.setAlternateContactName(orderModel.getPickupPersonName());
+							ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
 
-				LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
-				saveTicketDetailsInCommerce(ticket);
-				LOG.info("************ PickUpDetails Ticket Saved ********");
+							LOG.info(" ****** Before CRM Ticket Creatin *********");
+							ticketCreate.ticketCreationModeltoWsDTO(ticket);
+							LOG.info(" ******* After CRM Ticket Creatin ********");
+
+							LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
+							saveTicketDetailsInCommerce(ticket);
+							LOG.info("************ PickUpDetails Ticket Saved ********");
+						}
+
+					}
+				}
 			}
-
 		}
 		catch (final JAXBException ex)
 		{
@@ -845,7 +853,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
 		}
-		if(null!=sendTicketRequestData.getSource())
+		if (null != sendTicketRequestData.getSource())
 		{
 			ticket.setSource(sendTicketRequestData.getSource());
 		}
@@ -859,7 +867,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
 		}
-		
+
 		final TicketMasterXMLData ticketXmlData = ticketCreate.ticketCreationModeltoXMLData(sendTicketRequestData);
 		if (ticketXmlData != null)
 		{
@@ -876,5 +884,24 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 		modelService.save(ticket);
 	}
+
+
+	/**
+	 * @return the mplSellerInformationService
+	 */
+	public MplSellerInformationService getMplSellerInformationService()
+	{
+		return mplSellerInformationService;
+	}
+
+	/**
+	 * @param mplSellerInformationService
+	 *           the mplSellerInformationService to set
+	 */
+	public void setMplSellerInformationService(final MplSellerInformationService mplSellerInformationService)
+	{
+		this.mplSellerInformationService = mplSellerInformationService;
+	}
+
 
 }
