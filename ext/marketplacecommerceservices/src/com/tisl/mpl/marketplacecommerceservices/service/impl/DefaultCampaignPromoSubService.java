@@ -26,15 +26,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.CampaignPromoSubService;
+import com.tisl.mpl.model.BuyAAboveXGetPercentageOrAmountOffModel;
+import com.tisl.mpl.model.BuyABFreePrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAGetPrecentageDiscountCashbackModel;
+import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAPercentageDiscountModel;
+import com.tisl.mpl.model.BuyAandBGetPrecentageDiscountCashbackModel;
+import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAandBPrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAandBgetCModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.CartOrderThresholdDiscountCashbackModel;
 import com.tisl.mpl.model.CartOrderThresholdDiscountPromotionModel;
+import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.DeliveryModePromotionRestrictionModel;
 import com.tisl.mpl.model.EtailExcludeSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
+import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.pojo.CampaignData;
 
@@ -91,10 +102,51 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		{
 			campaignData = getBuyAPercentageDisData(promotion, campaignData);
 		}
+		else if (promotion instanceof BuyAandBPrecentageDiscountModel)
+		{
+			campaignData = getBuyABDiscountData(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyAandBgetCModel)
+		{
+			campaignData = getBuyABGetCData(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyXItemsofproductAgetproductBforfreeModel)
+		{
+			campaignData = getBuyABfreeData(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyABFreePrecentageDiscountModel)
+		{
+			campaignData = getBuyABFreePlusDis(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyAAboveXGetPercentageOrAmountOffModel)
+		{
+			campaignData = getProductThreshData(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyAGetPrecentageDiscountCashbackModel)
+		{
+			campaignData = getBuyACashBackData(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyAandBGetPrecentageDiscountCashbackModel)
+		{
+			campaignData = getBuyABCashBackData(promotion, campaignData);
+		}
+		else if (promotion instanceof CustomProductBOGOFPromotionModel)
+		{
+			campaignData = getBOGOData(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyAGetPromotionOnShippingChargesModel)
+		{
+			campaignData = buyAShipChrgsPromo(promotion, campaignData);
+		}
+		else if (promotion instanceof BuyAandBGetPromotionOnShippingChargesModel)
+		{
+			campaignData = buyABShipChrgsPromo(promotion, campaignData);
+		}
 
 
 		return campaignData;
 	}
+
 
 
 
@@ -123,6 +175,691 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		}
 
 		return campaignData;
+	}
+
+
+
+	/**
+	 * Campaign Data for : BuyAandBGetPromotionOnShippingChargesModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData buyABShipChrgsPromo(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		data = populateDefaultCampData(promotion, campaignData);
+		final BuyAandBGetPromotionOnShippingChargesModel oModel = (BuyAandBGetPromotionOnShippingChargesModel) promotion;
+
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getSecondProducts()))
+		{
+			data.setSecProducts(populateProducts(oModel.getSecondProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getSecondCategories()))
+		{
+			data.setSecCategories(populateCategories(oModel.getSecondCategories()));
+		}
+
+		if (null != oModel.getDiscTypesOnShippingCharges() && null != oModel.getDiscTypesOnShippingCharges())
+		{
+			data.setDiscountType(oModel.getDiscTypesOnShippingCharges().getCode());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		if (null != oModel.getTShip() && oModel.getTShip().booleanValue())
+		{
+			data.setIsTship(MarketplacecommerceservicesConstants.TRUE);
+		}
+
+		if (null != oModel.getSShip() && oModel.getSShip().booleanValue())
+		{
+			data.setIsSShip(MarketplacecommerceservicesConstants.TRUE);
+		}
+
+		return data;
+	}
+
+
+	/**
+	 * Campaign Data for : BuyAGetPromotionOnShippingChargesModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData buyAShipChrgsPromo(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		data = populateDefaultCampData(promotion, campaignData);
+		final BuyAGetPromotionOnShippingChargesModel oModel = (BuyAGetPromotionOnShippingChargesModel) promotion;
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getQuantity() && oModel.getQuantity().longValue() > 0)
+		{
+			data.setQuantity(oModel.getQuantity().toString());
+		}
+
+		if (null != oModel.getDiscTypesOnShippingCharges() && null != oModel.getDiscTypesOnShippingCharges())
+		{
+			data.setDiscountType(oModel.getDiscTypesOnShippingCharges().getCode());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		if (null != oModel.getTShip() && oModel.getTShip().booleanValue())
+		{
+			data.setIsTship(MarketplacecommerceservicesConstants.TRUE);
+		}
+
+		if (null != oModel.getSShip() && oModel.getSShip().booleanValue())
+		{
+			data.setIsSShip(MarketplacecommerceservicesConstants.TRUE);
+		}
+
+
+		return data;
+	}
+
+
+	/**
+	 * For Campaign Data For : CustomProductBOGOFPromotionModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getBOGOData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		final CustomProductBOGOFPromotionModel oModel = (CustomProductBOGOFPromotionModel) promotion;
+		CampaignData data = campaignData;
+		data = populateDefaultCampData(promotion, campaignData);
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		if (null != oModel.getQualifyingCount() && oModel.getQualifyingCount().longValue() > 0)
+		{
+			data.setQuantity(oModel.getQualifyingCount().toString());
+		}
+
+		if (null != oModel.getFreeCount() && oModel.getFreeCount().longValue() > 0)
+		{
+			data.setFreecount(oModel.getFreeCount().toString());
+		}
+
+
+		return data;
+	}
+
+
+	/**
+	 * Campaign Data For : BuyAandBGetPrecentageDiscountCashbackModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getBuyABCashBackData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		data = populateDefaultCampData(promotion, campaignData);
+		final BuyAandBGetPrecentageDiscountCashbackModel oModel = (BuyAandBGetPrecentageDiscountCashbackModel) promotion;
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getSecondProducts()))
+		{
+			data.setSecProducts(populateProducts(oModel.getSecondProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getSecondCategories()))
+		{
+			data.setSecCategories(populateCategories(oModel.getSecondCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (null != oModel.getPercentageOrAmount())
+		{
+			data.setIsPercentage(oModel.getPercentageOrAmount().toString());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (null != oModel.getMaxDiscount() && oModel.getMaxDiscount().doubleValue() > 0)
+		{
+			data.setMaxDiscount(oModel.getMaxDiscount().toString());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		return data;
+	}
+
+
+	/**
+	 * For Campaign Data : BuyAGetPrecentageDiscountCashbackModel
+	 *
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getBuyACashBackData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		data = populateDefaultCampData(promotion, campaignData);
+		final BuyAGetPrecentageDiscountCashbackModel oModel = (BuyAGetPrecentageDiscountCashbackModel) promotion;
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getQuantity() && oModel.getQuantity().longValue() > 0)
+		{
+			data.setQuantity(oModel.getQuantity().toString());
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (null != oModel.getPercentageOrAmount())
+		{
+			data.setIsPercentage(oModel.getPercentageOrAmount().toString());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (null != oModel.getMaxDiscount() && oModel.getMaxDiscount().doubleValue() > 0)
+		{
+			data.setMaxDiscount(oModel.getMaxDiscount().toString());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		return data;
+	}
+
+
+	/**
+	 * Campaign Data For : BuyAAboveXGetPercentageOrAmountOffModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getProductThreshData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		final BuyAAboveXGetPercentageOrAmountOffModel oModel = (BuyAAboveXGetPercentageOrAmountOffModel) promotion;
+		data = populateDefaultCampData(promotion, campaignData);
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (null != oModel.getPercentageOrAmount())
+		{
+			data.setIsPercentage(oModel.getPercentageOrAmount().toString());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getThresholdTotals()))
+		{
+			data.setThreshTotals(getDiscount(oModel.getThresholdTotals()));
+		}
+
+
+		return data;
+	}
+
+
+	/**
+	 * Campaign Data for : BuyABFreePrecentageDiscountModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getBuyABFreePlusDis(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		final BuyABFreePrecentageDiscountModel oModel = (BuyABFreePrecentageDiscountModel) promotion;
+		data = populateDefaultCampData(promotion, campaignData);
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getGiftProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		if (null != oModel.getQuantity() && oModel.getQuantity().longValue() > 0)
+		{
+			data.setQuantity(oModel.getQuantity().toString());
+		}
+
+		return data;
+	}
+
+
+
+	/**
+	 * Campaign Data for : BuyXItemsofproductAgetproductBforfreeModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getBuyABfreeData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		final BuyXItemsofproductAgetproductBforfreeModel oModel = (BuyXItemsofproductAgetproductBforfreeModel) promotion;
+		data = populateDefaultCampData(promotion, campaignData);
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getGiftProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		if (null != oModel.getQualifyingCount() && oModel.getQualifyingCount().longValue() > 0)
+		{
+			data.setQuantity(oModel.getQualifyingCount().toString());
+		}
+
+		return data;
+	}
+
+
+	/**
+	 * Campaign Data for : BuyAandBgetCModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getBuyABGetCData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		final BuyAandBgetCModel oModel = (BuyAandBgetCModel) promotion;
+		data = populateDefaultCampData(promotion, campaignData);
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getSecondProducts()))
+		{
+			data.setSecProducts(populateProducts(oModel.getSecondProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getSecondCategories()))
+		{
+			data.setSecCategories(populateCategories(oModel.getSecondCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getGiftProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getGiftProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+
+		return data;
+	}
+
+
+
+	/**
+	 * Campaign Data For : BuyAandBPrecentageDiscountModel
+	 *
+	 * @param promotion
+	 * @param campaignData
+	 * @return data
+	 */
+	private CampaignData getBuyABDiscountData(final AbstractPromotionModel promotion, final CampaignData campaignData)
+	{
+		CampaignData data = campaignData;
+		final BuyAandBPrecentageDiscountModel oModel = (BuyAandBPrecentageDiscountModel) promotion;
+		data = populateDefaultCampData(promotion, campaignData);
+
+
+		if (CollectionUtils.isNotEmpty(oModel.getProducts()))
+		{
+			data.setProducts(populateProducts(oModel.getProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getCategories()))
+		{
+			data.setCategories(populateCategories(oModel.getCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getSecondProducts()))
+		{
+			data.setSecProducts(populateProducts(oModel.getSecondProducts()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getSecondCategories()))
+		{
+			data.setSecCategories(populateCategories(oModel.getSecondCategories()));
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getExcludedProducts()))
+		{
+			data.setExcludedProducts(populateProducts(oModel.getExcludedProducts()));
+		}
+
+		if (null != oModel.getMinimumAmount() && oModel.getMinimumAmount().doubleValue() > 0)
+		{
+			data.setCatMinAmnt(oModel.getMinimumAmount().toString());
+		}
+
+		if (null != oModel.getPercentageOrAmount())
+		{
+			data.setIsPercentage(oModel.getPercentageOrAmount().toString());
+		}
+
+		if (null != oModel.getPercentageDiscount() && oModel.getPercentageDiscount().doubleValue() > 0)
+		{
+			data.setPercentage(oModel.getPercentageDiscount().toString());
+		}
+
+		if (CollectionUtils.isNotEmpty(oModel.getDiscountPrices()))
+		{
+			data.setDiscountPrices(getDiscount(oModel.getDiscountPrices()));
+		}
+
+		if (null != oModel.getMaxDiscount() && oModel.getMaxDiscount().doubleValue() > 0)
+		{
+			data.setMaxDiscount(oModel.getMaxDiscount().toString());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageFired()))
+		{
+			data.setFiredMessage(oModel.getMessageFired());
+		}
+
+		if (StringUtils.isNotEmpty(oModel.getMessageCouldHaveFired()))
+		{
+			data.setCouldFireMessage(oModel.getMessageCouldHaveFired());
+		}
+
+		return data;
 	}
 
 
@@ -433,6 +1170,12 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 			{
 				restrictiondata = restrictiondata + MarketplacecommerceservicesConstants.SINGLE_SPACE
 						+ Localization.getLocalizedString("type.ExcludeManufacturersRestriction.name")
+						+ MarketplacecommerceservicesConstants.SINGLE_SPACE;
+			}
+			else if (oModel instanceof PaymentModeSpecificPromotionRestrictionModel)
+			{
+				restrictiondata = restrictiondata + MarketplacecommerceservicesConstants.SINGLE_SPACE
+						+ Localization.getLocalizedString("type.PaymentModeSpecificPromotionRestriction.name")
 						+ MarketplacecommerceservicesConstants.SINGLE_SPACE;
 			}
 
