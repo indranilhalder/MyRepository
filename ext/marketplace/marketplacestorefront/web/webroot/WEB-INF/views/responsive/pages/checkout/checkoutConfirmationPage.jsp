@@ -158,7 +158,7 @@
 					</c:forEach>
 					<c:forEach items="${sellerOrder.pickupOrderGroups}" var="orderGroup">
 						<order:orderPickupDetailsItem order="${sellerOrder}"
-							orderGroup="${orderGroup}" />
+							orderGroup="${orderGroup}"   parentOrder="${orderData}"/>
 					</c:forEach>
 
 					<%-- <div>

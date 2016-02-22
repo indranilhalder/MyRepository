@@ -381,7 +381,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -432,9 +432,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -471,11 +471,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -509,11 +509,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -728,22 +728,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		return isCheckChildCancellable;
 	}
 
-	/**
-	 * @return the mplSellerInformationService
-	 */
-	public MplSellerInformationService getMplSellerInformationService()
-	{
-		return mplSellerInformationService;
-	}
-
-	/**
-	 * @param mplSellerInformationService
-	 *           the mplSellerInformationService to set
-	 */
-	public void setMplSellerInformationService(final MplSellerInformationService mplSellerInformationService)
-	{
-		this.mplSellerInformationService = mplSellerInformationService;
-	}
 
 
 
@@ -767,8 +751,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		return MarketplaceFacadesConstants.STATUS_SUCESS;
 	}
 
-
-
 	@Override
 	public void createCrmTicketUpdatePickDetails(final String orderId)
 	{
@@ -779,45 +761,67 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 			if (orderModel != null)
 			{
-				LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
-
-				customOmsOrderService.upDatePickUpDetails(orderModel);
-
-				final SendTicketRequestData ticket = new SendTicketRequestData();
-				final CustomerData customerData = customerFacade.getCurrentCustomer();
-
-				if (null != customerData)
+				try
 				{
-					ticket.setCustomerID(customerData.getUid());
+					LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
+					customOmsOrderService.upDatePickUpDetails(orderModel);
+
 				}
-				ticket.setSource(MarketplacecommerceservicesConstants.SOURCE);
-				ticket.setOrderId(orderModel.getCode());
-				ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
-				ticket.setAlternateContactName(orderModel.getPickupPersonName());
-				ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
+				catch (final Exception e)
+				{
+					LOG.error("update pickup_person details then ");
 
-				LOG.info(" ****** Before CRM Ticket Creatin *********");
-				ticketCreate.ticketCreationModeltoWsDTO(ticket);
-				LOG.info(" ******* After CRM Ticket Creatin ********");
+				}
+				for (final OrderModel childOrders : orderModel.getChildOrders())
+				{
+					for (final AbstractOrderEntryModel entry : childOrders.getEntries())
+					{
+						if (null != entry
+								&& entry.getMplDeliveryMode().getDeliveryMode().getCode()
+										.equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+						{
+							final SendTicketRequestData ticket = new SendTicketRequestData();
+							final CustomerData customerData = customerFacade.getCurrentCustomer();
+							if (null != customerData)
+							{
+								ticket.setCustomerID(customerData.getUid());
+							}
+							final List<SendTicketLineItemData> lineItemData = new ArrayList<SendTicketLineItemData>();
+							final SendTicketLineItemData reqData = new SendTicketLineItemData();
+							reqData.setLineItemId(entry.getOrderLineId());
+							lineItemData.add(reqData);
+							ticket.setLineItemDataList(lineItemData);
+							ticket.setSource(MarketplacecommerceservicesConstants.SOURCE);
+							ticket.setOrderId(orderModel.getCode());
+							ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+							ticket.setAlternateContactName(orderModel.getPickupPersonName());
+							ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
 
-				LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
-				saveTicketDetailsInCommerce(ticket);
-				LOG.info("************ PickUpDetails Ticket Saved ********");
+							LOG.info(" ****** Before CRM Ticket Creatin *********");
+							ticketCreate.ticketCreationModeltoWsDTO(ticket);
+							LOG.info(" ******* After CRM Ticket Creatin ********");
+
+							LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
+							saveTicketDetailsInCommerce(ticket);
+							LOG.info("************ PickUpDetails Ticket Saved ********");
+						}
+
+					}
+				}
 			}
-
 		}
 		catch (final JAXBException ex)
 		{
 			LOG.error(" >> Exception occured while CRM ticket creation", ex);
 		}
-
 	}
+
 
 
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -837,7 +841,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		final String mainOrderId = mainOrder.getCode();
 		try
 		{
-
 			final List<OrderModel> ordermodel = mainOrder.getChildOrders();
 			for (final OrderModel model : ordermodel)
 			{
@@ -898,24 +901,13 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					}
 				}
 			}
-
-
 		}
 		catch (final Exception e)
 		{
-
 			e.printStackTrace();
 			LOG.error("<<<<<<<<<<<Exception Rasing convert OrderModel to SendTicketRequestData Wto of class>>>>>>>>" + e);
 		}
-
-
-
-
 	}
-
-
-
-
 
 	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)
 	{
@@ -941,39 +933,28 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		if (null != sendTicketRequestData.getTicketType())
 		{
 			ticket.setTicketType(sendTicketRequestData.getTicketType());
-			LOG.debug("ticket create: TicketType>>>>> " + sendTicketRequestData.getTicketType());
 		}
 		if (null != sendTicketRequestData.getRefundType())
 		{
 			ticket.setRefundType(sendTicketRequestData.getRefundType());
-			LOG.debug("ticket create: RefundType>>>>> " + sendTicketRequestData.getRefundType());
-
 		}
 		if (null != sendTicketRequestData.getReturnCategory())
 		{
 			ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
-			LOG.debug("ticket create: ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
-
 		}
 		if (null != sendTicketRequestData.getSource())
 		{
 			ticket.setSource(sendTicketRequestData.getSource());
-			LOG.debug("ticket create: Source>>>>> " + sendTicketRequestData.getSource());
-
 		}
 
 
 		if (null != sendTicketRequestData.getAlternateContactName())
 		{
 			ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
-			LOG.debug("ticket create: AlternateContactName>>>>> " + sendTicketRequestData.getAlternateContactName());
-
 		}
 		if (null != sendTicketRequestData.getAlternatePhoneNo())
 		{
 			ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
-			LOG.debug("ticket create: AlternatePhoneNo>>>>> " + sendTicketRequestData.getAlternatePhoneNo());
-
 		}
 
 		final TicketMasterXMLData ticketXmlData = ticketCreate.ticketCreationModeltoXMLData(sendTicketRequestData);
@@ -992,5 +973,24 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 		modelService.save(ticket);
 	}
+
+
+	/**
+	 * @return the mplSellerInformationService
+	 */
+	public MplSellerInformationService getMplSellerInformationService()
+	{
+		return mplSellerInformationService;
+	}
+
+	/**
+	 * @param mplSellerInformationService
+	 *           the mplSellerInformationService to set
+	 */
+	public void setMplSellerInformationService(final MplSellerInformationService mplSellerInformationService)
+	{
+		this.mplSellerInformationService = mplSellerInformationService;
+	}
+
 
 }
