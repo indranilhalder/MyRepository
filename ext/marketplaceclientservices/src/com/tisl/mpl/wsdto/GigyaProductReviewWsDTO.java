@@ -29,6 +29,7 @@ public class GigyaProductReviewWsDTO implements Comparator<GigyaProductReviewWsD
 	private String rootCategory;
 	private String mediaItems;
 	private String mediaUrl;
+	private String mediaType;
 
 	/**
 	 * @return the rootCategory
@@ -266,6 +267,23 @@ public class GigyaProductReviewWsDTO implements Comparator<GigyaProductReviewWsD
 	public void setMediaUrl(final String mediaUrl)
 	{
 		this.mediaUrl = mediaUrl;
+	}
+
+	/**
+	 * @return the mediaType
+	 */
+	public String getMediaType()
+	{
+		return mediaType;
+	}
+
+	/**
+	 * @param mediaType
+	 *           the mediaType to set
+	 */
+	public void setMediaType(final String mediaType)
+	{
+		this.mediaType = mediaType;
 	}
 
 	/*

@@ -11,10 +11,10 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 
-<cms:pageSlot position="TopHeaderSlot" var="component" element="div"
+<%-- <cms:pageSlot position="TopHeaderSlot" var="component" element="div"
 	class="container">
 	<cms:component component="${component}" />
-</cms:pageSlot>
+</cms:pageSlot> --%>
 <c:if test="${param.source ne null and param.source eq 'App' }">
 	<c:set var="showOnlySiteLogo" value="true"></c:set>
 	<c:set var="hideSecureTransaction" value="true"></c:set>
@@ -124,9 +124,7 @@ function registerUser(eventObject)
 		<c:when test="${empty showOnlySiteLogo }">
 			<div class="banner">
 				<span class="toggle desktop helpmeshopbanner"><p><spring:theme
-						code="header.helpmeshop.howcanwehelpyou.title" /></p></span> <span
-					class="toggle mobile helpmeshopbanner"> <p><spring:theme
-						code="header.helpmeshop.howcanwehelpyou.mobile" /></p></span>
+						code="header.helpmeshop.howcanwehelpyou.title" /></p></span> 
 				<div class="content" id="helpmeshopcontent"></div>
 				<%-- <cms:pageSlot position="HeaderLinks" var="link">
 					<cms:component component="${link}" element="" />
@@ -208,6 +206,15 @@ function registerUser(eventObject)
 				<c:when test="${empty showOnlySiteLogo }">
 					<div class="marketplace">
 						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
+							<cms:component component="${logo}" />
+						</cms:pageSlot>
+						<!-- <div class="mobile-bag bag">
+						TISPRD-32-fix
+							<a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a>
+						</div> -->
+					</div>
+					<div class="marketplace linear-logo">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
 						<div class="mobile-bag bag">

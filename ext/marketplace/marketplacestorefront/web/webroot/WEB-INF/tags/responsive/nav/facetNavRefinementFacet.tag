@@ -12,7 +12,6 @@
 <c:if test="${facetData.code ne 'deptType'}">
 <c:if test="${facetData.code ne 'sellerId'}">
 <c:if test="${facetData.code ne 'allMobilePromotions'}">
-<c:if test="${facetData.code ne 'vouchers'}">
 
 <c:if test="${not empty facetData.values && facetData.code == 'inStockFlag'}">
 
@@ -23,6 +22,7 @@
 </c:if>
 
 <ycommerce:testId code="facetNav_title_${facetData.name}">
+<c:if test="${not empty facetData.values}">
 	<li class="facet js-facet ${facetData.name}">
 		<div class="facet-name js-facet-name">
 		
@@ -93,7 +93,7 @@
 						
 						<c:otherwise>
 							<c:if test="${facetData.multiSelect}">
-								<form action="#" method="get">
+								 <form action="#" method="get"> 
 									<input type="hidden" name="offer" value="${offer}"/>
 									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 									<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -163,8 +163,8 @@
 						
 					
 						<c:if test="${facetData.multiSelect}">
-							<ycommerce:testId code="facetNav_selectForm">
-							<form action="#" method="get">
+							<ycommerce:testId code="facetNav_selectForm"> 
+							 <form action="#" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -233,9 +233,9 @@
 				</div>
 			</c:if>
 		</div>
-	</li>
+		
+	</li> </c:if> 
 			</ycommerce:testId>
-			</c:if>
 			</c:if>
 			</c:if>
 			</c:if>

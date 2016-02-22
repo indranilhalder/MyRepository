@@ -676,7 +676,8 @@ input:focus {
       border: 1px solid transparent;
       margin: 0 -1px -1px -1px; }
       .select-view .select-list li:hover {
-        font-weight: 600; }
+        color: #000;
+        font-weight: 500; }
       @media (max-width: 900px) {
         .select-view .select-list li {
           padding-left: 10px; } }
@@ -971,7 +972,7 @@ h2 {
       content: "";
       display: table; }
   header .content .top {
-    z-index: 100; }
+   /*  z-index: 100; */}
   header .content .left, header .content .right {
     display: inline-block;
     line-height: 50px;
@@ -1139,7 +1140,7 @@ h2 {
                     transition: color 0.15s, background 0.15s; }
           header .content .right > ul > li.bag:hover {
             border-left: 2px solid #f0f4f5;
-            z-index: 2;
+            z-index: 4;
             -webkit-transition: z-index 0s, border 0.3s;
             -moz-transition: z-index 0s, border 0.3s;
             transition: z-index 0s, border 0.3s; }
@@ -1216,7 +1217,7 @@ h2 {
         header .content .right > ul > li.wishlist:hover {
           background: #fafafa; }
           header .content .right > ul > li.wishlist:hover .wishlist-info {
-            z-index: 2;
+            z-index: 10;
             max-height: 1000px;
             -webkit-transition: max-height 0.15s, z-index 0s;
             -moz-transition: max-height 0.15s, z-index 0s;
@@ -1332,7 +1333,7 @@ h2 {
           transition: background 0.15s; }
           header .content .right > ul > li.sign-in:hover .sign-in-info {
             max-height: 1000px;
-            z-index: 2;
+            z-index: 10;
             -webkit-transition: max-height 0.15s, z-index 0s;
             -moz-transition: max-height 0.15s, z-index 0s;
             transition: max-height 0.15s, z-index 0s; }
@@ -8121,7 +8122,7 @@ div.wishlist-content .pagination {
 @media ( min-width : 790px) {
 	.social {
 		padding-left: 0;
-		padding-bottom: 50px;
+		padding-bottom: 15px;
 		text-align: left;
 	}
 	.social h3 {
@@ -8475,7 +8476,7 @@ footer .banner {
 		float: left;
 		width: 33.33%;
 		padding-top: 23px;
-		padding-bottom: 50px;
+		padding-bottom: 5px;
 	}
 	footer>ul>li:first-child h3 {
 		/* font-size: 18px;
@@ -17152,7 +17153,8 @@ font-weight:normal;
       margin: 0 -2px -2px -2px;
       white-space: nowrap;
     	text-overflow: ellipsis;
-  		overflow: hidden;  } 		
+  		overflow: hidden; 
+  		color: #666; } 		
       		
   @media(min-width:791px)		
   {		
@@ -19383,9 +19385,9 @@ header .banner .toggle.mobile {
 
 @media (max-width: 790px)
 {
-header .banner .toggle.desktop {
+/* header .banner .toggle.desktop {
   display: none;
-}
+} */
  .brand-microsite header > .content .bottom .marketplace {
       height: 60px;
  }
@@ -24779,7 +24781,7 @@ div#cartItems.products p{
 	padding: 10px 5px 5px 5px;
 }
 
-.trackorder-dropdown li:first-child {
+.trackorder-dropdown li:nth-of-type(1) {
 	border: none;
 }
 
@@ -24802,6 +24804,7 @@ ul.trackorder-dropdown li > div > h4 {
 }
 .track.trackOrder:hover .trackorder-dropdown{
 display:block;
+z-index:10;
 }
 
 .trackOrder:hover{
@@ -29303,6 +29306,8 @@ footer>ul>li>.toggle>img{
 	width: 50%;
     float: left;
     padding: 0 20px;
+    position: relative;
+    padding-bottom: 60px;
 }
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
@@ -29313,11 +29318,15 @@ footer>ul>li>.toggle>img{
     width: 300px;
     text-decoration: none;
     margin: 0px auto;
-    padding: 13px;
+    padding: 7px;
     line-height: 24px;
     text-transform: uppercase;
     text-align: center;
     letter-spacing: 1.5px;
+    height: 40px;
+    position: absolute;
+         bottom:20px;
+         left: calc(50% - 150px);
 }
 #newAndExclusive a.new_exclusive_viewAll:hover,
 #bestPicks .view-cliq-offers:hover,
@@ -30180,6 +30189,8 @@ header:not(.compact) .content .marketplace.compact{
 }
 #productYouCare .short-info > h3 span:hover,
 #productYouCare .short-info > h3 span:hover:after,
+
+
 #bestPicks .short-info:hover span {
 	color: #a9143c;
 }
@@ -30206,10 +30217,20 @@ form[name='flyOutloginForm'] input::-moz-placeholder {
 form[name='flyOutloginForm'] input:-ms-input-placeholder {
 	line-height: 18px;
 } 
-
+header div.bottom .marketplace.linear-logo {
+		display: none;
+	}
 @media ( max-width : 790px){ 
 	footer>ul>li ul li {
 		line-height: 30px;
+	}
+	
+	header div.bottom .marketplace {
+		display: none;
+	}
+	
+	header div.bottom .marketplace.linear-logo {
+		display: block;
 	}
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img{
@@ -30227,6 +30248,24 @@ height: auto !important;
     margin: 0 auto;
     width: 70%;
     padding-top: 11px;
+}
+
+input#typeOfProduct::-webkit-input-placeholder {
+ 	line-height: 24px;
+}
+input#typeOfProduct::-moz-placeholder {
+ 	line-height: 24px;
+} 
+input#typeOfProduct:-ms-input-placeholder {
+ 	line-height: 24px;
+}
+
+.footwear_left div, .footwear_right div {
+	padding: 0 10px;
+}
+
+.footwear_left img, .footwear_right img {
+	width: 100%;
 }
 /*--------------maincss-----------*/
 .row

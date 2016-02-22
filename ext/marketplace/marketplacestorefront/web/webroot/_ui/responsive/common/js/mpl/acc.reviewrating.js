@@ -19,9 +19,14 @@ if(typeof(arrayrating)!= "undefined"){
 				}
 				$(reviewHeading).html("<input class='inputBox' type='text' name='updateReviewHeading"+indexElement+"' value='"+reviewHeadingText+"'/>");
 				$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
-				if($(".hiddenMediaUrl"+indexElement).val()!= ""){
+				/*if($(".hiddenMediaUrl"+indexElement).val()!= ""){
 					$(reviewMedia).html("<input class='inputBox' type='text' name='updateReviewMedia"+indexElement+"' value='"+$(".hiddenMediaUrl"+indexElement).val()+"'/>");
-				}
+					$(reviewMedia).show();
+				}*/
+				
+				if($("input.hiddenMediaUrl"+indexElement).val()!= ""){
+					$(reviewMedia).html("<input class='inputBox' style='width:100%;' type='text' name='updateReviewMedia"+indexElement+"' value='"+$("input.hiddenMediaUrl"+indexElement).val()+"'/>");
+				}						
 				$(reviewHeading).find('input.inputBox').focus();
 				$(".rating-div"+indexElement).show();
 				$(".rating-div"+indexElement).find("ul").removeClass("rate");
@@ -56,11 +61,10 @@ if(typeof(arrayrating)!= "undefined"){
 				
 				var originalHeading = $(".hiddenReviewHeading"+indexElement).val();
 				var originalComment = $(".hiddenReviewComment"+indexElement).val();
-				var originalUrl = $(".hiddenMediaUrl"+indexElement).val();
 
 				$(reviewHeading).html(originalHeading);
 				$(reviewComment).html(originalComment);
-				$(reviewUrl).html(originalUrl);
+				$(reviewUrl).hide();
 				$(this).parent().hide();
 			}
 			$(".rating-div"+indexElement).hide();
@@ -70,12 +74,13 @@ if(typeof(arrayrating)!= "undefined"){
 		});
 		
 		$("input[name=update]").click(function(){
+			
 			var isValidated = true;
 			var indexElement =  $(this).attr("data-index");
-			//alert("inside update");
 			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
 			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
 			var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
+			var hiddenMediaUrl = $(".hiddenMediaUrl"+indexElement).val()
 			
 			if(updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "")		
 			{		
@@ -93,14 +98,18 @@ if(typeof(arrayrating)!= "undefined"){
 				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
 			    isValidated=false;	
 			}
-			if(updatedMediaUrl == undefined || updatedMediaUrl.replace(/\s/g, '')  == "")		
-			{		
-			    $(".errorUpdateReview"+indexElement).html("<p>Please enter attachment URL. Attachment URL cannot be left blank.</p>");		
-			    isValidated=false;		
-			}else if(updatedMediaUrl.length > 100){
-				$(".errorUpdateReview"+indexElement).html("<p>Attachment URL cannot be greater than 100 charecters.</p>");		
-			    isValidated=false;	
+			if(hiddenMediaUrl!=""){
+				
+				if(updatedMediaUrl == undefined || updatedMediaUrl.replace(/\s/g, '')  == "")		
+				{		
+				    $(".errorUpdateReview"+indexElement).html("<p>Please enter attachment URL. Attachment URL cannot be left blank.</p>");		
+				    isValidated=false;		
+				}else if(updatedMediaUrl.length > 500){
+					$(".errorUpdateReview"+indexElement).html("<p>Attachment URL cannot be greater than 100 charecters.</p>");		
+				    isValidated=false;	
+				}
 			}
+			
 			//TISSTRT-290 fix
 			if((updatedReviewHeading.length > 250) && (updatedCommentTitle.length > 5000))		
 			{		
@@ -212,12 +221,14 @@ if(typeof(arrayrating)!= "undefined"){
 										$("div[data-rating"+indexElement+"=quality]").attr("style","width:"+quality+"%");
 										$("div[data-info-id="+indexElement+"]").show();
 									}
+									$("div[data-rating-all="+indexElement+"]").show();
+									
 								}else if(data.status == "failed"){
 									$("div[data-danger-id="+indexElement+"]").show();
 									if(data.error != ""){
 										console.log(">>> "+data.error);
 										var htmlError = $("div[data-danger-id="+indexElement+"]").html();
-										htmlError = htmlError+"<br><strong><b>Error:</b>"+data.error;
+										htmlError = htmlError+"<br><b>Description:</b>"+data.error;
 										$("div[data-danger-id="+indexElement+"]").html(htmlError);
 										isReload = false;
 									}
@@ -254,6 +265,27 @@ if(typeof(arrayrating)!= "undefined"){
 			}
 		});
 
+		/*Code for Review Page Video and Image Popup Starts*/
+		$(document).on("click",".comment-img img",function(e){
+			$(this).siblings("iframe").attr("scrolling","no")
+			if ($(this).attr("data-type") == "video") {
+				var url = $(this).siblings("iframe").attr("src");
+				$("#videoReviewFrame").show();
+				$("#videoReviewFrame").attr("src",url);
+				$("#videoReviewModal #videoReviewFrame").attr("src",url);
+				$("#videoReviewModal").modal();
+				$("#videoReviewModal").addClass("active");
+			}
+			else {
+				var url = $(this).attr("src");
+				$("#videoReviewFrame").show();
+				$("#videoReviewFrame").attr("src",url);
+				$("#videoReviewModal #videoReviewFrame").attr("src",url);
+				$("#videoReviewModal").modal();
+				$("#videoReviewModal").addClass("active");
+			}
+		});
+		/*Code for Review Page Video and Image Popup Ends*/
 		$(document).on("mouseleave",".rateEdit li",function() {
 			$(this).parent().find("span").removeClass("full");
 		});

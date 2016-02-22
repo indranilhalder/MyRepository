@@ -1547,9 +1547,14 @@
 
 
 	<!-- Tata Cliq Job : Campaign Team -->
+	<bean id="campaignPromoSubService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoSubService">
+	</bean>
+	
 	<bean id="campaignPromoDataService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoDataService">
 		<property name="modelService" ref="modelService" />
+		<property name="campaignPromoSubService" ref="campaignPromoSubService" />
 		<property name="sellerBasedPromotionDao" ref="sellerBasedPromotionDao" />
 	</bean>
 
