@@ -10,9 +10,6 @@
  			}
 		</style> 
 	</head>
-
-
-
 <body>
 	<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;" >
   		<tr>
@@ -43,9 +40,6 @@ Confirmed!<br>
      	<tr>
         	<td bgcolor="#FBFBFB">
         	<table width="598" border="0" cellspacing="0" cellpadding="0">
-          		<tr>
-            		<td width="240" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding:0 10px;">Order Reference No ${ctx.orderReferenceNumber}</td>
-            	</tr>
         	</table>
         	</td>
     	</tr>
@@ -61,7 +55,9 @@ Confirmed!<br>
                 			<table width="572" border="0" cellspacing="0" cellpadding="0">
                   				<tr>
                     				<td height="10"></td>
+                    				
                   				</tr>
+                  				<span  align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding:0 10px; width:100px;background-color: #ddd"><span style="font-size: 22px;color: #A52A2A;">OrderDetails:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order  No : ${ctx.orderReferenceNumber}</span>
      				#set ($shippingCharge=0)
 					#foreach( $childorder in ${ctx.childOrders} )
 							<tr>
@@ -80,7 +76,7 @@ Confirmed!<br>
                     				
                     				<table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
                       				<tr>
-                      				<td width="500" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding:0 10px;">Order  No : $childorder.code</td>
+                      				
                       				</tr>
                       				<tr>
                       					<td>&nbsp;</td>
@@ -88,26 +84,27 @@ Confirmed!<br>
                       					<td>&nbsp;</td>
                       				</tr>
                       				<tr>
-                        			<td width="120" height="55" align="center">Transaction <br>
+                        			<td   style="width: 177px;padding-left: 0px;text-align: center;height:65px;">Transaction <br>
                           				ID</td>
-                        			<td width="130" align="center">Name of<br>
+                        			<td style="width: 115px;padding-left: 27px;">Name of<br>
                           			Product</td>
-                        			<td width="50" align="center">Qty</td>
-                        			<td width="80" align="center">Price</td>
-                        			<td width="120" align="center">COD Charges<br>
+                        			<td style="padding-left: 22px;width: 50px;">Qty</td>
+                        			<td style="padding-left: 18px;">Price</td>
+                        			<td style="padding-left: 23px;text-align: center;">COD Charges<br>
                           			(if any) </td>
-                        			<td width="120" align="center"> Delivery<br>
+                        			<td style="padding-left: 20px;text-align: center;width: 120px;"> Delivery<br>
                           			Mode</td>
                       				</tr>
                       				#set ($srNo=1)
                       				#foreach($entry in ${childorder.entries})
-                      			<tr>
-		                			<td width="120" height="55" align="center" >$entry.orderLineId</td>
-		                			<td width="130" align="center">$entry.product.name</td>
-		                			<td width="50" align="center" >$entry.quantity</td>
-		                			<td width="80" align="center">$entry.netAmountAfterAllDisc</td>
-		                			<td width="120" align="center" >$entry.currDelCharge<br>
+                      			<tr height="50">
+		                			<td style="padding-left: 12px;color: #504B49;" >$entry.orderLineId</td>
+		                			<td style="color: #504B49;text-align:center">$entry.product.name</td>
+		                			<td align="center" style="padding-left: 10px;color: #504B49;" >$entry.quantity</td>
+		                			<td width="80" align="center"style="color: #504B49;">$entry.netAmountAfterAllDisc</td>
+		                			<td width="120" align="center" style="padding-left: 20px;color: #504B49;">$entry.currDelCharge<br>
 		                  			${ctx.math.roundTo(2, $entry.convenienceChargeApportion)}</td>
+		                  			<td style="color: #504B49;padding-left: 24px;text-align: center;">$entry.mplDeliveryMode.deliveryMode.name</td>
 		              			</tr>
                       			#set ($srNo=$srNo+1)
 								#set($shippingCharge=$shippingCharge+$entry.currDelCharge)
@@ -140,7 +137,9 @@ Confirmed!<br>
                         <td height="1" bgcolor="#ececec"></td>
                       </tr>
                       <tr>
+                      #if($ctx.deliveryAddress)
                         <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">${ctx.deliveryAddress}</td>
+                      #end
                       </tr>
                       <tr>
                         <td height="15"></td>
@@ -155,7 +154,18 @@ Confirmed!<br>
                         <td height="1" bgcolor="#ececec"></td>
                       </tr>
                       <tr>
-                        <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">${ctx.storeAddress}</td>
+                      #if($ctx.storeAddress)
+                      #foreach( $store in ${ctx.storeAddress} )
+                        <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">
+                        #if($store.line1)$store.line1#end
+                        #if($store.line2)$store.line2#end
+                        #if($store.landmark)$store.landmark#end
+                        #if($store.city)$store.city#end
+                        #if($store.state)$store.state#end
+                        #if($store.postalcode)$store.postalcode#end
+                        </td>
+                      #end
+                      #end
                       </tr>
                       <tr>
                         <td height="15"></td>

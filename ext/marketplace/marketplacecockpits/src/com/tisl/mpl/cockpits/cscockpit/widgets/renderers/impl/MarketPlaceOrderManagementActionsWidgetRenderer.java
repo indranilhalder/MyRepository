@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
+import de.hybris.platform.core.enums.OrderStatus;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.session.UISessionUtils;
 import de.hybris.platform.cockpit.widgets.Widget;
 import de.hybris.platform.cockpit.widgets.models.impl.DefaultItemWidgetModel;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -34,73 +35,61 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		OrderManagementActionsWidgetRenderer {
 
-	
-	static Logger log = Logger.getLogger(MarketPlaceOrderManagementActionsWidgetRenderer.class.getName());
+	static Logger log = Logger
+			.getLogger(MarketPlaceOrderManagementActionsWidgetRenderer.class
+					.getName());
 	@Autowired
 	private ConfigurationService configurationService;
 
-
-
-	//added
+	// added
 	private CallContextController callContextController;
-	protected CallContextController getCallContextController()
-		{
-	     return callContextController;
-		}
-	   
-	   @Required
-	  public void setCallContextController(CallContextController callContextController)
-	  {
-	    this.callContextController = callContextController;
-	  }
 
-	
-	 public TypedObject getOrder()
-	 /*     */   {
-	 /*  80 */     return getCallContextController().getCurrentOrder();
-	 /*     */   }
-	
-	
+	protected CallContextController getCallContextController() {
+		return callContextController;
+	}
+
+	@Required
+	public void setCallContextController(
+			CallContextController callContextController) {
+		this.callContextController = callContextController;
+	}
+
+	public TypedObject getOrder()
+	/*     */{
+		/* 80 */return getCallContextController().getCurrentOrder();
+		/*     */}
+
 	@Override
 	protected HtmlBasedComponent createContentInternal(
 			Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			HtmlBasedComponent rootContainer) {
-		
-		log.info("hiiiiiiiiiiiiiiiiiiiiii");
+
 		HtmlBasedComponent component = createRequiredButtons(widget,
 				rootContainer);
 
+		if (isUserInRole(configurationService.getConfiguration().getString(
+				"cscockpit.user.group.sendinvcsagentgroup"))) {
+			createButton(widget, (Div) component, "requestInvoice",
+					"csInvoiceRequestCreateWidgetConfig",
+					"invoicerequest-popup", "invoiceRequest",
+					"invoice.request", !isInvoiceAvailable(widget
+							.getWidgetController().getOrder()));
+		}
 
-		
-			if (isUserInRole(configurationService
-					.getConfiguration()
-					.getString(
-					"cscockpit.user.group.sendinvcsagentgroup"))) {
-				createButton(widget, (Div) component, "requestInvoice",
-						"csInvoiceRequestCreateWidgetConfig",
-						"invoicerequest-popup", "invoiceRequest",
-						"invoice.request", !isInvoiceAvailable(widget
-								.getWidgetController().getOrder()));
-			}
+		// Added for CNC button
+		if (isUserInRole(configurationService
+				.getConfiguration()
+				.getString(
+						MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP))) {
 
-		
-						//Added for CNC button
-			if (isUserInRole(configurationService
-					.getConfiguration()
-					.getString(
-							MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_ALTERNATECONTACTCSAGENTGROUP))) {
-					
-					log.info("^^^^^^^^^in new button^^^^^^^^^^^^^^^");
-					createButton(widget, (Div) component, "alternateContactDetails",
-							"csAlternateContactDetailsCreateWidgetConfig",
-			 				"alternateContactDetails-popup", "alternateContactDetails",
-							"alternateContactDetails.request", !isCnCAvailable(widget
-									.getWidgetController().getOrder()));
-				}
-		
-		
-		
-		
+			log.info("^^^^^^^^^in new button^^^^^^^^^^^^^^^");
+			createButton(widget, (Div) component, "alternateContactDetails",
+					"csAlternateContactDetailsCreateWidgetConfig",
+					"alternateContactDetails-popup", "alternateContactDetails",
+					"alternateContactDetails.request", !isCnCAvailable(widget
+							.getWidgetController().getOrder()));
+		}
+
 		if (isUserInRole(configurationService
 				.getConfiguration()
 				.getString(
@@ -110,7 +99,6 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 					"makePayment-popup", "makePayment", "refund.request", false);
 		}
 
-		
 		if (isUserInRole(configurationService.getConfiguration().getString(
 				"cscockpit.user.group.refunddelcsagentgroup"))) {
 
@@ -121,9 +109,6 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		}
 		return component;
 	}
-	
-	
-	
 
 	protected boolean isInvoiceAvailable(TypedObject orderObject) {
 		if (orderObject != null && orderObject.getObject() != null
@@ -137,14 +122,16 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MONTH, thresholdTime);
 			boolean isAfter = creationDate.after(cal.getTime());
-			
+
 			boolean isInvoiceAvaialble = false;
 
 			for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
 				Set<ConsignmentEntryModel> entries = new HashSet<>(
 						entry.getConsignmentEntries());
 				if (CollectionUtils.isNotEmpty(entries)
-						&& MarketplaceCockpitsConstants.validInvoiceStatus.contains(entries.iterator().next().getConsignment().getStatus())) {
+						&& MarketplaceCockpitsConstants.validInvoiceStatus
+								.contains(entries.iterator().next()
+										.getConsignment().getStatus())) {
 					isInvoiceAvaialble = true;
 					break;
 				}
@@ -154,30 +141,77 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		return false;
 	}
 
-	
-		//Added by sana
-		protected boolean isCnCAvailable(TypedObject orderObject) {
-		  AbstractOrderModel orderModel = (AbstractOrderModel) orderObject.getObject();
-		  Boolean isCnCAvailable = Boolean.FALSE;
-			  for (AbstractOrderEntryModel entry : orderModel.getEntries())		
-			  {
-				 if(entry.getMplDeliveryMode() !=null  && entry.getMplDeliveryMode().getDeliveryMode()!=null)
-				 {	
-					 isCnCAvailable= entry.getMplDeliveryMode().getDeliveryMode().getName().equalsIgnoreCase(MarketplaceCockpitsConstants.delNameMap.get("CnC"));		
-					return isCnCAvailable;
-				  }		
-			  } 
-			return false;
-		}
+	// Added for to test whether cnc  product is present or not
 
-	
+	protected boolean isCnCAvailable(TypedObject orderObject) {
+		AbstractOrderModel orderModel = (AbstractOrderModel) orderObject
+				.getObject();
+
+		Boolean isCnCAvailable = Boolean.FALSE;
+		for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
+			if (entry.getMplDeliveryMode() != null
+					&& entry.getMplDeliveryMode().getDeliveryMode() != null) {
+
+				String orderStatus = entry.getOrder().getStatus().getCode();
+				if (entry
+						.getMplDeliveryMode()
+						.getDeliveryMode()
+						.getName()
+						.equalsIgnoreCase(
+								MarketplaceCockpitsConstants.delNameMap
+										.get("CnC"))) {
+
+					isCnCAvailable = true;
+                   
+					if ((entry.getQuantity() <= 0
+							|| orderStatus
+									.equalsIgnoreCase(OrderStatus.DELIVERED
+											.getCode())
+							|| orderStatus
+									.equalsIgnoreCase(OrderStatus.CANCELLATION_INITIATED
+											.getCode())
+							|| orderStatus
+									.equalsIgnoreCase(OrderStatus.CANCELLED
+											.getCode()) || orderStatus
+								.equalsIgnoreCase(OrderStatus.ORDER_CANCELLED
+										.getCode()))) {
+						isCnCAvailable = false;
+
+					}
+
+					else if (orderStatus
+							.equalsIgnoreCase(OrderStatus.CLOSED_ON_RETURN_TO_ORIGIN
+									.getCode())
+							|| orderStatus
+									.equalsIgnoreCase(OrderStatus.ORDER_REJECTED
+											.getCode())
+							|| orderStatus
+									.equalsIgnoreCase(OrderStatus.RETURN_COMPLETED
+											.getCode())
+							|| orderStatus
+									.equalsIgnoreCase(OrderStatus.REFUND_INITIATED
+											.getCode())
+							|| orderStatus
+									.equalsIgnoreCase(OrderStatus.ORDER_COLLECTED
+											.getCode())) {
+						isCnCAvailable = false;
+
+					}
+					else{
+						return isCnCAvailable;
+					}
+				}
+			}
+		}
+		return isCnCAvailable;
+	}
+
 	protected HtmlBasedComponent createRequiredButtons(
 			Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			HtmlBasedComponent rootContainer) {
 		Div component = new Div();
 		component.setSclass("orderManagementActionsWidget");
-		
-		
+
 		if (isUserInRole(configurationService
 				.getConfiguration()
 				.getString(
@@ -193,8 +227,7 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 					"popup.partialCancellationRequestCreate",
 					!(((OrderManagementActionsWidgetController) widget
 							.getWidgetController()).isPartialCancelPossible()));
-			
-		
+
 		}
 
 		if (isUserInRole(configurationService
@@ -204,12 +237,10 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 			createButton(widget, component, "refundOrder",
 					"csRefundRequestCreateWidgetConfig",
 					"csRefundRequestCreateWidget-Popup",
-					"csReturnRequestCreateWidget", 
-					"popup.refundRequestCreate",
+					"csReturnRequestCreateWidget", "popup.refundRequestCreate",
 					!(((OrderManagementActionsWidgetController) widget
 							.getWidgetController()).isRefundPossible()));
-			
-			
+
 		}
 		if (isUserInRole(configurationService
 				.getConfiguration()
@@ -236,10 +267,8 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		return component;
 	}
 
-	
-	
 	private boolean isUserInRole(String groupName) {
-	Set<PrincipalGroupModel> userGroups = UISessionUtils
+		Set<PrincipalGroupModel> userGroups = UISessionUtils
 				.getCurrentSession().getUser().getAllGroups();
 		for (PrincipalGroupModel ug : userGroups) {
 			if (ug.getUid().equalsIgnoreCase(groupName)) {
@@ -249,13 +278,11 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 		return false;
 	}
 
-	
 	@Override
 	protected void handleButtonClickEvent(
 			Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
 			Event event, Div container, String springWidgetName,
 			String popupCode, String cssClass, String popupTitleLabelName) {
-		
 
 		getPopupWidgetHelper()
 				.createPopupWidget(
