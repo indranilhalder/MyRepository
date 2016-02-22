@@ -124,9 +124,7 @@ function registerUser(eventObject)
 		<c:when test="${empty showOnlySiteLogo }">
 			<div class="banner">
 				<span class="toggle desktop helpmeshopbanner"><p><spring:theme
-						code="header.helpmeshop.howcanwehelpyou.title" /></p></span> <span
-					class="toggle mobile helpmeshopbanner"> <p><spring:theme
-						code="header.helpmeshop.howcanwehelpyou.mobile" /></p></span>
+						code="header.helpmeshop.howcanwehelpyou.title" /></p></span> 
 				<div class="content" id="helpmeshopcontent"></div>
 				<%-- <cms:pageSlot position="HeaderLinks" var="link">
 					<cms:component component="${link}" element="" />

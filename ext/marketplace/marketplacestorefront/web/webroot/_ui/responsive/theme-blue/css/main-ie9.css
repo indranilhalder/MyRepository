@@ -2253,9 +2253,9 @@ header > .content .bottom .search form input{
  header.brand-header .content .bottom nav>ul>li>ul>li>ul {
   background-color: #000;
 }
-header .banner .toggle.desktop {
+/* header .banner .toggle.desktop {
   display: none;
-}
+} */
 .brand-microsite header .content .compact-toggle {
   opacity: 1;
 }
