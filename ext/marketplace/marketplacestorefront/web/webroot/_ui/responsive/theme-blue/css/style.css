@@ -972,7 +972,7 @@ h2 {
       content: "";
       display: table; }
   header .content .top {
-    z-index: 100; }
+   /*  z-index: 100; */}
   header .content .left, header .content .right {
     display: inline-block;
     line-height: 50px;
@@ -1140,7 +1140,7 @@ h2 {
                     transition: color 0.15s, background 0.15s; }
           header .content .right > ul > li.bag:hover {
             border-left: 2px solid #f0f4f5;
-            z-index: 2;
+            z-index: 4;
             -webkit-transition: z-index 0s, border 0.3s;
             -moz-transition: z-index 0s, border 0.3s;
             transition: z-index 0s, border 0.3s; }
@@ -8122,7 +8122,7 @@ div.wishlist-content .pagination {
 @media ( min-width : 790px) {
 	.social {
 		padding-left: 0;
-		padding-bottom: 50px;
+		padding-bottom: 15px;
 		text-align: left;
 	}
 	.social h3 {
@@ -8476,7 +8476,7 @@ footer .banner {
 		float: left;
 		width: 33.33%;
 		padding-top: 23px;
-		padding-bottom: 50px;
+		padding-bottom: 5px;
 	}
 	footer>ul>li:first-child h3 {
 		/* font-size: 18px;
@@ -24781,7 +24781,7 @@ div#cartItems.products p{
 	padding: 10px 5px 5px 5px;
 }
 
-.trackorder-dropdown li:first-child {
+.trackorder-dropdown li:nth-of-type(1) {
 	border: none;
 }
 
@@ -24804,6 +24804,7 @@ ul.trackorder-dropdown li > div > h4 {
 }
 .track.trackOrder:hover .trackorder-dropdown{
 display:block;
+z-index:10;
 }
 
 .trackOrder:hover{
@@ -29305,7 +29306,8 @@ footer>ul>li>.toggle>img{
 	width: 50%;
     float: left;
     padding: 0 20px;
-        position: relative;
+    position: relative;
+    padding-bottom: 60px;
 }
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
