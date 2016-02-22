@@ -972,7 +972,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Override
 	public SearchPageData<VoucherDisplayData> getAllClosedCoupons(final CustomerModel customer, final PageableData pageableData)
 	{
-		return convertPageData(getMplCouponService().getClosedVoucher(customer, pageableData), voucherDisplayConverter);
+		return convertPageData(getMplCouponService().getClosedVoucher(customer, pageableData), getVoucherDisplayConverter());
 	}
 
 
@@ -1191,6 +1191,27 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public void setMplVoucherService(final MplVoucherService mplVoucherService)
 	{
 		this.mplVoucherService = mplVoucherService;
+	}
+
+
+
+	/**
+	 * @return the voucherDisplayConverter
+	 */
+	public Converter<VoucherModel, VoucherDisplayData> getVoucherDisplayConverter()
+	{
+		return voucherDisplayConverter;
+	}
+
+
+
+	/**
+	 * @param voucherDisplayConverter
+	 *           the voucherDisplayConverter to set
+	 */
+	public void setVoucherDisplayConverter(final Converter<VoucherModel, VoucherDisplayData> voucherDisplayConverter)
+	{
+		this.voucherDisplayConverter = voucherDisplayConverter;
 	}
 
 

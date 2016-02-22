@@ -1,12 +1,10 @@
 package com.tisl.mpl.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
-import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 
@@ -41,15 +39,11 @@ public class MplCouponController
 	@Resource(name = "mplCouponFacade")
 	private MplCouponFacade mplCouponFacade;
 	@Autowired
-	private VoucherFacade voucherFacade;
-	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Autowired
 	private SessionService sessionService;
 	@Autowired
 	private BaseStoreService baseStoreService;
-	@Autowired
-	private ModelService modelService;
 
 
 	/**
@@ -124,7 +118,6 @@ public class MplCouponController
 		}
 		catch (final VoucherOperationException e)
 		{
-			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 			//Set the data for exception cases
 			data = setRedDataForException(data, cartModel);
 			if (e.getMessage().contains("total price exceeded"))
@@ -241,13 +234,11 @@ public class MplCouponController
 		}
 		catch (final VoucherOperationException e)
 		{
-			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-			//LOG.error("Issue with voucher release " + e.getMessage());
+			LOG.error("Issue with voucher release ", e);
 			data = setRelDataForException(data, cartModel);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			//LOG.error("Issue with voucher release " + ex.getMessage());
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			data = setRelDataForException(data, cartModel);
 		}
@@ -281,7 +272,7 @@ public class MplCouponController
 
 	/**
 	 *
-	 * This method sets data for erroneous cases for voucher release
+	 * This method sets data for erroneous cases for voucher redemption
 	 *
 	 * @param data
 	 * @param cartModel
@@ -316,16 +307,6 @@ public class MplCouponController
 	public void setMplCouponFacade(final MplCouponFacade mplCouponFacade)
 	{
 		this.mplCouponFacade = mplCouponFacade;
-	}
-
-	public VoucherFacade getVoucherFacade()
-	{
-		return voucherFacade;
-	}
-
-	public void setVoucherFacade(final VoucherFacade voucherFacade)
-	{
-		this.voucherFacade = voucherFacade;
 	}
 
 	public MplCheckoutFacade getMplCheckoutFacade()
