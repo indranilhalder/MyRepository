@@ -35,7 +35,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.facades.data.ATSResponseData;
 import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -145,21 +144,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			storeLocationRequestDataList.add(storeLocationRequestData);
 			//call to OMS get the storelocations for given pincode
 			storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
-			if (null != storeLocationResponseDataList && storeLocationResponseDataList.size() > 0)
-			{
-				for (final StoreLocationResponseData data : storeLocationResponseDataList)
-				{
-					LOG.info("USSID:" + data.getUssId());
-					for (final ATSResponseData resData : data.getAts())
-					{
-						LOG.info("StoreId:" + resData.getStoreId());
-						LOG.info("Quantity:" + resData.getQuantity());
-					}
-					LOG.info("------------------------------");
-				}
-
-				// code is required to get locations for each store
-			}
+			return storeLocationResponseDataList;
 		}
 		catch (final Exception e)
 		{
@@ -182,8 +167,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			final Double configurableRadius)
 	{
 		LOG.debug("sellerUssId:" + sellerUssId);
+		final String pincodeSellerId = sellerUssId.substring(0, 6);
 		final StoreLocationRequestData storeLocationRequestData = new StoreLocationRequestData();
-		final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, sellerUssId);
+		final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, pincodeSellerId);
 		LOG.debug("StoreList size is :" + storeList.size());
 		if (null != storeList && storeList.size() > 0)
 		{
