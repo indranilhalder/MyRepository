@@ -86,13 +86,6 @@ public interface MplCouponFacade
 	 */
 	void releaseVoucherInCheckout(CartModel cart) throws JaloPriceFactoryException, CalculationException;
 
-	/**
-	 * @param customer
-	 * @return CouponHistoryStoreDTO
-	 * @throws VoucherOperationException
-	 */
-	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer) throws VoucherOperationException;
-
 
 	/**
 	 * @param discountList
@@ -148,5 +141,15 @@ public interface MplCouponFacade
 	 * @return SearchPageData<CouponHistoryData>
 	 */
 	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(CustomerModel customer, PageableData pageableData);
+
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return
+	 * @throws VoucherOperationException
+	 */
+	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer, PageableData pageableData)
+			throws VoucherOperationException;
 
 }

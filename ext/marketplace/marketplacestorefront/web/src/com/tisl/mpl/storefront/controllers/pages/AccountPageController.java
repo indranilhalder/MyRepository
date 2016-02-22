@@ -1134,17 +1134,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 			/* getting all voucher transactions along with the order placed in a DTO */
-			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
 
 			final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
 			final PageableData pageableDataVoucherHistory = createPageableData(page, pageSizeVoucherHistory, sortCode, showMode);
-			final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = mplCouponFacade.getVoucherHistoryTransactions(
-					customer, pageableDataVoucherHistory);
+			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer, pageableDataVoucherHistory);
 
-			populateModelForCoupon(model, searchPageDataVoucherHistory, showMode);
-
-			final List<CouponHistoryData> couponOrderDataDTOList = searchPageDataVoucherHistory.getResults();
+			final List<CouponHistoryData> couponOrderDataDTOList = couponHistoryStoreDTO.getCouponHistoryDataList();
+			//
+			//			if (null != searchPageDataVoucherHistory)
+			//			{
+			//				populateModelForCoupon(model, searchPageDataVoucherHistory, showMode);
+			//			}
+			//
+			//			final List<CouponHistoryData> couponOrderDataDTOList = searchPageDataVoucherHistory.getResults();
 
 			for (final CouponHistoryData couponHistoryData : couponOrderDataDTOList)
 			{
@@ -1154,10 +1157,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 				LOG.debug(couponHistoryData.getRedeemedDate());
 			}
 
-			if (null != couponHistoryStoreDTO)
-			{
-				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDataList();
-			}
+
+			couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDataList();
+
 
 			if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_VOUCHER))
 			{
