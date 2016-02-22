@@ -24781,7 +24781,7 @@ div#cartItems.products p{
 	padding: 10px 5px 5px 5px;
 }
 
-.trackorder-dropdown li:first-child {
+.trackorder-dropdown li:nth-of-type(1) {
 	border: none;
 }
 
@@ -24804,6 +24804,7 @@ ul.trackorder-dropdown li > div > h4 {
 }
 .track.trackOrder:hover .trackorder-dropdown{
 display:block;
+z-index:10;
 }
 
 .trackOrder:hover{
