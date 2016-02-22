@@ -9,8 +9,6 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.core.model.user.UserGroupModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -49,6 +47,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
+import com.tisl.mpl.marketplacecommerceservices.service.CouponRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.sns.push.service.MplSNSMobilePushService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -74,6 +73,8 @@ public class NotificationServiceImpl implements NotificationService
 	private VoucherModelService voucherModelService;
 	@Autowired
 	private ConfigurationService configurationService;
+	@Resource(name = "couponRestrictionService")
+	private CouponRestrictionService couponRestrictionService;
 
 	public ConfigurationService getConfigurationService()
 	{
@@ -546,45 +547,8 @@ public class NotificationServiceImpl implements NotificationService
 	public void saveToVoucherStatusNotification(final VoucherModel voucher)
 	{
 		final Boolean isRead = Boolean.FALSE;
-		List<ProductModel> productAssociated = new ArrayList<ProductModel>();
-		List<CategoryModel> categoryAssociated = new ArrayList<CategoryModel>();
 		String voucherCode = "";
 		String voucherIndentifier = "";
-		Date voucherStartDate = null;
-		Date voucherEndDate = null;
-		final Set<RestrictionModel> restrictionList = voucher.getRestrictions();
-
-		final List<PrincipalModel> userList = new ArrayList<PrincipalModel>();
-		boolean userRestrExists = false;
-		boolean dateRestrExists = false;
-		UserRestrictionModel userRestrObj = null;
-
-		for (final RestrictionModel restrictionModel : restrictionList)
-		{
-			if (restrictionModel instanceof UserRestrictionModel)
-			{
-				userRestrObj = (UserRestrictionModel) restrictionModel;
-				userList.addAll((userRestrObj).getUsers());
-				userRestrExists = true;
-			}
-			else if (restrictionModel instanceof DateRestrictionModel)
-			{
-				voucherStartDate = ((DateRestrictionModel) restrictionModel).getStartDate();
-				voucherEndDate = ((DateRestrictionModel) restrictionModel).getEndDate();
-				dateRestrExists = true;
-			}
-			else if (restrictionModel instanceof ProductCategoryRestrictionModel)
-			{
-				final ProductCategoryRestrictionModel categoryRestriction = (ProductCategoryRestrictionModel) restrictionModel;
-				categoryAssociated = new ArrayList<CategoryModel>(categoryRestriction.getCategories());
-			}
-			else if (restrictionModel instanceof ProductRestrictionModel)
-			{
-				final ProductRestrictionModel productRestriction = (ProductRestrictionModel) restrictionModel;
-				productAssociated = new ArrayList<ProductModel>(productRestriction.getProducts());
-			}
-		}
-
 		VoucherStatusNotificationModel voucherStatus = null;
 		final String customerStatus = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
@@ -595,70 +559,56 @@ public class NotificationServiceImpl implements NotificationService
 			voucherCode = promoVoucher.getVoucherCode();
 			voucherIndentifier = promoVoucher.getCode();
 			LOG.debug("voucher identifier :" + voucherIndentifier);
-		}
-
-		final List<String> userUidList = new ArrayList<String>();
-
-		if (dateRestrExists && userRestrExists && userRestrObj != null && userRestrObj.getPositive().booleanValue())
-		{
+			final DateRestrictionModel dateRestrObj = couponRestrictionService.getDateRestriction(voucher);
+			final UserRestrictionModel userRestrObj = couponRestrictionService.getUserRestriction(voucher);
+			final List<PrincipalModel> userList = userRestrObj != null ? couponRestrictionService
+					.getRestrictionCustomerList(userRestrObj) : new ArrayList<PrincipalModel>();
 			final List<String> restrUserUidList = new ArrayList<String>();
 
-			for (final PrincipalModel user : userList)
+			if (dateRestrObj != null && userRestrObj != null && userRestrObj.getPositive().booleanValue()
+					&& CollectionUtils.isNotEmpty(userList))
 			{
-				if (user instanceof UserGroupModel)
-				{
-					final UserGroupModel userGroup = (UserGroupModel) user;
-					final List<PrincipalModel> grpMemberList = new ArrayList<PrincipalModel>(userGroup.getMembers());
-
-					for (final PrincipalModel grpMember : grpMemberList)
-					{
-						restrUserUidList.add(grpMember.getUid());
-					}
-				}
-				else if (user instanceof UserModel)
+				for (final PrincipalModel user : userList)
 				{
 					restrUserUidList.add(user.getUid());
 				}
-			}
 
-			if (null != voucherIndentifier && null != voucherCode)
+				if (null != voucherIndentifier && null != voucherCode)
+				{
+					final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
+
+					if (existingVoucherList.isEmpty())
+					{
+						voucherStatus = modelService.create(VoucherStatusNotificationModel.class);
+					}
+					else
+					{
+						voucherStatus = existingVoucherList.get(0);
+					}
+
+					//Setting values in model
+					voucherStatus.setVoucherIdentifier(voucherIndentifier);
+					voucherStatus.setVoucherCode(voucherCode);
+					voucherStatus.setCustomerUidList(restrUserUidList);
+					voucherStatus.setVoucherStartDate(dateRestrObj.getStartDate());
+					voucherStatus.setVoucherEndDate(dateRestrObj.getEndDate());
+					voucherStatus.setIsRead(isRead);
+					voucherStatus.setCustomerStatus(customerStatus);
+					modelService.save(voucherStatus);
+				}
+			}
+			else if (dateRestrObj != null
+					&& (userRestrObj == null || !userRestrObj.getPositive().booleanValue() || CollectionUtils.isEmpty(userList)))
 			{
 				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
-
-				if (existingVoucherList.isEmpty())
-				{
-					voucherStatus = modelService.create(VoucherStatusNotificationModel.class);
-				}
-				else
+				if (!existingVoucherList.isEmpty())
 				{
 					voucherStatus = existingVoucherList.get(0);
+					modelService.remove(voucherStatus);
 				}
-
-				userUidList.addAll(restrUserUidList);
-
-				//Setting values in model
-				voucherStatus.setVoucherIdentifier(voucherIndentifier);
-				voucherStatus.setVoucherCode(voucherCode);
-				voucherStatus.setCustomerUidList(userUidList);
-				voucherStatus.setVoucherStartDate(voucherStartDate);
-				voucherStatus.setVoucherEndDate(voucherEndDate);
-				voucherStatus.setIsRead(isRead);
-				voucherStatus.setCustomerStatus(customerStatus);
-				voucherStatus.setCategoryAssociated(categoryAssociated);
-				voucherStatus.setProductAssociated(productAssociated);
-				modelService.save(voucherStatus);
 			}
-		}
-		else if (dateRestrExists && (!userRestrExists || !userRestrObj.getPositive().booleanValue()))
-		{
-			final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
-			if (!existingVoucherList.isEmpty())
-			{
-				voucherStatus = existingVoucherList.get(0);
-				modelService.remove(voucherStatus);
-			}
-		}
 
+		}
 	}
 
 

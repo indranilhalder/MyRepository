@@ -12,8 +12,6 @@ import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -76,10 +74,9 @@ public interface MplCouponFacade
 
 	/**
 	 * @param cart
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
+	 * @throws VoucherOperationException
 	 */
-	void releaseVoucherInCheckout(CartModel cart) throws JaloPriceFactoryException, CalculationException;
+	void releaseVoucherInCheckout(CartModel cart) throws VoucherOperationException;
 
 	/**
 	 * @param customer
