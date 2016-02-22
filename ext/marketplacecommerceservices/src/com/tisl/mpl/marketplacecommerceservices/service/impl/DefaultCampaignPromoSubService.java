@@ -1430,6 +1430,7 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		data.setStartDate(formatter.format(promotion.getStartDate()));
 		data.setEndDate(formatter.format(promotion.getEndDate()));
 		data.setUrl(populateOfferURL(promotion));
+		data.setChannel(populateOfferChannel(promotion));
 
 		if (StringUtils.isNotEmpty(promotion.getTitle()))
 		{
@@ -1444,11 +1445,6 @@ public class DefaultCampaignPromoSubService implements CampaignPromoSubService
 		if (null != promotion.getEnabled())
 		{
 			data.setEnabled(promotion.getEnabled().toString());
-		}
-
-		if (CollectionUtils.isNotEmpty(promotion.getChannel()))
-		{
-			data.setChannel(populateOfferChannel(promotion));
 		}
 
 		if (CollectionUtils.isNotEmpty(promotion.getRestrictions()))
