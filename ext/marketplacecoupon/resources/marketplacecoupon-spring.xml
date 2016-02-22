@@ -132,13 +132,13 @@
    	</bean>	
    	
    	<!-- CouponRestrictionSaveInterceptor starts -->
-	<!-- <bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor" />
+	<bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor" />
 
 	<bean id="CouponProdRestSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
 		<property name="interceptor" ref="CouponProdRestSaveInterceptor" />
 		<property name="typeCode" value="ProductRestriction" />
-	</bean> -->
+	</bean>
 	<!-- CouponSaveInterceptor ends -->			
 
 </beans>

@@ -193,7 +193,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				getMplDefaultCalculationService().calculateTotals(cartModel, false);
 				getModelService().save(cartModel);
 
-				discountData.setCouponDiscount(discountUtility.createPrice(cartModel,
+				discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel,
 						Double.valueOf(lastVoucher.getMaxDiscountValue().doubleValue())));
 			}
 			else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0) //When discount value is greater than cart totals after applying promotion
@@ -248,7 +248,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					}
 					else
 					{
-						discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(voucherCalcValue)));
+						discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(voucherCalcValue)));
 					}
 				}
 				else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries are empty
@@ -258,7 +258,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				}
 				else
 				{
-					discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(voucherCalcValue)));
+					discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(voucherCalcValue)));
 				}
 			}
 		}
@@ -315,7 +315,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 			String msg = null;
 
-			discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(0)));
+			discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(0)));
 			if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
 			{
 				msg = "not_applicable";
@@ -846,5 +846,31 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	{
 		this.mplCommerceCartCalculationStrategy = mplCommerceCartCalculationStrategy;
 	}
+
+
+
+
+	/**
+	 * @return the discountUtility
+	 */
+	public DiscountUtility getDiscountUtility()
+	{
+		return discountUtility;
+	}
+
+
+
+
+	/**
+	 * @param discountUtility
+	 *           the discountUtility to set
+	 */
+	public void setDiscountUtility(final DiscountUtility discountUtility)
+	{
+		this.discountUtility = discountUtility;
+	}
+
+
+
 
 }
