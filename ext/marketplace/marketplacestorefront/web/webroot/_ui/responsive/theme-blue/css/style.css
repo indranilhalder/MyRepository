@@ -19385,9 +19385,9 @@ header .banner .toggle.mobile {
 
 @media (max-width: 790px)
 {
-header .banner .toggle.desktop {
+/* header .banner .toggle.desktop {
   display: none;
-}
+} */
  .brand-microsite header > .content .bottom .marketplace {
       height: 60px;
  }
