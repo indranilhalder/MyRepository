@@ -240,8 +240,7 @@
 					</c:if>
 				</div>
 			</div> --%>
-			<!--  <div class="stock-status">Item In Stock</div> -->
-		
+			<!--  <div class="stock-status">Item In Stock</div> -->	
 		</li>
 	</c:if>
 </c:forEach>
