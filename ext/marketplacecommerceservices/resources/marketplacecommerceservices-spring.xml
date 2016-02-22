@@ -1554,4 +1554,9 @@
 	</bean>
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
+	
+	<!-- Coupon restriction service, added for getting restrictions for coupon -->
+	<bean id="couponRestrictionService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCouponRestrictionServiceImpl">		
+	</bean>
 </beans>
