@@ -9,7 +9,6 @@ import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commercefacades.voucher.impl.DefaultVoucherFacade;
-import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
@@ -21,12 +20,9 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
@@ -71,9 +67,7 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
-import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
-import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 
 
 /**
@@ -89,10 +83,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
 	@Autowired
-	private ModelService modelService;
-	@Autowired
-	private MplCommerceCartCalculationStrategy calculationStrategy;
-	@Autowired
 	private VoucherFacade voucherFacade;
 	@Autowired
 	private MplCouponService mplCouponService;
@@ -101,15 +91,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Autowired
 	private VoucherModelService voucherModelService;
 	@Autowired
-	private CartService cartService;
-	@Autowired
 	private DefaultVoucherService defaultVoucherService;
 	@Autowired
 	private DefaultVoucherFacade defaultVoucherFacade;
-	@Autowired
-	private CommerceCartService commerceCartService;
-	@Autowired
-	private MplDefaultCalculationService mplDefaultCalculationService;
 	@Autowired
 	private MplVoucherService mplVoucherService;
 
@@ -595,11 +579,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * This method releases the voucher already applied in the cart automatically
 	 *
 	 * @param cart
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
+	 * @throws VoucherOperationException
 	 */
 	@Override
-	public void releaseVoucherInCheckout(final CartModel cart) throws JaloPriceFactoryException, CalculationException
+	public void releaseVoucherInCheckout(final CartModel cart) throws VoucherOperationException
 	{
 		final List<DiscountModel> discountList = cart.getDiscounts();
 
@@ -609,13 +592,24 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			try
 			{
 				releaseVoucher(couponCode, cart);
+				recalculateCartForCoupon(cart);
 			}
 			catch (final VoucherOperationException e)
 			{
-				LOG.error("Error while releasing voucher with message " + e.getMessage());
+				LOG.error("VoucherOperationException", e);
+				throw e;
+			}
+			catch (final EtailNonBusinessExceptions e)
+			{
+				LOG.error("EtailNonBusinessExceptions", e);
+				throw e;
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Exception", e);
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 			}
 
-			recalculateCartForCoupon(cart);
 		}
 	}
 
@@ -963,7 +957,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Override
 	public SearchPageData<VoucherDisplayData> getAllClosedCoupons(final CustomerModel customer, final PageableData pageableData)
 	{
-		return convertPageData(getMplCouponService().getClosedVoucher(customer, pageableData), voucherDisplayConverter);
+		return convertPageData(getMplCouponService().getClosedVoucher(customer, pageableData), getVoucherDisplayConverter());
 	}
 
 
@@ -1016,30 +1010,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	}
 
 
-	public CartService getCartService()
-	{
-		return cartService;
-	}
-
-
-	public void setCartService(final CartService cartService)
-	{
-		this.cartService = cartService;
-	}
-
-
-	public CommerceCartService getCommerceCartService()
-	{
-		return commerceCartService;
-	}
-
-
-	public void setCommerceCartService(final CommerceCartService commerceCartService)
-	{
-		this.commerceCartService = commerceCartService;
-	}
-
-
 	public VoucherService getVoucherService()
 	{
 		return voucherService;
@@ -1073,29 +1043,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		this.mplCheckoutFacade = mplCheckoutFacade;
 	}
 
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
-
-
-	public MplCommerceCartCalculationStrategy getCalculationStrategy()
-	{
-		return calculationStrategy;
-	}
-
-
-
-	public void setCalculationStrategy(final MplCommerceCartCalculationStrategy calculationStrategy)
-	{
-		this.calculationStrategy = calculationStrategy;
-	}
-
 
 	public VoucherFacade getVoucherFacade()
 	{
@@ -1113,30 +1060,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		return mplCouponService;
 	}
-
-
-
-
-	/**
-	 * @return the mplDefaultCalculationService
-	 */
-	public MplDefaultCalculationService getMplDefaultCalculationService()
-	{
-		return mplDefaultCalculationService;
-	}
-
-
-
-
-	/**
-	 * @param mplDefaultCalculationService
-	 *           the mplDefaultCalculationService to set
-	 */
-	public void setMplDefaultCalculationService(final MplDefaultCalculationService mplDefaultCalculationService)
-	{
-		this.mplDefaultCalculationService = mplDefaultCalculationService;
-	}
-
 
 
 
@@ -1182,6 +1105,27 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public void setMplVoucherService(final MplVoucherService mplVoucherService)
 	{
 		this.mplVoucherService = mplVoucherService;
+	}
+
+
+
+	/**
+	 * @return the voucherDisplayConverter
+	 */
+	public Converter<VoucherModel, VoucherDisplayData> getVoucherDisplayConverter()
+	{
+		return voucherDisplayConverter;
+	}
+
+
+
+	/**
+	 * @param voucherDisplayConverter
+	 *           the voucherDisplayConverter to set
+	 */
+	public void setVoucherDisplayConverter(final Converter<VoucherModel, VoucherDisplayData> voucherDisplayConverter)
+	{
+		this.voucherDisplayConverter = voucherDisplayConverter;
 	}
 
 

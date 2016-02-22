@@ -133,7 +133,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -215,7 +215,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -229,7 +229,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -615,13 +615,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
 			{
 				if ((subOrderEntryModel.getQualifyingCount().intValue() > 0 || subOrderEntryModel.getFreeCount().intValue() > 0)
-						&& subOrderEntryModel.getIsBOGOapplied().booleanValue())
+						&& subOrderEntryModel.getIsBOGOapplied().booleanValue()
+						&& !masterSet.contains(subOrderEntryModel.getProductPromoCode())) //SONAR collapsible if
 				{
-					if (!masterSet.contains(subOrderEntryModel.getProductPromoCode()))
-					{
-						masterSet.add(subOrderEntryModel.getProductPromoCode());
-						innerList.add(subOrderEntryModel.getProductPromoCode());
-					}
+					masterSet.add(subOrderEntryModel.getProductPromoCode());
+					innerList.add(subOrderEntryModel.getProductPromoCode());
 				}
 			}
 		}
@@ -630,9 +628,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
+	 *
 	 * @param orderList
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions

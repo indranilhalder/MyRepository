@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -48,7 +50,7 @@ public class CouponProdRestSaveInterceptor implements PrepareInterceptor<Product
 	public void onPrepare(final ProductRestrictionModel paramMODEL, final InterceptorContext paramInterceptorContext)
 			throws InterceptorException
 	{
-		if (null != paramMODEL && null != paramMODEL.getProductCodeList() && !paramMODEL.getProductCodeList().isEmpty())
+		if (null != paramMODEL && StringUtils.isNotEmpty(paramMODEL.getProductCodeList()))
 		{
 			final String productCodes = paramMODEL.getProductCodeList();
 			final List<ProductModel> newProductModelList = new ArrayList<ProductModel>();
@@ -70,7 +72,7 @@ public class CouponProdRestSaveInterceptor implements PrepareInterceptor<Product
 
 				final List<ProductModel> finalProductList = new ArrayList<ProductModel>();
 				final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
-				if (null != existingProductList && !existingProductList.isEmpty())
+				if (CollectionUtils.isNotEmpty(existingProductList))
 				{
 					finalProductList.addAll(existingProductList);
 				}
