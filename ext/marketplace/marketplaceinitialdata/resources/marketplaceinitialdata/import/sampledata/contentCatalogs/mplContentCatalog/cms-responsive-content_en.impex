@@ -19,10 +19,12 @@ $storefrontContextRoot=$config-storefrontContextRoot
 # Site Logo
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
 ;;sitelogo.png;sitelogo.png;$siteResource/images/logo/sitelogo.png;image/png;Tata Cliq;
+;;LinearSitelogo.png;LinearSitelogo.png;$siteResource/images/logo/LinearSitelogo.png;image/png;Tata Cliq;
 
 # Site Logo Component
 UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
 ;;SiteLogoComponent;sitelogo.png
+;;ResponsiveSiteLogoComponent;LinearSitelogo.png
 
 #Brands You Love Media
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
@@ -193,8 +195,8 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
 ;;GoogleImageComponent;Google Image Component;GoogleImageComponent;"https://plus.google.com";gplus.png
 ;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook.png
-;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"https://www.play.google.com";apple.png
-;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"http://www.apple.com";android.png
+;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"https://www.play.google.com";android.png
+;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"http://www.apple.com";apple.png
 
 
 # CMS Footer Component

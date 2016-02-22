@@ -88,18 +88,18 @@ public class MplSearchResponseSubCategoriesPopulator<FACET_SEARCH_CONFIG_TYPE, I
 					}
 				}
 
-				if (currentFacetName.contains(MplConstants.LEVEL_THREE) && currentFacetName.contains(MplConstants.FORWARD_SLASH)
+				if (currentFacetName.contains(MplConstants.LEVEL_THREE) && currentFacetName.contains(MplConstants.PIPE)
 						&& constructDeptHierarchy)
 				{
 
 					final StringBuffer departmentHierarchyWithCount = new StringBuffer(MplConstants.EMPTY_STRING);
 					int departmentRankingValue = 0;
-					for (final String facet : currentFacetName.split(MplConstants.FORWARD_SLASH))
+					for (final String facet : currentFacetName.split("\\|"))
 					{
 
 						if (facet.length() > 0 && !facet.contains(MplConstants.LEVEL_ZERO))
 						{
-							departmentHierarchyWithCount.append(MplConstants.FORWARD_SLASH).append(facet);
+							departmentHierarchyWithCount.append(MplConstants.PIPE).append(facet);
 							if (facet.contains(MplConstants.LEVEL_ONE))
 							{
 								final String[] facetItems = facet.split(MplConstants.COLON);
