@@ -322,7 +322,7 @@
 																<%-- <div class="comment-img">${comment.mediaItems}</div> --%>
 								<div class="comment-img">
 								<c:if test="${comment.mediaType eq 'video'}">
-								<img style="width:70px !important;" src="${commonResourcePath}/images/video-play.png" class="hiddenMediaUrl${count.index}" data-type="${comment.mediaType}" data-videosrc="${comment.mediaUrl}"/> <!--For Video  -->
+								<img style="width:70px !important;" src="${commonResourcePath}/images/video-play.png" class="hiddenMediaUrl${count.index} vidCount" data-type="${comment.mediaType}" data-videosrc="${comment.mediaUrl}&autoplay=false"/> <!--For Video  -->
 								</c:if>
 							<%-- <c:if test="${not empty comment.mediaType eq 'image'}">	</c:if>  --%><!--For Image  -->
 								${comment.mediaItems}
@@ -555,6 +555,7 @@
 	</div>
 </template:page>
 <script>
+//$("#videoReviewFrame")[0].src += "&autoplay=0";
 $(".next a").click(function(){
 	var pageNo = $(this).closest(".pagination").find("li.active a").text();
 	if(pageNo != ""){
@@ -570,10 +571,15 @@ $(".next a").click(function(){
 		}
 });
 
-function closing() {
-	$("#videoReviewModal").modal('hide');
-	$("#videoReviewFrame")[0].src += "&autoplay=0";
-}
+ function closing() {
+	window.location.reload();
+} 
+//  $(window).load(function(){
+			$('.vidCount').each(function(a){
+				$("iframe")[a].src += "&autoplay=false";
+			});
+//  });
+
 $(".prev a").click(function(){
 	var pageNo = $(this).closest(".pagination").find("li.active a").text();
 	pageNo = parseInt(pageNo);
@@ -598,6 +604,6 @@ $(".prev a").click(function(){
     transition: font-weight 0.15s;
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img iframe{
-display:none;
+display: none;
 }
 </style>

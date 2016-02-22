@@ -243,7 +243,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 				dataType : "json",
 				beforeSend: function(){
 					$(".home-brands-you-love-carousel").css("margin-bottom","120px");
-					$("#brandsYouLove").append("<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
+					$("#brandsYouLove").append("<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
                 },
 				url : ACC.config.encodedContextPath
 						+ "/getBrandsYouLoveContent",
@@ -301,7 +301,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					}
 
 					defaultHtml += "</div>";
-					$('#brandsYouLove .loaderDiv').remove();
+					
 					$(".home-brands-you-love-carousel").css("margin-bottom","20px");
 					
 					$('#brandsYouLove').append(defaultHtml);
@@ -309,6 +309,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					window.localStorage.setItem("brandContent-" + id,
 							encodeURI(defaultHtml));
 
+				},
+				complete: function(){
+					$('#brandsYouLove .loaderDiv').remove();
 				},
 				error : function() {
 					$('#brandsYouLove .loaderDiv').remove();
@@ -646,10 +649,21 @@ function getNewAndExclusiveAjaxCall(){
 		});
 
 			setTimeout(function(){
-				if($(window).width() > 773) {
+				/*if($(window).width() > 773) {
 					$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
+				}*/
+				//alert($('#newAndExclusive').height() +"|||"+$('#stayQued').height())
+				if ($(window).width() > 773) {
+					if ($('#newAndExclusive').height() > $('#stayQued').height()) {
+						$('#stayQued').css('min-height',
+								$('#newAndExclusive').outerHeight() + 'px');
+					} else {
+						$('#newAndExclusive').css('min-height',
+								$('#stayQued').outerHeight() + 'px');
+					}
 				}
-			},2000);
+				
+			},2500);
 		}
 	});
 }
