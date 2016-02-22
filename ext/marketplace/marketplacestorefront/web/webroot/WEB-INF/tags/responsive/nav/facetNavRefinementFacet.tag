@@ -22,7 +22,7 @@
 </c:if>
 
 <ycommerce:testId code="facetNav_title_${facetData.name}">
-<c:if test="${not empty facetData.values}">
+<c:if test="${facetData.values.size()>0}">
 	<li class="facet js-facet ${facetData.name}">
 		<div class="facet-name js-facet-name">
 		
