@@ -308,15 +308,16 @@ xpopup
     width: 70%!important;
 }
 
-
- 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-width : 320px) and (max-width : 480px) {
-#deliveryradioul{
+#deliveryradioul, .checkout-table{
 	width: 300px!important;
 	height: 200px!important;
 }
 }
+
+
+
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (min-width : 321px) {
@@ -332,7 +333,7 @@ xpopup
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) {
 
-	#deliveryradioul{
+	#deliveryradioul, .checkout-table{
 	width: 300px!important;
 	height: 200px!important;
 	
@@ -344,7 +345,7 @@ xpopup
 /* iPads (portrait and landscape) ----------- */
 @media only screen and (min-width : 768px) and (max-width : 1024px) {
 
-	#deliveryradioul{
+	#deliveryradioul, .checkout-table{
 	width: 580px!important;
 	height: 200px!important;
 }
@@ -358,7 +359,7 @@ xpopup
 Desktops and laptops ----------- */
 @media only screen  and (min-width : 1224px) {
 
-#deliveryradioul{
+#deliveryradioul, .checkout-table{
 	width: 920px !important;
 	
 	
@@ -370,7 +371,7 @@ Desktops and laptops ----------- */
 /* Large screens ----------- */
 @media only screen  and (min-width : 1824px) {
 
-#deliveryradioul{
+#deliveryradioul, .checkout-table{
 	width: 1300px!important;
 	
 	
@@ -6890,6 +6891,8 @@ text-transform: uppercase;
             transition: color 0.3s; }
           .cart.wrapper .product-block li.item > ul > li.delivery li.methodHome:before, .confirmation .product-block li.item > ul > li.delivery li.methodHome:before {
             color: #3f90e4; }
+            .cart.wrapper .product-block li.item > ul > li.delivery li.methodClick:before, .confirmation .product-block li.item > ul > li.delivery li.methodHome:before {
+            color: #FF0000; }
           .cart.wrapper .product-block li.item > ul > li.delivery li.express-delivery.checked span, .cart.wrapper .product-block li.item > ul > li.delivery li.express-delivery.checked input[type="radio"] + label, .cart.wrapper .product-block li.item > ul > li.delivery li.express-delivery.checked:after, .confirmation .product-block li.item > ul > li.delivery li.express.checked span, .confirmation .product-block li.item > ul > li.delivery li.express.checked input[type="radio"] + label, .confirmation .product-block li.item > ul > li.delivery li.express.checked:after {
             color: #ff2c43;
             -webkit-transition: color 0.3s;
@@ -25895,10 +25898,10 @@ margin-top:10px;
 		font-weight:normal;
 	}
 	.checkout.wrapper .product-block li.header > ul li.delivery, .checkout.wrapper .product-block li.item > ul li.delivery {
-		width:100%;
+		width:100% !important;
 	}
 	 .checkout.wrapper .product-block li.item > ul li:first-child {
-		width:100%;
+		width:100% !important;
 	}
 	.checkout.wrapper .product-block li.header > ul li:first-child{
 	width:45%;

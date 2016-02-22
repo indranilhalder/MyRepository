@@ -381,7 +381,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -432,9 +432,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -471,11 +471,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -509,11 +509,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -751,8 +751,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		return MarketplaceFacadesConstants.STATUS_SUCESS;
 	}
 
-
-
 	@Override
 	public void createCrmTicketUpdatePickDetails(final String orderId)
 	{
@@ -763,7 +761,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 			if (orderModel != null)
 			{
-
 				try
 				{
 					LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
@@ -817,7 +814,99 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			LOG.error(" >> Exception occured while CRM ticket creation", ex);
 		}
+	}
 
+
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
+	 */
+	@Override
+	public void createcrmTicketForCockpit(final OrderModel mainOrder, final String costomerId, final String source)
+
+	{
+		/* final OrderModel orderModel = null; */
+		try
+		{
+			customOmsOrderService.upDatePickUpDetails(mainOrder);
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("Excepton at OMS Calling  >>>>>" + e);
+		}
+
+		final String mainOrderId = mainOrder.getCode();
+		try
+		{
+			final List<OrderModel> ordermodel = mainOrder.getChildOrders();
+			for (final OrderModel model : ordermodel)
+			{
+				final String subOrderId = model.getCode();
+				final List<AbstractOrderEntryModel> entries = model.getEntries();
+				for (final AbstractOrderEntryModel entry : entries)
+				{
+					final String orderStatus = entry.getOrder().getStatus().getCode();
+					if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+							&& entry.getQuantity().intValue() > 0
+							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_DELIVERED)
+							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_SUCCESSFUL)
+							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_COMPLETED))
+
+					{
+
+						final SendTicketRequestData ticket = new SendTicketRequestData();
+
+						final List<SendTicketLineItemData> lineItemData = new ArrayList<SendTicketLineItemData>();
+						final SendTicketLineItemData reqData = new SendTicketLineItemData();
+						reqData.setLineItemId(entry.getOrderLineId());
+						lineItemData.add(reqData);
+						ticket.setLineItemDataList(lineItemData);
+						if (null != entry.getOrderLineId())
+						{
+							ticket.setOrderId(mainOrderId);
+						}
+						if (null != subOrderId)
+						{
+							ticket.setSubOrderId(subOrderId);
+						}
+						if (null != costomerId)
+						{
+							ticket.setCustomerID(costomerId);
+						}
+						if (null != source)
+						{
+							ticket.setSource(source);
+						}
+
+						ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+
+						if (null != mainOrder.getPickupPersonName())
+						{
+							ticket.setAlternateContactName(mainOrder.getPickupPersonName());
+						}
+						if (null != mainOrder.getPickupPersonMobile())
+						{
+							ticket.setAlternatePhoneNo(mainOrder.getPickupPersonMobile());
+						}
+
+						ticketCreate.ticketCreationModeltoWsDTO(ticket);
+
+						LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
+						saveTicketDetailsInCommerce(ticket);
+						LOG.info("************ PickUpDetails Ticket Saved ********");
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			LOG.error("<<<<<<<<<<<Exception Rasing convert OrderModel to SendTicketRequestData Wto of class>>>>>>>>" + e);
+		}
 	}
 
 	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)

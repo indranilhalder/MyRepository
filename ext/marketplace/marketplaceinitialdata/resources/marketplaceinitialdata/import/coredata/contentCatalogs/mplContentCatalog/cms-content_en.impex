@@ -79,11 +79,11 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
  ###########PDP Email
  ;mpl_Email_PDP_Body;"Send Invoice Email Body";$emailResource/email-PDPBody.vm
  #PickUp Person Order Collected
-;mpl_Email_Order_CollectedByPerson_Subject;"Order Collected From Store Email Subject";$emailSource/email-orderCollectedByPersonSubject.vm
-;mpl_Email_Order_CollectedByPerson_Body;"Order Collected From Store Email Body";$emailSourceemail-orderCollectedByPersonBody.vm
+;mpl_Email_Order_CollectedByPerson_Subject;"Order Collected From Store Email Subject";$emailResource/email-orderCollectedByPersonSubject.vm
+;mpl_Email_Order_CollectedByPerson_Body;"Order Collected From Store Email Body";$emailResource/email-orderCollectedByPersonBody.vm
 ## Order Refund credit
- ;mpl_Email_Order_RefundCredited_Subject;"Order Collected From Store Email Subject";$emailSource/email-orderRefundCreditedSubject.vm
- ;mpl_Email_Order_RefundCredited_Body;"Order Collected From Store Email Body";$emailSource/email-orderRefundCreditedBody.vm
+ ;mpl_Email_Order_RefundCredited_Subject;"Order Collected From Store Email Subject";$emailResource/email-orderRefundCreditedSubject.vm
+ ;mpl_Email_Order_RefundCredited_Body;"Order Collected From Store Email Body";$emailResource/email-orderRefundCreditedBody.vm
 
 
 # Email Pages

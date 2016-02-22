@@ -528,20 +528,38 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws EtailNonBusinessExceptions
 	{
 		List<PinCodeResponseData> pinCodeResponseData = null;
+		String configurableRadius = null;
 		final List<PincodeServiceData> pincodeServiceReqDataList = new ArrayList<PincodeServiceData>();
-		for (final OrderEntryData entryData : cartData.getEntries())
-   	{
-			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
-   
-   		final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
-   		LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
-   		final LocationDTO dto = new LocationDTO();
-   		dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-   		dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-   		final Location myLocation = new LocationDtoWrapper(dto);
-   		LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-   		LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
 
+		final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
+		final LocationDTO dto = new LocationDTO();
+		Location myLocation = null;
+
+		if (null != pinCodeModelObj)
+		{
+			try
+			{
+				configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+				LOG.debug("configurableRadius is:" + configurableRadius);
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				myLocation = new LocationDtoWrapper(dto);
+				LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+				LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+			}
+			catch (final Exception e)
+			{
+				LOG.error("configurableRadius values is empty please add radius property in properties file ");
+			}
+		}
+		else
+		{
+			return pinCodeResponseData;
+		}
+
+
+		for (final OrderEntryData entryData : cartData.getEntries())
+   		{
 			
 			if (!entryData.isGiveAway())
 			{
@@ -1251,7 +1269,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 									if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
 											.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD)) || (selectedDeliveryMode
 											.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
-											.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED))))
+											.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED))) || ((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
+													.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
 									{
 										deliveryModeAvaiableInResponse = true;
 									}
@@ -1266,7 +1285,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 										if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
 												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD)) || (selectedDeliveryMode
 												.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
-												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)))
+												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)) || ((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
+														.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC)))) 
 												&& StringUtils.isNotEmpty(deliveryDetailsData.getInventory())
 												&& cartEntry.getQuantity().longValue() > Long.parseLong(deliveryDetailsData.getInventory()))
 										{

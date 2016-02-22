@@ -334,7 +334,22 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 							}
 							storelocreqObj.setStoreId(storeLocationList);
 						}
-
+						if (null != storeLocationRequestDataList.get(i).getSellerId())
+						{
+							storelocreqObj.setSellerID(storeLocationRequestDataList.get(i).getSellerId());
+						}
+						if (null != storeLocationRequestDataList.get(i).getFulfillmentType())
+						{
+							storelocreqObj.setFulfillmentType(storeLocationRequestDataList.get(i).getFulfillmentType());
+						}
+						if (null != storeLocationRequestDataList.get(i).getTransportMode())
+						{
+							storelocreqObj.setTransportMode(storeLocationRequestDataList.get(i).getTransportMode());
+						}
+						if (storeLocationRequestDataList.get(i).getPrice() > 0.0)
+						{
+							storelocreqObj.setPrice(storeLocationRequestDataList.get(i).getPrice());
+						}
 						storeLocatorList.add(storelocreqObj);
 					}
 				}
