@@ -408,7 +408,7 @@
 																value="${entry.deliveryPointOfService.address}" />
 																<li class="item delivered first">
 																	<div class="item-header">
-															<c:set var="storeId" value="${pos.id}" />
+															<c:set var="storeId" value="${pos.address.id}" />
 															
 													<h3>${entryCount-HD_ED_Count} Product(s)-Collect
 																In-Store</h3> 
@@ -465,7 +465,6 @@
 											
 														<%-- <div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div>  --%>
 														&nbsp; &nbsp;
-														<c:if test="${entry.transactionId ne 'null'}"></c:if>
 														<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 														<c:if test="${editButton eq 'enable'}">
 														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
