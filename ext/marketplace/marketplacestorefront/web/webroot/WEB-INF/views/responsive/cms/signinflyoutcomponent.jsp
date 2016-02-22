@@ -99,10 +99,10 @@
 							
 							
 							<%--  <li class="header-SignInShare"><spring:theme
-									code="header.flyout.credits" /></li>
+									code="header.flyout.credits" /></li>	--%>
 
 						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li> --%>
+									code="header.flyout.coupons" /></a></li> 
 							 
 							<li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li>
@@ -152,10 +152,10 @@
 										code="header.flyout.myInterest" /></a></li>
 							
 					<%-- 							<li class="header-SignInShare"><spring:theme
-									code="header.flyout.credits" /></li>
+									code="header.flyout.credits" /></li>--%>
 
 						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-									code="header.flyout.coupons" /></a></li> --%>
+									code="header.flyout.coupons" /></a></li> 
 									
 							<li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li>

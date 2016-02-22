@@ -32,15 +32,15 @@
 		<li id="lnMyInterest"><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 					code="header.flyout.recommendations" /></a></li>
 	</ul>
-	<%-- <ul>
-		<li class="header-SignInShare">
+	 <ul>
+		<%--<li class="header-SignInShare">
 			<h3>
 				<spring:theme code="header.flyout.credits" />
 			</h3>
-		</li>
+		</li>--%>
 		<li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 					code="header.flyout.coupons" /></a></li>
-	</ul> --%>
+	</ul> 
 	<ul>
 		<li id="shareHead">
 			<h3>
