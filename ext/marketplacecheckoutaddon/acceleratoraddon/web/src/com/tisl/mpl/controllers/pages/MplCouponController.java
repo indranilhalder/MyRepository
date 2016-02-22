@@ -5,10 +5,7 @@ import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
@@ -30,6 +27,7 @@ import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 @Controller
@@ -61,56 +59,74 @@ public class MplCouponController
 	 * @param paymentMode
 	 * @return VoucherDiscountData
 	 * @throws EtailNonBusinessExceptions
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
-	 * @throws JaloSecurityException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
 	@RequestMapping(value = "/redeem", method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
-			final String bankNameSelected) throws EtailNonBusinessExceptions, JaloPriceFactoryException, CalculationException,
-			NumberFormatException, JaloInvalidParameterException, JaloSecurityException
+			final String bankNameSelected)
 	{
-		LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
-		final CartModel cartModel = getCartService().getSessionCart();
-		//		cartModel.setCouponErrorMsg("");
-		//		modelService.save(cartModel);
-
-
-		LOG.debug("The bank selected is  ::: " + bankNameSelected);
-		getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
-		//
-		//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
-		//		if (StringUtils.isEmpty(bankNameSelected))
-		//		{
-		//			getSessionService().setAttribute("bank", bankNameSelected);
-		//		}
-		//		else
-		//		{
-		//			for (final BankModel bank : bankList)
-		//			{
-		//				if (bank.getBankName().equalsIgnoreCase(bankNameSelected))
-		//				{
-		//					//setting the bank in session to be used for Promotion
-		//					getSessionService().setAttribute("bank", bank);
-		//					break;
-		//				}
-		//			}
-		//		}
-
-		final boolean redeem = true;
-		boolean couponRedStatus = false;
 		VoucherDiscountData data = new VoucherDiscountData();
-
+		final CartModel cartModel = getCartService().getSessionCart();
 		try
 		{
+			final StringBuilder sb = new StringBuilder();
+			LOG.debug(sb.append("Step 1:::The coupon code entered by the customer is :::").append(couponCode)
+					.append("------The bank selected is  ::: ").append(bankNameSelected));
+			getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
+			//
+			//	Commented-----to be implemented in R2 later
+			//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
+			//		if (StringUtils.isEmpty(bankNameSelected))
+			//		{
+			//			getSessionService().setAttribute("bank", bankNameSelected);
+			//		}
+			//		else
+			//		{
+			//			for (final BankModel bank : bankList)
+			//			{
+			//				if (bank.getBankName().equalsIgnoreCase(bankNameSelected))
+			//				{
+			//					//setting the bank in session to be used for Promotion
+			//					getSessionService().setAttribute("bank", bank);
+			//					break;
+			//				}
+			//			}
+			//		}
+
+			final boolean redeem = true;
+			boolean couponRedStatus = false;
+
+			//Apply the voucher
 			couponRedStatus = getMplCouponFacade().applyVoucher(couponCode, cartModel);
+
+			LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
+
+			//Calculate and set data attributes
+			data = getMplCouponFacade().calculateValues(cartModel, couponRedStatus, redeem);
+
+			final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+			final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
+			if (null != paymentInfo)
+			{
+				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
+				{
+					if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+					{
+						updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, updatedPaymentInfo);
+					}
+				}
+			}
+			getSessionService().removeAttribute("paymentModeForPromotion");
+			//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 		}
 		catch (final VoucherOperationException e)
 		{
-			LOG.error("Issue with voucher redeem " + e.getMessage());
+			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			//Set the data for exception cases
+			data = setRedDataForException(data, cartModel);
 			if (e.getMessage().contains("total price exceeded"))
 			{
 				data.setRedeemErrorMsg("Price_exceeded");
@@ -143,30 +159,21 @@ public class MplCouponController
 			{
 				data.setRedeemErrorMsg("User_Invalid");
 			}
-			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
-			data.setCouponRedeemed(false);
-			return data;
 		}
-
-		LOG.debug("Step 20:::Coupon Redemption Status is:::" + couponRedStatus);
-
-		data = getMplCouponFacade().calculateValues(cartModel, couponRedStatus, redeem);
-
-		final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
-		final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
-		if (null != paymentInfo)
+		catch (final EtailNonBusinessExceptions e)
 		{
-			for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
-			{
-				if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
-				{
-					updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
-					getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, updatedPaymentInfo);
-				}
-			}
+			//Set the data for exception cases
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			data = setRedDataForException(data, cartModel);
+			data.setRedeemErrorMsg("Issue");
 		}
-		getSessionService().removeAttribute("paymentModeForPromotion");
-		//getSessionService().removeAttribute("bank");
+		catch (final Exception e)
+		{
+			//Set the data for exception cases
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			data = setRedDataForException(data, cartModel);
+			data.setRedeemErrorMsg("Issue");
+		}
 
 		return data;
 	}
@@ -178,71 +185,115 @@ public class MplCouponController
 	 * @param couponCode
 	 * @return VoucherDiscountData
 	 * @throws EtailNonBusinessExceptions
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
+	 *
 	 */
 	@RequestMapping(value = "/release", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode) throws EtailNonBusinessExceptions,
-			JaloPriceFactoryException, CalculationException
+	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode)
 	{
-		LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
-		final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
-		if (null != paymentInfo)
-		{
-			for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
-			{
-				if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
-				{
-					getSessionService().setAttribute("paymentModeForPromotion", entry.getKey());
-				}
-			}
-		}
 		final CartModel cartModel = getCartService().getSessionCart();
-		boolean couponRelStatus = false;
-		final boolean redeem = false;
-
+		VoucherDiscountData data = new VoucherDiscountData();
 		try
 		{
-			getMplCouponFacade().releaseVoucher(couponCode, cartModel);
-			couponRelStatus = true;
-		}
-		catch (final VoucherOperationException e)
-		{
-			LOG.error("Issue with voucher release " + e.getMessage());
-			final VoucherDiscountData data = new VoucherDiscountData();
-			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
-			data.setRedeemErrorMsg("Release Issue");
-			data.setCouponReleased(false);
-			return data;
-		}
-
-		getMplCouponFacade().recalculateCartForCoupon(cartModel);
-		LOG.debug("Coupon Release Status is:::" + couponRelStatus);
-
-		VoucherDiscountData data = new VoucherDiscountData();
-		if (couponRelStatus)
-		{
-			data = getMplCouponFacade().calculateValues(cartModel, couponRelStatus, redeem);
-
-			//final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
-			final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
+			LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
+			final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
 			if (null != paymentInfo)
 			{
 				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
 				{
 					if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
 					{
-						updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
-						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, updatedPaymentInfo);
+						getSessionService().setAttribute("paymentModeForPromotion", entry.getKey());
 					}
 				}
 			}
+			boolean couponRelStatus = false;
+			final boolean redeem = false;
+
+			//Release the coupon
+			getMplCouponFacade().releaseVoucher(couponCode, cartModel);
+			couponRelStatus = true;
+
+			//Recalculate cart after releasing coupon
+			getMplCouponFacade().recalculateCartForCoupon(cartModel);
+			LOG.debug("Coupon Release Status is:::" + couponRelStatus);
+
+			if (couponRelStatus)
+			{
+				data = getMplCouponFacade().calculateValues(cartModel, couponRelStatus, redeem);
+
+				//final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
+				final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
+				if (null != paymentInfo)
+				{
+					for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
+					{
+						if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+						{
+							updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
+							getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, updatedPaymentInfo);
+						}
+					}
+				}
+			}
+
+			getSessionService().removeAttribute("paymentModeForPromotion");
 		}
-
-		getSessionService().removeAttribute("paymentModeForPromotion");
-
+		catch (final VoucherOperationException e)
+		{
+			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+			//LOG.error("Issue with voucher release " + e.getMessage());
+			data = setRelDataForException(data, cartModel);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			//LOG.error("Issue with voucher release " + ex.getMessage());
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			data = setRelDataForException(data, cartModel);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			data = setRelDataForException(data, cartModel);
+		}
 		return data;
+	}
+
+
+	/**
+	 *
+	 * This method sets data for erroneous cases for voucher release
+	 *
+	 * @param data
+	 * @param cartModel
+	 * @return VoucherDiscountData
+	 */
+	private VoucherDiscountData setRelDataForException(final VoucherDiscountData data, final CartModel cartModel)
+	{
+		final VoucherDiscountData errorData = data;
+		errorData.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+		errorData.setRedeemErrorMsg("Release Issue");
+		errorData.setCouponReleased(false);
+
+		return errorData;
+	}
+
+
+	/**
+	 *
+	 * This method sets data for erroneous cases for voucher release
+	 *
+	 * @param data
+	 * @param cartModel
+	 * @return VoucherDiscountData
+	 */
+	private VoucherDiscountData setRedDataForException(final VoucherDiscountData data, final CartModel cartModel)
+	{
+		final VoucherDiscountData errorData = data;
+		errorData.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+		errorData.setCouponRedeemed(false);
+
+		return errorData;
 	}
 
 

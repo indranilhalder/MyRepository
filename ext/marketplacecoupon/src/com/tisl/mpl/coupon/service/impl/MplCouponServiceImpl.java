@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.coupon.dao.MplCouponDao;
@@ -30,7 +29,6 @@ import com.tisl.mpl.util.VoucherDiscountComparator;
  */
 public class MplCouponServiceImpl implements MplCouponService
 {
-	private static final Logger LOG = Logger.getLogger(MplCouponServiceImpl.class);
 	@Autowired
 	private MplCouponDao mplCouponDao;
 
@@ -55,7 +53,6 @@ public class MplCouponServiceImpl implements MplCouponService
 	@Override
 	public List<VoucherDisplayData> getSortedVoucher(final List<VoucherDisplayData> voucherDataList)
 	{
-		LOG.debug("Inside Sorted Voucher Service Impl");
 		Collections.sort(voucherDataList, new VoucherDiscountComparator());
 		return voucherDataList;
 	}

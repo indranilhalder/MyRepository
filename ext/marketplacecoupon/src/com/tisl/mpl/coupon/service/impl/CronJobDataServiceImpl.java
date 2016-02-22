@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.coupon.service.CronJobDataService;
@@ -83,7 +84,7 @@ public class CronJobDataServiceImpl implements CronJobDataService
 			if (null != oCusModel.getOrders())
 			{
 				final ArrayList<OrderModel> orderList = new ArrayList<OrderModel>(oCusModel.getOrders());
-				if (!orderList.isEmpty())
+				if (CollectionUtils.isNotEmpty(orderList))
 				{
 					Collections.sort(orderList, new LatestOrderModelCompare());
 
@@ -93,13 +94,10 @@ public class CronJobDataServiceImpl implements CronJobDataService
 					final Date lastOrderDate = latestOrder.getDate();
 
 					if (CouponUtilityMethods.doDateValidation(startDate, endDate, lastOrderDate)
-							&& null != latestOrder.getTotalPrice())
+							&& null != latestOrder.getTotalPrice()
+							&& latestOrder.getTotalPrice().doubleValue() > specifiedAmount.doubleValue())
 					{
-						final Double amount = latestOrder.getTotalPrice();
-						if (amount.doubleValue() > specifiedAmount.doubleValue())
-						{
-							flag = true;
-						}
+						flag = true;
 					}
 				}
 			}
@@ -125,20 +123,10 @@ public class CronJobDataServiceImpl implements CronJobDataService
 			final Date restrictionEndDate, final int noOfDays)
 	{
 		final Date currentDate = new Date();
-		boolean flag = false;
-		if (null != oCusModel.getCreationtime())
-		{
-			final Date userCreationTime = oCusModel.getCreationtime();
-
-			if (CouponUtilityMethods.doDateValidation(restrictionStartDate, restrictionEndDate, userCreationTime)
-					&& oCusModel.getOrders() != null
-					&& oCusModel.getOrders().isEmpty()
-					&& (noOfDays == 0 || CouponUtilityMethods.noOfDaysCalculatorBetweenDates(userCreationTime, currentDate) >= noOfDays))
-			{
-				flag = true;
-			}
-		}
-		return flag;
+		return ((null != oCusModel.getCreationtime()
+				&& CouponUtilityMethods.doDateValidation(restrictionStartDate, restrictionEndDate, oCusModel.getCreationtime())
+				&& oCusModel.getOrders() != null && oCusModel.getOrders().isEmpty() && (noOfDays == 0 || CouponUtilityMethods
+				.noOfDaysCalculatorBetweenDates(oCusModel.getCreationtime(), currentDate) >= noOfDays)) ? true : false);
 	}
 
 
@@ -155,32 +143,26 @@ public class CronJobDataServiceImpl implements CronJobDataService
 	public boolean cartNotShoppedVoucherDetails(final CustomerModel oCusModel, final int noOfDays)
 	{
 		boolean flag = false;
+		final ArrayList<OrderModel> orderList = new ArrayList<OrderModel>(oCusModel.getOrders());
 
 		if (noOfDays == 0)
 		{
 			LOG.debug("No. of Days is 0. Please input No. of Days");
 		}
-		else
+		else if (CollectionUtils.isNotEmpty(orderList))
 		{
 			final Date currentDate = new Date();
 
-			ArrayList<OrderModel> orderList = null;
+			Collections.sort(orderList, new LatestOrderModelCompare());
+			final Date lastOrderDate = orderList.get(0).getDate();
+			final int noOfInactiveDays = CouponUtilityMethods.noOfDaysCalculatorBetweenDates(currentDate, lastOrderDate);
 
-			if (null != oCusModel.getOrders() && !oCusModel.getOrders().isEmpty())
+			if (noOfInactiveDays >= noOfDays)
 			{
-				orderList = new ArrayList<OrderModel>(oCusModel.getOrders());
-				Collections.sort(orderList, new LatestOrderModelCompare());
-				final Date lastOrderDate = orderList.get(0).getDate();
-				final int noOfInactiveDays = CouponUtilityMethods.noOfDaysCalculatorBetweenDates(currentDate, lastOrderDate);
-
-				if (noOfInactiveDays >= noOfDays)
-				{
-					flag = true;
-				}
-
+				flag = true;
 			}
-		}
 
+		}
 
 		return flag;
 	}
@@ -204,10 +186,10 @@ public class CronJobDataServiceImpl implements CronJobDataService
 			final boolean isForPayment, final boolean isGreater, final double cartValue)
 	{
 		boolean flag = false;
+		final ArrayList<CartModel> orderList = new ArrayList<CartModel>(oCusModel.getCarts());
 
-		if (null != oCusModel.getCarts() && !oCusModel.getCarts().isEmpty())
+		if (CollectionUtils.isNotEmpty(orderList))
 		{
-			final ArrayList<CartModel> orderList = new ArrayList<CartModel>(oCusModel.getCarts());
 			for (final CartModel cart : orderList)
 			{
 				if (CouponUtilityMethods.doDateValidation(startDate, endDate, cart.getCreationtime()))

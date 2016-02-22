@@ -54,11 +54,16 @@ public class MplCouponDaoImpl implements MplCouponDao
 	@Override
 	public List<VoucherModel> findVoucher()
 	{
-		final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
-
-		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-
-		return getFlexibleSearchService().<VoucherModel> search(query).getResult();
+		try
+		{
+			final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			return getFlexibleSearchService().<VoucherModel> search(query).getResult();
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 	public FlexibleSearchService getFlexibleSearchService()
@@ -183,4 +188,5 @@ public class MplCouponDaoImpl implements MplCouponDao
 		result.setQuery(query);
 		return result;
 	}
+
 }

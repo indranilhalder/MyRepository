@@ -21,7 +21,6 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String EXTENSIONNAME = "marketplacecoupon";
 
 	public static final String VOUCHERWITHINDATEQUERY = "select {d.voucher} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
-	//public static final String VOUCHERWITHINDATEQUERY = "select {pk} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
 	public static final String COUPONCODE = "couponCode".intern();
 	public static final String COUPONVALUE = "couponValue".intern();
 	public static final String ZEROPOINTZEROONE = "0.01".intern();

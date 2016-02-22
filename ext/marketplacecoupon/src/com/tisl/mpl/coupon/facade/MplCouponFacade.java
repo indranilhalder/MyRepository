@@ -13,7 +13,6 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -24,6 +23,7 @@ import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
 /**
@@ -62,21 +62,17 @@ public interface MplCouponFacade
 	 * @param cartModel
 	 * @return boolean
 	 * @throws VoucherOperationException
-	 * @throws CalculationException
-	 * @throws JaloSecurityException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
-	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, CalculationException,
-			NumberFormatException, JaloInvalidParameterException, JaloSecurityException;
+	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
 	/**
 	 * @param cartModel
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
+	 *
 	 */
-	void recalculateCartForCoupon(CartModel cartModel) throws JaloPriceFactoryException, CalculationException;
+	void recalculateCartForCoupon(CartModel cartModel) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -118,10 +114,12 @@ public interface MplCouponFacade
 
 
 	/**
+	 *
 	 * @param voucher
 	 * @param cartModel
 	 * @param voucherCode
 	 * @param applicableOrderEntryList
+	 * @throws EtailNonBusinessExceptions
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList);
