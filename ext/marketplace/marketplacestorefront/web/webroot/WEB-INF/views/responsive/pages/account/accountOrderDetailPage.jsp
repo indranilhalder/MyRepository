@@ -842,7 +842,7 @@
 											<!-- For RTO handling -->
 											<c:forEach items="${shippingStatus}" var="productStatus"
 												varStatus="loop">
-												<c:if test="${productStatus.responseCode eq 'DELIVERED'}">
+												<c:if test="${productStatus.responseCode eq 'DELIVERED' or currentStatusMap[entry.orderLineId] eq 'ORDER_COLLECTED'}">
 													<c:set var="productDelivered" value="1"></c:set>
 												</c:if>
 											</c:forEach>
@@ -1173,6 +1173,7 @@
 
 																		<c:if
 																			test="${productStatus.responseCode ne 'DELIVERED'}">
+																			<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 																			<div id="track-more-info">
 																				<p class="active">
 																					<span class="view-more-consignment"
@@ -1187,6 +1188,7 @@
 																			<div
 																				id="shippingStatusRecord${entry.orderLineId}_${loop.index}"
 																				class="view-more-consignment-data"></div>
+																		</c:if>
 																		</c:if>
 
 
