@@ -114,19 +114,9 @@
      <!-- Coupon Helper Class -->
 	<bean id="mplCouponHelper" class="com.tisl.mpl.helper.MplCouponHelper" />
 	
-<!-- 	<bean id="couponMailJob" class="com.tisl.mpl.coupon.job.CouponMailJob" autowire="byName"/> -->
-	
-	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" autowire="byName"/>
+<!-- 	<bean id="couponMailJob" class="com.tisl.mpl.coupon.job.CouponMailJob" autowire="byName"/> -->	
 
-	<!-- CouponSaveInterceptor starts -->
-	<bean id="CouponSaveInterceptor" class="com.tisl.mpl.interceptor.CouponSaveInterceptor" />
-
-	<bean id="CouponSaveInterceptorMapping"
-		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
-		<property name="interceptor" ref="CouponSaveInterceptor" />
-		<property name="typeCode" value="Voucher" />
-	</bean>
-	<!-- CouponSaveInterceptor ends -->
+	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" autowire="byName"/>	
 	
 	<!-- Tata Cliq Job : Campaign Team -->
 	<bean id="campaignVoucherDataService"
@@ -139,6 +129,16 @@
 	<!-- Tata Cliq : For Campaign Team   -->
    	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob"
    		autowire="byName" >
-   	</bean>
-						
+   	</bean>	
+   	
+   	<!-- CouponRestrictionSaveInterceptor starts -->
+	<bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor" />
+
+	<bean id="CouponProdRestSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="CouponProdRestSaveInterceptor" />
+		<property name="typeCode" value="ProductRestriction" />
+	</bean>
+	<!-- CouponSaveInterceptor ends -->			
+
 </beans>

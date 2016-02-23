@@ -21,7 +21,6 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String EXTENSIONNAME = "marketplacecoupon";
 
 	public static final String VOUCHERWITHINDATEQUERY = "select {d.voucher} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
-	//public static final String VOUCHERWITHINDATEQUERY = "select {pk} from {DateRestriction as d} where sysdate>={d.startdate} and sysdate<={d.enddate}";
 	public static final String COUPONCODE = "couponCode".intern();
 	public static final String COUPONVALUE = "couponValue".intern();
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
@@ -43,7 +42,7 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String CAMPAIGN_MULTIDATA_SEPERATOR = "|".intern();
 	public static final String CAMPAIGN_FILE_LOCATION = "campaign.voucher.csv.path".intern();
 	public static final String CAMPAIGN_FILE_NAME = "campaign_Voucher".intern();
-	public static final String CAMPAIGN_HEADER = "IDENTIFIER,NAME,PROMOTION_TEXT,VOUCHER_CODE,VALUE,CURRENCY,REDEEM_QUANTITY,REDEEM_QUANTITY_USER,MAX_DISCOUNT,STARTDATE,ENDDATE,PRODUCTS,CATEGORIES,USERGROUP,USER"
+	public static final String CAMPAIGN_HEADER = "IDENTIFIER,NAME,PROMOTION_TEXT,VOUCHER_CODE,VALUE,CURRENCY,REDEEM_QUANTITY,REDEEM_QUANTITY_USER,MAX_DISCOUNT,STARTDATE,ENDDATE,PRODUCTS,FOR_SELECTED_PRODUCTS,CATEGORIES,FOR_SELECTED_CATEGORIES,USERGROUP,USER,FOR_SELECTED_USER/USERGROUP"
 			.intern();
 
 	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();

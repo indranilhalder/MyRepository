@@ -93,7 +93,7 @@
 						
 						<c:otherwise>
 							<c:if test="${facetData.multiSelect}">
-								<form action="#" method="get">
+								<form action="${facetValueQueryUrl}" method="get">
 									<input type="hidden" name="offer" value="${offer}"/>
 									<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 									<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -164,7 +164,7 @@
 					
 						<c:if test="${facetData.multiSelect}">
 							<ycommerce:testId code="facetNav_selectForm">
-							<form action="#" method="get">
+						<form action="${facetValueQueryUrl}" method="get">
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>

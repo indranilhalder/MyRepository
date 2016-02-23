@@ -85,6 +85,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DMY_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DMY_DATE_FORMAT_INT = "yyyyMMdd";
 	public static final String COUPONS_DATE_FORMAT = "MMM dd, YYYY";
+	public static final String COUPONS_TXN_DATE_FORMAT = "MM";
 	public static final String TRUE = "true";
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
@@ -672,6 +673,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0014 = "E0014";
 	public static final String E0015 = "E0015";
 	public static final String E0016 = "E0016";
+	public static final String E0017 = "E0017";
+	public static final String E0018 = "E0018";
+	public static final String E0019 = "E0019";
 	//System/Non Business constants
 
 	//pdp error constants
@@ -1311,6 +1315,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
+	public static final String HUNDRED = "100".intern();
 
 
 	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
@@ -1321,7 +1326,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CAMPAIGN_CHANNEL = "WEB|WEBMOBILE|MOBILE|CALLCENTER|KIOSK".intern();
 	public static final String CAMPAIGN_MULTIDATA_SEPERATOR = "|".intern();
 	public static final String CAMPAIGN_FILE_LOCATION = "campaign.promotion.csv.path".intern();
-	public static final String CAMPAIGN_HEADER = "OFFER_ID,OFFER_NAME,OFFER_ACTIVE,OFFER_TYPE,OFFER_CHANNEL,OFFER_STARTDATE,OFFER_ENDDATE,URL,CREATION_DATE,MODIFIED_DATE"
+	public static final String CAMPAIGN_HEADER = "IDENTIFIER,TITLE,PROMOTIONGROUP,DESCRIPTION,ENABLED,PRIORITY,CHANNEL,PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
 			.intern();
 	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
 	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
@@ -1342,8 +1347,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String HTTPS = "https:".intern();
 
 
-
-
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
 
@@ -1361,6 +1364,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SIMPLEDATEFORMATDB = "yyyy-MM-dd HH:mm:ss";
 	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
+
+
 
 	private MarketplacecommerceservicesConstants()
 	{

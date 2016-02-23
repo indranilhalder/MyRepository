@@ -266,6 +266,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String ERROR_RESP = "gigys response error.";
 	public static final String UNUSED = "unused";
 	public static final String STATUS = "status";
+	public static final String ERROR = "error";
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -1132,18 +1133,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			//test ends
 
-			//final List<CouponHistoryData> couponHistoryDTOListModified = new ArrayList<CouponHistoryData>();
-			//final List<VoucherDisplayData> closedVoucherListModified = new ArrayList<VoucherDisplayData>();
 			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
 			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 
-
 			/* getting all voucher transactions along with the order placed in a DTO */
-			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
+
+			final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
+					.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
+			final PageableData pageableDataVoucherHistory = createPageableData(page, pageSizeVoucherHistory, sortCode, showMode);
+			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer, pageableDataVoucherHistory);
 
 			if (null != couponHistoryStoreDTO)
 			{
-				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDTOList();
+				couponHistoryDTOList = couponHistoryStoreDTO.getCouponHistoryDataList();
 			}
 
 			if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_VOUCHER))
@@ -6507,6 +6509,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			@RequestParam(value = ModelAttributetConstants.COMMENT_ID, defaultValue = ModelAttributetConstants.COMMENT_ID_VAL) final String commentID,
 			@RequestParam(value = ModelAttributetConstants.COMMENT_TEXT, defaultValue = ModelAttributetConstants.COMMENT_TEXT_VAL) final String commentText,
 			@RequestParam(value = ModelAttributetConstants.COMMENT_TITLE, defaultValue = ModelAttributetConstants.COMMENT_TITLE_VAL) final String commentTitle,
+			@RequestParam(value = ModelAttributetConstants.MEDIA_URL, defaultValue = ModelAttributetConstants.COMMENT_MEDIA_VAL) final String mediaUrl,
 			@RequestParam(value = ModelAttributetConstants.RATINGS, defaultValue = ModelAttributetConstants.RATINGS_VAL) final String ratings,
 			final Model model) throws Exception
 	{
@@ -6521,7 +6524,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (null != operation && operation.equals("edit"))
 			{
 				final String gigyaEditResponse = gigyaCommentService.editComment(categoryID, streamID, commentID, commentText,
-						commentTitle, ratings, customerModel.getUid());
+						commentTitle, mediaUrl, ratings, customerModel.getUid());
 
 				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
 				{
@@ -6531,6 +6534,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				else
 				{
 					jsonMap.put(STATUS, "failed");
+					jsonMap.put(ERROR, gigyaEditResponse);
 					return jsonMap;
 				}
 			}

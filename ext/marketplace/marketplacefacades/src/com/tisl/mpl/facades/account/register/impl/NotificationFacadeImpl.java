@@ -147,7 +147,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 		for (final VoucherStatusNotificationModel v : voucherList)
 		{
-			if (v.getIfUserRestrictionExist() == Boolean.TRUE && v.getCustomerUidList().contains(customerUID))
+			if (v.getCustomerUidList().contains(customerUID))
 			{
 				final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
 				notificationDataList.add(dataForVoucher);

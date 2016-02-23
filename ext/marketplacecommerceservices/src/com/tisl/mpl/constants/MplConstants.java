@@ -89,6 +89,7 @@ public final class MplConstants
 	//MplVariantComparator
 	public static final String DOUBLE = "\\D+";
 
+	public static final String PIPE = "|";
 
 
 	//	for wishlist

@@ -57,6 +57,12 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 	private static final String FILE_HEADER = MarketplacecouponConstants.CUSTOMER_LIST_FILE_HEADER;
 
 
+
+	/**
+	 * This is the perform method for CustomerListGenerationJob
+	 *
+	 * @param mailJob
+	 */
 	@Override
 	public PerformResult perform(final CronJobModel mailJob)
 	{
@@ -80,6 +86,7 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 	}
+
 
 	/**
 	 * @Desctiption This method takes the list of customers and sets in the CSV file to be generated in a specified

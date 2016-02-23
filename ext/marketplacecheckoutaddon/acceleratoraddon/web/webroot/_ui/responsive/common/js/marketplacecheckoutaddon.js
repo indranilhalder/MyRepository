@@ -890,8 +890,8 @@ function mobileBlacklist(){
 function generateOTP(){
 	$("#submitButtons").css("display","none");
 	var number=$("#otpMobileNUMField").val();
-	var prefixBefore=$("#mobilePrefix").val();
-	var prefix=prefixBefore.replace(/\D/g,'');
+	//var prefixBefore=$("#mobilePrefix").val();
+	//var prefix=prefixBefore.replace(/\D/g,'');
 	var mobileNumber=number;
 	$("#otpNUMField").val("");
 	$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
@@ -905,7 +905,8 @@ function generateOTP(){
 	else{
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/generateOTP",
-		data: { 'mobileNumber' : mobileNumber, 'prefix' : prefix },
+		//data: { 'mobileNumber' : mobileNumber, 'prefix' : prefix },
+		data: { 'mobileNumber' : mobileNumber },
 		type: "POST",
 		cache: false,	
 		success : function(response) {

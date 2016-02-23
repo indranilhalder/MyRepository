@@ -9,11 +9,7 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.jalo.JaloInvalidParameterException;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.BusinessProcessService;
@@ -1326,15 +1322,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#applyPromotions()
+	/**
+	 * This method applies the promotion on the cart for Payment page
+	 *
+	 * @param cartData
+	 * @param cart
+	 * @return MplPromoPriceData
+	 *
 	 */
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
-			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException
+	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws VoucherOperationException,
+			EtailNonBusinessExceptions
 	{
 		return getMplPaymentService().applyPromotions(cartData, cart);
 	}

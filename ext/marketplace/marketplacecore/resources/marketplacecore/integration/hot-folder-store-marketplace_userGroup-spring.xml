@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+ 
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+ 
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+ 
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:int="http://www.springframework.org/schema/integration"
+   xmlns:file="http://www.springframework.org/schema/integration/file"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+ 
+ 
+ 		<!-- General setup -->
+ 
+    <bean id="baseDirectoryCreateUserGroup" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/marketplace-userGroup" />
+    </bean>
+ 
+    <!-- 1) Scan for files -->
+    
+    <file:inbound-channel-adapter id="batchFilesCreateUserGroup" directory="#{baseDirectoryCreateUserGroup}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    
+    <file:outbound-gateway request-channel="batchFilesCreateUserGroup" reply-channel="batchFilesCreateUserGroupProc"
+        directory="#{baseDirectoryCreateUserGroup}/processing" delete-source-files="true" />
+
+	<!-- 3) transform csv to impex file -->
+	
+ 	<int:service-activator input-channel="batchFilesCreateUserGroupProc" output-channel="batchFilesHeaderInit"
+        ref="CreateUserGroupHeaderSetupTask" method="execute" />
+ 
+ 	<bean id="CreateUserGroupHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryCreateUserGroup" />
+    </bean>   
+    
+ <!-- Transformer converters mappings -->
+ 
+ 		 <!-- Transformer for Category Import -->
+    <bean id="batchUserGroupConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="Create_userGroup_master"
+    p:converter-ref="batchUserGroupConverter"/>
+    
+<!--     <bean id="batchisDomesticMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="domestic_bin"
+    p:converter-ref="batchisDomesticConverter"/> -->
+    
+		    
+    
+ 	  <!-- Converters -->
+ 	  
+ 	  <!-- Converter for Category Import -->
+  	<bean id="batchUserGroupConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	 # Insert Products
+              INSERT_UPDATE UserGroup;uid[unique=true];members(uid)
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{1};</value>
+        </property>
+        </bean>
+        
+        <!-- <bean id="batchisDomesticConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	 # Insert Products
+             UPDATE Bin;BinNo[unique=true];IssuingCountry[default='India'];ISOA2[default='IN'];ISOA3[default='IND'];ISONumber[default='830']	
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0}</value>
+        </property>
+        </bean> -->
+       
+       
+  </beans>

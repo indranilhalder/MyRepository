@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+
 
 public class MplCouponHelper
 {
@@ -21,32 +23,34 @@ public class MplCouponHelper
 
 	/**
 	 * @Description: validate delivery mode coupon
-	 * @param deliveryModeList
+	 *
+	 * @param restrDelModeList
 	 * @param order
-	 * @return true if satisfies
+	 * @param isPositive
+	 *
+	 * @return List<AbstractOrderEntry>
 	 */
+	@SuppressWarnings("deprecation")
 	public List<AbstractOrderEntry> validateDelliveryMode(final List<DeliveryMode> restrDelModeList, final AbstractOrder order,
 			final boolean isPositive)
 	{
 		final List<AbstractOrderEntry> matchingEntryList = new ArrayList<AbstractOrderEntry>();
-
 		final List<AbstractOrderEntry> entryList = new ArrayList<AbstractOrderEntry>(order.getAllEntries());
-
+		final List<AbstractOrderEntry> finalEntryList = new ArrayList<AbstractOrderEntry>();
 		for (final AbstractOrderEntry orderEntry : entryList)
 		{
-			final AbstractOrderEntryModel entry = ((AbstractOrderEntryModel) modelService.get(orderEntry));
-
+			final AbstractOrderEntryModel entry = ((AbstractOrderEntryModel) getModelService().get(orderEntry));
 			if (entry.getMplDeliveryMode() != null)
 			{
-				final DeliveryMode selectedDelMode = modelService.getSource(entry.getMplDeliveryMode().getDeliveryMode());
+				final DeliveryMode selectedDelMode = getModelService().getSource(entry.getMplDeliveryMode().getDeliveryMode());
+				//Adding entry to list if it contains selected delivery mode
 				if (restrDelModeList.contains(selectedDelMode))
 				{
 					matchingEntryList.add(orderEntry);
 				}
 			}
 		}
-
-		if (!matchingEntryList.isEmpty())
+		if (CollectionUtils.isNotEmpty(matchingEntryList))
 		{
 			if (isPositive)
 			{
@@ -56,14 +60,34 @@ public class MplCouponHelper
 			{
 				entryList.removeAll(matchingEntryList);
 			}
-
-			return entryList;
+			//Adding to final entry list
+			finalEntryList.addAll(entryList);
 		}
 		else
 		{
-			return matchingEntryList;
+			finalEntryList.addAll(matchingEntryList); //Adding to final entry list
 		}
-
+		return finalEntryList;
 	}
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
+
+
+
 
 }

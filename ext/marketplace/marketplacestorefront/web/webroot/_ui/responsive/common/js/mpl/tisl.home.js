@@ -243,7 +243,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 				dataType : "json",
 				beforeSend: function(){
 					$(".home-brands-you-love-carousel").css("margin-bottom","120px");
-					$("#brandsYouLove").append("<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
+					$("#brandsYouLove").append("<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='/store/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>");
                 },
 				url : ACC.config.encodedContextPath
 						+ "/getBrandsYouLoveContent",
@@ -255,7 +255,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					
 					$('.home-brands-you-love-desc').remove();
 					defaultHtml = "<div class='home-brands-you-love-desc'>";
-					
+					if (typeof response.text !== "undefined") {
+						defaultHtml += response.text;
+					}
 					if (typeof response.firstProductImageUrl !== "undefined") {
 						
 						defaultHtml += "<div class='home-brands-you-love-side-image left'><a href='"+ACC.config.encodedContextPath+response.firstProductUrl+"'><img src='"
@@ -271,9 +273,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 						defaultHtml +="</a></div>"
 					}
 					defaultHtml += "<div class='home-brands-you-love-main-image'>";
-					if (typeof response.text !== "undefined") {
-						defaultHtml += response.text;
-					}
+					
 					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml += "<div class='home-brands-you-love-main-image-wrapper'>";
 						if (typeof response.bannerText !=="undefined") {
@@ -301,7 +301,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					}
 
 					defaultHtml += "</div>";
-					$('#brandsYouLove .loaderDiv').remove();
+					
 					$(".home-brands-you-love-carousel").css("margin-bottom","20px");
 					
 					$('#brandsYouLove').append(defaultHtml);
@@ -309,6 +309,9 @@ function getBrandsYouLoveContentAjaxCall(id) {
 					window.localStorage.setItem("brandContent-" + id,
 							encodeURI(defaultHtml));
 
+				},
+				complete: function(){
+					$('#brandsYouLove .loaderDiv').remove();
 				},
 				error : function() {
 					$('#brandsYouLove .loaderDiv').remove();
@@ -498,10 +501,11 @@ function getBestPicksAjaxCall(){
 				pagination:false,
 				itemsDesktop : [5000,5], 
 				itemsDesktopSmall : [1400,5], 
-				itemsTablet: [650,2], 
-				itemsMobile : [480,2], 
+				itemsTablet: [650,1], 
+				itemsMobile : [480,1], 
 				rewindNav: false,
-				lazyLoad:true
+				lazyLoad:true,
+				scrollPerPage:true
 			});
 		}
 
@@ -577,7 +581,8 @@ function getProductsYouCareAjaxCall(){
 				itemsTablet: [650,2], 
 				itemsMobile : [480,2], 
 				rewindNav: false,
-				lazyLoad:true
+				lazyLoad:true,
+				scrollPerPage:true
 			});
 		}
 
@@ -639,8 +644,26 @@ function getNewAndExclusiveAjaxCall(){
 			itemsDesktop : false, 
 			itemsDesktopSmall : false, 
 			itemsTablet: false, 
-			itemsMobile : false
+			itemsMobile : false,
+			scrollPerPage:true
 		});
+
+			setTimeout(function(){
+				/*if($(window).width() > 773) {
+					$('#newAndExclusive').css('min-height',$('#newAndExclusive').parent().height()+'px');
+				}*/
+				//alert($('#newAndExclusive').height() +"|||"+$('#stayQued').height())
+				if ($(window).width() > 773) {
+					if ($('#newAndExclusive').height() > $('#stayQued').height()) {
+						$('#stayQued').css('min-height',
+								$('#newAndExclusive').outerHeight() + 'px');
+					} else {
+						$('#newAndExclusive').css('min-height',
+								$('#stayQued').outerHeight() + 'px');
+					}
+				}
+				
+			},2500);
 		}
 	});
 }
@@ -901,3 +924,21 @@ $(document).on("click", ".showcaseItem",
 			 getShowcaseContentAjaxCall(id);
 		});
 
+
+$(window).on(
+		'resize',
+		function() {
+			if ($(window).width() > 773) {
+				if ($('#newAndExclusive').height() > $('#stayQued').height()) {
+					$('#stayQued').css('min-height',
+							$('#newAndExclusive').outerHeight() + 'px');
+				} else {
+					$('#newAndExclusive').css('min-height',
+							$('#stayQued').outerHeight() + 'px');
+				}
+
+			} else {
+				$('#newAndExclusive').css('min-height', 'auto');
+				$('#stayQued').css('min-height', 'auto');
+			}
+		});

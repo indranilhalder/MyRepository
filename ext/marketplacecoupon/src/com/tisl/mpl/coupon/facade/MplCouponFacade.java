@@ -12,17 +12,16 @@ import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
+import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
 /**
@@ -61,36 +60,24 @@ public interface MplCouponFacade
 	 * @param cartModel
 	 * @return boolean
 	 * @throws VoucherOperationException
-	 * @throws CalculationException
-	 * @throws JaloSecurityException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
-	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, CalculationException,
-			NumberFormatException, JaloInvalidParameterException, JaloSecurityException;
+	boolean applyVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
 	/**
 	 * @param cartModel
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
+	 *
 	 */
-	void recalculateCartForCoupon(CartModel cartModel) throws JaloPriceFactoryException, CalculationException;
+	void recalculateCartForCoupon(CartModel cartModel) throws EtailNonBusinessExceptions;
 
 
 	/**
 	 * @param cart
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
-	 */
-	void releaseVoucherInCheckout(CartModel cart) throws JaloPriceFactoryException, CalculationException;
-
-	/**
-	 * @param customer
-	 * @return CouponHistoryStoreDTO
 	 * @throws VoucherOperationException
 	 */
-	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer) throws VoucherOperationException;
+	void releaseVoucherInCheckout(CartModel cart) throws VoucherOperationException;
 
 
 	/**
@@ -122,24 +109,42 @@ public interface MplCouponFacade
 	 */
 	void releaseVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
 
-	/*
-	 * @return
-	 */
-	@SuppressWarnings("javadoc")
-	List<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer);
-
 
 	/**
+	 *
 	 * @param voucher
 	 * @param cartModel
 	 * @param voucherCode
 	 * @param applicableOrderEntryList
+	 * @throws EtailNonBusinessExceptions
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
 			List<AbstractOrderEntryModel> applicableOrderEntryList);
 
 
-	@SuppressWarnings("javadoc")
+	/**
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherDisplayData>
+	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<CouponHistoryData>
+	 */
+	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(CustomerModel customer, PageableData pageableData);
+
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return CouponHistoryStoreDTO
+	 * @throws VoucherOperationException
+	 */
+	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer, PageableData pageableData)
+			throws VoucherOperationException;
 
 }
