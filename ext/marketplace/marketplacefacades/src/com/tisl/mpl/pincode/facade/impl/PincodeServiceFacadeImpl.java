@@ -82,7 +82,8 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 			//call to commerce db to get the latitude and longitude
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
-			final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+			if( null != pinCodeModelObj){
+			 String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null ? Config.getParameter("marketplacestorefront.configure.radius") : "0";
 			LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
 			final LocationDTO dto = new LocationDTO();
 			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
@@ -105,12 +106,14 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				}
 			}
 			return ckeckClicNcollect;
+		 }
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception for Pincode Serviceble check" + e);
 			return ckeckClicNcollect;
 		}
+		return ckeckClicNcollect;
 	}
 
 
@@ -132,7 +135,8 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		{
 			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
-			final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+			if (null != pinCodeModelObj){
+			final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius")!=null ? Config.getParameter("marketplacestorefront.configure.radius") : "0";
 			LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
 			final LocationDTO dto = new LocationDTO();
 			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
@@ -145,6 +149,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			//call to OMS get the storelocations for given pincode
 			storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
 			return storeLocationResponseDataList;
+		 }
 		}
 		catch (final Exception e)
 		{
