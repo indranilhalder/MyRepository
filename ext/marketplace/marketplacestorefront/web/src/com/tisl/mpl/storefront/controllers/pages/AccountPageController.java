@@ -213,7 +213,7 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-
+import de.hybris.platform.core.enums.OrderStatus;
 
 /**
  * Controller for home page
@@ -1011,6 +1011,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
+			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
@@ -6568,5 +6569,28 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		return null;
 	}
-
+    
+	/**
+	 * send orderstatus OrderDetailspage
+	 *
+	 * @return List of OrderStatus
+	 */
+	public List<OrderStatus> isEditable()
+	{
+		final List<OrderStatus> neededStatus = new ArrayList<OrderStatus>();
+		neededStatus.add(OrderStatus.ORDER_COLLECTED);
+		neededStatus.add(OrderStatus.ORDER_UNCOLLECTED);
+		neededStatus.add(OrderStatus.RETURN_INITIATED);
+		neededStatus.add(OrderStatus.RETURNINITIATED_BY_RTO);
+		neededStatus.add(OrderStatus.RETURN_CLOSED);
+		neededStatus.add(OrderStatus.QC_FAILED);
+		neededStatus.add(OrderStatus.CLOSED_ON_RETURN_TO_ORIGIN);
+		neededStatus.add(OrderStatus.RETURN_CANCELLED);
+		neededStatus.add(OrderStatus.COD_CLOSED_WITHOUT_REFUND);
+		neededStatus.add(OrderStatus.REFUND_INITIATED);
+		neededStatus.add(OrderStatus.REFUND_IN_PROGRESS);
+		neededStatus.add(OrderStatus.CLOSED_ON_CANCELLATION);
+		neededStatus.add(OrderStatus.CANCELLING);
+		return neededStatus;
+	}
 }

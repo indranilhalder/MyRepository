@@ -465,8 +465,14 @@
 											
 														<%-- <div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div>  --%>
 														&nbsp; &nbsp;
-														<c:if test="${entry.transactionId ne 'null'}"></c:if>
 														<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+														
+														<c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
+														<c:if test="${sellerOrderStatus eq sellerOrder.status }">
+														     <c:set var="editButton" value="disable" />
+														</c:if>
+													   </c:forEach>
+														
 														<c:if test="${editButton eq 'enable'}">
 														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
 														<!-- <div id="pickName" 
