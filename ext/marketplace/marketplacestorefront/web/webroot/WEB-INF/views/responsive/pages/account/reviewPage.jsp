@@ -96,7 +96,7 @@
 		        <c:otherwise>
 		        <c:if test="${not empty productDataModifyMap }">
 		        <p><spring:theme code="myaccount.review.recentPurchase"/></p>
-							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel">
+							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel" id="my-review-carousel">
 							
 								<c:forEach items="${productDataModifyMap}" var="product">
 								<div class="slide item" id="no-image-link${product.value.code}"><a
