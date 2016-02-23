@@ -29478,12 +29478,15 @@ padding:20px;
 .home-brands-you-love-side-image.right{
 padding-top:20px;
 }
+.visit-store-wrapper {
+    bottom: 25px;
+}
 }
 
 @media (max-width: 1050px){
 .home-brands-you-love-main-image-wrapper .text {
-    font-size: 30px;
-    line-height:30px;
+    font-size: 25px;
+    line-height:25px;
 }
 }
 @media(min-width:791px){
@@ -30260,6 +30263,10 @@ input#typeOfProduct:-ms-input-placeholder {
 }
 li#ratingDiv {
     max-width: 100%;
+}
+
+#my-review-carousel {
+	display: none;
 }
 /*--------------maincss-----------*/
 .row
