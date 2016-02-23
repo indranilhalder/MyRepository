@@ -26,10 +26,12 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -39,7 +41,9 @@ import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -61,6 +65,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	private ProductDetailsHelper productDetailsHelper;
 	private MplCartFacade mplCartFacade;
 	private PincodeService pincodeService;
+	
+	@Autowired
+	private MplSellerInformationService mplSellerInformationService;
 
 	/**
 	 * This method is used to check pincode is serviceable are not
@@ -185,7 +192,64 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			}
 			storeLocationRequestData.setStoreId(locationList);
 		}
+		//populate newly added fields
+		//get SellerInfo based on sellerUssid
+		final SellerInformationModel sellerInfoModel = mplSellerInformationService
+						.getSellerDetail(sellerUssId);
+		ProductModel productModel = null;
+		ProductData productData = null;
+		if (null != sellerInfoModel)
+		{
+			productModel = sellerInfoModel.getProductSource();
+			productData = productFacade.getProductForOptions(productModel,
+					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
+			storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());
+		}
+		List<RichAttributeModel> richAttributeModel = null;
+		if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+		{
+			richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+			if (richAttributeModel != null && richAttributeModel.get(0) != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
+					&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
+			{
+				final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+				storeLocationRequestData.setFulfillmentType(fulfillmentType.toUpperCase());
+			}
+			else
+			{
+				LOG.debug("storeLocationRequestData :  Fulfillment type not received for the SellerId"+sellerInfoModel.getSellerArticleSKU());
+			}
+			if (richAttributeModel != null && richAttributeModel.get(0) != null
+					&& richAttributeModel.get(0).getShippingModes() != null
+					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
+			{
+				final String shippingMode = richAttributeModel.get(0).getShippingModes().getCode();
+				storeLocationRequestData.setTransportMode(shippingMode.toUpperCase());
+			}
+			else
+			{
+				LOG.debug("storeLocationRequestData :  ShippingMode type not received for the "+sellerInfoModel.getSellerArticleSKU());
+			}
+			if ((null != productData.getSeller()) && (null != productData.getSeller().get(0)) && (null != productData.getSeller().get(0).getSpPrice()) && !(productData.getSeller().get(0).getSpPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getSpPrice().getValue().doubleValue());
+			}
+			else if ((null != productData.getSeller()) && (null != productData.getSeller().get(0)) && (null != productData.getSeller().get(0).getMopPrice()) && !(productData.getSeller().get(0).getMopPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getMopPrice().getValue().doubleValue());
+			}
+			else if (null != productData.getSeller().get(0).getMrpPrice() && !(productData.getSeller().get(0).getMrpPrice().equals("")))
+			{
+				storeLocationRequestData.setPrice(productData.getSeller().get(0).getMrpPrice().getValue().doubleValue());
+			}
+			else
+			{
+				LOG.debug("No price avaiable for seller :" + productData.getSeller().get(0).getSellerID());
+			}
+		}
 		storeLocationRequestData.setUssId(sellerUssId);
+		
 		return storeLocationRequestData;
 	}
 
