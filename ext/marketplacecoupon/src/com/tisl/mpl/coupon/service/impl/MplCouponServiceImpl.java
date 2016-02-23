@@ -6,6 +6,7 @@ package com.tisl.mpl.coupon.service.impl;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.Collections;
@@ -53,9 +54,6 @@ public class MplCouponServiceImpl implements MplCouponService
 		return voucherDataList;
 	}
 
-
-
-
 	/**
 	 * This method returns all active and closed vouchers
 	 *
@@ -70,7 +68,20 @@ public class MplCouponServiceImpl implements MplCouponService
 		return mplCouponDao.findClosedVoucher(customer, pageableData);
 	}
 
+	/**
+	 * This method returns all voucher invalidations
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherInvalidationModel>
+	 */
 
+	@Override
+	public SearchPageData<VoucherInvalidationModel> getVoucherRedeemedOrder(final CustomerModel customer,
+			final PageableData pageableData)
+	{
+		return mplCouponDao.findVoucherHistoryRedeemedOrders(customer, pageableData);
+	}
 
 
 	public MplCouponDao getMplCouponDao()

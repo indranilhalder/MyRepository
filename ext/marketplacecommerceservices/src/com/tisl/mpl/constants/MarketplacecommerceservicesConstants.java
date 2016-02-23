@@ -85,6 +85,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DMY_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DMY_DATE_FORMAT_INT = "yyyyMMdd";
 	public static final String COUPONS_DATE_FORMAT = "MMM dd, YYYY";
+	public static final String COUPONS_TXN_DATE_FORMAT = "MM";
 	public static final String TRUE = "true";
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
@@ -1364,6 +1365,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
 
+
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
@@ -1371,5 +1374,3 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
-
-

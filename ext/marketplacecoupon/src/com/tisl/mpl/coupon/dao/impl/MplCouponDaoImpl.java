@@ -11,6 +11,7 @@ import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -39,6 +41,9 @@ public class MplCouponDaoImpl implements MplCouponDao
 	@Autowired
 	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
+	private static final Logger LOG = Logger.getLogger(MplCouponDaoImpl.class);
+
+	public static final String PARENT = "parent";
 
 	/**
 	 * This method is used to fetch the active coupons from the database
@@ -130,6 +135,45 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 	}
 
+
+
+	/**
+	 * Method used to find voucher invalidations for a user
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherInvalidationModel>
+	 */
+	@Override
+	public SearchPageData<VoucherInvalidationModel> findVoucherHistoryRedeemedOrders(final CustomerModel customer,
+			final PageableData pageableData)
+	{
+		try
+		{
+
+			final Map queryParams = new HashMap();
+			queryParams.put("customerPk", customer);
+
+			final String VOUCHER_HISTORY_QUERY = "select {vi.pk} from {VoucherInvalidation as vi JOIN voucher as v ON  {v.pk}={vi.voucher}  "
+					+ "JOIN order as or ON {vi.order}={or.pk}} where  {vi.user} like"
+					+ "('%"
+					+ customer.getPk().getLongValue()
+					+ "%') ORDER BY {vi.creationtime} DESC";
+
+			System.out.println("Query :::::::::::::::" + VOUCHER_HISTORY_QUERY);
+			final List sortQueries = Arrays.asList(new SortQueryData[]
+			{ createSortQueryData("byDate", VOUCHER_HISTORY_QUERY) });
+
+			return pagedFlexibleSearchService.search(sortQueries, "byDate", queryParams, pageableData);
+
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
 	/**
 	 * Method used to create sort query data
 	 *
@@ -144,4 +188,5 @@ public class MplCouponDaoImpl implements MplCouponDao
 		result.setQuery(query);
 		return result;
 	}
+
 }

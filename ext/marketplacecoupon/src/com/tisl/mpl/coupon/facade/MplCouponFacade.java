@@ -17,6 +17,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
+import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
@@ -78,13 +79,6 @@ public interface MplCouponFacade
 	 */
 	void releaseVoucherInCheckout(CartModel cart) throws VoucherOperationException;
 
-	/**
-	 * @param customer
-	 * @return CouponHistoryStoreDTO
-	 * @throws VoucherOperationException
-	 */
-	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer) throws VoucherOperationException;
-
 
 	/**
 	 * @param discountList
@@ -135,5 +129,22 @@ public interface MplCouponFacade
 	 * @return SearchPageData<VoucherDisplayData>
 	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<CouponHistoryData>
+	 */
+	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(CustomerModel customer, PageableData pageableData);
+
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return CouponHistoryStoreDTO
+	 * @throws VoucherOperationException
+	 */
+	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer, PageableData pageableData)
+			throws VoucherOperationException;
 
 }
