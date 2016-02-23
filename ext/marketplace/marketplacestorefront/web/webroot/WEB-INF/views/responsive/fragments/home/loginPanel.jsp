@@ -151,7 +151,6 @@
 				document.flyOutloginForm.action="https://"+hostName+"/store/mpl/en/j_spring_security_check";
 				document.flyOutloginForm.submit();
 			}
-
 			return true;
 			
 			//formation of url as a part of solution for VAPT issues(TISSIT-1703)
@@ -192,4 +191,5 @@
 				}
 			}
 		});
+	
 </script>
