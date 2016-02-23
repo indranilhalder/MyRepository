@@ -1675,7 +1675,7 @@ function openPop_SizeGuide() {
 	//} else {
 	//	ussidValue = ussidfromSeller;
 	//}
-	var productCode = $("#product").val(); // '${product.code}';
+	var productCode = $("#productCode").val(); // '${product.code}';
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/viewWishlistsInPDP";
