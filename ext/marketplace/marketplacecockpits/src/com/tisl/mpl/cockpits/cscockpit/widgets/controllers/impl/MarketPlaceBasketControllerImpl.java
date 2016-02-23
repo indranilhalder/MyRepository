@@ -23,7 +23,6 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketCont
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -31,7 +30,6 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
-import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.InventoryReservationService;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -126,10 +124,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
     private VoucherService voucherService;
 	@Autowired
 	private VoucherModelService voucherModelService;
-	@Autowired
-	private MplCouponFacade mplCouponFacade;
-	@Autowired
-	private MplDefaultCalculationService mplDefaultCalculationService;
 	@Autowired
 	private MplVoucherService mplVoucherService;
 

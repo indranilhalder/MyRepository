@@ -27,10 +27,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.coupon.constants.MarketplacecouponConstants;
@@ -46,17 +47,15 @@ import com.tisl.mpl.util.GenericUtilityMethods;
  */
 public class DefaultCampaignVoucherDataService implements CampaignVoucherDataService
 {
-	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DefaultCampaignVoucherDataService.class.getName());
 
+	@Resource(name = "modelService")
 	private ModelService modelService;
-
+	@Resource(name = "mplCouponDao")
 	private MplCouponDao mplCouponDao;
-
-	@Autowired
+	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
-
-	@Autowired
+	@Resource(name = "campaignVoucherData")
 	private CampaignVoucherData campaignVoucherData;
 
 
@@ -264,15 +263,12 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 		{
 			if ((i != (userDataList.size() - 1)))
 			{
-				userdata = userdata
-				//+ (userDataList.get(i).getName() == null ? userDataList.get(i).getUid() : userDataList.get(i).getName())
-						+ userDataList.get(i).getUid() + MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
+				userdata = userdata + userDataList.get(i).getUid()
+						+ MarketplacecommerceservicesConstants.CAMPAIGN_MULTIDATA_SEPERATOR;
 			}
 			else
 			{
-				userdata = userdata
-				//+ (userDataList.get(i).getName() == null ? userDataList.get(i).getUid() : userDataList.get(i).getName());
-						+ userDataList.get(i).getUid();
+				userdata = userdata + userDataList.get(i).getUid();
 			}
 		}
 
@@ -479,10 +475,12 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 			datePrefix = GenericUtilityMethods.convertSysDateToString(new Date());
 		}
 
-		final File rootFolder = new File(configurationService.getConfiguration().getString(
+		final File rootFolder = new File(getConfigurationService().getConfiguration().getString(
 				MarketplacecouponConstants.CAMPAIGN_FILE_LOCATION, MarketplacecommerceservicesConstants.CAMPAIGN_FILE_PATH),
-				MarketplacecouponConstants.CAMPAIGN_FILE_NAME + datePrefix
-						+ configurationService.getConfiguration().getString("cronjob.campaign.voucher.extension", ".csv"));
+				MarketplacecouponConstants.CAMPAIGN_FILE_NAME
+						+ datePrefix
+						+ getConfigurationService().getConfiguration().getString(MarketplacecouponConstants.VOUCHERCAMPAIGNJOBEXTN,
+								MarketplacecouponConstants.DEFVOUCAMPAIGNJOBEXTN));
 
 		try
 		{

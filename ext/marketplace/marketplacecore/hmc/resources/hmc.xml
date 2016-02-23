@@ -3139,6 +3139,57 @@
 	      </editor>
 	   </organizer>
 	</type>
+	
+	
+	<type name="ProductRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="products"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="products" width="150"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="products"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.productrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="products">
+								<referencecollectioneditor create="false" add="true" remove="true">
+									<itemlayout>
+										<attribute name="code" width="92"/>
+										<attribute name="name" width="85"/>										
+									</itemlayout>
+								</referencecollectioneditor>
+	                  </attribute>
+	                  <attribute name="positive">
+	                     <advancedbooleaneditor truename="productrestriction.positive.true"
+	                                            falsename="productrestriction.positive.false"/>
+	                  </attribute>
+	                  <attribute name="productCodeList"/>
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
  <!-- Voucher HMC Modification ends -->
 
 </configuration>

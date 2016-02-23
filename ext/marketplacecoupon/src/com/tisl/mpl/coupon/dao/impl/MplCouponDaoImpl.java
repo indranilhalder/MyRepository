@@ -20,8 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.coupon.constants.MarketplacecouponConstants;
@@ -35,15 +36,13 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
  */
 public class MplCouponDaoImpl implements MplCouponDao
 {
-	@Autowired
+	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
-	@Autowired
+	@Resource(name = "pagedFlexibleSearchService")
 	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
 	private static final Logger LOG = Logger.getLogger(MplCouponDaoImpl.class);
-
-	public static final String PARENT = "parent";
 
 	/**
 	 * This method is used to fetch the active coupons from the database
@@ -64,16 +63,6 @@ public class MplCouponDaoImpl implements MplCouponDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-	}
-
-	public FlexibleSearchService getFlexibleSearchService()
-	{
-		return flexibleSearchService;
-	}
-
-	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
-	{
-		this.flexibleSearchService = flexibleSearchService;
 	}
 
 
@@ -100,7 +89,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 			}
 
 			final Map queryParams = new HashMap();
-			queryParams.put("customerPk", customer);
+			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer);
 
 			queryBiulder
 					.append(
@@ -120,12 +109,12 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			final String CLOSED_VOUCHER = queryBiulder.toString();
 			final List sortQueries = Arrays.asList(new SortQueryData[]
-			{ createSortQueryData("byDate", CLOSED_VOUCHER
+			{ createSortQueryData(MarketplacecouponConstants.BYDATE, CLOSED_VOUCHER
 
 			) });
 
 
-			return pagedFlexibleSearchService.search(sortQueries, "byDate", queryParams, pageableData);
+			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
 
 		}
 		catch (final Exception e)
@@ -152,7 +141,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 		{
 
 			final Map queryParams = new HashMap();
-			queryParams.put("customerPk", customer);
+			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer);
 
 			final String VOUCHER_HISTORY_QUERY = "select {vi.pk} from {VoucherInvalidation as vi JOIN voucher as v ON  {v.pk}={vi.voucher}  "
 					+ "JOIN order as or ON {vi.order}={or.pk}} where  {vi.user} like"
@@ -160,11 +149,11 @@ public class MplCouponDaoImpl implements MplCouponDao
 					+ customer.getPk().getLongValue()
 					+ "%') ORDER BY {vi.creationtime} DESC";
 
-			System.out.println("Query :::::::::::::::" + VOUCHER_HISTORY_QUERY);
+			LOG.debug("Query :::::::::::::::" + VOUCHER_HISTORY_QUERY);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
-			{ createSortQueryData("byDate", VOUCHER_HISTORY_QUERY) });
+			{ createSortQueryData(MarketplacecouponConstants.BYDATE, VOUCHER_HISTORY_QUERY) });
 
-			return pagedFlexibleSearchService.search(sortQueries, "byDate", queryParams, pageableData);
+			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
 
 		}
 		catch (final Exception e)
@@ -188,5 +177,35 @@ public class MplCouponDaoImpl implements MplCouponDao
 		result.setQuery(query);
 		return result;
 	}
+
+	/**
+	 * @return the pagedFlexibleSearchService
+	 */
+	public PagedFlexibleSearchService getPagedFlexibleSearchService()
+	{
+		return pagedFlexibleSearchService;
+	}
+
+	/**
+	 * @param pagedFlexibleSearchService
+	 *           the pagedFlexibleSearchService to set
+	 */
+	public void setPagedFlexibleSearchService(final PagedFlexibleSearchService pagedFlexibleSearchService)
+	{
+		this.pagedFlexibleSearchService = pagedFlexibleSearchService;
+	}
+
+
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
+
 
 }

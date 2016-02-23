@@ -10,8 +10,9 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.coupon.dao.MplCustomerDetailsDao;
@@ -23,7 +24,7 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 {
 
 	private static final Logger LOG = Logger.getLogger(MplCustomerDetailsDaoImpl.class);
-	@Autowired
+	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
 
@@ -43,7 +44,7 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 
-		return flexibleSearchService.<CustomerModel> search(query).getResult();
+		return getFlexibleSearchService().<CustomerModel> search(query).getResult();
 	}
 
 
@@ -65,8 +66,31 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 
-		return flexibleSearchService.<CartModel> search(query).getResult();
+		return getFlexibleSearchService().<CartModel> search(query).getResult();
 	}
+
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
+	{
+		return flexibleSearchService;
+	}
+
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
+
+
+
 
 
 }

@@ -16,8 +16,6 @@ import org.apache.commons.collections.CollectionUtils;
 
 public class MplCouponHelper
 {
-
-
 	@Resource(name = "modelService")
 	private ModelService modelService;
 
@@ -30,7 +28,6 @@ public class MplCouponHelper
 	 *
 	 * @return List<AbstractOrderEntry>
 	 */
-	@SuppressWarnings("deprecation")
 	public List<AbstractOrderEntry> validateDelliveryMode(final List<DeliveryMode> restrDelModeList, final AbstractOrder order,
 			final boolean isPositive)
 	{

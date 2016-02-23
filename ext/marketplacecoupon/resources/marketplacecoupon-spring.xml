@@ -82,12 +82,25 @@
 	  
 	  
 	<alias name="mplCouponFacade" alias="mplCouponFacade"/>
-		<bean id="mplCouponFacade" class="com.tisl.mpl.coupon.facade.impl.MplCouponFacadeImpl" />
+	<bean id="mplCouponFacade" class="com.tisl.mpl.coupon.facade.impl.MplCouponFacadeImpl">
+		<property name="voucherService" ref="voucherService"/>
+		<property name="mplCheckoutFacade" ref="mplCheckoutFacade"/>
+		<property name="voucherFacade" ref="voucherFacade"/>
+		<property name="mplCouponService" ref="mplCouponService"/>
+		<property name="configurationService" ref="configurationService"/>
+		<property name="voucherModelService" ref="voucherModelService"/>
+		<property name="defaultVoucherFacade" ref="defaultVoucherFacade"/>
+		<property name="mplVoucherService" ref="mplVoucherService"/>
+		<property name="sessionService" ref="sessionService"/>
+	</bean>
 		
 	
 	<bean id="mplCouponDao" class="com.tisl.mpl.coupon.dao.impl.MplCouponDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+		<property name="pagedFlexibleSearchService" ref="pagedFlexibleSearchService"/>
 	</bean>
 	<bean id="mplCouponService" class="com.tisl.mpl.coupon.service.impl.MplCouponServiceImpl">
+		<property name="mplCouponDao" ref="mplCouponDao"/>
 	</bean>
 	
 	<alias name="customerDetailsService" alias="customerDetailsService" />
@@ -102,7 +115,9 @@
 	</bean>
 
 	<bean id="customerDetailsDao"
-		class="com.tisl.mpl.coupon.dao.impl.MplCustomerDetailsDaoImpl" />
+		class="com.tisl.mpl.coupon.dao.impl.MplCustomerDetailsDaoImpl" >
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+	</bean>
 	
 	<alias name="defaultCustomerDetailsFacade" alias="customerDetailsFacade" />
 	<bean id="defaultCustomerDetailsFacade"
@@ -116,19 +131,24 @@
 	
 <!-- 	<bean id="couponMailJob" class="com.tisl.mpl.coupon.job.CouponMailJob" autowire="byName"/> -->	
 
-	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" autowire="byName"/>	
+	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" autowire="byName">
+		<property name="customerDetailsService" ref="customerDetailsService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>	
 	
 	<!-- Tata Cliq Job : Campaign Team -->
 	<bean id="campaignVoucherDataService"
 		class="com.tisl.mpl.coupon.service.impl.DefaultCampaignVoucherDataService">
 		<property name="modelService" ref="modelService" />
 		<property name="mplCouponDao" ref="mplCouponDao" />
+		<property name="configurationService" ref="configurationService" />
+		<property name="campaignVoucherData" ref="campaignVoucherData" />
 	</bean>
 	<bean id="campaignVoucherData" class="com.tisl.mpl.coupon.pojo.CampaignVoucherData" />
 	
 	<!-- Tata Cliq : For Campaign Team   -->
-   	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob"
-   		autowire="byName" >
+   	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob" autowire="byName">
+   		<property name="campaignVoucherDataService" ref="campaignVoucherDataService" />
    	</bean>	
    	
    	<!-- CouponRestrictionSaveInterceptor starts -->

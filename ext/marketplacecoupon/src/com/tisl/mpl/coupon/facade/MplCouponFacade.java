@@ -16,6 +16,7 @@ import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
+import java.util.Map;
 
 import com.tisl.mpl.data.CouponHistoryData;
 import com.tisl.mpl.data.CouponHistoryStoreDTO;
@@ -68,6 +69,7 @@ public interface MplCouponFacade
 
 	/**
 	 * @param cartModel
+	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
 	void recalculateCartForCoupon(CartModel cartModel) throws EtailNonBusinessExceptions;
@@ -76,8 +78,9 @@ public interface MplCouponFacade
 	/**
 	 * @param cart
 	 * @throws VoucherOperationException
+	 * @throws EtailNonBusinessExceptions
 	 */
-	void releaseVoucherInCheckout(CartModel cart) throws VoucherOperationException;
+	void releaseVoucherInCheckout(CartModel cart) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -146,5 +149,12 @@ public interface MplCouponFacade
 	 */
 	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer, PageableData pageableData)
 			throws VoucherOperationException;
+
+
+	/**
+	 * @param paymentInfo
+	 * @param cartModel
+	 */
+	void updatePaymentInfoSession(Map<String, Double> paymentInfo, CartModel cartModel);
 
 }

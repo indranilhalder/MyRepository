@@ -48,6 +48,44 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
 	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
 
+	public static final String COUPONREDEEM = "/redeem";
+	public static final String COUPONRELEASE = "/release";
+
+	//Coupon Error Messages
+	public static final String PRICEEXCEEDED = "Price_exceeded".intern();
+	public static final String INVALID = "Invalid".intern();
+	public static final String EXPIRED = "Expired".intern();
+	public static final String ISSUE = "Issue".intern();
+	public static final String NOTAPPLICABLE = "Not_Applicable".intern();
+	public static final String NOTRESERVABLE = "Not_Reservable".intern();
+	public static final String USERINVALID = "User_Invalid".intern();
+	public static final String FREEBIE = "Freebie".intern();
+	public static final String RELEASEISSUE = "Release Issue".intern();
+
+	//Coupon Exception Message
+	public static final String EXCPRICEEXCEEDED = "total price exceeded".intern();
+	public static final String EXCINVALID = "Voucher not found".intern();
+	public static final String EXCEXPIRED = "Voucher cannot be redeemed".intern();
+	public static final String EXCISSUE = "Error while".intern();
+	public static final String EXCNOTAPPLICABLE = "Voucher is not applicable".intern();
+	public static final String EXCNOTRESERVABLE = "Voucher is not reservable".intern();
+	public static final String EXCFREEBIE = "freebie".intern();
+	public static final String EXCUSERINVALID = "User not valid".intern();
+
+	public static final String COUPONRELISSUE = "Issue with voucher release ".intern();
+	public static final String CUSTOMERPK = "customerPk";
+	public static final String BYDATE = "byDate";
+
+	//Delimiter used in CSV file
+	public static final String COMMA_DELIMITER = ",";
+	public static final String COLON_DELIMITER = ":";
+	public static final String HYPHEN_DELIMITER = "-";
+	public static final String NEW_LINE_SEPARATOR = "\n";
+
+	public static final String VOUCHERCAMPAIGNJOBEXTN = "cronjob.campaign.voucher.extension".intern();
+	public static final String DEFVOUCAMPAIGNJOBEXTN = ".csv".intern();
+
+
 	private MarketplacecouponConstants()
 	{
 		//empty to avoid instantiating this constant class
