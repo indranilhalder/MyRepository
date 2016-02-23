@@ -1663,7 +1663,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 		//call service to get list of ATS and ussid
 		omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
-		productWithPOS = getProductWdPos(omsResponse,model);
+		if (null != omsResponse && omsResponse.size() > 0)
+		{
+			productWithPOS = getProductWdPos(omsResponse,model);
+		}
+		
 		if (productWithPOS.size() > 0)
 		{
 			status = true;
