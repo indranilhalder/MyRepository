@@ -1127,10 +1127,13 @@ $(document).on("keypress","#defaultWishName_quick",function(e) {
 	var key = e.keyCode;
 	if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
 		e.preventDefault();
+		 var start = this.selectionStart,
+         end = this.selectionEnd;
 		$('#defaultWishName_quick').val(wishlistname);
 		$("#addedMessage_quick").show();
 		$("#addedMessage_quick").html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
 		$("#addedMessage_quick").show().fadeOut(3000);
+		this.setSelectionRange(start, end);
 	} 
 }); 
 
