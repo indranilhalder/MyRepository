@@ -212,7 +212,6 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 		try
 		{
-
 			orderModel.setCode(orderId);
 			orderModel = flexibleSearchService.getModelByExample(orderModel);
 			LOG.debug(orderId + "" + name + "" + mobile);
@@ -227,14 +226,44 @@ public class OrderModelDaoImpl implements OrderModelDao
 				LOG.info("update pickuUpPersonMobileNo ");
 				orderModel.setPickupPersonMobile(mobile);
 			}
+
+			LOG.info("UpdatePickUpDetails ChildOrder ");
+			final List<OrderModel> childOrderList = orderModel.getChildOrders();
+			for (final OrderModel childOrder : childOrderList)
+			{
+				childOrder.setPickupPersonMobile(mobile);
+				childOrder.setPickupPersonName(name);
+				modelService.save(childOrder);
+			}
+
 			modelService.save(orderModel);
+
 
 		}
 		catch (final ModelSavingException expection)
 		{
-			LOG.error("***********EditPickUpDetails" + expection);
+			LOG.error("***********EditPickUpDetails" + expection.getMessage());
 		}
 		return orderModel;
 
+	}
+
+	@Override
+	public OrderModel getOrderModel(final String orderId) throws EtailNonBusinessExceptions
+	{
+		OrderModel orderModel = new OrderModel();
+		try
+		{
+			if (orderId != null)
+			{
+				orderModel.setCode(orderId);
+				orderModel = flexibleSearchService.getModelByExample(orderModel);
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+		return orderModel;
 	}
 }

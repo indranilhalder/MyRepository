@@ -71,9 +71,10 @@
 		<property name="timeService" ref="timeService" />
 		<property name="orderStatusMapping" ref="orderStatusMapping" />
 		<property name="configurationService" ref="configurationService" />
-		
+		<property name="customOmsCancelAdapter" ref="customOmsCancelAdapter" />
 	</bean>
 	
+	<bean id="customOmsCancelAdapter" class="com.tisl.mpl.integration.oms.adapter.CustomOmsCancelAdapter" />
 	
 	<alias name="defaultConsignmentStatusMappingStrategy" alias="consignmentStatusMappingStrategy" />
 	<bean id="defaultConsignmentStatusMappingStrategy"

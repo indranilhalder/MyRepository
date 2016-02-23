@@ -14,13 +14,8 @@
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>	
-	
-	
 	<!-- <table class="orderListTable"> -->
-		
-	    <%-- <c:forEach items="${orderGroup.entries}" var="entry"> --%>
-	      
-			<c:forEach items="${orderData.entries}" var="entry">
+			<c:forEach items="${orderGroup.entries}" var="entry"> 
 				<c:url value="${entry.product.url}" var="productUrl"/>
 				<li class="item">
 				<ul class="desktop">
@@ -32,7 +27,7 @@
 						</div>
 						<div class="product">
 								
-							<p class="company"></p>
+							<p class="company"></p> 
 							<ycommerce:testId code="orderDetails_productName_link">
 							<h3 class="product-brand-name"><a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.brand.brandname}</a></h3>
 								<h3 class="product-name"><a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a></h3>
@@ -67,10 +62,7 @@
 					</span>
 					</p>
 					<ul class="item-details">
-					
-					
 					 <%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
-				
 					</ul> 
 					</div>
 					  
@@ -123,27 +115,6 @@
 					</c:choose>
 					</li>
 					</ul>
-		        <c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
-			    <div class="orderBoxes clearfix addressThankyou">
-				<h1>Store Details</h1>
-			    <div class="orderBox address">
-				<h4>Store Address</h4>	
-					 <c:set var="storeAddress" value="${entry.deliveryPointOfService.address}" />
-					                <address>  ${storeAddress.firstName}&nbsp; ${storeAddress.lastName}<br>
-							    	           ${storeAddress.companyName}<br>
-							    	           ${storeAddress.line1} &nbsp;
-								               ${storeAddress.line2} &nbsp;
-								               ${storeAddress.town}, <br>
-								               ${storeAddress.state},
-								               ${storeAddress.country.name},
-								               ${storeAddress.postalCode} 
-								               ${storeAddress.country.isocode}<br>                
-								              +91&nbsp;${storeAddress.phone} <br>		                   
-						    		</address>  			
-				</div>
-			</div>
-		</c:if>
-				
 					<ul class="mobile-product">
                   <li>
                     <div class="product-img">

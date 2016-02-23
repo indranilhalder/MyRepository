@@ -164,5 +164,7 @@ public final class MarketplaceCockpitsConstants extends
 	
 	public static final String COUPON_REDEEM = "coupon_redeem";
 	
+	public static final String SOURCE="CSCockpit";
+	
 	
 }

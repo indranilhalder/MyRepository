@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "ticketMaster")
 @XmlType(propOrder =
 { "customerID", "orderId", "subOrderId", "ticketType", "refundType", "returnCategory", "lineItemDataList",
-		"alternateContactName", "alternatePhoneNo", "commerce" })
+		"alternateContactName", "alternatePhoneNo", "source", "lineItemId" })
 public class TicketMasterXMLData
 {
 	private String customerID;
@@ -29,8 +29,38 @@ public class TicketMasterXMLData
 	private List<TicketlineItemsXMLData> lineItemDataList;
 	private String alternateContactName;
 	private String alternatePhoneNo;
-	private String commerce;
+	private String source;
+	private String lineItemId;
 
+
+
+	/**
+	 * @return the lineItemId
+	 */
+	@XmlElement(name = "lineItemId")
+	public String getLineItemId()
+	{
+		return lineItemId;
+	}
+
+	/**
+	 * @param lineItemId
+	 *           the lineItemId to set
+	 */
+	public void setLineItemId(final String lineItemId)
+	{
+		this.lineItemId = lineItemId;
+	}
+
+	/**
+	 * @param source
+	 *           the source to set
+	 */
+
+	public void setSource(final String source)
+	{
+		this.source = source;
+	}
 
 	/**
 	 * @return the customerID
@@ -177,12 +207,13 @@ public class TicketMasterXMLData
 	}
 
 	/**
-	 * @return the commerce
+	 * @return the source
 	 */
-	@XmlElement(name = "commerce")
-	public String getCommerce()
+
+	@XmlElement(name = "source")
+	public String getSource()
 	{
-		return commerce;
+		return source;
 	}
 
 	/**
@@ -203,13 +234,5 @@ public class TicketMasterXMLData
 		this.alternatePhoneNo = alternatePhoneNo;
 	}
 
-	/**
-	 * @param commerce
-	 *           the commerce to set
-	 */
-	public void setCommerce(final String commerce)
-	{
-		this.commerce = commerce;
-	}
 
 }

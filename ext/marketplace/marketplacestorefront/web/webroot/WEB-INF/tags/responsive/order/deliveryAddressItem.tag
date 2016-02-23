@@ -9,10 +9,16 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<style>
+.orderBoxalignment{
+	margin-left: 15px ;
+	
+}
+</style>
 
 <c:set var="hasShippedItems" value="${order.deliveryItemsQuantity > 0}" />
-<h1><spring:theme code="text.deliveryAddress" text="Delivery Details"/></h1>
-<div class="orderBox address">
+<h1 style="margin-left: 15px"><spring:theme code="text.deliveryAddress" text="Delivery Details"/></h1>
+<div class="orderBox address orderBoxalignment">
 	<h4>Shipping Address</h4>
 	<c:if test="${not hasShippedItems}">
 		<spring:theme code="checkout.pickup.no.delivery.required"/>

@@ -34,7 +34,9 @@ import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
 import com.hybris.oms.domain.pickupinfo.PickupInfo;
 import com.hybris.oms.picupinfo.facade.PickupInfoFacade;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.service.MplSendOrderFromCommerceToCRM;
 
@@ -54,10 +56,8 @@ public class CustomOmsOrderService implements OmsOrderService
 	private MplSendOrderFromCommerceToCRM ordercreation;
 	@Autowired
 	private MplCustomerWebService mplCustomerWebService;
-
+   @Autowired
 	private PickupInfoFacade pickupInfoRestClient;
-
-
 
 	public OrderPlacementResult createOmsOrder(final OrderModel orderModel)
 	{
@@ -343,10 +343,10 @@ public class CustomOmsOrderService implements OmsOrderService
 			//orderRestClient.createOrder(pickInfo);
 			pickupInfoRestClient.updatePickupInfo(pickInfo);
 		}
-		catch (final Exception exception)
+		catch (final Exception e)
 		{
-			LOG.error("OMS Call From Commerece when PickUp Person Details Updated  >>>>>  " + exception);
+			
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-
 	}
 }

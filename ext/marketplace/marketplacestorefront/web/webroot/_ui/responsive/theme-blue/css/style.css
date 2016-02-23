@@ -56,13 +56,14 @@ img[src='']{
 
 	
 .savebtn{
- 	margin-left: 336px;
+ 	margin-left: -159px;
 	margin-top: 7px; 
 	height: 28px;
 	padding-top: 6px;
 	background-color: rgb(0, 203, 233);
 	color: #fff;
 	border: none;
+	position: absolute;
 	}
 
  .header2{width:37%}
@@ -7060,7 +7061,7 @@ text-transform: uppercase;
           clear: both; }
            @media (min-width: 650px) {
             .cart.wrapper .product-block li.header ul li:first-child, .confirmation .product-block li.header ul li:first-child {
-              width: 36%;
+              width: 51%;
               padding-left: 15px; } }
         .cart.wrapper .product-block li.header ul li.pincode-button, .confirmation .product-block li.header ul li.pincode-button {
           text-align:center;
@@ -16746,8 +16747,8 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     z-index: 2;
     content: "";
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background-color: #00cbe9;
     border: 2px solid #fff;

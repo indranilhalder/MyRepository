@@ -159,6 +159,16 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		parent="abstractEmailContext" scope="prototype">
 		<property name="orderConverter" ref="orderConverter" />
 	</bean>
+	
+	<!-- Added For PickUp Person And Order Refund Context  -->	
+	<bean id="orderCollectedByPersonNotificationEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.OrderCollectedByPersonNotificationEmailContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
+	<bean id="orderRefundCreditedEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.OrderRefundCreditedEmailContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
 
 	<bean id="deliverySentEmailContext"
 		class="com.tisl.mpl.facades.process.email.context.DeliverySentEmailContext"

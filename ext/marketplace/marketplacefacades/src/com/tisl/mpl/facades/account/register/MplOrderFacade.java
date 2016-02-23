@@ -118,7 +118,7 @@ public interface MplOrderFacade
 
 	/**
 	 * TISEE-6419
-	 * 
+	 *
 	 * @param orderData
 	 * @param transactionId
 	 * @return boolean
@@ -142,7 +142,14 @@ public interface MplOrderFacade
 	 *
 	 * Create Ticket CRM For UpdatePickUpDetails
 	 */
-	public void createCrmTicketUpdatePickDetails(String orderId, String name, String mobile);
+	public void createCrmTicketUpdatePickDetails(String orderId);
+
+	/**
+	 * raise ticket in CRM when updating pickup details from cscockpit
+	 *
+	 * @param orderId
+	 */
+	public void createcrmTicketForCockpit(OrderModel mainOrder, String customerId, String source);
 
 
 }
