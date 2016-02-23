@@ -279,10 +279,13 @@ $(document).on("keypress",'#newWishlistName',function(e) {
 		var key = e.keyCode;
 		if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
 			e.preventDefault();
+			 var start = this.selectionStart,
+	         end = this.selectionEnd;
 			$('#newWishlistName').val(wishlistname);
 			$('#errorCreate').show();
 			$('#errorCreate').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
 			$("#errorCreate").show().fadeOut(3000);
+			this.setSelectionRange(start, end);
 		} 
 	});
 $(document).ready(function() {    
@@ -312,9 +315,12 @@ $(document).on("keypress","#editWishList",function(e) {
 	var key = e.keyCode;
 	if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
 		e.preventDefault();
+		var start = this.selectionStart,
+        end = this.selectionEnd;
 		$('#editWishList').val(wishlistname);
 		$('#errRename').show();
 		$('#errRename').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
 		$('#errRename').show().fadeOut(3000);
+		this.setSelectionRange(start, end);
 	} 
 }); 
