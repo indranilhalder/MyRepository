@@ -30268,6 +30268,17 @@ li#ratingDiv {
 #my-review-carousel {
 	display: none;
 }
+
+
+.feature-categories.footwear .feature-categories ul.categories {
+	    margin-bottom: 0;
+    padding: 5px;
+}
+.feature-categories.footwear .feature-categories ul.categories.count-3 li {
+	width: calc(50% - 5px);
+    padding: 0 10px;
+    margin:0;
+}
 /*--------------maincss-----------*/
 .row
 {
