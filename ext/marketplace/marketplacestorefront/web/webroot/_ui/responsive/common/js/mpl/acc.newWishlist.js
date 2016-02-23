@@ -283,7 +283,7 @@ $(document).on("keypress",'#newWishlistName',function(e) {
 	         end = this.selectionEnd;
 			$('#newWishlistName').val(wishlistname);
 			$('#errorCreate').show();
-			$('#errorCreate').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
+			$('#errorCreate').html("<font color='#ff1c47'><b>Special characters are not allowed</b></font>");
 			$("#errorCreate").show().fadeOut(3000);
 			this.setSelectionRange(start, end);
 		} 
@@ -319,7 +319,7 @@ $(document).on("keypress","#editWishList",function(e) {
         end = this.selectionEnd;
 		$('#editWishList').val(wishlistname);
 		$('#errRename').show();
-		$('#errRename').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
+		$('#errRename').html("<font color='#ff1c47'><b>Special characters are not allowed</b></font>");
 		$('#errRename').show().fadeOut(3000);
 		this.setSelectionRange(start, end);
 	} 

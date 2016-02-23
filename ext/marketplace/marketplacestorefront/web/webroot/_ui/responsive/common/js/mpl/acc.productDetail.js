@@ -336,7 +336,7 @@ $(document).on("keypress",'#defaultWishName',function(e) {
 		         end = this.selectionEnd;
 			$('#defaultWishName').val(wishlistname);
 			$('#addedMessage').show();
-			$('#addedMessage').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
+			$('#addedMessage').html("<font color='#ff1c47'><b>Special characters are not allowed</b></font>");
 			$("#addedMessage").show().fadeOut(3000);
 			this.setSelectionRange(start, end);
 		} 
