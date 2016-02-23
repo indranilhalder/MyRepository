@@ -319,36 +319,27 @@ function loadDefaultWishListName() {
 	$("#wishListDetailsId").show();
 
 	wishListContent = wishListContent
-	+ "<tr><td><input type='text' id='defaultWishName' onkeyup='return onKeyUpWishlistNameValidate();' value='"
+	+ "<tr><td><input type='text' id='defaultWishName'  value='"
 	+ wishName + "'/></td></td></tr>"; 
-	/*wishListContent = wishListContent
-			+ "<tr><td><input type='text' id='defaultWishName' value='"
-			+ wishName + "'/></td></td></tr>";*/
 	$("#wishlistTbodyId").html(wishListContent);
    
 }
 
 //TISSTRT-907  WishList Special character implementation
-function onKeyUpWishlistNameValidate(){
-	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
+$(document).on("keypress",'#defaultWishName',function(e) {
 	var isValid = false;
 	var wishlistname = $("#defaultWishName").val();
-	isValid = re.test(wishlistname);
-	if(wishlistname!="" && !isValid){
-
-		wishlistname = wishlistname.substring(0, wishlistname.length - 1);
-		$('#defaultWishName').val(wishlistname);
-		$('#addedMessage').show();
-		$('#addedMessage').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
-		$("#addedMessage").show().fadeOut(3000);
-
+	if(wishlistname!="" ){
+		var key = e.keyCode;
+		if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
+			e.preventDefault();
+			$('#defaultWishName').val(wishlistname);
+			$('#addedMessage').show();
+			$('#addedMessage').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
+			$("#addedMessage").show().fadeOut(3000);
+		} 
 	}
-	else{
-		isValid = true;
-
-	}
-	return isValid;
-}    
+	}) 
 
 function gotoLogin() {
 	window.open(ACC.config.encodedContextPath + "/login", "_self");
@@ -415,19 +406,17 @@ function selectWishlist(i) {
 }
 
 function addToWishlist() {
-	
-	
 
 	var productCodePost = $("#productCodePost").val();
 
 	var wishName = "";
   
 	if (wishListList == "") {
-		wishName = $("#defaultWishName").val();
+		wishName = $("#defaultWishName").val().trim();
 	} else {
-		wishName = wishListList[$("#hidWishlist").val()];
+		wishName = wishListList[$("#hidWishlist").val().trim()];
 	}
-	if(wishName==""){
+	if(wishName=="" || wishName.trim()==""){
 		var msg=$('#wishlistnotblank').text();
 		$('#addedMessage').show();
 		$('#addedMessage').html(msg);
