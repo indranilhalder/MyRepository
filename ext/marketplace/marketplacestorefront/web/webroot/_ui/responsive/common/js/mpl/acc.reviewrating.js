@@ -87,7 +87,7 @@ if(typeof(arrayrating)!= "undefined"){
 			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment Title cannot be left blank.</p>");		
 			    isValidated=false;		
 			}else if(updatedReviewHeading.length > 250){
-				$(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater than 250 charecters.</p>");		
+				$(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater than 250 characters.</p>");		
 			    isValidated=false;
 			}
 			if(updatedCommentTitle == undefined || updatedCommentTitle.replace(/\s/g, '')  == "")		
@@ -95,7 +95,7 @@ if(typeof(arrayrating)!= "undefined"){
 			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment text cannot be left blank.</p>");		
 			    isValidated=false;		
 			}else if(updatedCommentTitle.length > 5000){
-				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
+				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 characters.</p>");		
 			    isValidated=false;	
 			}
 			if(hiddenMediaUrl!=""){
@@ -105,7 +105,7 @@ if(typeof(arrayrating)!= "undefined"){
 				    $(".errorUpdateReview"+indexElement).html("<p>Please enter attachment URL. Attachment URL cannot be left blank.</p>");		
 				    isValidated=false;		
 				}else if(updatedMediaUrl.length > 500){
-					$(".errorUpdateReview"+indexElement).html("<p>Attachment URL cannot be greater than 100 charecters.</p>");		
+					$(".errorUpdateReview"+indexElement).html("<p>Attachment URL cannot be greater than 100 characters.</p>");		
 				    isValidated=false;	
 				}
 			}
@@ -113,7 +113,7 @@ if(typeof(arrayrating)!= "undefined"){
 			//TISSTRT-290 fix
 			if((updatedReviewHeading.length > 250) && (updatedCommentTitle.length > 5000))		
 			{		
-			    $(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater that 250 characters<br/>Review text cannot be greater than 5000 charecters.</p>");		
+			    $(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater that 250 characters<br/>Review text cannot be greater than 5000 characters.</p>");		
 			    isValidated=false;		
 			}
 			var x = updatedReviewHeading.length;
