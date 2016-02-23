@@ -109,6 +109,18 @@
 
 
 $(document).ready(function(){
+	
+	//TISEEII-640 issue fix -- Start
+	$(".facet.js-facet .js-facet-name").each(function(){
+		var x = $(this).html().length; 
+		//if(x == "6")
+			if($.trim($(this).html())==''){
+			//alert("no data");
+				$(this).parent().hide();
+			}
+	});
+	//TISEEII-640 issue fix -- End
+	
 	$(document).keydown(function(e){
 		if(e.which == 27) {
 			$('.modal').modal('hide');
