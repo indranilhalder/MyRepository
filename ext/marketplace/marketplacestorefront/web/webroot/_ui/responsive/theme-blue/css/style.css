@@ -1217,7 +1217,7 @@ h2 {
         header .content .right > ul > li.wishlist:hover {
           background: #fafafa; }
           header .content .right > ul > li.wishlist:hover .wishlist-info {
-            z-index: 2;
+            z-index: 10;
             max-height: 1000px;
             -webkit-transition: max-height 0.15s, z-index 0s;
             -moz-transition: max-height 0.15s, z-index 0s;
@@ -1333,7 +1333,7 @@ h2 {
           transition: background 0.15s; }
           header .content .right > ul > li.sign-in:hover .sign-in-info {
             max-height: 1000px;
-            z-index: 2;
+            z-index: 10;
             -webkit-transition: max-height 0.15s, z-index 0s;
             -moz-transition: max-height 0.15s, z-index 0s;
             transition: max-height 0.15s, z-index 0s; }
@@ -2976,7 +2976,7 @@ h2 {
           header > .content .bottom .search form select {
             width: -webkit-calc(100% - 205px);
             width: calc(100% - 205px);
-            padding-left: 0px;
+            padding-left: 5px;
          }
          header > .content .bottom .search form input{
          width: -webkit-calc(100% - 120px);
@@ -3112,6 +3112,7 @@ h2 {
 .tabs-block .tabs>li.active,
 .tabs-block .tabs>.wrapper>li.active {
     display: inline-block;
+        width: 100%;
 }
 .tabs-block .tabs>li a,
 .tabs-block .tabs>.wrapper>li a {
@@ -17194,7 +17195,8 @@ font-weight:normal;
   	header > .content .bottom .search form select {		
            		
             width: -webkit-calc(100% - 65%);		
-            width: calc(100% - 65%);		
+            width: calc(100% - 65%);	
+            padding-left:5px;	
             		
      }		
      header > .content .bottom .search form input {		
@@ -18288,19 +18290,9 @@ body .account .right-account form .half.account-profileEmail,body .account .righ
     .feature-categories .content-block {
   margin: 0 40px;
 }
-.electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-prev{
-	
-	left:-30px;
-	width:40px;
-}
 .electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-prev::after{
 	
 right:0px;
-}
-.electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-next{
-	
-	right:-30px;
-	width:40px;
 }
 .electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-next::after{
 	
@@ -19385,9 +19377,9 @@ header .banner .toggle.mobile {
 
 @media (max-width: 790px)
 {
-header .banner .toggle.desktop {
+/* header .banner .toggle.desktop {
   display: none;
-}
+} */
  .brand-microsite header > .content .bottom .marketplace {
       height: 60px;
  }
@@ -25198,9 +25190,6 @@ color:#fff;
 .electronics-brand .feature-categories.custom-feature div.left-img + .content a{
 color:#fff;
 }
-.electronics-brand .feature-categories.custom-feature div.left-img + .content a:after{
-border-left: 4.5px solid #fff;
-}
 .electronics-brand .feature-categories.custom-feature{
 padding:0;
 }
@@ -25748,15 +25737,15 @@ padding-left: 0px;}
     margin:30px 0;}
     .listing.wrapper .right-block .listing-menu .pagination li.prev,.listing.wrapper .right-block .listing-menu .pagination li.next{
     height:34px;}
-     .listing.wrapper .right-block .listing-menu .pagination .prev:before,.listing.wrapper .right-block .listing-menu .pagination .next:after{
+     .listing.wrapper .right-block .listing-menu .pagination .prev a:before,.listing.wrapper .right-block .listing-menu .pagination .next a:after{
     margin-top:9px;}
-     .listing.wrapper .bottom-pagination .pagination .prev:before,.listing.wrapper .bottom-pagination .pagination .next:after{
+     .listing.wrapper .bottom-pagination .pagination .prev a:before,.listing.wrapper .bottom-pagination .pagination .next a:after{
     margin-top:12px;}
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 640px) and (-webkit-min-device-pixel-ratio: 2) {
 .feature-categories ul.categories a.shop_link:after, .feature-categories .item.slide a.shop_link:after,.brands .feature-brands span.link-copy:after, .brands .feature-virtues span.link-copy:after, .virtues .feature-brands span.link-copy:after, .virtues .feature-virtues span.link-copy:after{
-    top: 1px;
+   /*  top: 1px; */
     position: relative;
 }
 }
@@ -29236,6 +29225,8 @@ padding:15px;}
 }
 .shop-promos .promos li span:after{
       font-size: 30px;
+      color: inherit;
+      top:3px;
  }
 }
 
@@ -29487,12 +29478,15 @@ padding:20px;
 .home-brands-you-love-side-image.right{
 padding-top:20px;
 }
+.visit-store-wrapper {
+    bottom: 25px;
+}
 }
 
 @media (max-width: 1050px){
 .home-brands-you-love-main-image-wrapper .text {
-    font-size: 30px;
-    line-height:30px;
+    font-size: 25px;
+    line-height:25px;
 }
 }
 @media(min-width:791px){
@@ -29676,7 +29670,7 @@ padding: 0px 5px 10px;
 a.button.trending-button {
     background: transparent;
     color: #333;
-    border: 1px solid #bbb;
+    border: 1px solid #4a4a4a;
     font-size: 12px;
     font-weight: 600;
     text-decoration: none;
@@ -30073,7 +30067,7 @@ body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
     padding-bottom: 70px;
 }
 header.compact .content .top{
-height:95px;}
+min-height:95px;}
 header.compact .content span.material-icons{
 	 height: 50px;
     vertical-align: top;
@@ -30266,6 +30260,13 @@ input#typeOfProduct:-ms-input-placeholder {
 
 .footwear_left img, .footwear_right img {
 	width: 100%;
+}
+li#ratingDiv {
+    max-width: 100%;
+}
+
+#my-review-carousel {
+	display: none;
 }
 /*--------------maincss-----------*/
 .row
@@ -35689,6 +35690,9 @@ div.MSDQuickView, div.MSDQuickView:before {
 @media(max-width:400px){
 	.owl-carousel .owl-controls .owl-buttons .owl-prev, .owl-carousel .owl-controls .owl-buttons .owl-next{
 	top:35% !important;
+	}
+	.electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-next, .electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-prev{
+	top:50% !important;
 	}
 }
 
