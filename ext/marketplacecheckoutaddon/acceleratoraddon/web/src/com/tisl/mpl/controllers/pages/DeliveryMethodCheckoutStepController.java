@@ -720,6 +720,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 					
 					pwPOS.setUssId(ussId);
+					pwPOS.setSellerName(sellerName);
 					LOG.debug("get stores from commerce based on SellerId and StoredId(slaveId)");
 					for (int i = 0; i < storeLocationResponseData.getAts().size(); i++)
 					{
