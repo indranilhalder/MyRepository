@@ -56,10 +56,8 @@ public class CustomOmsOrderService implements OmsOrderService
 	private MplSendOrderFromCommerceToCRM ordercreation;
 	@Autowired
 	private MplCustomerWebService mplCustomerWebService;
-
+   @Autowired
 	private PickupInfoFacade pickupInfoRestClient;
-
-
 
 	public OrderPlacementResult createOmsOrder(final OrderModel orderModel)
 	{
