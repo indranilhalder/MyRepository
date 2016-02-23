@@ -64,7 +64,7 @@ UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];title[l
 
 # CMS Footer Component
 UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];notice[lang=$lang]
-;;FooterComponent;"&#169; 2015 Tata Marketplace | All rights reserved"
+;;FooterComponent;"&#169; 2016 Tata Marketplace | All rights reserved"
 UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];footerText[lang=$lang]
 ;;FooterComponent;"<p>Tata CLIQ........ Lorem ipsum dolor sit amet, <a href='#'>consectetur</a> adipiscing elit. In egestas, purus id imperdiet dignissim, nunc urna semper sapien, vitae varius erat felis et erat.</p> "
 

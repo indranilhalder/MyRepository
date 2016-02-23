@@ -19,10 +19,12 @@ $storefrontContextRoot=$config-storefrontContextRoot
 # Site Logo
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
 ;;sitelogo.png;sitelogo.png;$siteResource/images/logo/sitelogo.png;image/png;Tata Cliq;
+;;LinearSitelogo.png;LinearSitelogo.png;$siteResource/images/logo/LinearSitelogo.png;image/png;Tata Cliq;
 
 # Site Logo Component
 UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
 ;;SiteLogoComponent;sitelogo.png
+;;ResponsiveSiteLogoComponent;LinearSitelogo.png
 
 #Brands You Love Media
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
@@ -160,8 +162,8 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 #Added this line
 UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
 ;;TMPHomepageStayQuedComponent1;stayQuedBanner4.PNG;"<h5>How to dress</h5><h2>Casual</h2><h3>Yet Formal</h3><p>Read our tips on how to dress. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam congue ante ac venenatis faucibus. Donec eu orci sit amet purus consectetur scelerisque non id mi. Maecenas congue dictum nunc non eleifend. </p>";"Read Article"; 
-;;TMPHomepageStayQuedComponent2;stayQued1.jpg;"<h5>How to rock</h5><h2>denim</h2><h3>on denim</h3><p>Letâ€™s just say it â€“ these are dark, unpredictable times and thereâ€™s not much to hold on to. Thankfully, when it comes to sartorial issues, denim is our only hope.</p>";"Read Article";
-;;TMPHomepageStayQuedComponent3;stayQued2.jpg;"<h5>Denim</h5><h2>Duo</h2><h3>Men</h3><p>Donâ€™t be surprised if this fabric is all youâ€™re seeing everywhere. Like the sands through the hourglass, so are the days of denim upcycling. </p>";"Read Article";
+;;TMPHomepageStayQuedComponent2;stayQued1.jpg;"<h5>How to rock</h5><h2>denim</h2><h3>on denim</h3><p>Let’s just say it – these are dark, unpredictable times and there’s not much to hold on to. Thankfully, when it comes to sartorial issues, denim is our only hope.</p>";"Read Article";
+;;TMPHomepageStayQuedComponent3;stayQued2.jpg;"<h5>Denim</h5><h2>Duo</h2><h3>Men</h3><p>Don’t be surprised if this fabric is all you’re seeing everywhere. Like the sands through the hourglass, so are the days of denim upcycling. </p>";"Read Article";
 
 #### StayQued Ends#########
 UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
@@ -178,6 +180,31 @@ UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];tit
 UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 ;; NewAndExclusiveProductCarouselComponent;"Discover New & Exclusive"
 #;;TMPHomepageHandpickedProductCarouselComponent;Handpicked Collections.
+
+######## Footer image icons starts #######
+
+# Media Content
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;gplus.png;$siteResource/images/banners/homepage/gplus.png;gplus.png;"Google Plus";
+;;facebook.png;$siteResource/images/banners/homepage/facebook.png;facebook.png;"Facebook";
+;;apple.png;$siteResource/images/banners/homepage/apple.png;apple.png;"Apple";
+;;android.png;$siteResource/images/banners/homepage/android.png;android.png;"Android";
+
+
+# Footer Image Component
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
+;;GoogleImageComponent;Google Image Component;GoogleImageComponent;"https://plus.google.com";gplus.png
+;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook.png
+;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"https://www.play.google.com";android.png
+;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"http://www.apple.com";apple.png
+
+
+# CMS Footer Component
+INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);&componentRef;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV);
+;;FooterComponent;6;TataMarketplaceNavNode,CustomerServiceNavNode,MyMarketplaceNavNode;FooterComponent;GoogleImageComponent,FacebookImageComponent;AndroidImageComponent,AppleImageComponent;
+
+
+######## Footer image icons ends ########
 
 UPDATE MplNowTrendingProductCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
 #;;TMPHomepageNowTrendingProductCarouselComponent;Now Trending

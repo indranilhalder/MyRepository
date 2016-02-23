@@ -1547,11 +1547,21 @@
 
 
 	<!-- Tata Cliq Job : Campaign Team -->
+	<bean id="campaignPromoSubService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoSubService">
+	</bean>
+	
 	<bean id="campaignPromoDataService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoDataService">
 		<property name="modelService" ref="modelService" />
+		<property name="campaignPromoSubService" ref="campaignPromoSubService" />
 		<property name="sellerBasedPromotionDao" ref="sellerBasedPromotionDao" />
 	</bean>
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
+	
+	<!-- Coupon restriction service, added for getting restrictions for coupon -->
+	<bean id="couponRestrictionService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCouponRestrictionServiceImpl">		
+	</bean>
 </beans>

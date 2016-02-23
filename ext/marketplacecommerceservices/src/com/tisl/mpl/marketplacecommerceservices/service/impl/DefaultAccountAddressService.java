@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -53,7 +54,8 @@ public class DefaultAccountAddressService implements AccountAddressService
 			final List<StateData> stateDataList = new ArrayList<StateData>();
 			final List<StateModel> stateModelList = accountAddressDao.getStates();
 
-			if (null != stateModelList && stateModelList.size() > 0)
+			//if (null != stateModelList && stateModelList.size() > 0)
+			if (CollectionUtils.isNotEmpty(stateModelList))
 			{
 				for (final StateModel newModel : stateModelList)
 				{

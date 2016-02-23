@@ -92,10 +92,10 @@ header .content .bottom nav>ul>li>ul>li>ul.words>li {
 	{
 		margin-left:-32px;
 	}
-	header .marketplace img
+	/* header .marketplace img
 	{
 		width:80% !important;
-	}
+	} */
 	.brand header .bottom nav
 	{
 		margin-left:20px;
@@ -214,12 +214,12 @@ body .brand header > .content .bottom .mobile-bag.bag
 	display:none;
 }
 
-@media (max-width: 425px)
+/* @media (max-width: 425px)
   {
 	  .marketplace img {
 	  	width: 70%;
 	  }
-}
+} */
 @media (max-width:790px)
 {
 	header > .content .top.active
@@ -482,7 +482,7 @@ header .content nav > ul > li > ul > li > ul > li.short
 	  width: auto;
   margin: 10px 0px;
   text-align: center;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .carousel .item {
@@ -498,11 +498,7 @@ header .content nav > ul > li > ul > li > ul > li.short
 }		
 .product-facet {		
 	margin: 20px 0;		
-}		
-.product-facet .facet {		
-	padding: 10px 0px;		
-	margin: 0 0 20px 0;		
-}		
+}				
 .product-facet .facet:before, .product-facet .facet:after {		
 	content: " ";		
 	display: table;		
@@ -695,9 +691,9 @@ header .content nav > ul > li > ul > li > ul > li.short
 	height:40px;	
 	line-height:20px;
 }	
-.feedbackYes:hover{
+/* .feedbackYes:hover{
 	background-color:#009fb6;
-}	
+} */	
 .feedbackNo {		
 	padding: 12px 38px;		
 	background-color: #ffb810;		
@@ -709,9 +705,9 @@ header .content nav > ul > li > ul > li > ul > li.short
 	height:40px;	
 	line-height:20px;	
 }	
-.feedbackNo:hover{
+/* .feedbackNo:hover{
 	background-color:#cc8600;
-}		
+} */		
 #feedBackFormYes {		
 	margin: 0 41%;		
 	padding-top: 25px;		
@@ -756,7 +752,8 @@ header .content nav > ul > li > ul > li > ul > li.short
 }	
 .stockLevelStatus{
   top: 40%;
-    left: 24%;
+    left: 0;
+    right:0;
     font-size:12px;
     font-weight:600;
     position: absolute;
@@ -777,21 +774,6 @@ header .content nav > ul > li > ul > li > ul > li.short
     -ms-filter: "alpha(opacity=30)" !important;
     -moz-opacity: .3 !important;
     -khtml-opacity: .3 !important;
-}
-@media(max-width:420px){
-	.stockLevelStatus{
-    left: 18%;
-	}
-}
-@media(max-width:790px) and (min-width:421px){
-	.stockLevelStatus{
-    left: 28%;
-	}
-}
-@media(max-width:1145px) and (min-width:791px){
-	.stockLevelStatus{
-    left: 24%;
-	}
 }
 .productInfo li{
 	margin-bottom:5px;
@@ -2025,7 +2007,9 @@ header.brand-header .content .bottom .marketplace {
 
 
 header.brand-header .content .bottom nav {
-	color: #fff
+	color: #fff;
+    padding-left: 50px;
+    margin-left: 20px;
 }
 
 header.brand-header .content .bottom nav>ul>li>.toggle {
@@ -2040,6 +2024,7 @@ header.brand-header .content .bottom nav>ul>li:hover {
 header.brand-header .content .bottom nav>ul>li>ul {
 	background-color: #b9b9b9;
 	top: 80px;
+	left: 245px;
 }
 
 @media ( max-width :790px) {
@@ -2235,8 +2220,8 @@ header .content .marketplace.compact {
   z-index: -1;
 }
 header .content .marketplace.compact a img{
- width: 200px;
-  margin-top: 0px;
+ width: 130px;
+  margin-top: 7px;
 }
 header .banner .toggle.mobile {
   display: none;
@@ -2245,10 +2230,6 @@ header .banner .toggle.mobile {
    border: none;
 }
 
-
-.brand-microsite header .content .marketplace.compact .simple-banner-component{	
-	 margin-top:-10px; 
-}
 
 
 .brand-microsite header .content .bottom .brand-logo .simple-banner-component img{	
@@ -2272,9 +2253,9 @@ header > .content .bottom .search form input{
  header.brand-header .content .bottom nav>ul>li>ul>li>ul {
   background-color: #000;
 }
-header .banner .toggle.desktop {
+/* header .banner .toggle.desktop {
   display: none;
-}
+} */
 .brand-microsite header .content .compact-toggle {
   opacity: 1;
 }
@@ -2457,7 +2438,7 @@ header > .content .bottom .search {
 }
 header > .content .bottom .marketplace {
   text-align: center;
-  padding: 0 25px;
+  padding: 10px 25px;
   vertical-align: middle;
   font-size: 24px;
   text-transform: uppercase;
@@ -2480,22 +2461,11 @@ header.brand-header .content .bottom .bag{
 
 @media (max-width: 855px)
 {
-header .content .marketplace.compact {
+/* header .content .marketplace.compact {
   padding-right: 355px;
-}
+} */
 header .content .right > ul > li {
   padding: 0 10px;
-}
-
-}
-@media (max-width: 1080px)
-{
-header .content .marketplace.compact {
-  padding-right: 420px;
-  padding-left: 220px;
-  -webkit-transition: padding 0.15s;
-  -moz-transition: padding 0.15s;
-  transition: padding 0.15s;
 }
 
 }
@@ -2514,7 +2484,7 @@ display:none;
 	/* font-size:42px; */
 }
 .select-list ul li{
-	font-size:16px;
+	font-size:14px;
 }
 
 .glyphicon {
@@ -2561,7 +2531,7 @@ display:none;
   bottom: 0;
   right: 0;
   color: #fff;
-  background-color: #a9143c;
+  background-color: #961437;
   position: fixed;
   height: 35px;
   width: 126px;
@@ -9885,17 +9855,17 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
     font-size:12px;
 }
 
-.product-content .popover-content, .item-edit-details .popover-content, table#sellerTable.other-sellers-table .popover-content{
+.product-content .popover-content, .item-edit-details .popover-content, table#sellerTable.other-sellers-table .popover-content,.modal.size-guide .popover-content{
 	padding:0px !important;
 }
-.product-content .title-popover, .item-edit-details .title-popover, table#sellerTable.other-sellers-table .title-popover {
+.product-content .title-popover, .item-edit-details .title-popover, table#sellerTable.other-sellers-table .title-popover,.modal.size-guide .title-popover {
 	background-color: #fff;
     border-bottom: 0px;
     font-size: 12px;
     font-weight: 600;
     padding: 8px 10px;
 }
-.product-content .popover.bottom, .item-edit-details .popover.bottom, table#sellerTable.other-sellers-table .popover.bottom{
+.product-content .popover.bottom, .item-edit-details .popover.bottom, table#sellerTable.other-sellers-table .popover.bottom, .modal.size-guide .popover.bottom{
 	 min-width:250px;
 	 z-index: 1;
 }
@@ -9905,17 +9875,18 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
     color: blue;
     margin:5px 0px;
 }
-.popover-content .savetowishlistbutton, .cart.wrapper .popover-content .savetowishlistbutton, table#sellerTable.other-sellers-table .savetowishlistbutton{
+
+.popover-content .savetowishlistbutton, .cart.wrapper .popover-content .savetowishlistbutton, table#sellerTable.other-sellers-table .savetowishlistbutton,.modal.size-guide .savetowishlistbutton{
 	margin: 4px auto;
 	color: #fff;
-	background-color: #a9143c;
+	background-color: #A9143C;
 	width: 70px;
 	text-align: center;
 	cursor: pointer;
 	font-size: 12px !important;
 	font-weight: 600;
 	    height: 20px !important;
-    line-height: 3px;
+    line-height: 3px !important;
         padding: 13px 18px;
     border:0px;
     }
@@ -9924,12 +9895,12 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
 	text-decoration: underline;
 	font-weight: 600;
 	}
-	#wishListNonLoggedInId{
+	#wishListNonLoggedInId, #wishListNonLoggedInId_sizeGuide {
 	    margin: 15px 0px;
     text-align: center;
     font-size:12px;
 	}
-	#wishlistTbodyId #defaultWishName{
+	#wishlistTbodyId #defaultWishName,#wishlistTbodyId_sizeGuide #defaultWishName_sizeGuide{
 	    width: 100%;
     border: 1px solid #a9143c;
     height: 25px;
@@ -10126,8 +10097,9 @@ body .account .right-account .mpl-addressPopup.modal .confirm-deletionButton, bo
  	    line-height:32px;
  }
   body .account .right-account .mpl-addressPopup.modal .closeColorBox {
- 	background-color:red;
+ 	background-color:#ffb810;
  	opacity:0.7;
+ 	color:#000;
  }
 .progress {
 	filter:none !important;
@@ -11023,7 +10995,7 @@ min-height:auto !important;
 	padding: 10px 5px 5px 5px !important; 
 }
 
-.trackorder-dropdown li:first-child {
+.trackorder-dropdown li:nth-of-type(1) {
 	border: none;
 }
 
@@ -11046,6 +11018,7 @@ ul.trackorder-dropdown li > div > h4 {
 }
 .track.trackOrder:hover .trackorder-dropdown{
 display:block;
+z-index:10;
 }
 
 .trackOrder:hover{
@@ -11205,6 +11178,7 @@ div.variantFormContainer{
 @media (min-width:790px) {
 	 header>.content .bottom .marketplace {
 		display: table;
+		margin-top:-18px;
 	}
 	header>.content .bottom .marketplace .simple-banner-component
 		{
@@ -11931,9 +11905,9 @@ body .account .right-account form .full.span input#currentPassword{
     vertical-align: top;
 }
 #deleteConfirmation .deleteWlConfirmationNo,#removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo, #updateReview .updateReviewConfirmationNo{
-	background-color: red;
+	background-color: #ffb810;
     opacity: 0.7;
-    color: #fff;
+    color: #000;
     text-transform: uppercase;
     display: inline-block;
     padding: 0px 10px;
@@ -11949,6 +11923,9 @@ body .account .right-account form .full.span input#currentPassword{
 	    font-size: 24px;
     margin-bottom: 15px;
     line-height: 24px;
+}
+#deleteConfirmation .modal-title b,#removeProductConfirmation .modal-title b{
+	    font-weight: 500;
 }
 #deleteConfirmation .modal-content,#removeProductConfirmation .modal-content{
 	border:1px solid;
@@ -14801,8 +14778,9 @@ body .account .right-account .reviews .review-list .wrapper>li .review .details 
     
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details input[name="cancel"]{
-    background: #ff1c47;
-    opacity: 0.9;
+    background: #ffb810;
+    opacity: 0.7;
+    color:#000;
 }
 body.page-coupons .pagination li:not(.next):not(.prev):not(.active) span,body.page-coupons .pagination li:not(.next):not(.prev):not(.active) a {
     opacity: 0.5;
@@ -14819,21 +14797,26 @@ min-width:80px;
 
 
 	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
-	max-width: 100px;
-    display: block;
+	   max-width: 60px;
+    display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
+    vertical-align:middle;
 	}
-@media(min-width:791px) and (max-width:1080px){
+@media(min-width:791px) and (max-width:1300px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
+	    position: absolute;
+    	left: 210px;
+	}
+	header.compact .content .marketplace.compact + .right > ul > li.store-locator-header{
 	    position: absolute;
     	left: 120px;
 	}
-	header.compact .content .marketplace.compact a img{
+	/* header.compact .content .marketplace.compact a img{
 	width:180px;
-	}
+	} */
 	header.compact .content .marketplace.compact + .right > ul > li .account-userTitle-custom{
-	    width: 65px;
+	    max-width: 75px;
 	}
 	header.compact .content .marketplace.compact + .right > ul > li{
 	    padding:0 10px;
@@ -14848,6 +14831,7 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
     max-width: 210px;
 }
 }
+
 @media(min-width:791px){
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
@@ -15020,8 +15004,8 @@ padding-left: 13px !important;
     -ms-transform-origin: center;
     -o-transform-origin: center;
 	transform-origin: center;
-    border-bottom: 2px solid #fff;
-    border-left: 2px solid #fff;
+    border-bottom: 3px solid #fff;
+    border-left: 3px solid #fff;
 
 }
 .owl-next::after{
@@ -15030,14 +15014,14 @@ padding-left: 13px !important;
     bottom: 0;
     margin: auto !important;
     left: 0;
-border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
+border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
     
 	}
 .owl-carousel .owl-controls .owl-buttons .owl-prev, .owl-carousel .owl-controls .owl-buttons .owl-next{
-width: 40px;
+width: 30px;
     background: #a9143c;
-    height: 40px;
+    height: 30px;
     border-radius: 100%;
     
 }
@@ -15123,8 +15107,8 @@ width: 40px;
     bottom: 0;
     margin: auto !important;
     left: 0;
-    border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
 	}
 	
 	#brandsYouLove .bulprev:after {
@@ -15242,14 +15226,18 @@ width:100%;
     height: 35px;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page span {
-    background: rgba(255,255,255,0.6);
+    background: transparent;
+    border:2px solid rgba(255,255,255,0.6);
     border-radius: 100%;
     width:10px;
     height:10px;
 }
 .owl-carousel#rotatingImageTimeout .owl-controls .owl-pagination .owl-page.active span {
-    background: transparent;
-    border:2px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.6);
+    border: none;
+    border-radius: 100%;
+    width:10px;
+    height:10px;
 }
 /*New Homepage change ends*/
 footer>ul>li>.toggle>img{
@@ -15279,7 +15267,7 @@ footer>ul>li>.toggle>img{
 	display: block;
     background: transparent;
     color: #333;
-    border: 1px solid #4a4a4a;
+    border: 1px solid #bbb;
     font-size: 12px;
     font-weight: 600;
     width: 150px;
@@ -15299,6 +15287,9 @@ a.button.trending-button:hover{
 #newAndExclusive .newExclusiveElement > a{
     display: block;
     padding-bottom: 5px;
+}
+#newAndExclusive .newExclusiveElement > a:hover *{
+   color:#a9143c;
 }
 #newAndExclusive .New_Exclusive_title{
 	margin:10px 0;
@@ -15413,8 +15404,9 @@ width:100%;
 	color:#a9143c;
 }
 .home-brands-you-love-wrapper h1{
-text-align: center;
-    font-size: 24px;
+	text-align: center;
+    font-size: 28px;
+    font-weight: 600;
 }
 
 .home-brands-you-love-carousel-brands.active img{
@@ -15474,7 +15466,7 @@ margin: 10px 0px;
 #bestPicks .home-best-pick-carousel-img img{
 	max-width: 100%;
 }
-#bestPicks .short-info span {
+#bestPicks .short-info span , #bestPicks .short-info p{
     font-size: 12px;
     font-family: "Avenir Next";
     color:#333;
@@ -15486,6 +15478,15 @@ margin: 10px 0px;
     width: 100%;
     word-break: break-word;
 }
+#bestPicks .short-info span:last-child,#bestPicks .short-info p:last-child{
+font-family:DejaVu Sans;
+	font-size:98%;
+	display:inline !important;
+	background:transparent !important;
+	border:none;
+	font-weight:500;
+
+}
 #bestPicks .short-info a {
     font-size: 12px;
     font-family: "Avenir Next";
@@ -15496,7 +15497,7 @@ margin: 10px 0px;
     padding: 4px;
     width: 100%;
 }
-#bestPicks .short-info a span {
+#bestPicks .short-info a span,#bestPicks .short-info a p {
     font-size: 12px;
     font-family: "Avenir Next";
     color:inherit;
@@ -15507,7 +15508,7 @@ margin: 10px 0px;
     width: 100%;
     padding: 0;
 }
-#bestPicks .short-info span a {
+#bestPicks .short-info span a,#bestPicks .short-info p a {
     font-size: 12px;
     font-family: "Avenir Next";
     font-weight: 600;
@@ -15517,9 +15518,10 @@ margin: 10px 0px;
     width: 100%;
     padding: 0;
 }
+
 #bestPicks .view-cliq-offers {
 	padding: 13px;
-    border: 1px solid #4a4a4a;
+    border: 1px solid #bbb;
     color: #333;
     font-size: 12px;
     font-family: "Avenir Next";
@@ -15616,7 +15618,7 @@ padding: 0px 5px 10px;
 a.button.trending-button {
     background: transparent;
     color: #333;
-    border: 1px solid #4a4a4a;
+    border: 1px solid #bbb;
     font-size: 12px;
     font-weight: 600;
     text-decoration: none;
@@ -15795,7 +15797,7 @@ margin:20px 0;
 }
 .qued-content a.button.maroon {
    /*  margin-top: 90px; */
-    width: 220px;
+    width: 200px;
     padding-bottom: 20px;
    /*  margin:90px 0 20px 0; */
     position: absolute;
@@ -15847,9 +15849,10 @@ a.button, button {
     max-width: 100%;
     height: auto;
 }
-@media (max-width:790px){
+@media (max-width:650px){
 .qued{
-width:100%;}
+width:100%;
+padding-bottom: 20px;}
 }
 @media (max-width:650px){
 	.qued-content, .qued-image{
@@ -15857,7 +15860,8 @@ width:100%;}
 	.qued-content *, .qued-image{
 	text-align:center;}
 	.qued-content a.button.maroon {
-      margin: 0 auto;
+      margin: 0 auto 20px;
+    position: static;
    }
    .qued h1 {
        padding: 10px 0;
@@ -15882,7 +15886,8 @@ width: 100px !important;
     height: 50px !important;
     /* margin-top: 12px; */}
     header .content .bottom.active .marketplace {
-   margin-right: 0px;    }
+   margin-right: 0px;
+    margin-top: 0px;    }
 #rotatingImageTimeout {
     margin-top: 21px;
 }
@@ -15997,6 +16002,12 @@ body.touchDevice header .content nav > ul > li > ul > li.active > ul.words{
     padding-top: 40px;}
 body.touchDevice header .content nav>ul>li>ul>li>ul>li>a.view_dept{
 	padding-left:0px;}
+	span.out_of_stock#outOfStockId {
+    float: none;
+    clear: both;
+    display: block;
+    text-align: center;
+} 
 }
 .home-product-you-care-carousel{
     padding-bottom: 70px;
@@ -16026,3 +16037,6 @@ header:not(.compact) .content .marketplace.compact{
 	letter-spacing: 1.5px;
 	white-space: nowrap;}
 }
+a.size-guide {
+    white-space: nowrap;
+} 

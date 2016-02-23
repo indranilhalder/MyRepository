@@ -503,8 +503,8 @@
 					<property name="widgetCode" value="basketCartWidget"/>
 					<property name="widgetConfig" ref="csBasketCartWidgetConfig"/>
 				</bean>
-				
-				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+				<!-- Applied coupon -->
+				 <bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="couponWidget"/>
 					<property name="widgetConfig" ref="csCouponWidgetConfig"/>
 				</bean>

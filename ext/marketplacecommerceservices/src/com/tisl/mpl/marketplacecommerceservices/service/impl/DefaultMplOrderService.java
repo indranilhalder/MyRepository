@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -125,7 +126,8 @@ public class DefaultMplOrderService implements MplOrderService
 		{
 			final List<ReturnReasonData> reasonDataList = new ArrayList<ReturnReasonData>();
 			final List<ReturnReasonModel> reasonModelList = mplOrderDao.getReturnReasonForOrderItem();
-			if (null != reasonModelList && reasonModelList.size() > 0)
+			//if (null != reasonModelList && reasonModelList.size() > 0)
+			if (CollectionUtils.isNotEmpty(reasonModelList))
 			{
 				for (final ReturnReasonModel newModel : reasonModelList)
 				{
@@ -247,7 +249,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplAwbStatusService#prepAwbStatus(com.tisl.mpl.xml.pojo.AWBStatusResponse)
 	 */
 	@Override
@@ -327,7 +329,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplOrderService#findProductsByCode(java.lang.String)
 	 */
 	@Override

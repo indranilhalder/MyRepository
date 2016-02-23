@@ -42,7 +42,7 @@ INSERT_UPDATE SolrSearchConfig;description[unique=true];pageSize
 
 # Declare the indexed type Product
 INSERT_UPDATE SolrIndexedType;identifier[unique=true];type(code);variant;sorts(&sortRefID)
-;$solrIndexedType;Product;false;sortRef1,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8
+;$solrIndexedType;Product;false;sortRef1,sortRef3,sortRef4,sortRef5,sortRef6,sortRef7,sortRef8,sortRef9
 
 INSERT_UPDATE SolrFacetSearchConfig;name[unique=true];description;indexNamePrefix;languages(isocode);currencies(isocode);solrServerConfig(name);solrSearchConfig(description);solrIndexConfig(name);solrIndexedTypes(identifier);enabledLanguageFallbackMechanism;$catalogVersions
 ;$facetSearchConfigName;$facetSearchConfigDescription;$searchIndexNamePrefix;$indexLanguages;$indexCurrencies;$serverConfigName;$searchConfigName;$indexConfigName;$solrIndexedType;true;$productCatalog:Online,$productCatalog:Staged
@@ -111,9 +111,9 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; immediateCategory      ;string ;            ;    ;    ;    ;    ;    ;mplCompareProductValueProvider;
 ;$solrIndexedType; onlineExclusive        ;boolean;            ;    ;    ;    ;	   ;	;mplOnlineExclusiveValueProvider;
 ;$solrIndexedType; leastSizeProduct       ;string ;            ;    ;    ;    ;    ;    ;mplLeastSizeProductValueProvider;
-;$solrIndexedType; newTitle    		  ;string ;            ;	;    ;true;    ; true   ;mplNewTitleValueProvider;
-
-
+;$solrIndexedType; newTitle    		      ;string ;            ;	;    ;true;    ; true   ;mplNewTitleValueProvider;
+;$solrIndexedType; promotedProduct        ;boolean;            ;    ;    ;    ;	   ;	;mplPromotedProductValueProvider;
+;$solrIndexedType; promotedProductPriority        ;int;            ;    ;    ;    ;	   ;	;mplPromotedProductPriorityValueProvider;
 #Added for Cart
 
 ;$solrIndexedType; isVariant              ;boolean;            ;    ;    ;    ;    ;    ;mplIsVariantValueProvider;
@@ -246,7 +246,7 @@ INSERT_UPDATE SolrSort;&sortRefID;indexedType(identifier)[unique=true];code[uniq
 ;sortRef6;$solrIndexedType;price-desc;false;
 ;sortRef7;$solrIndexedType;isOffersExisting;false;
 ;sortRef8;$solrIndexedType;isProductNew;false;Newest
-
+;sortRef9;$solrIndexedType;promotedpriority-asc;false;
 
 # Define the sort fields
 INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fieldName[unique=true];ascending[unique=true];sortpos
@@ -264,6 +264,7 @@ INSERT_UPDATE SolrSortField;sort(indexedType(identifier),code)[unique=true];fiel
 ;$solrIndexedType:isOffersExisting;isOffersExisting;false;1
 ;$solrIndexedType:isProductNew;inStockFlag;false;0
 ;$solrIndexedType:isProductNew;isProductNew;false;1
+;$solrIndexedType:promotedpriority-asc;promotedProductPriority;true;0
 
 
 #Colour facet attribute for colour family facet

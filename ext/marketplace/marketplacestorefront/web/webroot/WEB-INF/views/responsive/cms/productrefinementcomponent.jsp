@@ -33,6 +33,7 @@ $(document).ready(function(){
 		<c:choose>
 		<c:when test="${isCategoryPage}">
 			<form id="categoryPageDeptHierTreeForm" name="categoryPageDeptHierTreeForm" method="get">
+				<input type="hidden" name="q" id="q" value="${searchPageData.currentQuery.query.value}"/>
 				<div id="categoryPageDeptHierTree"></div>
 			</form>
 		</c:when>

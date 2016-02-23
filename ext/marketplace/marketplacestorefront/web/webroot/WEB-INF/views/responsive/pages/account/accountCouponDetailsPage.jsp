@@ -16,7 +16,7 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -80,10 +80,10 @@
 
 		<div class="wrapper">
 			<!----- Left Navigation Starts --------->
-			<div class="left-nav">
-				<%-- <h1>
+			<%-- <div class="left-nav">
+				<h1>
 					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1> --%>
+				</h1>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -124,7 +124,10 @@
 
 				</ul>
 
-			</div>
+			</div> --%>
+			
+			<user:accountLeftNav pageName="coupons"/>
+			
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account rewards">
