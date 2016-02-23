@@ -1677,7 +1677,7 @@ function openPop_SizeGuide() {
 	//} else {
 	//	ussidValue = ussidfromSeller;
 	//}
-	var productCode = '${product.code}';//$("#product").val();
+	var productCode = $("#product").val(); // '${product.code}';
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/viewWishlistsInPDP";
@@ -1801,7 +1801,7 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 
 	function addToWishlist_SizeGuide() {
-	var productCodePost = '${product.code}'; //$("#productCode").val();
+	var productCodePost = $("#productCode").val(); //'${product.code}'; //
 	//var productCodePost = $("#productCodePostQuick").val();
 	//alert(productCodePost);
 	var wishName = "";
