@@ -141,7 +141,7 @@ public interface MplCouponFacade
 	/**
 	 * @param customer
 	 * @param pageableData
-	 * @return
+	 * @return CouponHistoryStoreDTO
 	 * @throws VoucherOperationException
 	 */
 	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer, PageableData pageableData)

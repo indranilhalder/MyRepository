@@ -5,15 +5,12 @@ package com.tisl.mpl.coupon.service.impl;
 
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -57,9 +54,6 @@ public class MplCouponServiceImpl implements MplCouponService
 		return voucherDataList;
 	}
 
-
-
-
 	/**
 	 * This method returns all active and closed vouchers
 	 *
@@ -72,19 +66,6 @@ public class MplCouponServiceImpl implements MplCouponService
 	public SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, final PageableData pageableData)
 	{
 		return mplCouponDao.findClosedVoucher(customer, pageableData);
-	}
-
-	/**
-	 * This method returns all used vouchers and corresponding order
-	 *
-	 * @param customer
-	 * @return Set<Map<OrderModel, VoucherModel>>
-	 */
-
-	@Override
-	public Set<Map<OrderModel, VoucherModel>> getCouponHistoryTransactions(final CustomerModel customer)
-	{
-		return getMplCouponDao().findVoucherRedeemedOrder(customer);
 	}
 
 	/**

@@ -805,7 +805,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		return finalCouponRedeemedDate;
 	}
 
-	
+
 
 	/**
 	 * @Description: This method returns coupon redemption count for a specific customer
@@ -1030,13 +1030,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final SearchPageData<VoucherInvalidationModel> searchVoucherModel = getMplCouponService().getVoucherRedeemedOrder(customer,
 				pageableData);
 		final List<CouponHistoryData> couponOrderDataDTOListFinal = new ArrayList<CouponHistoryData>();
-		final List<VoucherInvalidationModel> voucherInvalidationList = searchVoucherModel.getResults();
-
-		for (final VoucherInvalidationModel voucherInvalidation : voucherInvalidationList)
-		{
-			LOG.debug("---" + voucherInvalidation.getVoucher().getCode());
-		}
-
+		//final List<VoucherInvalidationModel> voucherInvalidationList = searchVoucherModel.getResults();
 
 		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = convertPageData(searchVoucherModel,
 				voucherTransactionConverter);
@@ -1052,7 +1046,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		/*
 		 * Collections.sort(couponOrderDataDTOListFinal, new Comparator<CouponHistoryData>() {
-		 * 
+		 *
 		 * @Override public int compare(final CouponHistoryData val1, final CouponHistoryData val2) { if
 		 * (val2.getRedeemedDate().compareTo(val1.getRedeemedDate()) > 0) { return 1; } else { return -1; } } });
 		 */

@@ -1365,20 +1365,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
 
-	//Audit Report
-	public static final String CHANGED = "CHANGED";
-	public static final String PRIORITYSTARTDATE = "priorityStartDate";
-	public static final String PRIORITYENDDATE = "priorityEndDate";
-	public static final String ISACTIVE = "isactive";
-	public static final String ACTIVATE = "Activate";
-	public static final String DEACTIVATED = "Deactivated";
-	public static final String SELLERID = "sellerid";
-	public static final String CATEGORYID = "categoryid";
-	public static final String LISTINGID = "listingid";
-	public static final String SIMPLEDATEFORMAT = "dd-MM-yyyy HH:mm:ss";
-	public static final String SIMPLEDATEFORMATDB = "yyyy-MM-dd HH:mm:ss";
-	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
-	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
+
 
 	private MarketplacecommerceservicesConstants()
 	{
@@ -1387,5 +1374,3 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
-
-
