@@ -329,7 +329,6 @@ function loadDefaultWishListName() {
 $(document).on("keypress",'#defaultWishName',function(e) {
 	var isValid = false;
 	var wishlistname = $("#defaultWishName").val();
-	if(wishlistname!="" ){
 		var key = e.keyCode;
 		if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
 			e.preventDefault();
@@ -338,7 +337,6 @@ $(document).on("keypress",'#defaultWishName',function(e) {
 			$('#addedMessage').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
 			$("#addedMessage").show().fadeOut(3000);
 		} 
-	}
 	}) 
 
 function gotoLogin() {
@@ -1677,7 +1675,7 @@ function openPop_SizeGuide() {
 	//} else {
 	//	ussidValue = ussidfromSeller;
 	//}
-	var productCode = '${product.code}';//$("#product").val();
+	var productCode = $("#productCode").val(); // '${product.code}';
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/viewWishlistsInPDP";
@@ -1801,7 +1799,7 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 
 	function addToWishlist_SizeGuide() {
-	var productCodePost = '${product.code}'; //$("#productCode").val();
+	var productCodePost = $("#productCode").val(); //'${product.code}'; //
 	//var productCodePost = $("#productCodePostQuick").val();
 	//alert(productCodePost);
 	var wishName = "";

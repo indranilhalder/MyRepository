@@ -274,25 +274,47 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 	});
 }
 
-$(document).ready(function() {
-
-	
-	$(document).on("keyup","#editWishList",function() {
-
-		validateEnteredName('editWishList',"errRename");
+$(document).on("keypress",'#newWishlistName',function(e) {
+	var wishlistname = $("#newWishlistName").val();
+		var key = e.keyCode;
+		if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
+			e.preventDefault();
+			$('#newWishlistName').val(wishlistname);
+			$('#errorCreate').show();
+			$('#errorCreate').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
+			$("#errorCreate").show().fadeOut(3000);
+		} 
 	});
-	$('#editWishList').blur(function() {
-		validateEnteredName('editWishList',"errRename");
-	});
+$(document).ready(function() {    
+    $('#myWishlistHeader').click(function(evt) {    	
+        evt.preventDefault();        
+        window.location.href = $(this).attr('href');
+
+    });
+
+    $('#createNewList').on('show.bs.modal', function () {
+	    $(".product-info .product-image-container .zoom").css("z-index","1");
+	    $(".zoomContainer").css("z-index","1");
+
+	}); 
+    $('#createNewList').on('hidden.bs.modal', function () {
+	    $(this).find("input,textarea,select").val('').end();
+	    $(".product-info .product-image-container .zoom").css("z-index","10000");
+	    $(".zoomContainer").css("z-index","9999");
+
+	}); 
+
 });
-function validateEnteredName(divId,errorDivId) {
-	var value=$('#'+divId).val();
-	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
-	var isValid = re.test(value);
-	if (!isValid) {
-		value = value.substring(0, value.length - 1);
-		$("#"+errorDivId).html("<font color='#ff1c47'><b>*</b>Special charecters are not allowed</font>");
-		$("#"+errorDivId).show().fadeOut(3000);
-	}
-	$('#'+divId).val(value);
-} 
+
+
+$(document).on("keypress","#editWishList",function(e) {
+	var wishlistname = $("#editWishList").val();
+	var key = e.keyCode;
+	if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
+		e.preventDefault();
+		$('#editWishList').val(wishlistname);
+		$('#errRename').show();
+		$('#errRename').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
+		$('#errRename').show().fadeOut(3000);
+	} 
+}); 

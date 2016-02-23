@@ -7,6 +7,7 @@ ACC.carousel = {
 	     "myStyleCarousel",
 	     "heroProductCarousel",
 	     "springflingCarousel",
+	     "myReviewCarousel",
 	     "advancedCategoryCarousel",
 		["bindCarousel", $(".js-owl-carousel").length >0]
 	],
@@ -157,6 +158,20 @@ ACC.carousel = {
 			itemsMobile : [480,2], 
 			rewindNav: false,
 			lazyLoad:true
+		});
+	},
+	
+	myReviewCarousel: function(){
+		$("#my-review-carousel").owlCarousel({
+			navigation:true,
+			navigationText : [],
+			pagination:false,
+			itemsDesktop : [5000,5], 
+			itemsDesktopSmall : [1400,5], 
+			itemsTablet: [650,2], 
+			itemsMobile : [480,2], 
+			rewindNav: false,
+			afterInit: function() {$("#my-review-carousel").show();}
 		});
 	}
 	
