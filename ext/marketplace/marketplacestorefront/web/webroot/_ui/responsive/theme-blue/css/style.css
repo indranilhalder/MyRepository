@@ -8285,13 +8285,13 @@ div.wishlist-content .pagination {
 
   @media(min-width:790px) {
 	   .body-Content {
-	 	padding-bottom:430px;
+/* 	 	padding-bottom:430px; */
 	 }
 	  body.page-productDetails .body-Content {
 	 	padding-bottom:0px;
 	 }
 	 .mainContent-wrapper footer {
-	position:absolute;
+	position: relative;
 	width:100%;
 	bottom:0;
 }
@@ -26981,10 +26981,10 @@ top: 14px;
     transition: border-color 0.5s;
     color:#000 !important;
 }
-.listing-leftmenu .Size .facet-list .facet-checkbox:checked+.facet-label  .facet-text {
+/* .listing-leftmenu .Size .facet-list .facet-checkbox:checked+.facet-label  .facet-text {
  	border: 1px solid #000;
 	color:#000 ;
-}
+} */
 .feature-collections ul.collections li.chef.sub .simple-banner-component {
 	display: inline-block;
 	width: 46%; 
