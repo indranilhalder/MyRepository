@@ -697,5 +697,7 @@ public final class ModelAttributetConstants
 	public static final String SELECTEDSIZE = "sizeSelectedSizeGuide";
 	public static final String NOVALUE = "0.0";
 	public static final String CLICK_AND_COLLECT = "click-and-collect";
+	
+	public static final String SUB_ORDER_STATUS = "subOrderStatus";
 
 }
