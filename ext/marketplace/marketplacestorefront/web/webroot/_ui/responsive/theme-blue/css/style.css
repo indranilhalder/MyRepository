@@ -1217,7 +1217,7 @@ h2 {
         header .content .right > ul > li.wishlist:hover {
           background: #fafafa; }
           header .content .right > ul > li.wishlist:hover .wishlist-info {
-            z-index: 2;
+            z-index: 10;
             max-height: 1000px;
             -webkit-transition: max-height 0.15s, z-index 0s;
             -moz-transition: max-height 0.15s, z-index 0s;
@@ -1333,7 +1333,7 @@ h2 {
           transition: background 0.15s; }
           header .content .right > ul > li.sign-in:hover .sign-in-info {
             max-height: 1000px;
-            z-index: 2;
+            z-index: 10;
             -webkit-transition: max-height 0.15s, z-index 0s;
             -moz-transition: max-height 0.15s, z-index 0s;
             transition: max-height 0.15s, z-index 0s; }
@@ -19385,9 +19385,9 @@ header .banner .toggle.mobile {
 
 @media (max-width: 790px)
 {
-header .banner .toggle.desktop {
+/* header .banner .toggle.desktop {
   display: none;
-}
+} */
  .brand-microsite header > .content .bottom .marketplace {
       height: 60px;
  }
