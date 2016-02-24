@@ -4,44 +4,26 @@
 package com.tisl.mpl.integration.oms.adapter;
 
 
-import de.hybris.platform.basecommerce.enums.CancelReason;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
-import de.hybris.platform.basecommerce.enums.OrderCancelEntryStatus;
-import de.hybris.platform.basecommerce.enums.OrderModificationEntryStatus;
 import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
-import de.hybris.platform.commercefacades.product.PriceDataFactory;
-import de.hybris.platform.commercefacades.product.data.PriceData;
-import de.hybris.platform.commercefacades.product.data.PriceDataType;
-import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.ItemModel;
-import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.integration.oms.OrderWrapper;
 import de.hybris.platform.integration.oms.ShipmentWrapper;
 import de.hybris.platform.integration.oms.adapter.OmsSyncAdapter;
 import de.hybris.platform.integration.oms.mapping.OmsHybrisEnumMappingStrategy;
 import de.hybris.platform.omsorders.notification.ModelChangeNotifier;
-import de.hybris.platform.ordercancel.OrderCancelEntry;
-import de.hybris.platform.ordercancel.OrderCancelException;
-import de.hybris.platform.ordercancel.OrderCancelRequest;
-import de.hybris.platform.ordercancel.OrderCancelService;
-import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
 import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
-import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
-import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.returns.ReturnService;
@@ -51,24 +33,17 @@ import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.event.EventService;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.time.TimeService;
-import de.hybris.platform.servicelayer.user.UserService;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,35 +53,19 @@ import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.shipping.Shipment;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsordersConstants;
-import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
-import com.tisl.mpl.core.enums.JuspayRefundType;
-import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.ImeiDetailModel;
 import com.tisl.mpl.core.model.InvoiceDetailModel;
-import com.tisl.mpl.core.model.RefundTransactionMappingModel;
-import com.tisl.mpl.data.ReturnLogisticsResponseData;
-import com.tisl.mpl.data.SendTicketLineItemData;
-import com.tisl.mpl.data.SendTicketRequestData;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 //import com.tisl.mpl.fulfilmentprocess.events.OrderRefundEvent;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCheckInvoice;
+import com.tisl.mpl.marketplacecommerceservices.event.OrderRefundCreditedEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
-import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.marketplaceomsservices.event.SendNotificationEvent;
-import com.tisl.mpl.model.CRMTicketDetailModel;
-import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
-import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
 import com.tisl.mpl.service.ReturnLogisticsService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.sms.MplSendSMSService;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
-import com.tisl.mpl.wsdto.PushNotificationData;
-import com.tisl.mpl.wsdto.ReturnLogistics;
-import com.tisl.mpl.wsdto.TicketMasterXMLData;
-import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
-import com.tisl.mpl.xml.pojo.ReturnLogisticsResponse;
 
 
 //import com.tisl.mpl.marketplacecommerceservices.event.ShippingConfirmationEvent;
@@ -497,6 +456,21 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 					customOmsCancelAdapter.createTicketInCRM(orderData, subOrderEntries, MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.REASON_CODE,
 							MarketplaceomsordersConstants.REFUND_TYPE_CODE,  orderData.getCustomerData(), orderModel);
 					customOmsCancelAdapter.initiateCancellation(MarketplaceomsordersConstants.TICKET_TYPE_CODE, orderData, subOrderEntries, orderModel, MarketplaceomsordersConstants.REASON_CODE);
+					final String trackOrderUrl = configurationService.getConfiguration().getString(
+							MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+							+ orderModel.getCode();
+					final OrderProcessModel orderProcessModel = new OrderProcessModel();
+					orderProcessModel.setOrder(orderModel);
+					orderProcessModel.setOrderTrackUrl(trackOrderUrl);
+					final OrderRefundCreditedEvent orderRefundCreditedEvent = new OrderRefundCreditedEvent(orderProcessModel);
+					try
+					{
+						eventService.publishEvent(orderRefundCreditedEvent);
+					}
+					catch (final Exception e1)
+					{
+						LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
+					}
 					customOmsCancelAdapter.frameCancelPushNotification(orderModel, subOrderEntries.getEntryNumber(), MarketplaceomsordersConstants.REASON_CODE, orderData.getCustomerData());
 					}
 				}
