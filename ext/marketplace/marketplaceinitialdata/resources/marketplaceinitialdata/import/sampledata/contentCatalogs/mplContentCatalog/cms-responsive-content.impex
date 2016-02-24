@@ -280,8 +280,12 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
 ;;DeliveryTextParagraphComponent;Delivery Text Paragraph Component;DeliveryTextParagraphComponent;;;;
 
+# CMS Link Components
+INSERT_UPDATE HomeStoreLocatorComponent;$contentCV[unique=true];uid[unique=true]; name;&componentRef;latitude;longitude;  
+;;HomeStoreLocatorComponentModel;Home Store Locator Component;HomeStoreLocatorComponentModel;21.0000;78.0000;;
+
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
-;;Section5Slot-Homepage;true;DeliveryTextParagraphComponent
+;;Section5Slot-Homepage;true;DeliveryTextParagraphComponent,HomeStoreLocatorComponentModel
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section5Slot-Homepage;Section5;;Section5Slot-Homepage;;;
