@@ -1193,6 +1193,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					entry.setMplDeliveryMode(null);
 					modelService.save(entry);
 				}
+				if (entry.getDeliveryPointOfService() != null)
+				{
+					entry.setDeliveryPointOfService(null);
+					modelService.save(entry);
+				}
 			}
 
 			commerceCartService.recalculateCart(cart);
