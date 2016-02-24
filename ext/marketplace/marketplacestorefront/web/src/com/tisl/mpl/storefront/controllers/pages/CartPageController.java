@@ -1464,8 +1464,4 @@ public class CartPageController extends AbstractPageController
 	{
 		this.mplCouponFacade = mplCouponFacade;
 	}
-
-
-
-
 }

@@ -171,6 +171,8 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+
+
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -363,6 +365,7 @@
 		<property name="otpDao" ref="otpDao" />
 		<property name="modelservice" ref="modelService" />
 		<property name="userService" ref="userService" />
+
 	</bean>
 	<bean id="otpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.OTPDaoImpl" />

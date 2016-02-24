@@ -806,8 +806,7 @@ $language=language(isocode)[default='en'][unique=true];
             <value>;{+0};{+0};{+1};</value>
         </property>
         </bean>
-        
-                  <!-- Converter for Promoted Product Import --> 
+    <!-- Converter for Promoted Product Import --> 
     <bean id="batchPromotedProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
@@ -822,3 +821,4 @@ $language=language(isocode)[default='en'][unique=true];
         </bean>
         
   </beans>
+

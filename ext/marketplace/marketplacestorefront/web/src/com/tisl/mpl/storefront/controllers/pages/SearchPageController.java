@@ -1,3 +1,4 @@
+
 /*
  * [y] hybris Platform
  *
@@ -1049,3 +1050,4 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 }
+

@@ -1,5 +1,5 @@
 /*
- * [y] hybris Platform
+
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -491,7 +491,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 
-	public static final String SMS_SENDER_ID = "TATAUS";
+	public static final String SMS_SENDER_ID = "marketplace.sms.sender.name".intern();
 	public static final String SMS_MESSAGE_FORGOT_PWD = "Dear Customer, One Time Password for your request is {0}. Please enter the same to submit the request. Regards, Team Tata Unistore.";
 	public static final String SMS_MESSAGE_ORDER_PLACED = "Hi {0}, thank you for placing the order with us .Your order ref no is ({1}). Excited? Click here to track your order {2} .";
 	public static final String SMS_MESSAGE_ORDER_SHIPPED = "Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
@@ -852,6 +852,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9210 = "B9210";
 	public static final String B9211 = "B9211";
 	public static final String B9212 = "B9212";
+	public static final String B9213 = "B9213";
+	public static final String B9214 = "B9214";
+	public static final String B9215 = "B9215";
+	public static final String B9216 = "B9216";
+	public static final String B9217 = "B9217";
+	public static final String B9218 = "B9218";
 
 
 	//Search error codes ends
@@ -863,21 +869,25 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
-	public static final String ORDER_ERROR = "Order not found in current BaseStore";
-	public static final String CSV_ERROR = "Error in CsvFileWriter !!!";
-	public static final String FILE_WRITER_ERROR = "Error while flushing/closing fileWriter !!!";
-	public static final String ORDER_CURRENCY_ERROR = "source order currency must not be null";
+	public static final String ORDER_ERROR = "B8000";
+	public static final String CSV_ERROR = "B8001";
+	public static final String FILE_WRITER_ERROR = "B8002";
+	public static final String ORDER_CURRENCY_ERROR = "B8003";
+	public static final String PROMOTION_FEED_ERROR = "B8004";
+	public static final String ORDER_PAYMENT_ERROR = "B8005";
 
+	public static final String PROMOTIONS_REPORT_FILE_EXTENSION = "promotions.report.extension";
 	public static final String FILE_PATH = "_";
 	public static final String SALES_REPORT_INCREMENTAL = "incremental";
 	public static final String SALES_REPORT_FULL = "full";
 	public static final String SALES_REPORT_QUERY = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE + "} WHERE {"
-			+ OrderModel.TYPE + "}=?type";
+			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 	public static final String SALES_REPORT_QUERY_START = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
-			+ "} WHERE " + "{" + OrderModel.CREATIONTIME + "} >=?fromDate AND {" + OrderModel.TYPE + "}=?type";
+			+ "} WHERE " + "{" + OrderModel.CREATIONTIME + "} >=?fromDate AND {" + OrderModel.TYPE + "}=?type order by {"
+			+ OrderModel.CODE + "} desc";
 	public static final String SALES_REPORT_QUERY_START_END = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
 			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate AND {"
-			+ OrderModel.TYPE + "}=?type";
+			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
@@ -1306,6 +1316,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate} and {immutableKeyHash} is null";
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
+
+	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
+	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
+
 	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
 
 
@@ -1346,8 +1360,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
-
-	//Audit Report
+//Audit Report
 	public static final String CHANGED = "CHANGED";
 	public static final String PRIORITYSTARTDATE = "priorityStartDate";
 	public static final String PRIORITYENDDATE = "priorityEndDate";
