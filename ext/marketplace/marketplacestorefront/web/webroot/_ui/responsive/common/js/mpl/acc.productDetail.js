@@ -319,11 +319,20 @@ function loadDefaultWishListName() {
 	$("#wishListDetailsId").show();
 
 	wishListContent = wishListContent
-			+ "<tr><td><input type='text' id='defaultWishName' value='"
-			+ wishName + "'/></td></td></tr>";
+	+ "<tr><td><input type='text' id='defaultWishName'  value='"
+	+ wishName + "'/></td></td></tr>"; 
 	$("#wishlistTbodyId").html(wishListContent);
    
 }
+
+//TISSTRT-907  WishList Special character implementation
+$(document).on("keypress",'#defaultWishName',function(e) {
+	var isValid = false;
+	var wishlistname = $("#defaultWishName").val();
+	var mainDiv = 'defaultWishName';
+	var errorDiv = "#addedMessage";
+	validateSpcharWlName(e,wishlistname,mainDiv,errorDiv);
+}) 
 
 function gotoLogin() {
 	window.open(ACC.config.encodedContextPath + "/login", "_self");
@@ -390,19 +399,17 @@ function selectWishlist(i) {
 }
 
 function addToWishlist() {
-	
-	
 
 	var productCodePost = $("#productCodePost").val();
 
 	var wishName = "";
   
 	if (wishListList == "") {
-		wishName = $("#defaultWishName").val();
+		wishName = $("#defaultWishName").val().trim();
 	} else {
-		wishName = wishListList[$("#hidWishlist").val()];
+		wishName = wishListList[$("#hidWishlist").val().trim()];
 	}
-	if(wishName==""){
+	if(wishName=="" || wishName.trim()==""){
 		var msg=$('#wishlistnotblank').text();
 		$('#addedMessage').show();
 		$('#addedMessage').html(msg);
@@ -1663,7 +1670,7 @@ function openPop_SizeGuide() {
 	//} else {
 	//	ussidValue = ussidfromSeller;
 	//}
-	var productCode = '${product.code}';//$("#product").val();
+	var productCode = $("#productCode").val(); // '${product.code}';
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "/viewWishlistsInPDP";
@@ -1787,7 +1794,7 @@ function loadDefaultWishListName_SizeGuide() {
 	}
 
 	function addToWishlist_SizeGuide() {
-	var productCodePost = '${product.code}'; //$("#productCode").val();
+	var productCodePost = $("#productCode").val(); //'${product.code}'; //
 	//var productCodePost = $("#productCodePostQuick").val();
 	//alert(productCodePost);
 	var wishName = "";

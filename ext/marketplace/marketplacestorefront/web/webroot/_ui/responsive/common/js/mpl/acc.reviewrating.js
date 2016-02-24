@@ -8,6 +8,8 @@ if(typeof(arrayrating)!= "undefined"){
 			if(indexElement!= undefined){
 				var reviewHeading = $(".reviewHeading"+indexElement);
 				var reviewComment = $(".reviewComment"+indexElement);
+			//	var reviewMedia = $(".reviewMedia"+indexElement);
+				
 				var updateButtons = $(".updateButtons"+indexElement);
 				
 				var reviewCommentText = $(".reviewComment"+indexElement).text();
@@ -17,6 +19,9 @@ if(typeof(arrayrating)!= "undefined"){
 				}
 				$(reviewHeading).html("<input class='inputBox' type='text' name='updateReviewHeading"+indexElement+"' value='"+reviewHeadingText+"'/>");
 				$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
+				
+				
+									
 				$(reviewHeading).find('input.inputBox').focus();
 				$(".rating-div"+indexElement).show();
 				$(".rating-div"+indexElement).find("ul").removeClass("rate");
@@ -45,6 +50,7 @@ if(typeof(arrayrating)!= "undefined"){
 			$("div[data-rating-all="+indexElement+"]").show();
 			var reviewHeading = $(".reviewHeading"+indexElement);
 			var reviewComment = $(".reviewComment"+indexElement);
+			//var reviewUrl = $(".reviewMedia"+indexElement);
 			
 			if(indexElement != undefined){
 				
@@ -53,6 +59,7 @@ if(typeof(arrayrating)!= "undefined"){
 
 				$(reviewHeading).html(originalHeading);
 				$(reviewComment).html(originalComment);
+				//$(reviewUrl).hide();
 				$(this).parent().hide();
 			}
 			$(".rating-div"+indexElement).hide();
@@ -62,11 +69,14 @@ if(typeof(arrayrating)!= "undefined"){
 		});
 		
 		$("input[name=update]").click(function(){
+			
 			var isValidated = true;
 			var indexElement =  $(this).attr("data-index");
-			//alert("inside update");
 			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
 			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
+		//	var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
+		//	var hiddenMediaUrl = $(".hiddenMediaUrl"+indexElement).val()
+			
 			if(updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "")		
 			{		
 			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment Title cannot be left blank.</p>");		
@@ -83,6 +93,7 @@ if(typeof(arrayrating)!= "undefined"){
 				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
 			    isValidated=false;	
 			}
+			
 			//TISSTRT-290 fix
 			if((updatedReviewHeading.length > 250) && (updatedCommentTitle.length > 5000))		
 			{		
@@ -101,6 +112,7 @@ if(typeof(arrayrating)!= "undefined"){
 		
 		$(document).on("click","button.updateReviewConfirmation",function(){
 			//validate the text first
+			var isReload = true;
 			var isValidated=true;
 			var isValidated_e =true;
 			var indexElement =  $(this).parents("li.review-li").attr("data-index");
@@ -109,6 +121,7 @@ if(typeof(arrayrating)!= "undefined"){
 			
 			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
 			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
+			//var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
 			
 			var categoryID = $(".categoryID"+indexElement).val();
 			var streamID = $(".streamID"+indexElement).val();
@@ -192,8 +205,19 @@ if(typeof(arrayrating)!= "undefined"){
 										$("div[data-rating"+indexElement+"=quality]").attr("style","width:"+quality+"%");
 										$("div[data-info-id="+indexElement+"]").show();
 									}
+									$("div[data-rating-all="+indexElement+"]").show();
+									
 								}else if(data.status == "failed"){
 									$("div[data-danger-id="+indexElement+"]").show();
+									if(data.error != ""){
+										console.log(">>> "+data.error);
+										var htmlError = $("div[data-danger-id="+indexElement+"]").html();
+										htmlError = htmlError+"<br><b>Description:</b>"+data.error;
+										$("div[data-danger-id="+indexElement+"]").html(htmlError);
+										isReload = false;
+									}
+									
+									
 								}
 							}
 						},
@@ -202,7 +226,9 @@ if(typeof(arrayrating)!= "undefined"){
 						},
 						complete:function(){
 							$(".review-block"+indexElement).unblock();
-							window.location.reload();
+							if(isReload){
+								window.location.reload();
+							}
 							}
 					});
 				}
@@ -223,6 +249,28 @@ if(typeof(arrayrating)!= "undefined"){
 			}
 		});
 
+		/*Code for Review Page Video and Image Popup Starts*/
+		
+		/*$(document).on("click",".comment-img img",function(e){
+			$(this).siblings("iframe").attr("scrolling","no")
+			if ($(this).attr("data-type") == "video") {
+				var url = $(this).siblings("iframe").attr("src");
+				$("#videoReviewFrame").show();
+				$("#videoReviewFrame").attr("src",url);
+				$("#videoReviewModal #videoReviewFrame").attr("src",url);
+				$("#videoReviewModal").modal();
+				$("#videoReviewModal").addClass("active");
+			}
+			else {
+				var url = $(this).attr("src");
+				$("#videoReviewFrame").show();
+				$("#videoReviewFrame").attr("src",url);
+				$("#videoReviewModal #videoReviewFrame").attr("src",url);
+				$("#videoReviewModal").modal();
+				$("#videoReviewModal").addClass("active");
+			}
+		});*/
+		/*Code for Review Page Video and Image Popup Ends*/
 		$(document).on("mouseleave",".rateEdit li",function() {
 			$(this).parent().find("span").removeClass("full");
 		});
@@ -349,12 +397,10 @@ if(typeof(arrayrating)!= "undefined"){
 						privacy : 'public',
 						version : 2,
 						containerID : 'commentsDiv',
-						/*onCommentSubmitted:reviewCount,*/ 
 						cid : '',
 						enabledShareProviders : 'facebook,twitter',
 						enabledProviders : 'facebook,google,twitter', // login providers that should be displayed when click post
-						/*onLoad :commentBox,*/
-						//userAction: shareUserAction
+						
 					}
 					gigya.comments.showCommentsUI(params);	
 		    }	

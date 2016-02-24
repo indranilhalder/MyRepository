@@ -171,6 +171,8 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+
+
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -363,6 +365,7 @@
 		<property name="otpDao" ref="otpDao" />
 		<property name="modelservice" ref="modelService" />
 		<property name="userService" ref="userService" />
+
 	</bean>
 	<bean id="otpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.OTPDaoImpl" />
@@ -1547,9 +1550,14 @@
 
 
 	<!-- Tata Cliq Job : Campaign Team -->
+	<bean id="campaignPromoSubService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoSubService">
+	</bean>
+	
 	<bean id="campaignPromoDataService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoDataService">
 		<property name="modelService" ref="modelService" />
+		<property name="campaignPromoSubService" ref="campaignPromoSubService" />
 		<property name="sellerBasedPromotionDao" ref="sellerBasedPromotionDao" />
 	</bean>
 

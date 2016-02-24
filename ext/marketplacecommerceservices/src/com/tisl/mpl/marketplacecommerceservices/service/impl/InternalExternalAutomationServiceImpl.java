@@ -69,7 +69,8 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 	private MplCmsPageService mplCmsPageService;
 
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	private static final String COMMA_DELIMITER = ",";
+	//private static final String COMMA_DELIMITER = "";
+	private static final String COMMA_DELIMITER = "\t";
 
 	/*
 	 * All banner components are scanned and results are returned as Map
@@ -582,10 +583,18 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			//for (final Map.Entry<String, String> entry : exportMap.entrySet())
 			for (final InternalCampaignReportData internalCampaignData : campaignDataConsolidatedList)
 			{
+				if (internalCampaignData.getIcid() == null)
+				{
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
+				}
+				else
+				{
+					fileWriter.append(internalCampaignData.getIcid()).append(COMMA_DELIMITER);
+				}
 
 				if (internalCampaignData.getAssetName() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -593,18 +602,20 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				}
 
 
-				if (internalCampaignData.getCategory() == null)
+				if (internalCampaignData.getCategory() == null
+						|| internalCampaignData.getCategory() == MarketplacecommerceservicesConstants.EMPTYSPACE)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
-					fileWriter.append("\"").append(internalCampaignData.getCategory()).append("\"").append(COMMA_DELIMITER);
+					//fileWriter.append("\"").append(internalCampaignData.getCategory()).append("\"").append(COMMA_DELIMITER);
+					fileWriter.append(internalCampaignData.getCategory()).append(COMMA_DELIMITER);
 				}
 
 				if (internalCampaignData.getMediaType() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -613,7 +624,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getSize() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -622,21 +633,14 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getSourcePage() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
 					fileWriter.append(internalCampaignData.getSourcePage()).append(COMMA_DELIMITER);
 				}
 
-				if (internalCampaignData.getIcid() == null)
-				{
-					fileWriter.append("").append(COMMA_DELIMITER);
-				}
-				else
-				{
-					fileWriter.append(internalCampaignData.getIcid()).append(COMMA_DELIMITER);
-				}
+
 
 				fileWriter.append(NEW_LINE_SEPARATOR);
 			}

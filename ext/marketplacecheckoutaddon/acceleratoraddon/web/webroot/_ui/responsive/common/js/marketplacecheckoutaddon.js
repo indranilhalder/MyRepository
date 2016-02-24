@@ -1,7 +1,7 @@
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
-var couponApplied=false;
-var bankNameSelected;
+//var promoAvailable=$("#promoAvailable").val();
+//var bankAvailable=$("#bankAvailable").val();
 
 //Display forms based on mode button click
 $("#viewPaymentCredit").click(function(){
@@ -138,7 +138,8 @@ function displayCODForm()
 	$("#paymentMode").val("COD");
 	var paymentMode=$("#paymentMode").val();
 	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
-	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");	
+	/*$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");*/	//Modified back as erroneously pushed by performance team
+	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 	//setCellNo();
 	if(codEligible=="BLACKLISTED")
 	{
@@ -197,7 +198,7 @@ function displayCODForm()
 						}
 						else
 						{
-							document.getElementById("convChargeField").innerHTML="FREE";
+							document.getElementById("convChargeField").innerHTML="Free"; //TISPRD-146
 							$("#convChargeMessage").css("display","none");
 						}
 						//document.getElementById("totalWithConvField").innerHTML=totalPrice; TISPT-29
@@ -1171,11 +1172,56 @@ $("#otpMobileNUMField").focus(function(){
  
  
   function createJuspayOrderForSavedCard(){
-	  	$(".pay button").prop("disabled",true);
+		$(".pay button").prop("disabled",true);
 		$(".pay button").css("opacity","0.5");
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	  // TISPRO-153
+	var payment_method_map = {
+	            "viewPaymentEMI": "EMI",
+	            "viewPaymentCredit": "Credit",
+	            "viewPaymentNetbanking": "Net Banking",
+	            "viewPaymentCOD": "COD",
+	            "viewPaymentDebit": "Debit"
+	        };
+	        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
+	        var payment_mode = payment_method_map[payment];
+	        var payment_type = "",
+	            priority_banks = "";
+	        if (payment_mode === "EMI") {
+
+	            payment_type = jQuery("select#bankNameForEMI").val();
+
+	        } else if (payment_mode === "Credit" || payment_mode === "Debit") {
+
+	            payment_type = jQuery("li.active-card span").attr("class") || "Saved Credit Card";
+
+	        } else if (payment_mode === "Net Banking") {
+
+	            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
+	            if (priority_banks.length > 0) {
+	                payment_type = priority_banks.val();
+	            } else {
+	                jQuery("#netbanking #bankCodeSelection").val();
+	            }
+
+	        } else if (payment_mode === "COD") {
+	            payment_type = "COD";
+	        }
+
+	        if (!payment_type) {
+	            payment_type = "NA";
+	        }
+
+	        utag.link({
+	            "link_name": 'Final Checkout',
+	            "event_type": 'PayNow',
+	            "payment_method": "" + payment_mode + "|" + payment_type,
+	            "product_id": utag.data.product_id
+
+	        });
+	  
 		
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
@@ -1190,6 +1236,7 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
+				
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -1251,12 +1298,57 @@ $("#otpMobileNUMField").focus(function(){
   
   
   function createJuspayOrderForNewCard(){
-	  	$(".pay button").prop("disabled",true);
+		$(".pay button").prop("disabled",true);
 		$(".pay button").css("opacity","0.5");
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		
+	  // TISPRO-153
+	  var payment_method_map = {
+	            "viewPaymentEMI": "EMI",
+	            "viewPaymentCredit": "Credit",
+	            "viewPaymentNetbanking": "Net Banking",
+	            "viewPaymentCOD": "COD",
+	            "viewPaymentDebit": "Debit"
+	        };
+	        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
+	        var payment_mode = payment_method_map[payment];
+	        var payment_type = "",
+	            priority_banks = "";
+	        if (payment_mode === "EMI") {
+
+	            payment_type = jQuery("select#bankNameForEMI").val();
+
+	        } else if (payment_mode === "Credit" || payment_mode === "Debit") {
+
+	            payment_type = jQuery("li.active-card span").attr("class") || "Saved Credit Card";
+
+	        } else if (payment_mode === "Net Banking") {
+
+	            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
+	            if (priority_banks.length > 0) {
+	                payment_type = priority_banks.val();
+	            } else {
+	                jQuery("#netbanking #bankCodeSelection").val();
+	            }
+
+	        } else if (payment_mode === "COD") {
+	            payment_type = "COD";
+	        }
+
+	        if (!payment_type) {
+	            payment_type = "NA";
+	        }
+
+	        utag.link({
+	            "link_name": 'Final Checkout',
+	            "event_type": 'PayNow',
+	            "payment_method": "" + payment_mode + "|" + payment_type,
+	            "product_id": utag.data.product_id
+
+	        });
+	  
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
 		var addressLine1=$("#address1").val();
@@ -2319,8 +2411,6 @@ function setBankForSavedCard(bankName){
 //			$("#no-click").remove();
 //		}
 //	});	
-	
-	bankNameSelected=bankName;
 	applyPromotion(bankName);	
 
 }
@@ -2353,38 +2443,6 @@ function applyPromotion(bankName)
 				document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
-				
-				//Coupon
-				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
-				{
-					if(response.voucherDiscount.couponDiscount.doubleValue<=0)
-					{
-		 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
-		 						" #expiredCouponError, #issueCouponError, #freebieCouponError").css("display","none");
-		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
-		 				$('#couponFieldId').attr('readonly', false);
-		 				var selection = $("#voucherDisplaySelection").val();
-		 				$("#couponFieldId").val(selection);
-		 				$("#couponMessage").html("Coupon has been removed after applying promotion");
-		 				$('#couponMessage').show();
-		 				$('#couponMessage').delay(5000).fadeOut('slow');
-		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000); 	
-					}
-					else
-					{
-						$("#couponApplied").css("display","block");
-		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
-		 				//$("#couponFieldId").attr('disabled','disabled');
-		 				$('#couponFieldId').attr('readonly', true);
-		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
-		 				$('#couponMessage').show();
-		 				$('#couponMessage').delay(5000).fadeOut('slow');
-		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
-					}
-				}
-				
-				
-				//Promotion
 				if(response.mplPromo==null || response.mplPromo==[])
 				{
 					$("#promotionApplied,#promotionMessage").css("display","none");
@@ -2749,7 +2807,7 @@ function checkPincodeServiceability(buttonType)
  			$("#isPincodeServicableId").val('N');
  		}
  	});
-	if ($('#giftYourselfProducts').length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
+	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
 	{
 		window.location.reload();
 		
@@ -2957,6 +3015,7 @@ function activateSignInTab()
 	}
 }
 function checkSignInValidation(path){
+	
 	if(path=="Checkout")
 	{
 		var emailId = $("#j_username").val();
@@ -3005,8 +3064,10 @@ function checkSignInValidation(path){
 	else{
 		$("#signinPasswordDiv").hide();
 	}
-	
-	
+	// TISPRO-153
+	if(validationResult){
+		utag.link({ "event_type" : "Login", "link_name" : "Login" });
+	}
 	return validationResult;
 }
 
@@ -3083,6 +3144,8 @@ function checkSignUpValidation(path){
 	//Fix for defect TISEE-3986 : handling special character like #	
 	if(validationResult)
 	{
+		// TISPRO-153
+		utag.link({ "event_type" : "Login", "link_name" : "Login" });
 		var encodedPWD= encodeURIComponent(password);
 		var encodedRePWD= encodeURIComponent(rePassword);		
 		if(path=="Checkout"){
@@ -3479,161 +3542,3 @@ function clearDisable()
 	$("#no-click").remove();
 	$(".make_payment").removeAttr('disabled');
 }
-
-
-//Coupon
-$("#couponSubmitButton").click(function(){
-	$(this).prop('disabled', true);
-	$(this).css("opacity","0.5");
-	$("#priceCouponError, #emptyCouponError, #appliedCouponError, " +
-			"#invalidCouponError, #expiredCouponError, #issueCouponError, " +
-			"#notApplicableCouponError, #notReservableCouponError, #freebieCouponError, #userInvalidCouponError").css("display","none");
-	if($("#couponFieldId").val()==""){
-		$("#emptyCouponError").css("display","block");	
-		//document.getElementById("couponError").innerHTML="Please enter a Coupon Code";
-		$(this).prop('disabled', false);
-		$(this).css("opacity","1");
-	}
-	else if($("#couponFieldId").val()!="" && $('#couponFieldId').prop('readonly') == true)
-	{
-		$("#appliedCouponError").css("display","block");	
-		//document.getElementById("couponError").innerHTML="Coupon is already applied";
-		$(this).prop('disabled', false);
-		$(this).css("opacity","1");
-	}
-	else{
-		var couponCode=$("#couponFieldId").val();
-		var paymentMode=$("#paymentMode").val();
-		$.ajax({
-	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
-	 		type: "GET",
-	 		cache: false,
-	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected},
-	 		success : function(response) {
-	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
-	 			$("#codAmount").text(response.totalPrice.formattedValue);
-	 			if(response.redeemErrorMsg!=null){
-	 				if(response.redeemErrorMsg=="Price_exceeded")
-	 				{
-	 					$("#priceCouponError").css("display","block");
-	 				}
-	 				else if(response.redeemErrorMsg=="Invalid")
-	 				{
-	 					$("#invalidCouponError").css("display","block");
-	 				}
-	 				else if(response.redeemErrorMsg=="Expired")
-	 				{
-	 					$("#expiredCouponError").css("display","block");
-	 				}
-	 				else if(response.redeemErrorMsg=="Issue")
-	 				{
-	 					$("#issueCouponError").css("display","block");
-	 				}
-	 				else if(response.redeemErrorMsg=="Not_Applicable")
-	 				{
-	 					$("#notApplicableCouponError").css("display","block");
-	 				}
-	 				else if(response.redeemErrorMsg=="Not_Reservable")
-	 				{
-	 					$("#notReservableCouponError").css("display","block");
-	 				}
-	 				else if(response.redeemErrorMsg=="Freebie")
-	 				{
-	 					$("#freebieCouponError").css("display","block");
-	 				}
-	 				else if(response.redeemErrorMsg=="User_Invalid")
-	 				{
-	 					$("#userInvalidCouponError").css("display","block");
-	 				}
-	 				//$("#couponError").css("display","block");	
-	 				//document.getElementById("couponError").innerHTML=response.redeemErrorMsg;
-	 			}
-	 			else{
-		 			if(response.couponRedeemed==true){
-		 				couponApplied=true;
-		 			}
-		 			if(couponApplied==true){
-		 				if(response.couponDiscount.doubleValue>0)
-			 			{
-			 				$("#couponApplied").css("display","block");
-			 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
-			 				//$("#couponFieldId").attr('disabled','disabled');
-			 				$('#couponFieldId').attr('readonly', true);
-			 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> is applied successfully");
-			 				$('#couponMessage').show();
-			 				$('#couponMessage').delay(2000).fadeOut('slow');
-			 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500);		 		
-			 			}
-		 				else
-		 				{
-		 					$("#issueCouponError").css("display","block");
-		 				}
-		 			}
-	 			}
-	 			$("#couponSubmitButton").prop('disabled', false);
-	 			$("#couponSubmitButton").css("opacity","1");
-	 		},
-	 		error : function(resp) {
-	 			$("#couponSubmitButton").prop('disabled', false);
-	 			$("#couponSubmitButton").css("opacity","1");
-	 		}
-	 	});	 
-	}
-});
-
-$("#couponFieldId").focus(function(){
-	//$("#couponError").css("display","none");	
-	$("#priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
-			" #expiredCouponError, #issueCouponError, #notApplicableCouponError," +
-			" #notReservableCouponError, #freebieCouponError, #userInvalidCouponError").css("display","none");
-});
-
-
-$(".remove-coupon-button").click(function(){
-	var couponCode=$("#couponFieldId").val();
-	$.ajax({
- 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
- 		type: "GET",
- 		cache: false,
- 		data: { 'couponCode' : couponCode },
- 		success : function(response) {
- 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
- 			$("#codAmount").text(response.totalPrice.formattedValue);
- 			//alert(response.totalPrice.formattedValue);
- 			if(response.couponReleased==true){
- 				couponApplied=true;
- 			}
- 			if(couponApplied==true){
- 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
- 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError").css("display","none");
- 				document.getElementById("couponValue").innerHTML="-"+response.couponDiscount.formattedValue;
- 				//$("#couponFieldId").attr('disabled','enabled');
- 				$('#couponFieldId').attr('readonly', false);
- 				var selection = $("#voucherDisplaySelection").val();
- 				$("#couponFieldId").val(selection);
- 				//$("#couponFieldId").val("");
- 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
- 				$('#couponMessage').show();
- 				$('#couponMessage').delay(2000).fadeOut('slow');
- 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
- 		},
- 		error : function(resp) {
- 		}
- 	});	 
-});
-
-
-$(document).ready(function(){
-	if($('#couponFieldId').prop('readonly') == false)
-	{
-		var selection = $("#voucherDisplaySelection").val();
-		$("#couponFieldId").val(selection);
-	}
-});
-$("#voucherDisplaySelection").change(function(){
-	if($('#couponFieldId').prop('readonly') == false)
-	{
-		var selection = $(this).val();
-		$("#couponFieldId").val(selection);
-	}
-});

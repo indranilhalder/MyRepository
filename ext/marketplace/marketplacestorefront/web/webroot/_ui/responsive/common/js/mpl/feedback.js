@@ -1,3 +1,4 @@
+
 /*----------Start of  validate email in feedback-----------*/
 	function validateEmail()
     { 	 var x = document.getElementById("emailField");
@@ -109,6 +110,18 @@
 
 
 $(document).ready(function(){
+	
+	//TISEEII-640 issue fix -- Start
+	$(".facet.js-facet .js-facet-name").each(function(){
+		var x = $(this).html().length; 
+		//if(x == "6")
+			if($.trim($(this).html())==''){
+			//alert("no data");
+				$(this).parent().hide();
+			}
+	});
+	//TISEEII-640 issue fix -- End
+	
 	$(document).keydown(function(e){
 		if(e.which == 27) {
 			$('.modal').modal('hide');
@@ -1126,7 +1139,7 @@ $(document).ready(function(){
 	$(window).on("load",function(e){
 		$('.sort-refine-bar.mobile').append('<span id="hidden-option-width" style="display: none;"></span>')
 		$(".sort-refine-bar select.black-arrow-left").css("display","block");
-		$(".sort-refine-bar select.black-arrow-left").css("background-position-x","44%");
+		$(".sort-refine-bar select.black-arrow-left").css("background-position-x","30%");
 		$(".sort-refine-bar select").change(function(){
 			 $("#hidden-option-width").html($(this).find('option:selected').text());
 			 var option_width=$("#hidden-option-width").width() + 30;
@@ -1261,6 +1274,16 @@ $(document).ready(function(){
 	 		$("header .content nav > ul > li > ul > li > .toggle a").click(function(){
 	 			$(this).attr("href","#");
 	 		});
+			}
+		
+		if($('.lookbook_wrapper .bottom-pagination').children().length==0){
+			$('.lookbook_wrapper .bottom-pagination').css('padding','0');
+			}
+			if($('body .lookbook_wrapper .lookbook-pagination').children().length==0){
+				$('body .lookbook_wrapper .lookbook-pagination').css('padding','0');
+			}
+			if($('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').children().length==0){
+			$('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').parents().find('.listing.wrapper').css('height','0px');
 			}
 		
 });
