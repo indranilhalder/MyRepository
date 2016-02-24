@@ -185,6 +185,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CHARGED = "CHARGED".intern();
 	public static final String JUSPAY_ORDER_STAT_RESP = "Order status response: ".intern();
 	public static final String NA = "NA".intern();
+	public static final String na = "na".intern();
 	public static final String DUMMYCCOWNER = "DUMMY NAME".intern();
 	public static final String DUMMYNUMBER = "XXXXXXXXXXXXXXXX".intern();
 	public static final String DUMMYCARDREF = "xxxxxxxxxxxxxxxxxx".intern();
