@@ -27568,7 +27568,10 @@ word-break: break-word;
 .feature-categories .item.slide > li {
 	list-style: none;
 }
-
+table.track-table-head,table.track-table{
+	border-left:1px solid #C0C0C0;
+	border-right:1px solid #C0C0C0;
+}
  table.track-table-head tr{
 	background:#C0C0C0;
 	color:#000000;
