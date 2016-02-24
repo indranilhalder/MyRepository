@@ -35,7 +35,6 @@ ACC.storefinder = {
 		var listitems = "";
 		data = ACC.storefinder.storeData
 		
-		console.info("start refreshNavigation");
 		if(data){
 			for(i = 0;i < data["data"].length;i++){
 				listitems += ACC.storefinder.createListItemHtml(data["data"][i],i)
@@ -43,31 +42,25 @@ ACC.storefinder = {
 	 
 			ACC.storefinder.bindStoreTestChange();
 		}
-		console.info("end refreshNavigation");
 		$("storeFinder").addClass("display: block");
 	},
 
 
 	bindPagination:function ()
 	{
-        console.info("bindPagination"+document.getElementById("store-finder-map"));
+        console.debug("bindPagination"+document.getElementById("store-finder-map"));
 	},
 
 	bindStoreChange:function()
 	{  
-		//console.info($("#storelocator-query").val())
-		console.info("bindStoreChange...");
 		$(document).ready(function(e){
-			console.info("inside ready doc...");
 	        ACC.global.addGoogleMapsApi("ACC.storefinder.loadinitGoogleMap");
 			 
 		});
-		console.info("finished bindStoreChange...");
 		
 		$(document).on("change","#storelocator-query",function(e){
 			 
-			console.info("*****************On change input******");
-			console.info($("#storelocator-query").val())
+			console.debug($("#storelocator-query").val())
 			var inputtext=$("#storelocator-query").val();
 			if(inputtext){ 
 			$('#storeSearchTextValue').text(inputtext);
@@ -90,9 +83,6 @@ ACC.storefinder = {
 		storeInformation = ACC.storefinder.storeId;
 		 var markerZoom= Number($("#markerZoom").val());
 		 var initialZoom=  Number($("#initialZoom").val());
-		console.info("Check values");
-	 	console.info(markerZoom);
-		console.info(initialZoom);
 		var mapIcons={"TATA Store":"https://maps.google.com/mapfiles/marker" + 'A' + ".png"};
 		
 		if($(".js-store-finder-map").length > 0)
@@ -116,8 +106,6 @@ ACC.storefinder = {
 			 var localStoreInfo=storeData[i];
 				
 			var comIcon="";
-			console.info("**********************");
-			console.info(localStoreInfo);
 			if(!(localStoreInfo["iconUrl"])){
 				comIcon="https://maps.google.com/mapfiles/marker" + 'A' + ".png"
 			 }else {
@@ -144,21 +132,16 @@ ACC.storefinder = {
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
 		          var infoMsg=storeData[i];
-		          
 		          var infoString="<div style=\"width:200px; height:100px\">"+infoMsg["displayName"]+" "+infoMsg["name"]+"</br> Distance Appx."+infoMsg["formattedDistance"]+" </br>"+infoMsg["line1"]
 					+" "+infoMsg["line2"];
 		          var openingMsg="";
 		          if(infoMsg["openings"]){
-		        	  console.info("Inside")
 		        	  var opening=infoMsg["openings"];
 		        	  for (var key in opening) {
 		    	          var value = opening[key];
 		    	          openingMsg +="</br>"+ key+" : "+value;
 		    	        } 
 		          }
-		          
-		          console.info("openingMsg"+openingMsg+ "</div>");
-				  console.info(infoString);
 		          infowindow.setContent(infoString+openingMsg+"</div>");
 		          infowindow.open(map, marker);
 		          map.setZoom(markerZoom);
@@ -168,7 +151,6 @@ ACC.storefinder = {
 		      })(marker, i));
 			marker.setMap(map);	 
 			}
-			//TODO
 			ACC.storefinder.staticLegends(map);
 		}
 		
@@ -192,7 +174,6 @@ ACC.storefinder = {
 			}
 		})
 
-        console.info("bindSearch");
 		//$(".js-store-finder").hide();
 		$(document).on("click",'#findStoresNearMe', function(e){
 			//e.preventDefault()
@@ -255,12 +236,10 @@ ACC.storefinder = {
 	init:function(){
 		//$("#findStoresNearMe").attr("disabled","disabled");
 		var initialZoom=Number($("#initialZoom"));
-		console.info("start init"+initialZoom);
 		$('#findStoresNearMe').addClass("disabled");
 		if(navigator.geolocation){
 			navigator.geolocation.getCurrentPosition(
 				function (position){
-					console.info("start init"+position.coords);
 					ACC.storefinder.coords = position.coords;
 					$('#findStoresNearMe').removeAttr("disabled");
 				},
@@ -270,21 +249,13 @@ ACC.storefinder = {
 				}
 			);
 		}
-		console.info("end init");
 	},
 	loadinitGoogleMap:function(){
-		//console.info(ACC.storefinder.defLat+" "+ACC.storefinder.initialZoom);
-		console.info("loadinitGoogleMap.>>>>>>>>>>");
-		 
 		 var initialZoom= Number($("#initialZoom").val());
 		 var defLat=$("#defLatitude").val(); 
 		 var defLot=$("#defLongitude").val(); 
-		 console.info("loadinitGoogleMap Check values");
-			console.info(initialZoom);
-			console.info(defLat);
 		 var initialZoom=Number($("#initialZoom").val());
 		 $(".js-store-finder-map").attr("id","store-finder-map");
-			console.info(defLat);
 
 		var centerPoint = new google.maps.LatLng(defLat,defLot);
 		var mapOptions = {
@@ -297,13 +268,11 @@ ACC.storefinder = {
 			center: centerPoint
 		}
 	  var map = new google.maps.Map(document.getElementById("store-finder-map"), mapOptions);
-		//TODO
 		ACC.storefinder.staticLegends(map);
 	}
 	,
 	bindStoreTestChange:function()
 	{  
-		    console.info("bindStoreTestChange...");
 			storeData=ACC.storefinder.storeData["data"];
 			var storeId=$(this).data("id");
 			console.info(storeData);
@@ -314,11 +283,7 @@ ACC.storefinder = {
 	showError:function()
 	{   
 		var errorMsg=$("#storefinderNoresult").val();
-		console.info("error msg"+errorMsg);
-		//var emptySearchMessage = $(".btn-primary").data("searchError");
-		//var errorMsg=emptySearchMessage;
 		globalErrorPopup(errorMsg);
-	//	$("#storeFinder").before('<div class="js-storefinder-alert alert alert-danger alert-dismissable" ><button class="close" type="button" data-dismiss="alert" aria-hidden="true">×</button>' + 'No Pos Foound for your search' + '</div>');
 	} 
 	,
 applyGamma:function(map) {
@@ -337,7 +302,6 @@ applyGamma:function(map) {
 	}
 	,
 removeGamma:function(map) {
-
 	    var mapStyles = [{
 	        "stylers": [{
 	            "gamma": 0
@@ -353,7 +317,6 @@ removeGamma:function(map) {
 		var legend = document.createElement('div');
 		legend.style.background='white';
 		legend.style.padding='10px';
-		console.info("**"+legend);
 		 // Setup the different icons and shadows
 	    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
 	    
@@ -375,7 +338,6 @@ removeGamma:function(map) {
 	         legend.appendChild(div);
 	    }
         
-	    //TODO
 	   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 	    
 	}
