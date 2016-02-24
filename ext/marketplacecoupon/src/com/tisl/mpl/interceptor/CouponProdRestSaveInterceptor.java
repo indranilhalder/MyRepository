@@ -20,9 +20,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
 /**
@@ -32,13 +35,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CouponProdRestSaveInterceptor implements PrepareInterceptor<ProductRestrictionModel>
 {
 
-	@Autowired
+	@Resource(name = "catalogVersionService")
 	private CatalogVersionService catalogVersionService;
 
-	@Autowired
+	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-	@Autowired
+	@Resource(name = "productService")
 	private ProductService productService;
 
 	/**
@@ -52,21 +55,22 @@ public class CouponProdRestSaveInterceptor implements PrepareInterceptor<Product
 	{
 		if (null != paramMODEL && StringUtils.isNotEmpty(paramMODEL.getProductCodeList()))
 		{
-			final String productCodes = paramMODEL.getProductCodeList();
+			final String productCodes = paramMODEL.getProductCodeList(); //List of product codes separated by commas
 			final List<ProductModel> newProductModelList = new ArrayList<ProductModel>();
 
-			final StringTokenizer newProductCodeTokens = new StringTokenizer(productCodes, ",");
+			final StringTokenizer newProductCodeTokens = new StringTokenizer(productCodes,
+					MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
 
-			final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
-					.getConfiguration().getString("cronjob.promotion.catelog"),
-					configurationService.getConfiguration().getString("cronjob.promotion.catalogVersionName"));
+			final CatalogVersionModel catalogVersionModel = getCatalogVersionService().getCatalogVersion(
+					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTCATALOGID),
+					getConfigurationService().getConfiguration().getString(
+							MarketplacecommerceservicesConstants.DEFAULTCATALOGVERISONID));
 			if (null != catalogVersionModel)
 			{
 				while (newProductCodeTokens.hasMoreTokens())
 				{
-
-					newProductModelList.add(productService.getProductForCode(catalogVersionModel, newProductCodeTokens.nextToken()
-							.trim()));
+					newProductModelList.add(getProductService().getProductForCode(catalogVersionModel,
+							newProductCodeTokens.nextToken().trim()));
 				}
 				final Collection<ProductModel> existingProductList = paramMODEL.getProducts();
 
@@ -80,12 +84,66 @@ public class CouponProdRestSaveInterceptor implements PrepareInterceptor<Product
 				productModelSet.addAll(finalProductList);
 				finalProductList.clear();
 				finalProductList.addAll(productModelSet);
-				paramMODEL.setProducts(finalProductList);
+				paramMODEL.setProducts(finalProductList); //Setting the products in product restriction
 			}
 
 		}
 
 	}
+
+	/**
+	 * @return the catalogVersionService
+	 */
+	public CatalogVersionService getCatalogVersionService()
+	{
+		return catalogVersionService;
+	}
+
+	/**
+	 * @param catalogVersionService
+	 *           the catalogVersionService to set
+	 */
+	public void setCatalogVersionService(final CatalogVersionService catalogVersionService)
+	{
+		this.catalogVersionService = catalogVersionService;
+	}
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+	/**
+	 * @return the productService
+	 */
+	public ProductService getProductService()
+	{
+		return productService;
+	}
+
+	/**
+	 * @param productService
+	 *           the productService to set
+	 */
+	public void setProductService(final ProductService productService)
+	{
+		this.productService = productService;
+	}
+
+
+
 
 
 }

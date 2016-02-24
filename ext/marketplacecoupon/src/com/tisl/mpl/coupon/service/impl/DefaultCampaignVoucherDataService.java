@@ -140,7 +140,7 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 				data.setPromoText(voucher.getDescription());
 			}
 
-			if (null != voucher.getValue() && voucher.getValue().doubleValue() > 0)
+			if (null != voucher.getValue())
 			{
 				data.setValue(voucher.getValue().toString());
 			}
@@ -150,13 +150,13 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 				data.setCurrency(voucher.getCurrency().getIsocode());
 			}
 
-			if (null != promoVoucher.getRedemptionQuantityLimit() && promoVoucher.getRedemptionQuantityLimit().intValue() > 0)
+			if (null != promoVoucher.getRedemptionQuantityLimit() && promoVoucher.getRedemptionQuantityLimit().intValue() >= 0)
 			{
 				data.setRedeemLimit(promoVoucher.getRedemptionQuantityLimit().toString());
 			}
 
 			if (null != promoVoucher.getRedemptionQuantityLimitPerUser()
-					&& promoVoucher.getRedemptionQuantityLimitPerUser().intValue() > 0)
+					&& promoVoucher.getRedemptionQuantityLimitPerUser().intValue() >= 0)
 			{
 				data.setRedeemLimitUsr(promoVoucher.getRedemptionQuantityLimitPerUser().toString());
 			}

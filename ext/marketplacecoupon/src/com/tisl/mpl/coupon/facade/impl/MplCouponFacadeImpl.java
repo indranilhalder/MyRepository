@@ -100,7 +100,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private SessionService sessionService;
 
 
-	@Autowired
+	@Resource(name = "voucherDisplayConverter")
 	private Converter<VoucherModel, VoucherDisplayData> voucherDisplayConverter;
 
 	@Autowired

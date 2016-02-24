@@ -37,7 +37,7 @@ public class MplCouponHelper
 		for (final AbstractOrderEntry orderEntry : entryList)
 		{
 			final AbstractOrderEntryModel entry = ((AbstractOrderEntryModel) getModelService().get(orderEntry));
-			if (entry.getMplDeliveryMode() != null)
+			if (entry.getMplDeliveryMode() != null && null != entry.getMplDeliveryMode().getDeliveryMode())
 			{
 				final DeliveryMode selectedDelMode = getModelService().getSource(entry.getMplDeliveryMode().getDeliveryMode());
 				//Adding entry to list if it contains selected delivery mode

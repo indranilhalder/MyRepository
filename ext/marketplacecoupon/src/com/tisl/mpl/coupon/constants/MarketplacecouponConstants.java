@@ -85,7 +85,6 @@ public final class MarketplacecouponConstants extends GeneratedMarketplacecoupon
 	public static final String VOUCHERCAMPAIGNJOBEXTN = "cronjob.campaign.voucher.extension".intern();
 	public static final String DEFVOUCAMPAIGNJOBEXTN = ".csv".intern();
 
-
 	private MarketplacecouponConstants()
 	{
 		//empty to avoid instantiating this constant class

@@ -92,6 +92,8 @@
 		<property name="defaultVoucherFacade" ref="defaultVoucherFacade"/>
 		<property name="mplVoucherService" ref="mplVoucherService"/>
 		<property name="sessionService" ref="sessionService"/>
+		<property name="voucherDisplayConverter" ref="voucherDisplayConverter"/>
+		<!-- <property name="voucherTransactionConverter" ref="voucherTransactionConverter"/> -->
 	</bean>
 		
 	
@@ -131,7 +133,7 @@
 	
 <!-- 	<bean id="couponMailJob" class="com.tisl.mpl.coupon.job.CouponMailJob" autowire="byName"/> -->	
 
-	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" autowire="byName">
+	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" parent="abstractJobPerformable">
 		<property name="customerDetailsService" ref="customerDetailsService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>	
@@ -147,12 +149,16 @@
 	<bean id="campaignVoucherData" class="com.tisl.mpl.coupon.pojo.CampaignVoucherData" />
 	
 	<!-- Tata Cliq : For Campaign Team   -->
-   	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob" autowire="byName">
+   	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob" parent="abstractJobPerformable">
    		<property name="campaignVoucherDataService" ref="campaignVoucherDataService" />
    	</bean>	
    	
    	<!-- CouponRestrictionSaveInterceptor starts -->
-	<bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor" />
+	<bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor">
+		<property name="catalogVersionService" ref="catalogVersionService" />
+		<property name="configurationService" ref="configurationService" />
+		<property name="productService" ref="productService" />
+	</bean>
 
 	<bean id="CouponProdRestSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
