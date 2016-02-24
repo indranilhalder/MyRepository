@@ -229,11 +229,11 @@ tr.d0 td {
 		
 	   
 		if (wishListList == "") {
-			wishName = $("#defaultWishName_quick").val();
+			wishName = $("#defaultWishName_quick").val().trim();
 		} else {
-			wishName = wishListList[$("#hidWishlist_quick").val()];
+			wishName = wishListList[$("#hidWishlist_quick").val().trim()];
 		}
-		if(wishName==""){
+		if(wishName=="" || wishName.trim()==""){
 			var msg=$('#wishlistnotblank_quick').text();
 			$('#addedMessage_quick').show();
 			$('#addedMessage_quick').html(msg);
@@ -1120,22 +1120,22 @@ $('ul.wish-share a#mailQuick').popover({
 		}
 	}
 });
-$(document).on("keyup","#defaultWishName_quick",function() {
-	validateWishEnteredNameQuick("defaultWishName_quick","addedMessage_quick");
-});
 
-function validateWishEnteredNameQuick(divId,errorDivId) {
-	var value=$('#'+divId).val();
-	var re = /^[ _a-zA-Z0-9_ ]*[ _a-zA-Z0-9_ ]+[ _a-zA-Z_ ]*$/i;
-	var isValid = re.test(value);
-	if (!isValid) {
-		value = value.substring(0, value.length - 1);
-		$("#"+errorDivId).html("<font color='#ff1c47'><b>*</b>Special charecters are not allowed</font>");
-		$("#"+errorDivId).show().fadeOut(3000);
-	}
-	$('#'+divId).val(value);
 
-}
+$(document).on("keypress","#defaultWishName_quick",function(e) {
+	var wishlistname = $("#defaultWishName_quick").val();
+	var key = e.keyCode;
+	if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
+		e.preventDefault();
+		 var start = this.selectionStart,
+         end = this.selectionEnd;
+		$('#defaultWishName_quick').val(wishlistname);
+		$("#addedMessage_quick").show();
+		$("#addedMessage_quick").html("<font color='#ff1c47'><b>Special characters are not allowed</b></font>");
+		$("#addedMessage_quick").show().fadeOut(3000);
+		this.setSelectionRange(start, end);
+	} 
+}); 
 
 
 </script>

@@ -298,10 +298,9 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						final ProductModel productModel = productService.getProductForCode(gsCommentObject.getString("streamId"));
 
-						productData = productFacade.getProductForOptions(productModel,
-								Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
-										ProductOption.GALLERY, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
-										ProductOption.VARIANT_FULL));
+						productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+								ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
+								ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
 					}
 
 					reviewDTO.setProductData(productData);
@@ -342,7 +341,10 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequestAllowEdit = new GSRequest(apiKey, secretKey, setCategoryInfoMethod);
 		gsRequestAllowEdit.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
 		gsRequestAllowEdit.setParam("categorySettings", "{userEditComment : true}");
-		gsRequestAllowEdit.setParam("clientSettings", "{enableMediaItems : true}");
+		if (null != commentMediaUrl && !commentMediaUrl.isEmpty())
+		{
+			gsRequestAllowEdit.setParam("clientSettings", "{enableMediaItems : true}");
+		}
 		GSResponse gsResponse = null;
 		Proxy proxy = null;
 
@@ -372,7 +374,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						gsRequest.setProxy(proxy);
 					}
-					if (null != commentMediaUrl)
+					if (null != commentMediaUrl && !commentMediaUrl.isEmpty())
 					{
 						final GSArray attachment = new GSArray();
 						attachment.add(commentMediaUrl);

@@ -585,7 +585,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			{
 				if (internalCampaignData.getIcid() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -594,7 +594,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getAssetName() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -602,18 +602,20 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				}
 
 
-				if (internalCampaignData.getCategory() == null)
+				if (internalCampaignData.getCategory() == null
+						|| internalCampaignData.getCategory() == MarketplacecommerceservicesConstants.EMPTYSPACE)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
-					fileWriter.append("\"").append(internalCampaignData.getCategory()).append("\"").append(COMMA_DELIMITER);
+					//fileWriter.append("\"").append(internalCampaignData.getCategory()).append("\"").append(COMMA_DELIMITER);
+					fileWriter.append(internalCampaignData.getCategory()).append(COMMA_DELIMITER);
 				}
 
 				if (internalCampaignData.getMediaType() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -622,7 +624,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getSize() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -631,7 +633,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getSourcePage() == null)
 				{
-					fileWriter.append("").append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
 				}
 				else
 				{

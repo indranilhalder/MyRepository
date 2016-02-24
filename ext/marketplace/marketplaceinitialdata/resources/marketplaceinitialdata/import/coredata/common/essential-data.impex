@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Import essential data for the Accelerator
 #
 # Includes:
@@ -528,3 +529,537 @@ INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLangu
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ;sellerPriorityJob;0 0/15 * 1/1 * ? *
+=======
+# Import essential data for the Accelerator
+#
+# Includes:
+# * Languages
+# * Currencies
+# * Titles
+# * Vendors
+# * Warehouses
+# * Supported Credit/Debit cards
+# * User Groups
+# * DistanceUnits for Storelocator
+# * MediaFolders
+# * MediaFormats
+# * Tax & Tax Groups
+# * Jobs
+
+# Languages
+INSERT_UPDATE Language;isocode[unique=true];fallbackLanguages(isocode);active[default=true]
+;en;;;
+;de;en;;
+;ja;en;;
+;zh;en;;
+
+# Currencies
+INSERT_UPDATE Currency;isocode[unique=true];conversion;digits;symbol
+;GBP;1;2;Ãƒâ€šÃ‚Â£
+;EUR;1;2;ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
+;USD;1,4;2;$
+;JPY;120;0;Ãƒâ€šÃ‚Â¥
+;INR;1;2;₹
+
+# SiteMap Language Currencies
+INSERT_UPDATE SiteMapLanguageCurrency;&siteMapLanguageCurrency;language(isoCode)[unique=true];currency(isocode)[unique=true];
+;enUsd;en;USD
+;enJpy;en;JPY
+;enGbp;en;GBP
+;enEur;en;EUR
+;jaUsd;ja;USD
+;jaJpy;ja;JPY
+;jaGbp;ja;GBP
+;jaEur;ja;EUR
+;deUsd;de;USD
+;deJpy;de;JPY
+;deGbp;de;GBP
+;deEur;de;EUR
+;zhUsd;zh;USD
+;zhJpy;zh;JPY
+;zhGbp;zh;GBP
+;zhEur;zh;EUR
+;enInr;en;INR
+
+
+
+INSERT_UPDATE DeliveryMode;code[unique=true];start;end
+;home-delivery;5;6
+;express-delivery;1;2 
+
+
+# Vendor
+INSERT_UPDATE Vendor;code[unique=true];name
+;default;Default Vendor
+
+# Warehouse
+INSERT_UPDATE Warehouse;code[unique=true];name;vendor(code)[default=default];default[default=true]
+;default;Default Warehouse;
+;warehouse_s;Warehouse South;
+;warehouse_e;Warehouse East;
+;warehouse_w;Warehouse West;
+;warehouse_n;Warehouse North;
+
+# Disable preview for email pages
+UPDATE CMSPageType;code[unique=true];previewDisabled
+;EmailPage;true
+
+# Titles
+INSERT_UPDATE Title;code[unique=true]
+;mr
+;mrs
+;miss
+;ms
+;dr
+;rev
+
+# Media Folders
+INSERT_UPDATE MediaFolder;qualifier[unique=true];path[unique=true]
+;images;images
+;email-body;email-body
+;email-attachments;email-attachments
+
+# Media formats
+INSERT_UPDATE MediaFormat;qualifier[unique=true]
+;1200Wx1200H
+;515Wx515H
+;365Wx246H
+;300Wx300H
+;160Wx46H
+;96Wx96H
+;65Wx65H
+;30Wx30H
+;mobile
+;tablet
+;desktop
+;widescreen
+;1348Wx2000H
+;437Wx649H
+;252Wx374H
+;113Wx168H
+;97Wx144H
+;40Wx40H
+
+# Media formats
+INSERT_UPDATE MediaFormat;qualifier[unique=true];name
+;1348Wx2000H;1348Wx2000H
+;437Wx649H;437Wx649H
+;252Wx374H;252Wx374H
+;113Wx168H;113Wx168H
+;97Wx144H;97Wx144H
+;40Wx40H;40Wx40H
+;160Wx46H;160Wx46H
+
+
+# Media formats
+INSERT_UPDATE MediaFormat;qualifier[unique=true];name
+;324Wx324H;324Wx324H
+;157Wx157H;157Wx157H
+;257Wx257H;257Wx257H
+;666Wx756H;666Wx756H
+;432Wx439H;432Wx439H
+;135Wx60H;135Wx60H
+;206Wx206H;206Wx206H
+;666Wx607H;666Wx607H
+;288Wx288H;666Wx607H
+;340Wx160H;340Wx160H
+
+
+# Tax & Tax Groups
+INSERT_UPDATE UserTaxGroup;code[unique=true]
+;de-taxes
+;jp-taxes
+;uk-taxes
+;us-taxes
+;ca-taxes
+
+INSERT_UPDATE ProductTaxGroup;code[unique=true]
+;jp-vat-full
+;eu-vat-full
+;eu-vat-half
+;us-sales-tax-full
+;ca-sales-tax-full
+
+INSERT_UPDATE Tax;code[unique=true];value;currency(isocode)
+;de-vat-full;19
+;de-vat-half;7
+;jp-vat-full;5
+;uk-vat-full;20
+;uk-vat-half;5
+;us-sales-tax-full;0
+;ca-sales-tax-full;0
+
+INSERT_UPDATE ServicelayerJob;code[unique=true];springId[unique=true]
+;cartRemovalJob;cartRemovalJob
+;siteMapMediaJob;siteMapMediaJob
+
+# Deactivate Frontend Restriction on category by default for perfomance purposes
+UPDATE SearchRestriction;code[unique=true];active[default=false]
+;Frontend_RestrictedCategory
+
+# example of assigning the rights to the user group
+
+$passwordEncoding=md5
+$defaultPassword=1234
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+
+
+INSERT_UPDATE Employee;UID[unique=true];$setPassword;description;name;groups(uid);sessionLanguage(isocode)
+;syncmanager;;Sync manager;;;en; 
+
+$catalog-id=mplProductCatalog
+$syncJobCode=sync $catalog-id:Staged->Online
+$sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
+$targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
+INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+;sync mplProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,Brand,SeoContent,RichAttribute,SizeGuide,ratingReview;syncmanager
+INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
+;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true
+
+INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
+;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
+                                         
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;MplNowTrendingProductCarouselComponent
+;wide;MplCategoryCarouselComponent
+;wide;MplSequentialBannerComponent
+;narrow;FooterComponent
+#Adding Brand Component,BrandCollectionComponent and DepartmentCollectionComponent in the navigation group
+;navigation;BrandComponent
+;navigation;BrandCollectionComponent
+;navigation;DepartmentCollectionComponent
+;headerlinks;CMSLinkComponent
+;headerlinks;CMSParagraphComponent
+;headerlinks;HelpMeShopSearchComponent
+
+
+#buybox insert  the procedure names
+INSERT_UPDATE BuyboxUpdateLog;last_run_time[dateformat=yyyy-MM-dd HH:mm];proc_name[unique=true]
+;2015-07-01 10:00:01;buybox_weightage
+;2015-07-01 10:00:01;buybox_dateupdate
+;2015-07-01 10:00:01;buybox_price_update
+;2015-06-01 10:00:01;ia_brands
+;2015-06-01 10:00:01;ia_brandprdrel
+;2015-06-01 10:00:01;ia_collection
+;2015-06-01 10:00:01;ia_category
+;2015-06-01 10:00:01;ia_catprdrel
+;2015-06-01 10:00:01;ia_price_inventory
+
+#buybox insert the weightage values
+INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue
+;priceweightage;-0.00000001 
+;invweightage;0.3
+
+INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+#;buyboxjob;buyboxCronJob;false;en
+#For Payment Job (Web Hook Integration)
+;juspayWebHookCronJob;juspayWebHookJob;false;en
+;juspayEBSCronJob;juspayEBSJob;false;en
+;campaignPromoDataCronJob;campaignPromoDataJob;false;en
+
+INSERT_UPDATE DelistingJobHelper;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
+								;DelistingHelperJob;delistingJob;en;seller;csv;
+
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+#% afterEach: impex.getLastImportedItem().setActivationTime(new Date());
+#; buyboxjob; 0 0/15 * 1/1 * ? *
+; juspayEBSCronJob; 0 0/15 * 1/1 * ? *
+; juspayWebHookCronJob; 0 0/15 * 1/1 * ? *
+;sellerPriorityCronJob;0 0/15 * 1/1 * ? *
+
+
+# Validation constraints - Customer
+INSERT_UPDATE AttributeConstraint;id[unique=true];annotation[allownull=true];descriptor(enclosingType(code),qualifier);qualifier;severity(code,itemtype(code));target;type(code);active
+;CustomerName;de.hybris.platform.validation.annotations.NotBlank;Customer:name;name;ERROR:Severity;de.hybris.platform.core.model.user.CustomerModel;Customer;false  
+
+#For Payment Web Hook Job
+INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfigDate
+;juspayWebHookCronJob
+;juspayEBSCronJob
+
+
+INSERT_UPDATE mediaStatusEnum;code[unique=true];name[lang=en]
+;pcm_new;New;
+;pcm_import;Import;
+;pcm_failure;Failure;
+;pcm_updated;Updated;
+;pcm_updatedui;Updated UI;
+;pcm_unchanged;Unchanged;
+;pcm_updatedpcm;Updated Pcm;
+;pcm_mediaupdated;Media Updated;
+;pcm_updatedservice;Updated Service;
+;pcm_imageprocessingcompleted;Image Processing Completed;
+
+INSERT_UPDATE productType;code[unique=true];name[lang=en]
+;pcm_simple;Simple;
+;pcm_base;Base;
+;pcm_variant;Variant;
+
+INSERT_UPDATE productStatusEnum;code[unique=true];name[lang=en]
+;pcm_approved;Approved;
+;pcm_rejected;Rejected;
+;pcm_accepted;Accepted;
+;pcm_duplicationcheckcompleted;Duplication Check Completed;
+;pcm_productupdated;Product Updated;
+;pcm_richattributeupdated;RichAttribute Updated;
+;pcm_ginsizecolorupdated;GIN Size Color Updated;
+;pcm_sellerinformationupdated;Seller Information Updated;
+;pcm_ginupdated;GIN Updated
+
+INSERT_UPDATE imageTypeEnum;code[unique=true];name[lang=en]
+;pcm_jpeg;jpeg;
+;pcm_png;png;
+
+INSERT_UPDATE videosTypeEnum;code[unique=true];name[lang=en]
+;pcm_avi;avi;
+;pcm_mp4;mp4;
+
+INSERT_UPDATE warrantyTypeEnum;code[unique=true];name[lang=en]
+;seller;Seller;
+;brand;Brand;
+
+INSERT_UPDATE isPromotionsAllowedEnum;code[unique=true];name[lang=en]
+;allow;Allow;
+;disallow;DisAllow;
+
+INSERT_UPDATE homeDeliveryEnum;code[unique=true];name[lang=en]
+;yes;Yes;
+;no;No;
+
+INSERT_UPDATE expressDeliveryEnum;code[unique=true];name[lang=en]
+;yes;Yes;
+;no;No;
+
+INSERT_UPDATE clickAndCollectEnum;code[unique=true];name[lang=en]
+;yes;Yes;
+;no;No;
+
+INSERT_UPDATE typeOfItem1Enum;code[unique=true];name[lang=en]
+;large;Large;
+;precious;Precious;
+;fragile;Fragile;
+;bulky;Bulky;
+;digital;Digital;
+
+INSERT_UPDATE typeOfItem2Enum;code[unique=true];name[lang=en]
+;premium;Premium;
+;semipremium;SemiPremium;
+;budget;Budget;
+
+INSERT_UPDATE shippingModeEnum;code[unique=true];name[lang=en]
+;surface;Surface;
+;air;Air;
+
+INSERT_UPDATE paymentModesEnum;code[unique=true];name[lang=en]
+;cod;COD;
+;prepaid;Prepaid;
+;both;Both;
+
+INSERT_UPDATE deliveryFulfillModesEnum;code[unique=true];name[lang=en]
+;tship;TShip;
+;sship;SShip;
+
+INSERT_UPDATE sellerAssociationStatusEnum;code[unique=true];name[lang=en]
+;yes;Yes;
+;no;No;
+
+INSERT_UPDATE globalIdentifierType;code[unique=true];name[lang=en]
+;ean;EAN
+;upc;UPC
+;isbn;ISBN
+;isbn10;ISBN10
+;isbn13;ISBN13
+;apn;APN
+;alternateEAN;AlternateEAN
+;internalWMPID;InternalWMPID
+
+INSERT_UPDATE MplBlackListingJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
+;blacklistReportCreationJob;blacklistReportJob;en;;;
+
+INSERT_UPDATE SellerTypeGlobalCodes;globalcode[unique=true];description
+;SLR_TYPE_PLT;Platinum
+;SLR_TYPE_GOLD;Gold
+;SLR_TYPE_SLVR;Silver
+;SLR_TYPE_TRST;Trusted
+
+
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;customerDetailsPopulateCronJob;customerDetailsPopulateJob;false;de
+;salesOrderPaymentInfoPopulateJob;salesOrderPaymentInfoJob;false;de
+;salesOrderCanRetInfoPopulateJob;salesOrderCancelPaymentInfoJob;false;de
+;merchantMasterPopulateCronJob;merchantmaster;false;de
+
+#For FICO CRM Job
+INSERT_UPDATE MplConfiguration;mplConfigCode[unique=true];mplConfigVal;mplConfigDate
+;customerDetailsPopulateCronJob
+;salesOrderPaymentInfoPopulateJob
+;salesOrderCanRetInfoPopulateJob
+
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+; customerDetailsPopulateCronJob; 0 0 0 * * ?
+; salesOrderPaymentInfoPopulateJob; 0 0 0 * * ?
+
+###For OrderStatusCodeMaster####
+INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;statusMessage;stage;enable;display;colorCode;dotId;
+;100000;PAYMENT_SUCCESSFUL;Order Placed;Your order is placed;APPROVED;true;true;00cbe9;D1;
+;100001;RMS_VERIFICATION_PENDING;Pending Verification;Your order is on hold;APPROVED;true;true;ffc200;D1;
+;100002;RMS_VERIFICATION_FAILED;Order not Placed;Sorry, this order can't be processed;APPROVED;true;true;ff1c47;D1;
+;100003;PENDING_SELLER_ASSIGNMENT;Order Placed;Your order is placed;APPROVED;true;true;00cbe9;D1;
+;100004;ORDER_ALLOCATED;Order Placed;Your order is placed;APPROVED;true;true;00cbe9;D1;
+
+;100005;ORDER_ACCEPTED;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100006;ORDER_REJECTED;Order Placed;Your order is placed;PROCESSING;true;true;ff1c47;D2;
+;100007;PICK_IN_PROGRESS;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100008;PICK_LIST_GENERATED;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100009;PICK_HOLD;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100010;PICK_CONFIRMED;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100011;PACKED;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100012;AWB_ASSIGNED;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100013;PRINT_SHIPPING_LABEL;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100014;INVOICE_GENERATED;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100015;PRINT_INVOICE;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100016;MANIFESTO_PENDING;Order Confirmed;Great! Your order is confirmed;PROCESSING;true;true;00cbe9;D2;
+;100017;READY_TO_SHIP;Order Confirmed;Your order is processing;PROCESSING;true;true;00cbe9;D2;
+;100018;LOGISTIC_PARTNER_SWITCH;Order Confirmed;Your order is processing;PROCESSING;true;true;00cbe9;D2;
+
+;100019;HOTC;Shipping commenced;Your order was just shipped;SHIPPING;true;true;00cbe9;D3;
+
+;100020;OUT_FOR_DELIVERY;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
+;100021;REACHED_NEAREST_HUB;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
+;100022;LOST_IN_TRANSIT;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
+;100023;UNDELIVERED;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
+
+;100024;DELIVERED;Shipment delivered;Super! Your order was delivered;SHIPPING;true;true;00cbe9;D5;
+
+;100025;RETURN_INITIATED;Return Initiated;Order return has been initiated;RETURN;true;true;00cbe9;D6;
+
+;100026;REVERSE_AWB_ASSIGNED;Return in Progress;Order return is in progress;RETURN;true;true;00cbe9;D7;
+;100032;RETURN_RECEIVED;Return in Progress;Order return is in progress;RETURN;true;true;00cbe9;D7;
+;100027;RETURN_CLOSED;Return in Progress;Order return is in progress;RETURN;true;true;00cbe9;D7;
+;100034;QC_FAILED;Return in Progress;Order return is in progress;RETURN;true;true;00cbe9;D7;
+;100035;RETURN_REJECTED;Return Rejected;Sorry, the return order has been declined;RETURN;true;true;ff1c47;D8;
+;100030;REDISPATCH_INITIATED;Re-dispatch Initiated;Re-dispatch has been initiated;RETURN;true;true;00cbe9;D8;
+;100031;CLOSED_ON_RETURN_TO_ORIGIN;Order Returned and Closed;Order has been returned and closed;RETURN;true;true;00cbe9;D8;
+;100029;REFUND_INITIATED;Refund Initiated;Refund has been initiated;RETURN;true;true;00cbe9;D8;
+;100041;REFUND_IN_PROGRESS;Manual refund initiated;Manual refund has been initiated;RETURN;true;true;ff1c47;D8;
+
+;100033;RETURN_COMPLETED;Return completed;Refund has been triggered;RETURN;true;true;00cbe9;D9;
+;100028;RETURN_CANCELLED;Return Cancelled;Order return has been Cancelled;RETURN;true;true;00cbe9;D9;
+
+;100036;CANCELLATION_INITIATED;Cancellation initiated;Your cancellation request is initiated;CANCEL;true;true;ff1c47;D10;
+;100037;REFUND_INITIATED;Refund Initiated;Refund has been initiated;CANCEL;true;true;ff1c47;D11;
+;100038;REFUND_IN_PROGRESS;Manual refund initiated;Manual refund has been initiated;CANCEL;true;true;ff1c47;D11;
+;100039;CLOSED_ON_CANCELLATION;Order Cancelled and Closed;Order has been cancelled and closed;CANCEL;true;true;ff1c47;D11;
+;100040;ORDER_CANCELLED;Order Cancelled;Your order has been cancelled;CANCEL;true;true;ff1c47;D11; 
+
+###Payment Related
+UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;juspayWebHookTAT;juspayEBSTAT;ebsTatExpiryAlertTime
+;mpl;50000;2000;10;6;15
+
+INSERT_UPDATE PaymentType;mode[unique=true];isAvailable;baseStore(uid)
+;Credit Card;true;mpl
+;Debit Card;true;mpl
+;Netbanking;true;mpl
+;EMI;true;mpl
+;COD;true;mpl
+;Cheque;false;mpl
+
+INSERT_UPDATE Bank;bankName;bankCode[unique=true];baseStore(uid)
+;HDFC Bank;HDFB;mpl
+;Axis Bank;AXIB;mpl
+;CITI Bank;CITB;mpl
+;ICICI Bank;ICIB;mpl
+;State Bank of India;SBOI;mpl
+;Bank of India;BOIN;mpl
+;Bank of Maharashtra;BOMH;mpl
+;Central Bank of India;CBIN;mpl
+;Corporation Bank;CRPB;mpl
+;Development Credit Bank;DECB;mpl
+;Federal Bank;FEDB;mpl
+;Industrial Development Bank of India;IDBI;mpl
+;Indian Bank;INDB;mpl
+;IndusInd Bank;INIB;mpl
+;Indian Overseas Bank;INOB;mpl
+;Jammu and Kashmir Bank;JAKB;mpl
+;Karnataka Bank;KARB;mpl
+;Karur Vysya;KARV;mpl
+;State Bank of Bikaner and Jaipur;SBBJ;mpl
+;State Bank of Hyderabad;SBOH;mpl
+;State Bank of Mysore;SBOM;mpl
+;State Bank of Travancore;SBOT;mpl
+;South Indian Bank;SOIB;mpl
+;Union Bank of India;UBOI;mpl
+;United Bank Of India;UNBI;mpl
+;Vijaya Bank;VIJB;mpl
+;Yes Bank;YESB;mpl
+;CityUnion;CITU;mpl
+;Canara Bank;CANB;mpl
+;State Bank of Patiala;SBOP;mpl
+;Deutsche Bank;DETB;mpl
+;Kotak Bank;KOTB;mpl
+;Dhanlaxmi Bank;DHNB;mpl
+;ING Vysya Bank;INGV;mpl
+
+
+INSERT_UPDATE Bin;BinNo[unique=true];CardBrand;CardType;bank(bankName);Category;IssuingCountry;ISOA2;ISOA3;ISONumber;IssuingOrgWebsite;IssuingOrgPhoneNo
+;424242;VISA;CREDIT;CITI Bank;POSTPAID;INDIA;IN;IND;356;https://www.citibank.co.in/;1800 22 6747
+
+
+INSERT_UPDATE BankforNetbanking;name(bankName)[unique=true];nbCode;isAvailable;priority
+;HDFC Bank;NB_HDFC;true;true
+;Axis Bank;NB_AXIS;true;true
+;CITI Bank;NB_CITI;true;true
+;ICICI Bank;NB_ICICI;true;true
+;State Bank of India;NB_SBI;true;true
+;Bank of India;NB_BOI;true;false
+;Bank of Maharashtra;NB_BOM;true;false
+;Central Bank of India;NB_CBI;true;false
+;Corporation Bank;NB_CORP;true;false
+;Development Credit Bank;NB_DCB;true;false
+;Federal Bank;NB_FED;true;false
+;Industrial Development Bank of India;NB_IDBI;true;false
+;Indian Bank;NB_INDB;true;false
+;IndusInd Bank;NB_INDUS;true;false
+;Indian Overseas Bank;NB_IOB;true;false
+;Jammu and Kashmir Bank;NB_JNK;true;false
+;Karnataka Bank;NB_KARN;true;false
+;Karur Vysya;NB_KVB;true;false
+;State Bank of Bikaner and Jaipur;NB_SBBJ;true;false
+;State Bank of Hyderabad;NB_SBH;true;false
+;State Bank of Mysore;NB_SBM;true;false
+;State Bank of Travancore;NB_SBT;true;false
+;South Indian Bank;NB_SOIB;true;false
+;Union Bank of India;NB_UBI;true;false
+;United Bank Of India;NB_UNIB;true;false
+;Vijaya Bank;NB_VJYB;true;false
+;Yes Bank;NB_YESB;true;false
+;CityUnion;NB_CUB;true;false
+;Canara Bank;NB_CANR;true;false
+;State Bank of Patiala;NB_SBP;true;false
+;Deutsche Bank;NB_DEUT;true;false
+;Kotak Bank;NB_KOTAK;true;false
+;Dhanlaxmi Bank;NB_DLS;true;false
+;ING Vysya Bank;NB_ING;true;false
+
+
+###For Webhook Report Job
+INSERT_UPDATE MplWebhookReportJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
+;webhookReportCreationJob;webhookReportJob;en;;;
+
+###For Seller priority Report Job
+INSERT_UPDATE MplSellerPriorityJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
+;sellerPriorityJob;sellerPriorityReportJob;en;;;
+
+###update seller priority 
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;sellerPriorityCronJob;updateSellerPriorityCronJob;false;en
+
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+;sellerPriorityJob;0 0/15 * 1/1 * ? *
+
+
+>>>>>>> BRANCH_TCS-HYCOMM-R2SPRINT-79_23-02-2016_21-12-39
