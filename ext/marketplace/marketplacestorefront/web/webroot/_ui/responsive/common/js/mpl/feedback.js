@@ -313,6 +313,7 @@ $(document).ready(function(){
 				if($(window).width() < 773) {
 					$("span#mobile-menu-toggle").unbind('click');
 					$("span#mobile-menu-toggle").click(function(){
+						$("a#tracklink").mouseover();
 						$(this).parent('li').siblings().find('#mobile-menu-toggle').removeClass("menu-dropdown-arrow");
 						$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
 						$(this).next().slideToggle();
@@ -1099,6 +1100,7 @@ $(document).ready(function(){
 			if($(window).width() < 773) {
 				$("span#mobile-menu-toggle").unbind('click');
 				$("span#mobile-menu-toggle").click(function(){
+					$("a#tracklink").mouseover();
 					$(this).parent('li').siblings().find('#mobile-menu-toggle').removeClass("menu-dropdown-arrow");
 					$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
 					$(this).next().slideToggle();

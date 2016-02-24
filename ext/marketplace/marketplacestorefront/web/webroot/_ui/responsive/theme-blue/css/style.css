@@ -10436,19 +10436,20 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .main-image .online-exclusive {
     position: absolute;
-    width: 40%;
-    bottom: -5px;
-    left: 0px;
-       text-align: center;
-    height: 25px;
-    /* min-width: 200px */
-    background-color: #fbba21;
-}
+	width: 40%;
+	bottom: 0px;
+	left: 10px;
+	text-align: center;
+	height: 25px;
+	min-width: 150px;
+	background-color: #fbba21;
+	display: table;
+	}
 .product-info .product-image-container .main-image .brush-strokes-sprite{
 	display: none;
 }
 .product-info .product-image-container .main-image .online-exclusive span {
-   position: static;
+  	position: static;
     vertical-align: middle;
     display: table-cell;
     color: #fff;
@@ -29701,13 +29702,24 @@ a.button.maroon {
     font-weight: bold;
     text-transform: uppercase;
 }
-@media(max-width:995px) and (min-width:651px){
+@media(max-width:967px) and (min-width:651px){
 #showcase a.button.trending-button {
+padding-top:9px;
+min-width: 165px;
+}
+}
+@media(max-width:993px) and (min-width:651px){
+#showcase a.button.maroon {
 padding-top:9px;
 }
 }
-@media(max-width:828px) and (min-width:651px){
+@media(max-width:333px){
 #showcase a.button.maroon {
+padding-top:9px;
+}
+}
+@media(max-width:323px){
+#showcase a.button.trending-button {
 padding-top:9px;
 }
 }
@@ -30229,6 +30241,14 @@ header div.bottom .marketplace.linear-logo {
 	header div.bottom .marketplace.linear-logo {
 		display: block;
 	}
+	.trackorder-dropdown li{
+	line-height: 18px !important;
+    border-bottom: none !important;
+    padding:5px;
+	}
+	div#track_footer {
+    padding-bottom: 5px;
+}
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img{
 display:inline-block;
