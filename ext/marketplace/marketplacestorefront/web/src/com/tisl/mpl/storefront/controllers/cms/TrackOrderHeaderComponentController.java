@@ -10,6 +10,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tisl.mpl.data.NotificationData;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.model.cms.components.TrackOrderHeaderComponentModel;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
@@ -38,52 +42,60 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 	@Autowired
 	private UserService userService;
 
-	@Autowired
+	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
 
 
 
 
-	@SuppressWarnings("boxing")
 	@Override
 	protected void fillModel(final HttpServletRequest request, final Model model, final TrackOrderHeaderComponentModel component)
 	{
 		//do nothing
-
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		if (!userService.isAnonymousUser(currentCustomer))
+		try
 		{
-			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
-			final String customerUID = currentCustomer.getUid();
-			if (null != customerUID)
+			final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+			if (!getUserService().isAnonymousUser(currentCustomer))
 			{
-				notificationMessagelist = notificationFacade.getNotificationDetail(customerUID, true);
-
-
-				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
+				List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
+				final String customerUID = currentCustomer.getUid();
+				if (null != customerUID)
 				{
+					notificationMessagelist = getNotificationFacade().getNotificationDetail(customerUID, true);
 
-
-					int notificationCount = Integer.valueOf(0);
-					for (final NotificationData single : notificationMessagelist)
+					if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 					{
-						if (single.getNotificationRead() != null && !single.getNotificationRead())
+						int notificationCount = 0;
+						for (final NotificationData single : notificationMessagelist)
 						{
-							notificationCount++;
+							if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
+							{
+								notificationCount++;
+							}
+
 						}
 
+						model.addAttribute("notificationCount", notificationCount);
+						model.addAttribute("isSignedInUser", "yes");
 					}
-
-
-					model.addAttribute("notificationCount", notificationCount);
-					model.addAttribute("isSignedInUser", "yes");
-
 				}
 			}
+			if (userService.isAnonymousUser(currentCustomer))
+			{
+				model.addAttribute("isSignedInUser", "no");
+			}
 		}
-		if (userService.isAnonymousUser(currentCustomer))
+		catch (final EtailBusinessExceptions e)
 		{
-			model.addAttribute("isSignedInUser", "no");
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 		}
 
 	}
@@ -94,5 +106,42 @@ public class TrackOrderHeaderComponentController extends AbstractCMSComponentCon
 	{
 		return "redirect:/";
 	}
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
+	/**
+	 * @return the notificationFacade
+	 */
+	public NotificationFacade getNotificationFacade()
+	{
+		return notificationFacade;
+	}
+
+	/**
+	 * @param notificationFacade
+	 *           the notificationFacade to set
+	 */
+	public void setNotificationFacade(final NotificationFacade notificationFacade)
+	{
+		this.notificationFacade = notificationFacade;
+	}
+
+
+
 
 }

@@ -324,7 +324,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 			}
 
 			//Saving data into VoucherStatusNotificationModel while saving voucher
-			if (null != item && item instanceof Voucher)
+			if (item instanceof Voucher)
 			{
 				final VoucherModel voucher = (VoucherModel) getModelService().get((Voucher) item);
 				getNotificationService().saveToVoucherStatusNotification(voucher);

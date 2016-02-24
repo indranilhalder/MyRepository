@@ -34,7 +34,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -55,17 +54,17 @@ public class MplVoucherServiceImpl implements MplVoucherService
 {
 	private static final Logger LOG = Logger.getLogger(MplVoucherServiceImpl.class);
 
-	@Autowired
+	@Resource(name = "calculationService")
 	private MplDefaultCalculationService mplDefaultCalculationService;
 	@Resource(name = "modelService")
 	private ModelService modelService;
 	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
-	@Autowired
+	@Resource(name = "commerceCartService")
 	private MplCommerceCartService mplCommerceCartService;
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
-	@Autowired
+	@Resource(name = "commerceCartCalculationStrategy")
 	private MplCommerceCartCalculationStrategy mplCommerceCartCalculationStrategy;
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
@@ -212,7 +211,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					LOG.debug("Step 15:::applicableOrderEntryList is not empty");
 					for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 					{
-						size += entry.getQuantity().intValue(); //Size in total count of all the order entries present in cart
+						size += (null != entry.getQuantity()) ? entry.getQuantity().intValue() : 0; //Size in total count of all the order entries present in cart
 					}
 					final double cartTotalThreshold = 0.01 * size; //Threshold is min value which is allowable after applying coupon
 					for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
@@ -222,7 +221,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 								.getCartPromoCode()))) ? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
 								.doubleValue();
 
-						productPrice += entry.getTotalPrice().doubleValue();
+						productPrice += (null != entry.getTotalPrice()) ? entry.getTotalPrice().doubleValue() : 0.0d;
 					}
 
 					LOG.debug(logBuilder.append("Step 15:::netAmountAfterAllDisc is ").append(netAmountAfterAllDisc)
@@ -289,9 +288,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final Double productPrice, final List<AbstractOrderEntryModel> applicableOrderEntryList,
 			final List<DiscountModel> voucherList) throws VoucherOperationException, EtailNonBusinessExceptions
 	{
+		final VoucherDiscountData discountData = new VoucherDiscountData();
 		try
 		{
-			final VoucherDiscountData discountData = new VoucherDiscountData();
+
 			releaseVoucher(voucherCode, cartModel); //Releases voucher
 			recalculateCartForCoupon(cartModel); //Recalculates cart after releasing voucher
 			getModelService().save(cartModel);
@@ -313,12 +313,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			}
 
 			discountData.setRedeemErrorMsg(msg);
-			return discountData;
+
 		}
 		catch (final ModelSavingException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
+		return discountData;
 	}
 
 
@@ -334,17 +335,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	{
 		LOG.debug("Step 9:::Inside getOrderEntriesFromVoucherEntries");
 		final VoucherEntrySet voucherEntrySet = getVoucherModelService().getApplicableEntries(voucherModel, cartModel);
-		final Iterator iter = voucherEntrySet.iterator();
 		final List<AbstractOrderEntry> applicableOrderList = new ArrayList<AbstractOrderEntry>();
 
-		while (iter.hasNext())
+		for (final Object voucherEntry : voucherEntrySet)
 		{
-			applicableOrderList.add(((VoucherEntry) iter.next()).getOrderEntry());
+			applicableOrderList.add(((VoucherEntry) voucherEntry).getOrderEntry());
 		}
 
 		return applicableOrderList;
 	}
-
 
 
 	/**

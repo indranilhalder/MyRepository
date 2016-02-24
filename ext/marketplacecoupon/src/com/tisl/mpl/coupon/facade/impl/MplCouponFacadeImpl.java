@@ -58,7 +58,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
@@ -99,11 +98,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	@Resource(name = "sessionService")
 	private SessionService sessionService;
 
-
 	@Resource(name = "voucherDisplayConverter")
 	private Converter<VoucherModel, VoucherDisplayData> voucherDisplayConverter;
 
-	@Autowired
+	@Resource(name = "voucherTransactionConverter")
 	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
 
 

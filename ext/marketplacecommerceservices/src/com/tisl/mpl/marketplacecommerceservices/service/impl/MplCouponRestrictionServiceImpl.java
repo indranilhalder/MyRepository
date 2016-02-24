@@ -26,7 +26,7 @@ public class MplCouponRestrictionServiceImpl implements CouponRestrictionService
 	/**
 	 * This method returns restriction object for a voucher
 	 *
-	 * @param VoucherModel
+	 * @param promoVoucher
 	 * @return list of users
 	 *
 	 */
@@ -51,7 +51,7 @@ public class MplCouponRestrictionServiceImpl implements CouponRestrictionService
 	/**
 	 * This method returns restriction object for a voucher
 	 *
-	 * @param VoucherModel
+	 * @param userRestrObj
 	 * @return list of users
 	 *
 	 */
@@ -82,7 +82,7 @@ public class MplCouponRestrictionServiceImpl implements CouponRestrictionService
 	/**
 	 * This method returns restriction object for a voucher
 	 *
-	 * @param VoucherModel
+	 * @param promoVoucher
 	 * @return DateRestrictionModel
 	 *
 	 */
@@ -91,7 +91,6 @@ public class MplCouponRestrictionServiceImpl implements CouponRestrictionService
 	{
 		DateRestrictionModel dateRestrObj = null;
 		final List<RestrictionModel> restrictionList = new ArrayList<RestrictionModel>(promoVoucher.getRestrictions());
-
 
 		for (final RestrictionModel restrictionModel : restrictionList)
 		{
