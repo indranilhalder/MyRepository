@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -39,6 +41,7 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.order.impl.MplDefaultCalculationService;
 import com.tisl.mpl.util.DiscountUtility;
@@ -54,17 +57,17 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 	@Autowired
 	private MplDefaultCalculationService mplDefaultCalculationService;
-	@Autowired
+	@Resource(name = "modelService")
 	private ModelService modelService;
-	@Autowired
+	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
 	@Autowired
-	private MplCommerceCartServiceImpl mplCommerceCartServiceImpl;
-	@Autowired
+	private MplCommerceCartService mplCommerceCartService;
+	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 	@Autowired
 	private MplCommerceCartCalculationStrategy mplCommerceCartCalculationStrategy;
-	@Autowired
+	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
 
 
@@ -74,7 +77,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param cartModel
 	 *
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void recalculateCartForCoupon(final CartModel cartModel) throws EtailNonBusinessExceptions
 	{
@@ -98,7 +100,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 			//recalculating cart
 			final Double deliveryCost = cartModel.getDeliveryCost();
-			//getCommerceCartService().recalculateCart(cartModel);
 
 			final CommerceCartParameter parameter = new CommerceCartParameter();
 			parameter.setEnableHooks(true);
@@ -110,7 +111,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					: 0.0d) + (null != deliveryCost ? deliveryCost.doubleValue() : 0.0d)));
 
 			// Freebie item changes
-			getMplCommerceCartServiceImpl().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+			getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
 
 			LOG.debug("Step 9:::Recalculation done successfully");
 
@@ -118,18 +119,11 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		catch (final IllegalStateException e)
 		{
-			LOG.error("IllegalStateException from CalculationException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0012);
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException from CalculationException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Exception from CalculationException", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 	}
@@ -161,14 +155,19 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			double voucherCalcValue = 0.0;
 			double promoCalcValue = 0.0;
 			List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); //Discount values against the cart
-			final String voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
+			String voucherCode = null;
+			if (lastVoucher instanceof PromotionVoucherModel)
+			{
+				voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
+			}
 
 			final List<DiscountModel> voucherList = cartModel.getDiscounts(); //List of discounts against the cart
 			if (CollectionUtils.isNotEmpty(discountList) && CollectionUtils.isNotEmpty(voucherList))
 			{
 				for (final DiscountValue discount : discountList)
 				{
-					if (discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode())) //Only 1 voucher can be applied and code is mandatory field
+					if (null != discount.getCode() && null != voucherList.get(0).getCode()
+							&& discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode())) //Only 1 voucher can be applied and code is mandatory field
 					{
 						voucherCalcValue = discount.getValue();
 					}
@@ -179,8 +178,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				}
 			}
 
-			final StringBuilder sb = new StringBuilder();
-			LOG.debug(sb.append("Step 12:::Voucher discount in cart is ").append(voucherCalcValue)
+			final StringBuilder logBuilder = new StringBuilder();
+			LOG.debug(logBuilder.append("Step 12:::Voucher discount in cart is ").append(voucherCalcValue)
 					.append(" & promo discount in cart is ").append(promoCalcValue));
 
 			if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
@@ -213,9 +212,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					LOG.debug("Step 15:::applicableOrderEntryList is not empty");
 					for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 					{
-						size += entry.getQuantity().intValue();
+						size += entry.getQuantity().intValue(); //Size in total count of all the order entries present in cart
 					}
-					final double cartTotalThreshold = 0.01 * size;
+					final double cartTotalThreshold = 0.01 * size; //Threshold is min value which is allowable after applying coupon
 					for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 					{
 						netAmountAfterAllDisc += ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry
@@ -226,7 +225,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						productPrice += entry.getTotalPrice().doubleValue();
 					}
 
-					LOG.debug(sb.append("Step 15:::netAmountAfterAllDisc is ").append(netAmountAfterAllDisc)
+					LOG.debug(logBuilder.append("Step 15:::netAmountAfterAllDisc is ").append(netAmountAfterAllDisc)
 							.append(" & productPrice is ").append(productPrice));
 
 					if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)) //When discount value is greater than entry totals after applying promotion
@@ -247,16 +246,18 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						getModelService().save(cartModel);
 					}
 					else
+					//In other cases, just set the coupon discount for the discount data
 					{
 						discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(voucherCalcValue)));
 					}
 				}
-				else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries are empty
+				else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList)) //When applicable entries list is empty
 				{
 					LOG.debug("Step 17:::applicable entries empty");
 					discountData = releaseVoucherAfterCheck(cartModel, voucherCode, null, applicableOrderEntryList, voucherList);
 				}
 				else
+				//In other cases, just set the coupon discount for the discount data
 				{
 					discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(voucherCalcValue)));
 				}
@@ -264,33 +265,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException from checkCartAfterApply", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
 		catch (final CalculationException e)
 		{
-			LOG.error("CalculationException from checkCartAfterApply", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0017);
 		}
 		catch (final NumberFormatException e)
 		{
-			LOG.error("CalculationException from checkCartAfterApply", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0015);
-		}
-		catch (final VoucherOperationException e)
-		{
-			LOG.error("VoucherOperationException", e);
-			throw e;
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error("VoucherOperationException", e);
-			throw e;
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Exception from checkCartAfterApply", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return discountData;
 	}
@@ -318,15 +301,15 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			discountData.setCouponDiscount(getDiscountUtility().createPrice(cartModel, Double.valueOf(0)));
 			if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
 			{
-				msg = "not_applicable";
+				msg = MarketplacecommerceservicesConstants.NOTAPPLICABLE;
 			}
 			else if (null != productPrice && productPrice.doubleValue() < 1)
 			{
-				msg = "freebie";
+				msg = MarketplacecommerceservicesConstants.EXCFREEBIE;
 			}
 			else
 			{
-				msg = "Price_exceeded";
+				msg = MarketplacecommerceservicesConstants.PRICEEXCEEDED;
 			}
 
 			discountData.setRedeemErrorMsg(msg);
@@ -334,23 +317,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
-		}
-		catch (final VoucherOperationException e)
-		{
-			LOG.error("VoucherOperationException", e);
-			throw e;
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			LOG.error("VoucherOperationException", e);
-			throw e;
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Exception", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
 
@@ -381,7 +348,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 
 	/**
-	 * @Description This method adds global discount
+	 * @Description This method adds a new global discount and removes the old global discount
 	 * @param discountList
 	 * @param voucherList
 	 * @param cartSubTotal
@@ -432,7 +399,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			final VoucherModel voucher = getVoucherService().getVoucher(voucherCode); //Finds voucher for the selected code
 			if (voucher == null)
 			{
-				throw new VoucherOperationException("Voucher not found: " + voucherCode);
+				throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERNOTFOUND + voucherCode);
 			}
 			else if (cartModel != null)
 			{
@@ -456,25 +423,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		catch (final JaloPriceFactoryException e)
 		{
-			LOG.error("JaloPriceFactoryException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
-		catch (final VoucherOperationException e)
-		{
-			LOG.error("VoucherOperationException", e);
-			throw e;
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Exception", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-
 	}
 
 
@@ -520,18 +474,17 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 * @param voucher
 	 * @param cartModel
 	 * @param voucherCode
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
 	public void setApportionedValueForVoucher(final VoucherModel voucher, final CartModel cartModel, final String voucherCode,
-			final List<AbstractOrderEntryModel> applicableOrderEntryList)
+			final List<AbstractOrderEntryModel> applicableOrderEntryList) throws EtailNonBusinessExceptions
 	{
 		try
 		{
 			LOG.debug("Step 18:::Inside setApportionedValueForVoucher");
 			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 			{
-				//final Voucher voucherObj = (Voucher) getModelService().getSource(voucher);
-
 				double totalApplicablePrice = 0.0D;
 				final BigDecimal percentageDiscount = null;
 				updateAppOrderEntriesForFreebieBogo(applicableOrderEntryList);
@@ -548,7 +501,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				{
 					for (final DiscountValue discount : discountList)
 					{
-						if (discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode())) //Only 1 voucher can be applied and code is mandatory field
+						if (null != discount.getCode() && null != voucherList.get(0).getCode()
+								&& discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode())) //Only 1 voucher can be applied and code is mandatory field
 						{
 							discountValue = discount.getValue();
 						}
@@ -607,19 +561,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("ModelSavingException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			throw e;
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Exception", e);
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-
 	}
 
 
@@ -640,12 +583,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		catch (final ArithmeticException e)
 		{
-			LOG.error("ArithmeticException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0019);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
@@ -667,12 +608,10 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		}
 		catch (final ArithmeticException e)
 		{
-			LOG.error("ArithmeticException", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0019);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception", e);
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
@@ -686,7 +625,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	 */
 	private double getCurrNetAmtAftrAllDisc(final double amount, final BigDecimal entryLevelApportionedPrice)
 	{
-		return amount > entryLevelApportionedPrice.doubleValue() ? (amount - entryLevelApportionedPrice.doubleValue()) : Double
+		return (amount > entryLevelApportionedPrice.doubleValue()) ? (amount - entryLevelApportionedPrice.doubleValue()) : Double
 				.parseDouble(MarketplacecommerceservicesConstants.ZEROPOINTZEROONE);
 	}
 
@@ -779,31 +718,6 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	}
 
 
-
-
-	/**
-	 * @return the mplCommerceCartServiceImpl
-	 */
-	public MplCommerceCartServiceImpl getMplCommerceCartServiceImpl()
-	{
-		return mplCommerceCartServiceImpl;
-	}
-
-
-
-
-	/**
-	 * @param mplCommerceCartServiceImpl
-	 *           the mplCommerceCartServiceImpl to set
-	 */
-	public void setMplCommerceCartServiceImpl(final MplCommerceCartServiceImpl mplCommerceCartServiceImpl)
-	{
-		this.mplCommerceCartServiceImpl = mplCommerceCartServiceImpl;
-	}
-
-
-
-
 	/**
 	 * @return the voucherService
 	 */
@@ -868,6 +782,29 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	public void setDiscountUtility(final DiscountUtility discountUtility)
 	{
 		this.discountUtility = discountUtility;
+	}
+
+
+
+
+	/**
+	 * @return the mplCommerceCartService
+	 */
+	public MplCommerceCartService getMplCommerceCartService()
+	{
+		return mplCommerceCartService;
+	}
+
+
+
+
+	/**
+	 * @param mplCommerceCartService
+	 *           the mplCommerceCartService to set
+	 */
+	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
+	{
+		this.mplCommerceCartService = mplCommerceCartService;
 	}
 
 

@@ -8,19 +8,19 @@ import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.coupon.constants.MarketplacecouponConstants;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -38,12 +38,12 @@ public class MplCouponController
 	private CartService cartService;
 	@Resource(name = "mplCouponFacade")
 	private MplCouponFacade mplCouponFacade;
-	@Autowired
+	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
-	@Autowired
-	private SessionService sessionService;
-	@Autowired
+	@Resource(name = "baseStoreService")
 	private BaseStoreService baseStoreService;
+	@Resource(name = "sessionService")
+	private SessionService sessionService;
 
 
 	/**
@@ -56,7 +56,7 @@ public class MplCouponController
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
-	@RequestMapping(value = "/redeem", method = RequestMethod.GET)
+	@RequestMapping(value = MarketplacecouponConstants.COUPONREDEEM, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
 			final String bankNameSelected)
@@ -65,10 +65,10 @@ public class MplCouponController
 		final CartModel cartModel = getCartService().getSessionCart();
 		try
 		{
-			final StringBuilder sb = new StringBuilder();
-			LOG.debug(sb.append("Step 1:::The coupon code entered by the customer is :::").append(couponCode)
+			final StringBuilder logBuilder = new StringBuilder();
+			LOG.debug(logBuilder.append("Step 1:::The coupon code entered by the customer is :::").append(couponCode)
 					.append("------The bank selected is  ::: ").append(bankNameSelected));
-			getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
+			getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION, paymentMode);
 			//
 			//	Commented-----to be implemented in R2 later
 			//		final Collection<BankModel> bankList = getBaseStoreService().getCurrentBaseStore().getBanks();
@@ -101,56 +101,51 @@ public class MplCouponController
 			data = getMplCouponFacade().calculateValues(cartModel, couponRedStatus, redeem);
 
 			final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
-			final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
-			if (null != paymentInfo)
+
+			//Update paymentInfo in session
+			getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
+
+			if (null != getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION))
 			{
-				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
-				{
-					if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
-					{
-						updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
-						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, updatedPaymentInfo);
-					}
-				}
+				getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 			}
-			getSessionService().removeAttribute("paymentModeForPromotion");
 			//getSessionService().removeAttribute("bank");	//Do not remove---needed later
 		}
 		catch (final VoucherOperationException e)
 		{
 			//Set the data for exception cases
 			data = setRedDataForException(data, cartModel);
-			if (e.getMessage().contains("total price exceeded"))
+			if (e.getMessage().contains(MarketplacecouponConstants.EXCPRICEEXCEEDED))
 			{
-				data.setRedeemErrorMsg("Price_exceeded");
+				data.setRedeemErrorMsg(MarketplacecouponConstants.PRICEEXCEEDED);
 			}
-			else if (e.getMessage().contains("Voucher not found"))
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCINVALID))
 			{
-				data.setRedeemErrorMsg("Invalid");
+				data.setRedeemErrorMsg(MarketplacecouponConstants.INVALID);
 			}
-			else if (e.getMessage().contains("Voucher cannot be redeemed"))
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCEXPIRED))
 			{
-				data.setRedeemErrorMsg("Expired");
+				data.setRedeemErrorMsg(MarketplacecouponConstants.EXPIRED);
 			}
-			else if (e.getMessage().contains("Error while"))
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCISSUE))
 			{
-				data.setRedeemErrorMsg("Issue");
+				data.setRedeemErrorMsg(MarketplacecouponConstants.ISSUE);
 			}
-			else if (e.getMessage().contains("Voucher is not applicable"))
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCNOTAPPLICABLE))
 			{
-				data.setRedeemErrorMsg("Not_Applicable");
+				data.setRedeemErrorMsg(MarketplacecouponConstants.NOTAPPLICABLE);
 			}
-			else if (e.getMessage().contains("Voucher is not reservable"))
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCNOTRESERVABLE))
 			{
-				data.setRedeemErrorMsg("Not_Reservable");
+				data.setRedeemErrorMsg(MarketplacecouponConstants.NOTRESERVABLE);
 			}
-			else if (e.getMessage().contains("freebie"))
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCFREEBIE))
 			{
-				data.setRedeemErrorMsg("Freebie");
+				data.setRedeemErrorMsg(MarketplacecouponConstants.FREEBIE);
 			}
-			else if (e.getMessage().contains("User not valid"))
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCUSERINVALID))
 			{
-				data.setRedeemErrorMsg("User_Invalid");
+				data.setRedeemErrorMsg(MarketplacecouponConstants.USERINVALID);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -158,14 +153,14 @@ public class MplCouponController
 			//Set the data for exception cases
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			data = setRedDataForException(data, cartModel);
-			data.setRedeemErrorMsg("Issue");
+			data.setRedeemErrorMsg(MarketplacecouponConstants.ISSUE);
 		}
 		catch (final Exception e)
 		{
 			//Set the data for exception cases
 			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 			data = setRedDataForException(data, cartModel);
-			data.setRedeemErrorMsg("Issue");
+			data.setRedeemErrorMsg(MarketplacecouponConstants.ISSUE);
 		}
 
 		return data;
@@ -180,7 +175,7 @@ public class MplCouponController
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	@RequestMapping(value = "/release", method = RequestMethod.GET)
+	@RequestMapping(value = MarketplacecouponConstants.COUPONRELEASE, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode)
 	{
@@ -194,47 +189,33 @@ public class MplCouponController
 			{
 				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
 				{
-					if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+					if (null != entry.getKey() && !(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
 					{
-						getSessionService().setAttribute("paymentModeForPromotion", entry.getKey());
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION, entry.getKey());
 					}
 				}
 			}
-			boolean couponRelStatus = false;
 			final boolean redeem = false;
 
 			//Release the coupon
 			getMplCouponFacade().releaseVoucher(couponCode, cartModel);
-			couponRelStatus = true;
 
 			//Recalculate cart after releasing coupon
 			getMplCouponFacade().recalculateCartForCoupon(cartModel);
-			LOG.debug("Coupon Release Status is:::" + couponRelStatus);
 
-			if (couponRelStatus)
+			data = getMplCouponFacade().calculateValues(cartModel, true, redeem);
+
+			//Update paymentInfo in session
+			getMplCouponFacade().updatePaymentInfoSession(paymentInfo, cartModel);
+
+			if (null != getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION))
 			{
-				data = getMplCouponFacade().calculateValues(cartModel, couponRelStatus, redeem);
-
-				//final Map<String, Double> paymentInfo = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE);
-				final Map<String, Double> updatedPaymentInfo = new HashMap<String, Double>();
-				if (null != paymentInfo)
-				{
-					for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
-					{
-						if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
-						{
-							updatedPaymentInfo.put(entry.getKey(), cartModel.getTotalPriceWithConv());
-							getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODE, updatedPaymentInfo);
-						}
-					}
-				}
+				getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 			}
-
-			getSessionService().removeAttribute("paymentModeForPromotion");
 		}
 		catch (final VoucherOperationException e)
 		{
-			LOG.error("Issue with voucher release ", e);
+			LOG.error(MarketplacecouponConstants.COUPONRELISSUE, e);
 			data = setRelDataForException(data, cartModel);
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -251,6 +232,7 @@ public class MplCouponController
 	}
 
 
+
 	/**
 	 *
 	 * This method sets data for erroneous cases for voucher release
@@ -263,7 +245,7 @@ public class MplCouponController
 	{
 		final VoucherDiscountData errorData = data;
 		errorData.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
-		errorData.setRedeemErrorMsg("Release Issue");
+		errorData.setRedeemErrorMsg(MarketplacecouponConstants.RELEASEISSUE);
 		errorData.setCouponReleased(false);
 
 		return errorData;
@@ -338,8 +320,6 @@ public class MplCouponController
 	{
 		this.baseStoreService = baseStoreService;
 	}
-
-
 
 
 }

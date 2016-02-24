@@ -61,9 +61,10 @@ public interface MplVoucherService
 	 * @param cartModel
 	 * @param voucherCode
 	 * @param applicableOrderEntryList
+	 * @throws EtailNonBusinessExceptions
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
-			List<AbstractOrderEntryModel> applicableOrderEntryList);
+			List<AbstractOrderEntryModel> applicableOrderEntryList) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param lastVoucher

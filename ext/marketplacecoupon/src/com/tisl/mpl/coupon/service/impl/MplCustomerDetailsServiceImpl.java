@@ -37,7 +37,7 @@ public class MplCustomerDetailsServiceImpl implements MplCustomerDetailsService
 	public List<CustomerModel> getCustomer()
 	{
 		//Content
-		return customerDetailsDao.findCustomer();
+		return getCustomerDetailsDao().findCustomer();
 	}
 
 
@@ -59,7 +59,7 @@ public class MplCustomerDetailsServiceImpl implements MplCustomerDetailsService
 	@Override
 	public List<CartModel> getCartDetails()
 	{
-		return customerDetailsDao.findCart();
+		return getCustomerDetailsDao().findCart();
 	}
 
 }

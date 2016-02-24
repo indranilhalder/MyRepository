@@ -25,8 +25,6 @@ import com.tisl.mpl.util.LatestOrderModelCompare;
  */
 public class CronJobDataServiceImpl implements CronJobDataService
 {
-
-	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CronJobDataServiceImpl.class.getName());
 
 	/**

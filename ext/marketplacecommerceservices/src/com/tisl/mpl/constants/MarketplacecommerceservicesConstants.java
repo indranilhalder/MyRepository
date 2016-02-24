@@ -1365,6 +1365,53 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
 
+	public static final String PARENT = "parent";
+
+	// Month list
+	public static final String JANUARY = "January";
+	public static final String FEBRUARY = "February";
+	public static final String MARCH = "March";
+	public static final String APRIL = "April";
+	public static final String MAY = "May";
+	public static final String JUNE = "June";
+	public static final String JULY = "July";
+	public static final String AUGUST = "August";
+	public static final String SEPTEMBER = "September";
+	public static final String OCTOBER = "October";
+	public static final String NOVEMBER = "November";
+	public static final String DECEMBER = "December";
+
+	// Month list
+
+	public static final String COUPONREDEEMERROR = "Coupon cannot be redeemed".intern();
+	public static final String COUPONTOPCOUNT = "coupon.display.topCount";
+	public static final String COUPONTOPCOUNTDEFVAL = "5";
+
+	//Coupon Exception Message
+	public static final String EXCPRICEEXCEEDED = "total price exceeded".intern();
+	public static final String EXCINVALID = "Voucher not found".intern();
+	public static final String EXCEXPIRED = "Voucher cannot be redeemed".intern();
+	public static final String EXCISSUE = "Error while".intern();
+	public static final String EXCNOTAPPLICABLE = "Voucher is not applicable".intern();
+	public static final String EXCNOTRESERVABLE = "Voucher is not reservable".intern();
+	public static final String EXCFREEBIE = "freebie".intern();
+	public static final String EXCUSERINVALID = "User not valid".intern();
+
+	public static final String USER = "User".intern();
+	public static final String DATE = "Date".intern();
+	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
+	public static final String VOUCHERNOTREDEEMABLE = "Voucher cannot be redeemed: ".intern();
+	public static final String VOUCHERINVALIDUSER = "User not valid for : ".intern();
+	public static final String VOUCHERINAPPLICABLE = "Voucher is not applicable: ".intern();
+	public static final String VOUCHERNOTRESERVABLE = "Voucher is not reservable: ".intern();
+	public static final String ERRORAPPLYVOUCHER = "Error while applying voucher: ".intern();
+	public static final String PRICEEXCEEDED = "Price_exceeded".intern();
+	public static final String NOTAPPLICABLE = "not_applicable".intern();
+	public static final String VOUCHER = "Voucher ".intern();
+	public static final String FREEBIEERROR = " cannot be redeemed: freebie".intern();
+	public static final String PRICEEXCEEDERROR = " cannot be redeemed: total price exceeded".intern();
+	public static final String DATERESTVIOLATION = "Date restriction is violated".intern();
+	public static final String USERRESTVIOLATION = "User restriction is violated".intern();
 
 
 	private MarketplacecommerceservicesConstants()

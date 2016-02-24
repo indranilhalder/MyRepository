@@ -1526,9 +1526,16 @@
     </bean>
 	  <!--  pdp seller priority report cron job ends -->
 	  
-	  <alias name="mplVoucherService" alias="mplVoucherService" />
+	<alias name="mplVoucherService" alias="mplVoucherService" />
 	<bean id="mplVoucherService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
+		<!-- <property name="calculationService" ref="calculationService" /> -->
+		<property name="modelService" ref="modelService" />
+		<property name="voucherModelService" ref="voucherModelService" />
+		<!-- <property name="commerceCartService" ref="commerceCartService" /> -->
+		<property name="voucherService" ref="voucherService" />
+		<!-- <property name="commerceCartCalculationStrategy" ref="commerceCartCalculationStrategy" /> -->
+		<property name="discountUtility" ref="discountUtility" />
 	</bean>
 	
 	<bean id="homepageComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.HomepageComponentServiceImpl">

@@ -16,8 +16,6 @@ import org.apache.commons.collections.CollectionUtils;
 
 public class MplCouponHelper
 {
-
-
 	@Resource(name = "modelService")
 	private ModelService modelService;
 
@@ -30,7 +28,6 @@ public class MplCouponHelper
 	 *
 	 * @return List<AbstractOrderEntry>
 	 */
-	@SuppressWarnings("deprecation")
 	public List<AbstractOrderEntry> validateDelliveryMode(final List<DeliveryMode> restrDelModeList, final AbstractOrder order,
 			final boolean isPositive)
 	{
@@ -40,7 +37,7 @@ public class MplCouponHelper
 		for (final AbstractOrderEntry orderEntry : entryList)
 		{
 			final AbstractOrderEntryModel entry = ((AbstractOrderEntryModel) getModelService().get(orderEntry));
-			if (entry.getMplDeliveryMode() != null)
+			if (entry.getMplDeliveryMode() != null && null != entry.getMplDeliveryMode().getDeliveryMode())
 			{
 				final DeliveryMode selectedDelMode = getModelService().getSource(entry.getMplDeliveryMode().getDeliveryMode());
 				//Adding entry to list if it contains selected delivery mode

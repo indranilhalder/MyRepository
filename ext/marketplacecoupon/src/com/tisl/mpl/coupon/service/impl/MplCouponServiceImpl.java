@@ -12,7 +12,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 import com.tisl.mpl.coupon.dao.MplCouponDao;
 import com.tisl.mpl.coupon.service.MplCouponService;
@@ -26,7 +26,7 @@ import com.tisl.mpl.util.VoucherDiscountComparator;
  */
 public class MplCouponServiceImpl implements MplCouponService
 {
-	@Autowired
+	@Resource(name = "mplCouponDao")
 	private MplCouponDao mplCouponDao;
 
 	/**
@@ -65,7 +65,7 @@ public class MplCouponServiceImpl implements MplCouponService
 	@Override
 	public SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, final PageableData pageableData)
 	{
-		return mplCouponDao.findClosedVoucher(customer, pageableData);
+		return getMplCouponDao().findClosedVoucher(customer, pageableData);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class MplCouponServiceImpl implements MplCouponService
 	public SearchPageData<VoucherInvalidationModel> getVoucherRedeemedOrder(final CustomerModel customer,
 			final PageableData pageableData)
 	{
-		return mplCouponDao.findVoucherHistoryRedeemedOrders(customer, pageableData);
+		return getMplCouponDao().findVoucherHistoryRedeemedOrders(customer, pageableData);
 	}
 
 
