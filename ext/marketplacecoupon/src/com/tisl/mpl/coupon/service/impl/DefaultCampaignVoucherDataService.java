@@ -132,12 +132,14 @@ public class DefaultCampaignVoucherDataService implements CampaignVoucherDataSer
 
 			if (StringUtils.isNotEmpty(voucher.getName()))
 			{
-				data.setName(voucher.getName());
+				final StringBuilder dataBuilder = new StringBuilder(50);
+				data.setName(dataBuilder.append("\"").append(voucher.getName()).append("\"").toString());
 			}
 
 			if (StringUtils.isNotEmpty(voucher.getDescription()))
 			{
-				data.setPromoText(voucher.getDescription());
+				final StringBuilder dataBuilder = new StringBuilder(50);
+				data.setPromoText(dataBuilder.append("\"").append(voucher.getDescription()).append("\"").toString());
 			}
 
 			if (null != voucher.getValue())
