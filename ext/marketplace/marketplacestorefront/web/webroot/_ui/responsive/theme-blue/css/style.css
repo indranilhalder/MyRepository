@@ -23917,9 +23917,10 @@ span.brand-subdesc {
     top: calc(32% - 6px);}
     
     #typeOfProduct{
- border:1px solid #DFD1D5;
+ 	border:1px solid #DFD1D5;
     margin-top:16px;
    	height:30px;
+   	line-height: 28px;
    	font-size: 18px;
     font-weight: 500;
     min-width:30%;}
@@ -25732,13 +25733,37 @@ padding-left: 0px;}
     -moz-transform-origin: 0 0;}
     .sprite-Vector_Smart_Object{
     height:45px;}
-    .bottom-pagination .pagination .prev,.bottom-pagination .pagination .next a{
+    .bottom-pagination .pagination .prev a,.bottom-pagination .pagination .next a{
     padding-left:0px;
-    padding-right:0px;}
+    padding-right:0px;
+    min-height: 30px;
+    min-width: 15px;
+    display: block;
+    position: relative;
+    z-index: 2;
+    }
     div.wishlist-nav h3{
     margin:30px 0;}
     .listing.wrapper .right-block .listing-menu .pagination li.prev,.listing.wrapper .right-block .listing-menu .pagination li.next{
-    height:34px;}
+    height:34px;
+    vertical-align: middle;
+    position: relative;
+    }
+    .listing.wrapper .right-block .listing-menu .pagination li.prev a,.listing.wrapper .right-block .listing-menu .pagination li.next a{
+    display: block;
+    min-width: 15px;
+    min-height: 30px;
+    position: relative;
+    z-index: 2;
+    }
+    .listing.wrapper .pagination .next:after,.listing.wrapper .pagination .prev:before{
+        position: absolute;
+    	top: 0;
+    	bottom: 0;
+    	margin: auto;
+    	left: 0;
+    	right: 0;
+    }
      .listing.wrapper .right-block .listing-menu .pagination .prev a:before,.listing.wrapper .right-block .listing-menu .pagination .next a:after{
     margin-top:9px;}
      .listing.wrapper .bottom-pagination .pagination .prev a:before,.listing.wrapper .bottom-pagination .pagination .next a:after{
@@ -30258,15 +30283,15 @@ height: auto !important;
     padding-top: 11px;
 }
 
-input#typeOfProduct::-webkit-input-placeholder {
- 	line-height: 24px;
+/* input#typeOfProduct::-webkit-input-placeholder {
+ 	line-height: 20px;
 }
 input#typeOfProduct::-moz-placeholder {
- 	line-height: 24px;
+ 	line-height: 20px;
 } 
 input#typeOfProduct:-ms-input-placeholder {
- 	line-height: 24px;
-}
+ 	line-height: 20px;
+} */
 
 .footwear_left div, .footwear_right div {
 	padding: 0 10px;
