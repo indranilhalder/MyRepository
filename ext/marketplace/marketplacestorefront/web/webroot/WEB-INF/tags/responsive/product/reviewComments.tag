@@ -416,6 +416,3 @@ margin-top:10px;
 </style> 
 
 </c:if>	
-
-
-
