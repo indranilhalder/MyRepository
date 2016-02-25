@@ -135,7 +135,7 @@ public class MplCancelOrderRequest
 	 */
 	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder =
-	{ "orderId", "transactionId", "returnCancelFlag", "requestID", "reasonCode", "returnCancelRemarks" })
+	{ "orderId", "transactionId", "returnCancelFlag", "requestID", "reasonCode", "returnCancelRemarks", "pinCode" })
 	public static class OrderLine
 	{
 
@@ -294,6 +294,7 @@ public class MplCancelOrderRequest
 		/**
 		 * @return the pinCode
 		 */
+		
 		public String getPinCode()
 		{
 			return pinCode;
