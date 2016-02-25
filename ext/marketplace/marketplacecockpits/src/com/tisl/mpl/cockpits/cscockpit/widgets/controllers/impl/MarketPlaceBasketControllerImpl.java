@@ -192,7 +192,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 								return null;
 							}
 						});
-		
 		modelService.save(cart);
 		
 		if (CollectionUtils.isNotEmpty(cart.getDiscounts())){
@@ -534,8 +533,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 													cartParameter);
 									cart.setCartReservationDate(null);
 									 ((MarketplaceCheckoutControllerImpl) getCheckoutController()).removeCODPayment();
-									
-									 
+
+
 								} catch (CommerceCartModificationException | PaymentException | 
 										ValidationException | JaloInvalidParameterException | NumberFormatException e) {
 									LOG.error("Exception calculating cart ["
@@ -566,7 +565,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				mplVoucherService.setApportionedValueForVoucher(voucher, cart, voucherCode, applicableOrderEntryList);
 
 		} 
-		 
+	
+
 	}
 	
 	
@@ -846,7 +846,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				final List<AbstractOrderEntryModel> applicableOrderEntryList = mplVoucherService.getOrderEntryModelFromVouEntries(voucher,
 						cartModel);
 				
-//				final String checkMsg = checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
+//				final String checkMsg = mplVoucherService.checkCartAfterApply(voucherCode, voucher, applicableOrderEntryList);
 //				if(!checkMsg.equalsIgnoreCase("success"))
 //				{
 //					LOG.error("Voucher " + voucherCode + " cannot be redeemed: total price exceeded");
@@ -856,6 +856,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 				final VoucherDiscountData data=mplVoucherService.checkCartAfterApply(voucher, cartModel, applicableOrderEntryList);
 				if (null != data && StringUtils.isNotEmpty(data.getRedeemErrorMsg()))
 				{
+
+
 					if (data.getRedeemErrorMsg().equalsIgnoreCase("freebie"))
 					{
 						return "freebie";
@@ -915,112 +917,113 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		}
 		return voucher;
 	}
-//	/**
-//	 * Checking state of cart after redeem last voucher
-//	 * 
-//	 * @param lastVoucherCode
-//	 * @throws JaloSecurityException 
-//	 * @throws NumberFormatException 
-//	 * @throws JaloInvalidParameterException 
-//	 * @throws CalculationException 
-//	 * @throws JaloPriceFactoryException 
-//	 */
-//	protected String checkCartAfterApply(final String lastVoucherCode, final VoucherModel lastVoucher, final List<AbstractOrderEntryModel> applicableOrderEntryList) throws JaloInvalidParameterException, NumberFormatException, JaloSecurityException, CalculationException, JaloPriceFactoryException
-//	{
-//		final CartModel cartModel = getCartModel();
-//
-//		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
-//		final double cartSubTotal = cartModel.getSubtotal().doubleValue();
-//		double voucherCalcValue = 0.0;
-//		double promoCalcValue = 0.0;
-//		List<DiscountValue> discountList = cartModel.getGlobalDiscountValues();
-//
-//		final List<DiscountModel> voucherList = cartModel.getDiscounts();
-//		if (CollectionUtils.isNotEmpty(discountList))
-//		{
-//			for (final DiscountValue discount : discountList)
-//			{
-//				if (CollectionUtils.isNotEmpty(voucherList) && discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
-//				{
-//					voucherCalcValue = discount.getValue();
-//				}
-//				else if (!discount.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
-//				{
-//					promoCalcValue = discount.getValue();
-//				}
-//			}
-//		}
-//
-//		if (!lastVoucher.getAbsolute().booleanValue() && voucherCalcValue != 0 && null != lastVoucher.getMaxDiscountValue()
-//				&& voucherCalcValue > lastVoucher.getMaxDiscountValue().doubleValue())
-//		{
-//			discountList = mplVoucherService.setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher, lastVoucher
-//					.getMaxDiscountValue().doubleValue());
-//			cartModel.setGlobalDiscountValues(discountList);
-//			mplDefaultCalculationService.calculateTotals(cartModel, false);
-//			getModelService().save(cartModel);
-//			return "success";
-//		}
-//
-//		else if (voucherCalcValue != 0 && (cartSubTotal - promoCalcValue - voucherCalcValue) <= 0)
-//		{
-//			releaseVoucher();
-//			LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
-//			//mplVoucherService.recalculateCartForCoupon(cartModel);
-//			getModelService().save(cartModel);
-//			return "total_price_exceeded";
-//		}
-//
-//		else
-//		{
-//			double netAmountAfterAllDisc = 0.0D;
-//			double productPrice = 0.0D;
-//			boolean flag = false;
-//
-//			if (CollectionUtils.isNotEmpty(applicableOrderEntryList))
-//			{
-//				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
-//				{
-//					if ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry.getProductPromoCode()))
-//							|| (null != entry.getCartPromoCode() && StringUtils.isNotEmpty(entry.getCartPromoCode())))
-//					{
-//						netAmountAfterAllDisc += entry.getNetAmountAfterAllDisc().doubleValue();
-//						flag = true;
-//					}
-//
-//					productPrice += entry.getTotalPrice().doubleValue();
-//				}
-//
-//
-//				if ((productPrice < 1) || (flag && voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0)
-//						|| (!flag && voucherCalcValue != 0 && (productPrice - voucherCalcValue) <= 0))
-//				{
-//					releaseVoucher();
-//					LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: total price exceeded");		
-//					//mplVoucherService.recalculateCartForCoupon(cartModel);
-//					getModelService().save(cartModel);
-//					if ((productPrice < 1))
-//					{
-//						return "freebie";
-//					}
-//					return "total_price_exceeded";
-//				}
-//			}
-//			else if(CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
-//			{
-//				releaseVoucher();
-//				LOG.error("Voucher " + lastVoucherCode + " cannot be redeemed: applicable entries removed");		
-//				//mplVoucherService.recalculateCartForCoupon(cartModel);
-//				getModelService().save(cartModel);
-//				return "voucher_inapplicable";
-//			}
-//			return "success";
-//		}
-//
-//	
-//		
-//	}
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	@Override
 	public String releaseVoucher()
 	{
@@ -1121,6 +1124,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	public void setVoucherModelService(VoucherModelService voucherModelService) {
 		this.voucherModelService = voucherModelService;
 	}
-		
+
 	
 }
