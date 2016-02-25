@@ -19,6 +19,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   }
 html,body,main {
 	height:100%;
+	overflow-x: hidden;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -12881,7 +12882,7 @@ div.pdp .reviews .toolbar select.white {
 .modal.size-guide .sizes > h3 {		
     width: 100%;
     padding: 10px 0;		
-    padding-left: 30px;		
+    /* padding-left: 30px;		 */
     font-size: 24px;		
     font-weight: 400;		
     text-align: center;		
@@ -12889,11 +12890,11 @@ div.pdp .reviews .toolbar select.white {
     padding-top:25px;
     		
 }		
-@media (min-width: 790px) {		
+/* @media (min-width: 790px) {		
     .modal.size-guide .sizes > h3 {		
         padding-left: 10px;		
     }		
-}		
+} */		
 .modal.size-guide .sizes .tables {		
     padding: 0 10px;		
     text-align: left;		
@@ -29575,14 +29576,14 @@ font-family:DejaVu Sans;
 }
 #bestPicks .view-cliq-offers {
 	padding: 13px;
-    border: 1px solid #bbb;
+    border: 1px solid #4a4a4a;
     color: #333;
     font-size: 12px;
     font-family: "Avenir Next";
     font-weight: 600;
 	    margin: 15px auto;
     text-transform: uppercase;
-    display: none;
+    display: block;
     width: 200px;
     text-align: center;
     letter-spacing: 1.5px;
@@ -29710,16 +29711,6 @@ min-width: 165px;
 }
 @media(max-width:993px) and (min-width:651px){
 #showcase a.button.maroon {
-padding-top:9px;
-}
-}
-@media(max-width:333px){
-#showcase a.button.maroon {
-padding-top:9px;
-}
-}
-@media(max-width:323px){
-#showcase a.button.trending-button {
 padding-top:9px;
 }
 }
