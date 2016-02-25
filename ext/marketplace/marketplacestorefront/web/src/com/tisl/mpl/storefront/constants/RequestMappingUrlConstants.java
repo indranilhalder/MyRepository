@@ -100,6 +100,10 @@ public final class RequestMappingUrlConstants
 	public static final String LINK_ORDER_RETURN_SUCCESS = "/returnSuccess";
 	public static final String LINK_ORDER_CANCEL_SUCCESS = "/cancelSuccess";
 	public static final String LINK_CHECK_CURRENT_PASSWORD = "/checkCurrentPassword";
+	
+	//Retun Item 
+	public static final String LINK_ORDER_RETURN_PINCODE_CHECK="/order/returnPincodeCheck";
+	public static final String LINK_ORDER_RETURN_PINCODE_SUBMIT="/order/returnPincodeSubmit";
 
 	/* For Lets Get Personal */
 	public static final String MY_INTEREST = "/myInterest";
