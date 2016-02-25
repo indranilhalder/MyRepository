@@ -6918,7 +6918,51 @@
 							</columntype>
 						</persistence>
 					</attribute>
-
+					<attribute type="java.lang.String" qualifier="phoneNo">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="address1">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="address2">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="address3">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="country">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="city">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="state">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="pincode">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="landmark">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
 
 				</attributes>
 			</itemtype>
@@ -7315,7 +7359,7 @@
 			</itemtype>
 
 		</typegroup>
-
+		<!-- pincode ,latitude and longitude Model -->
 		<typegroup name="Pincode">
 			<itemtype code="Pincode" extends="GenericItem"
 				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
