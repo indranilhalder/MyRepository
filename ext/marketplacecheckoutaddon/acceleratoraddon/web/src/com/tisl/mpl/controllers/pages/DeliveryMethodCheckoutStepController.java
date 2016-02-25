@@ -720,6 +720,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 					
 					pwPOS.setUssId(ussId);
+					pwPOS.setSellerName(sellerName);
 					LOG.debug("get stores from commerce based on SellerId and StoredId(slaveId)");
 					for (int i = 0; i < storeLocationResponseData.getAts().size(); i++)
 					{
@@ -1663,7 +1664,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 		//call service to get list of ATS and ussid
 		omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode);
-		productWithPOS = getProductWdPos(omsResponse,model);
+		if (null != omsResponse && omsResponse.size() > 0)
+		{
+			productWithPOS = getProductWdPos(omsResponse,model);
+		}
+		
 		if (productWithPOS.size() > 0)
 		{
 			status = true;

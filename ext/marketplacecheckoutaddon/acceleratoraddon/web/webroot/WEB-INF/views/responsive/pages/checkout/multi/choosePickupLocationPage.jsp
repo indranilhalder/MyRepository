@@ -491,7 +491,7 @@
 												<!-- end TISEE-4631 TISUAT-4229 -->
 												<ycommerce:testId code="cart_product_colour">
 													<c:if test="${not empty sellerName}">
-														<div class="colour"><b><spring:theme code="text.seller.name"/>	<b>${sellerName}</b></b></div>
+														<div class="colour"><b><spring:theme code="text.seller.name"/>	<b>${poses.sellerName}</b></b></div>
 													</c:if>
 												</ycommerce:testId>
 												</div>

@@ -1193,6 +1193,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					entry.setMplDeliveryMode(null);
 					modelService.save(entry);
 				}
+				if (entry.getDeliveryPointOfService() != null)
+				{
+					entry.setDeliveryPointOfService(null);
+					modelService.save(entry);
+				}
 			}
 
 			commerceCartService.recalculateCart(cart);
@@ -1235,7 +1240,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				responseDataList = getOMSPincodeResponseData(selectedPincode, cartData);
 
-				if (cartModel != null && cartModel.getEntries() != null && cartModel.getEntries().size() > 0)
+				if (null != responseDataList && responseDataList.size() > 0 && cartModel != null && cartModel.getEntries() != null && cartModel.getEntries().size() > 0)
 				{
 					for (final PinCodeResponseData pinCodeEntry : responseDataList)
 					{
@@ -1304,6 +1309,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						}
 					}
 
+				}
+				else {
+					isServicable = MarketplacecclientservicesConstants.N;
 				}
 				if (null != responseDataList)
 				{
