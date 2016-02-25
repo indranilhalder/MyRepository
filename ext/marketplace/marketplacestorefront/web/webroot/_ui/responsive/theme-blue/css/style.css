@@ -18289,11 +18289,11 @@ body .account .right-account form .half.account-profileEmail,body .account .righ
     }
     .feature-categories .content-block {
   margin: 0 40px;
-}
+
 .electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-prev::after{
 	
 right:0px;
-}
+
 .electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-next::after{
 	
 left:0px;
@@ -25189,7 +25189,7 @@ color:#fff;
 }
 .electronics-brand .feature-categories.custom-feature div.left-img + .content a{
 color:#fff;
-}
+
 .electronics-brand .feature-categories.custom-feature{
 padding:0;
 }
@@ -27571,7 +27571,7 @@ word-break: break-word;
 table.track-table-head,table.track-table{
 	border-left:1px solid #C0C0C0;
 	border-right:1px solid #C0C0C0;
-}
+
  table.track-table-head tr{
 	background:#C0C0C0;
 	color:#000000;
@@ -36209,4 +36209,5 @@ text-transform: uppercase;
 .modal.size-guide div.sizes.apparelSizes, .modal.size-guide div.footwear-size-table{
 overflow:auto;
 height:200px;
+
 }
