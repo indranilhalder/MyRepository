@@ -151,7 +151,8 @@ public class MplCancelOrderRequest
 		protected String reasonCode;
 		@XmlElement(name = "ReturnCancelRemarks", required = true)
 		protected String returnCancelRemarks;
-
+		@XmlElement(name = "pinCode", required = true)
+		protected String pinCode;
 		/**
 		 * Gets the value of the orderId property.
 		 *
@@ -288,6 +289,22 @@ public class MplCancelOrderRequest
 		public void setReturnCancelRemarks(final String value)
 		{
 			this.returnCancelRemarks = value;
+		}
+
+		/**
+		 * @return the pinCode
+		 */
+		public String getPinCode()
+		{
+			return pinCode;
+		}
+
+		/**
+		 * @param pinCode the pinCode to set
+		 */
+		public void setPinCode(String pinCode)
+		{
+			this.pinCode = pinCode;
 		}
 
 	}
