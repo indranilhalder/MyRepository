@@ -505,8 +505,6 @@ public class NotificationServiceImpl implements NotificationService
 		try
 		{
 			final Boolean isRead = Boolean.FALSE;
-			String voucherCode = null;
-			String voucherIndentifier = null;
 			VoucherStatusNotificationModel voucherStatus = null;
 			final String customerStatus = getConfigurationService().getConfiguration().getString(
 					MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
@@ -514,8 +512,8 @@ public class NotificationServiceImpl implements NotificationService
 			if (voucher instanceof PromotionVoucherModel)
 			{
 				final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
-				voucherCode = promoVoucher.getVoucherCode();
-				voucherIndentifier = promoVoucher.getCode();
+				String voucherCode = promoVoucher.getVoucherCode();
+				String voucherIndentifier = promoVoucher.getCode();
 				LOG.debug("voucher identifier :" + voucherIndentifier);
 				List<VoucherStatusNotificationModel> existingVoucherList = new ArrayList<VoucherStatusNotificationModel>();
 				if (StringUtils.isNotEmpty(voucherIndentifier))
