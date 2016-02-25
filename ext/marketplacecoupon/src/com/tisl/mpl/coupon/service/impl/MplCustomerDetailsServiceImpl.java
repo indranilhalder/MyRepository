@@ -8,6 +8,8 @@ import de.hybris.platform.core.model.user.CustomerModel;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.coupon.dao.MplCustomerDetailsDao;
@@ -19,6 +21,7 @@ import com.tisl.mpl.coupon.service.MplCustomerDetailsService;
 public class MplCustomerDetailsServiceImpl implements MplCustomerDetailsService
 {
 
+	@Resource(name = "customerDetailsDao")
 	private MplCustomerDetailsDao customerDetailsDao;
 
 

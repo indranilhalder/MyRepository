@@ -676,6 +676,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0017 = "E0017";
 	public static final String E0018 = "E0018";
 	public static final String E0019 = "E0019";
+	public static final String E0020 = "E0020";
+	public static final String E0021 = "E0021";
 	//System/Non Business constants
 
 	//pdp error constants
@@ -1412,6 +1414,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRICEEXCEEDERROR = " cannot be redeemed: total price exceeded".intern();
 	public static final String DATERESTVIOLATION = "Date restriction is violated".intern();
 	public static final String USERRESTVIOLATION = "User restriction is violated".intern();
+	public static final String VOUCHERCODE = "voucherCode".intern();
+	public static final String SYSDATE = "sysdate".intern();
+	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
 
 
 	private MarketplacecommerceservicesConstants()

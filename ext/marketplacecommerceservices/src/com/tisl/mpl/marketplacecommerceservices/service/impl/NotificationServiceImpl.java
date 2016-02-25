@@ -3,46 +3,41 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
+import de.hybris.platform.servicelayer.exceptions.ModelCreationException;
+import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
-import de.hybris.platform.voucher.model.ProductCategoryRestrictionModel;
-import de.hybris.platform.voucher.model.ProductRestrictionModel;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
-import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
 import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
-import com.tisl.mpl.data.AllVoucherListData;
 import com.tisl.mpl.data.NotificationData;
-import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
@@ -69,64 +64,12 @@ public class NotificationServiceImpl implements NotificationService
 
 	@Autowired
 	private MplSNSMobilePushService mplSNSMobilePushService;
-	@Autowired
+	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
-	@Autowired
+	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 	@Resource(name = "couponRestrictionService")
 	private CouponRestrictionService couponRestrictionService;
-
-	public ConfigurationService getConfigurationService()
-	{
-		return configurationService;
-	}
-
-	public void setConfigurationService(final ConfigurationService configurationService)
-	{
-		this.configurationService = configurationService;
-	}
-
-
-
-	/**
-	 * @return the notificationDao
-	 */
-	public NotificationDao getNotificationDao()
-	{
-		return notificationDao;
-	}
-
-	/**
-	 * @param notificationDao
-	 *           the notificationDao to set
-	 */
-	public void setNotificationDao(final NotificationDao notificationDao)
-	{
-		this.notificationDao = notificationDao;
-	}
-
-	@Resource(name = "modelService")
-	private ModelService modelService;
-
-
-
-
-	/**
-	 * @return the modelService
-	 */
-	public ModelService getModelService()
-	{
-		return modelService;
-	}
-
-	/**
-	 * @param modelService
-	 *           the modelService to set
-	 */
-	public void setModelService(final ModelService modelService)
-	{
-		this.modelService = modelService;
-	}
 
 
 	private static final Logger LOG = Logger.getLogger(NotificationServiceImpl.class);
@@ -134,7 +77,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -146,7 +89,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -177,7 +120,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -199,37 +142,45 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void markNotificationRead(final String customerId, final String orderNo, final String consignmentNo,
-			final String shopperStatus)
+			final String shopperStatus) throws EtailNonBusinessExceptions
 	{
-		final List<OrderStatusNotificationModel> notificationList = getNotificationDao().getModelforDetails(customerId, orderNo,
-				consignmentNo, shopperStatus);
-		final List<VoucherStatusNotificationModel> voucherList = getModelForVoucherIdentifier(orderNo);
-		final Boolean isRead = Boolean.TRUE;
-		for (final OrderStatusNotificationModel osn : notificationList)
+		try
 		{
-			osn.setIsRead(isRead);
-			modelService.save(osn);
+			final List<OrderStatusNotificationModel> notificationList = getNotificationDao().getModelforDetails(customerId, orderNo,
+					consignmentNo, shopperStatus);
+			final List<VoucherStatusNotificationModel> voucherList = getModelForVoucherIdentifier(orderNo);
+			final Boolean isRead = Boolean.TRUE;
+			for (final OrderStatusNotificationModel osn : notificationList)
+			{
+				osn.setIsRead(isRead);
+				getModelService().save(osn);
 
+			}
+			for (final VoucherStatusNotificationModel vsn : voucherList)
+			{
+				vsn.setIsRead(isRead);
+			}
+			if (CollectionUtils.isNotEmpty(voucherList)) //Saving the voucherList
+			{
+				getModelService().saveAll(voucherList);
+			}
 		}
-		for (final VoucherStatusNotificationModel v : voucherList)
+		catch (final ModelSavingException e)
 		{
-			v.setIsRead(isRead);
-			modelService.save(v);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
 		}
-
-
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -257,7 +208,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -315,7 +266,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -367,28 +318,36 @@ public class NotificationServiceImpl implements NotificationService
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getVoucher()
-	 */
 
+	/**
+	 * @return List<VoucherStatusNotificationModel>
+	 */
 	@Override
-	public List<VoucherStatusNotificationModel> getVoucher()
+	public List<VoucherStatusNotificationModel> getVoucher() throws EtailNonBusinessExceptions
 	{
 		List<VoucherStatusNotificationModel> voucherList = new ArrayList<>();
-		voucherList = getNotificationDao().findVoucher();
-		if (null != voucherList)
+		try
 		{
-			for (final VoucherStatusNotificationModel v : voucherList)
+			voucherList = getNotificationDao().findVoucher();
+			if (null != voucherList)
 			{
-				if (v.getVoucherEndDate().before(new Date()))
+				for (final VoucherStatusNotificationModel voucher : voucherList)
 				{
-					modelService.remove(v);
+					if (voucher.getVoucherEndDate().before(new Date()))
+					{
+						getModelService().remove(voucher);
+					}
 				}
 			}
 		}
-
+		catch (final ModelRemovalException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 
 		return voucherList;
 
@@ -396,7 +355,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -416,7 +375,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */
@@ -427,205 +386,311 @@ public class NotificationServiceImpl implements NotificationService
 		return notificationDataList;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 *
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getAllVoucherList(de.hybris.platform.core
-	 * .model.user.CustomerModel, java.util.List)
 	 */
-	@Override
-	public AllVoucherListData getAllVoucherList(final CustomerModel currentCustomer, final List<VoucherModel> voucherList)
-	{
-		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, YYYY");
-		final List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
-		final List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
-		final AllVoucherListData allVoucherListData = new AllVoucherListData();
-		for (final VoucherModel voucherModel : voucherList)
-		{
-			if (voucherModel instanceof PromotionVoucherModel)
-			{
-
-				final PromotionVoucherModel VoucherObj = (PromotionVoucherModel) voucherModel;
-
-				final Set<RestrictionModel> restrictionList = voucherModel.getRestrictions();
-				if (CollectionUtils.isNotEmpty(restrictionList))
-				{
-					boolean dateRestrExists = false;
-					boolean userRestrExists = false;
-					final boolean semiClosedRestrExists = false;
-
-					DateRestrictionModel dateRestrObj = null;
-					UserRestrictionModel userRestrObj = null;
-
-					List<ProductModel> specificProductCoupon = new ArrayList<ProductModel>();
-					List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
-					//List<ProductModel> productForCategoryBasedCoupon = new ArrayList<ProductModel>();
-
-					for (final RestrictionModel restrictionModel : restrictionList)
-					{
-
-						//final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
-						if (restrictionModel instanceof DateRestrictionModel)
-						{
-							dateRestrExists = true;
-							dateRestrObj = (DateRestrictionModel) restrictionModel;
-						}
-						if (restrictionModel instanceof UserRestrictionModel)
-						{
-							userRestrExists = true;
-							userRestrObj = (UserRestrictionModel) restrictionModel;
-						}
-
-						if (restrictionModel instanceof ProductRestrictionModel)
-						{
-							final ProductRestrictionModel productRestriction = (ProductRestrictionModel) restrictionModel;
-							specificProductCoupon = new ArrayList<ProductModel>(productRestriction.getProducts());
-
-						}
-
-						if (restrictionModel instanceof ProductCategoryRestrictionModel)
-						{
-							final ProductCategoryRestrictionModel categoryRestriction = (ProductCategoryRestrictionModel) restrictionModel;
-							categoryBasedCoupon = new ArrayList<CategoryModel>(categoryRestriction.getCategories());
-
-							//productForCategoryBasedCoupon = new ArrayList<ProductModel>(categoryRestriction.getProducts());
-						}
-
-					}
-
-					if (dateRestrExists)
-					{
-						final String voucherCode = VoucherObj.getVoucherCode();
-
-						if (dateRestrExists && voucherModelService.isReservable(voucherModel, voucherCode, currentCustomer))
-						{
-							final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
-							if (userRestrExists)
-							{
-								//								final Collection<PrincipalModel> userList = userRestrObj != null ? userRestrObj.getUsers()
-								//										: new ArrayList<PrincipalModel>();
-								if (userRestrObj != null && userRestrObj.getUsers().contains(currentCustomer))
-								{
-									voucherDisplayData.setVoucherCode(VoucherObj.getVoucherCode());
-									voucherDisplayData.setVoucherDescription(voucherModel.getDescription());
-									final Date endDate = dateRestrObj.getEndDate() != null ? dateRestrObj.getEndDate() : new Date();
-									voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
-									final Date startDate = dateRestrObj.getStartDate();
-									voucherDisplayData.setVoucherCreationDate(startDate);
-									voucherDisplayData.setProductsCoupon(specificProductCoupon);
-									voucherDisplayData.setCategoryBasedCoupon(categoryBasedCoupon);
-									closedVoucherDataList.add(voucherDisplayData);
-								}
-							}
-							else if (!semiClosedRestrExists)
-							{
-								voucherDisplayData.setVoucherCode(VoucherObj.getVoucherCode());
-								voucherDisplayData.setVoucherDescription(voucherModel.getDescription());
-								final Date endDate = dateRestrObj.getEndDate() != null ? dateRestrObj.getEndDate() : new Date();
-								voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
-								final Date startDate = dateRestrObj.getStartDate();
-								voucherDisplayData.setVoucherCreationDate(startDate);
-								openVoucherDataList.add(voucherDisplayData);
-							}
-						}
-					}
-				}
-			}
-		}
-		allVoucherListData.setClosedVoucherList(closedVoucherDataList);
-		allVoucherListData.setOpenVoucherList(openVoucherDataList);
-		return allVoucherListData;
-
-	}
+	//	@Override
+	//	public AllVoucherListData getAllVoucherList(final CustomerModel currentCustomer, final List<VoucherModel> voucherList)
+	//	{
+	//		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, YYYY");
+	//		final List<VoucherDisplayData> openVoucherDataList = new ArrayList<VoucherDisplayData>();
+	//		final List<VoucherDisplayData> closedVoucherDataList = new ArrayList<VoucherDisplayData>();
+	//		final AllVoucherListData allVoucherListData = new AllVoucherListData();
+	//		for (final VoucherModel voucherModel : voucherList)
+	//		{
+	//			if (voucherModel instanceof PromotionVoucherModel)
+	//			{
+	//
+	//				final PromotionVoucherModel VoucherObj = (PromotionVoucherModel) voucherModel;
+	//
+	//				final Set<RestrictionModel> restrictionList = voucherModel.getRestrictions();
+	//				if (CollectionUtils.isNotEmpty(restrictionList))
+	//				{
+	//					boolean dateRestrExists = false;
+	//					boolean userRestrExists = false;
+	//					final boolean semiClosedRestrExists = false;
+	//
+	//					DateRestrictionModel dateRestrObj = null;
+	//					UserRestrictionModel userRestrObj = null;
+	//
+	//					List<ProductModel> specificProductCoupon = new ArrayList<ProductModel>();
+	//					List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
+	//					//List<ProductModel> productForCategoryBasedCoupon = new ArrayList<ProductModel>();
+	//
+	//					for (final RestrictionModel restrictionModel : restrictionList)
+	//					{
+	//
+	//						//final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
+	//						if (restrictionModel instanceof DateRestrictionModel)
+	//						{
+	//							dateRestrExists = true;
+	//							dateRestrObj = (DateRestrictionModel) restrictionModel;
+	//						}
+	//						if (restrictionModel instanceof UserRestrictionModel)
+	//						{
+	//							userRestrExists = true;
+	//							userRestrObj = (UserRestrictionModel) restrictionModel;
+	//						}
+	//
+	//						if (restrictionModel instanceof ProductRestrictionModel)
+	//						{
+	//							final ProductRestrictionModel productRestriction = (ProductRestrictionModel) restrictionModel;
+	//							specificProductCoupon = new ArrayList<ProductModel>(productRestriction.getProducts());
+	//
+	//						}
+	//
+	//						if (restrictionModel instanceof ProductCategoryRestrictionModel)
+	//						{
+	//							final ProductCategoryRestrictionModel categoryRestriction = (ProductCategoryRestrictionModel) restrictionModel;
+	//							categoryBasedCoupon = new ArrayList<CategoryModel>(categoryRestriction.getCategories());
+	//
+	//							//productForCategoryBasedCoupon = new ArrayList<ProductModel>(categoryRestriction.getProducts());
+	//						}
+	//
+	//					}
+	//
+	//					if (dateRestrExists)
+	//					{
+	//						final String voucherCode = VoucherObj.getVoucherCode();
+	//
+	//						if (dateRestrExists && voucherModelService.isReservable(voucherModel, voucherCode, currentCustomer))
+	//						{
+	//							final VoucherDisplayData voucherDisplayData = new VoucherDisplayData();
+	//							if (userRestrExists)
+	//							{
+	//								//								final Collection<PrincipalModel> userList = userRestrObj != null ? userRestrObj.getUsers()
+	//								//										: new ArrayList<PrincipalModel>();
+	//								if (userRestrObj != null && userRestrObj.getUsers().contains(currentCustomer))
+	//								{
+	//									voucherDisplayData.setVoucherCode(VoucherObj.getVoucherCode());
+	//									voucherDisplayData.setVoucherDescription(voucherModel.getDescription());
+	//									final Date endDate = dateRestrObj.getEndDate() != null ? dateRestrObj.getEndDate() : new Date();
+	//									voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
+	//									final Date startDate = dateRestrObj.getStartDate();
+	//									voucherDisplayData.setVoucherCreationDate(startDate);
+	//									voucherDisplayData.setProductsCoupon(specificProductCoupon);
+	//									voucherDisplayData.setCategoryBasedCoupon(categoryBasedCoupon);
+	//									closedVoucherDataList.add(voucherDisplayData);
+	//								}
+	//							}
+	//							else if (!semiClosedRestrExists)
+	//							{
+	//								voucherDisplayData.setVoucherCode(VoucherObj.getVoucherCode());
+	//								voucherDisplayData.setVoucherDescription(voucherModel.getDescription());
+	//								final Date endDate = dateRestrObj.getEndDate() != null ? dateRestrObj.getEndDate() : new Date();
+	//								voucherDisplayData.setVoucherExpiryDate(sdf.format(endDate));
+	//								final Date startDate = dateRestrObj.getStartDate();
+	//								voucherDisplayData.setVoucherCreationDate(startDate);
+	//								openVoucherDataList.add(voucherDisplayData);
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//		allVoucherListData.setClosedVoucherList(closedVoucherDataList);
+	//		allVoucherListData.setOpenVoucherList(openVoucherDataList);
+	//		return allVoucherListData;
+	//
+	//	}
 
 	/**
 	 * @Description This method saves data into VoucherStatusNotificationModel while creating voucher
-	 * @param VoucherModel
+	 * @param voucher
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public void saveToVoucherStatusNotification(final VoucherModel voucher)
+	public void saveToVoucherStatusNotification(final VoucherModel voucher) throws EtailNonBusinessExceptions
 	{
-		final Boolean isRead = Boolean.FALSE;
-		String voucherCode = "";
-		String voucherIndentifier = "";
-		VoucherStatusNotificationModel voucherStatus = null;
-		final String customerStatus = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
-
-		if (voucher instanceof PromotionVoucherModel)
+		try
 		{
-			final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
-			voucherCode = promoVoucher.getVoucherCode();
-			voucherIndentifier = promoVoucher.getCode();
-			LOG.debug("voucher identifier :" + voucherIndentifier);
-			final DateRestrictionModel dateRestrObj = couponRestrictionService.getDateRestriction(voucher);
-			final UserRestrictionModel userRestrObj = couponRestrictionService.getUserRestriction(voucher);
-			final List<PrincipalModel> userList = userRestrObj != null ? couponRestrictionService
-					.getRestrictionCustomerList(userRestrObj) : new ArrayList<PrincipalModel>();
-			final List<String> restrUserUidList = new ArrayList<String>();
+			final Boolean isRead = Boolean.FALSE;
+			VoucherStatusNotificationModel voucherStatus = null;
+			final String customerStatus = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.CUSTOMER_STATUS_FOR_COUPON_NOTIFICATION);
 
-			if (dateRestrObj != null && userRestrObj != null && userRestrObj.getPositive().booleanValue()
-					&& CollectionUtils.isNotEmpty(userList))
+			if (voucher instanceof PromotionVoucherModel)
 			{
-				for (final PrincipalModel user : userList)
+				final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) voucher;
+				String voucherCode = promoVoucher.getVoucherCode();
+				String voucherIndentifier = promoVoucher.getCode();
+				LOG.debug("voucher identifier :" + voucherIndentifier);
+				List<VoucherStatusNotificationModel> existingVoucherList = new ArrayList<VoucherStatusNotificationModel>();
+				if (StringUtils.isNotEmpty(voucherIndentifier))
 				{
-					restrUserUidList.add(user.getUid());
+					existingVoucherList = getModelForVoucher(voucherIndentifier);
 				}
+				final DateRestrictionModel dateRestrObj = getCouponRestrictionService().getDateRestriction(voucher);
+				final UserRestrictionModel userRestrObj = getCouponRestrictionService().getUserRestriction(voucher);
+				final List<PrincipalModel> userList = userRestrObj != null ? getCouponRestrictionService()
+						.getRestrictionCustomerList(userRestrObj) : new ArrayList<PrincipalModel>();
+				final List<String> restrUserUidList = new ArrayList<String>();
 
-				if (null != voucherIndentifier && null != voucherCode)
+				if (dateRestrObj != null && userRestrObj != null && userRestrObj.getPositive().booleanValue()
+						&& CollectionUtils.isNotEmpty(userList))
 				{
-					final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
-
-					if (existingVoucherList.isEmpty())
+					for (final PrincipalModel user : userList)
 					{
-						voucherStatus = modelService.create(VoucherStatusNotificationModel.class);
-					}
-					else
-					{
-						voucherStatus = existingVoucherList.get(0);
+						restrUserUidList.add(user.getUid());
 					}
 
-					//Setting values in model
-					voucherStatus.setVoucherIdentifier(voucherIndentifier);
-					voucherStatus.setVoucherCode(voucherCode);
-					voucherStatus.setCustomerUidList(restrUserUidList);
-					voucherStatus.setVoucherStartDate(dateRestrObj.getStartDate());
-					voucherStatus.setVoucherEndDate(dateRestrObj.getEndDate());
-					voucherStatus.setIsRead(isRead);
-					voucherStatus.setCustomerStatus(customerStatus);
-					modelService.save(voucherStatus);
+					if (null != voucherIndentifier && null != voucherCode)
+					{
+						if (CollectionUtils.isEmpty(existingVoucherList))
+						{
+							voucherStatus = getModelService().create(VoucherStatusNotificationModel.class);
+						}
+						else
+						{
+							voucherStatus = existingVoucherList.get(0);
+						}
+
+						//Setting values in model
+						voucherStatus.setVoucherIdentifier(voucherIndentifier);
+						voucherStatus.setVoucherCode(voucherCode);
+						voucherStatus.setCustomerUidList(restrUserUidList);
+						voucherStatus.setVoucherStartDate(dateRestrObj.getStartDate());
+						voucherStatus.setVoucherEndDate(dateRestrObj.getEndDate());
+						voucherStatus.setIsRead(isRead);
+						voucherStatus.setCustomerStatus(customerStatus);
+						getModelService().save(voucherStatus);
+					}
 				}
-			}
-			else if (dateRestrObj != null
-					&& (userRestrObj == null || !userRestrObj.getPositive().booleanValue() || CollectionUtils.isEmpty(userList)))
-			{
-				final List<VoucherStatusNotificationModel> existingVoucherList = getModelForVoucher(voucherIndentifier);
-				if (!existingVoucherList.isEmpty())
+				else if (dateRestrObj != null
+						&& (userRestrObj == null || !userRestrObj.getPositive().booleanValue() || CollectionUtils.isEmpty(userList))
+						&& CollectionUtils.isNotEmpty(existingVoucherList))
 				{
 					voucherStatus = existingVoucherList.get(0);
-					modelService.remove(voucherStatus);
+					getModelService().remove(voucherStatus);
 				}
 			}
-
 		}
+		catch (final ModelSavingException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final ModelCreationException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
 	}
 
 
 
+	/**
+	 * This method returns list of VoucherStatusNotificationModel based on voucherIndentifier
+	 *
+	 * @param voucherIndentifier
+	 * @return List<VoucherStatusNotificationModel>
+	 * @throws EtailNonBusinessExceptions
+	 */
 	private List<VoucherStatusNotificationModel> getModelForVoucher(final String voucherIndentifier)
+			throws EtailNonBusinessExceptions
 	{
-
 		return getNotificationDao().getModelForVoucher(voucherIndentifier);
-
-
 	}
 
+
+	/**
+	 * This method returns list of VoucherStatusNotificationModel based on voucherCode
+	 *
+	 * @param voucherCode
+	 * @return List<VoucherStatusNotificationModel>
+	 * @throws EtailNonBusinessExceptions
+	 */
 	private List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode)
+			throws EtailNonBusinessExceptions
 	{
-
 		return getNotificationDao().getModelForVoucherIdentifier(voucherCode);
+	}
+
+	/**
+	 * @return the voucherModelService
+	 */
+	public VoucherModelService getVoucherModelService()
+	{
+		return voucherModelService;
+	}
+
+	/**
+	 * @param voucherModelService
+	 *           the voucherModelService to set
+	 */
+	public void setVoucherModelService(final VoucherModelService voucherModelService)
+	{
+		this.voucherModelService = voucherModelService;
+	}
+
+	/**
+	 * @return the couponRestrictionService
+	 */
+	public CouponRestrictionService getCouponRestrictionService()
+	{
+		return couponRestrictionService;
+	}
+
+	/**
+	 * @param couponRestrictionService
+	 *           the couponRestrictionService to set
+	 */
+	public void setCouponRestrictionService(final CouponRestrictionService couponRestrictionService)
+	{
+		this.couponRestrictionService = couponRestrictionService;
+	}
 
 
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+
+
+	/**
+	 * @return the notificationDao
+	 */
+	public NotificationDao getNotificationDao()
+	{
+		return notificationDao;
+	}
+
+	/**
+	 * @param notificationDao
+	 *           the notificationDao to set
+	 */
+	public void setNotificationDao(final NotificationDao notificationDao)
+	{
+		this.notificationDao = notificationDao;
+	}
+
+	@Resource(name = "modelService")
+	private ModelService modelService;
+
+
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
 	}
 }

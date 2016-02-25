@@ -17,93 +17,14 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/aop
-           http://www.springframework.org/schema/aop/spring-aop.xsd">
-
-	<!--
-	The hybris platform provides one single Spring application context for beans located at the jalo layer.
-	Each extension can add beans to this context by specifying them at this configuration file.
-	 
-	You can use and/or redefine beans defined at configuration files of other extensions as well as
-	adding new one.
-		
-	If you want to locate this file at a different location or want to use several files for better,
-	structuring, please use the '<yourextension>.application-context' property at your project.properties file.
-	There you can specify a comma separated list of files where first is tried to find a file per classpath and
-	then per file system.
-
-	
-	If you want to configure beans for your web module please have a look at
-	your web/webroot/WEB-INF/<extname>-web-spring.xml.
-	-->
-	
-	<!--  Example how to override a manager -->
-	<!--
-	<bean id="core.productManager"   class="com.tisl.mpl.coupon.jalo.MarketplacecouponProductManager" 	init-method="init"	destroy-method="destroy" />
-	-->
-	
-	
- 	<!--  Example how to configure the class to use for jalo session creation -->
-	<!--
-	<bean id="jalosession"   class="de.hybris.platform.jalo.JaloSessionFactory">
-		<property name="targetClassName" value="com.tisl.mpl.coupon.jalo.MarketplacecouponJaloSession"/>
-	</bean>
-	-->
-
-	
-	<!--  Example how to override an item  -->
-	<!-- 
-	<bean id="de.hybris.platform.jalo.product.Product" class="com.tisl.mpl.coupon.jalo.MarketplacecouponProduct" scope="prototype" />		
- 	-->
-
-	<!--  
-	 Example how to register and use an AOP aspect 
-     Also see http://static.springframework.org/spring/docs/2.5.x/reference/aop.html	
-     -->
-	
-	<!-- 
-	<bean id="marketplacecouponProfBean" class="com.tisl.mpl.coupon.aop.MarketplacecouponProfilingAspect"/>
-	<aop:config proxy-target-class="true">
-  		<aop:aspect id="marketplacecouponProfAspect" ref="marketplacecouponProfBean" >
-    	  <aop:pointcut id="profiledMethods" 
-	      	expression="execution(* getModificationTime(..))" />  	            
-	   		<aop:around pointcut-ref="profiledMethods" method="profile" />
-  		</aop:aspect>
-	</aop:config>
-	 -->
-
-	
-	<!-- some other examples of a pointcut that matches everything:
-
-    	  <aop:pointcut id="profiledMethods" 
-	      	expression="bean(de.hybris.platform.jalo.user.Customer) &amp;&amp; 
-	      	            !execution(* getPK(..))" />  	            
-	       <aop:pointcut id="profiledMethods" expression="execution(* *(..))" />	
-	  -->
-	  
+           http://www.springframework.org/schema/aop/spring-aop.xsd">	  
 	  
 	<alias name="mplCouponFacade" alias="mplCouponFacade"/>
-	<bean id="mplCouponFacade" class="com.tisl.mpl.coupon.facade.impl.MplCouponFacadeImpl">
-		<property name="voucherService" ref="voucherService"/>
-		<property name="mplCheckoutFacade" ref="mplCheckoutFacade"/>
-		<property name="voucherFacade" ref="voucherFacade"/>
-		<property name="mplCouponService" ref="mplCouponService"/>
-		<property name="configurationService" ref="configurationService"/>
-		<property name="voucherModelService" ref="voucherModelService"/>
-		<property name="defaultVoucherFacade" ref="defaultVoucherFacade"/>
-		<property name="mplVoucherService" ref="mplVoucherService"/>
-		<property name="sessionService" ref="sessionService"/>
-		<property name="voucherDisplayConverter" ref="voucherDisplayConverter"/>
-		<!-- <property name="voucherTransactionConverter" ref="voucherTransactionConverter"/> -->
-	</bean>
-		
+	<bean id="mplCouponFacade" class="com.tisl.mpl.coupon.facade.impl.MplCouponFacadeImpl" />
 	
-	<bean id="mplCouponDao" class="com.tisl.mpl.coupon.dao.impl.MplCouponDaoImpl">
-		<property name="flexibleSearchService" ref="flexibleSearchService"/>
-		<property name="pagedFlexibleSearchService" ref="pagedFlexibleSearchService"/>
-	</bean>
-	<bean id="mplCouponService" class="com.tisl.mpl.coupon.service.impl.MplCouponServiceImpl">
-		<property name="mplCouponDao" ref="mplCouponDao"/>
-	</bean>
+	<bean id="mplCouponDao" class="com.tisl.mpl.coupon.dao.impl.MplCouponDaoImpl" />
+	
+	<bean id="mplCouponService" class="com.tisl.mpl.coupon.service.impl.MplCouponServiceImpl" />
 	
 	<alias name="customerDetailsService" alias="customerDetailsService" />
 	<bean id="customerDetailsService"
@@ -118,7 +39,6 @@
 
 	<bean id="customerDetailsDao"
 		class="com.tisl.mpl.coupon.dao.impl.MplCustomerDetailsDaoImpl" >
-		<property name="flexibleSearchService" ref="flexibleSearchService"/>
 	</bean>
 	
 	<alias name="defaultCustomerDetailsFacade" alias="customerDetailsFacade" />
@@ -131,34 +51,20 @@
      <!-- Coupon Helper Class -->
 	<bean id="mplCouponHelper" class="com.tisl.mpl.helper.MplCouponHelper" />
 	
-<!-- 	<bean id="couponMailJob" class="com.tisl.mpl.coupon.job.CouponMailJob" autowire="byName"/> -->	
-
-	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" parent="abstractJobPerformable">
-		<property name="customerDetailsService" ref="customerDetailsService" />
-		<property name="configurationService" ref="configurationService" />
-	</bean>	
+	<bean id="customerListGenerationJob" class="com.tisl.mpl.coupon.job.CustomerListGenerationJob" parent="abstractJobPerformable" />
 	
 	<!-- Tata Cliq Job : Campaign Team -->
 	<bean id="campaignVoucherDataService"
 		class="com.tisl.mpl.coupon.service.impl.DefaultCampaignVoucherDataService">
-		<property name="modelService" ref="modelService" />
-		<property name="mplCouponDao" ref="mplCouponDao" />
-		<property name="configurationService" ref="configurationService" />
-		<property name="campaignVoucherData" ref="campaignVoucherData" />
 	</bean>
+	
 	<bean id="campaignVoucherData" class="com.tisl.mpl.coupon.pojo.CampaignVoucherData" />
 	
 	<!-- Tata Cliq : For Campaign Team   -->
-   	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob" parent="abstractJobPerformable">
-   		<property name="campaignVoucherDataService" ref="campaignVoucherDataService" />
-   	</bean>	
+   	<bean id="campaignVoucherJob" class="com.tisl.mpl.coupon.job.CampaignVoucherJob" parent="abstractJobPerformable" />
    	
    	<!-- CouponRestrictionSaveInterceptor starts -->
-	<bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor">
-		<property name="catalogVersionService" ref="catalogVersionService" />
-		<property name="configurationService" ref="configurationService" />
-		<property name="productService" ref="productService" />
-	</bean>
+	<bean id="CouponProdRestSaveInterceptor" class="com.tisl.mpl.interceptor.CouponProdRestSaveInterceptor" />
 
 	<bean id="CouponProdRestSaveInterceptorMapping"
 		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">

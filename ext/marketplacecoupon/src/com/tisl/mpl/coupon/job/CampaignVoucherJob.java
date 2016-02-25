@@ -25,7 +25,6 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 public class CampaignVoucherJob extends AbstractJobPerformable<CronJobModel>
 {
-	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CampaignVoucherJob.class.getName());
 
 	@Resource(name = "campaignVoucherDataService")

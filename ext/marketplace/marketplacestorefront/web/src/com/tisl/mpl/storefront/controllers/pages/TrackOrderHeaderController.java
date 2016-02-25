@@ -53,41 +53,54 @@ public class TrackOrderHeaderController
 	@RequestMapping(method = RequestMethod.GET)
 	public String get(final Model model, final HttpServletRequest request)
 	{
-		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
-		if (!userService.isAnonymousUser(currentCustomer))
+		try
 		{
-
-
-
-			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
-			final String customerUID = currentCustomer.getUid();
-
-			if (null != customerUID)
+			final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
+			if (!getUserService().isAnonymousUser(currentCustomer))
 			{
-				notificationMessagelist = notificationFacade.getNotificationDetail(customerUID, true);
 
+				List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
+				final String customerUID = currentCustomer.getUid();
 
-				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
+				if (null != customerUID)
 				{
+					notificationMessagelist = getNotificationFacade().getNotificationDetail(customerUID, true);
+
+					if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
+					{
+
+						model.addAttribute(ModelAttributetConstants.NOTIFICATION_MESSAGE_LIST, notificationMessagelist);
+
+						int notificationCount = 0;
+						for (final NotificationData single : notificationMessagelist)
+						{
+							if (single.getNotificationRead() != null && !single.getNotificationRead().booleanValue())
+							{
+								notificationCount++;
+							}
+
+						}
+						model.addAttribute(ModelAttributetConstants.NOTIFICATION_COUNT, notificationCount);
+						model.addAttribute(ModelAttributetConstants.IS_SIGNED_IN, "yes");
+					}
 
 					model.addAttribute(ModelAttributetConstants.NOTIFICATION_MESSAGE_LIST, notificationMessagelist);
-
-					int notificationCount = 0;
-					for (final NotificationData single : notificationMessagelist)
-					{
-						if (single.getNotificationRead() != null && !single.getNotificationRead())
-						{
-							notificationCount++;
-						}
-
-					}
-					model.addAttribute(ModelAttributetConstants.NOTIFICATION_COUNT, notificationCount);
-					model.addAttribute(ModelAttributetConstants.IS_SIGNED_IN, "yes");
 				}
-
-				model.addAttribute(ModelAttributetConstants.NOTIFICATION_MESSAGE_LIST, notificationMessagelist);
 			}
 		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
+
 		return ControllerConstants.Views.Fragments.Home.TrackOrderPanel;
 	}
 
@@ -98,15 +111,13 @@ public class TrackOrderHeaderController
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MARKREAD, method = RequestMethod.GET, produces = "application/json")
 	public void markAsRead(final String currentId, final String consignmentNo, final String shopperStatus)
 	{
-
 		try
 		{
-			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			final CustomerModel currentCustomer = (CustomerModel) getUserService().getCurrentUser();
 			final String customerUID = currentCustomer.getUid();
 			if (null != customerUID)
 			{
-
-				notificationFacade.markNotificationRead(customerUID, currentId, consignmentNo, shopperStatus);
+				getNotificationFacade().markNotificationRead(customerUID, currentId, consignmentNo, shopperStatus);
 			}
 
 		}
@@ -118,6 +129,52 @@ public class TrackOrderHeaderController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
 
 	}
+
+
+	/**
+	 * @return the notificationFacade
+	 */
+	public NotificationFacade getNotificationFacade()
+	{
+		return notificationFacade;
+	}
+
+
+	/**
+	 * @param notificationFacade
+	 *           the notificationFacade to set
+	 */
+	public void setNotificationFacade(final NotificationFacade notificationFacade)
+	{
+		this.notificationFacade = notificationFacade;
+	}
+
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
+
+
+
 }
