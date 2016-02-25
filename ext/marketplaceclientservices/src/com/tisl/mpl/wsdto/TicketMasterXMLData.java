@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "ticketMaster")
 @XmlType(propOrder =
 { "customerID", "orderId", "subOrderId", "ticketType", "refundType", "ticketSubType", "returnCategory", "lineItemDataList",
-		"alternateContactName", "alternatePhoneNo", "source", "lineItemId" })
+		"alternateContactName", "alternatePhoneNo", "source", "lineItemId", "addressInfo" })
 public class TicketMasterXMLData
 {
 	private String customerID;
@@ -32,7 +32,7 @@ public class TicketMasterXMLData
 	private String source;
 	private String lineItemId;
 	private String ticketSubType;
-
+	private AddressInfoDTO addressInfo;
 
 	/**
 	 * @return the lineItemId
@@ -251,4 +251,22 @@ public class TicketMasterXMLData
 	{
 		this.ticketSubType = ticketSubType;
 	}
+
+	/**
+	 * @return the addressInfo
+	 */
+	@XmlElement(name = "AddressInfo")
+	public AddressInfoDTO getAddressInfo()
+	{
+		return addressInfo;
+	}
+
+	/**
+	 * @param addressInfo the addressInfo to set
+	 */
+	public void setAddressInfo(AddressInfoDTO addressInfo)
+	{
+		this.addressInfo = addressInfo;
+	}
+
 }

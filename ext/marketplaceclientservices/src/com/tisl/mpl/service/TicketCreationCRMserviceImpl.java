@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.hybris.oms.domain.contactupdate.AddressInfo;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -27,6 +28,7 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
+import com.tisl.mpl.wsdto.AddressInfoDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 import com.tisl.mpl.wsdto.TicketlineItemsXMLData;
 
@@ -51,6 +53,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData) throws JAXBException
 
 	{
+		final AddressInfoDTO addressInfo = new AddressInfoDTO();
 		try
 		{
 			LOG.debug("....called ticket create to crm interface.....");
@@ -113,7 +116,18 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				LOG.debug("ticket create:Ticket ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
 
 			}
-
+			if (null != sendTicketRequestData.getAddressInfo())
+			{
+				addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
+				addressInfo.setAddress1(sendTicketRequestData.getAddressInfo().getAddress1());
+				addressInfo.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
+				addressInfo.setCountry(sendTicketRequestData.getAddressInfo().getCountry());
+				addressInfo.setCity(sendTicketRequestData.getAddressInfo().getCity());
+				addressInfo.setState(sendTicketRequestData.getAddressInfo().getState());
+				addressInfo.setPincode(sendTicketRequestData.getAddressInfo().getPincode());
+				addressInfo.setLandmark(sendTicketRequestData.getAddressInfo().getLandmark());
+			}
+			ticket.setAddressInfo(addressInfo);
 			final List<SendTicketLineItemData> sendTicketLineItemDataList = sendTicketRequestData.getLineItemDataList();
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
 			if (null != sendTicketLineItemDataList)
@@ -159,6 +173,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
+		LOG.debug("********************Ticket create CRM called********************************** ");
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
 		{
@@ -177,7 +192,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		LOG.info("Marshalling to file!!!!");
 		final StringWriter sw = new StringWriter();
 		m.marshal(ticketMasterXml, sw);
-		System.out.println(" %%%%%%%%%%%%%%%% XML File %%%%%%%%%%%%%%%% " + m);
+		LOG.debug(" <<<<<<<<<<<<<< CRM Ticket Xml File >>>>>>>>>>>>>>>> " + m);
 		final String xmlString = sw.toString();
 		LOG.debug(xmlString);
 		if (null != xmlString && webResource != null)

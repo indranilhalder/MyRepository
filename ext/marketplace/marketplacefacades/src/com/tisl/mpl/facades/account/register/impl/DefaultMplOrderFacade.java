@@ -614,9 +614,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
 					if (null != orderEntryData.getConsignment()
 							&& null != orderEntryData.getConsignment().getStatus()
-							&& orderEntryData.getConsignment().getStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-							&& returnWindow <= actualReturnWindow)
+							&& (orderEntryData.getConsignment().getStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment().getStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED)) && returnWindow <= actualReturnWindow)
 					{
 						orderEntryData.setItemReturnStatus(true);
 					}
