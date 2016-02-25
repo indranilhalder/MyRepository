@@ -413,6 +413,17 @@ public class ProductPageController extends AbstractPageController
 
 	}
 
+	/**
+	 * Get buybox data in respect of productCode and sellerId for sizeguide
+	 *
+	 * @param productCode
+	 * @param sellerId
+	 * @return
+	 * @throws JSONException
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 * @throws com.granule.json.JSONException
+	 */
 
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
@@ -420,100 +431,46 @@ public class ProductPageController extends AbstractPageController
 			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId) throws JSONException,
 			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
-		final JSONObject buyboxJson = new JSONObject();
+		LOG.debug(String.format("BUYBOZFORSIZEGUIDEAJAX : productCode:  %s | sellerId : %s ", productCode, sellerId));
+
+			final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
+			//	This method is responsible to get the winning buybox seller and other sellers count and minimum price information for the given product code and seller ID
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
 			if (buyboxdata != null)
 			{
-				//				if (null != buyboxdata.getAvailable())
-				//				{
-				//				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
-				//						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
-				//				{
-				//					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
-				//							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
-				//					{
-				//						LOG.debug("response.getUssid()********************  " + response.getUssid());
-				//						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
-				//						{
-				//							LOG.debug("response.getIsServicable()********************  " + response.getIsServicable());
-				//							if (response.getIsServicable().equalsIgnoreCase("Y"))
-				//							{
-				//								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
-				//							}
-				//							buyboxJson
-				//									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
-				//
-				//						}
-				//					}
-				//
-				//				}
-				//				else
-				//				{
-				if (null != buyboxdata.getAvailable())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, ModelAttributetConstants.NOVALUE);
-				}
-				//}
-				if (null != buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValue()
-						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
-							.getFormattedValue());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, ModelAttributetConstants.NOVALUE);
-				}
-				if (null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
-						&& !buyboxdata.getPrice().getFormattedValue().isEmpty())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, ModelAttributetConstants.NOVALUE);
-				}
-				if (null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
-						&& !buyboxdata.getMrp().getFormattedValue().isEmpty())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getFormattedValue());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, ModelAttributetConstants.NOVALUE);
-				}
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
+						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
+
+
+						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
+						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
+						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE,
+
+						null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
+								&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
+								: ModelAttributetConstants.NOVALUE);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
+
+						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
+								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
+								: ModelAttributetConstants.NOVALUE);
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-				if (null != buyboxdata.getSellerName())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, ModelAttributetConstants.EMPTY);
-				}
-				if (null != buyboxdata.getSellerArticleSKU())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, ModelAttributetConstants.EMPTY);
-				}
-				//				}
-				//				else
-				//				{
-				//
-				//					LOG.debug("***************************Inproper BuyBox data********************");
-				//					buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
-				//
-				//				}
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME,
+						null != buyboxdata.getSellerName() ? buyboxdata.getSellerName() : ModelAttributetConstants.EMPTY);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU,
+						null != buyboxdata.getSellerArticleSKU() ? buyboxdata.getSellerArticleSKU() : ModelAttributetConstants.EMPTY);
+
 			}
 			else
 			{
@@ -535,6 +492,12 @@ public class ProductPageController extends AbstractPageController
 		}
 		return buyboxJson;
 	}
+
+
+
+
+
+
 
 	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList, final String categoryType)
 	{

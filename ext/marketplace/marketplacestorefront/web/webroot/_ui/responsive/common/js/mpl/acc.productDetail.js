@@ -172,6 +172,90 @@ ACC.productDetail = {
 		     	buyboxDetailsForSizeGuide(productcode);
 		    });
 		});
+		
+		
+		/// Size Guide onload
+		
+/*		var qtyData = $("#pdpQty").val();
+		localStorage.setItem("sizeguideselectvaluePdp", qtyData);
+		
+		var qtyData1 = $("#quantity").val();
+		localStorage.setItem("sizeguideselectvalueQview", qtyData1);
+		
+		$("select#sizeGuideQty").on("change", function(){
+			var x = $("select#sizeGuideQty").val();
+			localStorage.setItem("sizeguideselectvalue", x);
+		});
+		var sizeGuide = localStorage.getItem('sizeguideselectvalue');
+		var pdp = localStorage.getItem('sizeguideselectvaluePdp');
+		var qview = localStorage.getItem('sizeguideselectvalueQview');
+		
+		if(sizeGuide == null || sizeGuide==undefined)
+		{
+			
+			if(pdp == null || pdp == 'undefined')
+			{
+				if(qview == null || qview == 'undefined')
+				{
+					$("#sizeGuideQty").val("1");
+				}
+				else
+				{
+					$("#sizeGuideQty").val(qview);
+				}
+			}
+			else
+			{
+				 $("#sizeGuideQty").val(pdp);
+			}
+			
+		}
+		else
+		{
+			$("#sizeGuideQty").val(sizeGuide);
+		}
+		var currentColour = '${product.colour}';
+		$(".color-swatch li span").each(function(){
+			var title = $(this).attr("title");
+			if(currentColour == title){
+				$(this).parent().parent().addClass("active");
+			}			
+		});
+		 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
+				$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
+					html : true,
+					content: function() {
+						return $(this).parents().find('.add-to-wishlist-container-sizeguide').html();
+					}
+				});
+			  }
+		var category=$("#categoryType").val(); 
+		 if(category!='Footwear'){ 
+		
+		var numLi= $(".modal.size-guide .sizes .tables li.header > ul").children().length;
+		var sizeWidth= 88/(numLi-1) + "%";
+
+		$(".modal.size-guide .sizes .tables li > ul > li").css("width",sizeWidth);
+		$(".modal.size-guide .sizes .tables li > ul > li:first-child").css("width","12%");
+	 	} 
+
+		$("#add_to_wishlist-sizeguide").click(function(){
+		 	$(".size-guide .modal-content").animate({ scrollTop: $('.size-guide .modal-content')[0].scrollHeight }, "slow");
+			return false;
+		});
+		$("#noProductForSelectedSeller").hide();
+		$("#productDetails").show();
+		$("#sizePrice").show();
+		
+		
+		$('body').on('hidden.bs.modal', '#popUpModal', function () {
+			 localStorage.removeItem('sizeguideselectvaluePdp');
+			 localStorage.removeItem('sizeguideselectvalueqview');
+			 localStorage.removeItem('sizeguideselectvalue');
+			 
+			 });*/
+		
+		
 		//End
 
 	},
@@ -1604,14 +1688,6 @@ function buyboxDetailsForSizeGuide(productCode){
 				
 				var count =0;
 
-
-//				if (!($(".size-guide.modal").is(":visible")) && $(".pdp #variant option:selected").val() == "#") {
-//					$('#variant option#select-option').attr("selected", "selected");
-//					sizeSelected=false;
-//				}
-				
-				//$("#sizeSelectedVal").val(sizeSelected);
-				
 				if(sellerName=="undefined" || sellerName==null || sellerName=="")
 				{
 					$("#productDetails").hide();
@@ -1626,13 +1702,6 @@ function buyboxDetailsForSizeGuide(productCode){
 				else{
 					$("#specialSelPrice").html(mopPrice);
 				}
-//				if(data['isPinCodeServicable']=='N'){
-//					$("#pinNotServicableSizeGuide").show();
-//					$("#addToCartSizeGuide #addToCartButton").attr('disabled','disabled');
-//				}
-//				else{
-//					$("#addToCartSizeGuide #addToCartButton").removeAttr('disabled');
-//				}
 				$("#sellerSelName").html(sellerName);
 				$("#sellerIdSizeGuide").html(sellerID);
 				$("#mopSelPrice").html(mopPrice);
@@ -1665,11 +1734,7 @@ function openPop_SizeGuide() {
 	//alert(ussidfromSeller);
 	
 	$('#addedMessage_sizeGuide').hide();
-	//if (ussidfromSeller == null || ussidfromSeller == "") {
 		ussidValue = $("#sellerSelArticleSKUVal").val();
-	//} else {
-	//	ussidValue = ussidfromSeller;
-	//}
 	var productCode = $("#productCode").val(); // '${product.code}';
 
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
@@ -1677,8 +1742,6 @@ function openPop_SizeGuide() {
 
 	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
 	//alert("localdata: "+dataString);
-	// for
-	// ussid
 
 	$.ajax({
 		contentType : "application/json; charset=utf-8",
