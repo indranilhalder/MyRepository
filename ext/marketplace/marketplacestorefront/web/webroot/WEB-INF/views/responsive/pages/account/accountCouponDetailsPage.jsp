@@ -126,7 +126,7 @@
 
 			</div> --%>
 			
-			<%-- <user:accountLeftNav pageName="coupons"/> --%>
+			<user:accountLeftNav pageName="coupons"/>
 			
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->

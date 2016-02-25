@@ -10,6 +10,9 @@ package com.tisl.mpl.coupon.service;
 public interface CampaignVoucherDataService
 {
 
+	/**
+	 * This method generates CSV files for Campaign Voucher
+	 */
 	void generateCSV();
 
 }

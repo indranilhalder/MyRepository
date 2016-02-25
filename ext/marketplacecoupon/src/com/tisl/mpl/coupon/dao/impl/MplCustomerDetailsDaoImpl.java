@@ -7,12 +7,12 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
-import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.coupon.dao.MplCustomerDetailsDao;
@@ -24,13 +24,15 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 {
 
 	private static final Logger LOG = Logger.getLogger(MplCustomerDetailsDaoImpl.class);
-	@Autowired
+	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
-	/*
-	 * (non-Javadoc)
+
+	/**
+	 * Returns list of Customer Model
 	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.CustomerDetailsDao#findCustomer()
+	 * @return List<CustomerModel>
+	 *
 	 */
 	@Override
 	public List<CustomerModel> findCustomer()
@@ -42,14 +44,15 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 
-		return flexibleSearchService.<CustomerModel> search(query).getResult();
+		return getFlexibleSearchService().<CustomerModel> search(query).getResult();
 	}
 
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns cartModel
 	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.CustomerDetailsDao#findCart()
+	 * @return List<CartModel>
+	 *
 	 */
 	@Override
 	public List<CartModel> findCart()
@@ -63,15 +66,30 @@ public class MplCustomerDetailsDaoImpl implements MplCustomerDetailsDao
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 
-		return flexibleSearchService.<CartModel> search(query).getResult();
+		return getFlexibleSearchService().<CartModel> search(query).getResult();
 	}
 
-	@Override
-	public List<VoucherModel> findVoucher()
+
+	/**
+	 * @return the flexibleSearchService
+	 */
+	public FlexibleSearchService getFlexibleSearchService()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return flexibleSearchService;
 	}
+
+
+	/**
+	 * @param flexibleSearchService
+	 *           the flexibleSearchService to set
+	 */
+	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
+	{
+		this.flexibleSearchService = flexibleSearchService;
+	}
+
+
+
 
 
 
