@@ -1652,7 +1652,6 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 								returnLogRespData
 										.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 							}
-
 						}
 						returnLogRespDataList.add(returnLogRespData);
 						responseList.add(orderLine);
@@ -1755,15 +1754,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 							else
 							{
 								returnLogRespData
-										.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
-								returnLogRespData
-										.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+										.setResponseMessage(MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
+
+
 							}
 
+							returnLogRespDataList.add(returnLogRespData);
+							responseList.add(orderLine);
 						}
-
-						returnLogRespDataList.add(returnLogRespData);
-						responseList.add(orderLine);
 					}
 				}
 				else
