@@ -205,6 +205,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String WAREHOUSE = "mpl_warehouse";
 
 
+
+
 	//PAYMENT DAO
 	public static final String MPLPAYMENTDAO = "mplPaymentDao";
 	public static final String MPLSTORE = "store".intern();
@@ -1361,7 +1363,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
-//Audit Report
+	//Audit Report
 	public static final String CHANGED = "CHANGED";
 	public static final String PRIORITYSTARTDATE = "priorityStartDate";
 	public static final String PRIORITYENDDATE = "priorityEndDate";
