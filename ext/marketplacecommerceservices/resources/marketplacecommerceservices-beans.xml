@@ -264,6 +264,7 @@
         <property name="alternateContactName" type="String"/>
         <property name="alternatePhoneNo" type="String"/>
         <property name="source" type="String"/>
+        <property name="ticketSubType" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
