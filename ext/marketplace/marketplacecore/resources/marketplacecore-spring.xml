@@ -36,7 +36,10 @@
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_ratingReview-spring.xml" />
 		
-	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_manualRefund-spring.xml"/>	
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_manualRefund-spring.xml"/>
+	
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
+		
 	<!-- SystemSetup for the MarketplaceCore -->
 	<bean id="acceleratorCoreSystemSetup" class="com.tisl.mpl.core.setup.CoreSystemSetup"
 		parent="abstractCoreSystemSetup" />
@@ -1290,4 +1293,3 @@
    	</bean>
    	
 </beans>
-

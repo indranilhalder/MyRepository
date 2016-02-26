@@ -8,7 +8,7 @@ if(typeof(arrayrating)!= "undefined"){
 			if(indexElement!= undefined){
 				var reviewHeading = $(".reviewHeading"+indexElement);
 				var reviewComment = $(".reviewComment"+indexElement);
-				var reviewMedia = $(".reviewMedia"+indexElement);
+			//	var reviewMedia = $(".reviewMedia"+indexElement);
 				
 				var updateButtons = $(".updateButtons"+indexElement);
 				
@@ -19,14 +19,9 @@ if(typeof(arrayrating)!= "undefined"){
 				}
 				$(reviewHeading).html("<input class='inputBox' type='text' name='updateReviewHeading"+indexElement+"' value='"+reviewHeadingText+"'/>");
 				$(reviewComment).html("<textarea name='updateReviewComment"+indexElement+"' rows='5' cols='30'>"+reviewCommentText+"</textarea>");
-				/*if($(".hiddenMediaUrl"+indexElement).val()!= ""){
-					$(reviewMedia).html("<input class='inputBox' type='text' name='updateReviewMedia"+indexElement+"' value='"+$(".hiddenMediaUrl"+indexElement).val()+"'/>");
-					$(reviewMedia).show();
-				}*/
 				
-				if($("input.hiddenMediaUrl"+indexElement).val()!= ""){
-					$(reviewMedia).html("<input class='inputBox' style='width:100%;' type='text' name='updateReviewMedia"+indexElement+"' value='"+$("input.hiddenMediaUrl"+indexElement).val()+"'/>");
-				}						
+				
+									
 				$(reviewHeading).find('input.inputBox').focus();
 				$(".rating-div"+indexElement).show();
 				$(".rating-div"+indexElement).find("ul").removeClass("rate");
@@ -55,7 +50,7 @@ if(typeof(arrayrating)!= "undefined"){
 			$("div[data-rating-all="+indexElement+"]").show();
 			var reviewHeading = $(".reviewHeading"+indexElement);
 			var reviewComment = $(".reviewComment"+indexElement);
-			var reviewUrl = $(".reviewMedia"+indexElement);
+			//var reviewUrl = $(".reviewMedia"+indexElement);
 			
 			if(indexElement != undefined){
 				
@@ -64,7 +59,7 @@ if(typeof(arrayrating)!= "undefined"){
 
 				$(reviewHeading).html(originalHeading);
 				$(reviewComment).html(originalComment);
-				$(reviewUrl).hide();
+				//$(reviewUrl).hide();
 				$(this).parent().hide();
 			}
 			$(".rating-div"+indexElement).hide();
@@ -79,41 +74,35 @@ if(typeof(arrayrating)!= "undefined"){
 			var indexElement =  $(this).attr("data-index");
 			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
 			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
-			var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
-			var hiddenMediaUrl = $(".hiddenMediaUrl"+indexElement).val()
+		//	var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
+		//	var hiddenMediaUrl = $(".hiddenMediaUrl"+indexElement).val()
 			
 			if(updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "")		
 			{		
-			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment Title cannot be left blank.</p>");		
+				$(".errorUpdateReview"+indexElement).html($("#comment_title_empty").text());		
 			    isValidated=false;		
 			}else if(updatedReviewHeading.length > 250){
-				$(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater than 250 charecters.</p>");		
+				$(".errorUpdateReview"+indexElement).html($("#comment_title_length").text());	
 			    isValidated=false;
 			}
 			if(updatedCommentTitle == undefined || updatedCommentTitle.replace(/\s/g, '')  == "")		
 			{		
-			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment text cannot be left blank.</p>");		
+				$(".errorUpdateReview"+indexElement).html($("#comment_text_empty").text());	
 			    isValidated=false;		
 			}else if(updatedCommentTitle.length > 5000){
-				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
+				$(".errorUpdateReview"+indexElement).html($("#comment_text_length").text());		
 			    isValidated=false;	
 			}
-			if(hiddenMediaUrl!=""){
-				
-				if(updatedMediaUrl == undefined || updatedMediaUrl.replace(/\s/g, '')  == "")		
-				{		
-				    $(".errorUpdateReview"+indexElement).html("<p>Please enter attachment URL. Attachment URL cannot be left blank.</p>");		
-				    isValidated=false;		
-				}else if(updatedMediaUrl.length > 500){
-					$(".errorUpdateReview"+indexElement).html("<p>Attachment URL cannot be greater than 100 charecters.</p>");		
-				    isValidated=false;	
-				}
-			}
 			
+			if((updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "") && (updatedCommentTitle == undefined || updatedCommentTitle.replace(/\s/g, '')  == ""))		
+			{		
+			    $(".errorUpdateReview"+indexElement).html($("#comment_text_title_empty").text());		
+			    isValidated=false;		
+			}
 			//TISSTRT-290 fix
 			if((updatedReviewHeading.length > 250) && (updatedCommentTitle.length > 5000))		
 			{		
-			    $(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater that 250 characters<br/>Review text cannot be greater than 5000 charecters.</p>");		
+				 $(".errorUpdateReview"+indexElement).html($("#comment_text_title_length").text());		
 			    isValidated=false;		
 			}
 			var x = updatedReviewHeading.length;
@@ -137,7 +126,7 @@ if(typeof(arrayrating)!= "undefined"){
 			
 			var updatedReviewHeading = $("input[name=updateReviewHeading"+indexElement+"]").val();
 			var updatedCommentTitle = $("textarea[name=updateReviewComment"+indexElement+"]").val();
-			var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
+			//var updatedMediaUrl = $("input[name=updateReviewMedia"+indexElement+"]").val();
 			
 			var categoryID = $(".categoryID"+indexElement).val();
 			var streamID = $(".streamID"+indexElement).val();
@@ -169,7 +158,7 @@ if(typeof(arrayrating)!= "undefined"){
 						url:"review/edit",
 						type:"POST",
 						dataType:"JSON",
-						data:{categoryID:categoryID,streamID:streamID,commentID:commentID,commentText:updatedCommentTitle,commentTitle:updatedReviewHeading,updatedMediaUrl:updatedMediaUrl,ratings:ratings},
+						data:{categoryID:categoryID,streamID:streamID,commentID:commentID,commentText:updatedCommentTitle,commentTitle:updatedReviewHeading,ratings:ratings},
 						beforeSend:function(){
 							var msg = "<h1 style='color:white'><span style='line-height:40px;font-size:'>Please Wait...<span></h1>";
 							$(".review-block"+indexElement).block({ message: msg });
@@ -266,7 +255,8 @@ if(typeof(arrayrating)!= "undefined"){
 		});
 
 		/*Code for Review Page Video and Image Popup Starts*/
-		$(document).on("click",".comment-img img",function(e){
+		
+		/*$(document).on("click",".comment-img img",function(e){
 			$(this).siblings("iframe").attr("scrolling","no")
 			if ($(this).attr("data-type") == "video") {
 				var url = $(this).siblings("iframe").attr("src");
@@ -284,7 +274,7 @@ if(typeof(arrayrating)!= "undefined"){
 				$("#videoReviewModal").modal();
 				$("#videoReviewModal").addClass("active");
 			}
-		});
+		});*/
 		/*Code for Review Page Video and Image Popup Ends*/
 		$(document).on("mouseleave",".rateEdit li",function() {
 			$(this).parent().find("span").removeClass("full");
@@ -412,12 +402,10 @@ if(typeof(arrayrating)!= "undefined"){
 						privacy : 'public',
 						version : 2,
 						containerID : 'commentsDiv',
-						/*onCommentSubmitted:reviewCount,*/ 
 						cid : '',
 						enabledShareProviders : 'facebook,twitter',
 						enabledProviders : 'facebook,google,twitter', // login providers that should be displayed when click post
-						/*onLoad :commentBox,*/
-						//userAction: shareUserAction
+						
 					}
 					gigya.comments.showCommentsUI(params);	
 		    }	

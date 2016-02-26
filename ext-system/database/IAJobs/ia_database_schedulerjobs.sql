@@ -73,3 +73,4 @@ DBMS_SCHEDULER.CREATE_JOB (
    comments           =>  'Job to update price_invetory table');
 END;
 /
+

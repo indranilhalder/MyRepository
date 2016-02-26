@@ -276,15 +276,24 @@ function removeFromWishlist(wishlistName, productCode, ussid,isMSDEnabled,isAppa
 
 $(document).on("keypress",'#newWishlistName',function(e) {
 	var wishlistname = $("#newWishlistName").val();
-		var key = e.keyCode;
-		if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
-			e.preventDefault();
-			$('#newWishlistName').val(wishlistname);
-			$('#errorCreate').show();
-			$('#errorCreate').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
-			$("#errorCreate").show().fadeOut(3000);
-		} 
-	});
+	var mainDiv = 'newWishlistName';
+	var errorDiv = "#errorCreate";
+	validateSpcharWlName(e,wishlistname,mainDiv,errorDiv);
+});
+
+function validateSpcharWlName(e,wishlistname,mainDiv,errorDiv){
+	var key = e.keyCode;
+	if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
+		e.preventDefault();
+		 var startWl = document.getElementById(mainDiv).selectionStart;
+         var endWl = document.getElementById(mainDiv).selectionEnd;
+		$('#'+mainDiv).val(wishlistname);
+		$(errorDiv).show();
+		$(errorDiv).html("<font color='#ff1c47'><b>Special characters are not allowed</b></font>");
+		$(errorDiv).show().fadeOut(3000);
+		document.getElementById(mainDiv).setSelectionRange(startWl, endWl);
+	} 
+}
 $(document).ready(function() {    
     $('#myWishlistHeader').click(function(evt) {    	
         evt.preventDefault();        
@@ -309,12 +318,7 @@ $(document).ready(function() {
 
 $(document).on("keypress","#editWishList",function(e) {
 	var wishlistname = $("#editWishList").val();
-	var key = e.keyCode;
-	if((key>=33 && key<48) || (key>=58 && key<65) || (key>=91 && key<97)){
-		e.preventDefault();
-		$('#editWishList').val(wishlistname);
-		$('#errRename').show();
-		$('#errRename').html("<font color='#ff1c47'><b>Special charecters are not allowed</b></font>");
-		$('#errRename').show().fadeOut(3000);
-	} 
+	var mainDiv = 'editWishList';
+	var errorDiv = "#errRename";
+	validateSpcharWlName(e,wishlistname,mainDiv,errorDiv);
 }); 
