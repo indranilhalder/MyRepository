@@ -154,16 +154,34 @@ public class MarketplacecclientservicesConstants
 	public static final String LAST_NAME = "lastName";
 	public static final String GIGYA_METHOD_LINK_ACCOUNTS = "gigya.linkaccount.method".intern();
 	//account page review
+	public static final Integer FIVE = Integer.valueOf(5);
+	public static final Integer HUNDRED = Integer.valueOf(100);
 	public static final String PROXY_HOST = "http.proxyHost";
 	public static final String PROXY_PORT = "http.proxyPort";
-	public static final String CATEGORY_ID = "categoryID";
-	public static final String STREAM_ID = "streamID";
+	public static final String CATEGORY_ID = "categoryId".intern();
+	public static final String STREAM_ID = "streamId".intern();
 	public static final String COMMENT_ID = "commentID";
 	public static final String SENDER_UID = "senderUID";
 	public static final String COMMENT_TEXT = "commentText";
 	public static final String COMMENT_TITLE = "commentTitle";
 	public static final String RATINGS = "ratings";
 	public static final String UID = "UID";
+	public static final String MEDIA = "mediaItems";
+	public static final String CLOTHING = "Clothing";
+	public static final String FOOTWEAR = "Footwear";
+	public static final String FIT = "Fit";
+	public static final String EASE_OF_USE = "Ease of use";
+	public static final String VALUE_FOR_MONEY = "Value for Money";
+	public static final String ID = "ID";
+	public static final String TIMESTAMP = "timestamp";
+	public static final String QUALITY = "Quality";
+	public static final String OVERALL = "_overall";
+	public static final String COMMENTS = "comments";
+	public static final String URL = "url";
+	public static final String HTML = "html";
+	public static final String TYPE = "type";
+	public static final String STATUS_REASON = "statusReason";
+	public static final String COMMENTCOUNTS = "commentCount";
 
 	public static final String REVIEWS_CATEGORYID_EXCEPTION = "Gigya 'getReviewsByCategoryProductId' for UID error ";
 	public static final String REVIEWS_EDIT_EXCEPTION = "Gigya 'editReviews' error ";
