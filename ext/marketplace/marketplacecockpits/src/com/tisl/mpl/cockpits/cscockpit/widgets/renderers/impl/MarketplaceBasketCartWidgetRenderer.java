@@ -67,7 +67,6 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	@Autowired
 	private DiscountUtility discountUtility;
 	
-	
 	/* (non-Javadoc)
 	 * @see de.hybris.platform.cscockpit.widgets.renderers.impl.BasketCartWidgetRenderer#createPickupCartButton(de.hybris.platform.cockpit.widgets.ListboxWidget)
 	 */
@@ -223,7 +222,7 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	    discountsTotalSpan.setParent(summary);
 	    Label discountsTotalLabel = new Label(LabelUtils.getLabel(widget, "summary.discountTotal", new Object[0]));
 	    discountsTotalLabel.setParent(discountsTotalSpan);
-	    //Label discountsTotal = new Label((Double.valueOf(orderDiscount)).toString());
+		//Label discountsTotal = new Label((Double.valueOf(orderDiscount)).toString());
 	    Label discountsTotal = new Label((discountUtility.createPrice(cartModel, Double.valueOf(orderDiscount))).getFormattedValue());
 	    discountsTotal.setSclass("csCartPriceRowValue");
 	    discountsTotal.setParent(discountsTotalSpan);
@@ -281,9 +280,5 @@ public class MarketplaceBasketCartWidgetRenderer extends
   		widget.getWidgetModel().setItems(((BasketController)widget.getWidgetController()).getPromotionalCartLineItems());
   		
   		return super.createContentInternal(widget, rootContainer);
-  	}
-	
-	
-	
-	
+  	}	
 }

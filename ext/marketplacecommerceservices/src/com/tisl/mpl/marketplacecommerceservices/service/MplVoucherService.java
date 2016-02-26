@@ -7,18 +7,14 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
-import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
-import de.hybris.platform.order.exceptions.CalculationException;
-import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
 
 import com.tisl.mpl.data.VoucherDiscountData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
 /**
@@ -30,10 +26,9 @@ public interface MplVoucherService
 
 	/**
 	 * @param cartModel
-	 * @throws JaloPriceFactoryException
-	 * @throws CalculationException
+	 *
 	 */
-	void recalculateCartForCoupon(CartModel cartModel) throws JaloPriceFactoryException, CalculationException;
+	void recalculateCartForCoupon(CartModel cartModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param voucherModel
@@ -62,38 +57,24 @@ public interface MplVoucherService
 	List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(VoucherModel voucherModel, CartModel cartModel);
 
 	/**
-	 * @param voucherCode
-	 * @return VoucherModel
-	 * @throws VoucherOperationException
-	 */
-	VoucherModel getVoucherModel(String voucherCode) throws VoucherOperationException;
-
-	/**
 	 * @param voucher
 	 * @param cartModel
 	 * @param voucherCode
 	 * @param applicableOrderEntryList
+	 * @throws EtailNonBusinessExceptions
 	 */
 	void setApportionedValueForVoucher(VoucherModel voucher, CartModel cartModel, String voucherCode,
-			List<AbstractOrderEntryModel> applicableOrderEntryList);
+			List<AbstractOrderEntryModel> applicableOrderEntryList) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param lastVoucher
 	 * @param cartModel
 	 * @param applicableOrderEntryList
 	 * @return VoucherDiscountData
-	 * @throws ModelSavingException
 	 * @throws VoucherOperationException
-	 * @throws CalculationException
-	 * @throws NumberFormatException
-	 * @throws JaloInvalidParameterException
-	 * @throws JaloSecurityException
-	 * @throws JaloPriceFactoryException
 	 */
 	VoucherDiscountData checkCartAfterApply(VoucherModel lastVoucher, CartModel cartModel,
-			List<AbstractOrderEntryModel> applicableOrderEntryList) throws ModelSavingException, VoucherOperationException,
-			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException,
-			JaloPriceFactoryException;
+			List<AbstractOrderEntryModel> applicableOrderEntryList) throws VoucherOperationException, EtailNonBusinessExceptions;
 
 	/**
 	 * @param voucherCode

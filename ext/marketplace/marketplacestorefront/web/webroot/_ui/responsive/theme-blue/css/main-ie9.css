@@ -15513,7 +15513,7 @@ font-family:DejaVu Sans;
 
 #bestPicks .view-cliq-offers {
 	padding: 13px;
-    border: 1px solid #bbb;
+    border: 1px solid #4a4a4a;
     color: #333;
     font-size: 12px;
     font-family: "Avenir Next";
@@ -16032,3 +16032,4 @@ header:not(.compact) .content .marketplace.compact{
 a.size-guide {
     white-space: nowrap;
 } 
+

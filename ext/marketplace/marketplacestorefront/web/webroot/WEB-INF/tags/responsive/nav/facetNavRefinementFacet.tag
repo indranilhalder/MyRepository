@@ -87,18 +87,33 @@ function navigateToPage(queryString,textString)
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
-								<a   onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" >
+								<form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); height:36px; width:36px;">
+								</form>
+								<%-- <a   onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" >
 							<!-- 	<a href="onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')"> -->
-						     		<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}"> --%>
+						     		<a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}">
 						     			<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="Multicolor" />
-						     		</a>
-								</c:when>
+						     		</a>--%>
+								</c:when> 
 								<c:otherwise>
-									<c:set var="colorHexCode" value="#${colorAry[1]}" />
-									
+								<c:set var="colorHexCode" value="#${colorAry[1]}" />
+								 <form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								
+								<input type="submit" title="${facetValue.name}" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
+								</form>
+									<%-- 
 									<a  title="${facetValue.name}" onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a>
-									<%-- <a href="#" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
-									<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
+									 <a href="#" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> 
+									<a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
 								</c:otherwise>
 							</c:choose>
 						</c:when>
@@ -127,7 +142,16 @@ function navigateToPage(queryString,textString)
 							<c:if test="${not facetData.multiSelect}">
 								<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 								<span class="facet-text">
-								<a href="#">${facetValue.name}</a>
+								<form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								
+								<input type="submit" value="${facetValue.name}"  />
+								</form>
+								
+								<%-- <a href="#">${facetValue.name}</a> --%>
 									<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}">${facetValue.name}</a> --%>&nbsp;
 									<%-- <ycommerce:testId code="facetNav_count">
 										<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
@@ -157,23 +181,74 @@ function navigateToPage(queryString,textString)
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
-								<a href="#">
-								<%-- <a href="/search/helpmeshop&amp;text=${searchPageData.freeTextSearch}&amp;q=${facetValue.query.query.value}"> --%>
-						     		<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}"> --%>
+								<form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								<input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); height:36px; width:36px;">
+								</form>
+								<%-- <a href="#">
+								<a href="/search/helpmeshop&amp;text=${searchPageData.freeTextSearch}&amp;q=${facetValue.query.query.value}">
+						     		<a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}">
 						     			<img src="${commonResourcePath}/images/multi.jpg" height="36" width="36" title="Multicolor" />
-						     		</a>
+						     		</a> --%>
 								</c:when>
 								<c:otherwise>
-									<c:set var="colorHexCode" value="#${colorAry[1]}" />
-									<%-- <a href="#" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
-									<a title="${facetValue.name}" onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a>
+								<c:set var="colorHexCode" value="#${colorAry[1]}" />
+								<!-- <a href="#" ></a> --> 
+							    <form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								
+								<input type="submit" title="${facetValue.name}" value="" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 36px;    padding: 13px 17px;"  />
+									<%-- <c:if test="${facetData.code == 'inStockFlag'}">
+									<c:if test="${facetValue.code == 'true' && facetStockSize=='2'}">
+										<span class="facet-label">
+										<span class="facet-mark"></span>
+										<span class="facet-text">
+											<spring:theme code="text.exclude.outOfStock"/>&nbsp;
+											<ycommerce:testId code="facetNav_count">
+												<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+											</ycommerce:testId>
+										</span>
+									</span>
+									</c:if>
+									</c:if> --%>
+									<%-- <c:if test="${facetData.code ne 'inStockFlag'}">
+										<span class="facet-label">
+										<c:if test="${not empty facetValue.name}">
+											<span class="facet-mark"></span>
+										</c:if>	
+											<span class="facet-text">
+												${facetValue.name}&nbsp;
+												<ycommerce:testId code="facetNav_count">
+													<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+												</ycommerce:testId>
+											</span>
+										</span>
+									</c:if> --%>
+					
+							</form>
+									 
+									 
+									<%-- <a title="${facetValue.name}" onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
 									<%-- <a href="/search/helpmeshop?q=${facetValue.query.query.value}&amp;text=${searchPageData.freeTextSearch}" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
 									<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
 								</c:otherwise>
 							</c:choose>
 						</c:when>
 						<c:when test="${facetData.name eq 'size'}">
-						<a href="#">${facetValue.name}</a>
+							   <form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								<input type="submit" value="${facetValue.name}"  />
+								</form>
+						<%-- <a href="#">${facetValue.name}</a> --%>
 							<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}">${facetValue.name}</a> --%>
 						</c:when>
 						
@@ -222,8 +297,16 @@ function navigateToPage(queryString,textString)
 						</c:if>
 						<c:if test="${not facetData.multiSelect}">
 							<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
-							<span class="facet-text">	
-							<a href="#">${facetValue.name}</a>						
+							<span class="facet-text">
+								<form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								
+								<input type="submit" value="${facetValue.name}"  />
+								</form>	
+							<%-- <a href="#">${facetValue.name}</a>	 --%>					
 								<%-- <a href="${facetValueQueryUrl}">${facetValue.name}</a> --%>
 								<%-- <ycommerce:testId code="facetNav_count">
 									<span class="facet-value-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
@@ -248,7 +331,15 @@ function navigateToPage(queryString,textString)
 					<a href="#" class="js-more-facet-values-link more" > ${remainingFacetValuesSize} &nbsp;<spring:theme code="search.nav.facetShowMore_${facetData.code}" /></a>
 				</div>
 				<div class="less js-less-facet-values checkbox-menu">
-					<a href="#" class="js-less-facet-values-link"><spring:theme code="search.nav.facetShowLess_${facetData.code}" /></a>
+				    	<form action="#" method="get"> 
+								<input type="hidden" name="offer" value="${offer}"/>
+								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
+								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
+								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
+								<input type="submit" value="${facetData.code}" class="js-less-facet-values-link"  />
+								</form>
+				
+					<%-- <a href="#" class="js-less-facet-values-link"><spring:theme code="search.nav.facetShowLess_${facetData.code}" /></a> --%>
 				</div>
 				</div>
 			</c:if>

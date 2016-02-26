@@ -1579,9 +1579,5 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	{
 		this.cartService = cartService;
 	}
-
-
-
-
-
 }
+
