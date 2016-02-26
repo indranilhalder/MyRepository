@@ -25,6 +25,9 @@ public class CampaignVoucherData
 	private String maxDiscount;
 	private String userGrp;
 	private String users;
+	private String forSelUsers;
+	private String forSelProducts;
+	private String forSelCategories;
 
 	/**
 	 * @return the identifier
@@ -280,6 +283,59 @@ public class CampaignVoucherData
 	{
 		this.users = users;
 	}
+
+	/**
+	 * @return the forSelUsers
+	 */
+	public String getForSelUsers()
+	{
+		return forSelUsers;
+	}
+
+	/**
+	 * @param forSelUsers
+	 *           the forSelUsers to set
+	 */
+	public void setForSelUsers(final String forSelUsers)
+	{
+		this.forSelUsers = forSelUsers;
+	}
+
+	/**
+	 * @return the forSelProducts
+	 */
+	public String getForSelProducts()
+	{
+		return forSelProducts;
+	}
+
+	/**
+	 * @param forSelProducts
+	 *           the forSelProducts to set
+	 */
+	public void setForSelProducts(final String forSelProducts)
+	{
+		this.forSelProducts = forSelProducts;
+	}
+
+	/**
+	 * @return the forSelCategories
+	 */
+	public String getForSelCategories()
+	{
+		return forSelCategories;
+	}
+
+	/**
+	 * @param forSelCategories
+	 *           the forSelCategories to set
+	 */
+	public void setForSelCategories(final String forSelCategories)
+	{
+		this.forSelCategories = forSelCategories;
+	}
+
+
 
 
 
