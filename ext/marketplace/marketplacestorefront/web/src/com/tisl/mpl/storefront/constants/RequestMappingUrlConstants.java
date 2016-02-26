@@ -117,6 +117,8 @@ public final class RequestMappingUrlConstants
 
 	//RatingReview
 	public final static String CHECKUSER = "/checkUser";
+	public final static String REVIEWS = "/reviews";
+	public final static String REVIEW_OPERATION = "/review/{operation}";
 
 	//Checkout
 	public final static String LOGIN_CHECKOUT = "/login/checkout";

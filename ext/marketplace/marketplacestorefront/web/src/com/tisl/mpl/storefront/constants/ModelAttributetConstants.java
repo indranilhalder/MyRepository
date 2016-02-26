@@ -198,6 +198,7 @@ public final class ModelAttributetConstants
 	public static final String PURCHASED_PRODUCT = "productDataModifyMap";
 	public static final String TOTAL_PAGES = "totalPages";
 	public static final String COMMENT_LIST_SIZE = "commentsListSize";
+	public static final String OPERATION = "operation";
 	//	pdp changes
 	public static final String CLOTHING = "Clothing";
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
