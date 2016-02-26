@@ -154,11 +154,10 @@ public class MplCouponDaoImpl implements MplCouponDao
 			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 			final String todayDate = formatter.format(new Date());
 
-
-			final StringBuilder queryBiulder = new StringBuilder(500);
 			queryBiulder.append("select {vi.pk} from {VoucherInvalidation as vi JOIN Order as odr ON {vi.order}={odr.pk}}")
 					.append(" where {vi.user} like").append("('%").append(customer.getPk().getLongValue()).append("%')")
-					.append("and {odr.date} > DATE_SUB(to_date('").append(todayDate).append("', 'MM/DD/YYYY'), INTERVAL 6 MONTH)").append("ORDER BY {vi.creationtime} DESC");
+					.append("and {odr.date} > DATE_SUB(to_date('").append(todayDate).append("', 'MM/DD/YYYY'), INTERVAL 6 MONTH)")
+					.append("ORDER BY {vi.creationtime} DESC");
 
 
 			final String VOUCHER_HISTORY_QUERY = queryBiulder.toString();
@@ -176,7 +175,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 	/**
 	 * Method used to find voucher invalidations for a user
-	 * 
+	 *
 	 * @param customer
 	 * @return List<VoucherInvalidationModel>
 	 *
