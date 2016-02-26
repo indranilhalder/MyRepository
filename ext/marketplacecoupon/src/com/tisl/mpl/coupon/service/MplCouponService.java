@@ -47,4 +47,10 @@ public interface MplCouponService
 	 */
 	SearchPageData<VoucherInvalidationModel> getVoucherRedeemedOrder(CustomerModel customer, PageableData pageableData);
 
+	/**
+	 * @param customer
+	 * @return List<VoucherInvalidationModel>
+	 */
+	List<VoucherInvalidationModel> getAllVoucherInvalidations(CustomerModel customer);
+
 }

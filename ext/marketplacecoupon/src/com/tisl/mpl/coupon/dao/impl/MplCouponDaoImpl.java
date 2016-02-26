@@ -9,12 +9,16 @@ import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,14 +146,16 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			final Map queryParams = new HashMap();
 			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer);
+			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			final String todayDate = formatter.format(new Date());
 
-			final String VOUCHER_HISTORY_QUERY = "select {vi.pk} from {VoucherInvalidation as vi JOIN voucher as v ON  {v.pk}={vi.voucher}  "
-					+ "JOIN order as or ON {vi.order}={or.pk}} where  {vi.user} like"
-					+ "('%"
-					+ customer.getPk().getLongValue()
-					+ "%') ORDER BY {vi.creationtime} DESC";
+			final StringBuilder queryBiulder = new StringBuilder(500);
+			queryBiulder.append("select {vi.pk} from {VoucherInvalidation as vi JOIN Order as odr ON {vi.order}={odr.pk}}")
+					.append(" where {vi.user} like").append("('%").append(customer.getPk().getLongValue()).append("%')")
+					.append("and {odr.date} > DATE_SUB(to_date('").append(todayDate).append("', 'MM/DD/YYYY'), INTERVAL 6 MONTH)");
 
-			LOG.debug("Query :::::::::::::::" + VOUCHER_HISTORY_QUERY);
+
+			final String VOUCHER_HISTORY_QUERY = queryBiulder.toString();
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, VOUCHER_HISTORY_QUERY) });
 
@@ -162,6 +168,52 @@ public class MplCouponDaoImpl implements MplCouponDao
 		}
 	}
 
+	/**
+	 * Method used to find voucher invalidations for a user
+	 * 
+	 * @param customer
+	 * @return List<VoucherInvalidationModel>
+	 *
+	 */
+	@Override
+	public List<VoucherInvalidationModel> findVoucherHistoryAllInvalidations(final CustomerModel customer)
+	{
+		try
+		{
+			final StringBuilder queryBiulder = new StringBuilder(500);
+			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			final String todayDate = formatter.format(new Date());
+			queryBiulder.append("select {vi.pk} from {VoucherInvalidation as vi JOIN Order as odr ON {vi.order}={odr.pk}}")
+					.append(" where {vi.user} like").append("('%").append(customer.getPk().getLongValue()).append("%')")
+					.append("and {odr.date} > DATE_SUB(to_date('").append(todayDate).append("', 'MM/DD/YYYY'), INTERVAL 6 MONTH)");
+
+			final String queryString = queryBiulder.toString();
+			//forming the flexible search query
+			final FlexibleSearchQuery voucherInvalidationQuery = new FlexibleSearchQuery(queryString);
+
+			//fetching bank list from DB using flexible search query
+			final List<VoucherInvalidationModel> voucherInvalidationList = flexibleSearchService.<VoucherInvalidationModel> search(
+					voucherInvalidationQuery).getResult();
+
+			return voucherInvalidationList;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	/**
 	 * Method used to create sort query data
