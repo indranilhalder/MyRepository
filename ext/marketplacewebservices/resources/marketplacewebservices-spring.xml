@@ -366,5 +366,10 @@
 <property name="userService" ref="userService"/>
 </bean>	
 <!-- For Promotion on Mobile cart -->
-	<bean id="mplDiscountUtil" class="com.tisl.mpl.utility.MplDiscountUtil" />			
+	<bean id="mplDiscountUtil" class="com.tisl.mpl.utility.MplDiscountUtil" />	
+	
+	<bean id="mplCouponWebFacade"
+	class="com.tisl.mpl.facade.impl.MplCouponWebFacadeImpl"/>
+	<bean id="mplCouponWebService"
+	class="com.tisl.mpl.service.impl.MplCouponWebServiceImpl"/>		
 </beans>

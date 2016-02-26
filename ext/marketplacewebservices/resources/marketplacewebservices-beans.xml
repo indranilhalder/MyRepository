@@ -2078,5 +2078,50 @@
 
 	</bean>
     
+      <bean class="com.tisl.mpl.wsdto.CommonCouponsDTO">
+		<property name="usedCouponsList" type="java.util.List&lt;com.tisl.mpl.wsdto.UsedCouponsDTO>" />
+		<property name="unusedCouponsList" type="java.util.List&lt;com.tisl.mpl.wsdto.UnusedCouponsDTO>" />
+		<property name="totalCount" type="String" />
+		<property name="totalUniqueCouponsUsed" type="String" />
+		<property name="totalSavings" type="String" />
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		
+	</bean>
+	
+	
+	 <bean class="com.tisl.mpl.wsdto.UsedCouponsDTO">
+		<property name="couponCode" type="String" />
+		<property name="orderDate" type="String" />
+		<property name="description" type="String" />
+		<property name="orderNo" type="String" />
+	</bean>
+	
+	
+	 <bean class="com.tisl.mpl.wsdto.UnusedCouponsDTO">
+		<property name="couponCode" type="String" />
+		<property name="expiryDate" type="String" />
+		<property name="description" type="String" />
+		<property name="couponType" type="String" />
+		<property name="redemptionQtyLimitPerUser" type="String" />
+		<property name="couponCreationDate" type="String" />			
+	</bean>
+   
+   
+    <bean class="com.tisl.mpl.wsdto.ApplyCouponsDTO">
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="couponDiscount" type="String" />
+		<property name="discount" type="String" />
+		<property name="total" type="String" />
+	</bean>
     
+     <bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO">
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />	
+		<property name="total" type="String" />
+	</bean> 
 </beans>

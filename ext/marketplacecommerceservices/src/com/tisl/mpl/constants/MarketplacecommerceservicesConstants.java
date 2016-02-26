@@ -805,6 +805,18 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9100 = "B9100";
 	public static final String B9101 = "B9101";
 	public static final String B9102 = "B9102";
+
+	public static final String B9500 = "B9500";
+	public static final String B9501 = "B9501";
+	public static final String B9502 = "B9502";
+	public static final String B9503 = "B9503";
+	public static final String B9504 = "B9504";
+	public static final String B9505 = "B9505";
+	public static final String B9506 = "B9506";
+	public static final String B9507 = "B9507";
+	public static final String B9508 = "B9508";
+	public static final String B9509 = "B9509";
+
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
