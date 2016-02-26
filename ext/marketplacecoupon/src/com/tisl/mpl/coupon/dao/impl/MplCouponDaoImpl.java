@@ -83,7 +83,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 		try
 		{
-			final StringBuilder queryBiulder = new StringBuilder(500);
+			final StringBuilder queryBiulder = new StringBuilder(600);
 			final StringBuilder groupBiulder = new StringBuilder(200);
 
 			final Set<PrincipalGroupModel> groups = customer.getGroups();
@@ -97,19 +97,24 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			queryBiulder
 					.append(
-							"select {v.pk} from {Promotionvoucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} ")
+							"select {v.pk} from {Promotionvoucher as v JOIN userrestriction as ur ON {v.pk}={ur.voucher} JOIN daterestriction as dr ON {v.pk}={dr.voucher}} where {dr.startdate} <= sysdate and sysdate<= {dr.enddate} AND ( {ur.users} like ('%")
 					//for checking current user and user group
-					.append(" AND ( {ur.users} like ('%")
+					//.append(" AND ( {ur.users} like ('%")
 					.append(customer.getPk().getLongValue())
 					.append("%')")
 					.append(groupBiulder.toString())
 					//check voucher invalidation table
-					.append(" )AND {v.redemptionQuantityLimitPerUser} >")
-					.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} ")
-					.append(" AND  {vin.user}='").append(customer.getPk().getLongValue()).append("' ").append(" }})")
-					.append(" AND {v.redemptionQuantityLimit} >")
-					.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})")
-					.append(" ORDER BY {dr.startdate} ASC");
+					.append(
+							" )AND {v.redemptionQuantityLimitPerUser} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} AND {vin.user}='")
+					//.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk} ")
+					//.append(" AND  {vin.user}='")
+					.append(customer.getPk().getLongValue())
+					.append(
+							"'  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} ASC");
+			//.append(" }})")
+			//.append(" AND {v.redemptionQuantityLimit} >")
+			//.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})")
+			//.append(" ORDER BY {dr.startdate} ASC");
 
 			final String CLOSED_VOUCHER = queryBiulder.toString();
 			final List sortQueries = Arrays.asList(new SortQueryData[]
@@ -143,16 +148,17 @@ public class MplCouponDaoImpl implements MplCouponDao
 	{
 		try
 		{
-
+			final StringBuilder queryBiulder = new StringBuilder(600);
 			final Map queryParams = new HashMap();
 			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer);
 			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 			final String todayDate = formatter.format(new Date());
 
+
 			final StringBuilder queryBiulder = new StringBuilder(500);
 			queryBiulder.append("select {vi.pk} from {VoucherInvalidation as vi JOIN Order as odr ON {vi.order}={odr.pk}}")
 					.append(" where {vi.user} like").append("('%").append(customer.getPk().getLongValue()).append("%')")
-					.append("and {odr.date} > DATE_SUB(to_date('").append(todayDate).append("', 'MM/DD/YYYY'), INTERVAL 6 MONTH)");
+					.append("and {odr.date} > DATE_SUB(to_date('").append(todayDate).append("', 'MM/DD/YYYY'), INTERVAL 6 MONTH)").append("ORDER BY {vi.creationtime} DESC");
 
 
 			final String VOUCHER_HISTORY_QUERY = queryBiulder.toString();

@@ -90,7 +90,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -267,6 +266,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String UNUSED = "unused";
 	public static final String STATUS = "status";
 	public static final String ERROR = "error";
+	public static final String OK = "OK";
+	public static final String SUCCESS = "success";
+	public static final String FAILED = "failed";
+	public static final String SUBORDER = "SubOrder";
+	public static final String EDITCOMMENT = "edit";
+	public static final String DELETECOMMENT = "delete";
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -6282,26 +6287,25 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws Exception
 	 */
 	@SuppressWarnings(UNUSED)
-	@RequestMapping(value = "/reviews", method = RequestMethod.GET)
+	@RequestMapping(value = RequestMappingUrlConstants.REVIEWS, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String review(
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ONE_VAL) final int page,
 			final Model model) throws Exception
 	{
 		final double pageSize = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE, 5);
+		final int orderCarousalsize = getSiteConfigService().getInt(MessageConstants.ORDER_CAROUSEL_SIZE, 10);
 		final Map<String, ProductData> productDataMap = new LinkedHashMap<String, ProductData>();
 		final Map<String, ProductData> productDataModifyMap = new LinkedHashMap<String, ProductData>();
-		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
-		final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
-		final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
-				ProductOption.VARIANT_FULL, ProductOption.CATEGORIES);
-		ProductData productData = new ProductData();
+		ProductData productData = null;
 		List<GigyaProductReviewWsDTO> commentsWithProductDataModified = new ArrayList<GigyaProductReviewWsDTO>();
-		int startIndex = 0;
-		int endIndex = 0;
-		int commentListSize = 0;
 		try
 		{
+			final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
+			final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
+			final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
+					ProductOption.VARIANT_FULL, ProductOption.CATEGORIES);
+			/* sorting order model list */
 			if (CollectionUtils.isNotEmpty(orderModels))
 			{
 				final List<OrderModel> modifiableOrderList = new ArrayList<OrderModel>();
@@ -6310,36 +6314,27 @@ public class AccountPageController extends AbstractMplSearchPageController
 				Collections.sort(modifiableOrderList, new Comparator<OrderModel>()
 				{
 					@Override
-					public int compare(final OrderModel o1, final OrderModel o2)
+					public int compare(final OrderModel orderModelOne, final OrderModel orderModelTwo)
 					{
-						final int compare = o1.getCreationtime().compareTo(o2.getCreationtime());
+						final int compare = orderModelOne.getCreationtime().compareTo(orderModelTwo.getCreationtime());
 						return compare;
 					}
 				});
 				Collections.reverse(modifiableOrderList);
 				for (final OrderModel order : modifiableOrderList)
 				{
-					for (final OrderModel sellerOrder : order.getChildOrders())
+					if (SUBORDER.equalsIgnoreCase(order.getType()))
 					{
-						for (final AbstractOrderEntryModel entry : sellerOrder.getEntries())
+						LOG.debug("----- Checking order type if suborder: -----" + order.getType());
+						for (final AbstractOrderEntryModel entry : order.getEntries())
 						{
 							final ProductModel productmodel = entry.getProduct();
-							final Double netPrice = entry.getNetAmountAfterAllDisc();
-							final PriceData price = productDetailsHelper.formPriceData(netPrice);
-							try
+							final ProductData productForOptionData = productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS);
+							if (productForOptionData != null)
 							{
-								if (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS) != null)
-								{
-									productData = (productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS));
-									productData.setPrice(price);
-								}
-							}
-							catch (final Exception exception)
-							{
-								LOG.error("Review  exception: " + exception);
+								productData = productForOptionData;
 							}
 							productDataMap.put(productData.getCode(), productData);
-
 							LOG.debug("**********ProductDataMap************** " + productDataMap);
 						}
 					}
@@ -6348,17 +6343,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			if (!productDataMap.isEmpty())
 			{
-				final Iterator productDataMapIterator = productDataMap.entrySet().iterator();
-				while (productDataMapIterator.hasNext())
+
+				for (final Map.Entry<String, ProductData> productEntry : productDataMap.entrySet())
 				{
-					final Map.Entry productEntry = (Map.Entry) productDataMapIterator.next();
-					final ProductData productDataValue = (ProductData) productEntry.getValue();
+					final ProductData productDataValue = productEntry.getValue();
 					final boolean isCommented = gigyaCommentService.getReviewsByCategoryProductId(productDataValue.getRootCategory(),
 							productDataValue.getCode(), customerModel.getUid());
 					if (!isCommented)
 					{
 						productDataModifyMap.put(productDataValue.getCode(), productDataValue);
-						if (productDataModifyMap.size() == 10)
+						if (productDataModifyMap.size() == orderCarousalsize)
 						{
 							break;
 						}
@@ -6368,7 +6362,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
 					.getReviewsByUID(customerModel.getUid());
-			//commentsWithProductDataModified = mplReviewrFacade.getProductPrice(commentsWithProductData, orderModels);
 			/* TISSTRT-119 fix */
 			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
 			if (!CollectionUtils.isEmpty(commentsWithProductDataModified))
@@ -6386,67 +6379,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 			/* pagination logic */
+			reviewPagination(commentsWithProductDataModified, pageSize, page, model);
 
-			if (!commentsWithProductDataModified.isEmpty())
-			{
-				int start = 0;
-				int end = 0;
-				final int commentsListSize = commentsWithProductDataModified.size();
-				commentListSize = commentsListSize;
-				final double pages = Math.ceil(commentsListSize / pageSize);
-				final int totalPages = (int) pages;
-				model.addAttribute(ModelAttributetConstants.TOTAL_PAGES, Integer.valueOf(totalPages));
-				model.addAttribute(ModelAttributetConstants.COMMENT_LIST_SIZE, Integer.valueOf(commentsListSize));
-				if (page != 0)
-				{
-					start = (int) ((page - 1) * pageSize);
-					end = (int) (start + pageSize);
-				}
-				else
-				{
-					start = 1;
-					end = (int) (start + pageSize);
-				}
-
-				if (start > commentsListSize)
-				{
-					start = 1;
-					end = (int) (start + pageSize);
-				}
-
-				if (end > commentsListSize)
-				{
-					commentsWithProductDataModified = commentsWithProductDataModified.subList(start, commentsListSize);
-				}
-				else
-				{
-
-					commentsWithProductDataModified = commentsWithProductDataModified.subList(start, end);
-				}
-			}
-			if (page > 1)
-			{
-				startIndex = ((page - 1) * (int) pageSize) + 1;
-				endIndex = ((page - 1) * (int) pageSize) + (int) pageSize;
-			}
-
-			else
-			{
-				if (commentListSize > pageSize)
-				{
-					startIndex = 1;
-					endIndex = (int) pageSize;
-				}
-				else
-				{
-					startIndex = 1;
-					endIndex = commentListSize;
-				}
-			}
-			if (endIndex >= commentListSize)
-			{
-				endIndex = commentListSize;
-			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -6467,9 +6401,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 				accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_REVIEWS));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
-		model.addAttribute(ModelAttributetConstants.COMMENTS, commentsWithProductDataModified);
-		model.addAttribute(ModelAttributetConstants.START_INDEX, Integer.valueOf(startIndex));
-		model.addAttribute(ModelAttributetConstants.END_INDEX, Integer.valueOf(endIndex));
+
 		model.addAttribute(ModelAttributetConstants.PURCHASED_PRODUCT, productDataModifyMap);
 		return getViewForPage(model);
 
@@ -6483,11 +6415,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws Exception
 	 */
 	@SuppressWarnings(UNUSED)
-	@RequestMapping(value = "/review/{operation}", method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.REVIEW_OPERATION, method = RequestMethod.POST)
 	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, String> modifyReview(
-			@PathVariable("operation") final String operation,
+			@PathVariable(ModelAttributetConstants.OPERATION) final String operation,
 			@RequestParam(value = ModelAttributetConstants.CATEGORY_ID, defaultValue = ModelAttributetConstants.CATEGORY_ID_VAL) final String categoryID,
 			@RequestParam(value = ModelAttributetConstants.STREAM_ID, defaultValue = ModelAttributetConstants.STREAM_ID_VAL) final String streamID,
 			@RequestParam(value = ModelAttributetConstants.COMMENT_ID, defaultValue = ModelAttributetConstants.COMMENT_ID_VAL) final String commentID,
@@ -6497,44 +6429,48 @@ public class AccountPageController extends AbstractMplSearchPageController
 			@RequestParam(value = ModelAttributetConstants.RATINGS, defaultValue = ModelAttributetConstants.RATINGS_VAL) final String ratings,
 			final Model model) throws Exception
 	{
-		/**
-		 * Edit comment service call
-		 */
+
 		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
 		final Map<String, String> jsonMap = new HashMap<String, String>();
 
 		try
 		{
-			if (null != operation && operation.equals("edit"))
+			/**
+			 * Edit review service call
+			 */
+			if (EDITCOMMENT.equals(operation))
 			{
 				final String gigyaEditResponse = gigyaCommentService.editComment(categoryID, streamID, commentID, commentText,
 						commentTitle, mediaUrl, ratings, customerModel.getUid());
 
-				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
+				if (null != gigyaEditResponse && gigyaEditResponse.equals(OK))
 				{
-					jsonMap.put(STATUS, "success");
+					jsonMap.put(STATUS, SUCCESS);
 					return jsonMap;
 				}
 				else
 				{
-					jsonMap.put(STATUS, "failed");
+					jsonMap.put(STATUS, FAILED);
 					jsonMap.put(ERROR, gigyaEditResponse);
 					return jsonMap;
 				}
 			}
 
-			if (null != operation && operation.equals("delete"))
+			/**
+			 * delete review service call
+			 */
+			if (DELETECOMMENT.equals(operation))
 			{
 				final String gigyaEditResponse = gigyaCommentService.deleteComment(categoryID, streamID, commentID);
 
-				if (null != gigyaEditResponse && gigyaEditResponse.equals("OK"))
+				if (null != gigyaEditResponse && gigyaEditResponse.equals(OK))
 				{
-					jsonMap.put(STATUS, "success");
+					jsonMap.put(STATUS, SUCCESS);
 					return jsonMap;
 				}
 				else
 				{
-					jsonMap.put(STATUS, "failed");
+					jsonMap.put(STATUS, FAILED);
 					return jsonMap;
 				}
 			}
@@ -6561,8 +6497,83 @@ public class AccountPageController extends AbstractMplSearchPageController
 		return null;
 	}
 
+	/**
+	 *
+	 * @param commentsWithProductDataModified
+	 * @param pageSize
+	 * @param page
+	 * @param model
+	 */
+	public void reviewPagination(List<GigyaProductReviewWsDTO> commentsWithProductDataModified, final double pageSize,
+			final int page, final Model model)
+	{
 
+		int startIndex = 0;
+		int endIndex = 0;
+		int commentListSize = 0;
 
+		if (!commentsWithProductDataModified.isEmpty())
+		{
+			int start = 0;
+			int end = 0;
+			final int commentsListSize = commentsWithProductDataModified.size();
+			commentListSize = commentsListSize;
+			final double pages = Math.ceil(commentsListSize / pageSize);
+			final int totalPages = (int) pages;
+			model.addAttribute(ModelAttributetConstants.TOTAL_PAGES, Integer.valueOf(totalPages));
+			model.addAttribute(ModelAttributetConstants.COMMENT_LIST_SIZE, Integer.valueOf(commentsListSize));
+			if (page != 0)
+			{
+				start = (int) ((page - 1) * pageSize);
+				end = (int) (start + pageSize);
+			}
+			else
+			{
+				start = 1;
+				end = (int) (start + pageSize);
+			}
 
+			if (start > commentsListSize)
+			{
+				start = 1;
+				end = (int) (start + pageSize);
+			}
 
+			if (end > commentsListSize)
+			{
+				commentsWithProductDataModified = commentsWithProductDataModified.subList(start, commentsListSize);
+			}
+			else
+			{
+
+				commentsWithProductDataModified = commentsWithProductDataModified.subList(start, end);
+			}
+		}
+		if (page > 1)
+		{
+			startIndex = ((page - 1) * (int) pageSize) + 1;
+			endIndex = ((page - 1) * (int) pageSize) + (int) pageSize;
+		}
+
+		else
+		{
+			if (commentListSize > pageSize)
+			{
+				startIndex = 1;
+				endIndex = (int) pageSize;
+			}
+			else
+			{
+				startIndex = 1;
+				endIndex = commentListSize;
+			}
+		}
+		if (endIndex >= commentListSize)
+		{
+			endIndex = commentListSize;
+		}
+		model.addAttribute(ModelAttributetConstants.START_INDEX, Integer.valueOf(startIndex));
+		model.addAttribute(ModelAttributetConstants.END_INDEX, Integer.valueOf(endIndex));
+		model.addAttribute(ModelAttributetConstants.COMMENTS, commentsWithProductDataModified);
+	}
 }

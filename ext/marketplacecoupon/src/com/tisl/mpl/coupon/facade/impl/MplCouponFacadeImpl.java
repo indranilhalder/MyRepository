@@ -245,7 +245,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		for (final AbstractOrderEntry entry : applicableOrderEntryList)
 		{
-			totalPrice += null != entry.getTotalPrice() ? entry.getTotalPrice().doubleValue() : 0.0D;
+			totalPrice += null == entry.getTotalPrice() ? 0.0D : entry.getTotalPrice().doubleValue();
 		}
 
 		if (voucherModel.getAbsolute().booleanValue())
@@ -1244,11 +1244,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		this.sessionService = sessionService;
 	}
-
-
-
-
-
 
 
 }

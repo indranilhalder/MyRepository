@@ -5,7 +5,6 @@ package com.tisl.mpl.interceptor;
 
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
-import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
@@ -39,8 +38,6 @@ public class ProductPromotionInterceptor implements PrepareInterceptor<ProductPr
 
 	private static final Logger LOG = Logger.getLogger(ProductPromotionInterceptor.class);
 
-	@Resource
-	private CategoryService categoryService;
 	@Resource
 	private CatalogVersionService catalogVersionService;
 	@Autowired
@@ -116,16 +113,16 @@ public class ProductPromotionInterceptor implements PrepareInterceptor<ProductPr
 
 			final StringTokenizer newProductCodeTokens = new StringTokenizer(productCodes, ",");
 
-			final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
-					configurationService.getConfiguration().getString("cronjob.promotion.catelog"),
+			final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
+					.getConfiguration().getString("cronjob.promotion.catelog"),
 					configurationService.getConfiguration().getString("cronjob.promotion.catalogVersionName"));
 			if (null != catalogVersionModel)
 			{
 				while (newProductCodeTokens.hasMoreTokens())
 				{
 
-					newProductModelList
-							.add(productService.getProductForCode(catalogVersionModel, newProductCodeTokens.nextToken().trim()));
+					newProductModelList.add(productService.getProductForCode(catalogVersionModel, newProductCodeTokens.nextToken()
+							.trim()));
 				}
 				final Collection<ProductModel> existingProductList = promotion.getProducts();
 
@@ -155,8 +152,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor<ProductPr
 	{
 		if (null != abstractPromotion && null == abstractPromotion.getPromotionGroup())
 		{
-			abstractPromotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(
-					configurationService.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
+			abstractPromotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(configurationService
+					.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
 		}
 	}
 }
