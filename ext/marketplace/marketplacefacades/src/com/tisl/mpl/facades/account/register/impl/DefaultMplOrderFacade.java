@@ -793,7 +793,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							ticket.setLineItemDataList(lineItemData);
 							ticket.setSource(MarketplacecommerceservicesConstants.SOURCE);
 							ticket.setOrderId(orderModel.getCode());
-							ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+							ticket.setTicketType(MarketplacecommerceservicesConstants.TICKET_TYPE);
+							ticket.setTicketSubType(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE);
 							ticket.setAlternateContactName(orderModel.getPickupPersonName());
 							ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
 
@@ -882,7 +883,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							ticket.setSource(source);
 						}
 
-						ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+						ticket.setTicketType(MarketplacecommerceservicesConstants.TICKET_TYPE);
+						ticket.setTicketSubType(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE);
 
 						if (null != mainOrder.getPickupPersonName())
 						{
