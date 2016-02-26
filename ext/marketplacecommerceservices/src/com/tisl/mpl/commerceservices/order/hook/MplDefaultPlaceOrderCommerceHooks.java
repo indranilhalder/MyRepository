@@ -135,7 +135,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -217,7 +217,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -231,7 +231,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -630,9 +630,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
+	 *
 	 * @param orderList
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
@@ -730,7 +730,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @return
 	 */
 	//TISUTO-163 --- Changes
-	@SuppressWarnings("javadoc")
 	private String getParentUssid(final List<String> associatedItems, final OrderModel subOrderModel)
 	{
 		String parentUssid = associatedItems.get(0);
@@ -843,7 +842,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		final OrderModel clonedSubOrder = getCloneAbstractOrderStrategy().clone(null, null, orderModel, generateSubOrderCode(),
 				OrderModel.class, OrderEntryModel.class);
 		getModelService().save(clonedSubOrder);
-		if (clonedSubOrder.getEntries() != null && !clonedSubOrder.getEntries().isEmpty())
+		if (CollectionUtils.isNotEmpty(clonedSubOrder.getEntries()))
 		{
 			getModelService().removeAll(clonedSubOrder.getEntries());
 			clonedSubOrder.setEntries(null);
@@ -897,8 +896,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			// Looping through the order Model for single line single quantity at entry level
 
-			if (!StringUtil.isEmpty(abstractOrderEntryModel.getCartPromoCode())
-					|| !StringUtil.isEmpty(abstractOrderEntryModel.getProductPromoCode()))
+			if (StringUtil.isNotEmpty(abstractOrderEntryModel.getCartPromoCode())
+					|| StringUtil.isNotEmpty(abstractOrderEntryModel.getProductPromoCode()))
 			{
 				final double cartvalue = abstractOrderEntryModel.getCartLevelDisc().doubleValue();
 				double cartApportionValue = 0;
@@ -908,12 +907,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				}
 				double bogoCartApportion = cartApportionValue;
 				double bogoCouponApportion = couponApportionValue;
-				if (!StringUtil.isEmpty(abstractOrderEntryModel.getProductPromoCode())
-						&& !StringUtil.isEmpty(abstractOrderEntryModel.getQualifyingCount().toString()))
+				if (StringUtil.isNotEmpty(abstractOrderEntryModel.getProductPromoCode())
+						&& StringUtil.isNotEmpty(abstractOrderEntryModel.getQualifyingCount().toString()))
 				{
 					int qualifyingCount = abstractOrderEntryModel.getQualifyingCount().intValue()
 							+ abstractOrderEntryModel.getFreeCount().intValue();
-					double bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue() * qualifyingCount;
+					double bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue()
+							* abstractOrderEntryModel.getQualifyingCount().intValue();
 					quantity = quantity - qualifyingCount;
 					double productApportionvalue = abstractOrderEntryModel.getTotalProductLevelDisc().doubleValue() / qualifyingCount;
 
@@ -926,7 +926,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 								/ (qualifyingCount - abstractOrderEntryModel.getFreeCount().intValue());
 						bogoCouponApportion = (couponApportionValue * qualifyingCount)
 								/ (qualifyingCount - abstractOrderEntryModel.getFreeCount().intValue());
-						bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue() * qualifyingCount;
+						bogoCODPrice = abstractOrderEntryModel.getConvenienceChargeApportion().doubleValue()
+								* abstractOrderEntryModel.getQualifyingCount().intValue();
 						qualifyingCount = qualifyingCount - bogoCount;
 						createOrderLine(abstractOrderEntryModel, bogoCount, clonedSubOrder, cartApportionValue, productApportionvalue,
 								price, true, qualifyingCount, deliveryCharge, cachedSellerInfoMap, 0, 0, prevDelCharge,
@@ -996,12 +997,23 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	}
 
 	/**
+	 *
 	 * @param abstractOrderEntryModel
 	 * @param quantity
 	 * @param clonedSubOrder
-	 * @param abstractOrderEntryModel
+	 * @param cartApportionValue
+	 * @param productApportionvalue
+	 * @param price
+	 * @param isbogo
+	 * @param bogoQualifying
+	 * @param deliveryCharge
+	 * @param cachedSellerInfoMap
+	 * @param bogoCODPrice
+	 * @param bogoCartApportion
+	 * @param prevDelCharge
+	 * @param couponApportionValue
+	 * @param bogoCouponApportion
 	 */
-	@SuppressWarnings("javadoc")
 	private void createOrderLine(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
 			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue,
 			final double price, final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying,
@@ -1112,6 +1124,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setIsBOGOapplied(Boolean.TRUE);
 				orderEntryModel.setConvenienceChargeApportion(Double.valueOf(0));
 				orderEntryModel.setCartLevelDisc(Double.valueOf(0));
+				orderEntryModel.setCouponCode("");
 				orderEntryModel.setCouponValue(Double.valueOf(0));
 				orderEntryModel.setNetAmountAfterAllDisc(Double.valueOf(0.01));
 				//orderEntryModel.setBasePrice(Double.valueOf(0.01));

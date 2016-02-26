@@ -650,7 +650,7 @@ public class DiscountUtility
 		}
 
 		// Get double value, handle null as zero
-		final double priceValue = val != null ? val.doubleValue() : 0d;
+		final double priceValue = val == null ? 0d : val.doubleValue();
 
 		return priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(priceValue), currency);
 	}

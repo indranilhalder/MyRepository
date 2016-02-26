@@ -213,7 +213,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					{
 						size += (null == entry.getQuantity()) ? 0 : entry.getQuantity().intValue(); //Size in total count of all the order entries present in cart
 					}
-					final double cartTotalThreshold = 0.01 * size; //Threshold is min value which is allowable after applying coupon
+					final BigDecimal cartTotalThreshold = BigDecimal.valueOf(0.01).multiply(BigDecimal.valueOf(size)); //Threshold is min value which is allowable after applying coupon
 					for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 					{
 						netAmountAfterAllDisc += ((null != entry.getProductPromoCode() && StringUtils.isNotEmpty(entry
@@ -233,16 +233,14 @@ public class MplVoucherServiceImpl implements MplVoucherService
 						discountData = releaseVoucherAfterCheck(cartModel, voucherCode, Double.valueOf(productPrice),
 								applicableOrderEntryList, voucherList);
 					}
-					else if (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) > 0
-							&& (netAmountAfterAllDisc - voucherCalcValue) < cartTotalThreshold) //When discount value is less than .01*count of applicable entries
+					else if (voucherCalcValue != 0
+							&& (netAmountAfterAllDisc - voucherCalcValue) > 0
+							&& ((BigDecimal.valueOf(netAmountAfterAllDisc).subtract(BigDecimal.valueOf(voucherCalcValue)))
+									.compareTo(cartTotalThreshold) == -1)) //When cart value after applying discount is less than .01*count of applicable entries
 					{
 						LOG.debug("Step 16.1:::Inside (cartSubTotal - promoCalcValue - voucherCalcValue) >= 0 < 0.01 block");
-						discountList = setGlobalDiscount(discountList, voucherList, cartSubTotal, promoCalcValue, lastVoucher,
-								(netAmountAfterAllDisc - cartTotalThreshold));
-
-						cartModel.setGlobalDiscountValues(discountList);
-						getMplDefaultCalculationService().calculateTotals(cartModel, false);
-						getModelService().save(cartModel);
+						discountData = releaseVoucherAfterCheck(cartModel, voucherCode, Double.valueOf(productPrice),
+								applicableOrderEntryList, voucherList);
 					}
 					else
 					//In other cases, just set the coupon discount for the discount data
