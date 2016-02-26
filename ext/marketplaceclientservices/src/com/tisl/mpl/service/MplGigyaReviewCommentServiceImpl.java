@@ -122,7 +122,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 
 		final String method = "comments.getUserComments";
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
-
+		boolean checkComment = true;
 		gsRequest.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, category);
 		gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, productId);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
@@ -145,7 +145,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			try
 			{
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
-				return (gsObj.getInt("commentCount") == 0) ? false : true;//sonar fix for avoiding unnecessary boolean returns
+				checkComment = (gsObj.getInt(MarketplacecclientservicesConstants.COMMENTCOUNTS) == 0) ? false : true;//sonar fix for avoiding unnecessary boolean returns
 
 			}
 			catch (final Exception e)
@@ -154,7 +154,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 
 			}
 		}
-		return true;
+		return checkComment;
 	}
 
 	/**
@@ -195,44 +195,46 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			if (gsResponse.getErrorCode() == 0)
 			{
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
-				final GSArray commentsJson = gsObj.getArray("comments");
+				final GSArray commentsJson = gsObj.getArray(MarketplacecclientservicesConstants.COMMENTS);
 
-				for (int i = 0; i < commentsJson.length(); i++)
+				for (int intCount = 0; intCount < commentsJson.length(); intCount++)
 				{
 					ProductData productData = null;
 					final GigyaProductReviewWsDTO reviewDTO = new GigyaProductReviewWsDTO();
-					final GSObject gsCommentObject = commentsJson.getObject(i);
+					final GSObject gsCommentObject = commentsJson.getObject(intCount);
 
-					if (checkItemArray(gsCommentObject, "mediaItems"))
+					if (checkItemArray(gsCommentObject, MarketplacecclientservicesConstants.MEDIA))
 					{
-						final GSArray mediaArray = gsCommentObject.getArray("mediaItems");
+						final GSArray mediaArray = gsCommentObject.getArray(MarketplacecclientservicesConstants.MEDIA);
 						if (null != mediaArray)
 						{
 							final GSObject media = mediaArray.getObject(0);
-							if (null != media.getString("html") && null != media.getString("url"))
+							if (null != media.getString(MarketplacecclientservicesConstants.HTML)
+									&& null != media.getString(MarketplacecclientservicesConstants.URL))
 							{
-								reviewDTO.setMediaItems(media.getString("html"));
-								reviewDTO.setMediaUrl(media.getString("url"));
-								reviewDTO.setMediaType(media.getString("type"));
+								reviewDTO.setMediaItems(media.getString(MarketplacecclientservicesConstants.HTML));
+								reviewDTO.setMediaUrl(media.getString(MarketplacecclientservicesConstants.URL));
+								reviewDTO.setMediaType(media.getString(MarketplacecclientservicesConstants.TYPE));
 							}
 						}
 					}
 
-					final String category = gsCommentObject.getString("categoryId");
-					final GSObject ratings = gsCommentObject.getObject("ratings");
-
-					if (ratings.getInt("_overall") != 0)
+					final String category = gsCommentObject.getString(MarketplacecclientservicesConstants.CATEGORY_ID);
+					final GSObject ratings = gsCommentObject.getObject(MarketplacecclientservicesConstants.RATINGS);
+					final int totalVal = MarketplacecclientservicesConstants.FIVE.intValue();
+					final int percentageConvert = MarketplacecclientservicesConstants.HUNDRED.intValue();
+					if (ratings.getInt(MarketplacecclientservicesConstants.OVERALL) != 0)
 					{
-						double overAllRatingInt = ratings.getDouble("_overall");
-						overAllRatingInt = (overAllRatingInt / 5) * 100;
+						double overAllRatingInt = ratings.getDouble(MarketplacecclientservicesConstants.OVERALL);
+						overAllRatingInt = (overAllRatingInt / totalVal) * percentageConvert;
 						overAllRatingInt = Math.ceil(overAllRatingInt);
 						reviewDTO.setOverAllRating(String.valueOf(overAllRatingInt));
 					}
 
-					if (checkItemKey(ratings, "Quality")) //removing unneccessary comparison of boolean objects(Sonar Fix)
+					if (checkItemKey(ratings, MarketplacecclientservicesConstants.QUALITY)) //removing unnecessary comparison of boolean objects(Sonar Fix)
 					{
-						double qualityInt = ratings.getDouble("Quality");
-						qualityInt = (qualityInt / 5) * 100;
+						double qualityInt = ratings.getDouble(MarketplacecclientservicesConstants.QUALITY);
+						qualityInt = (qualityInt / totalVal) * percentageConvert;
 						qualityInt = Math.ceil(qualityInt);
 						reviewDTO.setQualityRating(String.valueOf(qualityInt));
 					}
@@ -242,12 +244,13 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					}
 
 					//	if (category.equals("Clothing"))
-					if ("Clothing".equalsIgnoreCase(category) || "Footwear".equalsIgnoreCase(category)) //removing unneccessary comparison of boolean objects(Sonar Fix)
+					if (MarketplacecclientservicesConstants.CLOTHING.equalsIgnoreCase(category)
+							|| MarketplacecclientservicesConstants.FOOTWEAR.equalsIgnoreCase(category)) //removing unnecessary comparison of boolean objects(Sonar Fix)
 					{
-						if (checkItemKey(ratings, "Fit"))
+						if (checkItemKey(ratings, MarketplacecclientservicesConstants.FIT))
 						{
-							double fitInt = ratings.getDouble("Fit");
-							fitInt = (fitInt / 5) * 100;
+							double fitInt = ratings.getDouble(MarketplacecclientservicesConstants.FIT);
+							fitInt = (fitInt / totalVal) * percentageConvert;
 							fitInt = Math.ceil(fitInt);
 							reviewDTO.setFitRating(String.valueOf(fitInt));
 						}
@@ -258,10 +261,11 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					}
 					else
 					{
-						if (checkItemKey(ratings, "Ease of use")) //removing unneccessary comparison of boolean objects(Sonar Fix)
+						if (checkItemKey(ratings, MarketplacecclientservicesConstants.EASE_OF_USE)) //removing unnecessary comparison of boolean objects(Sonar Fix)
 						{
-							double easeOfUseInt = ratings.getDouble("Ease of use");
-							easeOfUseInt = (easeOfUseInt / 5) * 100;
+
+							double easeOfUseInt = ratings.getDouble(MarketplacecclientservicesConstants.EASE_OF_USE);
+							easeOfUseInt = (easeOfUseInt / totalVal) * percentageConvert;
 							easeOfUseInt = Math.ceil(easeOfUseInt);
 							reviewDTO.setEaseOfUse(String.valueOf(easeOfUseInt));
 						}
@@ -271,11 +275,11 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						}
 					}
 
-					if (checkItemKey(ratings, "Value for Money")) //removing unneccessary comparison of boolean objects(Sonar Fix)
+					if (checkItemKey(ratings, MarketplacecclientservicesConstants.VALUE_FOR_MONEY)) //removing unnecessary comparison of boolean objects(Sonar Fix)
 					{
 
-						double valueForMoneyInt = ratings.getDouble("Value for Money");
-						valueForMoneyInt = (valueForMoneyInt / 5) * 100;
+						double valueForMoneyInt = ratings.getDouble(MarketplacecclientservicesConstants.VALUE_FOR_MONEY);
+						valueForMoneyInt = (valueForMoneyInt / totalVal) * percentageConvert;
 						valueForMoneyInt = Math.ceil(valueForMoneyInt);
 						reviewDTO.setValueForMoneyRating(String.valueOf(valueForMoneyInt));
 					}
@@ -284,19 +288,20 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 						reviewDTO.setValueForMoneyRating(String.valueOf(0));
 					}
 
-					reviewDTO.setCommentId(gsCommentObject.getString("ID"));
-					reviewDTO.setCommentTitle(gsCommentObject.getString("commentTitle"));
-					reviewDTO.setCommentText(gsCommentObject.getString("commentText"));
+					reviewDTO.setCommentId(gsCommentObject.getString(MarketplacecclientservicesConstants.ID));
+					reviewDTO.setCommentTitle(gsCommentObject.getString(MarketplacecclientservicesConstants.COMMENT_TITLE));
+					reviewDTO.setCommentText(gsCommentObject.getString(MarketplacecclientservicesConstants.COMMENT_TEXT));
 
-					final long commentTimeStamp = gsCommentObject.getLong("timestamp");
+					final long commentTimeStamp = gsCommentObject.getLong(MarketplacecclientservicesConstants.TIMESTAMP);
 					final Date commentDateObj = new Date(commentTimeStamp);
 					final String reviewDate = getDate(commentDateObj);
 					reviewDTO.setReviewDate(reviewDate);
 					reviewDTO.setCommentDate(commentDateObj);
 
-					if (null != gsCommentObject.getString("streamId"))
+					if (null != gsCommentObject.getString(MarketplacecclientservicesConstants.STREAM_ID))
 					{
-						final ProductModel productModel = productService.getProductForCode(gsCommentObject.getString("streamId"));
+						final ProductModel productModel = productService.getProductForCode(gsCommentObject
+								.getString(MarketplacecclientservicesConstants.STREAM_ID));
 
 						productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 								ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
@@ -365,7 +370,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			if (allowEdit.getErrorCode() == 0)
 			{
 				final GSObject gsObj = new GSObject(allowEdit.getResponseText());
-				if (gsObj.getString("statusReason").equals("OK"))
+				if (gsObj.getString(MarketplacecclientservicesConstants.STATUS_REASON).equals("OK"))
 				{
 
 					final String method = "comments.updateComment";
@@ -378,7 +383,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						final GSArray attachment = new GSArray();
 						attachment.add(commentMediaUrl);
-						gsRequest.setParam("mediaItems", attachment);
+						gsRequest.setParam(MarketplacecclientservicesConstants.MEDIA, attachment);
 					}
 					gsRequest.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
 					gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, streamID);
@@ -392,7 +397,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					if (gsResponse.getErrorCode() == 0)
 					{
 						final GSObject gsObjToEdit = new GSObject(gsResponse.getResponseText());
-						return gsObjToEdit.getString("statusReason");
+						return gsObjToEdit.getString(MarketplacecclientservicesConstants.STATUS_REASON);
 					}
 				}
 			}
@@ -445,7 +450,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			if (gsResponse.getErrorCode() == 0)
 			{
 				final GSObject gsObj = new GSObject(gsResponse.getResponseText());
-				return gsObj.getString("statusReason");
+				return gsObj.getString(MarketplacecclientservicesConstants.STATUS_REASON);
 			}
 		}
 		catch (final Exception e)
