@@ -429,36 +429,38 @@ public class ProductPageController extends AbstractPageController
 			{
 				//				if (null != buyboxdata.getAvailable())
 				//				{
-				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
-						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+				//				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
+				//						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+				//				{
+				//					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
+				//							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+				//					{
+				//						LOG.debug("response.getUssid()********************  " + response.getUssid());
+				//						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
+				//						{
+				//							LOG.debug("response.getIsServicable()********************  " + response.getIsServicable());
+				//							if (response.getIsServicable().equalsIgnoreCase("Y"))
+				//							{
+				//								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
+				//							}
+				//							buyboxJson
+				//									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
+				//
+				//						}
+				//					}
+				//
+				//				}
+				//				else
+				//				{
+				if (null != buyboxdata.getAvailable())
 				{
-					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
-							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
-					{
-						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
-						{
-							if (response.getIsServicable().equalsIgnoreCase("Y"))
-							{
-								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
-							}
-							buyboxJson
-									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
-
-						}
-					}
-
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
 				}
 				else
 				{
-					if (null != buyboxdata.getAvailable())
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-					}
-					else
-					{
-						buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, ModelAttributetConstants.NOVALUE);
-					}
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, ModelAttributetConstants.NOVALUE);
 				}
+				//}
 				if (null != buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValue()
 						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty())
 				{
@@ -621,7 +623,7 @@ public class ProductPageController extends AbstractPageController
 			{
 				sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
 				response = pinCodeFacade.getResonseForPinCode(productCode, pin, populatePinCodeServiceData(productCode));
-				sessionService.setAttribute(ModelAttributetConstants.PINCODE_DETAILS, response);
+				//sessionService.setAttribute(ModelAttributetConstants.PINCODE_DETAILS, response);
 			}
 
 		}
@@ -1142,8 +1144,7 @@ public class ProductPageController extends AbstractPageController
 							  //electronics
 							else
 							{
-								//TISPRO-121
-								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
+								if (properitsValue.toLowerCase().contains(configurableAttributData.getName().toLowerCase()))
 
 								{
 

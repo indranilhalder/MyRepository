@@ -24,7 +24,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
 
 /**
- * @author 360641
+ * @author tcs
  *
  */
 public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValueProvider

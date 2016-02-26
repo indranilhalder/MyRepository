@@ -3,11 +3,14 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSPageService;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Required;
@@ -28,6 +31,9 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 {
 
 	private MplCmsPageDao mplCmsPageDao;
+
+	//	@Autowired
+	//	private ConfigurationService configurationService;
 
 	/**
 	 * @return the mplCmsPageDao
@@ -50,7 +56,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -96,7 +102,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getHomePageForMobile()
 	 */
 	@Override
@@ -109,7 +115,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -145,12 +151,11 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		if (null != shopByLook)
 		{
 			final Date today = new Date();
-			if ((null != shopByLook.getStartDate() && null != shopByLook.getEndDate() && shopByLook.getStartDate().before(today)
-					&& shopByLook.getEndDate().after(today))
+			if ((null != shopByLook.getStartDate() && null != shopByLook.getEndDate() && shopByLook.getStartDate().before(today) && shopByLook
+					.getEndDate().after(today))
 					|| (null == shopByLook.getStartDate() && null != shopByLook.getEndDate() && shopByLook.getEndDate().after(today))
-					|| (null != shopByLook.getStartDate() && shopByLook.getStartDate().before(today)
-							&& null == shopByLook.getEndDate())
-					|| null == shopByLook.getStartDate() && null == shopByLook.getEndDate())
+					|| (null != shopByLook.getStartDate() && shopByLook.getStartDate().before(today) && null == shopByLook
+							.getEndDate()) || null == shopByLook.getStartDate() && null == shopByLook.getEndDate())
 			{
 				final ContentPageModel landingPage = mplCmsPageDao.getCollectionLandingPageForMobile(cms, shopByLook);
 				return landingPage;
@@ -174,4 +179,28 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return landingPage;
 
 	}
+
+	//public Collection<ContentPageModel> getAllContentPages(final CatalogVersionModel catalogmodel)
+	@Override
+	public Collection<ContentPageModel> getAllContentPages(final Collection<CatalogVersionModel> catalogmodel)
+	{
+		return mplCmsPageDao.findAllContentPagesByCatalogVersions(catalogmodel);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getContentSlotByUidForPage(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId, final String catalogVersion)
+	{
+		final ContentSlotModel contentSlot = mplCmsPageDao.getContentSlotByUidForPage(pageId, contentSlotId, catalogVersion);
+		return contentSlot;
+	}
+
+
+
 }

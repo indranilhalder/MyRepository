@@ -63,16 +63,16 @@
 												 <c:if test="${fn:toUpperCase(entry.product.rootCategory) != 'ELECTRONICS'}">
 												 	
 												 	<ycommerce:testId code="cart_product_size">
-														<div class="size"><b><spring:theme code="text.size"/>${entry.product.size}</b></div>
+														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
 													</ycommerce:testId>
 													<ycommerce:testId code="cart_product_colour">
-																<div class="colour"><b><spring:theme code="text.colour"/>${entry.product.colour}</b></div>
+																<div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div>
 													</ycommerce:testId>
 												 </c:if>
 												<!-- end TISEE-4631 TISUAT-4229 -->
 												
 												<ycommerce:testId code="cart_product_colour">
-													<div class="colour"><b><spring:theme code="text.seller.name"/>	${entry.selectedSellerInformation.sellername}</b></div>
+													<div class="colour"><spring:theme code="text.seller.name"/>	${entry.selectedSellerInformation.sellername}</div>
 												</ycommerce:testId>
 												
 												<c:forEach items="${fullfillmentData}" var="fullfillmentData">
@@ -94,7 +94,7 @@
 												</c:forEach>
 												
 												<ycommerce:testId code="cart_product_colour">
-												<div class="colour"><b><spring:theme code="text.qty"/>${entry.quantity}</b></div>
+												<div class="colour"><spring:theme code="text.qty"/>${entry.quantity}</div>
 												</ycommerce:testId>
 															
 												<c:if
@@ -167,11 +167,11 @@
 														test="${sellerInfoMap.key == entry.entryNumber}">
 														<c:forEach items="${sellerInfoMap.value}"
 															var="sellerInfoMapValue"> 
-															<div><span><b><spring:theme code="text.seller.name"/> </b></span>${sellerInfoMapValue}</div>
+															<div><span><spring:theme code="text.seller.name"/> </span>${sellerInfoMapValue}</div>
 														</c:forEach>
 														
-														<div class="size"><b><spring:theme code="text.size"/>${entry.product.size}</b></div>
-												<div class="colour"><b><spring:theme code="text.colour"/>${entry.product.colour}</b></div>
+														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
+												<div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div>
 													</c:if>
 												</c:forEach>
 											</c:if>

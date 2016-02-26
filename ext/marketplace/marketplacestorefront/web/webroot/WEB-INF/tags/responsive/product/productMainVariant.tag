@@ -19,7 +19,6 @@
 <%@ taglib prefix="storepickup"
 	tagdir="/WEB-INF/tags/responsive/storepickup"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
 
 <c:url var="sizeGuideUrl"

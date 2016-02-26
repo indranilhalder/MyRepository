@@ -159,14 +159,15 @@
 		color: red;
 	}
 	.nextButton {
-    background-color: #00cbe9;
+    background-color: #a9143c;
     color: #fff;
 }
 .nextButton:hover {
     background-color: #fff;
-    color: #00cbe9;
+    color: #a9143c;
 }
 </style>
+
 <script>
 	$(document).ready(function(){
 		

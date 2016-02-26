@@ -12,23 +12,23 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${not empty component.urlLink}">
-			<a href="${bannerUrl}"><div class="hero fourPromoBanner">
+			<a href="${bannerUrl}?icid=${component.pk}"><div class="hero fourPromoBanner">
 					<div class="image">
 						<img src="${component.bannerImage.URL}" alt="">
 					</div>
 					<ul class="major-promos">
-						<li>${component.promoText4}</li>
+						<li data-bannerid="${component.pk}">${component.promoText4}</li>
 					</ul>
 
 					<ul class="minor-promos">
-						<li>${component.promoText2}</li>
+						<li data-bannerid="${component.pk}">${component.promoText2}</li>
 					</ul>
 
 					<ul class="top-promos">
-						<li>${component.promoText1}</li>
+						<li data-bannerid="${component.pk}">${component.promoText1}</li>
 					</ul>
 					<ul class="bottom-promos">
-						<li>${component.promoText3}</li>
+						<li data-bannerid="${component.pk}">${component.promoText3}</li>
 					</ul>
 
 				</div></a>
@@ -39,21 +39,32 @@
 					<img src="${component.bannerImage.URL}" alt="">
 				</div>
 				<ul class="major-promos">
-					<li>${component.promoText4}</li>
+					<li data-bannerid="${component.pk}">${component.promoText4}</li>
 				</ul>
 
 				<ul class="minor-promos">
-					<li>${component.promoText2}</li>
+					<li data-bannerid="${component.pk}">${component.promoText2}</li>
 				</ul>
 
 				<ul class="top-promos">
-					<li>${component.promoText1}</li>
+					<li data-bannerid="${component.pk}">${component.promoText1}</li>
 				</ul>
 				<ul class="bottom-promos">
-					<li>${component.promoText3}</li>
+					<li data-bannerid="${component.pk}">${component.promoText3}</li>
 				</ul>
 
 			</div>
 		</c:otherwise>
 	</c:choose>
 </c:if>
+<script>
+$(document).ready(function(){
+	
+	$("li[data-bannerid=${component.pk}]").each(function(){
+		var x = $(this).find("a").attr("href");
+		if(typeof(x) != "undefined"){
+			$(this).find("a").attr("href",x+"?icid=${component.pk}");
+		}
+	});
+});
+</script>

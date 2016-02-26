@@ -504,10 +504,10 @@
 					<property name="widgetConfig" ref="csBasketCartWidgetConfig"/>
 				</bean>
 				
-				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+				<!-- <bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="couponWidget"/>
 					<property name="widgetConfig" ref="csCouponWidgetConfig"/>
-				</bean>
+				</bean> -->
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="basketResultWidget"/>
 					<property name="widgetConfig" ref="csBasketResultWidgetConfig"/>
@@ -591,10 +591,10 @@
 					<property name="widgetConfig" ref="csCheckoutCartAppliedPromotionsWidgetConfig"/>
 				</bean>
 				<!-- Applied coupon -->
-				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+				<!-- <bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="checkoutCouponAppliedWidget"/>
 					<property name="widgetConfig" ref="csCouponCheckoutWidgetConfig"/>
-				</bean>
+				</bean> -->
 				
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="cartPaymentTransactionsWidget"/>
@@ -636,10 +636,10 @@
 				</bean>
 				
 				<!-- Applied coupon -->
-				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
+				<!-- <bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="orderCouponAppliedWidget"/>
 					<property name="widgetConfig" ref="csCouponOrderWidgetConfig"/>
-				</bean>
+				</bean> -->
 				
 				<bean class="de.hybris.platform.cscockpit.widgets.models.impl.CsWidgetBrowserModel$WidgetMapKey">
 					<property name="widgetCode" value="orderConsignmentsWidget"/>

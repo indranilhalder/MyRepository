@@ -202,6 +202,22 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					ProductData productData = null;
 					final GigyaProductReviewWsDTO reviewDTO = new GigyaProductReviewWsDTO();
 					final GSObject gsCommentObject = commentsJson.getObject(i);
+
+					if (checkItemArray(gsCommentObject, "mediaItems"))
+					{
+						final GSArray mediaArray = gsCommentObject.getArray("mediaItems");
+						if (null != mediaArray)
+						{
+							final GSObject media = mediaArray.getObject(0);
+							if (null != media.getString("html") && null != media.getString("url"))
+							{
+								reviewDTO.setMediaItems(media.getString("html"));
+								reviewDTO.setMediaUrl(media.getString("url"));
+								reviewDTO.setMediaType(media.getString("type"));
+							}
+						}
+					}
+
 					final String category = gsCommentObject.getString("categoryId");
 					final GSObject ratings = gsCommentObject.getObject("ratings");
 
@@ -311,7 +327,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 */
 	@Override
 	public String editComment(final String categoryID, final String streamID, final String commentID, final String commentText,
-			final String commentTitle, final String ratings, final String UID)
+			final String commentTitle, final String commentMediaUrl, final String ratings, final String UID)
 	{
 		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
@@ -325,6 +341,11 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequestAllowEdit = new GSRequest(apiKey, secretKey, setCategoryInfoMethod);
 		gsRequestAllowEdit.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
 		gsRequestAllowEdit.setParam("categorySettings", "{userEditComment : true}");
+		if (null != commentMediaUrl && !commentMediaUrl.isEmpty())
+		{
+			gsRequestAllowEdit.setParam("clientSettings", "{enableMediaItems : true}");
+		}
+		GSResponse gsResponse = null;
 		Proxy proxy = null;
 
 		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
@@ -353,6 +374,12 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					{
 						gsRequest.setProxy(proxy);
 					}
+					if (null != commentMediaUrl && !commentMediaUrl.isEmpty())
+					{
+						final GSArray attachment = new GSArray();
+						attachment.add(commentMediaUrl);
+						gsRequest.setParam("mediaItems", attachment);
+					}
 					gsRequest.setParam(MarketplacecclientservicesConstants.CATEGORY_ID, categoryID);
 					gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, streamID);
 					gsRequest.setParam(MarketplacecclientservicesConstants.COMMENT_ID, commentID);
@@ -361,7 +388,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 					gsRequest.setParam(MarketplacecclientservicesConstants.RATINGS, ratings);
 					gsRequest.setParam(MarketplacecclientservicesConstants.UID, UID);
 
-					final GSResponse gsResponse = gsRequest.send();
+					gsResponse = gsRequest.send();
 					if (gsResponse.getErrorCode() == 0)
 					{
 						final GSObject gsObjToEdit = new GSObject(gsResponse.getResponseText());
@@ -375,7 +402,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			LOG.error(MarketplacecclientservicesConstants.REVIEWS_EDIT_EXCEPTION + e.getMessage());
 
 		}
-		return null;
+		return gsResponse.getErrorMessage();
 	}
 
 	/**
@@ -437,49 +464,84 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	public String getDate(final Date commentDateObj)
 	{
 		String formatedDate = "";
-		try
+		int years = 0;
+		int months = 0;
+		int days = 0;
+		int updatedDays = 0;
+		//create calendar object for review day
+		final Calendar reviewDay = Calendar.getInstance();
+		reviewDay.setTimeInMillis(commentDateObj.getTime());
+		//create calendar object for current day
+		final long currentTime = System.currentTimeMillis();
+		final Calendar now = Calendar.getInstance();
+		now.setTimeInMillis(currentTime);
+		//Get difference between years
+		years = now.get(Calendar.YEAR) - reviewDay.get(Calendar.YEAR);
+		final int currMonth = now.get(Calendar.MONTH) + 1;
+		final int reviewMonth = reviewDay.get(Calendar.MONTH) + 1;
+		final String appendDays = "days ago";
+		final String appendDay = "a day ago";
+		//Get difference between months
+		months = currMonth - reviewMonth;
+		//if month difference is in negative then reduce years by one and calculate the number of months.
+		if (months < 0)
 		{
-			final Date date = new Date();
-			final Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-			final int thisMonth = cal.get(Calendar.MONTH);
-			final int thisDay = cal.get(Calendar.DAY_OF_MONTH);
-			cal.setTime(commentDateObj);
-			final int cYear = cal.get(Calendar.YEAR);
-			final int cMonth = cal.get(Calendar.MONTH);
-			final int cDay = cal.get(Calendar.DAY_OF_MONTH);
-			final int cHour = cal.get(Calendar.HOUR_OF_DAY);
-			final int cMinute = cal.get(Calendar.MINUTE);
-			LOG.debug(">>>>>>>>>date>>>>>>" + commentDateObj);
-			LOG.debug(">>>>>>>>>minute>>>>>>" + cMinute);
-			LOG.debug(">>>>>>>>>year>>>>>>" + cHour);
-			LOG.debug(">>>>>>>>>day>>>>>>" + cDay);
-			LOG.debug(">>>>>>>>>month>>>>>>" + cMonth);
-			LOG.debug(">>>>>>>>>year>>>>>>" + cYear);
-			final int dayDiff = thisDay - cDay;
-			if (dayDiff == 0)
+			years--;
+			months = 12 - reviewMonth + currMonth;
+			if (now.get(Calendar.DATE) < reviewDay.get(Calendar.DATE))
+			{
+				months--;
+			}
+		}
+		else if (months == 0 && now.get(Calendar.DATE) < reviewDay.get(Calendar.DATE))
+		{
+			years--;
+			months = 11;
+		}
+		//Calculate the days
+		if (now.get(Calendar.DATE) > reviewDay.get(Calendar.DATE))
+		{
+			days = now.get(Calendar.DATE) - reviewDay.get(Calendar.DATE);
+		}
+		else if (now.get(Calendar.DATE) < reviewDay.get(Calendar.DATE))
+		{
+			final int today = now.get(Calendar.DAY_OF_MONTH);
+			now.add(Calendar.MONTH, -1);
+			days = now.getActualMaximum(Calendar.DAY_OF_MONTH) - reviewDay.get(Calendar.DAY_OF_MONTH) + today;
+		}
+		else
+		{
+			days = 0;
+			if (months == 12)
+			{
+				years++;
+				months = 0;
+			}
+		}
+
+		if (months == 0)
+		{
+			if (days == 0)
 			{
 				formatedDate = "today";
 			}
-			else if (dayDiff == 1)
+			else if (days == 1)
 			{
-				formatedDate = dayDiff + " " + "day ago";
+				formatedDate = appendDay;
 			}
-			else if (dayDiff > 1 && dayDiff < 30)
+			else
 			{
-				LOG.debug(">>>>>>>>>date diffrence>>>>>>" + dayDiff + " " + "day ago");
-				formatedDate = dayDiff + " " + "days ago";
-			}
-
-			else if (dayDiff == 30 || dayDiff == 31)
-			{
-				final int monthDiff = thisMonth - cMonth;
-				formatedDate = monthDiff + " " + " month ago";
+				final String fullDate = days + " " + appendDays + updatedDays + " " + "months ago" + years + " " + "years ago";
+				LOG.debug(">>fullDate>> " + fullDate);
+				formatedDate = (days + " " + appendDays);
 			}
 		}
-		catch (final Exception e)
+		else
 		{
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + e);
+			updatedDays = (months * 30);
+			final String fullDate = days + " " + appendDays + updatedDays + " " + "months ago" + years + " " + "years ago";
+			LOG.debug(">>fullDate>> " + fullDate);
+			formatedDate = (days + updatedDays) + " " + appendDays;
 		}
 		return formatedDate;
 	}
@@ -512,4 +574,27 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 
 	}
 
+	/**
+	 * @Description: checks if array key in GSobject is missing or not
+	 * @param ratings
+	 *           ,key
+	 * @return boolean
+	 */
+	@Override
+	public boolean checkItemArray(final GSObject ratings, final String key)
+	{
+		try
+		{
+			ratings.getArray(key);
+			return true;
+		}
+		catch (final GSKeyNotFoundException e)
+		{
+			return false;
+		}
+		catch (final NullPointerException e)
+		{
+			return false;
+		}
+	}
 }

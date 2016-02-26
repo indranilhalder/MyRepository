@@ -6,6 +6,7 @@ package com.tisl.mpl.sns.push.tools;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.tisl.mpl.wsdto.PushNotificationData;
@@ -19,6 +20,7 @@ public class MplSNSMessageGenerator
 	 * received by the device as the value of the key "default".
 	 */
 	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final Logger LOG = Logger.getLogger(MplSNSMessageGenerator.class);
 
 	public static enum Platform
 	{
@@ -44,7 +46,8 @@ public class MplSNSMessageGenerator
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("Exception ", e);
 			throw (RuntimeException) e;
 		}
 	}

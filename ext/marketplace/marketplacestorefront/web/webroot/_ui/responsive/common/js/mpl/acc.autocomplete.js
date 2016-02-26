@@ -271,13 +271,19 @@ ACC.autocomplete = {
 					$.each(data.suggestions, function (i, obj)
 			       	{
 					
-						if(i!=0){	
+						if(i!=0){
+							
+							if((data.categories.length!=undefined && data.categories.length>0) ||
+									(data.brands.length!=undefined && data.brands.length>0)){
 						autoSearchData.push({
 							value: obj.term,
 							searchterm:term,
 							url: ACC.config.encodedContextPath + "/search?text=" + obj.term +"&best_search_keyword="+term,
 							type: "autoSuggestion"
 						});
+						
+						
+							}
 						}
 					});
 			     	}

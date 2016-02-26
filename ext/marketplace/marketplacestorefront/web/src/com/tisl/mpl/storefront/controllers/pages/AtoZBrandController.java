@@ -14,6 +14,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -147,7 +148,8 @@ public class AtoZBrandController
 
 
 
-		if (GroupBrandsAToE.size() == 0 || GroupBrandsFToJ.size() == 0)
+		//if (GroupBrandsAToE.size() == 0 || GroupBrandsFToJ.size() == 0)
+		if (MapUtils.isEmpty(GroupBrandsAToE) || MapUtils.isEmpty(GroupBrandsFToJ))
 		{
 
 			startAlphabet = 'A';
@@ -163,7 +165,8 @@ public class AtoZBrandController
 		}
 
 
-		else if (GroupBrandsKToO.size() == 0)
+		//else if (GroupBrandsKToO.size() == 0)
+		else if (MapUtils.isEmpty(GroupBrandsKToO))
 		{
 
 			startAlphabet = 'F';
@@ -176,7 +179,8 @@ public class AtoZBrandController
 
 		}
 
-		else if (GroupBrandsPToT.size() == 0)
+		//else if (GroupBrandsPToT.size() == 0)
+		else if (MapUtils.isEmpty(GroupBrandsPToT))
 		{
 
 			startAlphabet = 'K';
@@ -189,7 +193,8 @@ public class AtoZBrandController
 
 		}
 
-		else if (GroupBrandsUToZ.size() == 0)
+		//else if (GroupBrandsUToZ.size() == 0)
+		else if (MapUtils.isEmpty(GroupBrandsUToZ))
 		{
 
 			startAlphabet = 'P';

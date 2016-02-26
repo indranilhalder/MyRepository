@@ -20,7 +20,7 @@
 <c:choose>
 <c:when test="${isSignedInUser eq 'yes' }">
 	<li class="track trackOrder">
-	<a id="tracklink" href="${urlToAccess }"><span class="bell-icon"></span>&nbsp;(<span >${notificationCount}</span>)</a>
+	<a id="tracklink" href="${urlToAccess }"><span class="bell-icon"></span>&nbsp;Notifications(<span >${notificationCount}</span>)</a>
 		 <span id="mobile-menu-toggle"></span>
 		<ul class="trackorder-dropdown"></ul> 
 		</li>
@@ -30,7 +30,7 @@
 		<c:if test="${ empty notificationCount }">
 		
 		<li class="track trackOrder">
-	<a id="tracklink" href="${urlToAccess}"><span class="bell-icon"></span>&nbsp;</a>
+	<a id="tracklink" href="${urlToAccess}"><span class="bell-icon"></span>&nbsp;Notifications</a>
 		 <span id="mobile-menu-toggle"></span>
 		<ul class="trackorder-dropdown"></ul> 
 		</li>
