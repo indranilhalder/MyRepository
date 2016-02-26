@@ -498,6 +498,15 @@
 				height="100%" frameborder="0" allowfullscreen></iframe>
 		</div>
 	</div> -->
+	
+	<div style="display: none;">
+	<p id="comment_title_empty"><spring:theme code="myaccount.review.commentTitleValidationMsg"></spring:theme></p>
+	<p id="comment_title_length"><spring:theme code="myaccount.review.commentTitle.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_empty"><spring:theme code="myaccount.review.commentTextValidationMsg"></spring:theme></p>
+	<p id="comment_text_length"><spring:theme code="myaccount.review.commentText.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_title_length"><spring:theme code="myaccount.review.commentTextTitle.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_title_empty"><spring:theme code="myaccount.review.commentTextTitleValidationMsg"></spring:theme></p>
+	</div>
 </template:page>
 <script>
 //$("#videoReviewFrame")[0].src += "&autoplay=0";
