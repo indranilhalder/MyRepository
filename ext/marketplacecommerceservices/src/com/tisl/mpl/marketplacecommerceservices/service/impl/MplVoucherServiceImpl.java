@@ -106,8 +106,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			getMplCommerceCartCalculationStrategy().recalculateCart(parameter);
 
 			cartModel.setDeliveryCost(deliveryCost);
-			cartModel.setTotalPrice(Double.valueOf((null != cartModel.getTotalPrice() ? cartModel.getTotalPrice().doubleValue()
-					: 0.0d) + (null != deliveryCost ? deliveryCost.doubleValue() : 0.0d)));
+			cartModel.setTotalPrice(Double.valueOf((null == cartModel.getTotalPrice() ? 0.0d : cartModel.getTotalPrice()
+					.doubleValue()) + (null == deliveryCost ? 0.0d : deliveryCost.doubleValue())));
 
 			// Freebie item changes
 			getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
@@ -211,7 +211,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 					LOG.debug("Step 15:::applicableOrderEntryList is not empty");
 					for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 					{
-						size += (null != entry.getQuantity()) ? entry.getQuantity().intValue() : 0; //Size in total count of all the order entries present in cart
+						size += (null == entry.getQuantity()) ? 0 : entry.getQuantity().intValue(); //Size in total count of all the order entries present in cart
 					}
 					final double cartTotalThreshold = 0.01 * size; //Threshold is min value which is allowable after applying coupon
 					for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
@@ -221,7 +221,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 								.getCartPromoCode()))) ? entry.getNetAmountAfterAllDisc().doubleValue() : entry.getTotalPrice()
 								.doubleValue();
 
-						productPrice += (null != entry.getTotalPrice()) ? entry.getTotalPrice().doubleValue() : 0.0d;
+						productPrice += (null == entry.getTotalPrice()) ? 0.0d : entry.getTotalPrice().doubleValue();
 					}
 
 					LOG.debug(logBuilder.append("Step 15:::netAmountAfterAllDisc is ").append(netAmountAfterAllDisc)
@@ -490,7 +490,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				for (final AbstractOrderEntryModel entry : applicableOrderEntryList)
 				{
-					totalApplicablePrice += entry.getTotalPrice() != null ? entry.getTotalPrice().doubleValue() : 0.0D;
+					totalApplicablePrice += entry.getTotalPrice() == null ? 0.0D : entry.getTotalPrice().doubleValue();
 				}
 
 				final List<DiscountValue> discountList = cartModel.getGlobalDiscountValues(); //Discount values against the cart
@@ -535,14 +535,13 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 					LOG.debug("Step 20:::entryLevelApportionedPrice is " + entryLevelApportionedPrice);
 
-					entry.setCouponCode(null != voucherCode ? voucherCode : voucher.getCode());
+					entry.setCouponCode(null == voucherCode ? voucher.getCode() : voucherCode);
 					entry.setCouponValue(Double.valueOf(entryLevelApportionedPrice.doubleValue()));
 
-					if ((null != entry.getProductPromoCode() && !entry.getProductPromoCode().isEmpty())
-							|| (null != entry.getCartPromoCode() && !entry.getCartPromoCode().isEmpty()))
+					if ((StringUtils.isNotEmpty(entry.getProductPromoCode())) || (StringUtils.isNotEmpty(entry.getCartPromoCode())))
 					{
-						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() != null ? entry.getNetAmountAfterAllDisc()
-								.doubleValue() : 0.00D;
+						final double netAmtAftrAllDisc = entry.getNetAmountAfterAllDisc() == null ? 0.00D : entry
+								.getNetAmountAfterAllDisc().doubleValue();
 						currNetAmtAftrAllDisc = getCurrNetAmtAftrAllDisc(netAmtAftrAllDisc, entryLevelApportionedPrice);
 					}
 					else

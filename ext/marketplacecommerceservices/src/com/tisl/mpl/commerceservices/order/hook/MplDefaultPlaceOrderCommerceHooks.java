@@ -46,6 +46,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -124,16 +126,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private RMSVerificationNotificationService rMSVerificationNotificationService;
 
-	@Autowired
+	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
 
-	@Autowired
+	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -156,7 +158,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			if (null != orderModel)
 			{
-				final Collection<DiscountModel> voucherColl = voucherService.getAppliedVouchers(orderModel);
+				final Collection<DiscountModel> voucherColl = getVoucherService().getAppliedVouchers(orderModel);
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>();
 				if (CollectionUtils.isNotEmpty(voucherColl))
 				{
@@ -165,7 +167,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
 					final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) voucherList.get(0);
-					final VoucherInvalidationModel voucherInvalidationModel = voucherModelService.createVoucherInvalidation(
+					final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService().createVoucherInvalidation(
 							(VoucherModel) voucherList.get(0), promotionVoucherModel.getVoucherCode(), orderModel);
 					for (final DiscountValue discount : orderModel.getGlobalDiscountValues())
 					{
@@ -215,7 +217,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -229,7 +231,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -628,9 +630,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
+	 * 
 	 * @param orderList
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions
@@ -1381,5 +1383,50 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	{
 		return rMSVerificationNotificationService;
 	}
+
+
+
+	/**
+	 * @return the voucherModelService
+	 */
+	public VoucherModelService getVoucherModelService()
+	{
+		return voucherModelService;
+	}
+
+
+
+	/**
+	 * @param voucherModelService
+	 *           the voucherModelService to set
+	 */
+	public void setVoucherModelService(final VoucherModelService voucherModelService)
+	{
+		this.voucherModelService = voucherModelService;
+	}
+
+
+
+	/**
+	 * @return the voucherService
+	 */
+	public VoucherService getVoucherService()
+	{
+		return voucherService;
+	}
+
+
+
+	/**
+	 * @param voucherService
+	 *           the voucherService to set
+	 */
+	public void setVoucherService(final VoucherService voucherService)
+	{
+		this.voucherService = voucherService;
+	}
+
+
+
 
 }
