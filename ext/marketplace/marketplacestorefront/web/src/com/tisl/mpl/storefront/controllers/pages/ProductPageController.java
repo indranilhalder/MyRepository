@@ -189,6 +189,8 @@ public class ProductPageController extends AbstractPageController
 	private static final String SKU_ID_FOR_HD = "skuIdForHD";
 	private static final String SKU_ID_FOR_ED = "skuIdForED";
 
+	private static final String SKU_ID_FOR_CNC = "skuIdForCNC";
+
 	private static final String CUSTOMER_CARE_NUMBER = "1-800-282-8282";
 	private static final String CUSTOMER_CARE_EMAIL = "hello@tatacliq.com";
 
@@ -630,23 +632,31 @@ public class ProductPageController extends AbstractPageController
 			if (pin.matches(regex))
 			{
 				LOG.debug("productCode:" + productCode + "pinCode:" + pin);
-
 				final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
-
-				final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
-				LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
 				final LocationDTO dto = new LocationDTO();
-				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
-				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
-				final Location myLocation = new LocationDtoWrapper(dto);
-				LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
-				LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+				Location myLocation = null;
+				if (null != pinCodeModelObj)
+				{
+					try
+					{
+						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+						LOG.debug("configurableRadius is:" + configurableRadius);
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
+						response = pinCodeFacade.getResonseForPinCode(productCode, pin,
+								populatePinCodeServiceData(productCode, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
 
-
-				sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
-				response = pinCodeFacade.getResonseForPinCode(productCode, pin,
-						populatePinCodeServiceData(productCode, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
-				//response = pinCodeFacade.getResonseForPinCode(productCode, pin, populatePinCodeServiceData(productCode, storeList));
+						return response;
+					}
+					catch (final Exception e)
+					{
+						LOG.error("configurableRadius values is empty please add radius property in properties file ");
+					}
+				}
 			}
 
 		}
@@ -711,8 +721,11 @@ public class ProductPageController extends AbstractPageController
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			populateProductData(productData, model);
 			final List<String> deliveryInfoList = new ArrayList<String>();
+
 			deliveryInfoList.add(ModelAttributetConstants.EXPRESS_DELIVERY);
 			deliveryInfoList.add(ModelAttributetConstants.HOME_DELIVERY);
+			deliveryInfoList.add(ModelAttributetConstants.CLICK_AND_COLLECT);
+
 			/* deliverychange */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfoList);
 			updatePageTitle(productData, model);
@@ -723,6 +736,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(ModelAttributetConstants.SELLERS_SKU_ID_LIST, form.getSellersSkuListId());
 			model.addAttribute(SKU_ID_FOR_ED, form.getSkuIdForED());
 			model.addAttribute(SKU_ID_FOR_HD, form.getSkuIdForHD());
+			model.addAttribute(SKU_ID_FOR_CNC, form.getSkuIdForCNC());
 			model.addAttribute(SKU_ID_FOR_COD, form.getSkuIdForCod());
 			model.addAttribute(ModelAttributetConstants.SKU_IDS_WITH_NO_STOCK, form.getSkuIdsWithNoStock());
 			final List<PinCodeResponseData> stockDataArray = new ArrayList<PinCodeResponseData>();
@@ -1614,16 +1628,16 @@ public class ProductPageController extends AbstractPageController
 
 				final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
 						seller.getSellerID());
-				LOG.debug("StoreList size is :" + storeList.size());
 
-				if (null!= storeList && storeList.size() > 0)
+				if (null != storeList && storeList.size() > 0)
 				{
 					final List<String> locationList = new ArrayList<String>();
 					for (final Location location : storeList)
 					{
+						LOG.debug("Slave Ids for Stores::" + location.getName());
 						locationList.add(location.getName());
 					}
-					LOG.debug("locationList:" + locationList.size());
+					LOG.debug("Total Slave Ids List for given Pincode :" + locationList.size());
 					data.setStore(locationList);
 				}
 				data.setSellerId(seller.getSellerID());

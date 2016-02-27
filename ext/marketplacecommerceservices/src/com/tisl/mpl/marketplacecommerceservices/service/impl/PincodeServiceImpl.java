@@ -12,7 +12,6 @@ import de.hybris.platform.storelocator.exception.PointOfServiceDaoException;
 import de.hybris.platform.storelocator.impl.DefaultGPS;
 import de.hybris.platform.storelocator.impl.GeometryUtils;
 import de.hybris.platform.storelocator.location.Location;
-import de.hybris.platform.storelocator.location.impl.DefaultLocation;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.ArrayList;
@@ -21,6 +20,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 
@@ -51,7 +52,8 @@ public class PincodeServiceImpl implements PincodeService
 			for (final PointOfServiceModel posModel : this.pincodeDao.getAllGeocodedPOS(gps, distance, sellerId))
 			{
 				final double dist = calculateDistance(gps, posModel);
-				result.add(new DefaultLocation(posModel, Double.valueOf(dist)));
+				//result.add(new DefaultLocation(posModel, Double.valueOf(dist)));
+				result.add(new CustomLocation(posModel, Double.valueOf(dist)));
 			}
 			Collections.sort(result);
 			return result;
@@ -77,19 +79,15 @@ public class PincodeServiceImpl implements PincodeService
 		try
 		{
 			pincodeModel = this.pincodeDao.getLatAndLongForPincode(pincode);
-			return pincodeModel;
+			if (null != pincodeModel)
+			{
+				return pincodeModel;
+			}
 		}
-		catch (final Exception e)
+		catch (final NullPointerException ex)
 		{
-			try
-			{
-				throw new Exception(e.getMessage(), e);
-			}
-			catch (final Exception e1)
-			{
-
-				e1.printStackTrace();
-			}
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, ex);
+			throw new EtailNonBusinessExceptions(ex);
 		}
 		return pincodeModel;
 	}

@@ -2828,9 +2828,42 @@ function populatePincodeDeliveryMode(response,buttonType){
 	var isServicable=values[0];
 	var selectedPincode=values[1];
 	var deliveryModeJsonMap=values[2];
-	var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
-	var length = Object.keys(deliveryModeJsonObj).length;
-	var isStockAvailable="Y";
+	//console.log(deliveryModeJsonMap);
+	$(".pincodeServiceError").hide();
+	if(deliveryModeJsonMap=="null"){
+		$('#unsevisablePin').show();
+		$(".pincodeServiceError").show();
+		$("#checkout-enabled").css("pointer-events","none");
+		$("#checkout-enabled").css("cursor","default");
+		$("#checkout-enabled").css("opacity","0.5");
+		$("#expressCheckoutButtonId").css("pointer-events","none");
+		$("#expressCheckoutButtonId").css("cursor","default");
+		$("#expressCheckoutButtonId").css("opacity","0.5");
+		var pincodeEntered = $('#defaultPinCodeIds').val();
+		var pincodeServiceError = "This item is not serviceable for pincode "+pincodeEntered;
+		//console.log(pincodeServiceError);
+		var elementId = $(".desktop li:nth-child(3) ul");
+		elementId.hide();
+		$(".pincodeServiceError").text(pincodeServiceError);
+		
+		
+	}else{
+		$('#unsevisablePin').hide();
+		$(".pincodeServiceError").hide();
+		$("#checkout-enabled").css("pointer-events","all");
+		$("#checkout-enabled").css("cursor","cursor");
+		$("#checkout-enabled").css("opacity","1");
+		$("#expressCheckoutButtonId").css("pointer-events","all");
+		$("#expressCheckoutButtonId").css("cursor","cursor");
+		$("#expressCheckoutButtonId").css("opacity","1");
+		var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
+		var length = Object.keys(deliveryModeJsonObj).length;
+		var isStockAvailable="Y";
+		if(deliveryModeJsonMap == 'N') {
+			console.log("This is NO");
+		}	
+		
+	}
 	
 	for ( var key in deliveryModeJsonObj) {
 	var ussId= deliveryModeJsonObj[key].ussid;
@@ -2897,7 +2930,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 				}
 				else if(deliveryType==='CNC'/* && parseFloat(inventory) >= parseFloat(quantityValue)*/){
 					var newLi = document.createElement("li");
-					newLi.setAttribute("class", "click-collect");
+					newLi.setAttribute("class", "methodClick");
 					var text = document.createTextNode("Click and Collect");
 					newLi.appendChild(text);
 					newUi.appendChild(newLi);

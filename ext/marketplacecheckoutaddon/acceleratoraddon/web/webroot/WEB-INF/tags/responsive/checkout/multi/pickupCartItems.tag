@@ -15,10 +15,28 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
-
+<style>
+	.cncOrderInfo{
+		list-style: none;
+		clear: both;
+	}
+	.thumb {
+		width: 30%;
+		float: left;
+	}
+	.thumb a img {
+		width: 95%;
+	}
+	.price {
+		padding-top: 10px;
+	}
+	.title {
+		font-weight: 600;
+	}
+</style>
 <c:if test="${showHead}">
-	<li class="section">
-		<div class="title"><spring:theme code="checkout.multi.items.to.pickup" text="Pick up:"/></div>
+	<li class="section cncOrderInfo">
+		<div class="title"><spring:theme code="checkout.multi.items.to.pickup" text="Store Address:"/></div>
 		<div class="address">
 			${groupData.deliveryPointOfService.name}
 			<br>
@@ -45,7 +63,7 @@
 </c:if>
 <c:forEach items="${groupData.entries}" var="entry">		
 	<c:url value="${entry.product.url}" var="productUrl"/>
-		<li>
+		<li class="cncOrderInfo">
 			<div class="thumb">
 				<a href="${productUrl}">
 					<product:productPrimaryImage product="${entry.product}" format="thumbnail"/>
@@ -97,4 +115,3 @@
 		
 		</li>
 </c:forEach>
-

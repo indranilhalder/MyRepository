@@ -16,7 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "ticketMaster")
 @XmlType(propOrder =
-{ "customerID", "orderId", "subOrderId", "ticketType", "refundType", "returnCategory", "lineItemDataList" })
+{ "customerID", "orderId", "subOrderId", "ticketType", "refundType", "returnCategory", "lineItemDataList",
+		"alternateContactName", "alternatePhoneNo", "source", "lineItemId" })
 public class TicketMasterXMLData
 {
 	private String customerID;
@@ -26,6 +27,40 @@ public class TicketMasterXMLData
 	private String refundType;
 	private String returnCategory;
 	private List<TicketlineItemsXMLData> lineItemDataList;
+	private String alternateContactName;
+	private String alternatePhoneNo;
+	private String source;
+	private String lineItemId;
+
+
+
+	/**
+	 * @return the lineItemId
+	 */
+	@XmlElement(name = "lineItemId")
+	public String getLineItemId()
+	{
+		return lineItemId;
+	}
+
+	/**
+	 * @param lineItemId
+	 *           the lineItemId to set
+	 */
+	public void setLineItemId(final String lineItemId)
+	{
+		this.lineItemId = lineItemId;
+	}
+
+	/**
+	 * @param source
+	 *           the source to set
+	 */
+
+	public void setSource(final String source)
+	{
+		this.source = source;
+	}
 
 	/**
 	 * @return the customerID
@@ -153,6 +188,51 @@ public class TicketMasterXMLData
 		this.lineItemDataList = lineItemDataList;
 	}
 
+	/**
+	 * @return the alternateContactName
+	 */
+	@XmlElement(name = "AlternateContactName")
+	public String getAlternateContactName()
+	{
+		return alternateContactName;
+	}
+
+	/**
+	 * @return the alternatePhoneNo
+	 */
+	@XmlElement(name = "AlternatePhoneNo")
+	public String getAlternatePhoneNo()
+	{
+		return alternatePhoneNo;
+	}
+
+	/**
+	 * @return the source
+	 */
+
+	@XmlElement(name = "source")
+	public String getSource()
+	{
+		return source;
+	}
+
+	/**
+	 * @param alternateContactName
+	 *           the alternateContactName to set
+	 */
+	public void setAlternateContactName(final String alternateContactName)
+	{
+		this.alternateContactName = alternateContactName;
+	}
+
+	/**
+	 * @param alternatePhoneNo
+	 *           the alternatePhoneNo to set
+	 */
+	public void setAlternatePhoneNo(final String alternatePhoneNo)
+	{
+		this.alternatePhoneNo = alternatePhoneNo;
+	}
 
 
 }

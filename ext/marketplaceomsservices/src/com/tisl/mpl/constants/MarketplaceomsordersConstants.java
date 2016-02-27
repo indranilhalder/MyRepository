@@ -36,7 +36,9 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final String PAYMENTMETHOD_COD = "COD";
 	public static final String PAYMENTMETHOD_WALLET = "Wallet";
 
-
+	public static final String REFUND_TYPE_CODE="S";
+	public static final String TICKET_TYPE_CODE="C";
+	public static final String REASON_CODE="01";
 	private MarketplaceomsordersConstants()
 	{
 		//empty to avoid instantiating this constant class

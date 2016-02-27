@@ -11,20 +11,11 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 
-
-
-
-
-
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>	
-	
-	
 	<!-- <table class="orderListTable"> -->
-		
-		 
-			<c:forEach items="${orderGroup.entries}" var="entry">
+			<c:forEach items="${orderGroup.entries}" var="entry"> 
 				<c:url value="${entry.product.url}" var="productUrl"/>
 				<li class="item">
 				<ul class="desktop">
@@ -36,7 +27,7 @@
 						</div>
 						<div class="product">
 								
-							<p class="company"></p>
+							<p class="company"></p> 
 							<ycommerce:testId code="orderDetails_productName_link">
 							<h3 class="product-brand-name"><a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.brand.brandname}</a></h3>
 								<h3 class="product-name"><a href="${entry.product.purchasable ? productUrl : ''}">${entry.product.name}</a></h3>
@@ -71,10 +62,7 @@
 					</span>
 					</p>
 					<ul class="item-details">
-					
-					
 					 <%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
-				
 					</ul> 
 					</div>
 					  

@@ -71,9 +71,10 @@
 		<property name="timeService" ref="timeService" />
 		<property name="orderStatusMapping" ref="orderStatusMapping" />
 		<property name="configurationService" ref="configurationService" />
-		
+		<property name="customOmsCancelAdapter" ref="customOmsCancelAdapter" />
 	</bean>
 	
+	<bean id="customOmsCancelAdapter" class="com.tisl.mpl.integration.oms.adapter.CustomOmsCancelAdapter" />
 	
 	<alias name="defaultConsignmentStatusMappingStrategy" alias="consignmentStatusMappingStrategy" />
 	<bean id="defaultConsignmentStatusMappingStrategy"
@@ -123,7 +124,14 @@
 		<entry key="CLONCANC" value="CLOSED_ON_CANCELLATION" />
 		<entry key="OTFRDLVY" value="OUT_FOR_DELIVERY" />
 		<entry key="CODCWRND" value="COD_CLOSED_WITHOUT_REFUND" />
-		<entry key="CNLREFND" value="ORDER_CANCELLED" />					
+		<entry key="CNLREFND" value="ORDER_CANCELLED" />
+		<!-- Added entried fro R2 -->	
+		<entry key="ODREALOC" value="ORDER_REALLOCATED" />
+		<entry key="CNCINTED" value="CNC_INITIATED" />
+		<entry key="RDYCOLTN" value="READY_FOR_COLLECTION" />
+		<entry key="ORDCOLTD" value="ORDER_COLLECTED" />
+		<entry key="ORDUNCTD" value="ORDER_UNCOLLECTED"/>
+		<entry key="RETUIRTO" value="RETURNINITIATED_BY_RTO "/>					
 	</util:map>
 	
 	<alias name="defaultOrderStatusMapping" alias="orderStatusMapping" />
@@ -209,6 +217,14 @@
 		<entry key="PYMTFELD" value="PAYMENT_FAILED" />
 		<entry key="PYMTVRFN" value="RMS_VERIFICATION_PENDING" />
 		<entry key="RMSFAIL" value="RMS_VERIFICATION_FAILED" />
-		<entry key="PRETUCAN" value="PARTIALLY_RETURN_CANCELLED" />					
+		<entry key="PRETUCAN" value="PARTIALLY_RETURN_CANCELLED" />
+		<!-- added entries for R2 -->
+		<entry key="ODREALOC" value="ORDER_REALLOCATED" />
+		<entry key="CNCINTED" value="CNC_INITIATED" />
+		<entry key="RDYCOLTN" value="READY_FOR_COLLECTION" />
+		<entry key="ORDCOLTD" value="ORDER_COLLECTED" />
+		<entry key="ORDUNCTD" value="ORDER_UNCOLLECTED"/>
+		<entry key="RETUIRTO" value="RETURNINITIATED_BY_RTO "/>
+	    				
 	</util:map>
 </beans>

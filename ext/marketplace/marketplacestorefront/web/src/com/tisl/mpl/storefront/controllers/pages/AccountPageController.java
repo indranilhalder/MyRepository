@@ -103,6 +103,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.restlet.resource.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.Scope;
@@ -1076,6 +1077,38 @@ public class AccountPageController extends AbstractMplSearchPageController
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
 		return getViewForPage(model);
 	}
+
+
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public String string(@RequestParam(value = "orderId") final String orderId, @RequestParam(value = "name") final String name,
+			@RequestParam(value = "mobile") final String mobile)
+	{
+		String status = null;
+		if (orderId != null && name != null && mobile != null)
+		{
+			status = mplOrderFacade.editPickUpInfo(orderId, name, mobile);
+		}
+
+		return status;
+	}
+
+	@RequestMapping(value = RequestMappingUrlConstants.CREATE_TICKET_CRA_UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public void crmTicketUpdetaPickUpDetails(@RequestParam(value = "orderId") final String orderId)
+	{
+		if (orderId != null)
+		{
+		   LOG.info("Create CRM  Ticket For UpdatePickUpDetails ");
+			mplOrderFacade.createCrmTicketUpdatePickDetails(orderId);
+		}
+	}
+
+
 
 
 
@@ -6592,9 +6625,5 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		return null;
 	}
-
-
-
-
 
 }

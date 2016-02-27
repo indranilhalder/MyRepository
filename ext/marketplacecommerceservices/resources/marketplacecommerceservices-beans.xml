@@ -261,6 +261,9 @@
 		<property name="emailId" type="String"/>
 		<property name="actionType" type="String"/>
 		<property name="ticketStatus" type="String"/>
+        <property name="alternateContactName" type="String"/>
+        <property name="alternatePhoneNo" type="String"/>
+        <property name="source" type="String"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
@@ -629,4 +632,3 @@
 	</bean>
 	
 </beans>
-

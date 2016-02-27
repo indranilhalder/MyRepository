@@ -460,7 +460,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INR = "INR";
 	public static final String HD = "HD";
 	public static final String ED = "ED";
-	public static final String CnC = "CnC";
+	public static final String CnC = "CNC";
 	public static final String CC = "CC";
 
 	public static final String X = "X";
@@ -1323,9 +1323,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
 
-
+	//CRM Ticket Type
+	public static final String Ticket_Type = "AC";
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
+	//CRM Ticket Source From Commerce
+	public static final String SOURCE = "commerce";
 
 
 	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
