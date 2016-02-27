@@ -2641,13 +2641,15 @@ function submitNBForm(){
 								//console.log(juspayResponse);
 								var url = juspayResponse.payment.authentication.url;
 								var method = juspayResponse.payment.authentication.method;
-								var frm = document.createElement("form")
-								frm.style.display = "none"; // ensure that the form is hidden from the user
-								frm.setAttribute("method", method);
-								frm.setAttribute("action", url);
+								
 								if(method === "POST") {
-								  var params = juspayResponse.payment.authentication.params;
-								  for(var key in params) {
+									var frm = document.createElement("form")
+									frm.style.display = "none"; // ensure that the form is hidden from the user
+									frm.setAttribute("method", method);
+									frm.setAttribute("action", url);	
+									
+									var params = juspayResponse.payment.authentication.params;
+									for(var key in params) {
 								    var value = params[key];
 								    var field = document.createElement("input");
 								    field.setAttribute("type", "hidden");
@@ -2655,10 +2657,36 @@ function submitNBForm(){
 								    field.setAttribute("value", value);
 								    frm.appendChild(field);
 								  }
+									document.body.appendChild(frm)
+									// form is now ready
+									frm.submit();
 								}
-								document.body.appendChild(frm)
-								// form is now ready
-								frm.submit();
+								
+								 if(method == "GET") {
+								    window.location.href = url;
+								    return;
+								 }
+								
+//								var frm = document.createElement("form")
+//								frm.style.display = "none"; // ensure that the form is hidden from the user
+//								frm.setAttribute("method", method);
+//								frm.setAttribute("action", url);
+//								if(method === "POST") {
+//								  var params = juspayResponse.payment.authentication.params;
+//								  for(var key in params) {
+//								    var value = params[key];
+//								    var field = document.createElement("input");
+//								    field.setAttribute("type", "hidden");
+//								    field.setAttribute("name", key);
+//								    field.setAttribute("value", value);
+//								    frm.appendChild(field);
+//								  }
+//								}
+//								document.body.appendChild(frm)
+//								// form is now ready
+//								frm.submit();
+								
+								
 						},
 						error : function(resp) {
 							$("#netbankingIssueError").css("display","block");
