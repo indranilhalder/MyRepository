@@ -347,8 +347,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
 				{
-					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, subOrderModel.getParentReference().getCode(),
-							cancelOrRetrnanable, isReturn);
+					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, cancelOrRetrnanable, isReturn);
 				}
 			}
 			if (ticketTypeCode.equalsIgnoreCase("R") && bogoOrFreeBie) //TISEE-933
@@ -440,11 +439,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					if (ticketTypeCode.equalsIgnoreCase("C"))
 					{
-						updateConsignmentStatus(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.CANCELLATION_INITIATED);
+						updateConsignmentStatus(abstractOrderEntryModel, ConsignmentStatus.CANCELLATION_INITIATED);
 					}
 					else if (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) ////TISEE-933
 					{
-						updateConsignmentStatus(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.RETURN_INITIATED);
+						updateConsignmentStatus(abstractOrderEntryModel, ConsignmentStatus.RETURN_INITIATED);
 					}
 				}
 			}
@@ -1208,7 +1207,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 *
 	 */
 	private MplCancelOrderRequest populateOrderLineData(final OrderEntryData subOrderEntry, final String ticketTypeCode,
-			final OrderModel subOrderModel, final String reasonCode, final String ussid)
+			final OrderModel subOrderModel, final String reasonCode)
 	{
 
 		final MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
