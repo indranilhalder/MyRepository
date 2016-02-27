@@ -52,6 +52,7 @@
 									<select class="black-arrow" id="sortOptions${top ? '1' : '2'}" name="sort">
 										<option disabled><spring:theme code="${themeMsgKey}.sortTitle"/></option>
 										<c:forEach items="${searchPageData.sorts}" var="sort">
+											<c:if test="${sort.code ne 'promotedpriority-asc' }">
 											<option value="${sort.code}" ${sort.selected? 'selected="selected"' : ''}>
 												<c:choose>
 													<c:when test="${not empty sort.name}">
@@ -62,6 +63,7 @@
 													</c:otherwise>
 												</c:choose>
 											</option>
+											</c:if>
 										</c:forEach>
 									</select>
 									

@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,20 +110,23 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 				cancelModels = mplRefundService.getAllCancelled(reportModel.getStartDate(), reportModel.getEndDate());
 			}
 
-			if (refundModels.size() > 0)
+			//if (refundModels.size() > 0)
+			if (CollectionUtils.isNotEmpty(refundModels))
 			{
 				//Convert refund data and write into CSV
 				LOG.debug("-----------------REfund Write started--" + refundModels.size());
 				writeItemsToCSV(convertForOrderRefund(refundModels));
 				LOG.debug("-----------------REfund Write ended");
 			}
-			if (replaceModels.size() > 0)
+			//if (replaceModels.size() > 0)
+			if (CollectionUtils.isNotEmpty(replaceModels))
 			{
 				LOG.debug("-----------------Replacement Write started--" + replaceModels.size());
 				writeItemsToCSV(convertForOrderReplacement(replaceModels));
 				LOG.debug("-----------------Replacement Write ended--" + replaceModels.size());
 			}
-			if (cancelModels.size() > 0)
+			//if (cancelModels.size() > 0)
+			if (CollectionUtils.isNotEmpty(cancelModels))
 			{
 				LOG.debug("-----------------Cancel Write started--" + cancelModels.size());
 				writeItemsToCSV(convertForOrderCancelled(cancelModels));

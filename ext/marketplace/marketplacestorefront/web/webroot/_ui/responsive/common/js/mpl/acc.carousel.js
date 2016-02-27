@@ -7,6 +7,7 @@ ACC.carousel = {
 	     "myStyleCarousel",
 	     "heroProductCarousel",
 	     "springflingCarousel",
+	     "myReviewCarousel",
 	     "advancedCategoryCarousel",
 		["bindCarousel", $(".js-owl-carousel").length >0]
 	],
@@ -75,6 +76,20 @@ ACC.carousel = {
 			pagination:false,
 			singleItem:true
 		});
+		if(typeof homePageBannerTimeout!== "undefined"){
+			var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+			//alert(timeout);
+			$("#rotatingImageTimeout").owlCarousel({
+				navigation:false,
+				rewindNav: true,
+				autoPlay: timeout,
+				navigationText : [],
+				pagination:true,
+				singleItem:true,
+				autoHeight : true
+			});
+		}
+		
 	},
 	shopByLookCarousel: function(){
 		$(".shopByLookCarousel").owlCarousel({
@@ -144,7 +159,36 @@ ACC.carousel = {
 			rewindNav: false,
 			lazyLoad:true
 		});
+	},
+	
+	myReviewCarousel: function(){
+		$("#my-review-carousel").owlCarousel({
+			navigation:true,
+			navigationText : [],
+			pagination:false,
+			itemsDesktop : [5000,5], 
+			itemsDesktopSmall : [1400,5], 
+			itemsTablet: [650,2], 
+			itemsMobile : [480,2], 
+			rewindNav: false,
+			afterInit: function() {$("#my-review-carousel").show();}
+		});
 	}
 	
+	/*New Homepage change*/
+	/*timeoutCarousel: function(){
+		var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+		//alert(timeout);
+		$("#rotatingImageTimeout").owlCarousel({
+			navigation:false,
+			rewindNav: true,
+			autoPlay: timeout,
+			navigationText : [],
+			pagination:true,
+			singleItem:true
+		});
+	}*/
 	
+	
+
 };

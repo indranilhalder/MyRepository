@@ -1116,13 +1116,40 @@
 		</organizer>
 	</type>
 
-
+<type name="ProductPromotion" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.promotion.properties" mode="append">
+					<section name="section.promotion.products">
+						<listlayout>
+							<text name="text.productpromotion.productcodelisttitledescription" />
+							<attribute name="productCodeList" />
+							</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.media" mode="append">
+					<section name="section.promotion.media" mode="append">
+						<columnlayout>
+							<row>
+								<attribute name="productBanner" labelwidth="100">
+									<mediaeditor/>
+								</attribute>
+								<text name="text.productpromotion.productbanner" />
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
+	
 	<!-- Tata Etail For Buy A get y Free -->
 	<type name="BuyXItemsofproductAgetproductBforfree" mode="append">
 		<organizer>
 			<editor mode="append">
 				<tab name="tab.promotion.properties" mode="append">
 					<section name="section.promotion.products">
+
 						<listlayout>
 							<text name="text.productpromotion.qualifyingproductscategories" />
 							<attribute name="products" labelwidth="100">
@@ -2984,7 +3011,161 @@
 			</editor>
 		</organizer>
 	</type>
-
-
 <!--  seller priority ends -->
+
+	
+<!-- Voucher HMC Modification -->	
+<type name="Voucher" icon="ext/voucher/images/e_voucher.gif" mode="append">
+      <organizer>
+      <search mode="replace">
+            <condition attribute="code"/>
+            <condition attribute="name"/>
+         </search>
+         <result>
+            <listview mode="replace">
+               <itemlayout>
+                  <attribute name="code" width="100"/>
+                  <attribute name="name" width="150"/>
+                  <attribute name="valueString" width="150"/>
+               </itemlayout>
+            </listview>
+            <editview mode="replace">
+               <itemlayout>
+                  <attribute name="code" width="100"/>
+                  <attribute name="name" width="150"/>
+                  <attribute name="valueString" width="150"/>
+               </itemlayout>
+            </editview>
+            <treeview mode="replace">
+               <itemlayout>
+                  <attribute name="code"/>
+                  <attribute name="name"/>
+                  <attribute name="valueString"/>
+               </itemlayout>
+            </treeview>
+         </result>
+         <editor mode="replace">
+            <exclude>
+               <exclusion attribute="valueString"/>
+               <exclusion attribute="global"/>
+               <exclusion attribute="priority"/>
+               <exclusion attribute="freeShipping"/>
+            </exclude> 
+             <essentials>
+               <listlayout>
+                  <text name="text.voucher.code" width="353"/>
+                  <attribute name="code"/>
+                  <attribute name="name"/>
+               </listlayout>
+            </essentials>          
+            <tab name="tab.common">
+            	<section name="section.voucher.description">
+                  <listlayout>
+                     <attribute name="description"/>
+                  </listlayout>
+               </section>
+               <section name="section.voucher.value">
+                  <columnlayout leftwidth="370" rightwidth="370">
+                  	<row>
+                        <attribute name="absolute">
+                           <advancedbooleaneditor truename="absolute" falsename="relative"/>
+                        </attribute>
+                     </row>
+                      <row>
+                        <attribute name="value"/>
+                        <attribute name="currency"/>
+                     </row>
+                     <row>
+                        <attribute name="maxDiscountValue"/>
+                     </row>
+                  </columnlayout>
+               </section>
+            </tab> 
+            <tab name="tab.voucher.orders">
+               <section name="section.voucher.orders">
+                  <listlayout>
+                     <attribute name="orders">
+                        <referencecollectioneditor create="false" add="false" remove="false">
+                        	<itemlayout>
+                        		<attribute name="code" width="206"/>
+                        		<attribute name="date" width="120"/>
+                        		<attribute name="totalPrice" width="100"/>
+                        		<attribute name="user" width="120"/>
+                        	</itemlayout>
+                        </referencecollectioneditor>
+                     </attribute>
+                  </listlayout>
+               </section>
+            </tab>
+            <tabref idref="tab_administration"/>
+         </editor>
+      </organizer>
+      <defaultreference mode="replace">
+         <itemlayout>
+            <attribute name="code"/>
+            <attribute name="name"/>
+            <attribute name="valueString"/>
+         </itemlayout>
+      </defaultreference>
+   </type>
+   
+   <type name="PromotionVoucher" icon="ext/voucher/images/e_voucher.gif" mode="append">
+	   <organizer>
+	      <search>
+	         <condition attribute="voucherCode"/>
+	      </search>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.promotionvoucher.common" width="353"/>
+	               <attribute name="code" maxlength="3"/>
+	               <attribute name="name"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="tab.common" position="0">
+	            <section name="section.voucher.description" mode="replace">
+	            	<listlayout>
+                     	<attribute name="description"/>
+                  	</listlayout>
+	               <listlayout>
+	                  <text name="text.promotionvoucher.vouchercode" width="353"/>
+	                  <table>
+	                     <tr>
+	                        <td>
+	                           <attribute name="voucherCode"/>
+	                        </td>
+	                        <td>
+	                           <action type="item" classname="com.tisl.mpl.core.hmc.MplGeneratePromotionVoucherCodeAction" name="btn.generate.voucher.code.action"/>
+	                        </td>
+	                     </tr>
+	                  </table>
+	               </listlayout>
+	            </section>
+	         </tab>
+	         <tab name="tab.voucher.restrictions" position="1">
+	            <section name="section.voucher.restrictions">
+	               <listlayout>
+	               	<text name="text.voucher.restrictions" width="595"/>
+                     <attribute name="restrictions">
+                        <referencecollectioneditor presetattribute="voucher"
+                        									create="true"
+                        									add="true"
+                        									remove="true"
+                        									autosave="true">
+                           <itemlayout>
+                              <attribute name="restrictionType" width="194"/>
+                              <attribute name="description" width="357"/>
+                           </itemlayout> 
+                        </referencecollectioneditor>
+                     </attribute>
+	                  <attribute name="redemptionQuantityLimit" position="0"/>
+	                  <attribute name="redemptionQuantityLimitPerUser" position="1"/>
+	               </listlayout>
+	            </section>
+	         </tab>                  
+	      </editor>
+	   </organizer>
+	</type>
+ <!-- Voucher HMC Modification ends -->
+
 </configuration>

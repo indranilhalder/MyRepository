@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.errors.converters;
 
@@ -40,11 +40,11 @@ import org.springframework.context.MessageSource;
 @UnitTest
 public class CartModificationDataErrorConverterTest
 {
-	private static long OUT_OF_STOCK_VALUE = 0;
-	private static long LOW_STOCK_VALUE = 10;
-	private static long PRODUCT_QUANTITY = 20;
-	private static String PRODUCT_CODE = "123456";
-	private static Integer ENTRY_NUMBER = Integer.valueOf(1);
+	private static final long OUT_OF_STOCK_VALUE = 0;
+	private static final long LOW_STOCK_VALUE = 10;
+	private static final long PRODUCT_QUANTITY = 20;
+	private static final String PRODUCT_CODE = "123456";
+	private static final Integer ENTRY_NUMBER = Integer.valueOf(1);
 	public static final String NO_STOCK_MESSAGE = "cart.noStock";
 	public static final String LOW_STOCK_MESSAGE = "cart.noStock";
 

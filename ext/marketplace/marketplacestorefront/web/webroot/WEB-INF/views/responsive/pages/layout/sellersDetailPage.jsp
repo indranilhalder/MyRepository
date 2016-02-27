@@ -152,6 +152,7 @@ var hdIndx=-1;
 var edIndx=-1;
 $(document).ready(function() {
 	
+   	getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 var stockMap="${skuIdsWithNoStock}"; 
 	
 	 fetchPrice();
@@ -197,7 +198,7 @@ function firstToUpperCase( str ) {
 	background-color: #fff;
 	padding: 5px 10px;
 	border-collapse: separate;
-	box-shadow: 0 0 9px rgb(0, 203, 246);
+	box-shadow: 0 0 9px #a9143c;
 	visibility: hidden;
 }
 .tooltip_pop:after {
@@ -211,7 +212,7 @@ function firstToUpperCase( str ) {
 	-moz-transform: rotate(45deg);
 	transform: rotate(45deg);
 	border-collapse: separate;
-	box-shadow: 1px 1px 0px rgb(0, 203, 246);
+	box-shadow: 1px 1px 0px #a9143c;
 	position: absolute;
 	left: 50%;
 	margin-left: -4px;
@@ -376,7 +377,7 @@ var allSellers='${allsellers}';
 		<div class="product-detail">
 			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
 			<h2 class="company">${product.brand.brandname} by <span id="sellerNameId"></span></h2>
-				<h3 class="product-name">${product.name}</h3>
+				<h3 class="product-name">${product.productTitle}</h3>
 			</ycommerce:testId>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
@@ -456,7 +457,7 @@ var allSellers='${allsellers}';
 		<p><span id="otherSellersCount"></span>&nbsp;<span class="other-sellers-info"><spring:theme code="product.othersellers"></spring:theme></span>&nbsp;<spring:theme code="product.available"></spring:theme>&nbsp;<span id="minPrice" ></span></p>
 		</div>
 		<div id="sort" class="sort-by" style="display:none"><label><spring:theme code="seller.sort"/></label>
-		<select id="sort" onchange="sort(this.value);">
+		<select id="sellerSort" onchange="sortSellers(this.value);">
 				<%-- <option><spring:theme code="product.select"/></option> --%>
 				<option value="1"><spring:theme code="seller.sort.priceasc"/></option>
 				<option value="2"><spring:theme code="seller.sort.pricedesc"/></option>

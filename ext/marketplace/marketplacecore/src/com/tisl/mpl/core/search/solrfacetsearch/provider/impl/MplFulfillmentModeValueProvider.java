@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
@@ -29,14 +30,14 @@ import com.tisl.mpl.core.model.RichAttributeModel;
  *
  */
 //Index size for a PcmProductVariantModel
-public class MplFulfillmentModeValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplFulfillmentModeValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -61,7 +62,8 @@ public class MplFulfillmentModeValueProvider extends AbstractPropertyFieldValueP
 
 		final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
 
-		if (richAttributeModel != null && richAttributeModel.size() > 0)
+		//if (richAttributeModel != null && richAttributeModel.size() > 0)
+		if (CollectionUtils.isNotEmpty(richAttributeModel))
 		{
 			final DeliveryFulfillModesEnum fulfillModeEnum = richAttributeModel.get(0).getDeliveryFulfillModes();
 			final String fulfillMode = fulfillModeEnum.getCode();

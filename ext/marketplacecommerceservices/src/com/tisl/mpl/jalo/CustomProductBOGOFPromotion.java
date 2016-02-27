@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -75,8 +76,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 	/**
 	 * @Description : Buy One Get One Free
-	 * @param :
-	 *           SessionContext ctx ,PromotionEvaluationContext promoContext
+	 * @param : SessionContext ctx ,PromotionEvaluationContext promoContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -257,8 +257,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param :
-	 *           SessionContext ctx ,PromotionResult promotionResult ,Locale locale
+	 * @param : SessionContext ctx ,PromotionResult promotionResult ,Locale locale
 	 * @return : String
 	 */
 	@Override
@@ -307,8 +306,8 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 					args[0] = Integer.valueOf(finalNumberOfProducts);
 					args[1] = qualifyingCount;
 					args[2] = freeCount;
-					args[3] = minimumCategoryValue < 0.00D ? MarketplacecommerceservicesConstants.EMPTYSPACE
-							: Double.valueOf(minimumCategoryValue);
+					args[3] = minimumCategoryValue < 0.00D ? MarketplacecommerceservicesConstants.EMPTYSPACE : Double
+							.valueOf(minimumCategoryValue);
 					args[4] = populateMessageData(deliveryModes, paymentModes);
 					return formatMessage(this.getMessageCouldHaveFired(ctx), args, locale);
 				}
@@ -537,8 +536,8 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 						}
 
-						final List<PromotionOrderEntryConsumed> consumedItemsFromTail = consumeFromTail(paramSessionContext, comparator,
-								totalFactorCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
+						final List<PromotionOrderEntryConsumed> consumedItemsFromTail = consumeFromTail(paramSessionContext,
+								comparator, totalFactorCount, orderView.getAllEntries(paramSessionContext), qCMapForCatLevelBOGO,
 								tcMapForValidEntries);
 
 						final List actions = new ArrayList();
@@ -553,15 +552,15 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 						}
 						else
 						{
-							productAssociatedItemsMap = getDefaultPromotionsManager()
-									.getAssociatedItemsForAorBOGOorFreebiePromotions(validProductUssidMap, null);
+							productAssociatedItemsMap = getDefaultPromotionsManager().getAssociatedItemsForAorBOGOorFreebiePromotions(
+									validProductUssidMap, null);
 						}
 
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
 								productAssociatedItemsMap);
-						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE,
-								String.valueOf(this.getCode()));
+						paramSessionContext
+								.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 
 						//For setting qualifying count
 						int qalifyingCount = 0;
@@ -596,7 +595,8 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 							customBogoPromoDataMap.put(poec.getOrderEntry(paramSessionContext), Double.valueOf(adjustment));
 						}
 
-						if (customBogoPromoDataMap.size() > 0)
+						//if (customBogoPromoDataMap.size() > 0)
+						if (MapUtils.isNotEmpty(customBogoPromoDataMap))
 						{
 							LOG.debug("Populating the BOGO Promotion Details ");
 							LOG.debug("Creating Action for BOGO Promotion");

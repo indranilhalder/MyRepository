@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.coupon.service;
 
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -14,7 +17,7 @@ import com.tisl.mpl.data.VoucherDisplayData;
 
 
 /**
- * @author 752131
+ * @author TCS
  *
  */
 public interface MplCouponService
@@ -35,5 +38,7 @@ public interface MplCouponService
 	 * @return
 	 */
 	Set<Map<VoucherModel, DateRestrictionModel>> getClosedVoucher();
+
+	SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, PageableData pageableData);
 
 }
