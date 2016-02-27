@@ -370,7 +370,7 @@
 														</c:if>
 														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 															<a
-																href="${request.contextPath}/my-account/order/returnReplace?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+																href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 																<spring:theme code="text.account.returnReplace"
 																	text="Return Item" />
 															</a>

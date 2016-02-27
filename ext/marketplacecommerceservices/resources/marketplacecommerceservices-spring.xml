@@ -1577,4 +1577,37 @@
 	</bean>
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
+	<!-- Using Google Map service to look up address data. -->
+	<alias alias="geoServiceWrapper" name="defaultGoogleMapsGeoServiceWrapper"/>
+	
+	<alias alias="countryIsoGPSLocationMap" name="mplCountryIsoGPSLocationMap"/>
+	<bean id="mplCountryIsoGPSLocationMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map merge="true" key-type="java.lang.String" value-type="de.hybris.platform.storelocator.GPS">
+				<entry key="DEFAULT">
+					<bean class="de.hybris.platform.storelocator.impl.DefaultGPS">
+						<constructor-arg value="0D"/>
+						<constructor-arg value="0D"/>
+					</bean>
+				</entry>
+				<entry key="IN">
+					<bean class="de.hybris.platform.storelocator.impl.DefaultGPS">
+						<constructor-arg value="21.0000D"/>
+						<constructor-arg value="78.0000D"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<alias name="mplGoogleMapTools" alias="googleMapTools"/>
+	<bean id="mplGoogleMapTools" class="de.hybris.platform.storelocator.impl.GoogleMapTools" scope="prototype">
+		<property name="addressLocationParser" ref="firstPlacemarkWinsGoogleResponseParser"/>
+		<property name="routeDataParser" ref="routeDataGoogleResponseParser"/>
+		<property name="directionsUrlBuilder" ref="geolocationDirectionsUrlBuilder"/>
+		<property name="cliendId" value="${google.data-clientid}"/>
+		<property name="googleKey" value="${googleApiKey}"/>
+	</bean>
+	
+	<!-- Store Locator Beans end here -->
 </beans>

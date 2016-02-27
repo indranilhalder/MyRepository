@@ -615,9 +615,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
 					if (null != orderEntryData.getConsignment()
 							&& null != orderEntryData.getConsignment().getStatus()
-							&& orderEntryData.getConsignment().getStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-							&& returnWindow <= actualReturnWindow)
+							&& (orderEntryData.getConsignment().getStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment().getStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED)) && returnWindow <= actualReturnWindow)
 					{
 						orderEntryData.setItemReturnStatus(true);
 					}
@@ -794,7 +794,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							ticket.setLineItemDataList(lineItemData);
 							ticket.setSource(MarketplacecommerceservicesConstants.SOURCE);
 							ticket.setOrderId(orderModel.getCode());
-							ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+							ticket.setTicketType(MarketplacecommerceservicesConstants.TICKET_TYPE);
+							ticket.setTicketSubType(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE);
 							ticket.setAlternateContactName(orderModel.getPickupPersonName());
 							ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
 
@@ -883,7 +884,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							ticket.setSource(source);
 						}
 
-						ticket.setTicketType(MarketplacecommerceservicesConstants.Ticket_Type);
+						ticket.setTicketType(MarketplacecommerceservicesConstants.TICKET_TYPE);
+						ticket.setTicketSubType(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE);
 
 						if (null != mainOrder.getPickupPersonName())
 						{

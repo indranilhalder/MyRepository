@@ -106,7 +106,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String FRONTSLASH = "/";
 
-
 	//For AddProductCategory Intercepter
 	public static final String COMMA = ",";
 	public static final String HYPHEN = "-";
@@ -120,6 +119,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CATEGORY_APPAREL = "Clothing";
 	public static final String CATEGORY_ELECTORNICS = "Electronics";
 
+	//Return Item
+	public static final String REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE = "SORRY! We cannot pickup from the address provided, Please provide other address or You can Self - ship and let us know!";
 
 	//For Customer Facing Interceptor
 	public static final String NOTIFICATION_STATUS = "notification.status";
@@ -1131,6 +1132,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String VALID_RETURN = "valid.order.statuses.RETURN";
 	public static final String VALID_CANCEL = "valid.order.statuses.CANCEL";
 	public static final String VALID_DELIVERY = "valid.order.statuses.DELIVERY";
+	public static final String COLLECTED = "ORDER_COLLECTED";
 	//Post Seller Master Seller Name
 	public static final String SELLERMASTER_NAME = "firstname".intern();
 	public static final String CUSTOMER_MODEL_CANNOT_BE_NULL = "Customer model cannot be null";
@@ -1324,7 +1326,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
 
 	//CRM Ticket Type
-	public static final String Ticket_Type = "AC";
+	public static final String TICKET_TYPE = "D";
+	public static final String TICKET_SUB_TYPE = "AC";
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 	//CRM Ticket Source From Commerce

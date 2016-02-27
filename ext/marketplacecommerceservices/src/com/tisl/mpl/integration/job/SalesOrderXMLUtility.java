@@ -350,7 +350,16 @@ public class SalesOrderXMLUtility
 					{
 						xmlToFico = false;
 					}
-
+					//deliveryMode
+					if (null != entry.getMplDeliveryMode() && xmlToFico)
+					{
+						LOG.debug("DeliveryMode Setting into childOrderDataforXml");
+						xmlData.setDeliveryMode(entry.getMplDeliveryMode().getDeliveryMode().getName());
+					}
+					else
+					{
+						xmlToFico = false;
+					}
 					if (null != (entry.getOrderLineId()) || null != (entry.getTransactionID()) && xmlToFico)
 					{
 						xmlData.setTransactionId((entry.getOrderLineId() != null) ? entry.getOrderLineId() : entry.getTransactionID());
