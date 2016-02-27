@@ -171,6 +171,8 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+
+
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -363,6 +365,7 @@
 		<property name="otpDao" ref="otpDao" />
 		<property name="modelservice" ref="modelService" />
 		<property name="userService" ref="userService" />
+
 	</bean>
 	<bean id="otpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.OTPDaoImpl" />
@@ -1546,14 +1549,34 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
 	</bean>
 	
+	<bean id="homepageComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.HomepageComponentServiceImpl">
+	</bean>
+	
     <bean id="automationService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.InternalExternalAutomationServiceImpl">
 	</bean>
+	
+	
 		
 	<bean id="CampaignAutomationJob" parent="abstractJobPerformable"
 		class="com.tisl.mpl.marketplacecommerceservices.jobs.InternalExternalCampaignAutomationJob"
 		autowire="byName">
 	</bean>
+
+
+	<!-- Tata Cliq Job : Campaign Team -->
+	<bean id="campaignPromoSubService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoSubService">
+	</bean>
+	
+	<bean id="campaignPromoDataService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoDataService">
+		<property name="modelService" ref="modelService" />
+		<property name="campaignPromoSubService" ref="campaignPromoSubService" />
+		<property name="sellerBasedPromotionDao" ref="sellerBasedPromotionDao" />
+	</bean>
+
+	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
 	<!-- Using Google Map service to look up address data. -->
 	<alias alias="geoServiceWrapper" name="defaultGoogleMapsGeoServiceWrapper"/>
 	
