@@ -615,6 +615,7 @@ function refreshSellers(dataArray, ussid) {
 	var priceDataList = [];
 	var skuIdsForED = [];
 	var skuIdsForHD = [];
+	var skuIdsForCnC = [];
 	var skuForCodList = [];
 	var stockDataArrayList = [];
 	var stockIndx = -1;
@@ -646,6 +647,9 @@ function refreshSellers(dataArray, ussid) {
 					}
 					if (mode == 'ED') {
 						skuIdsForED[++indx] = "'" + dataArray[i]['ussid'] + "'";
+					}
+					if (mode == 'CNC') {
+						skuIdsForCnC[++indx] = "'" + dataArray[i]['ussid'] + "'";
 					}
 					// var stockDataArray=new Object();
 					var stockDataArray = {}
@@ -744,9 +748,11 @@ $(function() {
 	$(".submit")
 			.click(
 					function() {
+					
 						pinCodeChecked = true;
 						$("#home").hide();
 						$("#express").hide();
+						$("#collect").hide();
 						$("#codId").hide();
 						$(
 								'#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin')
@@ -790,9 +796,8 @@ $(function() {
 											refreshSellers(data, buyboxSeller);
 											$("#home").hide();
 											$("#express").hide();
-											$(
-													'#wrongPin,#unableprocessPin,#emptyPin')
-													.hide();
+											$("#collect").hide();
+											$('#wrongPin,#unableprocessPin,#emptyPin').hide();
 											$('#addToCartFormTitle').hide();
 											$('#addToCartButton-wrong').show();
 											$('#addToCartButton').hide();
@@ -803,6 +808,7 @@ $(function() {
 										else if (data[0]['isServicable'] == 'NA') {
 											$("#home").show();
 											$("#express").show();
+											$("#collect").show();
 											$("#codId").show();
 
 											return false;
@@ -864,7 +870,7 @@ $(function() {
 															// checking
 															// click&collect(CnC)
 															// mode
-															else if (deliveryModeName == 'CnC') {
+															else if (deliveryModeName == 'CNC') {
 
 																click = true;
 																/*
@@ -887,11 +893,13 @@ $(function() {
 															$("#home").hide();
 														}
 														if (exp == true) {
-															$("#express")
-																	.show();
+															$("#express").show();
 														} else {
-															$("#express")
-																	.hide();
+															$("#express").hide();
+														}if (click == true) {
+															$("#collect").show();
+														} else {
+															$("#collect").hide();
 														}
 
 														// }
@@ -1075,6 +1083,7 @@ function fetchPrice() {
  * This method is used to display delivery modes against a sku id
  */
 function displayDeliveryDetails(sellerName) {
+
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
 	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
@@ -1091,6 +1100,7 @@ function displayDeliveryDetails(sellerName) {
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
+				
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
 					leadTime=data['leadTimeForHomeDelivery'];
@@ -1127,6 +1137,16 @@ function displayDeliveryDetails(sellerName) {
 					//alert(pretext);
 					$("#expressDate").html(pretext+start+"-"+end+posttext);
 					$("#express").show();
+				}
+				console.log(deliveryModes.indexOf("CNC") );
+				if (deliveryModes.indexOf("CNC") == -1) {
+					
+					$("#collect").hide();
+				} else {
+					var start=$("#clickStartId").val();
+					var end=$("#clickEndId").val();
+					$("#clickDate").html(pretext+start+"-"+end+posttext);
+					$("#collect").show();
 				}
 
 				// enable COD flag if COD enabled

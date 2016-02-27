@@ -2115,6 +2115,24 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+					<attribute qualifier="serialNum" autocreate="true"
+						type="java.lang.String">
+						<modifiers initial="true" read="true" write="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="pickupPersonName" autocreate="true"
+						type="java.lang.String">
+						<modifiers initial="true" read="true" write="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="pickupPersonMobile" autocreate="true"
+						type="java.lang.String">
+						<modifiers initial="true" read="true" write="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
 				</attributes>
@@ -2683,6 +2701,23 @@
 						<persistence type="property" />
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
+					</attribute>
+					<!-- Newly added Fields -->
+
+					<attribute qualifier="state" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+
+					<attribute qualifier="city" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+					<!-- Modified -->
+
+					<attribute qualifier="slaveId" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
 					</attribute>
 				</attributes>
 			</itemtype>
@@ -7108,6 +7143,349 @@
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+		</typegroup>
+	
+	<!-- Newly Added for SlaveInfo Extending from PointOfService -->
+	<typegroup name="SlaveMaster">
+		<itemtype code="PointOfService" autocreate="false" generate="false">
+				<attributes>
+
+					<attribute autocreate="true" qualifier="sellerId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="slaveId" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="false" qualifier="type"
+						type="PointOfServiceTypeEnum">
+						<modifiers write="true" read="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="clicknCollect"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute qualifier="openingTime" type="java.util.Date">
+						<modifiers write="true" read="true" optional="true"
+							unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="closingTime" type="java.util.Date">
+						<modifiers initial="true" write="true" read="true"
+							optional="true" unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="mplWorkingDays" type="java.lang.String">
+						<modifiers initial="true" write="true" read="true"
+							optional="true" unique="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="remark" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="orderAcceptanceTAT"
+						type="java.lang.Integer" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="orderProcessingTAT"
+						type="java.lang.Integer" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="orderCutoffTimeHD"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="orderCutoffTimeED"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="isReturnable"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="parkingAvailable"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="location" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="storeSize" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="footFall" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="normalRetailSalesOfStore"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="ownerShip" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="managerName"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="managerPhone"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="mplStoreImage"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="storeContactNumber"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="returnstoreID"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="returnAddress1"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="returnAddress2"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="returnCountry"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="returnState"
+						type="java.lang.String" generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="returnCity" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="returnPin" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="active" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="email0" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email1" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email2" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email3" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email4" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email5" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email6" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email7" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email8" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="email9" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo0" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo1" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo2" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo3" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneN4" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo5" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo6" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo7" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo8" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="phoneNo9" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+				</attributes>
+
+			</itemtype>
+
+		</typegroup>
+
+		<typegroup name="Pincode">
+			<itemtype code="Pincode" extends="GenericItem"
+				jaloclass="de.hybris.platform.jalo.product.Pincode" autocreate="true"
+				generate="true">
+				<deployment table="Pincodes" typecode="11299" />
+				<attributes>
+					<attribute autocreate="true" qualifier="pincode" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" unique="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="latitude" type="java.lang.Double">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="longitude" type="java.lang.Double">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
 					</attribute>
 				</attributes>
 			</itemtype>

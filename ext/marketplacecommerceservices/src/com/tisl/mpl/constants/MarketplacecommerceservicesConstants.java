@@ -352,6 +352,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Seller Master Constants
 	public static final String SELLER_MASTER_XSD_PATH = "xsd/Seller_Master.xsd";
+	public static final String SLAVE_MASTER_XSD_PATH = "xsd/Slave_Master_v1.1.xsd";
 	public static final String SELLER_MASTER = "SELLER MASTER";
 	public static final String XSD_DATE_FORMAT = "yyyy-MM-dd";
 	public static final String ERROR_CODE_1 = "101";

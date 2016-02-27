@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
@@ -49,6 +50,11 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.storelocator.GPS;
+import de.hybris.platform.storelocator.location.Location;
+import de.hybris.platform.storelocator.location.impl.LocationDTO;
+import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.util.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -106,6 +112,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
@@ -242,7 +249,8 @@ public class ProductPageController extends AbstractPageController
 	@Autowired
 	private UserService userService;
 
-
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
 
 	/**
 	 * @param buyBoxFacade
@@ -621,9 +629,24 @@ public class ProductPageController extends AbstractPageController
 
 			if (pin.matches(regex))
 			{
+				LOG.debug("productCode:" + productCode + "pinCode:" + pin);
+
+				final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+
+				final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+				LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
+				final LocationDTO dto = new LocationDTO();
+				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+				final Location myLocation = new LocationDtoWrapper(dto);
+				LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+				LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+
+
 				sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
-				response = pinCodeFacade.getResonseForPinCode(productCode, pin, populatePinCodeServiceData(productCode));
-				//sessionService.setAttribute(ModelAttributetConstants.PINCODE_DETAILS, response);
+				response = pinCodeFacade.getResonseForPinCode(productCode, pin,
+						populatePinCodeServiceData(productCode, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
+				//response = pinCodeFacade.getResonseForPinCode(productCode, pin, populatePinCodeServiceData(productCode, storeList));
 			}
 
 		}
@@ -1023,6 +1046,7 @@ public class ProductPageController extends AbstractPageController
 
 			deliveryInfo.add(ModelAttributetConstants.EXPRESS_DELIVERY);
 			deliveryInfo.add(ModelAttributetConstants.HOME_DELIVERY);
+			deliveryInfo.add(ModelAttributetConstants.CLICK_AND_COLLECT);
 
 			/* delivery change */
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
@@ -1530,7 +1554,8 @@ public class ProductPageController extends AbstractPageController
 	 * @param productCode
 	 * @return requestData
 	 */
-	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode)
+	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps,
+			final Double configurableRadius)
 	{
 
 		final List<PincodeServiceData> requestData = new ArrayList<>();
@@ -1583,6 +1608,23 @@ public class ProductPageController extends AbstractPageController
 				if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod()))
 				{
 					data.setIsCOD(seller.getIsCod());
+				}
+
+				LOG.debug("Current locations for Seller Id:" + seller.getSellerID());
+
+				final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
+						seller.getSellerID());
+				LOG.debug("StoreList size is :" + storeList.size());
+
+				if (null!= storeList && storeList.size() > 0)
+				{
+					final List<String> locationList = new ArrayList<String>();
+					for (final Location location : storeList)
+					{
+						locationList.add(location.getName());
+					}
+					LOG.debug("locationList:" + locationList.size());
+					data.setStore(locationList);
 				}
 				data.setSellerId(seller.getSellerID());
 				data.setUssid(seller.getUssid());
