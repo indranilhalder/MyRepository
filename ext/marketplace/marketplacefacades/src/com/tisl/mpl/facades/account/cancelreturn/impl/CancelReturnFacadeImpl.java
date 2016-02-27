@@ -306,6 +306,162 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		return omsCancellationStatus;
 	}
 
+	/**
+	 * @author Techouts
+	 * @return boolean Retun Item Pincode Serviceability
+	 */
+	@Override
+	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, String reasonCode, String ussid,
+			String ticketTypeCode, CustomerData customerData, String refundType, boolean isReturn,
+			SalesApplication salesApplication, ReturnItemAddressData returnAddress)
+	{
+
+		LOG.debug("Step 1 :*********************************** isReturn:" + isReturn);
+
+		boolean cancelOrRetrnanable = true;
+		boolean omsCancellationStatus = false;
+		String pincode = null;
+
+		final OrderModel subOrderModel = customerAccountService.getOrderForCode((CustomerModel) userService.getCurrentUser(),
+				subOrderDetails.getCode(), baseStoreService.getCurrentBaseStore());
+		boolean bogoOrFreeBie = false;
+		try
+		{
+			MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
+
+			if (null != returnAddress.getPincode())
+			{
+				pincode = returnAddress.getPincode();
+			}
+			if (CollectionUtils.isNotEmpty(subOrderEntry.getAssociatedItems()))
+			{
+				bogoOrFreeBie = true;
+			}
+
+			LOG.debug("************BOGO or Free Bie available for order" + subOrderModel.getCode() + " is " + bogoOrFreeBie);
+			LOG.debug("Step 2: ***********************************Ticket Type code : " + ticketTypeCode);
+			if ((ticketTypeCode.equalsIgnoreCase("C") || (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie))) //TISEE-933
+			{
+
+				orderLineRequest = populateOrderLineData(subOrderEntry, ticketTypeCode, subOrderModel, reasonCode, ussid, pincode);
+
+				if (CollectionUtils.isNotEmpty(orderLineRequest.getOrderLine()))
+				{
+					cancelOrRetrnanable = cancelOrderInOMS(orderLineRequest, subOrderModel.getParentReference().getCode(),
+							cancelOrRetrnanable, isReturn);
+				}
+			}
+			if (ticketTypeCode.equalsIgnoreCase("R") && bogoOrFreeBie) //TISEE-933
+			{
+				cancelOrRetrnanable = true;
+			}
+			LOG.debug("Step 2: ***********************************cancelOrRetrnanable : " + cancelOrRetrnanable);
+			if (cancelOrRetrnanable)
+			{
+				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
+						subOrderEntry.getTransactionId());
+				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+				{
+
+					if (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) ////TISEE-933
+					{
+						LOG.debug("Step 3:***********************************History creation start for retrun");
+						createHistoryEntry(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.RETURN_INITIATED);
+					}
+				}
+			}
+
+
+			omsCancellationStatus = cancelOrRetrnanable;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		try
+		{
+
+			if (omsCancellationStatus)
+			{
+				LOG.debug("Step 4:***********************************Ticket is to be created for sub order:"
+						+ subOrderDetails.getCode());
+
+				final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
+						refundType, ussid, customerData, subOrderModel, returnAddress);
+
+				LOG.debug("Step 4.1:***********************************Ticket creation status for sub order:" + ticketCreationStatus);
+				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
+				cancelOrRetrnanable = initiateCancellation(ticketTypeCode, subOrderDetails, subOrderEntry, subOrderModel, reasonCode);
+				LOG.debug("Step 5.1 :*********************************** Refund and OMS call status:" + cancelOrRetrnanable);
+
+				if (cancelOrRetrnanable && ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) //TISEE-5524
+				{
+					LOG.debug("Step 6:***********************************Create return request for Return:"
+							+ subOrderDetails.getCode());
+
+					final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
+							subOrderEntry.getTransactionId());
+
+					for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+					{
+						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
+								salesApplication);
+
+						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
+					}
+				}
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error(">>> Cancel Refund exception occured : ", e);
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(">>> Cancel Refund exception occured : ", e);
+		}
+
+
+		try
+		{
+			LOG.debug("Step 8: *********************************** Updating commerce consignment status" + omsCancellationStatus);
+
+			if (omsCancellationStatus)
+			{
+				final List<AbstractOrderEntryModel> orderEntriesModel = associatedEntries(subOrderModel,
+						subOrderEntry.getTransactionId());
+				for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
+				{
+					if (ticketTypeCode.equalsIgnoreCase("C"))
+					{
+						updateConsignmentStatus(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.CANCELLATION_INITIATED);
+					}
+					else if (ticketTypeCode.equalsIgnoreCase("R") && !bogoOrFreeBie) ////TISEE-933
+					{
+						updateConsignmentStatus(abstractOrderEntryModel, subOrderModel, ConsignmentStatus.RETURN_INITIATED);
+					}
+				}
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			LOG.error("*******************Updating commerce consignment status ", e);
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(">>> Exception occured while updating consignment : ", ex);
+		}
+
+		return omsCancellationStatus;
+	}
+
 
 	private void updateConsignmentStatus(final AbstractOrderEntryModel orderEntryModel, final ConsignmentStatus consignmentStatus)
 	{
