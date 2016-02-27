@@ -14,7 +14,7 @@
 				src="${media.url}">
 		</c:when>
 		<c:otherwise>
-			<a href="${encodedUrl}">
+			<a href="${encodedUrl}?icid=${component.pk}">
 			<c:if test="${not empty media}">
 			<img class="image" alt="${media.altText}" src="${media.url}" /> 
 			</c:if>

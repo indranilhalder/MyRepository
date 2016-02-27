@@ -352,7 +352,8 @@ public class LoginPageController extends AbstractLoginPageController
 			form.setCheckPwd(rePassword);
 
 			getRegisterPageValidator().validate(form, bindingResult);
-			return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
+			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
+			return processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -383,9 +384,14 @@ public class LoginPageController extends AbstractLoginPageController
 	 * @return post login page
 	 * @throws CMSItemNotFoundException
 	 */
-	private String processRegisterUserRequestNew(final String referer, final ExtRegisterForm form,
-			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+	/*
+	 * private String processRegisterUserRequestNew(final String referer, final ExtRegisterForm form, final BindingResult
+	 * bindingResult, final Model model, final HttpServletRequest request, final HttpServletResponse response, final
+	 * RedirectAttributes redirectModel) throws CMSItemNotFoundException
+	 */
+	private String processRegisterUserRequestNew(final ExtRegisterForm form, final BindingResult bindingResult, final Model model,
+			final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes redirectModel)
+			throws CMSItemNotFoundException
 	{
 		if (bindingResult.hasErrors())
 		{

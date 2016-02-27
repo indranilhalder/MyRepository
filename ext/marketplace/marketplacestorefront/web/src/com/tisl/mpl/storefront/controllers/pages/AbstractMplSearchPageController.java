@@ -36,6 +36,7 @@ public abstract class AbstractMplSearchPageController extends AbstractPageContro
 	public static int MAX_PAGE_LIMIT = 0;
 	public static final String MAX_PAGE_LIMIT_TOTAL_ORDER_COUNT_DISPLAY = "orderHistory.max.page.limit.count.display";
 	private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT = "orderHistory.pagination.number.results.count";
+	private static final String PAGINATION_NUMBER_OF_RESULTS_COUNT_COUPON = "coupon.pagination.number.results.count";
 	private static final Logger LOG = Logger.getLogger(AbstractMplSearchPageController.class);
 
 	public static enum ShowMode
@@ -99,6 +100,30 @@ public abstract class AbstractMplSearchPageController extends AbstractPageContro
 		if (numberPagesShown > totalNoOfPages)
 		{
 			LOG.debug("*************** Order History : Set Number Of Pages Shown as 5 as its found greater than Total No Of Pages ***********");
+			numberPagesShown = 5;
+		}
+
+		model.addAttribute("numberPagesShown", Integer.valueOf(numberPagesShown));
+		model.addAttribute("searchPageData", searchPageData);
+		model.addAttribute("isShowAllAllowed", calculateShowAll(searchPageData, showMode));
+		model.addAttribute("isShowPageAllowed", calculateShowPaged(searchPageData, showMode));
+	}
+
+
+	/**
+	 * @description This is populating the data of coupon to create pagination
+	 * @param model
+	 * @param searchPageData
+	 * @param showMode
+	 */
+
+	protected void populateModelForCoupon(final Model model, final SearchPageData<?> searchPageData, final ShowMode showMode)
+	{
+		final int totalNoOfPages = searchPageData.getPagination().getNumberOfPages();
+		int numberPagesShown = getSiteConfigService().getInt(PAGINATION_NUMBER_OF_RESULTS_COUNT_COUPON, 2);
+		if (numberPagesShown > totalNoOfPages)
+		{
+			LOG.debug("*************** coupons : Set Number Of Pages Shown as 2 as its found greater than Total No Of Pages ***********");
 			numberPagesShown = 5;
 		}
 

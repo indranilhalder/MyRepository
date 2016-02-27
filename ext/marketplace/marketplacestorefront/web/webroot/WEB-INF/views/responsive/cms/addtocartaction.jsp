@@ -10,7 +10,10 @@
 
 <style>
 .out_of_stock {
-	color: #FE2E2E
+	color: #FE2E2E;
+}
+.dlist_message {
+	color: #FE2E2E;
 }
 .addToCartTitle{
 	display:none;
@@ -94,7 +97,7 @@ $(document).ready(function(){
 		value="${product.code}" />
 	<input type="hidden" name="wishlistNamePost" id="wishlistNamePost"
 		value="N" />
-	<input type="hidden" maxlength="3" size="" id="ussid" name="ussid"
+	<input type="hidden" maxlength="3" size="" id="ussid" name="ussid" class="ussidPdp"
 		value="" />
 	<%-- <span id="inventory" style="display: none"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
@@ -108,7 +111,10 @@ $(document).ready(function(){
 	<span id="addToCartFormexcedeInventory" style="display: none"><p class="inventory">
 			<font color="#ff1c47">Please decrease the quantity</font>
 		</p></span>
-
+	 <!-- TISST-13959 fix  -->
+	<span id="dListedErrorMsg" style="display: none"  class="dlist_message">
+		<spring:theme code="pdp.delisted.message" />
+	</span>
 	<span id="outOfStockId" style="display: none"  class="out_of_stock">
 		<spring:theme code="product.product.outOfStock" />
 		<input type="button" id="add_to_wishlist" onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>

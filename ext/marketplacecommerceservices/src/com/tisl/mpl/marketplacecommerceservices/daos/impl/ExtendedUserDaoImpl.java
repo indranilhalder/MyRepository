@@ -25,13 +25,13 @@ import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserService
  *
  * @author TCS Reply
  */
-public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel>implements ExtendedUserDao
+public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implements ExtendedUserDao
 {
-	private static String ANNONYMOUS = "anonymous";
-	private static String FIND_ALL_CUSTOMERS_BY_DATE_RANGE = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.modifiedtime} >= ?startDate AND {c.modifiedtime} <= ?endDate) OR ({c.creationtime} >= ?startDate AND {c.creationtime} <= ?endDate)";
-	private static String FIND_CUSTOMER_BY_ORIGINALUID = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.originalUid} = ?originalUID )";
-	private static String FIND_CUSTOMER_BY_UID = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.UID} = ?uid )";
-	private static String FIND_CUSTOMER_BY_OLDORIGINALUID = "SELECT {cd.pk} FROM {CustomerOldEmailDetails as cd} WHERE ({cd.oldOriginalUid} = ?oldOriginalUid )";
+	private static final String ANNONYMOUS = "anonymous";
+	private static final String FIND_ALL_CUSTOMERS_BY_DATE_RANGE = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.modifiedtime} >= ?startDate AND {c.modifiedtime} <= ?endDate) OR ({c.creationtime} >= ?startDate AND {c.creationtime} <= ?endDate)";
+	private static final String FIND_CUSTOMER_BY_ORIGINALUID = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.originalUid} = ?originalUID )";
+	private static final String FIND_CUSTOMER_BY_UID = "SELECT {c.pk} FROM {Customer as c} WHERE ({c.UID} = ?uid )";
+	private static final String FIND_CUSTOMER_BY_OLDORIGINALUID = "SELECT {cd.pk} FROM {CustomerOldEmailDetails as cd} WHERE ({cd.oldOriginalUid} = ?oldOriginalUid )";
 
 	/**
 	 * Instantiates a new extended user dao impl.
@@ -43,7 +43,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel>impleme
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @extaccelerator.core.user.dao.ExtendedUserDao#findUserByUIDandSiteID(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -66,8 +66,8 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel>impleme
 
 		if (resList.size() > 1)
 		{
-			throw new AmbiguousIdentifierException(
-					MarketplacecommerceservicesConstants.FOUND + resList.size() + " users with the unique uid '" + uid + "'");
+			throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
+					+ " users with the unique uid '" + uid + "'");
 		}
 		return resList.isEmpty() ? null : resList.get(0);
 	}
@@ -82,8 +82,8 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel>impleme
 		final List resList = find(Collections.singletonMap("uid", uid));
 		if (resList.size() > 1)
 		{
-			throw new AmbiguousIdentifierException(
-					MarketplacecommerceservicesConstants.FOUND + resList.size() + " users with the unique uid '" + uid + "'");
+			throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
+					+ " users with the unique uid '" + uid + "'");
 		}
 		return ((resList.isEmpty()) ? null : (UserModel) resList.get(0));
 	}
@@ -130,7 +130,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel>impleme
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @extaccelerator.core.user.dao.ExtendedUserDao#findAllUsers()
 	 */
 	@Override
@@ -142,7 +142,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel>impleme
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see core.user.dao.ExtendedUserDao#findNewAndModifiedUsersByDateRange(java.util.Date, java.util.Date)
 	 */
 	@Override
@@ -163,8 +163,8 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel>impleme
 		final List<CustomerModel> resList = getFlexibleSearchService().<CustomerModel> search(query).getResult();
 		if (resList.size() > 1)
 		{
-			throw new AmbiguousIdentifierException(
-					MarketplacecommerceservicesConstants.FOUND + resList.size() + " users with the unique emailid '" + uid + "'");
+			throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
+					+ " users with the unique emailid '" + uid + "'");
 		}
 		return resList.isEmpty() ? null : resList.get(0);
 	}

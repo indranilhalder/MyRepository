@@ -53,6 +53,7 @@
 				
 				if(ratingcount)
 					{
+					$(".product-detail ul.star-review").find("span").remove();
 					$(".product-detail ul.star-review").append($("<a href='#customer' />").text(ratingcount+" Reviews"));
 					}
 				else
@@ -64,13 +65,13 @@
 </c:if>
 </div>
 <c:if test="${isGigyaEnabled=='Y'}">
- <ul class="star-review" id="${product.code}">
+ <ul class="star-review" id="pdp_rating">
 				<li class="empty"></li>
 				<li class="empty"></li>
 				<li class="empty"></li>
 				<li class="empty"></li>
 				<li class="empty"></li>
-				
+				<span class="gig-rating-readReviewsLink_pdp"> <spring:theme code="rating.noreviews"/></span>
 				<!-- OOTB Code Commented to facilitate Rest Call -->
 		<%-- <c:choose>
 				<c:when test="${not empty product.ratingCount}">

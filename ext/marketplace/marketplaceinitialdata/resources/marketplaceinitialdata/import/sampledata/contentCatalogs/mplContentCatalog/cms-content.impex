@@ -26,6 +26,7 @@ $storefrontContextRoot=$config-storefrontContextRoot
 # Site Logo Component
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
 ;;SiteLogoComponent;Site Logo Component;SiteLogoComponent;"/"
+;;ResponsiveSiteLogoComponent;Responsive Site Logo Component;ResponsiveSiteLogoComponent;"/"
  
  
 # CMS Site Settings 
@@ -73,7 +74,7 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 ;AccountInviteFriendsNavNode;;Invite Friends;SiteRootNode;;AccountInviteFriendsLink;AccountInviteFriendsNavNode
 
 ###Footer changes for Non Product Pages
-;NPPageTataMarketplaceNavNode;;Tata Marketplace Pages;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink;NPPageTataMarketplaceNavNode
+;NPPageTataMarketplaceNavNode;;Tata Marketplace Pages;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;NPPageTataMarketplaceNavNode
 ;NPPageCustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;NPPageCustomerServiceNavNode;
 ;PaymentServiceNode;; Terms and condition payment page;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink,PaymentLink;PaymentServiceNode;
 
@@ -286,9 +287,10 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;HeaderLinksSlot;ContactInfo,HelpMeShopSearch
 #;;SearchBoxSlot;SearchBox
 #;;HomepageNavLinkSlot;HomepageNavLink
-;;MiniCartSlot;MiniCart,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder 
+;;MiniCartSlot;MiniCart,MyWishList,SignInFlyOut,TrackOrder 
 ;;SideContentSlot;MobileAppBanner
 ;;SiteLogoSlot;SiteLogoComponent
+;;TopHeaderSlot;ResponsiveSiteLogoComponent
 ;;TabsSlot;TabPanelContainer
 ;;TopContentSlot;FacebookOffersBanner
 ;;ProductLeftRefinements;browseCategoryComponent,RefinementFacetComponent
@@ -1116,7 +1118,7 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;AboutUsLink;About Us Link;/aboutus;;;;
 ;;CareersLink;Careers Link;/careers;;;
 ;;SellWithUSLink;Sell With Us Link;/sellwithus;;;
-;;StoreLocatorLink;Store Locator Link;/;;;
+;;StoreLocatorLink;Store Locator Link;/#;;;
 ;;ContactUsLink;Contact Us Link;/contact;;;;
 ;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;
 ;;TrackOrdersLink;Track Orders Link;/trackorders;;;;
@@ -1138,7 +1140,7 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;footwearLink;footwear Link;/footwear;;;;
 
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
-;TataMarketplaceNavNode;;Tata Marketplace Pages;;;AboutUsLink,CareersLink,SellWithUSLink;TataMarketplaceNavNode
+;TataMarketplaceNavNode;;Tata Marketplace Pages;;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;TataMarketplaceNavNode
 ;CustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;CustomerServiceNavNode;
 ;MyMarketplaceNavNode;;My Marketplace Pages;;;MyAccountLink,MyOrdersLink,MyShoppingBagLink,MyWishlistLink;MyMarketplaceNavNode;
 ;ApparelUKNavNode;;Apparel UK Site;SiteRootNode;;HomepageNavLink;ApparelUKNavNode;

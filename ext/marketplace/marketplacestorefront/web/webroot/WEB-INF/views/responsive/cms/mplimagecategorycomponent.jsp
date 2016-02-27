@@ -12,7 +12,7 @@
 	<c:if test="${not empty component.filterBySellerName}">
 
 		<c:param name="q"
-			value=":relevance:sellerId:${component.filterBySellerName}"></c:param>
+			value=":relevance:seller:${component.filterBySellerName}"></c:param>
 	</c:if>
 	<c:if test="${not empty component.filterByBrandName}">
 
@@ -72,4 +72,3 @@
 	</c:choose> <span>${category.name}</span> <a class="shop_link"
 	href="${categoryUrl}"><b><spring:theme
 				code="category.carousel.shopNow" /></b></a></li>
-

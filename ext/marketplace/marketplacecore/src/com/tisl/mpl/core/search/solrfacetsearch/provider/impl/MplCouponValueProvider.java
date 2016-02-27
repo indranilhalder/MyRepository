@@ -150,7 +150,7 @@ public class MplCouponValueProvider extends AbstractPropertyFieldValueProvider i
 		final Iterator localIterator = restrictedVouchers.iterator();
 
 
-		if (localIterator.hasNext())
+		while (localIterator.hasNext())
 		{
 			final VoucherModel voucher = (VoucherModel) localIterator.next();
 

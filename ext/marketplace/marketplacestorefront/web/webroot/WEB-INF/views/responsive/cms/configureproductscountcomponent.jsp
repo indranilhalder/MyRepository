@@ -15,10 +15,10 @@
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <!-- Displaying product quantity to be added to the bag in PDP -->
 		<p style="font-size:12px;">
-			<b><spring:theme code="product.configureproductscount.qty"></spring:theme></b>
+			<spring:theme code="product.configureproductscount.qty"></spring:theme>
 		</p>
 
-			<select class=" ">
+			<select class=" " id="pdpQty">
 				<c:forEach  var="i" varStatus="varStatus" begin="1" end="${qtycount}">
 					<option value="${i}">${i}</option>
 				</c:forEach>

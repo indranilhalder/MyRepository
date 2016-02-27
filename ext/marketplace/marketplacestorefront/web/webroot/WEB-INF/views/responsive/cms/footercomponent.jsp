@@ -6,7 +6,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-
 <!-- This is used for NewsLetter SignUp Section in footer -->
 <div class="right">
 	<div class="newsletter">
@@ -19,11 +18,23 @@
 	
 <!-- This is used for social media images in footer -->
 	
-	 <div class="social">
+	 <div class="social share">
 		<h3><spring:theme code="text.stay.connected"/></h3>
 		<div class="links">
 			<c:forEach items="${component.footerImageList}" var="banner">
 					<a href="${banner.urlLink}"><img src="${banner.media.URL}" ></a>
+			</c:forEach>
+		</div>
+	</div>
+
+
+<!-- This is used for app download images in footer -->
+	
+	 <div class="social app-download">
+		<h3><spring:theme code="text.download.app"/></h3>
+		<div class="links">
+			<c:forEach items="${component.footerAppImageList}" var="banner">
+					<a href="${banner.urlLink}" class="appios"><img src="${banner.media.URL}" ></a>
 			</c:forEach>
 		</div>
 	</div>
@@ -37,7 +48,15 @@
 			<li><c:forEach items="${node.links}"
 					step="${component.wrapAfter}" varStatus="i">
 					<c:if test="${component.wrapAfter > i.index}">
-						<h3 class="toggle">${node.title}</h3>
+						<c:choose>
+							<c:when test="${empty node.media}">
+							 <h3 class="toggle">${node.title}</h3>
+						    </c:when>    
+						    <c:otherwise>
+						        <h3 class="toggle"><img src="${node.media.url}" alt="${node.media.altText}" /></h3>
+						    </c:otherwise>
+						</c:choose>
+						<!-- <h3 class="toggle">${node.title}</h3> -->
 					</c:if>
 					<ul class="">
 						<c:forEach items="${node.links}" var="childlink"
@@ -59,7 +78,7 @@
 		if (mail == "") {
 
 			$("#error_message").css({"display":"block"});
-            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
+            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
 			return false;
 
 		} else {
@@ -69,8 +88,8 @@
 			 {
 
 				$("#error_message").css({"display":"block"});
-	            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
-				return false;
+	            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
+	            return false;
 			}
 
 			$.ajax({
@@ -83,19 +102,19 @@
 					if (data == "fail") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='red'><b>You are already subscribed to NewsLetter!</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='red'>You are already subscribed to NewsLetter!</font>";
 						return false;
 
 					} else if (data == "success") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#00cbe9'><b>Yay! We can't wait to be pen-pals with you.</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#a9143c'>Yay! We can't wait to be pen-pals with you.</font>";
 						return true;
 					}
 					
 					else if(data == "mailFormatError"){
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
 						return false;
 					}
 				},
@@ -111,7 +130,10 @@
 		//return true;
 	}
 </script>
-
+<!-- This is used for displaying text in footer -->
+<div class="footer-text">
+	${footerText}
+</div>
 <!-- This is used for displaying copyright in footer -->
 <div class="banner">
 	<span>${notice}</span>
@@ -129,13 +151,3 @@
 </div>
 <!-- /.modal -->
 
-<!-- /.modal -->
-<div class="modal size-guide fade" id="popUpModalNew" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
-	<div class="overlay"></div>
-		<div class="modal-content content" style="width:90%; max-width:90%;">
-			
-		</div>
-		<!-- /.modal-content -->
-	
-	<!-- /.modal-dialog -->
-</div>

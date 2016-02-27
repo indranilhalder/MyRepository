@@ -1023,26 +1023,26 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			if (day.intValue() >= 11 && day.intValue() <= 13)
 			{
-				result = currentDate + "th";
+				result = day + "th";
 			}
 			else
 			{
 				switch (day.intValue() % 10)
 				{
 					case 1:
-						result = currentDate + "st";
+						result = day + "st";
 						//LOG.debug(">>>>>>>>>>>>>>>>>>>>>>>date>>>>>>>>>>>>> : " + result);
 						break;
 					case 2:
-						result = currentDate + "nd";
+						result = day + "nd";
 						//LOG.debug(">>>>>>>>>>>>>>>>>>>>>>>date>>>>>>>>>>>>> : " + result);
 						break;
 					case 3:
-						result = currentDate + "rd";
+						result = day + "rd";
 						//LOG.debug(">>>>>>>>>>>>>>>>>>>>>>>date>>>>>>>>>>>>> : " + result);
 						break;
 					default:
-						result = currentDate + "th";
+						result = day + "th";
 						//LOG.debug(">>>>>>>>>>>>>>>>>>>>>>>date>>>>>>>>>>>>> : " + result);
 				}
 			}
