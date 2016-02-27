@@ -192,7 +192,9 @@ public final class ModelAttributetConstants
 	public static final String COMMENT_TEXT = "commentText";
 	public static final String COMMENT_TEXT_VAL = "";
 	public static final String COMMENT_TITLE = "commentTitle";
+	public static final String MEDIA_URL = "updatedMediaUrl";
 	public static final String COMMENT_TITLE_VAL = "";
+	public static final String COMMENT_MEDIA_VAL = "";
 	public static final String RATINGS = "ratings";
 	public static final String RATINGS_VAL = "";
 	public static final String COMMENTS = "comments";

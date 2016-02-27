@@ -1,4 +1,5 @@
 /*
+
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -853,6 +854,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9210 = "B9210";
 	public static final String B9211 = "B9211";
 	public static final String B9212 = "B9212";
+	public static final String B9213 = "B9213";
+	public static final String B9214 = "B9214";
+	public static final String B9215 = "B9215";
+	public static final String B9216 = "B9216";
+	public static final String B9217 = "B9217";
+	public static final String B9218 = "B9218";
 
 
 	//Search error codes ends
@@ -864,21 +871,25 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//For Sales Report
 	public static final String DATE_FORMAT_REPORT = "ddMMyyyyHHmmss";
-	public static final String ORDER_ERROR = "Order not found in current BaseStore";
-	public static final String CSV_ERROR = "Error in CsvFileWriter !!!";
-	public static final String FILE_WRITER_ERROR = "Error while flushing/closing fileWriter !!!";
-	public static final String ORDER_CURRENCY_ERROR = "source order currency must not be null";
+	public static final String ORDER_ERROR = "B8000";
+	public static final String CSV_ERROR = "B8001";
+	public static final String FILE_WRITER_ERROR = "B8002";
+	public static final String ORDER_CURRENCY_ERROR = "B8003";
+	public static final String PROMOTION_FEED_ERROR = "B8004";
+	public static final String ORDER_PAYMENT_ERROR = "B8005";
 
+	public static final String PROMOTIONS_REPORT_FILE_EXTENSION = "promotions.report.extension";
 	public static final String FILE_PATH = "_";
 	public static final String SALES_REPORT_INCREMENTAL = "incremental";
 	public static final String SALES_REPORT_FULL = "full";
 	public static final String SALES_REPORT_QUERY = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE + "} WHERE {"
-			+ OrderModel.TYPE + "}=?type";
+			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 	public static final String SALES_REPORT_QUERY_START = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
-			+ "} WHERE " + "{" + OrderModel.CREATIONTIME + "} >=?fromDate AND {" + OrderModel.TYPE + "}=?type";
+			+ "} WHERE " + "{" + OrderModel.CREATIONTIME + "} >=?fromDate AND {" + OrderModel.TYPE + "}=?type order by {"
+			+ OrderModel.CODE + "} desc";
 	public static final String SALES_REPORT_QUERY_START_END = "SELECT {" + OrderModel.PK + "} FROM {" + OrderModel._TYPECODE
 			+ "} WHERE {" + OrderModel.CREATIONTIME + "} >= ?startDate AND {" + OrderModel.CREATIONTIME + "} <=?endDate AND {"
-			+ OrderModel.TYPE + "}=?type";
+			+ OrderModel.TYPE + "}=?type order by {" + OrderModel.CODE + "} desc";
 
 
 	public static final String NOEMIBANKLIST = "EMI Bank list is not available , Please Enter the correct data";
@@ -1322,6 +1333,54 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//CRM Ticket Source From Commerce
 	public static final String SOURCE = "commerce";
 
+
+	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
+	public static final String CAMPAIGN_FREEBIE = "FREEBIE OFFER".intern();
+	public static final String CAMPAIGN_SHIPPING = "SHIPPING DISCOUNT OFFER".intern();
+	public static final String CAMPAIGN_BOGO = "BOGOF OFFER".intern();
+	public static final String CAMPAIGN_CASHBACK = "CASHBACK OFFER".intern();
+	public static final String CAMPAIGN_CHANNEL = "WEB|WEBMOBILE|MOBILE|CALLCENTER|KIOSK".intern();
+	public static final String CAMPAIGN_MULTIDATA_SEPERATOR = "|".intern();
+	public static final String CAMPAIGN_FILE_LOCATION = "campaign.promotion.csv.path".intern();
+	public static final String CAMPAIGN_HEADER = "IDENTIFIER,TITLE,PROMOTIONGROUP,DESCRIPTION,ENABLED,PRIORITY,CHANNEL,PRODUCTS,CATEGORIES,EXCLUDED PRODUCTS,CATEGORY MIN AMOUNT,QUANTITY,MAX DISCOUNT,IS PERCENTAGE,PERCENTAGE,DISCOUNT PRICES,GIFT PRODUCTS,START DATE,END DATE,RESTRICTIONS,FIRED MESSAGE,COULD FIRE MESSAGE,SECOND PRODUCTS,SECOND CATEGORIES,THRESH TOTALS,TSHIP,SSHIP,DISCOUNT TYPE,DELIVERY MODE,FREE COUNT,URL"
+			.intern();
+	public static final String CAMPAIGN_FILE_DELIMITTER = ",".intern();
+	public static final String CAMPAIGN_FILE_NEW_LINE_SEPARATOR = "\n".intern();
+	public static final String CAMPAIGN_FILE_NAME = "campaign".intern();
+	public static final String CAMPAIGN_WEBSITE = "http://tatacliq.com/store".intern();
+	public static final String CAMPAIGN_URL_ALL = "all".intern();
+
+	public static final String CAMPAIGN_URL_OFFER_IDENTIFIER = "/o/".intern();
+	public static final String CAMPAIGN_URL_OFFER_ID_URL = "?offer=".intern();
+	public static final String CAMPAIGN_FILE_PATH = "${HYBRIS_DATA_DIR}/feed/campaign".intern();
+
+
+	//For Special Price Updation
+	public static final String SPECIALPRICE_PROMOTIONS = "promotions".intern();
+	public static final String SPECIALPRICE_QUANTITY = "quantity".intern();
+	public static final String SPECIALPRICE_PRIORITY = "priority".intern();
+	public static final String HTTP = "http:".intern();
+	public static final String HTTPS = "https:".intern();
+
+
+
+
+	public static final String BANNER_IMAGE = "bannerImage";
+	public static final String BANNER_ALTTEXT = "bannerAltText";
+//Audit Report
+	public static final String CHANGED = "CHANGED";
+	public static final String PRIORITYSTARTDATE = "priorityStartDate";
+	public static final String PRIORITYENDDATE = "priorityEndDate";
+	public static final String ISACTIVE = "isactive";
+	public static final String ACTIVATE = "Activate";
+	public static final String DEACTIVATED = "Deactivated";
+	public static final String SELLERID = "sellerid";
+	public static final String CATEGORYID = "categoryid";
+	public static final String LISTINGID = "listingid";
+	public static final String SIMPLEDATEFORMAT = "dd-MM-yyyy HH:mm:ss";
+	public static final String SIMPLEDATEFORMATDB = "yyyy-MM-dd HH:mm:ss";
+	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
+	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
 
 	private MarketplacecommerceservicesConstants()
 	{

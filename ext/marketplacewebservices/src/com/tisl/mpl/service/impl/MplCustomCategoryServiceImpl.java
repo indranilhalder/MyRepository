@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -228,9 +229,9 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 		final Collection<CategoryModel> subcategories = categoryService.getAllSubcategoriesForCategory(category);
 
-		if (subcategories != null && subcategories.size() != 0)
+		//if (subcategories != null && subcategories.size() != 0)
+		if (CollectionUtils.isNotEmpty(subcategories))
 		{
-
 			for (final CategoryModel subcategory : subcategories)
 			{
 				if (subcategory.getProducts() != null)
@@ -282,7 +283,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * To get all categories shop by department
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getallCategories()
 	 */
 	@Override
@@ -424,7 +425,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getAboutusBanner()
 	 */
 	@Override
@@ -496,7 +497,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCustomCategoryService#getHelpnServices()
 	 */
 	@Override
@@ -972,13 +973,9 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 						}
 					}
 				}
-
 				catch (final CMSItemNotFoundException e)
 				{
-					// YTODO Auto-generated catch block
-					//LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-
-					e.printStackTrace();
+					LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
 					throw new EtailNonBusinessExceptions(e);
 				}
 			}
@@ -986,9 +983,7 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 
 		catch (final Exception e)
 		{
-			// YTODO Auto-generated catch block
-			//LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS + e);
-			e.printStackTrace();
+			LOG.error(MarketplacecommerceservicesConstants.EXCEPTION_IS, e);
 			throw new EtailNonBusinessExceptions(e);
 		}
 

@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.coupon.facade.job;
+package com.tisl.mpl.coupon.job;
 
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;

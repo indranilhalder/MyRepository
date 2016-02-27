@@ -9,6 +9,7 @@ import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
 
@@ -49,6 +50,8 @@ public class MplCouponController
 	private SessionService sessionService;
 	@Autowired
 	private BaseStoreService baseStoreService;
+	@Autowired
+	private ModelService modelService;
 
 
 	/**
@@ -72,6 +75,9 @@ public class MplCouponController
 	{
 		LOG.debug("The coupon code entered by the customer is ::: " + couponCode);
 		final CartModel cartModel = getCartService().getSessionCart();
+		//		cartModel.setCouponErrorMsg("");
+		//		modelService.save(cartModel);
+
 
 		LOG.debug("The bank selected is  ::: " + bankNameSelected);
 		getSessionService().setAttribute("paymentModeForPromotion", paymentMode);
@@ -137,7 +143,6 @@ public class MplCouponController
 			{
 				data.setRedeemErrorMsg("User_Invalid");
 			}
-
 			data.setTotalPrice(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv()));
 			data.setCouponRedeemed(false);
 			return data;

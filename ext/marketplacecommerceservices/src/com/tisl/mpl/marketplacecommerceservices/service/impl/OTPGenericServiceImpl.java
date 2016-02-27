@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -407,7 +408,8 @@ public class OTPGenericServiceImpl implements OTPGenericService
 			throw new EtailNonBusinessExceptions(ex);
 		}
 
-		if (otplist.size() > 0)
+		//if (otplist.size() > 0)
+		if (CollectionUtils.isNotEmpty(otplist))
 		{
 			final OTPModel latestOTP = otplist.get(0);
 			LOG.debug("OTP" + latestOTP.getOTPNumber());
@@ -489,7 +491,8 @@ public class OTPGenericServiceImpl implements OTPGenericService
 			final UserModel user = userService.getUserForUID(customerID);
 			final List<OTPModel> otplist = otpDao.fetchOTP(user.getPk().toString(), OTPType);
 
-			if (otplist.size() > 0)
+			//if (otplist.size() > 0)
+			if (CollectionUtils.isNotEmpty(otplist))
 			{
 				final OTPModel latestOTP = otplist.get(0);
 				LOG.debug("OTP" + latestOTP.getOTPNumber());
@@ -524,7 +527,7 @@ public class OTPGenericServiceImpl implements OTPGenericService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService#getLatestOTPModel(java.lang.String,
 	 * com.tisl.mpl.enums.OTPTypeEnum)
 	 */
@@ -536,7 +539,8 @@ public class OTPGenericServiceImpl implements OTPGenericService
 			final UserModel user = userService.getUserForUID(customerID);
 			final List<OTPModel> otplist = otpDao.fetchOTP(user.getPk().toString(), OTPType);
 
-			if (otplist.size() > 0)
+			//if (otplist.size() > 0)
+			if (CollectionUtils.isNotEmpty(otplist))
 			{
 				final OTPModel latestOTP = otplist.get(0);
 				LOG.debug("OTP" + latestOTP.getOTPNumber());
