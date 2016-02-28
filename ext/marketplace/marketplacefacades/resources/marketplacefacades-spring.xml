@@ -600,6 +600,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="cartService" ref="cartService"/>
 		<property name="mplExtendedCartConverter" ref="mplExtendedCartConverter"/>
 		<property name="modelService" ref="modelService" />
+	
 	</bean>
 	
 	<!-- <bean id="mplDefaultCheckoutFacade"
@@ -1249,7 +1250,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
              <map> 
              </map> 
            </constructor-arg>   -->
-		<property name="pattern" value="^[0-9]+$"/>
+		<property name="pattern" value="[0-9]+(\.[0-9])*"/>
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1280,7 +1281,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	<bean id="sizeGuideComparator"
 	      class="com.tisl.mpl.facade.comparator.SizeGuideComparator">
-		<property name="pattern" value="^[0-9]+$"/>
+		<property name="pattern" value="[0-9]+(\.[0-9])*"/>
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1392,6 +1393,24 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mplCheckoutFacade" ref="mplCheckoutFacade" />
 		<property name="productDetailsHelper" ref="productDetailsHelper" />
 		<property name="mplCartFacade" ref="mplCartFacade" />
-
 	</bean>
+	
+	<!-- -Voucher converter -->
+	<!-- <alias name="defaultOrderHistoryConverter" alias="orderHistoryConverter"/> -->
+	<bean id="voucherDisplayConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.tisl.mpl.data.VoucherDisplayData"/>
+		<property name="populators">
+			<list>
+				<ref bean="voucherDisplayPopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<!-- <alias name="defaultOrderHistoryPopulator" alias="orderHistoryPopulator"/> -->
+	<bean id="voucherDisplayPopulator"
+			class="com.tisl.mpl.facades.populators.MplVoucherDisplayPopulator">
+		<!-- <property name="enumerationService" ref="enumerationService"/>
+		<property name="priceDataFactory" ref="priceDataFactory"/> -->
+	</bean>
+	
 </beans>

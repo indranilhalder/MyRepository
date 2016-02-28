@@ -17,6 +17,8 @@ import de.hybris.platform.solrfacetsearch.config.IndexedProperty;
 import de.hybris.platform.solrfacetsearch.provider.impl.AbstractFacetValueDisplayNameProvider;
 import de.hybris.platform.solrfacetsearch.search.SearchQuery;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+
 
 public class MplFulfillmentModeDisplayNameProvider extends AbstractFacetValueDisplayNameProvider
 {
@@ -24,15 +26,20 @@ public class MplFulfillmentModeDisplayNameProvider extends AbstractFacetValueDis
 	@Override
 	public String getDisplayName(final SearchQuery query, final IndexedProperty property, final String facetValue)
 	{
+		String displayName = MarketplacecommerceservicesConstants.EMPTYSPACE;
+
 		if (facetValue != null && facetValue.equalsIgnoreCase("TShip"))
 		{
-			return "Tata Marketplace";
+			//return "Tata Marketplace";
+			displayName = "Tata Marketplace";
 		}
 		if (facetValue != null && facetValue.equalsIgnoreCase("SShip"))
 		{
-			return "Seller";
+			//return "Seller";
+			displayName = "Seller";
 		}
-		return "";
+		//return "";
+		return displayName;
 	}
 
 }

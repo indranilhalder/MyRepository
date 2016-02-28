@@ -132,7 +132,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -214,7 +214,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -228,7 +228,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -383,8 +383,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				totalPrice = totalPriceForSubTotal + totalConvChargeForCOD + totalDeliveryPrice
 						- (totalDeliveryDiscount + totalCartLevelDiscount + totalProductDiscount + totalCouponDiscount);
 				final DecimalFormat decimalFormat = new DecimalFormat("#.00");
-				totalPrice = Double.valueOf(decimalFormat.format(totalPrice)).doubleValue();
-				totalConvChargeForCOD = Double.valueOf(decimalFormat.format(totalConvChargeForCOD)).doubleValue();
+				//				totalPrice = Double.valueOf(decimalFormat.format(totalPrice)).doubleValue();
+				//				totalConvChargeForCOD = Double.valueOf(decimalFormat.format(totalConvChargeForCOD)).doubleValue();
+				//changed for SONAR fix
+				totalPrice = Double.parseDouble(decimalFormat.format(totalPrice));
+				totalConvChargeForCOD = Double.parseDouble(decimalFormat.format(totalConvChargeForCOD));
 				sellerOrderList.setTotalPrice(Double.valueOf(totalPrice));
 				sellerOrderList.setTotalPriceWithConv(Double.valueOf(totalPrice));
 				sellerOrderList.setConvenienceCharges(Double.valueOf(totalConvChargeForCOD));
@@ -621,9 +624,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
+	 *
 	 * @param orderList
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions

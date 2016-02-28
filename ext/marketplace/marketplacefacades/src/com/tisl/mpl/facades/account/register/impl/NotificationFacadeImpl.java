@@ -126,7 +126,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetail(com.tisl.mpl.data.NotificationData)
 	 */
@@ -147,7 +147,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 		for (final VoucherStatusNotificationModel v : voucherList)
 		{
-			if (v.getCustomerUidList().contains(customerUID))
+			if (v.getIfUserRestrictionExist() == Boolean.TRUE && v.getCustomerUidList().contains(customerUID))
 			{
 				final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
 				notificationDataList.add(dataForVoucher);
@@ -184,7 +184,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#checkCustomerFacingEntry(com.tisl.mpl.core.model.
 	 * OrderStatusNotificationModel)
 	 */
@@ -197,7 +197,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetailForEmailID(java.lang.String)
 	 */
 	@Override
@@ -222,7 +222,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -250,7 +250,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getUnReadNotificationCount(java.util.List)
 	 */
 	@Override

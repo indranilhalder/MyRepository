@@ -31,8 +31,8 @@ import org.springframework.beans.factory.annotation.Required;
 import com.tisl.mpl.constants.MplConstants;
 
 
-public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
-		Serializable
+public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldValueProvider
+		implements FieldValueProvider, Serializable
 {
 	private CategorySource categorySource;
 	private FieldNameProvider fieldNameProvider;
@@ -147,9 +147,9 @@ public class MplDepartmentHierarchyValueProvider extends AbstractPropertyFieldVa
 			}
 
 			final int rankingValue = (category.getRanking() != null) ? category.getRanking() : 0;
-			accumulator.append(MplConstants.FORWARD_SLASH).append(category.getCode()).append(MplConstants.COLON)
-					.append(category.getName()).append(":L").append(level).append(MplConstants.COLON).append(department)
-					.append(MplConstants.COLON).append(rankingValue);
+			accumulator.append(MplConstants.PIPE).append(category.getCode()).append(MplConstants.COLON).append(category.getName())
+					.append(":L").append(level).append(MplConstants.COLON).append(department).append(MplConstants.COLON)
+					.append(rankingValue);
 			output.add(accumulator.toString());
 			level = level + 1;
 		}

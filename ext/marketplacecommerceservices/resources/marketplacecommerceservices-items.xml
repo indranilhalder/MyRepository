@@ -232,6 +232,13 @@
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
+				<attribute qualifier="productCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion to be applied for list of products separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
 			</attributes>
 		</itemtype>
 
@@ -1298,6 +1305,9 @@
 				<index name="sellerNameIDX" unique="false">
 					<key attribute="sellerName" />
 				</index>
+				<index name="SLINFO_ARTICLESKU_IDX" unique="false">
+					<key attribute="sellerArticleSKU"/>
+				</index>
 			</indexes>
 		</itemtype>
 
@@ -2343,7 +2353,6 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
-					
 					
 				</attributes>
 			</itemtype>	

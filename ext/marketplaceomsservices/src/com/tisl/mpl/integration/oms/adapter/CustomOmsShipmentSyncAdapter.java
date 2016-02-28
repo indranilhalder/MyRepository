@@ -48,6 +48,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.util.StringUtils;
 
 import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.shipping.Shipment;
@@ -122,6 +123,9 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 	
 	@Autowired
 	private CustomOmsCancelAdapter  customOmsCancelAdapter;
+	
+	@Autowired
+	private CustomOmsCollectedAdapter customOmsCollectedAdapter;
 
 	@Override
 	public ConsignmentModel update(final OrderWrapper wrapper, final ItemModel parent)
@@ -453,7 +457,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 				LOG.debug("orderData:"+orderData);
 				for(OrderEntryData subOrderEntries: orderData.getEntries()){
 					if(subOrderEntries.getConsignment().getStatus().equals(ConsignmentStatus.CANCELLATION_INITIATED)){
-					customOmsCancelAdapter.createTicketInCRM(orderData, subOrderEntries, MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.REASON_CODE,
+					customOmsCancelAdapter.createTicketInCRM(orderData, subOrderEntries, MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
 							MarketplaceomsordersConstants.REFUND_TYPE_CODE,  orderData.getCustomerData(), orderModel);
 					customOmsCancelAdapter.initiateCancellation(MarketplaceomsordersConstants.TICKET_TYPE_CODE, orderData, subOrderEntries, orderModel, MarketplaceomsordersConstants.REASON_CODE);
 					final String trackOrderUrl = configurationService.getConfiguration().getString(
@@ -476,7 +480,19 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 				}
 			}
 			
-			
+			if(shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED)){
+				LOG.debug("Calling deliverd Initiation process started");
+				
+				final String appDwldUrl = getConfigurationService().getConfiguration().getString(
+						MarketplaceomsordersConstants.SMS_SERVICE_APP_DWLD_URL);
+				
+				final String orderNumber = (StringUtils.isEmpty(shipment.getOrderId())) ? MarketplaceomsordersConstants.EMPTY
+						: shipment.getOrderId();
+				final String mobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
+						: orderModel.getPickupPersonMobile();
+				
+				customOmsCollectedAdapter.sendNotificationForDelivery(orderModel, orderNumber,mobileNumber, appDwldUrl);
+			}
 			
 			createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
 			if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
@@ -926,6 +942,22 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 	public void setCustomOmsCancelAdapter(CustomOmsCancelAdapter customOmsCancelAdapter)
 	{
 		this.customOmsCancelAdapter = customOmsCancelAdapter;
+	}
+
+	/**
+	 * @return the customOmsCollectedAdapter
+	 */
+	public CustomOmsCollectedAdapter getCustomOmsCollectedAdapter()
+	{
+		return customOmsCollectedAdapter;
+	}
+
+	/**
+	 * @param customOmsCollectedAdapter the customOmsCollectedAdapter to set
+	 */
+	public void setCustomOmsCollectedAdapter(CustomOmsCollectedAdapter customOmsCollectedAdapter)
+	{
+		this.customOmsCollectedAdapter = customOmsCollectedAdapter;
 	}
 	
 	

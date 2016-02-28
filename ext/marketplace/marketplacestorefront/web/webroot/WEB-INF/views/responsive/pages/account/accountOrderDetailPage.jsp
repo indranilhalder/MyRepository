@@ -14,7 +14,7 @@
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
- 
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -97,10 +97,10 @@
 
 
 			<!----- Left Navigation Starts --------->
-			<div class="left-nav">
-				<%-- <h1>
+			<%--<div class="left-nav">
+				 <h1>
 					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1> --%>
+				</h1> 
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -138,7 +138,9 @@
 
 				</ul>
 
-			</div>
+			</div>--%>
+			
+			<user:accountLeftNav pageName="orderDetail"/>
 			<!----- Left Navigation ENDS --------->
 
 			<!----- RIGHT Navigation STARTS --------->
@@ -203,9 +205,9 @@
 								<h3>Total:</h3>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
-											/> <span> <format:price
+											/> <format:price
 												priceData="${subOrder.subTotal}" />
-									</span></li>
+									</li>
 									<li><spring:theme code="text.account.order.delivery"
 											text="Delivery" /><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"
@@ -227,14 +229,14 @@
 													priceData="${subOrder.couponDiscount}" />
 										</span></li>
 									</c:if>
-							
+									<!-- TISSTRT-136 -->
 
 									<c:if test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
 										<li><spring:theme
 												code="text.account.order.convinienceCharges"
-												text="Convenience Charges" /> <span> <format:price
+												text="Convenience Charges" /> <format:price
 													priceData="${subOrder.convenienceChargeForCOD}" />
-										</span></li>
+										</li>
 									</c:if>
 									<%-- <li><spring:theme text="Gift Wrap:" /><span><format:price
 												priceData="${subOrder.deliveryCost}"
@@ -678,7 +680,7 @@
 																								${entryCancel.imeiDetails.serialNum}</span>
 																						</c:if>
 																						<span class="sellerOrderNo"><b> <spring:theme
-																									code="text.orderHistory.seller.order.number" />:
+																									code="text.orderHistory.seller.order.number" />
 																						</b> ${sellerOrder.code} </span>
 																					</p>
 																					<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
@@ -797,7 +799,7 @@
 																								${entryCancel.imeiDetails.serialNum}</span>
 																						</c:if>
 																						<span class="sellerOrderNo"><b> <spring:theme
-																									code="text.orderHistory.seller.order.number" />:
+																									code="text.orderHistory.seller.order.number" />
 																						</b> ${sellerOrder.code} </span>
 																					</p>
 																					<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>

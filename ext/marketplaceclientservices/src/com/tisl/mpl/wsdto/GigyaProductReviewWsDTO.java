@@ -27,7 +27,9 @@ public class GigyaProductReviewWsDTO implements Comparator<GigyaProductReviewWsD
 	private String reviewDate;
 	private String easeOfUse;
 	private String rootCategory;
-
+	private String mediaItems;
+	private String mediaUrl;
+	private String mediaType;
 
 	/**
 	 * @return the rootCategory
@@ -231,6 +233,57 @@ public class GigyaProductReviewWsDTO implements Comparator<GigyaProductReviewWsD
 	public void setReviewDate(final String reviewDate)
 	{
 		this.reviewDate = reviewDate;
+	}
+
+	/**
+	 * @return the mediaItems
+	 */
+	public String getMediaItems()
+	{
+		return mediaItems;
+	}
+
+	/**
+	 * @param mediaItems
+	 *           the mediaItems to set
+	 */
+	public void setMediaItems(final String mediaItems)
+	{
+		this.mediaItems = mediaItems;
+	}
+
+	/**
+	 * @return the mediaUrl
+	 */
+	public String getMediaUrl()
+	{
+		return mediaUrl;
+	}
+
+	/**
+	 * @param mediaUrl
+	 *           the mediaUrl to set
+	 */
+	public void setMediaUrl(final String mediaUrl)
+	{
+		this.mediaUrl = mediaUrl;
+	}
+
+	/**
+	 * @return the mediaType
+	 */
+	public String getMediaType()
+	{
+		return mediaType;
+	}
+
+	/**
+	 * @param mediaType
+	 *           the mediaType to set
+	 */
+	public void setMediaType(final String mediaType)
+	{
+		this.mediaType = mediaType;
 	}
 
 	/*

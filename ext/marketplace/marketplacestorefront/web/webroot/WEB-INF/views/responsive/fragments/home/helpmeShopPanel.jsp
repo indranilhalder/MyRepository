@@ -55,7 +55,7 @@
 								<option value="${typeOfProduct.name}">${typeOfProduct.name}</option>
 							</c:forEach>
 						</select> --%>
-						<input id="typeOfProduct" type="text" name="typeOfProduct">
+						<input id="typeOfProduct" type="text" name="typeOfProduct" placeholder="product">
 						
 						<!-- <input id="typeOfProduct" type="text" value="Causal Shirt" name="typeOfProduct"> -->
 					</div>

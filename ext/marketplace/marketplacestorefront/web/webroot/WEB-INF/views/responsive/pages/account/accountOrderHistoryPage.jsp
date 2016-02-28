@@ -13,7 +13,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
-
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -74,7 +74,7 @@
 
 
 			<!----- Left Navigation Starts --------->
-			<div class="left-nav">
+			<%-- <div class="left-nav">
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -93,7 +93,7 @@
 								code="header.flyout.cards" /></a></li>
 					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 								code="header.flyout.address" /></a></li>
-								<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+					<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
 										code="header.flyout.review" /></a></li>
 					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
@@ -112,7 +112,8 @@
 								code="header.flyout.invite" /></a></li>
 
 				</ul>
-			</div>
+			</div> --%>
+			<user:accountLeftNav pageName="orderHistory"/>
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account">
@@ -369,7 +370,7 @@
 														</c:if>
 														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 															<a
-																href="${request.contextPath}/my-account/order/returnReplace?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+																href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 																<spring:theme code="text.account.returnReplace"
 																	text="Return Item" />
 															</a>
@@ -444,7 +445,7 @@
 																					</span>
 																					<c:if test="${not empty entryCancel.imeiDetails}"><span><b>Serial Number:</b> ${entryCancel.imeiDetails.serialNum}</span></c:if>
 																					<span class="sellerOrderNo"><b>
-																					<spring:theme code="text.orderHistory.seller.order.number" />:</b> 
+																					<spring:theme code="text.orderHistory.seller.order.number" /></b> 
 																					${subOrder.code}
 																					</span>
 																				</p>
@@ -558,7 +559,7 @@
 																					</span>
 																					<c:if test="${not empty entryCancel.imeiDetails}"><span><b>Serial Number:</b> ${entryCancel.imeiDetails.serialNum}</span></c:if>
 																					<span class="sellerOrderNo"><b>
-																					<spring:theme code="text.orderHistory.seller.order.number" />:</b> 
+																					<spring:theme code="text.orderHistory.seller.order.number" /></b> 
 																					${sellerOrder.code}
 																					</span>
 																				</p>
@@ -631,4 +632,3 @@
 		</div>
 	</div>
 </template:page>
-

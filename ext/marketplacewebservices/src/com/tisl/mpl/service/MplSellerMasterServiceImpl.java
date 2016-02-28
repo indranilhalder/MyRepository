@@ -700,7 +700,7 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 	{
 		final SellerMasterResponseWsDTO sellerMasterResWsDTO = new SellerMasterResponseWsDTO();
 		String status = MarketplacecommerceservicesConstants.SUCCESSS_RESP;
-		//final StringBuilder stringBuilder = new StringBuilder();
+		final StringBuilder stringBuilder = new StringBuilder();
 		try
 		{
 
@@ -714,11 +714,18 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getFirstname()))
 			{
-				/*
-				 * if (sellerMasterWsDTO.getLastname() != null && sellerMasterWsDTO.getMidname() != null) {
-				 * stringBuilder.append(sellerMasterWsDTO.getFirstname()).append(sellerMasterWsDTO.getMidname())
-				 * .append(sellerMasterWsDTO.getLastname()); }
-				 */
+				if (sellerMasterWsDTO.getLastname() != null && sellerMasterWsDTO.getMidname() != null)
+				{
+					stringBuilder.append(sellerMasterWsDTO.getFirstname()).append(sellerMasterWsDTO.getMidname())
+							.append(sellerMasterWsDTO.getLastname());
+					//resModel.setSellerName(stringBuilder.toString());
+				}
+
+				//Blocked for Sonar Fix
+				//				else
+				//				{
+				//					//	resModel.setSellerName(sellerMasterWsDTO.getFirstname());
+				//				}
 
 				masterModel.setFirstname(sellerMasterWsDTO.getFirstname());
 			}
@@ -848,7 +855,7 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			 * .getConfiguration().getString("DEFAULT_IMPORT_CATALOG_ID"),
 			 * configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_VERSION")); if (null !=
 			 * catalogVersionModel) {
-			 *
+			 * 
 			 * resModel.setCatalogVersion(catalogVersionModel); }
 			 */
 
@@ -1213,8 +1220,8 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 		catch (final Exception ex)
 		{
 			status = MarketplacecommerceservicesConstants.ERROR_FLAG;
-			//LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + ex.printStackTrace());
-			ex.printStackTrace();
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG, ex);
+			//ex.printStackTrace();
 		}
 
 		return status;
@@ -1311,20 +1318,20 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 
 			/*
 			 * if (sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("U")) {
-			 *
+			 * 
 			 * // if (masterModel.getId().equals(sellerMasterWsDTO.getId())) // { //final SellerInformationModel
 			 * resModelUpdate = mplSellerInformationDAO.getSellerInformation(sellerMasterWsDTO.getId()); if (resModelUpdate
 			 * == null) {
-			 *
-			 *
+			 * 
+			 * 
 			 * sellerMasterRes = saveSellerMaster(sellerMasterWsDTO); if (null != sellerMasterRes &&
 			 * StringUtils.isNotEmpty(sellerMasterRes.getStatus())) { status = sellerMasterRes.getStatus(); } if (null !=
 			 * sellerMasterRes && null != sellerMasterRes.getSellerMaster()) { status =
 			 * saveSellerInformation(sellerMasterWsDTO, sellerMasterRes.getSellerMaster()); } } else { status =
 			 * saveSellerInformationUpdate(sellerMasterWsDTO, resModelUpdate); } //}
-			 *
+			 * 
 			 * }
-			 *
+			 * 
 			 * else if (sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("I")) { status =
 			 * saveSellerInformation(sellerMasterWsDTO); }
 			 */
@@ -1339,3 +1346,4 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 
 	}
 }
+

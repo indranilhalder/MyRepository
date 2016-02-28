@@ -144,18 +144,18 @@ public class OrderModelDaoImpl implements OrderModelDao
 						order = orderModel;
 					}
 				}
-				return order;
+				//return order;
 			}
-			else
-			{
-				return null;
-			}
+			//			else
+			//			{
+			//				return null;
+			//			}
 		}
-
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e);
 		}
+		return order;
 	}
 
 	/**
@@ -187,18 +187,18 @@ public class OrderModelDaoImpl implements OrderModelDao
 						order = orderModel;
 					}
 				}
-				return order;
+				//return order;
 			}
-			else
-			{
-				return null;
-			}
+			//			else
+			//			{
+			//				return null;
+			//			}
 		}
-
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e);
 		}
+		return order;
 	}
 
 

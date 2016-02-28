@@ -199,7 +199,9 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/friendsInvite') 
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/inviteFriends') or
 
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/marketplace-preference') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/saveMplPreferences')}">
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/saveMplPreferences') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account/') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<script type="text/javascript" 
 		src="${commonResourcePath}/js/mpl/acc.accountaddress.js"></script>
 </c:if>

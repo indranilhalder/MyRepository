@@ -28,6 +28,7 @@ import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryMod
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -50,7 +52,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
@@ -61,6 +63,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
 import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
@@ -122,6 +125,14 @@ public class CustomOmsCancelAdapter implements Serializable
 	@Autowired
 	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
 	
+	@Resource(name = "emailAndSmsNotification")
+	private EmailAndSmsNotification emailAndSmsNotification;
+	
+	@Autowired
+	private BusinessProcessService businessProcessService;
+	
+
+	
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, 
 			final CustomerData customerData, final OrderModel subOrderModel)
@@ -141,6 +152,7 @@ public class CustomOmsCancelAdapter implements Serializable
 				{
 					sendTicketLineItemData.setCancelReasonCode(reasonCode);
 					sendTicketRequestData.setRefundType(refundType);
+					sendTicketRequestData.setTicketSubType(MarketplaceomsordersConstants.TICKET_SUB_TYPE_CODE);
 				}
 				else
 				{
@@ -315,16 +327,16 @@ public class CustomOmsCancelAdapter implements Serializable
 							if (orderLine.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
 							{
 								returnLogRespData
-										.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
+										.setResponseMessage(MarketplaceomsordersConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
 								returnLogRespData
-										.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
+										.setResponseDescription(MarketplaceomsordersConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
 							}
 							else
 							{
 								returnLogRespData
-										.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
+										.setResponseMessage(MarketplaceomsordersConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
 								returnLogRespData
-										.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+										.setResponseDescription(MarketplaceomsordersConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 							}
 
 						}
@@ -342,9 +354,9 @@ public class CustomOmsCancelAdapter implements Serializable
 					{
 						returnLogRespData.setOrderId(orderDetails.getCode());
 						returnLogRespData
-								.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
+								.setResponseMessage(MarketplaceomsordersConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
 						returnLogRespData
-								.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+								.setResponseDescription(MarketplaceomsordersConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
 					}
 					returnLogRespData.setTransactionId(transactionId);
 					returnLogRespDataList.add(returnLogRespData);
@@ -354,7 +366,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		}
 		catch (final Exception ex)
 		{
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			throw new EtailNonBusinessExceptions(ex, MarketplaceomsordersConstants.E0000);
 		}
 	}
 	
@@ -401,7 +413,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			}
 			catch (final JAXBException ex)
 			{
-				LOG.info(MarketplacecclientservicesConstants.EXCEPTION_IS);
+				LOG.info(MarketplaceomsordersConstants.EXCEPTION_IS);
 
 			}
 			ticket.setCRMRequest(crmRequest);
@@ -427,12 +439,12 @@ public class CustomOmsCancelAdapter implements Serializable
 		catch (final ModelSavingException e)
 		{
 			e.printStackTrace();
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0007);
+			throw new EtailNonBusinessExceptions(e, MarketplaceomsordersConstants.E0007);
 		}
 		catch (final Exception ex)
 		{
 			ex.printStackTrace();
-			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+			throw new EtailNonBusinessExceptions(ex, MarketplaceomsordersConstants.E0000);
 			
 		}
 		return cancellationInitiated;
@@ -530,7 +542,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		{
 			final String orderCode = subOrderDetails.getCode();
 
-			String message = MarketplacecommerceservicesConstants.EMPTY;
+			String message = MarketplaceomsordersConstants.EMPTY;
 			if (orderRequestRecord.getRefusedMessage() != null)
 			{
 				message = message + orderRequestRecord.getRefusedMessage();
@@ -639,8 +651,8 @@ public class CustomOmsCancelAdapter implements Serializable
 			LOG.debug("****** initiateRefund >> Begin >> OMS will not be called for COD  ");
 			final double refundedAmount = 0D;
 			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord.getOriginalVersion()
-					.getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, new Double(refundedAmount),
-					PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG, UUID.randomUUID().toString());
+					.getOrder(), MarketplaceomsordersConstants.FAILURE_FLAG, new Double(refundedAmount),
+					PaymentTransactionType.CANCEL, MarketplaceomsordersConstants.FAILURE_FLAG, UUID.randomUUID().toString());
 			mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
 					paymentTransactionModel);
 		}
@@ -723,10 +735,10 @@ public class CustomOmsCancelAdapter implements Serializable
 					pushData = new PushNotificationData();
 					if (null != refundableAmount && !refundableAmount.isEmpty() && null != cancelReason && !cancelReason.isEmpty())
 					{
-						pushData.setMessage(MarketplacecommerceservicesConstants.PUSH_MESSAGE_ORDER_CANCELLED
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, refundableAmount)
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, cancelledItems)
-								.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, cancelReason));
+						pushData.setMessage(MarketplaceomsordersConstants.PUSH_MESSAGE_ORDER_CANCELLED
+								.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO, refundableAmount)
+								.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE, cancelledItems)
+								.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO, cancelReason));
 					}
 					if (null != subOrderModel.getParentReference() && null != subOrderModel.getParentReference().getCode()
 							&& !subOrderModel.getParentReference().getCode().isEmpty())
@@ -891,14 +903,14 @@ public class CustomOmsCancelAdapter implements Serializable
 	{
 		if (source == null)
 		{
-			throw new IllegalArgumentException(MarketplacecommerceservicesConstants.ORDER_ERROR);
+			throw new IllegalArgumentException(MarketplaceomsordersConstants.ORDER_ERROR);
 		}
 
 		final CurrencyModel currency = source.getCurrency();
 
 		if (currency == null)
 		{
-			throw new IllegalArgumentException(MarketplacecommerceservicesConstants.ORDER_CURRENCY_ERROR);
+			throw new IllegalArgumentException(MarketplaceomsordersConstants.ORDER_CURRENCY_ERROR);
 		}
 
 		// Get double value, handle null as zero
@@ -907,6 +919,8 @@ public class CustomOmsCancelAdapter implements Serializable
 		return getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue), currency);
 	}
 
+
+	
 	/**
 	 * @return the priceDataFactory
 	 */
@@ -954,7 +968,23 @@ public class CustomOmsCancelAdapter implements Serializable
 	{
 		this.mplSNSMobilePushService = mplSNSMobilePushService;
 	}
-	
 
+	/**
+	 * @return the businessProcessService
+	 */
+	public BusinessProcessService getBusinessProcessService()
+	{
+		return businessProcessService;
+	}
+
+	/**
+	 * @param businessProcessService the businessProcessService to set
+	 */
+	public void setBusinessProcessService(BusinessProcessService businessProcessService)
+	{
+		this.businessProcessService = businessProcessService;
+	}
+	
+	
 
 }

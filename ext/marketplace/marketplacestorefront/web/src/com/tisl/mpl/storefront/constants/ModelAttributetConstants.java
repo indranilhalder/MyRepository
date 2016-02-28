@@ -176,6 +176,11 @@ public final class ModelAttributetConstants
 	public static final String YEARANNIVERSARYLIST = "yearAnniversaryList";
 	public static final String BASE_URL = "baseUrl";
 
+	//Return Item
+	public static final String RETURN_PINCODE_FORM = "returnPincodeCheckForm";
+	public static final String RETURN_ADDRESS = "retunAddress";
+	public static final String PINCODE_NOT_SERVICEABLE ="notServiceable";
+
 
 	//review page
 	public static final String CATEGORY_ID = "categoryID";
@@ -187,7 +192,9 @@ public final class ModelAttributetConstants
 	public static final String COMMENT_TEXT = "commentText";
 	public static final String COMMENT_TEXT_VAL = "";
 	public static final String COMMENT_TITLE = "commentTitle";
+	public static final String MEDIA_URL = "updatedMediaUrl";
 	public static final String COMMENT_TITLE_VAL = "";
+	public static final String COMMENT_MEDIA_VAL = "";
 	public static final String RATINGS = "ratings";
 	public static final String RATINGS_VAL = "";
 	public static final String COMMENTS = "comments";

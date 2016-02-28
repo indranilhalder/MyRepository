@@ -9,9 +9,6 @@ import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -69,29 +66,29 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 		if (null != VoucherStatusNotificationModel)
 		{
 
-			List<ProductModel> productsCoupon = new ArrayList<ProductModel>();
-			//List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
-			productsCoupon = VoucherStatusNotificationModel.getProductAssociated();
-			//categoryBasedCoupon = VoucherStatusNotificationModel.getCategoryAssociated();
-
-			String productUrl = "";
-			if (null != productsCoupon)
-			{
-				for (final ProductModel p : productsCoupon)
-				{
-					productUrl = getProductModelUrlResolver().resolve(p);
-					notificationData.setProductUrl(productUrl);
-
-				}
-			}
-			if (!VoucherStatusNotificationModel.getCategoryAssociated().isEmpty())
-			{
-
-				productUrl = "/v/" + (VoucherStatusNotificationModel.getVoucherIdentifier());
-				notificationData.setProductUrl(productUrl);
-
-
-			}
+			//			List<ProductModel> productsCoupon = new ArrayList<ProductModel>();
+			//			//List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
+			//			productsCoupon = VoucherStatusNotificationModel.getProductAssociated();
+			//			//categoryBasedCoupon = VoucherStatusNotificationModel.getCategoryAssociated();
+			//
+			//			String productUrl = "";
+			//			if (null != productsCoupon)
+			//			{
+			//				for (final ProductModel p : productsCoupon)
+			//				{
+			//					productUrl = getProductModelUrlResolver().resolve(p);
+			//					notificationData.setProductUrl(productUrl);
+			//
+			//				}
+			//			}
+			//			if (!VoucherStatusNotificationModel.getCategoryAssociated().isEmpty())
+			//			{
+			//
+			//				productUrl = "/v/" + (VoucherStatusNotificationModel.getVoucherIdentifier());
+			//				notificationData.setProductUrl(productUrl);
+			//
+			//
+			//			}
 
 			notificationData.setCouponCode(VoucherStatusNotificationModel.getVoucherCode());
 			notificationData.setNotificationRead(VoucherStatusNotificationModel.getIsRead());

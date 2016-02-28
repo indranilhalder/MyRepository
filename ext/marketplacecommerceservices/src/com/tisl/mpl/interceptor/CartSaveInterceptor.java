@@ -31,28 +31,20 @@ public class CartSaveInterceptor implements PrepareInterceptor
 		LOG.debug(Localization.getLocalizedString("payment.cartsaveinterceptor.message"));
 		if (object instanceof CartModel)
 		{
-			final CartModel cart = (CartModel) object;
-			//
-			//			if (null != cart.getDeliveryCost() && cart.getDeliveryCost().doubleValue() > 0.0)
-			//			{
-			//				cart.setTotalPrice(Double.valueOf(cart.getTotalPrice().doubleValue() + cart.getDeliveryCost().doubleValue()));
-			//			}
-			//			else
-			//			{
-			//				//cart.setTotalPrice(cart.getSubtotal());
-			//			}
-			if (null != cart.getConvenienceCharges())
+			final CartModel cartModel = (CartModel) object;
+
+			if (null != cartModel.getConvenienceCharges())
 			{
-				cart.setTotalPriceWithConv(Double.valueOf(cart.getTotalPrice().doubleValue()
-						+ cart.getConvenienceCharges().doubleValue()));
+				cartModel.setTotalPriceWithConv(Double.valueOf(cartModel.getTotalPrice().doubleValue()
+						+ cartModel.getConvenienceCharges().doubleValue()));
 			}
 			else
 			{
-				cart.setTotalPriceWithConv(cart.getTotalPrice());
+				cartModel.setConvenienceCharges(Double.valueOf(0.0));
+				cartModel.setTotalPriceWithConv(cartModel.getTotalPrice());
 			}
 		}
 
 	}
-
 
 }
