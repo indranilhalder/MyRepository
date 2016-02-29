@@ -303,6 +303,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 		try
 		{
+			//return buybox data for product code and seller id
 			final BuyBoxModel buyBoxMod = buyBoxService.buyboxForSizeGuide(productCode, sellerId);
 
 			//If all the sellers has stock zero, then display any product having non zero price
@@ -326,8 +327,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 			}
 			buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
-
-			//other sellers count
 		}
 		catch (final NumberFormatException e)
 		{
