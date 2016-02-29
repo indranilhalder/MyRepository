@@ -19,6 +19,12 @@
 		resource="classpath:/marketplacecore/integration/hot-folder-common-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_import-spring.xml" />
+		
+		
+		<!-- TISPRD-207 Changes Start-->
+		<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_delist-spring.xml" />
+		<!-- TISPRD-207 Changes End-->
 	<!-- <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_classification-spring.xml" /> -->
 	<import
