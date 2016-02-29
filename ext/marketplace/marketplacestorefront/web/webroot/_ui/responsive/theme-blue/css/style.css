@@ -649,6 +649,9 @@ input:focus {
     	display: inline-block;
     	color: #000;
          }
+      .brand-header .select-view .select-list > .selected:after {
+    	color: #fff;
+         }
     @media (max-width: 900px) {
       .select-view .select-list > .selected {
         font-size: 14px; } }
@@ -678,6 +681,9 @@ input:focus {
       margin: 0 -1px -1px -1px; }
       .select-view .select-list li:hover {
         color: #000;
+        font-weight: 500; }
+      .brand-header .select-view .select-list li:hover {
+        color: #fff;
         font-weight: 500; }
       @media (max-width: 900px) {
         .select-view .select-list li {
@@ -19348,7 +19354,7 @@ header .content .marketplace.compact {
   line-height: 50px;
   text-align: center;
   margin-left: 0;
-  z-index: -1;
+ /*  z-index: -1; */
 }
 header .content .marketplace.compact a img{
  width: 130px;
@@ -21745,7 +21751,7 @@ body .lookbook_wrapper div.share-link ul li a.gp:before {
     content: "\f0d5";
 }
 body .lookbook_wrapper div.share-link ul li a:hover:before {
-    color: #1e76d2;
+    color: #88102C;
 }
 .lookbook-intro {
     clear: both;
@@ -33558,7 +33564,7 @@ main {
 }
 
 .simple-banner-component a {
-	display: block;
+	display: inline-block;
 }
 
 .image-map-component img {
@@ -35713,6 +35719,9 @@ border: 2px solid #000 !important;
 }
 div.MSDQuickView, div.MSDQuickView:before {
 	font-size:22px;
+}
+.MSDQuickView {
+    color: #a9143c !important;
 }
 @media (min-width: 650px){
 .spacer {

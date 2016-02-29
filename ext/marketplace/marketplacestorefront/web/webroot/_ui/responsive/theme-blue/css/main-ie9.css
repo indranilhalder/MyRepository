@@ -2209,7 +2209,7 @@ header .content .marketplace.compact {
   line-height: 50px;
   text-align: center;
   margin-left: 0;
-  z-index: -1;
+  /* z-index: -1; */
 }
 header .content .marketplace.compact a img{
  width: 130px;
@@ -5046,7 +5046,7 @@ body .lookbook_wrapper div.share-link ul li a.gp:before {
     content: "\f0d5";
 }
 body .lookbook_wrapper div.share-link ul li a:hover:before {
-    color: #1e76d2;
+    color: #88102C;
 }
 .lookbook-intro {
     clear: both;
@@ -11537,7 +11537,7 @@ body .account .right-account .order-history.order-details li.item .actions a:vis
 	overflow:hidden;
 }
 .simple-banner-component a {
-    display: block;
+    display: inline-block;
 }
 #returnRequestForm .return-container , .return-form.success .return-container{
 	    border: 2px solid #dfd1d5;
