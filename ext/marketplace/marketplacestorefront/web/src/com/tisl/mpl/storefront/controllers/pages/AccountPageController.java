@@ -1228,6 +1228,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
+			model.addAttribute(ModelAttributetConstants.PAGE_SIZE_HISTORY, pageSizeVoucherHistory);
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 					accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_COUPONDETAILS));
 			model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
