@@ -7113,5 +7113,51 @@
 			</itemtype>
 
 		</typegroup>
+		
+		<!--                     Entry For Delist TISPRD-207 Start                          -->
+		
+		<typegroup name = "DelistSeller">
+		<itemtype code="MarketplaceDelist" autocreate="true" generate="true" >
+				<deployment table="mplDelist" typecode="15797" />
+				<attributes>
+					<attribute type="java.lang.String" qualifier="sellerID">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(30)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<attribute type="java.lang.String" qualifier="delistUssid">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property">
+						<columntype database='oracle'>
+								<value>VARCHAR2(1000)</value>
+							</columntype>
+							</persistence>
+					</attribute>
+					<attribute type="java.lang.String" qualifier="delistingStatus">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property"/>
+						
+					</attribute>
+					<attribute type="java.lang.String" qualifier="isBlockOMS">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property"/>	
+					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="isProcessed">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property"/>	
+						
+					</attribute>
+				</attributes>
+			</itemtype>
+			</typegroup>
+			<!--                     Entry For Delist TISPRD-207 End                          -->
 	</itemtypes>
 </items>

@@ -1252,6 +1252,9 @@
 					<description>This attribute will signfy the status of the seller product assciation. This will be used for delisting process</description>
 					<modifiers read="true" write="true" optional="true"
 						unique="false" />
+						<!-- TISPRD-207 Changes Start-->
+						<defaultvalue>em().getEnumerationValue("sellerAssociationStatusEnum","yes")</defaultvalue>
+						<!-- TISPRD-207 Changes End-->
 					<persistence type='property'>
 					<columntype database='oracle'>
 						<value>VARCHAR2(50)</value>
