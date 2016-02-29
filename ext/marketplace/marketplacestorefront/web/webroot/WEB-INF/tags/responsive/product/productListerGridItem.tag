@@ -213,8 +213,10 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->
 						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<!-- TISSTRT - 985::Size of footwear products are not displayed in SERP page-->
 						<c:if
-						test="${not empty product.productCategoryType && product.isVariant && product.productCategoryType eq 'Apparel'}">
+							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
+							                          || product.productCategoryType eq 'Footwear') }">
 						
 						 <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li>
 						 </c:if>
