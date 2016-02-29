@@ -692,13 +692,22 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							{
 								couponHistoryDTO.setRedeemedDate(getCouponRedeemedDate(orderDataKey.getCreated()));
 							}
-							if (couponHistoryDTOList.contains(couponHistoryDTO))
+
+							if (null != couponHistoryDTOList)
+							{
+
+								for (final CouponHistoryData couponData : couponHistoryDTOList)
+								{
+									if (couponData.getOrderCode().equals(couponHistoryDTO.getOrderCode()))
+									{
+										couponOrderDataDTOListFinal.add(couponHistoryDTO);
+									}
+
+								}
+							}
+							else
 							{
 								couponOrderDataDTOListFinal.add(couponHistoryDTO);
-							}
-							else if (!couponHistoryDTOList.contains(couponHistoryDTO))
-							{
-								couponHistoryDTOList.add(couponHistoryDTO);
 							}
 
 						}
