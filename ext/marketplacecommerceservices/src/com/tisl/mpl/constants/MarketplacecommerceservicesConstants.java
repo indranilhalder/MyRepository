@@ -187,6 +187,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CHARGED = "CHARGED".intern();
 	public static final String JUSPAY_ORDER_STAT_RESP = "Order status response: ".intern();
 	public static final String NA = "NA".intern();
+	public static final String na = "na".intern();
 	public static final String DUMMYCCOWNER = "DUMMY NAME".intern();
 	public static final String DUMMYNUMBER = "XXXXXXXXXXXXXXXX".intern();
 	public static final String DUMMYCARDREF = "xxxxxxxxxxxxxxxxxx".intern();
@@ -1323,7 +1324,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String GETPROMOTIONS = "select {p:pk} from {AbstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate} and {immutableKeyHash} is null";
 	public static final String PRODUCT_PROMO_PERCENTAGE_FIRE_MSG = "product.promotion.firedMessage.ifPercentage";
-	
+
 	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
 	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
 	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
@@ -1437,7 +1438,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String VOUCHERCODE = "voucherCode".intern();
 	public static final String SYSDATE = "sysdate".intern();
 	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
-
 
 	private MarketplacecommerceservicesConstants()
 	{

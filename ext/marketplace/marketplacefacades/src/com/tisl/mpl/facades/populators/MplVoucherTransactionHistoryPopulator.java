@@ -8,8 +8,6 @@ import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commercefacades.voucher.impl.DefaultVoucherFacade;
 import de.hybris.platform.converters.Populator;
-import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -36,11 +34,6 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
  */
 public class MplVoucherTransactionHistoryPopulator implements Populator<VoucherInvalidationModel, CouponHistoryData>
 {
-
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private VoucherModelService voucherModelService;
 	@Autowired
 	private DefaultVoucherFacade defaultVoucherFacade;
 	@Autowired

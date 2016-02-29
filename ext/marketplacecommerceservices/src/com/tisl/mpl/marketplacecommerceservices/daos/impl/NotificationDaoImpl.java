@@ -37,10 +37,12 @@ public class NotificationDaoImpl implements NotificationDao
 
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
+
 	private static final String SELECT_CLASS = "SELECT {c:";
 	private static final String FROM_CLASS = "FROM {";
 	private static final String WHERE_CLASS = "WHERE ";
 	private static final String C_CLASS = "{c:";
+	private static final String AS_C = " AS c} ";
 
 	protected ConfigurationService getConfigurationService()
 	{
@@ -65,7 +67,7 @@ public class NotificationDaoImpl implements NotificationDao
 			{
 				final StringBuilder stringBuilder = new StringBuilder(100);
 				stringBuilder.append(SELECT_CLASS).append(OrderStatusNotificationModel.PK).append("} ");
-				stringBuilder.append(FROM_CLASS).append(OrderStatusNotificationModel._TYPECODE).append(" AS c} ");
+				stringBuilder.append(FROM_CLASS).append(OrderStatusNotificationModel._TYPECODE).append(AS_C);
 				stringBuilder.append(WHERE_CLASS).append(C_CLASS);
 				stringBuilder.append(OrderStatusNotificationModel.CUSTOMERUID).append("}=?code ");
 				stringBuilder.append("ORDER BY").append(C_CLASS);
@@ -109,7 +111,7 @@ public class NotificationDaoImpl implements NotificationDao
 			SELECT_CLASS
 					+ OrderStatusNotificationModel.PK
 					+ "}" //
-					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
+					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + AS_C + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND" + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND" + C_CLASS
 					+ OrderStatusNotificationModel.TRANSACTIONID + "}=?transactionId AND" + C_CLASS
@@ -141,7 +143,7 @@ public class NotificationDaoImpl implements NotificationDao
 			SELECT_CLASS
 					+ OrderStatusNotificationModel.PK
 					+ "}" //
-					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
+					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + AS_C + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND " + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND " + C_CLASS
 					+ OrderStatusNotificationModel.TRANSACTIONID + "}=?consignmentId AND " + C_CLASS
@@ -151,7 +153,7 @@ public class NotificationDaoImpl implements NotificationDao
 			SELECT_CLASS
 					+ OrderStatusNotificationModel.PK
 					+ "}" //
-					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
+					+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + AS_C + WHERE_CLASS + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND" + C_CLASS
 					+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND" + C_CLASS
 					+ OrderStatusNotificationModel.CUSTOMERSTATUS + "}=?shopperStatus";
@@ -197,7 +199,7 @@ public class NotificationDaoImpl implements NotificationDao
 		SELECT_CLASS
 				+ OrderStatusNotificationModel.PK
 				+ "}" //
-				+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + " AS c} " + WHERE_CLASS + C_CLASS
+				+ FROM_CLASS + OrderStatusNotificationModel._TYPECODE + AS_C + WHERE_CLASS + C_CLASS
 				+ OrderStatusNotificationModel.CUSTOMERUID + "}=?customerId AND " + C_CLASS
 				+ OrderStatusNotificationModel.ORDERNUMBER + "}=?ordercode AND " + C_CLASS
 				+ OrderStatusNotificationModel.TRANSACTIONID + "}=?transactionId AND " + C_CLASS
