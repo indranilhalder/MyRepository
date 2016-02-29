@@ -68,7 +68,6 @@
 					    <c:when test="${product.rootCategory=='Clothing'}">
                  <div class="sizes apparelSizes">
                     <table>
-				<%-- <h2>Top</h2> --%>
 					<tr>
 					<td>
 								<ul>								
@@ -234,7 +233,6 @@
 	</p>
 	<br>
     </div>
-        </div> -->
         <div class="attributes">
 						<ul class="color-swatch">
 					<c:choose>
@@ -249,7 +247,6 @@
 								var="variantUrl" />
 						
 							 <c:choose>
-							<%-- 	<c:when test="${empty selectedSize}"> --%>
 							 <c:when test="${empty sizeSelectedSizeGuide}">
 								<a href="${variantUrl}&sizeSelected=" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
 							 </c:when>
@@ -402,8 +399,6 @@
 					<option>10</option>
 				</select>
 			</div>
-	
-</div -->
 
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
 		
@@ -464,7 +459,6 @@
 	</span>
 	<span id="addToCartSizeGuideTitleSuccess"></span>
 </form:form>
-			
 		</div>
 	</div>
 	</c:when>
@@ -512,7 +506,6 @@
 </div>
 <script>
 $(document).ready(function(){
-
 	var qtyData = $("#pdpQty").val();
 	localStorage.setItem("sizeguideselectvaluePdp", qtyData);
 	
@@ -591,6 +584,7 @@ $(document).ready(function(){
 		 localStorage.removeItem('sizeguideselectvalue');
 		 
 		 });
+	
 	
 });
 
