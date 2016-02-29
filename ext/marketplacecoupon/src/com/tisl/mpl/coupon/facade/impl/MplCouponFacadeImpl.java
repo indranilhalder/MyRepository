@@ -668,6 +668,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private List<CouponHistoryData> sortcouponHistoryDTOList(final Map<Date, OrderData> orderDateMap,
 			final Map<OrderData, VoucherData> orderVoucherMap, final List<CouponHistoryData> couponHistoryDTOList)
 	{
+		final List<CouponHistoryData> couponOrderDataDTOListFinal = new ArrayList<CouponHistoryData>();
 		if (!orderDateMap.isEmpty()) //arranging voucher and corresponding order in a DTO
 		{
 			for (final Map.Entry<Date, OrderData> orderDaterEntry : orderDateMap.entrySet())// as per IQA comments for code sanitization
@@ -691,17 +692,36 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							{
 								couponHistoryDTO.setRedeemedDate(getCouponRedeemedDate(orderDataKey.getCreated()));
 							}
-							couponHistoryDTOList.add(couponHistoryDTO);
+
+							if (null != couponHistoryDTOList)
+							{
+
+								for (final CouponHistoryData couponData : couponHistoryDTOList)
+								{
+									if (couponData.getOrderCode().equals(couponHistoryDTO.getOrderCode()))
+									{
+										couponOrderDataDTOListFinal.add(couponHistoryDTO);
+									}
+
+								}
+							}
+							else
+							{
+								couponOrderDataDTOListFinal.add(couponHistoryDTO);
+							}
 
 						}
-
 					}
 
 				}
+
 			}
 		}
-		return couponHistoryDTOList;
+
+		return couponOrderDataDTOListFinal;
 	}
+
+
 
 	/**
 	 * @param voucherCodeInvalidationMap
@@ -855,23 +875,23 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * (orderCreationDate != null) { final Calendar endCalendar = Calendar.getInstance(); final Calendar startCalendar =
 	 * Calendar.getInstance(); final SimpleDateFormat dateFormatforMONTH = new java.text.SimpleDateFormat(
 	 * MarketplacecommerceservicesConstants.COUPONS_TXN_DATE_FORMAT);
-	 * 
+	 *
 	 * endCalendar.setTime(new Date()); startCalendar.setTime(orderCreationDate);
-	 * 
+	 *
 	 * final int endYear = endCalendar.get(Calendar.YEAR); final int endMonth =
 	 * Integer.parseInt(dateFormatforMONTH.format(endCalendar.getTime())); final int endDay =
 	 * endCalendar.get(Calendar.DAY_OF_MONTH);
-	 * 
+	 *
 	 * final int startYear = startCalendar.get(Calendar.YEAR); final int startMonth =
 	 * Integer.parseInt(dateFormatforMONTH.format(startCalendar.getTime())); final int startDay =
 	 * startCalendar.get(Calendar.DAY_OF_MONTH);
-	 * 
+	 *
 	 * final DateTime startDate = new DateTime().withDate(startYear, startMonth, startDay); final DateTime endDate = new
 	 * DateTime().withDate(endYear, endMonth, endDay);
-	 * 
+	 *
 	 * final Months monthsBetween = Months.monthsBetween(startDate, endDate); final int monthsBetweenInt =
 	 * monthsBetween.getMonths();
-	 * 
+	 *
 	 * if (monthsBetweenInt < 6) { isDateValid = true; } } return isDateValid; }
 	 */
 
