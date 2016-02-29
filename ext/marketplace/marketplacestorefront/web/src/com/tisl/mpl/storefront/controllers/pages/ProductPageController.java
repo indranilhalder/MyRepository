@@ -436,7 +436,7 @@ public class ProductPageController extends AbstractPageController
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
-			//	This method is responsible to get the winning buybox seller and other sellers count and minimum price information for the given product code and seller ID
+			//	This method is responsible to get the buybox data for the given product code and seller ID
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
 			if (buyboxdata != null)
 			{
@@ -480,8 +480,10 @@ public class ProductPageController extends AbstractPageController
 		}
 		return buyboxJson;
 	}
+
 	/**
-	 *  Set the hedder data of the sizeguide
+	 * Set the hedder data of the sizeguide
+	 * 
 	 * @param sizeguideList
 	 * @param categoryType
 	 * @return
