@@ -36,7 +36,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -55,8 +54,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.Months;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
@@ -591,7 +588,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final Map<Date, OrderData> orderDateMap = new TreeMap<Date, OrderData>(Collections.reverseOrder());
 		final List<String> voucherCodeList = new ArrayList<String>();
 		List<String> amountList = new ArrayList<String>();
-		boolean isOrderDateValid = false;
+		final boolean isOrderDateValid = true;
 		final Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMap = new TreeMap<String, Collection<VoucherInvalidationModel>>();
 		final Map<OrderData, VoucherData> orderVoucherMap = new HashMap<OrderData, VoucherData>();
 		Map<String, Collection<VoucherInvalidationModel>> voucherCodeInvalidationMapFinal = new TreeMap<String, Collection<VoucherInvalidationModel>>();
@@ -617,7 +614,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					final String orderCode = order.getCode();
 					orderDetailsData = getMplCheckoutFacade().getOrderDetailsForCode(orderCode);
-					isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());// restrict orders to last six months only
+					//	isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());// restrict orders to last six months only
 
 					if (isOrderDateValid && null != voucherData)
 					{
@@ -853,41 +850,30 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param orderCreationDate
 	 * @return boolean
 	 */
-	private boolean checkTransactionDateValidity(final Date orderCreationDate)
-	{
-		boolean isDateValid = false;
-		if (orderCreationDate != null)
-		{
-			final Calendar endCalendar = Calendar.getInstance();
-			final Calendar startCalendar = Calendar.getInstance();
-			final SimpleDateFormat dateFormatforMONTH = new java.text.SimpleDateFormat(
-					MarketplacecommerceservicesConstants.COUPONS_TXN_DATE_FORMAT);
-
-			endCalendar.setTime(new Date());
-			startCalendar.setTime(orderCreationDate);
-
-			final int endYear = endCalendar.get(Calendar.YEAR);
-			final int endMonth = Integer.parseInt(dateFormatforMONTH.format(endCalendar.getTime()));
-			final int endDay = endCalendar.get(Calendar.DAY_OF_MONTH);
-
-			final int startYear = startCalendar.get(Calendar.YEAR);
-			final int startMonth = Integer.parseInt(dateFormatforMONTH.format(startCalendar.getTime()));
-			final int startDay = startCalendar.get(Calendar.DAY_OF_MONTH);
-
-			final DateTime startDate = new DateTime().withDate(startYear, startMonth, startDay);
-			final DateTime endDate = new DateTime().withDate(endYear, endMonth, endDay);
-
-			final Months monthsBetween = Months.monthsBetween(startDate, endDate);
-			final int monthsBetweenInt = monthsBetween.getMonths();
-
-			if (monthsBetweenInt < 6)
-			{
-				isDateValid = true;
-			}
-		}
-		return isDateValid;
-	}
-
+	/*
+	 * private boolean checkTransactionDateValidity(final Date orderCreationDate) { boolean isDateValid = false; if
+	 * (orderCreationDate != null) { final Calendar endCalendar = Calendar.getInstance(); final Calendar startCalendar =
+	 * Calendar.getInstance(); final SimpleDateFormat dateFormatforMONTH = new java.text.SimpleDateFormat(
+	 * MarketplacecommerceservicesConstants.COUPONS_TXN_DATE_FORMAT);
+	 * 
+	 * endCalendar.setTime(new Date()); startCalendar.setTime(orderCreationDate);
+	 * 
+	 * final int endYear = endCalendar.get(Calendar.YEAR); final int endMonth =
+	 * Integer.parseInt(dateFormatforMONTH.format(endCalendar.getTime())); final int endDay =
+	 * endCalendar.get(Calendar.DAY_OF_MONTH);
+	 * 
+	 * final int startYear = startCalendar.get(Calendar.YEAR); final int startMonth =
+	 * Integer.parseInt(dateFormatforMONTH.format(startCalendar.getTime())); final int startDay =
+	 * startCalendar.get(Calendar.DAY_OF_MONTH);
+	 * 
+	 * final DateTime startDate = new DateTime().withDate(startYear, startMonth, startDay); final DateTime endDate = new
+	 * DateTime().withDate(endYear, endMonth, endDay);
+	 * 
+	 * final Months monthsBetween = Months.monthsBetween(startDate, endDate); final int monthsBetweenInt =
+	 * monthsBetween.getMonths();
+	 * 
+	 * if (monthsBetweenInt < 6) { isDateValid = true; } } return isDateValid; }
+	 */
 
 	/**
 	 * @param month
@@ -998,7 +984,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		final List<CouponHistoryData> couponOrderDataDTOListFinal = new ArrayList<CouponHistoryData>();
 		final List<VoucherInvalidationModel> voucherInvalidationList = searchVoucherModel.getResults();
 		final Map<Date, OrderData> orderDateMap = new TreeMap<Date, OrderData>(Collections.reverseOrder());
-		boolean isOrderDateValid = false;
+		final boolean isOrderDateValid = true;
 		final Map<OrderData, VoucherData> orderVoucherMap = new HashMap<OrderData, VoucherData>();
 
 		OrderData orderDetailsData = new OrderData();
@@ -1016,7 +1002,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				{
 					final String orderCode = order.getCode();
 					orderDetailsData = getMplCheckoutFacade().getOrderDetailsForCode(orderCode);
-					isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());// restrict orders to last six months only
+					//	isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());// restrict orders to last six months only
 
 					if (isOrderDateValid && null != voucherData)
 					{
