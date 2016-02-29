@@ -1858,7 +1858,6 @@ function loadDefaultWishListName_SizeGuide() {
 
 	function addToWishlist_SizeGuide() {
 	var productCodePost = $("#productCode").val(); //'${product.code}'; //
-	//var productCodePost = $("#productCodePostQuick").val();
 	//alert(productCodePost);
 	var wishName = "";
 

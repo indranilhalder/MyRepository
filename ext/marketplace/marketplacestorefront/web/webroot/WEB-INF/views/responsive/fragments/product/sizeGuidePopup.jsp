@@ -554,6 +554,7 @@
 </div>
 <script>
 $(document).ready(function(){
+
 	var qtyData = $("#pdpQty").val();
 	localStorage.setItem("sizeguideselectvaluePdp", qtyData);
 	
@@ -632,7 +633,6 @@ $(document).ready(function(){
 		 localStorage.removeItem('sizeguideselectvalue');
 		 
 		 });
-	
 	
 });
 

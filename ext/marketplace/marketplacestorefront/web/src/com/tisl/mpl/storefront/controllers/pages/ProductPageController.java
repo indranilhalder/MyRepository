@@ -424,7 +424,6 @@ public class ProductPageController extends AbstractPageController
 	 * @throws UnsupportedEncodingException
 	 * @throws com.granule.json.JSONException
 	 */
-
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
@@ -433,7 +432,7 @@ public class ProductPageController extends AbstractPageController
 	{
 		LOG.debug(String.format("BUYBOZFORSIZEGUIDEAJAX : productCode:  %s | sellerId : %s ", productCode, sellerId));
 
-			final JSONObject buyboxJson = new JSONObject();
+		final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
@@ -443,34 +442,23 @@ public class ProductPageController extends AbstractPageController
 			{
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
 						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
-
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
-
-
 						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
 						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
 						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
-
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE,
-
 						null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
 								&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
 								: ModelAttributetConstants.NOVALUE);
-
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
-
 						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
 								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
 								: ModelAttributetConstants.NOVALUE);
-
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME,
 						null != buyboxdata.getSellerName() ? buyboxdata.getSellerName() : ModelAttributetConstants.EMPTY);
-
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU,
 						null != buyboxdata.getSellerArticleSKU() ? buyboxdata.getSellerArticleSKU() : ModelAttributetConstants.EMPTY);
-
 			}
 			else
 			{
@@ -492,13 +480,12 @@ public class ProductPageController extends AbstractPageController
 		}
 		return buyboxJson;
 	}
-
-
-
-
-
-
-
+	/**
+	 *  Set the hedder data of the sizeguide
+	 * @param sizeguideList
+	 * @param categoryType
+	 * @return
+	 */
 	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList, final String categoryType)
 	{
 		final Map<String, String> headerMap = new HashMap<String, String>();
