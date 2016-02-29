@@ -36207,3 +36207,10 @@ text-transform: uppercase;
 overflow:auto;
 height:200px;
 }
+
+ /* TISPRD-216 defect fix */
+div.productInfo ul li span.product-size.carousel-size{
+display:block;
+}
+
+/* TISPRD-216 defect fix ends */
