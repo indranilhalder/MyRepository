@@ -112,6 +112,8 @@ public class SearchPageController extends AbstractSearchPageController
 	//private static final String DROPDOWN_SELLER = "seller-"; Avoid unused private fields such as 'DROPDOWN_SELLER'.
 
 	public static final String REDIRECT_PREFIX = "redirect:";
+
+	private static final String BLANKSTRING = "";
 	@Autowired
 	private CatalogVersionService catalogVersionService;
 	@Resource(name = "productSearchFacade")
@@ -634,91 +636,95 @@ public class SearchPageController extends AbstractSearchPageController
 	@RequestMapping(value = "/autocomplete/" + COMPONENT_UID_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
 	public AutocompleteResultData getAutocompleteSuggestions(@PathVariable final String componentUid,
 			@RequestParam("term") final String term, @RequestParam("category") final String category) throws CMSItemNotFoundException
-	{
+	{		
 		final MplAutocompleteResultData resultData = new MplAutocompleteResultData();
-		//boolean allSearchFlag = false;
+	//boolean allSearchFlag = false;
 
-		//final SearchBoxComponentModel component = (SearchBoxComponentModel) cmsComponentService.getSimpleCMSComponent(componentUid);
+	//final SearchBoxComponentModel component = (SearchBoxComponentModel) cmsComponentService.getSimpleCMSComponent(componentUid);
 
-		//if (component.isDisplaySuggestions())
-		//{
+	//if (component.isDisplaySuggestions())
+	//{
 
-		final List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(term);
-		if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+	final List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(term);
+	if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+	{
+
+		resultData.setSuggestions(suggestions);
+	}
+	else
+	{
+		String substr = "";
+		substr = term.substring(0, term.length() - 1);
+
+		resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
+
+
+	}
+	//resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
+	final SearchStateData searchState = new SearchStateData();
+	final SearchQueryData searchQueryData = new SearchQueryData();
+	/*********** Fixing for Defect TISPRO-58 and TISPRD-346 Start */
+	final String strSuggestion = resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
+			: BLANKSTRING;
+	searchQueryData.setValue(strSuggestion.contains(term) ? strSuggestion : term);
+	/*********** Fixing for Defect TISPRO-58 and TISPRD-346 End */
+	//searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
+	searchState.setQuery(searchQueryData);
+	searchState.setSns(true);
+
+	final PageableData pageableData = null;
+
+	ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
+
+
+	if (CollectionUtils.isNotEmpty(resultData.getSuggestions()))
+	{
+
+		if (category.startsWith(MarketplaceCoreConstants.ALL_CATEGORY))
 		{
-
-			resultData.setSuggestions(suggestions);
+			searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
+					.textSearch(searchState, pageableData);
+			resultData.setCategories(searchPageData.getSnsCategories());
+			resultData.setBrands(searchPageData.getAllBrand());
+			//allSearchFlag = true;
 		}
 		else
+		//if (!allSearchFlag)
 		{
-			String substr = "";
-			substr = term.substring(0, term.length() - 1);
-
-			resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
-
-
-		}
-		//resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));
-		final SearchStateData searchState = new SearchStateData();
-		final SearchQueryData searchQueryData = new SearchQueryData();
-		searchQueryData.setValue(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
-		searchState.setQuery(searchQueryData);
-		searchState.setSns(true);
-
-		final PageableData pageableData = null;
-
-		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
-
-
-		if (CollectionUtils.isNotEmpty(resultData.getSuggestions()))
-		{
-
-			if (category.startsWith(MarketplaceCoreConstants.ALL_CATEGORY))
+			if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND))
 			{
-				searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
-						.textSearch(searchState, pageableData);
-				resultData.setCategories(searchPageData.getSnsCategories());
-				resultData.setBrands(searchPageData.getAllBrand());
-				//allSearchFlag = true;
+				searchPageData = searchFacade.categorySearch(category, searchState, pageableData);
 			}
 			else
-			//if (!allSearchFlag)
 			{
-				if (category.startsWith(DROPDOWN_CATEGORY) || category.startsWith(DROPDOWN_BRAND))
-				{
-					searchPageData = searchFacade.categorySearch(category, searchState, pageableData);
-				}
-				else
-				{
-					searchPageData = searchFacade.dropDownSearch(searchState, category, "sellerId", pageableData);
-				}
-				resultData.setCategories(searchPageData.getSnsCategories());
-				resultData.setBrands(searchPageData.getAllBrand());
-
+				searchPageData = searchFacade.dropDownSearch(searchState, category, "sellerId", pageableData);
 			}
-
-
-
-
-			final List<ProductData> suggestedProducts = searchPageData.getResults();
-
-			//this is done to remove some of the data issues where we
-			//have null images or price
-			if (suggestedProducts != null)
-			{
-				cleanSearchResults(suggestedProducts);
-				//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
-				resultData.setProducts(suggestedProducts);
-				resultData
-						.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
-			}
-
+			resultData.setCategories(searchPageData.getSnsCategories());
+			resultData.setBrands(searchPageData.getAllBrand());
 
 		}
-		//}
 
-		return resultData;
+
+
+
+		final List<ProductData> suggestedProducts = searchPageData.getResults();
+
+		//this is done to remove some of the data issues where we
+		//have null images or price
+		if (suggestedProducts != null)
+		{
+			cleanSearchResults(suggestedProducts);
+			//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
+			resultData.setProducts(suggestedProducts);
+			resultData
+					.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm() : term);
+		}
+
+
 	}
+	//}
+
+	return resultData;}
 
 	/**
 	 *

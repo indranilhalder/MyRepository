@@ -18,7 +18,7 @@ public interface UpdatePromotionalPriceService
 			final List<String> brands);
 
 	void disablePromotionalPrice(final List<Product> products, final List<Category> categories, final boolean isEnabled,
-			final Integer priority, final List<String> brands);
+			final Integer priority, final List<String> brands, Long quantity);
 
 
 
