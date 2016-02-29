@@ -33,6 +33,7 @@
 				</c:if>
 
 				<li class="logged_in dropdown" >
+				<span class="material-icons">&#xE8A6;</span>
 				<ycommerce:testId code="header_LoggedUser">
 					<c:set var="userName" value="${user.firstName}"/>
 						<c:if test="${not empty userName}">
@@ -89,13 +90,20 @@
 	
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
-	
-						<%--<li><a href="<c:url value="/my-account/review"/>"><spring:theme
-										code="header.flyout.review" /></a></li> --%>
+	<!-- Release 2 changes -->
+						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li> 
 										
 							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 										code="header.flyout.myInterest" /></a></li>
 							
+							
+							<%--  <li class="header-SignInShare"><spring:theme
+									code="header.flyout.credits" /></li>
+
+						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li> --%>
+							 
 							<li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li>
 	
@@ -136,12 +144,19 @@
 							<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 										code="header.flyout.address" /></a></li>
 	
-						<%--<li><a href="<c:url value="/my-account/review"/>"><spring:theme
-										code="header.flyout.review" /></a></li> --%>
+						<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li> 
+
 										
 							<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 										code="header.flyout.myInterest" /></a></li>
 							
+					<%-- 							<li class="header-SignInShare"><spring:theme
+									code="header.flyout.credits" /></li>
+
+						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li> --%>
+									
 							<li class="header-SignInShare"><spring:theme
 									code="header.flyout.share" /></li>
 	
@@ -165,7 +180,9 @@
 				<div class="content">
 				<div class="right">
 					<ul>
-						<li class="dropdown sign-in-dropdown sign-in"><ycommerce:testId
+						<li class="dropdown sign-in-dropdown sign-in">
+						<span class="material-icons">&#xE8A6;</span>
+						<ycommerce:testId
 						code="header_Login_link">
 						<a id="socialLogin" href="<c:url value="/login"/>" role="button"
 							aria-expanded="false"><spring:theme
@@ -267,3 +284,4 @@
 			</sec:authorize>
 		</c:if>
 	</li>
+	

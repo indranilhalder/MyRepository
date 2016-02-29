@@ -3,9 +3,8 @@
  */
 package com.tisl.mpl.service;
 
-import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
-import de.hybris.platform.core.Registry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
@@ -20,6 +19,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SellerMasterCorporateAddressModel;
@@ -27,12 +27,15 @@ import com.tisl.mpl.core.model.SellerMasterPaymentInfoModel;
 import com.tisl.mpl.core.model.SellerMasterWthhldTAXModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerMasterDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerInformationDAOImpl;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.model.SellerTypeGlobalCodesModel;
 import com.tisl.mpl.wsdto.CorporateAddressWsDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
+import com.tisl.mpl.wsdto.SellerMasterResponseWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
 
@@ -49,6 +52,35 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 
 	@Autowired
 	private MplSellerInformationDAOImpl mplSellerInformationDAO;
+
+	@Autowired
+	private MplSellerMasterDao mplSellerMasterDao;
+
+	@Autowired
+	private CatalogService catalogService;
+
+
+	@Autowired
+	private MplSellerInformationService mplSellerInformationService;
+
+	/**
+	 * @return the mplSellerInformationService
+	 */
+	public MplSellerInformationService getMplSellerInformationService()
+	{
+		return mplSellerInformationService;
+	}
+
+	/**
+	 * @param mplSellerInformationService
+	 *           the mplSellerInformationService to set
+	 */
+	public void setMplSellerInformationService(final MplSellerInformationService mplSellerInformationService)
+	{
+		this.mplSellerInformationService = mplSellerInformationService;
+	}
+
+
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
@@ -664,30 +696,20 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 	}
 
 
-
-	/*
-	 * @description:Save seller information data received in XML format from Seller Portal
-	 * 
-	 * @sellerInformationWSDTO
-	 * 
-	 * @return String
-	 */
-	@Override
-	public String saveSellerInformation(final SellerMasterWsDTO sellerMasterWsDTO)
+	public SellerMasterResponseWsDTO saveSellerMaster(final SellerMasterWsDTO sellerMasterWsDTO)
 	{
+		final SellerMasterResponseWsDTO sellerMasterResWsDTO = new SellerMasterResponseWsDTO();
 		String status = MarketplacecommerceservicesConstants.SUCCESSS_RESP;
 		final StringBuilder stringBuilder = new StringBuilder();
 		try
 		{
-			CatalogVersionService catalogVersionService;
-			catalogVersionService = (CatalogVersionService) Registry.getApplicationContext().getBean(
-					configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOGVERSIONSERVICE_NAME"));
+
 			final DateFormat formatter = new SimpleDateFormat(MarketplacecommerceservicesConstants.YYYYMMDD);
-			final SellerInformationModel resModel = modelService.create(SellerInformationModel.class);
+			//final SellerInformationModel resModel = modelService.create(SellerInformationModel.class);
 			masterModel = getMasterModel();
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getId()))
 			{
-				resModel.setSellerID(sellerMasterWsDTO.getId());
+				//	resModel.setSellerID(sellerMasterWsDTO.getId());
 				masterModel.setId(sellerMasterWsDTO.getId());
 			}
 			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getFirstname()))
@@ -696,12 +718,14 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 				{
 					stringBuilder.append(sellerMasterWsDTO.getFirstname()).append(sellerMasterWsDTO.getMidname())
 							.append(sellerMasterWsDTO.getLastname());
-					resModel.setSellerName(stringBuilder.toString());
+					//resModel.setSellerName(stringBuilder.toString());
 				}
-				else
-				{
-					resModel.setSellerName(sellerMasterWsDTO.getFirstname());
-				}
+
+				//Blocked for Sonar Fix
+				//				else
+				//				{
+				//					//	resModel.setSellerName(sellerMasterWsDTO.getFirstname());
+				//				}
 
 				masterModel.setFirstname(sellerMasterWsDTO.getFirstname());
 			}
@@ -713,12 +737,13 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 				if (null == sellerTypeGlobalCodesModel)
 				{
 					status = MarketplacecommerceservicesConstants.ERROR_CODE_1;
-					return status;
+					sellerMasterResWsDTO.setStatus(status);
+					return sellerMasterResWsDTO;
 				}
 				if (StringUtils.isNotEmpty(sellerTypeGlobalCodesModel.getDescription()))
 				{
 					final String description = sellerTypeGlobalCodesModel.getDescription();
-					resModel.setSellerType(description);
+					//resModel.setSellerType(description);
 					masterModel.setType(description);
 				}
 			}
@@ -810,17 +835,145 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			{
 				setMasterModelForPaymentInfo(sellerMasterWsDTO.getPaymentInfo());
 			}
-			resModel.setSellerMaster(masterModel);
-			final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
-					.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_ID"),
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getCollectionDays()))
+			{
+				masterModel.setCollectionDays(sellerMasterWsDTO.getCollectionDays());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getDaysToExtend()))
+			{
+				masterModel.setDaysToExtend(sellerMasterWsDTO.getDaysToExtend());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getExtensionTimes()))
+			{
+				masterModel.setExtensionTimes(sellerMasterWsDTO.getExtensionTimes());
+			}
+			modelService.saveAll(masterModel);
+			//resModel.setSellerMaster(masterModel);
+			//modelService.save(resModel);
+			/*
+			 * final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
+			 * .getConfiguration().getString("DEFAULT_IMPORT_CATALOG_ID"),
+			 * configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_VERSION")); if (null !=
+			 * catalogVersionModel) {
+			 * 
+			 * resModel.setCatalogVersion(catalogVersionModel); }
+			 */
+
+			//modelService.saveAll(resModel);
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
+		}
+		catch (final Exception ex)
+		{
+			status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + ex);
+		}
+
+		sellerMasterResWsDTO.setStatus(status);
+		sellerMasterResWsDTO.setSellerMaster(masterModel);
+		return sellerMasterResWsDTO;
+	}
+
+	private boolean updateSellerInfoWithSellerMaster(final List<SellerInformationModel> sellerInfoModelList,
+			final SellerMasterResponseWsDTO sellerMasterRes)
+	{
+		boolean status = false;
+		try
+		{
+			if (null != sellerMasterRes && null != sellerMasterRes.getSellerMaster()
+					&& !CollectionUtils.isEmpty(sellerInfoModelList))
+			{
+				for (final SellerInformationModel sellerInfoModel : sellerInfoModelList)
+				{
+					sellerInfoModel.setSellerMaster(sellerMasterRes.getSellerMaster());
+					modelService.save(sellerInfoModel);
+				}
+				status = true;
+			}
+		}
+		catch (final Exception e)
+		{
+			status = false;
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_INFO_UPDATE_ERROR_MSG + ":" + e.getMessage());
+		}
+		return status;
+	}
+
+
+	private String saveSellerInformation(final SellerMasterWsDTO sellerMasterWsDTO, final SellerMasterModel masterModel)
+	{
+		String status = MarketplacecommerceservicesConstants.SUCCESSS_RESP;
+		final StringBuilder stringBuilder = new StringBuilder();
+		try
+		{
+
+			//	final DateFormat formatter = new SimpleDateFormat(MarketplacecommerceservicesConstants.YYYYMMDD);
+			final SellerInformationModel resModel = modelService.create(SellerInformationModel.class);
+			//	masterModel = getMasterModel();
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getId()))
+			{
+				resModel.setSellerID(sellerMasterWsDTO.getId());
+				//	masterModel.setId(sellerMasterWsDTO.getId());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getFirstname()))
+			{
+				if (sellerMasterWsDTO.getLastname() != null && sellerMasterWsDTO.getMidname() != null)
+				{
+					stringBuilder.append(sellerMasterWsDTO.getFirstname()).append(sellerMasterWsDTO.getMidname())
+							.append(sellerMasterWsDTO.getLastname());
+					resModel.setSellerName(stringBuilder.toString());
+				}
+				else
+				{
+					resModel.setSellerName(sellerMasterWsDTO.getFirstname());
+				}
+
+				//masterModel.setFirstname(sellerMasterWsDTO.getFirstname());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getType()))
+			{
+				final String sellerType = sellerMasterWsDTO.getType();
+				final SellerTypeGlobalCodesModel sellerTypeGlobalCodesModel = mplSellerTypeGlobalCodesService
+						.getDescription(sellerType);
+				if (null == sellerTypeGlobalCodesModel)
+				{
+					status = MarketplacecommerceservicesConstants.ERROR_CODE_1;
+					return status;
+				}
+				if (StringUtils.isNotEmpty(sellerTypeGlobalCodesModel.getDescription()))
+				{
+					final String description = sellerTypeGlobalCodesModel.getDescription();
+					resModel.setSellerType(description);
+					//	masterModel.setType(description);
+				}
+			}
+			if (null != masterModel)
+			{
+				resModel.setSellerMaster(masterModel);
+			}
+			final CatalogVersionModel catalogVersionModel = catalogService.getCatalogVersion(configurationService.getConfiguration()
+					.getString("DEFAULT_IMPORT_CATALOG_ID"),
 					configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_VERSION"));
 			if (null != catalogVersionModel)
 			{
 
 				resModel.setCatalogVersion(catalogVersionModel);
 			}
+			modelService.save(resModel);
 
-			modelService.saveAll(resModel);
+
+
+
+			//modelService.saveAll(resModel);
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -842,21 +995,18 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 	}
 
 
-	@Override
-	public String saveSellerInformationUpdate(final SellerMasterWsDTO sellerMasterWsDTO,
-			final SellerInformationModel resModelUpdate)
+	//@Override
+	private String saveSellerMasterUpdate(final SellerMasterWsDTO sellerMasterWsDTO, final SellerMasterModel masterModelUpdate)
 	{
 		String status = MarketplacecommerceservicesConstants.SUCCESSS_RESP;
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		try
 		{
-			CatalogVersionService catalogVersionService;
-			catalogVersionService = (CatalogVersionService) Registry.getApplicationContext().getBean(
-					configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOGVERSIONSERVICE_NAME"));
+
 			final DateFormat formatter = new SimpleDateFormat(MarketplacecommerceservicesConstants.YYYYMMDD);
 
-			final SellerMasterModel masterModelUpdate = resModelUpdate.getSellerMaster();
+			//	final SellerMasterModel masterModelUpdate = resModelUpdate.getSellerMaster();
 			LOG.debug("Seller master model" + masterModelUpdate);
 
 			//removing existing corporate address starts
@@ -1013,6 +1163,20 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 			{
 				masterModelUpdate.setPayoutPeriod(sellerMasterWsDTO.getPayoutPeriod());
 			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getCollectionDays()))
+			{
+				masterModelUpdate.setCollectionDays(sellerMasterWsDTO.getCollectionDays());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getDaysToExtend()))
+			{
+				masterModelUpdate.setDaysToExtend(sellerMasterWsDTO.getDaysToExtend());
+			}
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getExtensionTimes()))
+			{
+				masterModelUpdate.setExtensionTimes(sellerMasterWsDTO.getExtensionTimes());
+			}
+			
+			
 
 			if (null != sellerMasterWsDTO.getRegisterAddress())
 			{
@@ -1039,20 +1203,6 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 				LOG.debug("etMasterModelForPaymentInfoUpdate update set");
 			}
 
-			//resModelUpdate.setSellerMaster(masterModelUpdate);
-
-			final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
-					.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_ID"),
-					configurationService.getConfiguration().getString("DEFAULT_IMPORT_CATALOG_VERSION"));
-			if (null != catalogVersionModel)
-			{
-
-				resModelUpdate.setCatalogVersion(catalogVersionModel);
-				LOG.debug("catalog ver used in update");
-				//statement was commented used to update seller info table, is not in use as PCM is updating
-			}
-
-			// modelService.saveAll(resModelUpdate);
 			modelService.saveAll(masterModelUpdate);
 
 		}
@@ -1070,8 +1220,8 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 		catch (final Exception ex)
 		{
 			status = MarketplacecommerceservicesConstants.ERROR_FLAG;
-			//LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + ex.printStackTrace());
-			ex.printStackTrace();
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG, ex);
+			//ex.printStackTrace();
 		}
 
 		return status;
@@ -1083,37 +1233,117 @@ public class MplSellerMasterServiceImpl implements MplSellerMasterService
 	public String insertUpdate(final SellerMasterWsDTO sellerMasterWsDTO)
 	{
 		String status = "";
-
-		if (sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("U"))
+		try
 		{
+			List<SellerInformationModel> sellerInfoModelList = null;
 
-			//			if (masterModel.getId().equals(sellerMasterWsDTO.getId()))
-			//			{
-			final SellerInformationModel resModelUpdate = mplSellerInformationDAO.getSellerInformation(sellerMasterWsDTO.getId());
-			if (resModelUpdate == null)
+			SellerMasterResponseWsDTO sellerMasterRes = null;
+			SellerMasterModel sellerMasterModel = null;
+			/*
+			 * if (StringUtils.isNotEmpty(sellerMasterWsDTO.getId())) { sellerInfoWithoutSellerMaster =
+			 * mplSellerInformationService.getSellerInformationWithSellerMaster(sellerMasterWsDTO .getId()); }
+			 */
+
+			if (StringUtils.isNotEmpty(sellerMasterWsDTO.getId()))
 			{
-				status = saveSellerInformation(sellerMasterWsDTO);
-			}
-			else
-			{
-				status = saveSellerInformationUpdate(sellerMasterWsDTO, resModelUpdate);
-			}
-			//}
+				sellerInfoModelList = mplSellerInformationDAO.getSellerInformation(sellerMasterWsDTO.getId());
 
-		}
+				if (StringUtils.isNotEmpty(sellerMasterWsDTO.getIsupdate()) && sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("I"))
+				{
+					sellerMasterRes = saveSellerMaster(sellerMasterWsDTO);
+					if (!CollectionUtils.isEmpty(sellerInfoModelList) && null != sellerMasterRes)
+					{
+						boolean isSellerInfoUpdate = false;
+						//sellerMasterRes = saveSellerMaster(sellerMasterWsDTO);
+						isSellerInfoUpdate = updateSellerInfoWithSellerMaster(sellerInfoModelList, sellerMasterRes);
+						if (!isSellerInfoUpdate)
+						{
+							status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+						}
+					}
+					else
+					{
+						//sellerMasterRes = saveSellerMaster(sellerMasterWsDTO);
+						if (null != sellerMasterRes && null != sellerMasterRes.getSellerMaster())
+						{
+							status = saveSellerInformation(sellerMasterWsDTO, sellerMasterRes.getSellerMaster());
+							return status;
+						}
 
-		else if (sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("I"))
-		{
-			status = saveSellerInformation(sellerMasterWsDTO);
+					}
+				}
+				else if (StringUtils.isNotEmpty(sellerMasterWsDTO.getIsupdate())
+						&& sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("U"))
+				{
+					if (StringUtils.isNotEmpty(sellerMasterWsDTO.getId()))
+					{
+						sellerMasterModel = mplSellerMasterDao.getSellerMaster(sellerMasterWsDTO.getId());
+					}
+					if (null != sellerMasterModel)
+					{
+						status = saveSellerMasterUpdate(sellerMasterWsDTO, sellerMasterModel);
+						return status;
+					}
+					else
+					{
+						sellerMasterRes = saveSellerMaster(sellerMasterWsDTO);
+						boolean isSellerInfoUpdate = false;
+						if (!CollectionUtils.isEmpty(sellerInfoModelList))
+						{
+							isSellerInfoUpdate = updateSellerInfoWithSellerMaster(sellerInfoModelList, sellerMasterRes);
+							if (!isSellerInfoUpdate)
+							{
+								status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+							}
+						}
+						else
+						{
+							if (null != sellerMasterRes && null != sellerMasterRes.getSellerMaster())
+							{
+								status = saveSellerInformation(sellerMasterWsDTO, sellerMasterRes.getSellerMaster());
+								return status;
+							}
+						}
+					}
+				}
+				else
+				{
+					status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+				}
+				if (null != sellerMasterRes && StringUtils.isNotEmpty(sellerMasterRes.getStatus()))
+				{
+					status = sellerMasterRes.getStatus();
+				}
+			}
+
+			/*
+			 * if (sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("U")) {
+			 * 
+			 * // if (masterModel.getId().equals(sellerMasterWsDTO.getId())) // { //final SellerInformationModel
+			 * resModelUpdate = mplSellerInformationDAO.getSellerInformation(sellerMasterWsDTO.getId()); if (resModelUpdate
+			 * == null) {
+			 * 
+			 * 
+			 * sellerMasterRes = saveSellerMaster(sellerMasterWsDTO); if (null != sellerMasterRes &&
+			 * StringUtils.isNotEmpty(sellerMasterRes.getStatus())) { status = sellerMasterRes.getStatus(); } if (null !=
+			 * sellerMasterRes && null != sellerMasterRes.getSellerMaster()) { status =
+			 * saveSellerInformation(sellerMasterWsDTO, sellerMasterRes.getSellerMaster()); } } else { status =
+			 * saveSellerInformationUpdate(sellerMasterWsDTO, resModelUpdate); } //}
+			 * 
+			 * }
+			 * 
+			 * else if (sellerMasterWsDTO.getIsupdate().equalsIgnoreCase("I")) { status =
+			 * saveSellerInformation(sellerMasterWsDTO); }
+			 */
 		}
-		else
+		catch (final Exception e)
 		{
 			status = MarketplacecommerceservicesConstants.ERROR_FLAG;
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
 		}
 
 		return status;
 
 	}
-
-
 }
+

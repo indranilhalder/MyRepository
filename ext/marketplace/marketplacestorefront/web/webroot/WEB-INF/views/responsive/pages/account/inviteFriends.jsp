@@ -4,8 +4,11 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="formElement"
-	tagdir="/WEB-INF/tags/desktop/formElement"%>
+<%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/desktop/formElement"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
+
+<span id="googleClientid" style="display:none">${googleClientid}</span>
+<span id="facebookAppid" style="display:none">${facebookAppid}</span>
 
 <spring:url value="/my-account" var="accountUrl" />
 <spring:url value="/my-account/profile" var="profileUrl" />
@@ -40,7 +43,7 @@
       </select>
 </h1>
 	<div class="wrapper">
-		<div class="left-nav">
+		<%-- <div class="left-nav">
 				<!-- <h1>
 					My MarketPlace</h1> -->
 				<ul>
@@ -51,15 +54,18 @@
 					<li><a href="/store/mpl/en/my-account/orders"><spring:theme code="header.flyout.orders"/></a></li>
 					<li><a href="/store/mpl/en/my-account/payment-details"><spring:theme code="header.flyout.cards"/></a></li>
 					<li><a href="/store/mpl/en/my-account/address-book"><spring:theme code="header.flyout.address"/></a></li>
+					<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+						code="header.flyout.review" /></a></li>
 					<li><a href="/store/mpl/en/my-account/myInterest"><spring:theme code="header.flyout.recommendations"/></a></li>
 				</ul>
 				<ul>
 					<li><h3><spring:theme code="text.inviteFriends.share"/></h3></li>
-					<li><a class="active" href="/store/mpl/en/my-account/friendsInvite"><spring:theme code="text.inviteFriends.invite.friends"/></a></li>
+					<li><a class="active" href="/store/mpl/en/my-account/friendsInvite"><spring:theme code="header.flyout.invite"/></a></li>
 								
 				</ul>
 				
-			</div>
+			</div> --%>
+			<user:accountLeftNav pageName="invite"/>
 
 		<!-- Social sharing -->
 
@@ -107,7 +113,7 @@
 				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Invite your mum, dad, friends, bros, aunties, uncles, next-door neighbors Call everybody here!"/></p>
                 <form>
 						<c:if test="${not empty textMessage}">
-							<c:set var="textMessage" value="Hey, I was blown away by the incredible shopping experience at Tata Mall. I highly recommend that you register as a member as well"></c:set>
+							<c:set var="textMessage" value="Hey, I was blown away by the incredible shopping experience at Tata CliQ. I highly recommend that you register as a member as well"></c:set>
                        	</c:if>
                         <label><spring:theme code="text.InviteFriends.friends.email" /></label>	
 						<input type="text" id="friendsEmail" onkeypress="kpressfemail()"/>
@@ -152,12 +158,12 @@
 									data-layout="button"></div> -->
 							<!-- <g:plus action="share" style="width:174px !important;"></g:plus> -->
 							
-							<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=1531353817178445&amp;description='+$('#sharepretext').text()+' '+' &amp;redirect_uri=http://www.facebook.com/')"></a>   
+							<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+' &amp;redirect_uri=http://www.facebook.com/')"></a>   
 							
 							
 							<span id="myBtn" class="demo g-interactivepost"
 	                            data-contenturl=""
-	                            data-clientid="740568174295-jfu61liejihi96t9ttmv6tg622m9g228.apps.googleusercontent.com"
+	                            data-clientid='${googleClientid}'
 	                            data-cookiepolicy="single_host_origin"
 	                            data-prefilltext="<spring:theme code="shareInvite.pretext"/>"
 	                            data-calltoactionlabel="INVITE"

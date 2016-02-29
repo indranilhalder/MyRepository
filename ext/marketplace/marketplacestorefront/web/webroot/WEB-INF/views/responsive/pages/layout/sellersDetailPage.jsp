@@ -33,6 +33,7 @@
 	var stockUssidIds=[];
 	var ussidIdsForED=[];
 	var ussidIdsForHD=[];
+	var ussidIdsForCNC=[];
 	var ussidIdsForCOD=[];
 	var stockDataArray=[];
 	var si=-1;
@@ -101,6 +102,20 @@
 	</script>
 	</c:if>
 	</c:forEach>
+	<!-- added code for CNC -->
+	<c:forEach items="${skuIdForCNC}" var="skuIdForCNC" varStatus="loop">
+    <c:if test="${not empty skuIdForCNC}">
+    <input type="hidden" id="skuIdForCNCs${loop.index}" value="${skuIdForCNC}"/>
+	<script>
+	 var loopStatus='${loop.index}';
+	ussidIdsForCNC[++c]=$("#skuIdForCNCs"+loopStatus).val();
+    if(ussidIdsForCNC!=""||ussidIdsForCNC!=[]){
+    	$("#skuIdForCNC").val(ussidIdsForCNC);
+    //	$("#skuIdForCNCs").val("");
+	}
+	</script>
+	</c:if>
+	</c:forEach>
 	<c:forEach items="${skuIdsWithNoStock}" var="noStockSkuId" varStatus="loop">
     <c:if test="${not empty noStockSkuId}">	
       <input type="hidden" id="skuIdForNoStocks${loop.index}" value="${noStockSkuId}"/>
@@ -146,12 +161,14 @@ var mrp = '${product.productMRP.value}';
 var deliveryModeMap="";
 var availableDeliveryATPForHD="";
 var availableDeliveryATPForED="";
+var availableDeliveryATPForCNC="";
 var ix=-1;
 var s=-1;
 var hdIndx=-1;
 var edIndx=-1;
 $(document).ready(function() {
 	
+   	getRating('${gigyaAPIKey}','${product.code}','${product.rootCategory}');
 	 var stockMap="${skuIdsWithNoStock}"; 
 	
 	 fetchPrice();
@@ -281,6 +298,26 @@ display:none;
 		 availableDeliveryATPForED=deliveryKey.concat("-").concat(deliveryValue);
  </script>
 </c:if> 
+
+ <c:if test="${delivery.key eq 'click-and-collect'}">
+			 <c:forEach var="clickEntry" items="${delivery.value}">
+		
+			 <c:if test="${clickEntry.key eq 'startForClick'}">	
+			 <input type="hidden" value="${clickEntry.value}" id="clickStartId"/>
+			 </c:if>
+			  <c:if test="${clickEntry.key eq 'endForClick'}">
+			  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
+		     </c:if>
+		    </c:forEach>
+		     <script>
+		 var deliveryKey=firstToUpperCase('${delivery.key}');
+		 var start=$("#clickStartId").val();
+		 var end=$("#clickEndId").val();
+		 var deliveryValue="Delivered in"+start+"-"+end+"business days";
+		 availableDeliveryATPForCNC=deliveryKey.concat("-").concat(deliveryValue);
+ </script>
+</c:if>
+
 <script>
 //var deliveryKey=firstToUpperCase('${delivery.key}');
 //var deliveryValue=firstToUpperCase('${delivery.value}');
@@ -376,14 +413,14 @@ var allSellers='${allsellers}';
 		<div class="product-detail">
 			<ycommerce:testId code="productDetails_productNamePrice_label_${product.code}">
 			<h2 class="company">${product.brand.brandname} by <span id="sellerNameId"></span></h2>
-				<h3 class="product-name">${product.name}</h3>
+				<h3 class="product-name">${product.productTitle}</h3>
 			</ycommerce:testId>
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
 				<product:productPricePanel product="${product}" /> <!-- Displaying buybox price -->
 			</ycommerce:testId>
 			<div class="fullfilled-by">
-			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>
+			<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;
 			<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
 			<span id="fulFilledBySship"  style="display:none;"></span>
 			</div>
@@ -456,7 +493,7 @@ var allSellers='${allsellers}';
 		<p><span id="otherSellersCount"></span>&nbsp;<span class="other-sellers-info"><spring:theme code="product.othersellers"></spring:theme></span>&nbsp;<spring:theme code="product.available"></spring:theme>&nbsp;<span id="minPrice" ></span></p>
 		</div>
 		<div id="sort" class="sort-by" style="display:none"><label><spring:theme code="seller.sort"/></label>
-		<select id="sort" onchange="sort(this.value);">
+		<select id="sellerSort" onchange="sortSellers(this.value);">
 				<%-- <option><spring:theme code="product.select"/></option> --%>
 				<option value="1"><spring:theme code="seller.sort.priceasc"/></option>
 				<option value="2"><spring:theme code="seller.sort.pricedesc"/></option>

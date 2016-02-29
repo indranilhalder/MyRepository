@@ -45,6 +45,8 @@ public class GigyaServiceImpl implements GigyaService
 	private String proxyPort;
 	private String proxyEnabled;
 	private String proxyAddress;
+	public static final String TRUE_STATUS = "true";
+	public static final String EXCEPTION_LOG = "Exception";
 
 	public String getApikey()
 	{
@@ -217,11 +219,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
@@ -271,7 +273,7 @@ public class GigyaServiceImpl implements GigyaService
 
 				//Defining the request
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-				if (proxyEnabledStatus.equalsIgnoreCase("true"))
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
 				{
 					setProxy();
 					request.setProxy(proxy);
@@ -334,7 +336,7 @@ public class GigyaServiceImpl implements GigyaService
 
 		catch (final Exception ex)
 		{
-			LOG.error("Exception", ex);
+			LOG.error(EXCEPTION_LOG, ex);
 
 		}
 
@@ -357,11 +359,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_LOGOUT);
+			final String gigyaMethod = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.METHOD_LOGOUT);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
 
 			if (getSecretkey() != null && getApikey() != null)
@@ -369,13 +371,13 @@ public class GigyaServiceImpl implements GigyaService
 			{
 				//Defining the request
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
-				if (proxyEnabledStatus.equalsIgnoreCase("true"))
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
 				{
 					setProxy();
 					request.setProxy(proxy);
 				}
 				// Adding parameters
-				request.setParam("UID", customerModel.getUid()); // set the "uid" parameter to user's ID
+				request.setParam(MarketplacecclientservicesConstants.UID, customerModel.getUid()); // set the "uid" parameter to user's ID
 				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
 				request.setAPIDomain(getDomain());
 
@@ -413,7 +415,7 @@ public class GigyaServiceImpl implements GigyaService
 
 		catch (final Exception ex)
 		{
-			LOG.error("Exception" + ex);
+			LOG.error(EXCEPTION_LOG + ex);
 			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND + ex);
 
 		}
@@ -435,91 +437,138 @@ public class GigyaServiceImpl implements GigyaService
 		}
 		catch (final InvalidKeyException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("InvalidKeyException ", e);
 		}
 		catch (final UnsupportedEncodingException e)
 		{
-			// YTODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("UnsupportedEncodingException ", e);
 		}
-
 		return false;
-
 	}
 
-
-
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.service.GigyaService#notifyGigyaOfRegistration(java.lang.String, java.lang.String)
-	 */
 	@Override
-	public void notifyGigyaOfRegistration(final String siteUid, final String gigyaUid, final String firstName,
-			final String lastName)
+	public void notifyGigya(final String siteUid, final String gigyaUid, String fName, final String lName, final String eMail,
+			final String gigyaMethod)
 	{
-
-
 		try
 		{
-			// Define the API-Key and Secret key .
-			final String gigyaMethod = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_REGISTRATION);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.PROXYENABLED);
 
-
-			final JSONObject loginUserInfo = new JSONObject();
+			String loginUserInfo = null;
 
 			if (getSecretkey() != null && getApikey() != null)
 
 			{
-				//Defining the request
-				final String method = gigyaMethod;
-				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), method);
-				if (proxyEnabledStatus.equalsIgnoreCase("true"))
+				GSRequest request = null;
+
+
+				LOG.debug("GigyaServiceImpl, notifyGigya Gigya Method" + gigyaMethod);
+				final String FIRSTNAME = "{firstName:" + "'";
+				final String LASTNAME = ",lastName: ";
+				final String EMAIL = ",email:";
+				// NOTIFY GIGYA WHEN USER LOGIN USING SOCIAL NETWORKS
+				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.notifyRegistration"))
+				{
+					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
+					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
+					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
+					{
+						loginUserInfo = FIRSTNAME + fName + "'" + "}";
+					}
+					else
+					{
+						if (eMail != null)
+						{
+							final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+							fName = splitList[0];
+							if (fName.contains("."))
+							{
+								fName = fName.replace('.', ' ');
+							}
+						}
+						loginUserInfo = FIRSTNAME + fName + "'" + "}";
+					}
+				}
+
+				//  NOTIFY GIGYA WHEN USER UPDATES HIS PROFILE DETAILS LIKE FIRSTNAME,LASTNAME,EMAIL
+				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.setUserInfo"))
+				{
+					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
+					request.setParam(MarketplacecclientservicesConstants.UID, siteUid);
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
+					{
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+
+					else
+					{
+						final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+						fName = splitList[0];
+						if (fName.contains("."))
+						{
+							fName = fName.replace('.', ' ');
+						}
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+				}
+
+				//NOTIFY GIGYA WHEN USER LOGIN THROUGH SOCIAL WITH THE SAME EMAIL USED DURIGN SITE LOGIN
+				if (gigyaMethod != null && gigyaMethod.equalsIgnoreCase("socialize.setUID"))
+				{
+					request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
+					request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, siteUid);
+					request.setParam(MarketplacecclientservicesConstants.UID, gigyaUid);
+
+					if (fName != null && fName.length() > 0 && !(fName.equals(" ")))
+					{
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+					else
+					{
+						if (eMail != null)
+						{
+							final String splitList[] = eMail.split(MarketplacecclientservicesConstants.SPLIT_AT);
+							fName = splitList[0];
+							if (fName.contains("."))
+							{
+								fName = fName.replace('.', ' ');
+							}
+						}
+						loginUserInfo = FIRSTNAME + fName + "'" + LASTNAME + "'" + lName + "'" + EMAIL + "'" + eMail + "'" + "}";
+					}
+
+
+				}
+
+
+
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
 				{
 					setProxy();
 					request.setProxy(proxy);
 				}
-				request.setParam("siteUID", siteUid);
-				request.setParam("UID", gigyaUid);
 				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
 				request.setAPIDomain(getDomain());
-				if (firstName != null || lastName != null)
-				{
-					loginUserInfo.put("firstName", firstName);
-					loginUserInfo.put("lastName", lastName);
-				}
+				request.setParam("userInfo", loginUserInfo);
 
-				if (loginUserInfo.toString() != null)
-				{
-					request.setParam("userInfo", loginUserInfo.toString());
-				}
-
-
-				LOG.debug("notifyGigyaOfRegistration,UID:-" + siteUid);
-				LOG.debug("notifyGigyaOfRegistration,GIGYA UID:-" + gigyaUid);
-
-
-				// Step 3 - Sending the request
-				LOG.debug(MarketplacecclientservicesConstants.WAIT_RESPONSE);
+				// Step 3 - SENDING THE REQUEST
 				final GSResponse response = request.send();
 
-				// Step 4 - handling the request's response.
+				// Step 4 - HANDLING THE REQUEST RESPONSE
 				if (response != null)
 				{
 					if (response.getErrorCode() == 0)
-					{ // SUCCESS! response status = OK
+					{
 						LOG.debug(response.getResponseText());
-
 					}
 					else
 					{
-						response.getResponseText();
+						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->"
+								+ (response.getErrorMessage()));
 					}
 
 				}
@@ -529,23 +578,15 @@ public class GigyaServiceImpl implements GigyaService
 					LOG.debug(MarketplacecclientservicesConstants.NULL_RESPONSE);
 				}
 
+
 			}
 
-			else
-			{
-				LOG.error(MarketplacecclientservicesConstants.CHECK_PROPERTIES_FILE);
-			}
 		}
-
 		catch (final Exception ex)
 		{
-			LOG.error("Exception" + ex);
-			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND + ex);
-
+			LOG.error(EXCEPTION_LOG, ex);
+			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND, ex);
 		}
+
 	}
-
-
-
-
 }

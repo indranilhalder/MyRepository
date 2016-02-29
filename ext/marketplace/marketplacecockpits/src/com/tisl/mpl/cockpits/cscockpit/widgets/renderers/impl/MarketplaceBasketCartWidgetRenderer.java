@@ -4,10 +4,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.api.HtmlBasedComponent;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Label;
@@ -19,6 +22,7 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceSearchCommandController;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
+import com.tisl.mpl.util.DiscountUtility;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.session.UISessionUtils;
@@ -26,6 +30,8 @@ import de.hybris.platform.cockpit.util.UITools;
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.utils.SafeUnbox;
@@ -34,8 +40,7 @@ import de.hybris.platform.cscockpit.widgets.models.impl.BasketCartWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.BasketCartWidgetRenderer;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
-
-import org.zkoss.zk.ui.event.Event;
+import de.hybris.platform.util.DiscountValue;
 
 /**
  * The Class MarketplaceBasketCartWidgetRenderer.
@@ -59,6 +64,8 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	@Autowired
 	private MarketplaceSearchCommandController marketplaceSearchCommandController;
 	
+	@Autowired
+	private DiscountUtility discountUtility;
 	
 	/* (non-Javadoc)
 	 * @see de.hybris.platform.cscockpit.widgets.renderers.impl.BasketCartWidgetRenderer#createPickupCartButton(de.hybris.platform.cockpit.widgets.ListboxWidget)
@@ -161,7 +168,6 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	  {
 	    Div summary = new Div();
 	    summary.setSclass("csCartSummary");
-
 	    Span netTotalSpan = new Span();
 	    netTotalSpan.setSclass("csCartPriceRow");
 	    netTotalSpan.setParent(summary);
@@ -188,14 +194,48 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	    tax.setSclass("csCartPriceRowValue");
 	    tax.setParent(taxSpan);
 	     **/
+	    TypedObject cartObject=widget.getWidgetController().getCart();
+	    CartModel cartModel=(CartModel) cartObject.getObject();
+	    
+	    final List<DiscountValue>discountList=cartModel.getGlobalDiscountValues();
+	    final List<DiscountModel> voucherList=cartModel.getDiscounts();
+	    double orderDiscount=0;
+	    double couponDiscount=0;
+	    
+	    if(CollectionUtils.isNotEmpty(discountList))
+	    {
+	    	for(DiscountValue disVal:discountList)
+	    	{
+	    		if(CollectionUtils.isNotEmpty(voucherList) && disVal.getCode().equalsIgnoreCase(voucherList.get(0).getCode()))
+	    		{
+	    			couponDiscount+=disVal.getAppliedValue();
+	    		}
+	    		else
+	    		{
+	    			orderDiscount+=disVal.getAppliedValue();
+	    		}
+	    	}
+	    }
+	    
 	    Span discountsTotalSpan = new Span();
 	    discountsTotalSpan.setSclass("csCartPriceRow");
 	    discountsTotalSpan.setParent(summary);
 	    Label discountsTotalLabel = new Label(LabelUtils.getLabel(widget, "summary.discountTotal", new Object[0]));
 	    discountsTotalLabel.setParent(discountsTotalSpan);
-	    Label discountsTotal = new Label(cartSummary.getTotalDiscounts());
+		//Label discountsTotal = new Label((Double.valueOf(orderDiscount)).toString());
+	    Label discountsTotal = new Label((discountUtility.createPrice(cartModel, Double.valueOf(orderDiscount))).getFormattedValue());
 	    discountsTotal.setSclass("csCartPriceRowValue");
 	    discountsTotal.setParent(discountsTotalSpan);
+	    
+	    Span couponDiscountTotalSpan = new Span();
+	    couponDiscountTotalSpan.setSclass("csCartPriceRow");
+	    couponDiscountTotalSpan.setParent(summary);
+	    Label couponDiscountTotalLabel = new Label(LabelUtils.getLabel(widget, "summary.couponDiscountTotal", new Object[0]));
+	    couponDiscountTotalLabel.setParent(couponDiscountTotalSpan);
+	   // Label couponDiscountTotal = new Label((Double.valueOf(couponDiscount)).toString());
+	    Label couponDiscountTotal = new Label((discountUtility.createPrice(cartModel, Double.valueOf(couponDiscount))).getFormattedValue());
+	    couponDiscountTotal.setSclass("csCartPriceRowValue");
+	    couponDiscountTotal.setParent(couponDiscountTotalSpan);
 
 	    Span grossTotalSpan = new Span();
 	    grossTotalSpan.setSclass("csCartPriceRow");
@@ -216,6 +256,8 @@ public class MarketplaceBasketCartWidgetRenderer extends
 			return;
 		((BasketController) widget.getWidgetController()).clearCart();
 
+		((MarketPlaceBasketController)widget.getWidgetController()).releaseVoucher();
+		
 		((BasketController) widget.getWidgetController()).dispatchEvent(null,
 				widget, null);
 		
@@ -226,9 +268,17 @@ public class MarketplaceBasketCartWidgetRenderer extends
 	}
 	
 	
-	
-	
-	
-	
-	
+	/* (non-Javadoc)
+ 	 * @see de.hybris.platform.cscockpit.widgets.renderers.impl.BasketCartWidgetRenderer#createContentInternal(de.hybris.platform.cockpit.widgets.ListboxWidget, org.zkoss.zk.ui.api.HtmlBasedComponent)
+ 	 */
+  	@Override
+  	protected HtmlBasedComponent createContentInternal(
+  			ListboxWidget<BasketCartWidgetModel, BasketController> widget,
+  			HtmlBasedComponent rootContainer) {
+  		
+  		//Fix TISEE-6282
+  		widget.getWidgetModel().setItems(((BasketController)widget.getWidgetController()).getPromotionalCartLineItems());
+  		
+  		return super.createContentInternal(widget, rootContainer);
+  	}	
 }

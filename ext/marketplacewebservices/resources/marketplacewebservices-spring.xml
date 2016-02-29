@@ -276,7 +276,11 @@
 <bean id="mplValidateAgainstXSDService"
 			class="com.tisl.mpl.service.MplValidateAgainstXSDServiceImpl"/>
 <bean id="mplSellerMasterService"
-			class="com.tisl.mpl.service.MplSellerMasterServiceImpl"/>			
+			class="com.tisl.mpl.service.MplSellerMasterServiceImpl"/>	
+			
+<bean id="mplSellerMasterDao"
+			class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplSellerMasterDaoImpl"/>			
+			
 <bean id="mplSellerTypeGlobalCodesService"
 			class="com.tisl.mpl.service.MplSellerTypeGlobalCodesServiceImpl"/>	
 <bean id="mplSellerTypeGlobalCodesDAO"
@@ -362,5 +366,8 @@
 <property name="userService" ref="userService"/>
 </bean>	
 <!-- For Promotion on Mobile cart -->
-	<bean id="mplDiscountUtil" class="com.tisl.mpl.utility.MplDiscountUtil" />			
+	<bean id="mplDiscountUtil" class="com.tisl.mpl.utility.MplDiscountUtil" />		
+	
+	<bean id="mplSlaveMasterService" class="com.tisl.mpl.service.MplSlaveMasterServiceImpl"/>	
+	<bean id="mplSlaveMasterDao" class="com.tisl.mpl.dao.MplSlaveMasterDAOImpl"/>
 </beans>

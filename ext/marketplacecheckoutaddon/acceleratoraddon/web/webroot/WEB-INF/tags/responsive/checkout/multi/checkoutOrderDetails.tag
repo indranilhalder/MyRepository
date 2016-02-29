@@ -19,6 +19,7 @@
 	<div class="checkout-order-summary">
 		<%-- <div class="headline"><spring:theme code="checkout.multi.order.summary" text="Order Summary" /></div> --%>
 		<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
+		<%-- <multi-checkout:coupons cartData="${cartData}" /> --%>
 		<div class="bottom order-details block">
 			<!-- <ul class="checkout-order-summary-list"> -->
 				<multi-checkout:deliveryCartItems cartData="${cartData}" showDeliveryAddress="${showDeliveryAddress}" />

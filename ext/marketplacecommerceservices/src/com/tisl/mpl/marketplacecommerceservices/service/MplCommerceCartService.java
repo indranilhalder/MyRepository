@@ -26,8 +26,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
+import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
@@ -399,4 +402,22 @@ public interface MplCommerceCartService
 	 * @return SellerInformationModel
 	 */
 	public abstract SellerInformationModel getSellerDetailsData(String ussid);
+
+	/**
+	 * @param cartModel
+	 * @param freebieModelMap
+	 * @param freebieParentQtyMap
+	 * @throws EtailNonBusinessExceptions
+	 */
+	void saveDeliveryMethForFreebie(CartModel cartModel, Map<String, MplZoneDeliveryModeValueModel> freebieModelMap,
+			Map<String, Long> freebieParentQtyMap) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param storeLocationRequestDataList
+	 * @return
+	 */
+	public abstract List<StoreLocationResponseData> getStoreLocationsforCnC(
+			List<StoreLocationRequestData> storeLocationRequestDataList);
+
+
 }

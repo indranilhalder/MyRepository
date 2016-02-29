@@ -4,6 +4,8 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +33,12 @@ public class OrderModelDaoImpl implements OrderModelDao
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
+	@Autowired
+	private ModelService modelService;
+
+	private static final Logger LOG = Logger.getLogger(OrderModelDaoImpl.class);
+
+
 	/**
 	 * It gets the list of all Orders
 	 *
@@ -39,9 +48,12 @@ public class OrderModelDaoImpl implements OrderModelDao
 	@Override
 	public List<OrderModel> getAllOrders() throws EtailNonBusinessExceptions
 	{
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put(MarketplacecommerceservicesConstants.ORDERTYPE, MarketplacecommerceservicesConstants.PARENTORDER);
 		try
 		{
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.SALES_REPORT_QUERY_START);
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.SALES_REPORT_QUERY,
+					params);
 			return flexibleSearchService.<OrderModel> search(query).getResult();
 		}
 
@@ -116,7 +128,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 		List<OrderModel> orderlist = null;
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(MarketplacecommerceservicesConstants.ORDERCODE, code);
-		params.put(MarketplacecommerceservicesConstants.ORDERTYPE, "SubOrder");
+		params.put(MarketplacecommerceservicesConstants.ORDERTYPE, MarketplacecommerceservicesConstants.SUBORDER);
 
 		try
 		{
@@ -132,18 +144,18 @@ public class OrderModelDaoImpl implements OrderModelDao
 						order = orderModel;
 					}
 				}
-				return order;
+				//return order;
 			}
-			else
-			{
-				return null;
-			}
+			//			else
+			//			{
+			//				return null;
+			//			}
 		}
-
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e);
 		}
+		return order;
 	}
 
 	/**
@@ -175,17 +187,83 @@ public class OrderModelDaoImpl implements OrderModelDao
 						order = orderModel;
 					}
 				}
-				return order;
+				//return order;
 			}
-			else
-			{
-				return null;
-			}
+			//			else
+			//			{
+			//				return null;
+			//			}
 		}
-
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e);
 		}
+		return order;
+	}
+
+
+
+
+	@Override
+	public OrderModel updatePickUpDetailsDao(final String orderId, final String name, final String mobile)
+	{
+
+		OrderModel orderModel = new OrderModel();
+
+		try
+		{
+			orderModel.setCode(orderId);
+			orderModel = flexibleSearchService.getModelByExample(orderModel);
+			LOG.debug(orderId + "" + name + "" + mobile);
+			LOG.debug("*****************************");
+			if (null != name)
+			{
+				LOG.info("update pickuUpPerson ");
+				orderModel.setPickupPersonName(name);
+			}
+			if (null != mobile)
+			{
+				LOG.info("update pickuUpPersonMobileNo ");
+				orderModel.setPickupPersonMobile(mobile);
+			}
+
+			LOG.info("UpdatePickUpDetails ChildOrder ");
+			final List<OrderModel> childOrderList = orderModel.getChildOrders();
+			for (final OrderModel childOrder : childOrderList)
+			{
+				childOrder.setPickupPersonMobile(mobile);
+				childOrder.setPickupPersonName(name);
+				modelService.save(childOrder);
+			}
+
+			modelService.save(orderModel);
+
+
+		}
+		catch (final ModelSavingException expection)
+		{
+			LOG.error("***********EditPickUpDetails" + expection.getMessage());
+		}
+		return orderModel;
+
+	}
+
+	@Override
+	public OrderModel getOrderModel(final String orderId) throws EtailNonBusinessExceptions
+	{
+		OrderModel orderModel = new OrderModel();
+		try
+		{
+			if (orderId != null)
+			{
+				orderModel.setCode(orderId);
+				orderModel = flexibleSearchService.getModelByExample(orderModel);
+			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+		return orderModel;
 	}
 }

@@ -9,7 +9,6 @@
 <%@ attribute name="product" required="true" type="de.hybris.platform.commercefacades.product.data.ProductData" %>
 <%@ attribute name="galleryImages" required="true" type="java.util.List" %>
 
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
    <script type="text/javascript">
    
  

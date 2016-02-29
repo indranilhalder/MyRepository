@@ -16,7 +16,6 @@ package com.tisl.mpl.core.cronjob.feedback.jobs;
 import de.hybris.platform.acceleratorservices.checkout.flow.CheckoutFlowStrategy;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
-import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.CronJobService;
@@ -24,6 +23,8 @@ import de.hybris.platform.servicelayer.cronjob.PerformResult;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -32,12 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.cronjob.feedback.processor.MarketplaceFeedBackProcessor;
 import com.tisl.mpl.core.model.FeedBackStoringModel;
+import com.tisl.mpl.core.model.FeedbackCronJobModel;
 
 
 /**
  * Base {@link CheckoutFlowStrategy} implementation, gives {@link #defaultStrategy} fallback functionality.
  */
-public class FeedBackSendFeedCronJob extends AbstractJobPerformable<CronJobModel>
+public class FeedBackSendFeedCronJob extends AbstractJobPerformable<FeedbackCronJobModel>
 {
 	@Autowired
 	private ConfigurationService configurationService;
@@ -51,14 +53,37 @@ public class FeedBackSendFeedCronJob extends AbstractJobPerformable<CronJobModel
 
 
 	@Override
-	public PerformResult perform(final CronJobModel cronJobModel)
+	public PerformResult perform(final FeedbackCronJobModel cronJobModel)
 	{
 		LOG.info("Starting feedBack generation");
-		final String outputFilePath = getOutputFilePath();
-		final Date lastRunTime = cronJobService.getCronJob("sendFeedBackCronJob").getCreationtime();
-		final List<FeedBackStoringModel> items = mplFeedBackProcessor.getFeedBackData(lastRunTime);
-		mplFeedBackProcessor.writeItemsToCSV(items, outputFilePath, getCSVHeaderLine());
 
+		final String outputFilePath = getOutputFilePath();
+		List<FeedBackStoringModel> items = new ArrayList<FeedBackStoringModel>();
+		final FeedbackCronJobModel currentCronJob = (FeedbackCronJobModel) cronJobService.getCronJob("sendFeedBackSearchCronJob");
+		final Date lastRunTime = currentCronJob.getLastExecutionTime();
+		//final Date lastRunTime = cronJobService.getCronJob("sendFeedBackCronJob").getCreationtime();
+		if (lastRunTime != null)
+		{
+
+			items = mplFeedBackProcessor.getFeedBackData(lastRunTime);
+		}
+		else
+		{
+			final Calendar cal = Calendar.getInstance();
+			final Date currentTime = new Date();
+			cal.setTime(currentTime);
+			cal.add(Calendar.DATE, -1);
+			final Date dateBeforeOneDay = cal.getTime();
+			items = mplFeedBackProcessor.getFeedBackData(dateBeforeOneDay);
+
+
+
+		}
+
+		//final List<FeedBackStoringModel> items = mplFeedBackProcessor.getFeedBackData(lastRunTime);
+		mplFeedBackProcessor.writeItemsToCSV(items, outputFilePath, getCSVHeaderLine());
+		currentCronJob.setLastExecutionTime(currentCronJob.getStartTime());
+		modelService.save(currentCronJob);
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
 

@@ -77,6 +77,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -137,6 +138,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	@Autowired
 	private SessionService sessionService;
+	@Autowired
+	private MplCommerceCartService mplCommerceCartService;
 
 	private static final Logger LOG = Logger.getLogger(MplCheckoutFacadeImpl.class);
 
@@ -259,15 +262,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -303,13 +306,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description modified from DefaultAcceleratorCheckoutFacade performExpressCheckout : TIS 391
-	 * 
+	 *
 	 * @ Selected Address set for express checkout
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return ExpressCheckoutResult
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	@Override
@@ -339,7 +342,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc if express checkout is enabled for the store
-	 * 
+	 *
 	 * @return boolean
 	 */
 
@@ -357,11 +360,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description setting address for express checkout : TIS 391
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	private boolean setDefaultDeliveryAddressForCheckout(final String addressId) throws EtailNonBusinessExceptions
@@ -388,11 +391,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 * 
+	 *
 	 * @param addressId
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -515,13 +518,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400 TISEE-581
-	 * 
+	 *
 	 * @param finalDeliveryCost
-	 * 
+	 *
 	 * @param deliveryCostPromotionMap
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -647,7 +650,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				//skip the order if product is missing in the order entries
 				for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
 				{
-					if (null == orderEntry.getProduct())// it means somehow product is deleted from the order entry.
+					if (null == orderEntry.getProduct()) // it means somehow product is deleted from the order entry.
 					{
 						LOG.info("************************Skipping order history for order :" + orderModel.getCode()
 								+ " and for user: " + orderModel.getUser().getName() + " **************************");
@@ -675,6 +678,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					final OrderData sellerOrderData = getOrderConverter().convert(sellerOrder);
 					//orderData.setDeliveryCost(childDeliveryCost);
 					sellerOrderData.setDeliveryCost(childDeliveryCost);
+					sellerOrderData.setPickupName(orderModel.getPickupPersonName());
+					sellerOrderData.setPickupPhoneNumber(orderModel.getPickupPersonMobile());
 					sellerOrderList.add(sellerOrderData);
 				}
 				orderData.setSellerOrderList(sellerOrderList);
@@ -708,7 +713,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	 *
 	 * @return PriceData
 	 */
-	private PriceData createPrice(final AbstractOrderModel source, final Double val)
+	@Override
+	public PriceData createPrice(final AbstractOrderModel source, final Double val)
 	{
 		if (source == null)
 		{
@@ -729,11 +735,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc to check pincode inventory for Pay now TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -802,11 +808,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @ Desc to check promotion expired or not for Pay now : TIS 414
-	 * 
+	 *
 	 * @param cartData
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -910,7 +916,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
@@ -1017,26 +1023,26 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		{
 			if (day.intValue() >= 11 && day.intValue() <= 13)
 			{
-				result = currentDate + "th";
+				result = day + "th";
 			}
 			else
 			{
 				switch (day.intValue() % 10)
 				{
 					case 1:
-						result = currentDate + "st";
+						result = day + "st";
 						//LOG.debug(">>>>>>>>>>>>>>>>>>>>>>>date>>>>>>>>>>>>> : " + result);
 						break;
 					case 2:
-						result = currentDate + "nd";
+						result = day + "nd";
 						//LOG.debug(">>>>>>>>>>>>>>>>>>>>>>>date>>>>>>>>>>>>> : " + result);
 						break;
 					case 3:
-						result = currentDate + "rd";
+						result = day + "rd";
 						//LOG.debug(">>>>>>>>>>>>>>>>>>>>>>>date>>>>>>>>>>>>> : " + result);
 						break;
 					default:
-						result = currentDate + "th";
+						result = day + "th";
 						//LOG.debug(">>>>>>>>>>>>>>>>>>>>>>>date>>>>>>>>>>>>> : " + result);
 				}
 			}
@@ -1100,7 +1106,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#triggerEmailAndSmsOnOrderConfirmation(de.hybris.platform.core.model
 	 * .order.OrderModel)
@@ -1153,15 +1159,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param freebieModelMap
-	 * 
+	 *
 	 * @param freebieParentQtyMap
-	 * 
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1169,77 +1175,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
 			throws EtailNonBusinessExceptions
 	{
-		if (cartModel != null && cartModel.getEntries() != null && freebieModelMap != null && !freebieModelMap.isEmpty())
-		{
-			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-			{
-				if (cartEntryModel != null && cartEntryModel.getGiveAway().booleanValue()
-						&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
-				{
-					saveDeliveryMethForFreebie(cartEntryModel, freebieModelMap, freebieParentQtyMap);
-				}
-			}
-		}
+		getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
 	}
 
-	private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
-			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
-	{
-
-		MplZoneDeliveryModeValueModel mplDeliveryMode = null;
-		if (cartEntryModel.getAssociatedItems().size() == 1)
-		{
-			mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
-		}
-		else if (cartEntryModel.getAssociatedItems().size() == 2
-				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode() != null
-				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1)).getDeliveryMode() != null
-				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode() != null)
-		{
-			if ((freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode())
-					.equals((freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1)).getDeliveryMode().getCode())))
-			{
-				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
-			}
-			else if (freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(0)).doubleValue() == freebieParentQtyMap.get(
-					cartEntryModel.getAssociatedItems().get(1)).doubleValue())
-			{
-				if (freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode()
-						.equalsIgnoreCase("home-delivery"))
-				{
-					mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
-				}
-				else
-				{
-					mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
-				}
-			}
-			else if (freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(0)).doubleValue() > freebieParentQtyMap.get(
-					cartEntryModel.getAssociatedItems().get(1)).doubleValue())
-			{
-
-				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
-
-			}
-			else
-			{
-				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
-			}
-
-		}
-		else
-		{
-			LOG.debug("Unable to handle DeliveryMode as more than two Parent");
-		}
-
-
-		if (mplDeliveryMode != null)
-		{
-			//saving parent product delivery mode to freebie item
-			cartEntryModel.setMplDeliveryMode(mplDeliveryMode);
-			getModelService().save(cartEntryModel);
-		}
-	}
 
 	/**
 	 * @return the deliveryCostService
@@ -1467,6 +1405,28 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	{
 		this.sessionService = sessionService;
 	}
+
+
+
+	/**
+	 * @return the mplCommerceCartService
+	 */
+	public MplCommerceCartService getMplCommerceCartService()
+	{
+		return mplCommerceCartService;
+	}
+
+
+
+	/**
+	 * @param mplCommerceCartService
+	 *           the mplCommerceCartService to set
+	 */
+	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
+	{
+		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
 
 
 

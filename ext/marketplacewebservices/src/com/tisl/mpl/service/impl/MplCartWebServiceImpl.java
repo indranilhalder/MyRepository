@@ -70,6 +70,7 @@ import javax.annotation.Resource;
 import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartServiceImpl;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.util.DiscountUtility;
@@ -825,7 +826,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		try
 		{
 			cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
-			if (null != cartModelList && cartModelList.size() > 0)
+			//if (null != cartModelList && cartModelList.size() > 0)
+			if (CollectionUtils.isNotEmpty(cartModelList))
 			{
 				for (final CartModel cartModel : cartModelList)
 				{
@@ -1033,7 +1035,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							for (final ImageData img : productData1.getImages())
 							{
 								if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
-										&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL))
+								//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
+										&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
 								{
 									gwlp.setImageURL(img.getUrl());
 								}
@@ -1373,8 +1376,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						 * discountUtility.createPrice( cart,
 						 * Double.valueOf(Math.round(abstractOrderEntry.getTotalPrice().doubleValue() -
 						 * abstractOrderEntry.getCartLevelDisc().doubleValue()))); if (null != cartLevelDisc && null !=
-						 * cartLevelDisc.getFormattedValue()) {
-						 * LOG.debug("************ Mobile webservice cartLevelDiscount ************* " +
+						 * cartLevelDisc.getFormattedValue()) { LOG.debug(
+						 * "************ Mobile webservice cartLevelDiscount ************* " +
 						 * cartLevelDisc.getFormattedValue());
 						 * gwlp.setCartLevelDiscount(String.valueOf(cartLevelDisc.getFormattedValue())); } }
 						 */
@@ -1388,11 +1391,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 							{
 								/*
 								 * LOG.debug("**********BigDecimal.ROUND_HALF_UP *****************" +
-								 * cartLevelDisc.getValue().setScale(2, BigDecimal.ROUND_HALF_UP));
-								 * LOG.debug("**********BigDecimal.ROUND_CEILING *****************" +
-								 * cartLevelDisc.getValue().setScale(2, BigDecimal.ROUND_CEILING));
-								 * LOG.debug("**********BigDecimal.ROUND_HALF_UP *****************" +
-								 * cartLevelDisc.getValue().setScale(2, BigDecimal.ROUND_UP));
+								 * cartLevelDisc.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)); LOG.debug(
+								 * "**********BigDecimal.ROUND_CEILING *****************" + cartLevelDisc.getValue().setScale(2,
+								 * BigDecimal.ROUND_CEILING)); LOG.debug("**********BigDecimal.ROUND_HALF_UP *****************"
+								 * + cartLevelDisc.getValue().setScale(2, BigDecimal.ROUND_UP));
 								 */
 
 								LOG.debug("************ Mobile webservice cartLevelDiscount ************* "
@@ -1932,7 +1934,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					}
 				}
 
-				if ((pincode == null || pincode.isEmpty()) || (!pincode.isEmpty() && deliveryModeDataMap.size() == 0))
+				//if ((pincode == null || pincode.isEmpty()) || (!pincode.isEmpty() && deliveryModeDataMap.size() == 0))
+				if (StringUtils.isEmpty(pincode) || (StringUtils.isNotEmpty(pincode) && MapUtils.isEmpty(deliveryModeDataMap)))
 				{
 					isServicable = MarketplacecommerceservicesConstants.N;
 				}

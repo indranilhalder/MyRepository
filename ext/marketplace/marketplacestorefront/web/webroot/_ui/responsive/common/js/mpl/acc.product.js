@@ -127,6 +127,7 @@ ACC.product = {
 		$(document).off('click', '#addToCartFormQuick').on('click', '#addToCartFormQuick', function(event) { 
 		   
 			 $("#qty1").val($("#quantity").val());
+			 
 				if($("#sizeSelected").val()!='no'){
 				ACC.product.sendAddToBagQuick("addToCartFormQuick");
 				
@@ -138,6 +139,27 @@ ACC.product = {
 				return false;
 		});
 		
+		// Size Guide addToCartSizeGuide
+		$(document).on('click','#addToCartSizeGuide .js-add-to-cart',function(event){
+			
+			var selectedSizeFlag = $("#sizeSelectedVal").val();
+			
+			
+			
+			 $("#sizeQty").val($("#sizeGuideQty").val());
+			//alert($('#variant.size-g option:selected').val());
+			 if($('#variant.size-g option:selected').val()!="#")
+			 {
+				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
+			 
+			}else{
+					$("#sizeSelectedSizeGuide").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
+					$("#sizeSelectedSizeGuide").show();
+			}
+			event.preventDefault();
+			return false;
+		});
+				
 		$(document).on('click','#addToCartFormId .js-add-to-cart',function(event){
 			ACC.product.sendAddToBag("addToCartFormId");
 			event.preventDefault();
@@ -509,6 +531,119 @@ addToBagFromWl: function(ussid, addedToCart) {
 			}
 		});
 	},
+	
+	//SizeGuide 
+	sendAddToBagSizeGuide: function(formId){
+		//alert("Size Guide sendAddToBagSizeGuide 3 "+formId);
+		
+		var input_name="qty";
+		var stock_id="stock";
+		var dataString=$('#'+formId).serialize();	
+		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
+		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
+		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
+		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
+
+		//alert("dataString: "+dataString+" quantity: "+quantity+" stock: "+stock);
+		$.ajax({
+			url : ACC.config.encodedContextPath + "/cart/add",
+			data : dataString,
+			type : "POST",
+			cache : false,
+			beforeSend: function(){
+		        $('#ajax-loader').show();
+		    },
+			success : function(data) {
+				//alert("data: "+data);
+				if(data.indexOf("cnt:") >= 0){
+					//alert("addtobag");
+				$("#"+formId+"TitleSuccess").html("");
+				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+
+				$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+
+				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
+				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+
+				//alert("data form id: "+$("#"+formId+" "+".addToCartSerpTitle"));
+				
+				//ACC.product.displayAddToCart(data,formId,false);
+				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+				}
+				else if(data=="reachedMaxLimit") {
+					//$("#"+formId+"Title").html("");
+					$("#"+formId+"Titlebagtofull").html("<br/><font color='#ff1c47'>"+$('#addToCartSizeGuideTitlebagtofull').html()+"</font>");
+					$("#"+formId+"Titlebagtofull").show().fadeOut(5000);
+				}
+				else if(data=="crossedMaxLimit"){
+					//alert("bagfull:  "+ formId+"Titlebagfull");
+					//$("#"+formId+"Titlebagfull").html("");
+					$("#"+formId+"Titlebagfull").html("<font color='#ff1c47'>"+$('#addToCartSizeGuideTitlebagfull').text()+"</font>");
+					$("#"+formId+"Titlebagfull").show().fadeOut(5000);
+				}
+				else if(data=="outofinventory"){
+					
+					//alert("outofinventory: "+data);
+					 $("#"+formId+"noInventorySize").html("<font color='#ff1c47'>" + $('#addToCartSizeGuidenoInventorySize').text() + "</font>");
+					 $("#"+formId+"noInventorySize").show().fadeOut(6000);
+			   	     return false;
+				}
+				else if(data=="willexceedeinventory"){
+					 $("#"+formId+"excedeInventorySize").html("<font color='#ff1c47'>" + $('#addToCartSizeGuideexcedeInventorySize').text() + "</font>");
+					 $("#"+formId+"excedeInventorySize").show().fadeOut(6000);
+			   		 return false;
+				}
+				else{
+					$("#"+formId+"Titleaddtobagerror").html("");
+					$("#"+formId+"Titleaddtobagerror").html("<br/><font color='#ff1c47'>"+$('#addToCartSizeGuideTitleaddtobagerror').text()+"</font>");
+					$("#"+formId+"Titleaddtobagerror").show().fadeOut(5000);
+				}
+			
+				//For MSD
+				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
+				if(isMSDEnabled === 'true')
+				{
+				//console.log(isMSDEnabled);
+				var isApparelExist  = $("input[name=isApparelExist]").val();
+				//console.log(isApparelExist);				
+				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
+				//console.log(salesHierarchyCategoryMSD);
+				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
+				//console.log(rootCategoryMSD);				
+				var productCodeMSD =  $("input[name=productCodeMSD]").val();
+				//console.log(productCodeMSD);				
+				var priceformad =  $("input[id=price-for-mad]").val();
+				//console.log(priceformad);				
+				
+				if(typeof isMSDEnabled === 'undefined')
+				{
+					isMSDEnabled = false;						
+				}
+				
+				if(typeof isApparelExist === 'undefined')
+				{
+					isApparelExist = false;						
+				}	
+				
+				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
+					{					
+					ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
+					}	
+				}
+				//End MSD
+				
+			},
+			complete: function(){
+		        $('#ajax-loader').hide();
+		    },
+			error : function(resp) {
+				//alert("Add to Bag unsuccessful: "+resp.responseText);
+			}
+		});
+	},
+	
+	
+	
 	displayAddToCart: function (cartResult,formId,isUpdateCartCount)
 	{
 		var formElement=$("#"+formId);
@@ -585,7 +720,21 @@ addToBagFromWl: function(ussid, addedToCart) {
 		        var listItemText = $(li).text().toUpperCase(), searchText = that.value.toUpperCase();
 		        return ~listItemText.indexOf(searchText);
 		    });
-		    
+		    if(($matchingListElements).size() > 0) {
+			    $(this).parents(".js-facet").find(".js-facet-top-values").hide();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").show();
+	
+				$(this).parents(".js-facet").find(".js-more-facet-values").hide();
+				$(this).parents(".js-facet").find(".js-less-facet-values").show();
+		    }
+		    if(that.value.toUpperCase() == ''){
+		    	$(this).parents(".js-facet").find(".js-facet-top-values").show();
+				$(this).parents(".js-facet").find(".js-facet-list-hidden").hide();
+
+				$(this).parents(".js-facet").find(".js-more-facet-values").show();
+				$(this).parents(".js-facet").find(".js-less-facet-values").hide();
+		    }
+			    
 		    $allListElements.hide();
 		    $(".brand .js-facet-top-values").hide();
 			$(".brand .js-facet-list.js-facet-list-hidden").show();
@@ -619,6 +768,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 				var currentBrand = "";
 				if(i==0) {
 					selectQueryParams = selectQueryParams + url;
+					//get searchcategory value to append with brand checkall url
 					if(url.indexOf(':category:') != -1){
 						var urlAry = url.split(':');
 						for (var j = 2; j <  urlAry.length; j = j + 2) { 
@@ -629,8 +779,11 @@ addToBagFromWl: function(ussid, addedToCart) {
 					}
 				}
 				else{
-					currentBrand = arr[arr.length-2]+":"+arr[arr.length-1];
-					selectQueryParams = selectQueryParams + ":"+currentBrand;
+					//condition to avoid duplicate brand
+					if(selectQueryParams.indexOf(arr[arr.length-1]) == -1) {
+						currentBrand = arr[arr.length-2]+":"+arr[arr.length-1];
+						selectQueryParams = selectQueryParams + ":"+currentBrand;
+					}
 				}
 				i = i + 1;
 				window.location.href = "?q="+selectQueryParams+"&searchCategory="+searchCategory+"&selectAllBrand=true";

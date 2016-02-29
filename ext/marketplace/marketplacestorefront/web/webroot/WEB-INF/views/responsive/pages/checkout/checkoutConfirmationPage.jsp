@@ -11,7 +11,6 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user"%>
  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <template:page pageTitle="${pageTitle}" >
 
 <!--- START: INSERTED for MSD --->
@@ -65,10 +64,15 @@
 				</p>
 				
 
-				<p>
+				<%-- <p>
+				**************************************
+				Blocked for Defect : TISPRD-57
 					<spring:theme code="checkout.orderConfirmation.copySentTo"
 						arguments="${orderData.customerData.displayUid}" />
-				</p>
+				****************************************
+				</p> --%>
+				
+				
 				<p>
 					<spring:theme code="checkout.orderConfirmation.checkOrderStatus" />
 				</p>
@@ -145,18 +149,16 @@
 				
 				
 			
-					   <b><spring:theme code="seller.order.code"/>${sellerOrder.code}</b> 
+					   <b style="margin-left: 15px"><spring:theme code="seller.order.code"/>${sellerOrder.code}</b> 
 					   
 					<c:forEach items="${sellerOrder.deliveryOrderGroups}"
 						var="orderGroup">
 						<order:orderDetailsItem order="${sellerOrder}"
-							orderGroup="${orderGroup}" parentOrder="${orderData}" />
-						
-							
+							orderGroup="${orderGroup}" parentOrder="${orderData}" />				
 					</c:forEach>
 					<c:forEach items="${sellerOrder.pickupOrderGroups}" var="orderGroup">
 						<order:orderPickupDetailsItem order="${sellerOrder}"
-							orderGroup="${orderGroup}" />
+							orderGroup="${orderGroup}"   parentOrder="${orderData}"/>
 					</c:forEach>
 
 					<%-- <div>
@@ -237,7 +239,6 @@ $( document ).ready(function() {
 
 </script>
 <!-- end MSD -->
-
 
 
 </template:page>

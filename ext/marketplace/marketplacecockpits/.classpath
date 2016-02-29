@@ -15,6 +15,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplacefacades"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplacecommerceservices"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceclientservices"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/juspay"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/marketplacecoupon"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>

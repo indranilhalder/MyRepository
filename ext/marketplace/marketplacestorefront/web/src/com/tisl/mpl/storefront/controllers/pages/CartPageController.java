@@ -89,6 +89,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -170,6 +171,9 @@ public class CartPageController extends AbstractPageController
 	@Resource(name = "modelService")
 	private ModelService modelService;
 
+	@Autowired
+	private MplCouponFacade mplCouponFacade;
+
 	/*
 	 * Display the cart page
 	 */
@@ -200,6 +204,8 @@ public class CartPageController extends AbstractPageController
 				LOG.debug("Cart Delisted Status " + deListedStatus);
 
 				final CartModel cart = mplCartFacade.removeDeliveryMode(serviceCart);
+
+				getMplCouponFacade().releaseVoucherInCheckout(cart);
 
 				//TISST-13010
 				getMplCartFacade().setCartSubTotal();
@@ -1242,7 +1248,7 @@ public class CartPageController extends AbstractPageController
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 			if ((cartData.getEntries() != null && !cartData.getEntries().isEmpty()))
 			{
-				if (!StringUtil.isEmpty(selectedPincode))
+				if (StringUtil.isNotEmpty(selectedPincode))
 				{
 					responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
 				}
@@ -1256,10 +1262,10 @@ public class CartPageController extends AbstractPageController
 						break;
 					}
 				}
+				//if ((selectedPincode == null || selectedPincode.isEmpty()) 	|| (!selectedPincode.isEmpty() && responseData.size() == 0))
+				if (StringUtil.isEmpty(selectedPincode)
+						|| (StringUtil.isNotEmpty(selectedPincode) && CollectionUtils.isEmpty(responseData)))
 
-
-				if ((selectedPincode == null || selectedPincode.isEmpty())
-						|| (!selectedPincode.isEmpty() && responseData.size() == 0))
 				{
 					isServicable = MarketplacecommerceservicesConstants.N;
 				}
@@ -1442,5 +1448,20 @@ public class CartPageController extends AbstractPageController
 		this.modelService = modelService;
 	}
 
+	/**
+	 * @return the mplCouponFacade
+	 */
+	public MplCouponFacade getMplCouponFacade()
+	{
+		return mplCouponFacade;
+	}
 
+	/**
+	 * @param mplCouponFacade
+	 *           the mplCouponFacade to set
+	 */
+	public void setMplCouponFacade(final MplCouponFacade mplCouponFacade)
+	{
+		this.mplCouponFacade = mplCouponFacade;
+	}
 }

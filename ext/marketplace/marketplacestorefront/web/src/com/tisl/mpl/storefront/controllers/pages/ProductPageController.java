@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
@@ -49,6 +50,11 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.storelocator.GPS;
+import de.hybris.platform.storelocator.location.Location;
+import de.hybris.platform.storelocator.location.impl.LocationDTO;
+import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.util.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -106,6 +112,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
@@ -128,6 +135,17 @@ import com.tisl.mpl.util.ExceptionUtil;
 @RequestMapping(value = "/**/p")
 public class ProductPageController extends AbstractPageController
 {
+	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
+	/**
+	 *
+	 */
+	private static final String FOOTWEAR = "Footwear";
+
+	/**
+	 *
+	 */
+	private static final String CLOTHING = "Clothing";
+
 	/**
 	 *
 	 */
@@ -142,6 +160,7 @@ public class ProductPageController extends AbstractPageController
 	 *
 	 */
 	private static final String IS_NEW = "isNew";
+
 	private static final String FULLFILMENT_TYPE = "fullfilmentType";
 
 	/**
@@ -169,6 +188,8 @@ public class ProductPageController extends AbstractPageController
 	private static final String SKU_ID_FOR_COD = "skuIdForCod";
 	private static final String SKU_ID_FOR_HD = "skuIdForHD";
 	private static final String SKU_ID_FOR_ED = "skuIdForED";
+
+	private static final String SKU_ID_FOR_CNC = "skuIdForCNC";
 
 	private static final String CUSTOMER_CARE_NUMBER = "1-800-282-8282";
 	private static final String CUSTOMER_CARE_EMAIL = "hello@tatacliq.com";
@@ -230,7 +251,8 @@ public class ProductPageController extends AbstractPageController
 	@Autowired
 	private UserService userService;
 
-
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
 
 	/**
 	 * @param buyBoxFacade
@@ -331,19 +353,66 @@ public class ProductPageController extends AbstractPageController
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.SIZE_GUIDE, method = RequestMethod.GET)
 	public String viewSizeGuide(
 			@RequestParam(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			@RequestParam(value = ControllerConstants.Views.Fragments.Product.SIZESELECTED) final String sizeSelected,
 			final Model model) throws CMSItemNotFoundException
 	{
+		Map<String, List<SizeGuideData>> sizeguideList = null;
 		try
 		{
-			final Map<String, List<SizeGuideData>> sizeguideList = sizeGuideFacade.getProductSizeguide(productCode);
-			//final Map<String, String>
-			final List<String> headerMap = getHeaderdata(sizeguideList);
 
-			LOG.info("***************headerMap" + headerMap);
+			final ProductModel productModel = productService.getProductForCode(productCode);
 
+			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+					ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+
+
+			populateProductData(productData, model);
+			sizeguideList = sizeGuideFacade.getProductSizeguide(productCode, productData.getRootCategory());
+
+			final List<String> headerMap = getHeaderdata(sizeguideList, productData.getRootCategory());
+			if (null != productData.getBrand())
+			{
+				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_BRAND, productData.getBrand().getBrandname());
+			}
+			if (FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				if (sizeguideList != null && CollectionUtils.isNotEmpty(sizeguideList.get(productCode)))
+				{
+					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
+				}
+			}
+			else if (CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+			}
+
+			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
+
+			{
+				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
+						new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+			}
+
+			if (null != sizeSelected)
+			{
+				model.addAttribute(ModelAttributetConstants.SELECTEDSIZE, sizeSelected);
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.SELECTEDSIZE, null);
+			}
 			model.addAttribute(ModelAttributetConstants.HEADER_SIZE_GUIDE, headerMap);
-			model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
-			//model.addAttribute(ModelAttributetConstants.PRODUCT_NAME, productName);
+
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -354,27 +423,184 @@ public class ProductPageController extends AbstractPageController
 
 	}
 
-	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList)
-	{
-		final Map<String, String> headerMap = new HashMap<String, String>();
 
-		for (final String key : sizeguideList.keySet())
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
+	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
+			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
+			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId) throws JSONException,
+			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+	{
+		final JSONObject buyboxJson = new JSONObject();
+		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
+		try
 		{
-			for (final SizeGuideData data : sizeguideList.get(key))
+			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
+			if (buyboxdata != null)
+			{
+				//				if (null != buyboxdata.getAvailable())
+				//				{
+				//				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
+				//						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+				//				{
+				//					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
+				//							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
+				//					{
+				//						LOG.debug("response.getUssid()********************  " + response.getUssid());
+				//						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
+				//						{
+				//							LOG.debug("response.getIsServicable()********************  " + response.getIsServicable());
+				//							if (response.getIsServicable().equalsIgnoreCase("Y"))
+				//							{
+				//								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
+				//							}
+				//							buyboxJson
+				//									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
+				//
+				//						}
+				//					}
+				//
+				//				}
+				//				else
+				//				{
+				if (null != buyboxdata.getAvailable())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, ModelAttributetConstants.NOVALUE);
+				}
+				//}
+				if (null != buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValue()
+						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
+							.getFormattedValue());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, ModelAttributetConstants.NOVALUE);
+				}
+				if (null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
+						&& !buyboxdata.getPrice().getFormattedValue().isEmpty())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, ModelAttributetConstants.NOVALUE);
+				}
+				if (null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
+						&& !buyboxdata.getMrp().getFormattedValue().isEmpty())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getFormattedValue());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, ModelAttributetConstants.NOVALUE);
+				}
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+				if (null != buyboxdata.getSellerName())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, ModelAttributetConstants.EMPTY);
+				}
+				if (null != buyboxdata.getSellerArticleSKU())
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
+				}
+				else
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, ModelAttributetConstants.EMPTY);
+				}
+				//				}
+				//				else
+				//				{
+				//
+				//					LOG.debug("***************************Inproper BuyBox data********************");
+				//					buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
+				//
+				//				}
+			}
+			else
 			{
 
-				if (null == headerMap.get(data.getDimensionSize()))
-				{
-					headerMap.put(data.getDimensionSize(), data.getDimensionSize());
-				}
+				LOG.debug("***************************Inproper BuyBox data********************");
+				buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
 
 			}
 		}
-		final List<String> headerMapData = new ArrayList<String>();
-		for (final String key : headerMap.keySet())
+		catch (final EtailBusinessExceptions e)
 		{
-			headerMapData.add(key);
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
 		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.ERROR_OCCURED);
+		}
+		return buyboxJson;
+	}
+
+	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList, final String categoryType)
+	{
+		final Map<String, String> headerMap = new HashMap<String, String>();
+		final List<String> headerMapData = new ArrayList<String>();
+		for (final String key : sizeguideList.keySet())
+		{
+			if (categoryType.equalsIgnoreCase(CLOTHING))
+			{
+				for (final SizeGuideData data : sizeguideList.get(key))
+				{
+
+					if (null == headerMap.get(data.getDimensionSize()))
+					{
+						headerMap.put(data.getDimensionSize(), data.getDimensionSize());
+					}
+
+				}
+
+			}
+			else if (categoryType.equalsIgnoreCase(FOOTWEAR))
+			{
+				for (final SizeGuideData data : sizeguideList.get(key))
+				{
+					if (data.getAge() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.age"), "Y");
+					}
+					if (data.getDimension() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlength"), "Y");
+					}
+					if (data.getDimensionSize() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.UK"), "Y");
+					}
+					if (data.getDimensionValue() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.Witdth"), "Y");
+					}
+					if (data.getEuroSize() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.EURO"), "Y");
+					}
+					if (data.getUsSize() != null)
+					{
+						headerMap.put(configurationService.getConfiguration().getString("footwear.header.US"), "Y");
+					}
+				}
+			}
+		}
+		for (final String keyData : headerMap.keySet())
+		{
+			headerMapData.add(keyData);
+		}
+
 		Collections.sort(headerMapData, sizeGuideHeaderComparator);
 		return headerMapData;
 	}
@@ -405,8 +631,32 @@ public class ProductPageController extends AbstractPageController
 
 			if (pin.matches(regex))
 			{
-				sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
-				response = pinCodeFacade.getResonseForPinCode(productCode, pin, populatePinCodeServiceData(productCode));
+				LOG.debug("productCode:" + productCode + "pinCode:" + pin);
+				final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+				final LocationDTO dto = new LocationDTO();
+				Location myLocation = null;
+				if (null != pinCodeModelObj)
+				{
+					try
+					{
+						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+						LOG.debug("configurableRadius is:" + configurableRadius);
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
+						response = pinCodeFacade.getResonseForPinCode(productCode, pin,
+								populatePinCodeServiceData(productCode, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
+
+						return response;
+					}
+					catch (final Exception e)
+					{
+						LOG.error("configurableRadius values is empty please add radius property in properties file ");
+					}
+				}
 			}
 
 		}
@@ -471,8 +721,11 @@ public class ProductPageController extends AbstractPageController
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			populateProductData(productData, model);
 			final List<String> deliveryInfoList = new ArrayList<String>();
+
 			deliveryInfoList.add(ModelAttributetConstants.EXPRESS_DELIVERY);
 			deliveryInfoList.add(ModelAttributetConstants.HOME_DELIVERY);
+			deliveryInfoList.add(ModelAttributetConstants.CLICK_AND_COLLECT);
+
 			/* deliverychange */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfoList);
 			updatePageTitle(productData, model);
@@ -483,6 +736,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(ModelAttributetConstants.SELLERS_SKU_ID_LIST, form.getSellersSkuListId());
 			model.addAttribute(SKU_ID_FOR_ED, form.getSkuIdForED());
 			model.addAttribute(SKU_ID_FOR_HD, form.getSkuIdForHD());
+			model.addAttribute(SKU_ID_FOR_CNC, form.getSkuIdForCNC());
 			model.addAttribute(SKU_ID_FOR_COD, form.getSkuIdForCod());
 			model.addAttribute(ModelAttributetConstants.SKU_IDS_WITH_NO_STOCK, form.getSkuIdsWithNoStock());
 			final List<PinCodeResponseData> stockDataArray = new ArrayList<PinCodeResponseData>();
@@ -524,6 +778,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(PINCODE_CHECKED, form.getIsPinCodeChecked());
 			model.addAttribute(ModelAttributetConstants.SELLER_PAGE, ModelAttributetConstants.Y);
 			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			setUpMetaData(model, metaDescription, metaTitle, pdCode);
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
@@ -603,6 +858,7 @@ public class ProductPageController extends AbstractPageController
 
 			final String sellerName = buyboxdata.getSellerName();
 			model.addAttribute(ModelAttributetConstants.SELLER_NAME, sellerName);
+			model.addAttribute(ModelAttributetConstants.SELLER_ID, buyboxdata.getSellerId());
 			String isCodEligible = ModelAttributetConstants.EMPTY;
 			for (final SellerInformationData seller : productData.getSeller())
 			{
@@ -626,6 +882,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
 			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
 		}
@@ -803,6 +1060,7 @@ public class ProductPageController extends AbstractPageController
 
 			deliveryInfo.add(ModelAttributetConstants.EXPRESS_DELIVERY);
 			deliveryInfo.add(ModelAttributetConstants.HOME_DELIVERY);
+			deliveryInfo.add(ModelAttributetConstants.CLICK_AND_COLLECT);
 
 			/* delivery change */
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
@@ -847,7 +1105,7 @@ public class ProductPageController extends AbstractPageController
 					((cliqCareMail == null || cliqCareMail.isEmpty()) ? CUSTOMER_CARE_EMAIL : cliqCareMail));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			final String metaDescription = productData.getSeoMetaDescription();
 			final String metaTitle = productData.getSeoMetaTitle();
 			final String productCode = productData.getCode();
@@ -910,7 +1168,8 @@ public class ProductPageController extends AbstractPageController
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
-							if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())))
 							{
 
 								if (null != properitsValue && featureValueData.getValue() != null
@@ -941,7 +1200,8 @@ public class ProductPageController extends AbstractPageController
 				}
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
-			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			}
@@ -959,7 +1219,6 @@ public class ProductPageController extends AbstractPageController
 		}
 
 	}
-
 
 	/**
 	 * @description Populating product data
@@ -1309,7 +1568,8 @@ public class ProductPageController extends AbstractPageController
 	 * @param productCode
 	 * @return requestData
 	 */
-	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode)
+	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps,
+			final Double configurableRadius)
 	{
 
 		final List<PincodeServiceData> requestData = new ArrayList<>();
@@ -1362,6 +1622,23 @@ public class ProductPageController extends AbstractPageController
 				if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod()))
 				{
 					data.setIsCOD(seller.getIsCod());
+				}
+
+				LOG.debug("Current locations for Seller Id:" + seller.getSellerID());
+
+				final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
+						seller.getSellerID());
+
+				if (null != storeList && storeList.size() > 0)
+				{
+					final List<String> locationList = new ArrayList<String>();
+					for (final Location location : storeList)
+					{
+						LOG.debug("Slave Ids for Stores::" + location.getName());
+						locationList.add(location.getName());
+					}
+					LOG.debug("Total Slave Ids List for given Pincode :" + locationList.size());
+					data.setStore(locationList);
 				}
 				data.setSellerId(seller.getSellerID());
 				data.setUssid(seller.getUssid());

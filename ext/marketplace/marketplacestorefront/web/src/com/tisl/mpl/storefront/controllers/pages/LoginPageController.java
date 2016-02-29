@@ -352,7 +352,8 @@ public class LoginPageController extends AbstractLoginPageController
 			form.setCheckPwd(rePassword);
 
 			getRegisterPageValidator().validate(form, bindingResult);
-			return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
+			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
+			return processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -383,9 +384,14 @@ public class LoginPageController extends AbstractLoginPageController
 	 * @return post login page
 	 * @throws CMSItemNotFoundException
 	 */
-	private String processRegisterUserRequestNew(final String referer, final ExtRegisterForm form,
-			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+	/*
+	 * private String processRegisterUserRequestNew(final String referer, final ExtRegisterForm form, final BindingResult
+	 * bindingResult, final Model model, final HttpServletRequest request, final HttpServletResponse response, final
+	 * RedirectAttributes redirectModel) throws CMSItemNotFoundException
+	 */
+	private String processRegisterUserRequestNew(final ExtRegisterForm form, final BindingResult bindingResult, final Model model,
+			final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes redirectModel)
+			throws CMSItemNotFoundException
 	{
 		if (bindingResult.hasErrors())
 		{
@@ -406,6 +412,9 @@ public class LoginPageController extends AbstractLoginPageController
 			if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 			{
 				getRegisterCustomerFacade().register(data);
+				// To avoid multiple time decoding of password containing '%' specially
+				final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
+				form.setPwd(password);
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
 				//	updating the isRegistered flag in friends model (in case of valid affiliated id)

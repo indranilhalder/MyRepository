@@ -63,6 +63,8 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.wishlist2.Wishlist2Service;
+import com.tisl.mpl.service.MplSlaveMasterService;
+
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -128,9 +130,9 @@ import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartServiceImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
+import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
@@ -170,7 +172,9 @@ import com.tisl.mpl.wsdto.VersionListResponseData;
 import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
-
+import org.springframework.web.bind.annotation.RequestBody;
+import com.tisl.mpl.wsdto.SellerSlaveDTO;
+import com.tisl.mpl.wsdto.SlaveInfoDTO;
 
 /**
  * @author TCS
@@ -256,6 +260,9 @@ public class MiscsController extends BaseController
 	private UpdateFeedbackFacade updateFeedbackFacade;
 	@Autowired
 	private MplNetBankingFacade mplNetBankingFacade;
+	
+	@Autowired
+	private MplSlaveMasterService mplSlaveMasterService;
 
 	/**
 	 * @return the configurationService
@@ -650,7 +657,8 @@ public class MiscsController extends BaseController
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("IOException : ", e);
 		}
 	}
 
@@ -692,12 +700,96 @@ public class MiscsController extends BaseController
 		}
 		catch (final IOException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			LOG.error("postOnlyXML1 : ", e);
 		}
 
 
 	}
 
+	/**
+	 * This is the rest call for SlaveMaster.
+	 * @author TECHOUTS
+	 * @param slaves
+	 * @param request
+	 * @return 
+	 */
+	@RequestMapping(value = "/{baseSiteId}/slaveMaster", method = RequestMethod.POST)
+	@ResponseBody
+	public WebSerResponseWsDTO saveSellerSlave(final InputStream slaves, final HttpServletRequest request)
+	{
+		final WebSerResponseWsDTO userResult = new WebSerResponseWsDTO(); //Object to store result
+		BufferedReader br = null;
+		final StringBuilder sb = new StringBuilder();
+		String saveStatus;
+		final Map map;
+		try
+		{
+			String line;
+			br = new BufferedReader(new InputStreamReader(slaves));
+			while ((line = br.readLine()) != null)
+			{
+				sb.append(line); //Storing data in String Builder object to in order to persist input stream.
+			}
+
+			final ServletContext servletContext = request.getSession().getServletContext();
+			final String relativeWebPath = MarketplacecommerceservicesConstants.SLAVE_MASTER_XSD_PATH;
+			final String absoluteDiskPath = servletContext.getRealPath(relativeWebPath);
+			final InputStream is0 = new ByteArrayInputStream(sb.toString().getBytes());
+			map = mplValidateAgainstXSDService.validateAgainstXSD(is0, absoluteDiskPath); //Validating XML input received XSD.
+
+			
+				final InputStream is1 = new ByteArrayInputStream(sb.toString().getBytes());
+				final XStream xstream = new XStream();
+				xstream.processAnnotations(SellerSlaveDTO.class); // inform XStream to parse annotations in SellerInformationWSDTO class
+				xstream.processAnnotations(SlaveInfoDTO.class); // and in two other classes...
+				final String dateFormat = MarketplacecommerceservicesConstants.XSD_DATE_FORMAT;
+				final String timeFormat = "";
+				final String[] acceptableFormats =
+				{ timeFormat };
+				xstream.registerConverter(new DateConverter(dateFormat, acceptableFormats, true));
+				final SellerSlaveDTO sellerSlavedto = (SellerSlaveDTO) xstream.fromXML(is1); // parse
+				saveStatus = mplSlaveMasterService.insertUpdate(sellerSlavedto);
+				if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_CODE_1))
+				{
+					userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					userResult.setError(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
+					LOG.debug(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
+					return userResult;
+				}
+				if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_FLAG))
+				{
+					userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+					LOG.debug(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+					return userResult;
+				}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
+			return userResult;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
+			return userResult;
+		}
+		catch (final Exception e)
+		{
+			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
+			return userResult;
+		}
+		LOG.debug(MarketplacecommerceservicesConstants.DATA_SAVED_MSG);
+		userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+		return userResult;
+	}
 	/**
 	 * Seller Master service for storing seller master information received from Seller Portal.
 	 *
@@ -994,7 +1086,8 @@ public class MiscsController extends BaseController
 				final List<AutocompleteSuggestionData> suggestions = subList(
 						productSearchFacade.getAutocompleteSuggestions(searchString), component.getMaxSuggestions().intValue());
 
-				if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+				//if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+				if (CollectionUtils.isNotEmpty(suggestions))
 				{
 					wsData.setSuggestions(suggestions);
 				}
@@ -1003,8 +1096,8 @@ public class MiscsController extends BaseController
 					String substr = "";
 					substr = searchString.substring(0, searchString.length() - 1);
 
-					wsData.setSuggestions(
-							subList(productSearchFacade.getAutocompleteSuggestions(substr), component.getMaxSuggestions().intValue()));
+					wsData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(substr), component
+							.getMaxSuggestions().intValue()));
 
 				}
 				final SearchStateData searchState = new SearchStateData();
@@ -1555,7 +1648,7 @@ public class MiscsController extends BaseController
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		String returnValue = null;
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();

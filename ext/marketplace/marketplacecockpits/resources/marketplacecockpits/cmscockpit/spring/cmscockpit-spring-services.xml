@@ -76,6 +76,8 @@
 						<value>BrandCollectionComponent.brandCollection</value>
 						<value>MplSequentialBannerComponent.bannersList</value>
 						<value>MplAdvancedCategoryCarouselComponent.categories</value>
+						<value>MplShowcaseComponent.showcaseItems</value>
+						<value>ImageCarouselComponent.collectionItems</value>
 					</list>
 				</entry>
 				<entry key="AbstractCMSComponent">
@@ -117,6 +119,8 @@
 				<entry key="FooterComponent">
 					<list>
 						<value>FooterComponent.navigationNodes</value>
+						<value>FooterComponent.footerImageList</value>
+						<value>FooterComponent.footerAppImageList</value>
 					</list>
 				</entry>
 				<entry key="BrandCollectionComponent">
@@ -132,6 +136,16 @@
 				<entry key="MplAdvancedCategoryCarouselComponent">
 					<list>
 						<value>MplAdvancedCategoryCarouselComponent.categories</value>
+					</list>
+				</entry>
+				<entry key="MplShowcaseComponent">
+					<list>
+						<value>MplShowcaseComponent.showcaseItems</value>
+					</list>
+				</entry>
+				<entry key="ImageCarouselComponent">
+					<list>
+						<value>ImageCarouselComponent.collectionItems</value>
 					</list>
 				</entry>
 			</map>

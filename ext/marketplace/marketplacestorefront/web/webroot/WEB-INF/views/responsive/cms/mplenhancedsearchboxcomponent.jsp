@@ -22,12 +22,45 @@
 			$("#js-site-search-input").focus(); 
 		});
 		
-		$("#search_form").submit(function(event) {
+		$('#searchButton').click(function(e){
+
+			if($("#js-site-search-input").val().trim()==""){
+				if($("#searchCategory").val().startsWith("all")){
+					e.preventDefault();
+				}
+				else{
+					var actionText = ACC.config.contextPath;
+					var dropdownValue = $("#searchCategory").val();
+					var dropdownName = $("#searchCategory").find('option:selected').text();
+					if (!String.prototype.startsWith) {
+						  String.prototype.startsWith = function(searchString, position) {
+						    position = position || 0;
+						    return this.indexOf(searchString, position) === position;
+						  };
+						}
+					if (dropdownValue.startsWith("MSH") || dropdownValue.startsWith("MBH")) {
+						actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue);
+					} else if (!dropdownValue.startsWith("all")) {
+						actionText = (actionText + '/s/' + dropdownValue);
+					}
+					$('#search_form').attr('action',actionText);
+				}
+			}
+
+		});
+		/* $("#search_form").submit(function(event) {
 			if($("#js-site-search-input").val().trim()=="") {
 				var actionText = ACC.config.contextPath;
 				var dropdownValue = $("#searchCategory").val();
 				var dropdownName = $("#searchCategory").find('option:selected').text();
 
+				if (!String.prototype.startsWith) {
+					  String.prototype.startsWith = function(searchString, position) {
+					    position = position || 0;
+					    return this.indexOf(searchString, position) === position;
+					  };
+					}
+				
 				if (dropdownValue.startsWith("MSH") || dropdownValue.startsWith("MBH")) {
 					actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue);
 				} else if (!dropdownValue.startsWith("all")) {
@@ -36,7 +69,7 @@
 				$("#search_form :input").prop("disabled", true);
 				$('#search_form').attr('action',actionText);
 			} 
-		});
+		}); */
 	});
 </script>
 
@@ -75,7 +108,7 @@
 	
 	<form id="search_form" name="search_form" method="get" action="${searchUrl}">
 		<span> <ycommerce:testId code="header_search_button">
-				<button></button>
+				<button id='searchButton'></button>
 			</ycommerce:testId>
 		</span>
 		<!-- search category List -->

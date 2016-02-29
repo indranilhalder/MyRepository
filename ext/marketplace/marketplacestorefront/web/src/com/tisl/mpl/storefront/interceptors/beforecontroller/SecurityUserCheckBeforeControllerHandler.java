@@ -49,9 +49,12 @@ public class SecurityUserCheckBeforeControllerHandler implements BeforeControlle
 			final HandlerMethod handler) throws IOException
 	{
 		// Skip this security check when run from within the WCMS Cockpit
+
+		boolean flag = true;
 		if (isPreviewDataModelValid(request))
 		{
-			return true;
+			//return true;
+			flag = true;
 		}
 
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -72,17 +75,19 @@ public class SecurityUserCheckBeforeControllerHandler implements BeforeControlle
 				/*
 				 * if (!springSecurityOriginalUId.equals(hybrisUserId)) { LOG.error("User miss-match springSecurityUserId ["
 				 * + springSecurityUserId + "] hybris session user [" + hybrisUserId + "]. Invalidating session.");
-				 * 
+				 *
 				 * // Invalidate session and redirect to the root page request.getSession().invalidate();
-				 * 
+				 *
 				 * final String encodedRedirectUrl = response.encodeRedirectURL(request.getContextPath() + "/");
 				 * response.sendRedirect(encodedRedirectUrl); return false; }
 				 */
 
-				return true;
+				//return true;
+				flag = true;
 			}
 		}
-		return true;
+		//return true;
+		return flag;
 	}
 
 	/**

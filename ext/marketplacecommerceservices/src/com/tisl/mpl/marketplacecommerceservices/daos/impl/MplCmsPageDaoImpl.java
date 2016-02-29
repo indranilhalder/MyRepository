@@ -3,8 +3,11 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
+import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
 import de.hybris.platform.cms2.servicelayer.daos.impl.DefaultCMSPageDao;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -12,6 +15,8 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import java.util.List;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
@@ -53,7 +58,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -75,7 +81,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -104,7 +111,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, CMSChannel.DESKTOP.getCode());
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -123,7 +131,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -139,7 +147,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, cms);
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -157,7 +166,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 		final List<MplShopByLookModel> shopByLookList = flexibleSearchService.<MplShopByLookModel> search(query).getResult();
-		if (shopByLookList != null && shopByLookList.size() > 0)
+		//if (shopByLookList != null && shopByLookList.size() > 0)
+		if (CollectionUtils.isNotEmpty(shopByLookList))
 		{
 			return shopByLookList.get(0);
 		}
@@ -181,7 +191,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -210,7 +221,8 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		query.addQueryParameter("channel", cms.getCode());
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();
-		if (contentPages != null && contentPages.size() > 0)
+		//if (contentPages != null && contentPages.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentPages))
 		{
 			return contentPages.get(0);
 		}
@@ -225,5 +237,31 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				.append(" as cm ON {cp.channel} = {cm.pk}}")
 				.append(" Where {cp." + ContentPageModel.ASSOCIATEDSELLER + "} = ?sellerMaster ");
 		return queryString;
+	}
+
+
+	@Override
+	public ContentSlotModel getContentSlotByUidForPage(final String pageId, final String contentSlotId, final String catalogVersion)
+	{
+		final String queryString = "Select {cs." + ContentSlotModel.PK + "} from {" + ContentSlotForPageModel._TYPECODE
+				+ " as csp join " + ContentSlotModel._TYPECODE + " as cs on {csp." + ContentSlotForPageModel.CONTENTSLOT + "}={cs."
+				+ ContentSlotModel.PK + "} " + "join " + ContentPageModel._TYPECODE + " as cp on {csp."
+				+ ContentSlotForPageModel.PAGE + "}={cp.pk} join " + CatalogVersionModel._TYPECODE + " as cv on {cp."
+				+ ContentPageModel.CATALOGVERSION + "}={cv." + CatalogVersionModel.PK + "}} " + "where {cp." + ContentPageModel.UID
+				+ "}=?uid and {cs." + ContentSlotModel.UID + "}=?contentUid and {cv." + CatalogVersionModel.VERSION + "}=?catVersion";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("uid", pageId);
+		query.addQueryParameter("contentUid", contentSlotId);
+		query.addQueryParameter("catVersion", catalogVersion);
+
+		final List<ContentSlotModel> contentSlots = flexibleSearchService.<ContentSlotModel> search(query).getResult();
+		//if (contentSlots != null && contentSlots.size() > 0)
+		if (CollectionUtils.isNotEmpty(contentSlots))
+		{
+			return contentSlots.get(0);
+		}
+
+		return null;
 	}
 }

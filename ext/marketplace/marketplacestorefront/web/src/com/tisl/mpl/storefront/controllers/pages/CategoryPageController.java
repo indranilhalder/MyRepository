@@ -16,11 +16,9 @@ package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
-import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.cms2.model.pages.CategoryPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
@@ -45,6 +43,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +120,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		model.addAttribute("searchCode", searchCode);
 		model.addAttribute("isCategoryPage", Boolean.TRUE);
+		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 		//Set the drop down text if the attribute is not empty or null
 		if (dropDownText != null && !dropDownText.isEmpty())
 		{
@@ -130,7 +130,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 		else
 		{
 			//Set the search drop down text to category name
-			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 			/*
 			 * Getting all Hero products as configured in back office
 			 */
@@ -139,17 +138,21 @@ public class CategoryPageController extends AbstractCategoryPageController
 			{
 				heroProducts = solrModel.getProducts();
 			}
-			final String categoryName = category.getName();
+			final String categoryName = (category == null) ? "" : category.getName();
 			model.addAttribute("dropDownText", categoryName);
 		}
-
+		int count = getSearchPageSize();
 		//Check if there is a landing page for the category
 		try
 		{
-			if (categoryService.getCategoryForCode(categoryCode) != null)
+			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{
+				count = preferencesData.getPageSize().intValue();
+			}
 
-				final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
+			if (category != null)
+			{
 
 				final String redirection = checkRequestUrl(request, response, getCategoryModelUrlResolver().resolve(category));
 				if (StringUtils.isNotEmpty(redirection))
@@ -157,16 +160,13 @@ public class CategoryPageController extends AbstractCategoryPageController
 					return redirection;
 				}
 
-				final CategoryPageModel categoryPage = getCategoryPage(category);
-				final CategorySearchEvaluator categorySearch = new CategorySearchEvaluator(categoryCode,
-						XSSFilterUtil.filter(searchQuery), page, showMode, sortCode, categoryPage);
-				categorySearch.doSearch();
-				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = categorySearch
-						.getSearchPageData();
+				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+						categoryCode, searchQuery, page, showMode, sortCode, count);
 
 				final List<ProductData> normalProductDatas = searchPageData.getResults();
 				//Set department hierarchy
-				if (normalProductDatas.size() > 0)
+				//if (normalProductDatas.size() > 0)
+				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
 					model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
 				}
@@ -193,7 +193,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 			try
 			{
 				final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
-				int count = getSearchPageSize();
 				if (preferencesData != null && preferencesData.getPageSize() != null)
 				{
 					count = preferencesData.getPageSize().intValue();

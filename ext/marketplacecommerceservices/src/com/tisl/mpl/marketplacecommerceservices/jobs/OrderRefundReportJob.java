@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.jobs;
 
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.CreditCardPaymentInfoModel;
@@ -27,12 +28,13 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,6 +43,7 @@ import com.tisl.mpl.data.OrderRefundData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.OrderRefundReportJobModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -58,6 +61,8 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 	private CronJobService cronJobService;
 	@Resource
 	private MPLRefundService mplRefundService;
+	@Autowired
+	private MplSellerInformationService mplSellerInformationService;
 
 	//Delimiter used in CSV file
 	private static final String COMMA_DELIMITER = ",";
@@ -83,11 +88,20 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 			//getting all the Refunds details based on type
 			if (getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SALES_REPORT_INCREMENTAL))
 			{
+				lastRunTime = cronJobService.getCronJob(reportModel.getCode()).getEndTime();
 				//fetch cronjob last run time from where it will fetch the next order list
-				lastRunTime = cronJobService.getCronJob(reportModel.getCode()).getModifiedtime();
-				refundModels = mplRefundService.getAllRefund(lastRunTime);
-				replaceModels = mplRefundService.getAllReplacement(lastRunTime);
-				cancelModels = mplRefundService.getAllCancelled(lastRunTime);
+				if (lastRunTime != null)
+				{
+					refundModels = mplRefundService.getAllRefund(lastRunTime);
+					replaceModels = mplRefundService.getAllReplacement(lastRunTime);
+					cancelModels = mplRefundService.getAllCancelled(lastRunTime);
+				}
+				else
+				{
+					refundModels = mplRefundService.getAllRefund();
+					replaceModels = mplRefundService.getAllReplacement();
+					cancelModels = mplRefundService.getAllCancelled();
+				}
 			}
 			else
 			{
@@ -96,20 +110,23 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 				cancelModels = mplRefundService.getAllCancelled(reportModel.getStartDate(), reportModel.getEndDate());
 			}
 
-			if (refundModels.size() > 0)
+			//if (refundModels.size() > 0)
+			if (CollectionUtils.isNotEmpty(refundModels))
 			{
 				//Convert refund data and write into CSV
 				LOG.debug("-----------------REfund Write started--" + refundModels.size());
 				writeItemsToCSV(convertForOrderRefund(refundModels));
 				LOG.debug("-----------------REfund Write ended");
 			}
-			if (replaceModels.size() > 0)
+			//if (replaceModels.size() > 0)
+			if (CollectionUtils.isNotEmpty(replaceModels))
 			{
 				LOG.debug("-----------------Replacement Write started--" + replaceModels.size());
 				writeItemsToCSV(convertForOrderReplacement(replaceModels));
 				LOG.debug("-----------------Replacement Write ended--" + replaceModels.size());
 			}
-			if (cancelModels.size() > 0)
+			//if (cancelModels.size() > 0)
+			if (CollectionUtils.isNotEmpty(cancelModels))
 			{
 				LOG.debug("-----------------Cancel Write started--" + cancelModels.size());
 				writeItemsToCSV(convertForOrderCancelled(cancelModels));
@@ -165,23 +182,13 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 		final DateFormat df = new SimpleDateFormat(MarketplacecommerceservicesConstants.DATE_FORMAT_REPORT);
 		final String timestamp = df.format(new Date());
 		final StringBuilder output_file_path = new StringBuilder();
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.report.path", ""));
+		output_file_path.append(File.separator);
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.prefix", ""));
+		output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
+		output_file_path.append(timestamp);
+		output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.extension", ""));
 
-		if (getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SALES_REPORT_INCREMENTAL))
-		{
-			output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.report.path", ""));
-			output_file_path.append(File.separator);
-			output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.prefix", ""));
-			output_file_path.append(MarketplacecommerceservicesConstants.FILE_PATH);
-			output_file_path.append(timestamp);
-			output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.extension", ""));
-		}
-		else
-		{
-			output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.report.path", ""));
-			output_file_path.append(File.separator);
-			output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.prefix", ""));
-			output_file_path.append(configurationService.getConfiguration().getString("cronjob.orderrefundreport.extension", ""));
-		}
 		return output_file_path.toString();
 	}
 
@@ -198,73 +205,48 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 		//Orderno,OrderDate,SellerSKUId,SellerName,CustomerName,CustomerRegisterDate,Status,PaymentMethod,RefundRef,ReasonCode
 		final List<OrderRefundData> dataList = new ArrayList<OrderRefundData>();
 		CustomerModel customer = null;
-		String sellerId = MarketplacecommerceservicesConstants.EMPTY;
-		String sellerName = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
 			LOG.debug("-----------------Refund convert started--");
 			for (final RefundEntryModel refund : refunds)
 			{
 				final OrderRefundData data = new OrderRefundData();
-				if (refund.getOrderEntry().getOrder() != null)
+
+				if (null != refund.getOrderEntry() && refund.getOrderEntry().getOrder() != null)
 				{
+					LOG.debug("-----------------Refund convert selected ussid started--" + refund.getPk());
+					setSellerInfo(refund.getOrderEntry(), data);
+
 					data.setOrderNo(refund.getOrderEntry().getOrder().getCode());
 					data.setOrderDate(refund.getOrderEntry().getOrder().getCreationtime().toString());
 					data.setPaymentMethod(getPaymentInfo(refund.getOrderEntry().getOrder()));
-					String selectedUssid = "";
-					LOG.debug("-----------------Refund convert selected ussid started--" + refund.getPk());
-					if (null != refund.getOrderEntry().getSelectedUSSID() && !refund.getOrderEntry().getSelectedUSSID().isEmpty())
-					{
-						selectedUssid = refund.getOrderEntry().getSelectedUSSID();
-					}
-					LOG.debug("-----------------Refund convert seller started--" + refund.getPk());
-					if (refund.getOrderEntry().getProduct() != null)
-					{
-						final Collection<SellerInformationModel> sellerInformationData = refund.getOrderEntry().getProduct()
-								.getSellerInformationRelator();
-						//final MarketplaceDeliveryModeData mplDeliveryMode = entry.getMplDeliveryMode();
-						for (final SellerInformationModel sellerEntry : sellerInformationData)
-						{
-							if (sellerEntry != null && null != selectedUssid && sellerEntry.getUSSID() != null
-									&& sellerEntry.getUSSID().equalsIgnoreCase(selectedUssid))
-							{
-								sellerId = sellerEntry.getSellerID();
-								sellerName = sellerEntry.getSellerName();
-								break;
-							}
-						}
-					}
-					else
-					{
-						//If product is not there skip teh entry
-						LOG.debug("-----------------Refund Skipped--" + refund.getPk());
-						continue;
-					}
-					data.setSellerSKUId(sellerId);
-					data.setSellerName(sellerName);
 					LOG.debug("-----------------Refund convert customer started--" + refund.getPk());
 					if (null != refund.getOrderEntry().getOrder().getUser())
 					{
 						if (refund.getOrderEntry().getOrder().getUser() instanceof CustomerModel)
 						{
 							customer = (CustomerModel) refund.getOrderEntry().getOrder().getUser();
-						}
-						String name = MarketplacecommerceservicesConstants.EMPTY;
-						if (customer != null && customer.getDefaultShipmentAddress() != null)
-						{
-							if (customer.getDefaultShipmentAddress().getFirstname() != null)
-							{
-								name += customer.getDefaultShipmentAddress().getFirstname() + MarketplacecommerceservicesConstants.SPACE;
-							}
-							name += MarketplacecommerceservicesConstants.SPACE;
-							if (customer.getDefaultShipmentAddress().getLastname() != null)
-							{
-								name += customer.getDefaultShipmentAddress().getLastname();
-							}
-							data.setCustomerName(name);
+
 							data.setCustomerRegisterDate(customer.getCreationtime().toString());
 						}
 					}
+					LOG.debug("-----------------Refund convert customer delivery address started--" + refund.getPk());
+					String name = MarketplacecommerceservicesConstants.EMPTY;
+					if (refund.getOrderEntry().getOrder().getDeliveryAddress() != null)
+					{
+						if (refund.getOrderEntry().getOrder().getDeliveryAddress().getFirstname() != null)
+						{
+							name += refund.getOrderEntry().getOrder().getDeliveryAddress().getFirstname()
+									+ MarketplacecommerceservicesConstants.SPACE;
+						}
+						name += MarketplacecommerceservicesConstants.SPACE;
+						if (refund.getOrderEntry().getOrder().getDeliveryAddress().getLastname() != null)
+						{
+							name += refund.getOrderEntry().getOrder().getDeliveryAddress().getLastname();
+						}
+						data.setCustomerName(name);
+					}
+
 				}
 				else
 				{
@@ -300,7 +282,6 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 				{
 					data.setRefundRef(MarketplacecommerceservicesConstants.EMPTY);
 				}
-
 				dataList.add(data);
 			}
 		}
@@ -310,6 +291,32 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 		}
 		return dataList;
 
+	}
+
+	protected void setSellerInfo(final AbstractOrderEntryModel entry, final OrderRefundData reportDTO)
+	{
+		//Freebie and non-freebie seller detail population
+		SellerInformationModel sellerInfoModel = null;
+		try
+		{
+			if (StringUtils.isNotEmpty(entry.getSelectedUSSID()))
+			{
+				sellerInfoModel = mplSellerInformationService.getSellerDetail(entry.getSelectedUSSID());
+
+				if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerID()))
+				{
+					reportDTO.setSellerSKUId(sellerInfoModel.getSellerID());
+				}
+				if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerName()))
+				{
+					reportDTO.setSellerName(sellerInfoModel.getSellerName());
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
+		}
 	}
 
 	/**
@@ -332,62 +339,40 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 			for (final ReplacementEntryModel replacement : replacements)
 			{
 				final OrderRefundData data = new OrderRefundData();
-				if (replacement.getOrderEntry().getOrder() != null)
+
+				if (null != replacement.getOrderEntry() && replacement.getOrderEntry().getOrder() != null)
 				{
+					LOG.debug("-----------------Replacement convert selected ussid started--" + replacement.getPk());
+					setSellerInfo(replacement.getOrderEntry(), data);
+
 					data.setOrderNo(replacement.getOrderEntry().getOrder().getCode());
 					data.setOrderDate(replacement.getOrderEntry().getOrder().getCreationtime().toString());
 					data.setPaymentMethod(getPaymentInfo(replacement.getOrderEntry().getOrder()));
-					String selectedUssid = "";
-					LOG.debug("-----------------Replacement convert selected ussid started--" + replacement.getPk());
-					if (null != replacement.getOrderEntry().getSelectedUSSID()
-							&& !replacement.getOrderEntry().getSelectedUSSID().isEmpty())
-					{
-						selectedUssid = replacement.getOrderEntry().getSelectedUSSID();
-					}
-					LOG.debug("-----------------Replacement convert seller started--" + replacement.getPk());
-					if (replacement.getOrderEntry().getProduct() != null)
-					{
-						final Collection<SellerInformationModel> sellerInformationData = replacement.getOrderEntry().getProduct()
-								.getSellerInformationRelator();
-						//final MarketplaceDeliveryModeData mplDeliveryMode = entry.getMplDeliveryMode();
-						for (final SellerInformationModel sellerEntry : sellerInformationData)
-						{
-							if (sellerEntry != null && null != selectedUssid && sellerEntry.getUSSID() != null
-									&& sellerEntry.getUSSID().equalsIgnoreCase(selectedUssid))
-							{
-								data.setSellerSKUId(sellerEntry.getSellerID());
-								data.setSellerName(sellerEntry.getSellerName());
-								break;
-							}
-						}
-					}
-
 					LOG.debug("-----------------Replacement convert customer started--" + replacement.getPk());
-
-					if (null != replacement.getOrderEntry().getOrder().getUser())
+					if (null != replacement.getOrderEntry().getOrder() && null != replacement.getOrderEntry().getOrder().getUser())
 					{
 						if (replacement.getOrderEntry().getOrder().getUser() instanceof CustomerModel)
 						{
 							customer = (CustomerModel) replacement.getOrderEntry().getOrder().getUser();
-						}
-						String name = MarketplacecommerceservicesConstants.EMPTY;
-						if (customer != null)
-						{
-							if (customer.getFirstName() != null)
-							{
-								name += customer.getFirstName();
-							}
-							name += MarketplacecommerceservicesConstants.SPACE;
-							if (customer.getLastName() != null)
-							{
-								name += customer.getLastName();
-							}
-							data.setCustomerName(name);
 							data.setCustomerRegisterDate(customer.getCreationtime().toString());
 						}
-
-						data.setCustomerName(customer.getName());
-						data.setCustomerRegisterDate(customer.getCreationtime().toString());
+					}
+					LOG.debug("-----------------Refund convert customer delivery address started--" + replacement.getPk());
+					String name = MarketplacecommerceservicesConstants.EMPTY;
+					if (null != replacement.getOrderEntry().getOrder()
+							&& replacement.getOrderEntry().getOrder().getDeliveryAddress() != null)
+					{
+						if (replacement.getOrderEntry().getOrder().getDeliveryAddress() != null)
+						{
+							name += replacement.getOrderEntry().getOrder().getDeliveryAddress().getFirstname()
+									+ MarketplacecommerceservicesConstants.SPACE;
+						}
+						name += MarketplacecommerceservicesConstants.SPACE;
+						if (replacement.getOrderEntry().getOrder().getDeliveryAddress().getLastname() != null)
+						{
+							name += replacement.getOrderEntry().getOrder().getDeliveryAddress().getLastname();
+						}
+						data.setCustomerName(name);
 					}
 
 				}
@@ -433,8 +418,6 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 		//Orderno,OrderDate,SellerSKUId,SellerName,CustomerName,CustomerRegisterDate,Status,PaymentMethod,RefundRef,ReasonCode
 		final List<OrderRefundData> dataList = new ArrayList<OrderRefundData>();
 		CustomerModel customer = null;
-		String sellerId = MarketplacecommerceservicesConstants.EMPTY;
-		String sellerName = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
 			LOG.debug("-----------------Cancelled convert started--");
@@ -445,66 +428,45 @@ public class OrderRefundReportJob extends AbstractJobPerformable<OrderRefundRepo
 					for (final OrderEntryModificationRecordEntryModel orderRecord : cancelled.getOrderEntriesModificationEntries())
 					{
 						final OrderRefundData data = new OrderRefundData();
+
 						LOG.debug("-----------------Cancelled convert recordentries started--" + orderRecord.getPk());
 						if (orderRecord.getOrderEntry() != null)
 						{
+							LOG.debug("-----------------Cancelled convert seller started--" + orderRecord.getPk());
+							setSellerInfo(orderRecord.getOrderEntry(), data);
+
 							data.setOrderNo(orderRecord.getOrderEntry().getOrder().getCode());
 							data.setOrderDate(orderRecord.getOrderEntry().getOrder().getCreationtime().toString());
 							data.setPaymentMethod(getPaymentInfo(orderRecord.getOrderEntry().getOrder()));
-							String selectedUssid = MarketplacecommerceservicesConstants.EMPTY;
-							LOG.debug("-----------------Cancelled convert ussid started--" + orderRecord.getPk());
-							if (null != orderRecord.getOrderEntry().getSelectedUSSID()
-									&& !orderRecord.getOrderEntry().getSelectedUSSID().isEmpty())
-							{
-								selectedUssid = orderRecord.getOrderEntry().getSelectedUSSID();
-							}
-							LOG.debug("-----------------Cancelled convert seller started--" + orderRecord.getPk());
-							if (orderRecord.getOrderEntry().getProduct() != null)
-							{
-								final Collection<SellerInformationModel> sellerInformationData = orderRecord.getOrderEntry().getProduct()
-										.getSellerInformationRelator();
-								//final MarketplaceDeliveryModeData mplDeliveryMode = entry.getMplDeliveryMode();
-								for (final SellerInformationModel sellerEntry : sellerInformationData)
-								{
-									if (sellerEntry != null && null != selectedUssid && sellerEntry.getUSSID() != null
-											&& sellerEntry.getUSSID().equalsIgnoreCase(selectedUssid))
-									{
-										sellerId = sellerEntry.getSellerID();
-										sellerName = sellerEntry.getSellerName();
-										break;
-									}
-								}
-							}
-							else
-							{
-								//If product is not there skip teh entry
-								LOG.debug("-----------------Cancelled Skipped--" + orderRecord.getPk());
-								continue;
-							}
-							data.setSellerSKUId(sellerId);
-							data.setSellerName(sellerName);
+
 							LOG.debug("-----------------Cancelled convert customer started--" + orderRecord.getPk());
-							if (null != orderRecord.getOrderEntry().getOrder().getUser())
+							if (null != orderRecord.getOrderEntry().getOrder()
+									&& null != orderRecord.getOrderEntry().getOrder().getUser())
 							{
 								if (orderRecord.getOrderEntry().getOrder().getUser() instanceof CustomerModel)
 								{
 									customer = (CustomerModel) orderRecord.getOrderEntry().getOrder().getUser();
-								}
-								String name = MarketplacecommerceservicesConstants.EMPTY;
-								if (customer != null)
-								{
-									if (customer.getFirstName() != null)
-									{
-										name += customer.getFirstName();
-									}
-									name += MarketplacecommerceservicesConstants.SPACE;
-									if (customer.getLastName() != null)
-									{
-										name += customer.getLastName();
-									}
-									data.setCustomerName(name);
+
 									data.setCustomerRegisterDate(customer.getCreationtime().toString());
 								}
+							}
+							LOG.debug("-----------------Refund convert customer delivery address started--" + orderRecord.getPk());
+							String name = MarketplacecommerceservicesConstants.EMPTY;
+							if (null != orderRecord.getOrderEntry().getOrder()
+									&& orderRecord.getOrderEntry().getOrder().getDeliveryAddress() != null)
+							{
+								if (orderRecord.getOrderEntry().getOrder().getDeliveryAddress() != null)
+								{
+									name += orderRecord.getOrderEntry().getOrder().getDeliveryAddress().getFirstname()
+											+ MarketplacecommerceservicesConstants.SPACE;
+								}
+								name += MarketplacecommerceservicesConstants.SPACE;
+								if (orderRecord.getOrderEntry().getOrder().getDeliveryAddress().getLastname() != null)
+								{
+									name += orderRecord.getOrderEntry().getOrder().getDeliveryAddress().getLastname();
+								}
+								data.setCustomerName(name);
+
 							}
 
 						}

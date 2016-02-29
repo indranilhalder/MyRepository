@@ -59,6 +59,7 @@ import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
 import com.tisl.mpl.jalo.ManufacturesRestriction;
 import com.tisl.mpl.jalo.SellerMaster;
+import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PromoXMLGenerationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PromotionSendMailService;
 import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
@@ -155,7 +156,8 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		LOG.debug("Inside beforeCreate in MarketplaceCoreHMCExtension");
 		boolean errorFlag = false;
 
-		if (null != itemType && null != itemType.getCode()
+		if (null != itemType
+				&& null != itemType.getCode()
 				&& (itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.BUYAALONGBGETSHIPPINGFREE)
 						|| itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.BUYAANDBPERCENTAGEDISCOUNT)
 						|| itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.BUYAANDBGETC)
@@ -167,13 +169,13 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 						|| itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.CARTFREEBIEPROMO)
 						|| itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.ABCASHBACKPROMO)
 						|| itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.ACASHBACKPROMO)
-						|| itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.CARTCASHBACKPROMO)
-						|| itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.BUYAABOVEXGETPERCENTAGEORAMOUNTOFF)))
+						|| itemType.getCode().equalsIgnoreCase(MarketplaceCoreConstants.CARTCASHBACKPROMO) || itemType.getCode()
+						.equalsIgnoreCase(MarketplaceCoreConstants.BUYAABOVEXGETPERCENTAGEORAMOUNTOFF)))
 		{
 			if (null != initialValues && null != initialValues.get(MarketplaceCoreConstants.PROMOCODE))
 			{
-				final List<AbstractPromotionModel> promo = getSellerBasedPromotionService()
-						.fetchPromotionDetails(initialValues.get(MarketplaceCoreConstants.PROMOCODE).toString());
+				final List<AbstractPromotionModel> promo = getSellerBasedPromotionService().fetchPromotionDetails(
+						initialValues.get(MarketplaceCoreConstants.PROMOCODE).toString());
 				if (null != promo && !promo.isEmpty() && promo.size() > 0)
 				{
 					errorFlag = true;
@@ -199,11 +201,13 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 		}
 
 
-		if (!errorFlag && null != itemType && null != itemType.getCode()
+		if (!errorFlag
+				&& null != itemType
+				&& null != itemType.getCode()
 				&& (itemType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.BUYAPERCENTAGEDISCOUNT)
 						|| itemType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.BUYxAGETBFREE)
-						|| itemType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CASHBACKPROMO)
-						|| itemType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CUSTOMBOGO)))
+						|| itemType.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CASHBACKPROMO) || itemType
+						.getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CUSTOMBOGO)))
 		{
 			final ArrayList<Product> productList = (ArrayList) initialValues.get(MarketplacecommerceservicesConstants.PROMO_PRODUCT);
 			final ArrayList<Category> categoryList = (ArrayList) initialValues
@@ -300,8 +304,8 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 
 
 
-			if (null != item && (item instanceof CustomProductBOGOFPromotion || item instanceof BuyAandBgetC
-					|| item instanceof BuyAandBPrecentageDiscount))
+			if (null != item
+					&& (item instanceof CustomProductBOGOFPromotion || item instanceof BuyAandBgetC || item instanceof BuyAandBPrecentageDiscount))
 			{
 				if (checkIfMultipleSellerRestrAdded(item))
 				{
@@ -314,6 +318,11 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 			{
 				getPromotionSendMailService().sendMail(item);
 			}
+
+			//			if (null != item && item instanceof Voucher)
+			//			{
+			//				getNotificationService().saveToVoucherStatusNotification(item);
+			//			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -421,8 +430,8 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 				if ((null != productList && !productList.isEmpty()) && null != startDate && null != endDate && isEnabled
 						&& quantity == 1)
 				{
-					LOG.debug(
-							"******** Special price check for product list:" + productList + " *** percentage discount:" + isPercentage);
+					LOG.debug("******** Special price check for product list:" + productList + " *** percentage discount:"
+							+ isPercentage);
 
 					if (isPercentage)
 					{
@@ -452,8 +461,8 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 								priority, sellerList, brandList);
 					}
 				}
-				else if ((null != categoryList && !categoryList.isEmpty())
-						|| ((null != productList && !productList.isEmpty())) && !isEnabled && quantity == 1)
+				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
+						&& !isEnabled && quantity == 1)
 				{
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
 							+ " *** categoryList:" + categoryList);
@@ -617,5 +626,10 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	protected DefaultPromotionManager getDefaultPromotionsManager()
 	{
 		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
+	}
+
+	protected NotificationService getNotificationService()
+	{
+		return Registry.getApplicationContext().getBean("notificationService", NotificationService.class);
 	}
 }

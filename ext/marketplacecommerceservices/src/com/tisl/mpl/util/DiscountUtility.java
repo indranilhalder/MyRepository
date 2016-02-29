@@ -11,9 +11,11 @@ import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionPriceRowModel;
+import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.util.localization.Localization;
 
 import java.math.BigDecimal;
@@ -21,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -43,6 +47,7 @@ import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
  */
 public class DiscountUtility
 {
+	private static final Logger LOG = Logger.getLogger(DiscountUtility.class);
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
@@ -254,7 +259,8 @@ public class DiscountUtility
 					priceRowList.addAll(discountPriceRows);
 				}
 
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency()
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getCurrency() && null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getCurrency()
 						&& null != priceRowList.get(0).getCurrency().getIsocode() && null != priceRowList.get(0).getPrice())
 				{
 					final PriceData discountPrice = createPrice(cart, priceRowList.get(0).getPrice());
@@ -364,7 +370,8 @@ public class DiscountUtility
 			if (null != discountPriceRows)
 			{
 				priceRowList.addAll(discountPriceRows);
-				if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+				//if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+				if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getPrice())
 				{
 					final Double cashbBackVal = priceRowList.get(0).getPrice();
 					final PriceData discountPrice = createPrice(cart, cashbBackVal);
@@ -414,7 +421,8 @@ public class DiscountUtility
 				if (null != discountPriceRows)
 				{
 					priceRowList.addAll(discountPriceRows);
-					if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+					//if (priceRowList.size() > 0 && null != priceRowList.get(0).getPrice())
+					if (CollectionUtils.isNotEmpty(priceRowList) && null != priceRowList.get(0).getPrice())
 					{
 						final Double cashbBackVal = priceRowList.get(0).getPrice();
 						final PriceData discountPrice = createPrice(cart, cashbBackVal);
@@ -580,14 +588,27 @@ public class DiscountUtility
 	{
 		double discount = 0.0d;
 		double totalPrice = 0.0D;
-		if (null != cart && null != cart.getEntries() && !cart.getEntries().isEmpty())
+		if (null != cart && CollectionUtils.isNotEmpty(cart.getEntries()))
 		{
+			final List<DiscountModel> discountList = cart.getDiscounts();
+			final List<DiscountValue> discountValueList = cart.getGlobalDiscountValues();
+			double voucherDiscount = 0.0d;
 			for (final AbstractOrderEntryModel entry : cart.getEntries())
 			{
 				totalPrice = totalPrice + (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue());
 			}
 
-			discount = (totalPrice + cart.getDeliveryCost().doubleValue()) - cart.getTotalPriceWithConv().doubleValue();
+			for (final DiscountValue discountValue : discountValueList)
+			{
+				if (CollectionUtils.isNotEmpty(discountList) && discountValue.getCode().equals(discountList.get(0).getCode()))
+				{
+					voucherDiscount = discountValue.getAppliedValue();
+					break;
+				}
+			}
+
+			discount = (totalPrice + cart.getDeliveryCost().doubleValue()) - cart.getTotalPriceWithConv().doubleValue()
+					- voucherDiscount;
 		}
 		return roundData(discount);
 	}
@@ -653,6 +674,24 @@ public class DiscountUtility
 	}
 
 
+	/**
+	 * Checks whether the entry is a bogo or a freebiw
+	 *
+	 * @param entry
+	 * @return boolean
+	 */
+	public boolean isFreebieOrBOGOApplied(final AbstractOrderEntryModel entry)
+	{
+		boolean flag = false;
+		if ((null != entry.getGiveAway() && entry.getGiveAway().booleanValue())
+				|| (null != entry.getIsBOGOapplied() && entry.getIsBOGOapplied().booleanValue() && null != entry.getQuantity()
+						&& null != entry.getFreeCount() && entry.getQuantity().intValue() == entry.getFreeCount().intValue()))
+		{
+			flag = true;
+		}
+		LOG.debug("Flag for bogoOrFreebie is " + flag);
+		return flag;
+	}
 
 
 

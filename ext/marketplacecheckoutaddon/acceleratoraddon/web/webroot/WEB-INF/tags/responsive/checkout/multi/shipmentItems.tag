@@ -18,6 +18,11 @@
 <c:set var="defaultPinCode" value="${defaultPincode}"></c:set>
 
 <c:if test="${hasShippedItems}">
+<script>
+	$(document).ready(function(){
+		$(".click-and-collect").addClass("click-collect");
+	});
+</script>
 	<div class="checkout-shipping-items">
 		<h1>
 			
@@ -63,16 +68,16 @@
 												 <c:if test="${fn:toUpperCase(entry.product.rootCategory) != 'ELECTRONICS'}">
 												 	
 												 	<ycommerce:testId code="cart_product_size">
-														<div class="size"><b><spring:theme code="text.size"/>${entry.product.size}</b></div>
+														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
 													</ycommerce:testId>
 													<ycommerce:testId code="cart_product_colour">
-																<div class="colour"><b><spring:theme code="text.colour"/>${entry.product.colour}</b></div>
+																<div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div>
 													</ycommerce:testId>
 												 </c:if>
 												<!-- end TISEE-4631 TISUAT-4229 -->
 												
 												<ycommerce:testId code="cart_product_colour">
-													<div class="colour"><b><spring:theme code="text.seller.name"/>	${entry.selectedSellerInformation.sellername}</b></div>
+													<div class="colour"><spring:theme code="text.seller.name"/>	${entry.selectedSellerInformation.sellername}</div>
 												</ycommerce:testId>
 												
 												<c:forEach items="${fullfillmentData}" var="fullfillmentData">
@@ -94,7 +99,7 @@
 												</c:forEach>
 												
 												<ycommerce:testId code="cart_product_colour">
-												<div class="colour"><b><spring:theme code="text.qty"/>${entry.quantity}</b></div>
+												<div class="colour"><spring:theme code="text.qty"/>${entry.quantity}</div>
 												</ycommerce:testId>
 															
 												<c:if
@@ -167,11 +172,11 @@
 														test="${sellerInfoMap.key == entry.entryNumber}">
 														<c:forEach items="${sellerInfoMap.value}"
 															var="sellerInfoMapValue"> 
-															<div><span><b><spring:theme code="text.seller.name"/> </b></span>${sellerInfoMapValue}</div>
+															<div><span><spring:theme code="text.seller.name"/> </span>${sellerInfoMapValue}</div>
 														</c:forEach>
 														
-														<div class="size"><b><spring:theme code="text.size"/>${entry.product.size}</b></div>
-												<div class="colour"><b><spring:theme code="text.colour"/>${entry.product.colour}</b></div>
+														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
+												<div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div>
 													</c:if>
 												</c:forEach>
 											</c:if>
@@ -212,8 +217,37 @@
 													<c:if test="${deliveryModeDataMap.key == entry.entryNumber}">
 													
 															<c:set var='count'  value='1' />
+														<c:set var="delModes" value="${fn:length(deliveryModeDataMap.value)}" />	
+														<c:forEach var="i" begin="1" end="${delModes}" step="1">
+														    <c:set var="delMode" value="${deliveryModeDataMap.value[delModes-i]}" />
+														  
+														   <c:if test="${count==1}">
+																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].sellerArticleSKU" value="${delMode.sellerArticleSKU}" />
+																<form:input id="radio_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.code}" />
+															</c:if>
+														   <c:set var='count'  value='${count+1}' />
 															
-														<c:forEach items="${deliveryModeDataMap.value}"	var="deliveryMode">
+															<c:choose>
+																	<c:when test="${delMode.code eq 'home-delivery'}">
+																			<li class="${delMode.code }">
+																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			
+																		<span>	${delMode.description }</span></li>
+																					
+																	</c:when>
+																	<c:otherwise>
+																			<li class="${delMode.code }">
+																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			
+																		<span>${delMode.description }</span> </li>
+																			
+																	</c:otherwise>
+															</c:choose>
+									
+														</c:forEach>	
+														<%-- <c:forEach items="${deliveryModeDataMap.value}"	var="deliveryMode">
 													
 															<c:if test="${count==1}">
 																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].sellerArticleSKU" value="${deliveryMode.sellerArticleSKU}" />
@@ -242,7 +276,7 @@
 															</c:choose>
 									
 											
-												</c:forEach>
+												</c:forEach> --%>
 												</c:if>
 												</c:forEach>
 												</c:if>

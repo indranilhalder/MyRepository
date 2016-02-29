@@ -56,7 +56,7 @@
 									<li class="empty"></li>
 								</ul> -->
 								<p class="company">${product.brand.brandname}</p>
-								<h3 class="product-name">${product.name}</h3>
+								<h3 class="product-name">${product.productTitle}</h3>  <!-- product.productTitle -->
 								<div class="price">
 
 									<c:choose>

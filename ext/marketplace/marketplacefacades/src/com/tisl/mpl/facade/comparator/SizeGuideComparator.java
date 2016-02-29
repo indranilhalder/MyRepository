@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.facades.product.data.SizeGuideData;
@@ -23,6 +24,7 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	private String pattern;
 	private Pattern regexPattern;
 	private List<List<String>> sizeSystems;
+	private static final Logger LOG = Logger.getLogger(SizeGuideComparator.class);
 
 	/**
 	 * This method is responsible for sizes to be displayed in size chartok
@@ -37,6 +39,9 @@ public class SizeGuideComparator implements Comparator<SizeGuideData>
 	{
 		final String value1 = sizeData1.getDimensionSize().replaceAll("\\s+", "").toUpperCase();
 		final String value2 = sizeData2.getDimensionSize().replaceAll("\\s+", "").toUpperCase();
+		//System.out.println("*********************sizeguide" + value1 + value2);
+		LOG.debug("*********************sizeguide" + value1 + value2);
+
 		if (value1 == null || value2 == null)
 		{
 			return 0;

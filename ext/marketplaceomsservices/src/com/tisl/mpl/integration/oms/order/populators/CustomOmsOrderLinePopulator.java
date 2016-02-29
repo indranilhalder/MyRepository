@@ -139,6 +139,27 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setPromotion(promotions);
 			target.setApprotionedPrice(source.getNetAmountAfterAllDisc().doubleValue() > 0 ? source.getNetAmountAfterAllDisc()
 					.doubleValue() : 2.0);
+			//Code Blocked since coupon has been out of scope for Release2
+
+			//			if (source.getCouponCode() != null && !source.getCouponCode().isEmpty())
+			//			{
+			//
+			//				final CouponDto coupon = new CouponDto();
+			//				coupon.setCouponCode(source.getCouponCode());
+			//				if (source.getCouponValue().doubleValue() > 0D)
+			//				{
+			//					coupon.setCouponValue(source.getCouponValue().toString());
+			//				}
+			//
+			//				//coupon.setSellerID(sellerInfoModel.getSellerID());
+			//				final ArrayList<CouponDto> couponList = new ArrayList<>();
+			//				couponList.add(coupon);
+			//				target.setCoupon(couponList);
+			//			}
+			//			else
+			//			{
+			//				LOG.debug("CustomOmsOrderLinePopulator : there is no coupon for the order ");
+			//			}
 
 			if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0)
 			{
@@ -206,15 +227,29 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 			//OOTB These values are set  to pass the out of the box checks , these fields are not required for OMS
 			// Store 1 will be replaced once the Click and Collect functionality is implemented
-			target.setCollectName("name");
-			target.setCollectPhoneNumber("9681684233");
+			//OMS expecting pickup person name and mobile number for each order line setting those  values from Order Model
+			if (source.getOrder() != null)
+			{
+				target.setCollectName(source.getOrder().getPickupPersonName());
+				target.setCollectPhoneNumber(source.getOrder().getPickupPersonMobile());
+			}
 			final LocationRole locationRole = LocationRole.SHIPPING;
 			final Set<LocationRole> locationRoles = new HashSet<LocationRole>();
 			locationRoles.add(locationRole);
 			target.setLocationRoles(locationRoles);
 			target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
-			target.setStoreID("Store1");
 
+			if (source.getDeliveryPointOfService() != null)
+			{
+				target.setStoreID(source.getDeliveryPointOfService().getSlaveId());
+			}
+
+			if (source.getCollectionDays() != null)
+			{
+				target.setCollectionDays(String.valueOf(source.getCollectionDays()));
+			}
+
+			//source.getCollectionDays()
 			target.setUnitTax(new Amount(source.getOrder().getCurrency().getIsocode(), Double
 					.valueOf(getOndemandTaxCalculationService().calculatePreciseUnitTax(
 							source.getOrder().getEntries().get(0).getTaxValues(),

@@ -21,6 +21,8 @@
 		<requires-extension name="acceleratorstorefrontcommons"/>
 		<requires-extension name="marketplaceJuspayServices"/>
 		<requires-extension name="marketplaceBinDb"/>
+		<requires-extension name="marketplacecoupon"/>
+		<requires-extension name="marketplacewebservices"/>
 
 		<coremodule generated="true" manager="com.tisl.mpl.jalo.MarketplacecheckoutaddonManager" packageroot="com.tisl.mpl"/>
 

@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
@@ -23,10 +24,14 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListRequest;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeRequest;
+import com.tisl.mpl.wsdto.StoreLocatorATS;
+import com.tisl.mpl.wsdto.StoreLocatorAtsResponseObject;
+import com.tisl.mpl.wsdto.StoreLocatorItem;
 
 
 /**
@@ -56,12 +61,22 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 	/**
 	 *
 	 */
+	private static final String CLICK_AND_COLLECT = "Click And Collect";
+
+	/**
+	 *
+	 */
 	private static final String ED = "ED";
 
 	/**
 	 *
 	 */
 	private static final String HD = "HD";
+
+	/**
+	 *
+	 */
+	private static final String CNC = "CNC";
 
 	/**
 	 *
@@ -155,6 +170,20 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 								{
 									deliveryModes.add(ED);
 								}
+								if (deliveryMode.equalsIgnoreCase(CLICK_AND_COLLECT))
+								{
+									deliveryModes.add(CNC);
+
+									if (null != reqData.get(i).getStore())
+									{
+										final List<String> reqStreNames = new ArrayList<String>();
+										for (final String storeName : reqData.get(i).getStore())
+										{
+											reqStreNames.add(storeName);
+										}
+										pincodereqObj.setStore(reqStreNames);
+									}
+								}
 							}
 							pincodereqObj.setDeliveryMode(deliveryModes);
 						}
@@ -162,7 +191,6 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 						{
 							pincodereqObj.setIsDeliveryDateRequired(reqData.get(i).getIsDeliveryDateRequired());
 						}
-
 						pincodeList.add(pincodereqObj);
 					}
 				}
@@ -179,6 +207,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				{
 					pincodeRequest.setItem(pincodeList);
 				}
+				LOG.debug("****************sendPinCodeDeliveryModetoOMS for this pincode:" + pin);
 				pincodeResfromOMS = sendPinCodeDeliveryModetoOMS(pincodeRequest);
 			}
 		}
@@ -226,11 +255,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					mockXMLFirstPhase += mockXMLSecond;
 				}
 				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
-				LOG.info("*********************** Pincode serviceability response xml :" + output);
-
+				LOG.debug("****** Pincode serviceability response for non-real time call :" + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
 				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (PinCodeDeliveryModeListResponse) unmarshaller.unmarshal(reader);
 			}
@@ -249,18 +276,163 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				m.marshal(pincodeRequest, sw);
 				final String xmlString = sw.toString();
 
-				LOG.info("*********************** Pincode serviceability request xml :" + xmlString);
+				LOG.debug("********Pincode serviceability  request  :" + xmlString);
 				final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml")
 						.header("X-tenantId", "single").entity(xmlString).post(ClientResponse.class);
 
 				final String output = response.getEntity(String.class);
-				LOG.info("*********************** Pincode serviceability response xml :" + output);
-
+				LOG.debug("****** Pincode serviceability response for real time call:" + output);
 				final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
 				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (PinCodeDeliveryModeListResponse) unmarshaller.unmarshal(reader);
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
+			throw new ClientEtailNonBusinessExceptions(ex);
+		}
+		return responsefromOMS;
+	}
+
+	/**
+	 * this method prepares request object and calls oms to get inventories for stores.
+	 *
+	 * @param storeLocationRequestDataList
+	 * @return StoreLocatorAtsResponseObject
+	 *
+	 */
+	@Override
+	public StoreLocatorAtsResponseObject prepStoreLocationsToOMS(final List<StoreLocationRequestData> storeLocationRequestDataList)
+	{
+		LOG.debug("from prepStoreLocationsToOMS method in serive");
+		StoreLocatorAtsResponseObject storeLocatorResfromOMS = null;
+		try
+		{
+			//check null condition
+			if (storeLocationRequestDataList != null && storeLocationRequestDataList.size() > 0)
+			{
+				final StoreLocatorATS storeLocatorRequest = new StoreLocatorATS();
+				final List<StoreLocatorItem> storeLocatorList = new ArrayList<StoreLocatorItem>();
+				for (int i = 0; i < storeLocationRequestDataList.size(); i++)
+				{
+					final StoreLocatorItem storelocreqObj = new StoreLocatorItem();
+					if (null != storeLocationRequestDataList.get(i))
+					{
+						if (null != storeLocationRequestDataList.get(i).getUssId())
+						{
+							storelocreqObj.setUssId(storeLocationRequestDataList.get(i).getUssId().toUpperCase());
+						}
+						if (null != storeLocationRequestDataList.get(i).getStoreId())
+						{
+							final List<String> storeLocationList = new ArrayList<String>();
+							for (final String storeLocation : storeLocationRequestDataList.get(i).getStoreId())
+							{
+								storeLocationList.add(storeLocation);
+							}
+							storelocreqObj.setStoreId(storeLocationList);
+						}
+						if (null != storeLocationRequestDataList.get(i).getSellerId())
+						{
+							storelocreqObj.setSellerID(storeLocationRequestDataList.get(i).getSellerId());
+						}
+						if (null != storeLocationRequestDataList.get(i).getFulfillmentType())
+						{
+							storelocreqObj.setFulfillmentType(storeLocationRequestDataList.get(i).getFulfillmentType());
+						}
+						if (null != storeLocationRequestDataList.get(i).getTransportMode())
+						{
+							storelocreqObj.setTransportMode(storeLocationRequestDataList.get(i).getTransportMode());
+						}
+						if (storeLocationRequestDataList.get(i).getPrice() > 0.0)
+						{
+							storelocreqObj.setPrice(storeLocationRequestDataList.get(i).getPrice());
+						}
+						storeLocatorList.add(storelocreqObj);
+					}
+				}
+				storeLocatorRequest.setItem(storeLocatorList);
+				LOG.debug("****************calls to oms to get valid stores having inventories*************");
+				storeLocatorResfromOMS = sendStoreLocatorstoOMS(storeLocatorRequest);
+			}
+		}
+		catch (final Exception e)
+		{
+			//pincodeResfromOMS = null;
+			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + e);
+			throw new ClientEtailNonBusinessExceptions(e);
+		}
+
+		return storeLocatorResfromOMS;
+	}
+
+	/**
+	 * This method calls to oms to get inventories for stores.
+	 *
+	 * @param storeLocatorRequest
+	 * @return StoreLocatorAtsResponseObject
+	 * @throws JAXBException
+	 */
+	public StoreLocatorAtsResponseObject sendStoreLocatorstoOMS(final StoreLocatorATS storeLocatorRequest) throws JAXBException
+	{
+		LOG.debug("from sendStoreLocatorstoOMS in service");
+		StoreLocatorAtsResponseObject responsefromOMS = new StoreLocatorAtsResponseObject();
+		try
+		{
+			final String omsstoreServiceability = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_REALCALL).trim();
+			String mockXMLFirstPhase = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_FIRSTPHASE).trim();
+			final String mockXMLSecondPhase = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
+			final String mockXMLThirdPhase = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_THIRDPHASE).trim();
+
+			if (omsstoreServiceability != null && mockXMLFirstPhase != null && !mockXMLFirstPhase.isEmpty()
+					&& mockXMLSecondPhase != null && !mockXMLSecondPhase.isEmpty() && mockXMLThirdPhase != null
+					&& !mockXMLThirdPhase.isEmpty() && omsstoreServiceability.equalsIgnoreCase("N"))
+			{
+				LOG.debug("Try to prepare non-real time OMS call get some stores and inventories");
+				for (final StoreLocatorItem entry : storeLocatorRequest.getItem())
+				{
+					String mockXMLSecond = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_SECONDPHASE).trim();
+					mockXMLSecond = mockXMLSecond.replaceAll("<replaceUssid>", entry.getUssId());
+					mockXMLFirstPhase += mockXMLSecond;
+				}
+				final String output = mockXMLFirstPhase + mockXMLThirdPhase;
+				LOG.debug("*********************** StoreLocator  non- real time response xml :" + output);
+				final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
+				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+				final StringReader reader = new StringReader(output);
+				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
+			}
+			else
+			{
+				final Client client = Client.create();
+				final WebResource webResource = client.resource(UriBuilder.fromUri(
+						configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.URLFOR_STORELOC_URL))
+						.build());
+				final JAXBContext context = JAXBContext.newInstance(StoreLocatorATS.class);
+				final Marshaller m = context.createMarshaller();
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+				final StringWriter sw = new StringWriter();
+				m.marshal(storeLocatorRequest, sw);
+				final String xmlString = sw.toString();
+
+				LOG.debug("*********************** StoreLocator Real Time Serviceability request xml :" + xmlString);
+				final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml")
+						.header("X-tenantId", "single").entity(xmlString).post(ClientResponse.class);
+
+				final String output = response.getEntity(String.class);
+				LOG.debug("*********************** StoreLocator Real Time Serviceability response xml :" + output);
+				final JAXBContext jaxbContext = JAXBContext.newInstance(StoreLocatorAtsResponseObject.class);
+				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+				final StringReader reader = new StringReader(output);
+				responsefromOMS = (StoreLocatorAtsResponseObject) unmarshaller.unmarshal(reader);
 			}
 		}
 		catch (final Exception ex)

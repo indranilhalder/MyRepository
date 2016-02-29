@@ -25,13 +25,14 @@ import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
- *
+ * @author TCS
  */
 @Controller
 @Scope("tenant")
@@ -44,6 +45,11 @@ public class TrackOrderHeaderController
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * @param model
+	 * @param request
+	 * @return fragments/home/trackOrderPanel
+	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String get(final Model model, final HttpServletRequest request)
 	{
@@ -51,8 +57,11 @@ public class TrackOrderHeaderController
 		if (!userService.isAnonymousUser(currentCustomer))
 		{
 
+
+
 			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
 			final String customerUID = currentCustomer.getUid();
+
 			if (null != customerUID)
 			{
 				notificationMessagelist = notificationFacade.getNotificationDetail(customerUID, true);
@@ -60,9 +69,10 @@ public class TrackOrderHeaderController
 
 				if (null != notificationMessagelist && !notificationMessagelist.isEmpty())
 				{
-					model.addAttribute("notificationMessagelist", notificationMessagelist);
 
-					int notificationCount = Integer.valueOf(0);
+					model.addAttribute(ModelAttributetConstants.NOTIFICATION_MESSAGE_LIST, notificationMessagelist);
+
+					int notificationCount = 0;
 					for (final NotificationData single : notificationMessagelist)
 					{
 						if (single.getNotificationRead() != null && !single.getNotificationRead())
@@ -71,9 +81,11 @@ public class TrackOrderHeaderController
 						}
 
 					}
-					model.addAttribute("notificationCount", notificationCount);
-					model.addAttribute("isSignedInUser", "yes");
+					model.addAttribute(ModelAttributetConstants.NOTIFICATION_COUNT, notificationCount);
+					model.addAttribute(ModelAttributetConstants.IS_SIGNED_IN, "yes");
 				}
+
+				model.addAttribute(ModelAttributetConstants.NOTIFICATION_MESSAGE_LIST, notificationMessagelist);
 			}
 		}
 		return ControllerConstants.Views.Fragments.Home.TrackOrderPanel;
@@ -84,7 +96,7 @@ public class TrackOrderHeaderController
 
 	@ResponseBody
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MARKREAD, method = RequestMethod.GET, produces = "application/json")
-	public void markAsRead(final String consignmentNo, final String orderId, final String shopperStatus)
+	public void markAsRead(final String currentId, final String consignmentNo, final String shopperStatus)
 	{
 
 		try
@@ -93,7 +105,8 @@ public class TrackOrderHeaderController
 			final String customerUID = currentCustomer.getUid();
 			if (null != customerUID)
 			{
-				notificationFacade.markNotificationRead(customerUID, orderId, consignmentNo, shopperStatus);
+
+				notificationFacade.markNotificationRead(customerUID, currentId, consignmentNo, shopperStatus);
 			}
 
 		}

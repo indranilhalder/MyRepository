@@ -596,35 +596,14 @@
 															<option value="11"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.11"/></option>
 															<option value="12"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.12"/></option>
 														</select>  
+														
+														<c:set var="currentyear" value="<%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)%>"></c:set>
 														<select class="card_exp_year" name="expyy" >
 							                            	<option value="year" selected><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.yyyy"/></option>
-															<option value="2015"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2015"/></option>
-															<option value="2016"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2016"/></option>
-															<option value="2017"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2017"/></option>
-															<option value="2018"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2018"/></option>
-															<option value="2019"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2019"/></option>
-															<option value="2020"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2020"/></option>
-															<option value="2021"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2021"/></option>
-															<option value="2022"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2022"/></option>
-															<option value="2023"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2023"/></option>
-															<option value="2024"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2024"/></option>
-															<option value="2025"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2025"/></option>
-															<option value="2026"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2026"/></option>
-															<option value="2027"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2027"/></option>
-															<option value="2028"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2028"/></option>
-															<option value="2029"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2029"/></option>
-															<option value="2030"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2030"/></option>
-															<option value="2031"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2031"/></option>
-															<option value="2032"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2032"/></option>
-															<option value="2033"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2033"/></option>
-															<option value="2034"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2034"/></option>
-															<option value="2035"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2035"/></option>
-															<option value="2036"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2036"/></option>
-															<option value="2037"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2037"/></option>
-															<option value="2038"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2038"/></option>
-															<option value="2039"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2039"/></option>
-															<option value="2040"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.2040"/></option>
-														</select>
+							                            	<c:forEach var="i" begin="${currentyear}" end="${currentyear + noOfYearsFromCurrentYear}">
+															   <option value="${i}">${i}</option>
+															</c:forEach>
+							                           </select>
 														<span class="error-message" id="expYYError"></span>
 						                            </div>
 						                            
@@ -638,8 +617,16 @@
 						                            </div>
 												</fieldset>
 		            							<div class="controls" id="billingAddress">
-					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
+					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2> 
+					                            <c:forEach var="cartItem" items="${cartData.entries}">
+					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+														 <c:set var="flag" value="true"/>
+													  </c:if>  
+										    	</c:forEach>
+										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
+					                           	</c:if>   	
 					                           		<fieldset>
 						                           		<div class="half">
 							                           		<label><spring:theme code="text.first.name"/></label>

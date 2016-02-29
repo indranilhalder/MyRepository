@@ -14,8 +14,10 @@ import de.hybris.platform.site.BaseSiteService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -141,7 +143,8 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			Collection<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 			categoryList = getBaseSitePreferredCategories();
 
-			if (null != categoryList && categoryList.size() > 0)
+			//if (null != categoryList && categoryList.size() > 0)
+			if (CollectionUtils.isNotEmpty(categoryList))
 			{
 				for (final CategoryModel categoryLineItem : categoryList)
 				{
@@ -379,7 +382,8 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			categoryList = getBaseSitePreferredCategories();
 			final List<String> categoryCode = mplPreferenceData.getSelectedCategory();
 			final List<String> brandCode = mplPreferenceData.getSelectedBrand();
-			if (null != categoryCode && categoryCode.size() > 0)
+			//if (null != categoryCode && categoryCode.size() > 0)
+			if (CollectionUtils.isNotEmpty(categoryCode))
 			{
 				for (final String code : categoryCode)
 				{
@@ -392,7 +396,8 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 					}
 				}
 			}
-			if (null != brandCode && brandCode.size() > 0)
+			//if (null != brandCode && brandCode.size() > 0)
+			if (CollectionUtils.isNotEmpty(brandCode))
 			{
 				for (final String code : brandCode)
 				{
@@ -436,6 +441,7 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			final CustomerModel customerModel = getCurrentSessionCustomer();
 			customerModel.setMarketplacepreference(mplPreferenceModelToSave);
 			modelService.save(mplPreferenceModelToSave);
+			customerModel.setModifiedtime(new Date());
 			modelService.save(customerModel);
 		}
 		catch (final ModelSavingException ex)
@@ -481,6 +487,7 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			modelService.save(mplPreferenceModelToSave);
 			final CustomerModel customerModel = getCurrentSessionCustomer();
 			customerModel.setMarketplacepreference(mplPreferenceModelToSave);
+			customerModel.setModifiedtime(new Date());
 			modelService.save(customerModel);
 		}
 		catch (final ModelSavingException ex)

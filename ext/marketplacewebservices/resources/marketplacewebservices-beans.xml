@@ -2071,5 +2071,12 @@
 		<property name="feedbackCustomerSurveys" type="boolean" />
 	</bean>
     
+    <bean class="com.tisl.mpl.wsdto.SellerMasterResponseWsDTO">
+
+		<property name="status" type="String" />
+		<property name="sellerMaster" type="com.tisl.mpl.model.SellerMasterModel" />
+
+	</bean>
+    
     
 </beans>

@@ -216,7 +216,7 @@ INSERT_UPDATE BuyboxUpdateLog;last_run_time[dateformat=yyyy-MM-dd HH:mm];proc_na
 
 #buybox insert the weightage values
 INSERT_UPDATE BBWeightage;weigtagetype[unique=true];weightagevalue
-;priceweightage;-0.7
+;priceweightage;-0.00000001 
 ;invweightage;0.3
 
 INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
@@ -224,6 +224,7 @@ INSERT_UPDATE CronJob;code[unique=true];job(code);singleExecutable;sessionLangua
 #For Payment Job (Web Hook Integration)
 ;juspayWebHookCronJob;juspayWebHookJob;false;en
 ;juspayEBSCronJob;juspayEBSJob;false;en
+;campaignPromoDataCronJob;campaignPromoDataJob;false;en
 
 INSERT_UPDATE DelistingJobHelper;code[unique=true];job(code);sessionLanguage(isocode);fileNamePrefix;fileExtension
 								;DelistingHelperJob;delistingJob;en;seller;csv;
@@ -234,7 +235,7 @@ INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 #; buyboxjob; 0 0/15 * 1/1 * ? *
 ; juspayEBSCronJob; 0 0/15 * 1/1 * ? *
 ; juspayWebHookCronJob; 0 0/15 * 1/1 * ? *
-
+;sellerPriorityCronJob;0 0/15 * 1/1 * ? *
 
 
 # Validation constraints - Customer
@@ -392,8 +393,12 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 ;100017;READY_TO_SHIP;Order Confirmed;Your order is processing;PROCESSING;true;true;00cbe9;D2;
 ;100018;LOGISTIC_PARTNER_SWITCH;Order Confirmed;Your order is processing;PROCESSING;true;true;00cbe9;D2;
 
+;100042;ORDER_REALLOCATED;Order Confirmed;Your order is processing;PROCESSING;true;true;00cbe9;D2;
+;100043;CNC_INITIATED;YAAAY! Almost there;Your order is processing;PROCESSING;true;true;00cbe9;D2;
+
 ;100019;HOTC;Shipping commenced;Your order was just shipped;SHIPPING;true;true;00cbe9;D3;
 
+;100044;READY_FOR_COLLECTION;Shipping commenced;Your order is Ready for Collection;SHIPPING;true;true;00cbe9;D4;
 ;100020;OUT_FOR_DELIVERY;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
 ;100021;REACHED_NEAREST_HUB;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
 ;100022;LOST_IN_TRANSIT;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
@@ -401,6 +406,7 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 
 ;100024;DELIVERED;Shipment delivered;Super! Your order was delivered;SHIPPING;true;true;00cbe9;D5;
 
+;100045;ORDER_COLLECTED;In Transit;Your order is Collected;SHIPPING;true;true;00cbe9;D6;
 ;100025;RETURN_INITIATED;Return Initiated;Order return has been initiated;RETURN;true;true;00cbe9;D6;
 
 ;100026;REVERSE_AWB_ASSIGNED;Return in Progress;Order return is in progress;RETURN;true;true;00cbe9;D7;
@@ -422,9 +428,10 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 ;100039;CLOSED_ON_CANCELLATION;Order Cancelled and Closed;Order has been cancelled and closed;CANCEL;true;true;ff1c47;D11;
 ;100040;ORDER_CANCELLED;Order Cancelled;Your order has been cancelled;CANCEL;true;true;ff1c47;D11; 
 
+
 ###Payment Related
-UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;ConvenienceChargeForCOD;juspayWebHookTAT;juspayEBSTAT;ebsTatExpiryAlertTime
-;mpl;50000;2000;100;10;6;15
+UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;juspayWebHookTAT;juspayEBSTAT;ebsTatExpiryAlertTime
+;mpl;50000;2000;10;6;15
 
 INSERT_UPDATE PaymentType;mode[unique=true];isAvailable;baseStore(uid)
 ;Credit Card;true;mpl
@@ -515,3 +522,15 @@ INSERT_UPDATE BankforNetbanking;name(bankName)[unique=true];nbCode;isAvailable;p
 ###For Webhook Report Job
 INSERT_UPDATE MplWebhookReportJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
 ;webhookReportCreationJob;webhookReportJob;en;;;
+
+###For Seller priority Report Job
+INSERT_UPDATE MplSellerPriorityJob;code[unique=true];job(code);sessionLanguage(isocode);startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
+;sellerPriorityJob;sellerPriorityReportJob;en;;;
+
+###update seller priority 
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;sellerPriorityCronJob;updateSellerPriorityCronJob;false;en
+
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+;sellerPriorityJob;0 0/15 * 1/1 * ? *

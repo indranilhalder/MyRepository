@@ -18,11 +18,23 @@
 	
 <!-- This is used for social media images in footer -->
 	
-	 <div class="social">
+	 <div class="social share">
 		<h3><spring:theme code="text.stay.connected"/></h3>
 		<div class="links">
 			<c:forEach items="${component.footerImageList}" var="banner">
 					<a href="${banner.urlLink}"><img src="${banner.media.URL}" ></a>
+			</c:forEach>
+		</div>
+	</div>
+
+
+<!-- This is used for app download images in footer -->
+	
+	 <div class="social app-download">
+		<h3><spring:theme code="text.download.app"/></h3>
+		<div class="links">
+			<c:forEach items="${component.footerAppImageList}" var="banner">
+					<a href="${banner.urlLink}" class="appios"><img src="${banner.media.URL}" ></a>
 			</c:forEach>
 		</div>
 	</div>
@@ -36,7 +48,15 @@
 			<li><c:forEach items="${node.links}"
 					step="${component.wrapAfter}" varStatus="i">
 					<c:if test="${component.wrapAfter > i.index}">
-						<h3 class="toggle">${node.title}</h3>
+						<c:choose>
+							<c:when test="${empty node.media}">
+							 <h3 class="toggle">${node.title}</h3>
+						    </c:when>    
+						    <c:otherwise>
+						        <h3 class="toggle"><img src="${node.media.url}" alt="${node.media.altText}" /></h3>
+						    </c:otherwise>
+						</c:choose>
+						<!-- <h3 class="toggle">${node.title}</h3> -->
 					</c:if>
 					<ul class="">
 						<c:forEach items="${node.links}" var="childlink"
@@ -58,7 +78,7 @@
 		if (mail == "") {
 
 			$("#error_message").css({"display":"block"});
-            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
+            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
 			return false;
 
 		} else {
@@ -68,8 +88,8 @@
 			 {
 
 				$("#error_message").css({"display":"block"});
-	            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
-				return false;
+	            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
+	            return false;
 			}
 
 			$.ajax({
@@ -82,19 +102,19 @@
 					if (data == "fail") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='red'><b>You are already subscribed to NewsLetter!</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='red'>You are already subscribed to NewsLetter!</font>";
 						return false;
 
 					} else if (data == "success") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#00cbe9'><b>Yay! We can't wait to be pen-pals with you.</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#a9143c'>Yay! We can't wait to be pen-pals with you.</font>";
 						return true;
 					}
 					
 					else if(data == "mailFormatError"){
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='red'><b>Please enter a valid email ID</b></font>";
+			            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
 						return false;
 					}
 				},
@@ -110,7 +130,10 @@
 		//return true;
 	}
 </script>
-
+<!-- This is used for displaying text in footer -->
+<div class="footer-text">
+	${footerText}
+</div>
 <!-- This is used for displaying copyright in footer -->
 <div class="banner">
 	<span>${notice}</span>
@@ -127,3 +150,4 @@
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+

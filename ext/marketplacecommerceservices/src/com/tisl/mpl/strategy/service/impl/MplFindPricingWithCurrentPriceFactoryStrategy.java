@@ -34,7 +34,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 
 
@@ -44,8 +43,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
  * session's price factory. If no session price factory is set it uses {@link OrderManager#getPriceFactory()} which will
  * retrieve the default one according to system settings.
  */
-public class MplFindPricingWithCurrentPriceFactoryStrategy extends AbstractBusinessService implements FindPriceStrategy,
-		FindDiscountValuesStrategy, FindTaxValuesStrategy
+public class MplFindPricingWithCurrentPriceFactoryStrategy extends AbstractBusinessService
+		implements FindPriceStrategy, FindDiscountValuesStrategy, FindTaxValuesStrategy
 {
 
 	protected static final Logger LOG = Logger.getLogger(MplFindPricingWithCurrentPriceFactoryStrategy.class);
@@ -66,40 +65,40 @@ public class MplFindPricingWithCurrentPriceFactoryStrategy extends AbstractBusin
 		}
 	}
 
-	@Override
-	public PriceValue findBasePrice(final AbstractOrderEntryModel entry) throws CalculationException
-	{
-		//final AbstractOrderEntry entryItem = getModelService().getSource(entry);
-		try
-		{
-			//return getCurrentPriceFactory().getBasePrice(entryItem);
-			LOG.info("Inside MplFindPricingWithCurrentPriceFactoryStrategy " + entry.getSelectedUSSID());
-			final String ussid = entry.getSelectedUSSID();
-			final List<BuyBoxModel> buyBoxModelList = buyBoxDao.getBuyBoxPriceForUssId(ussid);
-
-			Double finalPrice = Double.valueOf(0.0);
-			if (buyBoxModelList != null)
-			{
-				//final Double specialPrice = buyBoxModelList.get(0).getSpecialPrice();
-				final Double mopPrice = buyBoxModelList.get(0).getPrice();
-				final Double mrpPrice = buyBoxModelList.get(0).getMrp();
-				if (mopPrice != null && mopPrice.doubleValue() > 0.0)
-				{
-					finalPrice = mopPrice;
-				}
-				else if (mrpPrice != null && mrpPrice.doubleValue() > 0.0)
-				{
-					finalPrice = mrpPrice;
-				}
-
-			}
-			return new PriceValue("INR", finalPrice.doubleValue(), false);
-		}
-		catch (final Exception e)
-		{
-			throw new CalculationException(e);
-		}
-	}
+	//	@Override
+	//	public PriceValue findBasePrice(final AbstractOrderEntryModel entry) throws CalculationException
+	//	{
+	//		//final AbstractOrderEntry entryItem = getModelService().getSource(entry);
+	//		try
+	//		{
+	//			//return getCurrentPriceFactory().getBasePrice(entryItem);
+	//			LOG.info("Inside MplFindPricingWithCurrentPriceFactoryStrategy " + entry.getSelectedUSSID());
+	//			final String ussid = entry.getSelectedUSSID();
+	//			final List<BuyBoxModel> buyBoxModelList = buyBoxDao.getBuyBoxPriceForUssId(ussid);
+	//
+	//			Double finalPrice = Double.valueOf(0.0);
+	//			if (buyBoxModelList != null)
+	//			{
+	//				//final Double specialPrice = buyBoxModelList.get(0).getSpecialPrice();
+	//				final Double mopPrice = buyBoxModelList.get(0).getPrice();
+	//				final Double mrpPrice = buyBoxModelList.get(0).getMrp();
+	//				if (mopPrice != null && mopPrice.doubleValue() > 0.0)
+	//				{
+	//					finalPrice = mopPrice;
+	//				}
+	//				else if (mrpPrice != null && mrpPrice.doubleValue() > 0.0)
+	//				{
+	//					finalPrice = mrpPrice;
+	//				}
+	//
+	//			}
+	//			return new PriceValue("INR", finalPrice.doubleValue(), false);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			throw new CalculationException(e);
+	//		}
+	//	}
 
 	@Override
 	public List<DiscountValue> findDiscountValues(final AbstractOrderEntryModel entry) throws CalculationException
@@ -122,6 +121,21 @@ public class MplFindPricingWithCurrentPriceFactoryStrategy extends AbstractBusin
 		try
 		{
 			return getCurrentPriceFactory().getDiscountValues(orderItem);
+		}
+		catch (final JaloPriceFactoryException e)
+		{
+			throw new CalculationException(e);
+		}
+	}
+
+
+	@Override
+	public PriceValue findBasePrice(final AbstractOrderEntryModel entry) throws CalculationException
+	{
+		final AbstractOrderEntry entryItem = getModelService().getSource(entry);
+		try
+		{
+			return getCurrentPriceFactory().getBasePrice(entryItem);
 		}
 		catch (final JaloPriceFactoryException e)
 		{

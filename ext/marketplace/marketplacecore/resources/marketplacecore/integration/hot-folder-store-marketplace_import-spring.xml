@@ -52,6 +52,8 @@
 				<entry key="product_sizeguide" value="0" />
 				<entry key="sales_category" value="0" />
 				<entry key="online_exclusive" value="0" />
+				<entry key="priority_seller" value="0"/>
+				<entry key="promoted_product" value="0"/>
 					</map>
 		</property>
 	</bean>
@@ -237,6 +239,42 @@
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="online_exclusive"
     p:converter-ref="batchOnlineExclusiveConverter"/>
+    
+    
+     <!-- Transformer for SellerPriority update -->
+    <bean id="batchUpdateSellerPriorityConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="priority_seller"
+    p:converter-ref="batchSellerPriorityConverter"/>
+    
+     <!-- Transformer for PromotedProduct update -->
+    <bean id="batchPromotedProductConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="promoted_product"
+    p:converter-ref="batchPromotedProductConverter"/>
+    
+      <!-- Converter for seller Import -->
+  	<bean id="batchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+              	$catalogVersion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true]
+				$approved=approvalstatus(code)[default='check']
+				$lang=en
+                $productCatalog=mplProductCatalog
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+				$supercategories=supercategories(code, $catalogVersion)
+				$baseProduct=baseProduct(code,$catalogVersion)
+				$approved=approvalstatus(code)[default='check']
+				$unit=unit(code)[default='pieces']
+				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
+				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true,default=mplProductCatalog:Online]
+				Insert_Update MplSellerPriority;ListingId[unique=true][allownull=true](code,$catalogversion);CategoryId[unique=true][allownull=true](code,$catalogversion);SellerId(id);isActive;priorityStartDate[dateformat=dd/MM/yyyy HH:mm:ss];priorityEndDate[dateformat=dd/MM/yyyy HH:mm:ss]
+			</value>
+        </property>
+		<property name="impexRow">
+		<value>;{0};{1};{+2};{3};{4};{5}</value>
+		</property>
+        </bean>
     
  	  <!-- Converters -->
  	  
@@ -625,11 +663,11 @@ $language=language(isocode)[default='en'][unique=true];
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
 				          
-				INSERT_UPDATE RichAttribute;typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;productsource(code,$catalogVersion)[unique=true];$catalogversion
+				INSERT_UPDATE RichAttribute;typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);productsource(code,$catalogVersion)[unique=true];$catalogversion
 			</value>
         </property>
         <property name="impexRow">
-            <value>;{0};{1};{2};{+3};{+4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{+14}</value>
+            <value>;{0};{1};{2};{+3};{+4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{+14};{+15}</value>
         </property>
         </bean>
          <!-- Converter for SizeGuide For Product Import --> 
@@ -644,12 +682,11 @@ $language=language(isocode)[default='en'][unique=true];
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
-				          
-				INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension; unit[unique=true];size[unique=true];value[unique=true];categoryCode;brand;fitType;imageUrl;$catalogVersion
+			    INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true]; unit[unique=true];size[unique=true];value[unique=true];categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;$catalogVersion
 			</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};</value>
+            <value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11}</value>
         </property>
         </bean>
 	
@@ -742,11 +779,11 @@ $language=language(isocode)[default='en'][unique=true];
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
 				          
-				INSERT_UPDATE RichAttribute;homeDelivery(code);expressDelivery(code);clickAndCollect(code);typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;sellerInfo(sellerArticleSKU,$catalogVersion)[unique=true];$catalogversion
+				INSERT_UPDATE RichAttribute;homeDelivery(code);expressDelivery(code);clickAndCollect(code);typeOfItem1(code);typeOfItem2(code);shippingmodes(code);paymentModes(code);deliveryfulfillmodes(code);cancellationwindow;returnwindow;replacementwindow;exchangeallowedwindow;warrantyType(code);warrantyPeriod;ispromotionallowed(code);leadtimeforhomedelivery;sellerfulfilledshippingcharge;emi(code);sellerInfo(sellerArticleSKU,$catalogVersion)[unique=true];$catalogversion
 			</value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{+2};{3};{4};{5};{+6};{+7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{+17}</value>
+            <value>;{+0};{+1};{+2};{3};{4};{5};{+6};{+7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{+17};{+18}</value>
         </property>
         </bean>
         
@@ -769,5 +806,19 @@ $language=language(isocode)[default='en'][unique=true];
             <value>;{+0};{+0};{+1};</value>
         </property>
         </bean>
+    <!-- Converter for Promoted Product Import --> 
+    <bean id="batchPromotedProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				UPDATE Product;code[unique=true];isPromotedProduct;promotedProductPriority;$catalogVersion 
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{2};</value>
+        </property>
+        </bean>
         
   </beans>
+

@@ -287,6 +287,10 @@
 	<alias alias="csOrderActionsWidgetRenderer" name="marketPlaceDefaultCsOrderActionsWidgetRenderer" />
 	<bean id="marketPlaceDefaultCsOrderActionsWidgetRenderer" parent="defaultCsOrderActionsWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceOrderManagementActionsWidgetRenderer">
+		
+		<!-- added -->
+		<property name="callContextController" ref="csCallContextController"/>
+		<!--end  -->
 		<property name="popupWidgetHelper" ref="popupWidgetHelper" />
 	</bean>
 
@@ -574,6 +578,82 @@
 		<property name="sessionService" ref="sessionService"/>
 		<property name="popupWidgetHelper" ref="popupWidgetHelper"/>
 		<property name="formatFactory" ref="formatFactory"/>
+	</bean>
+	
+	
+		<!-- basket cart widget -->
+	<!-- <alias alias="csCouponWidgetConfig" name="csCouponWidgetConfig" />
+	<bean id="csCouponWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.basket.cart.Coupon" />
+		<property name="widgetRenderer" ref="csCouponWidgetRenderer" />
+		<property name="widgetController" ref="csBasketController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cscockpit.widgets.impl.CaptionUpdateListboxWidget" />
+		<property name="widgetModel" ref="csBasketCartWidgetModel" />
+	</bean>
+
+	<alias alias="csCouponWidgetRenderer" name="csCouponWidgetRenderer" />
+	<bean id="csCouponWidgetRenderer" parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponWidgetRenderer">
+	</bean>
+	
+	
+	checkout  coupon widget
+	<alias alias="csCouponCheckoutWidgetConfig" name="csCouponCheckoutWidgetConfig" />
+	<bean id="csCouponCheckoutWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.checkout.appliedCoupon" />
+		<property name="widgetRenderer" ref="csCouponCheckoutWidgetRenderer" />
+		<property name="widgetController" ref="csBasketController" />
+		<property name="widgetClass"
+			value="de.hybris.platform.cscockpit.widgets.impl.CaptionUpdateListboxWidget" />
+		<property name="widgetModel" ref="csBasketCartWidgetModel" />
+	</bean>
+
+	<alias alias="csCouponCheckoutWidgetRenderer" name="csCouponCheckoutWidgetRenderer" />
+	<bean id="csCouponCheckoutWidgetRenderer" parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponCheckoutWidgetRenderer">
+	</bean> 
+	
+	Order  coupon widget
+	<alias alias="csCouponOrderWidgetConfig" name="csCouponOrderWidgetConfig" />
+	<bean id="csCouponOrderWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.Order.appliedCoupon" />
+		<property name="widgetRenderer" ref="csCouponOrderWidgetRenderer" />
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetModel" ref="csBasketCartWidgetModel" />
+	</bean>
+
+	<alias alias="csCouponOrderWidgetRenderer" name="csCouponOrderWidgetRenderer" />
+	<bean id="csCouponOrderWidgetRenderer" parent="abstractWidgetRenderer"
+		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponOrderWidgetRenderer">
+	</bean> 
+	 -->
+	
+<!--Alternate Conatct details for CNC -->
+<alias alias="csAlternateContactDetailsCreateWidgetConfig" name="defaultCsAlternateContactDetailsCreateWidgetConfig"/>
+	<bean id="defaultCsAlternateContactDetailsCreateWidgetConfig" parent="csBaseWidgetConfig">
+	
+		<property name="widgetTitle" value="cscockpit.widget.order.alternateContactDetails.create"/>
+		<property name="widgetRenderer" ref="csAlternateContactDetailsCreateWidgetRenderer"/>
+		<property name="widgetController" ref="csCustomerController"/>
+		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
+		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame"/>
+		<property name="widgetModel">
+			<bean class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel"/>
+		</property>
+
+	</bean>
+
+	<alias alias="csAlternateContactDetailsCreateWidgetRenderer" name="defaultcsAlternateContactDetailsCreateWidgetRenderer"/>
+	<bean id="defaultcsAlternateContactDetailsCreateWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceAlternateContactDetailsWidgetRenderer">
+		<!-- <property name="editorConfigurationCode" value="editCustomerDetails"/> -->
+		<property name="listConfigurationCode" value="cncEntryList" />
+		<property name="listConfigurationType" value="AbstractOrderEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+		<property name="callContextController" ref="csCallContextController"/>
+		
 	</bean>
 	
 </beans>

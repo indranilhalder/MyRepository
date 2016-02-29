@@ -11,10 +11,10 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 
-<cms:pageSlot position="TopHeaderSlot" var="component" element="div"
+<%-- <cms:pageSlot position="TopHeaderSlot" var="component" element="div"
 	class="container">
 	<cms:component component="${component}" />
-</cms:pageSlot>
+</cms:pageSlot> --%>
 <c:if test="${param.source ne null and param.source eq 'App' }">
 	<c:set var="showOnlySiteLogo" value="true"></c:set>
 	<c:set var="hideSecureTransaction" value="true"></c:set>
@@ -63,7 +63,15 @@ function registerUser(eventObject)
 							}
 							else
 							{
-							window.open(ACC.config.encodedContextPath +data,"_self");
+							var hostName=window.location.host;
+							if(hostName.indexOf(':') >=0)
+							{
+								window.open(ACC.config.encodedContextPath +data,"_self");
+							}	
+							else
+								{
+							window.open("https://"+hostName+ACC.config.encodedContextPath +data,"_self");
+								}
 							}
 							
 						}	
@@ -108,16 +116,15 @@ function registerUser(eventObject)
 	<input type="hidden" id="ecompanyForIA" value="${ecompanyForIA}">
 	<input type="hidden" id="DamMediaHost" value="${DamMediaHost}">
 	<input type="hidden" id="mplStaticResourceHost" value="${mplStaticResourceHost}">
+	<input type="hidden" id="previewVersion" value="${cmsPageRequestContextData.preview}">
 	<!-- For Infinite Analytics End -->
 	
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
 			<div class="banner">
-				<span class="toggle desktop helpmeshopbanner"> <spring:theme
-						code="header.helpmeshop.howcanwehelpyou.title" /></span> <span
-					class="toggle mobile helpmeshopbanner"> <spring:theme
-						code="header.helpmeshop.howcanwehelpyou.mobile" /></span>
+				<span class="toggle desktop helpmeshopbanner"><p><spring:theme
+						code="header.helpmeshop.howcanwehelpyou.title" /></p></span> 
 				<div class="content" id="helpmeshopcontent"></div>
 				<%-- <cms:pageSlot position="HeaderLinks" var="link">
 					<cms:component component="${link}" element="" />
@@ -171,6 +178,7 @@ function registerUser(eventObject)
 								<cms:pageSlot position="MiniCart" var="component">
 									<cms:component component="${component}" />
 								</cms:pageSlot>
+								<li class="store-locator-header"><a href="#">Our Stores</a></li>
 							</c:if>
 						</c:if>
 						<!--Using this tag for Track Order Link in header navigation pane and it will navigate to 'My Order page'  -->
@@ -200,8 +208,18 @@ function registerUser(eventObject)
 						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
 							<cms:component component="${logo}" />
 						</cms:pageSlot>
+						<!-- <div class="mobile-bag bag">
+						TISPRD-32-fix
+							<a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a>
+						</div> -->
+					</div>
+					<div class="marketplace linear-logo">
+						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
+							<cms:component component="${logo}" />
+						</cms:pageSlot>
 						<div class="mobile-bag bag">
-							<a href="${cartUrl}">(<span class="responsive-bag-count"></span>)</a>
+						<!-- TISPRD-32-fix -->
+							<a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a>
 						</div>
 					</div>
 				</c:when>

@@ -4,15 +4,19 @@
 package com.tisl.mpl.facades.account.register.impl;
 
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
+import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
 import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
@@ -32,7 +36,41 @@ public class NotificationFacadeImpl implements NotificationFacade
 	private Converter<OrderStatusNotificationModel, NotificationData> trackOrderConverter;
 	@Autowired
 	private ExtendedUserService extendedUserService;
+	@Autowired
+	private Converter<VoucherStatusNotificationModel, NotificationData> trackOrderCouponConverter;
+	@Autowired
+	private ConfigurationService configurationService;
+	protected static final Logger LOG = Logger.getLogger(NotificationFacadeImpl.class);
 
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
+
+
+
+	/**
+	 * @return the trackOrderCouponConverter
+	 */
+	public Converter<VoucherStatusNotificationModel, NotificationData> getTrackOrderCouponConverter()
+	{
+		return trackOrderCouponConverter;
+	}
+
+	/**
+	 * @param trackOrderCouponConverter
+	 *           the trackOrderCouponConverter to set
+	 */
+	public void setTrackOrderCouponConverter(
+			final Converter<VoucherStatusNotificationModel, NotificationData> trackOrderCouponConverter)
+	{
+		this.trackOrderCouponConverter = trackOrderCouponConverter;
+	}
 
 
 	/**
@@ -95,16 +133,52 @@ public class NotificationFacadeImpl implements NotificationFacade
 	@Override
 	public List<NotificationData> getNotificationDetail(final String customerUID, final boolean isDesktop)
 	{
+
+
 		final List<OrderStatusNotificationModel> notificationModel = notificationService.getNotificationDetails(customerUID,
 				isDesktop);
-		final List<NotificationData> notificationDataList = new ArrayList<>();
+		final List<VoucherStatusNotificationModel> voucherList = getAllCoupons();
+		List<NotificationData> notificationDataList = new ArrayList<>();
 		for (final OrderStatusNotificationModel osnm : notificationModel)
 		{
 			final NotificationData tempnotificationData = trackOrderConverter.convert(osnm);
 			notificationDataList.add(tempnotificationData);
 		}
 
+		for (final VoucherStatusNotificationModel v : voucherList)
+		{
+			if (v.getIfUserRestrictionExist() == Boolean.TRUE && v.getCustomerUidList().contains(customerUID))
+			{
+				final NotificationData dataForVoucher = trackOrderCouponConverter.convert(v);
+				notificationDataList.add(dataForVoucher);
+			}
+		}
 
+		notificationDataList = notificationService.getSortedNotificationData(notificationDataList);
+		String couponCount = null;
+		if (isDesktop)
+		{
+			couponCount = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.NOTIFICATION_COUNT);
+		}
+		else
+		{
+			couponCount = getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.NOTIFICATION_COUNT_MOBILE);
+		}
+		int count = 0;
+		try
+		{
+			count = Integer.parseInt(couponCount);
+		}
+		catch (final NumberFormatException e)
+		{
+			LOG.debug("Number format exception occured while parsing");
+		}
+		if (notificationDataList.size() > count)
+		{
+			notificationDataList.subList(count, notificationDataList.size()).clear();
+		}
 		return notificationDataList;
 	}
 
@@ -201,6 +275,17 @@ public class NotificationFacadeImpl implements NotificationFacade
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return count;
+	}
+
+	private List<VoucherStatusNotificationModel> getAllCoupons()
+	{
+		final List<VoucherStatusNotificationModel> voucherList = new ArrayList<VoucherStatusNotificationModel>();
+		final List<VoucherStatusNotificationModel> voucherColl = notificationService.getVoucher();
+		if (CollectionUtils.isNotEmpty(voucherColl))
+		{
+			voucherList.addAll(voucherColl);
+		}
+		return voucherList;
 	}
 
 

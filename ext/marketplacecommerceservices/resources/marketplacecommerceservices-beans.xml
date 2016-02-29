@@ -135,6 +135,10 @@
 		<property name="notificationCreationDate" type="java.util.Date"/>
 		<property name="notificationSent" type="Boolean"/>
 		<property name="notificationRead" type="Boolean"/>
+		<property name="couponCode" type="String"/>
+		<property name="promotionIdentifier" type="String"/>
+		<property name="promotionDescription" type="String"/>
+		<property name="productUrl" type="String"/>
 </bean>	
 	<!-- EMITermRateData for EMI -->
 	<bean class="com.tisl.mpl.data.EMITermRateData">
@@ -197,6 +201,7 @@
 		<property name="totalPriceWithConvCharge" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="type" type="String"/>
 		<property name="customerData" type="de.hybris.platform.commercefacades.user.data.CustomerData"/>
+		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 	</bean>
 		
 	
@@ -256,6 +261,11 @@
 		<property name="emailId" type="String"/>
 		<property name="actionType" type="String"/>
 		<property name="ticketStatus" type="String"/>
+        <property name="alternateContactName" type="String"/>
+        <property name="alternatePhoneNo" type="String"/>
+        <property name="source" type="String"/>
+        <property name="ticketSubType" type="String"/>
+		<property name="addressInfo" type="com.tisl.mpl.data.ReturnAddressInfo"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
@@ -263,8 +273,21 @@
 		<property name="returnReasonCode" type="String"/>
 		<property name="cancelReasonCode" type="String"/>
 	</bean>
-	
-	<!-- OTP response Data-->
+
+	<!-- Return Item AddressInfo Data -->
+	<bean class="com.tisl.mpl.data.ReturnAddressInfo">
+		<property name="phoneNo" type="String"></property>
+		<property name="address1" type="String"></property>
+		<property name="address2" type="String"></property>
+		<property name="address3" type="String"></property>
+		<property name="country" type="String"></property>
+		<property name="city" type="String"></property>
+		<property name="state" type="String"></property>
+		<property name="pincode" type="String"></property>
+		<property name="landmark" type="String"></property>
+	</bean>
+
+	<!-- OTP response Data -->
 	<bean class="com.tisl.mpl.data.OTPResponseData">
 		<property name="OTPValid" type="Boolean"/>
 		<property name="invalidErrorMessage" type="String"/>
@@ -365,6 +388,7 @@
 	<bean class="com.tisl.mpl.data.SalesReportData">
 		<property name="orderNo" type="String"/>
 		<property name="orderDate" type="String"/>
+		<property name="orderTime" type="String"/>
 		<property name="listingId" type="String"/>
 		<property name="USSID" type="String"/>
 		<property name="sellerName" type="String"/>
@@ -547,6 +571,7 @@
     	<property name="totalExcConv" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="convCharge" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+    	<property name="voucherDiscount" type="com.tisl.mpl.data.VoucherDiscountData" />
     </bean> 
 	
 	<!-- Data class for Payment Specific Promotions Ends-->
@@ -593,5 +618,32 @@
 		<property name="contactNumber" type="String"/>
 	</bean> -->
 	
+	<!-- Seller Priority Report Headers Data-->
+	<bean class="com.tisl.mpl.data.SellerPriorityReportData">
+		<property name="modifiedTime" type="java.util.Date"/>
+		<property name="changedBy" type="String"/>
+		<property name="sellerId" type="String"/>
+		<property name="sellerName" type="String"/>
+		<property name="categoryId" type="String"/>
+		<property name="productId" type="String"/>
+		<property name="OldStartDate" type="java.util.Date"/>
+		<property name="modifiedStartDate" type="java.util.Date"/>
+		<property name="oldEndDate" type="java.util.Date"/>
+		<property name="modifiedEndDate" type="java.util.Date"/>
+		<property name="isActive" type="String"/>
+		<property name="modifiedActiveFlag" type="String"/>
+		<property name="newlyCreated" type="String"/>
+	</bean>
+	<!-- Seller Priority Report Headers Data Ends -->
+	
+	<!--  Report for Internal Campaign Data-->
+	<bean class="com.tisl.mpl.data.InternalCampaignReportData">
+	<property name ="assetName" type="String"/>
+	<property name ="category" type = "String" />
+	<property name ="mediaType" type = "String" />
+	<property name ="size" type="String"/>
+	<property name ="sourcePage" type = "String" />
+	<property name ="icid" type = "String" />
+	</bean>
+	
 </beans>
-

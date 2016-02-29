@@ -16,21 +16,27 @@ package com.tisl.mpl.jalo;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.europe1.jalo.PriceRow;
 import de.hybris.platform.europe1.model.PriceRowModel;
+import de.hybris.platform.jalo.order.AbstractOrderEntry;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.product.Unit;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.util.PriceValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacePriceFactoryConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 import com.tisl.mpl.util.ExceptionUtil;
 
 
@@ -47,13 +53,15 @@ public class MarketplacePriceFactoryManager extends GeneratedMarketplacePriceFac
 	private ModelService modelService;
 	@Autowired
 	private SessionService sessionService;
+	@Autowired
+	private BuyBoxDao buyBoxDao;
 
 	/*
 	 * Some important tips for development:
-	 *
+	 * 
 	 * Do NEVER use the default constructor of manager's or items. => If you want to do something whenever the manger is
 	 * created use the init() or destroy() methods described below
-	 *
+	 * 
 	 * Do NEVER use STATIC fields in your manager or items! => If you want to cache anything in a "static" way, use an
 	 * instance variable in your manager, the manager is created only once in the lifetime of a "deployment" or tenant.
 	 */
@@ -174,6 +182,40 @@ public class MarketplacePriceFactoryManager extends GeneratedMarketplacePriceFac
 			}
 		}
 		return ret;
+	}
+
+
+	@Override
+	public PriceValue getBasePrice(final AbstractOrderEntry entry) throws JaloPriceFactoryException
+	{
+		String ussid = "";
+		final Object ussidObj = entry.getProperty("selectedUSSID");
+		if (null != ussidObj)
+		{
+			ussid = ussidObj.toString();
+
+			final List<BuyBoxModel> buyBoxModelList = buyBoxDao.getBuyBoxPriceForUssId(ussid);
+
+			Double finalPrice = Double.valueOf(0.0);
+			if (CollectionUtils.isNotEmpty(buyBoxModelList))
+			{
+				//final Double specialPrice = buyBoxModelList.get(0).getSpecialPrice();
+				final Double mopPrice = buyBoxModelList.get(0).getPrice();
+				final Double mrpPrice = buyBoxModelList.get(0).getMrp();
+				if (mopPrice != null && mopPrice.doubleValue() > 0.0)
+				{
+					finalPrice = mopPrice;
+				}
+				else if (mrpPrice != null && mrpPrice.doubleValue() > 0.0)
+				{
+					finalPrice = mrpPrice;
+				}
+
+			}
+			return new PriceValue("INR", finalPrice.doubleValue(), false);
+		}
+
+		return super.getBasePrice(entry);
 	}
 
 }

@@ -52,7 +52,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 */
 	private static final String Y = "Y";
 
-	private static final String CN_C = "CnC";
+	private static final String CN_C = "CNC";
 
 	private static final String ED = "ED";
 	private static final String HD = "HD";
@@ -271,6 +271,79 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			else
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3001);
+			}
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0001);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return buyboxData;
+	}
+
+	/**
+	 * This method is responsible for get the winning buybox seller and other sellers count and minimum price information
+	 * for the given product code
+	 *
+	 * @param productCode
+	 * @return-buyboxData
+	 */
+
+
+	@Override
+	public BuyBoxData buyboxForSizeGuide(final String productCode, final String sellerId) throws EtailNonBusinessExceptions
+	{
+		final BuyBoxData buyboxData = new BuyBoxData();
+		BuyBoxModel buyBoxMod = null;
+
+		try
+		{
+			final List<BuyBoxModel> buyboxModelList = new ArrayList<BuyBoxModel>(buyBoxService.buyboxForSizeGuide(productCode,
+					sellerId));
+			//buyboxData.setAllOOStock(MarketplaceFacadesConstants.N);
+
+			//If all the sellers has stock zero, then display any product having non zero price
+
+			//if (buyboxModelList != null && buyboxModelList.size() > 0)
+			if (!buyboxModelList.isEmpty() && buyboxModelList.size() > 0)
+			{
+				buyBoxMod = buyboxModelList.get(0);
+				if (null != buyBoxMod.getSpecialPrice() && buyBoxMod.getSpecialPrice().doubleValue() > 0)
+				{
+					final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
+					//final double roundedSpPrice = Math.round(spPrice * 100) / 100;
+					buyboxData.setSpecialPrice(productDetailsHelper.formPriceData(new Double(spPrice)));
+				}
+				final double price = buyBoxMod.getPrice().doubleValue();
+				buyboxData.setPrice(productDetailsHelper.formPriceData(new Double(price)));
+				buyboxData.setSellerAssociationstatus(SellerAssociationStatusEnum.YES.toString());
+				buyboxData.setSellerName(buyBoxMod.getSellerName());
+				buyboxData.setSellerId(buyBoxMod.getSellerId());
+				buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
+				buyboxData.setAvailable(buyBoxMod.getAvailable());
+				if (null != buyBoxMod.getMrp())
+				{
+					buyboxData.setMrp(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+				}
+				buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
+
+				//other sellers count
+			}
+			else
+			{
+				//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3001);
+				return buyboxData;
 			}
 		}
 		catch (final NumberFormatException e)

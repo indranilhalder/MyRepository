@@ -26,6 +26,7 @@ $storefrontContextRoot=$config-storefrontContextRoot
 # Site Logo Component
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink
 ;;SiteLogoComponent;Site Logo Component;SiteLogoComponent;"/"
+;;ResponsiveSiteLogoComponent;Responsive Site Logo Component;ResponsiveSiteLogoComponent;"/"
  
  
 # CMS Site Settings 
@@ -73,7 +74,7 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 ;AccountInviteFriendsNavNode;;Invite Friends;SiteRootNode;;AccountInviteFriendsLink;AccountInviteFriendsNavNode
 
 ###Footer changes for Non Product Pages
-;NPPageTataMarketplaceNavNode;;Tata Marketplace Pages;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink;NPPageTataMarketplaceNavNode
+;NPPageTataMarketplaceNavNode;;Tata Marketplace Pages;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;NPPageTataMarketplaceNavNode
 ;NPPageCustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;NPPageCustomerServiceNavNode;
 ;PaymentServiceNode;; Terms and condition payment page;SiteRootNode;;AboutUsLink,CareersLink,SellWithUSLink,PaymentLink;PaymentServiceNode;
 
@@ -135,6 +136,9 @@ INSERT_UPDATE BrandComponent;$contentCV[unique=true];uid[unique=true];name;&comp
 ;;ElectronicsBrandComponent;Electronics Brands Component;ElectronicsBrandComponent;Electronics Brands;/brands/brandlist?cat=MBH12;OneCloumnOneBrandImage;;MBH12E00001,MBH12E00002,MBH12E00003,MBH12E00004,MBH12E00005
 
 
+INSERT_UPDATE BrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;masterBrandName;masterBrandURL;layout(code);subBrandList(subBrandName);subBrands(code,$productCV);
+;;FootwearBrandComponent;Footwear Brands Component;FootwearBrandComponent;Footwear Brands;/brands/brandlist?cat=MBH13;OneCloumnOneBrandImage;;MBH13A00001
+
 
 INSERT_UPDATE BrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;masterBrandName;masterBrandURL;layout(code);subBrandList(subBrandName);subBrands(code,$productCV) 
 ;;MultiBrandStoresComponentForBrandList;Multi Brand Store COmponent;MultiBrandStoresComponentForBrandList;Multi-Brand Stores;/;;;MBH11A00074,MBH11A00073
@@ -147,17 +151,17 @@ INSERT_UPDATE BrandComponent;$contentCV[unique=true];uid[unique=true];name;&comp
 
 #Brand Collection Component
 INSERT_UPDATE BrandCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;brandCollection(&componentRef);
-;;ShopByBrandComponent;Shop By Brand;ShopByBrandComponent;AToZBrandsComponent,MultiBrandStoresComponent,MensBrandComponent,WomensBrandComponent,ElectronicsBrandComponent;
+;;ShopByBrandComponent;Shop By Brand;ShopByBrandComponent;AToZBrandsComponent,MultiBrandStoresComponent,MensBrandComponent,WomensBrandComponent,ElectronicsBrandComponent,FootwearBrandComponent;
 ;;MultiAndOurFavouriteBrandComponent;Multi Store and Our Favourite Brands;MultiAndOurFavouriteBrandComponent;MultiBrandStoresComponentForBrandList,OurFavouriteBrands,A-ZBrands;
 
 #Creating Subbrands with links and images to be displayed under MasterBrands
 
 
 INSERT_UPDATE CMSSubbrand;subBrandName[unique=true];subBrandUrl;subBrandImage(code,$contentCV);subBrandLogo(code,$contentCV)
-;WestSide;/s/123654;westside1.jpg;logo_westside.jpg
-;Chroma;/brands/?brandName=chroma;croma.jpg;logo_croma.jpg
-;Nuon;;nuon.jpg;logo_Nuon.jpg
-;Ascot;;ascot.jpg;logob-ascot.jpg
+#;WestSide;/s/123654;westside1.jpg;logo_westside.jpg
+#;Chroma;/brands/?brandName=chroma;croma.jpg;logo_croma.jpg
+#;Nuon;;nuon.jpg;logo_Nuon.jpg
+#;Ascot;;ascot.jpg;logob-ascot.jpg
 
 
 
@@ -168,7 +172,7 @@ INSERT_UPDATE CMSSubbrand;subBrandName[unique=true];subBrandUrl;subBrandImage(co
 
 #Shop by Department Components
 INSERT_UPDATE DepartmentCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;departmentCollection(code,$productCV)
-;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12
+;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12,MSH13
 
 #INSERT_UPDATE CMSDepartment;department(code,$productCV)[unique=true];departmentImage(code,$contentCV)
 #;MSH10;;
@@ -273,6 +277,10 @@ INSERT_UPDATE SearchResultsListComponent;$contentCV[unique=true];uid[unique=true
 INSERT_UPDATE SearchResultsGridComponent;$contentCV[unique=true];uid[unique=true];name;actions(uid,$contentCV);&componentRef
 ;;SearchResultsGrid;Search Result Grid Component;ListAddToCartAction;SearchResultsGrid
 
+###Store Finder Link Component#
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;linkName;url;category(code, $productCV);target(code)[default='sameWindow'];;
+;;StoreFinderLink;Store Finder Link;Find a Store;/store-finder;;;;
+
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
 ;;VariantSelectorSlot;VariantSelector
@@ -283,9 +291,10 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;HeaderLinksSlot;ContactInfo,HelpMeShopSearch
 #;;SearchBoxSlot;SearchBox
 #;;HomepageNavLinkSlot;HomepageNavLink
-;;MiniCartSlot;MiniCart,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder 
+;;MiniCartSlot;MiniCart,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder,StoreFinderLink 
 ;;SideContentSlot;MobileAppBanner
 ;;SiteLogoSlot;SiteLogoComponent
+;;TopHeaderSlot;ResponsiveSiteLogoComponent
 ;;TabsSlot;TabPanelContainer
 ;;TopContentSlot;FacebookOffersBanner
 ;;ProductLeftRefinements;browseCategoryComponent,RefinementFacetComponent
@@ -718,6 +727,7 @@ INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;
 ;;AccountMplPreferenceJSPComponent;Account MplPreference JSP Component;accountMarketPreference.jsp;;AccountMplPreferenceJSPComponent
 ;;EmailconfirmationpageMplComponent;EmailconfirmationpageMpl Validation Component;forgotPasswordValidationMessage.jsp;;EmailconfirmationpageMplComponent
 ;;EmailConfirmSuccessPageComponent;Email Confirm Success Page Validation Component;forgotPasswordEmailConfirmationPage.jsp;;EmailConfirmSuccessPageComponent
+;;AccountCouponsComponent;Account Coupons Component;accountCouponDetailsPage.jsp;;AccountCouponsComponent
 
 #For brand list
 ;;brandListComponent;Brand List Component;brandlisting.jsp;;brandListComponent
@@ -767,6 +777,20 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;BodyContent-Account;BodyContent;;BodyContent-Account;;;
 ;;CrossSelling-Account;CrossSelling;;CrossSelling-Account;;;
 ;;UpSelling-Account;UpSelling;;UpSelling-Account;;;
+
+###### Account Coupon Details
+
+# ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;SideContent-coupons;Side Content Slot for My Account Coupon Details;true;AccountLeftNavigationComponent;;;
+;;BodyContent-coupons;Body Content Slot for My Account Coupon Details;true;AccountCouponsComponent;;;
+
+# ContentSlotForPage
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='coupons'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-coupons;SideContent;;SideContent-coupons;;;
+;;BodyContent-coupons;BodyContent;;BodyContent-coupons;;;
+
+
 
 ###### Account payment detail page
 
@@ -1098,7 +1122,7 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;AboutUsLink;About Us Link;/aboutus;;;;
 ;;CareersLink;Careers Link;/careers;;;
 ;;SellWithUSLink;Sell With Us Link;/sellwithus;;;
-;;StoreLocatorLink;Store Locator Link;/;;;
+;;StoreLocatorLink;Store Locator Link;/#;;;
 ;;ContactUsLink;Contact Us Link;/contact;;;;
 ;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;
 ;;TrackOrdersLink;Track Orders Link;/trackorders;;;;
@@ -1117,10 +1141,10 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;emailConfirmSuccessPageLink;Email Confirm Success Page Link;/pw/passwordEmail;;;;
 ;;PaymentLink;Payment Link;/tncPayment;;;;
 ;;AuthenticAndExclusiveLink;AuthenticAndExclusive Link;/authenticAndExclusive;;;;
-
+;;footwearLink;footwear Link;/footwear;;;;
 
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
-;TataMarketplaceNavNode;;Tata Marketplace Pages;;;AboutUsLink,CareersLink,SellWithUSLink;TataMarketplaceNavNode
+;TataMarketplaceNavNode;;Tata Marketplace Pages;;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;TataMarketplaceNavNode
 ;CustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;CustomerServiceNavNode;
 ;MyMarketplaceNavNode;;My Marketplace Pages;;;MyAccountLink,MyOrdersLink,MyShoppingBagLink,MyWishlistLink;MyMarketplaceNavNode;
 ;ApparelUKNavNode;;Apparel UK Site;SiteRootNode;;HomepageNavLink;ApparelUKNavNode;
@@ -1208,11 +1232,6 @@ INSERT_UPDATE Notification ;customerEmail[unique=true];NotificationType;Notifica
 INSERT_UPDATE SignInFlyOutComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
 ;;SignInFlyOut;Sign In Flyout;SignInFlyOut;;;
 
-
-
-
-
-
 #Compare Products Page
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
 ;;Section1Slot-compare;Compare Now Slot;true;CompareProductsComponent;;;
@@ -1242,4 +1261,3 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='businessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;MiddleContent-BusinessError;MiddleContent;;MiddleContent-BusinessError;;;
-

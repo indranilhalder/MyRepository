@@ -39,7 +39,6 @@
      <property name="pinMstrTmpPath"  value="${tata.oms.tpl.upload.tmp.path:#{null}}"/>
 	 <property name="tplInbndCsvPath"  value="${tata.oms.tpl.upload.inbnd.path:#{null}}"/>
 	 <property name="tplOutbndCsvPath"  value="${tata.oms.tpl.upload.outbnd.path:#{null}}"/>
-     <property name="tshipPinUnivsPath"  value="${tata.oms.tship.upload.outbnd.path:#{null}}" />
      <property name="validationErrFilePath"  value="${tata.oms.tpl.upload.err.path:#{null}}" />
      <property name="statesPropFilePath" value="${HYBRIS_CONFIG_DIR}"/>
     </bean>

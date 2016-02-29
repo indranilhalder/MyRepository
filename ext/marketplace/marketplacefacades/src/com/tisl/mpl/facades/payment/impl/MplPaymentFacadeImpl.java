@@ -4,11 +4,17 @@
 package com.tisl.mpl.facades.payment.impl;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.BusinessProcessService;
@@ -53,6 +59,7 @@ import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.PaymentService;
@@ -103,6 +110,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
 
+	@Resource(name = "mplCustomAddressFacade")
+	private MplCustomAddressFacade mplCustomAddressFacade;
+
 	private static final Logger LOG = Logger.getLogger(MplPaymentFacadeImpl.class);
 
 	/**
@@ -126,13 +136,37 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 
+			boolean flag = false;
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			for (final OrderEntryData entry : cartData.getEntries())
+			{
+
+				if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getCode() != null)
+				{
+					if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+					{
+						LOG.info("Any product Content CnC Then break loop and change flag value");
+						flag = true;
+						break;
+					}
+				}
+			}
+
 			if (CollectionUtils.isNotEmpty(paymentTypes))
 			{
 				//looping through the mode to get payment Types
 				for (final PaymentTypeModel mode : paymentTypes)
 				{
 					//retrieving the data
-					data.put(mode.getMode(), mode.getIsAvailable());
+					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					{
+						LOG.debug("Ignoring to add COD payment for CNC Product ");
+					}
+					else
+					{
+						LOG.info("****Print all Payment type ");
+						data.put(mode.getMode(), mode.getIsAvailable());
+					}
 				}
 			}
 			else
@@ -515,6 +549,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void saveCart(final CartModel cart)
 	{
 		//saving cartmodel
+		final Double deliveryCost = cart.getDeliveryCost();
+		getModelService().save(cart);
+		cart.setDeliveryCost(deliveryCost);
 		getModelService().save(cart);
 	}
 
@@ -562,26 +599,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			juspayOrderId = getMplPaymentService().createPaymentId();
 			LOG.debug("Order Id created by key generator is " + juspayOrderId);
 
-			//			while (!juspayOrderStatus.equalsIgnoreCase("NOT_FOUND"))
-			//			{
-			//				juspayOrderId = getMplPaymentService().createPaymentId();
-			//				LOG.debug("Order Id created by key generator is " + juspayOrderId);
-			//
-			//				//creating OrderStatusRequest
-			//				final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
-			//				orderStatusRequest.withOrderId(juspayOrderId);
-			//
-			//				//getting the response by calling get Order Status service
-			//				juspayOrderStatus = juspayService.getOrderStatus(orderStatusRequest).getStatus();
-			//			}
-
-
 			//Create entry in Audit table
 			flag = getMplPaymentService().createEntryInAudit(juspayOrderId, channel, cart.getGuid());
 
 			if (flag)
 			{
 				//creating InitOrderRequest of Juspay
+				// For netbanking firstname will be set as Bank Code
 				final InitOrderRequest request = new InitOrderRequest().withOrderId(juspayOrderId).withAmount(cart.getTotalPrice())
 						.withCustomerId(uid).withEmail(customerEmail).withUdf1(firstName).withUdf2(lastName).withUdf3(addressLine1)
 						.withUdf4(addressLine2).withUdf5(addressLine3).withUdf6(country).withUdf7(state).withUdf8(city)
@@ -835,7 +859,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6005);
+				LOG.info("No Saved credit cards found !!");
 			}
 		}
 		catch (final NullPointerException e)
@@ -1019,7 +1043,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			}
 			else
 			{
-				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B6006);
+				LOG.info("No Saved debit cards found !!");
 			}
 		}
 		catch (final NullPointerException e)
@@ -1333,11 +1357,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#applyPromotions()
 	 */
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
+	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException
 	{
 		return getMplPaymentService().applyPromotions(cartData, cart);
 	}
@@ -1545,6 +1571,27 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void setSendSMSFacade(final SendSMSFacade sendSMSFacade)
 	{
 		this.sendSMSFacade = sendSMSFacade;
+	}
+
+
+
+	/**
+	 * @return the mplCustomAddressFacade
+	 */
+	public MplCustomAddressFacade getMplCustomAddressFacade()
+	{
+		return mplCustomAddressFacade;
+	}
+
+
+
+	/**
+	 * @param mplCustomAddressFacade
+	 *           the mplCustomAddressFacade to set
+	 */
+	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
+	{
+		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
 
 }

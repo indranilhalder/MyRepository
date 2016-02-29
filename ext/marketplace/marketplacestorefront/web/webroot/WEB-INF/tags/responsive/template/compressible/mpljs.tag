@@ -15,9 +15,9 @@
 	src="${commonResourcePath}/js/plugins/jquery.cookie.min.js"></script>
 	
 <script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/matchMed.js"></script>
+	src="${commonResourcePath}/js/mpl/matchMedia.js"></script>
 <script type="text/javascript"
-	src="${commonResourcePath}/js/mpl/matchMed.addListener.js"></script>
+	src="${commonResourcePath}/js/mpl/matchMedia.addListener.js"></script>
 
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/jquery.blockUI-2.66.js"></script>
@@ -151,6 +151,10 @@
 	src="${commonResourcePath}/js/mpl/tisl.home.js"></script>
 <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.search.js"></script>
 
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/reviews')}">
+    <script type="text/javascript"
+	src="${commonResourcePath}/js/mpl/acc.reviewrating.js"></script>
+</c:if> 
 
 <!--[if lt IE 9]>
 <link rel="stylesheet" type="text/css" med="all" href="${themeResourcePath}/css/main-ie8.css"/>
@@ -195,7 +199,9 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/friendsInvite') 
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/inviteFriends') or
 
 fn:contains(requestScope['javax.servlet.forward.request_uri'],'/marketplace-preference') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/saveMplPreferences')}">
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/saveMplPreferences') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account/') or
+fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<script type="text/javascript" 
 		src="${commonResourcePath}/js/mpl/acc.accountaddress.js"></script>
 </c:if>
@@ -226,3 +232,8 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.sellerDetails.js"></script>
 </c:if> 
+
+<!-- Js entry for store finder -->
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder')}">
+ <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.storefinder.js"></script>
+</c:if>

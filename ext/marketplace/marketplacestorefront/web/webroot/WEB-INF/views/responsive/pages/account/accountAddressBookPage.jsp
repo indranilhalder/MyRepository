@@ -16,6 +16,7 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 
 <spring:url value="/my-account/profile" var="profileUrl" />
@@ -51,10 +52,10 @@
 		
 		<div class="wrapper">
 				<!----- Left Navigation Starts --------->
-			<div class="left-nav">
-				<%-- <h1>
+			<%-- <div class="left-nav">
+				<h1>
 					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1> --%>
+				</h1>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -72,8 +73,17 @@
 								code="header.flyout.cards" /></a></li>
 					<li><a class="active" href="<c:url value="/my-account/address-book"/>"><spring:theme
 								code="header.flyout.address" /></a></li>
+								<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+						code="header.flyout.review" /></a></li>
 					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
+				</ul>
+				<ul>
+					<li><h3>
+							<spring:theme code="header.flyout.credits" />
+						</h3></li>
+					<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+								code="header.flyout.coupons" /></a></li>
 				</ul>
 				<ul>
 					<li><h3>
@@ -84,7 +94,8 @@
 								
 				</ul>
 				
-			</div>
+			</div> --%>
+			<user:accountLeftNav pageName="addressBook"/>
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account">
@@ -469,9 +480,6 @@
 										
 										<div class="errorMessage"><div id="erraddressMob"></div></div>
 									</div>
-									 
-									
-
 								</fieldset>
 								
 								<%-- <input type="checkbox" name="mark-address-default" id="mark-address-default" class="account-only">
@@ -492,45 +500,8 @@
 									</div>
 							</form:form></li>
 					</ul>
-					
 				</div>
-				
 			</div>
 		</div>
 		</div>
 	</template:page>
-
-<%-- <script type="text/javascript" src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script> --%>
-<%-- <template:javaScriptVariables /> --%>
-<%-- <script type="text/javascript" src="${commonResourcePath}/js/acc.accountaddress.js"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/acc.accountpagination.js"></script>--%>
-<script type="text/javascript">
-<!-- address pagination	 -->	
-var i=0;
-var pageCount=0;
-var pagelimitAcc=10;
-var totalItem=$('#accountAddressCount').val();
-var noofpageCount=Math.ceil(totalItem/pagelimitAcc);
-$(document).ready(function() {
-	var divItem = "";
-	for(var i=1; i<=noofpageCount; i++){
-		divItem = divItem + "<a href='#nogo' onclick='pageNavigation("+i+")'>"+i+"</a>&emsp;";
-	}
-	  $('#prev').html(divItem);
-	  $('.right-account #address_item #item_ul>li').each(function(i)  {
-    	$(this).attr('id', 'p_' + i);
-    i=i + 1;
-    });
-    dispPageLimit(0,pagelimitAcc);
-});
-function pageNavigation(num){
-	var index = num;
-	var endIndex = (index*pagelimitAcc);
-	var startIndex = endIndex - pagelimitAcc;
-	 
-
-	dispPageLimit(startIndex,endIndex);
-	
-}
-</script> 
