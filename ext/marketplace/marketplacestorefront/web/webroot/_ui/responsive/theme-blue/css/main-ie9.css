@@ -1660,8 +1660,8 @@ font-size: 12px;
       left: 0;
       height: 30px;
       width: 100%;
-      width: -webkit-calc(100% + 4px);
-      width: calc(100% + 4px);
+      width: -webkit-calc(100% - -4px);
+      width: calc(100% - -4px);
       line-height: 30px;
       padding-left: 20px;
       font-size: 12px;
@@ -1682,8 +1682,8 @@ font-size: 12px;
          #variantForm .select-size ul {
       max-height: 0;
       overflow: hidden;
-      width: -webkit-calc(100% + 4px);
-      width: calc(100% + 4px);
+      width: -webkit-calc(100% - -4px);
+      width: calc(100% - -4px);
       margin: 2px -2px -2px;
       border-right: 1px solid transparent;
       border-left: 1px solid transparent;
@@ -1693,10 +1693,10 @@ font-size: 12px;
       -moz-transition: max-height 0.3s, border 0.15s 0.3s;
       transition: max-height 0.3s, border 0.15s 0.3s; }
      #variantForm .select-size li {
-      width: -webkit-calc(100% + 4px);
-      width: calc(100% + 4px);
-     /*  height: -webkit-calc(100% + 4px);
-      height: calc(100% + 4px); */
+      width: -webkit-calc(100% - -4px);
+      width: calc(100% - -4px);
+     /*  height: -webkit-calc(100% - -4px);
+      height: calc(100% - -4px); */
       
       background-color: #fff;
       line-height: 20px;
@@ -2963,8 +2963,8 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
   font-style: normal;
 }
 .feature-collections ul.collections li a {
-  top: -webkit-calc(10% + 115px);
-  top: calc(10% + 115px);
+  top: -webkit-calc(10% - -115px);
+  top: calc(10% - -115px);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: .5px;
@@ -4165,8 +4165,8 @@ body .account .new-address form div#checkBox
 .return-form .return-container .questions>label:first-of-type {
     display: block;
     background: #fff;
-    width: -webkit-calc(100% + 50px);
-    width: calc(100% + 50px);
+    width: -webkit-calc(100% - -50px);
+    width: calc(100% - -50px);
     height: 50px;
    margin-left: -25px;
     line-height: 50px;
@@ -4229,8 +4229,8 @@ body .account .new-address form div#checkBox
 .return-form.method .return-container .questions input+label .select {
     margin-top: 30px;
     margin-left: -20px;
-    width: -webkit-calc(100% + 20px);
-    width: calc(100% + 20px);
+    width: -webkit-calc(100% - -20px);
+    width: calc(100% - -20px);
     overflow: hidden;
     max-height: 0;
     -webkit-transition: max-height 0.3s;
@@ -10298,8 +10298,8 @@ div#cartItems.products p{
 .return-form .container .questions>label:first-of-type {
     display: block;
     background: #f0f4f5;
-    width: -webkit-calc(100% + 50px);
-    width: calc(100% + 50px);
+    width: -webkit-calc(100% - -50px);
+    width: calc(100% - -50px);
     height: 50px;
     margin-left: -25px;
     line-height: 50px;
@@ -10362,8 +10362,8 @@ div#cartItems.products p{
 .return-form.method .container .questions input+label .select {
     margin-top: 30px;
     margin-left: -20px;
-    width: -webkit-calc(100% + 20px);
-    width: calc(100% + 20px);
+    width: -webkit-calc(100% - -20px);
+    width: calc(100% - -20px);
     overflow: hidden;
     max-height: 0;
     -webkit-transition: max-height 0.3s;
@@ -11205,8 +11205,8 @@ body #account-invite .right-account>div form .mytextarea {
 	background-color:#000;
 	position: relative;
     left: -30px;
-    width:calc(100% + 60px);
-    width:-webkit-calc(100% + 60px);   
+    width:calc(100% - -60px);
+    width:-webkit-calc(100% - -60px);   
 text-align:center;
 line-height:50px;
 }
@@ -14832,7 +14832,7 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
     display: block;
     width: 100% !important;
     background-size: 200% 30px;
-    max-width: 245px;
+    max-width: 212px;
 }
 
 #loginDiv div[gigid="facebook"] div,
