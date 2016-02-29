@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.hybris.oms.domain.locationrole.LocationRole;
+import com.hybris.oms.domain.order.CouponDto;
 import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.order.OrderlineFulfillmentType;
 import com.hybris.oms.domain.order.Promotion;
@@ -141,25 +142,25 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					.doubleValue() : 2.0);
 			//Code Blocked since coupon has been out of scope for Release2
 
-			//			if (source.getCouponCode() != null && !source.getCouponCode().isEmpty())
-			//			{
-			//
-			//				final CouponDto coupon = new CouponDto();
-			//				coupon.setCouponCode(source.getCouponCode());
-			//				if (source.getCouponValue().doubleValue() > 0D)
-			//				{
-			//					coupon.setCouponValue(source.getCouponValue().toString());
-			//				}
-			//
-			//				//coupon.setSellerID(sellerInfoModel.getSellerID());
-			//				final ArrayList<CouponDto> couponList = new ArrayList<>();
-			//				couponList.add(coupon);
-			//				target.setCoupon(couponList);
-			//			}
-			//			else
-			//			{
-			//				LOG.debug("CustomOmsOrderLinePopulator : there is no coupon for the order ");
-			//			}
+			if (source.getCouponCode() != null && !source.getCouponCode().isEmpty())
+			{
+
+				final CouponDto coupon = new CouponDto();
+				coupon.setCouponCode(source.getCouponCode());
+				if (source.getCouponValue().doubleValue() > 0D)
+				{
+					coupon.setCouponValue(source.getCouponValue().toString());
+				}
+
+				//coupon.setSellerID(sellerInfoModel.getSellerID());
+				final ArrayList<CouponDto> couponList = new ArrayList<>();
+				couponList.add(coupon);
+				target.setCoupon(couponList);
+			}
+			else
+			{
+				LOG.debug("CustomOmsOrderLinePopulator : there is no coupon for the order ");
+			}
 
 			if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0)
 			{

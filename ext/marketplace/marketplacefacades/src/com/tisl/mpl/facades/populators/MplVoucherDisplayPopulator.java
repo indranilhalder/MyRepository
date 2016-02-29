@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -35,13 +34,18 @@ import com.tisl.mpl.marketplacecommerceservices.service.CouponRestrictionService
 public class MplVoucherDisplayPopulator implements Populator<VoucherModel, VoucherDisplayData>
 {
 
-	@Autowired
+	@Resource(name = "userService")
 	private UserService userService;
-	@Autowired
+	@Resource(name = "voucherModelService")
 	private VoucherModelService voucherModelService;
 	@Resource(name = "couponRestrictionService")
 	private CouponRestrictionService couponRestrictionService;
 
+
+	/**
+	 * @param source
+	 * @param target
+	 */
 	@Override
 	public void populate(final VoucherModel source, final VoucherDisplayData target)
 	{
@@ -53,17 +57,17 @@ public class MplVoucherDisplayPopulator implements Populator<VoucherModel, Vouch
 		if (source instanceof PromotionVoucherModel)
 		{
 			final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) source;
-			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-			final UserRestrictionModel userRestrObj = couponRestrictionService.getUserRestriction(promoVoucher);
-			final List<PrincipalModel> restrCustomerList = userRestrObj != null ? couponRestrictionService
+			final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
+			final UserRestrictionModel userRestrObj = getCouponRestrictionService().getUserRestriction(promoVoucher);
+			final List<PrincipalModel> restrCustomerList = userRestrObj != null ? getCouponRestrictionService()
 					.getRestrictionCustomerList(userRestrObj) : new ArrayList<PrincipalModel>();
 
 			if (null != promoVoucher.getVoucherCode()
-					&& voucherModelService.isReservable(promoVoucher, promoVoucher.getVoucherCode(), customer)
+					&& getVoucherModelService().isReservable(promoVoucher, promoVoucher.getVoucherCode(), customer)
 					&& restrCustomerList.contains(customer))
 			{
 
-				final DateRestrictionModel dateRestriction = couponRestrictionService.getDateRestriction(promoVoucher);
+				final DateRestrictionModel dateRestriction = getCouponRestrictionService().getDateRestriction(promoVoucher);
 				final Date endDate = dateRestriction.getEndDate() != null ? dateRestriction.getEndDate() : new Date();
 				final Date startDate = dateRestriction.getStartDate();
 
@@ -77,5 +81,59 @@ public class MplVoucherDisplayPopulator implements Populator<VoucherModel, Vouch
 		}
 
 	}//PromotionVoucher
+
+	/**
+	 * @return the userService
+	 */
+	public UserService getUserService()
+	{
+		return userService;
+	}
+
+	/**
+	 * @param userService
+	 *           the userService to set
+	 */
+	public void setUserService(final UserService userService)
+	{
+		this.userService = userService;
+	}
+
+	/**
+	 * @return the voucherModelService
+	 */
+	public VoucherModelService getVoucherModelService()
+	{
+		return voucherModelService;
+	}
+
+	/**
+	 * @param voucherModelService
+	 *           the voucherModelService to set
+	 */
+	public void setVoucherModelService(final VoucherModelService voucherModelService)
+	{
+		this.voucherModelService = voucherModelService;
+	}
+
+	/**
+	 * @return the couponRestrictionService
+	 */
+	public CouponRestrictionService getCouponRestrictionService()
+	{
+		return couponRestrictionService;
+	}
+
+	/**
+	 * @param couponRestrictionService
+	 *           the couponRestrictionService to set
+	 */
+	public void setCouponRestrictionService(final CouponRestrictionService couponRestrictionService)
+	{
+		this.couponRestrictionService = couponRestrictionService;
+	}
+
+
+
 
 }
