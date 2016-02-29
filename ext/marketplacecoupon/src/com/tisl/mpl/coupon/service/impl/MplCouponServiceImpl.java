@@ -83,6 +83,18 @@ public class MplCouponServiceImpl implements MplCouponService
 		return getMplCouponDao().findVoucherHistoryRedeemedOrders(customer, pageableData);
 	}
 
+	/**
+	 * This method returns all voucher invalidations
+	 *
+	 * @param customer
+	 * @return List<VoucherInvalidationModel>
+	 */
+
+	@Override
+	public List<VoucherInvalidationModel> getAllVoucherInvalidations(final CustomerModel customer)
+	{
+		return getMplCouponDao().findVoucherHistoryAllInvalidations(customer);
+	}
 
 	public MplCouponDao getMplCouponDao()
 	{
