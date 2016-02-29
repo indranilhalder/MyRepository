@@ -665,6 +665,7 @@ public final class ModelAttributetConstants
 	// TISPRO-48 - added new constants for pagination with lazy loading
 	public static final String PAGE_INDEX = "pageIndex";
 	public static final String PAGE_SIZE = "pageSize";
+	public static final String PAGE_SIZE_HISTORY = "pageSizeVoucherHistory";
 
 	//for Coupons
 	public static final String OPEN_VOUCHER_DISPLAY_LIST = "openVoucherDisplayList";

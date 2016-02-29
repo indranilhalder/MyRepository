@@ -133,22 +133,13 @@ public interface MplCouponFacade
 	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
 
-	/**
-	 * @param customer
-	 * @param pageableData
-	 * @return SearchPageData<CouponHistoryData>
-	 */
-	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(CustomerModel customer, PageableData pageableData);
-
 
 	/**
 	 * @param customer
-	 * @param pageableData
 	 * @return CouponHistoryStoreDTO
 	 * @throws VoucherOperationException
 	 */
-	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer, PageableData pageableData)
-			throws VoucherOperationException;
+	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer) throws VoucherOperationException;
 
 
 	/**
@@ -156,5 +147,15 @@ public interface MplCouponFacade
 	 * @param cartModel
 	 */
 	void updatePaymentInfoSession(Map<String, Double> paymentInfo, CartModel cartModel);
+
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<CouponHistoryData>
+	 * @throws VoucherOperationException
+	 */
+	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(final CustomerModel customer, final PageableData pageableData)
+			throws VoucherOperationException;
 
 }
