@@ -17,8 +17,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Authenticator;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -155,7 +158,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									/*
 									 * String CategorySeqBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|" +
 									 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
-									 *
+									 * 
 									 * CategorySeqBanner = CategorySeqBanner.substring(CategorySeqBanner.lastIndexOf("/") + 1,
 									 * CategorySeqBanner.length());
 									 */
@@ -214,12 +217,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 										/*
 										 * Authenticator.setDefault(new Authenticator() {
-										 *
+										 * 
 										 * @Override public PasswordAuthentication getPasswordAuthentication() { final String
 										 * username = "siteadmin"; final String password = "ASDF!@#$asdf1234";
 										 * LOG.info("Authenticating Login......"); return new PasswordAuthentication(username,
 										 * password.toCharArray());
-										 *
+										 * 
 										 * } });
 										 */
 
@@ -454,7 +457,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								 * LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl); } else if
 								 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
 								 * LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
-								 * 
+								 *
 								 * }
 								 */
 
@@ -566,9 +569,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		/*
 		 * for (final InternalCampaignReportData item : campaignDataConsolidatedTmpList) { if (!set.contains(item)) {
 		 * set.add(item); campaignDataConsolidatedList.add(item);
-		 *
+		 * 
 		 * }
-		 *
+		 * 
 		 * }
 		 */
 		try
@@ -585,7 +588,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			{
 				if (internalCampaignData.getIcid() == null)
 				{
-					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.na).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -594,7 +597,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getAssetName() == null)
 				{
-					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.na).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -605,7 +608,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 				if (internalCampaignData.getCategory() == null
 						|| internalCampaignData.getCategory() == MarketplacecommerceservicesConstants.EMPTYSPACE)
 				{
-					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.na).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -615,7 +618,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getMediaType() == null)
 				{
-					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.na).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -624,7 +627,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getSize() == null)
 				{
-					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.na).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -633,7 +636,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 				if (internalCampaignData.getSourcePage() == null)
 				{
-					fileWriter.append(MarketplacecommerceservicesConstants.NA).append(COMMA_DELIMITER);
+					fileWriter.append(MarketplacecommerceservicesConstants.na).append(COMMA_DELIMITER);
 				}
 				else
 				{
@@ -652,7 +655,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
-			 * 
+			 *
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
@@ -678,37 +681,34 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	public String findIamgeSize(final String urlString)
 	{
-
 		final String username = "siteadmin";
 		final String password = "ASDF!@#$asdf1234";
+		final URLConnection connection;
 		String size = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
-			//final String urlString = "https://upload.wikimedia.org/wikipedia/commons/7/7a/Pollock_to_Hussey.jpg";
-			final URL object = new URL(urlString);
+			final URL url = new URL(urlString);
+			//final SocketAddress addr = new InetSocketAddress("proxy.tcs.com", 8080);
+			final SocketAddress addr = new InetSocketAddress("10.10.12.10", 8080);
 
-			//final HttpsURLConnection connection = (HttpsURLConnection) object.openConnection();
-			final URLConnection connection = object.openConnection();
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+
+			connection = url.openConnection(proxy);
+
 			// int timeOut = connection.getReadTimeout();
-			connection.setReadTimeout(60 * 1000);
-			connection.setConnectTimeout(60 * 1000);
+			connection.setReadTimeout(60 * 100);
+			connection.setConnectTimeout(60 * 200);
 			final sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
 			final String authorization = username + ":" + password;
 			final String encodedAuth = "Basic " + encoder.encode(authorization.getBytes());
 			connection.setRequestProperty("Authorization", encodedAuth);
-			//final int responseCode = connection.getResponseCode();
-			//final int responseCode = connection.
-			//System.out.println("" + responseCode);
-			//final BufferedImage bimg = ImageIO.read(openURLForInput(url,username,password));
+			LOG.info("==============Encoded Authorization============ : " + encodedAuth);
 			final BufferedImage bimg = ImageIO.read(connection.getInputStream());
 			final int width = bimg.getWidth();
 			final int height = bimg.getHeight();
 			size = width + " X " + height;
-
 			//size = String.valueOf(width) + " X " + String.valueOf(height);
 			LOG.info("Size is :::::::" + size);
-
-
 		}
 		catch (final MalformedURLException e)
 		{
