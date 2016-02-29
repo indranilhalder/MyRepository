@@ -16032,4 +16032,13 @@ header:not(.compact) .content .marketplace.compact{
 a.size-guide {
     white-space: nowrap;
 } 
-
+#variantForm .select-size li:hover{
+ background-color:rgb(30,144,255);
+ color:#fff;
+ }
+ #variantForm .select-size li a {
+     display: block;
+ }
+ #variantForm .select-size li a:hover {
+   color:white;
+  }
