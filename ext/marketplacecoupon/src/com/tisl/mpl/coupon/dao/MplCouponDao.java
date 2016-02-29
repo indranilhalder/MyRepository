@@ -40,4 +40,10 @@ public interface MplCouponDao
 	 */
 	SearchPageData<VoucherInvalidationModel> findVoucherHistoryRedeemedOrders(CustomerModel customer, PageableData pageableData);
 
+	/**
+	 * @param customer
+	 * @return List<VoucherInvalidationModel>
+	 */
+	List<VoucherInvalidationModel> findVoucherHistoryAllInvalidations(CustomerModel customer);
+
 }

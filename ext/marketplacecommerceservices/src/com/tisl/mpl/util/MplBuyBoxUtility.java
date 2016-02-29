@@ -148,7 +148,10 @@ public class MplBuyBoxUtility
 			variantComparator.setVariantType("size");
 			Collections.sort(pcmProductVariantModelList, variantComparator);
 		}
-		if (isCapacityVariantPresent)
+		/*Forcing the capacity check condition for only "Electronics" products
+		  Fix for TISSTRT - 984::Prices of apparel products are not displayed in SERP page with size variants */
+		
+		if (isCapacityVariantPresent && selectedVariantModel.getProductCategoryType().equalsIgnoreCase("Electronics"))
 		{
 			variantComparator.setVariantType("capacity");
 			Collections.sort(pcmProductVariantModelList, variantComparator);
