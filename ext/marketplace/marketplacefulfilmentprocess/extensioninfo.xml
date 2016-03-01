@@ -20,6 +20,8 @@
 		<requires-extension name="marketplaceomsservices"/>
 		<requires-extension name="marketplaceclientservices"/>
 		<requires-extension name="marketplacecommerceservices"/>
+		<requires-extension name="omsorders"/>
+		
 <!-- 		<requires-extension name="marketplacefacades"/> -->
 		
 
