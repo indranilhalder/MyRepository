@@ -10030,11 +10030,11 @@ body .account .right-account .order-history .pagination li{
       position: absolute;
     top: 0px;
     background-color: #a9143c;
-    height: 25px;
-    right: 10px;
+    height: 20px;
+    right: 5px;
     background-image: none;
     display: table;
-    width: 35%;
+    /* width: 35%; */
         text-align: center;}
       .shop-sale.wrapper .product-tile .image .new {
      /*  width: 38%;
@@ -10048,7 +10048,7 @@ body .account .right-account .order-history .pagination li{
       /* bottom:4px;
        left: -10px; */
        top:0px;
-       right:10px; }
+       right:5px; }
        .product-tile .image .online-exclusive img.brush-strokes-sprite, .product-tile .image .on-sale img.brush-strokes-sprite,
        .product-tile .image .new img.brush-strokes-sprite{
      display:none;
@@ -10060,18 +10060,18 @@ body .account .right-account .order-history .pagination li{
         color: #fff;
         display: table-cell;
     	vertical-align: middle;
-      font-size: 10.5px !important;
-    letter-spacing: 1.5px;
+      font-size: 9px !important;
+    letter-spacing: 1px;
     font-weight: 600;
-        padding-left: 5%;
+        padding: 0px 8px;
         text-transform: uppercase;
         line-height:normal;
       }
     .product-tile .image .online-exclusive {
-      width: 80%;
+     /*  width: 80%; */
      background-color: #fbba21;
      /* min-width: 200px; */
-     height: 25px;
+     height: 20px;
      text-align: center;
      display: table;}
       .product-tile .image .online-exclusive span {
@@ -10084,9 +10084,9 @@ body .account .right-account .order-history .pagination li{
     
         	}
     .product-tile .image .on-sale {
-      width: 50%;
+    /*   width: 50%; */
      background-color: #ffb810;
-     height: 25px;
+     height: 20px;
      text-align: center;
      display: table; }
       .product-tile .image .on-sale span {
@@ -10443,12 +10443,12 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-image-container .main-image .online-exclusive {
     position: absolute;
-	width: 40%;
+	/* width: 40%; */
 	bottom: 0px;
-	left: 10px;
+	left: 5px;
 	text-align: center;
-	height: 25px;
-	min-width: 150px;
+	height: 20px;
+	/* min-width: 150px; */
 	background-color: #fbba21;
 	display: table;
 	}
@@ -10460,11 +10460,12 @@ body .account .right-account .order-history .pagination li{
     vertical-align: middle;
     display: table-cell;
     color: #fff;
-    font-size: 10.5px;
+    font-size: 9px;
     left: 0;
     font-weight: 600;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
+    padding:0 8px;
 }
 .sprite-Vector_Smart_Object {
     width: 216px;
@@ -23910,11 +23911,11 @@ span.brand-subdesc {
      position: absolute;
     top: 0px;
     background-color: #a9143c;
-    height: 25px;
-    left: 10px;
+    height: 20px;
+    left: 5px;
     background-image: none;
     display: table;
-    width: 20%;
+   /*  width: 20%; */
     text-align: center;
  }
 
@@ -27793,7 +27794,7 @@ min-width: 12px;
     margin-right: 5px;
 }
 .cart.wrapper .right-block .block.top li#couponApplied{
-color: #A9143C;
+color: #ff1c47;
 }
 .cart.wrapper .right-block .block.top button.remove-coupon-button:before{
  font-family: 'FontAwesome';
@@ -27801,7 +27802,7 @@ color: #A9143C;
           -moz-osx-font-smoothing: grayscale;
           font-weight: 100;
           content: "\f056";
-          color: #A9143C;
+          color: #ff1c47;
           font-size: 14px;
           display: inline-block;
           position:relative;
@@ -35694,6 +35695,7 @@ border: 2px solid #000 !important;
     height: auto;
     margin-bottom: 5px;
     padding: 0;
+    vertical-align: top;
 }
 .slider {
     opacity: 0;
