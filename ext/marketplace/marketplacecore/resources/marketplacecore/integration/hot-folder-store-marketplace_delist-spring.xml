@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+ 
+ Copyright (c) 2000-2014 hybris AG
+ All rights reserved.
+ 
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+ <!-- TISPRD-207 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:int="http://www.springframework.org/schema/integration"
+   xmlns:file="http://www.springframework.org/schema/integration/file"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration
+       http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/file
+       http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+ 
+ <!-- General setup -->
+ 
+    <!-- General setup -->
+ 		
+ 		 <bean id="fileOrderComparator" class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
+		<property name="prefixPriority">
+			<map>
+				<!-- default priority is 0 -->
+				<entry key="delist-seller" value="1" />		
+				<entry key="ussid-delist" value="2" />			
+			</map>
+		</property>
+	</bean>
+ 
+    <bean id="baseDirectoryMarketplaceDelist" class="java.lang.String">
+        <constructor-arg value="#{configurationService.configuration.getProperty('etail.delist.directory')}/marketplace-delisting" />
+    </bean>
+ 
+    <!-- 1) Scan for files -->
+    <file:inbound-channel-adapter id="batchFilesMarketplaceDelist" directory="#{baseDirectoryMarketplaceDelist}"
+        filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+ 
+    <!-- 2) move the file to processing and setup header -->
+    <file:outbound-gateway request-channel="batchFilesMarketplaceDelist" reply-channel="batchFilesMarketplaceDelistProc"
+        directory="#{baseDirectoryMarketplaceDelist}/processing" delete-source-files="true" />
+
+ 
+  <!-- 3) transform csv to impex file -->
+ <int:service-activator input-channel="batchFilesHeader" output-channel="batchFilesTran" ref="batchTransformerTask"
+		method="execute" />
+	<bean id="batchTransformerTask" 
+		  class="de.hybris.platform.acceleratorservices.dataimport.batch.task.ImpexTransformerTask" 
+		  init-method="initConvertersMap">
+		<property name="fieldSeparator" value="," />
+		<property name="encoding" value="UTF-8" />
+		<property name="linesToSkip" value="0"/>
+		<property name="cleanupHelper" ref="cleanupHelper" />
+	</bean>
+	
+ <int:service-activator input-channel="batchFilesMarketplaceDelistProc" output-channel="batchFilesHeaderInit"
+        ref="MarketplaceDelistHeaderSetupTask" method="execute" />
+ 
+ 	<bean id="MarketplaceDelistHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="mplProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceDelist" />
+    </bean>   
+ 
+   
+     <!-- Transformer converters mappings -->
+    
+     <!-- Transformer for Seller Dlist Import -->
+    <bean id="batchMplDelistSellerConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="delist-seller"
+    p:converter-ref="batchMplDelistSellerConverter"/>  
+    
+ 	 <!-- Converters -->
+ 	
+ 	<!-- Converter for Seller Delist Import --> 
+       <bean id="batchMplDelistSellerConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.SellerDelistConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}            	    
+				
+             INSERT_UPDATE MarketplaceDelist;sellerID[unique=true];DelistingStatus;isBlockOMS;isProcessed
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{1};{2};{3}</value>
+        </property>	
+        </bean>   
+         <!-- Transformer for Seller Dlist Import -->
+    <bean id="batchMplDelistUssidConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="ussid-delist"
+    p:converter-ref="batchMplDelistUssidConverter"/>  
+    
+ 	 <!-- Converters -->
+ 	
+ 	<!-- Converter for Seller Delist Import --> 
+       <bean id="batchMplDelistUssidConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.USSIDDelistConverter">
+        <property name="header">
+            <value>#{defaultImpexProductHeader}            	    
+				
+             INSERT_UPDATE MarketplaceDelist;sellerID[unique=true];DelistingStatus;DelistUssid[unique=true];isProcessed
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{1};{2};{3}</value>
+        </property>
+        </bean>  
+     
+     
+      </beans>
