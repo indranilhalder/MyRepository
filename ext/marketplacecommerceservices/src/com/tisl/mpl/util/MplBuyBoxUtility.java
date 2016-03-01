@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -93,7 +94,8 @@ public class MplBuyBoxUtility
 		}
 
 		//Get simple product code other than variant
-		if (sortedVariantsList.size() == 0)
+		//if (sortedVariantsList.size() == 0)
+		if (CollectionUtils.isEmpty(sortedVariantsList))
 		{
 			productCode = getInConditionProductCodes(productModel.getCode(), "");
 		}
@@ -146,7 +148,10 @@ public class MplBuyBoxUtility
 			variantComparator.setVariantType("size");
 			Collections.sort(pcmProductVariantModelList, variantComparator);
 		}
-		if (isCapacityVariantPresent)
+		/*Forcing the capacity check condition for only "Electronics" products
+		  Fix for TISSTRT - 984::Prices of apparel products are not displayed in SERP page with size variants */
+		
+		if (isCapacityVariantPresent && selectedVariantModel.getProductCategoryType().equalsIgnoreCase("Electronics"))
 		{
 			variantComparator.setVariantType("capacity");
 			Collections.sort(pcmProductVariantModelList, variantComparator);
@@ -158,13 +163,14 @@ public class MplBuyBoxUtility
 
 	public BuyBoxModel getBuyBoxWinnerModel(final List<BuyBoxModel> buyBoxModelList,
 			final List<PcmProductVariantModel> sortedVariantsList, final Map<String, List<BuyBoxModel>> buyBoxMap)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 
 
 		BuyBoxModel buyBoxWinnerModel = new BuyBoxModel();
 
-		if (sortedVariantsList.size() > 0)
+		//if (sortedVariantsList.size() > 0)
+		if (CollectionUtils.isNotEmpty(sortedVariantsList))
 		{
 			buyBoxWinnerModel = getLeastVariantSizeModel(sortedVariantsList, buyBoxMap);
 		}
@@ -196,7 +202,8 @@ public class MplBuyBoxUtility
 		for (final PcmProductVariantModel variantOptionData : sortedVariantsList)
 		{
 			final List<BuyBoxModel> productBBModelList = buyBoxMap.get(variantOptionData.getCode());
-			if (productBBModelList != null && productBBModelList.size() > 0)
+			//if (productBBModelList != null && productBBModelList.size() > 0)
+			if (CollectionUtils.isNotEmpty(productBBModelList))
 			{
 				if (leastVariant == 0)
 				{
@@ -240,7 +247,8 @@ public class MplBuyBoxUtility
 		final Map<String, List<BuyBoxModel>> buyBoxMap = new HashMap<String, List<BuyBoxModel>>();
 
 		// Iterate BuyBox results and add into Map<ProductCode,List<BuyBoxModel>> format
-		if (buyBoxModelList != null && buyBoxModelList.size() > 0)
+		//if (buyBoxModelList != null && buyBoxModelList.size() > 0)
+		if (CollectionUtils.isNotEmpty(buyBoxModelList))
 		{
 			for (final BuyBoxModel buyBoxModel : buyBoxModelList)
 			{

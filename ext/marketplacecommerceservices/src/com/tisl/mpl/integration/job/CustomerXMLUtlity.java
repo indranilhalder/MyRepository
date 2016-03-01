@@ -272,23 +272,22 @@ public class CustomerXMLUtlity
 					//TISUAT-4755
 					if (customer.getMarketplacepreference() != null)
 					{
-						//For Frequency
-						if (null != customer.getMarketplacepreference().getEmailFrequency())
-						{
-							customerCreateUpdate.setFrequency(customer.getMarketplacepreference().getEmailFrequency().getCode());
-						}
+
 						//For Comm Preference
 						commPreference = new MplCustomerWsData.CustomerCreateUpdate.CommPreferences();
-						if (customer.getMarketplacepreference().getIsInterestedInEmail() != null)
+						//TISSTRT-785 Remove Subscription Tag if the customer opts to unsubscribe from e-mail preferences
+						if (customer.getMarketplacepreference().getIsInterestedInEmail() != null
+								&& customer.getMarketplacepreference().getIsInterestedInEmail().booleanValue())
 						{
 							commPreference.setCommPref("Mail");
 							commPreference.setSubscribed(MarketplacecclientservicesConstants.X);
+							//For Frequency
+							if (null != customer.getMarketplacepreference().getEmailFrequency())
+							{
+								customerCreateUpdate.setFrequency(customer.getMarketplacepreference().getEmailFrequency().getCode());
+							}
 						}
-						else
-						{
-							commPreference.setCommPref("SMS");
-							commPreference.setSubscribed(MarketplacecclientservicesConstants.X);
-						}
+
 						customerCreateUpdate.setCommPreferences(commPreference);
 						//For Subscription
 						LOG.debug("Category started");
@@ -314,7 +313,12 @@ public class CustomerXMLUtlity
 							}
 						}
 						subscription.setCategories(categoryWSList);
-						subscription.setSubscribed(MarketplacecclientservicesConstants.X);
+						//TISSTRT-785 Remove Subscription Tag if the customer opts to unsubscribe from e-mail preferences
+						if (categoryWSList.size() > 0)
+						{
+							subscription.setSubscribed(MarketplacecclientservicesConstants.X);
+						}
+						//subscription.setSubscribed(MarketplacecclientservicesConstants.X);
 						customerCreateUpdate.setSubscription(subscription);
 
 					}

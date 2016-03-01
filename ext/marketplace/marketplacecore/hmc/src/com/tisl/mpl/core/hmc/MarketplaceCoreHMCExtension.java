@@ -33,8 +33,10 @@ import de.hybris.platform.promotions.jalo.OrderPromotion;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.jalo.PromotionPriceRow;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.voucher.jalo.Voucher;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -289,6 +291,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	public ActionResult afterSave(final Item item, final DisplayState displayState, final Map currentValues,
 			final Map initialValues, final ActionResult actionResult)
 	{
+		LOG.debug("Inside aftersave >>>>>>>>>");
 		boolean errorCheck = false;
 		try
 		{
@@ -320,9 +323,11 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 				getPromotionSendMailService().sendMail(item);
 			}
 
-			if (null != item && item instanceof Voucher)
+			//Saving data into VoucherStatusNotificationModel while saving voucher
+			if (item instanceof Voucher)
 			{
-				getNotificationService().saveToVoucherStatusNotification(item);
+				final VoucherModel voucher = (VoucherModel) getModelService().get((Voucher) item);
+				getNotificationService().saveToVoucherStatusNotification(voucher);
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -632,5 +637,10 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	protected NotificationService getNotificationService()
 	{
 		return Registry.getApplicationContext().getBean("notificationService", NotificationService.class);
+	}
+
+	protected ModelService getModelService()
+	{
+		return Registry.getApplicationContext().getBean("modelService", ModelService.class);
 	}
 }

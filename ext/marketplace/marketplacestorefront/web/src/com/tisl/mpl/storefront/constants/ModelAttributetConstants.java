@@ -187,7 +187,9 @@ public final class ModelAttributetConstants
 	public static final String COMMENT_TEXT = "commentText";
 	public static final String COMMENT_TEXT_VAL = "";
 	public static final String COMMENT_TITLE = "commentTitle";
+	public static final String MEDIA_URL = "updatedMediaUrl";
 	public static final String COMMENT_TITLE_VAL = "";
+	public static final String COMMENT_MEDIA_VAL = "";
 	public static final String RATINGS = "ratings";
 	public static final String RATINGS_VAL = "";
 	public static final String COMMENTS = "comments";
@@ -196,6 +198,7 @@ public final class ModelAttributetConstants
 	public static final String PURCHASED_PRODUCT = "productDataModifyMap";
 	public static final String TOTAL_PAGES = "totalPages";
 	public static final String COMMENT_LIST_SIZE = "commentsListSize";
+	public static final String OPERATION = "operation";
 	//	pdp changes
 	public static final String CLOTHING = "Clothing";
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
@@ -662,6 +665,7 @@ public final class ModelAttributetConstants
 	// TISPRO-48 - added new constants for pagination with lazy loading
 	public static final String PAGE_INDEX = "pageIndex";
 	public static final String PAGE_SIZE = "pageSize";
+	public static final String PAGE_SIZE_HISTORY = "pageSizeVoucherHistory";
 
 	//for Coupons
 	public static final String OPEN_VOUCHER_DISPLAY_LIST = "openVoucherDisplayList";

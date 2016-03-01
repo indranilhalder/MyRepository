@@ -34,7 +34,7 @@ public class MplSellerPriorityReportDAOImpl implements MplSellerPriorityReportDA
 	private final static Logger LOG = Logger.getLogger(MplSellerPriorityReportDAOImpl.class.getName());
 
 	/**
-	 * It gets the list of Seller Priority Changed Details with in date renge
+	 * Gets the list of Seller Priority Changed Details with in date renge
 	 *
 	 * @return List<SavedValuesModel>
 	 *
@@ -45,15 +45,14 @@ public class MplSellerPriorityReportDAOImpl implements MplSellerPriorityReportDA
 		try
 		{
 			final String queryString = MarketplacecommerceservicesConstants.SELLERPRIORITYWITHINDATEQUERY;
-			final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			final SimpleDateFormat sdf = new SimpleDateFormat(MarketplacecommerceservicesConstants.SIMPLEDATEFORMATDB);
 			final String startDataInput = sdf.format(startDate);
 			final String endDataInput = sdf.format(endDate);
 			//forming the flexible search query
 			final FlexibleSearchQuery changedDataQry = new FlexibleSearchQuery(queryString);
 			changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.START_DATE, startDataInput);
 			changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.END_DATE, endDataInput);
-			//changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.START_DATE, startDate);
-			//changedDataQry.addQueryParameter(MarketplacecommerceservicesConstants.END_DATE, endDate);
+			//	final int abc = 4 / 0;
 
 			LOG.info("**************** getSellerPriorityDetails Query ******************** : changedDataQry : " + changedDataQry);
 
@@ -84,7 +83,7 @@ public class MplSellerPriorityReportDAOImpl implements MplSellerPriorityReportDA
 	}
 
 	/**
-	 * It gets the list of Seller Priority Changed Details with no date renge
+	 * Gets the list of Seller Priority Changed Details with no date range
 	 *
 	 * @return List<SavedValuesModel>
 	 *

@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,6 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MplClassificationColourCodeValueProvider extends ClassificationPropertyValueProvider
 {
 	private FieldNameProvider fieldNameProvider;
+
+	public static final String COLORFAMILYFOOTWEAR = "colorfamilyfootwear";
+	public static final String COLORFAMILYFOOTWEARBLANK = "";
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -56,7 +60,8 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				classAttrAssignmentList.addAll(indexedProperty.getClassificationAttributeAssignments());
 			}
 
-			if (classAttrAssignmentList.size() > 0)
+			//if (classAttrAssignmentList.size() > 0)
+			if (CollectionUtils.isNotEmpty(classAttrAssignmentList))
 			{
 
 				final Product product = (Product) this.modelService.getSource(model);
@@ -128,13 +133,20 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 			final List<FeatureValue> list) throws FieldValueProviderException
 	{
 		final List result = new ArrayList();
-
+		//final PcmProductVariantModel pcmVariantProductModel = (PcmProductVariantModel) variantProductModel;
 		for (final FeatureValue featureValue : list)
 		{
 			Object value = featureValue.getValue();
+
 			if (value instanceof ClassificationAttributeValue)
 			{
 				value = ((ClassificationAttributeValue) value).getCode();
+				value = value.toString().toLowerCase();
+				if (value.toString().startsWith(COLORFAMILYFOOTWEAR))
+				{
+					value = value.toString().replaceAll(COLORFAMILYFOOTWEAR, COLORFAMILYFOOTWEARBLANK);
+				}
+
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
 			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,

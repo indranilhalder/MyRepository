@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.tisl.mpl.coupon.facade.job;
+package com.tisl.mpl.coupon.job;
 
 import de.hybris.platform.core.model.c2l.CountryModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -27,7 +27,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.coupon.constants.MarketplacecouponConstants;
 import com.tisl.mpl.coupon.service.MplCustomerDetailsService;
@@ -44,26 +43,26 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 	@Resource(name = "customerDetailsService")
 	private MplCustomerDetailsService customerDetailsService;
 
-	@Autowired
+	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
-
-	//Delimiter used in CSV file
-	private static final String COMMA_DELIMITER = ",";
-	private static final String COLON_DELIMITER = ":";
-	private static final String HYPHEN_DELIMITER = "-";
-	private static final String NEW_LINE_SEPARATOR = "\n";
 
 	//CSV file header
 	private static final String FILE_HEADER = MarketplacecouponConstants.CUSTOMER_LIST_FILE_HEADER;
 
 
+
+	/**
+	 * This is the perform method for CustomerListGenerationJob
+	 *
+	 * @param mailJob
+	 */
 	@Override
 	public PerformResult perform(final CronJobModel mailJob)
 	{
 		try
 		{
 			//Fetches All Customers
-			final List<CustomerModel> customerList = customerDetailsService.getCustomer();
+			final List<CustomerModel> customerList = getCustomerDetailsService().getCustomer();
 
 			if (null != customerList)
 			{
@@ -81,6 +80,7 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 		}
 	}
 
+
 	/**
 	 * @Desctiption This method takes the list of customers and sets in the CSV file to be generated in a specified
 	 *              location
@@ -93,7 +93,7 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 		final File rootFolder1 = new File(configurationService.getConfiguration().getString(
 				MarketplacecouponConstants.CUSTOMER_LIST_FILE_LOCATION), MarketplacecouponConstants.CUSTOMER_LIST_FILE_NAME
 				+ System.currentTimeMillis()
-				+ configurationService.getConfiguration().getString(MarketplacecouponConstants.CUSTOMER_LIST_FILE_EXTENSION));
+				+ getConfigurationService().getConfiguration().getString(MarketplacecouponConstants.CUSTOMER_LIST_FILE_EXTENSION));
 		try
 		{
 			rootFolder1.getParentFile().mkdirs();
@@ -103,46 +103,46 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 			fileWriter.append(FILE_HEADER);
 
 			//Add a new line separator after the header
-			fileWriter.append(NEW_LINE_SEPARATOR);
+			fileWriter.append(MarketplacecouponConstants.NEW_LINE_SEPARATOR);
 
 			//Write a new student object list to the CSV file
 			for (final CustomerModel customer : customerList)
 			{
 				fileWriter.append(customer.getUid());
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 				fileWriter.append(customer.getFirstName());
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 				fileWriter.append(customer.getLastName());
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 				fileWriter.append(customer.getOriginalUid());
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 				fileWriter.append(customer.getMobileNumber());
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 				if (customer.getGender() != null)
 				{
 					fileWriter.append(customer.getGender().getCode());
 				}
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 
 				final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				if (customer.getCreationtime() != null)
 				{
 					fileWriter.append(dateFormat.format(customer.getCreationtime()));
 				}
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 				if (customer.getDefaultShipmentAddress() != null)
 				{
 					final AddressModel address = customer.getDefaultShipmentAddress();
 					fileWriter.append(address.getAddressType());
-					fileWriter.append(COLON_DELIMITER);
+					fileWriter.append(MarketplacecouponConstants.COLON_DELIMITER);
 					fileWriter.append(address.getLine1());
-					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(MarketplacecouponConstants.HYPHEN_DELIMITER);
 					fileWriter.append(address.getLine2());
-					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(MarketplacecouponConstants.HYPHEN_DELIMITER);
 					fileWriter.append(address.getPostalcode());
-					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(MarketplacecouponConstants.HYPHEN_DELIMITER);
 					fileWriter.append(address.getTown());
-					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(MarketplacecouponConstants.HYPHEN_DELIMITER);
 					if (address.getCountry() != null)
 					{
 						final CountryModel countryModel = address.getCountry();
@@ -157,24 +157,24 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 
 						fileWriter.append(country);
 					}
-					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(MarketplacecouponConstants.HYPHEN_DELIMITER);
 					fileWriter.append(address.getPhone1());
-					fileWriter.append(HYPHEN_DELIMITER);
+					fileWriter.append(MarketplacecouponConstants.HYPHEN_DELIMITER);
 					fileWriter.append(address.getPhone2());
 				}
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 				if (customer.getDateOfBirth() != null)
 				{
 					fileWriter.append(dateFormat.format(customer.getDateOfBirth()));
 				}
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 				if (customer.getDateOfAnniversary() != null)
 				{
 					fileWriter.append(dateFormat.format(customer.getDateOfAnniversary()));
 				}
-				fileWriter.append(COMMA_DELIMITER);
+				fileWriter.append(MarketplacecouponConstants.COMMA_DELIMITER);
 
-				fileWriter.append(NEW_LINE_SEPARATOR);
+				fileWriter.append(MarketplacecouponConstants.NEW_LINE_SEPARATOR);
 			}
 		}
 		catch (final Exception e)
@@ -212,5 +212,26 @@ public class CustomerListGenerationJob extends AbstractJobPerformable<CronJobMod
 	{
 		this.configurationService = configurationService;
 	}
+
+
+	/**
+	 * @return the customerDetailsService
+	 */
+	public MplCustomerDetailsService getCustomerDetailsService()
+	{
+		return customerDetailsService;
+	}
+
+
+	/**
+	 * @param customerDetailsService
+	 *           the customerDetailsService to set
+	 */
+	public void setCustomerDetailsService(final MplCustomerDetailsService customerDetailsService)
+	{
+		this.customerDetailsService = customerDetailsService;
+	}
+
+
 
 }

@@ -6,9 +6,6 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
-import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
-import de.hybris.platform.jalo.security.JaloSecurityException;
-import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
@@ -157,17 +154,13 @@ public interface MplPaymentService
 	 * @param cartData
 	 * @param cart
 	 * @return MplPromoPriceData
-	 * @throws JaloPriceFactoryException
-	 * @throws JaloSecurityException
-	 * @throws CalculationException
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
-			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			CalculationException, JaloSecurityException, JaloPriceFactoryException;
+	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws VoucherOperationException,
+			EtailNonBusinessExceptions;
 
 
 	/**

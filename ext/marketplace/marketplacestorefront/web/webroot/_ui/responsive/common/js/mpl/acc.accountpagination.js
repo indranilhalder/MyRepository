@@ -28,10 +28,38 @@ $(document).ready(function (){
 	// -----------*** TISPRO-48 --- Pagination with Lazy loading ***----------------
 
 	
+	$(document).ready(function (){
+		// -----------*** TISSRT-630 --- Pagination with Lazy loading ***----------------
+		var pageIndexC = $('#pageIndexC').val();
+		var pagableSizeC = $('#pagableSizeC').val();
+		var pageNumC = parseInt(pageIndexC)+1;
+		var endCountC = pageNumC*pagableSizeC;
+		var startCountC = endCountC-pagableSizeC+1;
+		var totalNumberOfResultsC = $('#totalNumberOfResultsC').val();
+		if(endCountC>totalNumberOfResultsC){
+			endCountC = totalNumberOfResultsC;
+		}
+
+		var displayCoupon = startCountC+"-"+endCountC+ " of " + totalNumberOfResultsC + " Coupons";
+		$("#displayPaginationCountUpCoupon").html(displayCoupon);
+	});
 	
 	
-	
-	
+	$(document).ready(function (){
+		// -----------*** TISSRT-630 --- Pagination with Lazy loading Voucher History ***----------------
+		var pageIndexVH = $('#pageIndexVH').val();
+		var pagableSizeVH = $('#pagableSizeVH').val();
+		var pageNumVH = parseInt(pageIndexVH)+1;
+		var endCountVH = pageNumVH*pagableSizeVH;
+		var startCountVH = endCountVH-pagableSizeVH+1;
+		var totalNumberOfResultsVH = $('#totalNumberOfResultsVH').val();
+		if(endCountVH>totalNumberOfResultsVH){
+			endCountVH = totalNumberOfResultsVH;
+		}
+
+		var displayCouponHistory = startCountVH+"-"+endCountVH+ " of " + totalNumberOfResultsVH + " Transactions";
+		$("#displayPaginationCountUpCouponHistory").html(displayCouponHistory);
+	});
 // [START]
 
 	var divItem = "";
@@ -252,4 +280,3 @@ function pageNavigation(num){
 }
 
 //For Address Book Pagination
-

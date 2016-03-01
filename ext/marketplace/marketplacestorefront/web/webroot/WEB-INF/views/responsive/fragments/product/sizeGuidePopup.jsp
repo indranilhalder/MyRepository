@@ -5,7 +5,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
 <span id="defaultWishId_sizeGuide" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
 <span id="wishlistSuccess_sizeGuide" style="display:none"><spring:theme code="wishlist.success"/></span>
 <span id="wishlistnotblank_sizeGuide" style="display:none"><spring:theme code="wishlist.notblank"/></span>
@@ -15,7 +14,6 @@
 
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
-
 <div class="sizes">
 	
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
@@ -23,21 +21,24 @@
 	<c:when test="${not empty sizeguideData}">	
 		
 		<div class="tables">
-			<div>
+			<div class="footwear-size-table">
 				<%-- <h2>Top</h2> --%>
 					<ul>
 						<li class="header">
 							<ul>
 							   <c:if test="${product.rootCategory!='Footwear'}">
-								<li><spring:theme code="product.variants.size"/></li>
+								<%-- <li><spring:theme code="product.variants.size"/></li> --%>
 								</c:if>
+								
 								<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="Index" end="0">
+								
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue" varStatus="sizeIndex" >
 										<c:if test="${sizeIndex.index eq 0}">
 											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 										</c:if>
 									</c:forEach>
-								</c:forEach>							
+								</c:forEach>
+								<c:if test="${product.rootCategory=='Footwear'}">							
 								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
 								<li>${sizeGuide}</li>
 								<c:if test="${sizeGuide=='Age'}">
@@ -59,16 +60,42 @@
 								<c:set var="us" value="Y"/>
 								</c:if>
 								</c:forEach>
+								</c:if>
 							</ul>
 						</li>
 					</ul>
 						<c:choose>
 					    <c:when test="${product.rootCategory=='Clothing'}">
-						<c:forEach items="${sizeguideData}" var="sizeGuide" >
-							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>
-							<li class="item">
-								<ul>
-									<li>${sizeGuide.key}</li>
+                 <div class="sizes apparelSizes">
+                    <table>
+					<tr>
+					<td>
+								<ul>								
+								<li style="font-weight: bold"><spring:theme code="product.variants.size"/><br/></li>							
+								
+								<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="sizeGuideIndex" end="0">
+									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue" varStatus="sizeIndex" >
+										<c:if test="${sizeIndex.index eq 0}">
+											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
+										</c:if>
+
+
+									</c:forEach>
+								</c:forEach>
+								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
+										<li>${sizeGuide}</li>
+									</c:forEach>	
+
+							</ul>
+
+					</td>
+
+						 <c:forEach items="${sizeguideData}" var="sizeGuide" >
+							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>	
+							<td>	
+							<ul>
+									<li  style="font-weight: bold">${sizeGuide.key}</li>
+							
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
 										<li>${sizeGuideValue.dimensionValue}
 											<c:choose>
@@ -79,12 +106,15 @@
 									</c:forEach>
 									<c:if test="${count gt 1 }">
 									<c:forEach begin="0" end="${count-1}">
-										<li>&nbsp;</li>
+										<li></li>
 									</c:forEach>
 									</c:if>
-								</ul>
-							</li>	
+								  </ul>
+						</td>	
 						</c:forEach>
+				</tr>	
+			</table> 
+		</div>
 						</c:when>
 						 <c:when test="${product.rootCategory=='Footwear'}">
 								<c:forEach items="${sizeguideData}" var="sizeGuide" >
@@ -186,31 +216,23 @@
 		<div class="details">
 	 	<span id="noProductForSelectedSeller"> <font color="#ff1c47">
 			<spring:theme code="product.product.size.guide.notavail"/></font>
-			<!-- <h3> Selected Size is not available for this Seller </h3> -->
 			</span>
 		<span id="productDetails"> 
  <h3 class="company">
               ${product.brand.brandname}&nbsp;&nbsp;<span id="sellerSelName"></span></h3> <%-- <spring:theme code="product.by"/> --%>
              
-    <h3 class="product-name"><a href="${productUrl}">${product.name}</a></h3>		
+    <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>		
 
 </span>
  <div class="price" id="sizePrice">
-         <!--  <p class="normal"><div id="specialSelPrice"></div></p> -->
 	<p class="old" id="sizemrpPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<p class="sale" id="sizemopPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<p class="sale" id="sizespPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
 	</p>
 	<br>
     </div>
-        <!-- <div class="price">
-          <p class="normal"><div id="specialSelPrice"></div></p>
-        </div> -->
         <div class="attributes">
 						<ul class="color-swatch">
 					<c:choose>
@@ -225,7 +247,6 @@
 								var="variantUrl" />
 						
 							 <c:choose>
-							<%-- 	<c:when test="${empty selectedSize}"> --%>
 							 <c:when test="${empty sizeSelectedSizeGuide}">
 								<a href="${variantUrl}&sizeSelected=" data-target="#popUpModal" data-toggle="modal" data-productcode="${variantOption.code}">
 							 </c:when>
@@ -280,9 +301,6 @@
 	</c:choose>	
 			</ul>			
 <div class="size">	
-				<%-- <c:when test="${sizeSelectedSizeGuide == true}"> --%>
-					<%-- ${sizeSelectedSizeGuide} --%>
-				<%-- </c:when> --%>
 
 <c:if test="${noVariant!=true&&notApparel!=true}">
  <label>Size:  <c:if test="${not empty productSizeType}">(${productSizeType})</c:if></label>
@@ -295,8 +313,6 @@
 					<option value="#"><spring:theme code="text.select.size" /></option>
 				</c:otherwise>
 			</c:choose>
-			<%-- <option value="#" id="select-option"><spring:theme code="text.select.size" /></option> --%>
-			<%-- <option value="#" data-target="#popUpModalNew"><spring:theme code="text.select.size" /></option> --%>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:forEach items="${variantOption.colourCode}" var="color">
 					<c:choose>
@@ -319,9 +335,6 @@
 												</c:otherwise>
 											</c:choose>
 										
-										
-										
-											<%-- <option data-target="#popUpModal" selected="selected" data-productcode1="${code}" data-producturl="${link}">${entry.value}</option> --%>
 										</c:when>
 										<c:otherwise>
 											<option data-target="#popUpModal" data-productcode1="${code}" data-producturl="${link}&sizeSelected=true">${entry.value}</option>
@@ -386,11 +399,7 @@
 					<option>10</option>
 				</select>
 			</div>
-			<!-- <a href="#" class="button red">Add To Bag</a> -->
-			<!-- <div id="addToCartSizeGuideTitleSuccess" >
-	
-</div -->
-<span id="addToCartSizeGuideTitleSuccess"></span>
+
 <form:form method="post" id="addToCartSizeGuide" class="add_to_cart_form" action="#">
 		
 	<c:if test="${product.purchasable}">
@@ -430,7 +439,7 @@
 			<span id="outOfStockText" class="sizeGuide-message">
 			<spring:theme code="product.product.outOfStock" />
 			</span>
-		<input type="button" onClick="openPop();" id="add_to_wishlist-sizeguide" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
+		<input type="button" onClick="openPop_SizeGuide();" id="add_to_wishlist-sizeguide" class="wishlist" data-toggle="popover" data-placement="bottom" value="<spring:theme code="text.add.to.wishlist"/>"/>
 			<!-- <font color="#ff1c47">Product is out of stock for the selected size</font> -->
 		</p></span>
 		
@@ -448,17 +457,13 @@
 		<spring:theme code="basket.add.to.basket" />
 	</button>
 	</span>
+	<span id="addToCartSizeGuideTitleSuccess"></span>
 </form:form>
-<%-- <span id="addToCartSizeGuideTitleaddtobag" style="display:none"><spring:theme code="product.addtocart.success"/></span>
-<span id="addToCartSizeGuideTitleaddtobagerror" style="display:none"><spring:theme code="product.error"/></span>
-<span id="addToCartSizeGuideTitlebagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
-<span id="addToCartSizeGuideTitlebagfull" style="display:none"><spring:theme code="product.bag"/></span>  --%>
-			
 		</div>
 	</div>
 	</c:when>
 	<c:otherwise>
-		<p><spring:theme code="product.variants.size.guide.notavail"/></p>
+		<p style="color: #ff1c47;"><spring:theme code="product.variants.size.guide.notavail"/></p>
 	</c:otherwise>
 	</c:choose>	
 </div>
@@ -501,6 +506,51 @@
 </div>
 <script>
 $(document).ready(function(){
+	var qtyData = $("#pdpQty").val();
+	localStorage.setItem("sizeguideselectvaluePdp", qtyData);
+	
+	var qtyData1 = $("#quantity").val();
+	localStorage.setItem("sizeguideselectvalueQview", qtyData1);
+	
+	$("select#sizeGuideQty").on("change", function(){
+		var x = $("select#sizeGuideQty").val();
+		localStorage.setItem("sizeguideselectvalue", x);
+	});
+	var sizeGuide = localStorage.getItem('sizeguideselectvalue');
+	var pdp = localStorage.getItem('sizeguideselectvaluePdp');
+	var qview = localStorage.getItem('sizeguideselectvalueQview');
+	
+	if(sizeGuide == null || sizeGuide==undefined)
+	{
+		
+		if(pdp == null || pdp == 'undefined')
+		{
+			if(qview == null || qview == 'undefined')
+			{
+				$("#sizeGuideQty").val("1");
+			}
+			else
+			{
+				$("#sizeGuideQty").val(qview);
+			}
+		}
+		else
+		{
+			 $("#sizeGuideQty").val(pdp);
+		}
+		
+	}
+	else
+	{
+		$("#sizeGuideQty").val(sizeGuide);
+	}
+	var currentColour = '${product.colour}';
+	$(".color-swatch li span").each(function(){
+		var title = $(this).attr("title");
+		if(currentColour == title){
+			$(this).parent().parent().addClass("active");
+		}			
+	});
 	 if($('body').find('input.wishlist#add_to_wishlist-sizeguide').length > 0){
 			$('input.wishlist#add_to_wishlist-sizeguide').popover({ 
 				html : true,
@@ -526,245 +576,16 @@ $(document).ready(function(){
 	$("#noProductForSelectedSeller").hide();
 	$("#productDetails").show();
 	$("#sizePrice").show();
-	/* $('body').on('hidden.bs.modal', '#popUpModal', function () {
-		  $(this).removeData('bs.modal');
-		}); */
+	
+	
+	$('body').on('hidden.bs.modal', '#popUpModal', function () {
+		 localStorage.removeItem('sizeguideselectvaluePdp');
+		 localStorage.removeItem('sizeguideselectvalueqview');
+		 localStorage.removeItem('sizeguideselectvalue');
+		 
+		 });
 	
 	
 });
-
-
-
-function openPop() {
-	//alert("sellerSelArticleSKUVal local: "+ $("#sellerSelArticleSKUVal").val());
-	
-	var loggedIn=$("loggedIn").val();
-	
-	//alert(ussidfromSeller);
-	
-	$('#addedMessage_sizeGuide').hide();
-	//if (ussidfromSeller == null || ussidfromSeller == "") {
-		ussidValue = $("#sellerSelArticleSKUVal").val();
-	//} else {
-	//	ussidValue = ussidfromSeller;
-	//}
-	var productCode = '${product.code}';//$("#product").val();
-
-	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/viewWishlistsInPDP";
-
-	var dataString = 'productCode=' + productCode + '&ussid=' + ussidValue;// modified
-	//alert("localdata: "+dataString);
-	// for
-	// ussid
-
-	$.ajax({
-		contentType : "application/json; charset=utf-8",
-		url : requiredUrl,
-		data : dataString,
-		dataType : "json",
-		success : function(data) {
-		if (data==null) {
-				$("#wishListNonLoggedInId_sizeGuide").show();
-				$("#wishListDetailsId_sizeGuide").hide();
-			}
-
-			else if (data == "" || data == []) {
-				//alert("fasle");
-				loadDefaultWishListName_SizeGuide();
-
-			} else {
-				LoadWishLists_SizeGuide(ussidValue, data, productCode);
-				//alert("true");
-			}
-		},
-		error : function(xhr, status, error) {
-			$("#wishListNonLoggedInId_sizeGuide").show();
-			$("#wishListDetailsId_sizeGuide").hide();
-		}
-	});
-} 
-
-
-function LoadWishLists_SizeGuide(ussid, data, productCode) {
-	// modified for ussid
-	
-	//alert(ussid+" : "+data+" : "+productCode);
-	
-	var wishListContent = "";
-	var wishName = "";
-	$this = this;
-	$("#wishListNonLoggedInId_sizeGuide").hide();
-	$("#wishListDetailsId_sizeGuide").show();
-
-	for ( var i in data) {
-		var index = -1;
-		var checkExistingUssidInWishList = false;
-		var wishList = data[i];
-		wishName = wishList['particularWishlistName'];
-		
-		//alert(wishName+" : wishName");
-		
-		wishListList[i] = wishName;
-		var entries = wishList['ussidEntries'];
-		for ( var j in entries) {
-			var entry = entries[j];
-
-			if (entry == ussid) {
-
-				checkExistingUssidInWishList = true;
-				break;
-
-			}
-		}
-		//alert("checkExistingUssidInWishList : "+checkExistingUssidInWishList);
-	
-		if (checkExistingUssidInWishList) {
-			index++;
-            
-			wishListContent = wishListContent
-					+ "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_"
-					+ i
-					+ "' style='display: none' onclick='selectWishlist_SizeGuide("
-					+ i + ")' disabled><label for='radio_"
-					+ i + "'>"+wishName+"</label></td></tr>";
-		} else {
-			index++;
-		  
-			wishListContent = wishListContent
-					+ "<tr><td><input type='radio' name='wishlistradio' id='radio_"
-					+ i
-					+ "' style='display: none' onclick='selectWishlist_SizeGuide("
-					+ i + ")'><label for='radio_"
-					+ i + "'>"+wishName+"</label></td></tr>";
-					
-		}
-
-	}
-
-	$("#wishlistTbodyId_sizeGuide").html(wishListContent);
-
-}
-
-function loadDefaultWishListName_SizeGuide() {
-	var wishListContent = "";
-	var wishName = $("#defaultWishId_sizeGuide").text();
-	
-
-	
-	$("#wishListNonLoggedInId_sizeGuide").hide();
-	$("#wishListDetailsId_sizeGuide").show();
-
-	wishListContent = wishListContent
-			+ "<tr><td><input type='text' id='defaultWishName_sizeGuide' value='"
-			+ wishName + "'/></td></td></tr>";
-	$("#wishlistTbodyId_sizeGuide").html(wishListContent);
-	//alert(wishListContent+" wishListContent");
-
-	}
-
-
-
-	function selectWishlist_SizeGuide(i) {
-		//alert(i+" : sizeguide");
-	$("#hidWishlist_sizeGuide").val(i);
-
-	}
-
-	function addToWishlist_SizeGuide() {
-	var productCodePost = '${product.code}'; //$("#productCode").val();
-	//var productCodePost = $("#productCodePostQuick").val();
-	//alert(productCodePost);
-	var wishName = "";
-
-
-	if (wishListList == "") {
-		wishName = $("#defaultWishName_sizeGuide").val();
-	} else {
-		wishName = wishListList[$("#hidWishlist_sizeGuide").val()];
-	}
-	
-	//alert("wishListList add: "+wishListList);
-	
-	if(wishName==""){
-		var msg=$('#wishlistnotblank_sizeGuide').text();
-		$('#addedMessage_sizeGuide').show();
-		$('#addedMessage_sizeGuide').html(msg);
-		//alert("1");
-		return false;
-	}
-	if(wishName==undefined||wishName==null){
-		//alert("2");
-		return false;
-	}
-	var requiredUrl = ACC.config.encodedContextPath + "/p"
-			+ "/addToWishListInPDP";
-	var sizeSelected=true;
-	if( $("#variant.size-g option:selected").val()=="#"){
-		sizeSelected=false;
-	}
-	var dataString = 'wish=' + wishName + '&product=' + productCodePost
-			+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
-
-
-	$.ajax({
-		contentType : "application/json; charset=utf-8",
-		url : requiredUrl,
-		data : dataString,
-		dataType : "json",
-		success : function(data) {
-			if (data == true) {
-				$("#radio_" + $("#hidWishlist_sizeGuide").val()).prop("disabled", true);
-				var msg=$('#wishlistSuccess_sizeGuide').text();
-				$('#addedMessage_sizeGuide').show();
-				$('#addedMessage_sizeGuide').html(msg);
-				setTimeout(function() {
-					  $("#addedMessage_sizeGuide").fadeOut().empty();
-					}, 1500);
-				populateMyWishlistFlyOut(wishName);
-				
-				
-				//For MSD
-				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
-				if(isMSDEnabled === 'true')
-				{
-				console.log(isMSDEnabled);
-				var isApparelExist  = $("input[name=isApparelExist]").val();
-				console.log(isApparelExist);				
-				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-				console.log(salesHierarchyCategoryMSD);
-				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-				console.log(rootCategoryMSD);				
-				var productCodeMSD =  $("input[name=productCodeMSD]").val();
-				console.log(productCodeMSD);				
-				var priceformad =  $("input[id=price-for-mad]").val();
-				console.log(priceformad);				
-				
-				if(typeof isMSDEnabled === 'undefined')
-				{
-					isMSDEnabled = false;						
-				}
-				
-				if(typeof isApparelExist === 'undefined')
-				{
-					isApparelExist = false;						
-				}	
-				
-				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
-					{					
-					ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
-					}	
-				}
-				//End MSD
-			}
-		},
-	});
-
-	setTimeout(function() {
-		$('a.wishlist#wishlist').popover('hide');
-		$('input.wishlist#add_to_wishlist-sizeguide').popover('hide');
-		}, 1500);
-	}
-	
 
 </script> 	

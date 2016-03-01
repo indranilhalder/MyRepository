@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
 import com.tisl.mpl.marketplacecommerceservices.service.brand.BrandService;
 
@@ -53,11 +55,9 @@ public class DefaultBrandService implements BrandService
 
 		for (final CategoryModel category : subcategoryList)
 		{
-
-
 			subBrandList = category.getAllSubcategories();
-
-			if (subBrandList.size() > 0)
+			//if (subBrandList.size() > 0)
+			if (CollectionUtils.isNotEmpty(subBrandList))
 			{
 				for (final CategoryModel subBrand : subBrandList)
 				{ //gets the first character from a sub brand name
@@ -114,7 +114,7 @@ public class DefaultBrandService implements BrandService
 
 	/**
 	 * this method checks whether the email id exists or not
-	 * 
+	 *
 	 * @param emailId
 	 * @return boolean value
 	 */

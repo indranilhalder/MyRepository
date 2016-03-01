@@ -171,6 +171,8 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+
+
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -363,6 +365,7 @@
 		<property name="otpDao" ref="otpDao" />
 		<property name="modelservice" ref="modelService" />
 		<property name="userService" ref="userService" />
+
 	</bean>
 	<bean id="otpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.OTPDaoImpl" />
@@ -1526,9 +1529,19 @@
     </bean>
 	  <!--  pdp seller priority report cron job ends -->
 	  
-	  <alias name="mplVoucherService" alias="mplVoucherService" />
+	<alias name="mplVoucherService" alias="mplVoucherService" />
 	<bean id="mplVoucherService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
+		<!-- <property name="calculationService" ref="calculationService" /> -->
+		<property name="modelService" ref="modelService" />
+		<property name="voucherModelService" ref="voucherModelService" />
+		<!-- <property name="commerceCartService" ref="commerceCartService" /> -->
+		<property name="voucherService" ref="voucherService" />
+		<!-- <property name="commerceCartCalculationStrategy" ref="commerceCartCalculationStrategy" /> -->
+		<property name="discountUtility" ref="discountUtility" />
+	</bean>
+	
+	<bean id="homepageComponentService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.HomepageComponentServiceImpl">
 	</bean>
 	
     <bean id="automationService"
@@ -1544,11 +1557,21 @@
 
 
 	<!-- Tata Cliq Job : Campaign Team -->
+	<bean id="campaignPromoSubService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoSubService">
+	</bean>
+	
 	<bean id="campaignPromoDataService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCampaignPromoDataService">
 		<property name="modelService" ref="modelService" />
+		<property name="campaignPromoSubService" ref="campaignPromoSubService" />
 		<property name="sellerBasedPromotionDao" ref="sellerBasedPromotionDao" />
 	</bean>
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
+	
+	<!-- Coupon restriction service, added for getting restrictions for coupon -->
+	<bean id="couponRestrictionService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCouponRestrictionServiceImpl">		
+	</bean>
 </beans>

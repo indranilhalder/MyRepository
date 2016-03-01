@@ -27,10 +27,11 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 		<div class="product-tile">
 			<div class="image">
 			
-				 <c:if test="${product.isProductNew eq true}">
-					<img class="new brush-strokes-sprite sprite-New"
-					style="z-index: 1; display: block;"
-					src="/store/_ui/responsive/common/images/transparent.png"> </c:if> <a
+				<c:if test="${product.isProductNew eq true}">
+				<div style="z-index: 1;" class="new">
+					<img class="brush-strokes-sprite sprite-New"
+					src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
+					</div>  </c:if>  <a
 					class="thumb" href="${productUrl}" title="${product.name}"> <product:productPrimaryImage
 						product="${product}" format="searchPage" /> <%-- 	<product:productSearchPrimaryImage product="${product}" format="searchPage" index="1"/> --%>
 
@@ -212,8 +213,10 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->
 						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<!-- TISSTRT - 985::Size of footwear products are not displayed in SERP page-->
 						<c:if
-						test="${not empty product.productCategoryType && product.isVariant && product.productCategoryType eq 'Apparel'}">
+							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
+							                          || product.productCategoryType eq 'Footwear') }">
 						
 						 <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li>
 						 </c:if>

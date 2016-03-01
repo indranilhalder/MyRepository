@@ -40,9 +40,9 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 
 	/*
 	 * @Javadoc Method to Retrieve Pricerow based on articleSKUID
-	 *
+	 * 
 	 * @param->articleSKUID,catalogVersionModel
-	 *
+	 * 
 	 * @return->listOfPrice
 	 */
 	@Override
@@ -72,15 +72,15 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 
 	/*
 	 * <<<<<<< Updated upstream
-	 *
+	 * 
 	 * @Javadoc Method Method to Retrieve Pricerow based on multiple articleSKUID
-	 *
+	 * 
 	 * @param articleSKUIDList,catalogVersionModel
-	 *
+	 * 
 	 * @return PriceRowModel ======= (Javadoc) Method to Retrieve Pricerow based on multiple articleSKUID
-	 *
+	 * 
 	 * @param->articleSKUIDList,catalogVersionModel
-	 *
+	 * 
 	 * @return->listOfPrice >>>>>>> Stashed changes
 	 */
 
@@ -149,11 +149,11 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 
 	/*
 	 * <<<<<<< Updated upstream Method to retrieve PriceRow based on articleSKUID with checking stock level =======
-	 *
+	 * 
 	 * @Javadoc Method to retrieve PriceRow based on articleSKUID with checking stock level >>>>>>> Stashed changes
-	 *
+	 * 
 	 * @param articleSKUIDList,catalogVersionModel
-	 *
+	 * 
 	 * @return PriceRowModel
 	 */
 
@@ -161,6 +161,7 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	public PriceRowModel getPriceRowDetailForSKUWithStockCheck(final CatalogVersionModel catalogVersionModel,
 			final String articleSKUIDList)
 	{
+		PriceRowModel priceRowModel = null;
 		try
 		{
 			final String queryString = "SELECT {pm:pk} FROM {Pricerow AS pm JOIN Stocklevel AS sl ON {sl.SELLERARTICLESKU}={pm.SELLERARTICLESKU}} WHERE  {pm.SELLERARTICLESKU}=?sellerArticleSKU AND {sl.available}>'0' AND {pm.CATALOGVERSION}=?CATALOGVERSION ";
@@ -170,29 +171,30 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 			final SearchResult<PriceRowModel> searchRes = flexibleSearchService.search(queryString, params);
 			if (searchRes != null && searchRes.getCount() > 0)
 			{
-				return searchRes.getResult().get(0);
+				//return searchRes.getResult().get(0);
+				priceRowModel = searchRes.getResult().get(0);
 			}
-
-			return null;
+			//return null;
 		}
-
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e);
 		}
+		return priceRowModel;
 	}
 
 	/*
 	 * @Javadoc Method to retrieve least Price of product
-	 *
+	 * 
 	 * @param Productmodel, CatalogVersionModel
-	 *
+	 * 
 	 * @return PriceRowModel
 	 */
 
 	@Override
 	public PriceRowModel getMinimumPriceForProduct(final CatalogVersionModel catalogVersionModel, final ProductModel productModel)
 	{
+		PriceRowModel priceRowModel = null;
 		try
 		{
 			final String queryString = //
@@ -209,15 +211,15 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 			final SearchResult<PriceRowModel> searchRes = flexibleSearchService.search(queryString, params);
 			if (searchRes != null && searchRes.getCount() > 0)
 			{
-				return searchRes.getResult().get(0);
+				//return searchRes.getResult().get(0);
+				priceRowModel = searchRes.getResult().get(0);
 			}
-
-			return null;
+			//return null;
 		}
-
 		catch (final Exception ex)
 		{
 			throw new EtailNonBusinessExceptions(ex);
 		}
+		return priceRowModel;
 	}
 }

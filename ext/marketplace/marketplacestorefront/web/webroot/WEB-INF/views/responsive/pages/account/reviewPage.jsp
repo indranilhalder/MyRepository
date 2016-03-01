@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -28,59 +29,13 @@
 						code="header.flyout.review" /></option>
 						<option value=/store/mpl/en/my-account/myInterest data-href="account-addresses.php"><spring:theme code="header.flyout.recommendations" /></option>
               </optgroup>
-              
-               <optgroup label="Credits">
-                  <option value=/store/mpl/en/my-account/coupons data-href="account-invite.php"><spring:theme code="header.flyout.coupons" /></option>
-              </optgroup>
-         
           <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
               </optgroup>
       </select>
 </h1>
 	<div class="wrapper">
-	<div class="left-nav">
-		<ul>
-			<li><h3>
-					<spring:theme code="header.flyout.myaccount" />
-				</h3></li>
-			<li><a href="<c:url value="/my-account/"/>"><spring:theme
-						code="header.flyout.overview" /></a></li>
-			<li><a
-				href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-						code="header.flyout.marketplacepreferences" /></a></li>
-			<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
-						code="header.flyout.Personal" /></a></li>
-			<li><a href="<c:url value="/my-account/orders"/>"><spring:theme
-						code="header.flyout.orders" /></a></li>
-			<li><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
-						code="header.flyout.cards" /></a></li>
-			<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
-						code="header.flyout.address" /></a></li>
-			<li><a class="active"
-				href="<c:url value="/my-account/reviews"/>"><spring:theme
-						code="header.flyout.review" /></a></li>
-			<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
-						code="header.flyout.recommendations" /></a></li>
-						
-		</ul>
-		<%-- <ul>
-					<li><h3>
-							<spring:theme code="header.flyout.credits" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-								code="header.flyout.coupons" /></a></li>
-				</ul> --%>
-		<ul>
-			<li><h3>
-					<spring:theme code="header.flyout.share" />
-				</h3></li>
-			<li><a href="<c:url value="/my-account/friendsInvite"/>"><spring:theme
-						code="header.flyout.invite" /></a></li>
-
-		</ul>
-	</div>
-
+	<user:accountLeftNav pageName="review"/>
 	<div class="right-account">
 
 		<div class="my-reviews">
@@ -94,7 +49,7 @@
 		        <c:otherwise>
 		        <c:if test="${not empty productDataModifyMap }">
 		        <p><spring:theme code="myaccount.review.recentPurchase"/></p>
-							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel">
+							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel" id="my-review-carousel">
 							
 								<c:forEach items="${productDataModifyMap}" var="product">
 								<div class="slide item" id="no-image-link${product.value.code}"><a
@@ -141,9 +96,6 @@
 					<p>${startIndex}-${endIndex} of  ${commentsListSize} Reviews</p>
 					</c:if>
 					
-					<!-- <select class="white black-arrow">
-						<option>Sort by</option>
-					</select> -->
 					<div class="account-only">
 						 <c:if test="${totalPages ne 1 }"> 
 						<ul class="pagination">
@@ -215,8 +167,6 @@
 	    			
 						<div class="account-only product">
 						<ul>
-												
-  							 <%-- <product:productListerGridItem product="${comment.productData}" /> --%>
   							 <product:review product="${comment.productData}" />
   							<format:price priceData="${comment.productData.productMOP}"/>
   								
@@ -314,10 +264,23 @@
 								</div>
 								<h3 class="reviewHeading${count.index}">${comment.commentTitle}</h3>
 								<p class="reviewComment${count.index}">${comment.commentText}</p>
+								<%-- <p class="reviewMedia${count.index}"></p> --%>
+								<!-- Media addition  -->
+							
+									<!--content under discussion with BA   -->							
+								<%-- <div class="comment-img">
+								<c:if test="${comment.mediaType eq 'video'}">
+								<img style="width:70px !important;" src="${commonResourcePath}/images/video-play.png" class="hiddenMediaUrl${count.index} vidCount" data-type="${comment.mediaType}" data-videosrc="${comment.mediaUrl}&autoplay=false"/> <!--For Video  -->
+								</c:if>
+						
+								${comment.mediaItems}
+								</div> --%>
 								<div class="errorUpdateReview${count.index}" style="color: red;"></div>
 								
 								<input type="hidden" class="hiddenReviewHeading${count.index}" value="${comment.commentTitle}"/>
 								<input type="hidden" class="hiddenReviewComment${count.index}" value="${comment.commentText}"/>
+								<%-- <input type="hidden" class="hiddenMediaUrl${count.index}" value="${comment.mediaUrl}"/>
+								<input type="hidden" class="hiddenMediaType${count.index}" value="${comment.mediaType}"/> --%>
 								
 								<input type="hidden" class="categoryID${count.index}" value="${comment.productData.rootCategory}"/>
 								<input type="hidden" class="streamID${count.index}" value="${comment.productData.code}"/>
@@ -334,9 +297,7 @@
 								</p>
 							</div>
 							<div class="stats">
-              <%--  <c:if test=" ${empty comment.fitRating || comment.easeOfUse || comment.valueForMoneyRating || comment.qualityRating} ">
-               
-               </c:if> --%>
+           
 								<ul class="rating-list">
 								<c:choose>
 								<c:when test ="${comment.rootCategory eq 'Clothing' || comment.rootCategory eq 'Footwear' }">
@@ -482,7 +443,6 @@
 				<button class="deleteReviewConfirmation" type="submit" onclick="deleteReview();"><spring:theme code="text.wishlist.yes" /></button>
 					<a class="close deleteReviewConfirmationNo" href="#nogo" onclick="closeModal(this);"><spring:theme code="text.wishlist.no" /></a>
 				</div>
-				<!-- <button class="close" data-dismiss="modal"></button> -->
 			</div>
 			</div>
 		  </div>
@@ -500,7 +460,6 @@
 				<button class="updateReviewConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
 			    <a class="close updateReviewConfirmationNo" href="#nogo" onclick="closeModal(this);"><spring:theme code="text.wishlist.no" /></a>
 				</div>
-				<!-- <button class="close" data-dismiss="modal"></button> -->
 			</div>
 			</div>
 		  </div>
@@ -526,8 +485,31 @@
 			</div>
 			<div class="overlay" data-dismiss="modal"></div> 
 		  </div>
+		  <!--TOPIC UNDER DISCUSSION  -->
+		  <!-- <div class="modal fade" id="videoReviewModal" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay" data-dismiss="modal" onclick="closing()"></div>
+		<div class="modal-content content"
+			style="width: 53%; height: 60%; overflow: hidden;">
+			<button type="button" class="close pull-right" onclick="closing()"
+				aria-hidden="true" data-dismiss="modal"
+				style="width: 15px; height: 15px; top: 0; right: 0px;"></button>
+			<iframe name="videoReviewFrame" id="videoReviewFrame" width="100%"
+				height="100%" frameborder="0" allowfullscreen></iframe>
+		</div>
+	</div> -->
+	
+	<div style="display: none;">
+	<p id="comment_title_empty"><spring:theme code="myaccount.review.commentTitleValidationMsg"></spring:theme></p>
+	<p id="comment_title_length"><spring:theme code="myaccount.review.commentTitle.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_empty"><spring:theme code="myaccount.review.commentTextValidationMsg"></spring:theme></p>
+	<p id="comment_text_length"><spring:theme code="myaccount.review.commentText.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_title_length"><spring:theme code="myaccount.review.commentTextTitle.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_title_empty"><spring:theme code="myaccount.review.commentTextTitleValidationMsg"></spring:theme></p>
+	</div>
 </template:page>
 <script>
+//$("#videoReviewFrame")[0].src += "&autoplay=0";
 $(".next a").click(function(){
 	var pageNo = $(this).closest(".pagination").find("li.active a").text();
 	if(pageNo != ""){
@@ -542,6 +524,15 @@ $(".next a").click(function(){
 		window.location.href="?page="+pageNo;
 		}
 });
+
+ function closing() {
+	window.location.reload();
+} 
+//  $(window).load(function(){
+			$('.vidCount').each(function(a){
+				$("iframe")[a].src += "&autoplay=false";
+			});
+//  });
 
 $(".prev a").click(function(){
 	var pageNo = $(this).closest(".pagination").find("li.active a").text();

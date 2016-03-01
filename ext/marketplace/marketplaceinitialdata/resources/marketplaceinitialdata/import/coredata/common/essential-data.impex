@@ -424,8 +424,8 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 ;100040;ORDER_CANCELLED;Order Cancelled;Your order has been cancelled;CANCEL;true;true;ff1c47;D11; 
 
 ###Payment Related
-UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;ConvenienceChargeForCOD;juspayWebHookTAT;juspayEBSTAT;ebsTatExpiryAlertTime
-;mpl;50000;2000;100;10;6;15
+UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;juspayWebHookTAT;juspayEBSTAT;ebsTatExpiryAlertTime
+;mpl;50000;2000;10;6;15
 
 INSERT_UPDATE PaymentType;mode[unique=true];isAvailable;baseStore(uid)
 ;Credit Card;true;mpl
@@ -528,5 +528,3 @@ INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLangu
 
 INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
 ;sellerPriorityJob;0 0/15 * 1/1 * ? *
-
-

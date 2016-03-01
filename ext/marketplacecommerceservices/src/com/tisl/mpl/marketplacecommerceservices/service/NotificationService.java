@@ -4,8 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.jalo.Item;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
@@ -15,8 +13,8 @@ import javax.xml.bind.JAXBException;
 
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
 import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
-import com.tisl.mpl.data.AllVoucherListData;
 import com.tisl.mpl.data.NotificationData;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
 /**
@@ -33,7 +31,7 @@ public interface NotificationService
 
 
 	public void markNotificationRead(final String customerId, final String orderNo, final String consignmentNo,
-			final String shopperStatus);
+			final String shopperStatus) throws EtailNonBusinessExceptions;
 
 
 
@@ -51,12 +49,8 @@ public interface NotificationService
 
 	List<NotificationData> getSortedNotificationData(List<NotificationData> notificationDataList);
 
-	AllVoucherListData getAllVoucherList(CustomerModel currentCustomer, List<VoucherModel> voucherList);
+	//AllVoucherListData getAllVoucherList(CustomerModel currentCustomer, List<VoucherModel> voucherList);
 
-	/**
-	 * @param item
-	 */
-	void saveToVoucherStatusNotification(Item item);
-
+	void saveToVoucherStatusNotification(VoucherModel voucher);
 
 }

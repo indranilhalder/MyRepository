@@ -206,12 +206,9 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 								//TISSIT-1802
 								OrderModel subOrder = modelService.create(OrderModel.class);
-								if (null != rtmModel.getRefundedOrderEntry())
+								if (null != rtmModel.getRefundedOrderEntry() && null != rtmModel.getRefundedOrderEntry().getOrder())
 								{
-									if (null != rtmModel.getRefundedOrderEntry().getOrder())
-									{
-										subOrder = (OrderModel) rtmModel.getRefundedOrderEntry().getOrder();
-									}
+									subOrder = (OrderModel) rtmModel.getRefundedOrderEntry().getOrder();
 								}
 
 								if (null != subOrder && null != rtmModel.getRefundType()

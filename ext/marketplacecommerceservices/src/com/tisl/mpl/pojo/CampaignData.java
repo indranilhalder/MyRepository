@@ -17,136 +17,547 @@ public class CampaignData
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(PromotionCreationJob.class.getName());
 
-
-	private String offer_id;
-	private String offer_name;
-	private String offer_active;
-	private String offer_type;
-	private String offer_channel;
-	private String offer_startdate;
-	private String offer_enddate;
+	private String identifier;
+	private String title;
+	private String promotionGrp;
+	private String description;
+	private String enabled;
+	private String priority;
+	private String channel;
+	private String products;
+	private String categories;
+	private String excludedProducts;
+	private String catMinAmnt;
+	private String quantity;
+	private String maxDiscount;
+	private String isPercentage;
+	private String percentage;
+	private String discountPrices;
+	private String giftProducts;
+	private String startDate;
+	private String endDate;
+	private String restrictions;
+	private String firedMessage;
+	private String couldFireMessage;
+	private String secProducts;
+	private String secCategories;
+	private String threshTotals;
+	private String isTship;
+	private String isSShip;
+	private String discountType;
+	private String deliveryMode;
+	private String freecount;
 	private String url;
-	private String creation_date;
-	private String modified_date;
 
 
 	/**
-	 * @return the offer_id
+	 * @return the identifier
 	 */
-	public String getOffer_id()
+	public String getIdentifier()
 	{
-		return offer_id;
+		return identifier;
 	}
 
 	/**
-	 * @param offer_id
-	 *           the offer_id to set
+	 * @param identifier
+	 *           the identifier to set
 	 */
-	public void setOffer_id(final String offer_id)
+	public void setIdentifier(final String identifier)
 	{
-		this.offer_id = offer_id;
+		this.identifier = identifier;
 	}
 
 	/**
-	 * @return the offer_name
+	 * @return the title
 	 */
-	public String getOffer_name()
+	public String getTitle()
 	{
-		return offer_name;
+		return title;
 	}
 
 	/**
-	 * @param offer_name
-	 *           the offer_name to set
+	 * @param title
+	 *           the title to set
 	 */
-	public void setOffer_name(final String offer_name)
+	public void setTitle(final String title)
 	{
-		this.offer_name = offer_name;
+		this.title = title;
 	}
 
 	/**
-	 * @return the offer_active
+	 * @return the promotionGrp
 	 */
-	public String getOffer_active()
+	public String getPromotionGrp()
 	{
-		return offer_active;
+		return promotionGrp;
 	}
 
 	/**
-	 * @param offer_active
-	 *           the offer_active to set
+	 * @param promotionGrp
+	 *           the promotionGrp to set
 	 */
-	public void setOffer_active(final String offer_active)
+	public void setPromotionGrp(final String promotionGrp)
 	{
-		this.offer_active = offer_active;
+		this.promotionGrp = promotionGrp;
 	}
 
 	/**
-	 * @return the offer_type
+	 * @return the description
 	 */
-	public String getOffer_type()
+	public String getDescription()
 	{
-		return offer_type;
+		return description;
 	}
 
 	/**
-	 * @param offer_type
-	 *           the offer_type to set
+	 * @param description
+	 *           the description to set
 	 */
-	public void setOffer_type(final String offer_type)
+	public void setDescription(final String description)
 	{
-		this.offer_type = offer_type;
+		this.description = description;
 	}
 
 	/**
-	 * @return the offer_channel
+	 * @return the enabled
 	 */
-	public String getOffer_channel()
+	public String getEnabled()
 	{
-		return offer_channel;
+		return enabled;
 	}
 
 	/**
-	 * @param offer_channel
-	 *           the offer_channel to set
+	 * @param enabled
+	 *           the enabled to set
 	 */
-	public void setOffer_channel(final String offer_channel)
+	public void setEnabled(final String enabled)
 	{
-		this.offer_channel = offer_channel;
+		this.enabled = enabled;
 	}
 
 	/**
-	 * @return the offer_startdate
+	 * @return the priority
 	 */
-	public String getOffer_startdate()
+	public String getPriority()
 	{
-		return offer_startdate;
+		return priority;
 	}
 
 	/**
-	 * @param offer_startdate
-	 *           the offer_startdate to set
+	 * @param priority
+	 *           the priority to set
 	 */
-	public void setOffer_startdate(final String offer_startdate)
+	public void setPriority(final String priority)
 	{
-		this.offer_startdate = offer_startdate;
+		this.priority = priority;
 	}
 
 	/**
-	 * @return the offer_enddate
+	 * @return the channel
 	 */
-	public String getOffer_enddate()
+	public String getChannel()
 	{
-		return offer_enddate;
+		return channel;
 	}
 
 	/**
-	 * @param offer_enddate
-	 *           the offer_enddate to set
+	 * @param channel
+	 *           the channel to set
 	 */
-	public void setOffer_enddate(final String offer_enddate)
+	public void setChannel(final String channel)
 	{
-		this.offer_enddate = offer_enddate;
+		this.channel = channel;
+	}
+
+	/**
+	 * @return the products
+	 */
+	public String getProducts()
+	{
+		return products;
+	}
+
+	/**
+	 * @param products
+	 *           the products to set
+	 */
+	public void setProducts(final String products)
+	{
+		this.products = products;
+	}
+
+	/**
+	 * @return the categories
+	 */
+	public String getCategories()
+	{
+		return categories;
+	}
+
+	/**
+	 * @param categories
+	 *           the categories to set
+	 */
+	public void setCategories(final String categories)
+	{
+		this.categories = categories;
+	}
+
+	/**
+	 * @return the excludedProducts
+	 */
+	public String getExcludedProducts()
+	{
+		return excludedProducts;
+	}
+
+	/**
+	 * @param excludedProducts
+	 *           the excludedProducts to set
+	 */
+	public void setExcludedProducts(final String excludedProducts)
+	{
+		this.excludedProducts = excludedProducts;
+	}
+
+	/**
+	 * @return the catMinAmnt
+	 */
+	public String getCatMinAmnt()
+	{
+		return catMinAmnt;
+	}
+
+	/**
+	 * @param catMinAmnt
+	 *           the catMinAmnt to set
+	 */
+	public void setCatMinAmnt(final String catMinAmnt)
+	{
+		this.catMinAmnt = catMinAmnt;
+	}
+
+	/**
+	 * @return the quantity
+	 */
+	public String getQuantity()
+	{
+		return quantity;
+	}
+
+	/**
+	 * @param quantity
+	 *           the quantity to set
+	 */
+	public void setQuantity(final String quantity)
+	{
+		this.quantity = quantity;
+	}
+
+	/**
+	 * @return the maxDiscount
+	 */
+	public String getMaxDiscount()
+	{
+		return maxDiscount;
+	}
+
+	/**
+	 * @param maxDiscount
+	 *           the maxDiscount to set
+	 */
+	public void setMaxDiscount(final String maxDiscount)
+	{
+		this.maxDiscount = maxDiscount;
+	}
+
+	/**
+	 * @return the isPercentage
+	 */
+	public String getIsPercentage()
+	{
+		return isPercentage;
+	}
+
+	/**
+	 * @param isPercentage
+	 *           the isPercentage to set
+	 */
+	public void setIsPercentage(final String isPercentage)
+	{
+		this.isPercentage = isPercentage;
+	}
+
+	/**
+	 * @return the percentage
+	 */
+	public String getPercentage()
+	{
+		return percentage;
+	}
+
+	/**
+	 * @param percentage
+	 *           the percentage to set
+	 */
+	public void setPercentage(final String percentage)
+	{
+		this.percentage = percentage;
+	}
+
+	/**
+	 * @return the discountPrices
+	 */
+	public String getDiscountPrices()
+	{
+		return discountPrices;
+	}
+
+	/**
+	 * @param discountPrices
+	 *           the discountPrices to set
+	 */
+	public void setDiscountPrices(final String discountPrices)
+	{
+		this.discountPrices = discountPrices;
+	}
+
+	/**
+	 * @return the giftProducts
+	 */
+	public String getGiftProducts()
+	{
+		return giftProducts;
+	}
+
+	/**
+	 * @param giftProducts
+	 *           the giftProducts to set
+	 */
+	public void setGiftProducts(final String giftProducts)
+	{
+		this.giftProducts = giftProducts;
+	}
+
+	/**
+	 * @return the startDate
+	 */
+	public String getStartDate()
+	{
+		return startDate;
+	}
+
+	/**
+	 * @param startDate
+	 *           the startDate to set
+	 */
+	public void setStartDate(final String startDate)
+	{
+		this.startDate = startDate;
+	}
+
+	/**
+	 * @return the endDate
+	 */
+	public String getEndDate()
+	{
+		return endDate;
+	}
+
+	/**
+	 * @param endDate
+	 *           the endDate to set
+	 */
+	public void setEndDate(final String endDate)
+	{
+		this.endDate = endDate;
+	}
+
+	/**
+	 * @return the restrictions
+	 */
+	public String getRestrictions()
+	{
+		return restrictions;
+	}
+
+	/**
+	 * @param restrictions
+	 *           the restrictions to set
+	 */
+	public void setRestrictions(final String restrictions)
+	{
+		this.restrictions = restrictions;
+	}
+
+	/**
+	 * @return the firedMessage
+	 */
+	public String getFiredMessage()
+	{
+		return firedMessage;
+	}
+
+	/**
+	 * @param firedMessage
+	 *           the firedMessage to set
+	 */
+	public void setFiredMessage(final String firedMessage)
+	{
+		this.firedMessage = firedMessage;
+	}
+
+	/**
+	 * @return the couldFireMessage
+	 */
+	public String getCouldFireMessage()
+	{
+		return couldFireMessage;
+	}
+
+	/**
+	 * @param couldFireMessage
+	 *           the couldFireMessage to set
+	 */
+	public void setCouldFireMessage(final String couldFireMessage)
+	{
+		this.couldFireMessage = couldFireMessage;
+	}
+
+	/**
+	 * @return the secProducts
+	 */
+	public String getSecProducts()
+	{
+		return secProducts;
+	}
+
+	/**
+	 * @param secProducts
+	 *           the secProducts to set
+	 */
+	public void setSecProducts(final String secProducts)
+	{
+		this.secProducts = secProducts;
+	}
+
+	/**
+	 * @return the secCategories
+	 */
+	public String getSecCategories()
+	{
+		return secCategories;
+	}
+
+	/**
+	 * @param secCategories
+	 *           the secCategories to set
+	 */
+	public void setSecCategories(final String secCategories)
+	{
+		this.secCategories = secCategories;
+	}
+
+	/**
+	 * @return the threshTotals
+	 */
+	public String getThreshTotals()
+	{
+		return threshTotals;
+	}
+
+	/**
+	 * @param threshTotals
+	 *           the threshTotals to set
+	 */
+	public void setThreshTotals(final String threshTotals)
+	{
+		this.threshTotals = threshTotals;
+	}
+
+	/**
+	 * @return the isTship
+	 */
+	public String getIsTship()
+	{
+		return isTship;
+	}
+
+	/**
+	 * @param isTship
+	 *           the isTship to set
+	 */
+	public void setIsTship(final String isTship)
+	{
+		this.isTship = isTship;
+	}
+
+	/**
+	 * @return the isSShip
+	 */
+	public String getIsSShip()
+	{
+		return isSShip;
+	}
+
+	/**
+	 * @param isSShip
+	 *           the isSShip to set
+	 */
+	public void setIsSShip(final String isSShip)
+	{
+		this.isSShip = isSShip;
+	}
+
+	/**
+	 * @return the discountType
+	 */
+	public String getDiscountType()
+	{
+		return discountType;
+	}
+
+	/**
+	 * @param discountType
+	 *           the discountType to set
+	 */
+	public void setDiscountType(final String discountType)
+	{
+		this.discountType = discountType;
+	}
+
+	/**
+	 * @return the deliveryMode
+	 */
+	public String getDeliveryMode()
+	{
+		return deliveryMode;
+	}
+
+	/**
+	 * @param deliveryMode
+	 *           the deliveryMode to set
+	 */
+	public void setDeliveryMode(final String deliveryMode)
+	{
+		this.deliveryMode = deliveryMode;
+	}
+
+	/**
+	 * @return the freecount
+	 */
+	public String getFreecount()
+	{
+		return freecount;
+	}
+
+	/**
+	 * @param freecount
+	 *           the freecount to set
+	 */
+	public void setFreecount(final String freecount)
+	{
+		this.freecount = freecount;
 	}
 
 	/**
@@ -166,38 +577,8 @@ public class CampaignData
 		this.url = url;
 	}
 
-	/**
-	 * @return the creation_date
-	 */
-	public String getCreation_date()
-	{
-		return creation_date;
-	}
 
-	/**
-	 * @param creation_date
-	 *           the creation_date to set
-	 */
-	public void setCreation_date(final String creation_date)
-	{
-		this.creation_date = creation_date;
-	}
 
-	/**
-	 * @return the modified_date
-	 */
-	public String getModified_date()
-	{
-		return modified_date;
-	}
 
-	/**
-	 * @param modified_date
-	 *           the modified_date to set
-	 */
-	public void setModified_date(final String modified_date)
-	{
-		this.modified_date = modified_date;
-	}
 
 }

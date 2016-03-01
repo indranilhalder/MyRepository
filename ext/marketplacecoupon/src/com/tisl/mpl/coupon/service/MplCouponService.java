@@ -6,12 +6,10 @@ package com.tisl.mpl.coupon.service;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.user.CustomerModel;
-import de.hybris.platform.voucher.model.DateRestrictionModel;
+import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.tisl.mpl.data.VoucherDisplayData;
 
@@ -35,10 +33,24 @@ public interface MplCouponService
 	List<VoucherDisplayData> getSortedVoucher(List<VoucherDisplayData> voucherDataList);
 
 	/**
-	 * @return
+	 *
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherModel>
 	 */
-	Set<Map<VoucherModel, DateRestrictionModel>> getClosedVoucher();
-
 	SearchPageData<VoucherModel> getClosedVoucher(final CustomerModel customer, PageableData pageableData);
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<VoucherInvalidationModel>
+	 */
+	SearchPageData<VoucherInvalidationModel> getVoucherRedeemedOrder(CustomerModel customer, PageableData pageableData);
+
+	/**
+	 * @param customer
+	 * @return List<VoucherInvalidationModel>
+	 */
+	List<VoucherInvalidationModel> getAllVoucherInvalidations(CustomerModel customer);
 
 }

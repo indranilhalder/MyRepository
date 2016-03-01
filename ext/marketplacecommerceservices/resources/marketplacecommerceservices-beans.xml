@@ -370,6 +370,7 @@
 	<bean class="com.tisl.mpl.data.SalesReportData">
 		<property name="orderNo" type="String"/>
 		<property name="orderDate" type="String"/>
+		<property name="orderTime" type="String"/>
 		<property name="listingId" type="String"/>
 		<property name="USSID" type="String"/>
 		<property name="sellerName" type="String"/>
@@ -614,6 +615,8 @@
 		<property name="isActive" type="String"/>
 		<property name="modifiedActiveFlag" type="String"/>
 		<property name="newlyCreated" type="String"/>
+		<property name="modifiedSellerID" type="String"/>
+		<property name="modifiedSellerName" type="String"/>
 	</bean>
 	<!-- Seller Priority Report Headers Data Ends -->
 	
@@ -626,9 +629,6 @@
 	<property name ="sourcePage" type = "String" />
 	<property name ="icid" type = "String" />
 	</bean>
-	
-	
-	
 	
 </beans>
 

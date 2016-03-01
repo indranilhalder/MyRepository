@@ -6,7 +6,7 @@ package com.tisl.mpl.interceptor;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
-import de.hybris.platform.servicelayer.interceptor.ValidateInterceptor;
+import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 
-import com.tisl.mpl.core.enums.SellerPriorityEnum;
 import com.tisl.mpl.core.model.MplSellerPriorityModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerPriorityDao;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -26,7 +25,8 @@ import com.tisl.mpl.model.SellerInformationModel;
  * @author TCS
  *
  */
-public class SellerPriorityInterceptor implements ValidateInterceptor
+public class SellerPriorityInterceptor implements PrepareInterceptor
+
 {
 
 
@@ -58,7 +58,8 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 	 * @return: void
 	 */
 	@Override
-	public void onValidate(final Object model, final InterceptorContext arg) throws InterceptorException
+	//	public void onValidate(final Object model, final InterceptorContext arg) throws InterceptorException
+	public void onPrepare(final Object model, final InterceptorContext arg) throws InterceptorException
 	{
 
 		// YTODO Auto-generated method stub
@@ -118,15 +119,13 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 
 			final List<String> categoryList = new ArrayList<String>();
 			final List<String> skuIdList = new ArrayList<String>();
-			//			final Map<String, String> sellerCat = new HashMap<String, String>();
-			//			final Map<String, String> sellerProd = new HashMap<String, String>();
 			if (!(mplSellerPriorityDao.getAllSellerPriorities().isEmpty()))
 			{
 				LOG.debug("*********** Priority table size" + mplSellerPriorityDao.getAllSellerPriorities().size());
-
+				final List<MplSellerPriorityModel> sellerPriorityList = new ArrayList<MplSellerPriorityModel>();
 				for (final MplSellerPriorityModel priorityValue : mplSellerPriorityDao.getAllSellerPriorities())
 				{
-					// Cannot modify Category ID or Listing ID
+					sellerPriorityList.add(priorityValue);
 					if (arg.isModified(priorityValue, MplSellerPriorityModel.CATEGORYID)
 							|| arg.isModified(priorityValue, MplSellerPriorityModel.LISTINGID))
 					{
@@ -136,27 +135,39 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 					{
 						// Addding Category id and listing id into a list for the rows not modified
 						if (!arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYSTARTDATE)
-								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)) //&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE)
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.PRIORITYENDDATE)
+								&& null != priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue()
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.ISACTIVE)
+								&& !arg.isModified(priorityValue, MplSellerPriorityModel.SELLERID))
 						{
 							LOG.debug("no modification *********** categoryId : " + priorityValue.getCategoryId()
 									+ " **************   listingId" + priorityValue.getListingId());
-							if (null != priorityValue.getIsActive() && priorityValue.getIsActive().booleanValue())
+
+							if (null != priorityValue.getCategoryId())
 							{
-								if (null != priorityValue.getCategoryId())
-								{
-									categoryList.add(priorityValue.getCategoryId().getCode());
-								}
-								if (null != priorityValue.getListingId())
-								{
-									skuIdList.add(priorityValue.getListingId().getCode());
-								}
+								categoryList.add(priorityValue.getCategoryId().getCode());
+							}
+							if (null != priorityValue.getListingId())
+							{
+								skuIdList.add(priorityValue.getListingId().getCode());
 							}
 						}
 					}
 				}
 				// if new value already	 exist throw error
-				if (priority.getIsActive().booleanValue() && null != priority.getPriorityStatus()
-						&& SellerPriorityEnum.NEW.equals(priority.getPriorityStatus()))
+				//				if (SellerPriorityEnum.PROCESSING.equals(priority.getPriorityStatus()))
+				//				{
+				//					priority.setPriorityStatus(SellerPriorityEnum.PROCESSED);
+				//				}
+				//				else if (SellerPriorityEnum.ERROR.equals(priority.getPriorityStatus()))
+				//				{
+				//					priority.setPriorityStatus(SellerPriorityEnum.ERROR);
+				//				}
+				//				else
+				//				{
+				//				if (SellerPriorityEnum.PROCESSING.equals(priority.getPriorityStatus()))
+				//				{
+				if (priority.getIsActive().booleanValue())
 				{
 					if (null != categoryId && categoryList.contains(categoryId))
 					{
@@ -167,6 +178,8 @@ public class SellerPriorityInterceptor implements ValidateInterceptor
 						throw new InterceptorException(ERROR_SAME_SKU);
 					}
 				}
+				//}
+				//	}
 			}
 		}
 	}

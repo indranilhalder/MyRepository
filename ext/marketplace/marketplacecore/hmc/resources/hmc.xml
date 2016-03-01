@@ -1116,6 +1116,32 @@
 		</organizer>
 	</type>
 
+<type name="ProductPromotion" mode="append">
+		<organizer>
+			<editor mode="append">
+				<tab name="tab.promotion.properties" mode="append">
+					<section name="section.promotion.products">
+						<listlayout>
+							<text name="text.productpromotion.productcodelisttitledescription" />
+							<attribute name="productCodeList" />
+							</listlayout>
+					</section>
+				</tab>
+				<tab name="tab.promotion.media" mode="append">
+					<section name="section.promotion.media" mode="append">
+						<columnlayout>
+							<row>
+								<attribute name="productBanner" labelwidth="100">
+									<mediaeditor/>
+								</attribute>
+								<text name="text.productpromotion.productbanner" />
+							</row>
+						</columnlayout>
+					</section>
+				</tab>
+			</editor>
+		</organizer>
+	</type>
 
 	<!-- Tata Etail For Buy A get y Free -->
 	<type name="BuyXItemsofproductAgetproductBforfree" mode="append">
@@ -1123,6 +1149,7 @@
 			<editor mode="append">
 				<tab name="tab.promotion.properties" mode="append">
 					<section name="section.promotion.products">
+
 						<listlayout>
 							<text name="text.productpromotion.qualifyingproductscategories" />
 							<attribute name="products" labelwidth="100">
@@ -3081,6 +3108,115 @@
          </itemlayout>
       </defaultreference>
    </type>
+   
+   <type name="PromotionVoucher" icon="ext/voucher/images/e_voucher.gif" mode="append">
+	   <organizer>
+	      <search>
+	         <condition attribute="voucherCode"/>
+	      </search>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.promotionvoucher.common" width="353"/>
+	               <attribute name="code" maxlength="3"/>
+	               <attribute name="name"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="tab.common" position="0">
+	            <section name="section.voucher.description" mode="replace">
+	            	<listlayout>
+                     	<attribute name="description"/>
+                  	</listlayout>
+	               <listlayout>
+	                  <text name="text.promotionvoucher.vouchercode" width="353"/>
+	                  <table>
+	                     <tr>
+	                        <td>
+	                           <attribute name="voucherCode"/>
+	                        </td>
+	                        <td>
+	                           <action type="item" classname="com.tisl.mpl.core.hmc.MplGeneratePromotionVoucherCodeAction" name="btn.generate.voucher.code.action"/>
+	                        </td>
+	                     </tr>
+	                  </table>
+	               </listlayout>
+	            </section>
+	         </tab>
+	         <tab name="tab.voucher.restrictions" position="1">
+	            <section name="section.voucher.restrictions">
+	               <listlayout>
+	               	<text name="text.voucher.restrictions" width="595"/>
+                     <attribute name="restrictions">
+                        <referencecollectioneditor presetattribute="voucher"
+                        									create="true"
+                        									add="true"
+                        									remove="true"
+                        									autosave="true">
+                           <itemlayout>
+                              <attribute name="restrictionType" width="194"/>
+                              <attribute name="description" width="357"/>
+                           </itemlayout> 
+                        </referencecollectioneditor>
+                     </attribute>
+	                  <attribute name="redemptionQuantityLimit" position="0"/>
+	                  <attribute name="redemptionQuantityLimitPerUser" position="1"/>
+	               </listlayout>
+	            </section>
+	         </tab>                  
+	      </editor>
+	   </organizer>
+	</type>
+	
+	
+	<type name="ProductRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="products"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="products" width="150"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="products"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.productrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="products">
+								<referencecollectioneditor create="false" add="true" remove="true">
+									<itemlayout>
+										<attribute name="code" width="92"/>
+										<attribute name="name" width="85"/>										
+									</itemlayout>
+								</referencecollectioneditor>
+	                  </attribute>
+	                  <attribute name="positive">
+	                     <advancedbooleaneditor truename="productrestriction.positive.true"
+	                                            falsename="productrestriction.positive.false"/>
+	                  </attribute>
+	                  <attribute name="productCodeList"/>
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
  <!-- Voucher HMC Modification ends -->
 
 </configuration>

@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -658,8 +659,8 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 	 * @Description : To change Uid of customer
 	 */
 	@Override
-	public void changeUid(final String newUid, final String currentPassword)
-			throws DuplicateUidException, PasswordMismatchException
+	public void changeUid(final String newUid, final String currentPassword) throws DuplicateUidException,
+			PasswordMismatchException
 	{
 		try
 		{
@@ -707,11 +708,10 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 			//creating PaymentService of Juspay
 			final PaymentService juspayService = new PaymentService();
 
-			juspayService
-					.setBaseUrl(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
-			juspayService
-					.withKey(configurationService.getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
+			juspayService.setBaseUrl(configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService.withKey(
+					configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
 					.withMerchantId(
 							configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
@@ -729,8 +729,8 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
+	 * 
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplCustomerProfileFacade#getYearAnniversaryList()
 	 */
 	@Override
@@ -759,7 +759,7 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplCustomerProfileFacade#changePassword(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -1049,7 +1049,9 @@ public class MplCustomerProfileFacadeImpl implements MplCustomerProfileFacade
 					updatedDetailList.add(MarketplacecommerceservicesConstants.EMAIL_ID_suffix);
 				}
 			}
-			if (updatedDetailList.size() > 0)
+
+			//if (updatedDetailList.size() > 0)
+			if (CollectionUtils.isNotEmpty(updatedDetailList))
 			{
 				sendEmailForUpdateCustomerProfile(updatedDetailList, profileUpdateUrl);
 			}
