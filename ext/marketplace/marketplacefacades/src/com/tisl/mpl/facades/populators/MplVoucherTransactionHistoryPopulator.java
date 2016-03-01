@@ -12,14 +12,11 @@ import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.Months;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -65,7 +62,7 @@ public class MplVoucherTransactionHistoryPopulator implements Populator<VoucherI
 		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
 		VoucherData voucherData = new VoucherData();
 		final VoucherModel voucher = source.getVoucher();
-		boolean isOrderDateValid = false;
+		final boolean isOrderDateValid = true;
 
 		if (voucher instanceof PromotionVoucherModel) //type casting to PromotionVoucherModel
 
@@ -76,7 +73,7 @@ public class MplVoucherTransactionHistoryPopulator implements Populator<VoucherI
 				{
 					voucherData = getDefaultVoucherFacade().getVoucher(((PromotionVoucherModel) voucher).getVoucherCode());
 					final OrderData orderDetailsData = mplCheckoutFacade.getOrderDetailsForCode(source.getOrder().getCode());
-					isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());
+					//isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());
 					final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) source.getVoucher();
 
 					if (isOrderDateValid && null != promoVoucher.getVoucherCode() && null != orderDetailsData.getCode())
@@ -101,44 +98,33 @@ public class MplVoucherTransactionHistoryPopulator implements Populator<VoucherI
 	 * @param orderCreationDate
 	 * @return boolean
 	 */
-	private boolean checkTransactionDateValidity(final Date orderCreationDate)
-	{
-		boolean isDateValid = false;
-		if (orderCreationDate != null)
-		{
-			final Calendar endCalendar = Calendar.getInstance();
-			final Calendar startCalendar = Calendar.getInstance();
-			final SimpleDateFormat dateFormatforMONTH = new java.text.SimpleDateFormat(
-					MarketplacecommerceservicesConstants.COUPONS_TXN_DATE_FORMAT);
-
-
-			endCalendar.setTime(new Date());
-			startCalendar.setTime(orderCreationDate);
-
-			final int endYear = endCalendar.get(Calendar.YEAR);
-			final int endMonth = Integer.parseInt(dateFormatforMONTH.format(endCalendar.getTime()));
-			final int endDay = endCalendar.get(Calendar.DAY_OF_MONTH);
-
-
-			final int startYear = startCalendar.get(Calendar.YEAR);
-			final int startMonth = Integer.parseInt(dateFormatforMONTH.format(startCalendar.getTime()));
-			final int startDay = startCalendar.get(Calendar.DAY_OF_MONTH);
-
-			final DateTime startDate = new DateTime().withDate(startYear, startMonth, startDay);
-			final DateTime endDate = new DateTime().withDate(endYear, endMonth, endDay);
-
-
-			final Months monthsBetween = Months.monthsBetween(startDate, endDate);
-			final int monthsBetweenInt = monthsBetween.getMonths();
-
-			if (monthsBetweenInt < 6)
-			{
-				isDateValid = true;
-			}
-		}
-		return isDateValid;
-	}
-
+	/*
+	 * private boolean checkTransactionDateValidity(final Date orderCreationDate) { boolean isDateValid = false; if
+	 * (orderCreationDate != null) { final Calendar endCalendar = Calendar.getInstance(); final Calendar startCalendar =
+	 * Calendar.getInstance(); final SimpleDateFormat dateFormatforMONTH = new java.text.SimpleDateFormat(
+	 * MarketplacecommerceservicesConstants.COUPONS_TXN_DATE_FORMAT);
+	 * 
+	 * 
+	 * endCalendar.setTime(new Date()); startCalendar.setTime(orderCreationDate);
+	 * 
+	 * final int endYear = endCalendar.get(Calendar.YEAR); final int endMonth =
+	 * Integer.parseInt(dateFormatforMONTH.format(endCalendar.getTime())); final int endDay =
+	 * endCalendar.get(Calendar.DAY_OF_MONTH);
+	 * 
+	 * 
+	 * final int startYear = startCalendar.get(Calendar.YEAR); final int startMonth =
+	 * Integer.parseInt(dateFormatforMONTH.format(startCalendar.getTime())); final int startDay =
+	 * startCalendar.get(Calendar.DAY_OF_MONTH);
+	 * 
+	 * final DateTime startDate = new DateTime().withDate(startYear, startMonth, startDay); final DateTime endDate = new
+	 * DateTime().withDate(endYear, endMonth, endDay);
+	 * 
+	 * 
+	 * final Months monthsBetween = Months.monthsBetween(startDate, endDate); final int monthsBetweenInt =
+	 * monthsBetween.getMonths();
+	 * 
+	 * if (monthsBetweenInt < 6) { isDateValid = true; } } return isDateValid; }
+	 */
 	/**
 	 * @Description: This method returns the coupon redeemed date
 	 * @param fmtDate
