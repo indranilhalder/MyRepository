@@ -1354,13 +1354,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SPECIALPRICE_PRIORITY = "priority".intern();
 	public static final String HTTP = "http:".intern();
 	public static final String HTTPS = "https:".intern();
+	public static final String STAGED = "Staged".intern();
 
 
 
 
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
-//Audit Report
+	//Audit Report
 	public static final String CHANGED = "CHANGED";
 	public static final String PRIORITYSTARTDATE = "priorityStartDate";
 	public static final String PRIORITYENDDATE = "priorityEndDate";

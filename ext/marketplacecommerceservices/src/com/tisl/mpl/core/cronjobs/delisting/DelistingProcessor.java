@@ -1,21 +1,24 @@
+/**
+ *
+ */
 package com.tisl.mpl.core.cronjobs.delisting;
 
-
-import de.hybris.platform.util.CSVWriter;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Map;
 
 
 /**
  * @author TCS
  *
  */
+//TISPRD-207 Changes
 public interface DelistingProcessor
 {
-	public void processFile(InputStream input, OutputStream output, boolean flag) throws IOException;
 
-	CSVWriter getCSVWriter(final OutputStream output) throws java.io.UnsupportedEncodingException;
+
+	public void process();
+
+	public boolean processDatatoModelSeller(final Map<Integer, String> line);
+
+	public boolean processDatatoModelUssid(final Map<Integer, String> line);
 
 }
