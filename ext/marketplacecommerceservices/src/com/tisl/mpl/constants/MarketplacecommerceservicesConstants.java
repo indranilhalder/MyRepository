@@ -1383,6 +1383,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SIMPLEDATEFORMATDB = "yyyy-MM-dd HH:mm:ss";
 	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
+	public static final String FILENOTFOUNDEXCEPTION = "Cannot find file for batch update.";
+	public static final String IOEXCEPTION = "Exception closing file handle. ";
+
+
 
 	public static final String PARENT = "parent";
 
