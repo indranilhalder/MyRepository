@@ -151,7 +151,8 @@ public interface MplPaymentFacade
 	 * @param cartValue
 	 * @param totalCODCharge
 	 */
-	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge);
+	//TISPRD-361
+	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -254,9 +255,9 @@ public interface MplPaymentFacade
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
-			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			CalculationException, JaloSecurityException, JaloPriceFactoryException;
+	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException;
 
 
 	/**

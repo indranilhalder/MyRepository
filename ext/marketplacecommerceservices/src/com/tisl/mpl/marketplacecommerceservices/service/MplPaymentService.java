@@ -124,7 +124,8 @@ public interface MplPaymentService
 	 * @param cart
 	 *
 	 */
-	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart);
+	//TISPRD-361 method signature changes
+	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -165,9 +166,9 @@ public interface MplPaymentService
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart)
-			throws ModelSavingException, NumberFormatException, JaloInvalidParameterException, VoucherOperationException,
-			CalculationException, JaloSecurityException, JaloPriceFactoryException;
+	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException;
 
 
 	/**
