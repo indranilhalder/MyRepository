@@ -287,6 +287,10 @@
 	<alias alias="csOrderActionsWidgetRenderer" name="marketPlaceDefaultCsOrderActionsWidgetRenderer" />
 	<bean id="marketPlaceDefaultCsOrderActionsWidgetRenderer" parent="defaultCsOrderActionsWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceOrderManagementActionsWidgetRenderer">
+		
+		<!-- added -->
+		<property name="callContextController" ref="csCallContextController"/>
+		<!--end  -->
 		<property name="popupWidgetHelper" ref="popupWidgetHelper" />
 	</bean>
 
@@ -625,5 +629,8 @@
 	</bean> 
 	 -->
 	
+<!--Alternate Conatct details for CNC -->
+<alias alias="csAlternateContactDetailsCreateWidgetConfig" name="defaultCsAlternateContactDetailsCreateWidgetConfig"/>
+	<bean id="defaultCsAlternateContactDetailsCreateWidgetConfig" parent="csBaseWidgetConfig">
 	
 </beans>
