@@ -8,7 +8,7 @@
 </c:if>
 <div class="video-wrapper">
 	<div class="video-container">
-		<iframe class="iframe-video" src="${component.videoUrl}" id="player"></iframe>
+		<iframe class="iframe-video" src="${component.videoUrl}?rel=0&enablejsapi=1" id="player"></iframe>
 	</div>
 	<c:if test="${not empty component.videoDescription}">
 <div class="brand-description">
