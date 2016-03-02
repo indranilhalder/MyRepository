@@ -234,11 +234,11 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 		function(e) {
 		   
 		    if($(this).attr("data-type")=='image'){
-		    	$("#videoFrame").hide();
+		    	$("#player").hide();
 		    	$(".productImagePrimary .picZoomer-pic-wp img").show();
 			$(".productImagePrimary .picZoomer-pic-wp img").attr("src",
 					$(this).attr("data-primaryimagesrc"));
-			$("#videoFrame").attr("src","");
+			$("#player").attr("src","");
 			$(".super_zoom img").attr("src",
 					$(this).attr("data-zoomimagesrc"));
 			
@@ -257,9 +257,9 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
-		    	$("#videoFrame").show();
-				$("#videoFrame").attr("src",url);
-				$("#videoModal #videoFrame").attr("src",url);
+		    	$("#player").show();
+				$("#player").attr("src",url);
+				$("#videoModal #player").attr("src",url);
 				$("#videoModal").modal();
 				$("#videoModal").addClass("active");
 				//$(".productImagePrimary .picZoomer-pic-wp img").hide();
