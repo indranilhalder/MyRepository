@@ -138,7 +138,6 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.data.CouponHistoryData;
-import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.ExistingWishlistData;
 import com.tisl.mpl.data.FriendsInviteData;
@@ -1096,7 +1095,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_COUPONS, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String getCoupons(
-			@RequestParam(value = ModelAttributetConstants.PAGE_HISTORY, defaultValue = ModelAttributetConstants.ONE_VAL_COUPONS) final int pageHistory,
+			@RequestParam(value = ModelAttributetConstants.PAGE_HISTORY, defaultValue = ModelAttributetConstants.ZERO_VAL) final int pageHistory,
 			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = ModelAttributetConstants.ZERO_VAL) final int pageVoucher,
 			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = ModelAttributetConstants.PAGE_FOR, defaultValue = "") final String pageFor, final Model model,
@@ -1117,112 +1116,31 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
 			final SearchPageData<VoucherDisplayData> searchPageDataVoucher = mplCouponFacade.getAllClosedCoupons(customer,
 					pageableData);
-			final List<VoucherDisplayData> closedVoucherDataList = searchPageDataVoucher.getResults();
 			populateModelForCoupon(model, searchPageDataVoucher, showMode);
 
-			/* getting all voucher transactions along with the order placed in a DTO */
-
-			List<CouponHistoryData> couponHistoryDTOList = new ArrayList<CouponHistoryData>();
-			CouponHistoryStoreDTO couponHistoryStoreDTO = new CouponHistoryStoreDTO();
 			final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
-			final PageableData pageableDataVoucherHistory = createPageableData(page, pageSizeVoucherHistory, sortCode, showMode);
-			couponHistoryStoreDTO = mplCouponFacade.getCouponTransactions(customer);
+
+			/* Coupon history and saved sum count calculation */
+			final PageableData pageableDataVoucherHistory = createPageableData(pageHistory, pageSizeVoucherHistory, sortCode,
+					showMode);
+			final Map<String, Double> countSavedSumMap = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
+
+
 			final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
 					.getVoucherHistoryTransactions(customer, pageableDataVoucherHistory);
-			populateModelForCoupon(model, searchPageDataVoucherHistoryFinal, showMode);
 
-			if (null != couponHistoryStoreDTO)
-			{
-				couponHistoryDTOList = searchPageDataVoucherHistoryFinal.getResults();
-			}
+			populateModelForCouponHistory(model, searchPageDataVoucherHistoryFinal, showMode);
 
-			if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_VOUCHER))
+			if (null != countSavedSumMap)
 			{
-				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
-				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0,
-						pageVoucher, model);
-				//model = (Model) returnMapVoucher.get("model_attr_unused");
-				if (null != returnMapVoucher.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
+				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
 				{
-					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMapVoucher
-							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
-					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
-				}
-				// Auxiliary pagination with default 1 page
-				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
-				final Map<String, Object> returnMapHistory = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, 1, model);
-				//model = (Model) returnMapHistory.get("model_attr_used");
-				if (null != returnMapHistory.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
-				{
-					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMapHistory
-							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
-					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
-				}
-			}
-			else if (pageFor.equalsIgnoreCase(ModelAttributetConstants.ACCOUNT_HISTORY))
-			{
-				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
-				final Map<String, Object> returnMap = couponPagation(null, couponHistoryDTOList, 0, pageSizeHistory, pageHistory,
-						model);
-				//model = (Model) returnMap.get("model_attr_used");
-				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
-				{
-					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMap
-							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
-					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
-				}
-				// Auxiliary pagination with default 1 page
-				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
-				final Map<String, Object> returnMapVoucher = couponPagation(closedVoucherDataList, null, pageSizeCoupon, 0, 1, model);
-				//model = (Model) returnMapVoucher.get("model_attr_unused");
-				if (null != returnMapVoucher.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
-				{
-					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMapVoucher
-							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
-					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
-				}
-			}
-			else
-			{
-				final double pageSizeCoupon = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_VOUCHER, 1);
-				final double pageSizeHistory = getSiteConfigService().getInt(MessageConstants.PAZE_SIZE_COUPONS, 1);
-				final Map<String, Object> returnMap = couponPagation(closedVoucherDataList, couponHistoryDTOList, pageSizeCoupon,
-						pageSizeHistory, 1, model);
-				//model = (Model) returnMap.get("model_attr_unused");
-				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED))
-				{
-					final List<VoucherDisplayData> voucherDisplayDataPagList = (List<VoucherDisplayData>) returnMap
-							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_UNUSED);
-					model.addAttribute(ModelAttributetConstants.CLOSED_COUPON_LIST, voucherDisplayDataPagList);
-				}
-				//model = (Model) returnMap.get("model_attr_used");
-				if (null != returnMap.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED))
-				{
-					final List<CouponHistoryData> couponHistPagList = (List<CouponHistoryData>) returnMap
-							.get(ModelAttributetConstants.PAGINATED_DATA_COUPON_USED);
-					model.addAttribute(ModelAttributetConstants.COUPON_ORDER_DATA_DTO_LIST, couponHistPagList);
+					model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, iterator.getValue());
+					model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, iterator.getKey());
 				}
 
 			}
-
-
-
-			if (null != couponHistoryStoreDTO.getSavedSum())
-			{
-
-				model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, couponHistoryStoreDTO.getSavedSum());
-			}
-
-			if (null != Integer.valueOf(couponHistoryStoreDTO.getCouponsRedeemedCount()))
-			{
-
-				model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT,
-						Integer.valueOf(couponHistoryStoreDTO.getCouponsRedeemedCount()));
-
-			}
-
-
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
@@ -1244,151 +1162,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
-	}
-
-
-
-	/*
-	 *
-	 */
-	public Map<String, Object> couponPagation(List<VoucherDisplayData> closedVoucherDataList,
-			List<CouponHistoryData> couponHistoryDTOList, final double pageSizeCoupon, final double pageSizeHistory, final int page,
-			final Model model)
-	{
-
-		int start = 0;
-		int end = 0;
-		int listSize = 0;
-		int startIndex = 0;
-		int endIndex = 0;
-		final Map<String, Object> returnMap = new HashMap<String, Object>();
-		if (null != closedVoucherDataList && !CollectionUtils.isEmpty(closedVoucherDataList))
-		{
-			listSize = closedVoucherDataList.size();
-			final double pages = Math.ceil(listSize / pageSizeCoupon);
-			final int totalPages = (int) pages;
-			//change
-			model.addAttribute(ModelAttributetConstants.TOTAL_PAGES_COUPONS, Integer.valueOf(totalPages));
-			model.addAttribute(ModelAttributetConstants.COUPONS_LIST_SIZE, Integer.valueOf(listSize));
-			returnMap.put("model_attr_unused", model);
-
-			if (page != 0)
-			{
-				start = (int) ((page - 1) * pageSizeCoupon);
-				end = (int) (start + pageSizeCoupon);
-			}
-			else
-			{
-				start = 1;
-				end = (int) (start + pageSizeCoupon);
-			}
-
-			if (start > listSize)
-			{
-				start = 1;
-				end = (int) (start + pageSizeCoupon);
-			}
-
-			if (end > listSize)
-			{
-				closedVoucherDataList = closedVoucherDataList.subList(start, listSize);
-			}
-			else
-			{
-
-				closedVoucherDataList = closedVoucherDataList.subList(start, end);
-			}
-			if (page > 1)
-			{
-				startIndex = ((page - 1) * (int) pageSizeCoupon) + 1;
-				endIndex = ((page - 1) * (int) pageSizeCoupon) + (int) pageSizeCoupon;
-			}
-			else
-			{
-				if (listSize > pageSizeCoupon)
-				{
-					startIndex = 1;
-					endIndex = (int) pageSizeCoupon;
-				}
-				else
-				{
-					startIndex = 1;
-					endIndex = listSize;
-				}
-			}
-			if (endIndex >= listSize)
-			{
-				endIndex = listSize;
-			}
-			returnMap.put("paginated_data_coupon_unused", closedVoucherDataList);
-			model.addAttribute(ModelAttributetConstants.START_INDEX_COUPONS, Integer.valueOf(startIndex));
-			model.addAttribute(ModelAttributetConstants.END_INDEX_COUPONS, Integer.valueOf(endIndex));
-		}
-		// used section
-		if (null != couponHistoryDTOList && !CollectionUtils.isEmpty(couponHistoryDTOList))
-		{
-			listSize = couponHistoryDTOList.size();
-			final double pages = Math.ceil(listSize / pageSizeHistory);
-			final int totalPages = (int) pages;
-			//change
-			model.addAttribute(ModelAttributetConstants.TOTAL_PAGES_COUPONS_HIST, Integer.valueOf(totalPages));
-			model.addAttribute(ModelAttributetConstants.COUPONS_HIST_LIST_SIZE, Integer.valueOf(listSize));
-			returnMap.put("model_attr_used", model);
-
-			if (page != 0)
-			{
-				start = (int) ((page - 1) * pageSizeHistory);
-				end = (int) (start + pageSizeHistory);
-			}
-			else
-			{
-				start = 1;
-				end = (int) (start + pageSizeHistory);
-			}
-
-			if (start > listSize)
-			{
-				start = 1;
-				end = (int) (start + pageSizeHistory);
-			}
-
-			if (end > listSize)
-			{
-				couponHistoryDTOList = couponHistoryDTOList.subList(start, listSize);
-			}
-			else
-			{
-
-				couponHistoryDTOList = couponHistoryDTOList.subList(start, end);
-			}
-			if (page > 1)
-			{
-				startIndex = ((page - 1) * (int) pageSizeHistory) + 1;
-				endIndex = ((page - 1) * (int) pageSizeHistory) + (int) pageSizeHistory;
-			}
-			else
-			{
-				if (listSize > pageSizeHistory)
-				{
-					startIndex = 1;
-					endIndex = (int) pageSizeHistory;
-				}
-				else
-				{
-					startIndex = 1;
-					endIndex = listSize;
-				}
-			}
-			if (endIndex >= listSize)
-			{
-				endIndex = listSize;
-			}
-			returnMap.put("paginated_data_coupon_used", couponHistoryDTOList);
-			model.addAttribute(ModelAttributetConstants.START_INDEX_COUPONS_HIST, Integer.valueOf(startIndex));
-			model.addAttribute(ModelAttributetConstants.END_INDEX_COUPONS_HIST, Integer.valueOf(endIndex));
-		}
-		return returnMap;
-
 	}
 
 	/**
