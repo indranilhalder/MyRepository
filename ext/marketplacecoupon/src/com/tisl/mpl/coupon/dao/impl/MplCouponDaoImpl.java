@@ -61,8 +61,21 @@ public class MplCouponDaoImpl implements MplCouponDao
 		try
 		{
 			final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
+			LOG.debug("queryString: " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			return getFlexibleSearchService().<VoucherModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -118,6 +131,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 			//.append(" ORDER BY {dr.startdate} ASC");
 
 			final String CLOSED_VOUCHER = queryBiulder.toString();
+			LOG.debug("queryString: " + CLOSED_VOUCHER);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, CLOSED_VOUCHER
 
@@ -126,6 +140,18 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
 
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -163,11 +189,24 @@ public class MplCouponDaoImpl implements MplCouponDao
 					.append("ORDER BY {vi.creationtime} DESC");
 
 			final String VOUCHER_HISTORY_QUERY = queryBiulder.toString();
+			LOG.debug("queryString: " + VOUCHER_HISTORY_QUERY);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, VOUCHER_HISTORY_QUERY) });
 
 			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
 
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -199,6 +238,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 					.append("ORDER BY {vi.creationtime} DESC");
 
 			final String queryString = queryBiulder.toString();
+			LOG.debug("queryString: " + queryString);
 			//forming the flexible search query
 			final FlexibleSearchQuery voucherInvalidationQuery = new FlexibleSearchQuery(queryString);
 
