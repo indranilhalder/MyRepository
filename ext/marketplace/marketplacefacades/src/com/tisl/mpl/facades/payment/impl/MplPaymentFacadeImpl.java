@@ -1108,15 +1108,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @param totalCODCharge
 	 *
 	 */
+	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge)
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge) throws EtailNonBusinessExceptions
 	{
 		//getting the current user
 		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
 		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
 		final CartModel cart = getCartService().getSessionCart();
 		final List<AbstractOrderEntryModel> entries = cart.getEntries();
+
+		//setting payment transaction for COD
 		getMplPaymentService().setPaymentTransactionForCOD(paymentMode, cart);
+
 		if (null != mplCustomer)
 		{
 			if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
@@ -1328,7 +1332,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#applyPromotions()
 	 */
 	@Override
