@@ -30,11 +30,11 @@ var homePageBannerTimeout='${timeout}';
 									<img src="${banner.bannerImage.url}">
 								</div>
 								<ul class="major-promos">
-									<li>${banner.majorPromoText}</li>
+									<li data-bannerid="${banner.pk}">${banner.majorPromoText}</li>
 								</ul>
 								<ul class="minor-promos">
-									<li>${banner.minorPromo1Text}</li>
-									<li>${banner.minorPromo2Text}</li>
+									<li data-bannerid="${banner.pk}">${banner.minorPromo1Text}</li>
+									<li data-bannerid="${banner.pk}">${banner.minorPromo2Text}</li>
 								</ul>
 							</div>
 						</c:when>
@@ -46,18 +46,18 @@ var homePageBannerTimeout='${timeout}';
 									<img src="${banner.bannerImage.url}">
 								</div>
 								<ul class="major-promos">
-									<li>${banner.promoText4}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>
 
 								<ul class="minor-promos">
-									<li>${banner.promoText2}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText2}</li>
 								</ul>
 
 								<ul class="top-promos">
-									<li>${banner.promoText1}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText1}</li>
 								</ul>
 								<ul class="bottom-promos">
-									<li>${banner.promoText3}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText3}</li>
 								</ul>
 							</div>
 
@@ -97,11 +97,11 @@ var homePageBannerTimeout='${timeout}';
 									<img src="${banner.bannerImage.url}">
 								</div>
 								<ul class="major-promos">
-									<li>${banner.majorPromoText}</li>
+									<li data-bannerid="${banner.pk}">${banner.majorPromoText}</li>
 								</ul>
 								<ul class="minor-promos">
-									<li>${banner.minorPromo1Text}</li>
-									<li>${banner.minorPromo2Text}</li>
+									<li data-bannerid="${banner.pk}">${banner.minorPromo1Text}</li>
+									<li data-bannerid="${banner.pk}">${banner.minorPromo2Text}</li>
 								</ul>
 							</div>
 						</c:when>
@@ -113,18 +113,18 @@ var homePageBannerTimeout='${timeout}';
 									Hello<img src="${banner.bannerImage.url}">
 								</div>
 								<ul class="major-promos">
-									<li>${banner.promoText4}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>
 
 								<ul class="minor-promos">
-									<li>${banner.promoText2}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText2}</li>
 								</ul>
 
 								<ul class="top-promos">
-									<li>${banner.promoText1}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText1}</li>
 								</ul>
 								<ul class="bottom-promos">
-									<li>${banner.promoText3}</li>
+									<li data-bannerid="${banner.pk}">${banner.promoText3}</li>
 								</ul>
 							</div>
 
@@ -147,6 +147,19 @@ var homePageBannerTimeout='${timeout}';
 	</div>
 	</c:otherwise>
 	</c:choose>
+<script>
 
+	$(document).ready(function(){
+		$(".hero li").each(function() {
+			if($(this).has("href")){
+				var icid = $(this).attr("data-bannerid");
+				var link = $(this).find("a").attr("href");
+				link = link + "?icid="+icid;
+				$(this).find("a").attr("href",link);
+			}
+		});
+	});
+
+</script> 
 
 
