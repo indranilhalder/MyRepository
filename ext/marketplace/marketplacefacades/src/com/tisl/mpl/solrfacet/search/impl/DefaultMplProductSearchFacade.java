@@ -50,6 +50,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	 *
 	 */
 	private static final String PROMOTED_PRODUCT = "promotedProduct";
+	private static final String IS_OFFER_EXISTING = "isOffersExisting";
 
 	/**
 	 * @return the mplProductSearchService
@@ -908,5 +909,35 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		return searchQueryData;
 	}
 
+	@Override
+	public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> searchAllOffers(final SearchStateData searchState,
+			final PageableData pageableData)
+	{
+		return getThreadContextService().executeInContext(
+				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+				{
+					@Override
+					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+					{
+						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+								.convert(getProductSearchService().searchAgain(decodeSearchAllOffers(searchState), pageableData));
+					}
+				});
+	}
+
+	protected SolrSearchQueryData decodeSearchAllOffers(final SearchStateData searchState)
+	{
+		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
+
+		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+
+		solrSearchQueryTermData.setKey(IS_OFFER_EXISTING);
+		solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
+
+		searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
+
+
+		return searchQueryData;
+	}
 
 }
