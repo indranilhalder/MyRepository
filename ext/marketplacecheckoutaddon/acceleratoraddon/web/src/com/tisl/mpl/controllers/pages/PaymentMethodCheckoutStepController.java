@@ -1645,6 +1645,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, JaloSecurityException,
 			JaloPriceFactoryException
 	{
+		final long startTime = System.currentTimeMillis();
+		LOG.debug("Entering Controller applyPromotions()=====" + System.currentTimeMillis());
 		final CartModel cart = getCartService().getSessionCart();
 		//TISEE-510
 
@@ -1746,6 +1748,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			responseData.setUssidPriceDetails(jsonResponse);
 		}
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Controller applyPromotions()=====" + (endTime - startTime));
 		return responseData;
 
 	}
@@ -1857,6 +1862,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	//public @ResponseBody Boolean setBankForSavedCard(final String bankName) throws EtailNonBusinessExceptions
 	private Boolean setBankForSavedCard(final String bankName) throws EtailNonBusinessExceptions
 	{
+		final long startTime = System.currentTimeMillis();
 		Boolean sessionStatus = Boolean.FALSE;
 		try
 		{
@@ -1871,6 +1877,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					break;
 				}
 			}
+			final long iterationTime = System.currentTimeMillis();
+			LOG.debug("Inside setBankForSavedCard=====exiting loop=====" + (iterationTime - startTime));
 			LOG.debug("From session=====Bank:::::::"
 					+ getSessionService().getAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN));
 			if (null == (getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION)))
@@ -1891,6 +1899,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error("No bank " + bankName + " is matched with the local bank model " + e);
 		}
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Controller setBankForSavedCard()=====" + (endTime - startTime));
 
 		return sessionStatus;
 	}

@@ -1523,6 +1523,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException
 	{
+		final long startTime = System.currentTimeMillis();
 		//Reset Voucher Apportion
 		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
 		{
@@ -1666,6 +1667,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		promoPriceData.setVoucherDiscount(discData);
 
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service applyPromotions()======" + (endTime - startTime));
 		return promoPriceData;
 	}
 
@@ -1679,6 +1682,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	private void calculatePromotion(final CartModel cart, final CartData cartData)
 	{
+		final long startTime = System.currentTimeMillis();
 		final Double deliveryCost = cart.getDeliveryCost();
 		final CommerceCartParameter parameter = new CommerceCartParameter();
 		parameter.setEnableHooks(true);
@@ -1698,6 +1702,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		getModelService().save(cart);
 		getMplCommerceCartService().setTotalWithConvCharge(cart, cartData);
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting calculatePromotion()========" + (endTime - startTime));
 	}
 
 
@@ -1745,6 +1752,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	private Double populateCartDiscountPrice(final CartModel cart)
 	{
+		final long startTime = System.currentTimeMillis();
+		LOG.debug("Entering Service populateCartDiscountPrice()=====" + System.currentTimeMillis());
 		Double value = Double.valueOf(0);
 		final CartData cartData = getMplExtendedCartConverter().convert(cart);
 
@@ -1754,6 +1763,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			value = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
 
 		}
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Controller applyPromotions()=====" + (endTime - startTime));
 		return value;
 	}
 

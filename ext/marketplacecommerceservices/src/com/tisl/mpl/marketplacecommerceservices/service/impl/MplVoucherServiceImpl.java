@@ -142,6 +142,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			CalculationException, NumberFormatException, JaloInvalidParameterException, JaloSecurityException,
 			JaloPriceFactoryException
 	{
+		final long startTime = System.currentTimeMillis();
 		LOG.debug("Step 7:::Inside checking cart after applying voucher");
 		//Total amount in cart updated with delay... Calculating value of voucher regarding to order
 		final double cartSubTotal = cartModel.getSubtotal().doubleValue();
@@ -220,6 +221,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				if ((productPrice < 1) || (voucherCalcValue != 0 && (netAmountAfterAllDisc - voucherCalcValue) <= 0))
 				{
+					final long endTime = System.currentTimeMillis();
+					LOG.debug("Exiting service checkCartAfterApply====== " + (endTime - startTime));
 					LOG.debug("Step 15:::inside freebie and (netAmountAfterAllDisc - voucherCalcValue) <= 0 and (productPrice - voucherCalcValue) <= 0 block");
 					return releaseVoucherAfterCheck(cartModel, voucherCode, Double.valueOf(productPrice), applicableOrderEntryList,
 							voucherList);
@@ -229,10 +232,14 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			else if (CollectionUtils.isEmpty(applicableOrderEntryList) && CollectionUtils.isNotEmpty(voucherList))
 			{
 				LOG.debug("Step 13,14,15/1:::applicable entries empty");
+				final long endTime = System.currentTimeMillis();
+				LOG.debug("Exiting service checkCartAfterApply====== " + (endTime - startTime));
 				return releaseVoucherAfterCheck(cartModel, voucherCode, null, applicableOrderEntryList, voucherList);
 			}
 
 			discountData.setCouponDiscount(discountUtility.createPrice(cartModel, Double.valueOf(voucherCalcValue)));
+			final long endTime = System.currentTimeMillis();
+			LOG.debug("Exiting service checkCartAfterApply====== " + (endTime - startTime));
 			return discountData;
 		}
 
@@ -380,6 +387,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	public List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(final VoucherModel voucherModel,
 			final CartModel cartModel)
 	{
+		final long startTime = System.currentTimeMillis();
 		LOG.debug("Step 11:::Inside getOrderEntryModelFromVouEntries");
 
 		final List<AbstractOrderEntry> orderEntryList = getOrderEntriesFromVoucherEntries(voucherModel, cartModel);
@@ -397,6 +405,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 		}
 
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service getOrderEntryModelFromVouEntries====== " + (endTime - startTime));
 		return applicableOrderList;
 	}
 
@@ -431,6 +441,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	public void setApportionedValueForVoucher(final VoucherModel voucher, final CartModel cartModel, final String voucherCode,
 			final List<AbstractOrderEntryModel> applicableOrderEntryList)
 	{
+		final long startTime = System.currentTimeMillis();
 		LOG.debug("Step 16:::Inside setApportionedValueForVoucher");
 		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 		{
@@ -551,7 +562,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			}
 		}
 
-
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service setApportionedValueForVoucher====== " + (endTime - startTime));
 	}
 
 	/**
