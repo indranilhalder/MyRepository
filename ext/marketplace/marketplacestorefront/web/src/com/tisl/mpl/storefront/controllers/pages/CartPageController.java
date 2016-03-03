@@ -89,6 +89,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -702,13 +703,30 @@ public class CartPageController extends AbstractPageController
 
 						final SellerInformationModel sellerInfoForWishlist = mplSellerInformationService.getSellerDetail(entryModel
 								.getUssid());
+						//TISPRO-165 Putting Fulfillment type for Treat Yourself Section
+						if (sellerInfoForWishlist != null
+								&& sellerInfoForWishlist.getRichAttribute() != null
+								&& sellerInfoForWishlist.getRichAttribute().size() > 0
+								&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0).getDeliveryFulfillModes() != null
+								&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0).getDeliveryFulfillModes()
+										.getCode() != null)
 
-						final String sellerName = sellerInfoForWishlist.getSellerName();
-						if (entryModel.getUssid() != null && null != sellerName)
 						{
-							ussidMap.put(productData.getCode(), entryModel.getUssid());
-							model.addAttribute("ussidMap", ussidMap);
-							model.addAttribute("sellerName", sellerName);
+							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0)
+									.getDeliveryFulfillModes().getCode();
+
+							final String sellerName = sellerInfoForWishlist.getSellerName();
+							if (entryModel.getUssid() != null && null != sellerName)
+							{
+								ussidMap.put(productData.getCode(), entryModel.getUssid());
+								model.addAttribute("ussidMap", ussidMap);
+								model.addAttribute("sellerName", sellerName);
+							}
+							if (StringUtils.isNotEmpty(fulfillmentType))
+							{
+								model.addAttribute("fulfillmentType", fulfillmentType);
+
+							}
 						}
 						for (final OrderEntryData cart : cartData.getEntries())
 						{

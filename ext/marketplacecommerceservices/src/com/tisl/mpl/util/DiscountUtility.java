@@ -60,6 +60,7 @@ public class DiscountUtility
 	 */
 	public MplPromotionData populateData(final ProductPromotionModel productPromotion, final CartModel cart)
 	{
+		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = new MplPromotionData();
 		if (productPromotion instanceof BuyAPercentageDiscountModel)
 		{
@@ -86,6 +87,8 @@ public class DiscountUtility
 		{
 			promoData = getBuyAAboveXData(productPromotion, cart);
 		}
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service populateData====== " + (endTime - startTime));
 		return promoData;
 	}
 
@@ -101,11 +104,15 @@ public class DiscountUtility
 	 */
 	public MplPromotionData populateCartPromoData(final OrderPromotionModel orderPromotion, final CartModel cart)
 	{
+		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = new MplPromotionData();
 		if (orderPromotion instanceof CartOrderThresholdDiscountPromotionModel)
 		{
 			promoData = getCartDiscountPromoData(orderPromotion, cart);
 		}
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Service populateCartPromoData()=====" + (endTime - startTime));
 
 		return promoData;
 	}
@@ -119,6 +126,7 @@ public class DiscountUtility
 	 */
 	public MplPromotionData populatePotentialPromoData(final ProductPromotionModel productPromotion, final CartModel cart)
 	{
+		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = null;
 
 		if (productPromotion instanceof BuyAPercentageDiscountModel)
@@ -206,6 +214,8 @@ public class DiscountUtility
 			}
 		}
 
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service populatePotentialPromoData====== " + (endTime - startTime));
 		return promoData;
 	}
 
@@ -218,6 +228,7 @@ public class DiscountUtility
 	 */
 	public MplPromotionData populatePotentialOrderPromoData(final OrderPromotionModel orderPromotion, final CartModel cart)
 	{
+		final long startTime = System.currentTimeMillis();
 		MplPromotionData promoData = null;
 
 		if (orderPromotion instanceof CartOrderThresholdDiscountPromotionModel)
@@ -232,9 +243,10 @@ public class DiscountUtility
 				promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.POTENTIAL_PROMO_MESSAGE);
 			}
 		}
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Entering service populatePotentialOrderPromoData====== " + (endTime - startTime));
 		return promoData;
 	}
-
 
 	/**
 	 * @Description : For Cart Level Discount Promotion
@@ -663,6 +675,7 @@ public class DiscountUtility
 	 */
 	public MplPromotionData populateNonPromoData(final CartData cartData)
 	{
+		final long startTime = System.currentTimeMillis();
 		final MplPromotionData promoData = new MplPromotionData();
 		if (null != cartData && null != cartData.getTotalDiscounts())
 		{
@@ -670,6 +683,8 @@ public class DiscountUtility
 			promoData.setPromoTypeIdentifier(MarketplacecommerceservicesConstants.OTHER_PROMO);
 		}
 
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Service populateNonPromoData()=====" + (endTime - startTime));
 		return promoData;
 	}
 
