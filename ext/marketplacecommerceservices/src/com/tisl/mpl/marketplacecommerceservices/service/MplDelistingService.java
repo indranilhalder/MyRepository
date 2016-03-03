@@ -7,6 +7,7 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.MarketplaceDelistModel;
 import com.tisl.mpl.model.SellerInformationModel;
 
 
@@ -26,9 +27,12 @@ public interface MplDelistingService
 
 	public void delistSeller(final List<SellerInformationModel> ussid, final String delisting, final String blockOMS);
 
-	public void delistUSSID(final List<SellerInformationModel> ussid, final String delisting);
+	public boolean delistUSSID(final List<SellerInformationModel> ussid, final String delisting);
 
 	public List<SellerInformationModel> getModelforUSSID(final String ussid, CatalogVersionModel catalogVersion);
+
+	//TISPRD-207 Changes
+	public List<MarketplaceDelistModel> findUnprocessedRecord();
 
 
 }
