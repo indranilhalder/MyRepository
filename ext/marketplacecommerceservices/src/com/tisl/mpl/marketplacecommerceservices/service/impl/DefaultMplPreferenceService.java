@@ -331,6 +331,10 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 		try
 		{
 			final Collection<CategoryModel> categoryList = baseSiteService.getCurrentBaseSite().getMplPrefferedCategories();
+			//			final Collection<CategoryModel> brandList = baseSiteService.getCurrentBaseSite().getMplPrefferedBrands();
+			//			final List<CategoryModel> totallist = new ArrayList<CategoryModel>();
+			//			totallist.addAll(categoryList);
+			//			totallist.addAll(brandList);
 			return categoryList;
 		}
 		catch (final Exception ex)
@@ -439,6 +443,67 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			//	saving marketplace preference model for current customer
 
 			final CustomerModel customerModel = getCurrentSessionCustomer();
+			customerModel.setMarketplacepreference(mplPreferenceModelToSave);
+			modelService.save(mplPreferenceModelToSave);
+			customerModel.setModifiedtime(new Date());
+			modelService.save(customerModel);
+		}
+		catch (final ModelSavingException ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0007);
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+
+	/**
+	 * Changes made for saving mpl pref data in during registration
+	 */
+	@Override
+	public void saveUserSpecificMplPrefDataInitially(final CustomerModel customerModel)
+	{
+		try
+		{
+			final List<CategoryModel> preferredCategoryList = new ArrayList<CategoryModel>();
+			final List<CategoryModel> preferredBrandList = new ArrayList<CategoryModel>();
+			final MarketplacePreferenceModel mplPreferenceModel = customerModel.getMarketplacepreference();
+			MarketplacePreferenceModel mplPreferenceModelToSave = new MarketplacePreferenceModel();
+			if (null != mplPreferenceModel)
+			{
+				mplPreferenceModelToSave = mplPreferenceModel;
+			}
+			else
+			{
+				mplPreferenceModelToSave = modelService.create(MarketplacePreferenceModel.class);
+			}
+			Collection<CategoryModel> categoryList = new ArrayList<CategoryModel>();
+			categoryList = getBaseSitePreferredCategories();
+
+			if (CollectionUtils.isNotEmpty(categoryList))
+			{
+				for (final CategoryModel categoryLineItem : categoryList)
+				{
+					if (!categoryLineItem.getCode().startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
+					{
+						preferredCategoryList.add(categoryLineItem);
+					}
+					else
+					{
+						preferredBrandList.add(categoryLineItem);
+					}
+				}
+			}
+
+			mplPreferenceModelToSave.setIsInterestedInEmail(Boolean.TRUE);
+			mplPreferenceModelToSave.setPreferredCategory(preferredCategoryList);
+			mplPreferenceModelToSave.setPreferredBrand(preferredBrandList);
+			mplPreferenceModelToSave.setEmailFrequency(Frequency.WEEKLY);
+			mplPreferenceModelToSave.setUserReview(Boolean.TRUE);
+			mplPreferenceModelToSave.setCustomerSurveys(Boolean.TRUE);
+
 			customerModel.setMarketplacepreference(mplPreferenceModelToSave);
 			modelService.save(mplPreferenceModelToSave);
 			customerModel.setModifiedtime(new Date());
