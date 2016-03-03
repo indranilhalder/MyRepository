@@ -3099,7 +3099,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						LOG.debug("populateDataForSoftReservation :  entryModel.getQuantity() is null or empty");
 					}
 
-					
 					if (entryModel.getDeliveryPointOfService() != null)
 					{
 						cartSoftReservationData.setStoreId(entryModel.getDeliveryPointOfService().getSlaveId());
@@ -3173,10 +3172,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										+ entryModel.getSelectedUSSID());
 							}
 						}
-						
 					}
-					
-					
+
 					cartSoftReservationDataList.add(cartSoftReservationData);
 
 				}
@@ -3881,55 +3878,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
+	/*
 	 * @desc use to save freebie delivery mode
 	 *
 	 * @param cartModel
@@ -3959,6 +3908,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			}
 		}
 	}
+
+
 	/**
 	 * This method saves delivery modes for freebie order entries
 	 * 
