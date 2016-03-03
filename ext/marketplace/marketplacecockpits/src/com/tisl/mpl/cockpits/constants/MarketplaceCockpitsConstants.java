@@ -166,5 +166,4 @@ public final class MarketplaceCockpitsConstants extends
 	
 	public static final String SOURCE="CSCockpit";
 	
-	
 }

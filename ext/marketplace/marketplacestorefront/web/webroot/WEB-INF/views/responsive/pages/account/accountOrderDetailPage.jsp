@@ -26,53 +26,6 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 
-<style>
-.ordermargingalignment {
-	height: 41px;
-	padding-top: 7px;
-	font-size: 12px;
-	font-weight: 300;
-}
-
-.orderheadingalignment {
-	font-size: 12px;
-}
-
-.orderbodyalignment {
-	font-size: 12px;
-}
-
-.attributes {
-	font-size: 12px;
-}
-
-.actions {
-	font-size: 12px;
-}
-.pickupeditbtn:after{
-
-     font-family: 'FontAwesome';
-    content:"\f040";
-    padding:0 5px 0 5px; 
-}
-.deliverymode {
-	font-size: 12px;
-	font-weight: 600;
-	min-height: 17px;
-}
-
-.error_text {
-	color: red;
-}
-
-#pickName {
-	height: 25px !important;
-}
-.order {
-	margin-top: 8px !important;
-}
-</style>
-
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
@@ -97,10 +50,10 @@
 
 
 			<!----- Left Navigation Starts --------->
-			<%--<div class="left-nav">
-				 <h1>
+			<%-- <div class="left-nav">
+				<h1>
 					<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
-				</h1> 
+				</h1>
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.myaccount" />
@@ -119,16 +72,17 @@
 								code="header.flyout.cards" /></a></li>
 					<li><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 								code="header.flyout.address" /></a></li>
+					<li><a href="<c:url value="/my-account/reviews"/>"><spring:theme
+										code="header.flyout.review" /></a></li>
 					<li><a href="<c:url value="/my-account/myInterest"/>"><spring:theme
 								code="header.flyout.recommendations" /></a></li>
 				</ul>
-				<ul>
-					<li class="header-SignInShare"><h3>
-							<spring:theme code="header.flyout.credits" />
-						</h3></li>
-					<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-								code="header.flyout.coupons" /></a></li>
-				</ul>
+				<!-- <ul>
+				<li class="header-SignInShare"><h3><spring:theme
+									code="header.flyout.credits" /></h3></li>
+						<li><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+									code="header.flyout.coupons" /></a></li>
+				</ul> -->
 				<ul>
 					<li><h3>
 							<spring:theme code="header.flyout.share" />
@@ -138,8 +92,7 @@
 
 				</ul>
 
-			</div>--%>
-			
+			</div> --%>
 			<user:accountLeftNav pageName="orderDetail"/>
 			<!----- Left Navigation ENDS --------->
 
@@ -205,7 +158,7 @@
 								<h3>Total:</h3>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
-											/> <format:price
+											/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
 									<li><spring:theme code="text.account.order.delivery"
@@ -221,7 +174,7 @@
 										</span></li>
 									</c:if>
 									<!-- TISEE-2672 -->
-
+									
 									<!-- TISSTRT-136 -->
 									<c:if test="${subOrder.couponDiscount.value > 0}">
 										<li><spring:theme code="text.account.order.coupon"
@@ -825,44 +778,43 @@
 											</div>
 											<div class="overlay fade" data-dismiss="modal"></div>
 										</div>
-										
-										
-								          <!-- Start Order Tracking diagram -->
-											<c:set value="${trackStatusMap[entry.orderLineId]}"
-												var="trackStatus" />
-											<c:set value="${trackStatus['APPROVED']}"
-												var="approvedStatus" />
-											<c:set value="${trackStatus['PROCESSING']}"
-												var="processingStatus" />
-											<c:set value="${trackStatus['SHIPPING']}"
-												var="shippingStatus" />
-											<c:set value="${trackStatus['DELIVERY']}"
-												var="deliveryStatus" />
-											<c:set value="${trackStatus['CANCEL']}" var="cancelStatus" />
-											<c:set value="${trackStatus['RETURN']}" var="returnStatus" />
-											<c:set var="productDelivered" value="0"></c:set>
-											<!-- For RTO handling -->
+										<!-- Start Order Tracking diagram -->
+
+										<c:set value="${trackStatusMap[entry.orderLineId]}"
+											var="trackStatus" />
+										<c:set value="${trackStatus['APPROVED']}" var="approvedStatus" />
+										<c:set value="${trackStatus['PROCESSING']}"
+											var="processingStatus" />
+										<c:set value="${trackStatus['SHIPPING']}" var="shippingStatus" />
+										<c:set value="${trackStatus['DELIVERY']}" var="deliveryStatus" />
+										<c:set value="${trackStatus['CANCEL']}" var="cancelStatus" />
+										<c:set value="${trackStatus['RETURN']}" var="returnStatus" />
+										<c:set var="productDelivered" value="0"></c:set>
+										 <!-- For RTO handling -->
 											<c:forEach items="${shippingStatus}" var="productStatus"
 												varStatus="loop">
 												<c:if test="${productStatus.responseCode eq 'DELIVERED' or currentStatusMap[entry.orderLineId] eq 'ORDER_COLLECTED'}">
-													<c:set var="productDelivered" value="1"></c:set>
+										 	<c:set var="productDelivered" value="1"></c:set>
+										  </c:if>
+										  </c:forEach>
+										<div class="deliveryTrack status"
+											id="tracker_${entry.transactionId}">
+											<ul class="nav">
+
+												<li>Approval</li>
+
+												<c:choose>
+													<c:when
+														test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
+														<li>Processing</li>
+													</c:when>
+
+												</c:choose>
+
+
+												<c:if test="${fn:length(cancelStatus) gt 0}">
+													<li>Cancel</li>
 												</c:if>
-											</c:forEach>
-											<div class="deliveryTrack status"
-												id="tracker_${entry.transactionId}">
-												<ul class="nav">
-
-													<li>Approval</li>
-
-													<c:choose>
-														<c:when
-															test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
-															<li>Processing</li>
-														</c:when>
-													</c:choose>
-													<c:if test="${fn:length(cancelStatus) gt 0}">
-														<li>Cancel</li>
-													</c:if>
 													<c:choose>
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
@@ -877,7 +829,7 @@
 														</c:otherwise>
 													</c:choose>
 
-													<!-- For RTO handling productDelivered -->
+												<!-- For RTO handling productDelivered -->
 													<c:choose>
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
@@ -900,158 +852,84 @@
 														<li>Return</li>
 													</c:if>
 
-													<%-- <c:if
+												<%-- <c:if
 													test="${fn:length(cancelStatus) eq 0 and fn:length(returnStatus) gt 0 }">
 													<li>Delivery</li>
 												</c:if>
 												--%>
-												</ul>
-												<ul class="progtrckr tabs">
+											</ul>
+											<ul class="progtrckr tabs">
+												
+												<!-------------------------------- Approval Block --------------------------------------->
+												<c:set var="displayMsgVar" value="" />
+												<li class="progress progtrckr-done orderStatus processing"
+													orderlineid="${entry.orderLineId}"
+													ordercode="${subOrder.code}">
+													<span class="start"></span>
+													<c:set value="0" var="dotCount" /> 
+													<!-- Show only first and last result to restrict in 2 dots-->
+													<c:forEach items="${approvedStatus}" var="productStatus" varStatus="loop">
 
-													<!-------------------------------- Approval Block --------------------------------------->
-													<c:set var="displayMsgVar" value="" />
-													<li class="progress progtrckr-done orderStatus processing"
-														orderlineid="${entry.orderLineId}"
-														ordercode="${subOrder.code}"><span class="start"></span>
-														<c:set value="0" var="dotCount" /> <!-- Show only first and last result to restrict in 2 dots-->
-														<c:forEach items="${approvedStatus}" var="productStatus"
-															varStatus="loop">
+														<c:choose>
+															<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> 
+																	<img src="${commonResourcePath}/images/thin_top_arrow_222.png" class="dot-arrow">
+																</span>
+																<c:set var="dotCount" value="${dotCount + 1}" />
+															</c:when>
+														</c:choose>
 
-															<c:choose>
-																<c:when
-																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}"
-																		index="${loop.index}"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																	</span>
-																	<c:set var="dotCount" value="${dotCount + 1}" />
-																</c:when>
-															</c:choose>
-
-															<!-- Prepare popup message  -->
+														<!-- Prepare popup message  -->
 															<c:if test="${productStatus.isEnabled eq true}">
-																<c:set var="displayMsgVar"
-																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
-																<c:forEach items="${productStatus.statusRecords}"
-																	var="statusRecord">
-																	<c:set var="displayMsgVar"
-																		value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
+																<c:set var="displayMsgVar" value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+																<c:forEach items="${productStatus.statusRecords}" var="statusRecord">
+																	<c:set var="displayMsgVar" value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
 																</c:forEach>
 															</c:if>
+															
+														<!-- Prepare popup message  ends -->
 
-															<!-- Prepare popup message  ends -->
-
-															<c:set
-																value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
-																var="showBlock" />
+														<c:set value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}" var="showBlock" />
 
 															<c:if test="${productStatus.isSelected eq true}">
-																<div
-																	class="order message trackOrdermessage_${productStatus.colorCode} order-placed-arrow"
+																<div class="order message trackOrdermessage_${productStatus.colorCode} order-placed-arrow"
 																	id="orderStatus${entry.orderLineId}_${loop.index}"
-																	style="display: ${showBlock};">${displayMsgVar}</div>
+																	style="display: ${showBlock};">${displayMsgVar}
+																</div>
 															</c:if>
 
-															<!-- setting to default if both enabled and selected are true -->
-															<c:if
-																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+														<!-- setting to default if both enabled and selected are true -->
+															<c:if test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
 
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="0">
+												</c:forEach> 
+												
+												<c:forEach var="i" begin="${dotCount}" end="0">
 															<span class="dot inactive"></span>
-														</c:forEach> <span class="end "></span> <span class="end "></span></li>
-													<!--End Approval Block -->
+														</c:forEach> <span class="end "></span>
+												<span class="end "></span>
+											</li>
+											<!--End Approval Block -->
 
-													<!-------------------------------------------- Processing Block ---------------------------->
-													<c:set var="displayMsgVar" value="" />
-													<c:if
-														test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
+												<!-------------------------------------------- Processing Block ---------------------------->
+												<c:set var="displayMsgVar" value="" />
+												<c:if
+													test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
 
-														<li
-															class="progress progtrckr-done processingStatus processing"
-															orderlineid="${entry.orderLineId}"
-															ordercode="${subOrder.code}"><c:set value="${0}"
-																var="dotCount" /> <c:forEach
-																items="${processingStatus}" var="productStatus"
-																varStatus="loop">
-
-																<c:if test="${loop.last}">
-																	<c:choose>
-																		<c:when
-																			test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																			<span
-																				class="dot  trackOrder_${productStatus.colorCode}"
-																				index="${loop.index}"> <img
-																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																				class="dot-arrow">
-																			</span>
-																			<c:set var="dotCount" value="${dotCount + 1}" />
-																		</c:when>
-																	</c:choose>
-
-																	<!-- Prepare popup message  -->
-																	<c:if test="${productStatus.isEnabled eq true}">
-																		<c:set var="displayMsgVar"
-																			value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
-
-																		<c:forEach items="${productStatus.statusRecords}"
-																			var="statusRecord">
-																			<c:set var="displayMsgVar"
-																				value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
-																		</c:forEach>
-																	</c:if>
-																	<!-- Prepare popup message  ends -->
-
-																	<c:set
-																		value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
-																		var="showBlock" />
-
-																	<c:if test="${productStatus.isSelected eq true}">
-																		<div
-																			class="order message trackOrdermessage_${productStatus.colorCode} processing-stage-arrow1"
-																			id="processingStatus${entry.orderLineId}_${loop.index}"
-																			style="display: ${showBlock};">${displayMsgVar}
-
-																		</div>
-
-																	</c:if>
-
-																	<!-- setting to default if both enabled and selected are true -->
-																	<c:if
-																		test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																		<c:set var="displayMsgVar" value="" />
-																	</c:if>
-
-																</c:if>
-
-															</c:forEach> <c:forEach var="i" begin="${dotCount}" end="0">
-																<span class="dot inactive"></span>
-															</c:forEach> <span class="end "></span></li>
-													</c:if>
-													<!--End Processing Block -->
-
-
-													<%-- <c:choose>
-												<c:when test="${fn:length(cancelStatus) gt 0}"> --%>
-
-													<c:if test="${fn:length(cancelStatus) gt 0}">
-														<!--------------------------------------- Cancel Block ------------------------------------------>
-														<c:set var="displayMsgVar" value="" />
-														<li
-															class="progress progtrckr-done cancelStatus processing"
-															orderlineid="${entry.orderLineId}"
-															ordercode="${subOrder.code}"><c:set value="${0}"
-																var="dotCount" /> <c:forEach items="${cancelStatus}"
-																var="productStatus" varStatus="loop">
-
+													<li
+														class="progress progtrckr-done processingStatus processing"
+														orderlineid="${entry.orderLineId}"
+														ordercode="${subOrder.code}">
+														<c:set value="${0}" var="dotCount" /> 
+														
+														<c:forEach items="${processingStatus}" var="productStatus" varStatus="loop">
+														
+															<c:if test="${loop.last}">
 																<c:choose>
 																	<c:when
 																		test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																		<span
-																			class="dot trackOrder_${productStatus.colorCode}"
-																			index="${loop.index}"> <img
+																		<span class="dot  trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
 																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																			class="dot-arrow">
 																		</span>
@@ -1077,10 +955,12 @@
 																	var="showBlock" />
 
 																<c:if test="${productStatus.isSelected eq true}">
-																	<div
-																		class="cancellation message trackOrdermessage_${productStatus.colorCode}"
-																		id="cancellation${entry.orderLineId}_${loop.index}"
-																		style="display: ${showBlock}">${displayMsgVar}</div>
+																	<div class="order message trackOrdermessage_${productStatus.colorCode} processing-stage-arrow1"
+																		id="processingStatus${entry.orderLineId}_${loop.index}"
+																		style="display: ${showBlock};">${displayMsgVar}
+
+																	</div>
+
 																</c:if>
 
 																<!-- setting to default if both enabled and selected are true -->
@@ -1089,68 +969,132 @@
 																	<c:set var="displayMsgVar" value="" />
 																</c:if>
 
-															</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
-																<span class="dot inactive"></span>
-															</c:forEach> <span class="end "></span></li>
-														<!--End Cancel Block -->
-													</c:if>
-													<%-- </c:when>
+															</c:if>
+
+														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="0">
+															<span class="dot inactive"></span>
+														</c:forEach> <span class="end "></span>
+
+													</li>
+												</c:if>
+												<!--End Processing Block -->
+
+
+												<%-- <c:choose>
+												<c:when test="${fn:length(cancelStatus) gt 0}"> --%>
+
+												<c:if test="${fn:length(cancelStatus) gt 0}">
+													<!--------------------------------------- Cancel Block ------------------------------------------>
+													<c:set var="displayMsgVar" value="" />
+													<li class="progress progtrckr-done cancelStatus processing"
+														orderlineid="${entry.orderLineId}"
+														ordercode="${subOrder.code}"><c:set value="${0}"
+															var="dotCount" /> <c:forEach items="${cancelStatus}"
+															var="productStatus" varStatus="loop">
+
+															<c:choose>
+																<c:when
+																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}">
+																		<img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																	</span>
+																	<c:set var="dotCount" value="${dotCount + 1}" />
+																</c:when>
+															</c:choose>
+
+															<!-- Prepare popup message  -->
+															<c:if test="${productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar"
+																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+
+																<c:forEach items="${productStatus.statusRecords}"
+																	var="statusRecord">
+																	<c:set var="displayMsgVar"
+																		value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
+																</c:forEach>
+															</c:if>
+															<!-- Prepare popup message  ends -->
+
+															<c:set
+																value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
+																var="showBlock" />
+
+															<c:if test="${productStatus.isSelected eq true}">
+																<div class="cancellation message trackOrdermessage_${productStatus.colorCode}"
+																	id="cancellation${entry.orderLineId}_${loop.index}"
+																	style="display: ${showBlock}">${displayMsgVar}</div>
+															</c:if>
+
+															<!-- setting to default if both enabled and selected are true -->
+															<c:if
+																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar" value="" />
+															</c:if>
+
+														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+															<span class="dot inactive"></span>
+														</c:forEach> <span class="end "></span></li>
+													<!--End Cancel Block -->
+												</c:if>
+												<%-- </c:when>
 												<c:otherwise> --%>
 
-													<%-- </c:otherwise>
+												<%-- </c:otherwise>
 												</c:choose> --%>
 
-													<!------------------------------- Shipping Block --------------------------------->
-													<c:if test="${fn:length(cancelStatus) eq 0}">
-														<c:set var="displayMsgVar" value="" />
-														<li
-															class="progress progtrckr-done shippingStatus processing"
-															orderlineid="${entry.orderLineId}"
-															ordercode="${subOrder.code}">
-															<!-- <span class="start"></span> --> <c:set value="${0}"
-																var="dotCount" /> <c:forEach items="${shippingStatus}"
-																var="productStatus" varStatus="loop">
 
-																<c:choose>
-																	<c:when
-																		test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																		<span
-																			class="dot trackOrder_${productStatus.colorCode}"
-																			index="${loop.index}"> <img
-																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																			class="dot-arrow">
-																		</span>
-																		<c:set var="dotCount" value="${dotCount + 1}" />
-																	</c:when>
-																</c:choose>
 
-																<!-- Prepare popup message  -->
-																<c:if test="${productStatus.isEnabled eq true}">
+
+												<!------------------------------- Shipping Block --------------------------------->
+												<c:if test="${fn:length(cancelStatus) eq 0}">
+													<c:set var="displayMsgVar" value="" />
+													<li
+														class="progress progtrckr-done shippingStatus processing"
+														orderlineid="${entry.orderLineId}"
+														ordercode="${subOrder.code}">
+														<!-- <span class="start"></span> --> <c:set value="${0}"
+															var="dotCount" /> <c:forEach items="${shippingStatus}"
+															var="productStatus" varStatus="loop">
+
+															<c:choose>
+																<c:when
+																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																	</span>
+																	<c:set var="dotCount" value="${dotCount + 1}" />
+																</c:when>
+															</c:choose>
+
+															<!-- Prepare popup message  -->
+															<c:if test="${productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar"
+																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+
+																<c:forEach items="${productStatus.statusRecords}"
+																	var="statusRecord">
 																	<c:set var="displayMsgVar"
-																		value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
-
-																	<c:forEach items="${productStatus.statusRecords}"
-																		var="statusRecord">
-																		<c:set var="displayMsgVar"
-																			value="${displayMsgVar}
+																		value="${displayMsgVar}
 																		<ul>
 																		<li>${statusRecord.statusDescription}</li>
 																		</ul>" />
-																	</c:forEach>
+																</c:forEach>
 
-																</c:if>
+															</c:if>
 
-																<!-- Prepare popup message  ends -->
+															<!-- Prepare popup message  ends -->
 
 
-																<c:set
-																	value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
-																	var="showBlock" />
-																<c:if test="${productStatus.isSelected eq true}">
-																	<div
-																		class="order message trackOrdermessage_${productStatus.colorCode} shipping tracking-information"
-																		id="shippingStatus${entry.orderLineId}_${loop.index}"
-																		style="display: ${showBlock}">
+															<c:set
+																value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
+																var="showBlock" />
+															<c:if test="${productStatus.isSelected eq true}">
+																<div class="order message trackOrdermessage_${productStatus.colorCode} shipping tracking-information"
+																	id="shippingStatus${entry.orderLineId}_${loop.index}"
+																	style="display: ${showBlock}">
 
 																		${displayMsgVar}
 																		<!-- TISEE-5433 -->
@@ -1181,50 +1125,47 @@
 																					<span class="view-more-consignment"
 																						orderlineid="${entry.orderLineId}"
 																						index="${loop.index}" ordercode="${subOrder.code}">
-																						View more </span>
+																						View more
+																					</span>
 																				</p>
 																				<p>
 																					<span>View less</span>
 																				</p>
-																			</div>
-																			<div
-																				id="shippingStatusRecord${entry.orderLineId}_${loop.index}"
-																				class="view-more-consignment-data"></div>
-																		</c:if>
-																		</c:if>
+																		  </div>
+																		  <div id="shippingStatusRecord${entry.orderLineId}_${loop.index}" class="view-more-consignment-data"></div>
+																	 </c:if>
+																	
+																	
+																</div>
+															</c:if>
 
-
-																	</div>
-																</c:if>
-
-																<!-- setting to default if both enabled and selected are true -->
-																<c:if
-																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<c:set var="displayMsgVar" value="" />
-																</c:if>
-
-															</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
-																<span class="dot inactive"></span>
-															</c:forEach> <!-- <span class="end"></span> -->
-														</li>
-													</c:if>
-													<!-- End Shipping Block -->
-													<!------------------------------- Delivery Block ------------------------------------->
-													<!-- For RTO handling productDelivered -->
-													<c:if
-														test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-														<li class="progress progtrckr-done delivery-status">
-															<p>
-																<c:if
-																	test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
+															<!-- setting to default if both enabled and selected are true -->
+															<c:if
+																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar" value="" />
+															</c:if>
+															 
+														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+															<span class="dot inactive"></span>
+														</c:forEach> <!-- <span class="end"></span> -->
+													</li>
+												</c:if>
+												<!-- End Shipping Block -->
+												<!------------------------------- Delivery Block ------------------------------------->
+												 <!-- For RTO handling productDelivered -->
+												<c:if
+													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+													<li class="progress progtrckr-done delivery-status">
+														<p> 
+															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
-															</p>
-														</li>
-													</c:if>
-
-													<!------------------------------- Delivery Block ------------------------------------->
-													<%-- 
+														</p>
+													</li>
+												</c:if>
+												
+												<!------------------------------- Delivery Block ------------------------------------->
+												<%-- 
 												 <c:if
 													test="${fn:length(cancelStatus) eq 0 }">
 													<li class="progress progtrckr-done delivery-status">
@@ -1238,80 +1179,69 @@
 													</li>
 												</c:if>
 												--%>
-													<!-- End Delivery Block -->
+												<!-- End Delivery Block -->
+												
+												
+												<!-- End Delivery Block -->
 
+												<c:if test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
+													<!--------------------------------- Return Block -------------------------------------->
+													<c:set var="displayMsgVar" value="" />
+													<li class="progress progtrckr-done returnStatus processing"
+														orderlineid="${entry.orderLineId}"
+														ordercode="${subOrder.code}"><span
+														class="start return-start"></span> <c:set value="${0}"
+															var="dotCount" /> <c:forEach items="${returnStatus}"
+															var="productStatus" varStatus="loop">
+															<c:choose>
+																<c:when
+																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																	</span>
+																	<c:set var="dotCount" value="${dotCount + 1}" />
+																</c:when>
+															</c:choose>
 
-													<!-- End Delivery Block -->
+															<!-- Prepare popup message  -->
+															<c:if test="${productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar"
+																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
 
-													<c:if
-														test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
-														<!--------------------------------- Return Block -------------------------------------->
-														<c:set var="displayMsgVar" value="" />
-														<li
-															class="progress progtrckr-done returnStatus processing"
-															orderlineid="${entry.orderLineId}"
-															ordercode="${subOrder.code}"><span
-															class="start return-start"></span> <c:set value="${0}"
-																var="dotCount" /> <c:forEach items="${returnStatus}"
-																var="productStatus" varStatus="loop">
-																<c:choose>
-																	<c:when
-																		test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																		<span
-																			class="dot trackOrder_${productStatus.colorCode}"
-																			index="${loop.index}"> <img
-																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																			class="dot-arrow">
-																		</span>
-																		<c:set var="dotCount" value="${dotCount + 1}" />
-																	</c:when>
-																</c:choose>
-
-																<!-- Prepare popup message  -->
-																<c:if test="${productStatus.isEnabled eq true}">
+																<c:forEach items="${productStatus.statusRecords}"
+																	var="statusRecord">
 																	<c:set var="displayMsgVar"
-																		value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+																		value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
+																</c:forEach>
+															</c:if>
+															<!-- Prepare popup message  ends -->
 
-																	<c:forEach items="${productStatus.statusRecords}"
-																		var="statusRecord">
-																		<c:set var="displayMsgVar"
-																			value="${displayMsgVar}<ul><li>${statusRecord.statusDescription}</li></ul>" />
-																	</c:forEach>
-																</c:if>
-																<!-- Prepare popup message  ends -->
+															<c:set
+																value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
+																var="showBlock" />
 
-																<c:set
-																	value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}"
-																	var="showBlock" />
+															<c:if test="${productStatus.isSelected eq true}">
+																<div class="return message trackOrdermessage_${productStatus.colorCode}"
+																	id="return${entry.orderLineId}_${loop.index}"
+																	style="display: ${showBlock};">
 
-																<c:if test="${productStatus.isSelected eq true}">
-																	<div
-																		class="return message trackOrdermessage_${productStatus.colorCode}"
-																		id="return${entry.orderLineId}_${loop.index}"
-																		style="display: ${showBlock};">
-
-																		${displayMsgVar}
-																		<!-- TISEE-5433 -->
-																		<c:if
-																			test="${not empty returnLogistic[entry.orderLineId] and fn:toLowerCase(returnLogistic[entry.orderLineId]) ne 'null'}">
-																			<p>Logistic :
-																				${returnLogistic[entry.orderLineId]}</p>
-																		</c:if>
-																		<c:if
-																			test="${not empty returnAwbNum[entry.orderLineId] and fn:toLowerCase(returnAwbNum[entry.orderLineId]) ne 'null'}">
-																			<c:choose>
-																				<c:when
-																					test="${not empty trackingurl[entry.orderLineId]}">
-																					<p>
-																						AWB No. <a
-																							href="${trackingurl[entry.orderLineId]}">${returnAwbNum[entry.orderLineId]}</a>
-																				</c:when>
-																				<c:otherwise>
-																					<p>AWB No. ${returnAwbNum[entry.orderLineId]}</p>
-																				</c:otherwise>
-																			</c:choose>
-																		</c:if>
-																		<%-- 		
+																	${displayMsgVar}
+																	<!-- TISEE-5433 -->
+																	<c:if test="${not empty returnLogistic[entry.orderLineId] and fn:toLowerCase(returnLogistic[entry.orderLineId]) ne 'null'}">
+																 	<p>Logistic : ${returnLogistic[entry.orderLineId]}</p>
+																 	</c:if>
+																 	<c:if test="${not empty returnAwbNum[entry.orderLineId] and fn:toLowerCase(returnAwbNum[entry.orderLineId]) ne 'null'}">
+																 		<c:choose>
+																 		<c:when test="${not empty trackingurl[entry.orderLineId]}">
+																 			<p>AWB No. <a href="${trackingurl[entry.orderLineId]}">${returnAwbNum[entry.orderLineId]}</a>
+																 		</c:when>
+																 		<c:otherwise>
+																 			<p>AWB No. ${returnAwbNum[entry.orderLineId]}</p>
+																 		</c:otherwise>
+																 		</c:choose>	
+																 	</c:if>
+																	<%-- 		
 																	<div id="track-more-info-return">
 																		<p class="active">
 																			<span class="view-more-consignment-return"
@@ -1329,22 +1259,24 @@
 
 																	</div>
 --%>
-																	</div>
-																</c:if>
+																</div>
+															</c:if>
 
-																<!-- setting to default if both enabled and selected are true -->
-																<c:if
-																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<c:set var="displayMsgVar" value="" />
-																</c:if>
-															</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
-																<span class="dot inactive"></span>
-															</c:forEach> <span class="end return-end"></span></li>
-													</c:if>
-													<!--End Return Block -->
-												</ul>
-											</div>
-											<!-- End Order Tracking diagram -->
+															<!-- setting to default if both enabled and selected are true -->
+															<c:if
+																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar" value="" />
+															</c:if>
+														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+															<span class="dot inactive"></span>
+														</c:forEach> <span class="end return-end"></span></li>
+												</c:if>
+												<!--End Return Block -->
+												
+											</ul>
+
+										</div>
+										<!-- End Order Tracking diagram -->
 									</div>
 
 
@@ -1373,7 +1305,6 @@
 <script>
 
 /*--------- Start of track order UI -------*/
-
 
 $(function(){
 	$('body .right-account .order-details .deliveryTrack ul.nav').each(function(){

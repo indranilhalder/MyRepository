@@ -6716,7 +6716,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	@ResponseBody
 	public Map<String, String> modifyReview(@PathVariable("operation") final String operation,
-
 			@RequestParam(value = ModelAttributetConstants.CATEGORY_ID, defaultValue = ModelAttributetConstants.CATEGORY_ID_VAL) final String categoryID,
 			@RequestParam(value = ModelAttributetConstants.STREAM_ID, defaultValue = ModelAttributetConstants.STREAM_ID_VAL) final String streamID,
 			@RequestParam(value = ModelAttributetConstants.COMMENT_ID, defaultValue = ModelAttributetConstants.COMMENT_ID_VAL) final String commentID,
