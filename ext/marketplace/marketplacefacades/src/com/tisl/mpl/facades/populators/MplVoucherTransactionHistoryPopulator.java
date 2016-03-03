@@ -3,10 +3,6 @@
  */
 package com.tisl.mpl.facades.populators;
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.voucher.data.VoucherData;
-import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
-import de.hybris.platform.commercefacades.voucher.impl.DefaultVoucherFacade;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
@@ -17,12 +13,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.CouponHistoryData;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 
 
 /**
@@ -31,10 +25,6 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
  */
 public class MplVoucherTransactionHistoryPopulator implements Populator<VoucherInvalidationModel, CouponHistoryData>
 {
-	@Autowired
-	private DefaultVoucherFacade defaultVoucherFacade;
-	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
 
 	// Month list
 	private static final String JANUARY = "January";
@@ -60,71 +50,30 @@ public class MplVoucherTransactionHistoryPopulator implements Populator<VoucherI
 	{
 		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
 		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
-		VoucherData voucherData = new VoucherData();
 		final VoucherModel voucher = source.getVoucher();
-		final boolean isOrderDateValid = true;
 
-		if (voucher instanceof PromotionVoucherModel) //type casting to PromotionVoucherModel
+		if (voucher instanceof PromotionVoucherModel)
 
 		{
-			try
+			final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) source.getVoucher();
+			if (null != promoVoucher.getVoucherCode() && !promoVoucher.getVoucherCode().isEmpty())
 			{
-				if (source.getOrder().getType().equalsIgnoreCase(PARENT))
-				{
-					voucherData = getDefaultVoucherFacade().getVoucher(((PromotionVoucherModel) voucher).getVoucherCode());
-					final OrderData orderDetailsData = mplCheckoutFacade.getOrderDetailsForCode(source.getOrder().getCode());
-					//isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());
-					final PromotionVoucherModel promoVoucher = (PromotionVoucherModel) source.getVoucher();
-
-					if (isOrderDateValid && null != promoVoucher.getVoucherCode() && null != orderDetailsData.getCode())
-					{
-						target.setCouponCode(voucherData.getVoucherCode());
-						target.setCouponDescription(voucherData.getDescription());
-						target.setOrderCode(orderDetailsData.getCode());
-						target.setRedeemedDate(getCouponRedeemedDate(orderDetailsData.getCreated()));
-					}
-				}
+				target.setCouponCode(promoVoucher.getVoucherCode());
 			}
-			catch (final VoucherOperationException e)
+			else
 			{
-				e.printStackTrace();
+				target.setCouponCode("");
+			}
+			target.setCouponDescription(promoVoucher.getDescription());
+			target.setOrderCode(source.getOrder().getCode());
+			if (null != getCouponRedeemedDate(source.getOrder().getDate()))
+			{
+				target.setRedeemedDate(getCouponRedeemedDate(source.getOrder().getDate()));
 			}
 		}
 
 	}
 
-	/**
-	 * @Description: This method restricts orders in last six months
-	 * @param orderCreationDate
-	 * @return boolean
-	 */
-	/*
-	 * private boolean checkTransactionDateValidity(final Date orderCreationDate) { boolean isDateValid = false; if
-	 * (orderCreationDate != null) { final Calendar endCalendar = Calendar.getInstance(); final Calendar startCalendar =
-	 * Calendar.getInstance(); final SimpleDateFormat dateFormatforMONTH = new java.text.SimpleDateFormat(
-	 * MarketplacecommerceservicesConstants.COUPONS_TXN_DATE_FORMAT);
-	 * 
-	 * 
-	 * endCalendar.setTime(new Date()); startCalendar.setTime(orderCreationDate);
-	 * 
-	 * final int endYear = endCalendar.get(Calendar.YEAR); final int endMonth =
-	 * Integer.parseInt(dateFormatforMONTH.format(endCalendar.getTime())); final int endDay =
-	 * endCalendar.get(Calendar.DAY_OF_MONTH);
-	 * 
-	 * 
-	 * final int startYear = startCalendar.get(Calendar.YEAR); final int startMonth =
-	 * Integer.parseInt(dateFormatforMONTH.format(startCalendar.getTime())); final int startDay =
-	 * startCalendar.get(Calendar.DAY_OF_MONTH);
-	 * 
-	 * final DateTime startDate = new DateTime().withDate(startYear, startMonth, startDay); final DateTime endDate = new
-	 * DateTime().withDate(endYear, endMonth, endDay);
-	 * 
-	 * 
-	 * final Months monthsBetween = Months.monthsBetween(startDate, endDate); final int monthsBetweenInt =
-	 * monthsBetween.getMonths();
-	 * 
-	 * if (monthsBetweenInt < 6) { isDateValid = true; } } return isDateValid; }
-	 */
 	/**
 	 * @Description: This method returns the coupon redeemed date
 	 * @param fmtDate
@@ -172,13 +121,6 @@ public class MplVoucherTransactionHistoryPopulator implements Populator<VoucherI
 		final String strMonth = months.get(month);
 		return strMonth;
 
-	}
-
-
-
-	public DefaultVoucherFacade getDefaultVoucherFacade()
-	{
-		return defaultVoucherFacade;
 	}
 
 }
