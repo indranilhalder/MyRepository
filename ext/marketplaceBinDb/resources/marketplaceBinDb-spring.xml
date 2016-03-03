@@ -32,6 +32,10 @@
 	<alias name="binDao" alias="binDao"/>
 	<bean id="binDao" class="com.tisl.mpl.bin.dao.impl.BinDaoImpl" >
 	</bean>
+	
+	 <!-- Job for Bank Data Generation    -->
+   	<bean id="mplBankCSVPrepareJob" class="com.tisl.mpl.bin.jobs.MplBankCSVPrepareJob"
+   		autowire="byName" />
 			
 			
 </beans>
