@@ -207,6 +207,7 @@ import com.tisl.mpl.storefront.web.forms.validator.MplEmailValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplPasswordValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
+import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
@@ -385,6 +386,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private MplGigyaReviewCommentService gigyaCommentService;
 	@Autowired
 	private DefaultMplReviewFacade mplReviewrFacade;
+	@Autowired
+	private DiscountUtility discountUtility;
 
 	@Autowired
 	private MyStyleProfileFacade myStyleProfileFacade;
@@ -1132,11 +1135,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			populateModelForCouponHistory(model, searchPageDataVoucherHistoryFinal, showMode);
 
+			final Collection<OrderModel> orders = customer.getOrders();
+			final List<OrderModel> orderList = new ArrayList<OrderModel>();
+			if (CollectionUtils.isNotEmpty(orders))
+			{
+				orderList.addAll(orders);
+			}
+
 			if (null != countSavedSumMap)
 			{
 				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
 				{
-					model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, iterator.getValue());
+					final Double value = Double.valueOf(Math.round(iterator.getValue() * 100.0) / 100.0);
+					model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, discountUtility.createPrice(orderList.get(0), value));
 					model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, iterator.getKey());
 				}
 
@@ -6060,7 +6071,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @return String
 	 * @throws Exception
 	 */
-	@SuppressWarnings(UNUSED)
 	@RequestMapping(value = RequestMappingUrlConstants.REVIEWS, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String review(
