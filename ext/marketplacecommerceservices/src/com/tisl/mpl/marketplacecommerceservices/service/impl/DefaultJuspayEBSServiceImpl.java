@@ -12,6 +12,8 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +60,9 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 
 	@Autowired
 	private RMSVerificationNotificationService rMSVerificationNotificationService;
+
+	@Autowired
+	private BaseStoreService baseStoreService;
 
 	/**
 	 * @Description: Fetch Audit Based on EBS Status
@@ -125,13 +130,14 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 		{
 			final PaymentService juspayService = new PaymentService();
 
-			juspayService.setBaseUrl(
-					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.JUSPAYBASEURL));
+			juspayService.setBaseUrl(getConfigurationService().getConfiguration().getString(
+					MarketplacecommerceservicesConstants.JUSPAYBASEURL));
 			juspayService
-					.withKey(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY))
-					.withMerchantId(getConfigurationService().getConfiguration()
-							.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
+					.withKey(
+							getConfigurationService().getConfiguration().getString(
+									MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY)).withMerchantId(
+							getConfigurationService().getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.JUSPAYMERCHANTID));
 
 			//creating OrderStatusRequest
 			final GetOrderStatusRequest orderStatusRequest = new GetOrderStatusRequest();
@@ -313,9 +319,11 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 			final Collection<OrderProcessModel> ops = oModel.getOrderProcess();
 			for (final OrderProcessModel op : ops)
 			{
-				LOG.debug(" order state ====> " + op.getState());
+				final BaseStoreModel store = getJuspayWebHookDao().getSubmitOrderProcessName();
+				final String processDefinitionName = store.getSubmitOrderProcessCode();
+				LOG.debug(" order state ====> " + op.getState() + "=====and process name=====>" + processDefinitionName);
 				if (StringUtils.isNotEmpty(op.getProcessDefinitionName())
-						&& op.getProcessDefinitionName().equalsIgnoreCase("mpl-oms-submitorder-process")
+						&& op.getProcessDefinitionName().equalsIgnoreCase(processDefinitionName)
 						&& ProcessState.WAITING.equals(op.getState()) && null != op.getOrder()
 						&& StringUtils.isNotEmpty(op.getOrder().getCode()))
 				{
@@ -444,4 +452,20 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 		}
 	}
 
+	/**
+	 * @return the baseStoreService
+	 */
+	public BaseStoreService getBaseStoreService()
+	{
+		return baseStoreService;
+	}
+
+	/**
+	 * @param baseStoreService
+	 *           the baseStoreService to set
+	 */
+	public void setBaseStoreService(final BaseStoreService baseStoreService)
+	{
+		this.baseStoreService = baseStoreService;
+	}
 }
