@@ -4,7 +4,6 @@
 package com.tisl.mpl.coupon.facade.impl;
 
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
@@ -35,8 +34,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -563,95 +560,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		final Map<String, Double> result = getMplCouponService().getAllVoucherInvalidations(customer);
 		return result;
-	}
-
-	/**
-	 * @param orderDateMap
-	 * @param orderVoucherMap
-	 * @param couponHistoryDTOList
-	 * @return List<CouponHistoryData>
-	 */
-	private List<CouponHistoryData> sortcouponHistoryDTOList(final Map<Date, OrderData> orderDateMap,
-			final Map<OrderData, VoucherData> orderVoucherMap, final List<CouponHistoryData> couponHistoryDTOList)
-	{
-		final List<CouponHistoryData> couponOrderDataDTOListFinal = new ArrayList<CouponHistoryData>();
-		if (!orderDateMap.isEmpty()) //arranging voucher and corresponding order in a DTO
-		{
-			for (final Map.Entry<Date, OrderData> orderDaterEntry : orderDateMap.entrySet())// as per IQA comments for code sanitization
-			{
-
-				if (!orderVoucherMap.isEmpty())
-				{
-					for (final Map.Entry<OrderData, VoucherData> orderVoucherEntry : orderVoucherMap.entrySet()) // as per IQA comments for code sanitization
-					{
-						final OrderData orderDataKey = orderVoucherEntry.getKey();
-						final VoucherData voucherDataValue = orderVoucherEntry.getValue();
-
-						if ((orderDaterEntry.getValue()).equals(orderDataKey))
-						{
-							final CouponHistoryData couponHistoryDTO = new CouponHistoryData();
-
-							couponHistoryDTO.setCouponCode(voucherDataValue.getVoucherCode());
-							couponHistoryDTO.setCouponDescription(voucherDataValue.getDescription());
-							couponHistoryDTO.setOrderCode(orderDataKey.getCode());
-							if (null != getCouponRedeemedDate(orderDataKey.getCreated()))// as per IQA comments for code sanitization
-							{
-								couponHistoryDTO.setRedeemedDate(getCouponRedeemedDate(orderDataKey.getCreated()));
-							}
-
-							if (null != couponHistoryDTOList)
-							{
-
-								for (final CouponHistoryData couponData : couponHistoryDTOList)
-								{
-									if (couponData.getOrderCode().equals(couponHistoryDTO.getOrderCode()))
-									{
-										couponOrderDataDTOListFinal.add(couponHistoryDTO);
-									}
-
-								}
-							}
-							else
-							{
-								couponOrderDataDTOListFinal.add(couponHistoryDTO);
-							}
-
-						}
-					}
-
-				}
-
-			}
-		}
-
-		return couponOrderDataDTOListFinal;
-	}
-
-	/**
-	 * This method returns the coupon redeemed date
-	 *
-	 * @param fmtDate
-	 * @return String
-	 *
-	 */
-	private String getCouponRedeemedDate(final Date fmtDate)
-	{
-		String finalCouponRedeemedDate = null;
-		if (fmtDate != null)
-		{
-			final Calendar cal = Calendar.getInstance();
-			cal.setTime(fmtDate);
-			final int year = cal.get(Calendar.YEAR);
-			final int month = cal.get(Calendar.MONTH);
-			final int day = cal.get(Calendar.DAY_OF_MONTH);
-			final String strMonth = getMonthFromInt(month).substring(0, 3);
-			final String dayPrefix = day < 10 ? MarketplacecommerceservicesConstants.ZERO
-					: MarketplacecommerceservicesConstants.EMPTY;
-
-			finalCouponRedeemedDate = strMonth + MarketplacecommerceservicesConstants.SINGLE_SPACE + dayPrefix + day
-					+ MarketplacecommerceservicesConstants.SINGLE_SPACE + year;
-		}
-		return finalCouponRedeemedDate;
 	}
 
 
