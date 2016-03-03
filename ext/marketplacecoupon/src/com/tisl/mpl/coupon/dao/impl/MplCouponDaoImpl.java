@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -61,8 +62,21 @@ public class MplCouponDaoImpl implements MplCouponDao
 		try
 		{
 			final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
+			LOG.debug("queryString: " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			return getFlexibleSearchService().<VoucherModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -118,6 +132,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 			//.append(" ORDER BY {dr.startdate} ASC");
 
 			final String CLOSED_VOUCHER = queryBiulder.toString();
+			LOG.debug("queryString: " + CLOSED_VOUCHER);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, CLOSED_VOUCHER
 
@@ -126,6 +141,18 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
 
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -163,11 +190,24 @@ public class MplCouponDaoImpl implements MplCouponDao
 					.append("ORDER BY {vi.creationtime} DESC");
 
 			final String VOUCHER_HISTORY_QUERY = queryBiulder.toString();
+			LOG.debug("queryString: " + VOUCHER_HISTORY_QUERY);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, VOUCHER_HISTORY_QUERY) });
 
 			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
 
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -183,7 +223,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 	 *
 	 */
 	@Override
-	public List<VoucherInvalidationModel> findVoucherHistoryAllInvalidations(final CustomerModel customer)
+	public Map<String, Double> findVoucherHistoryAllInvalidations(final CustomerModel customer)
 	{
 		try
 		{
@@ -193,20 +233,26 @@ public class MplCouponDaoImpl implements MplCouponDao
 			calendar.add(Calendar.MONTH, -6);
 			final Date sixMonthsBeforeDate = calendar.getTime();
 			final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
-			queryBiulder.append("select {vi.pk} from {VoucherInvalidation as vi JOIN Order as odr ON {vi.order}={odr.pk}}")
-					.append(" where {vi.user} like").append("('%").append(customer.getPk().getLongValue()).append("%')")
-					.append("and {odr.date} > to_date('").append(dateSixMonthsBefore).append("', 'MM/DD/YYYY')")
-					.append("ORDER BY {vi.creationtime} DESC");
+
+			queryBiulder.append("SELECT COUNT({vi.pk}),SUM({vi.savedAmount}) FROM {VoucherInvalidation as vi JOIN ")
+					.append("Order AS odr ON {vi.order}={odr.pk}} WHERE {vi.user} LIKE ").append("('%")
+					.append(customer.getPk().getLongValue()).append("%')").append("AND {odr.date} > to_date('")
+					.append(dateSixMonthsBefore).append("', 'MM/DD/YYYY')");
 
 			final String queryString = queryBiulder.toString();
-			//forming the flexible search query
-			final FlexibleSearchQuery voucherInvalidationQuery = new FlexibleSearchQuery(queryString);
+			final FlexibleSearchQuery voucherInvalidationSumQuery = new FlexibleSearchQuery(queryString);
+			voucherInvalidationSumQuery.setResultClassList(Arrays.asList(String.class, Double.class));
+			final SearchResult<List<Object>> result = flexibleSearchService.search(voucherInvalidationSumQuery);
 
-			//fetching bank list from DB using flexible search query
-			final List<VoucherInvalidationModel> voucherInvalidationList = flexibleSearchService.<VoucherInvalidationModel> search(
-					voucherInvalidationQuery).getResult();
+			final Map<String, Double> totalSavingSumMap = new HashMap<String, Double>();
+			for (final List<Object> obj : result.getResult())
+			{
+				final String totalCount = (String) obj.get(0);
+				final Double totalSaving = (Double) obj.get(1);
+				totalSavingSumMap.put(totalCount, totalSaving);
+			}
+			return totalSavingSumMap;
 
-			return voucherInvalidationList;
 		}
 		catch (final FlexibleSearchException e)
 		{

@@ -11,6 +11,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -87,11 +88,11 @@ public class MplCouponServiceImpl implements MplCouponService
 	 * This method returns all voucher invalidations
 	 *
 	 * @param customer
-	 * @return List<VoucherInvalidationModel>
+	 * @return Map<String, Double>
 	 */
 
 	@Override
-	public List<VoucherInvalidationModel> getAllVoucherInvalidations(final CustomerModel customer)
+	public Map<String, Double> getAllVoucherInvalidations(final CustomerModel customer)
 	{
 		return getMplCouponDao().findVoucherHistoryAllInvalidations(customer);
 	}

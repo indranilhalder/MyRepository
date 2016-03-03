@@ -10,6 +10,7 @@ import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
+import java.util.Map;
 
 import com.tisl.mpl.data.VoucherDisplayData;
 
@@ -49,8 +50,8 @@ public interface MplCouponService
 
 	/**
 	 * @param customer
-	 * @return List<VoucherInvalidationModel>
+	 * @return Map<String, Double>
 	 */
-	List<VoucherInvalidationModel> getAllVoucherInvalidations(CustomerModel customer);
+	Map<String, Double> getAllVoucherInvalidations(CustomerModel customer);
 
 }
