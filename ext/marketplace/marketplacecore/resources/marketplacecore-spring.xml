@@ -841,6 +841,8 @@
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplOffersExistingValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="promotionsService" ref="promotionsService"/>
+		<property name="timeService" ref="timeService" />
 	</bean>
 	
 	
