@@ -99,10 +99,12 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.restlet.resource.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.annotation.Scope;
@@ -170,6 +172,7 @@ import com.tisl.mpl.facades.account.reviews.impl.DefaultMplReviewFacade;
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
+import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.DayData;
@@ -201,6 +204,7 @@ import com.tisl.mpl.storefront.util.AllWishListCompareByDate;
 import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.FriendsInviteForm;
 import com.tisl.mpl.storefront.web.forms.MplCustomerProfileForm;
+import com.tisl.mpl.storefront.web.forms.ReturnPincodeCheckForm;
 import com.tisl.mpl.storefront.web.forms.ReturnRequestForm;
 import com.tisl.mpl.storefront.web.forms.validator.AccountAddressValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
@@ -212,7 +216,7 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-
+import de.hybris.platform.core.enums.OrderStatus;
 
 /**
  * Controller for home page
@@ -267,6 +271,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String UNUSED = "unused";
 	public static final String STATUS = "status";
 	public static final String ERROR = "error";
+	//added New page for return 
+	public static final String RETURN_PINCODE = "returnPincodeAvailabilityCheck";
+	public static final String RETURN_ADDRESS = "returnAddress";
+	public static final String RETURN_Logistics_Availability = "returnLogisticsAvailability";
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
 	private CheckoutFacade checkoutFacade;
@@ -1015,6 +1023,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
+			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
@@ -1076,6 +1085,38 @@ public class AccountPageController extends AbstractMplSearchPageController
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
 		return getViewForPage(model);
 	}
+
+
+
+
+	@RequestMapping(value = RequestMappingUrlConstants.UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public String updatePickupDetails(@RequestParam(value = "orderId") final String orderId, @RequestParam(value = "name") final String name,
+			@RequestParam(value = "mobile") final String mobile)
+	{
+		String status = null;
+		if (orderId != null && name != null && mobile != null)
+		{
+			status = mplOrderFacade.editPickUpInfo(orderId, name, mobile);
+		}
+
+		return status;
+	}
+
+	@RequestMapping(value = RequestMappingUrlConstants.CREATE_TICKET_CRA_UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
+	@ResponseBody
+	@Post
+	public void crmTicketUpdetaPickUpDetails(@RequestParam(value = "orderId") final String orderId)
+	{
+		if (orderId != null)
+		{
+		   LOG.info("Create CRM  Ticket For UpdatePickUpDetails ");
+			mplOrderFacade.createCrmTicketUpdatePickDetails(orderId);
+		}
+	}
+
+
 
 
 
@@ -1406,6 +1447,152 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 	/**
+	 * @description order returns for particular Pincode servicesability availability check
+	 * @param orderCode
+	 * @param ussid
+	 * @param transactionId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_CHECK, method = RequestMethod.GET)
+	public String returnPincodeAvailability(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
+			@RequestParam(ModelAttributetConstants.USSID) final String ussid,
+			@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId, final Model model)
+			throws CMSItemNotFoundException
+	{
+		try
+		{
+			ReturnPincodeCheckForm returnPincodeCheckForm = new ReturnPincodeCheckForm();
+			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			AddressData address = orderDetails.getDeliveryAddress();
+			storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
+			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUBMIT));
+			returnPincodeCheckForm.setTransactionId(transactionId);
+			returnPincodeCheckForm.setOrderCode(orderCode);
+			returnPincodeCheckForm.setUssid(ussid);
+			if (null != address)
+			{
+				returnPincodeCheckForm.setFirstName(address.getFirstName());
+				returnPincodeCheckForm.setLastName(address.getLastName());
+				returnPincodeCheckForm.setAddressLane1(address.getLine1());
+				returnPincodeCheckForm.setAddressLane2(address.getLine2());
+				returnPincodeCheckForm.setMobileNo(address.getPhone());
+				returnPincodeCheckForm.setPincode(address.getPostalCode());
+				returnPincodeCheckForm.setCity(address.getTown());
+				returnPincodeCheckForm.setState(address.getState());
+				returnPincodeCheckForm.setCountry(address.getCountry().getName());
+				returnPincodeCheckForm.setLandmark(address.getLocality());
+			}
+			model.addAttribute(ModelAttributetConstants.RETURN_PINCODE_FORM, returnPincodeCheckForm);
+		}
+		catch (Exception e)
+		{
+			LOG.info("<<<<<<<<<<<<<<< Order Return Pincode Serviceability Check >>>>>>>>>>" + e.getStackTrace());
+		}
+		return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
+	}
+
+	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_SUBMIT, method = RequestMethod.POST)
+	public String returnPincodeAvailability(final ReturnPincodeCheckForm returnAddress, final Model model,
+			final BindingResult bindingResult, HttpServletRequest request) throws CMSItemNotFoundException
+	{
+		OrderEntryData orderEntry = new OrderEntryData();
+		final HttpSession session = request.getSession();
+		final String orderCode = returnAddress.getOrderCode();
+		final String pinCode = returnAddress.getPincode();
+		final String ussid = returnAddress.getUssid();
+		final String transactionId = returnAddress.getTransactionId();
+		final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		returnAddrData.setFirstName(returnAddress.getFirstName());
+		returnAddrData.setLastName(returnAddress.getLastName());
+		returnAddrData.setMobileNo(returnAddress.getMobileNo());
+		returnAddrData.setAddressLane1(returnAddress.getAddressLane1());
+		returnAddrData.setAddressLane2(returnAddress.getAddressLane2());
+		returnAddrData.setPincode(returnAddress.getPincode());
+		returnAddrData.setLandmark(returnAddress.getLandmark());
+		returnAddrData.setCity(returnAddress.getCity());
+		returnAddrData.setState(returnAddress.getState());
+		returnAddrData.setCountry(returnAddress.getCountry());
+		List<OrderEntryData> returnOrderEntry = new ArrayList<OrderEntryData>();
+		final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
+		final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
+		for (final OrderEntryData entry : subOrderEntries)
+		{
+			if (entry.getTransactionId().equalsIgnoreCase(transactionId))
+			{
+				orderEntry = entry;
+				returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId);
+				returnProductMap.put(orderEntry.getTransactionId(), returnOrderEntry);
+				break;
+			}
+			boolean returnLogisticsAvailability = false;
+			if (!(entry.isGiveAway() || entry.isIsBOGOapplied()))
+			{
+				returnLogisticsAvailability = true;
+			}
+			model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
+		}
+		session.setAttribute(RETURN_ADDRESS, returnAddrData);
+		model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, orderEntry);
+		model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
+		model.addAttribute(ModelAttributetConstants.SUBORDER, subOrderDetails);
+		model.addAttribute(ModelAttributetConstants.USSID, ussid);
+
+
+		final ReturnRequestForm returnRequestForm = new ReturnRequestForm();
+		final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+
+		model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
+		model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
+		storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_REQUEST));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_REQUEST));
+
+		final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
+		breadcrumbs.add(new Breadcrumb(RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS,
+				getMessageSource().getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null, getI18nService().getCurrentLocale()),
+				null));
+
+		breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL, getMessageSource().getMessage(
+				MessageConstants.TEXT_ACCOUNT_ORDER_ORDERBREADCRUMB, new Object[]
+				{ orderCode }, ModelAttributetConstants.ORDER_NUMBER_SYNTAX, getI18nService().getCurrentLocale()), null));
+		breadcrumbs.add(new Breadcrumb(null, getMessageSource().getMessage(MessageConstants.RETURN_REQUEST_LOCALE, null,
+				getI18nService().getCurrentLocale()), null));
+
+		model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
+		model.addAttribute(ModelAttributetConstants.RETURN_ADDRESS, returnAddrData);
+		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+		storeContentPageTitleInModel(model, MessageConstants.RETURN_REQUEST);
+		storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
+		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUBMIT));
+
+		boolean returnLogisticsCheck = true;
+		final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(subOrderDetails,
+				pinCode);
+		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
+		{
+			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
+			if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
+			{
+				returnLogisticsCheck = false;
+			}
+		}
+		session.setAttribute(RETURN_Logistics_Availability, returnLogisticsCheck);
+		model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
+		model.addAttribute(RETURN_ADDRESS, pinCode);
+		model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
+
+		if (!returnLogisticsCheck)
+		{
+			return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
+		}
+		else
+		{
+			return ControllerConstants.Views.Pages.Account.AccountReturnReqPage;
+		}
+	}
+
+	/**
 	 * This method returns the return/refund request page
 	 *
 	 * @description Order Return reason
@@ -1514,6 +1701,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public String returnSubmit(final HttpServletRequest request, final ReturnRequestForm returnRequestForm, final Model model)
 			throws CMSItemNotFoundException
 	{
+		final HttpSession session = request.getSession();
 		try
 		{
 			final String reasonCode = returnRequestForm.getReasonCode();
@@ -1578,18 +1766,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 				returnLogisticsAvailability = true;
 			}
 			model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
-
-			boolean returnLogisticsCheck = true;
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
-					.checkReturnLogistics(subOrderDetails);
-			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
-			{
-				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
-				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
-				{
-					returnLogisticsCheck = false;
-				}
-			}
+			/*
+			 * boolean returnLogisticsCheck = true; final List<ReturnLogisticsResponseData> returnLogisticsRespList =
+			 * cancelReturnFacade .checkReturnLogistics(subOrderDetails); for (final ReturnLogisticsResponseData response :
+			 * returnLogisticsRespList) { model.addAttribute(ModelAttributetConstants.RETURNLOGMSG,
+			 * response.getResponseMessage()); if
+			 * (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL)) {
+			 * returnLogisticsCheck = false; } }
+			 */
+			boolean returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
 			model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
 
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);
@@ -1632,10 +1817,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public String returnSuccess(final HttpServletRequest request, final ReturnRequestForm returnRequestForm, final Model model,
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
+
+
+		final boolean cancellationStatus;
+
 		try
 		{
 			OrderEntryData subOrderEntry = new OrderEntryData();
 			Boolean returnLogisticsCheck = Boolean.TRUE;
+			HttpSession session = request.getSession();
 			List<OrderEntryData> returnSubOrderEntry = new ArrayList<>();
 			final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();
 			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(returnRequestForm.getOrderCode());
@@ -1644,7 +1834,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String ussid = returnRequestForm.getUssid();
 			final String refundType = returnRequestForm.getRefundType();
 			final String transactionId = returnRequestForm.getTransactionId();
-
+			final ReturnItemAddressData returnAddrData = (ReturnItemAddressData) session.getAttribute(RETURN_ADDRESS);
 			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 			for (final OrderEntryData entry : subOrderEntries)
 			{
@@ -1672,10 +1862,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			final boolean cancellationStatus = cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode,
-					ussid, ticketTypeCode, customerData, refundType, true, SalesApplication.WEB);
-
-
+			if (ticketTypeCode.equalsIgnoreCase("R"))
+			{
+				cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
+						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
+			}
+			else
+			{
+				cancellationStatus = cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, ussid,
+						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB);
+			}
 			if (!cancellationStatus)
 			{
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
@@ -6592,9 +6788,28 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		return null;
 	}
-
-
-
-
-
+    
+	/**
+	 * send orderstatus OrderDetailspage
+	 *
+	 * @return List of OrderStatus
+	 */
+	public List<OrderStatus> isEditable()
+	{
+		final List<OrderStatus> neededStatus = new ArrayList<OrderStatus>();
+		neededStatus.add(OrderStatus.ORDER_COLLECTED);
+		neededStatus.add(OrderStatus.ORDER_UNCOLLECTED);
+		neededStatus.add(OrderStatus.RETURN_INITIATED);
+		neededStatus.add(OrderStatus.RETURNINITIATED_BY_RTO);
+		neededStatus.add(OrderStatus.RETURN_CLOSED);
+		neededStatus.add(OrderStatus.QC_FAILED);
+		neededStatus.add(OrderStatus.CLOSED_ON_RETURN_TO_ORIGIN);
+		neededStatus.add(OrderStatus.RETURN_CANCELLED);
+		neededStatus.add(OrderStatus.COD_CLOSED_WITHOUT_REFUND);
+		neededStatus.add(OrderStatus.REFUND_INITIATED);
+		neededStatus.add(OrderStatus.REFUND_IN_PROGRESS);
+		neededStatus.add(OrderStatus.CLOSED_ON_CANCELLATION);
+		neededStatus.add(OrderStatus.CANCELLING);
+		return neededStatus;
+	}
 }

@@ -31,7 +31,7 @@
 	   <c:forEach var="entry" items="${deliveryModeMap}">
 		<%-- Key: <c:out value="${entry.key}"/> --%>
 		<c:if test="${entry.key eq 'home-delivery'}">
-		<li><a  id="home" class="HomeDelivery home" style="display: none"> <span><spring:theme code="text.home.delivery"/></span> 
+		<li id="homeli"><a  id="home" class="HomeDelivery home" style="display: none"> <span><spring:theme code="text.home.delivery"/></span> 
 		 <c:forEach var="homeEntry" items="${entry.value}">
 			 <c:if test="${homeEntry.key eq 'startForHome'}">
 			 <input type="hidden" value="${homeEntry.value}" id="homeStartId"/>
@@ -47,7 +47,7 @@
 			</li>
 		  </c:if>
 		  <c:if test="${entry.key eq 'express-delivery'}">
-			<li><a id="express" class="ExpressDelivery express" style="display: none"> <span><spring:theme code="text.express.shipping"/></span> 
+			<li id="expressli"><a id="express" class="ExpressDelivery express" style="display: none"> <span><spring:theme code="text.express.shipping"/></span> 
 			 <c:forEach var="expressEntry" items="${entry.value}">
 			 <c:if test="${expressEntry.key eq 'startForExpress'}">
 			 <input type="hidden" value="${expressEntry.value}" id="expressStartId"/>
@@ -59,6 +59,24 @@
 		    </c:forEach>
 			<span id="expressDate"><%-- <c:out value="${entry.value}" /> --%></span>
 			</a></li>	
+		</c:if> 
+		
+		<c:if test="${entry.key eq 'click-and-collect'}">
+		
+		<li id="collectli"><a  id="collect" class="collect"  ><span><spring:theme code="text.clickandcollect.shipping"/></span><span>Buy online, collect in-store</span>
+		
+		 <c:forEach var="clickEntry" items="${entry.value}">
+	
+			 <c:if test="${clickEntry.key eq 'startForClick'}">
+			 <input type="hidden" value="${clickEntry.value}" id="clickStartId"/>
+			 </c:if>
+			 
+			  <c:if test="${clickEntry.key eq 'endForClick'}">
+			  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
+		     </c:if>
+		    </c:forEach>
+		    <span id="clickDate"><%-- <c:out value="${entry.value}" /> --%></span>
+		    </a></li>
 		</c:if> 
 	</c:forEach>
 	

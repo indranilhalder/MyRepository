@@ -615,6 +615,7 @@ function refreshSellers(dataArray, ussid) {
 	var priceDataList = [];
 	var skuIdsForED = [];
 	var skuIdsForHD = [];
+	var skuIdForCNC = [];
 	var skuForCodList = [];
 	var stockDataArrayList = [];
 	var stockIndx = -1;
@@ -646,6 +647,9 @@ function refreshSellers(dataArray, ussid) {
 					}
 					if (mode == 'ED') {
 						skuIdsForED[++indx] = "'" + dataArray[i]['ussid'] + "'";
+					}
+					if (mode == 'CNC') {
+						skuIdForCNC[++indx] = "'" + dataArray[i]['ussid'] + "'";
 					}
 					// var stockDataArray=new Object();
 					var stockDataArray = {}
@@ -681,6 +685,7 @@ function refreshSellers(dataArray, ussid) {
 	$("#sellersSkuListId").val(nonservicableussids);
 	$("#skuIdForED").val(skuIdsForED);
 	$("#skuIdForHD").val(skuIdsForHD);
+	$("#skuIdForCNC").val(skuIdForCNC);
 	$("#skuIdForCod").val(skuForCodList);
 	$("#skuIdsWithNoStock").val(ussidListWithNoStock);
 	$("#isPinCodeChecked").val("true");
@@ -744,9 +749,14 @@ $(function() {
 	$(".submit")
 			.click(
 					function() {
+					
 						pinCodeChecked = true;
 						$("#home").hide();
+						$("#homeli").hide();
 						$("#express").hide();
+						$("#expressli").hide();
+						$("#collect").hide();
+						$("#collectli").hide();
 						$("#codId").hide();
 						$(
 								'#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin')
@@ -789,10 +799,12 @@ $(function() {
 												|| data == null) {
 											refreshSellers(data, buyboxSeller);
 											$("#home").hide();
+											$("#homeli").hide();
 											$("#express").hide();
-											$(
-													'#wrongPin,#unableprocessPin,#emptyPin')
-													.hide();
+											$("#expressli").hide();
+											$("#collect").hide();
+											$("#collectli").hide();
+											$('#wrongPin,#unableprocessPin,#emptyPin').hide();
 											$('#addToCartFormTitle').hide();
 											$('#addToCartButton-wrong').show();
 											$('#addToCartButton').hide();
@@ -802,7 +814,11 @@ $(function() {
 										// check if oms service is down
 										else if (data[0]['isServicable'] == 'NA') {
 											$("#home").show();
+											$("#homeli").show();
 											$("#express").show();
+											$("#expressli").show();
+											$("#collect").show();
+											$("#collectli").show();
 											$("#codId").show();
 
 											return false;
@@ -864,7 +880,7 @@ $(function() {
 															// checking
 															// click&collect(CnC)
 															// mode
-															else if (deliveryModeName == 'CnC') {
+															else if (deliveryModeName == 'CNC') {
 
 																click = true;
 																/*
@@ -883,23 +899,34 @@ $(function() {
 														}
 														if (home == true) {
 															$("#home").show();
+															$("#homeli").show();
 														} else {
 															$("#home").hide();
+															$("#homeli").hide();
 														}
 														if (exp == true) {
-															$("#express")
-																	.show();
+															$("#express").show();
+															$("#expressli").show();
 														} else {
-															$("#express")
-																	.hide();
+															$("#express").hide();
+															$("#expressli").hide();
+														}if (click == true) {
+															$("#collect").show();
+															$("#collectli").show();
+														} else {
+															$("#collect").hide();
+															$("#collectli").hide();
 														}
 
 														// }
 
 													} else {
 														$("#home").hide();
+														$("#homeli").hide();
 														$("#click").hide();
+														$("#expressli").hide();
 														$("#express").hide();
+														$("#collectli").hide();
 														$(
 																'#wrongPin,#unableprocessPin,#emptyPin')
 																.hide();
@@ -924,8 +951,10 @@ $(function() {
 											}
 											if (!checkBuyBoxIdPresent) {
 												$("#home").hide();
+												$("#homeli").hide();
 												$("#click").hide();
 												$("#express").hide();
+												$("#expressli").hide();
 												$(
 														'#wrongPin,#unableprocessPin,#emptyPin')
 														.hide();
@@ -1075,6 +1104,7 @@ function fetchPrice() {
  * This method is used to display delivery modes against a sku id
  */
 function displayDeliveryDetails(sellerName) {
+
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
 	var requiredUrl = ACC.config.encodedContextPath + "/p" + "/" + productCode
@@ -1091,6 +1121,7 @@ function displayDeliveryDetails(sellerName) {
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
+				
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
 					leadTime=data['leadTimeForHomeDelivery'];
@@ -1111,15 +1142,18 @@ function displayDeliveryDetails(sellerName) {
 				}
 				if (deliveryModes.indexOf("HD") == -1) {
 					$("#home").hide();
+					$("#homeli").hide();
 				} else {
 					var start=parseInt($("#homeStartId").val())+leadTime;
 					var end=parseInt($("#homeEndId").val())+leadTime;
 					$("#homeDate").html(pretext+start+"-"+end+posttext);
 					$("#home").show();
+					$("#homeli").show();
 				}
 				
 				if (deliveryModes.indexOf("ED") == -1) {
 					$("#express").hide();
+					$("#expressli").hide();
 				} else {
 					var start=$("#expressStartId").val();
 					var end=$("#expressEndId").val();
@@ -1127,6 +1161,19 @@ function displayDeliveryDetails(sellerName) {
 					//alert(pretext);
 					$("#expressDate").html(pretext+start+"-"+end+posttext);
 					$("#express").show();
+					$("#expressli").show();
+				}
+				console.log(deliveryModes.indexOf("CNC") );
+				if (deliveryModes.indexOf("CNC") == -1) {
+					
+					$("#collect").hide();
+					$("#collectli").hide();
+				} else {
+					var start=$("#clickStartId").val();
+					var end=$("#clickEndId").val();
+					$("#clickDate").html(pretext+start+"-"+end+posttext);
+					$("#collect").show();
+					$("#collectli").show();
 				}
 
 				// enable COD flag if COD enabled
