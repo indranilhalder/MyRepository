@@ -793,6 +793,7 @@
 	<bean id="mplSwatchSizeValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplSizeValueProvider"
 		parent="abstractPropertyFieldValueProvider">
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
 	
