@@ -55,14 +55,14 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 
 	/**
 	 * @Description : Fetch Audit Details Based on orderId
-	 * @param :
-	 *           orderId
+	 * @param : orderId
 	 */
 	@Override
 	public MplPaymentAuditModel fetchAuditData(final String orderId)
 	{
 		final String queryString = //
-		"SELECT {p:" + MplPaymentAuditModel.PK + "} "//
+		"SELECT {p:" + MplPaymentAuditModel.PK
+				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + MplPaymentAuditModel._TYPECODE + " AS p} where" + "{p."
 				+ MplPaymentAuditModel.AUDITID + "} = ?orderId";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
@@ -78,7 +78,8 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	public List<OrderModel> fetchOrder(final String guid)
 	{
 		final String queryString = //
-		"SELECT {o:" + OrderModel.PK + "} "//
+		"SELECT {o:" + OrderModel.PK
+				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS o} where" + "{o." + OrderModel.GUID
 				+ "} = ?guid";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
@@ -94,7 +95,8 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	public MplConfigurationModel getCronDetails(final String code)
 	{
 		final String queryString = //
-		"SELECT {cm:" + MplConfigurationModel.PK + "} "//
+		"SELECT {cm:" + MplConfigurationModel.PK
+				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
 				+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
 
@@ -112,7 +114,9 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	public List<JuspayWebhookModel> fetchSpecificWebHookData(final Date mplConfigDate, final Date startTime)
 	{
 		final String queryString = //
-		"SELECT {j:" + JuspayWebhookModel.PK + "} "//
+		"SELECT {j:"
+				+ JuspayWebhookModel.PK
+				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + JuspayWebhookModel._TYPECODE + " AS j} where " + "{j."
 				+ JuspayWebhookModel.MODIFIEDTIME + "} <= ?earlierDate  and " + "{j." + JuspayWebhookModel.ISEXPIRED
 				+ "} = ?expiredData";
@@ -131,7 +135,25 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	public BaseStoreModel getJobTAT()
 	{
 		final String queryString = //
-		"SELECT {bs:" + BaseStoreModel.PK + "} "//
+		"SELECT {bs:" + BaseStoreModel.PK
+				+ "} "//
+				+ MarketplacecommerceservicesConstants.QUERYFROM + BaseStoreModel._TYPECODE + " AS bs } where" + "{bs."
+				+ BaseStoreModel.UID + "} = ?code";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, MarketplacecommerceservicesConstants.BASESTORE_UID);
+		return getFlexibleSearchService().<BaseStoreModel> searchUnique(query);
+	}
+
+	/**
+	 * @Decsription : Fetch Submit Order Process Name From Base Store
+	 */
+	@Override
+	public BaseStoreModel getSubmitOrderProcessName()
+	{
+		final String queryString = //
+		"SELECT {bs:" + BaseStoreModel.PK
+				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + BaseStoreModel._TYPECODE + " AS bs } where" + "{bs."
 				+ BaseStoreModel.UID + "} = ?code";
 
@@ -166,7 +188,8 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 		OrderModel orderModel = null;
 
 		final String queryString = //
-		"SELECT {om:" + OrderModel.PK + "} "//
+		"SELECT {om:" + OrderModel.PK
+				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om } where" + "{om." + OrderModel.GUID
 				+ "} = ?code and " + "{om." + OrderModel.TYPE + "} = ?type";
 
@@ -189,7 +212,8 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	public OrderModel fetchParentOrder(final String cartGUID)
 	{
 		final String queryString = //
-		"SELECT {o:" + OrderModel.PK + "} "//
+		"SELECT {o:" + OrderModel.PK
+				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS o } where" + "{o." + OrderModel.GUID
 				+ "} = ?code and " + "{o." + OrderModel.TYPE + "} = ?type";
 
@@ -226,7 +250,8 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	public List<RefundTransactionMappingModel> fetchRefundTransactionMapping(final String juspayRefundId)
 	{
 		final String queryString = //
-		"SELECT {rtm:" + RefundTransactionMappingModel.PK + "} "//
+		"SELECT {rtm:" + RefundTransactionMappingModel.PK
+				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + RefundTransactionMappingModel._TYPECODE + " AS rtm} where"
 				+ "{rtm." + RefundTransactionMappingModel.JUSPAYREFUNDID + "} = ?juspayRefundId";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
