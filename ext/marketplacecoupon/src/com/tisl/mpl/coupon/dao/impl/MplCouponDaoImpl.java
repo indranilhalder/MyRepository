@@ -19,7 +19,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -180,13 +179,15 @@ public class MplCouponDaoImpl implements MplCouponDao
 			final Map queryParams = new HashMap();
 
 			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-			final Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.MONTH, -6);
-			final Date sixMonthsBeforeDate = calendar.getTime();
-			final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
+			//			final Calendar calendar = Calendar.getInstance();
+			//			calendar.add(Calendar.MONTH, -6);
+			//			final Date sixMonthsBeforeDate = calendar.getTime();
+			//			final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
+			final String currentDate = formatter.format(new Date());
+
 			queryBiulder.append("select {vi.pk} from {VoucherInvalidation as vi JOIN Order as odr ON {vi.order}={odr.pk}}")
 					.append(" where {vi.user} like").append("('%").append(customer.getPk().getLongValue()).append("%')")
-					.append("and {odr.date} > to_date('").append(dateSixMonthsBefore).append("', 'MM/DD/YYYY')")
+					.append("and {odr.date} > to_date('").append(currentDate).append("', 'MM/DD/YYYY') - INTERVAL '6' MONTH ")
 					.append("ORDER BY {vi.creationtime} DESC");
 
 			final String VOUCHER_HISTORY_QUERY = queryBiulder.toString();
@@ -229,44 +230,49 @@ public class MplCouponDaoImpl implements MplCouponDao
 		{
 			final StringBuilder queryBiulder = new StringBuilder(500);
 			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-			final Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.MONTH, -6);
-			final Date sixMonthsBeforeDate = calendar.getTime();
-			final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
-			double totalSaving = 0;
-			int totalCount = 0;
-			queryBiulder.append("SELECT COUNT({vi.pk}),SUM({vi.savedAmount}) FROM {VoucherInvalidation as vi JOIN ")
+			//final Calendar calendar = Calendar.getInstance();
+			//calendar.add(Calendar.MONTH, -6);
+			//final Date sixMonthsBeforeDate = calendar.getTime();
+			//final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
+			final String currentDate = formatter.format(new Date());
+			//final double totalSaving = 0;
+			//final int totalCount = 0;
+
+			queryBiulder.append("SELECT COUNT(distinct{vi.voucher}),SUM({vi.savedAmount}) FROM {VoucherInvalidation as vi JOIN ")
 					.append("Order AS odr ON {vi.order}={odr.pk}} WHERE {vi.user} LIKE ").append("('%")
-					.append(customer.getPk().getLongValue()).append("%')").append("AND {odr.date} > to_date('")
-					.append(dateSixMonthsBefore).append("', 'MM/DD/YYYY') GROUP BY {vi.code}");
+					.append(customer.getPk().getLongValue()).append("%')").append("AND {odr.date} > to_date('").append(currentDate)
+					.append("', 'MM/DD/YYYY') - INTERVAL '6' MONTH");
 
 			final String queryString = queryBiulder.toString();
 			final FlexibleSearchQuery voucherInvalidationSumQuery = new FlexibleSearchQuery(queryString);
-			voucherInvalidationSumQuery.setResultClassList(Arrays.asList(String.class, Double.class));
+			voucherInvalidationSumQuery.setResultClassList(Arrays.asList(Integer.class, Double.class));
 			final SearchResult<List<Object>> result = flexibleSearchService.search(voucherInvalidationSumQuery);
 
 			final Map<String, Double> totalSavingSumMap = new HashMap<String, Double>();
 			for (final List<Object> obj : result.getResult())
 			{
-				final String count = (String) obj.get(0);
-				final int countInt = Integer.parseInt(count);
-				if (countInt > 1)
-				{
-					totalCount = totalCount + 1;
-				}
-				else
-				{
-					totalCount = totalCount + countInt;
-				}
-
+				final Integer count = (Integer) obj.get(0);
 				final Double saving = (Double) obj.get(1);
-				totalSaving = totalSaving + saving.doubleValue();
+
+				totalSavingSumMap.put(String.valueOf(count), saving);
+				//				final int countInt = Integer.parseInt(count);
+				//				if (countInt > 1)
+				//				{
+				//					totalCount = totalCount + 1;
+				//				}
+				//				else
+				//				{
+				//					totalCount = totalCount + countInt;
+				//				}
+				//
+				//				final Double saving = (Double) obj.get(1);
+				//				totalSaving = totalSaving + saving.doubleValue();
 			}
-			if (totalCount > 0 && totalSaving > 0)
-			{
-				final Double totalSavingDouble = new Double(totalSaving);
-				totalSavingSumMap.put(String.valueOf(totalCount), totalSavingDouble);
-			}
+			//			if (totalCount > 0 && totalSaving > 0)
+			//			{
+			//				final Double totalSavingDouble = new Double(totalSaving);
+			//				totalSavingSumMap.put(String.valueOf(totalCount), totalSavingDouble);
+			//			}
 
 			return totalSavingSumMap;
 
