@@ -235,8 +235,8 @@ public class MplCouponDaoImpl implements MplCouponDao
 			//final Date sixMonthsBeforeDate = calendar.getTime();
 			//final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
 			final String currentDate = formatter.format(new Date());
-			double totalSaving = 0;
-			int totalCount = 0;
+			//final double totalSaving = 0;
+			//final int totalCount = 0;
 
 			queryBiulder.append("SELECT COUNT(distinct{vi.voucher}),SUM({vi.savedAmount}) FROM {VoucherInvalidation as vi JOIN ")
 					.append("Order AS odr ON {vi.order}={odr.pk}} WHERE {vi.user} LIKE ").append("('%")
@@ -245,31 +245,34 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			final String queryString = queryBiulder.toString();
 			final FlexibleSearchQuery voucherInvalidationSumQuery = new FlexibleSearchQuery(queryString);
-			voucherInvalidationSumQuery.setResultClassList(Arrays.asList(String.class, Double.class));
+			voucherInvalidationSumQuery.setResultClassList(Arrays.asList(Integer.class, Double.class));
 			final SearchResult<List<Object>> result = flexibleSearchService.search(voucherInvalidationSumQuery);
 
 			final Map<String, Double> totalSavingSumMap = new HashMap<String, Double>();
 			for (final List<Object> obj : result.getResult())
 			{
-				final String count = (String) obj.get(0);
-				final int countInt = Integer.parseInt(count);
-				if (countInt > 1)
-				{
-					totalCount = totalCount + 1;
-				}
-				else
-				{
-					totalCount = totalCount + countInt;
-				}
-
+				final Integer count = (Integer) obj.get(0);
 				final Double saving = (Double) obj.get(1);
-				totalSaving = totalSaving + saving.doubleValue();
+
+				totalSavingSumMap.put(String.valueOf(count), saving);
+				//				final int countInt = Integer.parseInt(count);
+				//				if (countInt > 1)
+				//				{
+				//					totalCount = totalCount + 1;
+				//				}
+				//				else
+				//				{
+				//					totalCount = totalCount + countInt;
+				//				}
+				//
+				//				final Double saving = (Double) obj.get(1);
+				//				totalSaving = totalSaving + saving.doubleValue();
 			}
-			if (totalCount > 0 && totalSaving > 0)
-			{
-				final Double totalSavingDouble = new Double(totalSaving);
-				totalSavingSumMap.put(String.valueOf(totalCount), totalSavingDouble);
-			}
+			//			if (totalCount > 0 && totalSaving > 0)
+			//			{
+			//				final Double totalSavingDouble = new Double(totalSaving);
+			//				totalSavingSumMap.put(String.valueOf(totalCount), totalSavingDouble);
+			//			}
 
 			return totalSavingSumMap;
 
