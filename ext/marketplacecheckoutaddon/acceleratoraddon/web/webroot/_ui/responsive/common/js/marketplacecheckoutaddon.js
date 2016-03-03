@@ -1178,49 +1178,57 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	  // TISPRO-153
-	var payment_method_map = {
-	            "viewPaymentEMI": "EMI",
-	            "viewPaymentCredit": "Credit",
-	            "viewPaymentNetbanking": "Net Banking",
-	            "viewPaymentCOD": "COD",
-	            "viewPaymentDebit": "Debit"
-	        };
-	        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
-	        var payment_mode = payment_method_map[payment];
-	        var payment_type = "",
-	            priority_banks = "";
-	        if (payment_mode === "EMI") {
-
-	            payment_type = jQuery("select#bankNameForEMI").val();
-
-	        } else if (payment_mode === "Credit" || payment_mode === "Debit") {
-
-	            payment_type = jQuery("li.active-card span").attr("class") || "Saved Credit Card";
-
-	        } else if (payment_mode === "Net Banking") {
-
-	            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
-	            if (priority_banks.length > 0) {
-	                payment_type = priority_banks.val();
-	            } else {
-	                jQuery("#netbanking #bankCodeSelection").val();
-	            }
-
-	        } else if (payment_mode === "COD") {
-	            payment_type = "COD";
-	        }
-
-	        if (!payment_type) {
-	            payment_type = "NA";
-	        }
-
-	        utag.link({
-	            "link_name": 'Final Checkout',
-	            "event_type": 'PayNow',
-	            "payment_method": "" + payment_mode + "|" + payment_type,
-	            "product_id": utag.data.product_id
-
-	        });
+	try {		
+		var payment_method_map = {
+		            "viewPaymentEMI": "EMI",
+		            "viewPaymentCredit": "Credit",
+		            "viewPaymentNetbanking": "Net Banking",
+		            "viewPaymentCOD": "COD",
+		            "viewPaymentDebit": "Debit"
+		        };
+		        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
+		        var payment_mode = payment_method_map[payment];
+		        var payment_type = "",
+		            priority_banks = "";
+		        if (payment_mode === "EMI") {
+	
+		            payment_type = jQuery("select#bankNameForEMI").val();
+	
+		        } else if (payment_mode === "Credit" || payment_mode === "Debit") {
+	
+		            payment_type = jQuery("li.active-card span").attr("class") || "Saved Credit Card";
+	
+		        } else if (payment_mode === "Net Banking") {
+	
+		            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
+		            if (priority_banks.length > 0) {
+		                payment_type = priority_banks.val();
+		            } else {
+		                jQuery("#netbanking #bankCodeSelection").val();
+		            }
+	
+		        } else if (payment_mode === "COD") {
+		            payment_type = "COD";
+		        }
+	
+		        if (!payment_type) {
+		            payment_type = "NA";
+		        }
+		        
+		        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
+		        {
+		        	utag.link({
+			            "link_name": 'Final Checkout',
+			            "event_type": 'PayNow',
+			            "payment_method": "" + payment_mode + "|" + payment_type,
+			            "product_id": utag.data.product_id
+	
+			        });
+		        }
+	        
+	   } catch (e) {
+		// TODO: handle exception
+	   }     
 	  
 		
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
@@ -1305,7 +1313,10 @@ $("#otpMobileNUMField").focus(function(){
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		
 	  // TISPRO-153
-	  var payment_method_map = {
+		
+	try {
+	
+		var payment_method_map = {
 	            "viewPaymentEMI": "EMI",
 	            "viewPaymentCredit": "Credit",
 	            "viewPaymentNetbanking": "Net Banking",
@@ -1341,13 +1352,21 @@ $("#otpMobileNUMField").focus(function(){
 	            payment_type = "NA";
 	        }
 
-	        utag.link({
-	            "link_name": 'Final Checkout',
-	            "event_type": 'PayNow',
-	            "payment_method": "" + payment_mode + "|" + payment_type,
-	            "product_id": utag.data.product_id
+	        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
+	        {
+	        	utag.link({
+		            "link_name": 'Final Checkout',
+		            "event_type": 'PayNow',
+		            "payment_method": "" + payment_mode + "|" + payment_type,
+		            "product_id": utag.data.product_id
 
-	        });
+		        });
+	        }
+	        
+		} catch (e) {
+			// TODO: handle exception
+		}
+	        
 	  
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
