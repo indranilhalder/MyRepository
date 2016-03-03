@@ -437,14 +437,14 @@
 			<search mode="append">
 				<condition attribute="BinNo" />
 				<condition attribute="CardType" />
-				<condition attribute="Bank" />
+				<condition attribute="bankName" />
 			</search>
 			<result defaultview="list">
 				<listview>
 					<itemlayout mode="replace">
 						<attribute name="BinNo" width="300"></attribute>
 						<attribute name="CardType" width="300"></attribute>
-						<attribute name="Bank" width="300"></attribute>
+						<attribute name="bankName" width="300"></attribute>
 					</itemlayout>
 				</listview>
 				<editview mode="replace">
@@ -473,7 +473,7 @@
 							<attribute name="BinNo" />
 							<attribute name="CardType" />
 							<attribute name="isDomestic" />
-							<attribute name="Bank" />
+							<attribute name="bankName" />
 						</listlayout>
 					</section>
 				</tab>

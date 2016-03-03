@@ -34,10 +34,16 @@
 	<!-- BIN Model for BIN Validation -->
 	<itemtype code="Bin" autocreate="true" generate="true">
 		<description>BIN numbers for BIN Validation of Debit/Credit Cards</description>
+		<deployment table="MplBinDataTable" typecode="15236" />
 		<attributes>
 			<attribute qualifier="BinNo" type="java.lang.String">
 				<description>Defines the BIN no.</description>
 				<persistence type="property" />
+				<modifiers  optional="false" />
+			</attribute>
+			<attribute qualifier="bankName" type="java.lang.String">
+				<description>Defines the Bank Name.</description>
+				<persistence type="property"  />
 			</attribute>
 			<attribute qualifier="CardBrand" type="java.lang.String">
 				<description>Brand of the card against the BIN.</description>
