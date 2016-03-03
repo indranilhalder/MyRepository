@@ -14,7 +14,6 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -37,12 +36,10 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
@@ -764,61 +761,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		final SearchPageData<VoucherInvalidationModel> searchVoucherModel = getMplCouponService().getVoucherRedeemedOrder(customer,
 				pageableData);
-		final List<CouponHistoryData> couponOrderDataDTOListFinal = new ArrayList<CouponHistoryData>();
-		final List<VoucherInvalidationModel> voucherInvalidationList = searchVoucherModel.getResults();
-		final Map<Date, OrderData> orderDateMap = new TreeMap<Date, OrderData>(Collections.reverseOrder());
-		final boolean isOrderDateValid = true;
-		final Map<OrderData, VoucherData> orderVoucherMap = new HashMap<OrderData, VoucherData>();
 
-		OrderData orderDetailsData = new OrderData();
-		VoucherData voucherData = new VoucherData();
-		if (CollectionUtils.isNotEmpty(voucherInvalidationList))
+		SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = null;
+		if (null != searchVoucherModel)
 		{
+			searchPageDataVoucherHistory = convertPageData(searchVoucherModel, voucherTransactionConverter);
 
-			for (final VoucherInvalidationModel voucherInvalidation : voucherInvalidationList)
-			{
-				final OrderModel order = voucherInvalidation.getOrder();
-				voucherData = getDefaultVoucherFacade().getVoucher(
-						((PromotionVoucherModel) voucherInvalidation.getVoucher()).getVoucherCode());
-
-				if (order.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.PARENT))
-				{
-					final String orderCode = order.getCode();
-					orderDetailsData = getMplCheckoutFacade().getOrderDetailsForCode(orderCode);
-					//	isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());// restrict orders to last six months only
-
-					if (isOrderDateValid && null != voucherData)
-					{
-						orderDateMap.put(orderDetailsData.getCreated(), orderDetailsData);//mapping order with date such that the latest order is on top
-						orderVoucherMap.put(orderDetailsData, voucherData);
-
-					}
-
-				}
-			}
 		}
-
-		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = convertPageData(searchVoucherModel,
-				voucherTransactionConverter);
-		final List<CouponHistoryData> couponOrderDataDTOList = searchPageDataVoucherHistory.getResults();
-		final List<CouponHistoryData> couponHistoryDTOListFinal = sortcouponHistoryDTOList(orderDateMap, orderVoucherMap,
-				couponOrderDataDTOList);
-
-		for (final CouponHistoryData couponHistoryData : couponHistoryDTOListFinal)
-		{
-			if (null != couponHistoryData.getCouponCode() && null != couponHistoryData.getCouponDescription()
-					&& null != couponHistoryData.getOrderCode())
-			{
-				couponOrderDataDTOListFinal.add(couponHistoryData);
-			}
-		}
-
-		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = new SearchPageData<CouponHistoryData>();
-		searchPageDataVoucherHistoryFinal.setResults(couponOrderDataDTOListFinal);
-		searchPageDataVoucherHistoryFinal.setPagination(searchVoucherModel.getPagination());
-		searchPageDataVoucherHistoryFinal.setSorts(searchVoucherModel.getSorts());
-		return searchPageDataVoucherHistoryFinal;
-
+		return searchPageDataVoucherHistory;
 	}
 
 	/**

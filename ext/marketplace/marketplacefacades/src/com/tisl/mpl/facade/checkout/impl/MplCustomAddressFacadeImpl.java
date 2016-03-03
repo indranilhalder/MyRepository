@@ -187,22 +187,26 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	public CartData getCheckoutCart()
 	{
 		final CartModel cartModel = getCart();
-		final CartData cartData = getMplExtendedCartConverter().convert(cartModel);
-
-		if (cartData != null)
+		CartData cartData = null;
+		if (null != cartModel)
 		{
-			cartData.setDeliveryAddress(getDeliveryAddress());
-			cartData.setPaymentInfo(getPaymentDetails());
+			cartData = getMplExtendedCartConverter().convert(cartModel);
 
-		}
+			if (cartData != null)
+			{
+				cartData.setDeliveryAddress(getDeliveryAddress());
+				cartData.setPaymentInfo(getPaymentDetails());
 
-		if (null != cartModel.getConvenienceCharges())
-		{
-			cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));
-		}
-		if (null != cartModel.getTotalPriceWithConv())
-		{
-			cartData.setTotalPriceWithConvCharge(createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			}
+
+			if (null != cartModel.getConvenienceCharges())
+			{
+				cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));
+			}
+			if (null != cartModel.getTotalPriceWithConv())
+			{
+				cartData.setTotalPriceWithConvCharge(createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			}
 		}
 
 		return cartData;
@@ -364,7 +368,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCustomAddressFacade#populateDeliveryMethodData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -445,9 +449,9 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * Set delivery mode using USSID
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param sellerArticleSKUID
 	 */
 	@Override
@@ -501,7 +505,11 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	public boolean hasValidCart()
 	{
 		final CartData cartData = getCheckoutCart();
-		final boolean validCart = cartData.getEntries() != null && !cartData.getEntries().isEmpty();
+		boolean validCart = false;
+		if (null != cartData)
+		{
+			validCart = cartData.getEntries() != null && !cartData.getEntries().isEmpty();
+		}
 		return validCart;
 	}
 
