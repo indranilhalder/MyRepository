@@ -377,6 +377,7 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 		try
 		{
 			getModelService().save(customerModel);
+			//TISPRO-181-capturing mpl preference data to customer model during registration
 			mplPreferenceService.saveUserSpecificMplPrefDataInitially(customerModel);
 		}
 		catch (final ModelSavingException e)

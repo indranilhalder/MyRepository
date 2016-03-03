@@ -331,10 +331,6 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 		try
 		{
 			final Collection<CategoryModel> categoryList = baseSiteService.getCurrentBaseSite().getMplPrefferedCategories();
-			//			final Collection<CategoryModel> brandList = baseSiteService.getCurrentBaseSite().getMplPrefferedBrands();
-			//			final List<CategoryModel> totallist = new ArrayList<CategoryModel>();
-			//			totallist.addAll(categoryList);
-			//			totallist.addAll(brandList);
 			return categoryList;
 		}
 		catch (final Exception ex)
@@ -459,6 +455,7 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 	}
 
 
+	//TISPRO-181-capturing mpl preference data to customer model during registration
 	/**
 	 * Changes made for saving mpl pref data in during registration
 	 */
