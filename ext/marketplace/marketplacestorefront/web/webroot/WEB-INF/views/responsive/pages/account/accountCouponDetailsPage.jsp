@@ -222,23 +222,25 @@
 										<spring:theme code="text.account.coupons.date" />
 									</p>
 								</li>
+							
 								<c:forEach items="${searchPageDatahist.results}"
 									var="couponHistoryDetailDTO">
+								<c:if test="${couponHistoryDetailDTO ne null}">	
 									<li class="cashback-row ">
 										<p class="coupon">
 											<span>${couponHistoryDetailDTO.couponCode}</span>
 										</p>
 										<p class="description">
 											<span>${couponHistoryDetailDTO.couponDescription}</span>
-										</p> <c:if test="${couponHistoryDetailDTO ne null}">
+										</p> 
 											<p class="order">
 												#<span>${couponHistoryDetailDTO.orderCode}</span>
 											</p>
 											<p class="date">
 												<span>${couponHistoryDetailDTO.redeemedDate}</span>
 											</p>
-										</c:if>
 									</li>
+									</c:if>
 								</c:forEach>
 							</ul>
 
