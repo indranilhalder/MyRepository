@@ -11,6 +11,7 @@ import de.hybris.platform.servicelayer.cronjob.PerformResult;
 
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.bin.service.BinService;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.jobs.PromotionCreationJob;
@@ -26,6 +27,8 @@ public class MplBankCSVPrepareJob extends AbstractJobPerformable<CronJobModel>
 
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(PromotionCreationJob.class.getName());
+
+	private BinService binService;
 
 	/**
 	 * @Description : Generate CSV with Bank Details present in Bin but not in Bank
@@ -63,7 +66,24 @@ public class MplBankCSVPrepareJob extends AbstractJobPerformable<CronJobModel>
 	 */
 	private void generateFileData()
 	{
-		// YTODO Auto-generated method stub
+		binService.generateFileData();
+	}
+
+	/**
+	 * @return the binService
+	 */
+	public BinService getBinService()
+	{
+		return binService;
+	}
+
+	/**
+	 * @param binService
+	 *           the binService to set
+	 */
+	public void setBinService(final BinService binService)
+	{
+		this.binService = binService;
 	}
 
 }

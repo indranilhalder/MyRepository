@@ -8,8 +8,10 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -100,6 +102,44 @@ public class BinDaoImpl implements BinDao
 	public void setFlexibleSearchService(final FlexibleSearchService flexibleSearchService)
 	{
 		this.flexibleSearchService = flexibleSearchService;
+	}
+
+
+	/**
+	 * Generate Bank Data for .csv
+	 */
+	@Override
+	public List<String> getBankDetails() throws EtailNonBusinessExceptions
+	{
+		List<BinModel> bankBinList = new ArrayList<BinModel>();
+		final List<String> bankList = new ArrayList<String>();
+		try
+		{
+			final String queryString = MarketplaceBinDbConstants.BANKDATAQUERY;
+
+			final FlexibleSearchQuery bankQuery = new FlexibleSearchQuery(queryString);
+			bankBinList = getFlexibleSearchService().<BinModel> search(bankQuery).getResult();
+			if (CollectionUtils.isNotEmpty(bankBinList))
+			{
+				for (final BinModel oModel : bankBinList)
+				{
+					bankList.add(oModel.getBankName());
+				}
+			}
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return bankList;
 	}
 
 }

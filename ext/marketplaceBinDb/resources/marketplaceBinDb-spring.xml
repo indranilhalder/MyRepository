@@ -35,7 +35,11 @@
 	
 	 <!-- Job for Bank Data Generation    -->
    	<bean id="mplBankCSVPrepareJob" class="com.tisl.mpl.bin.jobs.MplBankCSVPrepareJob"
-   		autowire="byName" />
+   		autowire="byName" >
+   		<property name="binService" ref="binService" />
+   	</bean>
+   	<!-- POJO Class for Bank Data Generation    -->
+   	<bean id="bankDataPojo" class="com.tisl.mpl.bin.pojo.BankDataPojo" />
 			
 			
 </beans>

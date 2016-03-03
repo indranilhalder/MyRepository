@@ -30,4 +30,18 @@ public final class MarketplaceBinDbConstants /* extends GeneratedMarketplaceBinD
 	public static final String BINDAO = "binDao";
 	public static final String BINSERVICE = "binService";
 	public static final String BINFACADE = "binFacade";
+
+	public static final String COMMA = ",".intern();
+	public static final String BASESTORE_UID = "mpl".intern();
+
+	public static final String BANK_FILE_LOCATION = "payment.bank.csv.path".intern();
+	public static final String BANK_FILE_LOCATION_DATA = "${HYBRIS_DATA_DIR}/feed/bank".intern();
+	public static final String BANK_FILE_NAME = "bank_data_master".intern();
+
+	public static final String BANK_FILE_DELIMITTER = ",".intern();
+	public static final String BANK_FILE_NEW_LINE_SEPARATOR = "\n".intern();
+
+	public static final String BANKDATAQUERY = "select distinct {b:pk} from {Bin As b} WHERE upper({b.bankName}) NOT IN ({{select distinct upper({bank:bankName}) from {Bank As bank}}})"
+			.intern();
+
 }
