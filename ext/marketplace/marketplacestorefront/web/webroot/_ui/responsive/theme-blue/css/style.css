@@ -18,7 +18,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   font-style:italic;
   }
 html,body,main {
-	height:100%;
+	/*  height:100%;  */
 	overflow-x: hidden;
 }
 /* HTML5 display-role reset for older browsers */
@@ -1545,7 +1545,10 @@ h2 {
             margin-left: 5px;
             top: 4px;
             font-size:22px;
-            line-height: 10px; }}
+            line-height: 10px; }
+             header.brand-header .content nav > ul > li > .toggle:after {
+            color: #fff; }
+            }
         @media (min-width:791px) and (max-width: 1050px) {
           header .content nav > ul > li {
             margin-right: 0;
@@ -8287,7 +8290,7 @@ div.wishlist-content .pagination {
 }
 .mainContent-wrapper {
 	position:relative;
-	min-height:100%;
+	/* min-height:100%; */
 }
 
   @media(min-width:790px) {
@@ -19164,6 +19167,9 @@ header.brand-header .content .bottom nav>ul>li>.toggle {
 header.brand-header .content .bottom nav>ul>li:hover {
 	background-color: #000
 }
+header.brand-header .content .bottom nav>ul>li:hover .toggle {
+	color: #fff;
+}
 
 header.brand-header .content .bottom nav>ul>li>ul {
 	background-color: #b9b9b9;
@@ -19174,6 +19180,7 @@ header.brand-header .content .bottom nav>ul>li>ul {
 @media ( max-width :790px) {
 	header.brand-header .content .bottom nav>ul>li>ul {
 		top: 55px;
+		left: 0;
 	}
 }
 
@@ -20285,7 +20292,7 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
 }
 }
 
-@media (min-width: 790px)
+@media (min-width: 791px)
 {
 .listing.wrapper .right-block .listing-menu .wrapped-form.view {
   display: inline-block;
@@ -20330,6 +20337,7 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
   width: 100%;
   font-weight: 500;
   margin-left:5px;
+  background-position-x: 60px;
 }}
 .pagination .prev:before {
         content: "";
@@ -25619,7 +25627,8 @@ body .account .right-account .order-history.order-details li.item .actions a:vis
 	padding-top:10px;}
 	.listing.wrapper .right-block .listing-menu > div .wrapped-form.sort select#sortOptions1{
 margin: 0px;
-padding-left: 0px;} 
+padding-left: 0px;
+background-position-x: 55px;} 
 	.toggle-filterSerp{
 	display: block;
 	padding-left:5px;
@@ -29972,7 +29981,7 @@ header .content .marketplace, header .content .brand-logo {
        margin-right: 25px;
   }
 header .content .bottom.active .marketplace a img {
-width: 100px !important;
+width: 90px !important;
     height: 50px !important;
     /* margin-top: 12px; */}
     header .content .bottom.active .marketplace {
