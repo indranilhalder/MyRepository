@@ -633,4 +633,27 @@
 <alias alias="csAlternateContactDetailsCreateWidgetConfig" name="defaultCsAlternateContactDetailsCreateWidgetConfig"/>
 	<bean id="defaultCsAlternateContactDetailsCreateWidgetConfig" parent="csBaseWidgetConfig">
 	
+		<property name="widgetTitle" value="cscockpit.widget.order.alternateContactDetails.create"/>
+		<property name="widgetRenderer" ref="csAlternateContactDetailsCreateWidgetRenderer"/>
+		<property name="widgetController" ref="csCustomerController"/>
+		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
+		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame"/>
+		<property name="widgetModel">
+			<bean class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel"/>
+		</property>
+
+	</bean>
+
+	<alias alias="csAlternateContactDetailsCreateWidgetRenderer" name="defaultcsAlternateContactDetailsCreateWidgetRenderer"/>
+	<bean id="defaultcsAlternateContactDetailsCreateWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceAlternateContactDetailsWidgetRenderer">
+		<!-- <property name="editorConfigurationCode" value="editCustomerDetails"/> -->
+		<property name="listConfigurationCode" value="cncEntryList" />
+		<property name="listConfigurationType" value="AbstractOrderEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+		<property name="callContextController" ref="csCallContextController"/>
+		
+	</bean>
+	
 </beans>
