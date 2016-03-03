@@ -235,6 +235,8 @@ public class MplCouponDaoImpl implements MplCouponDao
 			//final Date sixMonthsBeforeDate = calendar.getTime();
 			//final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
 			final String currentDate = formatter.format(new Date());
+			double totalSaving = 0;
+			int totalCount = 0;
 
 			queryBiulder.append("SELECT COUNT(distinct{vi.voucher}),SUM({vi.savedAmount}) FROM {VoucherInvalidation as vi JOIN ")
 					.append("Order AS odr ON {vi.order}={odr.pk}} WHERE {vi.user} LIKE ").append("('%")
@@ -249,10 +251,26 @@ public class MplCouponDaoImpl implements MplCouponDao
 			final Map<String, Double> totalSavingSumMap = new HashMap<String, Double>();
 			for (final List<Object> obj : result.getResult())
 			{
-				final String totalCount = (String) obj.get(0);
-				final Double totalSaving = (Double) obj.get(1);
-				totalSavingSumMap.put(totalCount, totalSaving);
+				final String count = (String) obj.get(0);
+				final int countInt = Integer.parseInt(count);
+				if (countInt > 1)
+				{
+					totalCount = totalCount + 1;
+				}
+				else
+				{
+					totalCount = totalCount + countInt;
+				}
+
+				final Double saving = (Double) obj.get(1);
+				totalSaving = totalSaving + saving.doubleValue();
 			}
+			if (totalCount > 0 && totalSaving > 0)
+			{
+				final Double totalSavingDouble = new Double(totalSaving);
+				totalSavingSumMap.put(String.valueOf(totalCount), totalSavingDouble);
+			}
+
 			return totalSavingSumMap;
 
 		}
