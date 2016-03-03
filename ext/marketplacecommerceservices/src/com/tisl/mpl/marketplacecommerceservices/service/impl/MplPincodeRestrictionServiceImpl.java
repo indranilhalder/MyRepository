@@ -260,15 +260,15 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 
 	/*
 	 * This method will check whether fulfillment type is matching or not.
-	 * 
+	 *
 	 * @param reqData
-	 * 
+	 *
 	 * @param fullfillmentType
-	 * 
+	 *
 	 * @param ussId
-	 * 
+	 *
 	 * @param selleId
-	 * 
+	 *
 	 * @return flag
 	 */
 	private boolean checkFullfillmentType(final List<PincodeServiceData> reqData, final String fullfillmentType,
@@ -473,21 +473,43 @@ public class MplPincodeRestrictionServiceImpl implements MplPincodeRestrictionSe
 					pincodeServiceData.getDeliveryModes().remove(deliveryModeData);
 					break;
 				}
-				else
+				//Start - Code additon TISPRO-167
+				// added for Category Id
+				final List<String> categoryList = getCategoryCodeList(pincodeServiceData.getProductCode());
+				if (CollectionUtils.isNotEmpty(categoryList))
 				{
-
 					for (final Map.Entry<String, List<String>> entry : restricteddeliveryModeMap.entrySet())
 					{
-						if (entry.getValue().contains(deliveryModeData.getName()))
+						if (entry.getValue().contains(deliveryModeData.getName()) && categoryList.contains(entry.getKey()))
 						{
 							pincodeServiceData.getDeliveryModes().remove(deliveryModeData);
 							break;
 						}
-
 					}
-
-
 				}
+				// added for listing id check
+				for (final Map.Entry<String, List<String>> entry : restricteddeliveryModeMap.entrySet())
+				{
+					if (entry.getValue().contains(deliveryModeData.getName())
+							&& pincodeServiceData.getProductCode().equalsIgnoreCase(entry.getKey()))
+					{
+						pincodeServiceData.getDeliveryModes().remove(deliveryModeData);
+						break;
+					}
+				}
+				//End - Code additon TISPRO-167
+				/*
+				 * else {
+				 *
+				 * for (final Map.Entry<String, List<String>> entry : restricteddeliveryModeMap.entrySet()) { if
+				 * (entry.getValue().contains(deliveryModeData.getName())) {
+				 * pincodeServiceData.getDeliveryModes().remove(deliveryModeData); break; }
+				 *
+				 * }
+				 *
+				 *
+				 * }
+				 */
 
 			}
 		}
