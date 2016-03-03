@@ -19,11 +19,11 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SizeGuideModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao;
 import com.tisl.mpl.marketplacecommerceservices.service.SizeGuideService;
-import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
@@ -66,7 +66,7 @@ public class SizeGuideServiceImpl implements SizeGuideService
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0018);//MarketplacecommerceservicesConstants.E0000);
 		}
 		return sizeModels;
 	}
@@ -76,21 +76,28 @@ public class SizeGuideServiceImpl implements SizeGuideService
 		String sizeGuideCode = null;
 		//get size chart feature
 		final FeatureList featureList = getClassificationService().getFeatures(product);
-		for (final Feature feature : featureList)
+		try
 		{
-			final String featureName = feature.getName().replaceAll("\\s+", "");
-
-			final String sizeChart = configurationService.getConfiguration().getString("product.sizechart.value")
-					.replaceAll("\\s+", "");
-			if (featureName.equalsIgnoreCase(sizeChart))
+			for (final Feature feature : featureList)
 			{
-				if (null != feature.getValue())
+				final String featureName = feature.getName().replaceAll("\\s+", "");
+
+				final String sizeChart = configurationService.getConfiguration().getString("product.sizechart.value")
+						.replaceAll("\\s+", "");
+				if (featureName.equalsIgnoreCase(sizeChart))
 				{
-					final FeatureValue sizeGuidefeatureVal = feature.getValue();
-					sizeGuideCode = String.valueOf(sizeGuidefeatureVal.getValue());
-					break;
+					if (null != feature.getValue())
+					{
+						final FeatureValue sizeGuidefeatureVal = feature.getValue();
+						sizeGuideCode = String.valueOf(sizeGuidefeatureVal.getValue());
+						break;
+					}
 				}
 			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
 		return sizeGuideCode;

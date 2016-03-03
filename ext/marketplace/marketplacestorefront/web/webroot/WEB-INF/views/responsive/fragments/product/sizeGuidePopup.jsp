@@ -15,10 +15,14 @@
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
 <div class="sizes">
-	
+
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
 	<c:choose>
-	<c:when test="${not empty sizeguideData}">	
+		<c:when test="${sizeguideData eq 'dataissue'}">
+			<p style="color: #ff1c47;"><spring:theme code="product.error"/></p>
+		</c:when>
+		
+	<c:when test="${not empty sizeguideData and sizeguideData  ne 'dataissue'}">	
 		
 		<div class="tables">
 			<div class="footwear-size-table">
