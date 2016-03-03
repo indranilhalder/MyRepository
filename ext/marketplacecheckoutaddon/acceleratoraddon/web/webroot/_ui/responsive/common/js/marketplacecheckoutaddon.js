@@ -2946,6 +2946,18 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#isPincodeServicableId").val('Y');
 		$('#checkout-id #checkout-enabled').removeClass('checkout-disabled'); //TISEE-6257
 		$('#expresscheckoutid #expressCheckoutButtonId').removeClass('express-checkout-disabled'); //TISEE-6257
+		//Code Start TISPRD-437
+		var str1 = document.referrer; 
+		if(str1.indexOf('checkout') != -1){ //last page checkout
+			if($('.global-alerts').length != 0) { //error exist in dom
+				var errortext = $(".global-alerts,alert-danger, alert-dismissable").text();
+				if( errortext != null && errortext != 'undefined' && errortext != '') {
+					  $(".global-alerts").remove();
+				} 
+			}
+		}
+		//Code End TISPRD-437
+		
 		if(buttonType=='typeCheckout')
 		{
 			redirectToCheckout(checkoutLinkURlId);
