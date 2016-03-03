@@ -74,7 +74,7 @@
 				<ycommerce:testId code="checkoutStepTwo">
 					<div class="checkout-shipping left-block">
 						<div class="checkout-indent">
-							<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
+							<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/check" method="post" commandName="deliveryMethodForm">
 									<multi-checkout:shipmentItems cartData="${cartData}" defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
 								<button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 							</form:form>
