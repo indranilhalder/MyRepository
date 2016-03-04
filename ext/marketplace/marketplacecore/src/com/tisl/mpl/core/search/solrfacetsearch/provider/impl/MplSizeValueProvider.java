@@ -23,6 +23,7 @@ import java.util.TreeSet;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PcmProductVariantModel;
+import com.tisl.mpl.util.MplBuyBoxUtility;
 
 
 /**
@@ -36,6 +37,8 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 
 
 	private FieldNameProvider fieldNameProvider;
+	private MplBuyBoxUtility mplBuyBoxUtility;
+
 
 	/*
 	 * (non-Javadoc)
@@ -44,6 +47,25 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
 	 */
+	/**
+	 * @return the mplBuyBoxUtility
+	 */
+
+	public MplBuyBoxUtility getMplBuyBoxUtility()
+	{
+		return mplBuyBoxUtility;
+	}
+
+	/**
+	 * @param mplBuyBoxUtility
+	 *           the mplBuyBoxUtility to set
+	 */
+	@Required
+	public void setMplBuyBoxUtility(final MplBuyBoxUtility mplBuyBoxUtility)
+	{
+		this.mplBuyBoxUtility = mplBuyBoxUtility;
+	}
+
 	/**
 	 * @return Collection<fieldValues>
 	 * @param indexConfig
@@ -89,8 +111,11 @@ public class MplSizeValueProvider extends AbstractPropertyFieldValueProvider imp
 				//				}
 
 				//Included for Electronics Product
-				if (pcmSizeVariantModel.getColour() != null && pcmVariantModel.getColour() != null
-						&& pcmSizeVariantModel.getColour().equalsIgnoreCase(pcmVariantModel.getColour())
+				final String sizeVariantColour = mplBuyBoxUtility.getVariantColour(pcmSizeVariantModel,
+						pcmSizeVariantModel.getFeatures());
+
+				final String pcmVariantColour = mplBuyBoxUtility.getVariantColour(pcmVariantModel, pcmVariantModel.getFeatures());
+				if (sizeVariantColour != null && pcmVariantColour != null && sizeVariantColour.equalsIgnoreCase(pcmVariantColour)
 						&& pcmSizeVariantModel.getSize() != null)
 				{
 
