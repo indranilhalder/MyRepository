@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
+import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 
@@ -115,6 +116,78 @@ public class OfferPageController extends AbstractSearchPageController
 		return getViewForPage(model);
 	}
 
+	//Added to render all the offer related products
+	@RequestMapping(value = "/viewAllOffers", method = RequestMethod.GET)
+	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
+			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
+			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+			@RequestParam(value = "sort", required = false) final String sortCode, final HttpServletRequest request,
+			final Model model) throws CMSItemNotFoundException
+	{
+		try
+		{
+
+
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = performSearchForAllOffers(
+					searchQuery, page, showMode, sortCode, getSearchPageSize());
+			populateModel(model, searchPageData, ShowMode.Page);
+
+			model.addAttribute("hideDepartments", Boolean.TRUE);
+			model.addAttribute("otherProducts", true);
+
+
+			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
+					Collections.singletonList(new Breadcrumb("#", "Offers", LAST_LINK_CLASS)));
+
+			storeCmsPageInModel(model, getContentPageForLabelOrId(OFFER_LISTING_CMS_PAGE_ID));
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			return frontEndErrorHelper.callNonBusinessError(model, e.getErrorMessage());
+
+		}
+		catch (final Exception exp)
+		{
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
+			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
+
+		}
+
+
+		return getViewForPage(model);
+	}
+
+	/**
+	 * @param searchQuery
+	 * @param page
+	 * @param showMode
+	 * @param sortCode
+	 * @param searchPageSize
+	 */
+	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> performSearchForAllOffers(
+			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
+	{
+		final PageableData pageableData = createPageableData(page, page, sortCode, ShowMode.Page);
+		final SearchStateData searchState = new SearchStateData();
+		final SearchQueryData searchQueryData = new SearchQueryData();
+
+		if (searchQuery == null)
+		{
+			searchState.setQuery(searchQueryData);
+
+		}
+		else
+		{
+			searchQueryData.setValue(searchQuery);
+		}
+
+
+		return searchFacade.searchAllOffers(searchState, pageableData);
+	}
+	//End
 
 	protected class OfferSearchEvaluator
 	{
