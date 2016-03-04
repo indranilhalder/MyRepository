@@ -20,7 +20,7 @@
 <c:if test="${component.layout eq 'FiveBrandImages'}">
 	<ul class="images">
 		<li class="short images">
-			<div class="toggle">
+			<%-- <div class="toggle">
 				<a href="${masterBrandUrl}">${component.masterBrandName}</a>
 				<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
 			</div> 
@@ -30,7 +30,7 @@
 
 						</b>
 					</h4></a>
-			</div> <c:forEach items="${component.subBrandList}" var="subBrand">
+			</div> --%> <c:forEach items="${component.subBrandList}" var="subBrand">
 			<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
 				<a href="${subBrandUrl}"><img class="multibrand-logo" src="${subBrand.subBrandImage.URL}" />
 					<img class="logo" src="${subBrand.subBrandLogo.URL}" ></a>
@@ -44,7 +44,7 @@
 
 	<ul id="kids" class="images">
 		<li class="short images">
-			<div class="toggle">
+			<%-- <div class="toggle">
 				<a href="${masterBrandUrl}">${component.masterBrandName} 
 				</a>
 				</div>
@@ -55,7 +55,7 @@
 
 								</b>
 							</h4></a>
-					</div>
+					</div> --%>
 				
 			<ul class="words" style="width: 50%; float: left">
 				<c:forEach items="${component.subBrands}" var="subBrand">
@@ -96,7 +96,7 @@
 
 
 		<li class="short images" id="atozbrandsdiplay">
-			<div class="toggle">
+			<%-- <div class="toggle">
 				<a href="">${component.masterBrandName}</a>
 			</div> <c:url var="brandlistUrl" value="/brands/brandlist?cat=A-ZBrands" />
 			<div>
@@ -105,7 +105,7 @@
 
 						</b>
 					</h4></a>
-			</div>
+			</div> --%>
 		</li>
 	</ul>
 </c:if>
