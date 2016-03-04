@@ -122,7 +122,6 @@ public class BinServiceImpl implements BinService
 				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_DELIMITTER);
 
 				fileWriter.append(data.getBaseStoreUId());
-				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_DELIMITTER);
 
 				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_NEW_LINE_SEPARATOR);
 			}
