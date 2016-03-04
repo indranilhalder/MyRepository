@@ -14,6 +14,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -162,13 +163,15 @@ public class BinServiceImpl implements BinService
 		final List<BankDataPojo> csvBankDataList = new ArrayList<BankDataPojo>();
 		for (final String bankData : bankNameList)
 		{
-			BankDataPojo pojo = new BankDataPojo();
-			pojo = validateBankData(bankData);
-			if (null != pojo)
+			if (StringUtils.isNotEmpty(bankData))
 			{
-				csvBankDataList.add(pojo);
+				BankDataPojo pojo = new BankDataPojo();
+				pojo = validateBankData(bankData);
+				if (null != pojo)
+				{
+					csvBankDataList.add(pojo);
+				}
 			}
-
 		}
 		return csvBankDataList;
 	}
@@ -184,8 +187,13 @@ public class BinServiceImpl implements BinService
 		final BankDataPojo pojo = new BankDataPojo();
 		if (bankData.contains(MarketplaceBinDbConstants.COMMA))
 		{
-			pojo.setBankCode("\"" + bankData + "\"");
-			pojo.setBankName("\"" + bankData + "\"");
+			final StringBuilder sb = new StringBuilder();
+			sb.append("\"");
+			sb.append(bankData);
+			sb.append("\"");
+
+			pojo.setBankCode(sb.toString());
+			pojo.setBankName(sb.toString());
 			pojo.setBaseStoreUId(MarketplaceBinDbConstants.BASESTORE_UID);
 		}
 		else
