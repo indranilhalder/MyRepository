@@ -22,7 +22,7 @@
 	class="de.hybris.platform.acceleratorservices.dataimport.batch.FileOrderComparator">
 			<property name="prefixPriority">
 					<map>
-					<entry key="bins_iso_9_4" value="0" />
+					<entry key="bins_iso_9_4" value="1" />
 					<entry key="bank_data" value="0" />
 					</map>
 			</property>
