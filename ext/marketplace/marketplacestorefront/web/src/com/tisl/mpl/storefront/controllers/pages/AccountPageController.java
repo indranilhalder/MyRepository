@@ -1156,6 +1156,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
+			model.addAttribute(ModelAttributetConstants.PAGE_INDEX_HIST, pageHistory);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE_HISTORY, pageSizeVoucherHistory);
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
