@@ -182,9 +182,9 @@
 									</c:if> <c:if test="${couponsRedeemedCount > 1}">
 										<spring:theme code="text.account.coupons.coupons" />
 									</c:if>
-								</span>&nbsp;
+								</span>
 								<spring:theme code="text.account.coupons.sofarsaved" />
-								<span>Rs. ${totalSavedSum}</span>
+								<span>${totalSavedSum.formattedValue}</span>
 								<spring:theme code="text.account.coupons.onpurchase" />
 							</p>
 								<div class="bottom btn-placement">
