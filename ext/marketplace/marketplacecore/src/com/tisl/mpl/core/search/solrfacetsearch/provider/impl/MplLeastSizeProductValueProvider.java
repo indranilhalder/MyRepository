@@ -27,16 +27,15 @@ import com.tisl.mpl.util.MplBuyBoxUtility;
  * @author TCS
  *
  */
-public class MplLeastSizeProductValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplLeastSizeProductValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 	private FieldNameProvider fieldNameProvider;
 	private MplBuyBoxUtility mplBuyBoxUtility;
 
 	/**
 	 * @Description : Return leastSizeProduct
-	 * @param :
-	 *           final IndexConfig indexConfig, final IndexedProperty indexedProperty,final Object model
+	 * @param : final IndexConfig indexConfig, final IndexedProperty indexedProperty,final Object model
 	 * @return : Collection<FieldValue>
 	 */
 	//Return leastSizeProduct against each Product
@@ -70,8 +69,7 @@ public class MplLeastSizeProductValueProvider extends AbstractPropertyFieldValue
 
 	/**
 	 * @Description : Return filed values
-	 * @param :
-	 *           final String leastSizeProduct, final IndexedProperty indexedProperty
+	 * @param : final String leastSizeProduct, final IndexedProperty indexedProperty
 	 * @return : List<FieldValue>
 	 */
 	//Create field value for least size product

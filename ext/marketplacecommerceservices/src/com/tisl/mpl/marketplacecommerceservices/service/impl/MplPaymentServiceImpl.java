@@ -229,7 +229,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		if (null != cartValue && cartValue.doubleValue() >= emiThreshold.doubleValue())
 		{
-			emiBankList = getMplPaymentDao().getEMIBanks(cartValue);
+			//TISPRO-179
+			emiBankList = getMplPaymentDao().getEMIBanks(cartValue, null);
 		}
 
 		return emiBankList;
@@ -1507,7 +1508,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * This method applies promotion in the payment page
 	 *
 	 * @param cartData
-	 * @param cart
+	 * @param cartModel
 	 * @return MplPromoPriceData
 	 * @throws JaloPriceFactoryException
 	 * @throws JaloSecurityException
@@ -1516,21 +1517,23 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
+	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cartModel) throws ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions
 	{
 		final long startTime = System.currentTimeMillis();
 		//Reset Voucher Apportion
-		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 		{
+			LOG.debug(">> 1 : Checking voucher related promotion >> ");
 			for (final AbstractOrderEntryModel entry : getMplVoucherService().getOrderEntryModelFromVouEntries(
-					(VoucherModel) cart.getDiscounts().get(0), cart))
+					(VoucherModel) cartModel.getDiscounts().get(0), cartModel))
 			{
-				entry.setCouponCode("");
+				entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
 				entry.setCouponValue(Double.valueOf(0.00D));
 				getModelService().save(entry);
 			}
@@ -1538,63 +1541,89 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 
 		final MplPromoPriceData promoPriceData = new MplPromoPriceData();
-		MplPromotionData responseData = new MplPromotionData();
 		VoucherDiscountData discData = new VoucherDiscountData();
-		final List<MplPromotionData> responseDataList = new ArrayList<MplPromotionData>();
-		calculatePromotion(cart, cartData);
+		calculatePromotion(cartModel, cartData);
 
-		final BankModel bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+		final BankModel bankModel = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 		final String paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 
-		final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cart.getTotalPriceWithConv());
-
-		if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI"))
+		if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && bankModel != null
+				&& bankModel.getBankName() != null)
 		{
-			boolean flag = true;
-			if (null != emiBankList && !emiBankList.isEmpty())
+
+			LOG.debug(">> Apply promotion >> Inside EMI ");
+			final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(),
+					bankModel.getBankName());
+			if (!(CollectionUtils.isNotEmpty(emiBankList) && emiBankList.size() == 1))
 			{
-				for (final EMIBankModel emiBank : emiBankList)
-				{
-					if (null != bankName && null != emiBank.getName() && StringUtils.isNotEmpty(emiBank.getName().getBankName())
-							&& bankName.equals(emiBank.getName()))
-					{
-						flag = true;
-						break;
-					}
-					else
-					{
-						flag = false;
-					}
-				}
-			}
-			else
-			{
-				flag = false;
-			}
-			if (!flag)
-			{
-				calculatePromotion(cart, cartData);
+				calculatePromotion(cartModel, cartData);
 				promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
 						MarketplacecommerceservicesConstants.PAYMENT_EMI_PROMOERROR));
 			}
 		}
 
-		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 		{
-			final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
+			LOG.debug(">> 2 : Checking voucher related promotion >> ");
+			final PromotionVoucherModel voucher = (PromotionVoucherModel) cartModel.getDiscounts().get(0);
 			final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
-					voucher, cart);
-			discData = getMplVoucherService().checkCartAfterApply(voucher, cart, applicableOrderEntryList);
-			getMplVoucherService().setApportionedValueForVoucher(voucher, cart, voucher.getVoucherCode(), applicableOrderEntryList);
-			getMplCommerceCartService().setTotalWithConvCharge(cart, cartData);
+					voucher, cartModel);
+			discData = getMplVoucherService().checkCartAfterApply(voucher, cartModel, applicableOrderEntryList);
+			getMplVoucherService().setApportionedValueForVoucher(voucher, cartModel, voucher.getVoucherCode(),
+					applicableOrderEntryList);
+			getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
 
 		}
 		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 
-		//getting the promotion data
-		final Set<PromotionResultModel> promotion = cart.getAllPromotionResults();
-		if (null != promotion && !promotion.isEmpty())
+		final List<MplPromotionData> responseDataList = getAppliedPromotionDetails(cartModel, cartData);
+
+		if (CollectionUtils.isNotEmpty(responseDataList))
+		{
+			promoPriceData.setMplPromo(responseDataList);
+		}
+
+		promoPriceData.setTotalDiscount(calculateTotalDiscount(cartModel));
+		//Populating Currency and Total Price Details
+		if (null != cartModel.getCurrency() && StringUtils.isNotEmpty(cartModel.getCurrency().getSymbol()) && null != cartData)
+		{
+			promoPriceData.setCurrency(cartModel.getCurrency().getSymbol());
+			promoPriceData.setTotalPrice(cartData.getTotalPriceWithConvCharge());
+			promoPriceData.setConvCharge(cartData.getConvenienceChargeForCOD());
+			final PriceData totalvalExcConv = discountUtility
+					.createPrice(cartModel, Double.valueOf(((cartData.getTotalPriceWithConvCharge().getValue()).subtract(cartData
+							.getConvenienceChargeForCOD().getValue())).toString()));
+
+			if (null != totalvalExcConv && null != totalvalExcConv.getFormattedValue())
+			{
+				promoPriceData.setTotalExcConv(totalvalExcConv);
+			}
+			promoPriceData.setDeliveryCost(cartData.getDeliveryCost());
+		}
+		promoPriceData.setVoucherDiscount(discData);
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service applyPromotions()======" + (endTime - startTime));
+		return promoPriceData;
+	}
+
+	/**
+	 * @Description : To get details of applied promotion
+	 * @param cartModel
+	 * @param cartData
+	 * @return List<MplPromotionData>
+	 * @throws EtailNonBusinessExceptions
+	 */
+	private List<MplPromotionData> getAppliedPromotionDetails(final CartModel cartModel, final CartData cartData)
+			throws EtailNonBusinessExceptions
+	{
+		MplPromotionData responseData = new MplPromotionData();
+
+		final List<MplPromotionData> responseDataList = new ArrayList<MplPromotionData>();
+
+		final Set<PromotionResultModel> promotion = cartModel.getAllPromotionResults();
+		if (CollectionUtils.isNotEmpty(promotion))
 		{
 			for (final PromotionResultModel promo : promotion)
 			{
@@ -1603,25 +1632,25 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					if (promo.getPromotion() instanceof ProductPromotionModel && promo.getCertainty().floatValue() < 1.0F)
 					{
 						final ProductPromotionModel productPromotion = (ProductPromotionModel) promo.getPromotion();
-						responseData = getDiscountUtility().populatePotentialPromoData(productPromotion, cart);
+						responseData = getDiscountUtility().populatePotentialPromoData(productPromotion, cartModel);
 						responseDataList.add(responseData);
 					}
 					else if (promo.getPromotion() instanceof OrderPromotionModel && promo.getCertainty().floatValue() < 1.0F)
 					{
 						final OrderPromotionModel orderPromotion = (OrderPromotionModel) promo.getPromotion();
-						responseData = getDiscountUtility().populatePotentialOrderPromoData(orderPromotion, cart);
+						responseData = getDiscountUtility().populatePotentialOrderPromoData(orderPromotion, cartModel);
 						responseDataList.add(responseData);
 					}
 					else if (promo.getPromotion() instanceof ProductPromotionModel && promo.getCertainty().floatValue() == 1.0F)
 					{
 						final ProductPromotionModel productPromotion = (ProductPromotionModel) promo.getPromotion();
-						responseData = getDiscountUtility().populateData(productPromotion, cart);
+						responseData = getDiscountUtility().populateData(productPromotion, cartModel);
 						responseDataList.add(responseData);
 					}
 					else if (promo.getPromotion() instanceof OrderPromotionModel && promo.getCertainty().floatValue() == 1.0F)
 					{
 						final OrderPromotionModel orderPromotion = (OrderPromotionModel) promo.getPromotion();
-						responseData = getDiscountUtility().populateCartPromoData(orderPromotion, cart);
+						responseData = getDiscountUtility().populateCartPromoData(orderPromotion, cartModel);
 						responseDataList.add(responseData);
 					}
 				}
@@ -1637,48 +1666,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			responseData = getDiscountUtility().populateNonPromoData(cartData);
 			responseDataList.add(responseData);
 		}
-		if (!responseDataList.isEmpty())
-		{
-			promoPriceData.setMplPromo(responseDataList);
-		}
 
-		promoPriceData.setTotalDiscount(calculateTotalDiscount(cart));
-		//Populating Currency and Total Price Details
-		if (null != cart.getCurrency() && StringUtils.isNotEmpty(cart.getCurrency().getSymbol()) && null != cartData)
-		{
-			promoPriceData.setCurrency(cart.getCurrency().getSymbol());
-			promoPriceData.setTotalPrice(cartData.getTotalPriceWithConvCharge());
-			promoPriceData.setConvCharge(cartData.getConvenienceChargeForCOD());
-			//			final BigDecimal totalvalExcConv = (cartData.getTotalPrice().getValue()).subtract(cartData.getConvenienceChargeForCOD()
-			//					.getValue());
-
-			final PriceData totalvalExcConv = discountUtility
-					.createPrice(cart, Double.valueOf(((cartData.getTotalPriceWithConvCharge().getValue()).subtract(cartData
-							.getConvenienceChargeForCOD().getValue())).toString()));
-
-			if (null != totalvalExcConv && null != totalvalExcConv.getFormattedValue())
-			{
-				promoPriceData.setTotalExcConv(totalvalExcConv);
-			}
-			//			promoPriceData.setTotalExcConv((cartData.getTotalPrice().getValue()).subtract(cartData.getConvenienceChargeForCOD()
-			//					.getValue()));
-			promoPriceData.setDeliveryCost(cartData.getDeliveryCost());
-		}
-
-		promoPriceData.setVoucherDiscount(discData);
-
-		final long endTime = System.currentTimeMillis();
-		LOG.debug("Exiting service applyPromotions()======" + (endTime - startTime));
-		return promoPriceData;
+		return responseDataList;
 	}
-
-
 
 	/**
 	 * This method calculates the promotional values
 	 *
 	 * @param cart
-	 * @param cartData
 	 */
 	private void calculatePromotion(final CartModel cart, final CartData cartData)
 	{
@@ -1764,7 +1759,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		}
 		final long endTime = System.currentTimeMillis();
-		LOG.debug("Time taken within Controller applyPromotions()=====" + (endTime - startTime));
+		LOG.debug("Time taken within Controller populateCartDiscountPrice()=====" + (endTime - startTime));
 		return value;
 	}
 
@@ -1777,8 +1772,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private boolean checkPromoForPaymntRestrictn(final PromotionResultModel promo)
 	{
 		boolean flag = false;
-		if (null != promo && null != promo.getPromotion() && null != promo.getPromotion().getRestrictions()
-				&& !promo.getPromotion().getRestrictions().isEmpty())
+		if (null != promo && null != promo.getPromotion() && CollectionUtils.isNotEmpty(promo.getPromotion().getRestrictions()))
 		{
 			for (final AbstractPromotionRestrictionModel restriction : promo.getPromotion().getRestrictions())
 			{
@@ -2347,16 +2341,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						final CountryModel country = getI18NService().getCountry(countryISO);
 						address.setCountry(country);//country
 					}
-
-					//					if (null != cart.getDeliveryAddress() && StringUtils.isNotEmpty(cart.getDeliveryAddress().getPhone1()))
-					//					{
-					//						address.setPhone1(cart.getDeliveryAddress().getPhone1());
-					//					}
-					//					if (null != cart.getDeliveryAddress() && StringUtils.isNotEmpty(cart.getDeliveryAddress().getCellphone()))
-					//					{
-					//						address.setCellphone(cart.getDeliveryAddress().getCellphone());
-					//					}
-
 					address.setOwner(cart.getUser());
 					address.setShippingAddress(Boolean.FALSE);
 					address.setUnloadingAddress(Boolean.FALSE);
@@ -2522,7 +2506,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		return jusModelLast;
 	}
 
+	/*
+	 * @description : fetching bank model for a bank name TISPRO-179\
+	 *
+	 * @param : bankName
+	 *
+	 * @return : BankModel
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions
+	{
+		return getMplPaymentDao().getBankDetailsForBank(bankName);
 
+	}
 
 	//Getters and Setters
 

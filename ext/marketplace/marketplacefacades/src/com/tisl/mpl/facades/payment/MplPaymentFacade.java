@@ -257,7 +257,7 @@ public interface MplPaymentFacade
 	 */
 	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException;
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -267,5 +267,16 @@ public interface MplPaymentFacade
 	 */
 	Map<Date, SavedCardData> listStoredEMICards(CustomerModel customer, String bankName);
 
+	/*
+	 * @Description : saving bank name in session -- TISPRO-179
+	 * 
+	 * @param bankName
+	 * 
+	 * @return Boolean
+	 * 
+	 * @throws EtailNonBusinessExceptions
+	 */
+
+	Boolean setBankForSavedCard(final String bankName) throws EtailNonBusinessExceptions;
 
 }

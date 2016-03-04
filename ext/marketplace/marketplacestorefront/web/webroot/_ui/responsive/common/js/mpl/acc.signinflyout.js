@@ -39,6 +39,8 @@ $(document).ready(function(){
 	$("#errorHolder").text("Password cannot be left empty");
 	return false;
 	}else{
+		// TISPRO-183
+		utag.link({ "event_type" : "Login", "link_name" : "Login" });
 		//TISSIT-1703
 		var hostName=window.location.host;
 		if(hostName.indexOf(':') >=0)
