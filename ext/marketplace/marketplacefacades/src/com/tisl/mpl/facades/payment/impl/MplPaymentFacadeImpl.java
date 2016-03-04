@@ -72,6 +72,7 @@ import com.tisl.mpl.juspay.response.StoredCard;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -107,6 +108,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	private BinService binService;
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
+
+
 
 	private static final Logger LOG = Logger.getLogger(MplPaymentFacadeImpl.class);
 
@@ -1328,21 +1331,80 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		return savedCardDataMap;
 	}
 
-
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.facades.payment.MplPaymentFacade#applyPromotions()
+	/**
+	 * @return MplPromoPriceData
+	 * @throws CalculationException
+	 * @throws JaloPriceFactoryException
+	 * @throws JaloSecurityException
+	 * @throws VoucherOperationException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
+	 * @throws ModelSavingException
+	 * @throws EtailNonBusinessExceptions
 	 */
+
 	@Override
 	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions
 	{
 		return getMplPaymentService().applyPromotions(cartData, cart);
 	}
 
+
+	/*
+	 * @Description : saving bank name in session -- TISPRO-179
+	 * 
+	 * @param bankName
+	 * 
+	 * @return Boolean
+	 * 
+	 * @throws EtailNonBusinessExceptions
+	 */
+
+	@Override
+	public Boolean setBankForSavedCard(final String bankName) throws EtailNonBusinessExceptions
+	{
+		final long startTime = System.currentTimeMillis();
+		Boolean sessionStatus = Boolean.FALSE;
+		try
+		{
+			//TISPRO-179
+			final BankModel bankModel = getMplPaymentService().getBankDetailsForBank(bankName);
+
+			if (bankModel != null)
+			{
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN, bankModel);
+				sessionStatus = Boolean.TRUE;
+			}
+
+			final long iterationTime = System.currentTimeMillis();
+			LOG.debug("Inside setBankForSavedCard=====exiting loop=====" + (iterationTime - startTime));
+			LOG.debug("From session=====Bank:::::::"
+					+ getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN));
+			if (null == (getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION)))
+			{
+				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.PAYMENTMODE);
+				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
+				{
+					if (!(MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+					{
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION, entry.getKey());
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("No bank " + bankName + " is matched with the local bank model " + e);
+		}
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Controller setBankForSavedCard()=====" + (endTime - startTime));
+
+		return sessionStatus;
+	}
 
 	//Getters and setters
 	/**

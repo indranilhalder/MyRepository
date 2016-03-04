@@ -101,7 +101,7 @@ public class MplPaymentServiceImplUnitTest
 	public void testGetEMIBanks()
 	{
 		final List<EMIBankModel> emiBankList = Arrays.asList(emiBankModel);
-		Mockito.when(mplPaymentDao.getEMIBanks(Double.valueOf(100))).thenReturn(emiBankList);
+		Mockito.when(mplPaymentDao.getEMIBanks(Double.valueOf(100), null)).thenReturn(emiBankList);
 		Mockito.when(emiBankModel.getName()).thenReturn(bank);
 		Mockito.when(bank.getBankName()).thenReturn("HDFC");
 		mplPaymentServiceImpl.getEMIBanks(Double.valueOf(100));

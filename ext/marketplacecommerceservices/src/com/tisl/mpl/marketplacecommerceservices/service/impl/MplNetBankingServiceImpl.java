@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -43,13 +44,22 @@ public class MplNetBankingServiceImpl implements MplNetBankingService
 	public List<EMIBankModel> getEMIBanks(final Double cartValue) throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 
-		List<EMIBankModel> emiBankList = new ArrayList<EMIBankModel>();
+		final List<EMIBankModel> emiBankList = new ArrayList<EMIBankModel>();
 		try
 		{
-
-			if (null != cartValue && null != mplPaymentDao.getEMIBanks(cartValue))
+			//			if (null != cartValue && null != mplPaymentDao.getEMIBanks(cartValue))
+			//			{
+			//				emiBankList = mplPaymentDao.getEMIBanks(cartValue);
+			//			}
+			//			return emiBankList;
+			//TISPRO-179
+			if (null != cartValue)
 			{
-				emiBankList = mplPaymentDao.getEMIBanks(cartValue);
+				final List<EMIBankModel> emiBankDetailsList = mplPaymentDao.getEMIBanks(cartValue, null);
+				if (CollectionUtils.isNotEmpty(emiBankDetailsList))
+				{
+					emiBankList.addAll(emiBankDetailsList);
+				}
 			}
 			return emiBankList;
 		}
