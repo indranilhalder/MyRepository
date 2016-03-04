@@ -393,8 +393,12 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 ;100017;READY_TO_SHIP;Order Confirmed;Your order is processing;PROCESSING;true;true;00cbe9;D2;
 ;100018;LOGISTIC_PARTNER_SWITCH;Order Confirmed;Your order is processing;PROCESSING;true;true;00cbe9;D2;
 
+;100042;ORDER_REALLOCATED;Order Confirmed;Your order is processing;PROCESSING;true;true;00cbe9;D2;
+;100043;CNC_INITIATED;YAAAY! Almost there;Your order is processing;PROCESSING;true;true;00cbe9;D2;
+
 ;100019;HOTC;Shipping commenced;Your order was just shipped;SHIPPING;true;true;00cbe9;D3;
 
+;100044;READY_FOR_COLLECTION;Shipping commenced;Your order is Ready for Collection;SHIPPING;true;true;00cbe9;D4;
 ;100020;OUT_FOR_DELIVERY;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
 ;100021;REACHED_NEAREST_HUB;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
 ;100022;LOST_IN_TRANSIT;In Transit;Your order is on its way;SHIPPING;true;true;00cbe9;D4;
@@ -402,6 +406,7 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 
 ;100024;DELIVERED;Shipment delivered;Super! Your order was delivered;SHIPPING;true;true;00cbe9;D5;
 
+;100045;ORDER_COLLECTED;In Transit;Your order is Collected;SHIPPING;true;true;00cbe9;D6;
 ;100025;RETURN_INITIATED;Return Initiated;Order return has been initiated;RETURN;true;true;00cbe9;D6;
 
 ;100026;REVERSE_AWB_ASSIGNED;Return in Progress;Order return is in progress;RETURN;true;true;00cbe9;D7;
@@ -422,6 +427,7 @@ INSERT_UPDATE OrderStatusCodeMaster;id[unique=true];statusCode;responseStatus;st
 ;100038;REFUND_IN_PROGRESS;Manual refund initiated;Manual refund has been initiated;CANCEL;true;true;ff1c47;D11;
 ;100039;CLOSED_ON_CANCELLATION;Order Cancelled and Closed;Order has been cancelled and closed;CANCEL;true;true;ff1c47;D11;
 ;100040;ORDER_CANCELLED;Order Cancelled;Your order has been cancelled;CANCEL;true;true;ff1c47;D11; 
+
 
 ###Payment Related
 UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;juspayWebHookTAT;juspayEBSTAT;ebsTatExpiryAlertTime

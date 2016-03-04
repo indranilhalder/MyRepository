@@ -1,9 +1,10 @@
 var isCodSet = false;	//this is a variable to check whether convenience charge is set or not
 var binStatus= false;
 
-
 var couponApplied=false;
 var bankNameSelected;
+
+
 
 //Display forms based on mode button click
 $("#viewPaymentCredit").click(function(){
@@ -141,7 +142,8 @@ function displayCODForm()
 	var paymentMode=$("#paymentMode").val();
 	$("#COD, #paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 	/*$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","block");*/	//Modified back as erroneously pushed by performance team
-	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/	//setCellNo();
+	$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, .make_payment, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/	
+	//setCellNo();
 	if(codEligible=="BLACKLISTED")
 	{
 		$("#customerBlackListMessage").css("display","block");
@@ -1238,7 +1240,6 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
-
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -1350,6 +1351,7 @@ $("#otpMobileNUMField").focus(function(){
 	            "product_id": utag.data.product_id
 
 	        });
+
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
 		var addressLine1=$("#address1").val();
@@ -2863,9 +2865,40 @@ function populatePincodeDeliveryMode(response,buttonType){
 	var isServicable=values[0];
 	var selectedPincode=values[1];
 	var deliveryModeJsonMap=values[2];
+	//console.log(deliveryModeJsonMap);
+	$(".pincodeServiceError").hide();
+	if(deliveryModeJsonMap=="null"){
+		$('#unsevisablePin').show();
+		$(".pincodeServiceError").show();
+		$("#checkout-enabled").css("pointer-events","none");
+		$("#checkout-enabled").css("cursor","default");
+		$("#checkout-enabled").css("opacity","0.5");
+		$("#expressCheckoutButtonId").css("pointer-events","none");
+		$("#expressCheckoutButtonId").css("cursor","default");
+		$("#expressCheckoutButtonId").css("opacity","0.5");
+		var pincodeEntered = $('#defaultPinCodeIds').val();
+		var pincodeServiceError = "This item is not serviceable for pincode "+pincodeEntered;
+		//console.log(pincodeServiceError);
+		var elementId = $(".desktop li:nth-child(3) ul");
+		elementId.hide();
+		$(".pincodeServiceError").text(pincodeServiceError);		
+	}else{
+		$('#unsevisablePin').hide();
+		$(".pincodeServiceError").hide();
+		$("#checkout-enabled").css("pointer-events","all");
+		$("#checkout-enabled").css("cursor","cursor");
+		$("#checkout-enabled").css("opacity","1");
+		$("#expressCheckoutButtonId").css("pointer-events","all");
+		$("#expressCheckoutButtonId").css("cursor","cursor");
+		$("#expressCheckoutButtonId").css("opacity","1");
 	var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
 	var length = Object.keys(deliveryModeJsonObj).length;
 	var isStockAvailable="Y";
+	if(deliveryModeJsonMap == 'N') {
+			console.log("This is NO");
+		}	
+		
+	}
 	
 	for ( var key in deliveryModeJsonObj) {
 	var ussId= deliveryModeJsonObj[key].ussid;
@@ -2932,7 +2965,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 				}
 				else if(deliveryType==='CNC'/* && parseFloat(inventory) >= parseFloat(quantityValue)*/){
 					var newLi = document.createElement("li");
-					newLi.setAttribute("class", "click-collect");
+					newLi.setAttribute("class", "methodClick");
 					var text = document.createTextNode("Click and Collect");
 					newLi.appendChild(text);
 					newUi.appendChild(newLi);
@@ -3103,8 +3136,6 @@ function checkSignInValidation(path){
 	if(validationResult){
 		utag.link({ "event_type" : "Login", "link_name" : "Login" });
 	}
-	
-	
 	return validationResult;
 }
 
@@ -3737,3 +3768,4 @@ $("#voucherDisplaySelection").change(function(){
 		$("#couponFieldId").val(selection);
 	}
 });
+
