@@ -48,7 +48,7 @@ public class BinServiceImpl implements BinService
 	private ConfigurationService configurationService;
 
 	/**
-	 * This method sends the bin to call DB to fetch details related to Bin
+	 * @Description This method sends the bin to call DB to fetch details related to Bin
 	 *
 	 * @param bin
 	 * @return BinModel
@@ -57,9 +57,7 @@ public class BinServiceImpl implements BinService
 	@Override
 	public BinModel checkBin(final String bin) throws EtailNonBusinessExceptions
 	{
-		final BinModel binModel = getBinDao().fetchBankFromBin(bin);
-
-		return binModel;
+		return getBinDao().fetchBankFromBin(bin);
 	}
 
 
@@ -72,7 +70,7 @@ public class BinServiceImpl implements BinService
 	{
 		try
 		{
-			final List<String> bankNameList = binDao.getBankDetails();
+			final List<String> bankNameList = getBinDao().getBankDetails();
 			if (CollectionUtils.isNotEmpty(bankNameList))
 			{
 				final List<BankDataPojo> csvBankDataList = populateData(bankNameList);
@@ -86,17 +84,15 @@ public class BinServiceImpl implements BinService
 		{
 			LOG.error(exception.getMessage());
 			ExceptionUtil.etailBusinessExceptionHandler(exception, null);
+			throw exception;
 		}
 		catch (final EtailNonBusinessExceptions exception)
 		{
 			LOG.error(exception.getMessage());
 			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
+			throw exception;
 		}
-
 	}
-
-
-
 
 	/**
 	 * @Description : Generate CSV with Bank Details present in Bin but not in Bank
@@ -116,17 +112,13 @@ public class BinServiceImpl implements BinService
 
 			for (final BankDataPojo data : csvBankDataList)
 			{
-				fileWriter.append(data.getBankName());
+				fileWriter.append(data.getBankName().toUpperCase());
 				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_DELIMITTER);
-
-				fileWriter.append(data.getBankCode());
+				fileWriter.append(data.getBankCode().toUpperCase());
 				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_DELIMITTER);
-
 				fileWriter.append(data.getBaseStoreUId());
-
 				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_NEW_LINE_SEPARATOR);
 			}
-
 		}
 		catch (final IOException exception)
 		{
@@ -136,7 +128,6 @@ public class BinServiceImpl implements BinService
 		{
 			LOG.error(exception.getMessage());
 		}
-
 		finally
 		{
 			try
@@ -153,7 +144,7 @@ public class BinServiceImpl implements BinService
 
 
 	/**
-	 * Populate Data in POJO Class
+	 * @description Populate Data in POJO Class
 	 *
 	 * @param bankNameList
 	 * @return csvBankDataList
@@ -165,8 +156,7 @@ public class BinServiceImpl implements BinService
 		{
 			if (StringUtils.isNotEmpty(bankData))
 			{
-				BankDataPojo pojo = new BankDataPojo();
-				pojo = validateBankData(bankData);
+				final BankDataPojo pojo = validateBankData(bankData);
 				if (null != pojo)
 				{
 					csvBankDataList.add(pojo);
@@ -180,7 +170,7 @@ public class BinServiceImpl implements BinService
 	 * Validate Bank Data
 	 *
 	 * @param bankData
-	 * @return pojo
+	 * @return BankDataPojo
 	 */
 	private BankDataPojo validateBankData(final String bankData)
 	{
@@ -191,17 +181,15 @@ public class BinServiceImpl implements BinService
 			sb.append("\"");
 			sb.append(bankData);
 			sb.append("\"");
-
 			pojo.setBankCode(sb.toString());
 			pojo.setBankName(sb.toString());
-			pojo.setBaseStoreUId(MarketplaceBinDbConstants.BASESTORE_UID);
 		}
 		else
 		{
 			pojo.setBankCode(bankData);
 			pojo.setBankName(bankData);
-			pojo.setBaseStoreUId(MarketplaceBinDbConstants.BASESTORE_UID);
 		}
+		pojo.setBaseStoreUId(MarketplaceBinDbConstants.BASESTORE_UID);
 		return pojo;
 	}
 
@@ -221,6 +209,4 @@ public class BinServiceImpl implements BinService
 	{
 		this.binDao = binDao;
 	}
-
-
 }

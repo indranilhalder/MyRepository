@@ -105,7 +105,9 @@ public class BinDaoImpl implements BinDao
 
 
 	/**
-	 * Generate Bank Data for .csv
+	 * @description : Generate Bank Data for .csv
+	 * @return List<String>
+	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
 	public List<String> getBankDetails() throws EtailNonBusinessExceptions
@@ -136,5 +138,4 @@ public class BinDaoImpl implements BinDao
 		}
 		return bankList;
 	}
-
 }
