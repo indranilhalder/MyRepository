@@ -1490,6 +1490,7 @@ h2 {
         margin-right: 20px;
         padding: 0 15px;
         width: 190px;
+        padding-top: 10px;
         -webkit-transition: background-color 0.3s 1s;
         -moz-transition: background-color 0.3s 1s;
         transition: background-color 0.3s 1s; }
@@ -1521,6 +1522,8 @@ h2 {
          /*  font-size: 14px; */
           font-weight: 500;
           font-size: 11.5px;
+          line-height: 20px;
+    		height: 51px;
     	  text-transform: uppercase;
     	  letter-spacing: 0.6px;
           -webkit-transition: color 0.3s;
@@ -8592,15 +8595,18 @@ footer .banner {
         border-bottom: 3px solid #ccc;}
         @media (min-width: 650px) {
           .top.checkout-top .content ul li {
-            font-size: 25px;
+            font-size: 20px;
           } }
         .top.checkout-top .content ul li span {
           font-family: "Avenir Next","Courier New";
           font-style: normal;
-          font-size: 25px;
+          font-size: 22px;
           float:left;
           font-weight: 400;
           color: #fff;
+          }
+        .top.checkout-top .content ul li.step-done > span {
+          display:none;
           }
           @media (min-width: 650px) {
             .top.checkout-top .content ul li span {
@@ -8615,16 +8621,23 @@ footer .banner {
                @media (max-width: 650px) {
               .top.checkout-top .content ul li.active:after {
                 bottom: 8%; } }
-        .top.checkout-top .content ul li:before {
-          content: "";
-          height: 40px;
-          width: 40px;
-          display: block;
-          font-family: "Avenir Next","Courier New";
-          font-size: 24px;
-          margin: 10px 0 5px;
-          position:absolute;
-          top:0;}
+        .top.checkout-top .content ul li.step-done:before {
+          height: 30px;
+    width: 30px;
+    display: block;
+    font-size: 20px;
+    position: absolute;
+    top: 3px;
+    background: #fff;
+    bottom: 0;
+    margin: auto;
+    border-radius: 100%;
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: lighter;
+    content: "\f00c";
+    padding-top: 5px;}
         /*   @media (min-width: 650px) {
             .top.checkout-top .content ul li:before {
               margin: 20px auto; } }
@@ -8666,6 +8679,7 @@ footer .banner {
 
 .top.checkout-top .content ul li a {
 	color: #aaa;
+	padding: 0;
 }
 
 	/* .top.checkout-top .content ul li a.active:after{				
@@ -20060,6 +20074,7 @@ color: #ff829a;
           {
           	padding:0px;
           	width:120px;
+          	padding-top:10px;
           }
         /*   header .content .bottom.active nav
           {
@@ -20943,8 +20958,11 @@ font-weight:600;
 	float:left;
 	margin: 15px auto;
 }
-.marketplace-checkout .simple-banner-component img{
+/* .marketplace-checkout .simple-banner-component img{
 		width:160px !important;
+} */
+.top.checkout-top .content ul li {
+    height: 50px;
 }
 .secureTransaction{
   top: 15px;}
@@ -20966,14 +20984,14 @@ font-weight:600;
 	left:0;
 	top:60%;}
 }
-@media(max-width:450px){
+/* @media(max-width:450px){
 	.top.checkout-top .content ul li {
 	  padding: 10px 0px 20px;}
 	.cart.checkout.wrapper .nav li:first-child{
 	float:left;}
 	.cart.checkout.wrapper .nav li:last-child{
 	float:right;}
-}
+} */
 
 .bundle-wrapper{
 	padding-left:74px;
@@ -30239,6 +30257,22 @@ header div.bottom .marketplace.linear-logo {
 	header div.bottom .marketplace.linear-logo {
 		display: block;
 	}
+	.top.checkout-top .content ul li.step-done:before {
+    height: 25px;
+    width: 25px;
+    display: block;
+    font-size: 18px;
+    padding-top: 4px;
+    left: 4px;
+}
+.top.checkout-top .content ul li {
+    font-size: 16px;
+    height: 50px;
+    vertical-align: top;
+}
+.top.checkout-top .content ul li span {
+    font-size: 18px;
+}
 }
 body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img{
 display:inline-block;
@@ -30325,6 +30359,7 @@ li#ratingDiv {
      font-weight: 500;
      text-transform: capitalize;
      margin-top: 9px;
+     display: block;
      letter-spacing: 1px;}
      
      header .content nav > ul > li > .toggle > span:last-child{
