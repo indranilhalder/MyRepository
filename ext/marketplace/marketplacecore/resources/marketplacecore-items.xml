@@ -7057,6 +7057,11 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+					<attribute qualifier="ticketSubType" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
 					<attribute qualifier="returnCategory" type="java.lang.String">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
