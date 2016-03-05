@@ -33,5 +33,6 @@
 		<property name="orderId" type="String"/>
 		<property name="transactionId" type="String"/>
 		<property name="isReturnLogisticsAvailable" type="String"/>
+		<property name="pinCode" type="String"></property>
 	</bean>
 </beans>

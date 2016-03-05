@@ -209,6 +209,25 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		//set up payment page
 		setupAddPaymentPage(model);
+		Boolean selectPickupDetails = false;
+		
+		//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
+		//this is only when cart entry contains cnc delivery mode.
+		final CartModel cartModel = getCartService().getSessionCart();
+		for(final AbstractOrderEntryModel abstractOrderEntryModel :cartModel.getEntries())
+		{
+			if (null != abstractOrderEntryModel.getDeliveryPointOfService())
+			{
+				final String pickupPersonName = cartModel.getPickupPersonName();
+				final String pickupPersonMobile = cartModel.getPickupPersonMobile();
+				if ((pickupPersonName == null) && (pickupPersonMobile == null))
+				{
+					selectPickupDetails = true;
+					model.addAttribute("selectPickupDetails", selectPickupDetails);
+					return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+				}
+			}
+		}
 
 		//creating new Payment Form
 		final PaymentForm paymentForm = new PaymentForm();

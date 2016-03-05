@@ -113,6 +113,19 @@ public class MarketplacewebservicesConstants
 	public static final String ORIGINALUID = "originalUid".intern();
 	public static final String CARDREFNUMBER = "cardRefNo".intern();
 
+	public static final String POS_QUERY_FOR_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId}=?slaveId"
+			.intern();
+
+	public static final String POS_QUERY_FOR_POSNAME = "select {pos:pk} from {PointOfService As pos} where {pos.name}=?name"
+			.intern();
+	public static final String POS_SLAVEID = "slaveId".intern();
+
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.sellerId}=?sellerId and {pos.name}=?name"
+			.intern();
+	public static final String POS_SELLERID = "sellerId".intern();
+	public static final String POS_NAME = "name".intern();
+
+
 	public static final String COD_ELIGIBLE = "Eligible for COD";
 	//	public static final String SSHIP_ELIGIBLE = "One or more items in your order are Seller Fulfilled. Hence, No COD mode is available."
 	//			.intern();

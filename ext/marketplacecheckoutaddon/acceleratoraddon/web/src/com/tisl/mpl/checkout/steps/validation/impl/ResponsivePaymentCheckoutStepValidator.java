@@ -38,19 +38,19 @@ public class ResponsivePaymentCheckoutStepValidator extends AbstractCheckoutStep
 			return ValidationResults.REDIRECT_TO_CART;
 		}
 
-		if (getMplCustomAddressFacade().hasNoDeliveryAddress())
+		/*if (getMplCustomAddressFacade().hasNoDeliveryAddress())
 		{
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
 					"checkout.multi.deliveryAddress.notprovided");
 			return ValidationResults.REDIRECT_TO_DELIVERY_METHOD;
-		}
+		}*/
 
-		if (getMplCustomAddressFacade().hasNoDeliveryMode())
+		/*if (getMplCustomAddressFacade().hasNoDeliveryMode())
 		{
 			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
 					"checkout.multi.deliveryMethod.notprovided");
 			return ValidationResults.REDIRECT_TO_DELIVERY_METHOD;
-		}
+		}*/
 
 		// Commented to refer marketplacefacade
 		/*

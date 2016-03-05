@@ -304,22 +304,26 @@
 									</c:if> --%>
 							</div>
 						</li>
-
-
-
-
-						<li class="item delivered first">
-							<div class="item-header">
+	                            <c:set var="editButton" value="enable" />
 								<c:set var="entryCount" value="0"></c:set>
 								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 									varStatus="status">
 									<c:forEach items="${sellerOrder.entries}" var="entry"
 										varStatus="entryStatus">
 										<c:set var="entryCount" value="${entryCount +1 }"></c:set>
+										
+										<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
+									         <c:set var="HD_ED_Count" value="${HD_ED_Count +1 }" />
+									         <c:set var="flag" value="true" />
+								        </c:if>
 									</c:forEach>
 								</c:forEach>
+									
+								<c:if test="${flag}">
+								<li class="item delivered first">
+						    	<div class="item-header">
 								<c:if test="${entryCount > 1}">
-									<h3>Shipping Address:</h3>
+								<h3>${HD_ED_Count} Product(s)-ShippingAddress:</h3>
 								</c:if>
 								<c:if test="${entryCount  <= 1 }">
 									<h3>
@@ -343,13 +347,49 @@
 									<br>
 									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
 								</address>
-							</div> <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
+							</div>
+							</c:if>
+							 <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 								varStatus="status">
 								<input type="hidden" id="subOrderCode"
 									value="${sellerOrder.code}" />
 								<input type="hidden" id="newCode" value="${subOrder.code}" />
 								<c:forEach items="${sellerOrder.entries}" var="entry"
 									varStatus="entryStatus">
+									<c:if
+											test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+								    <c:if test="${storeId ne entry.deliveryPointOfService.address.id}">
+									   <c:set var="pos"
+																value="${entry.deliveryPointOfService.address}" />
+																<li class="item delivered first">
+																	<div class="item-header">
+															<c:set var="storeId" value="${pos.id}" />
+															
+													<h3>${entryCount-HD_ED_Count} Product(s)-Collect
+																In-Store</h3> 
+															<p style="font-size: 12px; font-weight: 600;">Store
+																Address:</p>
+															<br>
+															<br>
+						
+															<address
+																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
+																${fn:escapeXml(pos.firstName)}&nbsp;
+																${fn:escapeXml(pos.lastName)}<br>
+																${fn:escapeXml(pos.companyName)} <br>
+																${fn:escapeXml(pos.line1)}&nbsp;
+																${fn:escapeXml(pos.line2)}
+																${fn:escapeXml(pos.town)}, <br>
+																${fn:escapeXml(pos.state)},
+																${fn:escapeXml(pos.country.name)},
+																${fn:escapeXml(pos.postalCode)}
+																${fn:escapeXml(pos.country.isocode)} <br>
+																+91&nbsp; ${fn:escapeXml(pos.phone)} <br>
+															</address>
+															</div>
+								  	        </c:if>
+									</c:if>
+									
 									<div class="item-fulfillment">
 										<p>
 											<spring:message code="mpl.myBag.fulfillment"></spring:message>
@@ -373,7 +413,93 @@
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
 										</p>
+										
+											
+											
+											<!--  Edit button and input box for  pickup Person details -->
+											
+														<%-- <div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div>  --%>
+														&nbsp; &nbsp;
+														<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+														
+														<c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
+														<c:if test="${sellerOrderStatus eq sellerOrder.status }">
+														     <c:set var="editButton" value="disable" />
+														</c:if>
+													   </c:forEach>
+														
+														<c:if test="${editButton eq 'enable'}">
+														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
+														<!-- <div id="pickName" 
+														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
+														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
+														<!-- <a type="button" id="button" class="pickupeditbtn" 
+														style="width: 11px; padding-top: 7px; padding-left: -45px; font-weight: 100;margin-left: 15pc;">Edit
+													    </a> -->
+													   <c:set var="editButton" value="disable" />
+													   <div class="container pickup_Edit"
+														style="margin-left: 181px; margin-top: -22px;">
+														
+														<div class="row">
+														
+															<div class="col-md-5">
+														
+															<div class="row" style="float: left; z-index: 999;">
+																		<div class="col-md-5">
+																		
+																		  <div class="col-md-5">
+																			<label class="pickup_name"
+																				style="padding-top: 12px; margin-left: 17px;font-weight: bold;">PickUpName</label>
+																		 </div>
+																		
+																		<div class="col-md-7"
+																			style="z-index: 99999 !important;">
+																			<input id="pickUpName" class="pickUpName" type="Text"
+																				name="pickUpName1"
+																				style="height: 28px; margin-top: 6px; z-index: 119; margin-left: 47px;"
+																				value="${sellerOrder.getPickupName()}" /> <br />
+																			<div class="error_text pickupPersonNameError"
+																				style="width: 115px; font-size: 10px;margin-left: 49px;"></div>
+																		</div>
+																  </div>
+													        </div>
+													        </div>
+													        
+													        <div class="col-md-4" style="z-index: 99;">
+																	<div class="row" style="z-index: 99;">
+																	<div class="col-md-5">
+																			<label class="pickup_mob"
+																				style="margin-left: -86px; padding-top: 14px; width: 71px;font-weight: bold;">Mobile
+																				No</label>
+																		</div>
+																		<div class="col-md-7">
+																			<input id="pickMobileNo" class="pickMobileNo"
+																				type="Text" name="mobileNo"   maxlength="10"
+																				style="margin-left: -128px; height: 28px; margin-top: 7px; z-index: 10;"
+																				value="${sellerOrder.getPickupPhoneNumber()}" />
+																			<div class="error_text pickupPersonMobileError"
+																				style="margin-left: -125px; width: 167px; font-size: 10px;"></div>
+																				
+																			</div>
+																			</div>
+																		</div>
+																	<div class="col-md-1"></div>	
+																	<div class="col-md-1">
+																	<input type="button" value="Save" class="savebtn"
+																		onclick="editPickUpDetails('${subOrder.code}')"
+																		style="z-index: 99; min-width: 91px;margin-left: -188px;" />
+																    </div>	
+																    
+
+															
+													   </div>
+													   </div>
+														</c:if>
+														</c:if>
+														
+													
 									</div>
+									<br> <br>
 									<c:url value="${entry.product.url}" var="productUrl" />
 									<c:set var="orderEntrySellerSKU"
 										value="${entry.mplDeliveryMode.sellerArticleSKU}" />
@@ -518,6 +644,7 @@
 																</c:forEach>
 															</ul>
 															<div class="questions">
+													
 																<label>But why?</label>
 																<form:select name="reasonList"
 																	id="cancellationreasonSelectBox_${entry.transactionId}" path="reasonCode" onchange="setDropDownValue(${entry.transactionId})">
@@ -559,9 +686,6 @@
 											</div>
 											<div class="overlay" data-dismiss="modal"></div>
 										</div>
-
-
-
 										<div class=" modal account active fade"
 											id="cancelSuccess${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}">
 											<div class="content">
@@ -667,9 +791,9 @@
 										<c:set value="${trackStatus['RETURN']}" var="returnStatus" />
 										<c:set var="productDelivered" value="0"></c:set>
 										 <!-- For RTO handling -->
-										 <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-										 <c:if test="${productStatus.responseCode eq 'DELIVERED'}">
+											<c:forEach items="${shippingStatus}" var="productStatus"
+												varStatus="loop">
+												<c:if test="${productStatus.responseCode eq 'DELIVERED' or currentStatusMap[entry.orderLineId] eq 'ORDER_COLLECTED'}">
 										 	<c:set var="productDelivered" value="1"></c:set>
 										  </c:if>
 										  </c:forEach>
@@ -691,20 +815,42 @@
 												<c:if test="${fn:length(cancelStatus) gt 0}">
 													<li>Cancel</li>
 												</c:if>
-
-												<c:if test="${fn:length(cancelStatus) eq 0}">
-													<li>Shipping</li>
-												</c:if>
+													<c:choose>
+														<c:when
+															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+															<c:if test="${fn:length(cancelStatus) eq 0}">
+																<li>READY for PickUp</li>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<c:if test="${fn:length(cancelStatus) eq 0}">
+																<li>Shipping</li>
+															</c:if>
+														</c:otherwise>
+													</c:choose>
 
 												<!-- For RTO handling productDelivered -->
-												<c:if
-													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li>Delivery</li>
-												</c:if>
+													<c:choose>
+														<c:when
+															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+															<c:if
+																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+																<li>PickedUp</li>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<c:if
+																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+																<li>Delivery</li>
+															</c:if>
+														</c:otherwise>
 
-												<c:if test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
-													<li>Return</li>
-												</c:if>
+													</c:choose>
+
+													<c:if
+														test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
+														<li>Return</li>
+													</c:if>
 
 												<%-- <c:if
 													test="${fn:length(cancelStatus) eq 0 and fn:length(returnStatus) gt 0 }">
@@ -950,24 +1096,31 @@
 																	id="shippingStatus${entry.orderLineId}_${loop.index}"
 																	style="display: ${showBlock}">
 
-																	${displayMsgVar}
-																	<!-- TISEE-5433 -->
-																	<c:if test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null'}">
-																 		<p>Logistics: ${logistic[entry.orderLineId]}</p>
-																 	</c:if>
-																 	<c:if test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null'}">
-																 		<c:choose>
-																 		<c:when test="${not empty trackingurl[entry.orderLineId]}">
-																 			<p>AWB No. <a href="${trackingurl[entry.orderLineId]}">${awbNum[entry.orderLineId]}</a>
-																 		</c:when>
-																 		<c:otherwise>
-																 			<p>AWB No. ${awbNum[entry.orderLineId]}</p>
-																 		</c:otherwise>
-																 		</c:choose>	
-																 	</c:if>
-																	
-																	<c:if test="${productStatus.responseCode ne 'DELIVERED'}">
-																		 <div id="track-more-info">
+																		${displayMsgVar}
+																		<!-- TISEE-5433 -->
+																		<c:if
+																			test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null'}">
+																			<p>Logistics: ${logistic[entry.orderLineId]}</p>
+																		</c:if>
+																		<c:if
+																			test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null'}">
+																			<c:choose>
+																				<c:when
+																					test="${not empty trackingurl[entry.orderLineId]}">
+																					<p>
+																						AWB No. <a
+																							href="${trackingurl[entry.orderLineId]}">${awbNum[entry.orderLineId]}</a>
+																				</c:when>
+																				<c:otherwise>
+																					<p>AWB No. ${awbNum[entry.orderLineId]}</p>
+																				</c:otherwise>
+																			</c:choose>
+																		</c:if>
+
+																		<c:if
+																			test="${productStatus.responseCode ne 'DELIVERED'}">
+																			<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
+																			<div id="track-more-info">
 																				<p class="active">
 																					<span class="view-more-consignment"
 																						orderlineid="${entry.orderLineId}"
@@ -1339,4 +1492,73 @@ $(function() {
 			$("#" + divId).stop(true, true).fadeOut();
 		}
 	}
+	
+	 function editPickUpDetails(orderId) {
+		      var name=$("#pickUpName").val();
+		      var mobile=$("#pickMobileNo").val(); 	 
+		      var isString = isNaN(mobile);
+		      var nameValidation =/^[a-zA-Z()]+$/.test(name);
+		      $(".pickupPersonNameError, .pickupPersonMobileError").hide();
+		       if(name.length <= 3 ){    
+		    	     $(".pickupPersonNameError").show();
+		    	     $(".pickupPersonNameError").text("Enter Atleast 4 Letters");
+		      }
+		       else if(nameValidation== false){
+		    	     $(".pickupPersonNameError").show();
+		    	     $(".pickupPersonNameError").text("Enter only Alphabet");
+		       }	       
+		       else if (isString==true){
+		    	  $(".pickupPersonMobileError").show();
+		          $(".pickupPersonMobileError").text("Enter only numbers");
+		      }else if(mobile.length<=9 || mobile.length >= 11) {   
+		    	  $(".pickupPersonMobileError").show();
+		          $(".pickupPersonMobileError").text("Enter 10 Digit Number");
+		      }	
+		      else 
+		      {     
+		      $.ajax({	  
+					type: "POST",
+					url: ACC.config.encodedContextPath + "/my-account/updatepickUp_Details",
+				    data: "orderId="+orderId + "&name=" + name+ "&mobile="+mobile,
+					success: function (response) {
+					    	var status=response; 	 	
+					    	
+					    	if(status="sucess"){
+					    	
+					    		
+					    			$("#pickName").text(name);
+					    			$("#pickNo").text(mobile);
+					    			$(".pickup_Edit").css("display","none");
+					    			$(".pickupeditbtn").css("display","block");
+					    			if(status="sucess"){
+							    		$.ajax({	  
+											type: "POST",
+											url: ACC.config.encodedContextPath + "/my-account/crmTicketCreateUpdatePickUpDetail",
+										    data: "orderId="+orderId,
+											success: function () {	
+											}
+										});
+							    		
+							    	}	      
+					    	}
+					    	
+						}
+				});
+		      } 
+	}	 
+	$(document).ready(function(){
+		 $(".pickupeditbtn").click(function(){
+			
+		
+			$(".pickup_Edit").css("display","block");
+			$(".pickupeditbtn").css("display","none");		
+		});
+		 $(".savebtn").click(function(){	
+		
+			// $(".pickupeditbtn").css("display","block");
+			 
+		 });
+		 //$(".pickupeditbtn").hide(); 
+	 });	 
+	
 </script>
