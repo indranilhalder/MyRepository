@@ -1145,6 +1145,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws VoucherOperationException
 	 * @throws NullPointerException
 	 */
+
+
 	@SuppressWarnings("boxing")
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_COUPONS, method = RequestMethod.GET)
 	@RequireHardLogIn
@@ -1179,8 +1181,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final PageableData pageableDataVoucherHistory = createPageableData(pageHistory, pageSizeVoucherHistory, sortCode,
 					showMode);
 			final Map<String, Double> countSavedSumMap = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
+
+
 			final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
 					.getVoucherHistoryTransactions(customer, pageableDataVoucherHistory);
+
 			populateModelForCouponHistory(model, searchPageDataVoucherHistoryFinal, showMode);
 
 			final Collection<OrderModel> orders = customer.getOrders();
@@ -1192,6 +1197,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			if (null != countSavedSumMap)
 
+
 			{
 				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
 				{
@@ -1199,10 +1205,13 @@ public class AccountPageController extends AbstractMplSearchPageController
 					model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, discountUtility.createPrice(orderList.get(0), value));
 					model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, iterator.getKey());
 				}
+
 			}
+
 			storeCmsPageInModel(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ACCOUNT_CMS_COUPONS));
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
+			model.addAttribute(ModelAttributetConstants.PAGE_INDEX_HIST, pageHistory);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE_HISTORY, pageSizeVoucherHistory);
 			model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
@@ -1690,18 +1699,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 
 			/*
+
 			 * boolean returnLogisticsCheck = true; final List<ReturnLogisticsResponseData> returnLogisticsRespList =
 			 * 
+
 			 * cancelReturnFacade .checkReturnLogistics(subOrderDetails); for (final ReturnLogisticsResponseData response :
 			 * 
 			 * 
+
 			 * returnLogisticsRespList) { model.addAttribute(ModelAttributetConstants.RETURNLOGMSG,
 			 * response.getResponseMessage()); if
 			 * (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL)) {
 			 * 
+
 			 * returnLogisticsCheck = false; } }
 			 */
 			final boolean returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
+
+
 			model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
 
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);
@@ -1799,6 +1814,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				cancellationStatus = cancelReturnFacade.implementCancelOrReturn(subOrderDetails, subOrderEntry, reasonCode, ussid,
 						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB);
 			}
+
+
 			if (!cancellationStatus)
 			{
 				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
@@ -2061,6 +2078,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 				}
 			}
+
+
+
 
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 
@@ -5947,6 +5967,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
+
 			//For Fetching Selected Data Ends
 			model.addAttribute("categoryDataMap", categoryDataMap);
 			model.addAttribute("brandDataMap", brandDataMap);
@@ -6518,6 +6539,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			if (!productDataMap.isEmpty())
 			{
+
 				for (final Map.Entry<String, ProductData> productEntry : productDataMap.entrySet())
 				{
 					final ProductData productDataValue = productEntry.getValue();
@@ -6556,6 +6578,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			/* pagination logic */
 
 			reviewPagination(commentsWithProductDataModified, pageSize, page, model);
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -6604,6 +6627,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			@RequestParam(value = ModelAttributetConstants.RATINGS, defaultValue = ModelAttributetConstants.RATINGS_VAL) final String ratings,
 			final Model model) throws Exception
 	{
+
 		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
 		final Map<String, String> jsonMap = new HashMap<String, String>();
 
@@ -6687,6 +6711,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final int page, final Model model)
 
 	{
+
 		int startIndex = 0;
 		int endIndex = 0;
 		int commentListSize = 0;

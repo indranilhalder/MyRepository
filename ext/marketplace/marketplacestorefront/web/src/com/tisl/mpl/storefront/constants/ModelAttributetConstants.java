@@ -669,6 +669,7 @@ public final class ModelAttributetConstants
 	public static final String TRACKINGURL = "trackingurl";
 	// TISPRO-48 - added new constants for pagination with lazy loading
 	public static final String PAGE_INDEX = "pageIndex";
+	public static final String PAGE_INDEX_HIST = "pageIndexHist";
 	public static final String PAGE_SIZE = "pageSize";
 	public static final String PAGE_SIZE_HISTORY = "pageSizeVoucherHistory";
 
