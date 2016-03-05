@@ -131,7 +131,9 @@ Confirmed!<br>
                     <td width="10" >&nbsp;</td>
                     <td width="265" align="left" valign="top"><table width="265" border="0" cellspacing="0" cellpadding="0">
                       <tr>
+                      #if($ctx.deliveryAddress)
                         <td width="244" height="35" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:15px; color:#202020;">Shipping Address:</td>
+                      #end
                       </tr>
                       <tr>
                         <td height="1" bgcolor="#ececec"></td>
@@ -148,7 +150,9 @@ Confirmed!<br>
                     <td>&nbsp;</td>
                     <td width="265" align="left" valign="top"><table width="265" border="0" cellspacing="0" cellpadding="0">
                       <tr>
+                      #if($ctx.storeAddress)
                         <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;">Store Address for PiQ up:</td>
+                      #end 
                       </tr>
                       <tr>
                         <td height="1" bgcolor="#ececec"></td>
