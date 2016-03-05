@@ -15,7 +15,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "item", propOrder =
-{ "uSSID", "sellerID", "price", "isCOD", "fulfilmentType", "transportMode", "isDeliveryDateRequired", "deliveryMode" ,"deliveryDate"})
+{ "uSSID", "sellerID", "price", "isCOD", "fulfilmentType", "transportMode", "isDeliveryDateRequired", "deliveryMode",
+		"deliveryDate", "store" })
 public class PinCodeDeliveryModeRequest implements Serializable
 {
 	@XmlElement(name = "USSID")
@@ -37,6 +38,10 @@ public class PinCodeDeliveryModeRequest implements Serializable
 
 	@XmlElement(name = "deliveryDate")
 	private String deliveryDate;
+
+	@XmlElement(name = "Store")
+	private List<String> store;
+
 	/**
 	 * @return the uSSID
 	 */
@@ -190,5 +195,24 @@ public class PinCodeDeliveryModeRequest implements Serializable
 	{
 		this.deliveryDate = deliveryDate;
 	}
+
+	/**
+	 * @return the store
+	 */
+	public List<String> getStore()
+	{
+		return store;
+	}
+
+	/**
+	 * @param store
+	 *           the store to set
+	 */
+	public void setStore(final List<String> store)
+	{
+		this.store = store;
+	}
+
+
 
 }
