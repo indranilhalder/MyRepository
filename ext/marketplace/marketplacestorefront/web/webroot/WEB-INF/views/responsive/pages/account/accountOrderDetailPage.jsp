@@ -1117,8 +1117,7 @@
 																			</c:choose>
 																		</c:if>
 
-																		<c:if
-																			test="${productStatus.responseCode ne 'DELIVERED'}">
+																		<c:if test="${productStatus.responseCode ne 'DELIVERED'}">
 																			<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 																			<div id="track-more-info">
 																				<p class="active">
@@ -1135,6 +1134,7 @@
 																				</p>
 																		  </div>
 																		  <div id="shippingStatusRecord${entry.orderLineId}_${loop.index}" class="view-more-consignment-data"></div>
+																	 </c:if>
 																	 </c:if>
 																	
 																	
