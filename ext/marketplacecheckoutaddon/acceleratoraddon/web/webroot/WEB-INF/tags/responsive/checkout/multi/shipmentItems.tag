@@ -330,7 +330,12 @@
 		</ul>
 		 -->
 		
-		
+		<script>
+   $(document).ready(function(){
+    $("#radio_0_home-delivery").prop("checked", true);
+    calculateDeliveryCost('radio_0','home-delivery');
+   })
+  </script>
 	</div>
 	</c:if>
 
