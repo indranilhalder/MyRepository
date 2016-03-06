@@ -36689,3 +36689,6 @@ text-transform: uppercase;
 overflow:auto;
 height:200px;
 }
+.cart.wrapper .product-block li.item > ul > li.delivery li.methodClick:before, .confirmation .product-block li.item > ul > li.delivery li.methodClick:before{
+	color: #ff0000;
+}

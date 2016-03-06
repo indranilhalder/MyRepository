@@ -2742,6 +2742,9 @@ function showPromotionTag()
 }
 
 $(document).ready(function(){
+	$("#ussid").addClass("ussid");
+	var elementId = $(".desktop li:nth-child(3) ul");
+	elementId.after("<span class='pincodeServiceError'></span>");
 	$("#defaultPinCodeIds").keyup(function(event){
 	    if(event.keyCode == 13){
 	        $("#pinCodeButtonIds").click();
@@ -2856,9 +2859,9 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#expressCheckoutButtonId").css("pointer-events","all");
 		$("#expressCheckoutButtonId").css("cursor","cursor");
 		$("#expressCheckoutButtonId").css("opacity","1");
-	var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
-	var length = Object.keys(deliveryModeJsonObj).length;
-	var isStockAvailable="Y";
+		var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
+		var length = Object.keys(deliveryModeJsonObj).length;
+		var isStockAvailable="Y";
 		if(deliveryModeJsonMap == 'N') {
 			console.log("This is NO");
 		}	
@@ -2909,11 +2912,13 @@ function populatePincodeDeliveryMode(response,buttonType){
 			isStockAvailable="N";
 		}
 		
-			
-			for ( var count in jsonObj) {
+			var reverseCount = jsonObj.length-1;
+			//console.log(reverseCount);
+			for (i=reverseCount; i>=0; i--) {
 				var inventory=0;
-				var deliveryType=jsonObj[count].type;
-				inventory=jsonObj[count].inventory;
+				var deliveryType=jsonObj[i].type;
+				//console.log(deliveryType=jsonObj[i].type);
+				inventory=jsonObj[i].inventory;
 				if(deliveryType==='HD' /*&& parseFloat(inventory) >= parseFloat(quantityValue)*/ ){
 					var newLi = document.createElement("li");
 					newLi.setAttribute("class", "methodHome");
@@ -3166,7 +3171,7 @@ function checkSignUpValidation(path){
 	
 	if(validationResult && password!=rePassword){
 		$("#signupPasswordDiv").show();
-		$("#signupPasswordDiv").html("The passwords donâ€™t match. Try again?");
+		$("#signupPasswordDiv").html("The passwords don’t match. Try again?");
 		validationResult=false;
 	}  else if(validationResult){
 		$("#signupPasswordDiv").hide();

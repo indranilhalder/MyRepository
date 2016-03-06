@@ -26,6 +26,53 @@
 <spring:url value="/my-account/default/wishList" var="wishlistUrl" />
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 
+<style>
+.ordermargingalignment {
+	height: 41px;
+	padding-top: 7px;
+	font-size: 12px;
+	font-weight: 300;
+}
+
+.orderheadingalignment {
+	font-size: 12px;
+}
+
+.orderbodyalignment {
+	font-size: 12px;
+}
+
+.attributes {
+	font-size: 12px;
+}
+
+.actions {
+	font-size: 12px;
+}
+.pickupeditbtn:after{
+
+     font-family: 'FontAwesome';
+    content:"\f040";
+    padding:0 5px 0 5px; 
+}
+.deliverymode {
+	font-size: 12px;
+	font-weight: 600;
+	min-height: 17px;
+}
+
+.error_text {
+	color: red;
+}
+
+#pickName {
+	height: 25px !important;
+}
+.order {
+	margin-top: 8px !important;
+}
+</style>
+
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
@@ -1134,7 +1181,7 @@
 																		  </div>
 																		  <div id="shippingStatusRecord${entry.orderLineId}_${loop.index}" class="view-more-consignment-data"></div>
 																	 </c:if>
-																	
+																	</c:if>
 																	
 																</div>
 															</c:if>
