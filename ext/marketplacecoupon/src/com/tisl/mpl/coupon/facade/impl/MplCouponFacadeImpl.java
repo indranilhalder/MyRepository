@@ -33,7 +33,6 @@ import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,22 +188,26 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public List<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer,
 			final List<VoucherModel> voucherList)
 	{
-		List<VoucherDisplayData> voucherDataList = new ArrayList<VoucherDisplayData>();
-
-		for (final VoucherModel voucherModel : voucherList)
+		final List<VoucherDisplayData> voucherDataList = new ArrayList<VoucherDisplayData>();
+		if (null != voucherList)
 		{
-			if (voucherModel instanceof PromotionVoucherModel
-					&& checkVoucherCanBeRedeemed(voucherModel, ((PromotionVoucherModel) voucherModel).getVoucherCode(), cart))
+			for (final VoucherModel voucherModel : voucherList)
 			{
-				//sets voucher details in voucherDataList
-				voucherDataList = calculateVoucherDisplay(voucherModel, voucherDataList, cart);
+				if (voucherModel instanceof PromotionVoucherModel
+						&& checkVoucherCanBeRedeemed(voucherModel, ((PromotionVoucherModel) voucherModel).getVoucherCode(), cart))
+				{
+					//sets voucher details in voucherDataList
+					calculateVoucherDisplay(voucherModel, voucherDataList, cart);
+				}
 			}
 		}
-		//Sorts the voucherDataList based on coupon discount value
-		voucherDataList = getMplCouponService().getSortedVoucher(voucherDataList);
 
-		final int couponCount = Integer.parseInt(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.COUPONTOPCOUNT, MarketplacecommerceservicesConstants.COUPONTOPCOUNTDEFVAL));
+		//Sorts the voucherDataList based on coupon discount value
+		getMplCouponService().getSortedVoucher(voucherDataList);//TODO remove assignment
+
+		final int couponCount = Integer.parseInt(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.COUPONTOPCOUNT,
+						MarketplacecommerceservicesConstants.COUPONTOPCOUNTDEFVAL), 0);
 		//to display only top 5 or configured coupons
 		if (voucherDataList.size() > couponCount)
 		{
@@ -219,10 +222,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 * @param voucherModel
 	 * @param voucherDataList
-	 * @return ArrayList<VoucherDisplayData>
 	 */
-	private List<VoucherDisplayData> calculateVoucherDisplay(final VoucherModel voucherModel,
-			final List<VoucherDisplayData> voucherDataList, final CartModel cartModel)
+	private void calculateVoucherDisplay(final VoucherModel voucherModel, final List<VoucherDisplayData> voucherDataList,
+			final CartModel cartModel)
 	{
 		final List<AbstractOrderEntry> applicableOrderEntryList = getOrderEntriesFromVoucherEntries(voucherModel, cartModel);
 		double totalPrice = 0.0D;
@@ -233,7 +235,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			totalPrice += null == entry.getTotalPrice() ? 0.0D : entry.getTotalPrice().doubleValue();
 		}
 
-		if (voucherModel.getAbsolute().booleanValue())
+		if (null != voucherModel.getAbsolute() && voucherModel.getAbsolute().booleanValue())
 		{
 			voucherDiscount = voucherModel.getValue().doubleValue();
 		}
@@ -242,7 +244,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			voucherDiscount = (totalPrice * voucherModel.getValue().doubleValue()) / 100;
 		}
 
-		return setVoucherdata(voucherDiscount, voucherDataList, voucherModel);
+		setVoucherdata(voucherDiscount, voucherDataList, voucherModel);
 	}
 
 	/**
@@ -252,9 +254,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param voucherDiscount
 	 * @param voucherDataList
 	 * @param voucherModel
-	 * @return List<VoucherDisplayData>
 	 */
-	private List<VoucherDisplayData> setVoucherdata(final double voucherDiscount, final List<VoucherDisplayData> voucherDataList,
+	private void setVoucherdata(final double voucherDiscount, final List<VoucherDisplayData> voucherDataList,
 			final VoucherModel voucherModel)
 	{
 		final VoucherDisplayData voucherData = new VoucherDisplayData();
@@ -271,7 +272,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		voucherData.setVoucherDescription(voucherModel.getDescription());
 		voucherDataList.add(voucherData);
 
-		return voucherDataList;
+		//return voucherDataList;
 	}
 
 	/**
@@ -477,11 +478,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 
 	/**
-	 * This method returns the violated restrictions
+	 * This method returns whether date or user restriction is violated
 	 *
 	 * @param voucher
 	 * @param cartModel
-	 * @return boolean
+	 * @return the violated restriction
 	 */
 	protected String checkViolatedRestrictions(final VoucherModel voucher, final CartModel cartModel)
 	{
@@ -500,6 +501,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				LOG.error(MarketplacecommerceservicesConstants.USERRESTVIOLATION);
 				error = MarketplacecommerceservicesConstants.USER;
 				break;
+			}
+			else
+			{
+				continue;
 			}
 		}
 		return error;
@@ -560,25 +565,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		final Map<String, Double> result = getMplCouponService().getAllVoucherInvalidations(customer);
 		return result;
-	}
-
-
-	/**
-	 * @param month
-	 * @return String
-	 */
-	private String getMonthFromInt(final int month)
-
-	{
-		final List<String> months = Arrays.asList(MarketplacecommerceservicesConstants.JANUARY,
-				MarketplacecommerceservicesConstants.FEBRUARY, MarketplacecommerceservicesConstants.MARCH,
-				MarketplacecommerceservicesConstants.APRIL, MarketplacecommerceservicesConstants.MAY,
-				MarketplacecommerceservicesConstants.JUNE, MarketplacecommerceservicesConstants.JULY,
-				MarketplacecommerceservicesConstants.AUGUST, MarketplacecommerceservicesConstants.SEPTEMBER,
-				MarketplacecommerceservicesConstants.OCTOBER, MarketplacecommerceservicesConstants.NOVEMBER,
-				MarketplacecommerceservicesConstants.DECEMBER);
-		return months.get(month);
-
 	}
 
 
@@ -653,7 +639,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	}
 
 	/**
-	 * This method returns all redeemed voucher data
+	 * This method returns all redeemed voucher data //TODO modify description
 	 *
 	 * @param customer
 	 * @param pageableData
