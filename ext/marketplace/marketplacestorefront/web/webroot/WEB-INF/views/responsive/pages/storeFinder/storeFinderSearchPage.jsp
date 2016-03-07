@@ -20,6 +20,7 @@
 			"line1" : "${pos.address.line1}",
 			"line2" : "${pos.address.line2}",
 			"town" : "${pos.address.town}",
+			"iconUrl" : "${pos.mapIcon.url}",
 			"postalCode" : "${pos.address.postalCode}",
 			"latitude" : "${pos.geoPoint.latitude}",
 			"longitude" : "${pos.geoPoint.longitude}",
@@ -41,7 +42,7 @@
 </c:if>
 
 <c:if test="${empty searchPageData.results}">
-
+<c:if test="${!NoResultFound}">
 <template:page pageTitle="${pageTitle}">
 		
 		<cms:pageSlot position="TopContent" var="feature">
@@ -55,5 +56,5 @@
 		</div>
 
 </template:page>
-
+</c:if>
 </c:if>

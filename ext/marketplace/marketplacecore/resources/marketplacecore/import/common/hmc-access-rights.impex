@@ -31,4 +31,26 @@ UserGroup;promotionusergroup;employeegroup;;;;;;;
 ;;;;ProductThresholdPriceDiscountPromotion;-;-;-;-
 ;;;;ProductSteppedMultiBuyPromotion;-;-;-;-
 
+
+##
+## couponusergroup access rights
+##
+UserGroup;couponusergroup;employeegroup;;;;;;;
+;;;;DateRestriction;+;+;+;+
+;;;;NewCustomerRestriction;-;-;-;-
+;;;;OrderRestriction;-;-;-;-
+;;;;ProductCategoryRestriction;+;+;+;+
+;;;;ProductQuantityRestriction;-;-;-;-
+;;;;ProductRestriction;+;+;+;+
+;;;;PromotionVoucher;+;+;+;+
+;;;;RegularCustomerOrderQuantityRestriction ;-;-;-;-
+;;;;RegularCustomerOrderTotalRestriction;-;-;-;-
+;;;;Restriction;+;+;+;+
+;;;;RestrictionCollection;+;+;+;+
+;;;;SerialVoucher;+;+;+;+
+;;;;UserRestriction;+;+;+;+
+;;;;Voucher;+;+;+;+
+;;;;VoucherCollection;+;+;+;+
+;;;;VoucherInvalidation;+;+;+;+
+
 $END_USERRIGHTS

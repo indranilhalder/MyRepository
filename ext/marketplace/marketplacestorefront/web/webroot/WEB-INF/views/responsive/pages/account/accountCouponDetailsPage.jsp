@@ -190,7 +190,7 @@
 								<div class="bottom btn-placement">
 									<c:if test="${not empty searchPageDatahist.results}">
 										<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination Voucher History -->
-										<input type="hidden" id="pageIndexVH" value="${pageIndex}" />
+										<input type="hidden" id="pageIndexVH" value="${pageIndexHist}" />
 										<input type="hidden" id="pagableSizeVH"
 											value="${pageSizeVoucherHistory}" />
 										<input type="hidden" id="totalNumberOfResultsVH"
@@ -260,7 +260,7 @@
 					<div class="bottom btn-placement">
 						<c:if test="${not empty searchPageDatahist.results}">
 							<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination Voucher History -->
-							<input type="hidden" id="pageIndexVH" value="${pageIndex}" />
+							<input type="hidden" id="pageIndexVH" value="${pageIndexHist}" />
 							<input type="hidden" id="pagableSizeVH"
 								value="${pageSizeVoucherHistory}" />
 							<input type="hidden" id="totalNumberOfResultsVH"
@@ -346,13 +346,18 @@
 			$("#transactionHistory").css("top", "640px");
 		}
 		
-		$("span.cHistBottom li").each(function(){
+		$("span.cHistBottom,span.cHistTop li").each(function(){
 			var href = $(this).find("a").attr("href");
 			if(href!="" && href != "undefined" && typeof(href)!= "undefined"){
 				var newHref = href.replace("page","pageHistory");
 				$(this).find("a").attr("href",newHref);
 			}
 		});
+		
+		var next = $(".cHistTop").find("li.next").find("a").attr("href");
+		if(next!=""){
+			$(".cHistBottom").find("li.next").find("a").attr("href",next);
+		}
 	});
 </script>
 <c:if test="${param.pageHistory ne null or param.page ne null}">

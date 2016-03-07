@@ -575,10 +575,20 @@ public final class HybrisDataConverter
 					final String totalEntryPrice = entry.getTotalPrice().getValue().toPlainString();//total price for a cart entry 
 
 					final List<String> categoryList = new ArrayList<String>();
-					for (final CategoryData thisCategory : entry.getProduct().getCategories())
-					{
-						categoryList.add(thisCategory.getName());
+					//START [05-Feb-2016] R2.1 - Adding only a Null Check to fix Card payment issue.
+					//Check that if (entry.getProduct().getCategories() != null) then only execute the loop. Else just log an 
+					//error message and continue.
+					Logger tealiumLog = Logger.getLogger(TealiumIQManager.class.getName());
+					if (entry.getProduct() != null && entry.getProduct().getCategories() != null){
+						tealiumLog.info(" entry.getProduct().getCategories() is NOT NULL. - sku,name = " + sku + " : " + name);
+						for (final CategoryData thisCategory : entry.getProduct().getCategories())
+						{
+							categoryList.add(thisCategory.getName());
+						}
+					} else {
+						tealiumLog.warn(" ***>>> entry.getProduct().getCategories() is NULL. - sku,name = " + sku + " : " + name);
 					}
+					//End [05-Feb-2016] R2.1 - Adding Null Check to fix Card payment issue. 
 					final Object[] categoryStrings = categoryList.toArray();
 					String category = "";
 					if (categoryStrings.length > 0)

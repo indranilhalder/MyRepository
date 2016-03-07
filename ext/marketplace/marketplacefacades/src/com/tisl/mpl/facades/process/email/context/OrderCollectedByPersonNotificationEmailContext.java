@@ -1,0 +1,76 @@
+/**
+ * 
+ */
+package com.tisl.mpl.facades.process.email.context;
+
+import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
+import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
+import de.hybris.platform.core.model.c2l.LanguageModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+
+import org.apache.log4j.Logger;
+
+
+/**
+ * @author Dileep
+ *
+ */
+public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmailContext<OrderProcessModel>
+{
+
+	private static final String ORDERCODE = "orderCode";
+	private static final String CUSTOMER = "Customer";
+	private static final String PICKUP_PERSON_NAME = "pickupPerson";
+	private static final String PICKUP_PERSON_NUMBER = "pickupPersonNo";
+	private static final String STORE_NAME = "storeName";
+	private static final String CUSTOMER_NAME = "customerName";
+	private static final Logger LOG = Logger.getLogger(OrderCollectedByPersonNotificationEmailContext.class);
+
+	@Override
+	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
+	{
+		super.init(orderProcessModel, emailPageModel);
+		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+		LOG.info("Order Collected By Nominal Person Email Context Class");
+		put(ORDERCODE, orderProcessModel.getOrder().getCode());
+		LOG.debug("Order Colletcted By Nominal Person Email Context ");
+		put(PICKUP_PERSON_NAME, orderProcessModel.getOrder().getPickupPersonName());
+		put(PICKUP_PERSON_NUMBER, orderProcessModel.getOrder().getPickupPersonMobile());
+		for(AbstractOrderEntryModel entry : orderProcessModel.getOrder().getEntries())
+		{
+		  String storeName=entry.getDeliveryPointOfService().getName();
+		  put(STORE_NAME,storeName);
+		}
+		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
+		put(EMAIL, customer.getOriginalUid());
+		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+
+	}
+
+	@Override
+	protected BaseSiteModel getSite(OrderProcessModel businessProcessModel)
+	{
+
+		return businessProcessModel.getOrder().getSite();
+	}
+
+
+	@Override
+	protected CustomerModel getCustomer(OrderProcessModel businessProcessModel)
+	{
+
+		return (CustomerModel) businessProcessModel.getOrder().getUser();
+	}
+
+
+	@Override
+	protected LanguageModel getEmailLanguage(OrderProcessModel businessProcessModel)
+	{
+		return businessProcessModel.getOrder().getLanguage();
+	}
+
+}

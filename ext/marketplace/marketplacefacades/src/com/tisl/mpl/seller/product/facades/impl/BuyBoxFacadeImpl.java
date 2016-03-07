@@ -52,7 +52,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 */
 	private static final String Y = "Y";
 
-	private static final String CN_C = "CnC";
+	private static final String CN_C = "CNC";
 
 	private static final String ED = "ED";
 	private static final String HD = "HD";
