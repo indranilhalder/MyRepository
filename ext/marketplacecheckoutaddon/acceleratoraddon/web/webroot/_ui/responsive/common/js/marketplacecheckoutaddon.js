@@ -364,6 +364,44 @@ function submitForm(){
 							$("#otpSentMessage").css("display","none");
 						}
 						else{
+							
+							
+							//TISPRO-153
+							
+							try {		
+								var payment_method_map = {
+								            
+								            "viewPaymentCOD": "COD",
+								            
+								        };
+								        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
+								        var payment_mode = payment_method_map[payment];
+								        var payment_type = "";
+								            
+								        
+								        if (payment_mode === "COD") {
+								            payment_type = "COD";
+								        }
+							
+								        if (!payment_type) {
+								            payment_type = "NA";
+								        }
+								       
+								        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
+								        {
+								        	utag.link({
+									            "link_name": 'Final Checkout',
+									            "event_type": 'PayNow',
+									            "payment_method": "" + payment_mode + "|" + payment_type,
+									            "product_id": utag.data.product_id
+							
+									        });
+								        }
+							        
+							   } catch (e) {
+								// TODO: handle exception
+							   } 
+							
 							$("#form-actions, #otpNUM").css("display","block");
 							$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
 							$("#otpSentMessage").css("display","none");
