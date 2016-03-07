@@ -1838,7 +1838,7 @@ public class DefaultPromotionManager extends PromotionsManager
 				if (restriction instanceof PaymentModeSpecificPromotionRestriction)
 				{
 					String paymentMode = null;
-					Bank selectedBank = null;
+					String selectedBank = MarketplacecommerceservicesConstants.EMPTY;
 					if (null != ctx)
 					{
 						paymentMode = ctx.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
@@ -1855,7 +1855,7 @@ public class DefaultPromotionManager extends PromotionsManager
 								if (paymentType.getMode().equalsIgnoreCase(paymentMode))
 								{
 									final List<Bank> restrBanks = paymentModeRestriction.getBanks(ctx);
-									if (restrBanks != null && restrBanks.isEmpty())
+									if (CollectionUtils.isEmpty(restrBanks))
 									{
 										flag = true;
 										break;
@@ -1864,7 +1864,7 @@ public class DefaultPromotionManager extends PromotionsManager
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT)
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT) || paymentMode
 												.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
-											&& (selectedBank != null && restrBanks.contains(selectedBank)))
+											&& (StringUtils.isNotEmpty(selectedBank) && checkBankData(selectedBank, restrBanks)))
 									{
 										flag = true;
 										break;
@@ -1884,6 +1884,32 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		}
 
+		return flag;
+	}
+
+	/**
+	 * @param selectedBank
+	 * @param restrBanks
+	 * @return boolean
+	 */
+	private boolean checkBankData(final String selectedBank, final List<Bank> restrBanks)
+	{
+		boolean flag = false;
+		try
+		{
+			for (final Bank bank : restrBanks)
+			{
+				if (null != bank.getAttribute("bankName") && bank.getAttribute("bankName").toString().equals(selectedBank))
+				{
+					flag = true;
+					break;
+				}
+			}
+		}
+		catch (JaloInvalidParameterException | JaloSecurityException e)
+		{
+			LOG.error(e.getMessage());
+		}
 		return flag;
 	}
 

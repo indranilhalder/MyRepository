@@ -11,6 +11,7 @@ import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -43,26 +44,19 @@ public class BinDaoImpl implements BinDao
 	@Override
 	public BinModel fetchBankFromBin(final String bin) throws EtailNonBusinessExceptions
 	{
+		BinModel binModel = null;
 		try
 		{
-			BinModel binModel = null;
 			final String queryString = MarketplaceBinDbConstants.BANKFORBINQUERY;
 
 			//forming the flexible search query
 			final FlexibleSearchQuery bankQuery = new FlexibleSearchQuery(queryString);
 			bankQuery.addQueryParameter(MarketplaceBinDbConstants.BINNO, bin);
 			final List<BinModel> binList = getFlexibleSearchService().<BinModel> search(bankQuery).getResult();
-			if (null != binList && !binList.isEmpty())
+			if (CollectionUtils.isNotEmpty(binList))
 			{
 				//fetching BIN data from DB using flexible search query
 				binModel = binList.get(0);
-
-				//returning binModel
-				return binModel;
-			}
-			else
-			{
-				return null;
 			}
 		}
 		catch (final FlexibleSearchException e)
@@ -81,6 +75,7 @@ public class BinDaoImpl implements BinDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
+		return binModel;
 	}
 
 

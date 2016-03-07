@@ -22,6 +22,8 @@
 	<alias name="binFacade" alias="binFacade"/>
 	<bean id="binFacade" class="com.tisl.mpl.bin.facade.impl.BinFacadeImpl" >
   		<property name="binService" ref="binService" />
+  		<property name="sessionService" ref="sessionService" />
+  		<property name="configurationService" ref="configurationService" />
     </bean>
     
     <alias name="binService" alias="binService"/>

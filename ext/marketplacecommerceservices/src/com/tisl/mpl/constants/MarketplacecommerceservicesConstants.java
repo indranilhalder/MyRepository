@@ -1384,6 +1384,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
 
 	public static final String BANKNAME = "bankName";
+	public static final String EBS_DOWNTIME = "payment.ebs.downtime".intern();
 
 	private MarketplacecommerceservicesConstants()
 	{

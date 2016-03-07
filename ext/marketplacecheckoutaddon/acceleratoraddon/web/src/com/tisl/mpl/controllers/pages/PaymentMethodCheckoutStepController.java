@@ -51,7 +51,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
-import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -86,7 +85,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.bin.facade.BinFacade;
-import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
@@ -103,7 +101,6 @@ import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplNetbankingData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.data.SavedCardData;
-import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -1611,74 +1608,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody BinData binCheck(@PathVariable(MarketplacecheckoutaddonConstants.BINNO) final String binNumber)
 			throws EtailNonBusinessExceptions
 	{
-		BinModel bin = new BinModel();
-		final BinData binData = new BinData();
-		final String ebsDowntime = getConfigurationService().getConfiguration().getString("payment.ebs.downtime");
+		BinData binData = null;
 		try
 		{
-			//calling facade method to perform BIN check
-			bin = getBinFacade().performBinCheck(binNumber);
-			if (StringUtils.isNotEmpty(ebsDowntime) && ebsDowntime.equalsIgnoreCase("Y"))
+			//Code Change for TISPRO-175
+			if (StringUtils.isNotEmpty(binNumber))
 			{
-				if (null != bin)
-				{
-					binData.setBankName(bin.getBank().getBankName());
-					binData.setCardType(bin.getCardType());
-					if (StringUtils.isNotEmpty(bin.getIssuingCountry()) && bin.getIssuingCountry().equalsIgnoreCase("India"))
-					{
-						binData.setIsValid(true);
-					}
-					else
-					{
-						binData.setIsValid(false);
-					}
-				}
-				else
-				{
-					binData.setIsValid(false);
-				}
+				binData = getBinFacade().binCheck(binNumber);
 			}
-			else
-			{
-				if (null != bin)
-				{
-					binData.setBankName(bin.getBank().getBankName());
-					binData.setCardType(bin.getCardType());
-					binData.setIsValid(true);
-				}
-				else
-				{
-					binData.setIsValid(true);
-				}
-			}
-
-			if (null != bin && null != bin.getBank())
-			{
-				//setting the bank in session to be used for Promotion
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bin.getBank());
-			}
-			else
-			{
-				//setting the bank in session to be used for Promotion
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, null);
-			}
-
-			LOG.debug("From session=====Bank:::::::"
-					+ getSessionService().getAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN));
-
-			if (null == getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION))
-			{
-				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
-						MarketplacecheckoutaddonConstants.PAYMENTMODE);
-				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
-				{
-					if (!(MarketplacecheckoutaddonConstants.WALLET.equalsIgnoreCase(entry.getKey())))
-					{
-						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYMENTMODEFORPROMOTION, entry.getKey());
-					}
-				}
-			}
-
 		}
 		catch (final NullPointerException e)
 		{
@@ -1950,17 +1887,18 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 
-	/**
-	 *
-	 * @param cart
-	 * @param customer
-	 */
-	private List<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer)
-	{
-		final List<VoucherModel> voucherList = getMplCouponFacade().getAllCoupons();
-
-		return getMplCouponFacade().displayTopCoupons(cart, customer, voucherList);
-	}
+	//	/**
+	//	 *
+	//	 * @param cart
+	//	 * @param customer
+	//    Commented Code to be uncommented when in Scope
+	//	 */
+	//	private List<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer)
+	//	{
+	//		final List<VoucherModel> voucherList = getMplCouponFacade().getAllCoupons();
+	//
+	//		return getMplCouponFacade().displayTopCoupons(cart, customer, voucherList);
+	//	}
 
 
 	/**
