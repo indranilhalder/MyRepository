@@ -11,19 +11,10 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
 
-
-
-
-
-
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>	
-	
-	
 	<!-- <table class="orderListTable"> -->
-		
-		 
 			<c:forEach items="${orderGroup.entries}" var="entry">
 				<c:url value="${entry.product.url}" var="productUrl"/>
 				<li class="item">
@@ -71,10 +62,7 @@
 					</span>
 					</p>
 					<ul class="item-details">
-					
-					
 					 <%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
-				
 					</ul> 
 					</div>
 					  

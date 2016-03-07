@@ -79,6 +79,10 @@ public class ReturnLogisticsServiceImpl implements ReturnLogisticsService
 				for (final ReturnLogistics returnLogisticsObj : returnLogisticsList)
 				{
 					final OrderLineData reqObj = new OrderLineData();
+					if(null!=returnLogisticsObj.getPinCode())
+					{
+						reqObj.setPinCode(returnLogisticsObj.getPinCode());
+					}
 					if (null != returnLogisticsObj.getOrderId())
 					{
 						reqObj.setOrderId(returnLogisticsObj.getOrderId());

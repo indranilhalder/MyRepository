@@ -78,4 +78,16 @@ public interface OrderModelService
 	 */
 	Map<String, OrderStatusCodeMasterModel> getOrderStatusCodeMasterList();
 
+
+	/**
+	 * UpdatePickUpdetails
+	 * 
+	 * @param orderId
+	 * @param name
+	 * @param mobile
+	 * @return
+	 */
+	OrderModel updatePickUpDetailService(final String orderId, final String name, final String mobile);
+
+
 }

@@ -33,6 +33,7 @@
 	var stockUssidIds=[];
 	var ussidIdsForED=[];
 	var ussidIdsForHD=[];
+	var ussidIdsForCNC=[];
 	var ussidIdsForCOD=[];
 	var stockDataArray=[];
 	var si=-1;
@@ -101,6 +102,20 @@
 	</script>
 	</c:if>
 	</c:forEach>
+	<!-- added code for CNC -->
+	<c:forEach items="${skuIdForCNC}" var="skuIdForCNC" varStatus="loop">
+    <c:if test="${not empty skuIdForCNC}">
+    <input type="hidden" id="skuIdForCNCs${loop.index}" value="${skuIdForCNC}"/>
+	<script>
+	 var loopStatus='${loop.index}';
+	ussidIdsForCNC[++c]=$("#skuIdForCNCs"+loopStatus).val();
+    if(ussidIdsForCNC!=""||ussidIdsForCNC!=[]){
+    	$("#skuIdForCNC").val(ussidIdsForCNC);
+    //	$("#skuIdForCNCs").val("");
+	}
+	</script>
+	</c:if>
+	</c:forEach>
 	<c:forEach items="${skuIdsWithNoStock}" var="noStockSkuId" varStatus="loop">
     <c:if test="${not empty noStockSkuId}">	
       <input type="hidden" id="skuIdForNoStocks${loop.index}" value="${noStockSkuId}"/>
@@ -146,6 +161,7 @@ var mrp = '${product.productMRP.value}';
 var deliveryModeMap="";
 var availableDeliveryATPForHD="";
 var availableDeliveryATPForED="";
+var availableDeliveryATPForCNC="";
 var ix=-1;
 var s=-1;
 var hdIndx=-1;
@@ -282,6 +298,26 @@ display:none;
 		 availableDeliveryATPForED=deliveryKey.concat("-").concat(deliveryValue);
  </script>
 </c:if> 
+
+ <c:if test="${delivery.key eq 'click-and-collect'}">
+			 <c:forEach var="clickEntry" items="${delivery.value}">
+		
+			 <c:if test="${clickEntry.key eq 'startForClick'}">	
+			 <input type="hidden" value="${clickEntry.value}" id="clickStartId"/>
+			 </c:if>
+			  <c:if test="${clickEntry.key eq 'endForClick'}">
+			  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
+		     </c:if>
+		    </c:forEach>
+		     <script>
+		 var deliveryKey=firstToUpperCase('${delivery.key}');
+		 var start=$("#clickStartId").val();
+		 var end=$("#clickEndId").val();
+		 var deliveryValue="Delivered in"+start+"-"+end+"business days";
+		 availableDeliveryATPForCNC=deliveryKey.concat("-").concat(deliveryValue);
+ </script>
+</c:if>
+
 <script>
 //var deliveryKey=firstToUpperCase('${delivery.key}');
 //var deliveryValue=firstToUpperCase('${delivery.value}');

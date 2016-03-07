@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="SellerSlave">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SlaveInfo" maxOccurs="unbounded" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="sellerid"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="slaveid"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="name"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="type"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="latitude"/> <!-- V1.1 changed float to string -->
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="longitude"/> <!-- V1.1 changed float to string -->
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="OpeningTime"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ClosingTime"/>
+			  <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="WorkingDays"/><!--Newly Added. Comma Seperate,Sunday -0, Monday - 1, ..., Saturday - 6 Sending only Open Days-->
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ClicknCollect"/>
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Remark"/> <!-- V1.1 Newly Added-->
+			  
+			  <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="isReturnable"/><!--Newly Added Y/N-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:int" name="orderAcceptanceTAT"/><!--Newly Added-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:int" name="orderProcessingTAT"/><!--Newly Added-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="orderCutoffTimeHD"/><!--Newly Added-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="orderCutoffTimeED"/><!--Newly Added-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ParkingAvailable"/><!--Newly Added-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Location"/> <!--Newly Added LOV- mall /standalone-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="StoreSize"/><!--Newly Added.. V1.1 changed int to string-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="FootFall"/><!--Newly Added.. V1.1 changed int to string-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="NormalRetailSalesOfStore"/><!--Newly Added-->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Ownership"/><!--Newly Added-->
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ManagerName"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="ManagerPhone"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="StoreImage"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="StoreContactNo"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Address1"/>
+              <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Address2"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Country"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="State"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="City"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Pin"/>
+			  
+	      	  <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ReturnstoreID"/>
+	          <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ReturnAddress1"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ReturnAddress2"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ReturnCountry"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ReturnState"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ReturnCity"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="ReturnPin"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="active"/>
+			  
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email0"/> <!-- V1.1 changed mandatory to optional, renamed Email to Email0 -->
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="PhoneNo0"/> <!-- V1.1 renamed Mobile to PhoneNo0 -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo1"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo2"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo3"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo4"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo5"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo6"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo7"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo8"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="PhoneNo9"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email1"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email2"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email3"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email4"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email5"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email6"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email7"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email8"/><!--v0.9 for SP to OMS -->
+			  <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Email9"/><!--v0.9 for SP to OMS -->
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
