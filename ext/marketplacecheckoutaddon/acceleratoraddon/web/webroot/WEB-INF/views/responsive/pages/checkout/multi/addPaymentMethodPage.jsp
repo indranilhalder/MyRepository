@@ -618,7 +618,15 @@
 												</fieldset>
 		            							<div class="controls" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
+					                            <c:forEach var="cartItem" items="${cartData.entries}">
+					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+														 <c:set var="flag" value="true"/>
+													  </c:if>  
+										    	</c:forEach>
+										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
+					                           	</c:if>   	
 					                           		<fieldset>
 						                           		<div class="half">
 							                           		<label><spring:theme code="text.first.name"/></label>

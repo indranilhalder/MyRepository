@@ -80,7 +80,8 @@ public class MPLDefaultConsignmentBasedReturnableCheck extends DefaultConsignmen
 			{
 				final Consignment consignment = (Consignment) iterator.next();
 				final ConsignmentModel consignmentModel = modelService.get(consignment);
-				if (consignment.getStatus().getCode().equals(ConsignmentStatus.DELIVERED.getCode()))
+				if (consignment.getStatus().getCode().equals(ConsignmentStatus.DELIVERED.getCode()) ||
+						consignment.getStatus().getCode().equals(ConsignmentStatus.ORDER_COLLECTED.getCode()))
 				{
 					if (null != consignmentModel.getDeliveryDate())
 					{

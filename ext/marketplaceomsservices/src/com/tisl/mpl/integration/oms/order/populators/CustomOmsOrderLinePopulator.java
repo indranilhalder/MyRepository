@@ -228,15 +228,29 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 			//OOTB These values are set  to pass the out of the box checks , these fields are not required for OMS
 			// Store 1 will be replaced once the Click and Collect functionality is implemented
-			target.setCollectName("name");
-			target.setCollectPhoneNumber("9681684233");
+			//OMS expecting pickup person name and mobile number for each order line setting those  values from Order Model
+			if (source.getOrder() != null)
+			{
+				target.setCollectName(source.getOrder().getPickupPersonName());
+				target.setCollectPhoneNumber(source.getOrder().getPickupPersonMobile());
+			}
 			final LocationRole locationRole = LocationRole.SHIPPING;
 			final Set<LocationRole> locationRoles = new HashSet<LocationRole>();
 			locationRoles.add(locationRole);
 			target.setLocationRoles(locationRoles);
 			target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
-			target.setStoreID("Store1");
 
+			if (source.getDeliveryPointOfService() != null)
+			{
+				target.setStoreID(source.getDeliveryPointOfService().getSlaveId());
+			}
+
+			if (source.getCollectionDays() != null)
+			{
+				target.setCollectionDays(String.valueOf(source.getCollectionDays()));
+			}
+
+			//source.getCollectionDays()
 			target.setUnitTax(new Amount(source.getOrder().getCurrency().getIsocode(), Double
 					.valueOf(getOndemandTaxCalculationService().calculatePreciseUnitTax(
 							source.getOrder().getEntries().get(0).getTaxValues(),
