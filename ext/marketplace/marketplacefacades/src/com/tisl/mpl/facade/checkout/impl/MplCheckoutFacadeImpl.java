@@ -678,6 +678,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 					final OrderData sellerOrderData = getOrderConverter().convert(sellerOrder);
 					//orderData.setDeliveryCost(childDeliveryCost);
 					sellerOrderData.setDeliveryCost(childDeliveryCost);
+					sellerOrderData.setPickupName(orderModel.getPickupPersonName());
+					sellerOrderData.setPickupPhoneNumber(orderModel.getPickupPersonMobile());
 					sellerOrderList.add(sellerOrderData);
 				}
 				orderData.setSellerOrderList(sellerOrderList);

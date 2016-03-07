@@ -182,15 +182,15 @@
 									</c:if> <c:if test="${couponsRedeemedCount > 1}">
 										<spring:theme code="text.account.coupons.coupons" />
 									</c:if>
-								</span>&nbsp;
+								</span>
 								<spring:theme code="text.account.coupons.sofarsaved" />
-								<span>Rs. ${totalSavedSum}</span>
+								<span>${totalSavedSum.formattedValue}</span>
 								<spring:theme code="text.account.coupons.onpurchase" />
 							</p>
 								<div class="bottom btn-placement">
 									<c:if test="${not empty searchPageDatahist.results}">
 										<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination Voucher History -->
-										<input type="hidden" id="pageIndexVH" value="${pageIndex}" />
+										<input type="hidden" id="pageIndexVH" value="${pageIndexHist}" />
 										<input type="hidden" id="pagableSizeVH"
 											value="${pageSizeVoucherHistory}" />
 										<input type="hidden" id="totalNumberOfResultsVH"
@@ -222,23 +222,25 @@
 										<spring:theme code="text.account.coupons.date" />
 									</p>
 								</li>
+							
 								<c:forEach items="${searchPageDatahist.results}"
 									var="couponHistoryDetailDTO">
+								<c:if test="${couponHistoryDetailDTO ne null}">	
 									<li class="cashback-row ">
 										<p class="coupon">
 											<span>${couponHistoryDetailDTO.couponCode}</span>
 										</p>
 										<p class="description">
 											<span>${couponHistoryDetailDTO.couponDescription}</span>
-										</p> <c:if test="${couponHistoryDetailDTO ne null}">
+										</p> 
 											<p class="order">
 												#<span>${couponHistoryDetailDTO.orderCode}</span>
 											</p>
 											<p class="date">
 												<span>${couponHistoryDetailDTO.redeemedDate}</span>
 											</p>
-										</c:if>
 									</li>
+									</c:if>
 								</c:forEach>
 							</ul>
 
@@ -258,7 +260,7 @@
 					<div class="bottom btn-placement">
 						<c:if test="${not empty searchPageDatahist.results}">
 							<!-- TISSRT-630 ---- Set values in hidden filed for lazy loading pagination Voucher History -->
-							<input type="hidden" id="pageIndexVH" value="${pageIndex}" />
+							<input type="hidden" id="pageIndexVH" value="${pageIndexHist}" />
 							<input type="hidden" id="pagableSizeVH"
 								value="${pageSizeVoucherHistory}" />
 							<input type="hidden" id="totalNumberOfResultsVH"
@@ -344,13 +346,18 @@
 			$("#transactionHistory").css("top", "640px");
 		}
 		
-		$("span.cHistBottom li").each(function(){
+		$("span.cHistBottom,span.cHistTop li").each(function(){
 			var href = $(this).find("a").attr("href");
 			if(href!="" && href != "undefined" && typeof(href)!= "undefined"){
 				var newHref = href.replace("page","pageHistory");
 				$(this).find("a").attr("href",newHref);
 			}
 		});
+		
+		var next = $(".cHistTop").find("li.next").find("a").attr("href");
+		if(next!=""){
+			$(".cHistBottom").find("li.next").find("a").attr("href",next);
+		}
 	});
 </script>
 <c:if test="${param.pageHistory ne null or param.page ne null}">

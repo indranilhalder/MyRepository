@@ -4,7 +4,6 @@
 package com.tisl.mpl.coupon.facade.impl;
 
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
@@ -34,9 +33,6 @@ import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -192,22 +188,26 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	public List<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer,
 			final List<VoucherModel> voucherList)
 	{
-		List<VoucherDisplayData> voucherDataList = new ArrayList<VoucherDisplayData>();
-
-		for (final VoucherModel voucherModel : voucherList)
+		final List<VoucherDisplayData> voucherDataList = new ArrayList<VoucherDisplayData>();
+		if (null != voucherList)
 		{
-			if (voucherModel instanceof PromotionVoucherModel
-					&& checkVoucherCanBeRedeemed(voucherModel, ((PromotionVoucherModel) voucherModel).getVoucherCode(), cart))
+			for (final VoucherModel voucherModel : voucherList)
 			{
-				//sets voucher details in voucherDataList
-				voucherDataList = calculateVoucherDisplay(voucherModel, voucherDataList, cart);
+				if (voucherModel instanceof PromotionVoucherModel
+						&& checkVoucherCanBeRedeemed(voucherModel, ((PromotionVoucherModel) voucherModel).getVoucherCode(), cart))
+				{
+					//sets voucher details in voucherDataList
+					calculateVoucherDisplay(voucherModel, voucherDataList, cart);
+				}
 			}
 		}
-		//Sorts the voucherDataList based on coupon discount value
-		voucherDataList = getMplCouponService().getSortedVoucher(voucherDataList);
 
-		final int couponCount = Integer.parseInt(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.COUPONTOPCOUNT, MarketplacecommerceservicesConstants.COUPONTOPCOUNTDEFVAL));
+		//Sorts the voucherDataList based on coupon discount value
+		getMplCouponService().getSortedVoucher(voucherDataList);//TODO remove assignment
+
+		final int couponCount = Integer.parseInt(
+				getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.COUPONTOPCOUNT,
+						MarketplacecommerceservicesConstants.COUPONTOPCOUNTDEFVAL), 0);
 		//to display only top 5 or configured coupons
 		if (voucherDataList.size() > couponCount)
 		{
@@ -222,10 +222,9 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 *
 	 * @param voucherModel
 	 * @param voucherDataList
-	 * @return ArrayList<VoucherDisplayData>
 	 */
-	private List<VoucherDisplayData> calculateVoucherDisplay(final VoucherModel voucherModel,
-			final List<VoucherDisplayData> voucherDataList, final CartModel cartModel)
+	private void calculateVoucherDisplay(final VoucherModel voucherModel, final List<VoucherDisplayData> voucherDataList,
+			final CartModel cartModel)
 	{
 		final List<AbstractOrderEntry> applicableOrderEntryList = getOrderEntriesFromVoucherEntries(voucherModel, cartModel);
 		double totalPrice = 0.0D;
@@ -236,7 +235,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			totalPrice += null == entry.getTotalPrice() ? 0.0D : entry.getTotalPrice().doubleValue();
 		}
 
-		if (voucherModel.getAbsolute().booleanValue())
+		if (null != voucherModel.getAbsolute() && voucherModel.getAbsolute().booleanValue())
 		{
 			voucherDiscount = voucherModel.getValue().doubleValue();
 		}
@@ -245,7 +244,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 			voucherDiscount = (totalPrice * voucherModel.getValue().doubleValue()) / 100;
 		}
 
-		return setVoucherdata(voucherDiscount, voucherDataList, voucherModel);
+		setVoucherdata(voucherDiscount, voucherDataList, voucherModel);
 	}
 
 	/**
@@ -255,9 +254,8 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	 * @param voucherDiscount
 	 * @param voucherDataList
 	 * @param voucherModel
-	 * @return List<VoucherDisplayData>
 	 */
-	private List<VoucherDisplayData> setVoucherdata(final double voucherDiscount, final List<VoucherDisplayData> voucherDataList,
+	private void setVoucherdata(final double voucherDiscount, final List<VoucherDisplayData> voucherDataList,
 			final VoucherModel voucherModel)
 	{
 		final VoucherDisplayData voucherData = new VoucherDisplayData();
@@ -274,7 +272,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		voucherData.setVoucherDescription(voucherModel.getDescription());
 		voucherDataList.add(voucherData);
 
-		return voucherDataList;
+		//return voucherDataList;
 	}
 
 	/**
@@ -480,11 +478,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 
 	/**
-	 * This method returns the violated restrictions
+	 * This method returns whether date or user restriction is violated
 	 *
 	 * @param voucher
 	 * @param cartModel
-	 * @return boolean
+	 * @return the violated restriction
 	 */
 	protected String checkViolatedRestrictions(final VoucherModel voucher, final CartModel cartModel)
 	{
@@ -503,6 +501,10 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				LOG.error(MarketplacecommerceservicesConstants.USERRESTVIOLATION);
 				error = MarketplacecommerceservicesConstants.USER;
 				break;
+			}
+			else
+			{
+				continue;
 			}
 		}
 		return error;
@@ -563,114 +565,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	{
 		final Map<String, Double> result = getMplCouponService().getAllVoucherInvalidations(customer);
 		return result;
-	}
-
-	/**
-	 * @param orderDateMap
-	 * @param orderVoucherMap
-	 * @param couponHistoryDTOList
-	 * @return List<CouponHistoryData>
-	 */
-	private List<CouponHistoryData> sortcouponHistoryDTOList(final Map<Date, OrderData> orderDateMap,
-			final Map<OrderData, VoucherData> orderVoucherMap, final List<CouponHistoryData> couponHistoryDTOList)
-	{
-		final List<CouponHistoryData> couponOrderDataDTOListFinal = new ArrayList<CouponHistoryData>();
-		if (!orderDateMap.isEmpty()) //arranging voucher and corresponding order in a DTO
-		{
-			for (final Map.Entry<Date, OrderData> orderDaterEntry : orderDateMap.entrySet())// as per IQA comments for code sanitization
-			{
-
-				if (!orderVoucherMap.isEmpty())
-				{
-					for (final Map.Entry<OrderData, VoucherData> orderVoucherEntry : orderVoucherMap.entrySet()) // as per IQA comments for code sanitization
-					{
-						final OrderData orderDataKey = orderVoucherEntry.getKey();
-						final VoucherData voucherDataValue = orderVoucherEntry.getValue();
-
-						if ((orderDaterEntry.getValue()).equals(orderDataKey))
-						{
-							final CouponHistoryData couponHistoryDTO = new CouponHistoryData();
-
-							couponHistoryDTO.setCouponCode(voucherDataValue.getVoucherCode());
-							couponHistoryDTO.setCouponDescription(voucherDataValue.getDescription());
-							couponHistoryDTO.setOrderCode(orderDataKey.getCode());
-							if (null != getCouponRedeemedDate(orderDataKey.getCreated()))// as per IQA comments for code sanitization
-							{
-								couponHistoryDTO.setRedeemedDate(getCouponRedeemedDate(orderDataKey.getCreated()));
-							}
-
-							if (null != couponHistoryDTOList)
-							{
-
-								for (final CouponHistoryData couponData : couponHistoryDTOList)
-								{
-									if (couponData.getOrderCode().equals(couponHistoryDTO.getOrderCode()))
-									{
-										couponOrderDataDTOListFinal.add(couponHistoryDTO);
-									}
-
-								}
-							}
-							else
-							{
-								couponOrderDataDTOListFinal.add(couponHistoryDTO);
-							}
-
-						}
-					}
-
-				}
-
-			}
-		}
-
-		return couponOrderDataDTOListFinal;
-	}
-
-	/**
-	 * This method returns the coupon redeemed date
-	 *
-	 * @param fmtDate
-	 * @return String
-	 *
-	 */
-	private String getCouponRedeemedDate(final Date fmtDate)
-	{
-		String finalCouponRedeemedDate = null;
-		if (fmtDate != null)
-		{
-			final Calendar cal = Calendar.getInstance();
-			cal.setTime(fmtDate);
-			final int year = cal.get(Calendar.YEAR);
-			final int month = cal.get(Calendar.MONTH);
-			final int day = cal.get(Calendar.DAY_OF_MONTH);
-			final String strMonth = getMonthFromInt(month).substring(0, 3);
-			final String dayPrefix = day < 10 ? MarketplacecommerceservicesConstants.ZERO
-					: MarketplacecommerceservicesConstants.EMPTY;
-
-			finalCouponRedeemedDate = strMonth + MarketplacecommerceservicesConstants.SINGLE_SPACE + dayPrefix + day
-					+ MarketplacecommerceservicesConstants.SINGLE_SPACE + year;
-		}
-		return finalCouponRedeemedDate;
-	}
-
-
-	/**
-	 * @param month
-	 * @return String
-	 */
-	private String getMonthFromInt(final int month)
-
-	{
-		final List<String> months = Arrays.asList(MarketplacecommerceservicesConstants.JANUARY,
-				MarketplacecommerceservicesConstants.FEBRUARY, MarketplacecommerceservicesConstants.MARCH,
-				MarketplacecommerceservicesConstants.APRIL, MarketplacecommerceservicesConstants.MAY,
-				MarketplacecommerceservicesConstants.JUNE, MarketplacecommerceservicesConstants.JULY,
-				MarketplacecommerceservicesConstants.AUGUST, MarketplacecommerceservicesConstants.SEPTEMBER,
-				MarketplacecommerceservicesConstants.OCTOBER, MarketplacecommerceservicesConstants.NOVEMBER,
-				MarketplacecommerceservicesConstants.DECEMBER);
-		return months.get(month);
-
 	}
 
 
@@ -745,7 +639,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	}
 
 	/**
-	 * This method returns all redeemed voucher data
+	 * This method returns all redeemed voucher data //TODO modify description
 	 *
 	 * @param customer
 	 * @param pageableData
@@ -761,65 +655,14 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 		final SearchPageData<VoucherInvalidationModel> searchVoucherModel = getMplCouponService().getVoucherRedeemedOrder(customer,
 				pageableData);
-		final List<CouponHistoryData> couponOrderDataDTOListFinal = new ArrayList<CouponHistoryData>();
-		final List<VoucherInvalidationModel> voucherInvalidationList = searchVoucherModel.getResults();
-		//final Map<Date, OrderData> orderDateMap = new TreeMap<Date, OrderData>(Collections.reverseOrder());
-		//final boolean isOrderDateValid = true;
-		//final Map<OrderData, VoucherData> orderVoucherMap = new HashMap<OrderData, VoucherData>();
 
-		//OrderData orderDetailsData = new OrderData();
-		//VoucherData voucherData = new VoucherData();
-		LOG.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Voucher invalidation list size " + voucherInvalidationList.size());
-
-		for (final VoucherInvalidationModel voucherInvalidation : voucherInvalidationList)
+		SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = null;
+		if (null != searchVoucherModel)
 		{
-			final CouponHistoryData couponHistData = new CouponHistoryData();
-			couponHistData.setCouponCode(voucherInvalidation.getCode());
-			couponHistData.setCouponDescription(voucherInvalidation.getVoucher().getDescription());
-			couponHistData.setOrderCode(voucherInvalidation.getOrder().getCode());
-			couponHistData.setRedeemedDate(getCouponRedeemedDate(voucherInvalidation.getOrder().getDate()));
-			couponOrderDataDTOListFinal.add(couponHistData);
+			searchPageDataVoucherHistory = convertPageData(searchVoucherModel, voucherTransactionConverter);
+
 		}
-
-
-
-		/*
-		 * if (CollectionUtils.isNotEmpty(voucherInvalidationList)) {
-		 * LOG.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Voucher invalidation list size " +
-		 * voucherInvalidationList.size()); for (final VoucherInvalidationModel voucherInvalidation :
-		 * voucherInvalidationList) { final OrderModel order = voucherInvalidation.getOrder(); voucherData =
-		 * getDefaultVoucherFacade().getVoucher( ((PromotionVoucherModel)
-		 * voucherInvalidation.getVoucher()).getVoucherCode());
-		 * 
-		 * if (order.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.PARENT)) { final String orderCode =
-		 * order.getCode(); orderDetailsData = getMplCheckoutFacade().getOrderDetailsForCode(orderCode); //
-		 * isOrderDateValid = checkTransactionDateValidity(orderDetailsData.getCreated());// restrict orders to last six
-		 * months only
-		 * 
-		 * if (isOrderDateValid && null != voucherData) { orderDateMap.put(orderDetailsData.getCreated(),
-		 * orderDetailsData);//mapping order with date such that the latest order is on top
-		 * orderVoucherMap.put(orderDetailsData, voucherData);
-		 * 
-		 * }
-		 * 
-		 * } } }
-		 * 
-		 * final SearchPageData<CouponHistoryData> searchPageDataVoucherHistory = convertPageData(searchVoucherModel,
-		 * voucherTransactionConverter); final List<CouponHistoryData> couponOrderDataDTOList =
-		 * searchPageDataVoucherHistory.getResults(); final List<CouponHistoryData> couponHistoryDTOListFinal =
-		 * sortcouponHistoryDTOList(orderDateMap, orderVoucherMap, couponOrderDataDTOList);
-		 * 
-		 * for (final CouponHistoryData couponHistoryData : couponHistoryDTOListFinal) { if (null !=
-		 * couponHistoryData.getCouponCode() && null != couponHistoryData.getCouponDescription() && null !=
-		 * couponHistoryData.getOrderCode()) { couponOrderDataDTOListFinal.add(couponHistoryData); } }
-		 */
-
-		final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = new SearchPageData<CouponHistoryData>();
-		searchPageDataVoucherHistoryFinal.setResults(couponOrderDataDTOListFinal);
-		searchPageDataVoucherHistoryFinal.setPagination(searchVoucherModel.getPagination());
-		searchPageDataVoucherHistoryFinal.setSorts(searchVoucherModel.getSorts());
-		return searchPageDataVoucherHistoryFinal;
-
+		return searchPageDataVoucherHistory;
 	}
 
 	/**
