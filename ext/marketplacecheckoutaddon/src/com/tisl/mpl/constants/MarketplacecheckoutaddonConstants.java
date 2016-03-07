@@ -233,6 +233,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String EXPYEARS = "noOfYearsFromCurrentYear";
 
 	public static final String MPLCOUPONURL = "/checkout/multi/coupon";
+	//delivery mode 
+	public static final String CLICK_N_COLLECT = "click-and-collect";
 
 	private MarketplacecheckoutaddonConstants()
 	{

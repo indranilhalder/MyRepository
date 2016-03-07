@@ -120,7 +120,7 @@ public class MarketplacewebservicesConstants
 			.intern();
 	public static final String POS_SLAVEID = "slaveId".intern();
 
-	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.sellerId}=?sellerId and {pos.name}=?name"
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.sellerId}=?sellerId and {pos.slaveId}=?slaveId"
 			.intern();
 	public static final String POS_SELLERID = "sellerId".intern();
 	public static final String POS_NAME = "name".intern();

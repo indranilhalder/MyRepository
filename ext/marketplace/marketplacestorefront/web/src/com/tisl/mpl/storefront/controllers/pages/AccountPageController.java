@@ -1196,13 +1196,23 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			}
 			if (null != countSavedSumMap)
-
-
 			{
 				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
 				{
-					final Double value = Double.valueOf(Math.round(iterator.getValue() * 100.0) / 100.0);
-					model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, discountUtility.createPrice(orderList.get(0), value));
+					Double value = 0.0d;
+					if (null != iterator.getValue())
+					{
+						value = Double.valueOf(Math.round(iterator.getValue() * 100.0) / 100.0);
+					}
+					if (CollectionUtils.isNotEmpty(orderList))
+					{
+						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM,
+								discountUtility.createPrice(orderList.get(0), value));
+					}
+					else
+					{
+						model.addAttribute(ModelAttributetConstants.TOTAL_SAVED_SUM, value);
+					}
 					model.addAttribute(ModelAttributetConstants.COUPONS_REDEEMED_COUNT, iterator.getKey());
 				}
 
@@ -1699,19 +1709,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
 
 			/*
-
+			 * 
 			 * boolean returnLogisticsCheck = true; final List<ReturnLogisticsResponseData> returnLogisticsRespList =
 			 * 
-
+			 * 
 			 * cancelReturnFacade .checkReturnLogistics(subOrderDetails); for (final ReturnLogisticsResponseData response :
 			 * 
 			 * 
-
+			 * 
 			 * returnLogisticsRespList) { model.addAttribute(ModelAttributetConstants.RETURNLOGMSG,
 			 * response.getResponseMessage()); if
 			 * (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL)) {
 			 * 
-
+			 * 
 			 * returnLogisticsCheck = false; } }
 			 */
 			final boolean returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
@@ -6700,7 +6710,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 
 	/**
-	 * 
+	 *
 	 *
 	 * @param commentsWithProductDataModified
 	 * @param pageSize

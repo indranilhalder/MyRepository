@@ -51,8 +51,8 @@
 		<property name="sellerName" type="String"/>
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData">
-		<property name="mplOpeningTime" type="de.hybris.platform.commercefacades.storelocator.data.TimeData"/>
-		<property name="mplClosingTime" type="de.hybris.platform.commercefacades.storelocator.data.TimeData"/>
+		<property name="mplOpeningTime" type="String"/>
+		<property name="mplClosingTime" type="String"/>
 	</bean>
 
 </beans>

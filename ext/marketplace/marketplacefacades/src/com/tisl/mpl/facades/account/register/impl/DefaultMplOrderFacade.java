@@ -3,6 +3,7 @@
 // */
 package com.tisl.mpl.facades.account.register.impl;
 
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
@@ -27,6 +28,7 @@ import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -830,6 +832,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	public void createcrmTicketForCockpit(final OrderModel mainOrder, final String costomerId, final String source)
 
 	{
+		LOG.debug("Insise createcrmTicketForCockpit method");
 		/* final OrderModel orderModel = null; */
 		try
 		{
@@ -850,13 +853,25 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				final List<AbstractOrderEntryModel> entries = model.getEntries();
 				for (final AbstractOrderEntryModel entry : entries)
 				{
-					final String orderStatus = entry.getOrder().getStatus().getCode();
+					String orderStatus = entry.getOrder().getStatus().getCode();
+					try
+					{
+						if (CollectionUtils.isNotEmpty(entry.getConsignmentEntries()))
+						{
+							final ConsignmentStatus consignmentStatus = entry.getConsignmentEntries().iterator().next().getConsignment()
+									.getStatus();
+							orderStatus = consignmentStatus.getCode();
+
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.debug("Consignment Entries Null" + e);
+					}
 					if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
-							&& entry.getQuantity().intValue() > 0
-							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_STATUS_DELIVERED)
-							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_SUCCESSFUL)
-							&& !orderStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_COMPLETED))
+							&& entry.getQuantity().intValue() > 0 && checkStastus(orderStatus))
+
 
 					{
 
@@ -912,6 +927,39 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 	}
 
+
+	// For checking order entry status
+
+	private boolean checkStastus(final String orderEntryStatus)
+	{
+		LOG.debug("Checking order status for CRM Ticket");
+		final List<String> nonChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_FAILED.getCode(),
+				OrderStatus.RETURNINITIATED_BY_RTO.getCode());
+
+		final List<String> nonChangableOrdeStatusList = Arrays.asList(ConsignmentStatus.CANCELLATION_INITIATED.getCode(),
+				ConsignmentStatus.CANCELLED.getCode(), ConsignmentStatus.CLOSED_ON_CANCELLATION.getCode(),
+				ConsignmentStatus.CLOSED_ON_RETURN_TO_ORIGIN.getCode(), ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND.getCode(),
+				ConsignmentStatus.ORDER_CANCELLED.getCode(), ConsignmentStatus.ORDER_COLLECTED.getCode(),
+				ConsignmentStatus.ORDER_REJECTED.getCode(), ConsignmentStatus.ORDER_UNCOLLECTED.getCode(),
+				ConsignmentStatus.QC_FAILED.getCode(), ConsignmentStatus.REFUND_IN_PROGRESS.getCode(),
+				ConsignmentStatus.REFUND_INITIATED.getCode(), ConsignmentStatus.RETURN_CANCELLED.getCode(),
+				ConsignmentStatus.RETURN_CLOSED.getCode(), ConsignmentStatus.RETURN_INITIATED.getCode(),
+				ConsignmentStatus.RETURN_RECEIVED.getCode(), ConsignmentStatus.RETURN_TO_ORIGIN.getCode(),
+				ConsignmentStatus.RETURN_COMPLETED.getCode());
+
+		if (nonChangableOrdeStatus.contains(orderEntryStatus)
+				|| nonChangableOrdeStatusList.contains(orderEntryStatus.toUpperCase()))
+		{
+			return false;
+		}
+
+		return true;
+
+	}
+
+
+
+
 	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)
 	{
 		String crmRequest = null;
@@ -936,28 +984,44 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		if (null != sendTicketRequestData.getTicketType())
 		{
 			ticket.setTicketType(sendTicketRequestData.getTicketType());
+			LOG.debug("ticket create: TicketType>>>>> " + sendTicketRequestData.getTicketType());
+		}
+		if (null != sendTicketRequestData.getTicketSubType())
+		{
+			ticket.setTicketSubType(sendTicketRequestData.getTicketSubType());
+			LOG.debug("ticket create: TicketSubType>>>>> " + sendTicketRequestData.getTicketSubType());
 		}
 		if (null != sendTicketRequestData.getRefundType())
 		{
 			ticket.setRefundType(sendTicketRequestData.getRefundType());
+			LOG.debug("ticket create: RefundType>>>>> " + sendTicketRequestData.getRefundType());
+
 		}
 		if (null != sendTicketRequestData.getReturnCategory())
 		{
 			ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
+			LOG.debug("ticket create: ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
+
 		}
 		if (null != sendTicketRequestData.getSource())
 		{
 			ticket.setSource(sendTicketRequestData.getSource());
+			LOG.debug("ticket create: Source>>>>> " + sendTicketRequestData.getSource());
+
 		}
 
 
 		if (null != sendTicketRequestData.getAlternateContactName())
 		{
 			ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+			LOG.debug("ticket create: AlternateContactName>>>>> " + sendTicketRequestData.getAlternateContactName());
+
 		}
 		if (null != sendTicketRequestData.getAlternatePhoneNo())
 		{
 			ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
+			LOG.debug("ticket create: AlternatePhoneNo>>>>> " + sendTicketRequestData.getAlternatePhoneNo());
+
 		}
 
 		final TicketMasterXMLData ticketXmlData = ticketCreate.ticketCreationModeltoXMLData(sendTicketRequestData);
