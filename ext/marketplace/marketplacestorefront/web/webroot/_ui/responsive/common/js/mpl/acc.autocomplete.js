@@ -8,6 +8,7 @@ ACC.autocomplete = {
 	{
 		
 		// extend the default autocomplete widget, to solve issue on multiple instances of the searchbox component
+		var  count=1;
 		$.widget( "custom.yautocomplete", $.ui.autocomplete, {
 			_create:function(){
 				
@@ -33,10 +34,27 @@ ACC.autocomplete = {
 					window.location.href = ui.item.url;
 				}
 			},_renderItem : function (ul, item){
+				var suggestedString="";
+				if(count==1){
+				if (/\s/.test(item.value)) {
+					count++;
+					suggestedString=item.value.substr(0,item.value.indexOf(' '));
 				
+				}
+				else{
+					count++;
+					suggestedString=item.value;
+					
+				}
+				}
 				if (item.type == "autoSuggestion"){
+					if(count==1){
+					var renderHtml = "<a href='?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + suggestedString + "</div></a>";
+					}else{
+						var renderHtml = "<a href='?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
+					}
 					/*var renderHtml = "<a href='?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";*/
-					var renderHtml = "<a href='" + ACC.config.encodedContextPath + "/search/?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
+					/*var renderHtml = "<a href='" + ACC.config.encodedContextPath + "/search/?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";*/
 					return $("<li>")
 							.data("item.autocomplete", item)
 							.append(renderHtml)
