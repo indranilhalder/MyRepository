@@ -1553,7 +1553,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 			LOG.debug(">> Apply promotion >> Inside EMI Bank Name : " + bankName);
 			final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(), bankName);
-			if (!(CollectionUtils.isNotEmpty(emiBankList) && emiBankList.size() == 1))
+			if (!(CollectionUtils.isNotEmpty(emiBankList)))
 			{
 				calculatePromotion(cartModel, cartData);
 				promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
@@ -2506,11 +2506,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
