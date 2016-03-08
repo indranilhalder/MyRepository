@@ -31,6 +31,7 @@ import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.marketplacecommerceservices.event.MplRegisterEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtDefaultCustomerService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPreferenceService;
 import com.tisl.mpl.service.MplCustomerWebService;
 
 
@@ -47,6 +48,10 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 	//Customer Create CRM
 	@Autowired
 	private MplCustomerWebService mplCustomerWebService;
+
+
+	@Autowired
+	private MplPreferenceService mplPreferenceService;
 
 	/**
 	 * @return the mplCustomerWebService
@@ -372,6 +377,8 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 		try
 		{
 			getModelService().save(customerModel);
+			//TISPRO-181-capturing mpl preference data to customer model during registration
+			mplPreferenceService.saveUserSpecificMplPrefDataInitially(customerModel);
 		}
 		catch (final ModelSavingException e)
 		{
