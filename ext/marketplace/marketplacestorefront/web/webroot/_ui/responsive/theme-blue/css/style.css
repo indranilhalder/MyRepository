@@ -1816,12 +1816,14 @@ h2 {
        transition: transform 0.3s 0.3s; } */
           header .content nav > ul > li:hover > ul {
             background-color: #fff;
+            -webkit-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
+            -moz-box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
             box-shadow: rgb(208, 208, 208) 1px 1px 1px 1px;
           	height: 450px;
             z-index: 3;
-            -webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
-            -moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s;
-            transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s; }
+            -webkit-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s, -webkit-box-shadow 0.15s 0.3s;
+            -moz-transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s, -moz-box-shadow 0.15s 0.3s;
+            transition: width 0.3s, height 0.15s 0.3s, overflow 0s 0.15s, box-shadow 0.15s 0.3s; }
   header .content .search {
     float: right;
     max-width: 640px;
@@ -5322,7 +5324,9 @@ text-transform: uppercase;
     text-transform: uppercase;
     font-size: 10px !important;
     letter-spacing: 1.2px; }
-  .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp {
+  .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
+  .cart.wrapper #newAddressButtonUp
+   {
         width: 30%;
     float: right;
     margin-top: 86px;
@@ -5331,7 +5335,8 @@ text-transform: uppercase;
     border: 1px solid #a9143c;
     color: #fff;
     height: 40px !important; }
-  .cart.wrapper .button#deliveryMethodSubmitUp:hover, .cart.wrapper .button#deliveryAddressSubmitUp:hover {
+  .cart.wrapper .button#deliveryMethodSubmitUp:hover, .cart.wrapper .button#deliveryAddressSubmitUp:hover,
+  .cart.wrapper #newAddressButtonUp:hover {
         background: #88102C !important; }
     @media (max-width: 650px) {
       .cart.wrapper button, .cart.wrapper .button, .confirmation button, .confirmation .button {
@@ -5341,7 +5346,7 @@ text-transform: uppercase;
          li.checkout-button a{
 	line-height:40px !important; 
          }
-         .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp {
+         .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,.cart.wrapper #newAddressButtonUp {
          display:none;
          }
          }

@@ -283,6 +283,33 @@
 					</script>
 					<ycommerce:testId code="checkoutStepTwo">
 						<div class="checkout-shipping">
+						<c:choose>
+					<c:when test="${edit eq true}">
+						<ycommerce:testId code="multicheckout_saveAddress_button">
+							<button  id="editAddressButtonUp"  class="btn btn-primary btn-block" type="submit">
+								<spring:theme code="checkout.multi.saveAddress" text="Save address"/>
+							</button>
+						</ycommerce:testId>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when test="${accountPageAddress eq true}">
+								<ycommerce:testId code="multicheckout_saveAddress_button">
+									<button id="newAddressButtonAccountUp" class=" btn btn-primary btn-block" type="submit">
+										<spring:theme code="checkout.multi.deliveryAddress.continue" text="Continue"/>
+									</button>
+								</ycommerce:testId>
+							</c:when>
+							<c:otherwise>
+								<ycommerce:testId code="multicheckout_saveAddress_button">
+									<button id="newAddressButtonUp" class="button" type="submit">
+										<spring:theme code="checkout.multi.deliveryAddress.continue" text="Continue"/>
+									</button>
+								</ycommerce:testId>
+							</c:otherwise>
+						</c:choose>						
+					</c:otherwise>
+				</c:choose> 
 							<div class="checkout-indent left-block address-form">
 								<h1>
 									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
@@ -358,6 +385,33 @@
 					</script>
 					<ycommerce:testId code="checkoutStepTwo">
 						<div class="checkout-shipping">
+					<c:choose>
+					<c:when test="${edit eq true}">
+						<ycommerce:testId code="multicheckout_saveAddress_button">
+							<button  id="editAddressButtonUp"  class="btn btn-primary btn-block" type="submit">
+								<spring:theme code="checkout.multi.saveAddress" text="Save address"/>
+							</button>
+						</ycommerce:testId>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when test="${accountPageAddress eq true}">
+								<ycommerce:testId code="multicheckout_saveAddress_button">
+									<button id="newAddressButtonAccountUp" class=" btn btn-primary btn-block" type="submit">
+										<spring:theme code="checkout.multi.deliveryAddress.continue" text="Continue"/>
+									</button>
+								</ycommerce:testId>
+							</c:when>
+							<c:otherwise>
+								<ycommerce:testId code="multicheckout_saveAddress_button">
+									<button id="newAddressButtonUp" class="button" type="submit">
+										<spring:theme code="checkout.multi.deliveryAddress.continue" text="Continue"/>
+									</button>
+								</ycommerce:testId>
+							</c:otherwise>
+						</c:choose>						
+					</c:otherwise>
+				</c:choose> 
 							<div class="checkout-indent left-block address-form">
 								<h1>
 									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
