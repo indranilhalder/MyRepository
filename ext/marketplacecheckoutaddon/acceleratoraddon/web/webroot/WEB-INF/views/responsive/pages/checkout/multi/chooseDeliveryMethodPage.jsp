@@ -72,15 +72,27 @@
     				}
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
+				
+				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
+				<!-- TISCR-305 starts -->
+				<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+				<!-- TISCR-305 ends -->
 					<div class="checkout-shipping left-block">
+					
 						<div class="checkout-indent">
-							<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
+							<%-- <form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm"> --%>
 									<multi-checkout:shipmentItems cartData="${cartData}" defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
 								<button class="button" id="deliveryMethodSubmit" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
-							</form:form>
+							<%-- </form:form> --%>
 							<%-- <p><spring:theme code="checkout.multi.deliveryMethod.message" text="Items will ship as soon as they are available. <br> See Order Summary for more information." /></p> --%>
 						</div>
+						
+						
+						
 					</div>
+					
+					</form:form>
+					
 				</ycommerce:testId>
 			</jsp:body>
 			</multi-checkout:checkoutSteps>			
@@ -131,7 +143,16 @@
     			</script>
 				<ycommerce:testId code="checkoutStepTwo"> 
 					<div class="checkout-shipping"> 
+					<c:if test="${not empty deliveryAddresses}"> 
+								
+										<form id="selectAddressForm" action="${request.contextPath}/checkout/multi/delivery-method/select-address" method="get">
+											<c:set var='countWork'  value='1' />
+											<c:set var='countHome'  value='1' />
+											<!-- TISCR-305 starts -->
+											<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryMethod.continue"  text="Next"/></button>
+											<!-- TISCR-305 ends -->
 						<div class="checkout-indent left-block address-form">
+						
 								<h1>
 									<spring:theme code="checkout.summary.shippingAddress" text="Shipping Address"></spring:theme>
 								</h1>
@@ -145,11 +166,13 @@
 										</a></li>		
           								</ul>		
   									</li>
-									<c:if test="${not empty deliveryAddresses}"> 
+									<%-- <c:if test="${not empty deliveryAddresses}"> 
 								
 										<form id="selectAddressForm" action="${request.contextPath}/checkout/multi/delivery-method/select-address" method="get">
 											<c:set var='countWork'  value='1' />
-											<c:set var='countHome'  value='1' />
+											<c:set var='countHome'  value='1' /> --%>
+											
+											
 											<div class="addressList">
 												<c:forEach items="${deliveryAddresses}" var="deliveryAddress" varStatus="status">
 												<li class="item"> 
@@ -206,9 +229,10 @@
 													
 											</div>
 											<button id="deliveryAddressSubmit" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryMethod.continue"  text="Next"/></button>
-										</form>
-									</c:if>
+										
 						</div>
+						</form>
+									</c:if>
 					</div>
 				</ycommerce:testId>
 			</jsp:body>
