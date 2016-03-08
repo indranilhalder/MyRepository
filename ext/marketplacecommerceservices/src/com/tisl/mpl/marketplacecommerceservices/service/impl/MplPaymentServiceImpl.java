@@ -1549,11 +1549,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 
 		if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
+
 		{
 
 			LOG.debug(">> Apply promotion >> Inside EMI Bank Name : " + bankName);
 			final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(), bankName);
-			if (!(CollectionUtils.isNotEmpty(emiBankList) && emiBankList.size() == 1))
+
+			if (CollectionUtils.isEmpty(emiBankList))
 			{
 				calculatePromotion(cartModel, cartData);
 				promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
@@ -2861,5 +2863,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.mplVoucherService = mplVoucherService;
 	}
+
+
 
 }
