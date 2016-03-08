@@ -140,7 +140,7 @@
 		<bean id="returnLogistics"
 			class="com.tisl.mpl.service.ReturnLogisticsServiceImpl"/>
 		<bean id="mplClickToCallService" class="com.tisl.mpl.service.MplClickToCallWebServiceImpl" />		
-		<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl">
-</bean>		
+		<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl"/>
+		<bean id="mplGigyaReviewCommentDao" class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl"/>
 </beans>
 

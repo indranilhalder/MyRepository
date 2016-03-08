@@ -1156,6 +1156,7 @@ function fetchPrice() {
 
 			} 
 				else {
+				 $(".reviews").hide(); 	
 				 $('#addToCartButton-wrong').attr("disable",true);
 				 $('#addToCartButton-wrong').show();
 				 $('#addToCartButton').hide();

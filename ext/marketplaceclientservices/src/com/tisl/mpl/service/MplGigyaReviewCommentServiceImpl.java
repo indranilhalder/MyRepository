@@ -7,9 +7,14 @@ package com.tisl.mpl.service;
 import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commerceservices.search.pagedata.PageableData;
+import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.store.BaseStoreModel;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -20,6 +25,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,6 +36,7 @@ import com.gigya.socialize.GSObject;
 import com.gigya.socialize.GSRequest;
 import com.gigya.socialize.GSResponse;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 
 
@@ -46,7 +54,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	private ProductService productService;
 	@Autowired
 	private ProductFacade productFacade;
-
+	@Resource(name = "mplGigyaReviewCommentDao")
+	private MplGigyaReviewCommentDaoImpl mplGigyaReviewCommentDao;
 	public static final String TRUE_STATUS = "true";
 	public static final String PROXY_SET_STATEMNT = "******************** PROXY SET ";
 	public static final String PROXY_HOST_STATEMNT = "******************** PROXY HOST ";
@@ -112,10 +121,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	@Override
 	public boolean getReviewsByCategoryProductId(final String category, final String productId, final String customerUID)
 	{
-		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
 				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
-		final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
 
 		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
 		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
@@ -127,17 +134,14 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, productId);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
+		if (TRUE_STATUS.equalsIgnoreCase(proxySet))
 		{
-			final int proxyPortInt = Integer.parseInt(proxyPort);
-			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-			gsRequest.setProxy(proxy);
+			final Proxy proxy = getConfiguredProxy();
+			if (null != proxy)
+			{
+				gsRequest.setProxy(proxy);
+			}
 		}
-
-		LOG.debug(PROXY_SET_STATEMNT + proxySet);
-		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
-		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 
 		final GSResponse gsResponse = gsRequest.send();
 		if (gsResponse.getErrorCode() == 0)
@@ -166,10 +170,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	@Override
 	public List<GigyaProductReviewWsDTO> getReviewsByUID(final String customerUID)
 	{
-		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
 				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
-		final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
 
 		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
 		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
@@ -178,16 +180,16 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final GSRequest gsRequest = new GSRequest(apiKey, secretKey, method);
 		gsRequest.setParam(MarketplacecclientservicesConstants.SENDER_UID, customerUID);
 
-		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
+		if (TRUE_STATUS.equalsIgnoreCase(proxySet))
 		{
-			final int proxyPortInt = Integer.parseInt(proxyPort);
-			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-			gsRequest.setProxy(proxy);
+			final Proxy proxy = getConfiguredProxy();
+			if (null != proxy)
+			{
+				gsRequest.setProxy(proxy);
+			}
 		}
 		LOG.debug(PROXY_SET_STATEMNT + proxySet);
-		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
-		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
+
 		final List<GigyaProductReviewWsDTO> customerReviewList = new ArrayList<GigyaProductReviewWsDTO>();
 		try
 		{
@@ -334,11 +336,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	public String editComment(final String categoryID, final String streamID, final String commentID, final String commentText,
 			final String commentTitle, final String commentMediaUrl, final String ratings, final String UID)
 	{
-		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
 		final String proxySet = configService.getConfiguration()
 				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
-		final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
-
 		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
 		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
 
@@ -351,18 +350,16 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 			gsRequestAllowEdit.setParam("clientSettings", "{enableMediaItems : true}");
 		}
 		GSResponse gsResponse = null;
-		Proxy proxy = null;
+		final Proxy proxy = getConfiguredProxy();
 
-		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
+		if (TRUE_STATUS.equalsIgnoreCase(proxySet))
 		{
-			final int proxyPortInt = Integer.parseInt(proxyPort);
-			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-			proxy = new Proxy(Proxy.Type.HTTP, addr);
-			gsRequestAllowEdit.setProxy(proxy);
+			if (null != proxy)
+			{
+				gsRequestAllowEdit.setProxy(proxy);
+			}
 		}
 		LOG.debug(PROXY_SET_STATEMNT + proxySet);
-		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
-		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		try
 		{
 			final GSResponse allowEdit = gsRequestAllowEdit.send();
@@ -419,11 +416,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	@Override
 	public String deleteComment(final String categoryID, final String streamID, final String commentID)
 	{
-		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
-		final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
 		final String proxySet = configService.getConfiguration()
 				.getString(MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
-
 		final String secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_SECRETKEY);
 		final String apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_APIKEY);
 
@@ -433,17 +427,15 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		gsRequest.setParam(MarketplacecclientservicesConstants.STREAM_ID, streamID);
 		gsRequest.setParam(MarketplacecclientservicesConstants.COMMENT_ID, commentID);
 
-
-		if (null != proxySet && proxySet.equalsIgnoreCase(TRUE_STATUS) && null != proxyHost && null != proxyPort)
+		if (TRUE_STATUS.equalsIgnoreCase(proxySet))
 		{
-			final int proxyPortInt = Integer.parseInt(proxyPort);
-			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
-			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
-			gsRequest.setProxy(proxy);
+			final Proxy proxy = getConfiguredProxy();
+			if (null != proxy)
+			{
+				gsRequest.setProxy(proxy);
+			}
 		}
 		LOG.debug(PROXY_SET_STATEMNT + proxySet);
-		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
-		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
 		try
 		{
 			final GSResponse gsResponse = gsRequest.send();
@@ -556,8 +548,6 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 	 * @param ratings
 	 *           ,key
 	 * @return boolean
-	 * @throws GSKeyNotFoundException
-	 *            ,NullPointerException
 	 */
 
 	@Override
@@ -601,5 +591,50 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * @desc This method uses the configured proxy and returns a proxy object
+	 * @return Proxy
+	 */
+	@Override
+	public Proxy getConfiguredProxy()
+	{
+		final String proxyPort = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY_PORT);
+		final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
+		Proxy proxy = null;
+		if (null != proxyHost && null != proxyPort)
+		{
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			proxy = new Proxy(Proxy.Type.HTTP, addr);
+		}
+		LOG.debug(PROXY_HOST_STATEMNT + proxyHost);
+		LOG.debug(PROXY_PORT_STATEMNT + proxyPort);
+		return proxy;
+	}
+
+	/**
+	 * @Desc : Returns the order history with duration as filter TISEE-1855
+	 * @param paramCustomerModel
+	 * @param paramBaseStoreModel
+	 * @param paramPageableData
+	 * @return SearchPageData
+	 */
+	@Override
+	public SearchPageData<OrderModel> getPagedFilteredSubOrderHistory(final CustomerModel paramCustomerModel,
+			final BaseStoreModel paramBaseStoreModel, final PageableData paramPageableData)
+	{
+		try
+		{
+			return mplGigyaReviewCommentDao.getPagedFilteredSubOrderHistory(paramCustomerModel, paramBaseStoreModel,
+					paramPageableData);
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e);
+		}
+		return null;
+
 	}
 }
