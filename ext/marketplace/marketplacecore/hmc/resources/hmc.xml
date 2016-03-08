@@ -3206,11 +3206,104 @@
 									</itemlayout>
 								</referencecollectioneditor>
 	                  </attribute>
-	                  <attribute name="positive">
+	                  <attribute name="positive" width="500">
 	                     <advancedbooleaneditor truename="productrestriction.positive.true"
 	                                            falsename="productrestriction.positive.false"/>
 	                  </attribute>
 	                  <attribute name="productCodeList"/>
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
+	
+	
+	<type name="UserRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.userrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="users">
+                           <referencecollectioneditor>
+                              <itemlayout>
+                                 <attribute name="uid" width="166"/>
+                                 <attribute name="displayname" width="166"/>
+                              </itemlayout>
+                           </referencecollectioneditor>
+                        </attribute>
+	                  <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="userrestriction.positive.true"
+	                                            falsename="userrestriction.positive.false"/>
+	                  </attribute>
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
+	
+	
+	<type name="ProductCategoryRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.productcategoryrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="categories"/>
+	                  <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="productcategoryrestriction.positive.true"
+	                                            falsename="productcategoryrestriction.positive.false"/>
+	                  </attribute>
 	               </listlayout>
 	            </section>
 	         </tab>
