@@ -305,11 +305,11 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179
-	 * 
+	 *
 	 * @param : bankName
-	 * 
+	 *
 	 * @return : BankModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -323,7 +323,7 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			final FlexibleSearchQuery bankQuery = new FlexibleSearchQuery(queryString);
 			bankQuery.addQueryParameter(MarketplacecommerceservicesConstants.BANKNAME, bankName.toUpperCase());
 			final List<BankModel> bankModelList = flexibleSearchService.<BankModel> search(bankQuery).getResult();
-			if (CollectionUtils.isNotEmpty(bankModelList) && bankModelList.size() == 1)
+			if (CollectionUtils.isNotEmpty(bankModelList))
 			{
 				bankModel = bankModelList.get(0);
 			}

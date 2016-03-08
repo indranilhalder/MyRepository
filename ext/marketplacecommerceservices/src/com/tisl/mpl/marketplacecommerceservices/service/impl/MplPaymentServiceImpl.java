@@ -1555,7 +1555,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.debug(">> Apply promotion >> Inside EMI ");
 			final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(),
 					bankModel.getBankName());
-			if (!(CollectionUtils.isNotEmpty(emiBankList) && emiBankList.size() == 1))
+			if (CollectionUtils.isEmpty(emiBankList))
 			{
 				calculatePromotion(cartModel, cartData);
 				promoPriceData.setErrorMsgForEMI(getConfigurationService().getConfiguration().getString(
