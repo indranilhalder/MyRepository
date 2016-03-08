@@ -112,9 +112,9 @@ public class BinServiceImpl implements BinService
 
 			for (final BankDataPojo data : csvBankDataList)
 			{
-				fileWriter.append(data.getBankName());
+				fileWriter.append(data.getBankName().toUpperCase());
 				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_DELIMITTER);
-				fileWriter.append(data.getBankCode());
+				fileWriter.append(data.getBankCode().toUpperCase());
 				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_DELIMITTER);
 				fileWriter.append(data.getBaseStoreUId());
 				fileWriter.append(MarketplaceBinDbConstants.BANK_FILE_NEW_LINE_SEPARATOR);

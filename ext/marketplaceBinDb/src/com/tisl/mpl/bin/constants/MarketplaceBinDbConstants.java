@@ -41,7 +41,7 @@ public final class MarketplaceBinDbConstants /* extends GeneratedMarketplaceBinD
 	public static final String BANK_FILE_DELIMITTER = ",".intern();
 	public static final String BANK_FILE_NEW_LINE_SEPARATOR = "\n".intern();
 
-	public static final String BANKDATAQUERY = "select distinct {b:bankName} from {Bin As b} WHERE {b.bankName} NOT IN ({{select distinct {bank:bankName} from {Bank As bank}}})"
+	public static final String BANKDATAQUERY = "select distinct {b:bankName} from {Bin As b} WHERE upper({b.bankName}) NOT IN ({{select distinct upper({bank:bankName}) from {Bank As bank}}})"
 			.intern();
 
 }
