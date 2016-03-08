@@ -764,6 +764,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -934,6 +936,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
 							<attribute name="secondCategories" labelwidth="100">
 								<referencecollectioneditor
 									autoperform="true" resortable="true" add="true" remove="true"
@@ -957,6 +961,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
                             <text name="text.productpromotion.minimumAmount" />
@@ -1021,6 +1027,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
 							<attribute name="secondCategories" labelwidth="100">
 								<referencecollectioneditor
 									autoperform="true" resortable="true" add="true" remove="true"
@@ -1043,7 +1051,10 @@
 										<attribute name="name" width="274" />
 									</itemlayout>
 								</referencecollectioneditor>
-							</attribute></listlayout>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+							</listlayout>
 							<listlayout>
                             <text name="text.productpromotion.minimumAmount" />
 							<attribute name="minimumAmount" />
@@ -1127,18 +1138,6 @@
 							</listlayout>
 					</section>
 				</tab>
-				<tab name="tab.promotion.media" mode="append">
-					<section name="section.promotion.media" mode="append">
-						<columnlayout>
-							<row>
-								<attribute name="productBanner" labelwidth="100">
-									<mediaeditor/>
-								</attribute>
-								<text name="text.productpromotion.productbanner" />
-							</row>
-						</columnlayout>
-					</section>
-				</tab>
 			</editor>
 		</organizer>
 	</type>
@@ -1148,8 +1147,7 @@
 		<organizer>
 			<editor mode="append">
 				<tab name="tab.promotion.properties" mode="append">
-					<section name="section.promotion.products">
-
+					<section name="section.promotion.products">							
 						<listlayout>
 							<text name="text.productpromotion.qualifyingproductscategories" />
 							<attribute name="products" labelwidth="100">
@@ -1185,6 +1183,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -1264,6 +1264,10 @@
 										</itemlayout>
 									</referencecollectioneditor>
 								</attribute>
+							</row>
+							<row>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</row>
 							<row>
 								<attribute name="qualifyingCount" labelwidth="100" />
@@ -1454,6 +1458,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -1799,6 +1805,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
 							<attribute name="secondCategories" labelwidth="100">
 								<referencecollectioneditor
 									autoperform="true" resortable="true" add="true" remove="true"
@@ -1822,6 +1830,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -1933,6 +1943,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -2410,6 +2422,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							<attribute name="thresholdTotals" labelwidth="100">
 									<referencecollectioneditor editable="true"
 										externalcreate="false" resortable="false" remove="true"
@@ -2545,6 +2559,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							<text name="text.productpromotion.quantity" />
 							<attribute name="quantity" />
 							<text name="text.productpromotion.fulfilmenttype" />
@@ -2653,6 +2669,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
 							<attribute name="secondCategories" labelwidth="100">
 								<referencecollectioneditor
 									autoperform="true" resortable="true" add="true" remove="true"
@@ -2674,6 +2692,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							<text name="text.productpromotion.fulfilmenttype" />							
 							<attribute name="tShip" />
 							<attribute name="sShip" />
