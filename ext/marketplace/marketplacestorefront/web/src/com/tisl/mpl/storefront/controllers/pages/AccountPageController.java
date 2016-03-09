@@ -6519,7 +6519,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
 					ProductOption.VARIANT_FULL, ProductOption.CATEGORIES);
 
-			if (null != sortedLatestorders && !sortedLatestorders.getResults().isEmpty())
+			if (!CollectionUtils.isEmpty(sortedLatestorders.getResults()))
 			{
 				for (final OrderModel order : sortedLatestorders.getResults())
 				{
@@ -6532,8 +6532,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 							productData = productForOptionData;
 						}
 						productDataMap.put(productData.getCode(), productData);
-
-						LOG.debug("**********ProductDataMap************** " + productDataMap);
 					}
 				}
 			}
