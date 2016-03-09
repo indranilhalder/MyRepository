@@ -26,8 +26,10 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
@@ -36,9 +38,13 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.voucher.VoucherModelService;
+import de.hybris.platform.voucher.jalo.PromotionVoucher;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -56,6 +62,7 @@ import javax.annotation.Resource;
 
 import net.sourceforge.pmd.util.StringUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -140,6 +147,12 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	private SessionService sessionService;
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
+
+	@Resource(name = "voucherModelService")
+	private VoucherModelService voucherModelService;
+
+	@Resource(name = "modelService")
+	private ModelService modelService;
 
 	private static final Logger LOG = Logger.getLogger(MplCheckoutFacadeImpl.class);
 
@@ -262,15 +275,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -306,13 +319,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description modified from DefaultAcceleratorCheckoutFacade performExpressCheckout : TIS 391
-	 *
+	 * 
 	 * @ Selected Address set for express checkout
-	 *
+	 * 
 	 * @param addressId
-	 *
+	 * 
 	 * @return ExpressCheckoutResult
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	@Override
@@ -342,7 +355,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc if express checkout is enabled for the store
-	 *
+	 * 
 	 * @return boolean
 	 */
 
@@ -360,11 +373,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description setting address for express checkout : TIS 391
-	 *
+	 * 
 	 * @param addressId
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions,Exception
 	 */
 	private boolean setDefaultDeliveryAddressForCheckout(final String addressId) throws EtailNonBusinessExceptions
@@ -391,11 +404,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Re calculating cart delivery cost: TIS 400
-	 *
+	 * 
 	 * @param addressId
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -518,13 +531,13 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @description Storing delivery cost while navigating from Delivery mode to address selection : TIS 400 TISEE-581
-	 *
+	 * 
 	 * @param finalDeliveryCost
-	 *
+	 * 
 	 * @param deliveryCostPromotionMap
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -735,11 +748,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @Desc to check pincode inventory for Pay now TIS 414
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -808,11 +821,11 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @ Desc to check promotion expired or not for Pay now : TIS 414
-	 *
+	 * 
 	 * @param cartData
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -916,7 +929,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCheckoutFacade#placeOrder(java.lang.String)
 	 */
 	@Override
@@ -1106,7 +1119,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCheckoutFacade#triggerEmailAndSmsOnOrderConfirmation(de.hybris.platform.core.model
 	 * .order.OrderModel)
@@ -1159,15 +1172,15 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	/*
 	 * @desc use to save freebie delivery mode
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param freebieModelMap
-	 *
+	 * 
 	 * @param freebieParentQtyMap
-	 *
+	 * 
 	 * @return void
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1178,6 +1191,45 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		getMplCommerceCartService().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
 	}
 
+	/*
+	 * @Description to check coupon expired or not for Pay now
+	 * 
+	 * @param cartData
+	 * 
+	 * @return boolean
+	 * 
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public boolean isCouponValid(final CartModel cart) throws EtailNonBusinessExceptions
+	{
+		boolean result = false;
+
+		final List<DiscountModel> voucherList = cart.getDiscounts();
+		if (CollectionUtils.isNotEmpty(voucherList))
+		{
+			final PromotionVoucherModel voucher = (PromotionVoucherModel) voucherList.get(0);//Only one coupon would be applied in one order
+			if (getVoucherModelService().isApplicable(voucher, cart)
+					&& ((PromotionVoucher) getModelService().getSource(voucher)).isReservable(voucher.getVoucherCode(),
+							(User) getModelService().getSource(cart.getUser())))
+			{
+				result = true;
+			}
+		}
+
+		return result;
+	}
+
+	public VoucherModelService getVoucherModelService()
+	{
+		return voucherModelService;
+	}
+
+
+	public void setVoucherModelService(final VoucherModelService voucherModelService)
+	{
+		this.voucherModelService = voucherModelService;
+	}
 
 	/**
 	 * @return the deliveryCostService
@@ -1425,6 +1477,28 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
 	{
 		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
+	/**
+	 * @return the modelService
+	 */
+	@Override
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
+
+
+
+
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	@Override
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
 	}
 
 
