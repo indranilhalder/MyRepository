@@ -73,6 +73,8 @@ import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
@@ -327,7 +329,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private FrontEndErrorHelper frontEndErrorHelper;
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
-
+	@Autowired
+	private BaseStoreService baseStoreService;
 
 	//	Autowired variable declaration
 	@Autowired
@@ -6507,42 +6510,30 @@ public class AccountPageController extends AbstractMplSearchPageController
 		try
 		{
 			final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
-			final List<OrderModel> orderModels = (List<OrderModel>) customerModel.getOrders();
+			final BaseStoreModel currentBaseStore = baseStoreService.getCurrentBaseStore();
+			final PageableData pagedData = new PageableData();
+			pagedData.setCurrentPage(0);
+			pagedData.setPageSize(orderCarousalsize);
+			final SearchPageData<OrderModel> sortedLatestorders = gigyaCommentService.getPagedFilteredSubOrderHistory(customerModel,
+					currentBaseStore, pagedData);
 			final List<ProductOption> PRODUCT_OPTIONS = Arrays.asList(ProductOption.BASIC, ProductOption.PRICE,
 					ProductOption.VARIANT_FULL, ProductOption.CATEGORIES);
-			/* sorting order model list */
-			if (CollectionUtils.isNotEmpty(orderModels))
+
+			if (null != sortedLatestorders && !sortedLatestorders.getResults().isEmpty())
 			{
-				final List<OrderModel> modifiableOrderList = new ArrayList<OrderModel>();
-				modifiableOrderList.addAll(orderModels);
-
-				Collections.sort(modifiableOrderList, new Comparator<OrderModel>()
+				for (final OrderModel order : sortedLatestorders.getResults())
 				{
-					@Override
-					public int compare(final OrderModel orderModelOne, final OrderModel orderModelTwo)
+					for (final AbstractOrderEntryModel entry : order.getEntries())
 					{
-						final int compare = orderModelOne.getCreationtime().compareTo(orderModelTwo.getCreationtime());
-						return compare;
-					}
-				});
-				Collections.reverse(modifiableOrderList);
-				for (final OrderModel order : modifiableOrderList)
-				{
-					if (SUBORDER.equalsIgnoreCase(order.getType()))
-					{
-						LOG.debug("----- Checking order type if suborder: -----" + order.getType());
-						for (final AbstractOrderEntryModel entry : order.getEntries())
+						final ProductModel productmodel = entry.getProduct();
+						final ProductData productForOptionData = productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS);
+						if (productForOptionData != null)
 						{
-							final ProductModel productmodel = entry.getProduct();
-							final ProductData productForOptionData = productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS);
-							if (productForOptionData != null)
-							{
-								productData = productForOptionData;
-							}
-							productDataMap.put(productData.getCode(), productData);
-
-							LOG.debug("**********ProductDataMap************** " + productDataMap);
+							productData = productForOptionData;
 						}
+						productDataMap.put(productData.getCode(), productData);
+
+						LOG.debug("**********ProductDataMap************** " + productDataMap);
 					}
 				}
 			}

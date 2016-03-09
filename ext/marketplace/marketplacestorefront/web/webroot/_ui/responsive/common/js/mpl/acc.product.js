@@ -165,13 +165,55 @@ ACC.product = {
 			event.preventDefault();
 			return false;
 		});
+		//change
+		$(document).ready(function(){
+			$('form[id^="addToCartForm"]').each(function() {
+				var isPresent=false;
+				var productCodePost="productCodePost";
+	 			 var input = $("#"+this.id+" :input[name='" + productCodePost +"']"); 
+	 			// var requiredserpUrl = ACC.config.encodedContextPath + "/search"+ "/showCartData";
+	 			 var requiredserpUrl = ACC.config.encodedContextPath + "/search"+ "/showAllCartEntries";
+	 			 var productId="productCodePost";
+				 var product =input.val(); 
+	             var dataString = 'productCode=' + product;
+	             $.ajax({
+	    			contentType : "application/json; charset=utf-8",
+	    			url : requiredserpUrl,
+	    			//data : dataString,
+	    			dataType : "json",
+	    			success : function(data) {
+	    				for ( var sProduct in data) {
+	    					var entry = data[sProduct];
+	    					if (product == entry) {
+	    						isPresent = true;
+	    						break;
+
+	    					}
+	    				}
+	    	             if(isPresent){
+	    	            	 
+	    	            	 $("#addToCartButton"+product +".js-add-to-cart").hide();
+	    	    				$("#addToCartButton"+product +".disabled.js-add-to-cart").show();
+	    	             }
+	    		  }
+	    		});
+	 			});
+			});
 		
-		$(document).on('click','.serp_add_to_cart_form .js-add-to-cart',function(event){
-			ACC.product.sendAddToBag($(this).closest('form').attr("id"));
-			event.preventDefault();
-			return false;
-		});
-		
+		 $(document).on('click','.serp_add_to_cart_form .js-add-to-cart',function(event){
+				if(!$(this).hasClass("disabled")) {
+				 var requiredserpUrl = ACC.config.encodedContextPath + "/search"+ "/showCartData";
+				 var productId="productCodePost";
+				 var product = $("#"+$(this).closest('form').attr("id")+" :input[name='" + productId +"']").val(); 
+	             var dataString = 'productCode=' + product;
+	             var dataValue='';
+	            ACC.product.sendAddToBag($(this).closest('form').attr("id"));
+				event.preventDefault();
+				$(this).hide();
+				$(this).siblings('.disabled').css("display","block");
+				}
+				return false;
+			});
 		
 		$(document).on("click",".js-add-to-cart_wl",function(event){
 			event.preventDefault();
