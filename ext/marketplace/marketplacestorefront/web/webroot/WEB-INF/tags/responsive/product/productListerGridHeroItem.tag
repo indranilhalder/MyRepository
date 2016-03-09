@@ -101,7 +101,7 @@
 						</button>
 					
 					<button id="addToCartButton${product.code}"
-							class=" disabled serp-addtobag js-add-to-cart"
+							class="disabled serp-addtobag js-add-to-cart"
 							disabled="disabled">
 							<span><spring:theme code="basket.add.to.basket" /></span>
 						</button>
@@ -242,9 +242,9 @@
 		</div>
 
 	</ycommerce:testId></li>
-<style>
+ <style>
 .product-tile:hover .image .quickview .serp-addtobag.disabled {
  	display: none;
  	opacity: 0.7;
  }
-</style>
+</style> 
