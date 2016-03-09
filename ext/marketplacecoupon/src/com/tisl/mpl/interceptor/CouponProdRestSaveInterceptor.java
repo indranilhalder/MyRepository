@@ -26,6 +26,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
@@ -53,42 +55,52 @@ public class CouponProdRestSaveInterceptor implements PrepareInterceptor<Product
 	public void onPrepare(final ProductRestrictionModel paramMODEL, final InterceptorContext paramInterceptorContext)
 			throws InterceptorException
 	{
-		if (null != paramMODEL && StringUtils.isNotEmpty(paramMODEL.getProductCodeList()))
+		try
 		{
-			final String productCodes = paramMODEL.getProductCodeList(); //List of product codes separated by commas
-			final List<ProductModel> newProductModelList = new ArrayList<ProductModel>();
-
-			final StringTokenizer newProductCodeTokens = new StringTokenizer(productCodes,
-					MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
-
-			final CatalogVersionModel catalogVersionModel = getCatalogVersionService().getCatalogVersion(
-					getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTCATALOGID),
-					getConfigurationService().getConfiguration().getString(
-							MarketplacecommerceservicesConstants.DEFAULTCATALOGVERISONID));
-			if (null != catalogVersionModel)
+			if (null != paramMODEL && StringUtils.isNotEmpty(paramMODEL.getProductCodeList()))
 			{
-				while (newProductCodeTokens.hasMoreTokens())
-				{
-					newProductModelList.add(getProductService().getProductForCode(catalogVersionModel,
-							newProductCodeTokens.nextToken().trim()));
-				}
-				final Collection<ProductModel> existingProductList = paramMODEL.getProducts();
+				final String productCodes = paramMODEL.getProductCodeList(); //List of product codes separated by commas
+				final List<ProductModel> newProductModelList = new ArrayList<ProductModel>();
 
-				final List<ProductModel> finalProductList = new ArrayList<ProductModel>();
-				final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
-				if (CollectionUtils.isNotEmpty(existingProductList))
+				final StringTokenizer newProductCodeTokens = new StringTokenizer(productCodes,
+						MarketplacecommerceservicesConstants.CAMPAIGN_FILE_DELIMITTER);
+
+				final CatalogVersionModel catalogVersionModel = getCatalogVersionService().getCatalogVersion(
+						getConfigurationService().getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTCATALOGID),
+						getConfigurationService().getConfiguration().getString(
+								MarketplacecommerceservicesConstants.DEFAULTCATALOGVERISONID));
+				if (null != catalogVersionModel)
 				{
-					finalProductList.addAll(existingProductList);
+					while (newProductCodeTokens.hasMoreTokens())
+					{
+						newProductModelList.add(getProductService().getProductForCode(catalogVersionModel,
+								newProductCodeTokens.nextToken().trim()));
+					}
+					final Collection<ProductModel> existingProductList = paramMODEL.getProducts();
+
+					final List<ProductModel> finalProductList = new ArrayList<ProductModel>();
+					final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
+					if (CollectionUtils.isNotEmpty(existingProductList))
+					{
+						finalProductList.addAll(existingProductList);
+					}
+					finalProductList.addAll(newProductModelList);
+					productModelSet.addAll(finalProductList);
+					finalProductList.clear();
+					finalProductList.addAll(productModelSet);
+					paramMODEL.setProducts(finalProductList); //Setting the products in product restriction
 				}
-				finalProductList.addAll(newProductModelList);
-				productModelSet.addAll(finalProductList);
-				finalProductList.clear();
-				finalProductList.addAll(productModelSet);
-				paramMODEL.setProducts(finalProductList); //Setting the products in product restriction
+
 			}
-
 		}
-
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
 	}
 
 	/**
