@@ -88,6 +88,7 @@ public class MarketplacecclientservicesConstants
 	public static final String RATING_PROXY_SET = "proxy.enabled".intern();
 	public static final String RATING_APIKEY = "gigya.apikey".intern();
 	public static final String RATING_PROXY = "proxy.address".intern();
+	public static final String BY_DATE = "byDate";
 	public static final String RATING_PROXY_PORT = "proxy.port".intern();
 	public static final String RATING_PROXY_ENABLED = "proxy.enabled".intern();
 	public static final String HTTPS_PROXYSET = "https.proxySet";
@@ -189,7 +190,7 @@ public class MarketplacecclientservicesConstants
 	public static final String REVIEWS_UID_EXCEPTION = "Gigya 'getReviewsByUID'  UID error";
 
 	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
-	
+
 
 	public static final String URLFOR_STORELOC_FIRSTPHASE = "oms.storelocationserviceability.firstxmlphase";
 	public static final String URLFOR_STORELOC_SECONDPHASE = "oms.storelocationserviceability.secondxmlphase";
