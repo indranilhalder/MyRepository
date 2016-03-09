@@ -5,7 +5,6 @@ package com.tisl.mpl.interceptor;
 
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
-import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
@@ -43,8 +42,7 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 
 	private static final Logger LOG = Logger.getLogger(ProductPromotionInterceptor.class);
 
-	@Resource
-	private CategoryService categoryService;
+
 	@Resource
 	private CatalogVersionService catalogVersionService;
 	@Autowired
@@ -116,14 +114,14 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 	{
 		if (null != abstractPromotion && null == abstractPromotion.getPromotionGroup())
 		{
-			abstractPromotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(
-					configurationService.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
+			abstractPromotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(configurationService
+					.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.servicelayer.interceptor.PrepareInterceptor#onPrepare(java.lang.Object,
 	 * de.hybris.platform.servicelayer.interceptor.InterceptorContext)
 	 */
@@ -133,8 +131,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 
 		LOG.debug("ProductPromotionInterceptor");
 
-		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
-				configurationService.getConfiguration().getString("cronjob.promotion.catelog"),
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
+				.getConfiguration().getString("cronjob.promotion.catelog"),
 				configurationService.getConfiguration().getString("cronjob.promotion.catalogVersionName"));
 
 		if (object instanceof ProductPromotionModel)
@@ -156,8 +154,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 					while (newProductCodeTokens.hasMoreTokens())
 					{
 
-						newProductModelList
-								.add(productService.getProductForCode(catalogVersionModel, newProductCodeTokens.nextToken().trim()));
+						newProductModelList.add(productService.getProductForCode(catalogVersionModel, newProductCodeTokens.nextToken()
+								.trim()));
 					}
 					final Collection<ProductModel> existingProductList = promotion.getProducts();
 
@@ -190,8 +188,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 					while (newExclProductCodeTokens.hasMoreTokens())
 					{
 
-						newExclProductModelList
-								.add(productService.getProductForCode(catalogVersionModel, newExclProductCodeTokens.nextToken().trim()));
+						newExclProductModelList.add(productService.getProductForCode(catalogVersionModel, newExclProductCodeTokens
+								.nextToken().trim()));
 					}
 					final Collection<ProductModel> existingExcludedProductList = promotion.getExcludedProducts();
 
@@ -232,8 +230,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 					while (newSecondProductCodeTokens.hasMoreTokens())
 					{
 
-						newSecondProductModelList.add(
-								productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens.nextToken().trim()));
+						newSecondProductModelList.add(productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens
+								.nextToken().trim()));
 					}
 					final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
 
@@ -269,8 +267,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 					while (newSecondProductCodeTokens.hasMoreTokens())
 					{
 
-						newSecondProductModelList.add(
-								productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens.nextToken().trim()));
+						newSecondProductModelList.add(productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens
+								.nextToken().trim()));
 					}
 					final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
 
@@ -306,8 +304,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 					while (newSecondProductCodeTokens.hasMoreTokens())
 					{
 
-						newSecondProductModelList.add(
-								productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens.nextToken().trim()));
+						newSecondProductModelList.add(productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens
+								.nextToken().trim()));
 					}
 					final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
 
@@ -343,8 +341,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 					while (newSecondProductCodeTokens.hasMoreTokens())
 					{
 
-						newSecondProductModelList.add(
-								productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens.nextToken().trim()));
+						newSecondProductModelList.add(productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens
+								.nextToken().trim()));
 					}
 					final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
 
