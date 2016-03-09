@@ -1474,10 +1474,10 @@ h2 {
       -o-transform: translateY(-50%);
       transform: translateY(-50%); }
   header .content nav {
-    margin-left: 20px; } }
-    @media (min-width:791px) and (max-width: 901px) {
+    margin-left: 45px; } }
+   /*  @media (min-width:791px) and (max-width: 901px) {
       header .content nav {
-        margin-left: -1px; } }
+        margin-left: -1px; } } */
          @media (min-width:791px) {
     header .content nav > ul {
       clear: both; }
@@ -1488,35 +1488,36 @@ h2 {
       header .content nav > ul > li {
         float: left;
         margin-right: 20px;
-        padding: 0 15px;
-        width: 190px;
+        padding: 0;
+        width: 120px;
         padding-top: 10px;
         -webkit-transition: background-color 0.3s 0.3s;
         -moz-transition: background-color 0.3s 0.3s;
         transition: background-color 0.3s 0.3s; }
         header .content nav > ul > li:first-child > ul {
-          left: 200px;
-          width: 190px; }
+          left: 205px;
+          width: 150px; }
         .brand header .content nav > ul > li:first-child > ul {
           left: 15px;
-          width: 190px; }
+          width: 150px; }
           header .content nav > ul > li:first-child  > ul:hover {
-            width: -webkit-calc(100% - 200px);
-            width: calc(100% - 200px); 
+            width: -webkit-calc(100% - 208px);
+            width: calc(100% - 208px); 
         }
 
             
         header .content nav > ul > li:first-child + li {
-          margin-right: 0; }
+          margin-right: 0;
+              margin-left: 20px; }
           header .content nav > ul > li:first-child + li > ul {
-            left: 410px;
-            width: 190px; }
+            left: 365px;
+            width: 150px; }
           .brand header .content nav > ul > li:first-child + li > ul {
             left: 225px;
             width: 190px; }
             header .content nav > ul > li:first-child + li > ul:hover {
-              width: -webkit-calc(100% - 410px);
-              width: calc(100% - 410px);
+              width: -webkit-calc(100% - 368px);
+              width: calc(100% - 368px);
            }
         header .content nav > ul > li > .toggle {
          /*  font-size: 14px; */
@@ -1545,7 +1546,7 @@ h2 {
         @media (min-width:791px) and (max-width: 1050px) {
           header .content nav > ul > li {
             margin-right: 0;
-            width: 175px; }
+            width: 120px; }
             
               header .content nav > ul > li > .toggle:after {
 			    margin-left: 3px;
@@ -1556,34 +1557,34 @@ h2 {
               padding-right: 0;
             }
               header .content nav > ul > li:first-child  > ul {
-                left: 200px;
-                width: 175px; }
+                left: 205px;
+                width: 150px; }
               .brand header .content nav > ul > li:first-child  > ul {
                 left: 15px;
                 width: 145px; }
                 header .content nav > ul > li:first-child  > ul:hover {
-                  width: -webkit-calc(100% - 220px);
-                  width: calc(100% - 220px);
+                  width: -webkit-calc(100% - 208px);
+                  width: calc(100% - 208px);
                   } }
                   
                   
                   
-                  @media (min-width:791px) and (max-width: 990px) {
+                  @media (min-width:855px) and (max-width: 990px) {
             header .content nav > ul > li:first-child  > ul:hover {
-                width: -webkit-calc(100% - 265px);
-                width: calc(100% - 265px);
+                width: -webkit-calc(100% - 208px);
+                width: calc(100% - 208px);
                
             }
         }
          @media (min-width:791px) and (max-width: 855px) {		
             header .content nav>ul>li:first-child>ul:hover {		
-                width: -webkit-calc(100% - 220px);		
-                width: calc(100% - 220px);
+                width: -webkit-calc(100% - 190px);		
+                width: calc(100% - 190px);
             }
          }
         @media (min-width:791px) and (max-width: 990px) {
             header .content nav > ul > li:first-child  > ul {
-                left: 200px;
+                left: 205px;
             }
         }
         
@@ -1592,25 +1593,25 @@ h2 {
             header .content nav > ul > li:first-child + li {
               padding-right: 0; }
               header .content nav > ul > li:first-child + li > ul {
-                left: 376px;
-                width: 175px; }
+                left: 346px;
+                width: 150px; }
               .brand header .content nav > ul > li:first-child + li > ul {
                 left: 150px;
                 width: 145px; }
                 header .content nav > ul > li:first-child + li > ul:hover {
-                  width: -webkit-calc(100% - 365px);
-                  width: calc(100% - 365px);
+                  width: -webkit-calc(100% - 350px);
+                  width: calc(100% - 350px);
                    }}
-@media (min-width:791px) and (max-width: 990px) {
+@media (min-width:856px) and (max-width: 990px) {
             header .content nav > ul > li:first-child + li > ul:hover {
-                width: -webkit-calc(100% - 410px);
-                width: calc(100% - 410px);
+                width: -webkit-calc(100% - 350px);
+                width: calc(100% - 350px);
             }
         }
         @media (min-width:791px) and (max-width: 855px) {		
             header .content nav>ul>li:first-child+li>ul:hover {		
-                width: -webkit-calc(100% - 365px);		
-                width: calc(100% - 365px);}
+                width: -webkit-calc(100% - 330px);		
+                width: calc(100% - 330px);}
         }
         @media (min-width:791px) and (max-width: 990px) {
             /* header .content nav > ul > li:first-child + li > ul {
@@ -1622,7 +1623,7 @@ h2 {
                 left: 220px
             }
             header .content nav > ul > li:first-child + li > ul {
-                left: 334px
+                left: 325px
             }
             .brand header .content nav > ul > li:first-child + li > ul {
                 left: 135px
@@ -1644,7 +1645,7 @@ h2 {
           transition: height 0.3s 0.3s; }
           header .content nav > ul > li > ul > li {
             background-color: #fff;
-            width: 190px; }
+            width: 150px; }
             header .content nav > ul > li > ul > li > .toggle {
               position: relative;
               padding-left: 20px; }
@@ -1674,13 +1675,13 @@ h2 {
   				  overflow: hidden; } }
             @media  (min-width: 791px) and (max-width: 1050px) {
               header .content nav > ul > li > ul > li {
-                width: 175px; }
+                width: 150px; }
                              }
             @media (min-width: 791px) {            
             header .content nav > ul > li > ul > li > ul {
               position: absolute;
               top: 0;
-              left: 189px;
+              left: 150px;
               height: 450px;
               padding-top: 10px;
               padding-left: 30px;
@@ -1688,11 +1689,11 @@ h2 {
               overflow: auto;
               background-color: #fff;
               opacity: 0;
-              width: -webkit-calc(100% - 190px);
-              width: calc(100% - 190px); } }
+              width: -webkit-calc(100% - 150px);
+              width: calc(100% - 150px); } }
                     @media (min-width: 791px) and (max-width: 1050px) {
                   header .content nav > ul > li > ul > li > ul {
-                 left:175px;
+                 left:150px;
                  }
                  }
                   @media (min-width: 791px) { 
@@ -1777,7 +1778,7 @@ h2 {
           header .content nav > ul > li > ul:before {
             content: "";
             display: block;
-            width: 190px;
+            width: 150px;
             height: 100%;
             position: absolute;
             top: 0;
@@ -1786,7 +1787,7 @@ h2 {
             z-index: -1; } }
 			    @media (min-width: 791px) and (max-width: 1050px) {
 			        header .content nav > ul > li > ul:before {
-			            width: 175px;
+			            width: 150px;
 			        }
 			    }
 			     @media (min-width: 791px) {
@@ -3292,6 +3293,8 @@ h2 {
 	.hero .major-promos span, .hero .minor-promos span,.hero .top-promos span,.hero .bottom-promos span {
 		/* font-size: 42px; */
 	}
+	header .content nav > ul > li > ul > li > ul > li.images > a .multibrand-logo{
+	display:none;}
 }
 
 .hero .major-promos a, .hero .minor-promos a ,.hero .top-promos a, .hero .bottom-promos a{
@@ -5335,6 +5338,11 @@ text-transform: uppercase;
     border: 1px solid #a9143c;
     color: #fff;
     height: 40px !important; }
+      .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
+  .cart.wrapper #newAddressButtonUp,  .cart.wrapper .button#deliveryMethodSubmit, .cart.wrapper .button#deliveryAddressSubmit,
+  .cart.wrapper #newAddressButton{
+ font-weight: 500;
+    font-size: 12px !important; }
   .cart.wrapper .button#deliveryMethodSubmitUp:hover, .cart.wrapper .button#deliveryAddressSubmitUp:hover,
   .cart.wrapper #newAddressButtonUp:hover {
         background: #88102C !important; }
@@ -8724,7 +8732,7 @@ footer .banner {
 	color: #000;
 }
 
-	.top.checkout-top .content ul li a.active:after{				
+/* 	.top.checkout-top .content ul li a.active:after{				
 	  content: "";				
   position: absolute;				
   background-image: url(../images/stroke-maroon.png);				
@@ -8734,7 +8742,7 @@ footer .banner {
   height: 25px;				
   left: 20%;				
 	top:80%;		
-}
+} */
 .sign-in.tab-view::after {
   clear: both;
   content: "";
@@ -8830,7 +8838,7 @@ footer .banner {
     .sign-in.tab-view .tabs > li .left form label {
       display: block;
       padding: 10px 0;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600; }
       @media (min-width: 790px) {
         .sign-in.tab-view .tabs > li .left form label {
@@ -8998,7 +9006,7 @@ footer .banner {
     .sign-in.wrapper .benefits {
       width: 35%; } }
   .sign-in.wrapper .benefits h2 {
-    font-family: "LP Bambus";
+    font-family: inherit;
     padding: 40px 0;
     text-align: center; }
     @media (min-width: 790px) {
@@ -9048,7 +9056,7 @@ footer .banner {
       display: inline-block;
       width: 75%;
       float: left;
-      padding-left: 15px;
+     /*  padding-left: 15px; */
       position: relative; }
       .sign-in.wrapper .benefits ul li > div img {
         height: 50px; }
@@ -9057,9 +9065,9 @@ footer .banner {
    		 max-width: 25%;}
         .sign-in.wrapper .benefits ul li > div:first-child span {
          height: 50px;
-	    color: #fff;
+	    color: #a9143c;
 	    display: block;
-	    padding-left: 15px;
+	   /*  padding-left: 15px; */
 	    text-align: center;
 	    line-height: 60px;
 	    font-size: 25px; }
@@ -9085,7 +9093,8 @@ footer .banner {
 }
 .sign-in.wrapper .benefits ul li>div:first-child span:before {
     content: '';
-    background-image: url(../images/brush-strokes.png);
+   /*  background-image: url(../images/brush-strokes.png); */
+    background-image: none;
     background-repeat: no-repeat;
     display: block;
     width: 111px;
@@ -17275,7 +17284,7 @@ font-weight:normal;
    @media (min-width:791px) and  (max-width:900px)		
   {		
 	  header .content nav > ul > li:nth-of-type(1) > ul {		
-	  		left: 159px;		
+	  		left: 185px;		
 	  }		
 	    header.brand-header .content  .bottom.active nav > ul > li:first-child > ul
           {
@@ -17441,7 +17450,8 @@ ul.helpmeshop-list{
 
 .benefits h2
 {
-	font-size:32px;
+	font-size:30px;
+	font-weight:400;
 }
 .left p
 {
@@ -20073,7 +20083,7 @@ color: #ff829a;
           }
           header .content  .bottom.active nav > ul > li:first-child > ul
           {
-          	left:176px;
+          	left:181px;
           }
           header.brand-header .content  .bottom.active nav > ul > li:first-child > ul
           {
@@ -20081,12 +20091,12 @@ color: #ff829a;
           }
          header .content .bottom.active nav > ul > li:first-child + li > ul 
          {
-         	left:385px;
+         	left:340px;
          	
          }
          header .content  .bottom.active nav > ul > li:first-child + li > ul:hover
          {
-         	width: calc(100% - 395px);
+         	width: calc(100% - 345px);
          }
          header .content   .bottom.active nav > ul > li:first-child  > ul:hover {
             width: -webkit-calc(100% - 185px);
@@ -20132,30 +20142,30 @@ color: #ff829a;
      }
       header .content  .bottom.active nav > ul > li:first-child > ul
           {
-          	left:135px;
+          	left:160px;
           }
          header .content .bottom.active nav > ul > li:first-child + li > ul 
          {
-         	left:290px;
+         	left:300px;
          	
          }
          header .content  .bottom.active nav > ul > li:first-child + li > ul:hover
          {
-         	width: calc(100% - 312px);
-         	width: -webkit-calc(100% - 312px);
+         	width: calc(100% - 335px);
+         	width: -webkit-calc(100% - 335px);
          }
          header .content   .bottom.active nav > ul > li:first-child  > ul:hover {
-            width: -webkit-calc(100% - 180px);
-            width: calc(100% - 180px); 
+            width: -webkit-calc(100% - 185px);
+            width: calc(100% - 185px); 
            }
           header .content .bottom.active nav > ul > li > ul > li > ul
            {
-           	 left:175px !important;
+           	 left:150px !important;
            }
            header .content .bottom.active nav > ul > li > ul > li > ul
            {
-             max-width: -webkit-calc(100% - 175px);
-               max-width: calc(100% - 175px)
+             max-width: -webkit-calc(100% - 150px);
+               max-width: calc(100% - 150px)
            }
       
 }
@@ -27215,6 +27225,10 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 .off-bag {
 	display: block;
 	width: 100%;
+	color:#ff2c43;
+}
+.off-bag span {
+	color:#000;
 }
 body .account .right-account .order-history.order-details li.item .status .message.processing-stage-arrow1 {
 	left:-100%;
@@ -28956,7 +28970,7 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
 }
 @media (max-width: 1050px) and (min-width: 901px){
 header .content .bottom.active nav > ul > li:first-child > ul {
-    left: 176px;
+    left: 181px;
 }
 header .content .bottom.active nav > ul > li:first-child + li > ul {
     left: 330px;
@@ -30442,6 +30456,8 @@ li#ratingDiv {
     letter-spacing: 1.2px;
     margin-left:11px;
 }
+.cart.wrapper .product-block li.item>ul.desktop>li.price del{
+color:rgb(185,185,185);}
 /*--------------maincss-----------*/
 .row
 {
