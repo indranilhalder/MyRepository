@@ -7657,5 +7657,32 @@
 			</itemtype>
 		</typegroup>
 		<!-- Store Localotor end here -->
+		
+	<typegroup name="User">
+		<itemtype code="PrincipalGroup" generate="false"
+			autocreate="false">
+			<attributes>
+             <attribute qualifier="userList" type="java.lang.String">
+                <modifiers read="true" write="true" search="true" optional="true" />
+                <persistence type="property" />
+             </attribute>
+           <!-- moved to core    
+             <attribute qualifier="writeableLanguages" type="LanguageCollection">
+					<modifiers read="true" write="true" search="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="readableLanguages" type="LanguageCollection">
+					<modifiers read="true" write="true" search="true" optional="true" />
+					<persistence type="property" />
+				</attribute> 
+				<attribute qualifier="hmcXML"
+					type="java.lang.String">
+					<modifiers read="true" write="true" search="false" optional="true" dontOptimize="true" />
+					<persistence type="property" />
+				</attribute>
+           -->
+			</attributes>
+		</itemtype>
+	</typegroup>
 	</itemtypes>
 </items>

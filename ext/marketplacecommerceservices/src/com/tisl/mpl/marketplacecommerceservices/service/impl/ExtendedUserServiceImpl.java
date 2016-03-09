@@ -369,4 +369,20 @@ public class ExtendedUserServiceImpl extends DefaultUserService implements Exten
 		}
 	}
 
+
+
+	/**
+	 * This method is used to return UserModel based on user ID
+	 *
+	 * @param userId
+	 * @return UserModel
+	 *
+	 */
+	@Override
+	public UserModel getUserByUid(final String userId)
+	{
+		validateParameterNotNull(userId, MplConstants.M4_ASSERT_UID_NULL);
+		return this.userDao.getUserByUid(userId);
+	}
+
 }

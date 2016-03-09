@@ -1625,5 +1625,16 @@
 	</bean>
 	
 	<!-- Store Locator Beans end here -->
+	
+	
+	<!-- UserGroupSaveInterceptor starts -->
+	<bean id="UserGroupSaveInterceptor" class="com.tisl.mpl.interceptor.UserGroupSaveInterceptor" />
+
+	<bean id="UserGroupSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="UserGroupSaveInterceptor" />
+		<property name="typeCode" value="PrincipalGroup" />
+	</bean>
+	<!-- CouponSaveInterceptor ends -->		
 </beans>
 
