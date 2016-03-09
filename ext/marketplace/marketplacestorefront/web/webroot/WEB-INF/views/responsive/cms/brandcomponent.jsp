@@ -32,8 +32,12 @@
 					</h4></a>
 			</div> --%> <c:forEach items="${component.subBrandList}" var="subBrand">
 			<c:url var="subBrandUrl" value="${subBrand.subBrandUrl}"></c:url>
-				<a href="${subBrandUrl}"><img class="multibrand-logo" src="${subBrand.subBrandImage.URL}" />
-					<img class="logo" src="${subBrand.subBrandLogo.URL}" ></a>
+				<a href="${subBrandUrl}">
+				<div class="multibrand-wrapper">
+				<img class="multibrand-logo" src="${subBrand.subBrandImage.URL}" />
+					<img class="logo" src="${subBrand.subBrandLogo.URL}" >
+					</div>
+					</a>
 			</c:forEach>
 		</li>
 	</ul>
