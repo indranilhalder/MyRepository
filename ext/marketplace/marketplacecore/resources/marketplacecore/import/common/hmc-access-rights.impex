@@ -52,5 +52,10 @@ UserGroup;couponusergroup;employeegroup;;;;;;;
 ;;;;Voucher;+;+;+;+
 ;;;;VoucherCollection;+;+;+;+
 ;;;;VoucherInvalidation;+;+;+;+
+;;;;Product;+;-;-;-
+;;;;Category;+;-;-;-
+;;;;User;+;-;-;-
+;;;;Customer;+;-;-;-
+;;;;UserGroup;+;-;-;-
 
 $END_USERRIGHTS
