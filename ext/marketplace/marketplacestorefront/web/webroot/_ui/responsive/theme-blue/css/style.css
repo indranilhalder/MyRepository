@@ -2702,7 +2702,7 @@ h2 {
       max-width: 50%;
         font-size: 20px;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 500;
         width: 50%;
         padding: 20px 0;}
       header > .content .bottom nav > ul > li:nth-of-type(1) {
@@ -2723,7 +2723,7 @@ h2 {
         background-color: #fff;
         z-index: 0; }
         header > .content .bottom nav > ul > li .toggle {
-        font-size: 13px;
+        font-size: 14px;
         position: relative;
         width: 100%;
         left: 0;
@@ -27240,9 +27240,9 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	width: 100%;
 	color:#ff2c43;
 }
-.off-bag span {
+.off-bag span:last-child {
 	color:#000;
-	margin-left:10px;
+	margin-left:5px;
 }
 body .account .right-account .order-history.order-details li.item .status .message.processing-stage-arrow1 {
 	left:-100%;
