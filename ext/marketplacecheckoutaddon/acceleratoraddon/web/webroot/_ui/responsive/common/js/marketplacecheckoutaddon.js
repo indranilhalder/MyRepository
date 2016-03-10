@@ -3028,9 +3028,9 @@ function checkSignInValidation(path){
 		$("#signinPasswordDiv").hide();
 	}
 	// TISPRO-153
-	if(validationResult){
+	/*if(validationResult){
 		utag.link({ "event_type" : "Login", "link_name" : "Login" });
-	}
+	}*/
 	return validationResult;
 }
 
@@ -3108,7 +3108,7 @@ function checkSignUpValidation(path){
 	if(validationResult)
 	{
 		// TISPRO-153
-		utag.link({ "event_type" : "Login", "link_name" : "Login" });
+		/*utag.link({ "event_type" : "Login", "link_name" : "Login" });*/
 		var encodedPWD= encodeURIComponent(password);
 		var encodedRePWD= encodeURIComponent(rePassword);		
 		if(path=="Checkout"){
