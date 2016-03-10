@@ -6851,6 +6851,17 @@ text-transform: uppercase;
   width: 348px;
     margin: 30px auto;
     height: 40px !important;}
+    @media(max-width:650px){
+    .checkout.wrapper .left-block .button {
+  width: 100%;
+   }
+   .cart.wrapper .left-block .payments.tab-view .full,.cart.wrapper .left-block .payments.tab-view .half {
+    margin-left: 0px !important;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card input[type="checkbox"]+label:before {
+    left: 2px;
+}
+    }
 .checkout.wrapper .left-block div.product-img {
   width: 25% !important; }
 .checkout.wrapper .left-block div.product {
@@ -25386,7 +25397,7 @@ padding:0;
 #addToCartButton {
     font-size: 12px;
     letter-spacing: 1px;
-    height: 55px;
+    height: 40px;
     padding: 0px 10px;
     font-weight: 500;
     clear: both;
@@ -25642,7 +25653,7 @@ body .account .right-account .order-history.order-details li.item .actions a:vis
 @media (max-width:350px) {
 	.secureTransaction {
 		font-size:10px;
-		right:3px;
+		right:10px;
 	}
 	.cart.wrapper .wishlist li.item ul.mobile-product .item-edit-details .button#addToCartButton{
 		width:180px;
@@ -26153,7 +26164,7 @@ line-height:19px;
 	font-weight:600;
 	}
 	#otpMobileNUMField{
-	width:85%;
+	width:84%;
 	}
 	.cod-container #enterOTP label input {
     width: 75%;
@@ -26921,7 +26932,7 @@ margin-bottom:10px;
     width: 100%;
     padding: 10px;
     text-align: center;
-    bottom: 67px;
+    bottom: 52px;
     left: 0;
     z-index: 200000;
 }
@@ -29627,7 +29638,7 @@ margin: 10px 0px;
     font-family: "Avenir Next";
     color:#333;
     font-weight: 500;
-    text-align: left;
+    text-align: center;
     line-height: 1;
     display: inline-block;
     padding: 4px;
