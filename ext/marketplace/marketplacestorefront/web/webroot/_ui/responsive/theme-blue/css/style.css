@@ -30084,6 +30084,9 @@ width: 100px !important;
 }
 .home-brands-you-love-wrapper .home-brands-you-love-desc p.product-name {
 	margin-top: 10px;
+	font-size: 16px;
+    font-weight: 600;
+    padding-bottom: 8px;
 }
 li.store-locator-header a:before{
 	font-family: FontAwesome;
