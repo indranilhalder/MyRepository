@@ -1381,6 +1381,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SIMPLEDATEFORMATDB = "yyyy-MM-dd HH:mm:ss";
 	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
+	//Added for constants for clickandcollect and active.
+	public static final String CLICK_N_COLLECT = "Y";
+	public static final String ACTIVE = "Y";
 
 	private MarketplacecommerceservicesConstants()
 	{

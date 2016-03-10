@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao;
 
 
@@ -33,7 +33,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.PincodeDao;
 @Component(value = "pincodeDao")
 public class PincodeDaoImpl implements PincodeDao
 {
-	private final String clicknCollect = "y";
+	
 
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
@@ -113,7 +113,8 @@ public class PincodeDaoImpl implements PincodeDao
 					.append("latitude").append("} is not null AND {").append("longitude").append("} is not null AND {")
 					.append("latitude").append("} >= ?latMin AND {").append("latitude").append("} <= ?latMax AND {")
 					.append("longitude").append("} >= ?lonMin AND {").append("longitude").append("} <= ?lonMax ")
-					.append(" AND {sellerid").append("} = ?sellerId AND {").append("clicknCollect").append("} = ?clicknCollect ");
+					.append(" AND {sellerid").append("} = ?sellerId AND {").append("clicknCollect")
+					.append("} = ?clicknCollect AND  { active ").append("} = ?active");
 			//
 			LOG.debug("Query for get SlaveIds from PointofService :" + query.toString());
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(query.toString());
@@ -122,7 +123,8 @@ public class PincodeDaoImpl implements PincodeDao
 			fQuery.addQueryParameter("lonMax", lonMax);
 			fQuery.addQueryParameter("lonMin", lonMin);
 			fQuery.addQueryParameter("sellerId", sellerId);
-			fQuery.addQueryParameter("clicknCollect", clicknCollect);
+			fQuery.addQueryParameter("clicknCollect", MarketplacecommerceservicesConstants.CLICK_N_COLLECT);
+			fQuery.addQueryParameter("active", MarketplacecommerceservicesConstants.ACTIVE);
 			return fQuery;
 		}
 		catch (final GeoLocatorException e)
