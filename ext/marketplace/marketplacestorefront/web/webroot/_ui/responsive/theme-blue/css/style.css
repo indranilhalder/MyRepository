@@ -5572,7 +5572,7 @@ text-transform: uppercase;
                 line-height: 1.5; }
             .cart.wrapper .right-block .block.bottom.order-details > ul li.item .product h3.product-name, .confirmation .right-block .block.bottom.order-details > ul li.item .product h3.product-name {
               margin: 5px 0 15px;
-              font-weight: 500;
+              font-weight: 600;
               font-size: 14px; }
             .cart.wrapper .right-block .block.bottom.order-details > ul li.item .product .method, .confirmation .right-block .block.bottom.order-details > ul li.item .product .method {
               margin-top: 10px;
@@ -6553,7 +6553,7 @@ text-transform: uppercase;
                 font-weight: 400; }
             .cart.wrapper .product-block li.item > ul > li:first-child div.product .product-name, .confirmation .product-block li.item > ul > li:first-child div.product .product-name {
               font-size: 14px;
-              font-weight: 400;
+              font-weight: 600;
               margin: 5px 0 20px 0; }
               @media (max-width: 845px) {
                 .cart.wrapper .product-block li.item > ul > li:first-child div.product .product-name, .confirmation .product-block li.item > ul > li:first-child div.product .product-name {
