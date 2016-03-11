@@ -108,7 +108,7 @@ function addToWishlistForCart(ussid,productCode)
 		return false;
 	}
     if(wishName==undefined||wishName==null){
-    	$("#wishlistErrorId").html("Please select an wishlist");
+    	$("#wishlistErrorId").html("Please select a wishlist");
     	$("#wishlistErrorId").css("display","block");
     	return false;
     }
