@@ -149,8 +149,8 @@
 						  	width: 920px !important;
 						  }
 						  .savenewid {
-						  	background: #333 !important;
-						  	border-color: #333 !important;
+						  	background: #00cbe9 !important;
+						  	border-color: #00cbe9 !important;
 						  	height: 40px !important;
 						  }
 						  
@@ -184,7 +184,13 @@
 					  	    width: 98px !important;
 						    margin-left: 88px;
 						  }
-						 	
+						  
+						  .scrollThis {
+						  	height: 188px;
+						  	padding-left: 5px;
+							overflow-x: hidden;
+							overflow-y: scroll;
+						  }					 	
 					</style>
 					<script>
 					//TISST-13010
@@ -295,6 +301,10 @@
 					$(".pickupPersonNameError").show();
 					$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
 				}
+				else if(!(/^\S{3,}$/.test(pickupPersonName))){
+					   $(".pickupPersonNameError").show();
+					   $(".pickupPersonNameError").text("Spaces cannot be allowed");
+				 }
 				else if(statusName == false) {
 					$(".pickupPersonNameError").show();
 					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
@@ -501,7 +511,7 @@
 							</div>
 							<li class="delivery">
 									<div class="error_txt pincodeServicable${status1.index}" style="width: 200px;font-size: 12px;"></div>
-									<ul class="delivered delivered${status1.index}">
+									<ul class="delivered scrollThis delivered${status1.index}">
 							<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
 										<li style="width: 240px !important;" class="removeColor${status1.index}">
 											<%-- <input class="radio_btn" type="radio" name="address" id="address${status.index}" value="address${status.index}"> --%>
@@ -532,6 +542,13 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}" style="text-transform: lowercase" >STORE TIMINGS
+																<br/>
+																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
+																	${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM
+																	</c:if>
+																</span>
+																
 																
 										</li>
 										<script>
@@ -735,6 +752,14 @@
 											          	}
 											          $(".latlng${status1.index}").text(changecordinates${status1.index});
 											          processMap${status1.index}();
+											          $('.scrollThis').each(function(){
+															if($(this).find("li").length <= '2'){
+																$(this).css({"overflow-y" : "hidden"});	
+															}
+															else {
+																$(this).css({"overflow-y" : "scroll"});
+															}
+														});
 										        	} else {
 										        		$(".pincodeServicable${status1.index}").show();
 										        		$(".delivered${status1.index}").hide();
@@ -845,11 +870,11 @@
      				 <div class="col-md-3">
       					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
        					 <div class="col-md-3">
-        					<input type="text" id="pickupPersonName" name="pickupPersonName" class="inputname" placeholder="Enter Full Name" /><br/>
+        					<input type="text" id="pickupPersonName" name="pickupPersonName" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
         					<div class="error_txt pickupPersonNameError"></div>
             			</div>
             			<div class="col-md-3">
-							<input type="text" id="pickupPersonMobile" class="inputmobile" placeholder="Enter Mobile Number" /><br/>
+							<input type="text" id="pickupPersonMobile" class="inputmobile" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
 							<div class="error_txt pickupPersonMobileError"></div>
         			    </div>
 			             <div class="col-md-3">
@@ -886,12 +911,27 @@
 				</c:when>
 				
 				<c:otherwise>
+				<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
-						<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation">CONTINUE</a>
+						CONTINUE
 					</div>
+				</a>
 				</c:otherwise>
 			</c:choose>
 		</div>
+		<script>
+			$(document).ready(function(){
+				$('.scrollThis').each(function(){
+					if($(this).find("li").length <= '2'){
+						$(this).css({"overflow-y" : "hidden"});	
+					}
+					else {
+						$(this).css({"overflow-y" : "scroll"});
+					}
+				});
+					
+			});
+		</script>
 					</ycommerce:testId>
 					</jsp:body>
 	</multi-checkout:checkoutSteps>
