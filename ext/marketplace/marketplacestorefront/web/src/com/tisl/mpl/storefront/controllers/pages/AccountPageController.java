@@ -1024,6 +1024,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
+			model.addAttribute(ModelAttributetConstants.FILTERDELIVERYMODE,getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
