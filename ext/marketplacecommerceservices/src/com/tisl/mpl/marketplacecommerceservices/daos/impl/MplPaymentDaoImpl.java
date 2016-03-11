@@ -14,6 +14,7 @@ import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ import com.tisl.mpl.model.PaymentTypeModel;
 @Qualifier(MarketplacecommerceservicesConstants.MPLPAYMENTDAO)
 public class MplPaymentDaoImpl implements MplPaymentDao
 {
-
+	private static final Logger LOG = Logger.getLogger(MplPaymentDaoImpl.class);
 	private FlexibleSearchService flexibleSearchService;
 
 	/**
@@ -180,6 +181,8 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	{
 		try
 		{
+			final long startTime = System.currentTimeMillis();
+			LOG.debug("Entering Dao getEMIBanks()=======" + System.currentTimeMillis());
 			final String queryString = MarketplacecommerceservicesConstants.EMIBANKSQUERY;
 
 			//forming the flexible search query
@@ -189,6 +192,8 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			//fetching EMI bank list from DB using flexible search query
 			final List<EMIBankModel> emiBankList = flexibleSearchService.<EMIBankModel> search(bankListQuery).getResult();
 
+			final long endTime = System.currentTimeMillis();
+			LOG.debug("Exiting Dao getEMIBanks()=======" + (endTime - startTime));
 			//returning the EMI bank list
 			return emiBankList;
 		}

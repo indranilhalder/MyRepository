@@ -505,112 +505,80 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	@Override
 	public void setPaymentTransactionForCOD(final Map<String, Double> paymentMode, final CartModel cart)
+			throws EtailNonBusinessExceptions
 	{
-		Collection<PaymentTransactionModel> collection = cart.getPaymentTransactions();
-		final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
-		if (null == collection || collection.isEmpty())
+		try
 		{
-			collection = new ArrayList<PaymentTransactionModel>();
-		}
+			// TISPRD-361
+			Collection<PaymentTransactionModel> collection = cart.getPaymentTransactions();
+			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			if (null == collection || collection.isEmpty())
+			{
+				collection = new ArrayList<PaymentTransactionModel>();
+			}
 
-		paymentTransactionList.addAll(collection);
+			paymentTransactionList.addAll(collection);
 
-		final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-		//final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
-		final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-		final Date date = new Date();
-		final String codCode = getCodCodeGenerator().generate().toString();
-		//Setting fields of paymentTransactionEntry with Payment Gateway Responses for Wallet and COD
-		for (final Map.Entry<String, Double> entry : paymentMode.entrySet())
-		{
+			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+			//final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+			final Date date = new Date();
+			final String codCode = getCodCodeGenerator().generate().toString();
 			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
 					.create(PaymentTransactionEntryModel.class);
-			paymentTransactionEntry.setCode("COD" + codCode + "-" + System.currentTimeMillis());
-			paymentTransactionEntry.setAmount(BigDecimal.valueOf(entry.getValue().doubleValue()));
+			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+			paymentTransactionEntry.setAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
 			paymentTransactionEntry.setTime(date);
 			paymentTransactionEntry.setCurrency(cart.getCurrency());
 			paymentTransactionEntry.setType(PaymentTransactionType.COD_PAYMENT);
 			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			if (null != entry.getKey())
-			{
 
-				final PaymentTypeModel paymenttype = getMplPaymentDao().getPaymentMode(entry.getKey());
-				paymentTransactionEntry.setPaymentMode(paymenttype);
+			PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
+			paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
+			paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
+			paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
 
-				//				if (MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey()))
-				//				{
-				//					//paymentTransactionEntry.setPaymentMode(MarketplacecommerceservicesConstants.WALLET);//TODO::Wallet not in scope of Release 1
-				//				}
-				//				else if (MarketplacecommerceservicesConstants.COD.equalsIgnoreCase(entry.getKey()))
-				//				{
-				//					paymentTransactionEntry.setPaymentMode(MarketplacecommerceservicesConstants.COD);
-				//				}
-			}
-			try
+			getModelService().save(paymentTransactionEntry);
+			paymentTransactionEntryList.add(paymentTransactionEntry);
+
+			if (null != cart.getPaymentInfo())
 			{
-				getModelService().save(paymentTransactionEntry);
-				paymentTransactionEntryList.add(paymentTransactionEntry);
+				paymentTransactionModel.setInfo(cart.getPaymentInfo());
 			}
-			catch (final ModelSavingException e)
+			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+			paymentTransactionModel.setCreationtime(date);
+			paymentTransactionModel.setCurrency(cart.getCurrency());
+			paymentTransactionModel.setEntries(paymentTransactionEntryList);
+			paymentTransactionModel.setOrder(cart);
+			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
+			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
+					&& paymentTransactionEntryList.get(0).getTransactionStatus()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 			{
-				LOG.error(MarketplacecommerceservicesConstants.PAYMENT_TRAN_EXC_LOG + e);
-				throw new ModelSavingException(e + ": Exception while saving payment transaction entry with ");
-			}
-		}
-		//Setting fields of paymentTransactionEntry with valid responses. This will change.
-		if (null != cart.getPaymentInfo())
-		{
-			paymentTransactionModel.setInfo(cart.getPaymentInfo());
-		}
-		paymentTransactionModel.setCode("COD" + codCode + "-" + System.currentTimeMillis());
-		paymentTransactionModel.setCreationtime(date);
-		paymentTransactionModel.setCurrency(cart.getCurrency());
-		paymentTransactionModel.setEntries(paymentTransactionEntryList);
-		paymentTransactionModel.setOrder(cart);
-		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
-		//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
-		boolean flag = false;
-		for (final PaymentTransactionEntryModel entry : paymentTransactionEntryList)
-		{
-			if (entry.getTransactionStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-			{
-				flag = true;
+				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
 			else
 			{
-				flag = false;
+				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
 			}
-		}
-		if (flag)
-		{
-			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-		}
-		else
-		{
-			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
-		}
-		try
-		{
 			getModelService().save(paymentTransactionModel);
 			paymentTransactionList.add(paymentTransactionModel);
-		}
-		catch (final ModelSavingException e)
-		{
-			LOG.error("Exception while saving payment transaction with " + e);
-			throw new ModelSavingException(e + ": Exception while saving payment transaction with ");
-		}
-		cart.setPaymentTransactions(paymentTransactionList);
-		try
-		{
+
+			cart.setPaymentTransactions(paymentTransactionList);
 			getModelService().save(cart);
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Exception while saving cart with " + e);
-			throw new ModelSavingException(e + ": Exception while saving cart with");
+			LOG.error("Exception while saving cart with ", e);
+			throw new EtailNonBusinessExceptions(e, ": Exception while setPaymentTransactionForCOD");
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception while setPaymentTransactionForCOD ", ex);
+			throw new EtailNonBusinessExceptions(ex);
 		}
 	}
-
 
 	/**
 	 * This private method is used to set the values in DebitCardPaymentInfoModel after getting successful response from
@@ -1202,11 +1170,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			for (final AbstractOrderEntryModel entry : entries)
 			{
 				if (!getDiscountUtility().isFreebieOrBOGOApplied(entry))
-
-
-
-
-
 				{
 					double entryTotals = 0;
 					if (entry.getNetAmountAfterAllDisc().doubleValue() > 0)
@@ -1239,10 +1202,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					}
 					LOG.debug("Entry level Conv charge is>>>>>>>" + appCODChargeForEachItem);
 					entry.setConvenienceChargeApportion(Double.valueOf(appCODChargeForEachItem));
-
-
-
-
 					try
 					{
 						getModelService().save(entry);
@@ -1252,25 +1211,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 						LOG.error("Exception while saving abstract order entry model with " + e);
 						throw new ModelSavingException(e + " :Exception while saving abstract order entry model with");
 					}
-
-
-
-
-
-
-
-
-
-
-
-
-
 				}
-
-
-
-
-
 
 			}
 		}
@@ -1279,7 +1220,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		//setting values in CODPaymentInfoModel
 		cODPaymentInfoModel.setCashOwner(custName);
-		cODPaymentInfoModel.setCode("COD_" + entries.get(0).getOrder().getCode());
+		cODPaymentInfoModel.setCode(MarketplacecommerceservicesConstants.COD + "_" + entries.get(0).getOrder().getCode());
 		cODPaymentInfoModel.setUser(getUserService().getCurrentUser());
 		try
 		{
@@ -1289,9 +1230,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		catch (final ModelSavingException e)
 		{
 			LOG.error("Exception while saving cod payment info with " + e);
-			throw new ModelSavingException(e + " :Exception while saving cod payment info with");
+			throw new ModelSavingException("Exception while saving cod payment info with", e);
 		}
-
 
 		//setting CODPaymentInfoModel in cartmodel
 		cartModel.setPaymentInfo(cODPaymentInfoModel);
@@ -1303,8 +1243,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		}
 		catch (final ModelSavingException e)
 		{
-			LOG.error("Exception while saving cart with " + e);
-			throw new ModelSavingException(e + " :Exception while saving cart with");
+			LOG.error("Exception while saving cart with ", e);
+			throw new ModelSavingException("Exception while saving cart with", e);
 		}
 	}
 
@@ -1583,6 +1523,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException
 	{
+		final long startTime = System.currentTimeMillis();
 		//Reset Voucher Apportion
 		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
 		{
@@ -1726,6 +1667,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		promoPriceData.setVoucherDiscount(discData);
 
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service applyPromotions()======" + (endTime - startTime));
 		return promoPriceData;
 	}
 
@@ -1739,6 +1682,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	private void calculatePromotion(final CartModel cart, final CartData cartData)
 	{
+		final long startTime = System.currentTimeMillis();
 		final Double deliveryCost = cart.getDeliveryCost();
 		final CommerceCartParameter parameter = new CommerceCartParameter();
 		parameter.setEnableHooks(true);
@@ -1758,6 +1702,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 		getModelService().save(cart);
 		getMplCommerceCartService().setTotalWithConvCharge(cart, cartData);
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting calculatePromotion()========" + (endTime - startTime));
 	}
 
 
@@ -1805,6 +1752,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 */
 	private Double populateCartDiscountPrice(final CartModel cart)
 	{
+		final long startTime = System.currentTimeMillis();
+		LOG.debug("Entering Service populateCartDiscountPrice()=====" + System.currentTimeMillis());
 		Double value = Double.valueOf(0);
 		final CartData cartData = getMplExtendedCartConverter().convert(cart);
 
@@ -1814,6 +1763,8 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			value = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
 
 		}
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Controller applyPromotions()=====" + (endTime - startTime));
 		return value;
 	}
 
