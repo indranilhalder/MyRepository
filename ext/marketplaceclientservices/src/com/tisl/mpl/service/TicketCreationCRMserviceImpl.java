@@ -118,6 +118,8 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			}
 			if (null != sendTicketRequestData.getAddressInfo())
 			{
+				addressInfo.setShippingFirstName(sendTicketRequestData.getAddressInfo().getShippingFirstName());
+				addressInfo.setShippingLastName(sendTicketRequestData.getAddressInfo().getShippingLastName());
 				addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
 				addressInfo.setAddress1(sendTicketRequestData.getAddressInfo().getAddress1());
 				addressInfo.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
