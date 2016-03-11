@@ -1040,7 +1040,18 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 		modelService.save(ticket);
 	}
-
+	/**
+	 *This method used for sorting  deliveryMode in sequence of HD ED CNC
+	 *@return List Of deliveryMode  
+	 */
+	@Override
+	public List<String> filterDeliveryMode(){
+		final List<String> deliveryMode = new ArrayList<String>();
+		deliveryMode.add(MarketplaceFacadesConstants.HD);
+		deliveryMode.add(MarketplaceFacadesConstants.EXPRESS);
+		deliveryMode.add(MarketplaceFacadesConstants.C_C);
+		return deliveryMode;
+	}
 
 	/**
 	 * @return the mplSellerInformationService
