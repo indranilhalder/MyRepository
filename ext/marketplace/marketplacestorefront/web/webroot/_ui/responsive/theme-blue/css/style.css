@@ -29467,6 +29467,9 @@ a.button.trending-button:hover{
    color:#a9143c;
 }
 #newAndExclusive .New_Exclusive_title{
+	font-weight:600;
+}
+#newAndExclusive .New_Exclusive_title,#newAndExclusive .New_Exclusive_price{
 	margin:10px 0;
 	color:#333;
 }
@@ -29801,6 +29804,9 @@ p.showcase-para {
 	color:#bbb;
 	 word-break: break-word;
 	 line-height: 22px;
+}
+.showcase-center h3{
+	font-weight:600;
 }
 .showcase-center h3, .showcase-center p{line-height: 20px;}
 .showcase-section .desc-section{
