@@ -1384,6 +1384,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
 
 	public static final String BANKNAME = "bankName";
+	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
+
 
 	private MarketplacecommerceservicesConstants()
 	{
