@@ -37,7 +37,7 @@ ACC.autocomplete = {
 				var suggestedString="";
 				if(count==1){
 				if (/\s/.test(item.value)) {
-					count++;
+					//count++;
 					suggestedString=item.value.substr(0,item.value.indexOf(' '));
 				
 				}
@@ -206,15 +206,14 @@ ACC.autocomplete = {
 						});
 					}
 					
-					
+			
 					if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 						{
 							if(i==0){
 								
-								if(data.categories.length!=undefined && data.categories.length>0){	
-									
-							autoSearchData.push({
+								if(data.categories.length!=undefined && data.categories.length>0){		
+							    autoSearchData.push({
 								value: obj.term,
 								searchterm:term,
 								url: ACC.config.encodedContextPath + "/search?text=" + obj.term,
@@ -288,7 +287,7 @@ ACC.autocomplete = {
 					if(data.suggestions != null){
 					$.each(data.suggestions, function (i, obj)
 			       	{
-					
+					 
 						if(i!=0){
 							
 							if((data.categories.length!=undefined && data.categories.length>0) ||
@@ -328,6 +327,11 @@ ACC.autocomplete = {
 		
 		
 		$search = $(".js-site-search-input");
+//		$searchMicrosite = $(".js-site-micrositesearch-input");
+//		if($searchMicrosite.length>0){
+//			$searchMicrosite.yautocomplete();
+//		}
+		
 		if($search.length>0){
 			$search.yautocomplete()
 		}
@@ -343,6 +347,7 @@ ACC.autocomplete = {
 		var count = searchText.match(/,/g);  
 		if(count == null || count.length<=2) {
 			$('#js-site-search-input').val(searchText);
+			//$("#js-site-micrositesearch-input").val(searchText);
 		}
 	},
 	// For Microsite ShopByBrand Component
