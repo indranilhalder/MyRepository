@@ -16172,7 +16172,8 @@ body .account .right-account .order-history .product-block li.item a.close {
     display: inline-block;
 }
 body .account .right-account .order-history .product-block li.item h3 {
-    font-size: 14px
+    font-size: 14px;
+    font-weight:600;
 }
 body .account .right-account .order-history .product-block li.item h3 span {
     display: block;
@@ -30489,6 +30490,9 @@ li#ratingDiv {
 }
 .cart.wrapper .product-block li.item>ul.desktop>li.price del{
 color:rgb(185,185,185);}
+.commentcontent .popUpProductTitle{
+font-weight:600;
+font-size:14px;}
 /*--------------maincss-----------*/
 .row
 {
