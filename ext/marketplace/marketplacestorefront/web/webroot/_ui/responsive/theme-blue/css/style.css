@@ -19306,7 +19306,7 @@ header .content .compact-toggle {
 header.compact .content .compact-toggle {
   opacity: 1;
 }
-.brand-microsite header .content .compact-toggle {
+body.template-pages-layout-micrositePage1 header .content .compact-toggle {
   opacity: 1;
 }
 header .content .compact-toggle.open:before{
@@ -19325,7 +19325,7 @@ header .content .compact-toggle:before {
   position: relative;
   left: 50%;
   margin-left: -4px;
-  top: 30%;
+  top: 0px;
   height: 0;
   width: 0;
   border-left: 4px solid transparent;
@@ -19364,16 +19364,16 @@ header .banner .toggle.mobile {
    border: none;
 }
 
-.brand-microsite header.brand-header .select-view{
+body.template-pages-layout-micrositePage1 header.brand-header .select-view{
     background-color:#000;
     color:#fff;
     border-color:#fff;
 }
-.brand-microsite header .content .bottom .brand-logo .simple-banner-component{	
+body.template-pages-layout-micrositePage1 header .content .bottom .brand-logo .simple-banner-component{	
 	 padding-top:10px; 
 }
 }
-.brand-microsite header .content .bottom .brand-logo .simple-banner-component{
+body.template-pages-layout-micrositePage1 header .content .bottom .brand-logo .simple-banner-component{
 	width:auto;
 }
 
@@ -19382,7 +19382,7 @@ header .banner .toggle.mobile {
 /* header .banner .toggle.desktop {
   display: none;
 } */
- .brand-microsite header > .content .bottom .marketplace {
+ body.template-pages-layout-micrositePage1 header > .content .bottom .marketplace {
       height: 60px;
  }
   header > .content .bottom .search form input{
@@ -19396,7 +19396,7 @@ header.brand-header .content .bottom nav>ul>li>ul>li>ul {
 header > .content .top {
   z-index: 105;
 }
-.brand-microsite header .content .compact-toggle {
+body.template-pages-layout-micrositePage1 header .content .compact-toggle {
   opacity: 1;
 }
 header .content .compact-toggle.open:before{
@@ -19481,7 +19481,7 @@ header > .content .compact-toggle:before {
   position: relative;
   left: 50%;
   margin-left: -4px;
-  top: 30%;
+  top: 0px;
   height: 0;
   width: 0;
   border-left: 4px solid transparent;
@@ -19633,7 +19633,7 @@ header .content .marketplace.compact {
 }
 
 }
-.brand-microsite .breadcrumbs{
+body.template-pages-layout-micrositePage1 .breadcrumbs{
 display:none;
 }
 .brand-microsite .brand-content-grid h3{
