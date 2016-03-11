@@ -151,5 +151,9 @@ public interface MplOrderFacade
 	 */
 	public void createcrmTicketForCockpit(OrderModel mainOrder, String customerId, String source);
 
-
+	/**
+	 * Sorted DeliveryMode
+	 * @return DeliverYMode List Type
+	 */
+	public List<String> filterDeliveryMode();
 }
