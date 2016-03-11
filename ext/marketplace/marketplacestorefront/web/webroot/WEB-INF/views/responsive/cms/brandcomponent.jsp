@@ -36,6 +36,9 @@
 				<div class="multibrand-wrapper">
 				<img class="multibrand-logo" src="${subBrand.subBrandImage.URL}" />
 					<img class="logo" src="${subBrand.subBrandLogo.URL}" >
+					<p class="multibrand-name">
+					${subBrand.subBrandName}
+					</p>
 					</div>
 					</a>
 			</c:forEach>
