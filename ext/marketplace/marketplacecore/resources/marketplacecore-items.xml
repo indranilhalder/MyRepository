@@ -7135,6 +7135,16 @@
 							</columntype>
 						</persistence>
 					</attribute>
+					<attribute type="java.lang.String" qualifier="shippingFirstName">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="shippingLastName">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
 					<attribute type="java.lang.String" qualifier="phoneNo">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
