@@ -30,7 +30,7 @@ import com.tisl.mpl.review.daos.MplGigyaReviewCommentDao;
 public class MplGigyaReviewCommentDaoImpl implements MplGigyaReviewCommentDao
 {
 
-	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private final static Logger LOG = Logger.getLogger(MplGigyaReviewCommentDaoImpl.class.getName());
 	@Autowired
 	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
