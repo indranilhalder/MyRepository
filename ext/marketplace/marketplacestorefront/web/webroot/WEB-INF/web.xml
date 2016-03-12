@@ -200,10 +200,10 @@
 			<name>SID</name>
 		</cookie-config> -->
 		
-		<cookie-config>
+	   <!--	<cookie-config>
 			<secure>true</secure>
 			<http-only>true</http-only>
-		</cookie-config> 
+		</cookie-config> -->
        <session-timeout>30</session-timeout>
 	</session-config>
 
