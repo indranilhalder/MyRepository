@@ -532,9 +532,10 @@ function addToWishlistFromCart() {
 											<c:choose>												
 												<c:when	test="${productDeliveryMode.key == entry.entryNumber}">
 													<c:if test="${productDeliveryMode.key == entry.entryNumber}">
-														<c:forEach items="${productDeliveryMode.value}"
-															var="productDeliveryModeMapValue">
-															<li class="method${ productDeliveryModeMapValue.name}">${ productDeliveryModeMapValue.name}</li>
+														<c:set var="delModes" value="${fn:length(deliveryModeDataMap.value)}" />	
+														<c:forEach var="i" begin="1" end="${delModes}" step="1">
+															<c:set var="delMode" value="${deliveryModeDataMap.value[delModes-i]}" />
+															<li class="method${delMode.name}">${delMode.name}</li>
 														</c:forEach>
 													</c:if>
 												</c:when>
