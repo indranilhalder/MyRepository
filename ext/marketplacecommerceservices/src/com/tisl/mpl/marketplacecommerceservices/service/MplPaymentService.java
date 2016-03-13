@@ -22,6 +22,7 @@ import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 
 
@@ -165,10 +166,11 @@ public interface MplPaymentService
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
+	 * @throws EtailNonBusinessExceptions
 	 */
 	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
-			JaloSecurityException, JaloPriceFactoryException;
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -245,5 +247,16 @@ public interface MplPaymentService
 	 *
 	 */
 	JuspayEBSResponseModel getEntryInAuditByOrder(final String orderId);
+
+	/*
+	 * @description : fetching bank model for a bank name TISPRO-179\
+	 *
+	 * @param : bankName
+	 *
+	 * @return : BankModel
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 }
