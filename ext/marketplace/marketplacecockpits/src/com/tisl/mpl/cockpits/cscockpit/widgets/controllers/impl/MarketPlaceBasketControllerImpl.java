@@ -611,7 +611,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			getCommerceCartService().recalculateCart(cartParameter);
 			
 			//setting coupon discount starts
-			if (CollectionUtils.isNotEmpty(cart.getDiscounts())){
+			if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
+			{
 				final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
 				final String voucherCode=voucher.getVoucherCode();
 				final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(voucher,
