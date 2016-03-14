@@ -3546,13 +3546,26 @@ function sendTealiumData(){
 		        
 		        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
 		        {
-		        	utag.link({
-			            "link_name": 'Final Checkout',
-			            "event_type": 'PayNow',
-			            "payment_method": "" + payment_mode + "|" + payment_type,
-			            "product_id": utag.data.product_id
-	
-			        });
+		        	
+		        	if(payment_mode === "COD"){
+		        		utag.link({
+				            "link_name": 'Final Checkout',
+				            "event_type": 'PayNow',
+				            "payment_method": "" + payment_type,
+				            "product_id": utag.data.product_id
+		
+				        });
+		        		
+		        	}else{
+		        		
+		        	}
+			        	utag.link({
+				            "link_name": 'Final Checkout',
+				            "event_type": 'PayNow',
+				            "payment_method": "" + payment_mode + "|" + payment_type,
+				            "product_id": utag.data.product_id
+		
+				        });
 		        }
 	        
 	   } catch (e) {
