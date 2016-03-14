@@ -10,6 +10,7 @@ import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
@@ -26,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPaymentDaoImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
@@ -33,7 +35,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 
 /**
  * @author TCS
- * 
+ *
  */
 public class CODPaymentServiceImpl implements CODPaymentService
 {
@@ -48,6 +50,9 @@ public class CODPaymentServiceImpl implements CODPaymentService
 
 	@Autowired
 	private BaseStoreService baseStoreService;
+
+	@Autowired
+	private PersistentKeyGenerator codCodeGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -76,11 +81,17 @@ public class CODPaymentServiceImpl implements CODPaymentService
 			paymentTransactionModelList = new ArrayList<PaymentTransactionModel>();
 		}
 
-		final String merchantTransactionCode = (new StringBuilder(String.valueOf(cart.getUser().getUid()))).append("-")
-				.append(UUID.randomUUID()).toString();
-		paymentTransactionModel.setCode(merchantTransactionCode);
+		//TISPRO-192
+		//		final String merchantTransactionCode = (new StringBuilder(String.valueOf(cart.getUser().getUid()))).append("-")
+		//				.append(UUID.randomUUID()).toString();
+		//		paymentTransactionModel.setCode(merchantTransactionCode);
+
+		final String codCode = getCodCodeGenerator().generate().toString();
+		paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+
 		paymentTransactionModel.setCurrency(cart.getCurrency());
-		paymentTransactionModel.setStatus("SUCCESS");
+		paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
 		paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
 		paymentTransactionModelList.add(paymentTransactionModel);
 		cartModel.setPaymentTransactions(paymentTransactionModelList);
@@ -112,18 +123,24 @@ public class CODPaymentServiceImpl implements CODPaymentService
 		// YTODO Auto-generated method stub
 		final PaymentTransactionEntryModel paymentTransactionEntryModel = getModelService().create(
 				PaymentTransactionEntryModel.class);
+		final String codCode = getCodCodeGenerator().generate().toString();
 
 		//paymentTransactionEntryModel.setType(value);
 		paymentTransactionEntryModel.setPaymentTransaction(paymentTransactionModel);
 		paymentTransactionEntryModel.setCurrency(cart.getCurrency());
-		paymentTransactionEntryModel.setTransactionStatus(getConfigurationService().getConfiguration().getString(
-				"payment.transactionStatus"));
-		paymentTransactionEntryModel.setCode(paymentTransactionModel.getCode());
-		paymentTransactionEntryModel.setAmount(new BigDecimal(amount));
-		paymentTransactionEntryModel.setTransactionStatusDetails(getConfigurationService().getConfiguration().getString(
-				"payment.transactionStatusDetails"));
+
+		//TISPRO-192
+		//		paymentTransactionEntryModel.setTransactionStatus(getConfigurationService().getConfiguration().getString(
+		//				"payment.transactionStatus"));
+		paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		//paymentTransactionEntryModel.setCode(paymentTransactionModel.getCode());
+		paymentTransactionEntryModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+		paymentTransactionEntryModel.setAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
+		//		paymentTransactionEntryModel.setTransactionStatusDetails(getConfigurationService().getConfiguration().getString(
+		//				"payment.transactionStatusDetails"));
 		paymentTransactionEntryModel.setTime(new Date());
-		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
+		//		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
+		paymentTransactionEntryModel.setType(PaymentTransactionType.COD_PAYMENT);
 		//paymentTransactionEntryModel.setPaymentMode(OTPTypeEnum.COD.toString());
 		paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(OTPTypeEnum.COD.toString()));
 		getModelService().save(paymentTransactionEntryModel);
@@ -206,4 +223,20 @@ public class CODPaymentServiceImpl implements CODPaymentService
 		this.configurationService = configurationService;
 	}
 
+	/**
+	 * @return the codCodeGenerator
+	 */
+	public PersistentKeyGenerator getCodCodeGenerator()
+	{
+		return codCodeGenerator;
+	}
+
+	/**
+	 * @param codCodeGenerator
+	 *           the codCodeGenerator to set
+	 */
+	public void setCodCodeGenerator(final PersistentKeyGenerator codCodeGenerator)
+	{
+		this.codCodeGenerator = codCodeGenerator;
+	}
 }
