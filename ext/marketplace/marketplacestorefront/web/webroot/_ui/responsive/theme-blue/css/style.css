@@ -7218,7 +7218,8 @@ text-transform: uppercase;
     @media (min-width: 650px) {
       .checkout.wrapper .product-block.addresses li.item {
         width: 49%;
-        float: left;
+        /* float: left; */
+        vertical-align: top;
         padding: 10px;
         padding-bottom: 20px; } }
     .checkout.wrapper .product-block.addresses li.item input[type="radio"] + label {
