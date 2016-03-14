@@ -464,6 +464,43 @@
 								});
 							</script>
 						</li>
+							<!-- Freebie Product Details -->
+							
+								 <c:if test="${not empty poses.product.freebieProducts}">
+									<c:forEach items="${poses.product.freebieProducts}" var="freebieProds">
+										<%-- ${freebieProds.associateProductData.code}
+										${freebieProds.associateProductData} --%>
+										<%-- ${freebieProds.product.code}
+										${freebieProds.sellerName}
+										${freebieProds.qty} --%>
+										<li class="item delivery_options">
+											<ul>
+												<li>
+													<div>
+														<div class="thumb product-img">
+															<a href="${freebieProds.product.url}"><product:productPrimaryImage
+																	product="${freebieProds.product}" format="thumbnail" /></a>
+														</div>
+														<div class="details product">
+															<h3 class="product-brand-name">
+																<a href="">${freebieProds.product.brand.brandname}</a>
+															</h3>
+															<ycommerce:testId code="cart_product_name">
+																<a href="${freebieProds.product.url}"><div
+																		class="name product-name">${freebieProds.product.name}</div></a>
+															</ycommerce:testId>
+															<div class="freebieId"><b>Product ID:</b> ${freebieProds.product.code}</div>
+															<div class="sellerName"><b>Seller:</b> ${freebieProds.sellerName}</div>
+															<div class="freebieQty"><b>Qty:</b> ${freebieProds.qty}</div>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</li>
+										
+								</c:forEach>
+							</c:if>
+							<!-- /. Freebie Product Details -->
 							<li class="item delivery_options item${status1.index}">
 								<ul>
 										<li>
