@@ -1603,6 +1603,10 @@ $(function() {
 		      } 
 	}	 
 	$(document).ready(function(){
+		    var length = $(".returnStatus .dot").length;
+		    var percent = 100/parseInt(length);
+		    $(".returnStatus .dot").css("width", percent+"%");
+		    
 		 $(".pickupeditbtn").click(function(){
 			
 		
