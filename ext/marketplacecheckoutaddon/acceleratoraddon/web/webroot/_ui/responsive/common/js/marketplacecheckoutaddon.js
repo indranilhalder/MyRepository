@@ -2471,6 +2471,10 @@ function applyPromotion(bankName)
 						$("#couponApplied").css("display","block");
 		 				document.getElementById("couponValue").innerHTML="-"+response.voucherDiscount.couponDiscount.formattedValue;
 		 				//$("#couponFieldId").attr('disabled','disabled');
+		 				if($("#couponFieldId").val()=="")
+		 				{
+		 					$("#couponFieldId").val(response.voucherDiscount.voucherCode);
+		 				}
 		 				$('#couponFieldId').attr('readonly', true);
 		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
 		 				$('#couponMessage').show();

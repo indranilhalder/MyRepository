@@ -29,7 +29,6 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
-import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
@@ -994,21 +993,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 		//For Voucher when reloaded
-		final List<VoucherData> voucherDataList = voucherFacade.getVouchersForCart();
-
-		for (final VoucherData voucher : voucherDataList)
-		{
-			try
-			{
-				//voucherFacade.releaseVoucher(voucher.getVoucherCode());
-				mplCouponFacade.releaseVoucher(voucher.getVoucherCode(), getCartService().getSessionCart());
-			}
-			catch (final VoucherOperationException e)
-			{
-				LOG.error("Voucher with voucher code " + voucher.getVoucherCode() + " could not be released");
-				e.printStackTrace();
-			}
-		}
+		//		final List<VoucherData> voucherDataList = voucherFacade.getVouchersForCart();
+		//
+		//		for (final VoucherData voucher : voucherDataList)
+		//		{
+		//			try
+		//			{
+		//				//voucherFacade.releaseVoucher(voucher.getVoucherCode());
+		//				mplCouponFacade.releaseVoucher(voucher.getVoucherCode(), getCartService().getSessionCart());
+		//			}
+		//			catch (final VoucherOperationException e)
+		//			{
+		//				LOG.error("Voucher with voucher code " + voucher.getVoucherCode() + " could not be released");
+		//				e.printStackTrace();
+		//			}
+		//		}
 
 		//getting cart subtotal value
 		final Double cartValue = Double.valueOf(cartData.getSubTotal().getValue().doubleValue());
