@@ -330,7 +330,7 @@ public class HomePageController extends AbstractPageController
 					String price = null;
 					try
 					{
-						price = getProductPrice(firstProduct);
+						price = getProductPrice(secondProduct);
 					}
 					catch (final EtailBusinessExceptions e)
 					{
