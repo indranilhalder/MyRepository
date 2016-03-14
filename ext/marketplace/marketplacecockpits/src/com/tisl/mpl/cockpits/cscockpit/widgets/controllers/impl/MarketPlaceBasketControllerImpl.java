@@ -72,7 +72,6 @@ import de.hybris.platform.util.WeakArrayList;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.DateRestrictionModel;
-import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.UserRestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -179,14 +178,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		
 		modelService.save(cart);
 		
-		if (CollectionUtils.isNotEmpty(cart.getDiscounts())){
-			final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
-			final String voucherCode=voucher.getVoucherCode();
-			final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(voucher,
-					cart);
 			try {
-				getMplVoucherService().checkCartAfterApply(voucher, cart, applicableOrderEntryList);	//Checking the cart after OOB voucher application
-				getMplVoucherService().setApportionedValueForVoucher(voucher, cart, voucherCode, applicableOrderEntryList);	//Apportioning voucher discount
+				getMplVoucherService().checkCartWithVoucher(cart);
 			} catch (EtailNonBusinessExceptions e) {
 				LOG.error("Exception calculating cart ["
 						+ cart + "]", e);
@@ -203,8 +196,6 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						+ cart + "]", e);
 				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 			}
-
-	} 
 
 		return isItemAddedToCart;
 	}
@@ -540,15 +531,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 						});
 		
 		modelService.save(cart);
-		 
-		 if (CollectionUtils.isNotEmpty(cart.getDiscounts())){
-				final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
-				final String voucherCode=voucher.getVoucherCode();
-				final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(voucher,
-						cart);
 				try {
-					getMplVoucherService().checkCartAfterApply(voucher, cart, applicableOrderEntryList);
-					getMplVoucherService().setApportionedValueForVoucher(voucher, cart, voucherCode, applicableOrderEntryList);
+					getMplVoucherService().checkCartWithVoucher(cart);
 				} catch (EtailNonBusinessExceptions e) {
 					LOG.error("Exception calculating cart ["
 							+ cart + "]", e);
@@ -564,8 +548,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 							+ cart + "]", e);
 					ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 				}
-		} 
-		 
+
 	}
 	
 	
@@ -610,18 +593,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			cartParameter.setCart((CartModel)entry.getOrder());			
 			getCommerceCartService().recalculateCart(cartParameter);
 			
-			//setting coupon discount starts
-			if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
-			{
-				final PromotionVoucherModel voucher = (PromotionVoucherModel) cart.getDiscounts().get(0);
-				final String voucherCode=voucher.getVoucherCode();
-				final List<AbstractOrderEntryModel> applicableOrderEntryList = getMplVoucherService().getOrderEntryModelFromVouEntries(voucher,
-						cart);
-					getMplVoucherService().checkCartAfterApply(voucher, cart, applicableOrderEntryList);	//Checking the cart after OOB voucher application
-					getMplVoucherService().setApportionedValueForVoucher(voucher, cart, voucherCode, applicableOrderEntryList);	//Apportioning voucher discount
-		//setting coupon discount ends
-			
-			}
+			getMplVoucherService().checkCartWithVoucher(cart);
 	      }catch (CalculationException | PaymentException | ValidationException e) {
 				LOG.error(e);
 				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
