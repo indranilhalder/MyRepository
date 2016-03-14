@@ -1151,11 +1151,13 @@
 																		${displayMsgVar}
 																		<!-- TISEE-5433 -->
 																		<c:if
-																			test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null'}">
+																			test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
+																			}">
 																			<p>Logistics: ${logistic[entry.orderLineId]}</p>
 																		</c:if>
 																		<c:if
-																			test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null'}">
+																			test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
+																			}">
 																			<c:choose>
 																				<c:when
 																					test="${not empty trackingurl[entry.orderLineId]}">
@@ -1280,10 +1282,12 @@
 
 																	${displayMsgVar}
 																	<!-- TISEE-5433 -->
-																	<c:if test="${not empty returnLogistic[entry.orderLineId] and fn:toLowerCase(returnLogistic[entry.orderLineId]) ne 'null'}">
+																	<c:if test="${not empty returnLogistic[entry.orderLineId] and fn:toLowerCase(returnLogistic[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
+																	}">
 																 	<p>Logistic : ${returnLogistic[entry.orderLineId]}</p>
 																 	</c:if>
-																 	<c:if test="${not empty returnAwbNum[entry.orderLineId] and fn:toLowerCase(returnAwbNum[entry.orderLineId]) ne 'null'}">
+																 	<c:if test="${not empty returnAwbNum[entry.orderLineId] and fn:toLowerCase(returnAwbNum[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
+																 	}">
 																 		<c:choose>
 																 		<c:when test="${not empty trackingurl[entry.orderLineId]}">
 																 			<p>AWB No. <a href="${trackingurl[entry.orderLineId]}">${returnAwbNum[entry.orderLineId]}</a>
@@ -1603,6 +1607,10 @@ $(function() {
 		      } 
 	}	 
 	$(document).ready(function(){
+		    var length = $(".returnStatus .dot").length;
+		    var percent = 100/parseInt(length);
+		    $(".returnStatus .dot").css("width", percent+"%");
+		    
 		 $(".pickupeditbtn").click(function(){
 			
 		

@@ -212,6 +212,7 @@ import com.tisl.mpl.storefront.web.forms.validator.MplCustomerProfileFormValidat
 import com.tisl.mpl.storefront.web.forms.validator.MplEmailValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplPasswordValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
+import com.tisl.mpl.storefront.web.forms.validator.ReturnItemFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -319,6 +320,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private FrontEndErrorHelper frontEndErrorHelper;
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
+	//Return Form Validation
+	@Resource(name = "returnItemFormValidator")
+	private ReturnItemFormValidator returnItemFormValidator;
 
 
 	//	Autowired variable declaration
@@ -976,9 +980,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 									else
 									{
-										LOG.debug(
-												" order : Consignment is null or empty :Setting Item Retrun status to false for  Order code :"
-														+ orderCode);
+										LOG.debug(" order : Consignment is null or empty :Setting Item Retrun status to false for  Order code :"
+												+ orderCode);
 										orderEntry.setItemReturnStatus(false);
 									}
 								}
@@ -1024,7 +1027,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
-			model.addAttribute(ModelAttributetConstants.FILTERDELIVERYMODE,getMplOrderFacade().filterDeliveryMode());
+			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE,getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
@@ -1036,10 +1039,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			model.addAttribute(ModelAttributetConstants.TRACKINGURL, trackStatusTrackingURLMap);
 
 			final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
-			breadcrumbs
-					.add(new Breadcrumb(
-							RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS, getMessageSource()
-									.getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null, getI18nService().getCurrentLocale()),
+			breadcrumbs.add(new Breadcrumb(RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS, getMessageSource()
+							.getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null, getI18nService().getCurrentLocale()),
 					null));
 			breadcrumbs.add(new Breadcrumb(ModelAttributetConstants.HASH_VAL,
 					getMessageSource().getMessage(MessageConstants.TEXT_ACCOUNT_ORDER_ORDERBREADCRUMB, new Object[]
@@ -1105,7 +1106,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		return status;
 	}
 
-	@RequestMapping(value = RequestMappingUrlConstants.CREATE_TICKET_CRA_UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.CREATE_TICKET_CRM_UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
 	@ResponseBody
 	@Post
 	public void crmTicketUpdetaPickUpDetails(@RequestParam(value = "orderId") final String orderId)
@@ -1143,7 +1144,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			@RequestParam(value = ModelAttributetConstants.SHOW, defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = ModelAttributetConstants.PAGE_FOR, defaultValue = "") final String pageFor, final Model model,
 			@RequestParam(value = ModelAttributetConstants.SORT, required = false) final String sortCode)
-					throws CMSItemNotFoundException, VoucherOperationException
+			throws CMSItemNotFoundException, VoucherOperationException
 	{
 		try
 		{
@@ -1453,7 +1454,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @param ussid
 	 * @param transactionId
 	 * @param model
-	 * @return
+	 * @return String
 	 */
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_CHECK, method = RequestMethod.GET)
 	public String returnPincodeAvailability(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
@@ -1482,7 +1483,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				returnPincodeCheckForm.setCity(address.getTown());
 				returnPincodeCheckForm.setState(address.getState());
 				returnPincodeCheckForm.setCountry(address.getCountry().getName());
-				returnPincodeCheckForm.setLandmark(address.getLocality());
+				returnPincodeCheckForm.setLandmark(address.getLine3());
 			}
 			model.addAttribute(ModelAttributetConstants.RETURN_PINCODE_FORM, returnPincodeCheckForm);
 		}
@@ -1495,8 +1496,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_SUBMIT, method = RequestMethod.POST)
 	public String returnPincodeAvailability(final ReturnPincodeCheckForm returnAddress, final Model model,
-			final BindingResult bindingResult, HttpServletRequest request) throws CMSItemNotFoundException
+			HttpServletRequest request) throws CMSItemNotFoundException
 	{
+		final String errorMsg = returnItemFormValidator.returnValidate(returnAddress);
+		if (!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
+		{
+			GlobalMessages.addErrorMessage(model, errorMsg);
+			model.addAttribute("errorMsg", errorMsg);
+			storeContentPageTitleInModel(model, MessageConstants.RETURN_REQUEST);
+			storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
+			return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
+		}
 		OrderEntryData orderEntry = new OrderEntryData();
 		final HttpSession session = request.getSession();
 		final String orderCode = returnAddress.getOrderCode();
@@ -1572,19 +1582,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 				pinCode);
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 		{
-			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
 			if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
 			{
 				returnLogisticsCheck = false;
 			}
 		}
-		session.setAttribute(RETURN_Logistics_Availability, returnLogisticsCheck);
+		session.setAttribute(RETURN_Logistics_Availability, returnLogisticsRespList);
 		model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
 		model.addAttribute(RETURN_ADDRESS, pinCode);
 		model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 
 		if (!returnLogisticsCheck)
 		{
+			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE,
+					MarketplacecommerceservicesConstants.REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE);
 			return ControllerConstants.Views.Pages.Account.AccountOrderReturnPincodeServiceCheck;
 		}
 		else
@@ -1607,7 +1618,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public String returnRequest(@RequestParam(ModelAttributetConstants.ORDERCODE) final String orderCode,
 			@RequestParam(ModelAttributetConstants.USSID) final String ussid,
 			@RequestParam(ModelAttributetConstants.TRANSACTION_ID) final String transactionId, final Model model)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -1767,15 +1778,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 				returnLogisticsAvailability = true;
 			}
 			model.addAttribute(ModelAttributetConstants.RETURNLOGAVAIL, returnLogisticsAvailability);
-			/*
-			 * boolean returnLogisticsCheck = true; final List<ReturnLogisticsResponseData> returnLogisticsRespList =
-			 * cancelReturnFacade .checkReturnLogistics(subOrderDetails); for (final ReturnLogisticsResponseData response :
-			 * returnLogisticsRespList) { model.addAttribute(ModelAttributetConstants.RETURNLOGMSG,
-			 * response.getResponseMessage()); if
-			 * (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL)) {
-			 * returnLogisticsCheck = false; } }
-			 */
-			boolean returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
+
+			//start
+			boolean returnLogisticsCheck = true;
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = (List<ReturnLogisticsResponseData>) session
+					.getAttribute(RETURN_Logistics_Availability);
+			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
+			{
+				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
+				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
+				{
+					returnLogisticsCheck = false;
+				}
+			}
 			model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
 
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);
@@ -2441,7 +2456,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String editProfile(final Model model,
 			@RequestParam(value = ModelAttributetConstants.PARAM, required = false) final String param)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -2596,7 +2611,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String updateProfile(final MplCustomerProfileForm mplCustomerProfileForm, final BindingResult bindingResult,
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttributes)
-					throws CMSItemNotFoundException, ParseException
+			throws CMSItemNotFoundException, ParseException
 	{
 		try
 		{
@@ -5111,7 +5126,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@RequireHardLogIn
 	public String marketplacePreference(final Model model,
 			@RequestParam(value = ModelAttributetConstants.PARAM, required = false) final String param)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -5290,7 +5305,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			@RequestParam(value = ModelAttributetConstants.FREQUENCY, required = false) final String frequency,
 			@RequestParam(value = ModelAttributetConstants.FEEDBACK_AREA, required = false) final String feedBackArea,
 			@RequestParam(value = ModelAttributetConstants.IS_UNSUBSCIBED, required = false) final String isUnsubscibed)
-					throws CMSItemNotFoundException, JSONException
+			throws CMSItemNotFoundException, JSONException
 	{
 		try
 		{

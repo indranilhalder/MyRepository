@@ -276,6 +276,8 @@
 	
 	<!-- Return Item AddressInfo Data -->
 	<bean class="com.tisl.mpl.data.ReturnAddressInfo">
+		<property name="shippingFirstName" type="String"/>
+		<property name="shippingLastName" type="String"/>
 		<property name="phoneNo" type="String"></property>
 		<property name="address1" type="String"></property>
 		<property name="address2" type="String"></property>
