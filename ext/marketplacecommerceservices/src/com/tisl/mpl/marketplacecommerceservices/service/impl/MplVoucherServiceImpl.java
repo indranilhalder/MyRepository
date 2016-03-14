@@ -158,6 +158,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			if (lastVoucher instanceof PromotionVoucherModel)
 			{
 				voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
+				discountData.setVoucherCode(voucherCode);
 			}
 
 			final List<DiscountModel> voucherList = cartModel.getDiscounts(); //List of discounts against the cart
