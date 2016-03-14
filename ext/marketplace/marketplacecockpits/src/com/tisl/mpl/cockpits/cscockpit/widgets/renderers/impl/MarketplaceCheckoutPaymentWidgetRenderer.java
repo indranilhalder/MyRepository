@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -22,8 +24,6 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
-import sun.security.krb5.Confounder;
-
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -34,10 +34,13 @@ import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
+import com.tisl.mpl.util.ExceptionUtil;
 
 import de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
@@ -104,6 +107,9 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	
 	@Autowired
 	private ConfigurationService configurationService;
+	
+	@Resource(name = "mplVoucherService")
+	private MplVoucherService mplVoucherService;	
 	
 	/**
 	 * Creates the content internal.
@@ -339,6 +345,9 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		 */
 		@Override
 		public void onEvent(Event event) throws ValidationException,PaymentException {
+			CartModel cart = ((CartModel) ((CheckoutController) widget
+					.getWidgetController()).getBasketController().getCart()
+					.getObject());
 			if(event instanceof SelectEvent){
 				
 				Set selectedItems = ((SelectEvent)event).getSelectedItems();
@@ -356,17 +365,54 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				//
 				((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
 				((MarketplaceCheckoutController) widget.getWidgetController()).processCODPayment();
+				try {
+					getMplVoucherService().checkCartWithVoucher(cart);
+				} catch (EtailNonBusinessExceptions e) {
+					LOG.error("Exception calculating cart ["
+							+ cart + "]", e);
+					ExceptionUtil.etailNonBusinessExceptionHandler(e);
+				}
+				catch(VoucherOperationException e)
+				{
+					LOG.error("Exception calculating cart ["
+							+ cart + "]", e);
+				}
+				catch(Exception e)
+				{
+					LOG.error("Exception calculating cart ["
+							+ cart + "]", e);
+					ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+				}
 				Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 				((CheckoutController) widget.getWidgetController()).getBasketController()
 						.dispatchEvent(null, widget.getWidgetController(), data);
 				} else{
 					((MarketplaceCheckoutController) widget.getWidgetController()).removeCODPayment();
+					try {
+						getMplVoucherService().checkCartWithVoucher(cart);
+					} catch (EtailNonBusinessExceptions e) {
+						LOG.error("Exception calculating cart ["
+								+ cart + "]", e);
+						ExceptionUtil.etailNonBusinessExceptionHandler(e);
+					}
+					catch(VoucherOperationException e)
+					{
+						LOG.error("Exception calculating cart ["
+								+ cart + "]", e);
+					}
+					catch(Exception e)
+					{
+						LOG.error("Exception calculating cart ["
+								+ cart + "]", e);
+						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+					}
 					Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 					((CheckoutController) widget.getWidgetController()).getBasketController()
 							.dispatchEvent(null, widget.getWidgetController(), data);
 					}
 			   
 			    }
+			
 
 				}
 
@@ -622,6 +668,19 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	public void setConfigurationService(ConfigurationService configurationService) {
 		this.configurationService = configurationService;
 	}
+
+
+	public MplVoucherService getMplVoucherService() {
+		return mplVoucherService;
+	}
+
+
+	public void setMplVoucherService(MplVoucherService mplVoucherService) {
+		this.mplVoucherService = mplVoucherService;
+	}
+	
+	
+	
 	
 	
 }
