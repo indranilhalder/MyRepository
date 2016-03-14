@@ -801,13 +801,20 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							ticket.setAlternateContactName(orderModel.getPickupPersonName());
 							ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
 
-							LOG.info(" ****** Before CRM Ticket Creatin *********");
-							ticketCreate.ticketCreationModeltoWsDTO(ticket);
-							LOG.info(" ******* After CRM Ticket Creatin ********");
-
-							LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
-							saveTicketDetailsInCommerce(ticket);
-							LOG.info("************ PickUpDetails Ticket Saved ********");
+							final String asyncEnabled = configurationService.getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.ASYNC_ENABLE).trim();
+							//create ticket only if async is not working
+							if (asyncEnabled.equalsIgnoreCase("N"))
+							{	LOG.debug(" ****** Before CRM Ticket Creatin *********");
+								ticketCreate.ticketCreationModeltoWsDTO(ticket);
+								LOG. debug(" ******* After CRM Ticket Creatin ********");
+							}
+							else
+							{
+								// CRM ticket Cron JOB data preparation
+								saveTicketDetailsInCommerce(ticket);
+							}
+						
 						}
 
 					}
