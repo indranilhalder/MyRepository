@@ -273,6 +273,13 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				LOG.debug("ticket create: Source>>>>> " + sendTicketRequestData.getSource());
 
 			}
+			if (null != sendTicketRequestData.getTicketSubType())
+			{
+				ticket.setTicketSubType(sendTicketRequestData.getTicketSubType());
+				LOG.debug("ticket create:TicketSubType>>>>> " + sendTicketRequestData.getTicketSubType());
+
+			}
+
 
 
 			final List<SendTicketLineItemData> sendTicketLineItemDataList = sendTicketRequestData.getLineItemDataList();
