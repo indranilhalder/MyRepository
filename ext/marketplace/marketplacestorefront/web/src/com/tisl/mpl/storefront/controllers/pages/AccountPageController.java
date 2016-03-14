@@ -1027,7 +1027,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
-			model.addAttribute(ModelAttributetConstants.FILTERDELIVERYMODE,getMplOrderFacade().filterDeliveryMode());
+			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE,getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
@@ -1106,7 +1106,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		return status;
 	}
 
-	@RequestMapping(value = RequestMappingUrlConstants.CREATE_TICKET_CRA_UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
+	@RequestMapping(value = RequestMappingUrlConstants.CREATE_TICKET_CRM_UPDATE_PICKUP_DETAILS, method = RequestMethod.POST)
 	@ResponseBody
 	@Post
 	public void crmTicketUpdetaPickUpDetails(@RequestParam(value = "orderId") final String orderId)
