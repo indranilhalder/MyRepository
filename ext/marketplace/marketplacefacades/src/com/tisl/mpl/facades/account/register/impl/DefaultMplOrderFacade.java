@@ -384,7 +384,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -435,9 +435,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -474,11 +474,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -512,11 +512,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -618,8 +618,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					if (null != orderEntryData.getConsignment()
 							&& null != orderEntryData.getConsignment().getStatus()
 							&& (orderEntryData.getConsignment().getStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment().getStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED)) && returnWindow <= actualReturnWindow)
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment()
+									.getStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED))
+							&& returnWindow <= actualReturnWindow)
 					{
 						orderEntryData.setItemReturnStatus(true);
 					}
@@ -805,16 +806,17 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 									.getString(MarketplacecommerceservicesConstants.ASYNC_ENABLE).trim();
 							//create ticket only if async is not working
 							if (asyncEnabled.equalsIgnoreCase("N"))
-							{	LOG.debug(" ****** Before CRM Ticket Creatin *********");
+							{
+								LOG.debug(" ****** Before CRM Ticket Creatin *********");
 								ticketCreate.ticketCreationModeltoWsDTO(ticket);
-								LOG. debug(" ******* After CRM Ticket Creatin ********");
+								LOG.debug(" ******* After CRM Ticket Creatin ********");
 							}
 							else
 							{
 								// CRM ticket Cron JOB data preparation
 								saveTicketDetailsInCommerce(ticket);
 							}
-						
+
 						}
 
 					}
@@ -918,11 +920,20 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							ticket.setAlternatePhoneNo(mainOrder.getPickupPersonMobile());
 						}
 
-						ticketCreate.ticketCreationModeltoWsDTO(ticket);
-
-						LOG.info("After CRM Call Saved To CRM Ticket Deatils into Model");
-						saveTicketDetailsInCommerce(ticket);
-						LOG.info("************ PickUpDetails Ticket Saved ********");
+						final String asyncEnabled = configurationService.getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.ASYNC_ENABLE).trim();
+						//create ticket only if async is not working
+						if (asyncEnabled.equalsIgnoreCase("N"))
+						{
+							LOG.debug(" ****** Before CRM Ticket Creatin *********");
+							ticketCreate.ticketCreationModeltoWsDTO(ticket);
+							LOG.debug(" ******* After CRM Ticket Creatin ********");
+						}
+						else
+						{
+							// CRM ticket Cron JOB data preparation
+							saveTicketDetailsInCommerce(ticket);
+						}
 					}
 				}
 			}
@@ -1047,12 +1058,15 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 		modelService.save(ticket);
 	}
+
 	/**
-	 *This method used for sorting  deliveryMode in sequence of HD ED CNC
-	 *@return List Of deliveryMode  
+	 * This method used for sorting deliveryMode in sequence of HD ED CNC
+	 *
+	 * @return List Of deliveryMode
 	 */
 	@Override
-	public List<String> filterDeliveryMode(){
+	public List<String> filterDeliveryMode()
+	{
 		final List<String> deliveryMode = new ArrayList<String>();
 		deliveryMode.add(MarketplaceFacadesConstants.HD);
 		deliveryMode.add(MarketplaceFacadesConstants.EXPRESS);
