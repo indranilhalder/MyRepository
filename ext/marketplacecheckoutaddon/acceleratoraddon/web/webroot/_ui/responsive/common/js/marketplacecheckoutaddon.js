@@ -1836,6 +1836,13 @@ $(".cvvHelp").popover({
 		    content: $("#cvvHelpContent").val()
 		});
 	}
+	$(".remove-coupon-button").popover({
+		html: 'true',
+	    placement: 'left',
+	    trigger: 'hover',
+	  //  title: 'Card Security Code',
+	    content: $("#couponRelContent").val()
+	});
 });
 
 
