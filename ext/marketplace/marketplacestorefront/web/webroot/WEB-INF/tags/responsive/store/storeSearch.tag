@@ -26,7 +26,7 @@
 							<div class="input-group">
 								<formElement:formInputBox idKey="storelocator-query" labelKey="storelocator.query" path="q" labelCSS="sr-only" inputCSS="form-control js-store-finder-search-input" mandatory="true"  placeholder="pickup.search.message" />
 								<span class="input-group-btn">
-									<button class="btn btn-primary" type="submit" data-search-empty="<spring:theme code="storelocator.error.no.results.subtitle" text="Check that you entered a valid postcode or place name."/>">
+									<button class="store-btn btn-primary" type="submit" data-search-empty="<spring:theme code="storelocator.error.no.results.subtitle" text="Check that you entered a valid postcode or place name."/>">
 										<!-- <span class="glyphicon glyphicon-search"></span> -->
 										<span>Find A Store</span>
 									</button>
@@ -35,20 +35,23 @@
 						</ycommerce:testId>
 					</form:form>
 				</div>
-				<div class="col-sm-6">
+			</div>
+			<div class="row">
+			 <div class="col-sm-6">
 					<ycommerce:testId code="storeFinder_nearMe_button">
 						<%-- <button id="findStoresNearMe" class="btn-link" type="button">
 							<spring:theme code="storeFinder.findStoresNearMe"/>
 						</button> --%>
-						 <a id="findStoresNearMe" disabled><spring:theme code="storeFinder.findStoresNearMe"/></a>
+						 <a id="findStoresNearMe" class="findStoresNearMe" disabled><spring:theme code="storeLocator.findStoresNearMe"/></a>
 					</ycommerce:testId>
 				
 				</div>
 				<div class="col-sm-6">
-				     <span><spring:theme code="Store Near"/></span>
-					 <label id="storeSearchTextValue"></label>
+				     <span class="storeNear"><spring:theme code="storeLocator.stores.Near"/></span>
+					 <label class="storeSearchTextValue" id="storeSearchTextValue"></label>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 </div>

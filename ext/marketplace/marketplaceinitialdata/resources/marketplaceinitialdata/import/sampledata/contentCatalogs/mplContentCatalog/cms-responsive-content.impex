@@ -400,6 +400,19 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section6Slot-Homepage;Section6;;Section6Slot-Homepage;;;
 
+## Home section 7
+#######Showcase ###################
+# Home Store Locator Components
+INSERT_UPDATE HomeStoreLocatorComponent;$contentCV[unique=true];uid[unique=true]; name;&componentRef;latitude;longitude;  
+;;HomeStoreLocatorComponent;Home Store Locator Component;HomeStoreLocatorComponent;21.0000;78.0000;;
+
+##Store Locator Component
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;Section7Slot-Homepage;HomeStoreLocatorComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section7Slot-Homepage;Section7;;Section7Slot-Homepage;;;
+
 #################    HOME PAGE END     #################
 
 ################ WOMEN CATEGORY LANDING PAGE ################
