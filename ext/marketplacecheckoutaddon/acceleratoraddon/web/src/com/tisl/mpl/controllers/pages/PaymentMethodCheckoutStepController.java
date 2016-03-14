@@ -209,12 +209,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		//set up payment page
 		setupAddPaymentPage(model);
-		Boolean selectPickupDetails = false;
-		
+		boolean selectPickupDetails = false;
+
 		//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 		//this is only when cart entry contains cnc delivery mode.
 		final CartModel cartModel = getCartService().getSessionCart();
-		for(final AbstractOrderEntryModel abstractOrderEntryModel :cartModel.getEntries())
+		for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
 		{
 			if (null != abstractOrderEntryModel.getDeliveryPointOfService())
 			{
@@ -223,7 +223,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if ((pickupPersonName == null) && (pickupPersonMobile == null))
 				{
 					selectPickupDetails = true;
-					model.addAttribute("selectPickupDetails", selectPickupDetails);
+					model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
 					return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 				}
 			}
@@ -521,6 +521,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 			codData = null;
 		}
+		else if (!mplCheckoutFacade.isCouponValid(cart))
+		{
+			getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+			codData = null;
+		}
 		else
 		{
 			if (cart != null && cart.getEntries() != null)
@@ -692,6 +697,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
 					redirectFlag = true;
 				}
+			}
+
+			if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				redirectFlag = true;
 			}
 
 			if (redirectFlag)
@@ -1991,6 +2002,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
 					redirectFlag = true;
 				}
+			}
+
+			if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				redirectFlag = true;
 			}
 
 			if (redirectFlag)
