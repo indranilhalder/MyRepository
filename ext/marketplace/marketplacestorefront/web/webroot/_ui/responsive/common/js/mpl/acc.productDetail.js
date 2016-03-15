@@ -766,12 +766,16 @@ $(function() {
 							$('#unsevisablePin,#unableprocessPin,#wrongPin')
 									.hide();
 							$("#emptyPin").show();
+							$('#addToCartButton').show();
+							$('#buyNowButton').attr("disabled",false);
 
 							return false;
 						} else if (!regExp.test(pin)) {
 							$('#unsevisablePin,#unableprocessPin,#emptyPin')
 									.hide();
 							$("#wrongPin").show();
+							$('#addToCartButton').show();
+							$('#buyNowButton').attr("disabled",false);
 
 							return false;
 						}
@@ -797,6 +801,7 @@ $(function() {
 											$('#addToCartButton-wrong').show();
 											$('#addToCartButton').hide();
 											$('#unsevisablePin').show();
+											$('#buyNowButton').attr("disabled",true);
 											return false;
 										}
 										// check if oms service is down
@@ -834,12 +839,14 @@ $(function() {
 																	.hide();
 															$("#outOfStockId")
 																	.show();
+															$("#buyNowButton").hide();
 															$("#stock").val(0);
 
 														} else {
 															$(
 																	"#addToCartButton")
 																	.show();
+															$("#buyNowButton").show();
 														}
 														if (pincodedata['cod'] == 'Y') {
 
@@ -909,9 +916,11 @@ $(function() {
 															$(
 																	'#addToCartButton-wrong')
 																	.show();
+															$('#buyNowButton').attr("disabled",true);
 														} else {
 															$("#outOfStockId")
 																	.show();
+															$("#buyNowButton").hide();
 														}
 														$('#addToCartButton')
 																.hide();
@@ -935,6 +944,7 @@ $(function() {
 															.show();
 												} else {
 													$("#outOfStockId").show();
+													$("#buyNowButton").hide();
 												}
 												// $('#addToCartButton-wrong').show();
 												$('#addToCartButton').hide();
@@ -1007,11 +1017,13 @@ function fetchPrice() {
 					if (allStockZero == 'Y' && data['othersSellersCount']>0) {
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
+						$("#buyNowButton").hide();
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 					}
 					else if (allStockZero == 'Y' && data['othersSellersCount']==0) {
 						$("#addToCartButton").hide();
+						$("#buyNowButton").hide();
 						$("#outOfStockId").show();
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
@@ -1063,6 +1075,7 @@ function fetchPrice() {
 				 $("#pdpPincodeCheck").hide();
 				 $("#pin").attr("disabled",true);
 				 $("#pdpPincodeCheckDList").show();
+				 $("#buyNowButton").attr("disabled",true);
 				 
 				 
 				
@@ -1896,3 +1909,7 @@ function loadDefaultWishListName_SizeGuide() {
 		}, 1500);
 	}
 	
+	$(document).on('click','#buyNow .js-add-to-cart',function(event){
+		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
+		ACC.product.sendAddToBag("addToCartForm",true);
+	});
