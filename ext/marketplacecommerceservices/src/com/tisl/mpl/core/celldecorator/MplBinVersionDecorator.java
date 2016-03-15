@@ -39,12 +39,10 @@ public class MplBinVersionDecorator implements CSVCellDecorator
 		String parsedValue = srcLine.get(Integer.valueOf(position));
 		final String input = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.BIN_DATA_UPLOAD_VERSION, MarketplacecommerceservicesConstants.EMPTY);
-
 		if (StringUtils.isNotEmpty(input))
 		{
 			parsedValue = input;
 		}
-
 		return parsedValue;
 	}
 }
