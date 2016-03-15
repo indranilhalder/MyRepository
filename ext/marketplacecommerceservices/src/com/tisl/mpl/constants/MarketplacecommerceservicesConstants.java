@@ -1389,6 +1389,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
 
+	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
+
 
 
 	private MarketplacecommerceservicesConstants()

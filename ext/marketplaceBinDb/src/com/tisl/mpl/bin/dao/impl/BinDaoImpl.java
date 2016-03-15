@@ -3,6 +3,8 @@
  */
 package com.tisl.mpl.bin.dao.impl;
 
+import de.hybris.platform.core.Registry;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -34,6 +36,14 @@ public class BinDaoImpl implements BinDao
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
+
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean(MarketplacecommerceservicesConstants.CONFIGURATION_SER,
+				ConfigurationService.class);
+	}
+
+
 	/**
 	 * This method fetches the details wrt a bin
 	 *
@@ -45,6 +55,8 @@ public class BinDaoImpl implements BinDao
 	public BinModel fetchBankFromBin(final String bin) throws EtailNonBusinessExceptions
 	{
 		BinModel binModel = null;
+		final String binVersion = getConfigurationService().getConfiguration().getString(
+				MarketplaceBinDbConstants.BIN_PRESENT_VERSION, MarketplacecommerceservicesConstants.EMPTY);
 		try
 		{
 			final String queryString = MarketplaceBinDbConstants.BANKFORBINQUERY;
@@ -52,6 +64,7 @@ public class BinDaoImpl implements BinDao
 			//forming the flexible search query
 			final FlexibleSearchQuery bankQuery = new FlexibleSearchQuery(queryString);
 			bankQuery.addQueryParameter(MarketplaceBinDbConstants.BINNO, bin);
+			bankQuery.addQueryParameter(MarketplaceBinDbConstants.BIN_VERSION, binVersion);
 			final List<BinModel> binList = getFlexibleSearchService().<BinModel> search(bankQuery).getResult();
 			if (CollectionUtils.isNotEmpty(binList))
 			{

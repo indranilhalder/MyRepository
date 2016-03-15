@@ -79,11 +79,11 @@
 		<property name="header">
 			<value>
 				# Insert BIN Data
-				INSERT Bin;BinNo[unique=true];CardBrand;bankName;CardType;Category;IssuingCountry;ISOA2;ISOA3;ISONumber;IssuingOrgWebsite;IssuingOrgPhoneNo
+				INSERT Bin;BinNo;CardBrand;bankName;CardType;Category;IssuingCountry;ISOA2;ISOA3;ISONumber;IssuingOrgWebsite;IssuingOrgPhoneNo;version[cellDecorator=com.tisl.mpl.core.celldecorator.MplBinVersionDecorator]
 			</value>
 		</property>
 		<property name="impexRow">
-			<value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}</value>
+			<value>;{+0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11}</value>
 		</property>
 	</bean> 
 	

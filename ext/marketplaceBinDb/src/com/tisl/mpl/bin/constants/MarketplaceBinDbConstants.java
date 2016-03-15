@@ -25,7 +25,7 @@ public final class MarketplaceBinDbConstants /* extends GeneratedMarketplaceBinD
 		//empty to avoid instantiating this constant class
 	}
 
-	public static final String BANKFORBINQUERY = "select {b:pk} from {Bin As b} WHERE {b.binno}=?bin";
+	public static final String BANKFORBINQUERY = "select {b:pk} from {Bin As b} WHERE {b.binno}=?bin and {b.version}=?version";
 	public static final String BINNO = "bin";
 	public static final String BINDAO = "binDao";
 	public static final String BINSERVICE = "binService";
@@ -43,5 +43,8 @@ public final class MarketplaceBinDbConstants /* extends GeneratedMarketplaceBinD
 
 	public static final String BANKDATAQUERY = "select distinct {b:bankName} from {Bin As b} WHERE upper({b.bankName}) NOT IN ({{select distinct upper({bank:bankName}) from {Bank As bank}}})"
 			.intern();
+
+	public static final String BIN_VERSION = "version".intern();
+	public static final String BIN_PRESENT_VERSION = "mpl.payment.bin.presentversion".intern();
 
 }

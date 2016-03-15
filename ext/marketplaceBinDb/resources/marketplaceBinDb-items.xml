@@ -81,6 +81,10 @@
 				<description>Issuing Organization phone no. of card against the BIN.</description>
 				<persistence type="property" />
 			</attribute>
+			<attribute qualifier="version" type="java.lang.String">
+				<description>Defines the Version of the Data</description>
+				<persistence type="property"  />
+			</attribute>
 		</attributes>
 	</itemtype>
 	
