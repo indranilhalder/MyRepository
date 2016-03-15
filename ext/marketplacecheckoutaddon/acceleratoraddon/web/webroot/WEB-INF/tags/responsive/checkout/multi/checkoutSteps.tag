@@ -17,27 +17,29 @@
 					<c:when test="${progressBarId eq checkoutStep.progressBarId}">
 						<c:set scope="page"  var="activeCheckoutStepNumber"  value="${checkoutStep.stepNumber}"/>
 						<li class="sign-in active">
-						<span>${checkoutStep.stepNumber}</span>
+						
 						<a href="${stepUrl}" class="step-head js-checkout-step active">
-							<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
+							<span>${checkoutStep.stepNumber}.</span>&nbsp;<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
 						</a>
 						</li>
 					</c:when>
 					<c:when test="${checkoutStep.stepNumber > activeCheckoutStepNumber}">
 					<li class="delivery">
-					<span>${checkoutStep.stepNumber}</span>
+					
 						<a href="${stepUrl}" class="step-head js-checkout-step ">
-							<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
+							<span>${checkoutStep.stepNumber}.</span>&nbsp;<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
 						</a>
 						</li>
 					</c:when>
 					<c:otherwise>
+					<!--  TISCR-304 start -->
 					<li class="payments step-done">
-					<span>${checkoutStep.stepNumber}</span>
+					
 						<a href="${stepUrl}" class="step-head js-checkout-step ">
-							<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
+							<span>${checkoutStep.stepNumber}.</span>&nbsp;<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
 						</a>
 						</li>
+							<!--  TISCR-304 end -->
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
