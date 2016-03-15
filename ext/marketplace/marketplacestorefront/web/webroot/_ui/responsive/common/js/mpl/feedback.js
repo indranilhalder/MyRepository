@@ -1296,4 +1296,7 @@ $(document).ready(function(){
 			$(document).on("click",'.select-size',function() {
 				$(this).toggleClass('active');
 			});
+			$(document).on("click",".mini-transient-bag",function(){
+				$(this).remove();
+			});
 });
