@@ -14,6 +14,7 @@ import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPaymentDao;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 
 
@@ -174,20 +176,31 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 	 * whose upper limit is greater than/equal to cartValue and also whose lower limit is less than/equal to cartValue
 	 *
 	 * @param cartValue
+	 * @param emiBankName
 	 * @return List<EMIBankModel>
 	 */
 	@Override
-	public List<EMIBankModel> getEMIBanks(final Double cartValue)
+	public List<EMIBankModel> getEMIBanks(final Double cartValue, final String emiBankName)
 	{
 		try
 		{
 			final long startTime = System.currentTimeMillis();
 			LOG.debug("Entering Dao getEMIBanks()=======" + System.currentTimeMillis());
-			final String queryString = MarketplacecommerceservicesConstants.EMIBANKSQUERY;
 
-			//forming the flexible search query
-			final FlexibleSearchQuery bankListQuery = new FlexibleSearchQuery(queryString);
-			bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLCARTVALUE, cartValue);
+			FlexibleSearchQuery bankListQuery = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.EMPTY);
+			if (emiBankName == null)
+			{
+				final String queryString = MarketplacecommerceservicesConstants.EMIBANKSQUERY;
+				bankListQuery = new FlexibleSearchQuery(queryString);
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLCARTVALUE, cartValue);
+			}
+			else
+			{
+				final String queryString = MarketplacecommerceservicesConstants.EMIBANK_FOR_BANKNAMES_QUERY;
+				bankListQuery = new FlexibleSearchQuery(queryString);
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.MPLCARTVALUE, cartValue);
+				bankListQuery.addQueryParameter(MarketplacecommerceservicesConstants.BANKNAME, emiBankName.toUpperCase());
+			}
 
 			//fetching EMI bank list from DB using flexible search query
 			final List<EMIBankModel> emiBankList = flexibleSearchService.<EMIBankModel> search(bankListQuery).getResult();
@@ -289,6 +302,42 @@ public class MplPaymentDaoImpl implements MplPaymentDao
 			throw new EtailNonBusinessExceptions(ex);
 		}
 	}
+
+	/*
+	 * @description : fetching bank model for a bank name TISPRO-179
+	 *
+	 * @param : bankName
+	 *
+	 * @return : BankModel
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+
+	@Override
+	public BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions
+	{
+		BankModel bankModel = null;
+		try
+		{
+			final String queryString = MarketplacecommerceservicesConstants.BANKMODELQUERY;
+			final FlexibleSearchQuery bankQuery = new FlexibleSearchQuery(queryString);
+			bankQuery.addQueryParameter(MarketplacecommerceservicesConstants.BANKNAME, bankName.toUpperCase());
+			final List<BankModel> bankModelList = flexibleSearchService.<BankModel> search(bankQuery).getResult();
+			if (CollectionUtils.isNotEmpty(bankModelList))
+			{
+				bankModel = bankModelList.get(0);
+			}
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception while fetching bank model :", ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		return bankModel;
+	}
+
+
+
 
 
 	/**

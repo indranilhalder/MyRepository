@@ -186,15 +186,15 @@ public class PromotionalProductsComponentController extends AbstractCMSComponent
 			categoryID = brandId;
 		}
 
-		LOG.debug(
-				"**************************" + categoryID + "***********************************************************" + offerId);
+		LOG.debug("**************************" + categoryID + "***********************************************************"
+				+ offerId + "****************" + identifier);
 
 		final PageableData pageableData = createPageableData(page, getSearchPageSize(), null, ShowMode.All);
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
 		searchState.setQuery(searchQueryData);
 		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = searchFacade
-				.dropDownSearchForOffer(searchState, offerId, pageableData, categoryID, "Web");
+				.dropDownSearchForOffer(searchState, identifier, pageableData, categoryID, "Web");
 
 
 		final List<ProductData> promoProductDataList = searchPageData.getResults();

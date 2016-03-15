@@ -138,6 +138,7 @@ public class LoginPageController extends AbstractLoginPageController
 	protected String getDefaultLoginPage(boolean loginError, final HttpSession session, final Model model)
 			throws CMSItemNotFoundException
 	{
+		String returnPage = null;
 		try
 		{
 			final LoginForm loginForm = new LoginForm();
@@ -182,23 +183,24 @@ public class LoginPageController extends AbstractLoginPageController
 				model.addAttribute(ModelAttributetConstants.COUNT, sessionService.getAttribute(ModelAttributetConstants.COUNT));
 			}
 			storeContentPageTitleInModel(model, MessageConstants.LOGIN_PAGE_TITLE);
-			return getView();
+			returnPage = getView();
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+			returnPage = frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		return returnPage;
 	}
 
 	@Override
@@ -248,8 +250,10 @@ public class LoginPageController extends AbstractLoginPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response, final HttpSession session)
 			throws CMSItemNotFoundException
 	{
+		String returnPage = null;
 		try
 		{
+
 			if (!StringUtils.isBlank(affiliateId))
 			{
 				final ExtRegisterForm form = new ExtRegisterForm();
@@ -281,23 +285,24 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.Y_CAPS_VAL);
 			}
-			return getDefaultLoginPage(false, session, model);
+			returnPage = getDefaultLoginPage(false, session, model);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+			returnPage = frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		return returnPage;
 	}
 
 	/**
@@ -343,8 +348,10 @@ public class LoginPageController extends AbstractLoginPageController
 			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	{
+		String returnPage = null;
 		try
 		{
+
 			//Fix for defect TISEE-3986 : handling special character like #
 			final String password = java.net.URLDecoder.decode(request.getParameter("pwd"), "UTF-8");
 			final String rePassword = java.net.URLDecoder.decode(request.getParameter("checkPwd"), "UTF-8");
@@ -353,23 +360,24 @@ public class LoginPageController extends AbstractLoginPageController
 
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
-			return processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
+			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
+			returnPage = frontEndErrorHelper.callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
+		return returnPage;
 	}
 
 	/**
@@ -393,6 +401,7 @@ public class LoginPageController extends AbstractLoginPageController
 			final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes redirectModel)
 			throws CMSItemNotFoundException
 	{
+		String returnPage = null;
 		if (bindingResult.hasErrors())
 		{
 			model.addAttribute(form);
@@ -400,62 +409,67 @@ public class LoginPageController extends AbstractLoginPageController
 			model.addAttribute(new GuestForm());
 			model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
 			GlobalMessages.addErrorMessage(model, MessageConstants.FORM_GLOBAL_ERROR);
-			return handleRegistrationError(model);
+			returnPage = handleRegistrationError(model);
 		}
-
-		final ExtRegisterData data = new ExtRegisterData();
-		data.setLogin(form.getEmail().toLowerCase());
-		data.setPassword(form.getPwd());
-		data.setAffiliateId(form.getAffiliateId());
-		try
+		else
 		{
-			if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
-			{
-				getRegisterCustomerFacade().register(data);
-				// To avoid multiple time decoding of password containing '%' specially
-				final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
-				form.setPwd(password);
-				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
-				//	updating the isRegistered flag in friends model (in case of valid affiliated id)
-				if (null != form.getAffiliateId() && !StringUtils.isBlank(form.getAffiliateId()))
+			final ExtRegisterData data = new ExtRegisterData();
+			data.setLogin(form.getEmail().toLowerCase());
+			data.setPassword(form.getPwd());
+			data.setAffiliateId(form.getAffiliateId());
+			try
+			{
+				if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 				{
-					final FriendsInviteData friendsData = new FriendsInviteData();
-					friendsData.setAffiliateId(form.getAffiliateId());
-					friendsData.setFriendsEmail(form.getEmail());
-					friendsInviteFacade.updateFriendsModel(friendsData);
-				}
-				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
-			}
-			else
-			{
-				rePopulateLoginPageWithDuplicateUidErrorMsg(model, form, bindingResult);
-				return handleRegistrationError(model);
-			}
-		}
-		//		catch (final DuplicateUidException e)
-		//		{
-		//			rePopulateLoginPageWithDuplicateUidErrorMsg(model, form, bindingResult);
-		//			return handleRegistrationError(model);
-		//		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-		}
+					getRegisterCustomerFacade().register(data);
+					// To avoid multiple time decoding of password containing '%' specially
+					final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
+					form.setPwd(password);
+					getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
-		model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
-		return REDIRECT_PREFIX + getSuccessRedirect(request, response);
+					//	updating the isRegistered flag in friends model (in case of valid affiliated id)
+					if (null != form.getAffiliateId() && !StringUtils.isBlank(form.getAffiliateId()))
+					{
+						final FriendsInviteData friendsData = new FriendsInviteData();
+						friendsData.setAffiliateId(form.getAffiliateId());
+						friendsData.setFriendsEmail(form.getEmail());
+						friendsInviteFacade.updateFriendsModel(friendsData);
+					}
+					model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
+				}
+				else
+				{
+					rePopulateLoginPageWithDuplicateUidErrorMsg(model, form, bindingResult);
+					returnPage = handleRegistrationError(model);
+				}
+			}
+
+			//		catch (final DuplicateUidException e)
+			//		{
+			//			rePopulateLoginPageWithDuplicateUidErrorMsg(model, form, bindingResult);
+			//			return handleRegistrationError(model);
+			//		}
+			catch (final EtailBusinessExceptions e)
+			{
+				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+				returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			}
+			catch (final EtailNonBusinessExceptions e)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+				returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			}
+			catch (final Exception e)
+			{
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+				returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			}
+
+			model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
+			returnPage = REDIRECT_PREFIX + getSuccessRedirect(request, response);
+		}
+		return returnPage;
 	}
 
 	/**
