@@ -466,6 +466,8 @@
 			type="java.util.Date"></property>
 		<property name="imeiDetails"
 			type="de.hybris.platform.commercefacades.order.data.ImeiDetailData"></property>
+			<property name="productPromoCode"
+			type="String"></property>
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">

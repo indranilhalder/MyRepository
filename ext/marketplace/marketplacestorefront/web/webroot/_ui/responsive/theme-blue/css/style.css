@@ -36503,9 +36503,9 @@ display:block;
     box-shadow: -1px 4px 7px 1px rgba(0,0,0,0.3);}
             header .content .right > ul > li.transient-mini-bag .mini-transient-bag > ul > li.view-bag-li{
             border-top:none !important;
-            width: calc(100%  -40px);
-            width: -webkit-calc(100% - -40px);
-   			 margin-left: -20px;
+            width: calc(100%  - -30px);
+   			     width: -webkit-calc(100% - -30px);
+    margin-left: -15px;
             }
              header .content .right > ul > li.transient-mini-bag .mini-transient-bag *{
              color:#fff;}
@@ -36525,21 +36525,30 @@ display:block;
     border-width: 9px;
 }
             header .content .right > ul > li.transient-mini-bag .mini-transient-bag .item {
-              padding-left: 120px;
-              padding-bottom: 5px;
+/*               padding-left: 120px; */
+              padding-bottom: 10px;
               position: relative;
               }
-              header .content .right > ul > li.transient-mini-bag .mini-transient-bag .item .product-img {
-                position: absolute;
-                left: 0;
-                width: 110px; }
-                header .content .right > ul > li.transient-mini-bag .mini-transient-bag .item .product-img img {
+
+header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item .product-img
+	{
+	position: relative;
+	left: 0;
+	width: 110px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+header .content .right > ul > li.transient-mini-bag .mini-transient-bag .item .product-img img {
                   width: 100%;
                   max-height: 155px;
                   height: auto; }
               header .content .right > ul > li.transient-mini-bag .mini-transient-bag .item .product {
-                line-height: 20px;
-                    width: 135px; }
+                    line-height: 20px;
+				    width: 160px;
+				    display: inline-block;
+				    padding-left: 20px;
+				    vertical-align: top;}
                 header .content .right > ul > li.transient-mini-bag .mini-transient-bag .item .product .product-name a{
                   font-size: 14px;
                   font-weight:600; }
@@ -36617,11 +36626,11 @@ display:block;
                     -moz-transition: color 0.15s, background 0.15s;
                     transition: color 0.15s, background 0.15s; }
                     .transient-offer{
-                    background-color: #ffb810;
-						    padding: 2px 4px;
-						    text-transform: uppercase;
-						    display:inline;
-						    line-height:normal;}
+                        background-color: #ffb810;
+					    padding: 2px 4px;
+					    text-transform: uppercase;
+					    line-height: normal;
+					    display: inline-block;}
 						    span.mini-cart-close {
 						    position: absolute;
 						        top: -5px;
@@ -36638,5 +36647,8 @@ display:block;
               transform: rotate(45deg);
 							}
                     
-                    
+                   .mini-transient-bag .addedText {
+                    	    display: inline-block;
+   							margin-bottom: 10px;
+                    }
                    /*mini transient bag css changes ends*/ 
