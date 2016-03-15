@@ -34,20 +34,24 @@ public class MplVariantComparator implements Comparator<PcmProductVariantModel>
 	{
 		String value0 = null;
 		String value1 = null;
+		int returnValue = 0;
 
 		if (variantType != null && variantType.equalsIgnoreCase("size"))
 		{
 			value0 = variantProductModel1.getSize();
 			value1 = variantProductModel2.getSize();
-			return getSizeCompareValue(value0, value1);
+			returnValue = getSizeCompareValue(value0, value1);
 		}
-		if (variantType != null && variantType.equalsIgnoreCase("capacity"))
+		else
 		{
-			value0 = variantProductModel1.getCapacity();
-			value1 = variantProductModel2.getCapacity();
-			return getCapacityCompareValue(value0, value1);
+			if (variantType != null && variantType.equalsIgnoreCase("capacity"))
+			{
+				value0 = variantProductModel1.getCapacity();
+				value1 = variantProductModel2.getCapacity();
+				returnValue = getCapacityCompareValue(value0, value1);
+			}
 		}
-		return 0;
+		return returnValue;
 	}
 
 	public int getCapacityCompareValue(final String value0, final String value1)
@@ -55,22 +59,25 @@ public class MplVariantComparator implements Comparator<PcmProductVariantModel>
 		//try numeric compare - if doesn't work then try size system
 		final boolean value1IsNumber = isNumber(value0);
 		final boolean value2IsNumber = isNumber(value1);
+		int returnValue = 0;
 		if (value1IsNumber && value2IsNumber)
 		{
-			return numericCompare(value0, value1);
+			returnValue = numericCompare(value0, value1);
 		}
 		else
 		{
 			final double modifiedValue1 = Double.parseDouble(value0.replaceAll(MplConstants.DOUBLE, ""));
 			final double modifiedValue2 = Double.parseDouble(value1.replaceAll(MplConstants.DOUBLE, ""));
 			//values out of size-systems are placed as last thus so big number.
-			return Double.compare(modifiedValue1, modifiedValue2);
+			returnValue = Double.compare(modifiedValue1, modifiedValue2);
 		}
 		//no luck - assume values are equal
+		return returnValue;
 	}
 
 	public int getSizeCompareValue(final String value0, final String value1)
 	{
+
 		if (value0 == null || value1 == null)
 		{
 			return 0;

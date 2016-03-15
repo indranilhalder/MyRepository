@@ -550,6 +550,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setCreationtime(date);
 			paymentTransactionModel.setCurrency(cart.getCurrency());
 			paymentTransactionModel.setEntries(paymentTransactionEntryList);
+			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
 			paymentTransactionModel.setOrder(cart);
 			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
 			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
