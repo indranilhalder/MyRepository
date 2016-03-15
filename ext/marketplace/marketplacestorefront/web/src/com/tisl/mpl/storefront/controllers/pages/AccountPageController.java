@@ -1465,6 +1465,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		try
 		{
 			ReturnPincodeCheckForm returnPincodeCheckForm = new ReturnPincodeCheckForm();
+			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
+			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
+			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
 			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			AddressData address = orderDetails.getDeliveryAddress();
 			storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
@@ -1499,6 +1502,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		final String errorMsg = returnItemFormValidator.returnValidate(returnAddress);
+		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
+		final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
+		model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataListNew);
 		if (!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 		{
 			GlobalMessages.addErrorMessage(model, errorMsg);
