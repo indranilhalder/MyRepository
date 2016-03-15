@@ -355,12 +355,12 @@ sendAddToBag : function(formId, isBuyNow) {
 									: isSuccess = false;
 							
 							
-							$("#" + formId + "TitleSuccess").html("");
-							$("#" + formId + "TitleSuccess").html("<font color='#00CBE9'>"+ $('#addtobag').text()+ "</font>");
-							$("#" + formId + "TitleSuccess").show().fadeOut(5000);
+							//$("#" + formId + "TitleSuccess").html("");
+							//$("#" + formId + "TitleSuccess").html("<font color='#00CBE9'>"+ $('#addtobag').text()+ "</font>");
+							//$("#" + formId + "TitleSuccess").show().fadeOut(5000);
 							$("#" + formId + "Title.sellerAddToBagTitle").show().fadeOut(5000);
 							$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
-
+							ACC.product.showTransientCart(productCode,quantity);
 							// ACC.product.displayAddToCart(data,formId,false);
 							$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 						} else if (data == "reachedMaxLimit") {
