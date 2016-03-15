@@ -250,6 +250,48 @@
 	            return false;
 	        }
 	    }
+		
+	    function checkWhiteSpace(text) {
+	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
+	        var number = new RegExp(/\d/g);
+	        if(letters.test(text))
+		        {
+		        	if(number.test(text))
+			        {
+			            return false;
+			        }
+			        else
+			        {
+			            var enteredText = text.split(" ");
+	                    var length = enteredText.length;
+	                    var count = 0;
+	                    var countArray = new Array();
+	                    for(var i=0;i<=length-1;i++) {
+	                        if(enteredText[i]==" " || enteredText[i]=="" || enteredText[i]==null) {
+	                            countArray[i] = "space";
+	                            count++;
+	                        } else {
+	                            countArray[i] = "text";
+	                        }
+	                    }
+	                    var lengthC = countArray.length;
+	                    for(var i=0;i<=lengthC-1;i++) {
+	                        //console.log(countArray[i+1]);
+	                        if(countArray[i] == "space" && countArray[i+1] == "space" || countArray[i] == "text" && countArray[i+1] == "space" && countArray[i+2] == "text" || countArray[i] == "text" && countArray[i+1] == "space") {
+	                            return false;
+	                            break;
+	                        } else if (i == lengthC-1) {
+	                        	return true;
+	                        	break;
+	                        }   
+	                    }
+			        }
+		        }
+		        else
+		        {
+		            return false;
+		        }
+	    }
 	
 		$(document).ready(function(){
 			$(".pickUpPersonAjax").hide();
@@ -297,11 +339,12 @@
 				var isString = isNaN($('#pickupPersonMobile').val());
 				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
 				var statusName = allLetter(pickUpPersonNam);
+				var nameCheck = checkWhiteSpace($("#pickupPersonName").val());
 				if($('#pickupPersonName').val().length <= "3"){ 
 					$(".pickupPersonNameError").show();
 					$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
 				}
-				else if(!(/^\S{3,}$/.test(pickupPersonName))){
+				else if(nameCheck == false){
 					   $(".pickupPersonNameError").show();
 					   $(".pickupPersonNameError").text("Spaces cannot be allowed");
 				 }
@@ -464,18 +507,55 @@
 								});
 							</script>
 						</li>
+							<!-- Freebie Product Details -->
+							
+								 <c:if test="${not empty poses.product.freebieProducts}">
+									<c:forEach items="${poses.product.freebieProducts}" var="freebieProds">
+										<%-- ${freebieProds.associateProductData.code}
+										${freebieProds.associateProductData} --%>
+										<%-- ${freebieProds.product.code}
+										${freebieProds.sellerName}
+										${freebieProds.qty} --%>
+										<li class="item delivery_options">
+											<ul>
+												<li>
+													<div>
+														<div class="thumb product-img">
+															<a href="${freebieProds.product.url}"><product:productPrimaryImage
+																	product="${freebieProds.product}" format="thumbnail" /></a>
+														</div>
+														<div class="details product">
+															<h3 class="product-brand-name">
+																<a href="">${freebieProds.product.brand.brandname}</a>
+															</h3>
+															<ycommerce:testId code="cart_product_name">
+																<a href="${freebieProds.product.url}"><div
+																		class="name product-name">${freebieProds.product.name}</div></a>
+															</ycommerce:testId>
+															<div class="freebieId"><b>Product ID:</b> ${freebieProds.product.code}</div>
+															<div class="sellerName"><b>Seller:</b> ${freebieProds.sellerName}</div>
+															<div class="freebieQty"><b>Qty:</b> ${freebieProds.qty}</div>
+														</div>
+													</div>
+												</li>
+											</ul>
+										</li>
+										
+								</c:forEach>
+							</c:if>
+							<!-- /. Freebie Product Details -->
 							<li class="item delivery_options item${status1.index}">
 								<ul>
 										<li>
 											<div>
 												<div class="thumb product-img">
-													<a href="${poses.product.url}"><product:productPrimaryImage
+													<a class="productUrlName" href="${poses.product.url}"><product:productPrimaryImage
 															product="${poses.product}" format="thumbnail" /></a>
 												</div>
 												<div class="details product" >
-													<h3 class="product-brand-name"><a href="">${poses.product.brand.brandname}</a></h3>
+													<h3 class="product-brand-name">${poses.product.brand.brandname}</h3>
 													<ycommerce:testId code="cart_product_name">
-														<a href="${poses.product.url}"><div class="name product-name">${poses.product.name}</div></a>
+														<a class="productUrlName" href="${poses.product.url}"><div class="name product-name">${poses.product.name}</div></a>
 													</ycommerce:testId>
 																									<!-- start TISEE-4631 TISUAT-4229 -->
 												
@@ -870,11 +950,11 @@
      				 <div class="col-md-3">
       					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
        					 <div class="col-md-3">
-        					<input type="text" id="pickupPersonName" name="pickupPersonName" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
+        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
         					<div class="error_txt pickupPersonNameError"></div>
             			</div>
             			<div class="col-md-3">
-							<input type="text" id="pickupPersonMobile" class="inputmobile" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
+							<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
 							<div class="error_txt pickupPersonMobileError"></div>
         			    </div>
 			             <div class="col-md-3">
@@ -929,6 +1009,9 @@
 						$(this).css({"overflow-y" : "scroll"});
 					}
 				});
+				var productUrlNew = $(".productUrlName").attr("href");
+				var latestProductUrl = ACC.config.encodedContextPath + productUrlNew;
+				$(".productUrlName").attr("href", latestProductUrl);
 					
 			});
 		</script>
