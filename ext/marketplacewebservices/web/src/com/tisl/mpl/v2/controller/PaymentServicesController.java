@@ -3,11 +3,13 @@
  */
 package com.tisl.mpl.v2.controller;
 
+import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -85,6 +87,10 @@ public class PaymentServicesController extends BaseController
 	private ModelService modelService;
 	@Autowired
 	private ExtendedUserService extUserService;
+	
+	@Autowired
+	private Converter<CartModel, CartData> mplExtendedCartConverter;
+
 	private static final String CUSTOMER = "ROLE_CUSTOMERGROUP";
 	private static final String CUSTOMERMANAGER = "ROLE_CUSTOMERMANAGERGROUP";
 	private static final String TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
@@ -769,7 +775,11 @@ public class PaymentServicesController extends BaseController
 		PaymentServiceWsData paymentModesData = new PaymentServiceWsData();
 		try
 		{
-			final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes("mpl");
+			CartModel cart=null;
+			cart=mplPaymentWebFacade.findCartValues(cartId);
+			final CartData cartData=getMplExtendedCartConverter().convert(cart);
+					
+			final Map<String, Boolean> paymentMode = getMplPaymentFacade().getPaymentModes(MarketplacewebservicesConstants.MPLSTORE, true,cartData);
 			paymentModesData = getMplPaymentWebFacade().potentialPromotionOnPaymentMode(userId, cartId);
 			paymentModesData.setPaymentModes(paymentMode);
 		}
@@ -1025,6 +1035,22 @@ public class PaymentServicesController extends BaseController
 	public void setExtUserService(final ExtendedUserService extUserService)
 	{
 		this.extUserService = extUserService;
+	}
+
+	/**
+	 * @return the mplExtendedCartConverter
+	 */
+	public Converter<CartModel, CartData> getMplExtendedCartConverter()
+	{
+		return mplExtendedCartConverter;
+	}
+
+	/**
+	 * @param mplExtendedCartConverter the mplExtendedCartConverter to set
+	 */
+	public void setMplExtendedCartConverter(Converter<CartModel, CartData> mplExtendedCartConverter)
+	{
+		this.mplExtendedCartConverter = mplExtendedCartConverter;
 	}
 
 }
