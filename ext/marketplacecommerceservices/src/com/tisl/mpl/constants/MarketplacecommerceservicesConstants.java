@@ -1385,7 +1385,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String BANKNAME = "bankName";
 	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
-
+	public static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
 
 	private MarketplacecommerceservicesConstants()
 	{

@@ -351,11 +351,11 @@ addToBagFromWl: function(ussid, addedToCart) {
 				$("#"+formId+"TitleSuccess").html("");
 				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
 
-				$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+				//$("#"+formId+"TitleSuccess").show().fadeOut(5000);
 
 				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
 				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
-
+				ACC.product.showTransientCart(productCode,quantity);
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
@@ -806,5 +806,50 @@ addToBagFromWl: function(ussid, addedToCart) {
 			}
 		});
 	});
+	},
+	showTransientCart: function (productCode,quantity)
+	{
+		var dataString="productCode="+productCode+"&quantity="+quantity;
+		//AJAX CALL
+		$
+		.ajax({
+			type : "GET",
+			dataType : "json",
+			url : ACC.config.encodedContextPath
+					+ "/p/showTransientCart",
+			data:dataString,
+			success : function(response) {
+				
+				var transientCartHtml="<div class='mini-transient-bag' ><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-brand-name'><a href='"+response.productUrl+"'>"+response.brand+"</a></h3><h3 class='product-name'><a href='"+response.productUrl+"'>"+response.productTitle+"</a></h3><p class='item-info'></p></div><ul class='item-edit-details'><li>Qty:"+response.quantity+"</li><li>Size:&nbsp;2years</li><li><a href='#nogo' class='removeFromCart' data-entry-no='0' data-ussid='123653098765485130011719'>Remove</a></li></ul></li><li class='price'><span class='priceFormat'>"+response.productPrice+"</span></li></ul></li><li><a href='/store/mpl/en/cart' class='go-to-bag mini-cart-checkout-button'>Go To My Bag</a></li></ul></div>";
+				$('.bag').append(transientCartHtml);
+				$('header .content .right > ul > li.bag').css({'z-index':'4','border-left':'2px solid #f0f4f5'});
+				$('.mini-transient-bag').fadeOut(3000);
+				/*$('.about-one.showcase-section').remove();
+				defaultHtml = "<div class='about-one showcase-section'>";
+				if (typeof response.bannerImageUrl !=="undefined") {
+					defaultHtml +="<div class='desc-section'>";
+					if(typeof response.bannerUrl !=="undefined"){
+						defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"'>";
+					}
+					defaultHtml += "<img src='"+ response.bannerImageUrl
+					+ "'></img>";	
+					if(typeof response.bannerUrl !=="undefined"){
+						defaultHtml+="</a>";
+					}
+					defaultHtml +="</div>";
+				}*/
+				
+			
+				
+
+			},
+			error : function() {
+				console.log("Error while getting transient cart");
+				
+			}
+		});
+
+//END AJAX
+		
 	}
 };
