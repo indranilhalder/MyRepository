@@ -7218,7 +7218,8 @@ text-transform: uppercase;
     @media (min-width: 650px) {
       .checkout.wrapper .product-block.addresses li.item {
         width: 49%;
-        float: left;
+        /* float: left; */
+        vertical-align: top;
         padding: 10px;
         padding-bottom: 20px; } }
     .checkout.wrapper .product-block.addresses li.item input[type="radio"] + label {
@@ -17958,7 +17959,7 @@ header .content .bottom .search .select-list select
     padding-top: 26px;
     font-size: 12px;
     font-weight: 500;
-    height: 31px;
+    height: 32px;
     width: 112px;
     -webkit-transition: border 0.3s, z-index 0s 0.3s;
     -moz-transition: border 0.3s, z-index 0s 0.3s;
@@ -17973,7 +17974,7 @@ header .content .bottom .search .select-list select
       width: 100%;
       width: -webkit-calc(100% - -2px);
       width: calc(100% - -2px);
-      line-height: 30px;
+      line-height: 34px;
       padding-left: 20px;
       font-size: 12px;
       margin: -2px -1px -2px;
@@ -17981,7 +17982,7 @@ header .content .bottom .search .select-list select
       
      #variantForm .select-size > .selected:after {
         position: absolute;
-        top: 12px;
+        top: 15px;
         right: 8px;
         content: "";
         height: 0;
@@ -18000,9 +18001,9 @@ header .content .bottom .search .select-list select
       border-left: 1px solid transparent;
       border-bottom: 1px solid transparent;
       cursor: pointer;
-      -webkit-transition: max-height 0.3s, border 0.15s 0.3s;
+      /* -webkit-transition: max-height 0.3s, border 0.15s 0.3s;
       -moz-transition: max-height 0.3s, border 0.15s 0.3s;
-      transition: max-height 0.3s, border 0.15s 0.3s; }
+      transition: max-height 0.3s, border 0.15s 0.3s; */ }
      #variantForm .select-size li {
       width: -webkit-calc(100% - -4px);
       width: calc(100% - -4px);
@@ -18017,15 +18018,15 @@ header .content .bottom .search .select-list select
        #variantForm .select-size li:hover {
         font-weight: 600; }
      
-     #variantForm .select-size:hover {
+     #variantForm .select-size.active {
       border-color: #DFD1D5;
       z-index: 1;
       -webkit-transition: border 0.15s;
       -moz-transition: border 0.15s;
       transition: border 0.15s; }
-       #variantForm .select-size:hover > .selected {
+       #variantForm .select-size.active > .selected {
         border-bottom: 1px solid #DFD1D5; }
-       #variantForm .select-size:hover ul {
+       #variantForm .select-size.active ul {
         max-height: 500px;
         border-color: #DFD1D5;
         -webkit-transition: max-height 0.15s, border 0s;
@@ -19306,7 +19307,7 @@ header .content .compact-toggle {
 header.compact .content .compact-toggle {
   opacity: 1;
 }
-.brand-microsite header .content .compact-toggle {
+body.template-pages-layout-micrositePage1 header .content .compact-toggle {
   opacity: 1;
 }
 header .content .compact-toggle.open:before{
@@ -19325,7 +19326,7 @@ header .content .compact-toggle:before {
   position: relative;
   left: 50%;
   margin-left: -4px;
-  top: 30%;
+  top: 0px;
   height: 0;
   width: 0;
   border-left: 4px solid transparent;
@@ -19364,16 +19365,16 @@ header .banner .toggle.mobile {
    border: none;
 }
 
-.brand-microsite header.brand-header .select-view{
+body.template-pages-layout-micrositePage1 header.brand-header .select-view{
     background-color:#000;
     color:#fff;
     border-color:#fff;
 }
-.brand-microsite header .content .bottom .brand-logo .simple-banner-component{	
+body.template-pages-layout-micrositePage1 header .content .bottom .brand-logo .simple-banner-component{	
 	 padding-top:10px; 
 }
 }
-.brand-microsite header .content .bottom .brand-logo .simple-banner-component{
+body.template-pages-layout-micrositePage1 header .content .bottom .brand-logo .simple-banner-component{
 	width:auto;
 }
 
@@ -19382,7 +19383,7 @@ header .banner .toggle.mobile {
 /* header .banner .toggle.desktop {
   display: none;
 } */
- .brand-microsite header > .content .bottom .marketplace {
+ body.template-pages-layout-micrositePage1 header > .content .bottom .marketplace {
       height: 60px;
  }
   header > .content .bottom .search form input{
@@ -19396,7 +19397,7 @@ header.brand-header .content .bottom nav>ul>li>ul>li>ul {
 header > .content .top {
   z-index: 105;
 }
-.brand-microsite header .content .compact-toggle {
+body.template-pages-layout-micrositePage1 header .content .compact-toggle {
   opacity: 1;
 }
 header .content .compact-toggle.open:before{
@@ -19481,7 +19482,7 @@ header > .content .compact-toggle:before {
   position: relative;
   left: 50%;
   margin-left: -4px;
-  top: 30%;
+  top: 0px;
   height: 0;
   width: 0;
   border-left: 4px solid transparent;
@@ -19633,7 +19634,7 @@ header .content .marketplace.compact {
 }
 
 }
-.brand-microsite .breadcrumbs{
+body.template-pages-layout-micrositePage1 .breadcrumbs{
 display:none;
 }
 .brand-microsite .brand-content-grid h3{
@@ -30291,12 +30292,23 @@ li#ratingDiv {
     padding: 0 10px;
     margin:0;
 }
+#variantForm .select-size>span {
+	cursor: pointer;
+} 
+#variantForm .select-size li, #variantForm .select-size li a  {
+	cursor: default;
+}
 #variantForm .select-size li:hover{
  	background-color:rgb(30,144,255);
+ 	color:#fff;
+ 	transition: color 0s;
+ }
+ #variantForm .select-size li:hover a{
  	color:#fff;
  }
  #variantForm .select-size li a {
      display: block;
+     transition: color 0s;
  }
  #variantForm .select-size li a:hover {
    color:white;
