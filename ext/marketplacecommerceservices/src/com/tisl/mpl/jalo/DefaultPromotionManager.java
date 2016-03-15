@@ -1017,14 +1017,16 @@ public class DefaultPromotionManager extends PromotionsManager
 						{
 							if (seller.getSellerID().equalsIgnoreCase(sellerID))
 							{
-								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(seller.getSellerArticleSKU());
-								for (final StockLevelModel stockModel : stockData)
-								{
-									if (stockModel.getAvailable() > 0)
-									{
-										giftProductDetails.put(seller.getSellerArticleSKU(), product);
-									}
-								}
+								//TISSIT-1906---Stock check removal for freebie Items
+								giftProductDetails.put(seller.getSellerArticleSKU(), product);
+								//								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(seller.getSellerArticleSKU());
+								//								for (final StockLevelModel stockModel : stockData)
+								//								{
+								//									if (stockModel.getAvailable() > 0)
+								//									{
+								//										giftProductDetails.put(seller.getSellerArticleSKU(), product);
+								//									}
+								//								}
 							}
 						}
 					}
@@ -2506,14 +2508,16 @@ public class DefaultPromotionManager extends PromotionsManager
 						{
 							if (sellerDetails.contains(seller.getSellerID()))
 							{
-								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(seller.getSellerArticleSKU());
-								for (final StockLevelModel stockModel : stockData)
-								{
-									if (stockModel.getAvailable() > 0)
-									{
-										giftProductDetails.put(seller.getSellerArticleSKU(), product);
-									}
-								}
+								//TISSIT-1906
+								giftProductDetails.put(seller.getSellerArticleSKU(), product);
+								//								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(seller.getSellerArticleSKU());
+								//								for (final StockLevelModel stockModel : stockData)
+								//								{
+								//									if (stockModel.getAvailable() > 0)
+								//									{
+								//										giftProductDetails.put(seller.getSellerArticleSKU(), product);
+								//									}
+								//								}
 							}
 						}
 					}

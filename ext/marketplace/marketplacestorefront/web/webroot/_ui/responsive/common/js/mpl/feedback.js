@@ -449,7 +449,7 @@ $(document).ready(function(){
 			 
 	 /*---Start of Micro site brand header toggle functionality ---*/
 			 
-			 if($('body>div').hasClass('brand-microsite')){
+			 if($('body').hasClass('template-pages-layout-micrositePage1')){
 	
 				 $(this).find('header').first().addClass('compact');
 				 $(this).find('header').first().find('.compact-toggle').click(function(){
@@ -1286,4 +1286,9 @@ $(document).ready(function(){
 			$('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').parents().find('.listing.wrapper').css('height','0px');
 			}
 		
+			
+
+			$(document).on("click",'.select-size',function() {
+				$(this).toggleClass('active');
+			});
 });

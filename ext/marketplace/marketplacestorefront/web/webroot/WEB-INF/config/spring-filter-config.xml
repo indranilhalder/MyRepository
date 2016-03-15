@@ -165,7 +165,7 @@
 
 	<alias name="defaultSessionCookieGenerator" alias="sessionCookieGenerator"/>
 	<bean id="defaultSessionCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.EnhancedCookieGenerator" >
-		<property name="cookieSecure" value="false"/>
+		<property name="cookieSecure" value="true"/>
 		<property name="cookieName" value="JSESSIONID"/>
 		<property name="cookieMaxAge" value="-1"/>
 		<property name="useDefaultPath" value="false"/>

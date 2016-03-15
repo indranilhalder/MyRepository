@@ -3,9 +3,9 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
-<div class="brand-microsite electronics-brand">
-<template:micrositePage pageTitle="${pageTitle}">
 
+<template:micrositePage pageTitle="${pageTitle}">
+<div class="brand-microsite electronics-brand">
 	<cms:pageSlot position="BrandBannerSlot" var="feature">
 				<cms:component component="${feature}" element="div"
 					class="" />
@@ -79,7 +79,7 @@
 	<!-- For Infinite Analytics Start -->
 	<div class="trending"  id="ia_products_hot"></div>
 <!-- For Infinite Analytics End -->
-
+</div>
 </template:micrositePage>
 
-</div>
+

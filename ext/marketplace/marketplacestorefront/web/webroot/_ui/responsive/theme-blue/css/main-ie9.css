@@ -2083,7 +2083,7 @@ header.brand-header .content .search form button, header.brand-header .content .
 	border-color: #fff;
 	color: #fff
 }
-.brand-microsite header.brand-header .select-view {
+body.template-pages-layout-micrositePage1 header.brand-header .select-view {
   background-color: #000;
   color: #fff;
   border-color: #fff;
@@ -2167,7 +2167,7 @@ header.compact .content .compact-toggle {
   opacity: 1;
 }
 
-.brand-microsite header .content .compact-toggle {
+body.template-pages-layout-micrositePage1 header .content .compact-toggle {
   opacity: 1;
 }
 header .content .compact-toggle.open:before{
@@ -2224,17 +2224,17 @@ header .banner .toggle.mobile {
 
 
 
-.brand-microsite header .content .bottom .brand-logo .simple-banner-component img{	
+body.template-pages-layout-micrositePage1 header .content .bottom .brand-logo .simple-banner-component img{	
 	 margin-top:30px; 
 }
 }
 
 @media (max-width: 790px)
 {
-.brand-microsite header .content .bottom .marketplace .simple-banner-component{	
+body.template-pages-layout-micrositePage1 header .content .bottom .marketplace .simple-banner-component{	
 	 margin-top:0px; 
 }
- .brand-microsite header > .content .bottom .marketplace {
+ body.template-pages-layout-micrositePage1 header > .content .bottom .marketplace {
       height: 60px;
  }
 
@@ -2248,7 +2248,7 @@ header > .content .bottom .search form input{
 /* header .banner .toggle.desktop {
   display: none;
 } */
-.brand-microsite header .content .compact-toggle {
+body.template-pages-layout-micrositePage1 header .content .compact-toggle {
   opacity: 1;
 }
 header .content .compact-toggle.open:before{
@@ -2461,7 +2461,7 @@ header .content .right > ul > li {
 }
 
 }
-.brand-microsite .breadcrumbs{
+body.template-pages-layout-micrositePage1 .breadcrumbs{
 display:none;
 }
 

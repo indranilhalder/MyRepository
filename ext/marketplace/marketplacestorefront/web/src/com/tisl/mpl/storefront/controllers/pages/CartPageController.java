@@ -186,8 +186,11 @@ public class CartPageController extends AbstractPageController
 			CommerceCartModificationException, CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
+		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
+
 		try
 		{
+
 			CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
 			//TISST-13012
@@ -255,13 +258,15 @@ public class CartPageController extends AbstractPageController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 		catch (final Exception e)
 		{
@@ -269,9 +274,10 @@ public class CartPageController extends AbstractPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
-		return ControllerConstants.Views.Pages.Cart.CartPage;
+		return returnPage;
 	}
 
 	/**
@@ -285,6 +291,7 @@ public class CartPageController extends AbstractPageController
 	{
 		try
 		{
+
 			final Map<String, String> priceModified = new HashMap<String, String>();
 			final Map<String, String> priceModifiedMssg = new HashMap<String, String>();
 			final Map<String, PriceData> basePriceMap = new HashMap<String, PriceData>();
@@ -417,6 +424,7 @@ public class CartPageController extends AbstractPageController
 	public String cartCheck(@SuppressWarnings(MarketplacecommerceservicesConstants.UNUSED) final Model model,
 			final RedirectAttributes redirectModel) throws CommerceCartModificationException, CMSItemNotFoundException
 	{
+		String returnPage = REDIRECT_PREFIX + "/checkout";
 		try
 		{
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
@@ -424,20 +432,23 @@ public class CartPageController extends AbstractPageController
 			if (!getMplCartFacade().hasEntries() || validateCart(redirectModel))
 			{
 				LOG.debug("Class Namecartcheck :" + className + "Missing or empty cart");
-				return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				//return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
 			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 		catch (final Exception e)
 		{
@@ -445,9 +456,11 @@ public class CartPageController extends AbstractPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
-		return REDIRECT_PREFIX + "/checkout";
+		return returnPage;
+
 	}
 
 	/*
@@ -465,6 +478,8 @@ public class CartPageController extends AbstractPageController
 			@RequestParam(value = "pci", required = false) final CheckoutPciOptionEnum checkoutPci)
 			throws CommerceCartModificationException, CMSItemNotFoundException
 	{
+
+		String returnPage = REDIRECT_PREFIX + "/checkout";
 		LOG.debug("Entering into initCheck" + "Class Nameinitcheck :" + className);
 		try
 		{
@@ -475,37 +490,54 @@ public class CartPageController extends AbstractPageController
 				LOG.debug("Class Nameinit :" + className + "Missing or empty cart");
 
 				// No session cart or empty session cart. Bounce back to the cart page.
-				return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				//return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
 			}
-
-			// Override the Checkout Flow setting in the session
-			if (checkoutFlow != null && StringUtils.isNotBlank(checkoutFlow.getCode()))
+			else
 			{
-				SessionOverrideCheckoutFlowFacade.setSessionOverrideCheckoutFlow(checkoutFlow);
+
+				// Override the Checkout Flow setting in the session
+				if (checkoutFlow != null && StringUtils.isNotBlank(checkoutFlow.getCode()))
+				{
+
+					SessionOverrideCheckoutFlowFacade.setSessionOverrideCheckoutFlow(checkoutFlow);
+				}
+
+				// Override the Checkout PCI setting in the session
+				if (checkoutPci != null && StringUtils.isNotBlank(checkoutPci.getCode()))
+				{
+					SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
+				}
+
+
+				// Redirect to the start of the checkout flow to begin the checkout process
+				// We just redirect to the generic '/checkout' page which will actually select the checkout flow
+				// to use. The customer is not necessarily logged in on this request, but will be forced to login
+				// when they arrive on the '/checkout' page.
+
+
+
+
 			}
 
-			// Override the Checkout PCI setting in the session
-			if (checkoutPci != null && StringUtils.isNotBlank(checkoutPci.getCode()))
-			{
-				SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
-			}
 
-			// Redirect to the start of the checkout flow to begin the checkout process
-			// We just redirect to the generic '/checkout' page which will actually select the checkout flow
-			// to use. The customer is not necessarily logged in on this request, but will be forced to login
-			// when they arrive on the '/checkout' page.
+
+
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			getFrontEndErrorHelper().callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 		catch (final Exception e)
 		{
@@ -513,9 +545,13 @@ public class CartPageController extends AbstractPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
-		return REDIRECT_PREFIX + "/checkout";
+
+
+		return returnPage;
+
 	}
 
 
@@ -526,6 +562,7 @@ public class CartPageController extends AbstractPageController
 			@Valid final UpdateQuantityForm form, final BindingResult bindingResult, final HttpServletRequest request,
 			final RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	{
+		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
 		LOG.debug("Entering into updateCartQuantities" + "Class NameupdateCartQuantities :" + className);
 		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 		if (bindingResult.hasErrors())
@@ -588,7 +625,8 @@ public class CartPageController extends AbstractPageController
 					}
 				}
 				// Redirect to the cart page on update success so that the browser doesn't re-post again
-				return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				//return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
 			}
 			catch (final CommerceCartModificationException ex)
 			{
@@ -596,19 +634,23 @@ public class CartPageController extends AbstractPageController
 				ExceptionUtil.etailBusinessExceptionHandler(new EtailBusinessExceptions(MarketplacecommerceservicesConstants.E0000),
 						null);
 				getFrontEndErrorHelper().callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-				return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+				//return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+				returnPage = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 			}
 			catch (final EtailBusinessExceptions e)
 			{
 				ExceptionUtil.etailBusinessExceptionHandler(e, null);
 				getFrontEndErrorHelper().callBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-				return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+				//return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+				returnPage = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 			}
 			catch (final EtailNonBusinessExceptions e)
 			{
 				ExceptionUtil.etailNonBusinessExceptionHandler(e);
 				getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-				return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+				//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+				returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+
 			}
 			catch (final Exception e)
 			{
@@ -616,12 +658,13 @@ public class CartPageController extends AbstractPageController
 				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 						MarketplacecommerceservicesConstants.E0000));
 				getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-				return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+				//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+				returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 			}
 		}
 
 		prepareDataForPage(model, cartData);
-		return ControllerConstants.Views.Pages.Cart.CartPage;
+		return returnPage;
 	}
 
 	private void createProductList(final Model model, final CartData cartData) throws CMSItemNotFoundException
@@ -861,14 +904,17 @@ public class CartPageController extends AbstractPageController
 		{
 			LOG.error("Failed to validate cart", e);
 		}
-		if (!modifications.isEmpty())
+		if (CollectionUtils.isNotEmpty(modifications))
+
 		{
 			redirectModel.addFlashAttribute("validationData", modifications);
 
 			// Invalid cart. Bounce back to the cart page.
-			return true;
+
+
 		}
-		return false;
+		return (CollectionUtils.isNotEmpty(modifications)) ? true : false;
+
 	}
 
 	/**
@@ -884,6 +930,7 @@ public class CartPageController extends AbstractPageController
 		final String entryNumberString = request.getParameter("entryNumber");
 		LOG.debug("Class NameremoveFromMinicar :" + className + "entry number is >>>>>>>>" + entryNumberString);
 		final long entryNumber = Long.parseLong(entryNumberString);
+		String returnStatement = "fail";
 		if (getMplCartFacade().hasEntries())
 		{
 			LOG.debug("Class NameremoveFromMinica :" + className + "#####Inside Remove Ajax call#####");
@@ -892,16 +939,20 @@ public class CartPageController extends AbstractPageController
 			if (cartModification.getQuantity() == 0)
 			{
 				LOG.debug("Class NameremoveFromMini :" + className + "#####Removed Product#####");
-				return "Item has been Removed From the cart";
+				//return "Item has been Removed From the cart";
+				returnStatement = "Item has been Removed From the cart";
 			}
 			else
 			{
 				LOG.debug("Class NameremoveFromMin :" + className + "##########\t" + cartModification.getQuantity());
-				return "Could not removed item from cart";
+				//return "Could not removed item from cart";
+				returnStatement = "Could not removed item from cart";
 			}
 		}
 		LOG.debug("Class NameremoveFromMi :" + className + "Could find any cart entries");
-		return "fail";
+		//returnStatement = "fail";
+		return returnStatement;
+
 	}
 
 	/**
@@ -980,6 +1031,7 @@ public class CartPageController extends AbstractPageController
 	public @ResponseBody String checkPincodeServiceability(
 			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode) throws EtailNonBusinessExceptions
 	{
+		String returnStatement = null;
 		//TISSEC-11
 		final String regex = "\\d{6}";
 
@@ -1041,16 +1093,17 @@ public class CartPageController extends AbstractPageController
 				LOG.error("Exception while checking pincode serviceabilty " + ex);
 			}
 
-			return isServicable + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + selectedPincode
+			returnStatement = isServicable + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + selectedPincode
 					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + jsonResponse;
 
 		}
 		else
 		{
 			isServicable = MarketplacecommerceservicesConstants.N;
-			return isServicable;
+			returnStatement = isServicable;
 		}
 
+		return returnStatement;
 
 	}
 
@@ -1139,58 +1192,77 @@ public class CartPageController extends AbstractPageController
 		LOG.debug("Entring into showWishListsForCartPage" + "Class NameshowWishListsForCartPag :" + className);
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
 		final UserModel user = userService.getCurrentUser();
+		List<WishlistData> wishListData = null;
 
 		//If the user is not logged in then ask customer to login.
 		if (null != user.getName() && user.getName().equalsIgnoreCase(USER.ANONYMOUS_CUSTOMER))
 		{
-			return null;
-		}
 
-		final List<WishlistData> wishListData = new ArrayList<WishlistData>();
-		try
-		{
-			final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
-			final int wishListSize = allWishlists.size();
 
-			final String nameSet = ModelAttributetConstants.WISHLIST_NO + ModelAttributetConstants.UNDER_SCORE + "1";
 
-			//check whether any wishlist exits for user or not or else create a new wishlist and add product to it
-			if (wishListSize == 0)
+
+			wishListData = new ArrayList<WishlistData>();
+			try
 			{
-				//add product to new wishlist
-				final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, nameSet, productCode);
 
-				wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, Boolean.valueOf(Boolean.TRUE));
-				final WishlistData wishData = new WishlistData();
-				wishData.setParticularWishlistName(createdWishlist.getName());
-				wishData.setProductCode(productCode);
-				wishListData.add(wishData);
-			}
-			else
-			{
-				//view existing wishlists
-				for (final Wishlist2Model wish : allWishlists)
+				final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
+				final int wishListSize = allWishlists.size();
+
+				final String nameSet = ModelAttributetConstants.WISHLIST_NO + ModelAttributetConstants.UNDER_SCORE + "1";
+
+				//check whether any wishlist exits for user or not or else create a new wishlist and add product to it
+				if (wishListSize == 0)
 				{
-					final WishlistData wishList = new WishlistData();
-					wishList.setParticularWishlistName(wish.getName());
-					for (final Wishlist2EntryModel wlEntry : wish.getEntries())
+
+					//add product to new wishlist
+					final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, nameSet, productCode);
+
+					wishlistFacade.addProductToWishlist(createdWishlist, productCode, ussid, Boolean.valueOf(Boolean.TRUE));
+					final WishlistData wishData = new WishlistData();
+					wishData.setParticularWishlistName(createdWishlist.getName());
+					wishData.setProductCode(productCode);
+					wishListData.add(wishData);
+				}
+				else
+
+
+
+
+
+				{
+					//view existing wishlists
+					for (final Wishlist2Model wish : allWishlists)
+
+
+
 					{
-						if (wlEntry.getProduct().getCode().equals(productCode))
+						final WishlistData wishList = new WishlistData();
+						wishList.setParticularWishlistName(wish.getName());
+						for (final Wishlist2EntryModel wlEntry : wish.getEntries())
+
 						{
-							wishList.setProductCode(productCode);
+							if (wlEntry.getProduct().getCode().equals(productCode))
+							{
+								wishList.setProductCode(productCode);
+							}
 						}
+						wishListData.add(wishList);
 					}
-					wishListData.add(wishList);
+
 				}
 			}
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+			catch (final EtailBusinessExceptions e)
+			{
+
+				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			}
+
+			catch (final EtailNonBusinessExceptions e)
+			{
+
+				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			}
 		}
 		return wishListData;
 	}
@@ -1483,3 +1555,5 @@ public class CartPageController extends AbstractPageController
 		this.mplCouponFacade = mplCouponFacade;
 	}
 }
+
+

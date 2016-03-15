@@ -365,43 +365,9 @@ function submitForm(){
 						}
 						else{
 							
-							
 							//TISPRO-153
-							
-							try {		
-								var payment_method_map = {
-								            
-								            "viewPaymentCOD": "COD",
-								            
-								        };
-								        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
-								        var payment_mode = payment_method_map[payment];
-								        var payment_type = "";
-								            
-								        
-								        if (payment_mode === "COD") {
-								            payment_type = "COD";
-								        }
-							
-								        if (!payment_type) {
-								            payment_type = "NA";
-								        }
-								       
-								        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
-								        {
-								        	utag.link({
-									            "link_name": 'Final Checkout',
-									            "event_type": 'PayNow',
-									            "payment_method": "" + payment_mode + "|" + payment_type,
-									            "product_id": utag.data.product_id
-							
-									        });
-								        }
-							        
-							   } catch (e) {
-								// TODO: handle exception
-							   } 
-							
+							sendTealiumData();
+														
 							$("#form-actions, #otpNUM").css("display","block");
 							$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
 							$("#otpSentMessage").css("display","none");
@@ -600,7 +566,7 @@ function deselectSelection(){
 
 function getSelectedEMIBank(){
 	$("#emiPromoError").css("display","none");
-	var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();
+	var selectedBank=$("select[id='bankNameForEMI']").find('option:selected').text();		
 	$(".card_number, .name_on_card, .security_code, #cardType, #otpNUMField").val("");
 	 $('ul.accepted-cards li').removeClass('active-card');
 	$(".card_exp_month").val("month");	
@@ -1215,59 +1181,8 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	  // TISPRO-153
-	try {		
-		var payment_method_map = {
-		            "viewPaymentEMI": "EMI",
-		            "viewPaymentCredit": "Credit",
-		            "viewPaymentNetbanking": "Net Banking",
-		            "viewPaymentCOD": "COD",
-		            "viewPaymentDebit": "Debit"
-		        };
-		        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
-		        var payment_mode = payment_method_map[payment];
-		        var payment_type = "",
-		            priority_banks = "";
-		        if (payment_mode === "EMI") {
-	
-		            payment_type = jQuery("select#bankNameForEMI").val();
-	
-		        } else if (payment_mode === "Credit" || payment_mode === "Debit") {
-	
-		            payment_type = jQuery("li.active-card span").attr("class") || "Saved Credit Card";
-	
-		        } else if (payment_mode === "Net Banking") {
-	
-		            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
-		            if (priority_banks.length > 0) {
-		                payment_type = priority_banks.val();
-		            } else {
-		                jQuery("#netbanking #bankCodeSelection").val();
-		            }
-	
-		        } else if (payment_mode === "COD") {
-		            payment_type = "COD";
-		        }
-	
-		        if (!payment_type) {
-		            payment_type = "NA";
-		        }
-		        
-		        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
-		        {
-		        	utag.link({
-			            "link_name": 'Final Checkout',
-			            "event_type": 'PayNow',
-			            "payment_method": "" + payment_mode + "|" + payment_type,
-			            "product_id": utag.data.product_id
-	
-			        });
-		        }
-	        
-	   } catch (e) {
-		// TODO: handle exception
-	   }     
-	  
+	  // TISPRO-153		
+		sendTealiumData();
 		
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
@@ -1351,61 +1266,8 @@ $("#otpMobileNUMField").focus(function(){
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		
 	  // TISPRO-153
+		sendTealiumData();
 		
-	try {
-	
-		var payment_method_map = {
-	            "viewPaymentEMI": "EMI",
-	            "viewPaymentCredit": "Credit",
-	            "viewPaymentNetbanking": "Net Banking",
-	            "viewPaymentCOD": "COD",
-	            "viewPaymentDebit": "Debit"
-	        };
-	        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
-	        var payment_mode = payment_method_map[payment];
-	        var payment_type = "",
-	            priority_banks = "";
-	        if (payment_mode === "EMI") {
-
-	            payment_type = jQuery("select#bankNameForEMI").val();
-
-	        } else if (payment_mode === "Credit" || payment_mode === "Debit") {
-
-	            payment_type = jQuery("li.active-card span").attr("class") || "Saved Credit Card";
-
-	        } else if (payment_mode === "Net Banking") {
-
-	            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
-	            if (priority_banks.length > 0) {
-	                payment_type = priority_banks.val();
-	            } else {
-	                jQuery("#netbanking #bankCodeSelection").val();
-	            }
-
-	        } else if (payment_mode === "COD") {
-	            payment_type = "COD";
-	        }
-
-	        if (!payment_type) {
-	            payment_type = "NA";
-	        }
-
-	        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
-	        {
-	        	utag.link({
-		            "link_name": 'Final Checkout',
-		            "event_type": 'PayNow',
-		            "payment_method": "" + payment_mode + "|" + payment_type,
-		            "product_id": utag.data.product_id
-
-		        });
-	        }
-	        
-		} catch (e) {
-			// TODO: handle exception
-		}
-	        
-	  
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
 		var addressLine1=$("#address1").val();
@@ -2684,6 +2546,10 @@ function submitNBForm(){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add"); 
 				}
 				else{
+					
+					//TISPRO-153
+					sendTealiumData();
+					
 					$("#juspayOrderId").val(response);
 					var juspayOrderId=$("#juspayOrderId").val();
 					$.ajax({
@@ -3162,9 +3028,9 @@ function checkSignInValidation(path){
 		$("#signinPasswordDiv").hide();
 	}
 	// TISPRO-153
-	if(validationResult){
+	/*if(validationResult){
 		utag.link({ "event_type" : "Login", "link_name" : "Login" });
-	}
+	}*/
 	return validationResult;
 }
 
@@ -3242,7 +3108,7 @@ function checkSignUpValidation(path){
 	if(validationResult)
 	{
 		// TISPRO-153
-		utag.link({ "event_type" : "Login", "link_name" : "Login" });
+		/*utag.link({ "event_type" : "Login", "link_name" : "Login" });*/
 		var encodedPWD= encodeURIComponent(password);
 		var encodedRePWD= encodeURIComponent(rePassword);		
 		if(path=="Checkout"){
@@ -3638,4 +3504,71 @@ function clearDisable()
 {
 	$("#no-click").remove();
 	$(".make_payment").removeAttr('disabled');
+}
+
+function sendTealiumData(){
+	try {		
+		var payment_method_map = {
+		            "viewPaymentEMI": "EMI",
+		            "viewPaymentCredit": "Credit Card",
+		            "viewPaymentNetbanking": "NetBanking",
+		            "viewPaymentCOD": "COD",
+		            "viewPaymentDebit": "Debit Card"
+		        };
+		        var payment = jQuery("ul.checkout-paymentmethod.nav li.active span").attr("id");
+		        var payment_mode = payment_method_map[payment];
+		        var payment_type = "",
+		            priority_banks = "";
+		        if (payment_mode === "EMI") {
+		        	
+		            payment_type = jQuery("select#bankNameForEMI").val();
+	
+		        } else if (payment_mode === "Credit Card" || payment_mode === "Debit Card") {
+	
+		            payment_type = jQuery("li.active-card span").attr("class") || "Saved Card";
+	
+		        } else if (payment_mode === "NetBanking") {
+	
+		            priority_banks = jQuery("#netbanking input[name='priority_banks']:checked");
+		            if (priority_banks.length > 0) {
+		                payment_type = priority_banks.val();
+		            } else {
+		            	payment_type = jQuery("#netbanking #bankCodeSelection").val();
+		            }
+	
+		        } else if (payment_mode === "COD") {
+		            payment_type = "COD";
+		        }
+	
+		        if (!payment_type) {
+		            payment_type = "NA";
+		        }
+		        
+		        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
+		        {
+		        	
+		        	if(payment_mode === "COD"){
+		        		utag.link({
+				            "link_name": 'Final Checkout',
+				            "event_type": 'PayNow',
+				            "payment_method": "" + payment_type,
+				            "product_id": utag.data.product_id
+		
+				        });
+		        		
+		        	}else{
+		        		
+		        	}
+			        	utag.link({
+				            "link_name": 'Final Checkout',
+				            "event_type": 'PayNow',
+				            "payment_method": "" + payment_mode + "|" + payment_type,
+				            "product_id": utag.data.product_id
+		
+				        });
+		        }
+	        
+	   } catch (e) {
+		// TODO: handle exception
+	   }     
 }
