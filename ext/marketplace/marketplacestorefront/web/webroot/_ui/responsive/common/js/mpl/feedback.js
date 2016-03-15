@@ -1286,9 +1286,4 @@ $(document).ready(function(){
 			$('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').parents().find('.listing.wrapper').css('height','0px');
 			}
 		
-			
-
-			$(document).on("click",'.select-size',function() {
-				$(this).toggleClass('active');
-			});
 });
