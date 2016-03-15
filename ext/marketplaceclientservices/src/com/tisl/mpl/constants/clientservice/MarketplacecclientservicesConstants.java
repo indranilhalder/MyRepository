@@ -171,4 +171,6 @@ public class MarketplacecclientservicesConstants
 	public static final String REVIEWS_UID_EXCEPTION = "Gigya 'getReviewsByUID'  UID error";
 
 	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
+	public static final String E0019 = "E0019";
+	public static final String E0020 = "E0020";
 }
