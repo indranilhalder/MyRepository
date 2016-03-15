@@ -711,7 +711,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					pickUpPersonMobile = customer.getMobileNumber();
 				}
-				model.addAttribute("pickupPersonName", pickupPersonName);
+				model.addAttribute("pickupPersonName", pickupPersonName.trim());
 				model.addAttribute("pickUpPersonMobile", pickUpPersonMobile);
 				model.addAttribute("delModeCount",delModeCount);
 				model.addAttribute("cnccount",count);
