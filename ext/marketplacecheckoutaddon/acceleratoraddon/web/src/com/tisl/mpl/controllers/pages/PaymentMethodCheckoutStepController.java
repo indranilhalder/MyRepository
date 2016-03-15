@@ -246,7 +246,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			//Getting Payment modes
 			final Map<String, Boolean> paymentModeMap = getMplPaymentFacade()
-					.getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE);
+					.getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, null);
 			if (!paymentModeMap.isEmpty())
 			{
 				//Adding payment modes in model to be accessed from jsp
