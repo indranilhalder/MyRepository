@@ -82,4 +82,11 @@ public interface MplVoucherService
 	 * @throws VoucherOperationException
 	 */
 	void releaseVoucher(String voucherCode, CartModel cartModel) throws VoucherOperationException;
+
+	/**
+	 * @param cartModel
+	 * @throws VoucherOperationException
+	 * @throws EtailNonBusinessExceptions
+	 */
+	void checkCartWithVoucher(CartModel cartModel) throws VoucherOperationException, EtailNonBusinessExceptions;
 }

@@ -73,10 +73,6 @@ public class MplCouponDaoImpl implements MplCouponDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
-		}
 		catch (final Exception e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
@@ -124,7 +120,7 @@ public class MplCouponDaoImpl implements MplCouponDao
 					//.append(" AND  {vin.user}='")
 					.append(customer.getPk().getLongValue())
 					.append(
-							"'  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} ASC");
+							"'  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} DESC");
 			//.append(" }})")
 			//.append(" AND {v.redemptionQuantityLimit} >")
 			//.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})")
@@ -148,10 +144,6 @@ public class MplCouponDaoImpl implements MplCouponDao
 		catch (final UnknownIdentifierException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
-		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -205,10 +197,6 @@ public class MplCouponDaoImpl implements MplCouponDao
 		catch (final UnknownIdentifierException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
-		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{
@@ -284,10 +272,6 @@ public class MplCouponDaoImpl implements MplCouponDao
 		catch (final UnknownIdentifierException e)
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
-		}
-		catch (final NullPointerException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
 		}
 		catch (final Exception e)
 		{

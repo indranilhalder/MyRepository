@@ -158,7 +158,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									/*
 									 * String CategorySeqBanner = findCategoryLink(bigPromoBanner.getMajorPromoText() + "|" +
 									 * bigPromoBanner.getMinorPromo1Text() + "|" + bigPromoBanner.getMinorPromo2Text());
-									 * 
+									 *
 									 * CategorySeqBanner = CategorySeqBanner.substring(CategorySeqBanner.lastIndexOf("/") + 1,
 									 * CategorySeqBanner.length());
 									 */
@@ -217,12 +217,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 										/*
 										 * Authenticator.setDefault(new Authenticator() {
-										 * 
+										 *
 										 * @Override public PasswordAuthentication getPasswordAuthentication() { final String
 										 * username = "siteadmin"; final String password = "ASDF!@#$asdf1234";
 										 * LOG.info("Authenticating Login......"); return new PasswordAuthentication(username,
 										 * password.toCharArray());
-										 * 
+										 *
 										 * } });
 										 */
 
@@ -457,7 +457,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								 * LOG.debug("++++ 3333.1+++++++++Image URL:::::" + ImageUrl); } else if
 								 * (!ImageUrl.startsWith("https://")) { ImageUrl = "https:" + ImageUrl;
 								 * LOG.debug("3333.2+++++++++++++Image URL:::::" + ImageUrl);
-								 *
+								 * 
 								 * }
 								 */
 
@@ -569,9 +569,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		/*
 		 * for (final InternalCampaignReportData item : campaignDataConsolidatedTmpList) { if (!set.contains(item)) {
 		 * set.add(item); campaignDataConsolidatedList.add(item);
-		 * 
+		 *
 		 * }
-		 * 
+		 *
 		 * }
 		 */
 		try
@@ -655,7 +655,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("category_id"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("media_type"));
 			 * fileWriter.append(COMMA_DELIMITER); fileWriter.append(exportMap.get("si ze"));
-			 *
+			 * 
 			 * fileWriter.append(NEW_LINE_SEPARATOR);
 			 * //System.out.println("value in map is--------------------------------------------------------------" +
 			 * it.next()); //final FileWriter writer = new FileWriter(path, true); //writer.write(it.next().toString()); }
@@ -681,15 +681,17 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	public String findIamgeSize(final String urlString)
 	{
-		final String username = "siteadmin";
-		final String password = "ASDF!@#$asdf1234";
+		final String username = configurationService.getConfiguration().getString("internal.campaign.report.username", "");
+		final String password = configurationService.getConfiguration().getString("internal.campaign.report.password", "");
 		final URLConnection connection;
 		String size = MarketplacecommerceservicesConstants.EMPTY;
+		final String proxyENV = configurationService.getConfiguration().getString("internal.campaign.report.proxy");
+		final int port = Integer.parseInt(configurationService.getConfiguration().getString("internal.campaign.report.port"));
 		try
 		{
 			final URL url = new URL(urlString);
 			//final SocketAddress addr = new InetSocketAddress("proxy.tcs.com", 8080);
-			final SocketAddress addr = new InetSocketAddress("10.10.12.10", 8080);
+			final SocketAddress addr = new InetSocketAddress(proxyENV, port);
 
 			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
 
@@ -717,12 +719,12 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 		catch (final IOException e)
 		{
 			LOG.info("IO Exception: " + e.getMessage());
-			e.printStackTrace();
+
 		}
 		catch (final Exception e)
 		{
 			LOG.info("Exception is: " + e.getMessage());
-			e.printStackTrace();
+
 		}
 		return size;
 
