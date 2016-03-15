@@ -158,6 +158,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			if (lastVoucher instanceof PromotionVoucherModel)
 			{
 				voucherCode = ((PromotionVoucherModel) lastVoucher).getVoucherCode();
+				discountData.setVoucherCode(voucherCode);
 			}
 
 			final List<DiscountModel> voucherList = cartModel.getDiscounts(); //List of discounts against the cart
@@ -643,6 +644,30 @@ public class MplVoucherServiceImpl implements MplVoucherService
 				iterator.remove();
 			}
 		}
+	}
+
+
+
+	/**
+	 * This method checks the cart after promotion application(recalculate cart) and handles custom voucher calculation
+	 *
+	 * @param cartModel
+	 * @throws VoucherOperationException
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public void checkCartWithVoucher(final CartModel cartModel) throws VoucherOperationException, EtailNonBusinessExceptions
+	{
+		//setting coupon discount starts
+		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts())
+				&& cartModel.getDiscounts().get(0) instanceof PromotionVoucherModel)
+		{
+			final PromotionVoucherModel voucher = (PromotionVoucherModel) cartModel.getDiscounts().get(0);
+			final List<AbstractOrderEntryModel> applicableOrderEntryList = getOrderEntryModelFromVouEntries(voucher, cartModel);
+			checkCartAfterApply(voucher, cartModel, applicableOrderEntryList); //Checking the cart after OOB voucher application
+			setApportionedValueForVoucher(voucher, cartModel, voucher.getVoucherCode(), applicableOrderEntryList); //Apportioning voucher discount
+		}
+		//setting coupon discount ends
 	}
 
 
