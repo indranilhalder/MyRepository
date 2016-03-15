@@ -40,7 +40,7 @@ public interface MplPaymentFacade
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	Map<String, Boolean> getPaymentModes(String store) throws EtailNonBusinessExceptions;
+	Map<String, Boolean> getPaymentModes(String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions;
 
 
 	/**
