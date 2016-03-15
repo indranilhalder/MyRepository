@@ -856,7 +856,14 @@ sendAddToBag : function(formId, isBuyNow) {
 			data:dataString,
 			success : function(response) {
 				
-				var transientCartHtml="<div class='mini-transient-bag' ><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-brand-name'><a href='"+response.productUrl+"'>"+response.brand+"</a></h3><h3 class='product-name'><a href='"+response.productUrl+"'>"+response.productTitle+"</a></h3><p class='item-info'></p></div><ul class='item-edit-details'><li>Qty:"+response.quantity+"</li><li>Size:&nbsp;2years</li><li><a href='#nogo' class='removeFromCart' data-entry-no='0' data-ussid='123653098765485130011719'>Remove</a></li></ul></li><li class='price'><span class='priceFormat'>"+response.productPrice+"</span></li></ul></li><li><a href='/store/mpl/en/cart' class='go-to-bag mini-cart-checkout-button'>Go To My Bag</a></li></ul></div>";
+				var transientCartHtml="<div class='mini-transient-bag' ><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-brand-name'><a href='"+response.productUrl+"'>"+response.brand+"</a></h3><h3 class='product-name'><a href='"+response.productUrl+"'>"+response.productTitle+"</a></h3><p class='item-info'></p></div><ul class='item-edit-details'><li>Qty:"+response.quantity+"</li>";
+				if(typeof response.size!=="undefined"){
+					transientCartHtml+="<li>Size:&nbsp;"+response.size+"</li>";
+				}
+				if(typeof response.capacity!=="undefined"){
+					transientCartHtml+="<li>Capacity:&nbsp;"+response.capacity+"</li>";
+				}
+				transientCartHtml+="<li class='price'><span class='priceFormat'>"+response.productPrice+"</span></li></ul></li><li><a href='/store/mpl/en/cart' class='go-to-bag mini-cart-checkout-button'>Go To My Bag</a></li></ul></div>";
 				$('.bag').append(transientCartHtml);
 				$('header .content .right > ul > li.bag').css({'z-index':'4','border-left':'2px solid #f0f4f5'});
 				$('.mini-transient-bag').fadeOut(3000);
