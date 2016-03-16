@@ -2112,7 +2112,7 @@ function validatePin() {
 }  
 
 
-$("#newAddressButton").click(function() {
+$("#newAddressButton,#newAddressButtonUp").click(function() {
 	var validate=true;
 	var regPostcode = /^([1-9])([0-9]){5}$/;
     var mob = /^[1-9]{1}[0-9]{9}$/;

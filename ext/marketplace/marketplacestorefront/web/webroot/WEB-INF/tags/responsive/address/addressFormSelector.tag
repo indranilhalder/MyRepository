@@ -105,12 +105,13 @@
 					</c:otherwise>
 				</c:choose>
 			
-				<c:if test="${not noAddress}">
+			
+				<%-- <c:if test="${not noAddress}">
 					<ycommerce:testId code="multicheckout_cancel_button">
 						<c:url value="${cancelUrl}" var="cancel"/>
 							<a class="button delivery-cancelButton" href="${cancel}"><spring:theme code="checkout.multi.cancel" text="Cancel"/></a>
 					</ycommerce:testId>
-				</c:if>	
+				</c:if> --%>	
 	</div>
 </form:form>
 

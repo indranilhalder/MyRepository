@@ -19,7 +19,27 @@ ACC.checkout = {
 			$('#selectDeliveryMethodForm').submit();	
 		})
 		
+		//TISCR-305 
+		$(document).on("click","#deliveryMethodSubmitUp",function(e){
+			e.preventDefault();
+			$('#selectDeliveryMethodForm').submit();	
+		})
+		
+		
 		$(document).on("click","#deliveryAddressSubmit",function(e){
+			e.preventDefault();
+			
+			var selectedAddressCode = $('input[name=selectedAddressCode]:checked').val();
+			if(selectedAddressCode == null || selectedAddressCode=='undefined')
+			{
+				alert("Please select a delivery address");
+				return false;
+			}
+			$('#selectAddressForm').submit();	
+		})
+		
+		//TISCR-305 
+			$(document).on("click","#deliveryAddressSubmitUp",function(e){
 			e.preventDefault();
 			
 			var selectedAddressCode = $('input[name=selectedAddressCode]:checked').val();
