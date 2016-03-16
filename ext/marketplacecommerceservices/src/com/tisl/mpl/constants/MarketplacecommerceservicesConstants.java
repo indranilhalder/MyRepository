@@ -1444,7 +1444,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Added for constants for clickandcollect and active.
 	public static final String CLICK_N_COLLECT = "Y";
 	public static final String ACTIVE = "Y";
-	
+
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
