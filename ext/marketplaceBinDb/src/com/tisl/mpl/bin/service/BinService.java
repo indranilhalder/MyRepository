@@ -21,4 +21,10 @@ public interface BinService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public BinModel checkBin(final String bin) throws EtailNonBusinessExceptions;
+
+	/**
+	 * Generate CSV with Bank Details present in Bin but not in Bank
+	 *
+	 */
+	public void generateFileData();
 }

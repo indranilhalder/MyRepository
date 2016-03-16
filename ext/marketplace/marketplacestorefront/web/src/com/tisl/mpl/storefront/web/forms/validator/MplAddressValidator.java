@@ -50,6 +50,7 @@ public class MplAddressValidator
 	 */
 	private String validateStandardFields(final AccountAddressForm addressForm)
 	{
+		String returnStatement = null;
 		final List<StateData> stateDataList = accountAddressFacade.getStates();
 		boolean validState = false;
 		final String firstName = addressForm.getFirstName();
@@ -74,90 +75,92 @@ public class MplAddressValidator
 
 		if (!validState)
 		{
-			return "address.state.invalid";
+			returnStatement = "address.state.invalid";
 		}
 
-		if (StringUtils.isEmpty(firstName))
+		else if (StringUtils.isEmpty(firstName))
 		{
-			return "address.firstName.invalid";
+			returnStatement = "address.firstName.invalid";
 		}
 		else if (!CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(firstName)
 				|| StringUtils.length(firstName) > MAX_FIELD_LENGTH_140)
 		{
-			return "address.firstName.invalid.new";
+			returnStatement = "address.firstName.invalid.new";
 		}
 		else if (StringUtils.isEmpty(lastName))
 		{
-			return "address.lastName.invalid";
+			returnStatement = "address.lastName.invalid";
 		}
 		else if (!CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(lastName)
 				|| StringUtils.length(lastName) > MAX_FIELD_LENGTH_140)
 		{
-			return "address.lastName.invalid.new";
+			returnStatement = "address.lastName.invalid.new";
 		}
 
 		else if (StringUtils.isEmpty(line1))
 		{
-			return "address.line1.invalid";
+			returnStatement = "address.line1.invalid";
 		}
 		else if (StringUtils.length(line1) > MAX_FIELD_LENGTH_UPDATED)
 		{
-			return "address.line1.invalid.length";
+			returnStatement = "address.line1.invalid.length";
 		}
 		else if (StringUtils.isEmpty(line2))
 		{
-			return "address.line2.invalid";
+			returnStatement = "address.line2.invalid";
 		}
 		else if (StringUtils.length(line2) > MAX_FIELD_LENGTH_UPDATED)
 		{
-			return "address.line2.invalid.length";
+			returnStatement = "address.line2.invalid.length";
 		}
 		else if (StringUtils.isEmpty(line3))
 		{
-			return "address.line3.invalid";
+			returnStatement = "address.line3.invalid";
 		}
 		else if (StringUtils.length(line3) > MAX_FIELD_LENGTH_UPDATED)
 		{
-			return "address.line3.invalid.length";
+			returnStatement = "address.line3.invalid.length";
 		}
 
 		else if (StringUtils.isEmpty(townCity) || StringUtils.length(townCity) > MAX_FIELD_LENGTH_UPDATED)
 		{
-			return "address.townCity.invalid";
+			returnStatement = "address.townCity.invalid";
 		}
 		else if (!CommonAsciiValidator.validateAlphaWithSpaceNoSpCh(townCity))
 		{
-			return "address.townCity.invalid.alphaAndSpace";
+			returnStatement = "address.townCity.invalid.alphaAndSpace";
 		}
 		else if (StringUtils.isEmpty(state))
 		{
-			return "address.state.invalid";
+			returnStatement = "address.state.invalid";
 		}
 
 		else if (StringUtils.isEmpty(mobile))
 		{
-			return "address.mobileNumber.invalid";
+			returnStatement = "address.mobileNumber.invalid";
 		}
 		else if (!CommonAsciiValidator.validateNumericWithoutSpace(mobile) || StringUtils.length(mobile) != MAX_FIELD_LENGTH_10)
 		{
-			return "address.mobileNumber.invalid.numeric.length";
+			returnStatement = "address.mobileNumber.invalid.numeric.length";
 		}
 		else if (StringUtils.isEmpty(postcode))
 		{
-			return "address.postcode.invalid";
+			returnStatement = "address.postcode.invalid";
 		}
 		else if (!CommonAsciiValidator.validateNumericWithoutSpace(postcode) || StringUtils.length(postcode) != MAX_FIELD_LENGTH_6)
 		{
-			return "address.postcode.invalid.numeric.length";
+			returnStatement = "address.postcode.invalid.numeric.length";
 		}
 		else if (StringUtils.isEmpty(addressType))
 		{
-			return "address.addressType.select";
+			returnStatement = "address.addressType.select";
 		}
 		else
 		{
-			return "success";
+			returnStatement = "success";
 		}
+		return returnStatement;
+
 	}
 
 }

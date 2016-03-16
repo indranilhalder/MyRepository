@@ -272,8 +272,11 @@ public class ProductPageController extends AbstractPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
+
+		String returnStatement = null;
 		try
 		{
+
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
@@ -281,55 +284,63 @@ public class ProductPageController extends AbstractPageController
 
 			if (StringUtils.isNotEmpty(redirection))
 			{
-				return redirection;
-			}
-			if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
-			{
-				model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+				returnStatement = redirection;
 			}
 
-			populateProductDetailForDisplay(productModel, model, request);
-			// for MSD
-			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
-			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
-			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
-			model.addAttribute(new ReviewForm());
-			//			final List<ProductReferenceData> productReferences = productFacade.getProductReferencesForCode(productCode,
-			//					Arrays.asList(ProductReferenceTypeEnum.SIMILAR, ProductReferenceTypeEnum.ACCESSORIES),
-			//					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE), null);
-			//			model.addAttribute(ModelAttributetConstants.PRODUCT_REFERENCES, productReferences);
-			model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
-			model.addAttribute(ModelAttributetConstants.SELECTED_SIZE, selectedSize);
-			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
-			// for MSD
-			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
-			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
-			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+			else
+			{
+				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
+				{
+					model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+
+				}
+
+				populateProductDetailForDisplay(productModel, model, request);
+				// for MSD
+				final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
+				final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
+				final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
+				model.addAttribute(new ReviewForm());
+				//			final List<ProductReferenceData> productReferences = productFacade.getProductReferencesForCode(productCode,
+				//					Arrays.asList(ProductReferenceTypeEnum.SIMILAR, ProductReferenceTypeEnum.ACCESSORIES),
+				//					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE), null);
+				//			model.addAttribute(ModelAttributetConstants.PRODUCT_REFERENCES, productReferences);
+				model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
+				model.addAttribute(ModelAttributetConstants.SELECTED_SIZE, selectedSize);
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
+				// for MSD
+				model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
+				model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
+				model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+
+				returnStatement = getViewForPage(model);
+			}
 
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
-			//return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			returnStatement = frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
-			//frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+
+
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
-			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+
 		}
 
-		return getViewForPage(model);
+
+		return returnStatement;
 	}
 
 	/**
@@ -698,8 +709,10 @@ public class ProductPageController extends AbstractPageController
 			final Model model, @Valid final SellerInformationDetailsForm form, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
+		String returnStatement = null;
 		try
 		{
+
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
@@ -767,26 +780,29 @@ public class ProductPageController extends AbstractPageController
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			returnStatement = getViewForPage(model);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+			//return frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+			returnStatement = frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
 		}
-		return getViewForPage(model);
+
+		return returnStatement;
 
 	}
 
@@ -825,6 +841,7 @@ public class ProductPageController extends AbstractPageController
 		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 				ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+		String returnStatement = null;
 		try
 		{
 			populateProductData(productData, model);
@@ -868,21 +885,23 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			//	ExceptionUtil.etailBusinessExceptionHandler(e, model);
 			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
-			return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 
-		return ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+
+		return returnStatement;
 	}
 
 	@Deprecated
@@ -892,6 +911,7 @@ public class ProductPageController extends AbstractPageController
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
 			throws CMSItemNotFoundException
 	{
+		String returnStatement = null;
 		getReviewValidator().validate(form, result);
 
 		final ProductModel productModel = productService.getProductForCode(productCode);
@@ -903,18 +923,24 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute("showReviewForm", Boolean.TRUE);
 			populateProductDetailForDisplay(productModel, model, request);
 			storeCmsPageInModel(model, getPageForProduct(productModel));
-			return getViewForPage(model);
+			returnStatement = getViewForPage(model);
+		}
+		else
+		{
+
+			final ReviewData review = new ReviewData();
+			review.setHeadline(XSSFilterUtil.filter(form.getHeadline()));
+			review.setComment(XSSFilterUtil.filter(form.getComment()));
+			review.setRating(form.getRating());
+			review.setAlias(XSSFilterUtil.filter(form.getAlias()));
+			productFacade.postReview(productCode, review);
+			GlobalMessages
+					.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
+			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
 		}
 
-		final ReviewData review = new ReviewData();
-		review.setHeadline(XSSFilterUtil.filter(form.getHeadline()));
-		review.setComment(XSSFilterUtil.filter(form.getComment()));
-		review.setRating(form.getRating());
-		review.setAlias(XSSFilterUtil.filter(form.getAlias()));
-		productFacade.postReview(productCode, review);
-		GlobalMessages.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
 
-		return REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
+		return returnStatement;
 	}
 
 	@Deprecated
@@ -975,6 +1001,7 @@ public class ProductPageController extends AbstractPageController
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
 			throws CMSItemNotFoundException
 	{
+		String returnStatement = null;
 		getReviewValidator().validate(form, result);
 
 		final ProductModel productModel = productService.getProductForCode(productCode);
@@ -984,18 +1011,24 @@ public class ProductPageController extends AbstractPageController
 			GlobalMessages.addErrorMessage(model, "review.general.error");
 			populateProductDetailForDisplay(productModel, model, request);
 			setUpReviewPage(model, productModel);
-			return ControllerConstants.Views.Pages.Product.WriteReview;
+			returnStatement = ControllerConstants.Views.Pages.Product.WriteReview;
 		}
+		else
+		{
 
-		final ReviewData review = new ReviewData();
-		review.setHeadline(XSSFilterUtil.filter(form.getHeadline()));
-		review.setComment(XSSFilterUtil.filter(form.getComment()));
-		review.setRating(form.getRating());
-		review.setAlias(XSSFilterUtil.filter(form.getAlias()));
-		productFacade.postReview(productCode, review);
-		GlobalMessages.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
+			final ReviewData review = new ReviewData();
+			review.setHeadline(XSSFilterUtil.filter(form.getHeadline()));
+			review.setComment(XSSFilterUtil.filter(form.getComment()));
+			review.setRating(form.getRating());
+			review.setAlias(XSSFilterUtil.filter(form.getAlias()));
+			productFacade.postReview(productCode, review);
+			GlobalMessages
+					.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
+			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
+		}
+		return returnStatement;
 
-		return REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
+
 	}
 
 	@ExceptionHandler(UnknownIdentifierException.class)
@@ -1496,6 +1529,7 @@ public class ProductPageController extends AbstractPageController
 	public boolean checkUser()
 	{
 		boolean flag = true;
+
 		try
 		{
 			final UserModel user = userService.getCurrentUser();
@@ -1509,12 +1543,12 @@ public class ProductPageController extends AbstractPageController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return false;
+			flag = false;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return false;
+			flag = false;
 		}
 
 		return flag;
@@ -1700,3 +1734,5 @@ public class ProductPageController extends AbstractPageController
 
 
 }
+
+
