@@ -1291,4 +1291,20 @@ $(document).ready(function(){
 		}
 
 		
+		$(document).on("click",'.select-size',function() {
+			$(this).toggleClass('active');
+		});
+		var selectOpen = false;
+		$(document).on("mouseleave",'.select-size',function() {
+			if($('.select-size').hasClass("active")) {
+				selectOpen = true;
+			}
+		});
+		$(document).on("click",function() {
+			if(selectOpen) {
+				$('.select-size').removeClass('active');
+				selectOpen = false;
+			}
+		});
+		
 });
