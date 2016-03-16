@@ -151,7 +151,11 @@ ACC.storefinder = {
 		      })(marker, i));
 			marker.setMap(map);	 
 			}
-			ACC.storefinder.staticLegends(map);
+			/* Create a DIV to hold the control and call StoreFinderLegendsControl() */
+		    var homeLegendsControlDiv = document.createElement('div');
+		    var homeLegendsControl = new ACC.storefinder.StoreFinderLegendsControl(homeLegendsControlDiv, map);
+		    homeLegendsControlDiv.index = 1;
+			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
 		}
 		
 	},
@@ -268,7 +272,11 @@ ACC.storefinder = {
 			center: centerPoint
 		}
 	  var map = new google.maps.Map(document.getElementById("store-finder-map"), mapOptions);
-		ACC.storefinder.staticLegends(map);
+		/* Create a DIV to hold the control and call StoreFinderLegendsControl() */
+	    var homeLegendsControlDiv = document.createElement('div');
+	    var homeLegendsControl = new ACC.storefinder.StoreFinderLegendsControl(homeLegendsControlDiv, map);
+	    homeLegendsControlDiv.index = 1;
+		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
 	}
 	,
 	bindStoreTestChange:function()
@@ -311,12 +319,10 @@ removeGamma:function(map) {
 	    map.setOptions({
 	        styles: mapStyles
 	    });
-	}
-	,
-	staticLegends:function(map){
-		var legend = document.createElement('div');
-		legend.style.background='white';
-		legend.style.padding='10px';
+	},
+	StoreFinderLegendsControl:function (controlDiv,map){
+		//controlDiv.style.background='white';
+		controlDiv.style.padding='10px';
 		 // Setup the different icons and shadows
 	    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
 	    
@@ -330,15 +336,20 @@ removeGamma:function(map) {
 	      iconURLPrefix + 'yellow-dot.png'
 	    ]
 	    var iconsLength = icons.length;
-	    
-	    console.info(legend); 
+	    var controlUI = document.createElement('div');
+	      controlUI.style.backgroundColor = '#ffffff';
+	      controlUI.style.textAlign = 'center';
+	      controlUI.style.right='60px';
+	      controlUI.style.padding='10px';
+	      controlDiv.appendChild(controlUI);
+	      
 	    for (var i = 0; i < icons.length; i++) { 
 	    	 var div = document.createElement('div');
 	         div.innerHTML = "Sample Data" +'<img src="' + icons[i] + '"> ';
-	         legend.appendChild(div);
+	         controlUI.appendChild(div);
 	    }
-        
-	   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+	    console.info(controlDiv);  
+	  // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 	    
 	}
 };

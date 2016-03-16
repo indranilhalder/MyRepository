@@ -121,7 +121,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store) throws EtailNonBusinessExceptions
+	public Map<String, Boolean> getPaymentModes(final String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions
 	{
 
 		//Declare variable
@@ -133,7 +133,18 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 
 			boolean flag = false;
-			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+			CartData cartData=null;
+			if (isMobile)
+			{
+				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
+				cartData = cartDataMobile;
+			}
+			else
+			{
+				cartData = getMplCustomAddressFacade().getCheckoutCart();
+			}
+			
+			
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
 
