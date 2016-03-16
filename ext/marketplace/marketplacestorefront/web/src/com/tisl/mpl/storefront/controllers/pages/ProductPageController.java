@@ -286,11 +286,13 @@ public class ProductPageController extends AbstractPageController
 			{
 				returnStatement = redirection;
 			}
+
 			else
 			{
 				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
 				{
 					model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+
 				}
 
 				populateProductDetailForDisplay(productModel, model, request);
@@ -320,18 +322,23 @@ public class ProductPageController extends AbstractPageController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			returnStatement = frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+
+
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+
 		}
+
 
 		return returnStatement;
 	}
@@ -794,6 +801,7 @@ public class ProductPageController extends AbstractPageController
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
 		}
+
 		return returnStatement;
 
 	}
@@ -892,6 +900,7 @@ public class ProductPageController extends AbstractPageController
 			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 
+
 		return returnStatement;
 	}
 
@@ -929,6 +938,7 @@ public class ProductPageController extends AbstractPageController
 					.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
 			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
 		}
+
 
 		return returnStatement;
 	}
@@ -1017,6 +1027,7 @@ public class ProductPageController extends AbstractPageController
 			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
 		}
 		return returnStatement;
+
 
 	}
 
@@ -1723,3 +1734,5 @@ public class ProductPageController extends AbstractPageController
 
 
 }
+
+

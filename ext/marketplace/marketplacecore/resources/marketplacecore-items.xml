@@ -4579,10 +4579,21 @@
                     <attribute qualifier="ipAddress" type="java.lang.String">
 						<modifiers optional="true" />
 						<persistence type="property" />
+					</attribute>					
+					<attribute qualifier="exportedToCrmRetryCount" type="java.lang.Integer">
+						<description>Hold a counter of how many times the order was attempted to be sent to crm.
+						</description>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<persistence type="property"/>
 					</attribute>
-
-
-
+					<attribute qualifier="omsSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="crmSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 

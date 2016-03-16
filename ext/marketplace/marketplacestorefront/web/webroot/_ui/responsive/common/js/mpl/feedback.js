@@ -1285,5 +1285,10 @@ $(document).ready(function(){
 			if($('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').children().length==0){
 			$('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').parents().find('.listing.wrapper').css('height','0px');
 			}
+
+		if($('.promo-block .promo-img').children().length == 0){
+			$('.promo-block .pdp-promoDesc').css({'float':'none','margin':'0px auto'});
+		}
+
 		
 });
