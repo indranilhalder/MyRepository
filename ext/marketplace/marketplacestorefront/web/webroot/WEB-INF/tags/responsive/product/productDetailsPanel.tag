@@ -124,12 +124,7 @@ tr.d0 td {
 
 			</div>
 			
-			<div id="buyNow">
-	        <button style="display: block" id="buyNowButton" type="button" class="btn-block js-add-to-cart">
-				<spring:theme code="buyNow.button.pdp" />
-			</button>
-	        </div>
-
+			
 			<span id="defaultWishId" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
 			<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
 			<span id="wishlistnotblank" style="display:none"><spring:theme code="wishlist.notblank"/></span>
