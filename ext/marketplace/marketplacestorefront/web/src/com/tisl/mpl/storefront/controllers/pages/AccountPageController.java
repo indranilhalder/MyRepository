@@ -1745,7 +1745,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					returnLogisticsCheck = false;
 				}
 			}
-			final boolean returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
+			returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
 
 
 			model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
