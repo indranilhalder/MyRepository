@@ -27275,7 +27275,7 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	color:#ff2c43;
 }
 .off-bag span:last-child {
-	color:#ff2c43;
+	color:#000;
 	margin-left:4px;
 }
 body .account .right-account .order-history.order-details li.item .status .message.processing-stage-arrow1 {
