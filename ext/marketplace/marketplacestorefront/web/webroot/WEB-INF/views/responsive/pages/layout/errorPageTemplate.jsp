@@ -5,7 +5,7 @@
 
 <template:page pageTitle="${pageTitle}">
 <div class="error-template-message">
-	<div class="r2_error_container">
+	<div class="error_container">
 		<ul>
 			<li class="left_col">
 				<cms:pageSlot position="SideContent" var="features" >
