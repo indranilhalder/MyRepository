@@ -40,4 +40,18 @@ public class GigyaFacadeImpl implements GigyaFacade
 	{
 		return gigyaService.gigyaLoginHelperforMobile(customerModel, isNewUser);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.facades.account.reviews.GigyaFacade#ratingLogoutHelper(de.hybris.platform.core.model.user.CustomerModel
+	 * )
+	 */
+	@Override
+	public void ratingLogoutHelper(final CustomerModel customerModel)
+	{
+		gigyaService.ratingLogoutHelper(customerModel);
+
+	}
 }

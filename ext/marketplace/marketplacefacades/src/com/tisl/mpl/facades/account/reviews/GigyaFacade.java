@@ -24,4 +24,6 @@ public interface GigyaFacade
 	 * @return List
 	 */
 	public GigyaWsDTO gigyaLoginHelper(CustomerModel customerModel, boolean isNewUser);
+
+	public void ratingLogoutHelper(final CustomerModel customerModel);
 }
