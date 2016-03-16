@@ -161,13 +161,13 @@ ACC.product = {
 		});
 				
 		$(document).on('click','#addToCartFormId .js-add-to-cart',function(event){
-			ACC.product.sendAddToBag("addToCartFormId");
+			ACC.product.sendAddToBag("addToCartFormId",false);
 			event.preventDefault();
 			return false;
 		});
 		
 		$(document).on('click','.serp_add_to_cart_form .js-add-to-cart',function(event){
-			ACC.product.sendAddToBag($(this).closest('form').attr("id"));
+			ACC.product.sendAddToBag($(this).closest('form').attr("id"),false);
 			event.preventDefault();
 			return false;
 		});
@@ -327,6 +327,7 @@ sendAddToBag : function(formId, isBuyNow) {
 			.val();
 	var stock = $("#" + formId + " :input[name='" + stock_id + "']").val();
 	var isSuccess = false;
+	var ussid=$('#ussid').val();
 	/*
 	 * if(parseInt(stock)<parseInt(quantity)){
 	 * $("#"+formId+"noInventory").html("<font color='#ff1c47'>" +
@@ -358,9 +359,12 @@ sendAddToBag : function(formId, isBuyNow) {
 							//$("#" + formId + "TitleSuccess").html("");
 							//$("#" + formId + "TitleSuccess").html("<font color='#00CBE9'>"+ $('#addtobag').text()+ "</font>");
 							//$("#" + formId + "TitleSuccess").show().fadeOut(5000);
-							$("#" + formId + "Title.sellerAddToBagTitle").show().fadeOut(5000);
-							$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
-							ACC.product.showTransientCart(productCode,quantity);
+							//$("#" + formId + "Title.sellerAddToBagTitle").show().fadeOut(5000);
+							//$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
+							if(!isBuyNow){
+								ACC.product.showTransientCart(ussid);
+							}
+							
 							// ACC.product.displayAddToCart(data,formId,false);
 							$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 						} else if (data == "reachedMaxLimit") {
@@ -471,6 +475,7 @@ sendAddToBag : function(formId, isBuyNow) {
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
+		 var ussid=$('#ussid').val();
 		 /*if(parseInt(stock)<parseInt(quantity)){
 			    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 			    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -487,14 +492,14 @@ sendAddToBag : function(formId, isBuyNow) {
 		    },
 			success : function(data) {
 				if(data.indexOf("cnt:") >= 0){
-				$("#"+formId+"TitleSuccess").html("");
-				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+				//$("#"+formId+"TitleSuccess").html("");
+				//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
 
-				$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+				//$("#"+formId+"TitleSuccess").show().fadeOut(5000);
 
-				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
-				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
-
+				//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
+				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+				ACC.product.showTransientCart(ussid);
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
@@ -843,48 +848,34 @@ sendAddToBag : function(formId, isBuyNow) {
 		});
 	});
 	},
-	showTransientCart: function (productCode,quantity)
+	showTransientCart: function (ussid)
 	{
-		var dataString="productCode="+productCode+"&quantity="+quantity;
+		var dataString="ussid="+ussid;
 		//AJAX CALL
 		$
 		.ajax({
 			type : "GET",
 			dataType : "json",
 			url : ACC.config.encodedContextPath
-					+ "/p/showTransientCart",
+					+ "/cart/showTransientCart",
 			data:dataString,
 			success : function(response) {
+				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
 				
-				var transientCartHtml="<div class='mini-transient-bag' ><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-brand-name'><a href='"+response.productUrl+"'>"+response.brand+"</a></h3><h3 class='product-name'><a href='"+response.productUrl+"'>"+response.productTitle+"</a></h3><p class='item-info'></p></div><ul class='item-edit-details'><li>Qty:"+response.quantity+"</li>";
-				if(typeof response.size!=="undefined"){
-					transientCartHtml+="<li>Size:&nbsp;"+response.size+"</li>";
+				if(typeof response.offer!=='undefined'){
+					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
-				if(typeof response.capacity!=="undefined"){
-					transientCartHtml+="<li>Capacity:&nbsp;"+response.capacity+"</li>";
-				}
-				transientCartHtml+="<li class='price'><span class='priceFormat'>"+response.productPrice+"</span></li></ul></li><li><a href='/store/mpl/en/cart' class='go-to-bag mini-cart-checkout-button'>Go To My Bag</a></li></ul></div>";
-				$('.bag').append(transientCartHtml);
-				$('header .content .right > ul > li.bag').css({'z-index':'4','border-left':'2px solid #f0f4f5'});
-				$('.mini-transient-bag').fadeOut(3000);
-				/*$('.about-one.showcase-section').remove();
-				defaultHtml = "<div class='about-one showcase-section'>";
-				if (typeof response.bannerImageUrl !=="undefined") {
-					defaultHtml +="<div class='desc-section'>";
-					if(typeof response.bannerUrl !=="undefined"){
-						defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"'>";
-					}
-					defaultHtml += "<img src='"+ response.bannerImageUrl
-					+ "'></img>";	
-					if(typeof response.bannerUrl !=="undefined"){
-						defaultHtml+="</a>";
-					}
-					defaultHtml +="</div>";
-				}*/
 				
-			
+				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='/store/mpl/en/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
+				$('.transient-mini-bag').append(transientCartHtml);
 				
-
+				setTimeout(function(){
+					$('.mini-transient-bag').fadeOut(2000);
+				},2000);
+				setTimeout(function(){
+					$('.mini-transient-bag').remove();
+				},4000);
+				
 			},
 			error : function() {
 				console.log("Error while getting transient cart");

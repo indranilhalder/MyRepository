@@ -1733,7 +1733,7 @@ public class ProductPageController extends AbstractPageController
 		return successful;
 	}
 
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.TRANSIENTCARTAJAX, method = RequestMethod.GET)
+	/*@RequestMapping(value = ControllerConstants.Views.Fragments.Product.TRANSIENTCARTAJAX, method = RequestMethod.GET)
 	public @ResponseBody JSONObject showTransientCart(@RequestParam("productCode") final String productCode,
 			@RequestParam("quantity") final String quantity)
 					throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
@@ -1818,7 +1818,7 @@ public class ProductPageController extends AbstractPageController
 		}
 
 		return transientCartJSON;
-	}
+	}*/
 
 
 }

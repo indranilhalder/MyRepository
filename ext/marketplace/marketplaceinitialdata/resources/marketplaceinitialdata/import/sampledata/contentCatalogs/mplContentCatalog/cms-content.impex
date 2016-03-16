@@ -462,7 +462,8 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 ;;TitleForTnCPaymentPageComponent;Title For TnCPayment PageComponent;TitleForTnCPaymentPageComponent;;;;
 ;;HowToDocumentsComponent;How To Documents Component;HowToDocumentsComponent;;;;
 
-
+;;MyTataRewardsComponent;My Tata Rewards Page component;MyTataRewardsComponent;;;;
+;;TncMyTataRewardsComponent;TncMyTataRewardsComponent Page component;TncMyTataRewardsComponent;;;;
   
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef)
@@ -561,6 +562,37 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;Section3-aboutus;Section3;;Section3-aboutus;;;
 ;;Section4-aboutus;Section4;;Section4-aboutus;;;
 
+#####My Tata Rewards Page ######
+
+#ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+;;Section2ASlot-mytatarewards;Section2A Slot for My Tata Rewards Page;true;;
+;;Section2BSlot-mytatarewards;Section2B Slot for My Tata Rewards Page;true;MyTataRewardsComponent;
+;;Section4-mytatarewards;Section4 for My Tata Rewards page;true;ContactAddress;
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='mytatarewards'];contentSlot(uid,$contentCV)[unique=true];;;
+
+;;Section2A-mytatarewards;Section2A;;Section2ASlot-mytatarewards;;;
+;;Section2B-mytatarewards;Section2B;;Section2BSlot-mytatarewards;;;
+;;Section4-mytatarewards;Section4;;Section4-mytatarewards;;;
+
+#####Page2 Page ######
+
+#ContentSlot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+
+;;Section2ASlot-tncmytatarewards;Section2A Slot for Tnc My Tata Rewards Page;true;;
+;;Section2BSlot-tncmytatarewards;Section2B Slot for Tnc My Tata Rewards Page;true;TncMyTataRewardsComponent;
+;;Section4-tncmytatarewards;Section4 for Tnc My Tata Rewards page;true;ContactAddress;
+
+# ContentSlotForPage 
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='tncmytatarewards'];contentSlot(uid,$contentCV)[unique=true];;;
+
+;;Section2A-tncmytatarewards;Section2A;;Section2ASlot-tncmytatarewards;;;
+;;Section2B-tncmytatarewards;Section2B;;Section2BSlot-tncmytatarewards;;;
+;;Section4-tncmytatarewards;Section4;;Section4-tncmytatarewards;;;
 
 ##### Sell With Us Page######
 
@@ -1138,6 +1170,9 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;PaymentLink;Payment Link;/tncPayment;;;;
 ;;AuthenticAndExclusiveLink;AuthenticAndExclusive Link;/authenticAndExclusive;;;;
 ;;footwearLink;footwear Link;/footwear;;;;
+
+;;MyTataRewardsLink;My Tata Rewards Link;/mytatarewards;;;;
+;;TncMyTataRewardsLink;Tnc My Tata Rewards Link;/tncmytatarewards;;;;
 
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
 ;TataMarketplaceNavNode;;Tata Marketplace Pages;;;AboutUsLink,CareersLink,SellWithUSLink,StoreLocatorLink;TataMarketplaceNavNode

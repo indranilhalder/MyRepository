@@ -264,6 +264,7 @@ public interface ControllerConstants
 				String MiniCartPanel = "fragments/cart/miniCartPanel";
 				String MiniCartErrorPanel = "fragments/cart/miniCartErrorPanel";
 				String CartPopup = "fragments/cart/cartPopup";
+
 			}
 
 			interface Account
@@ -328,7 +329,7 @@ public interface ControllerConstants
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
 				public static final String BUYBOZFORSIZEGUIDEAJAX = "buyboxDataForSizeGuide";
-				public static final String TRANSIENTCARTAJAX = "showTransientCart";
+
 			}
 		}
 	}
