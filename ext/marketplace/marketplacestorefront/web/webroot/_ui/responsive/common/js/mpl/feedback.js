@@ -1299,4 +1299,16 @@ $(document).ready(function(){
 			$(document).on("click",".mini-transient-bag",function(){
 				$(this).remove();
 			});
+			
+			$(document).on("click","#addToCartButton, .serp-addtobag.js-add-to-cart",function(){
+				if($(window).width() > 773) {
+					$("#cboxClose").click();
+				 $('html,body').animate({
+				            scrollTop: 0
+				        }, 500);
+				 
+				} 
+				
+				});
+			
 });

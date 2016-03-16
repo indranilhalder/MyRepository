@@ -228,6 +228,7 @@
 		<property name="uid" type="String"></property>
 		<property name="signature" type="String"></property>
 		<property name="timestamp" type="String"></property>
+		<property name="checkTataRewards" type="boolean"></property>
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.TrackOrderData">

@@ -42,6 +42,17 @@
 
 	<form:hidden path="affiliateId" class="add_edit_delivery_address_id" />
 	
+<%-- 	<formElement:formCheckbox idKey="check_MyRewards"
+		labelKey="register.checkMyRewards" path="checkTataRewards" inputCSS=""  /> --%>
+		
+		<c:url value="/mytatarewards" var="mytatarewards" />
+		<c:url value="/tncmytatarewards" var="tncmytatarewards" />
+		 <div id="checkBox">
+										
+				<input type="checkbox" id="check_MyRewards" name="check_MyRewards" value="true"/>
+				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }">My Tata Rewards Program</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }"> T&C </a> and <a href="${tncmytatarewards }"> privacy policy</a> of My Tata Rewards program</label>
+		</div> 
+	
 	<div class="form-actions clearfix">
 		<ycommerce:testId code="register_Register_button">
 			<button type="submit" onclick="return checkSignUpValidation('login');" ><spring:theme code='${actionNameKey}' /></button>
