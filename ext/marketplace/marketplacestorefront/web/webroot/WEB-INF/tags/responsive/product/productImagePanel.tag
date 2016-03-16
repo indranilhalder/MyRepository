@@ -101,7 +101,7 @@
             <button type="button" class="close pull-right" 
               onclick="closing()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">
             </button>
-			<iframe name="videoFrame" id="videoFrame" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+			<iframe name="videoFrame" id="player" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
       </div>
 </div>
 <style>

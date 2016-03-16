@@ -29,7 +29,7 @@
   		<ul>
   		
   			<c:forEach var="classification" items="${mapConfigurableAttribute}">
-				   <li>${classification.key} - ${classification.value}</li>
+				   <li>${classification.value}</li>
 			</c:forEach>
   			<%-- <li><spring:theme code="product.listing.id"></spring:theme>${product.code}</li> --%>
   		</ul>
