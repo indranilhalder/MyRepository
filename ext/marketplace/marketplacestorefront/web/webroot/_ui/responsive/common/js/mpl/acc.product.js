@@ -359,8 +359,8 @@ sendAddToBag : function(formId, isBuyNow) {
 							//$("#" + formId + "TitleSuccess").html("");
 							//$("#" + formId + "TitleSuccess").html("<font color='#00CBE9'>"+ $('#addtobag').text()+ "</font>");
 							//$("#" + formId + "TitleSuccess").show().fadeOut(5000);
-							$("#" + formId + "Title.sellerAddToBagTitle").show().fadeOut(5000);
-							$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
+							//$("#" + formId + "Title.sellerAddToBagTitle").show().fadeOut(5000);
+							//$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
 							if(!isBuyNow){
 								ACC.product.showTransientCart(ussid);
 							}
@@ -475,6 +475,7 @@ sendAddToBag : function(formId, isBuyNow) {
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
+		 var ussid=$('#ussid').val();
 		 /*if(parseInt(stock)<parseInt(quantity)){
 			    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 			    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -491,14 +492,14 @@ sendAddToBag : function(formId, isBuyNow) {
 		    },
 			success : function(data) {
 				if(data.indexOf("cnt:") >= 0){
-				$("#"+formId+"TitleSuccess").html("");
-				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+				//$("#"+formId+"TitleSuccess").html("");
+				//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
 
-				$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+				//$("#"+formId+"TitleSuccess").show().fadeOut(5000);
 
-				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
-				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
-
+				//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
+				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+				ACC.product.showTransientCart(ussid);
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
