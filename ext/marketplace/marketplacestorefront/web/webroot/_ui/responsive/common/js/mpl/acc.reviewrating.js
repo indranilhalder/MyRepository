@@ -374,8 +374,8 @@ if(typeof(arrayrating)!= "undefined"){
 			
 		    function reviewPopUpDisplay(rootCategory , productCode , productTitle,productBrand,id){
 		    	
-		    	$(".popUpProductTitle").text(productTitle);
-		    	$(".popUpProductBrand").text(productBrand);
+		    	$(".popUpProductTitle").text(decodeURI(productTitle));
+		    	$(".popUpProductBrand").text(decodeURI(productBrand));
 		    	var x = $("#new-review-link"+productCode).siblings().find(".picZoomer-pic").attr("src");
 		    	
 		    	if(typeof(x) == "undefined" || x == ""){
