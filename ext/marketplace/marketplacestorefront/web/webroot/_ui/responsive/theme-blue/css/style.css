@@ -1011,6 +1011,7 @@ h2 {
           margin-right: 10px; }
         header .content .right > ul > li.bag {
           border-left: 2px solid #fff;
+          z-index:4;
           -webkit-transition: z-index 0s 0.3s, border 0.3s 0.3s;
           -moz-transition: z-index 0s 0.3s, border 0.3s 0.3s;
           transition: z-index 0s 0.3s, border 0.3s 0.3s; }
@@ -22735,6 +22736,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 }
 .serp-addtobag.js-add-to-cart {
 	background-color: rgba(248, 249, 251,0);
+	    line-height: 14px;
 } 
 .product-tile .image .quickview a{
 	position:relative;
@@ -36493,7 +36495,7 @@ display:block;
 /* TISPRD-216 defect fix ends */
 /*mini transient bag css changes starts*/
                    header .content .right > ul > li.transient-mini-bag{
-                    z-index:4;
+                    z-index:5;
                     }
                     header .content .right > ul > li.transient-mini-bag .mini-transient-bag {
             position: absolute;
