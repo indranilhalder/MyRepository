@@ -24,6 +24,7 @@
     	<property name="couponRedeemed" type="boolean"/>
     	<property name="couponReleased" type="boolean"/>
     	<property name="redeemErrorMsg" type="String"/>
+    	<property name="voucherCode" type="String"/>
     </bean>
     
       <bean class="com.tisl.mpl.data.VoucherDisplayData">
