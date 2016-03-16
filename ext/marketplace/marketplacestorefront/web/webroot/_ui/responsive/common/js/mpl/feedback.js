@@ -1291,9 +1291,4 @@ $(document).ready(function(){
 		}
 
 		
-			
-
-			$(document).on("click",'.select-size',function() {
-				$(this).toggleClass('active');
-			});
 });

@@ -1545,17 +1545,17 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		VoucherDiscountData discData = new VoucherDiscountData();
 		calculatePromotion(cartModel, cartData);
 
-		final BankModel bankModel = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+		final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 		final String paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 
-		if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && bankModel != null
-				&& bankModel.getBankName() != null)
+		if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
+
 		{
 
-			LOG.debug(">> Apply promotion >> Inside EMI ");
-			final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(),
-					bankModel.getBankName());
+			LOG.debug(">> Apply promotion >> Inside EMI Bank Name : " + bankName);
+			final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(), bankName);
+
 			if (CollectionUtils.isEmpty(emiBankList))
 			{
 				calculatePromotion(cartModel, cartData);
@@ -2509,11 +2509,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2864,5 +2864,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.mplVoucherService = mplVoucherService;
 	}
+
+
 
 }

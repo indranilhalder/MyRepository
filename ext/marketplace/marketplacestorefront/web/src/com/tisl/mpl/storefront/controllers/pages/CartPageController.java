@@ -460,6 +460,7 @@ public class CartPageController extends AbstractPageController
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 		return returnPage;
+
 	}
 
 	/*
@@ -498,6 +499,7 @@ public class CartPageController extends AbstractPageController
 				// Override the Checkout Flow setting in the session
 				if (checkoutFlow != null && StringUtils.isNotBlank(checkoutFlow.getCode()))
 				{
+
 					SessionOverrideCheckoutFlowFacade.setSessionOverrideCheckoutFlow(checkoutFlow);
 				}
 
@@ -507,11 +509,21 @@ public class CartPageController extends AbstractPageController
 					SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
 				}
 
+
 				// Redirect to the start of the checkout flow to begin the checkout process
 				// We just redirect to the generic '/checkout' page which will actually select the checkout flow
 				// to use. The customer is not necessarily logged in on this request, but will be forced to login
 				// when they arrive on the '/checkout' page.
+
+
+
+
 			}
+
+
+
+
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -539,6 +551,7 @@ public class CartPageController extends AbstractPageController
 
 
 		return returnPage;
+
 	}
 
 
@@ -892,13 +905,16 @@ public class CartPageController extends AbstractPageController
 			LOG.error("Failed to validate cart", e);
 		}
 		if (CollectionUtils.isNotEmpty(modifications))
+
 		{
 			redirectModel.addFlashAttribute("validationData", modifications);
 
 			// Invalid cart. Bounce back to the cart page.
 
+
 		}
 		return (CollectionUtils.isNotEmpty(modifications)) ? true : false;
+
 	}
 
 	/**
@@ -936,6 +952,7 @@ public class CartPageController extends AbstractPageController
 		LOG.debug("Class NameremoveFromMi :" + className + "Could find any cart entries");
 		//returnStatement = "fail";
 		return returnStatement;
+
 	}
 
 	/**
@@ -1087,6 +1104,7 @@ public class CartPageController extends AbstractPageController
 		}
 
 		return returnStatement;
+
 	}
 
 	/**
@@ -1175,14 +1193,18 @@ public class CartPageController extends AbstractPageController
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
 		final UserModel user = userService.getCurrentUser();
 		List<WishlistData> wishListData = null;
+
 		//If the user is not logged in then ask customer to login.
 		if (null != user.getName() && user.getName().equalsIgnoreCase(USER.ANONYMOUS_CUSTOMER))
 		{
 
 
+
+
 			wishListData = new ArrayList<WishlistData>();
 			try
 			{
+
 				final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists();
 				final int wishListSize = allWishlists.size();
 
@@ -1191,6 +1213,7 @@ public class CartPageController extends AbstractPageController
 				//check whether any wishlist exits for user or not or else create a new wishlist and add product to it
 				if (wishListSize == 0)
 				{
+
 					//add product to new wishlist
 					final Wishlist2Model createdWishlist = wishlistFacade.createNewWishlist(user, nameSet, productCode);
 
@@ -1201,13 +1224,22 @@ public class CartPageController extends AbstractPageController
 					wishListData.add(wishData);
 				}
 				else
+
+
+
+
+
 				{
 					//view existing wishlists
 					for (final Wishlist2Model wish : allWishlists)
+
+
+
 					{
 						final WishlistData wishList = new WishlistData();
 						wishList.setParticularWishlistName(wish.getName());
 						for (final Wishlist2EntryModel wlEntry : wish.getEntries())
+
 						{
 							if (wlEntry.getProduct().getCode().equals(productCode))
 							{
@@ -1216,14 +1248,19 @@ public class CartPageController extends AbstractPageController
 						}
 						wishListData.add(wishList);
 					}
+
 				}
 			}
+
 			catch (final EtailBusinessExceptions e)
 			{
+
 				ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			}
+
 			catch (final EtailNonBusinessExceptions e)
 			{
+
 				ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			}
 		}
@@ -1518,3 +1555,5 @@ public class CartPageController extends AbstractPageController
 		this.mplCouponFacade = mplCouponFacade;
 	}
 }
+
+

@@ -22,6 +22,8 @@
 	<alias name="binFacade" alias="binFacade"/>
 	<bean id="binFacade" class="com.tisl.mpl.bin.facade.impl.BinFacadeImpl" >
   		<property name="binService" ref="binService" />
+  		<property name="sessionService" ref="sessionService" />
+  		<property name="configurationService" ref="configurationService" />
     </bean>
     
     <alias name="binService" alias="binService"/>
@@ -32,6 +34,14 @@
 	<alias name="binDao" alias="binDao"/>
 	<bean id="binDao" class="com.tisl.mpl.bin.dao.impl.BinDaoImpl" >
 	</bean>
+	
+	 <!-- Job for Bank Data Generation    -->
+   	<bean id="mplBankCSVPrepareJob" class="com.tisl.mpl.bin.jobs.MplBankCSVPrepareJob"
+   		autowire="byName" >
+   		<property name="binService" ref="binService" />
+   	</bean>
+   	<!-- POJO Class for Bank Data Generation    -->
+   	<bean id="bankDataPojo" class="com.tisl.mpl.bin.pojo.BankDataPojo" />
 			
 			
 </beans>

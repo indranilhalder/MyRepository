@@ -18123,15 +18123,15 @@ header .content .bottom .search .select-list select
        #variantForm .select-size li:hover {
         font-weight: 600; }
      
-     #variantForm .select-size.active {
+     #variantForm .select-size:hover {
       border-color: #DFD1D5;
       z-index: 1;
       -webkit-transition: border 0.15s;
       -moz-transition: border 0.15s;
       transition: border 0.15s; }
-       #variantForm .select-size.active > .selected {
+       #variantForm .select-size:hover > .selected {
         border-bottom: 1px solid #DFD1D5; }
-       #variantForm .select-size.active ul {
+       #variantForm .select-size:hover ul {
         max-height: 500px;
         border-color: #DFD1D5;
         -webkit-transition: max-height 0.15s, border 0s;
@@ -36477,3 +36477,4 @@ display:block;
 }
 
 /* TISPRD-216 defect fix ends */
+
