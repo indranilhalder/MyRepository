@@ -85,6 +85,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String DMY_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DMY_DATE_FORMAT_INT = "yyyyMMdd";
 	public static final String COUPONS_DATE_FORMAT = "MMM dd, YYYY";
+	public static final String COUPONS_TXN_DATE_FORMAT = "MM";
 	public static final String TRUE = "true";
 	public static final String TRUE_UPPER = "TRUE";
 	public static final String ZERO = "0";
@@ -186,6 +187,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CHARGED = "CHARGED".intern();
 	public static final String JUSPAY_ORDER_STAT_RESP = "Order status response: ".intern();
 	public static final String NA = "NA".intern();
+	public static final String na = "na".intern();
 	public static final String DUMMYCCOWNER = "DUMMY NAME".intern();
 	public static final String DUMMYNUMBER = "XXXXXXXXXXXXXXXX".intern();
 	public static final String DUMMYCARDREF = "xxxxxxxxxxxxxxxxxx".intern();
@@ -656,7 +658,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INVENTORY_WIIL_EXCEDE = "willexceedeinventory";
 
 	//For SellerPriority Report
-	public static final String CSVFILEHEADER_SELLERPRIORITY = "Modified Time, User ID, Seller ID, Seller Name, Category ID, Product ID, Start Date, End Date, Active?, Newly_Created?, Modified_Start Date, Modified_End Date, Modified_Active Flag";
+	public static final String CSVFILEHEADER_SELLERPRIORITY = "Modified Time, User ID, Seller ID, Seller Name, Category ID, Product ID, Start Date, End Date, Active?, Newly_Created?, Modified Swllwe ID, Modified Seller Name, Modified Start Date, Modified End Date, Modified Active Flag";
 
 	//System/Non Business constants
 	public static final String E0000 = "E0000";
@@ -674,6 +676,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0014 = "E0014";
 	public static final String E0015 = "E0015";
 	public static final String E0016 = "E0016";
+	public static final String E0017 = "E0017";
+	public static final String E0018 = "E0018";
+	public static final String E0019 = "E0019";
+	public static final String E0020 = "E0020";
+	public static final String E0021 = "E0021";
 	//System/Non Business constants
 
 	//pdp error constants
@@ -1303,11 +1310,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_EXPRESS_DELIVERY = "Express Delivery ".intern();
 	// Seler Priority Report Query
 	// Within date range
-	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValues as s}, {MplSellerPriority as sp },{SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {s.modifieditem}={sp.pk} and {s.creationtime} BETWEEN ?startDate and ?endDate order by {s.Timestamp} desc";
+	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {sv.pk} from {SavedValues as sv JOIN MplSellerPriority as msp ON {sv.modifieditem}={msp.pk} and {sv.creationtime} BETWEEN '2016-01-27 19:42:21.961' and '2016-02-18 17:07:46.338'JOIN SavedValueEntryType as sve ON {sv.modificationtype}={sve.pk}} order by {sv.Timestamp} desc";
 	//	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValueEntry as se},{SavedValues as s}, {Bin as bk }, {SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {st.code} = 'changed'and {s.modifieditem}={bk.pk} and {s.pk} = {se.Parent} and {s.creationtime} BETWEEN ?startDate and ?endDate ";
 
 	// full data
-	public static final String SELLERPRIORITYQUERY = "Select {s.pk} from {SavedValues as s}, {MplSellerPriority as sp },{SavedValueEntryType as st} where {s.modificationtype}={st.pk}  and {s.modifieditem}={sp.pk} order by {s.Timestamp} desc";
+	public static final String SELLERPRIORITYQUERY = "Select {sv.pk} from {SavedValues as sv JOIN MplSellerPriority as msp ON {sv.modifieditem}={msp.pk} JOIN SavedValueEntryType as sve ON {sv.modificationtype}={sve.pk}} order by {sv.Timestamp} desc";
 
 	public static final String SELLERPRIORITYDATAQUERY = "Select {sp.pk} from  {MplSellerPriority as sp }";
 
@@ -1328,10 +1335,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//CRM Ticket Type
 	public static final String TICKET_TYPE = "D";
 	public static final String TICKET_SUB_TYPE = "AC";
+	public static final String SOURCE = "commerce";
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 	//CRM Ticket Source From Commerce
-	public static final String SOURCE = "commerce";
+	public static final String HUNDRED = "100".intern();
 
 
 	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
@@ -1381,10 +1389,56 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SIMPLEDATEFORMATDB = "yyyy-MM-dd HH:mm:ss";
 	public static final String ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES = "No sellerpriority data in saved values";
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
+	public static final String FILENOTFOUNDEXCEPTION = "Cannot find file for batch update.";
+	public static final String IOEXCEPTION = "Exception closing file handle. ";
+	public static final String PARENT = "parent";
+	public static final String JANUARY = "January";
+	public static final String FEBRUARY = "February";
+	public static final String MARCH = "March";
+	public static final String APRIL = "April";
+	public static final String MAY = "May";
+	public static final String JUNE = "June";
+	public static final String JULY = "July";
+	public static final String AUGUST = "August";
+	public static final String SEPTEMBER = "September";
+	public static final String OCTOBER = "October";
+	public static final String NOVEMBER = "November";
+	public static final String DECEMBER = "December";
+
+	public static final String COUPONREDEEMERROR = "Coupon cannot be redeemed".intern();
+	public static final String COUPONTOPCOUNT = "coupon.display.topCount";
+	public static final String COUPONTOPCOUNTDEFVAL = "5";
+	public static final String EXCPRICEEXCEEDED = "total price exceeded".intern();
+	public static final String EXCINVALID = "Voucher not found".intern();
+	public static final String EXCEXPIRED = "Voucher cannot be redeemed".intern();
+	public static final String EXCISSUE = "Error while".intern();
+	public static final String EXCNOTAPPLICABLE = "Voucher is not applicable".intern();
+	public static final String EXCNOTRESERVABLE = "Voucher is not reservable".intern();
+	public static final String EXCFREEBIE = "freebie".intern();
+	public static final String EXCUSERINVALID = "User not valid".intern();
+	public static final String USER = "User".intern();
+	public static final String DATE = "Date".intern();
+	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
+	public static final String VOUCHERNOTREDEEMABLE = "Voucher cannot be redeemed: ".intern();
+	public static final String VOUCHERINVALIDUSER = "User not valid for : ".intern();
+	public static final String VOUCHERINAPPLICABLE = "Voucher is not applicable: ".intern();
+	public static final String VOUCHERNOTRESERVABLE = "Voucher is not reservable: ".intern();
+	public static final String ERRORAPPLYVOUCHER = "Error while applying voucher: ".intern();
+	public static final String PRICEEXCEEDED = "Price_exceeded".intern();
+	public static final String NOTAPPLICABLE = "not_applicable".intern();
+	public static final String VOUCHER = "Voucher ".intern();
+	public static final String FREEBIEERROR = " cannot be redeemed: freebie".intern();
+	public static final String PRICEEXCEEDERROR = " cannot be redeemed: total price exceeded".intern();
+	public static final String DATERESTVIOLATION = "Date restriction is violated".intern();
+	public static final String USERRESTVIOLATION = "User restriction is violated".intern();
+	public static final String VOUCHERCODE = "voucherCode".intern();
+	public static final String SYSDATE = "sysdate".intern();
+	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
+
 	//Added for constants for clickandcollect and active.
 	public static final String CLICK_N_COLLECT = "Y";
 	public static final String ACTIVE = "Y";
-
+	
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
