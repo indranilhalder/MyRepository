@@ -49,18 +49,27 @@ public class SendOrderToCRMEventListner extends AbstractEventListener<SendOrderT
 	@Override
 	protected void onEvent(final SendOrderToCRMEvent sendOrderToCRMEvent)
 	{
-		LOG.info("inside event listner");
-		final OrderModel orderModel = sendOrderToCRMEvent.getOrderModel();
-		LOG.info("inside event listner: got order model");
-
-		order = getOrderConverter().convert(orderModel);
-		ordercreation.orderCreationDataToCRM(order);
-		LOG.debug(">>>>>>>>>>>>> After CRM order call <<<<<<<<<<<<<<<<");
-		if (null != orderModel.getUser().getUid())
+		try
 		{
-			LOG.info(">>>>>>>>>>>>> calling customer update after order place <<<<<<<<<<<<<<<<");
-			mplCustomerWebService.customerModeltoWsData((CustomerModel) orderModel.getUser(), "U", false);
-			LOG.info(">>>>>>>>>>>>>******* customer update success *********<<<<<<<<<<<<<<<<");
+			LOG.info("inside event listner");
+			final OrderModel orderModel = sendOrderToCRMEvent.getOrderModel();
+			LOG.info("inside event listner: got order model");
+
+			order = getOrderConverter().convert(orderModel);
+
+			ordercreation.orderCreationDataToCRM(order);
+
+			LOG.debug(">>>>>>>>>>>>> After CRM order call <<<<<<<<<<<<<<<<");
+			if (null != orderModel.getUser().getUid())
+			{
+				LOG.info(">>>>>>>>>>>>> calling customer update after order place <<<<<<<<<<<<<<<<");
+				mplCustomerWebService.customerModeltoWsData((CustomerModel) orderModel.getUser(), "U", false);
+				LOG.info(">>>>>>>>>>>>>******* customer update success *********<<<<<<<<<<<<<<<<");
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Unable to connect to CRM :" + e.getMessage());
 		}
 	}
 

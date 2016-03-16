@@ -12,5 +12,5 @@ import com.hybris.oms.domain.order.Order;
  */
 public interface MplSendOrderFromCommerceToCRM
 {
-	public void orderCreationDataToCRM(final Order orderData);
+	public void orderCreationDataToCRM(final Order orderData) throws Exception;
 }

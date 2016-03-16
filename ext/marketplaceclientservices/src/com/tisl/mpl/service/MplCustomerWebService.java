@@ -5,6 +5,8 @@ package com.tisl.mpl.service;
 
 import de.hybris.platform.core.model.user.CustomerModel;
 
+import javax.xml.bind.JAXBException;
+
 import com.tisl.mpl.xml.pojo.MplCustomerWsData;
 
 
@@ -16,8 +18,10 @@ public interface MplCustomerWebService
 {
 	/**
 	 * @param customerWsDTO
+	 * @throws JAXBException
+	 * @throws Exception
 	 */
-	public void customerDataToCRM(MplCustomerWsData customerWsDTO);
+	public void customerDataToCRM(MplCustomerWsData customerWsDTO) throws Exception;
 
 	/**
 	 * @param customerModel
