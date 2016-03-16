@@ -28,7 +28,7 @@
 
 
 <template:page pageTitle="${pageTitle}">
-	<div class="account">
+	<div class="account" id="anchorHead">
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
 			<%--  <select class="menu-select">
@@ -154,7 +154,7 @@
 							</ul>
 
 
-							<div class="totals">
+							<div class="totals" id="anchor">
 								<h3>Total:</h3>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"

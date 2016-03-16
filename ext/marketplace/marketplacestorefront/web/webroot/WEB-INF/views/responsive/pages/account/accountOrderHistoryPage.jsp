@@ -206,9 +206,9 @@
 															code="text.orderHistory.number" /></span>#${orderHistoryDetail.code}</li>
 
 												<li class="links"><a
-													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
+													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
 															code="text.orderHistory.view.order" /></a> <a
-													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
+													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"><spring:theme
 															code="text.orderHistory.track.order" /></a></li>
 											</ul>
 										</li>

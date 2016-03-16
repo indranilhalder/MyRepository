@@ -36,6 +36,23 @@
        	else if(pageName=="review"){
        		$("#lnReview a").addClass("active"); 		
        	}
+		
+		
+		
+		var sPageURL = window.location.search.substring(1);
+		if(sPageURL.indexOf('&pageAnchor=')>0){
+			var sURLVariables = sPageURL.split('&');
+			var param = sURLVariables[1];
+			var splitter = param.split('=');
+			var anchorPoint = splitter[1];
+			
+			if(anchorPoint == 'trackOrder'){
+				$('html, body').animate({
+			        scrollTop: $('#anchor').offset().top
+			    }, 500);
+			}
+		}
+		
  });
  /*-----------End of Left Nav script -----------------*/
  
