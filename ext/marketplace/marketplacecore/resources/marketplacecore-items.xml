@@ -2662,6 +2662,16 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
+					<attribute qualifier="ischeckedMyRewards"
+						autocreate="true" type="java.lang.Boolean" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
 					<!-- Push notification save device key web service ends -->
 				</attributes>
 			</itemtype>
