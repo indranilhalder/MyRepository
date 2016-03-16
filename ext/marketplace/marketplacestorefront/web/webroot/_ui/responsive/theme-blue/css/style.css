@@ -29683,11 +29683,7 @@ font-family:DejaVu Sans;
 	font-weight:500;
 
 }
-#bestPicks .short-info span:nth-child(2),#bestPicks .short-info p:nth-child(2){
-	font-size:16px;
-	font-weight:600;
 
-}
 #bestPicks .short-info a {
     font-size: 12px;
     font-family: "Avenir Next";
@@ -30540,6 +30536,15 @@ right: 0px !important;
     bottom: 97px !important;
     left: 0px !important;
     margin: auto;}
+}
+#otherSellerLinkId .other-sellers-info{
+	    color: #A9143C;
+	text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-decoration: underline;
+    font-weight: 600;
+    line-height: 1.5;
 }
 /*--------------maincss-----------*/
 .row
