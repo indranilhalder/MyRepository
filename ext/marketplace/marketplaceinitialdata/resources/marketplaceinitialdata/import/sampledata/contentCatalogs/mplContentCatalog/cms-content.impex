@@ -124,7 +124,7 @@ INSERT_UPDATE BrandComponent;$contentCV[unique=true];uid[unique=true];name;&comp
 ;;AToZBrandsComponent;A to Z Brands;AToZBrandsComponent;A-Z Brands;/brands/brandlist?cat=A-ZBrands;AtoZ;
 
 INSERT_UPDATE BrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;masterBrandName;masterBrandURL;layout(code);subBrandList(subBrandName) 
-#;;MultiBrandStoresComponent;Multi Brand Stores;MultiBrandStoresComponent;Multi-BrandStores;/brands/brandlist?cat=MultiBrandStoresComponentForBrandList;FiveBrandImages;WestSide,Chroma,Nuon,Ascot
+;;MultiBrandStoresComponent;Multi Brand Stores;MultiBrandStoresComponent;Multi-BrandStores;/brands/brandlist?cat=MultiBrandStoresComponentForBrandList;FiveBrandImages;WestSide,Chroma,Nuon,Ascot
 
 INSERT_UPDATE BrandComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;masterBrandName;masterBrandURL;layout(code);subBrandList(subBrandName);subBrands(code,$productCV) 
 ;;MensBrandComponent;Men's Brand;MensBrandComponent;Men's Brands;/brands/brandlist?cat=MBH11;OneCloumnOneBrandImage;
@@ -151,7 +151,7 @@ INSERT_UPDATE BrandComponent;$contentCV[unique=true];uid[unique=true];name;&comp
 
 #Brand Collection Component
 INSERT_UPDATE BrandCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;brandCollection(&componentRef);
-#;;ShopByBrandComponent;Shop By Brand;ShopByBrandComponent;AToZBrandsComponent,MultiBrandStoresComponent,MensBrandComponent,WomensBrandComponent,ElectronicsBrandComponent,FootwearBrandComponent;
+;;ShopByBrandComponent;Shop By Brand;ShopByBrandComponent;AToZBrandsComponent,MultiBrandStoresComponent,MensBrandComponent,WomensBrandComponent,ElectronicsBrandComponent,FootwearBrandComponent;
 ;;MultiAndOurFavouriteBrandComponent;Multi Store and Our Favourite Brands;MultiAndOurFavouriteBrandComponent;MultiBrandStoresComponentForBrandList,OurFavouriteBrands,A-ZBrands;
 
 #Creating Subbrands with links and images to be displayed under MasterBrands
@@ -715,8 +715,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 
 # ContentSlotForPage
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='termsAndConditions'];contentSlot(uid,$contentCV)[unique=true];;;
-#;;Section2A-TermsAndConditions;Section2A;;Section2ASlot-TermsAndConditions;;;
-#;;Section2B-TermsAndConditions;Section2B;;Section2BSlot-TermsAndConditions;;;
+;;Section2A-TermsAndConditions;Section2A;;Section2ASlot-TermsAndConditions;;;
+;;Section2B-TermsAndConditions;Section2B;;Section2BSlot-TermsAndConditions;;;
 
 
  
