@@ -209,11 +209,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//set up payment page
 		setupAddPaymentPage(model);
 		boolean selectPickupDetails = false;
-		
+
 		//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 		//this is only when cart entry contains cnc delivery mode.
 		final CartModel cartModel = getCartService().getSessionCart();
-		for(final AbstractOrderEntryModel abstractOrderEntryModel :cartModel.getEntries())
+		for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
 		{
 			if (null != abstractOrderEntryModel.getDeliveryPointOfService())
 			{
@@ -697,6 +697,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					redirectFlag = true;
 				}
 			}
+
 			if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
 			{
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
@@ -993,12 +994,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		//For Voucher when reloaded
 		//		final List<VoucherData> voucherDataList = voucherFacade.getVouchersForCart();
-
+		//
 		//		for (final VoucherData voucher : voucherDataList)
 		//		{
 		//			try
 		//			{
-				//voucherFacade.releaseVoucher(voucher.getVoucherCode());
+		//				//voucherFacade.releaseVoucher(voucher.getVoucherCode());
 		//				mplCouponFacade.releaseVoucher(voucher.getVoucherCode(), getCartService().getSessionCart());
 		//			}
 		//			catch (final VoucherOperationException e)
@@ -1639,9 +1640,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * This method is used to apply Payment specific promotions- Payment mode specific and Bank/Card specific
 	 *
 	 * @return String
-	 * @throws CalculationException
-	 * @throws JaloPriceFactoryException
-	 * @throws JaloSecurityException
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
@@ -2010,6 +2008,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
 				redirectFlag = true;
 			}
+
 			if (redirectFlag)
 			{
 				return "redirect";
@@ -2166,14 +2165,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 	/**
+	 * This method displays top coupons in the payments page
+	 *
 	 *
 	 * @param cart
 	 * @param customer
 	 */
+	// Do not delete ---- to be used later
 	//	private List<VoucherDisplayData> displayTopCoupons(final CartModel cart, final CustomerModel customer)
 	//	{
 	//		final List<VoucherModel> voucherList = getMplCouponFacade().getAllCoupons();
-
+	//
 	//		return getMplCouponFacade().displayTopCoupons(cart, customer, voucherList);
 	//	}
 

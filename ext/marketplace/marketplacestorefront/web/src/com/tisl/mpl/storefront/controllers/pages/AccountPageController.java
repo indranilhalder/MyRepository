@@ -42,6 +42,8 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.product.data.WishlistProductData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
@@ -76,7 +78,6 @@ import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
-import de.hybris.platform.yacceleratorfacades.product.data.GenderData;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -212,12 +213,12 @@ import com.tisl.mpl.storefront.web.forms.validator.MplCustomerProfileFormValidat
 import com.tisl.mpl.storefront.web.forms.validator.MplEmailValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplPasswordValidator;
 import com.tisl.mpl.storefront.web.forms.validator.MplUpdateEmailFormValidator;
+import com.tisl.mpl.storefront.web.forms.validator.ReturnItemFormValidator;
 import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-import com.tisl.mpl.storefront.web.forms.validator.ReturnItemFormValidator;
 
 
 
@@ -1443,7 +1444,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_SUBMIT, method = RequestMethod.POST)
 	public String returnPincodeAvailability(final ReturnPincodeCheckForm returnAddress, final Model model,
-			final HttpServletRequest request) throws CMSItemNotFoundException
+			final BindingResult bindingResult, final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		final String errorMsg = returnItemFormValidator.returnValidate(returnAddress);
 		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -1532,6 +1533,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				pinCode);
 		for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 		{
+			model.addAttribute(ModelAttributetConstants.PINCODE_NOT_SERVICEABLE, response.getResponseMessage());
 			if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
 			{
 				returnLogisticsCheck = false;
@@ -1794,7 +1796,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 		{
 			OrderEntryData subOrderEntry = new OrderEntryData();
 			Boolean returnLogisticsCheck = Boolean.TRUE;
-			final HttpSession session = request.getSession();
 			final HttpSession session = request.getSession();
 			List<OrderEntryData> returnSubOrderEntry = new ArrayList<>();
 			final Map<String, List<OrderEntryData>> returnProductMap = new HashMap<>();

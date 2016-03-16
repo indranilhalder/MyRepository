@@ -1,5 +1,6 @@
 /*
 
+ * [y] hybris Platform
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -107,6 +108,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String FRONTSLASH = "/";
 
+
 	//For AddProductCategory Intercepter
 	public static final String COMMA = ",";
 	public static final String HYPHEN = "-";
@@ -122,7 +124,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Return Item
 	public static final String REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE = "SORRY! We cannot pickup from the address provided, Please provide other address or You can Self - ship and let us know!";
-
 	//For Customer Facing Interceptor
 	public static final String NOTIFICATION_STATUS = "notification.status";
 	public static final String USE_NOTIFICATION = "notification.use";
@@ -463,7 +464,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INR = "INR";
 	public static final String HD = "HD";
 	public static final String ED = "ED";
-	public static final String CnC = "CNC";
+	public static final String CnC = "CNC";	//Changed after SAP code merging
 	public static final String CC = "CC";
 
 	public static final String X = "X";
@@ -1329,18 +1330,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
 	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
-
 	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
 
 	//CRM Ticket Type
 	public static final String TICKET_TYPE = "D";
 	public static final String TICKET_SUB_TYPE = "AC";
+	//CRM Ticket Source From Commerce
 	public static final String SOURCE = "commerce";
+	
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
-	//CRM Ticket Source From Commerce
 	public static final String HUNDRED = "100".intern();
-
 
 	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
 	public static final String CAMPAIGN_FREEBIE = "FREEBIE OFFER".intern();
@@ -1370,12 +1370,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String HTTP = "http:".intern();
 	public static final String HTTPS = "https:".intern();
 
-
-
-
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
-//Audit Report
+
+	//Audit Report
 	public static final String CHANGED = "CHANGED";
 	public static final String PRIORITYSTARTDATE = "priorityStartDate";
 	public static final String PRIORITYENDDATE = "priorityEndDate";
@@ -1391,7 +1389,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String FILEPATHNOTAVAILABLE = "File Path not available";
 	public static final String FILENOTFOUNDEXCEPTION = "Cannot find file for batch update.";
 	public static final String IOEXCEPTION = "Exception closing file handle. ";
+
 	public static final String PARENT = "parent";
+
+	// Month list
 	public static final String JANUARY = "January";
 	public static final String FEBRUARY = "February";
 	public static final String MARCH = "March";
@@ -1405,9 +1406,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOVEMBER = "November";
 	public static final String DECEMBER = "December";
 
+	// Month list
+
 	public static final String COUPONREDEEMERROR = "Coupon cannot be redeemed".intern();
 	public static final String COUPONTOPCOUNT = "coupon.display.topCount";
 	public static final String COUPONTOPCOUNTDEFVAL = "5";
+
+	//Coupon Exception Message
 	public static final String EXCPRICEEXCEEDED = "total price exceeded".intern();
 	public static final String EXCINVALID = "Voucher not found".intern();
 	public static final String EXCEXPIRED = "Voucher cannot be redeemed".intern();
@@ -1416,6 +1421,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EXCNOTRESERVABLE = "Voucher is not reservable".intern();
 	public static final String EXCFREEBIE = "freebie".intern();
 	public static final String EXCUSERINVALID = "User not valid".intern();
+
 	public static final String USER = "User".intern();
 	public static final String DATE = "Date".intern();
 	public static final String VOUCHERNOTFOUND = "Voucher not found: ".intern();
@@ -1438,7 +1444,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Added for constants for clickandcollect and active.
 	public static final String CLICK_N_COLLECT = "Y";
 	public static final String ACTIVE = "Y";
-	
 	private MarketplacecommerceservicesConstants()
 	{
 		//empty to avoid instantiating this constant class
@@ -1446,3 +1451,4 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
+
