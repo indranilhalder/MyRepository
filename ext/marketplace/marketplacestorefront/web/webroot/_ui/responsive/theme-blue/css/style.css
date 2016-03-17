@@ -17488,6 +17488,9 @@ ul.helpmeshop-list{
 {
 	font-size:12px;
 }
+.left p, .right p {
+    text-align: left;
+}
 ul.social-connect > li a
 {
 	font-size:12px;
@@ -29473,10 +29476,12 @@ a.button.trending-button:hover{
 }
 #newAndExclusive .New_Exclusive_title{
 	font-weight:600;
+	font-size:16px;
 }
 #newAndExclusive .New_Exclusive_title,#newAndExclusive .New_Exclusive_price{
 	margin:10px 0;
 	color:#333;
+	text-align:left;
 }
 footer .footer-text {
 	clear:both;
@@ -29808,8 +29813,12 @@ p.showcase-para {
 }
 .showcase-center h3{
 	font-weight:600;
+	font-size:16px;
 }
-.showcase-center h3, .showcase-center p{line-height: 20px;}
+.showcase-center h3, .showcase-center p{
+	line-height: 20px;
+	text-align:left;
+}
 .showcase-section .desc-section{
 width:33.33%;
 float:left;
