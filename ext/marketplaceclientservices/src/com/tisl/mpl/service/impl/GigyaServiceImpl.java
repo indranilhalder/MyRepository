@@ -14,6 +14,7 @@ import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -585,7 +586,6 @@ public class GigyaServiceImpl implements GigyaService
 	}
 
 	@Override
-	//	public List<String> gigyaLoginHelperforMobile(final CustomerModel customerModel, final boolean isNewUser)
 	public GigyaWsDTO gigyaLoginHelperforMobile(final CustomerModel customerModel, final boolean isNewUser)
 	{
 		//	final List<String> cookieData = new ArrayList<>();
@@ -670,8 +670,14 @@ public class GigyaServiceImpl implements GigyaService
 						final GSObject responsedata = response.getData();
 						final String sessionToken = responsedata.getString(MarketplacecclientservicesConstants.SESSIONTOKEN);
 						final String sessionSecret = responsedata.getString(MarketplacecclientservicesConstants.SESSIONSECRET);
-						gigyaWsDTO.setSessionSecret(sessionSecret);
-						gigyaWsDTO.setSessionToken(sessionToken);
+						if (StringUtils.isNotEmpty(sessionSecret))
+						{
+							gigyaWsDTO.setSessionSecret(sessionSecret);
+						}
+						if (StringUtils.isNotEmpty(sessionToken))
+						{
+							gigyaWsDTO.setSessionToken(sessionToken);
+						}
 					}
 					else
 					{
@@ -691,12 +697,10 @@ public class GigyaServiceImpl implements GigyaService
 		catch (final GSKeyNotFoundException e)
 		{
 			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND, e);
-			return gigyaWsDTO;
 		}
 		catch (final Exception ex)
 		{
 			LOG.error(EXCEPTION_LOG, ex);
-
 		}
 		return gigyaWsDTO;
 	}
