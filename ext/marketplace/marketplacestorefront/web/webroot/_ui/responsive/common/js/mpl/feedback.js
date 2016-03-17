@@ -1285,10 +1285,26 @@ $(document).ready(function(){
 			if($('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').children().length==0){
 			$('.lookbook_wrapper .listing.wrapper .product-listing.product-grid').parents().find('.listing.wrapper').css('height','0px');
 			}
-		
-			
 
-			$(document).on("click",'.select-size',function() {
-				$(this).toggleClass('active');
-			});
+		if($('.promo-block .promo-img').children().length == 0){
+			$('.promo-block .pdp-promoDesc').css({'float':'none','margin':'0px auto'});
+		}
+
+		
+		$(document).on("click",'.select-size',function() {
+			$(this).toggleClass('active');
+		});
+		var selectOpen = false;
+		$(document).on("mouseleave",'.select-size',function() {
+			if($('.select-size').hasClass("active")) {
+				selectOpen = true;
+			}
+		});
+		$(document).on("click",function() {
+			if(selectOpen) {
+				$('.select-size').removeClass('active');
+				selectOpen = false;
+			}
+		});
+		
 });
