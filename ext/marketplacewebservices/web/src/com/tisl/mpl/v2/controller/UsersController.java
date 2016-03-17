@@ -504,8 +504,14 @@ public class UsersController extends BaseCommerceController
 			isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
 			result = mobileUserService.loginUser(emailId, password);
 			gigyaWsDTO = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
-			result.setSessionSecret(gigyaWsDTO.getSessionSecret());
-			result.setSessionToken(gigyaWsDTO.getSessionToken());
+			if (StringUtils.isNotEmpty(gigyaWsDTO.getSessionSecret()))
+			{
+				result.setSessionSecret(gigyaWsDTO.getSessionSecret());
+			}
+			if (StringUtils.isNotEmpty(gigyaWsDTO.getSessionToken()))
+			{
+				result.setSessionToken(gigyaWsDTO.getSessionToken());
+			}
 			//Return result
 		}
 		catch (final EtailNonBusinessExceptions e)
