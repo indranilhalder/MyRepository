@@ -95,7 +95,11 @@ ACC.storefinder = {
 				zoomControl: false,
 				panControl: false,
 				streetViewControl: false,
-				disableDefaultUI:true,
+				zoomControl:true,
+			  	zoomControlOptions:{
+			  		position:google.maps.ControlPosition.RIGHT_TOP
+			  	},
+			  	disableDefaultUI:false,
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				center: centerPoint
 			}
@@ -168,7 +172,22 @@ ACC.storefinder = {
 			var q = $(".js-store-finder-search-input").val();
 
 			if(q.length>0){
-				ACC.storefinder.getInitStoreData(q);
+				 var geocoder = new google.maps.Geocoder();
+				var lat='0';
+				var lng='0';
+				geocoder.geocode({ 'address': q }, function(results, status) {
+				    if (status == google.maps.GeocoderStatus.OK) {
+				    	var searchLocation = results[0].geometry.location;
+				    	console.log("Check for logs.")
+				    	lat=searchLocation.lat();
+				    	lng=searchLocation.lng();
+				    	console.log(lat);
+				    	ACC.storefinder.getInitStoreData(null,lat,lng);
+				    }else{
+				    	ACC.storefinder.getInitStoreData(null,lat,lng);
+				    } 
+				        }); 
+				// ACC.storefinder.getInitStoreData(q);
 			}else{
 				if($(".js-storefinder-alert").length<1){
 					var emptySearchMessage = $(".btn-primary").data("searchEmpty")
@@ -267,7 +286,11 @@ ACC.storefinder = {
 			zoomControl: false,
 			panControl: false,
 			streetViewControl: false,
-			disableDefaultUI:true,
+			zoomControl:true,
+		  	zoomControlOptions:{
+		  		position:google.maps.ControlPosition.RIGHT_TOP
+		  	},
+		  	disableDefaultUI:false,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			center: centerPoint
 		}
