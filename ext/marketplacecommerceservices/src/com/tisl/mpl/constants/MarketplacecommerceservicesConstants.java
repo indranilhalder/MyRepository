@@ -1457,6 +1457,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SYSDATE = "sysdate".intern();
 	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
 
+	//Added for constants for clickandcollect and active.
+	public static final String CLICK_N_COLLECT = "Y";
+	public static final String ACTIVE = "Y";
+
 	public static final String BANKNAME = "bankName";
 
 	private MarketplacecommerceservicesConstants()
