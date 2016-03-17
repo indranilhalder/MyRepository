@@ -1628,7 +1628,6 @@
 		<property name="addressLocationParser" ref="firstPlacemarkWinsGoogleResponseParser"/>
 		<property name="routeDataParser" ref="routeDataGoogleResponseParser"/>
 		<property name="directionsUrlBuilder" ref="geolocationDirectionsUrlBuilder"/>
-		<property name="cliendId" value="${google.data-clientid}"/>
 		<property name="googleKey" value="${googleApiKey}"/>
 	</bean>
 	

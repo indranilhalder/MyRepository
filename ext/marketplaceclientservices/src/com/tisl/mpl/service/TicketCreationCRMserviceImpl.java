@@ -118,6 +118,8 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			}
 			if (null != sendTicketRequestData.getAddressInfo())
 			{
+				addressInfo.setShippingFirstName(sendTicketRequestData.getAddressInfo().getShippingFirstName());
+				addressInfo.setShippingLastName(sendTicketRequestData.getAddressInfo().getShippingLastName());
 				addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
 				addressInfo.setAddress1(sendTicketRequestData.getAddressInfo().getAddress1());
 				addressInfo.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
@@ -271,6 +273,13 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				LOG.debug("ticket create: Source>>>>> " + sendTicketRequestData.getSource());
 
 			}
+			if (null != sendTicketRequestData.getTicketSubType())
+			{
+				ticket.setTicketSubType(sendTicketRequestData.getTicketSubType());
+				LOG.debug("ticket create:TicketSubType>>>>> " + sendTicketRequestData.getTicketSubType());
+
+			}
+
 
 
 			final List<SendTicketLineItemData> sendTicketLineItemDataList = sendTicketRequestData.getLineItemDataList();

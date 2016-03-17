@@ -248,6 +248,13 @@
 			<value code="ORDER_COLLECTED"/>
 			<value code="ORDER_UNCOLLECTED"/>
 			<value code="RETURNINITIATED_BY_RTO"/>	
+			<value code="PARTIALLY_ORDER_REALLOCATED" />
+			<value code="PARTIALLY_CNC_INITIATED" />
+			<value code="PARTIALLY_READY_FOR_COLLECTION" />
+			<value code="PARTIALLY_ORDER_COLLECTED" />
+			<value code="PARTIALLY_ORDER_UNCOLLECTED" />
+			<value code="PARTIALLY_RETURNINITIATED_BY_RTO" />
+				
 		</enumtype>
 
 		<!-- pcm changes! -->
@@ -7146,6 +7153,16 @@
 								<value>HYBRIS.LONG_STRING</value>
 							</columntype>
 						</persistence>
+					</attribute>
+					<attribute type="java.lang.String" qualifier="shippingFirstName">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute type="java.lang.String" qualifier="shippingLastName">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
 					</attribute>
 					<attribute type="java.lang.String" qualifier="phoneNo">
 						<persistence type="property" />
