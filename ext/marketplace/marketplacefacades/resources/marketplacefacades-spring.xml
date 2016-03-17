@@ -1426,5 +1426,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 			class="com.tisl.mpl.facades.populators.MplVoucherTransactionHistoryPopulator">
 	</bean>
 
+<bean id="gigyaFacade"
+		class="com.tisl.mpl.facades.account.reviews.impl.GigyaFacadeImpl">
+	</bean>
 </beans>
 

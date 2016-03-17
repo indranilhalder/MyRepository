@@ -3118,7 +3118,7 @@
 	         <essentials mode="replace">
 	            <listlayout>
 	               <text name="text.promotionvoucher.common" width="353"/>
-	               <attribute name="code" maxlength="3"/>
+	               <attribute name="code"/>
 	               <attribute name="name"/>
 	            </listlayout>
 	         </essentials>

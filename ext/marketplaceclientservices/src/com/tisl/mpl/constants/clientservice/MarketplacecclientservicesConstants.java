@@ -199,4 +199,8 @@ public class MarketplacecclientservicesConstants
 	public static final String URLFOR_STORELOC_REALCALL = "oms.storelocationserviceability.realtimecall";
 	public static final String URLFOR_STORELOC_MOCKURL = "oms.storelocator.serviceabilility.url";
 	public static final String URLFOR_STORELOC_URL = "oms.storelocator.serviceabilility.url";
+	public static final String SESSIONTOKEN = "sessionToken".intern();
+	public static final String SESSIONSECRET = "sessionSecret".intern();
+	public static final String TARGETENV = "targetEnv";
+	public static final String MOBILE = "mobile";
 }

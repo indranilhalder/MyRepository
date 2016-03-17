@@ -63,9 +63,10 @@
 											<h3 class="product-name">${product.value.productTitle}</h3>
 											
 										</div>
-								</a> <a id="new-review-link${product.value.code}" class="account-only new-review" data-toggle="modal" data-target="#reviewPluginContainer" 
+								</a> 
+								<a id="new-review-link${product.value.code}" class="account-only new-review" data-toggle="modal" data-target="#reviewPluginContainer" 
 										data-product = "${product.value.code}" data-category = "${product.value.rootCategory}"
-										onclick="reviewPopUpDisplay('${product.value.rootCategory}','${product.value.code}','${product.value.productTitle}','${product.value.brand.brandname}',this.id)"
+										onclick='reviewPopUpDisplay("${product.value.rootCategory}","${product.value.code}",encodeURI("${product.value.productTitle}"),encodeURI("${product.value.brand.brandname}"),this.id)'
 										><spring:theme code="myaccount.review.reviewProduct"/></a>
 								</div>
 								</c:forEach>

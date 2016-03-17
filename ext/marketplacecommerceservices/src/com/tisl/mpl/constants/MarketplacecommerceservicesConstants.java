@@ -464,7 +464,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INR = "INR";
 	public static final String HD = "HD";
 	public static final String ED = "ED";
-	public static final String CnC = "CNC";	//Changed after SAP code merging
+	public static final String CnC = "CNC"; //Changed after SAP code merging
 	public static final String CC = "CC";
 
 	public static final String X = "X";
@@ -809,6 +809,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9100 = "B9100";
 	public static final String B9101 = "B9101";
 	public static final String B9102 = "B9102";
+	public static final String B9310 = "B9310";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1311,7 +1312,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_EXPRESS_DELIVERY = "Express Delivery ".intern();
 	// Seler Priority Report Query
 	// Within date range
-	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {sv.pk} from {SavedValues as sv JOIN MplSellerPriority as msp ON {sv.modifieditem}={msp.pk} and {sv.creationtime} BETWEEN '2016-01-27 19:42:21.961' and '2016-02-18 17:07:46.338'JOIN SavedValueEntryType as sve ON {sv.modificationtype}={sve.pk}} order by {sv.Timestamp} desc";
+	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {sv.pk} from {SavedValues as sv JOIN MplSellerPriority as msp ON {sv.modifieditem}={msp.pk} and {sv.creationtime} BETWEEN ?startDate and ?endDate JOIN SavedValueEntryType as sve ON {sv.modificationtype}={sve.pk}} order by {sv.Timestamp} desc";
 	//	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValueEntry as se},{SavedValues as s}, {Bin as bk }, {SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {st.code} = 'changed'and {s.modifieditem}={bk.pk} and {s.pk} = {se.Parent} and {s.creationtime} BETWEEN ?startDate and ?endDate ";
 
 	// full data
@@ -1337,7 +1338,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TICKET_SUB_TYPE = "AC";
 	//CRM Ticket Source From Commerce
 	public static final String SOURCE = "commerce";
-	
+
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 	public static final String HUNDRED = "100".intern();

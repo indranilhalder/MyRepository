@@ -471,4 +471,7 @@ public class MarketplacewebservicesConstants
 	public static final String QS = "?";
 	public static final String AFFILIATEID = "affiliateId";
 	public static final String EQUALS = "=";
+
+	public static final String USE_GIGYA = "gigya.use".intern();
+	public static final String NO = "N";
 }
