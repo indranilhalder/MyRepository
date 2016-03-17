@@ -32,7 +32,7 @@
 						</li>
 					</c:when>
 					<c:otherwise>
-					<li class="payments">
+					<li class="payments step-done">
 					<span>${checkoutStep.stepNumber}</span>
 						<a href="${stepUrl}" class="step-head js-checkout-step ">
 							<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
