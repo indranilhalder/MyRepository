@@ -559,14 +559,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		session.setAttribute("deliveryMethodForm" , deliveryMethodForm);
 		
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-		if (cartData.getDeliveryAddress() != null)
-		{
-			if (LOG.isDebugEnabled())
-			{
-				LOG.debug("Express checkout : ");
-			}
-			return getCheckoutStep().nextStep();
-		}		
+//		if (cartData.getDeliveryAddress() != null)
+//		{
+//			if (LOG.isDebugEnabled())
+//			{
+//				LOG.debug("Express checkout : ");
+//			}
+//			return getCheckoutStep().nextStep();
+//		}		
 		model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 		this.prepareDataForPage(model);
 		
@@ -660,6 +660,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 			if (count >0 && delModeCount == 0)
 			{
+				//cart has only cnc
+				//for express checkout
+				if (cartData.getDeliveryAddress() != null)
+				{
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("Express checkout Having Delivery Mode as CNC: ");
+						LOG.debug("forward to cart page as Express Checkout is not supported for CNC mode ");
+					}
+					//forward to cart page as Express Checkout is not supported for CNC mode
+					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+				}
 				String deliveryCode = null;
 				if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
 				{
@@ -679,6 +691,21 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					}
 				}
 
+			}
+			if (count >0 && delModeCount > 0)
+			{
+				//for express checkout
+				//if cart entries contains one of delivery modes as cnc then just redirect to cart page.
+				if (cartData.getDeliveryAddress() != null)
+				{
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("Express checkout Having Mixed Delivery Mode as CNC and HD/Ed: ");
+						LOG.debug("forward to cart page as Express Checkout is not supported for CNC mode ");
+					}
+					//forward to cart page as Express Checkout is not supported for CNC mode
+					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+				}
 			}
 			if (count>0)
 			{
