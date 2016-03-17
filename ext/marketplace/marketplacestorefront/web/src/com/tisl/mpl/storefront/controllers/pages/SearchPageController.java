@@ -559,7 +559,17 @@ public class SearchPageController extends AbstractSearchPageController
 			model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 					Collections.singletonList(new Breadcrumb("#", NEW_EXCLUSIVE_BREADCRUMB, LAST_LINK_CLASS)));
-			model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
+			model.addAttribute("pageType", PageType.PRODUCT.name());
+			model.addAttribute("hideDepartments", Boolean.TRUE);
+			//Code to hide the applied facet for promotedProduct
+			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
+			{
+				final String facetCode = searchPageData.getBreadcrumbs().get(0).getFacetCode();
+				if (StringUtils.isNotEmpty(facetCode) && facetCode.equalsIgnoreCase("promotedProduct"))
+				{
+					searchPageData.setBreadcrumbs(null);
+				}
+			}
 
 			if (!searchPageData.getResults().isEmpty())
 			{

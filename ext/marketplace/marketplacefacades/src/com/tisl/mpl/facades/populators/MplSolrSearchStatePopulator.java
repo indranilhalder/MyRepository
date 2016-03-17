@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -95,11 +96,16 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			populateOfferListingUrl(source, target);
 		}
+		else if (checkFilterForNewExclusive(source))
+		{
+			populateUrlForNewExclusive(source, target);
+		}
 		//		else if (source.getOfferID() != null)
 		//		{
 		//
 		//			populateOfferListingUrl(source, target);
 		//		}
+
 		else
 		{
 			populateFreeTextSearchUrl(source, target);
@@ -191,8 +197,8 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 			try
 			{
 				encodedOfferId = URLEncoder.encode(source.getOfferID(), "UTF-8");
-				target.setUrl("/o/" + offerCategoryID + "?offer=" + encodedOfferId
-						+ buildUrlQueryString(source, target).replace("?", "&"));
+				target.setUrl(
+						"/o/" + offerCategoryID + "?offer=" + encodedOfferId + buildUrlQueryString(source, target).replace("?", "&"));
 			}
 			catch (final UnsupportedEncodingException e)
 			{
@@ -206,5 +212,36 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 					+ buildUrlQueryString(source, target).replace("?", "&"));
 		}
 
+	}
+
+	/**
+	 * @param source
+	 * @param target
+	 */
+	protected void populateUrlForNewExclusive(final SolrSearchQueryData source, final SearchStateData target)
+	{
+		target.setUrl(getSearchPath() + "/viewOnlineProducts" + buildUrlQueryString(source, target));
+
+	}
+
+	/**
+	 * @param source
+	 * @return
+	 */
+	protected boolean checkFilterForNewExclusive(final SolrSearchQueryData source)
+	{
+		boolean hasFilterForNewExclusive = false;
+		if (CollectionUtils.isNotEmpty(source.getFilterTerms()))
+		{
+			for (final SolrSearchQueryTermData filterTerm : source.getFilterTerms())
+			{
+				if (filterTerm.getKey().equalsIgnoreCase("promotedProduct"))
+				{
+					hasFilterForNewExclusive = true;
+					break;
+				}
+			}
+		}
+		return hasFilterForNewExclusive;
 	}
 }
