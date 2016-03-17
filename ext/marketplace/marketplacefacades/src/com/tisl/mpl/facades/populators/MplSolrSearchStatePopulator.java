@@ -17,12 +17,14 @@ import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.search.data.SearchQueryData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
 import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryData;
+import de.hybris.platform.commerceservices.search.solrfacetsearch.data.SolrSearchQueryTermData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +40,7 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 	private UrlResolver<CategoryData> categoryDataUrlResolver;
 	private Converter<SolrSearchQueryData, SearchQueryData> searchQueryConverter;
 	private static final Logger LOG = Logger.getLogger(MplSolrSearchStatePopulator.class);
+	private static final String IS_OFFER_EXISTING = "isOffersExisting";
 
 	protected String getSearchPath()
 	{
@@ -86,16 +89,41 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 
 			populateSellerListingUrl(source, target);
 		}
-		else if (source.getOfferID() != null)
-		{
 
+
+		else if (checkIfOfferListingPage(source.getFilterTerms()) && source.getOfferID() == null || (source.getOfferID() != null))
+		{
 			populateOfferListingUrl(source, target);
 		}
+		//		else if (source.getOfferID() != null)
+		//		{
+		//
+		//			populateOfferListingUrl(source, target);
+		//		}
 		else
 		{
 			populateFreeTextSearchUrl(source, target);
 		}
 
+
+	}
+
+	/**
+	 * @param filterTerms
+	 */
+	private boolean checkIfOfferListingPage(final List<SolrSearchQueryTermData> filterTerms)
+	{
+		// YTODO Auto-generated method stub
+		boolean isOffer = false;
+		for (final SolrSearchQueryTermData term : filterTerms)
+		{
+			if (term.getKey().equalsIgnoreCase(IS_OFFER_EXISTING))
+			{
+				isOffer = true;
+				break;
+			}
+		}
+		return isOffer;
 
 	}
 
@@ -155,11 +183,11 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 		{
 			offerCategoryID = source.getOfferCategoryID();
 		}
-
+		String encodedOfferId = "";
 		if (source.getOfferID() != null)
 
 		{
-			String encodedOfferId;
+
 			try
 			{
 				encodedOfferId = URLEncoder.encode(source.getOfferID(), "UTF-8");
@@ -172,5 +200,11 @@ public class MplSolrSearchStatePopulator implements Populator<SolrSearchQueryDat
 				LOG.error("UnsupportedEncodingException ", e);
 			}
 		}
+		else if (source.getOfferID() == null)
+		{
+			target.setUrl("/o/viewAllOffers?offer=" + encodedOfferId + "?searchCategory=" + offerCategoryID
+					+ buildUrlQueryString(source, target).replace("?", "&"));
+		}
+
 	}
 }
