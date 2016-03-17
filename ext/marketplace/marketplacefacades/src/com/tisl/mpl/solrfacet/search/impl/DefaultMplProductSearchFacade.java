@@ -900,11 +900,13 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 
-		solrSearchQueryTermData.setKey(PROMOTED_PRODUCT);
-		solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
+		if (searchQueryData.getFilterTerms() == null)
+		{
+			solrSearchQueryTermData.setKey(PROMOTED_PRODUCT);
+			solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
 
-		searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
-
+			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
+		}
 
 		return searchQueryData;
 	}
@@ -931,12 +933,13 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 
-		solrSearchQueryTermData.setKey(IS_OFFER_EXISTING);
-		solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
+		if (searchQueryData.getFilterTerms() == null)
+		{
+			solrSearchQueryTermData.setKey(IS_OFFER_EXISTING);
+			solrSearchQueryTermData.setValue(Boolean.TRUE.toString());
+			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 
-		searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
-
-
+		}
 		return searchQueryData;
 	}
 

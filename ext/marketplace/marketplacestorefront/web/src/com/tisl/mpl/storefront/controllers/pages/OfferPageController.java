@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -82,8 +82,8 @@ public class OfferPageController extends AbstractSearchPageController
 			@RequestParam(value = "page", defaultValue = "0") final int page,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
-			CMSItemNotFoundException
+			final HttpServletRequest request, final HttpServletResponse response)
+					throws UnsupportedEncodingException, CMSItemNotFoundException
 	{
 
 		try
@@ -101,12 +101,6 @@ public class OfferPageController extends AbstractSearchPageController
 					searchBreadcrumbBuilder.getBreadcrumbs(null, offerSearch.getSearchPageData()));
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 					Collections.singletonList(new Breadcrumb("#", "Offers", LAST_LINK_CLASS)));
-			/* TISEEII-1145 fixes start */
-			if (CollectionUtils.isNotEmpty(offerSearch.getSearchPageData().getResults()))
-			{
-				model.addAttribute("departmentHierarchyData", offerSearch.getSearchPageData().getDepartmentHierarchyData());
-			}
-			/* TISEEII-1145 fixes end */
 			model.addAttribute("offer", offerID);
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(OFFER_LISTING_CMS_PAGE_ID));
@@ -114,8 +108,8 @@ public class OfferPageController extends AbstractSearchPageController
 		catch (final Exception exp)
 		{
 
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
 
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 
@@ -125,7 +119,7 @@ public class OfferPageController extends AbstractSearchPageController
 
 	//Added to render all the offer related products
 	@RequestMapping(value = "/viewAllOffers", method = RequestMethod.GET)
-	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
+	public String displayOfferRelatedProducts(@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode, final HttpServletRequest request,
@@ -141,12 +135,18 @@ public class OfferPageController extends AbstractSearchPageController
 
 			model.addAttribute("hideDepartments", Boolean.TRUE);
 			model.addAttribute("otherProducts", true);
-			/* TISEEII-1145 fixes start */
-			if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
+
+			//Code to hide the applied facet for isOfferExisting
+			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
 			{
-				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+				final String facetCode = searchPageData.getBreadcrumbs().get(0).getFacetCode();
+				if (StringUtils.isNotEmpty(facetCode) && facetCode.equalsIgnoreCase("isOffersExisting"))
+				{
+					searchPageData.setBreadcrumbs(null);
+				}
 			}
-			/* TISEEII-1145 fixes end */
+
+
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 					Collections.singletonList(new Breadcrumb("#", "Offers", LAST_LINK_CLASS)));
 
@@ -161,8 +161,8 @@ public class OfferPageController extends AbstractSearchPageController
 		}
 		catch (final Exception exp)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
 			return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
 
 		}
@@ -181,20 +181,16 @@ public class OfferPageController extends AbstractSearchPageController
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> performSearchForAllOffers(
 			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
 	{
-		final PageableData pageableData = createPageableData(page, page, sortCode, ShowMode.Page);
+		final PageableData pageableData = createPageableData(page, searchPageSize, sortCode, ShowMode.Page);
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
 
-		if (searchQuery == null)
-		{
-			searchState.setQuery(searchQueryData);
-
-		}
-		else
+		if (StringUtils.isNotEmpty(searchQuery))
 		{
 			searchQueryData.setValue(searchQuery);
 		}
 
+		searchState.setQuery(searchQueryData);
 
 		return searchFacade.searchAllOffers(searchState, pageableData);
 	}
