@@ -171,6 +171,7 @@ import com.tisl.mpl.facades.account.register.FriendsInviteFacade;
 import com.tisl.mpl.facades.account.register.MplCustomerProfileFacade;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.account.reviews.GigyaFacade;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryData;
 import com.tisl.mpl.facades.data.MplFavBrandCategoryWsDTO;
 import com.tisl.mpl.facades.data.MplPreferenceData;
@@ -208,6 +209,7 @@ import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.GetmerchantWsDTO;
+import com.tisl.mpl.wsdto.GigyaWsDTO;
 import com.tisl.mpl.wsdto.MplAllFavouritePreferenceWsDTO;
 import com.tisl.mpl.wsdto.MplOrderNotificationWsDto;
 import com.tisl.mpl.wsdto.MplOrderTrackingNotificationsListWsDto;
@@ -376,7 +378,8 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private ProductDetailsHelper productDetailsHelper;
 
-
+	@Autowired
+	private GigyaFacade gigyaFacade;
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
 	//	@Autowired Critical Sonar fixes Unused private Field
@@ -485,16 +488,29 @@ public class UsersController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "{emailId}/loginMobile", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public MplUserResultWsDto loginUser(@PathVariable final String emailId, @RequestParam final String password)
-			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	public MplUserResultWsDto loginUser(@PathVariable final String emailId, @RequestParam final String newCustomer,
+			@RequestParam final String password)
+					throws RequestParameterException, WebserviceValidationException, MalformedURLException
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
+		GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
+		boolean isNewusers = false;
+		final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailId);
 		try
 		{
 			LOG.debug("****************** User Login mobile web service ***********" + emailId);
 			//Login user with username and password
+			isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
 			result = mobileUserService.loginUser(emailId, password);
-			//Return result
+			gigyaWsDTO = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
+			if (StringUtils.isNotEmpty(gigyaWsDTO.getSessionSecret()))
+			{
+				result.setSessionSecret(gigyaWsDTO.getSessionSecret());
+			}
+			if (StringUtils.isNotEmpty(gigyaWsDTO.getSessionToken()))
+			{
+				result.setSessionToken(gigyaWsDTO.getSessionToken());
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3405,9 +3421,10 @@ public class UsersController extends BaseCommerceController
 			final HttpServletRequest httpRequest)
 	{
 		final MplUserResultWsDto mplUserResultWsDto = new MplUserResultWsDto();
-
+		CustomerModel currentUser = null;
 		try
 		{
+			currentUser = mplPaymentWebFacade.getCustomer(userId);
 			final String authorization = httpRequest.getHeader("Authorization");
 			String username = null;
 			if (authorization != null && authorization.startsWith("Basic"))
@@ -3435,6 +3452,7 @@ public class UsersController extends BaseCommerceController
 				{
 
 					oauthTokenService.removeAccessToken(accessTokenModel.getTokenId());
+					gigyaFacade.ratingLogoutHelper(currentUser);
 					mplUserResultWsDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
 				}
@@ -3775,6 +3793,38 @@ public class UsersController extends BaseCommerceController
 						updateCustomerDetailDto.setDateOfBirth(customerToSave.getDateOfBirth());
 					}
 
+					// NOTIFY GIGYA OF THE USER PROFILE CHANGES
+					final String gigyaServiceSwitch = configurationService.getConfiguration()
+							.getString(MarketplacewebservicesConstants.USE_GIGYA);
+
+					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
+					{
+						final String gigyaMethod = configurationService.getConfiguration()
+								.getString(MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+						String fnameGigya = null;
+						String lnameGigya = null;
+
+						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getFirstName()))
+						{
+							fnameGigya = updateCustomerDetailDto.getFirstName().trim();
+						}
+						else
+						{
+
+							fnameGigya = MarketplacewebservicesConstants.EMPTY;
+						}
+						if (StringUtils.isNotEmpty(updateCustomerDetailDto.getLastName()))
+						{
+							lnameGigya = updateCustomerDetailDto.getLastName().trim();
+						}
+						else
+						{
+							lnameGigya = MarketplacewebservicesConstants.EMPTY;
+						}
+
+						gigyaFacade.notifyGigya(updateCustomerDetailDto.getEmailId(), null, fnameGigya, lnameGigya,
+								updateCustomerDetailDto.getEmailId().trim(), gigyaMethod);
+					}
 				}
 				catch (final DuplicateUidException e)
 				{
