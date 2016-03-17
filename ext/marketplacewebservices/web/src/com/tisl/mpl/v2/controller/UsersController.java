@@ -144,7 +144,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
-import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
@@ -505,8 +504,14 @@ public class UsersController extends BaseCommerceController
 			isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
 			result = mobileUserService.loginUser(emailId, password);
 			gigyaWsDTO = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
-			result.setSessionSecret(gigyaWsDTO.getSessionSecret());
-			result.setSessionToken(gigyaWsDTO.getSessionToken());
+			if (StringUtils.isNotEmpty(gigyaWsDTO.getSessionSecret()))
+			{
+				result.setSessionSecret(gigyaWsDTO.getSessionSecret());
+			}
+			if (StringUtils.isNotEmpty(gigyaWsDTO.getSessionToken()))
+			{
+				result.setSessionToken(gigyaWsDTO.getSessionToken());
+			}
 			//Return result
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -3797,7 +3802,7 @@ public class UsersController extends BaseCommerceController
 					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
 					{
 						final String gigyaMethod = configurationService.getConfiguration()
-								.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+								.getString(MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
 						String fnameGigya = null;
 						String lnameGigya = null;
 
