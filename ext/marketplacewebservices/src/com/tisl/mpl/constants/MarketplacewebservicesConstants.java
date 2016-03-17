@@ -474,4 +474,5 @@ public class MarketplacewebservicesConstants
 
 	public static final String USE_GIGYA = "gigya.use".intern();
 	public static final String NO = "N";
+	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
 }
