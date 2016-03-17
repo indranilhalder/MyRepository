@@ -17,9 +17,9 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   i{
   font-style:italic;
   }
-html,body,main {
+/* html,body,main {
 	overflow-x:hidden;
-}
+} */
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block; }
@@ -5349,7 +5349,7 @@ text-transform: uppercase;
   .cart.wrapper .button#deliveryMethodSubmitUp, .cart.wrapper .button#deliveryAddressSubmitUp,
   .cart.wrapper #newAddressButtonUp
    {
-        width: 30%;
+        width: 28%;
     float: right;
     margin-top: 86px;
     margin-bottom: -77px;
@@ -5398,7 +5398,7 @@ text-transform: uppercase;
     @media (min-width: 650px) {
       .cart.wrapper .right-block, .confirmation .right-block {
         float: right;
-        width: 30%;
+        width: 28%;
         margin-top: 65px; }
         .cart.wrapper .right-block.shipping{
          margin-top: 84px;}
@@ -5729,7 +5729,7 @@ text-transform: uppercase;
 }
     @media (min-width: 650px) {
       .cart.wrapper .left-block, .confirmation .left-block {
-        width: 65%;
+        width: 68%;
         float: left; }
        }
   .cart.wrapper .left-block.personal, .confirmation .left-block.personal {
@@ -8638,7 +8638,8 @@ footer .banner {
   .top.checkout-top .content {
     width: 100%;
     text-align: center;
-    margin-bottom: 15px;}
+    margin-bottom: 15px;
+    padding-top:2px !important;}
     .top.checkout-top .content::after {
       clear: both;
       content: "";
@@ -8863,7 +8864,10 @@ footer .banner {
     @media (min-width: 790px) {
       .sign-in.tab-view .tabs > li .left {
         width: 50%;
-        float: left; } }
+        float: left; }
+        .sign-in.tab-view .tabs > li .left #checkBox {
+        width: 115%;
+        } }
     .sign-in.tab-view .tabs > li .left p {
       line-height: 1.5;
       margin-bottom: 15px;
@@ -8976,7 +8980,7 @@ footer .banner {
         .sign-in.tab-view .tabs > li#sign_up_content .social-connect {
       padding-left: 0;
       padding-right: 0;
-      padding-top: 85px;
+      padding-top: 110px;
       background: transparent; }
       @media (min-width: 790px) {
         .sign-in.tab-view .tabs > li .register-section .social-connect {
@@ -21048,7 +21052,7 @@ ul.accepted-cards li span img{
 	margin-bottom: 15px;
 }
 .marketplace-checkout{
-	margin: 42px auto -9px;
+	margin: 30px auto;
 }
 .marketplace-checkout .simple-banner-component a{
 	display:inline;
@@ -26096,6 +26100,8 @@ color:#A9143C;
 .product-block.wishlist .item .desktop #addToCartButton{
 	    background-color: #A9143C !important;
     border-color: #A9143C !important;
+    color:#fff;
+    height:30px !important;
 
 }
 
@@ -30566,9 +30572,9 @@ margin-left: -55px;
 }
 @media(max-width:1299px){
 .top.checkout-top{
-width: calc(100% - -60px);
-width: -webkit-calc(100% - -60px);
-margin-left: -30px;
+width: calc(100% - -30px);
+    width: -webkit-calc(100% - -30px);
+    margin-left: -15px;
 }
 }
 #buyNowButton{
@@ -36569,7 +36575,7 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag:after
 header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item
 	{
 	/*               padding-left: 120px; */
-	padding-bottom: 10px;
+	padding-bottom: 5px;
 	position: relative;
 }
 
@@ -36580,13 +36586,19 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item .produ
 	width: 110px;
 	display: inline-block;
 	vertical-align: top;
+	    margin-bottom: 10px;
+    background: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item .product-img img
 	{
-	width: 100%;
-	max-height: 155px;
+	max-width: 100%;
+	max-height: 90px;
 	height: auto;
+	    margin: 5px auto;
+	
 }
 
 header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item .product
@@ -36594,7 +36606,8 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item .produ
 	line-height: 20px;
 	width: 160px;
 	display: inline-block;
-	padding-left: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
 	vertical-align: top;
 }
 
@@ -36633,21 +36646,18 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item .price
 	text-align: center;
 }
 
-header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
-	(.item ) {
+header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not(.item) {
 	clear: both;
 	border-top: 1px solid #fff;
 }
 
-header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
-	(.item )::after {
+header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not(.item)::after {
 	clear: both;
 	content: "";
 	display: table;
 }
 
-header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
-	(.item ) .more-items {
+header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not(.item) .more-items {
 	font-size: 14px;
 	font-weight: 500;
 	text-align: center;
@@ -36656,8 +36666,7 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
 	margin-bottom: 20px;
 }
 
-header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
-	(.item ) a {
+header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not(.item) a {
 	display: inline-block;
 	font-size: 12px;
 	text-align: center;
@@ -36679,8 +36688,7 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
 	transition: color 0.3s, background 0.3s;
 }
 
-header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
-	(.item ) a.go-to-bag {
+header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not(.item) a.go-to-bag {
 	display: block;
 	color: #FFF;
 	border-top: 1px solid #fff;
@@ -36695,14 +36703,12 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
 	width: 100%;
 }
 
-header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
-	(.item ) a.checkout {
+header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not(.item) a.checkout {
 	background-color: #A9143C;
 	border: 2px solid #A9143C;
 }
 
-header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not
-	(.item ) a.checkout:hover {
+header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not(.item) a.checkout:hover {
 	color: #A9143C;
 	background-color: #fff;
 	-webkit-transition: color 0.15s, background 0.15s;
@@ -36819,7 +36825,8 @@ span.mini-cart-close {
 	}
 	.error-template-message .error_container ul li.left_col,
 		.error-template-message .error_container ul li.right_col {
-		width: 100%;
+		width: calc(100% - 30px);
+		width: -webkit-calc(100% - 30px);
 		margin: auto;
 		float: none;
 	}
