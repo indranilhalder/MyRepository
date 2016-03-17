@@ -171,8 +171,16 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+	<bean id="productPromotionInterceptor" class="com.tisl.mpl.interceptor.ProductPromotionInterceptor">
 
+	</bean>
 
+	<bean id="productPromotionInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="productPromotionInterceptor" />
+		<property name="typeCode" value="ProductPromotion" />
+	</bean>
+	
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -369,10 +377,10 @@
 	</bean>
 	<bean id="otpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.OTPDaoImpl" />
-		
-		
-		
-		<!-- ============== configure beans for pincode ============== -->
+
+
+
+	<!-- ============== configure beans for pincode ============== -->
 		
 		<alias name="pincodeService" alias="pincodeService" />
 	<bean id="pincodeService"
@@ -1544,10 +1552,10 @@
     </bean>
 	  <!--  pdp seller priority report cron job ends -->
 	  
-	<alias name="mplVoucherService" alias="mplVoucherService" />
+	  <alias name="mplVoucherService" alias="mplVoucherService" />
 	<bean id="mplVoucherService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplVoucherServiceImpl">
-		<!-- <property name="calculationService" ref="calculationService" /> -->
+<!-- <property name="calculationService" ref="calculationService" /> -->
 		<property name="modelService" ref="modelService" />
 		<property name="voucherModelService" ref="voucherModelService" />
 		<!-- <property name="commerceCartService" ref="commerceCartService" /> -->
@@ -1620,9 +1628,12 @@
 		<property name="addressLocationParser" ref="firstPlacemarkWinsGoogleResponseParser"/>
 		<property name="routeDataParser" ref="routeDataGoogleResponseParser"/>
 		<property name="directionsUrlBuilder" ref="geolocationDirectionsUrlBuilder"/>
+		<property name="cliendId" value="${google.data-clientid}"/>
 		<property name="googleKey" value="${googleApiKey}"/>
 	</bean>
 	
 	<!-- Store Locator Beans end here -->
-</beans>
+
+
+	</beans>
 

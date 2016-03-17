@@ -1,6 +1,7 @@
+
 /*
 
- * [y] hybris Platform
+
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -124,6 +125,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Return Item
 	public static final String REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE = "SORRY! We cannot pickup from the address provided, Please provide other address or You can Self - ship and let us know!";
+
 	//For Customer Facing Interceptor
 	public static final String NOTIFICATION_STATUS = "notification.status";
 	public static final String USE_NOTIFICATION = "notification.use";
@@ -223,6 +225,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String EMIBANKSQUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  order by {m.bankname}"
 			.intern();
+
+	//TISPRO-179
+	public static final String EMIBANK_FOR_BANKNAMES_QUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
+			.intern();
+
+
 	public static final String EMIBANTERMSSQUERY = "select {e:pk} from {emibank as e},{bank as b} where {e.name}={b.pk} and {b.bankName}=?bank"
 			.intern();
 	public static final String PAYMENTTYPEFORAPPORTIONQUERY = "select {p:pk} from {PaymentType As p} WHERE {p.mode}=?paymentMode"
@@ -259,8 +267,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ALLPROMOTIONSQUERY = "select {p:pk} from {abstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate}"
 			.intern();
 
+	//TISPRO-179
 
 
+	public static final String BANKMODELQUERY = "select {bnk.pk} from {bank as bnk} where upper({bnk.bankname}) =?bankname";
 
 	//For Search Populator
 	public static final String BRAND = "brand";
@@ -1330,6 +1340,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
 	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
+
 	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
 
 	//CRM Ticket Type
@@ -1337,10 +1348,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TICKET_SUB_TYPE = "AC";
 	//CRM Ticket Source From Commerce
 	public static final String SOURCE = "commerce";
-	
+
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 	public static final String HUNDRED = "100".intern();
+
 
 	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
 	public static final String CAMPAIGN_FREEBIE = "FREEBIE OFFER".intern();
@@ -1369,6 +1381,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SPECIALPRICE_PRIORITY = "priority".intern();
 	public static final String HTTP = "http:".intern();
 	public static final String HTTPS = "https:".intern();
+	public static final String STAGED = "Staged".intern();
+
+
+
 
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
@@ -1441,9 +1457,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SYSDATE = "sysdate".intern();
 	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
 
-	//Added for constants for clickandcollect and active.
-	public static final String CLICK_N_COLLECT = "Y";
-	public static final String ACTIVE = "Y";
+	public static final String BANKNAME = "bankName";
 
 	private MarketplacecommerceservicesConstants()
 	{
@@ -1452,4 +1466,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
+
 
