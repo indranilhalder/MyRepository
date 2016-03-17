@@ -18126,15 +18126,15 @@ header .content .bottom .search .select-list select
        #variantForm .select-size li:hover {
         font-weight: 600; }
      
-     #variantForm .select-size:hover {
+     #variantForm .select-size.active {
       border-color: #DFD1D5;
       z-index: 1;
       -webkit-transition: border 0.15s;
       -moz-transition: border 0.15s;
       transition: border 0.15s; }
-       #variantForm .select-size:hover > .selected {
+       #variantForm .select-size.active > .selected {
         border-bottom: 1px solid #DFD1D5; }
-       #variantForm .select-size:hover ul {
+       #variantForm .select-size.active ul {
         max-height: 500px;
         border-color: #DFD1D5;
         -webkit-transition: max-height 0.15s, border 0s;
@@ -27278,7 +27278,7 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	color:#ff2c43;
 }
 .off-bag span:last-child {
-	color:#ff2c43;
+	color:#000;
 	margin-left:4px;
 }
 body .account .right-account .order-history.order-details li.item .status .message.processing-stage-arrow1 {
