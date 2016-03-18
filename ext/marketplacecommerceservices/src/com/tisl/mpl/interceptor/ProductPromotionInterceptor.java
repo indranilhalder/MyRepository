@@ -26,6 +26,10 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.model.BuyAandBGetPrecentageDiscountCashbackModel;
+import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
+import com.tisl.mpl.model.BuyAandBPrecentageDiscountModel;
+import com.tisl.mpl.model.BuyAandBgetCModel;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 
 
@@ -33,7 +37,7 @@ import com.tisl.mpl.promotion.helper.MplPromotionHelper;
  * @author TCS
  *
  */
-public class ProductPromotionInterceptor implements PrepareInterceptor<ProductPromotionModel>
+public class ProductPromotionInterceptor implements PrepareInterceptor
 {
 
 	private static final Logger LOG = Logger.getLogger(ProductPromotionInterceptor.class);
@@ -99,50 +103,6 @@ public class ProductPromotionInterceptor implements PrepareInterceptor<ProductPr
 		this.configurationService = configurationService;
 	}
 
-	@Override
-	public void onPrepare(final ProductPromotionModel promotion, final InterceptorContext arg1) throws InterceptorException
-	{
-		LOG.debug("ProductPromotionInterceptor");
-
-		populatePromotionGroup(promotion);
-
-		if (null != promotion.getProductCodeList() && !promotion.getProductCodeList().isEmpty())
-		{
-			final String productCodes = promotion.getProductCodeList();
-			final List<ProductModel> newProductModelList = new ArrayList<ProductModel>();
-
-			final StringTokenizer newProductCodeTokens = new StringTokenizer(productCodes, ",");
-
-			final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
-					.getConfiguration().getString("cronjob.promotion.catelog"),
-					configurationService.getConfiguration().getString("cronjob.promotion.catalogVersionName"));
-			if (null != catalogVersionModel)
-			{
-				while (newProductCodeTokens.hasMoreTokens())
-				{
-
-					newProductModelList.add(productService.getProductForCode(catalogVersionModel, newProductCodeTokens.nextToken()
-							.trim()));
-				}
-				final Collection<ProductModel> existingProductList = promotion.getProducts();
-
-				final List<ProductModel> finalProductList = new ArrayList<ProductModel>();
-				final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
-				if (null != existingProductList && !existingProductList.isEmpty())
-				{
-					finalProductList.addAll(existingProductList);
-				}
-				finalProductList.addAll(newProductModelList);
-				productModelSet.addAll(finalProductList);
-				finalProductList.clear();
-				finalProductList.addAll(productModelSet);
-				promotion.setProducts(finalProductList);
-				promotion.setProductCodeList("");
-			}
-
-		}
-	}
-
 	/**
 	 * The Method to auto populate a promotion group.
 	 *
@@ -155,5 +115,251 @@ public class ProductPromotionInterceptor implements PrepareInterceptor<ProductPr
 			abstractPromotion.setPromotionGroup(mplPromotionHelper.fetchPromotionGroupDetails(configurationService
 					.getConfiguration().getString("promotion.default.promotionGroup.identifier")));
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see de.hybris.platform.servicelayer.interceptor.PrepareInterceptor#onPrepare(java.lang.Object,
+	 * de.hybris.platform.servicelayer.interceptor.InterceptorContext)
+	 */
+	@Override
+	public void onPrepare(final Object object, final InterceptorContext arg1) throws InterceptorException
+	{
+
+		LOG.debug("ProductPromotionInterceptor");
+
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
+				configurationService.getConfiguration().getString("cronjob.promotion.catelog"),
+				configurationService.getConfiguration().getString("cronjob.promotion.catalogVersionName"));
+
+		if (object instanceof ProductPromotionModel)
+		{
+			//@Description :To check if an Enabled Promotions exists with the Product and same priority
+			final ProductPromotionModel promotion = (ProductPromotionModel) object;
+			populatePromotionGroup(promotion);
+
+			if (null != promotion.getProductCodeList() && !promotion.getProductCodeList().isEmpty())
+			{
+				final String productCodes = promotion.getProductCodeList();
+				final List<ProductModel> newProductModelList = new ArrayList<ProductModel>();
+
+				final StringTokenizer newProductCodeTokens = new StringTokenizer(productCodes, ",");
+
+
+				if (null != catalogVersionModel)
+				{
+					while (newProductCodeTokens.hasMoreTokens())
+					{
+
+						newProductModelList
+								.add(productService.getProductForCode(catalogVersionModel, newProductCodeTokens.nextToken().trim()));
+					}
+					final Collection<ProductModel> existingProductList = promotion.getProducts();
+
+					final List<ProductModel> finalProductList = new ArrayList<ProductModel>();
+					final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
+					if (null != existingProductList && !existingProductList.isEmpty())
+					{
+						finalProductList.addAll(existingProductList);
+					}
+					finalProductList.addAll(newProductModelList);
+					productModelSet.addAll(finalProductList);
+					finalProductList.clear();
+					finalProductList.addAll(productModelSet);
+					promotion.setProducts(finalProductList);
+					promotion.setProductCodeList("");
+				}
+
+			}
+
+			if (null != promotion.getExcludedProductCodeList() && !promotion.getExcludedProductCodeList().isEmpty())
+			{
+
+				final String excludedProductCodes = promotion.getExcludedProductCodeList();
+				final List<ProductModel> newExclProductModelList = new ArrayList<ProductModel>();
+
+				final StringTokenizer newExclProductCodeTokens = new StringTokenizer(excludedProductCodes, ",");
+
+				if (null != catalogVersionModel)
+				{
+					while (newExclProductCodeTokens.hasMoreTokens())
+					{
+
+						newExclProductModelList
+								.add(productService.getProductForCode(catalogVersionModel, newExclProductCodeTokens.nextToken().trim()));
+					}
+					final Collection<ProductModel> existingExcludedProductList = promotion.getExcludedProducts();
+
+					final List<ProductModel> finalExcludedProductList = new ArrayList<ProductModel>();
+					final Set<ProductModel> excludedProductModelSet = new HashSet<ProductModel>();
+					if (null != existingExcludedProductList && !existingExcludedProductList.isEmpty())
+					{
+						finalExcludedProductList.addAll(existingExcludedProductList);
+					}
+					finalExcludedProductList.addAll(newExclProductModelList);
+					excludedProductModelSet.addAll(finalExcludedProductList);
+					finalExcludedProductList.clear();
+					finalExcludedProductList.addAll(excludedProductModelSet);
+					promotion.setExcludedProducts(finalExcludedProductList);
+					promotion.setExcludedProductCodeList("");
+				}
+			}
+
+		}
+
+
+		// Check for second qualifying products for BuyAandBPrecentageDiscount type promotion
+
+
+		if (object instanceof BuyAandBPrecentageDiscountModel)
+		{
+			final BuyAandBPrecentageDiscountModel promotion = (BuyAandBPrecentageDiscountModel) object;
+			populatePromotionGroup(promotion);
+			if (null != promotion.getSecondProductCodeList() && !promotion.getSecondProductCodeList().isEmpty())
+			{
+				final String productCodes = promotion.getSecondProductCodeList();
+				final List<ProductModel> newSecondProductModelList = new ArrayList<ProductModel>();
+
+				final StringTokenizer newSecondProductCodeTokens = new StringTokenizer(productCodes, ",");
+
+				if (null != catalogVersionModel)
+				{
+					while (newSecondProductCodeTokens.hasMoreTokens())
+					{
+
+						newSecondProductModelList.add(
+								productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens.nextToken().trim()));
+					}
+					final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
+
+					final List<ProductModel> finalSecondProductList = new ArrayList<ProductModel>();
+					final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
+					if (null != existingSecondProductList && !existingSecondProductList.isEmpty())
+					{
+						finalSecondProductList.addAll(existingSecondProductList);
+					}
+					finalSecondProductList.addAll(newSecondProductModelList);
+					productModelSet.addAll(finalSecondProductList);
+					finalSecondProductList.clear();
+					finalSecondProductList.addAll(productModelSet);
+					promotion.setSecondProducts(finalSecondProductList);
+					promotion.setSecondProductCodeList("");
+				}
+
+			}
+		}
+		if (object instanceof BuyAandBgetCModel)
+		{
+			final BuyAandBgetCModel promotion = (BuyAandBgetCModel) object;
+			populatePromotionGroup(promotion);
+			if (null != promotion.getSecondProductCodeList() && !promotion.getSecondProductCodeList().isEmpty())
+			{
+				final String productCodes = promotion.getSecondProductCodeList();
+				final List<ProductModel> newSecondProductModelList = new ArrayList<ProductModel>();
+
+				final StringTokenizer newSecondProductCodeTokens = new StringTokenizer(productCodes, ",");
+
+				if (null != catalogVersionModel)
+				{
+					while (newSecondProductCodeTokens.hasMoreTokens())
+					{
+
+						newSecondProductModelList.add(
+								productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens.nextToken().trim()));
+					}
+					final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
+
+					final List<ProductModel> finalSecondProductList = new ArrayList<ProductModel>();
+					final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
+					if (null != existingSecondProductList && !existingSecondProductList.isEmpty())
+					{
+						finalSecondProductList.addAll(existingSecondProductList);
+					}
+					finalSecondProductList.addAll(newSecondProductModelList);
+					productModelSet.addAll(finalSecondProductList);
+					finalSecondProductList.clear();
+					finalSecondProductList.addAll(productModelSet);
+					promotion.setSecondProducts(finalSecondProductList);
+					promotion.setSecondProductCodeList("");
+				}
+
+			}
+		}
+		if (object instanceof BuyAandBGetPrecentageDiscountCashbackModel)
+		{
+			final BuyAandBGetPrecentageDiscountCashbackModel promotion = (BuyAandBGetPrecentageDiscountCashbackModel) object;
+			populatePromotionGroup(promotion);
+			if (null != promotion.getSecondProductCodeList() && !promotion.getSecondProductCodeList().isEmpty())
+			{
+				final String productCodes = promotion.getSecondProductCodeList();
+				final List<ProductModel> newSecondProductModelList = new ArrayList<ProductModel>();
+
+				final StringTokenizer newSecondProductCodeTokens = new StringTokenizer(productCodes, ",");
+
+				if (null != catalogVersionModel)
+				{
+					while (newSecondProductCodeTokens.hasMoreTokens())
+					{
+
+						newSecondProductModelList.add(
+								productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens.nextToken().trim()));
+					}
+					final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
+
+					final List<ProductModel> finalSecondProductList = new ArrayList<ProductModel>();
+					final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
+					if (null != existingSecondProductList && !existingSecondProductList.isEmpty())
+					{
+						finalSecondProductList.addAll(existingSecondProductList);
+					}
+					finalSecondProductList.addAll(newSecondProductModelList);
+					productModelSet.addAll(finalSecondProductList);
+					finalSecondProductList.clear();
+					finalSecondProductList.addAll(productModelSet);
+					promotion.setSecondProducts(finalSecondProductList);
+					promotion.setSecondProductCodeList("");
+				}
+
+			}
+		}
+		if (object instanceof BuyAandBGetPromotionOnShippingChargesModel)
+		{
+			final BuyAandBGetPromotionOnShippingChargesModel promotion = (BuyAandBGetPromotionOnShippingChargesModel) object;
+			populatePromotionGroup(promotion);
+			if (null != promotion.getSecondProductCodeList() && !promotion.getSecondProductCodeList().isEmpty())
+			{
+				final String productCodes = promotion.getSecondProductCodeList();
+				final List<ProductModel> newSecondProductModelList = new ArrayList<ProductModel>();
+
+				final StringTokenizer newSecondProductCodeTokens = new StringTokenizer(productCodes, ",");
+
+				if (null != catalogVersionModel)
+				{
+					while (newSecondProductCodeTokens.hasMoreTokens())
+					{
+
+						newSecondProductModelList.add(
+								productService.getProductForCode(catalogVersionModel, newSecondProductCodeTokens.nextToken().trim()));
+					}
+					final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
+
+					final List<ProductModel> finalSecondProductList = new ArrayList<ProductModel>();
+					final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
+					if (null != existingSecondProductList && !existingSecondProductList.isEmpty())
+					{
+						finalSecondProductList.addAll(existingSecondProductList);
+					}
+					finalSecondProductList.addAll(newSecondProductModelList);
+					productModelSet.addAll(finalSecondProductList);
+					finalSecondProductList.clear();
+					finalSecondProductList.addAll(productModelSet);
+					promotion.setSecondProducts(finalSecondProductList);
+					promotion.setSecondProductCodeList("");
+				}
+
+			}
+		}
+
 	}
 }

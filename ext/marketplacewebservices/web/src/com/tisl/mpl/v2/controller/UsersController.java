@@ -4156,7 +4156,14 @@ public class UsersController extends BaseCommerceController
 				else
 				{
 					final UserModel user = userService.getCurrentUser();
-					getCustomerAccountService().changePassword(user, old, newPassword);
+					try
+					{
+						getCustomerAccountService().changePassword(user, old, newPassword);
+					}
+					catch (final Exception e)
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0009);
+					}
 				}
 				CustomerModel currentUser = null;
 				try
@@ -4480,6 +4487,10 @@ public class UsersController extends BaseCommerceController
 								if (StringUtils.isNotEmpty(emibanking.getName().getBankName()))
 								{
 									eMIBankWsDTO.setEmiBank(emibanking.getName().getBankName());
+								}
+								if (StringUtils.isNotEmpty(emibanking.getCode()))
+								{
+									eMIBankWsDTO.setCode(emibanking.getCode());
 								}
 								if (StringUtils.isNotEmpty(emibanking.getEmiLowerLimit().toString()))
 								{

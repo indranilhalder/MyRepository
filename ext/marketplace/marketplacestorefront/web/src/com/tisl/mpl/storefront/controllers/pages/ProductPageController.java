@@ -413,14 +413,28 @@ public class ProductPageController extends AbstractPageController
 
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 		}
+		/*
+		 * catch (final EtailNonBusinessExceptions e) { ExceptionUtil.etailNonBusinessExceptionHandler(e); }
+		 */
 		catch (final EtailNonBusinessExceptions e)
 		{
+			if (MarketplacecommerceservicesConstants.E0018.equalsIgnoreCase(e.getErrorCode()))
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, "dataissue");
+			}
+
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
 		}
 		return ControllerConstants.Views.Fragments.Product.SizeGuidePopup;
 
 
 	}
+
 
 	/**
 	 * Get buybox data in respect of productCode and sellerId for sizeguide
@@ -433,6 +447,7 @@ public class ProductPageController extends AbstractPageController
 	 * @throws UnsupportedEncodingException
 	 * @throws com.granule.json.JSONException
 	 */
+
 
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
 	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
@@ -508,58 +523,66 @@ public class ProductPageController extends AbstractPageController
 	{
 		final Map<String, String> headerMap = new HashMap<String, String>();
 		final List<String> headerMapData = new ArrayList<String>();
-		for (final String key : sizeguideList.keySet())
+		try
 		{
-			if (categoryType.equalsIgnoreCase(CLOTHING))
-			{
-				for (final SizeGuideData data : sizeguideList.get(key))
-				{
 
-					if (null == headerMap.get(data.getDimensionSize()))
+			for (final String key : sizeguideList.keySet())
+			{
+				if (categoryType.equalsIgnoreCase(CLOTHING))
+				{
+					for (final SizeGuideData data : sizeguideList.get(key))
 					{
-						headerMap.put(data.getDimensionSize(), data.getDimensionSize());
+
+						if (null == headerMap.get(data.getDimensionSize()))
+						{
+							headerMap.put(data.getDimensionSize(), data.getDimensionSize());
+						}
+
 					}
 
 				}
-
-			}
-			else if (categoryType.equalsIgnoreCase(FOOTWEAR))
-			{
-				for (final SizeGuideData data : sizeguideList.get(key))
+				else if (categoryType.equalsIgnoreCase(FOOTWEAR))
 				{
-					if (data.getAge() != null)
+					for (final SizeGuideData data : sizeguideList.get(key))
 					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.age"), "Y");
-					}
-					if (data.getDimension() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlength"), "Y");
-					}
-					if (data.getDimensionSize() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.UK"), "Y");
-					}
-					if (data.getDimensionValue() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.Witdth"), "Y");
-					}
-					if (data.getEuroSize() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.EURO"), "Y");
-					}
-					if (data.getUsSize() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.US"), "Y");
+						if (data.getAge() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.age"), "Y");
+						}
+						if (data.getDimension() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlength"), "Y");
+						}
+						if (data.getDimensionSize() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.UK"), "Y");
+						}
+						if (data.getDimensionValue() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.Witdth"), "Y");
+						}
+						if (data.getEuroSize() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.EURO"), "Y");
+						}
+						if (data.getUsSize() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.US"), "Y");
+						}
 					}
 				}
 			}
-		}
-		for (final String keyData : headerMap.keySet())
-		{
-			headerMapData.add(keyData);
-		}
+			for (final String keyData : headerMap.keySet())
+			{
+				headerMapData.add(keyData);
+			}
 
-		Collections.sort(headerMapData, sizeGuideHeaderComparator);
+			Collections.sort(headerMapData, sizeGuideHeaderComparator);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 		return headerMapData;
 	}
 

@@ -180,10 +180,10 @@
 						</hlayout>
 
 						<!-- to enable p2slave uncomment the code -->
-						<!-- <hlayout>
+						<hlayout visible="@bind(vm.p2slavesVisibleStatus)">
 							<label value="P2SlaveID" hflex="1" />
 							<label value=":" hflex="1"></label>
-							<listbox  id="p2SlaveIDListbox"
+							<listbox  id="p2SlaveIDListbox" disabled="@bind(vm.p2slavesDropDownsStatus)"
 							model="@bind(vm.p2SlaveIDList)" hflex="1" mold="select"
 							onSelect="@command('onSelectp2SlaveIDList')">
 							<template name="model">
@@ -199,13 +199,13 @@
 							
 							</hlayout> 
 							
-							<hlayout>
+							<hlayout visible="@bind(vm.p2slavesVisibleStatus)">
 							<label value="P2SlaveName" hflex="1" />
 							<label value=":" hflex="1"></label>
 							<label value="@bind(vm.p2SlaveName)"
 							hflex="1">
 							</label>
-							</hlayout>-->
+							</hlayout>
 						<hlayout visible="@bind(vm.sShipStatus)">
 							<label value="P1LogisticsID" hflex="1" />
 							<label value=":" hflex="1"></label>
@@ -487,10 +487,6 @@
 							</label>
 						</hlayout>
 					</vlayout>
-
-
-
-
 					<hlayout sclass="headings">
 						<label sclass="headings"
 							value="Customer Info">

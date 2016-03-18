@@ -881,6 +881,7 @@ function editAddress(addressId) {
         var regexCharSpace = /^[a-zA-Z ]*$/;
 //        var regexCharSpace = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
         var regexSpace = /\s/;
+        var equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/;
         var flagFn = true; 
         var flagLn = true;
         var flagAd1 = true;
@@ -966,6 +967,11 @@ function editAddress(addressId) {
         	flagMob = false;
         }
         else if (regexSpace.test(addressForm.mobileNo.value)) {
+        	$("#errddressMob").css({"display":"block"});
+        	document.getElementById("erraddressMob").innerHTML = "<font color='red' size='2'>Mobile number should contain 10 digit numbers only</font>";
+        	flagMob = false;
+        }
+        else if(equalNoCheck.test(addressForm.mobileNo.value)){
         	$("#errddressMob").css({"display":"block"});
         	document.getElementById("erraddressMob").innerHTML = "<font color='red' size='2'>Mobile number should contain 10 digit numbers only</font>";
         	flagMob = false;

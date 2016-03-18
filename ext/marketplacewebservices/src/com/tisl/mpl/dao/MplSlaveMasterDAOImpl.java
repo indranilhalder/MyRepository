@@ -96,7 +96,7 @@ public class MplSlaveMasterDAOImpl implements MplSlaveMasterDAO
 			//create the flexible search query
 			LOG.debug("call to commerse db search for stores given sellerId and SlaveId ");
 			final FlexibleSearchQuery posQuery = new FlexibleSearchQuery(queryString);
-			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_NAME, slaveId);
+			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_SLAVEID, slaveId);
 			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_SELLERID, sellerId);
 			final List<PointOfServiceModel> posList = flexibleSearchService.<PointOfServiceModel> search(posQuery).getResult();
 

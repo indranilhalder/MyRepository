@@ -26,8 +26,9 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
@@ -95,7 +96,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(SHIPPINGCHARGE, shippingCharge);
 		//Setting first name and last name to NAMEOFPERSON
 		final StringBuilder name = new StringBuilder(150);
-		final List<AddressModel> storeAddrList = new ArrayList<AddressModel>();
+		final Set<AddressModel> storeAddrList = new HashSet<AddressModel>();
 		final StringBuilder deliveryAddr = new StringBuilder(150);
 		for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
 		{
@@ -107,36 +108,34 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				put(CUSTOMER_NAME, CUSTOMER);
 
 			}
-			else if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.HD)
-					|| entryModel.getMplDeliveryMode().getDeliveryMode().getCode()
-							.equalsIgnoreCase(MarketplaceFacadesConstants.EXPRESS))
-			{
-				final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
-				if (null != deliveryAddress.getFirstname())
-				{
-					put(CUSTOMER_NAME, deliveryAddress.getFirstname());
-				}
-				if (null != deliveryAddress.getFirstname())
-				{
-					name.append(deliveryAddress.getFirstname());
-				}
-				if (null != deliveryAddress.getLastname())
-				{
-					name.append(SPACE).append(deliveryAddress.getLastname());
-				}
-
-				put(NAMEOFPERSON, (name.length() > 0 ? name : CUSTOMER));
-				put(MOBILENUMBER,
-						(null != deliveryAddress.getPhone1() ? deliveryAddress.getPhone1() : deliveryAddress.getCellphone()));
-				put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
-
-				deliveryAddr.append(deliveryAddress.getStreetname()).append(COMMA).append(deliveryAddress.getStreetnumber())
-						.append(COMMA).append(deliveryAddress.getAddressLine3()).append(COMMA).append(deliveryAddress.getTown())
-						.append(COMMA).append(deliveryAddress.getDistrict()).append(COMMA).append(deliveryAddress.getPostalcode());
-				put(DELIVERYADDRESS, deliveryAddr);
-
-			}
 		}
+
+		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+		if (deliveryAddress != null)
+		{
+			if (null != deliveryAddress.getFirstname())
+			{
+				put(CUSTOMER_NAME, deliveryAddress.getFirstname());
+			}
+			if (null != deliveryAddress.getFirstname())
+			{
+				name.append(deliveryAddress.getFirstname());
+			}
+			if (null != deliveryAddress.getLastname())
+			{
+				name.append(SPACE).append(deliveryAddress.getLastname());
+			}
+
+			put(NAMEOFPERSON, (name.length() > 0 ? name : CUSTOMER));
+			put(MOBILENUMBER, (null != deliveryAddress.getPhone1() ? deliveryAddress.getPhone1() : deliveryAddress.getCellphone()));
+			put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+
+			deliveryAddr.append(deliveryAddress.getStreetname()).append(COMMA).append(deliveryAddress.getStreetnumber())
+					.append(COMMA).append(deliveryAddress.getAddressLine3()).append(COMMA).append(deliveryAddress.getTown())
+					.append(COMMA).append(deliveryAddress.getDistrict()).append(COMMA).append(deliveryAddress.getPostalcode());
+			put(DELIVERYADDRESS, deliveryAddr);
+		}
+
 		if (storeAddrList.size() > 0)
 		{
 			put(CNCSTOREADDRESS, storeAddrList);
