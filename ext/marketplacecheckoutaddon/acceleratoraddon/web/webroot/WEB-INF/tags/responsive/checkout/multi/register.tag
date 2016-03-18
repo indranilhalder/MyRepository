@@ -22,8 +22,8 @@
 	<%-- <formElement:formInputBox idKey="register.email" labelKey="register.email" 
 		path="email" inputCSS="form-control" mandatory="true"/> --%>
 
-	<label class="email_Label"><strong><spring:theme
-				code="text.account.email" text="Email Address" /></strong></label>
+	<label class="email_Label"><spring:theme
+				code="text.account.email" text="Email Address" /></label>
 	
 	<form:input id="register.email" class="inputText"
 		idKey="register.email" labelKey="register.email" path="email" maxlength="240" />
