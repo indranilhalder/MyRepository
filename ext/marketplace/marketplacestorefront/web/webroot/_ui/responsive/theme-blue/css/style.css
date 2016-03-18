@@ -25181,20 +25181,24 @@ input.brandSearchTxt {
     height: 30px;
 }
 #addToCartButton-wrong{
-	color: #fff;
-    background-color: rgb(255,118,133);
-    border-color: #ff2c43;
-    line-height: 30px;
-    cursor:default;
-    display:none;
-    font-size:12px;
+    background-color: #ccc;
+    border: 1px solid #a9143c;
+    cursor: default;
+    display: none;
+    font-size: 12px;
     letter-spacing: 1px;
-    line-height: 55px;
-    height: 55px;
+    line-height: 40px;
+    height: 40px;
     padding: 0;
+    margin-bottom: 20px;
     font-weight: 500;
     clear: both;
+    color: #a9143c;
+    opacity: 0.5;
 }
+button#buyNowButton[disabled="disabled"] {
+    opacity: 0.5;
+} 
 .account-userTitle-custom{
 	line-height:50px;
     white-space: nowrap;
@@ -36833,6 +36837,8 @@ span.mini-cart-close {
  .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards{
 		        border-bottom: 1px dashed #a9143c;
     			padding: 0;
+    			display: inline-block;
+    			width: 152px;
           }
           .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards:after{
 		    content: "\f059";
