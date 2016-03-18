@@ -51,7 +51,7 @@
 					<div class="reward-popover">
 					<p class="reward-popover-container">
 					<span class="reward-popover-left">We work with brands to create great Rewards that start your savings on the very first purchase. Once enrolled, you can unlock these 
-					<span><a class="reward-popover-dash-border">rewards </a></span><span> &nbsp; instantly!</span>
+					<span><a class="reward-popover-dash-border" href="#" target="_blank">rewards </a></span><span> &nbsp; instantly!</span>
 					</span>
 					<span class="reward-popover-img">
 					<img src="${commonResourcePath}/images/Logo-Rewards.png">
@@ -59,7 +59,7 @@
 					</p>
 					</div>					
 				<input type="checkbox" id="check_MyRewards" name="check_MyRewards" value="true"/>
-				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" class="tata-rewards">My Tata Rewards Program</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }"> T&C </a> and <a href="${tncmytatarewards }"> privacy policy</a> of My Tata Rewards program</label>
+				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" target="_blank" class="tata-rewards">My Tata Rewards Program</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }" target="_blank"> T&C </a> and <a href="${tncmytatarewards }" target="_blank"> privacy policy</a> of My Tata Rewards program</label>
 		</div> 
 	
 	<div class="form-actions clearfix">
