@@ -372,8 +372,12 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
 ;;DeliveryTextParagraphComponent;Delivery Text Paragraph Component;DeliveryTextParagraphComponent;;;;
 
+# CMS Link Components
+INSERT_UPDATE HomeStoreLocatorComponent;$contentCV[unique=true];uid[unique=true]; name;&componentRef;latitude;longitude;  
+;;HomeStoreLocatorComponentModel;Home Store Locator Component;HomeStoreLocatorComponentModel;21.0000;78.0000;;
+
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
-;;Section5Slot-Homepage;true;DeliveryTextParagraphComponent
+;;Section5Slot-Homepage;true;DeliveryTextParagraphComponent,HomeStoreLocatorComponentModel
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section5Slot-Homepage;Section5;;Section5Slot-Homepage;;;
@@ -445,15 +449,19 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ################ FOOTWEAR CATEGORY LANDING PAGE ################
 
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
+;;TMPFootwearHomepageBannerComponent;TMP Footwear Homepage Banner Component;4;TMPFootwearHomepageBannerComponent
+
+
 #Category Carousel
 INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
-;;TMPFootwearMainCategoriesCarouselComponent;Footwear Main Categories Carousel Component;MSH1310,MSH1311,MSH1312;TMPFootwearMainCategoriesCarouselComponent;large
-;;TMPOccasionFootwearMainCategoriesCarouselComponent;Occasion Footwear Main Categories Carousel Component;MSH1015100,MSH1015104,MSH1015103,MSH1115102;TMPOccasionFootwearMainCategoriesCarouselComponent;thumbnail
+;;TMPFootwearMainCategoriesCarouselComponent;Footwear Main Categories Carousel Component;;TMPFootwearMainCategoriesCarouselComponent;large
+;;TMPOccasionFootwearMainCategoriesCarouselComponent;Occasion Footwear Main Categories Carousel Component;;TMPOccasionFootwearMainCategoriesCarouselComponent;thumbnail
 
 
 INSERT_UPDATE MplFootwearComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;categoryCode(code,$productCV);title
-;;WomenFootwearImgComponent;Women Footwear;WomenFootwearImgComponent;MSH1311106,MSH1310102,MSH1310100,MSH1310103
-;;MenFootwearImgComponent;Men Footwear;MenFootwearImgComponent;MSH1311107,MSH1311101,MSH1311100,MSH1311104
+;;WomenFootwearImgComponent;Women Footwear;WomenFootwearImgComponent;
+;;MenFootwearImgComponent;Men Footwear;MenFootwearImgComponent;
 
 
 
@@ -688,25 +696,25 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 ########################## END OF WESTSIDE BRAND LANDING PAGE ##################
 
-##SHOE BRAND LANDING PAGE#####################
+##FOOTWEAR BRAND LANDING PAGE#####################
 
 INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;SequenceNumber;&componentRef
-;;TMPShoeHomepageBannerComponent;Shoe  Banner Component;4;TMPShoeHomepageBannerComponent
+;;TMPShoeHomepageBannerComponent;Footwear  Banner Component;4;TMPShoeHomepageBannerComponent
 
 #Category Carousel
 INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
-;;TMPShoeMainCategoriesCarouselComponent;Shoe Main Categories Carousel Component;MSH1010,MSH1011,MSH1112,MSH1010,MSH1112;TMPShoeMainCategoriesCarouselComponent;thumbnail
+;;TMPShoeMainCategoriesCarouselComponent;Footwear Main Categories Carousel Component;MSH1010,MSH1011,MSH1112,MSH1010,MSH1112;TMPShoeMainCategoriesCarouselComponent;thumbnail
 
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
 ;;NikeTrackFieldCollectionParagraphComponent;Patterned and Paragraph Component;NikeTrackFieldCollectionParagraphComponent;;;;
 
 
 INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;SequenceNumber;&componentRef
-;;ShoeImage1Component;shoe  Image Component 1;/;;ShoeImage1Component
-;;ShoeImage2Component;shoe  Image Component 2;/;;ShoeImage2Component
+;;ShoeImage1Component;Footwear  Image Component 1;/;;ShoeImage1Component
+;;ShoeImage2Component;Footwear  Image Component 2;/;;ShoeImage2Component
 
 INSERT_UPDATE ProductRefinementComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
-;;RefinementFacetShoeComponent;Product Refinement Facet for Shoe Component;RefinementFacetShoeComponent
+;;RefinementFacetShoeComponent;Product Refinement Facet for Footwear Component;RefinementFacetShoeComponent
 
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;title;description;
 ;;BackgroundImages1;Background Images1 Component;BackgroundImages1;;;""
@@ -717,23 +725,23 @@ INSERT_UPDATE ProductGridComponent;$contentCV[unique=true];uid[unique=true];name
 
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;Section1-shoe;Section1 slot for shoe Brand Landing Page;true;TMPShoeHomepageBannerComponent;;;
-;;Section2-shoe; Shoe Carousel Brand Landing Page;true;TMPShoeMainCategoriesCarouselComponent;;;
-;;Section3ASlot-shoe;Section 3A Slot for shoe Image;true;NikeTrackFieldCollectionParagraphComponent,ShoeImage2Component,ShoeImage1Component;;;
-;;Section3BSlot-shoe;Section 2B Slot for Product grid;true;RefinementFacetShoeComponent;;;
-;;Section3C-shoe;Background Image Slot;true;BackgroundImages1,BackgroundImages2
-;;Section4Slot-shoe;Section 3 Slot for Product grid;true;ProductGridComponent;;;
+;;Section1-footwearBrand;Section1 slot for footwear Brand Landing Page;true;TMPShoeHomepageBannerComponent;;;
+;;Section2-footwearBrand; Footwear Carousel Brand Landing Page;true;TMPShoeMainCategoriesCarouselComponent;;;
+;;Section3ASlot-footwearBrand;Section 3A Slot for footwear Image;true;NikeTrackFieldCollectionParagraphComponent,ShoeImage2Component,ShoeImage1Component;;;
+;;Section3BSlot-footwearBrand;Section 2B Slot for Product grid;true;RefinementFacetShoeComponent;;;
+;;Section3C-footwearBrand;Background Image Slot;true;BackgroundImages1,BackgroundImages2
+;;Section4Slot-footwearBrand;Section 3 Slot for Product grid;true;ProductGridComponent;;;
 
 # ContentSlotForPage for brand landing page
-INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='shoe'];contentSlot(uid,$contentCV)[unique=true];;;
-;;Section1-shoe;Section1;;Section1-shoe;;;
-;;Section2Slot-shoe;Section2;;Section2-shoe;;;
-;;Section3ASlot-shoe;Section3A;;Section3ASlot-shoe;;;
-;;Section3BSlot-shoe;Section3B;;Section3BSlot-shoe;;;
-;;Section3C-shoe;Section3C;;Section3C-shoe;;;
-;;Section4Slot-shoe;Section4;;Section4Slot-shoe;;;
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='footwearBrand'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-footwearBrand;Section1;;Section1-footwearBrand;;;
+;;Section2Slot-footwearBrand;Section2;;Section2-footwearBrand;;;
+;;Section3ASlot-footwearBrand;Section3A;;Section3ASlot-footwearBrand;;;
+;;Section3BSlot-footwearBrand;Section3B;;Section3BSlot-footwearBrand;;;
+;;Section3C-footwearBrand;Section3C;;Section3C-footwearBrand;;;
+;;Section4Slot-footwearBrand;Section4;;Section4Slot-footwearBrand;;;
 
-##SHOE BRAND LANDING PAGE: END#####################
+##FOOTWEAR BRAND LANDING PAGE: END#####################
 
 ####BRAND LANDING PAGE-ELECTRONICS##############
 

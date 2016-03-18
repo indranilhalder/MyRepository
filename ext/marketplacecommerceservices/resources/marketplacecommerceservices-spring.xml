@@ -171,6 +171,8 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+
+
 	<!-- PriceRowPromotionInterceptor ends -->
 	<!-- DeliveryModeInterceptor Start -->
 	<!-- <bean id="deliveryModeCreateInterceptor" class="com.tisl.mpl.interceptor.DeliveryModeCreateInterceptor"> 
@@ -363,9 +365,25 @@
 		<property name="otpDao" ref="otpDao" />
 		<property name="modelservice" ref="modelService" />
 		<property name="userService" ref="userService" />
+
 	</bean>
 	<bean id="otpDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.OTPDaoImpl" />
+		
+		
+		
+		<!-- ============== configure beans for pincode ============== -->
+		
+		<alias name="pincodeService" alias="pincodeService" />
+	<bean id="pincodeService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.PincodeServiceImpl">
+		<property name="pincodeDao" ref="pincodeDao" />
+		
+	</bean>
+	<bean id="pincodeDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PincodeDaoImpl" >
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+	</bean>
 
 
 	<!-- Payment DAO and Service Implementation -->
@@ -1566,9 +1584,46 @@
 	</bean>
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
+
 	
 	<!-- Coupon restriction service, added for getting restrictions for coupon -->
 	<bean id="couponRestrictionService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCouponRestrictionServiceImpl">		
 	</bean>
+
+
+	<!-- Using Google Map service to look up address data. -->
+	<alias alias="geoServiceWrapper" name="defaultGoogleMapsGeoServiceWrapper"/>
+	
+	<alias alias="countryIsoGPSLocationMap" name="mplCountryIsoGPSLocationMap"/>
+	<bean id="mplCountryIsoGPSLocationMap" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map merge="true" key-type="java.lang.String" value-type="de.hybris.platform.storelocator.GPS">
+				<entry key="DEFAULT">
+					<bean class="de.hybris.platform.storelocator.impl.DefaultGPS">
+						<constructor-arg value="0D"/>
+						<constructor-arg value="0D"/>
+					</bean>
+				</entry>
+				<entry key="IN">
+					<bean class="de.hybris.platform.storelocator.impl.DefaultGPS">
+						<constructor-arg value="21.0000D"/>
+						<constructor-arg value="78.0000D"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<alias name="mplGoogleMapTools" alias="googleMapTools"/>
+	<bean id="mplGoogleMapTools" class="de.hybris.platform.storelocator.impl.GoogleMapTools" scope="prototype">
+		<property name="addressLocationParser" ref="firstPlacemarkWinsGoogleResponseParser"/>
+		<property name="routeDataParser" ref="routeDataGoogleResponseParser"/>
+		<property name="directionsUrlBuilder" ref="geolocationDirectionsUrlBuilder"/>
+		<property name="cliendId" value="${google.data-clientid}"/>
+		<property name="googleKey" value="${googleApiKey}"/>
+	</bean>
+	
+	<!-- Store Locator Beans end here -->
 </beans>
+

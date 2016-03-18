@@ -106,7 +106,11 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 							disabled="disabled">
 							<span><spring:theme code="basket.add.to.basket" /></span>
 						</button>
-					
+					    <button id="addToCartButton${product.code}"
+							class="disabled serp-addtobag js-add-to-cart"
+							disabled="disabled">
+							<span><spring:theme code="basket.add.to.basket" /></span>
+						</button>
 
 				</form:form>
 
@@ -213,8 +217,10 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->
 						<%-- <li>Size : ${product.displaySize}</li> --%>
+						<!-- TISSTRT - 985::Size of footwear products are not displayed in SERP page-->
 						<c:if
-						test="${not empty product.productCategoryType && product.isVariant && product.productCategoryType eq 'Apparel'}">
+							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
+							                          || product.productCategoryType eq 'Footwear') }">
 						
 						 <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li>
 						 </c:if>
@@ -273,3 +279,9 @@ if (sessionStorage.getItem("comparePageVisited")!=null) {
 		
 	});
 </script>
+ <style>
+.product-tile:hover .image .quickview .serp-addtobag.disabled {
+ 	display: none;
+ 	opacity: 0.7;
+ }
+</style> 

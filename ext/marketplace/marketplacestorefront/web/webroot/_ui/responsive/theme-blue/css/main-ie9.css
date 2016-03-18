@@ -1370,19 +1370,10 @@ border:none;
     .feature-categories .content-block {
   margin: 0 40px;
 }
-.electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-prev{
-	
-	left:-30px;
-	width:40px;
-}
+
 .electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-prev::after{
 	
 right:0px;
-}
-.electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-next{
-	
-	right:-30px;
-	width:40px;
 }
 .electronic-brand-slider .owl-carousel .owl-controls .owl-buttons .owl-next::after{
 	
@@ -1499,27 +1490,28 @@ font-weight: 600;
   letter-spacing: 1.5px;
   margin: 20px auto;
 }
-.electronics-brand .feature-categories.custom-feature div.left-img + .content a:after{
+ .electronics-brand .feature-categories.custom-feature div.left-img + .content a:after{
 content: "";
-  color: #000;
-  margin-left: 10px;
-  display: inline-block;
-  -webkit-transition: border 0.15s;
-  -moz-transition: border 0.15s;
-  transition: border 0.15s;
-  height: 0;
-  width: 0;
-  border-bottom: 4.5px solid transparent;
-  border-left: 4.5px solid #000;
-  border-top: 4.5px solid transparent;
+  font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f105";
+    font-size: 17px;
+    vertical-align: middle;
+    padding-left: 5px;
+    font-weight: lighter;
+    border: none;
+    position: relative;
+    top: -3px;
 }
+/*
 .electronics-brand .feature-categories.custom-feature div.left-img + .content a:hover:after{
 height: 0;
   width: 0;
   border-bottom: 4.5px solid transparent;
   border-left: 4.5px solid #a9143c;
   border-top: 4.5px solid transparent;
-}
+} */
  .electronics-brand .feature-categories.custom-feature div.left-img + .content>div{
  padding: 20px;
   text-align: center;
@@ -2217,7 +2209,7 @@ header .content .marketplace.compact {
   line-height: 50px;
   text-align: center;
   margin-left: 0;
-  z-index: -1;
+  /* z-index: -1; */
 }
 header .content .marketplace.compact a img{
  width: 130px;
@@ -5054,7 +5046,7 @@ body .lookbook_wrapper div.share-link ul li a.gp:before {
     content: "\f0d5";
 }
 body .lookbook_wrapper div.share-link ul li a:hover:before {
-    color: #1e76d2;
+    color: #88102C;
 }
 .lookbook-intro {
     clear: both;
@@ -11545,7 +11537,7 @@ body .account .right-account .order-history.order-details li.item .actions a:vis
 	overflow:hidden;
 }
 .simple-banner-component a {
-    display: block;
+    display: inline-block;
 }
 #returnRequestForm .return-container , .return-form.success .return-container{
 	    border: 2px solid #dfd1d5;
@@ -15521,7 +15513,7 @@ font-family:DejaVu Sans;
 
 #bestPicks .view-cliq-offers {
 	padding: 13px;
-    border: 1px solid #bbb;
+    border: 1px solid #4a4a4a;
     color: #333;
     font-size: 12px;
     font-family: "Avenir Next";
@@ -15618,7 +15610,7 @@ padding: 0px 5px 10px;
 a.button.trending-button {
     background: transparent;
     color: #333;
-    border: 1px solid #bbb;
+    border: 1px solid #4a4a4a;
     font-size: 12px;
     font-weight: 600;
     text-decoration: none;
@@ -16040,3 +16032,4 @@ header:not(.compact) .content .marketplace.compact{
 a.size-guide {
     white-space: nowrap;
 } 
+

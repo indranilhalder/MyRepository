@@ -253,7 +253,9 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem,
+
+			final ShowCaseLayout showcaseLayout)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
@@ -310,8 +312,9 @@ public class HomePageController extends AbstractPageController
 	{
 
 
-		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section4CSlot-Homepage", version);
+		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section4CSlot-Homepage",
+
+				version);
 		return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
 	}
 
@@ -320,8 +323,9 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getProductsYouCare", method = RequestMethod.GET)
 	public JSONObject getProductsYouCare(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section4DSlot-Homepage", version);
+		final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section4DSlot-Homepage",
+
+				version);
 		return homepageComponentService.getProductsYouCareJSON(homepageSection4DSlot);
 	}
 
@@ -333,8 +337,9 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		final JSONObject newAndExclusiveJson = new JSONObject();
-		final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section4BSlot-Homepage", version);
+		final ContentSlotModel homepageSection4BSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section4BSlot-Homepage",
+
+				version);
 		if (CollectionUtils.isNotEmpty(homepageSection4BSlot.getCmsComponents()))
 		{
 			components = homepageSection4BSlot.getCmsComponents();
@@ -420,8 +425,9 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getPromoBannerHomepage", method = RequestMethod.GET)
 	public JSONObject getPromoBannerHomepage(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section4ASlot-Homepage", version);
+		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section4ASlot-Homepage",
+
+				version);
 
 		//return getJsonBanner(homepageSection4ASlot, "promo");
 		return homepageComponentService.getJsonBanner(homepageSection4ASlot, "promo");
@@ -432,8 +438,9 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getStayQuedHomepage", method = RequestMethod.GET)
 	public JSONObject getStayQuedHomepage(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section5ASlot-Homepage", version);
+		final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section5ASlot-Homepage",
+
+				version);
 		//return getJsonBanner(homepageSection5ASlot, "stayQued");
 		return homepageComponentService.getJsonBanner(homepageSection5ASlot, "stayQued");
 
@@ -504,9 +511,17 @@ public class HomePageController extends AbstractPageController
 	{
 		final List<ImageData> images = (List<ImageData>) productData.getImages();
 		String imageUrl = MISSING_IMAGE_URL;
-		if (images != null && images.get(0).getUrl() != null)
+
+		if (CollectionUtils.isNotEmpty(images))
 		{
-			imageUrl = images.get(0).getUrl();
+			for (final ImageData image : images)
+			{
+				if (image.getMediaPriority() != null && image.getMediaPriority().intValue() == 1
+						&& image.getFormat().equalsIgnoreCase("searchPage"))
+				{
+					imageUrl = image.getUrl();
+				}
+			}
 		}
 
 		return imageUrl;

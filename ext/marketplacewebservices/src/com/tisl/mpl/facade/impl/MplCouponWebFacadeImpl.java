@@ -26,6 +26,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.service.MplCouponWebService;
+import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
@@ -37,13 +38,13 @@ import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
  */
 public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 {
+	private static final Logger LOG = Logger.getLogger(MplCouponWebFacadeImpl.class);
+
 	@Autowired
 	MplCouponWebService mplCouponWebService;
 
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
-
-	private static final Logger LOG = Logger.getLogger(MplCouponWebFacadeImpl.class);
 
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
@@ -138,36 +139,63 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 	{
 		boolean couponRelStatus = false;
 		final boolean redeem = false;
-		final ReleaseCouponsDTO releaseCouponsDTO = new ReleaseCouponsDTO();
+		ReleaseCouponsDTO releaseCouponsDTO = new ReleaseCouponsDTO();
 		try
 		{
 			mplCouponFacade.releaseVoucher(couponCode, cartModel);
 			couponRelStatus = true;
+			mplCouponFacade.recalculateCartForCoupon(cartModel);
+			LOG.debug("Coupon Release Status is:::" + couponRelStatus);
+			VoucherDiscountData data = new VoucherDiscountData();
+			if (couponRelStatus)
+			{
+				data = mplCouponFacade.calculateValues(cartModel, couponRelStatus, redeem);
+				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
+				{
+					releaseCouponsDTO.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
+				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9508);
+			}
 		}
 		catch (final VoucherOperationException e)
 		{
-			LOG.error("Issue with voucher release " + e.getMessage());
-			releaseCouponsDTO.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
-					.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
-			releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
-			releaseCouponsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9508);
+			LOG.error("Issue with voucher release ", e);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO, cartModel);
 		}
-		mplCouponFacade.recalculateCartForCoupon(cartModel);
-		LOG.debug("Coupon Release Status is:::" + couponRelStatus);
-		VoucherDiscountData data = new VoucherDiscountData();
-		if (couponRelStatus)
+		catch (final EtailNonBusinessExceptions e)
 		{
-			data = mplCouponFacade.calculateValues(cartModel, couponRelStatus, redeem);
-			if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
-			{
-				releaseCouponsDTO.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
-			}
-			releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO, cartModel);
 		}
-		else
+		catch (final Exception e)
 		{
-			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9508);
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+			releaseCouponsDTO = setRelDataForException(releaseCouponsDTO, cartModel);
 		}
+
+		return releaseCouponsDTO;
+	}
+
+
+
+	/**
+	 * This method sets Release Coupon DTO for exception cases
+	 *
+	 * @param releaseCouponsDTO
+	 * @param cartModel
+	 * @return ReleaseCouponsDTO
+	 */
+	private ReleaseCouponsDTO setRelDataForException(final ReleaseCouponsDTO releaseCouponsDTO, final CartModel cartModel)
+	{
+		releaseCouponsDTO.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
+				.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+		releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+		releaseCouponsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9508);
+
 		return releaseCouponsDTO;
 	}
 

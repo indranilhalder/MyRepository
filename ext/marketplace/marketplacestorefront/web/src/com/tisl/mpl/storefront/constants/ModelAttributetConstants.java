@@ -176,6 +176,11 @@ public final class ModelAttributetConstants
 	public static final String YEARANNIVERSARYLIST = "yearAnniversaryList";
 	public static final String BASE_URL = "baseUrl";
 
+	//Return Item
+	public static final String RETURN_PINCODE_FORM = "returnPincodeCheckForm";
+	public static final String RETURN_ADDRESS = "retunAddress";
+	public static final String PINCODE_NOT_SERVICEABLE ="notServiceable";
+
 
 	//review page
 	public static final String CATEGORY_ID = "categoryID";
@@ -198,6 +203,7 @@ public final class ModelAttributetConstants
 	public static final String PURCHASED_PRODUCT = "productDataModifyMap";
 	public static final String TOTAL_PAGES = "totalPages";
 	public static final String COMMENT_LIST_SIZE = "commentsListSize";
+	public static final String OPERATION = "operation";
 	//	pdp changes
 	public static final String CLOTHING = "Clothing";
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
@@ -663,7 +669,9 @@ public final class ModelAttributetConstants
 	public static final String TRACKINGURL = "trackingurl";
 	// TISPRO-48 - added new constants for pagination with lazy loading
 	public static final String PAGE_INDEX = "pageIndex";
+	public static final String PAGE_INDEX_HIST = "pageIndexHist";
 	public static final String PAGE_SIZE = "pageSize";
+	public static final String PAGE_SIZE_HISTORY = "pageSizeVoucherHistory";
 
 	//for Coupons
 	public static final String OPEN_VOUCHER_DISPLAY_LIST = "openVoucherDisplayList";
@@ -698,5 +706,8 @@ public final class ModelAttributetConstants
 
 	public static final String SELECTEDSIZE = "sizeSelectedSizeGuide";
 	public static final String NOVALUE = "0.0";
+	public static final String CLICK_AND_COLLECT = "click-and-collect";
+	
+	public static final String SUB_ORDER_STATUS = "subOrderStatus";
 
 }

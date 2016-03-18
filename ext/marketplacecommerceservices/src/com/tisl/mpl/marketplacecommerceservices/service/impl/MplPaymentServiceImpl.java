@@ -1207,7 +1207,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					{
 						entryTotals = entry.getTotalPrice().doubleValue();
 					}
-					entryTotals -= (null != entry.getFreeCount() ? entry.getFreeCount().intValue() : 0);
+					entryTotals -= (null == entry.getFreeCount() ? 0 : 0.01 * entry.getFreeCount().intValue());
 					final double quantity = (entry.getQualifyingCount().intValue() > 0) ? entry.getQualifyingCount().doubleValue()
 							: entry.getQuantity().doubleValue();
 
@@ -1546,7 +1546,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		if (CollectionUtils.isNotEmpty(cart.getDiscounts()))
 		{
 			final List<AbstractOrderEntryModel> entryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
-					(VoucherModel) cart.getDiscounts().get(0), cart); //Since only 1 voucher is applied to the cart and 
+					(VoucherModel) cart.getDiscounts().get(0), cart); //Since only 1 voucher is applied to the cart and
 																					  //before promotion calculation only 1 discount will be present
 			for (final AbstractOrderEntryModel entry : entryList)
 			{
@@ -2862,14 +2862,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.mplVoucherService = mplVoucherService;
 	}
-
-
-
-
-
-
-
-
 
 
 }

@@ -15,6 +15,9 @@
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Search2"/>
         <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Title"/>
         <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="Language"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="collectionDays"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="daysToExtend"/>
+        <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="extensionTimes"/>
         <xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="Customer"/>
         <xs:element name="corporateAddress" maxOccurs="unbounded" minOccurs="0">
           <xs:complexType>
@@ -26,7 +29,7 @@
               <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CorporateAddCity"/>
               <xs:element maxOccurs="1" minOccurs="1" type="xs:int" name="CorporateAddPin"/>
               <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CorporateEmail"/>
-              <xs:element maxOccurs="1" minOccurs="1" type="xs:long" name="CorporatePhone"/>
+              <xs:element maxOccurs="1" minOccurs="1" type="xs:string" name="CorporatePhone"/>
               <xs:element maxOccurs="1" minOccurs="0" type="xs:long" name="CorporateMobile"/>
             </xs:sequence>
           </xs:complexType>

@@ -15,6 +15,11 @@
 	<context:annotation-config />
 
 	<!-- Spring Integration -->
+	
+	
+	<!-- Added For Pincode -->
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
+	
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-common-spring.xml" />
 	<import
@@ -40,6 +45,7 @@
 	
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
 		
+
 	<!-- SystemSetup for the MarketplaceCore -->
 	<bean id="acceleratorCoreSystemSetup" class="com.tisl.mpl.core.setup.CoreSystemSetup"
 		parent="abstractCoreSystemSetup" />
@@ -404,13 +410,32 @@
 	</bean>
 	
 	
-	<bean id="sendNotificationEventListener" class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationEventListener"
+	
+	<!-- Added For Order Collected From Store Conformation Mail -->
+
+	<bean id="orderCollectedByPersonEventListener"
+		class="com.tisl.mpl.core.event.OrderCollectedByPersonEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	<bean id="orderRefundCreditedEventListener"
+		class="com.tisl.mpl.core.event.OrderRefundCreditedEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+
+
+
+	<bean id="sendNotificationEventListener"
+		class="com.tisl.mpl.marketplaceomsservices.event.SendNotificationEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean> 
-	
+
 	<bean id="sendOrderToCRMEventListner" class=" com.tisl.mpl.marketplaceomsservices.event.SendOrderToCRMEventListner"
 		parent="abstractSiteEventListener">
  		<property name="orderConverter" ref="omsOrderConverter" />
@@ -537,6 +562,20 @@
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/outForDeliverySmsProcess.xml" />
 	</bean>
+
+	<!-- Added For Order Collected Order From Store -->
+	<bean id="orderCollectedByPersonEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/orderCollectedByPersonEmailProcess.xml" />
+	</bean>
+	<bean id="orderRefundCreditedEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+	
+		value="classpath:/marketplacecore/processes/orderRefundCreditedEmailProcess.xml" />
+	</bean>
+
 	<!-- Actions -->
 	<bean id="abstractAction" class="de.hybris.platform.processengine.action.AbstractAction"
 		abstract="true">
@@ -621,6 +660,16 @@
   	<property name="frontendTemplateName" value="OrderDeliveryEmailTemplate" /> 
   </bean>
 	
+	<!-- Added For Order Collected From Store -->
+	<bean id="generateOrderCollectedByPersonEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderCollectedByPersonEmailTemplate" />
+	</bean>
+
+
+	<bean id="generateOrderRefundCreditedEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderRefundCreditedEmailTemplate" />
+	</bean>
+
 	<bean id="removeSentEmail"
 		class="de.hybris.platform.acceleratorservices.process.email.actions.RemoveSentEmailAction"
 		parent="abstractAction">
@@ -841,6 +890,8 @@
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplOffersExistingValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="promotionsService" ref="promotionsService"/>
+		<property name="timeService" ref="timeService" />
 	</bean>
 	
 	

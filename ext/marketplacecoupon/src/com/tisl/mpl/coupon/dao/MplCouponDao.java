@@ -10,6 +10,7 @@ import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,5 +40,11 @@ public interface MplCouponDao
 	 * @return SearchPageData<VoucherInvalidationModel>
 	 */
 	SearchPageData<VoucherInvalidationModel> findVoucherHistoryRedeemedOrders(CustomerModel customer, PageableData pageableData);
+
+	/**
+	 * @param customer
+	 * @return Map<String, Double>
+	 */
+	Map<String, Double> findVoucherHistoryAllInvalidations(CustomerModel customer);
 
 }

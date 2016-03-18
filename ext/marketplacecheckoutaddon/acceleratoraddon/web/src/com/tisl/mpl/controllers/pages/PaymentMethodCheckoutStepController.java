@@ -29,7 +29,6 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
-import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
@@ -209,6 +208,25 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		}
 		//set up payment page
 		setupAddPaymentPage(model);
+		boolean selectPickupDetails = false;
+
+		//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
+		//this is only when cart entry contains cnc delivery mode.
+		final CartModel cartModel = getCartService().getSessionCart();
+		for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+		{
+			if (null != abstractOrderEntryModel.getDeliveryPointOfService())
+			{
+				final String pickupPersonName = cartModel.getPickupPersonName();
+				final String pickupPersonMobile = cartModel.getPickupPersonMobile();
+				if ((pickupPersonName == null) && (pickupPersonMobile == null))
+				{
+					selectPickupDetails = true;
+					model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
+					return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+				}
+			}
+		}
 
 		//creating new Payment Form
 		final PaymentForm paymentForm = new PaymentForm();
@@ -502,6 +520,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWPROMOTIONEXPIRED, "TRUE");
 			codData = null;
 		}
+		else if (!mplCheckoutFacade.isCouponValid(cart))
+		{
+			getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+			codData = null;
+		}
 		else
 		{
 			if (cart != null && cart.getEntries() != null)
@@ -673,6 +696,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
 					redirectFlag = true;
 				}
+			}
+
+			if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				redirectFlag = true;
 			}
 
 			if (redirectFlag)
@@ -964,21 +993,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 
 		//For Voucher when reloaded
-		final List<VoucherData> voucherDataList = voucherFacade.getVouchersForCart();
-
-		for (final VoucherData voucher : voucherDataList)
-		{
-			try
-			{
-				//voucherFacade.releaseVoucher(voucher.getVoucherCode());
-				mplCouponFacade.releaseVoucher(voucher.getVoucherCode(), getCartService().getSessionCart());
-			}
-			catch (final VoucherOperationException e)
-			{
-				LOG.error("Voucher with voucher code " + voucher.getVoucherCode() + " could not be released");
-				e.printStackTrace();
-			}
-		}
+		//		final List<VoucherData> voucherDataList = voucherFacade.getVouchersForCart();
+		//
+		//		for (final VoucherData voucher : voucherDataList)
+		//		{
+		//			try
+		//			{
+		//				//voucherFacade.releaseVoucher(voucher.getVoucherCode());
+		//				mplCouponFacade.releaseVoucher(voucher.getVoucherCode(), getCartService().getSessionCart());
+		//			}
+		//			catch (final VoucherOperationException e)
+		//			{
+		//				LOG.error("Voucher with voucher code " + voucher.getVoucherCode() + " could not be released");
+		//				e.printStackTrace();
+		//			}
+		//		}
 
 		//getting cart subtotal value
 		final Double cartValue = Double.valueOf(cartData.getSubTotal().getValue().doubleValue());
@@ -1972,6 +2001,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
 					redirectFlag = true;
 				}
+			}
+
+			if (!redirectFlag && !mplCheckoutFacade.isCouponValid(cart))
+			{
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID, "TRUE");
+				redirectFlag = true;
 			}
 
 			if (redirectFlag)

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.tisl.mpl.data.CouponHistoryData;
-import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -133,22 +132,13 @@ public interface MplCouponFacade
 	 */
 	SearchPageData<VoucherDisplayData> getAllClosedCoupons(CustomerModel customer, PageableData pageableData);
 
-	/**
-	 * @param customer
-	 * @param pageableData
-	 * @return SearchPageData<CouponHistoryData>
-	 */
-	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(CustomerModel customer, PageableData pageableData);
-
 
 	/**
 	 * @param customer
-	 * @param pageableData
-	 * @return CouponHistoryStoreDTO
+	 * @return Map<String, Double>
 	 * @throws VoucherOperationException
 	 */
-	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer, PageableData pageableData)
-			throws VoucherOperationException;
+	Map<String, Double> getInvalidatedCouponCountSaved(CustomerModel customer) throws VoucherOperationException;
 
 
 	/**
@@ -156,5 +146,15 @@ public interface MplCouponFacade
 	 * @param cartModel
 	 */
 	void updatePaymentInfoSession(Map<String, Double> paymentInfo, CartModel cartModel);
+
+
+	/**
+	 * @param customer
+	 * @param pageableData
+	 * @return SearchPageData<CouponHistoryData>
+	 * @throws VoucherOperationException
+	 */
+	SearchPageData<CouponHistoryData> getVoucherHistoryTransactions(final CustomerModel customer, final PageableData pageableData)
+			throws VoucherOperationException;
 
 }

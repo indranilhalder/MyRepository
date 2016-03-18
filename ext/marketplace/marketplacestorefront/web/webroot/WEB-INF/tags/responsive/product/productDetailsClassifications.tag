@@ -8,10 +8,8 @@
    
     position: relative;
     text-align: center;
-    background-color: #00cbe9;
+    background-color: #a9143c;
     color: #fff;
-    background: -webkit-linear-gradient(91deg, #3f90e4 0%, #21f7ff 99%), url('../images/header-grad.png');
-    background: linear-gradient(91deg, #3f90e4 0%, #21f7ff 99%), url('../images/header-grad.png');
     text-transform: uppercase;
     display: block;
     line-height: 30px;

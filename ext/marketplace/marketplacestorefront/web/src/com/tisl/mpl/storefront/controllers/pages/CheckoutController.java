@@ -65,6 +65,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
@@ -410,6 +411,7 @@ public class CheckoutController extends AbstractCheckoutController
 
 
 
+	@SuppressWarnings("boxing")
 	protected String processOrderCode(final String orderCode, final Model model, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
@@ -474,11 +476,26 @@ public class CheckoutController extends AbstractCheckoutController
 
 			for (final OrderEntryData entry : orderEntryList)
 			{
-				if (entry != null)
+				if (entry != null && entry.getMplDeliveryMode() !=null)
 				{
-					totalItemCount += entry.getQuantity();
+					if (!entry.getMplDeliveryMode().getCode().equals(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+					{
+						totalItemCount += entry.getQuantity();
+					}
 				}
 			}
+			//saving IP of the Customer
+			try
+			{
+				final String userIpAddress = request.getHeader("X-Forwarded-For");
+				orderModel.setIpAddress(userIpAddress);
+				getModelService().save(orderModel);
+			}
+			catch (final Exception e)
+			{
+				LOG.debug("Exception during IP save" + e.getMessage());
+			}
+			//End saving IP of the Customer
 
 			orderDetails.setNet(true);
 
@@ -541,31 +558,38 @@ public class CheckoutController extends AbstractCheckoutController
 			 * orderDetails.getDeliveryAddress().getFirstName(); final String orderReferenceNumber =
 			 * orderDetails.getCode(); final String trackingUrl = getConfigurationService().getConfiguration()
 			 * .getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderReferenceNumber;
-			 * 
-			 * 
+			 *
+			 *
+
+
 			 * // Email ************* Order Placed final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			 * orderProcessModel.setOrder(orderModel); orderProcessModel.setOrderTrackUrl(trackorderurl); final
 			 * OrderPlacedEvent orderplacedEvent = new OrderPlacedEvent(orderProcessModel); try {
 			 * eventService.publishEvent(orderplacedEvent); } catch (final Exception e1) { // YTODO // Auto-generated catch
 			 * block LOG.error("Exception during sending mail >> " + e1.getMessage()); }
-			 * 
+			 *
+
 			 * try { sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-			 * 
+			 *
+
 			 * MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
 			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
 			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
 			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, trackingUrl), mobileNumber);
 			 */
-			/*try
-			{
-				//mplCheckoutFacade.triggerEmailAndSmsOnOrderConfirmation(orderModel, orderDetails, trackorderurl);
-				//mplCheckoutFacade.sendMobileNotifications(orderDetails);
+			/*
 
-			}
-			catch (final EtailNonBusinessExceptions ex)
-			{
-				LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex.getMessage());
-			}*/
+
+			 * try { //mplCheckoutFacade.triggerEmailAndSmsOnOrderConfirmation(orderModel, orderDetails, trackorderurl);
+			 * //mplCheckoutFacade.sendMobileNotifications(orderDetails);
+			 * 
+
+
+			 * } catch (final EtailNonBusinessExceptions ex) {
+
+			 * LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex.getMessage()); }
+			 */
+
 			// TODO: TIS-1178: Email & SMS ********* On Hold Due to Risks
 
 		}
@@ -632,3 +656,4 @@ public class CheckoutController extends AbstractCheckoutController
 	}
 
 }
+

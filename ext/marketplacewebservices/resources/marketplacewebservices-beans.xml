@@ -833,6 +833,8 @@
 		<property name="errorCode" type="String" />
 		<property name="customerId" type="String" />
 		<property name="isTemporaryPassword" type="String" />
+		<property name="sessionToken" type="String" />
+		<property name="sessionSecret" type="String" />
 	</bean>
 	<!-- Registration Mobile web service -->
 
@@ -2075,7 +2077,6 @@
 
 		<property name="status" type="String" />
 		<property name="sellerMaster" type="com.tisl.mpl.model.SellerMasterModel" />
-
 	</bean>
     
       <bean class="com.tisl.mpl.wsdto.CommonCouponsDTO">
@@ -2116,6 +2117,14 @@
 		<property name="couponDiscount" type="String" />
 		<property name="discount" type="String" />
 		<property name="total" type="String" />
+		</bean>
+     <bean class="com.tisl.mpl.wsdto.GigyaWsDTO">
+		<property name="status" type="String" />
+		<property name="sessionToken" type="String" />
+        <property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="sessionSecret" type="String" />
+
 	</bean>
     
      <bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO">
@@ -2124,4 +2133,5 @@
 		<property name="errorCode" type="String" />	
 		<property name="total" type="String" />
 	</bean> 
+	
 </beans>
