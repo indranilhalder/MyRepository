@@ -1252,7 +1252,7 @@ h2 {
             position: relative; }
             header .content .right > ul > li.sign-in .sign-in-info form label {
               display: block;
-              font-weight: 600;
+              font-weight: normal;
               line-height: 30px; }
             header .content .right > ul > li.sign-in .sign-in-info form input {
               width: 100%;
@@ -1274,12 +1274,13 @@ h2 {
               background-color: #A9143C;
               color: #fff;
               padding: 0px;
-              line-height: 50px;
+              line-height:40px;
               padding: 0 25px;
               display: block;
               width: 100%;
               margin-top: 15px;
-              text-transform: uppercase; }
+              text-transform: uppercase; 
+                  height: 40px;}
               header .content .right > ul > li.sign-in .sign-in-info form button[type="submit"]:hover {
                 background: #88102C; }
             header .content .right > ul > li.sign-in .sign-in-info form .forgot-password {
@@ -6853,7 +6854,7 @@ text-transform: uppercase;
 .checkout.wrapper .left-block p.items-no {
   margin-bottom: 15px; }
 .checkout.wrapper .left-block .button {
-  width: 348px;
+  width:46%;
     margin: 30px auto;
     height: 40px !important;}
     @media(max-width:650px){
@@ -8868,7 +8869,10 @@ footer .banner {
       display: block;
       padding: 10px 0;
       font-size: 12px;
-      font-weight: 600; }
+      font-weight: normal; }
+      .sign-in.tab-view .tabs > li .left p{
+      font-size:14px;
+       font-weight: 500;}
       @media (min-width: 790px) {
         .sign-in.tab-view .tabs > li .left form label {
           letter-spacing: 1.2px; } }
@@ -8898,8 +8902,9 @@ footer .banner {
       background-color: #A9143C;
       color: #fff;
       text-transform: uppercase;
-      font-size: 10px;
+      font-size: 12px;
       letter-spacing: 1.2px;
+      font-weight:normal;
       margin: 10px auto; }
       @media (min-width: 790px) {
         .sign-in.tab-view .tabs > li .left form button {
@@ -10535,6 +10540,7 @@ body .account .right-account .order-history .pagination li{
     height: 20px;
     /* min-width: 200px */
     background-color: #fbba21;
+    display:table;
 }
 .product-info .product-image-container .main-image .brush-strokes-sprite{
 	display: none;
@@ -17422,8 +17428,9 @@ font-weight:normal;
 
 .sign-in-info li:first-child{
 	line-height: 19px;
-  font-size: 12px;
+  font-size: 14px;
   padding: 0 25px;
+  font-weight:500;
 }
 
 @media (max-width:790px)
@@ -23918,7 +23925,7 @@ header .content .search .links li.ui-menu-item  div.name
 header .content .search .links li.product.ui-menu-item  div.name
 {
 	margin-left:10px;
-	font-weight:normal;
+	font-weight:600;
 }
 header .content .search .links li  div.price
 {
@@ -29442,6 +29449,8 @@ footer>ul>li>.toggle>img{
     position: relative;
     padding-bottom: 60px;
 }
+#newAndExclusive .newExclusiveElement{
+    padding: 0px 7% 0px;}
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
     background: transparent;
@@ -29532,12 +29541,11 @@ vertical-align: middle;
 	padding:0 10px;
     box-sizing: border-box;
 }
-.home-brands-you-love-side-image.left {
+.home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
 vertical-align:top;
+padding: 0 2.8%;
 }
-.home-brands-you-love-side-image.right {
-	vertical-align:top;
-}
+ 
 .home-brands-you-love-main-image {
     width: 48%;
     display: inline-block;
@@ -29592,7 +29600,7 @@ width:100%;
 }
 .home-brands-you-love-wrapper h1{
 	text-align: center;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 600;
 }
 
@@ -29824,6 +29832,9 @@ width:33.33%;
 float:left;
 text-align:center;
 padding: 0px 5px 10px;
+}
+.showcase-section .desc-section:last-child {
+    padding: 0px 7.5% 10px;
 }
 a.button.trending-button {
     background: transparent;
