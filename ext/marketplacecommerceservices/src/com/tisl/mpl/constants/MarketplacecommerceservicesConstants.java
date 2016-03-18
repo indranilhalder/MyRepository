@@ -1144,6 +1144,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CANCEL_STATUS = "valid.order.statuses.CANCELLATION";
 	public static final String CANCEL_ORDER_STATUS = "valid.order.statuses.CANCELLATION_ORDER";
 	public static final String DELIVERED = "DELIVERED";
+	public static final String ORDER_COLLECTED = "ORDER_COLLECTED";
 	public static final String VALID_APPROVED = "valid.order.statuses.APPROVED";
 	public static final String VALID_SHIPPING = "valid.order.statuses.SHIPPING";
 	public static final String VALID_PROCESSING = "valid.order.statuses.PROCESSING";
@@ -1470,5 +1471,3 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
-
-

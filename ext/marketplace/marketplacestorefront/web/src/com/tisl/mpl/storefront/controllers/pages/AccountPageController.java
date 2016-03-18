@@ -963,7 +963,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 									{
 										consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
 										if (consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-												&& null != consignmentModel)
+												&& null != consignmentModel
+												&& consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 										{
 											final Date sDate = new Date();
 											final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
