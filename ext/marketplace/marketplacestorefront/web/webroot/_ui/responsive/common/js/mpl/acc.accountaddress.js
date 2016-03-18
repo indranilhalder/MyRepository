@@ -803,8 +803,8 @@ function editAddress(addressId) {
 			//Fix for defect TISEE-3986 : handling special character like #
 			var currentPassword = $("#currentPassword").val();			
 			var newPassword= $("#newPassword").val();			
-			newPassword= encodeURIComponent(newPassword);
-			$("#newPassword").val(newPassword);
+			newEncodedPassword= encodeURIComponent(newPassword);
+			$("#newPassword").val(newEncodedPassword);
 			
 			var checkNewPassword = $("#checkNewPassword").val();			
 			checkNewPassword= encodeURIComponent(checkNewPassword);
