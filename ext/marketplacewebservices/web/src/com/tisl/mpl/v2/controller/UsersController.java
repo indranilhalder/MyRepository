@@ -4485,6 +4485,10 @@ public class UsersController extends BaseCommerceController
 								{
 									eMIBankWsDTO.setEmiBank(emibanking.getName().getBankName());
 								}
+								if (StringUtils.isNotEmpty(emibanking.getCode()))
+								{
+									eMIBankWsDTO.setCode(emibanking.getCode());
+								}
 								if (StringUtils.isNotEmpty(emibanking.getEmiLowerLimit().toString()))
 								{
 									eMIBankWsDTO.setEmiLowerLimit(emibanking.getEmiLowerLimit().toString());

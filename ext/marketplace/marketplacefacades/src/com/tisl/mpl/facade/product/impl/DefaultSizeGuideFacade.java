@@ -29,7 +29,6 @@ import com.tisl.mpl.facade.comparator.SizeGuideComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.marketplacecommerceservices.service.SizeGuideService;
-import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.SizeGuideWsDTO;
 import com.tisl.mpl.wsdto.SizeGuideWsData;
 import com.tisl.mpl.wsdto.SizeGuideWsDataValue;
@@ -117,7 +116,11 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return sizeGuideSortedDatas;
 	}
@@ -203,9 +206,10 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			//ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			sizeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			sizeDTO.setError(MarketplacecommerceservicesConstants.SIZEGUIDE_NOT_FOUND);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return sizeDTO;
 	}

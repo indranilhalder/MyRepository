@@ -102,9 +102,17 @@ $( document ).ready(function() {
 								<c:if test="${not empty product.size}">
 								<p class="size">Size: ${product.size}</p>
 								</c:if>
-								<c:if test="${not empty sellerName}">
-								<p class="size">Fullfilled by: ${sellerName}</p>
-								</c:if>
+								<!--TISPRO-165  -->
+								
+								<c:choose>
+								
+									<c:when test="${fn:toLowerCase(fulfillmentType) eq 'tship'}">
+										<p class="size">Fullfilled by: <spring:theme code="product.default.fulfillmentType"></spring:theme></p>
+									</c:when>
+									<c:otherwise>
+										<p class="size">Fullfilled by: ${sellerName}</p>
+									</c:otherwise>
+								</c:choose>
 						</div> <form:form method="post" id="addToCartForm"
 							class="add_to_cart_form"
 							action="${request.contextPath }/cart/add">

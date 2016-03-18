@@ -54,97 +54,126 @@
     .error_text{
     	color: red;
     }
+    .inputBoxHeight {
+	  height: 80px !important;
+	}
 </style>
+
 <script type="text/javascript">
-					$(document).ready(function() {
-						var firstname = $(".firstName").val();
-						var lastname=$(".latName").val();
-						var mobileno=$(".mobileNo").val();
-						var isString=isNaN(mobileno);
-						var Adreess1=$(".Address1").val();
-						var Adreess2=$(".Address2").val();
-						var pincodeNo=$(".pincodeno").val();
-						var landmark=$(".landmark").val();
-						var city=$(".city").val();
-						var state=$(".state").val();
-						var country=$(".country").val();
+		$(document).ready(function() {
+			$("#proceedBtnNew").click(function(){
+				//console.log("Proceed Button Clicked!!!")
+				var url = $("#proceedBtnNew").attr("data-url");
+				window.location = url;
+				
+			});
+			var firstname = $(".firstName").val();
+			var lastname=$(".latName").val();
+			var mobileno=$(".mobileNo").val();
+			var isString=isNaN(mobileno);
+			var Adreess1=$(".Address1").val();
+			var Adreess2=$(".Address2").val();
+			var pincodeNo=$(".pincodeno").val();
+			var landmark=$(".landmark").val();
+			var city=$(".city").val();
+			var state=$(".state").val();
+			var country=$(".country").val();
+			
+			
+			//console.log(isString);
+			
+			$("#savebtn").click(function(e) {
+				hideErrorMessage();
+				 //alert("coming"); 
+				 
+			if($("#firstName").val().length <= 3 || $("#lastName").val().length <= 2 || isNaN($("#mobileNo").val()) == true || $("#mobileNo").val().length < 10 || $("#addressLane1").val().length <= 4 || $("#addressLane2").val().length <= 4 || isNaN($("#pincode").val()) == true || $("#pincode").val().length < 5 ||$("#landmark").val().length <= 5 || $("#city").val().length <= 1 || $("#state").val().length <= 1 || $("#country").val().length <= 1) {	
+				e.preventDefault();
+					if ($("#firstName").val().length <= 3) {
+						$(".firstNameError").show();
+						$(".firstNameError").text("Enter Atleat 4 letters");
+					} 
+					
+					if ($("#lastName").val().length <= 2) {
+						$(".lastNameError").show();
+						$(".lastNameError").text("Enter Atleast 3 Letters ");
+					} 
+					
+					
 						
+					if (isNaN($("#mobileNo").val()) == true) {
+						$(".mobileNumberError").show();
+						$(".mobileNumberError").text("Enter only Numbers");
+					} else if (isNaN($("#mobileNo").val()) == false){
+						if ($("#mobileNo").val().length < 10) {
+							$(".mobileNumberError").show();
+							$(".mobileNumberError").text("Enter 10 digit mobile number");
+						}
+					} 
+
+					if ($("#addressLane1").val().length <= 4) {
+							$(".address1Error").show();
+							$(".address1Error").text(" Enter Above 5 Characters");
+						} 				
 						
-						console.log(isString);
-						
-						$('#savebtn').click(function() {
-							/* alert("coming"); */
-							$(".firstNameError").hide();
-							$(".lastNameError").hide();
-							$(".mobileNumberError").hide();
-							$(".address1Error").hide();
-							$(".address2Error").hide();
-							$(".pincodeNoError").hide();
-							$(".landMarkError").hide();
-							$(".cityError").hide();
-							$(".stateError").hide();
-							$(".countryError").hide();
-							
-							
-							if(firstname.length<=3){
-								//alert("soon");
-								
-								$(".firstNameError").show();
-								$(".firstNameError").text("Enter Atleat 4 letters");
-							}
-							if(lastname.length<=2){
-								//alert("Hi i am coming");
-								$(".lastNameError").show();
-								$(".lastNameError").text("Enter Atleast 3 Letters ");
-							}
-							if(mobileno.length<=9){
-								if(isString==true){
-									$(".mobileNumberError").show();
-									$(".mobileNumberError").text("Enter only Numbers");
-								}else{
-									$(".mobileNumberError").show();
-									$(".mobileNumberError").text("Enter 10 digit Numbers");
-								}
-							}
-							if(Adreess1.length<=10){
-								$(".address1Error").show();
-								$(".address1Error").text("Enter Address1 Details");
-							}
-							if(Adreess2.length<=10){
-								$(".address2Error").show();
-								$(".address2Error").text("Enter Address2 Details");
-							}
-							if(pincodeNo.length<=5){
-								
+					if ($("#addressLane2").val().length <= 4) {
+							$(".address2Error").show();
+							$(".address2Error").text("Enter Above 5 Characters");
+						} 
+	
+					if (isNaN($("#pincode").val()) == true) {
+							$(".pincodeNoError").show();
+							$(".pincodeNoError").text("Enter only Numbers");
+						} else if (isNaN($("#pincode").val()) == false) {
+							if ($("#pincode").val().length < 5) {
 								$(".pincodeNoError").show();
-								$(".pincodeNoError").text("Enter Picode Number");
+								$(".pincodeNoError").text("Enter 6 digit pincode");
 							}
-
-							  if(landmark.length<=5){
-								$(".landMarkError").show();
-								$(".landMarkError").text("Enter Nearest landMark");
-							} 
-
-							if(city.length<=4){
-								$(".cityError").show();
-								$(".cityError").text("Enter City Details");
-							}
-
-							if(state.length<=9){
-								$(".stateError").show();
-								$(".stateError").text("Enter State Details");
-							}
-							if(country.length<=5){
-								$(".countryError").show();
-								$(".countryError").text("Enter Country Details");
-							} 
-						});
+						}
+			
+						 
+					if ($("#landmark").val().length <= 4) {
+							$(".landMarkError").show();
+							$(".landMarkError").text("Enter Above 5 Characters");
+						}
+		
+					if ($("#city").val().length <= 1) {
+							$(".cityError").show();
+							$(".cityError").text("Enter Above 1 Characters");
+						} 
 						
+		
+					if ($("#state").val().length <= 1) {
+							$(".stateError").show();
+							$(".stateError").text("Enter Above 1 Characters");
+						} 
 						
+					if ($("#country").val().length <= 1) {
+							$(".countryError").show();
+							$(".countryError").text("Enter Above 1 Characters");
+						}
+				} 
+				else {
 						
+				}
+			});
+			
+			function hideErrorMessage() {
+				$(".firstNameError").hide();
+				$(".lastNameError").hide();
+				$(".mobileNumberError").hide();
+				$(".address1Error").hide();
+				$(".address2Error").hide();
+				$(".pincodeNoError").hide();
+				$(".landMarkError").hide();
+				$(".cityError").hide();
+				$(".stateError").hide();
+				$(".countryError").hide();
+			}
 
-					});
-				</script>
+			
+
+		});
+	</script>
 
 	<div class="body-Content">
 		<div
@@ -170,70 +199,101 @@
 							commandName="returnPincodeCheckForm">
 							
 							<div class="row">
-								<div class="col-md-4">
-									<label>First Name*</label>
-									<form:input path="firstName" placeholder="Enter First Name" value="${returnPincodeCheckForm.firstName }"  />
-									<div class="error_text firstNameError"></div>
+								<div class="col-md-4 inputBoxHeight">
+										<label>First Name*</label>
+										<form:input path="firstName" placeholder="Enter first Name" class="firstName" />
+										<div class="error_text firstNameError"></div>
+									</div>
+									<div class="col-md-4 inputBoxHeight">
+										<label>Last Name*</label><br>
+										<form:input path="lastName" placeholder="Enter Last Name" class="lastName" />
+										<div class="error_text lastNameError"></div>
+									</div>
+									<div class="col-md-4 inputBoxHeight">
+	
+										<label>Mobile No*</label><br>
+										<form:input path="mobileNo" maxlength="10" placeholder="Enter Mobile No" class="mobileNo" />
+										<div class="error_text mobileNumberError"></div>
+									</div>
 								</div>
-								<div class="col-md-4">
-									<label>Last Name*</label><br>
-									<form:input path="lastName" placeholder="Enter Last Name" value="${returnPincodeCheckForm.lastName }" />
-									<div class="error_text lastNameError"></div>
+								
+								<div class="row">
+									<div class="col-md-12 inputBoxHeight">
+										<label>Address Line1*</label><br>
+										<form:input path="addressLane1" class="Address1" placeholder="Enter Address Line" />
+										<div class="error_text address1Error"></div>
+									</div>
 								</div>
-								<div class="col-md-4">
-
-									<label>Mobile No*</label><br>
-									<form:input path="mobileNo" placeholder="Enter Mobile No" value="${returnPincodeCheckForm.mobileNo }"  />
-									<div class="error_text mobileNumberError"></div>
+								
+								
+								<div class="row">
+									<div class="col-md-12 inputBoxHeight">
+										<label>Address Line2*</label><br>
+										<form:input path="addressLane2" class="Address2"
+											placeholder="Enter Address Line"
+											 />
+										<div class="error_text address2Error"></div>
+									</div>
 								</div>
-
-								<div class="col-md-12">
-									<label>Address Line1*</label><br>
-									<form:input path="addressLane1"
-										placeholder="Enter Address Line" value="${returnPincodeCheckForm.addressLane1 }"  />
-									<div class="error_text address1Error"></div>
-
+								
+								<div class="row">
+									<div class="col-md-4 inputBoxHeight">
+										<label>Pincode*</label><br>
+										<form:input maxlength="6" path="pincode" placeholder="Enter PinCode" />
+										<div class="error_text pincodeNoError"></div>
+									</div>
+									
+									<div class="col-md-8 inputBoxHeight">
+										<label>LandMark*</label><br>
+										<form:input path="landmark" placeholder="Enter Your Nearest Land mark" />
+										<div class="error_text landMarkError"></div>
+									</div>
 								</div>
-								<br>
-								<div class="col-md-12">
-									<label>Address Line2*</label><br>
-									<form:input path="addressLane2"
-										placeholder="Enter Address Line" value="${returnPincodeCheckForm.addressLane2 }" />
-									<div class="error_text address2Error"></div>
-								</div>
-								<div class="col-md-4">
-									<label>Pincode*</label><br>
-									<form:input path="pincode" placeholder="Enter PinCode" value="${returnPincodeCheckForm.pincode }" />
-									<div class="error_text pincodeNoError"></div>
-								</div>
-								<div class="col-md-8">
-									<label>LandMark*</label><br>
-									<form:input path="landmark"
-										placeholder="Enter Your Nearest Land mark" value="${returnPincodeCheckForm.landmark }"  />
-									<div class="error_text landMarkError"></div>
-								</div>
-
-								<div class="col-md-4">
-									<label>City*</label><br>
-									<form:input path="city" placeholder="Enter city" value="${returnPincodeCheckForm.city }" />
-									<div class="error_text cityError"></div>
-								</div>
-								<div class="col-md-4">
-									<label>State*</label><br>
-									<form:input path="state" placeholder="Enter State" value="${returnPincodeCheckForm.state }" />
-									<div class="error_text stateError"></div>
-								</div>
-								<div class="col-md-4">
-									<label>Country*</label><br>
-									<form:input path="country" placeholder="Enter Country" value="${returnPincodeCheckForm.country }"/>
-									<div class="error_text countryError"></div>
+								
+								<div class="row">
+									<div class="col-md-4 inputBoxHeight">
+										<label>Country*</label><br>
+										<form:input path="country" placeholder="Enter Country" class="country"
+											/>
+										<div class="error_text countryError"></div>
+									</div>
+									
+									<div class="col-md-4 inputBoxHeight">
+										<label>City*</label><br>
+										<form:input path="city" placeholder="Enter city" class="city"
+											 />
+										<div class="error_text cityError"></div>
+									</div>
+									
+									<div class="col-md-4 inputBoxHeight">
+										<label>State*</label><br><%-- ${returnPincodeCheckForm.state} --%>
+										<form:select path="state"  items="${stateDataList}" itemValue="code" itemLabel="name"></form:select>
+<%-- 										<form:input path="state" placeholder="Enter State" class="state" --%>
+<%-- 											 /> --%>
+										<div class="error_text stateError"></div>
+									</div>
 								</div>
 								<form:hidden path="orderCode" value="${orderCode}" />
 								<form:hidden path="ussid" value="${ussid}" />
 								<form:hidden path="transactionId" value="${transactionId}" />
-							</div>
+						
 							<br>
-							<input type="submit" id="savebtn" value="Continue" class="btn btn-info" style="border: none;width: 100px;margin-left:358px; ">
+							<div class="row">
+									<div class="col-md-4"></div>
+									
+										<input type="submit" id="savebtn" value="Continue" class="btn btn-info"	style="border: none; width: 100px;" />
+									
+									<div class="col-md-1"></div>
+									<c:choose>
+										<c:when test="${returnLogisticsCheck eq false}">
+											<input type="button" id="proceedBtnNew" value="Proceed" class="btn btn-info" data-url="${request.contextPath}/my-account/order/returnReplace?orderCode=${returnPincodeCheckForm.orderCode}&ussid=${returnPincodeCheckForm.ussid}&transactionId=${returnPincodeCheckForm.transactionId}" style="border: none; width: 100px;" />
+										</c:when>
+										<c:otherwise>
+											<input type="button" id="proceedBtn" value="Proceed" class="btn btn-info"	style="border: none; width: 100px;" disabled />
+										</c:otherwise>
+									</c:choose>									
+								</div>
+								
 							<div class="deliver_message"><!-- SORRY! We cannot pickup from
 								the address provided, Please provide other address or You can
 								Self - ship and let us know! -->
@@ -241,6 +301,7 @@
 								${notServiceable}
 								</c:if></div>
 						</form:form>
+						</div>
 
 					</div>
 
@@ -252,5 +313,43 @@
 			</div>
 
 		</div>
-	</div>
+		<script>
+			$(document).ready(function() {
+				function selectState(stateName){
+					$("#state option").each(function(){
+						if($(this).text() == stateName) {
+							var value = $(this).val();
+							$("#state").val(value);
+							//console.log($(this).text());
+						}
+					});
+				}
+				document.onload = selectState("${returnPincodeCheckForm.state}");
+				console.log("${stateDataList}");
+				$("#state").css("height", "40px");
+				$("#state").css("width", "100%");
+			});
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				function loadFormData() {
+					$(".firstName").val("${returnPincodeCheckForm.firstName }");
+					$(".lastName").val("${returnPincodeCheckForm.lastName }");
+					$(".mobileNo").val("${returnPincodeCheckForm.mobileNo }");
+					$(".addressLane1").val("${returnPincodeCheckForm.addressLane1 }");
+					$(".addressLane2").val("${returnPincodeCheckForm.addressLane2 }");
+					$(".pincode").val("${returnPincodeCheckForm.pincode }");
+					$(".landmark").val("${returnPincodeCheckForm.landmark }");
+					$(".city").val("${returnPincodeCheckForm.city }");
+					$(".state").val("${returnPincodeCheckForm.state }");
+					$("country").val("${returnPincodeCheckForm.country }");
+				}
+				document.onload = loadFormData();
+				$.delay(1000, function(){
+					loadFormData();
+				});
+				
+			});
+		</script>
+		
 </template:page>

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.wsdto;
 
@@ -7,14 +7,19 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
  * @author Dileep
  *
  */
 @XmlRootElement(name = "AddressInfo")
-@XmlType(propOrder ={"phoneNo","address1","address2","address3","country","city","state","pincode","landmark"})
+@XmlType(propOrder =
+{ "shippingFirstName", "shippingLastName", "phoneNo", "address1", "address2", "address3", "country", "city", "state", "pincode",
+		"landmark" })
 public class AddressInfoDTO
 {
+	private String shippingFirstName;
+	private String shippingLastName;
 	private String phoneNo;
 	private String address1;
 	private String address2;
@@ -24,7 +29,43 @@ public class AddressInfoDTO
 	private String state;
 	private String pincode;
 	private String landmark;
-	
+
+	/**
+	 * @return the shippingFirstName
+	 */
+	@XmlElement(name = "shippingFirstName")
+	public String getShippingFirstName()
+	{
+		return shippingFirstName;
+	}
+
+	/**
+	 * @param shippingFirstName
+	 *           the shippingFirstName to set
+	 */
+	public void setShippingFirstName(final String shippingFirstName)
+	{
+		this.shippingFirstName = shippingFirstName;
+	}
+
+	/**
+	 * @return the shippingLastName
+	 */
+	@XmlElement(name = "shippingLastName")
+	public String getShippingLastName()
+	{
+		return shippingLastName;
+	}
+
+	/**
+	 * @param shippingLastName
+	 *           the shippingLastName to set
+	 */
+	public void setShippingLastName(final String shippingLastName)
+	{
+		this.shippingLastName = shippingLastName;
+	}
+
 	/**
 	 * @return the phoneNo
 	 */
@@ -33,7 +74,7 @@ public class AddressInfoDTO
 	{
 		return phoneNo;
 	}
-	
+
 	/**
 	 * @return the address1
 	 */
@@ -42,7 +83,7 @@ public class AddressInfoDTO
 	{
 		return address1;
 	}
-	
+
 	/**
 	 * @return the address2
 	 */
@@ -51,7 +92,7 @@ public class AddressInfoDTO
 	{
 		return address2;
 	}
-	
+
 	/**
 	 * @return the address3
 	 */
@@ -60,7 +101,7 @@ public class AddressInfoDTO
 	{
 		return address3;
 	}
-	
+
 	/**
 	 * @return the country
 	 */
@@ -69,7 +110,7 @@ public class AddressInfoDTO
 	{
 		return country;
 	}
-	
+
 	/**
 	 * @return the city
 	 */
@@ -78,7 +119,7 @@ public class AddressInfoDTO
 	{
 		return city;
 	}
-	
+
 	/**
 	 * @return the state
 	 */
@@ -87,7 +128,7 @@ public class AddressInfoDTO
 	{
 		return state;
 	}
-	
+
 	/**
 	 * @return the pincode
 	 */
@@ -96,7 +137,7 @@ public class AddressInfoDTO
 	{
 		return pincode;
 	}
-	
+
 	/**
 	 * @return the landmark
 	 */
@@ -105,75 +146,84 @@ public class AddressInfoDTO
 	{
 		return landmark;
 	}
-	
+
 	/**
-	 * @param phoneNo the phoneNo to set
+	 * @param phoneNo
+	 *           the phoneNo to set
 	 */
-	public void setPhoneNo(String phoneNo)
+	public void setPhoneNo(final String phoneNo)
 	{
 		this.phoneNo = phoneNo;
 	}
-	
+
 	/**
-	 * @param address1 the address1 to set
+	 * @param address1
+	 *           the address1 to set
 	 */
-	public void setAddress1(String address1)
+	public void setAddress1(final String address1)
 	{
 		this.address1 = address1;
 	}
-	
+
 	/**
-	 * @param address2 the address2 to set
+	 * @param address2
+	 *           the address2 to set
 	 */
-	public void setAddress2(String address2)
+	public void setAddress2(final String address2)
 	{
 		this.address2 = address2;
 	}
-	
+
 	/**
-	 * @param address3 the address3 to set
+	 * @param address3
+	 *           the address3 to set
 	 */
-	public void setAddress3(String address3)
+	public void setAddress3(final String address3)
 	{
 		this.address3 = address3;
 	}
-	
+
 	/**
-	 * @param country the country to set
+	 * @param country
+	 *           the country to set
 	 */
-	public void setCountry(String country)
+	public void setCountry(final String country)
 	{
 		this.country = country;
 	}
-	
+
 	/**
-	 * @param city the city to set
+	 * @param city
+	 *           the city to set
 	 */
-	public void setCity(String city)
+	public void setCity(final String city)
 	{
 		this.city = city;
 	}
-	
+
 	/**
-	 * @param state the state to set
+	 * @param state
+	 *           the state to set
 	 */
-	public void setState(String state)
+	public void setState(final String state)
 	{
 		this.state = state;
 	}
-	
+
 	/**
-	 * @param pincode the pincode to set
+	 * @param pincode
+	 *           the pincode to set
 	 */
-	public void setPincode(String pincode)
+	public void setPincode(final String pincode)
 	{
 		this.pincode = pincode;
 	}
-	
+
 	/**
-	 * @param landmark the landmark to set
+	 * @param landmark
+	 *           the landmark to set
 	 */
-	public void setLandmark(String landmark)
+	public void setLandmark(final String landmark)
 	{
 		this.landmark = landmark;
 	}

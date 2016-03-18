@@ -418,6 +418,7 @@ public class MarketplacewebservicesConstants
 	public static final String CHANNEL_WEBMOBILE = "WebMobile";
 	public static final String CHANNEL_MOBILE = "Mobile";
 
+	public static final String MPLSTORE = "mpl";
 
 
 	public static final String CUSTOMERQUERY = "select {c:pk} from {customer As c} where {c.originalUid}=?originalUid".intern();

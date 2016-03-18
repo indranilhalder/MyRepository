@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.storefront.controllers.cms;
 
@@ -58,22 +58,22 @@ public class HomeStoreLocatorComponentController extends AbstractCMSComponentCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.storefront.controllers.cms.AbstractCMSComponentController#fillModel(javax.servlet.http.
 	 * HttpServletRequest, org.springframework.ui.Model,
 	 * de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel)
 	 */
 	@Override
-	protected void fillModel(HttpServletRequest request, Model model, HomeStoreLocatorComponentModel component)
+	protected void fillModel(final HttpServletRequest request, final Model model, final HomeStoreLocatorComponentModel component)
 	{
-      //Set default latitude.
+		//Set default latitude.
 		if (null != component.getLatitude())
 		{
 			model.addAttribute(LATITUDE, component.getLatitude());
 		}
 		else
 		{
-			model.addAttribute(LATITUDE, configurationService.getConfiguration().getString("default.initialzoom"));
+			model.addAttribute(LATITUDE, configurationService.getConfiguration().getString("default.latitude"));
 
 		}
 		//Set Longitude.
@@ -83,7 +83,7 @@ public class HomeStoreLocatorComponentController extends AbstractCMSComponentCon
 		}
 		else
 		{
-			model.addAttribute(LONGITUDE, configurationService.getConfiguration().getString("default.initialzoom"));
+			model.addAttribute(LONGITUDE, configurationService.getConfiguration().getString("default.longtitude"));
 		}
 		if (null != component.getInitialZoom())
 		{
@@ -116,7 +116,7 @@ public class HomeStoreLocatorComponentController extends AbstractCMSComponentCon
 		geoPoint.setLongitude(longitude.doubleValue());
 
 		double maxRadiusForPosSearch;
-		BaseStoreModel baseStore = baseStoreService.getCurrentBaseStore();
+		final BaseStoreModel baseStore = baseStoreService.getCurrentBaseStore();
 		if (null != baseStore & null != baseStore.getMaxRadiusForPoSSearch()
 				&& baseStore.getMaxRadiusForPoSSearch().doubleValue() > 0)
 		{

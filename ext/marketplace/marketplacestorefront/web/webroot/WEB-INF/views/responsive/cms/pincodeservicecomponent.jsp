@@ -63,7 +63,7 @@
 		
 		<c:if test="${entry.key eq 'click-and-collect'}">
 		
-		<li id="collectli"><a  id="collect" class="collect"  ><span><spring:theme code="text.clickandcollect.shipping"/></span><span>Buy online, collect in-store</span>
+		<li id="collectli"><a  id="collect" class="collect" style="display: none" ><span><spring:theme code="text.clickandcollect.shipping"/></span><span>Buy online, collect in-store</span>
 		
 		 <c:forEach var="clickEntry" items="${entry.value}">
 	
