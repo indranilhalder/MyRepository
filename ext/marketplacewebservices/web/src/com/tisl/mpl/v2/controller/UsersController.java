@@ -163,6 +163,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
@@ -200,6 +201,7 @@ import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
+import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMIBankWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
@@ -379,6 +381,7 @@ public class UsersController extends BaseCommerceController
 	private ProductDetailsHelper productDetailsHelper;
 
 	@Autowired
+	private MplCouponWebFacade mplCouponWebFacade;
 	private GigyaFacade gigyaFacade;
 
 	//@Autowired
@@ -6475,6 +6478,65 @@ public class UsersController extends BaseCommerceController
 		}
 		return profileUpdateUrl;
 	}
+
+	/**
+	 * @Description : For getting the details of all the Coupons available for the User
+	 * @param emailId
+	 * @param currentPage
+	 * @param pageSize
+	 * @param usedCoupon
+	 * @param sortCode
+	 * @return CommonCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailId}/getCoupons", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public CommonCouponsDTO getCoupons(@PathVariable final String emailId, @RequestParam final int currentPage,
+			/* @RequestParam final int pageSize, */ @RequestParam final String usedCoupon,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sortCode)
+					throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	{
+		CommonCouponsDTO couponDto = new CommonCouponsDTO();
+		try
+		{
+			//couponDto = mplCouponWebFacade.getCoupons(currentPage, pageSize, emailId, usedCoupon, sortCode);
+			couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			couponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				couponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				couponDto.setErrorCode(e.getErrorCode());
+			}
+			couponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				couponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				couponDto.setErrorCode(e.getErrorCode());
+			}
+			couponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return couponDto;
+	}
+
 
 	/**
 	 * @description method is called to generate update profileURL mobile service

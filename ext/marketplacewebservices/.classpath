@@ -59,5 +59,6 @@
 	<classpathentry exported="true" kind="lib" path="/springintegrationlibs/lib/spring-integration-http-4.1.2.RELEASE.jar"/>
 	<classpathentry exported="true" kind="lib" path="/xyformsfacades/lib/saxon-9.1.0.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="/solrfacetsearch/lib/org.restlet-2.1.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/marketplacecoupon"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>
