@@ -48,7 +48,16 @@
 		<c:url value="/mytatarewards" var="mytatarewards" />
 		<c:url value="/tncmytatarewards" var="tncmytatarewards" />
 		 <div id="checkBox">
-										
+					<div class="reward-popover">
+					<p class="reward-popover-container">
+					<span class="reward-popover-left">We work with brands to create great Rewards that start your savings on the very first purchase. Once enrolled, you can unlock these 
+					<span><a class="reward-popover-dash-border">rewards </a></span><span> &nbsp; instantly!</span>
+					</span>
+					<span class="reward-popover-img">
+					<img src="${commonResourcePath}/images/Logo-Rewards.png">
+					</span>
+					</p>
+					</div>					
 				<input type="checkbox" id="check_MyRewards" name="check_MyRewards" value="true"/>
 				<label for="check_MyRewards">I want to be a part of <a href="${mytatarewards }" class="tata-rewards">My Tata Rewards Program</a> (You can opt-out anytime) By opting in I agree to <a href="${tncmytatarewards }"> T&C </a> and <a href="${tncmytatarewards }"> privacy policy</a> of My Tata Rewards program</label>
 		</div> 
@@ -58,7 +67,10 @@
 			<button type="submit" onclick="return checkSignUpValidation('login');" ><spring:theme code='${actionNameKey}' /></button>
 		</ycommerce:testId>
 	</div>
-	
+	<div class="exist-account">
+	<span>Already have a TataCLiQ account?  </span>
+	<span><a href="/store/mpl/en/login"> &nbsp;  SignIn here</a></span>
+	</div>
 </form:form>
 </div>
 <span class="or"><spring:theme code="text.or"/></span>

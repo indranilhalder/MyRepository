@@ -1310,5 +1310,10 @@ $(document).ready(function(){
 				} 
 				
 				});
-			
+			$('.tata-rewards').popover({
+			    html: 'true',
+			    placement: 'top',
+			    trigger: 'hover',
+			    content: $(".reward-popover").html()
+			});
 });
