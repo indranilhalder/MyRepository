@@ -14,6 +14,7 @@ import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,6 +26,7 @@ import com.gigya.socialize.GSResponse;
 import com.gigya.socialize.SigUtils;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.service.GigyaService;
+import com.tisl.mpl.wsdto.GigyaWsDTO;
 
 
 /**
@@ -219,11 +221,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+			final String gigyaMethod = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
 
 			final GSObject userAction = new GSObject();
 			String firstName = null;
@@ -359,11 +361,11 @@ public class GigyaServiceImpl implements GigyaService
 		{
 			// Define the API-Key and Secret key .
 
-			final String gigyaMethod = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.METHOD_LOGOUT);
+			final String gigyaMethod = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.METHOD_LOGOUT);
 
-			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
 
 
 			if (getSecretkey() != null && getApikey() != null)
@@ -454,8 +456,8 @@ public class GigyaServiceImpl implements GigyaService
 		try
 		{
 
-			final String proxyEnabledStatus = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.PROXYENABLED);
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
 
 			String loginUserInfo = null;
 
@@ -567,8 +569,8 @@ public class GigyaServiceImpl implements GigyaService
 					}
 					else
 					{
-						LOG.debug("GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->"
-								+ (response.getErrorMessage()));
+						LOG.debug(
+								"GIGYA RESPONSE ERROR CODE->" + response.getErrorCode() + " MESSAGE ->" + (response.getErrorMessage()));
 					}
 
 				}
@@ -588,5 +590,133 @@ public class GigyaServiceImpl implements GigyaService
 			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND, ex);
 		}
 
+	}
+
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.GigyaService#gigyaLoginHelperforMobile(de.hybris.platform.core.model.user.CustomerModel,
+	 * boolean)
+	 */
+	@Override
+	public GigyaWsDTO gigyaLoginHelperforMobile(final CustomerModel customerModel, final boolean isNewUser)
+	{
+		final GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
+		try
+		{
+			// Define the API-Key and Secret key .
+			final String gigyaMethod = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.METHOD_NOTIFY_LOGIN);
+
+			final String proxyEnabledStatus = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.PROXYENABLED);
+
+			final GSObject userAction = new GSObject();
+			String firstName = null;
+			String lastName = null;
+			final JSONObject loginUserInfo = new JSONObject();
+			String emailId = null;
+
+			if (getSecretkey() != null && getApikey() != null)
+			{
+				if (customerModel.getFirstName().length() > 0 && !(customerModel.getFirstName().equals(" "))
+						&& !(" ".equals(customerModel.getFirstName())))
+				{
+					firstName = customerModel.getFirstName();
+					LOG.debug("USER FIRSTNAME:- " + firstName);
+				}
+				else
+				{
+					emailId = customerModel.getOriginalUid(); // final
+					final String splitList[] = emailId.split(MarketplacecclientservicesConstants.SPLIT_AT);
+					firstName = splitList[0];
+					if (firstName.contains("."))
+					{
+						firstName = firstName.replace('.', ' ');
+					}
+
+					LOG.debug("USER EMAIL:- " + emailId + " ," + firstName);
+				}
+				if (customerModel.getLastName().length() > 0 && !(customerModel.getLastName().equals(" "))
+						&& !(" ".equals(customerModel.getLastName())))
+				{
+					lastName = customerModel.getLastName();
+					LOG.debug("USER LASTNAME:- " + lastName);
+				}
+				userAction.put(MarketplacecclientservicesConstants.FIRST_NAME, firstName);
+				userAction.put(MarketplacecclientservicesConstants.LAST_NAME, lastName);
+
+				if (firstName != null || emailId != null || lastName != null)
+				{
+					loginUserInfo.put("firstName", firstName);
+					loginUserInfo.put("email", emailId);
+					loginUserInfo.put("lastName", lastName);
+				}
+				//Defining the request
+				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
+				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
+				{
+					setProxy();
+					request.setProxy(proxy);
+				}
+				// Adding parameters
+				request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, customerModel.getUid());
+				request.setParam(MarketplacecclientservicesConstants.PARAM_ISNEWUSER, isNewUser);
+				request.setParam(MarketplacecclientservicesConstants.PARAM_USERINFO, userAction);
+				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
+				request.setParam(MarketplacecclientservicesConstants.TARGETENV, MarketplacecclientservicesConstants.MOBILE);
+				request.setAPIDomain(getDomain());
+				if (loginUserInfo.toString() != null)
+				{
+					request.setParam("userInfo", loginUserInfo.toString());
+				}
+				// Step 3 - Sending the request
+				LOG.debug(MarketplacecclientservicesConstants.WAIT_RESPONSE);
+				final GSResponse response = request.send();
+				// Step 4 - handling the request's response.
+				if (response != null)
+				{
+					if (response.getErrorCode() == 0)
+					{
+						LOG.debug(response.getResponseText());
+						final GSObject responsedata = response.getData();
+						final String sessionToken = responsedata.getString(MarketplacecclientservicesConstants.SESSIONTOKEN);
+						final String sessionSecret = responsedata.getString(MarketplacecclientservicesConstants.SESSIONSECRET);
+						if (StringUtils.isNotEmpty(sessionSecret))
+						{
+							gigyaWsDTO.setSessionSecret(sessionSecret);
+						}
+						if (StringUtils.isNotEmpty(sessionToken))
+						{
+							gigyaWsDTO.setSessionToken(sessionToken);
+						}
+					}
+					else
+					{
+						LOG.error(MarketplacecclientservicesConstants.ERROR_RESPONSE + response.getLog());
+					}
+				}
+				else
+				{
+					LOG.debug(MarketplacecclientservicesConstants.NULL_RESPONSE);
+				}
+			}
+			else
+			{
+				LOG.error(MarketplacecclientservicesConstants.CHECK_PROPERTIES_FILE);
+			}
+		}
+		catch (final GSKeyNotFoundException e)
+		{
+			LOG.error(MarketplacecclientservicesConstants.KEY_NOT_FOUND, e);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(EXCEPTION_LOG, ex);
+		}
+		return gigyaWsDTO;
 	}
 }
