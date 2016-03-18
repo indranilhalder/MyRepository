@@ -1300,7 +1300,7 @@ $(document).ready(function(){
 				$(this).remove();
 			});
 			
-			$(document).on("click","#addToCartButton, .serp-addtobag.js-add-to-cart",function(){
+			/*$(document).on("click","#addToCartButton, .serp-addtobag.js-add-to-cart",function(){
 				if($(window).width() > 773) {
 					$("#cboxClose").click();
 				 $('html,body').animate({
@@ -1309,7 +1309,7 @@ $(document).ready(function(){
 				 
 				} 
 				
-				});
+				});*/
 			$('.tata-rewards').popover({
 			    html: 'true',
 			    placement: 'top',

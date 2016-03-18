@@ -363,6 +363,7 @@ sendAddToBag : function(formId, isBuyNow) {
 							//$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
 							if(!isBuyNow){
 								ACC.product.showTransientCart(ussid);
+								ACC.product.scrollForTransientCart();
 							}
 							
 							// ACC.product.displayAddToCart(data,formId,false);
@@ -475,7 +476,7 @@ sendAddToBag : function(formId, isBuyNow) {
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
-		 var ussid=$('#ussid').val();
+		 var ussid=$('#ussid_quick').val();
 		 /*if(parseInt(stock)<parseInt(quantity)){
 			    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 			    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -500,6 +501,7 @@ sendAddToBag : function(formId, isBuyNow) {
 				//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
 				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
 				ACC.product.showTransientCart(ussid);
+				ACC.product.scrollForTransientCart();
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
@@ -860,13 +862,13 @@ sendAddToBag : function(formId, isBuyNow) {
 					+ "/cart/showTransientCart",
 			data:dataString,
 			success : function(response) {
-				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
+				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
 				
 				if(typeof response.offer!=='undefined'){
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
 				}
 				
-				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='/store/mpl/en/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
+				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
 				
 				setTimeout(function(){
@@ -884,6 +886,18 @@ sendAddToBag : function(formId, isBuyNow) {
 		});
 
 //END AJAX
+		
+	},
+	
+	scrollForTransientCart: function ()
+	{
+		if($(window).width() > 773) {
+			$("#cboxClose").click();
+		 $('html,body').animate({
+		            scrollTop: 0
+		        }, 500);
+		 
+		} 
 		
 	}
 };
