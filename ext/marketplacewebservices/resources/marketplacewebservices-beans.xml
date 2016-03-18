@@ -833,6 +833,8 @@
 		<property name="errorCode" type="String" />
 		<property name="customerId" type="String" />
 		<property name="isTemporaryPassword" type="String" />
+		<property name="sessionToken" type="String" />
+		<property name="sessionSecret" type="String" />
 	</bean>
 	<!-- Registration Mobile web service -->
 
@@ -2078,5 +2080,12 @@
 
 	</bean>
     
+    <bean class="com.tisl.mpl.wsdto.GigyaWsDTO">
+		<property name="status" type="String" />
+		<property name="sessionToken" type="String" />
+        <property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="sessionSecret" type="String" />
+	</bean>
     
 </beans>
