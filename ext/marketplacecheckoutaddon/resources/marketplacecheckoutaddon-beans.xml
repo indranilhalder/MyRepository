@@ -53,6 +53,7 @@
 	<bean class="de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData">
 		<property name="mplOpeningTime" type="String"/>
 		<property name="mplClosingTime" type="String"/>
+		<property name="mplWorkingDays" type="String"/>
 	</bean>
 	<bean class="com.tisl.mpl.facades.data.FreebieProduct">
 		<property name="sellerName" type="String"/>
