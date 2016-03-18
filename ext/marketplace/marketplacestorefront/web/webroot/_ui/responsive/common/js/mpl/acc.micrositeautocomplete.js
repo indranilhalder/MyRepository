@@ -52,8 +52,9 @@ ACC.micrositeautocomplete = {
 					
 				}
 				if (item.type == "productResult"){ 
-					var renderHtml = "<a href='" + ACC.config.encodedContextPath + item.url + "' >";
-
+                   var renderHtml = "<a href='" + ACC.config.encodedContextPath + item.url + "' >";
+					
+					renderHtml += 	"<div class='Best-Sellers'>" + "Best Sellers" +"</div>";
 					if (item.image != null){
 						renderHtml += "<img src='" + item.image + "'  />";
 					}
@@ -61,6 +62,8 @@ ACC.micrositeautocomplete = {
 					renderHtml += 	"<div class='name'>" + item.value +"</div>";
 					renderHtml += 	"<div class='price'>" + item.price +"</div>";
 					renderHtml += 	"</a>";
+
+					return $("<li class='product'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
 
 					return $("<li class='product'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
 				}
