@@ -4153,7 +4153,14 @@ public class UsersController extends BaseCommerceController
 				else
 				{
 					final UserModel user = userService.getCurrentUser();
-					getCustomerAccountService().changePassword(user, old, newPassword);
+					try
+					{
+						getCustomerAccountService().changePassword(user, old, newPassword);
+					}
+					catch (final Exception e)
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0009);
+					}
 				}
 				CustomerModel currentUser = null;
 				try
