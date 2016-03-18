@@ -514,7 +514,11 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 						Listitem deliveryModeItem = new Listitem(
 								sb.toString(),
 								getCockpitTypeService().wrapItem(deliveryEntry));
+						if(!deliveryEntry.getDeliveryMode().getName().equalsIgnoreCase(
+								MarketplaceCockpitsConstants.delNameMap
+								.get("CnC"))) {
 						deliveryModeItem.setParent(deliveryModeDropdown);
+						}
 						
 						if (deliveryModeModel !=null && ObjectUtils.nullSafeEquals(deliveryModeModel
 								.getDeliveryMode().getCode(), deliveryEntry

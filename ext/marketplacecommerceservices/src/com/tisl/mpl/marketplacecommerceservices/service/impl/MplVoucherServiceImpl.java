@@ -146,10 +146,12 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			EtailNonBusinessExceptions
 	{
 		VoucherDiscountData discountData = new VoucherDiscountData();
+		final long startTime = System.currentTimeMillis();
 		try
 		{
 			LOG.debug("Step 11:::Inside checking cart after applying voucher");
 			//Total amount in cart updated with delay... Calculating value of voucher regarding to order
+
 			final double cartSubTotal = cartModel.getSubtotal().doubleValue();
 			double voucherCalcValue = 0.0;
 			double promoCalcValue = 0.0;
@@ -273,6 +275,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0015);
 		}
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service checkCartAfterApply====== " + (endTime - startTime));
 		return discountData;
 	}
 
@@ -454,7 +458,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	public List<AbstractOrderEntryModel> getOrderEntryModelFromVouEntries(final VoucherModel voucherModel,
 			final CartModel cartModel)
 	{
-		LOG.debug("Step 10:::Inside getOrderEntryModelFromVouEntries");
+		final long startTime = System.currentTimeMillis();
+		LOG.debug("Step 11:::Inside getOrderEntryModelFromVouEntries");
 
 		final List<AbstractOrderEntryModel> applicableOrderList = new ArrayList<AbstractOrderEntryModel>();
 		for (final AbstractOrderEntry entry : getOrderEntriesFromVoucherEntries(voucherModel, cartModel)) //Converts applicable order entries from AbstractOrderEntry to AbstractOrderEntryModel
@@ -462,6 +467,8 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			applicableOrderList.add((AbstractOrderEntryModel) getModelService().get(entry));
 		}
 
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Exiting service getOrderEntryModelFromVouEntries====== " + (endTime - startTime));
 		return applicableOrderList;
 	}
 
@@ -480,6 +487,7 @@ public class MplVoucherServiceImpl implements MplVoucherService
 	{
 		try
 		{
+			final long startTime = System.currentTimeMillis();
 			LOG.debug("Step 18:::Inside setApportionedValueForVoucher");
 			if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 			{
@@ -555,6 +563,9 @@ public class MplVoucherServiceImpl implements MplVoucherService
 
 				getModelService().saveAll(applicableOrderEntryList);
 			}
+
+			final long endTime = System.currentTimeMillis();
+			LOG.debug("Exiting service setApportionedValueForVoucher====== " + (endTime - startTime));
 		}
 		catch (final ModelSavingException e)
 		{

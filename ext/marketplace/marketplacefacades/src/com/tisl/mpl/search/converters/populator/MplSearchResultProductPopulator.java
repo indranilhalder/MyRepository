@@ -131,6 +131,11 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 				{
 
 					target.setIsOfferExisting(Boolean.TRUE);
+					/*
+					 * TISPRD-216 :: This change has been made to change the url for actual product which has variant not the
+					 * lowest size variant which may not have promotion
+					 */
+					target.setUrl(getProductDataUrlResolver().resolve(target));
 				}
 				/*
 				 * if( { target.setLeastSizeProduct(this.<String> getValue(source, "allPromotions")); }

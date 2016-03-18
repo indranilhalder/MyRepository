@@ -333,10 +333,13 @@ public class SalesOrderReverseXMLUtility
 								LOG.debug("set sub order list");
 							}
 						}
-						if (bulkSalesDataList != null)
+						//TISSIT-1780
+						if (salesXMLData != null && xmlToFico)
 						{
 							bulkSalesDataList.add(salesXMLData);
+							LOG.debug("xml order:" + salesXMLData.getOrderId());
 						}
+						LOG.debug("bulkSalesDataList Size" + bulkSalesDataList.size());
 					}
 
 				}

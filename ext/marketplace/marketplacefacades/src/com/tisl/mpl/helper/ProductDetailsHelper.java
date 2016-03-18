@@ -187,8 +187,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -852,15 +852,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -948,35 +948,42 @@ public class ProductDetailsHelper
 		String sizeGuideCode = null;
 		//get size chart feature
 		final FeatureList featureList = classificationService.getFeatures(product);
-		for (final Feature feature : featureList)
+		try
 		{
-			final String featureName = feature.getName().replaceAll("\\s+", "");
 
-			final String sizeChart = configurationService.getConfiguration().getString("product.sizetype.value")
-					.replaceAll("\\s+", "");
-			if (featureName.equalsIgnoreCase(sizeChart))
+			for (final Feature feature : featureList)
 			{
-				if (null != feature.getValue())
-				{
-					final FeatureValue sizeGuidefeatureVal = feature.getValue();
-					if (sizeGuidefeatureVal != null)
-					{
-						//						sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode()
-						//								.replaceAll("sizetype", ""));
+				final String featureName = feature.getName().replaceAll("\\s+", "");
 
-						if (StringUtils.isNotEmpty(String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue())
-								.getCode())))
+				final String sizeChart = configurationService.getConfiguration().getString("product.sizetype.value")
+						.replaceAll("\\s+", "");
+				if (featureName.equalsIgnoreCase(sizeChart))
+				{
+					if (null != feature.getValue())
+					{
+						final FeatureValue sizeGuidefeatureVal = feature.getValue();
+						if (sizeGuidefeatureVal != null)
 						{
-							sizeGuideCode = String.valueOf(
-									((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode().replaceAll("sizetype",
-											"")).toUpperCase();
+							//						sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode()
+							//								.replaceAll("sizetype", ""));
+
+							if (StringUtils.isNotEmpty(String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal
+									.getValue()).getCode())))
+							{
+								sizeGuideCode = String.valueOf(
+										((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode().replaceAll(
+												"sizetype", "")).toUpperCase();
+							}
 						}
+						break;
 					}
-					break;
 				}
 			}
 		}
-
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 		return sizeGuideCode;
 	}
 }

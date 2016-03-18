@@ -206,7 +206,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 										&& categoryMedia.getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H")
 										&& null != categoryMedia.getURL2())
 								{
-									youCareCategoryJSON.put("mediaURL", categoryMedia.getURL2());
+									youCareCategoryJSON.put("mediaURL", getMediaUrlStrategy(categoryMedia.getURL2()));
 									mediaFound = true;
 								}
 							}
@@ -235,6 +235,8 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 				productYouCare.put("categories", subComponentJsonArray);
 
 			}
+
+
 		}
 		return productYouCare;
 	}
@@ -422,6 +424,25 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 		}
 		return displayBanner;
+	}
+
+	private String getMediaUrlStrategy(final String mediaUrl)
+	{
+		LOG.debug("Media Url is :::::::" + mediaUrl);
+		String newMediaUrl = mediaUrl;
+		if (StringUtils.isNotEmpty(mediaUrl))
+		{
+			if (mediaUrl.contains("http") || mediaUrl.contains("https"))
+			{
+				newMediaUrl = mediaUrl.substring((mediaUrl.lastIndexOf(':') + 1));
+			}
+
+
+		}
+
+		LOG.debug("Media Url without protocol is :::::::" + newMediaUrl);
+		return newMediaUrl;
+
 	}
 
 }

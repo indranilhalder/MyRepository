@@ -256,29 +256,6 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 
 
 
-
-	//	/**
-	//	 * Validate the Freebie Promotion for Seller Restriction
-	//	 *
-	//	 * @param itemType
-	//	 * @param initialValues
-	//	 * @return boolean
-	//	 */
-	//	private boolean validateFreebieData(final Map initialValues)
-	//	{
-	//		boolean flag = false;
-	//		List<AbstractPromotionRestrictionModel> restrictionList = new ArrayList<AbstractPromotionRestrictionModel>();
-	//		if (null != initialValues && null != initialValues.get("restrictions"))
-	//		{
-	//			restrictionList = (List<AbstractPromotionRestrictionModel>) initialValues.get("restrictions");
-	//			if (CollectionUtils.isNotEmpty(restrictionList))
-	//			{
-	//				flag = getDefaultPromotionsManager().sellerRestrExists(restrictionList);
-	//			}
-	//		}
-	//		return flag;
-	//	}
-
 	/**
 	 * @Description: The Method is invoked whenever a HMC modification is done
 	 * @param: item
@@ -451,7 +428,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					}
 
 				}
-				if ((null != categoryList && !categoryList.isEmpty()) && null != startDate && null != endDate && isEnabled
+				else if ((null != categoryList && !categoryList.isEmpty()) && null != startDate && null != endDate && isEnabled
 						&& quantity == 1)
 				{
 					LOG.debug("******** Special price check for product list in category:" + productList + " *** percentage discount:"
@@ -473,7 +450,15 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
 							+ " *** categoryList:" + categoryList);
 					getUpdatePromotionalPriceService().disablePromotionalPrice(productList, categoryList, isEnabled, priority,
-							brandList);
+							brandList, quantity);
+				}
+				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
+						&& quantity > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
+				{
+					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
+							+ " *** categoryList:" + categoryList);
+					getUpdatePromotionalPriceService().disablePromotionalPrice(productList, categoryList, isEnabled, priority,
+							brandList, quantity);
 				}
 			}
 		}
