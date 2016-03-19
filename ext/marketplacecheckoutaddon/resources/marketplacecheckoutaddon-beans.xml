@@ -41,7 +41,10 @@
 
 	<bean class="com.tisl.mpl.facades.data.StoreLocationResponseData">
 	  <property name="ussId" type="String" />
-	  <property name="ats" type="java.util.List&lt;com.tisl.mpl.facades.data.ATSResponseData>"></property>
+	  <property name="ats" type="java.util.List&lt;com.tisl.mpl.facades.data.ATSResponseData>"/>
+	  <property name="error" type="String"/>
+	  <property name="errorCode" type="String"/>
+	  <property name="status" type="String"/>
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.ProudctWithPointOfServicesData">
