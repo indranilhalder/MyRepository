@@ -899,6 +899,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							final String closingTime = pointOfServiceModel.getMplClosingTime();
 							posData.setMplClosingTime(closingTime);
 						}
+						if (null != pointOfServiceModel.getMplWorkingDays())
+						{
+							final String mplWorkingDays = pointOfServiceModel.getMplWorkingDays();
+							posData.setMplWorkingDays(mplWorkingDays);
+						}
 						
 						posDataList.add(posData);
 					}

@@ -48,9 +48,9 @@
 	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/zkspring-security-3.1.1.jar"/>
 	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/zweb-7.0.4.jar"/>
 	<classpathentry kind="lib" path="/backoffice/web/webroot/WEB-INF/lib/zul-7.0.4.jar"/>
-	<classpathentry kind="lib" path="/omsclient/lib/oms-domain-objects-5.5.1.11.jar"/>
 	<classpathentry kind="lib" path="/omsclient/lib/oms-api-5.5.1.11.jar"/>
+	<classpathentry kind="lib" path="/omsclient/lib/oms-domain-objects-5.5.1.11.jar"/>
 	<classpathentry kind="lib" path="/omsclient/lib/oms-rest-client-5.5.1.11.jar"/>
-	<classpathentry kind="lib" path="lib/xlsxtocsvpincode-3.5.jar"/>
+	<classpathentry kind="lib" path="/home/irfan2/Desktop/xlsxtocsvpincode-3.6.jar"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>
