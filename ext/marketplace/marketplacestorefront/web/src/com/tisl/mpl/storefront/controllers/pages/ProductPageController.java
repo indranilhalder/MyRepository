@@ -1479,6 +1479,11 @@ public class ProductPageController extends AbstractPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
 
 		return emiBankNames;
 	}
@@ -1734,5 +1739,3 @@ public class ProductPageController extends AbstractPageController
 
 
 }
-
-
