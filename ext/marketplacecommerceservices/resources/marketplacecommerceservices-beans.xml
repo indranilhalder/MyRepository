@@ -29,7 +29,8 @@
 	<property name="state" type="String"/>
 	<property name="line3" type="String"/>
 	<property name="locality" type="String"/>
-	
+	<property name="city" type="String"/>
+	<property name="landmark" type="String"/>
 	</bean>
 	
 	

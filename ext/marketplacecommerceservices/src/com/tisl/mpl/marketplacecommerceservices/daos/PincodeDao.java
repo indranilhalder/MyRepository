@@ -20,10 +20,18 @@ public interface PincodeDao
 	/**
 	 * @param gps
 	 * @param distance
+	 * @param sellerId
 	 * @return
 	 */
 	Collection<PointOfServiceModel> getAllGeocodedPOS(GPS gps, double distance, String sellerId);
 
+	/**
+	 * @param gps
+	 * @param distance
+	 * @return List of PointOfService
+	 */
+	Collection<PointOfServiceModel> getAllGeocodedPOS(GPS gps, double distance);
+	
 	/**
 	 * @param model
 	 * @return
