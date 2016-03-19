@@ -190,7 +190,12 @@
 						  	padding-left: 5px;
 							overflow-x: hidden;
 							overflow-y: scroll;
-						  }					 	
+						  }
+						  
+						  .continue_holder {
+						  	width: 250px !important;
+						  }
+						  					 	
 					</style>
 					<script>
 					//TISST-13010
@@ -251,6 +256,10 @@
 	        }
 	    }
 		
+		function checkMobileNumberSpace(number) {			
+			return /\s/g.test(number);
+		}
+		
 	    function checkWhiteSpace(text) {
 	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
 	        var number = new RegExp(/\d/g);
@@ -299,44 +308,14 @@
 			
 			$("#pickupPersonSubmit").hide();
 			$("#pickupPersonName").keyup(function(){
-				var pickupPersonName = $("#pickupPersonName").val();
-				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
-				var statusName = allLetter(pickUpPersonNam);
-				if(statusName == false) {
-					$(".pickupPersonNameError").show();
-					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
-				}
-				else {
-					$(".pickupPersonNameError").hide();
-				}
-			});
-			$("#pickupPersonMobile").keyup(function(){
-				var pickupPersonMobile = $("#pickupPersonMobile").val();
-				var isString = isNaN($('#pickupPersonMobile').val());
-				if(isString==true) {
-						$(".pickupPersonMobileError").show();
-						$(".pickupPersonMobileError").text("Enter only numbers");
-					}
-				else if($('#pickupPersonMobile').val().length >= "11") {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
-				} else {
-					$(".pickupPersonMobileError").hide();
-				}
-			});
-			$("#savePickupPersondDetails").click(function(){
 				$(".pickupPersonSubmitError").hide();
 				$(".pickUpPersonAjax").hide();
 				//alert("hello")
 				$(".pickupPersonMobileError").hide();
 				$(".pickupPersonNameError").hide();
 				$(".pickupDetails").hide();
-				
-				console.log("Working");
 				var pickupPersonName = $("#pickupPersonName").val();
-				
 				var pickupPersonMobile = $("#pickupPersonMobile").val();
-				var isString = isNaN($('#pickupPersonMobile').val());
 				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
 				var statusName = allLetter(pickUpPersonNam);
 				var nameCheck = checkWhiteSpace($("#pickupPersonName").val());
@@ -352,44 +331,101 @@
 					$(".pickupPersonNameError").show();
 					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
 				}
-				else if($('#pickupPersonMobile').val().length <= "9") {
-					if(isString==true) {
+			});
+			$("#pickupPersonMobile").keyup(function(){
+				$(".pickupPersonSubmitError").hide();
+				$(".pickUpPersonAjax").hide();
+				//alert("hello")
+				$(".pickupPersonMobileError").hide();
+				$(".pickupPersonNameError").hide();
+				$(".pickupDetails").hide();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				var mobileSpaceCheck = checkMobileNumberSpace($('#pickupPersonMobile').val());
+				if($('#pickupPersonMobile').val().length <= "10") {
+					if(isString==true || mobileSpaceCheck==true) {
 						$(".pickupPersonMobileError").show();
 						$(".pickupPersonMobileError").text("Enter only numbers");
 					}
-					else {
+					else if ($('#pickupPersonMobile').val().length <= "9") {
 						$(".pickupPersonMobileError").show();
 						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
 					}
+					else if($('#pickupPersonMobile').val().indexOf("-") > -1 || $('#pickupPersonMobile').val().indexOf("+") > -1 ) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
 				}
-				else if($('#pickupPersonMobile').val().length > "10") {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
-				}
-				else if(isString==true) {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only numbers");
-				}
-				else {
-					var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPickupPersonDetails";
-					var dataString = 'pickupPersonName=' + pickupPersonName+ '&pickupPersonMobile=' + pickupPersonMobile;
-						$.ajax({
-						url : requiredUrl,
-						data : dataString,
-						success : function(data) {
-							//console.log("success call for pickup person details"+data);
-							$("#pickupPersonSubmit").text("1");
-							$(".pickUpPersonAjax").fadeIn(100);
-							$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
-	
-						},
-						error : function(xhr, status, error) {
-							console.log(error);	
-						}
-					});
-				}
-					
+			});
+			$("#savePickupPersondDetails").click(function(){
+				$(".pickupPersonSubmitError").hide();
+				$(".pickUpPersonAjax").hide();
+				//alert("hello")
+				$(".pickupPersonMobileError").hide();
+				$(".pickupPersonNameError").hide();
+				$(".pickupDetails").hide();
 				
+				console.log("Working");
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
+				var statusName = allLetter(pickUpPersonNam);
+				var nameCheck = checkWhiteSpace($("#pickupPersonName").val());
+				var mobileSpaceCheck = checkMobileNumberSpace($('#pickupPersonMobile').val());
+				if($('#pickupPersonName').val().length <= "3"){ 
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
+				}
+				else if(nameCheck == false){
+					   $(".pickupPersonNameError").show();
+					   $(".pickupPersonNameError").text("Spaces cannot be allowed");
+				 }
+				else if(statusName == false) {
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
+				}
+				else if($('#pickupPersonMobile').val().length <= "10") {
+					if(isString==true || mobileSpaceCheck==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+					else if ($('#pickupPersonMobile').val().length <= "9") {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
+					}
+					else if($('#pickupPersonMobile').val().indexOf("-") > -1 || $('#pickupPersonMobile').val().indexOf("+") > -1 ) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+				
+					/* else if($('#pickupPersonMobile').val().length > "10") {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+					} */
+					/* else if(isString==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					} */
+					else {
+						var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPickupPersonDetails";
+						var dataString = 'pickupPersonName=' + pickupPersonName+ '&pickupPersonMobile=' + pickupPersonMobile;
+							$.ajax({
+							url : requiredUrl,
+							data : dataString,
+							success : function(data) {
+								//console.log("success call for pickup person details"+data);
+								$("#pickupPersonSubmit").text("1");
+								$(".pickUpPersonAjax").fadeIn(100);
+								$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
+		
+							},
+							error : function(xhr, status, error) {
+								console.log(error);	
+							}
+						});
+					}
+				}
 			});
 			
 			$(".pickupDetails").hide();
@@ -507,7 +543,8 @@
 								});
 							</script>
 						</li>
-							<!-- Freebie Product Details -->
+						
+						<!-- Freebie Product Details -->
 							
 								 <c:if test="${not empty poses.product.freebieProducts}">
 									<c:forEach items="${poses.product.freebieProducts}" var="freebieProds">
@@ -544,6 +581,7 @@
 								</c:forEach>
 							</c:if>
 							<!-- /. Freebie Product Details -->
+							
 							<li class="item delivery_options item${status1.index}">
 								<ul>
 										<li>
@@ -622,7 +660,7 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}" style="text-transform: lowercase" >STORE TIMINGS
+																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}" style="text-transform: uppercase;" >PiQ up hrs
 																<br/>
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
 																	${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM
@@ -897,13 +935,7 @@
 
 							      markers.push(marker);
 
-							      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-							        return function() {
-							          infowindow.setContent(loc${status1.index}[i][0]);
-							          infowindow.open(map, marker);
-							          
-							        }
-							      })(marker, i));
+							      
 							      
 							      iconCounter++;
 							      // We only have a limited number of possible icon colors, so we may have to restart the counter

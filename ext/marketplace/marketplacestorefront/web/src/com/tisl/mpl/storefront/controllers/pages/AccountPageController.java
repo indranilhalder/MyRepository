@@ -963,7 +963,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 									{
 										consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
 										if (consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-												&& null != consignmentModel)
+												&& null != consignmentModel
+												&& consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 										{
 											final Date sDate = new Date();
 											final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
@@ -1044,7 +1045,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
-			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE,getMplOrderFacade().filterDeliveryMode());
+			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE, getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
@@ -1745,9 +1746,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 					returnLogisticsCheck = false;
 				}
 			}
-			returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
-
-
 			model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
 
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);

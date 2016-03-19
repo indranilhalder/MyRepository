@@ -164,10 +164,17 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 			final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequestData(sellerUssId,
 					myLocation.getGPS(), Double.parseDouble(configurableRadius));
-			storeLocationRequestDataList.add(storeLocationRequestData);
-			//call to OMS get the storelocations for given pincode
-			storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
-			return storeLocationResponseDataList;
+			if(null!= storeLocationRequestData)
+			{
+   			storeLocationRequestDataList.add(storeLocationRequestData);
+   			//call to OMS get the storelocations for given pincode
+   			storeLocationResponseDataList = mplCartFacade.getStoreLocationsforCnC(storeLocationRequestDataList);
+   			return storeLocationResponseDataList;
+			}
+			else
+			{
+				return storeLocationResponseDataList;
+			}
 		 }
 		}
 		catch (final Exception e)
@@ -192,17 +199,20 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	{
 		LOG.debug("sellerUssId:" + sellerUssId);
 		final String pincodeSellerId = sellerUssId.substring(0, 6);
-		final StoreLocationRequestData storeLocationRequestData = new StoreLocationRequestData();
+		StoreLocationRequestData storeLocationRequestData = null;
 		final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, pincodeSellerId);
 		LOG.debug("StoreList size is :" + storeList.size());
 		if (null != storeList && storeList.size() > 0)
 		{
+			storeLocationRequestData = new StoreLocationRequestData();
 			final List<String> locationList = new ArrayList<String>();
 			for (final Location location : storeList)
 			{
 				locationList.add(location.getName());
 			}
 			storeLocationRequestData.setStoreId(locationList);
+		}else{
+			return storeLocationRequestData;
 		}
 		//populate newly added fields
 		//get SellerInfo based on sellerUssid
