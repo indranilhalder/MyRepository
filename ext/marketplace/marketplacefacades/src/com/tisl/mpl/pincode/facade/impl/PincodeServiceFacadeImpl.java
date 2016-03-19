@@ -11,18 +11,25 @@ import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.commerceservices.converter.Converters;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -65,6 +72,11 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	private ProductDetailsHelper productDetailsHelper;
 	private MplCartFacade mplCartFacade;
 	private PincodeService pincodeService;
+	
+	private Converters converters;
+	
+	@Resource(name="pointOfServiceConverter")
+	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 	
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
@@ -261,7 +273,8 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	 * @param configurableRadius
 	 * @return
 	 */
-	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps,
+	@Override
+	public List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps,
 			final Double configurableRadius)
 	{
 		LOG.debug("in populatePinCodeServiceData method");
@@ -345,6 +358,40 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return requestData;
+	}
+	
+	/**
+	 * Get all the stores for pincode and radius.
+	 * @param gps
+	 * @param radius
+	 * @return List of Stores
+	 */
+	@Override
+	public List<PointOfServiceData> getStoresForPincode(GPS gps, String radius)
+	{
+		Collection<PointOfServiceModel> posModels = new ArrayList<PointOfServiceModel>();
+		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
+		double rad = Double.parseDouble(radius);
+		try
+		{
+			posModels = pincodeService.getStoresForPincode(gps, rad);
+			if (null != posModels && posModels.size() > 0)
+			{
+				//convert model to data
+				posData = converters.convertAll(posModels, pointOfServiceConverter);
+				if (null != posData && posData.size() > 0)
+				{
+					return posData;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			LOG.error("Exception while fetching Stores for pincode and radius");
+			posData.clear();
+		}
+		
+		return posData;
 	}
 
 	/**
