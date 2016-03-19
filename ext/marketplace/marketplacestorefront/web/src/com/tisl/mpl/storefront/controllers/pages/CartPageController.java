@@ -430,7 +430,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -860,11 +860,14 @@ public class CartPageController extends AbstractPageController
 	{
 		LOG.debug("Entring into removeFromMinicart" + "Class NameremoveFromMinicart :" + className);
 		final String entryNumberString = request.getParameter("entryNumber");
-		LOG.debug("Class NameremoveFromMinicar :" + className + "entry number is >>>>>>>>" + entryNumberString);
-		final long entryNumber = Long.parseLong(entryNumberString);
 		String returnStatement = "fail";
+
 		try
 		{
+
+			LOG.debug("Class NameremoveFromMinicar :" + className + "entry number is >>>>>>>>" + entryNumberString);
+			final long entryNumber = Long.parseLong(entryNumberString);
+
 			if (getMplCartFacade().hasEntries())
 			{
 				LOG.debug("Class NameremoveFromMinica :" + className + "#####Inside Remove Ajax call#####");
@@ -1091,7 +1094,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1143,7 +1146,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

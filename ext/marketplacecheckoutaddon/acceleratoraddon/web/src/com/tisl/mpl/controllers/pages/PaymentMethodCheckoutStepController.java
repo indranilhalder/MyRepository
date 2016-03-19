@@ -1429,28 +1429,48 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String setShippingAddress() throws InvalidCartException
 	{
 		CartData cartData = new CartData();
+		String concatAddress = MarketplacecommerceservicesConstants.EMPTY;
 		if (null != getMplCustomAddressFacade().getCheckoutCart())
 		{
 			cartData = getMplCustomAddressFacade().getCheckoutCart();
 		}
 		//Getting the fields from delivery address
-		final String firstName = cartData.getDeliveryAddress().getFirstName();
-		final String lastName = cartData.getDeliveryAddress().getLastName();
-		final String addressLine1 = cartData.getDeliveryAddress().getLine1();
-		final String addressLine2 = cartData.getDeliveryAddress().getLine2();
-		final String addressLine3 = cartData.getDeliveryAddress().getLine3();
-		final String country = cartData.getDeliveryAddress().getCountry().getName();
-		final String state = cartData.getDeliveryAddress().getState();
-		final String city = cartData.getDeliveryAddress().getTown();
-		final String pincode = cartData.getDeliveryAddress().getPostalCode();
+		try
+		{
+			final String firstName = cartData.getDeliveryAddress().getFirstName();
+			final String lastName = cartData.getDeliveryAddress().getLastName();
+			final String addressLine1 = cartData.getDeliveryAddress().getLine1();
+			final String addressLine2 = cartData.getDeliveryAddress().getLine2();
+			final String addressLine3 = cartData.getDeliveryAddress().getLine3();
+			final String country = cartData.getDeliveryAddress().getCountry().getName();
+			final String state = cartData.getDeliveryAddress().getState();
+			final String city = cartData.getDeliveryAddress().getTown();
+			final String pincode = cartData.getDeliveryAddress().getPostalCode();
 
-		final String concatAddress = firstName + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + lastName
-				+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine1
-				+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine2
-				+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine3
-				+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + country + MarketplacecheckoutaddonConstants.STRINGSEPARATOR
-				+ state + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + city
-				+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + pincode;
+			concatAddress = firstName + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + lastName
+					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine1
+					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine2
+					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine3
+					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + country + MarketplacecheckoutaddonConstants.STRINGSEPARATOR
+					+ state + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + city
+					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + pincode;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions in setShippingAddress", e);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions in setShippingAddress", e);
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception in setShippingAddress", e);
+		}
 
 		return concatAddress;
 	}
