@@ -397,27 +397,27 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
-//			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
-//			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-//
-//			if (cartModel != null && cartModel.getEntries() != null)
-//			{
-//				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-//				{
-//					if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
-//							&& cartEntryModel.getSelectedUSSID() != null)
-//					{
-//						freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-//						freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-//					}
-//				}
-//			}
-//
-//			applyPromotions();
-//
-//			getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
-//
-//			LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+
+			if (cartModel != null && cartModel.getEntries() != null)
+			{
+				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+				{
+					if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
+							&& cartEntryModel.getSelectedUSSID() != null)
+					{
+						freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+						freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+					}
+				}
+			}
+
+			applyPromotions();
+
+			getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+
+			LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
 
 			timeOutSet(model);
 
@@ -575,26 +575,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//handle freebie
 		final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 		final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-		if (cartModel != null && cartModel.getEntries() != null)
-		{
-			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-			{
-				if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
-						&& cartEntryModel.getSelectedUSSID() != null)
-				{
-					freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-					freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-				}
-			}
-		}
-
-		applyPromotions();
-
-		getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
-		}
 		
 		final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 		
@@ -689,6 +669,26 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							}
 						}
 					}
+				}
+				if (cartModel != null && cartModel.getEntries() != null)
+				{
+					for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+					{
+						if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
+								&& cartEntryModel.getSelectedUSSID() != null)
+						{
+							freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+							freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+						}
+					}
+				}
+
+				applyPromotions();
+
+				getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
 				}
 
 			}
