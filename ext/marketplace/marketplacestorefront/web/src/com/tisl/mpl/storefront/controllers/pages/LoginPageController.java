@@ -437,6 +437,7 @@ public class LoginPageController extends AbstractLoginPageController
 						friendsInviteFacade.updateFriendsModel(friendsData);
 					}
 					model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
+					returnPage = REDIRECT_PREFIX + getSuccessRedirect(request, response);
 				}
 				else
 				{
@@ -466,8 +467,8 @@ public class LoginPageController extends AbstractLoginPageController
 				returnPage = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 
-			model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
-			returnPage = REDIRECT_PREFIX + getSuccessRedirect(request, response);
+//			model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.N_CAPS_VAL);
+			
 		}
 		return returnPage;
 	}
