@@ -770,7 +770,6 @@
 		<property name="city" type="String" />
 		<property name="landmark" type="String" />
 	</bean>
-	
 	<!--End Of Adding New Properties To AddressWsDTO -->
 	<!-- Get Cart details -->
 	<bean class="com.tisl.mpl.wsdto.CartDataDetailsWsDTO">
@@ -834,6 +833,8 @@
 		<property name="errorCode" type="String" />
 		<property name="customerId" type="String" />
 		<property name="isTemporaryPassword" type="String" />
+		<property name="sessionToken" type="String" />
+		<property name="sessionSecret" type="String" />
 	</bean>
 	<!-- Registration Mobile web service -->
 
@@ -2076,8 +2077,16 @@
 
 		<property name="status" type="String" />
 		<property name="sellerMaster" type="com.tisl.mpl.model.SellerMasterModel" />
-
 	</bean>
+    
+     <bean class="com.tisl.mpl.wsdto.GigyaWsDTO">
+		<property name="status" type="String" />
+		<property name="sessionToken" type="String" />
+        <property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="sessionSecret" type="String" />
+	</bean>
+
 	<bean
 		class="de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData">
 		<property name="sellerId" type="String" />
@@ -2216,5 +2225,5 @@
 		<property name="errorCode" type="String"/>
 		<property name="status" type="String"/>	
 	</bean>
-	
+    
 </beans>
