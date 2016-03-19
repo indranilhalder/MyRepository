@@ -131,7 +131,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@RequireHardLogIn
 	@Override
 	@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.DELIVERY_METHOD)
-	public String enterStep(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
+	public String enterStep(final Model model, final RedirectAttributes redirectAttributes)
 	{
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
@@ -191,6 +191,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
 		}
+
+		catch (final CMSItemNotFoundException e)
+		{
+			LOG.error(" CMSItemNotFoundException while  delivery mode show enter step ", e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
@@ -226,7 +233,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 *           - the id of the delivery mode
 	 * @param deliveryMethodForm
 	 * @param bindingResult
-	 * @throws CMSItemNotFoundException
 	 * @return - a URL to the page to load.
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL)
@@ -235,7 +241,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			final Model model) throws CMSItemNotFoundException
 	{
 		Double finalDeliveryCost = Double.valueOf(0.0);
-		String returnPage = "";
+		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
 
 		try
 		{
@@ -384,6 +390,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
 			returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
 		}
+		catch (final CMSItemNotFoundException e)
+		{
+			LOG.error("CMSItemNotFoundException  while  selecting delivery mode ", e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
@@ -414,13 +426,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 *
 	 * @param model
 	 *           - the id of the delivery mode
-	 * @throws CMSItemNotFoundException
 	 * @return - a URL to the page to load.
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLSELECTSAVEDADDRESS, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String doSelectSavedAddress(final Model model) throws CMSItemNotFoundException
+	public String doSelectSavedAddress(final Model model)
 	{
+
+		String returnPage = MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
 		try
 		{
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -457,23 +470,34 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			model.addAttribute("metaRobots", "noindex,nofollow");
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
 		}
+		catch (final CMSItemNotFoundException cmsEx)
+		{
+			LOG.error("CMSItemNotFoundException  while  selecting saved address ", cmsEx);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while  selecting saved address ", e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while selecting saved address ", e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while showing saved address :" + e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
 		model.addAttribute("checkoutPageName", selectAddress);
-		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.ChooseDeliveryMethodPage;
-
+		return returnPage;
 	}
 
 	/**

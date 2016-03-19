@@ -206,13 +206,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			return getCheckoutStep().previousStep();
 		}
-		//set up payment page
-		setupAddPaymentPage(model);
-
 		//creating new Payment Form
 		final PaymentForm paymentForm = new PaymentForm();
 		try
 		{
+			//set up payment page
+			setupAddPaymentPage(model);
+
 			//TISST-13012
 			final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
 			if (cartItemDelistedStatus)
@@ -369,7 +369,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param model
 	 * @throws CMSItemNotFoundException
 	 */
-	private void setupAddPaymentPage(final Model model) throws CMSItemNotFoundException
+	private void setupAddPaymentPage(final Model model) throws CMSItemNotFoundException, Exception
 	{
 		model.addAttribute(MarketplacecheckoutaddonConstants.METAROBOTS, MarketplacecheckoutaddonConstants.NOINDEX_NOFOLLOW);
 
@@ -401,7 +401,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		if (null != cartData && null != cartData.getTotalPrice())
 		{
 			final Double totalAmount = Double.valueOf((cartData.getTotalPrice().getValue().doubleValue()));
-
 			try
 			{
 				emiTermRate = getMplPaymentFacade().getBankTerms(selectedEMIBank, totalAmount);
@@ -419,6 +418,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				LOG.error(MarketplacecommerceservicesConstants.B6008, e);
 				ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			}
+			catch (final Exception e)
+			{
+				LOG.error(MarketplacecommerceservicesConstants.B6008, e);
 			}
 		}
 		return emiTermRate;
@@ -792,18 +795,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORMMPLURL, "");
 			model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, null);
-			LOG.warn(MarketplacecheckoutaddonConstants.LOGWARN, e);
+			LOG.error(MarketplacecheckoutaddonConstants.LOGWARN, e);
 			GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.GLOBALERROR);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error(" Exception in setupSilentOrderPostPage", ex);
 		}
 	}
 
 
 	/**
-	 * This method is used to set up the form and rendering it with the necessary values
-	 *
-	 * @param model
+	 * This method is used to set up the form and rendering it with the necessary values * @param model
 	 */
-	private void setupMplPaymentPage(final Model model)
+	private void setupMplPaymentPage(final Model model) throws Exception
 	{
 		//getting cartdata
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -875,7 +880,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param input
 	 * @return String
 	 */
-	private static String stripNonDigits(final CharSequence input)
+	private static String stripNonDigits(final CharSequence input) throws Exception
 	{
 		final StringBuilder sb = new StringBuilder(input.length());
 		for (int i = 0; i < input.length(); i++)
@@ -895,7 +900,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 * @param model
 	 * @throws EtailBusinessExceptions
 	 */
-	private void setupMplNetbankingForm(final Model model) throws EtailBusinessExceptions
+	private void setupMplNetbankingForm(final Model model) throws EtailBusinessExceptions, Exception
 	{
 		List<MplNetbankingData> popularBankList = new ArrayList<MplNetbankingData>();
 		try
@@ -1600,6 +1605,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				LOG.error("Error while generating JSON ", e);
 				ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			}
+			catch (final Exception e)
+			{
+				LOG.error("Error while generating JSON ", e);
+			}
 			responseData.setUssidPriceDetails(jsonResponse);
 		}
 
@@ -1640,7 +1649,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("Exception in binCheck", e);
 		}
-
+		catch (final Exception e)
+		{
+			LOG.error("Exception in binCheck", e);
+		}
 		return binData;
 	}
 
@@ -1849,6 +1861,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
+			throws Exception
 	{
 
 		MplZoneDeliveryModeValueModel mplDeliveryMode = null;

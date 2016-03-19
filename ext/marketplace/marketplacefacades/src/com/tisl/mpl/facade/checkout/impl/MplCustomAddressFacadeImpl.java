@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -503,13 +504,13 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	@Override
 	public boolean hasValidCart()
 	{
-		boolean validCart = false;
+		//final boolean validCart = false;
 		final CartData cartData = getCheckoutCart();
-		if (null != cartData)
-		{
-			validCart = cartData.getEntries() != null && !cartData.getEntries().isEmpty();
-		}
-		return validCart;
+		/*
+		 * if (null != cartData) { validCart = cartData.getEntries() != null && !cartData.getEntries().isEmpty(); } return
+		 * validCart;
+		 */
+		return (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())) ? true : false;
 	}
 
 	@Override
