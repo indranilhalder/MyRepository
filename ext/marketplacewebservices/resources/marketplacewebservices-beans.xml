@@ -2083,7 +2083,6 @@
 		<property name="sellerId" type="String" />
 		<property name="slaveId" type="String" />
 		<property name="clicknCollect" type="String" />
-		<property name="mplWorkingDays" type="String" />
 		<property name="remark" type="String" />
 		<property name="orderAcceptanceTAT" type="int" />
 		<property name="orderProcessingTAT" type="int" />
