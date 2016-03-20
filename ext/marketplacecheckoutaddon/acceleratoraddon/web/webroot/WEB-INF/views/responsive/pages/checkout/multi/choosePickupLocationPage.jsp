@@ -40,12 +40,13 @@
 					 	
 					 	.radio_btn {
 							display: block !important;;
-						    height: 15px;
-						    width: 15px;
+						    height: 15px !important;
+						    width: 15px !important;
 						    cursor: pointer;
 						   	float: left;
+						   	border-radius: 50% !important;
+							padding: 0px !important;
 						    margin-left: -38px !important;
-						    border-radius: 10px;
 						}
 						
 						.radio_btn2 {
@@ -303,6 +304,13 @@
 	    }
 	
 		$(document).ready(function(){
+			if($(document).width() <= "1300") {
+				$(".right-block").css("width", "324px");
+				var mapWidth = $(".header4").width();
+				mapWidth = parseInt(mapWidth)+10;
+				$(".mapWidth").css("width", mapWidth+"px")
+				
+			}
 			$(".pickUpPersonAjax").hide();
 			$(".pickupPersonSubmitError").hide();
 			
@@ -713,7 +721,7 @@
 								</li>
 							
 							<li>
-													<ul id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
+													<ul class="mapWidth" id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
 													<ul id="maphide${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
@@ -870,14 +878,7 @@
 											          	}
 											          $(".latlng${status1.index}").text(changecordinates${status1.index});
 											          processMap${status1.index}();
-											          $('.scrollThis').each(function(){
-															if($(this).find("li").length <= '2'){
-																$(this).css({"overflow-y" : "hidden"});	
-															}
-															else {
-																$(this).css({"overflow-y" : "scroll"});
-															}
-														});
+											          
 										        	} else {
 										        		$(".pincodeServicable${status1.index}").show();
 										        		$(".delivered${status1.index}").hide();
@@ -1003,7 +1004,7 @@
 		</div>
 		</div>
 		
-		<div class="right-block shipping" style="margin-top: 74px;">
+		<div class="right-block shipping" style="margin-top: 80px;">
 				<div class="checkout-order-summary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
@@ -1033,14 +1034,6 @@
 		</div>
 		<script>
 			$(document).ready(function(){
-				$('.scrollThis').each(function(){
-					if($(this).find("li").length <= '2'){
-						$(this).css({"overflow-y" : "hidden"});	
-					}
-					else {
-						$(this).css({"overflow-y" : "scroll"});
-					}
-				});
 				var productUrlNew = $(".productUrlName").attr("href");
 				var latestProductUrl = ACC.config.encodedContextPath + productUrlNew;
 				$(".productUrlName").attr("href", latestProductUrl);
