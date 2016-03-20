@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.facades.process.email.context;
 
@@ -40,19 +40,26 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 		LOG.debug("Order Colletcted By Nominal Person Email Context ");
 		put(PICKUP_PERSON_NAME, orderProcessModel.getOrder().getPickupPersonName());
 		put(PICKUP_PERSON_NUMBER, orderProcessModel.getOrder().getPickupPersonMobile());
-		for(AbstractOrderEntryModel entry : orderProcessModel.getOrder().getEntries())
+		for (final AbstractOrderEntryModel entry : orderProcessModel.getOrder().getEntries())
 		{
-		  String storeName=entry.getDeliveryPointOfService().getName();
-		  put(STORE_NAME,storeName);
+			final String storeName = entry.getDeliveryPointOfService().getName();
+			put(STORE_NAME, storeName);
 		}
 		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
-		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		if (deliveryAddress != null)
+		{
+			put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		}
+		else
+		{
+			put(CUSTOMER_NAME, CUSTOMER_NAME);
+		}
 
 	}
 
 	@Override
-	protected BaseSiteModel getSite(OrderProcessModel businessProcessModel)
+	protected BaseSiteModel getSite(final OrderProcessModel businessProcessModel)
 	{
 
 		return businessProcessModel.getOrder().getSite();
@@ -60,7 +67,7 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 
 
 	@Override
-	protected CustomerModel getCustomer(OrderProcessModel businessProcessModel)
+	protected CustomerModel getCustomer(final OrderProcessModel businessProcessModel)
 	{
 
 		return (CustomerModel) businessProcessModel.getOrder().getUser();
@@ -68,7 +75,7 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 
 
 	@Override
-	protected LanguageModel getEmailLanguage(OrderProcessModel businessProcessModel)
+	protected LanguageModel getEmailLanguage(final OrderProcessModel businessProcessModel)
 	{
 		return businessProcessModel.getOrder().getLanguage();
 	}
