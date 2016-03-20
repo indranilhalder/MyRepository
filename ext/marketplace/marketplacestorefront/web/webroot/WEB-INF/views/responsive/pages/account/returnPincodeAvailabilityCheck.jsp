@@ -86,7 +86,7 @@
 				hideErrorMessage();
 				 //alert("coming"); 
 				 
-				if ($("#firstName").val().length < 1 || $("#lastName").val().length <1 || isNaN($("#mobileNo").val()) == true || $("#mobileNo").val().length < 10 || $("#addressLane1").val().length < 1 || $("#addressLane2").val().length < 1 || isNaN($("#pincode").val()) == true || $("#pincode").val().length < 5 || $("#landmark").val().length < 1 || $("#city").val().length < 1 || $("#state").val().length < 1){	
+				if ($("#firstName").val().length < 1 || $("#lastName").val().length <1 || isNaN($("#mobileNo").val()) == true || $("#mobileNo").val().length < 10 || $("#addressLane1").val().length < 1 || $("#addressLane2").val().length < 1 || isNaN($("#pincode").val()) == true || $("#pincode").val().length < 5 || $("#landmark").val().length < 1 || $("#city").val().length < 1 || $("#state").val() == "00"){	
 					e.preventDefault();
 					if ($("#firstName").val().length <1 ) {
 			            $(".firstNameError").show();
@@ -145,7 +145,7 @@
 			        }
 
 
-			        if ($("#state").val().length < 1) {
+			        if ( $("#state").val() == "00") {
 			            $(".stateError").show();
 			            $(".stateError").text("Please choose a state");
 			        }
@@ -339,9 +339,10 @@
 					$(".landmark").val("${returnPincodeCheckForm.landmark }");
 					$(".city").val("${returnPincodeCheckForm.city }");
 					$(".state").val("${returnPincodeCheckForm.state }");
-					$("country").val("${returnPincodeCheckForm.country }");
+					$(".country").val("${returnPincodeCheckForm.country }");
 					$(".country").css('pointer-events', 'none');
 					$(".country").attr('tabindex', '-1');
+					$(".country").val("India");
 				}
 				document.onload = loadFormData();
 				$.delay(1000, function(){
