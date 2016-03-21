@@ -1633,6 +1633,12 @@
     	<property name="readStatus" type="Boolean"></property>
     	<property name="consignmentId" type="String"></property>
     	<property name="actualOrderDetailStatus" type="String"></property>
+    	<!--coupon changes	 -->
+    	<property name="couponCode" type="String"></property>
+    	<property name="couponNotificationPassDate" type="String"></property>
+    	<property name="actualCouponMessage" type="String"></property>
+    	<property name="displayCouponMessage" type="String"></property>
+    	<!-- coupon changes end -->
     </bean>
     
     
