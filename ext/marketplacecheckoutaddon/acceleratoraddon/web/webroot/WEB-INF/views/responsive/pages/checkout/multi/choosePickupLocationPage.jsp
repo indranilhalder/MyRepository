@@ -687,12 +687,12 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs
-																<br/>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
+																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM</span>
 																	</c:if>
-																</span>
+																
 																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
 																<span class="weeklyOff${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize;"></span>
 																
@@ -816,41 +816,22 @@
 							    
 							    //console.log(iconURLPrefix${status1.index});
 							    
-							    
-							    var icons = [		iconURLPrefix${status1.index} + 'markergrey1.png',
-													iconURLPrefix${status1.index} + 'markergrey2.png',
-													iconURLPrefix${status1.index} + 'markergrey3.png',
-													iconURLPrefix${status1.index} + 'markergrey4.png',
-													iconURLPrefix${status1.index} + 'markergrey5.png',
-													iconURLPrefix${status1.index} + 'markergrey6.png',
-													iconURLPrefix${status1.index} + 'markergrey7.png',
-													iconURLPrefix${status1.index} + 'markergrey8.png',
-													iconURLPrefix${status1.index} + 'markergrey9.png',
-													iconURLPrefix${status1.index} + 'markergrey10.png',
-													iconURLPrefix${status1.index} + 'markergrey11.png',
-													iconURLPrefix${status1.index} + 'markergrey12.png',
-													iconURLPrefix${status1.index} + 'markergrey13.png',
-													iconURLPrefix${status1.index} + 'markergrey14.png',
-													iconURLPrefix${status1.index} + 'markergrey15.png',
-													iconURLPrefix${status1.index} + 'markergrey16.png',
-													iconURLPrefix${status1.index} + 'markergrey17.png',
-													iconURLPrefix${status1.index} + 'markergrey18.png',
-													iconURLPrefix${status1.index} + 'markergrey19.png',
-													iconURLPrefix${status1.index} + 'markergrey20.png',
-													iconURLPrefix${status1.index} + 'markergrey21.png',
-													iconURLPrefix${status1.index} + 'markergrey22.png',
-													iconURLPrefix${status1.index} + 'markergrey23.png',
-													iconURLPrefix${status1.index} + 'markergrey24.png',
-													iconURLPrefix${status1.index} + 'markergrey25.png'
-											    ];
-							    
-							    var icons${status1.index} = icons;
-							      
+							    var icons = new Array();
+							    for(var i=1;i<=25;i++) {
+						    		icons[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+								}
+							    var icons${status1.index} = new Array();
+							    for(var i=1;i<=25;i++) {
+						    		icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+							    }
+ 
 							    var iconsLength = icons${status1.index}.length;
 							    
 							    $(".radio_btn${status1.index}").click(function(){
 							    	var number = $(this).val();
-							    	icons${status1.index} = icons;
+							    	for(var i=1;i<=25;i++) {
+							    		icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+								    }
 							    	number = number.replace("address","");
 							    	//number++;
 							    	var myCounter = "1";
@@ -880,7 +861,7 @@
 									    	  contentType : "application/json; charset=utf-8",
 									          data : dataString${status1.index},   
 									          success : function(data) {
-									        	 //console.log(data);
+									        	 console.log(data);
 										          var response${status1.index} = JSON.stringify(data);
 										          var jsonObject${status1.index} = JSON.parse(response${status1.index});
 										          $("#changeValue${status1.index}").text(pinvalue${status1.index});
@@ -889,7 +870,10 @@
 										          if(jsonObject${status1.index}.length != "0") {
 										        	  $("input[name='address${status1.index}']").prop('checked', false);
 										        	  $(".removeColor${status1.index} .radio_color").removeClass("colorChange");
-										        	  icons${status1.index} = icons;
+										        	  //icons${status1.index} = icons;
+										        	  for(var i=1;i<=25;i++) {
+												    	icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+												      }
 										        	  processMap${status1.index}();
 										        	  $(".delivered${status1.index}").show();
 										        	  $("#map${status1.index}").show();
@@ -917,7 +901,42 @@
 											        	  	$(".address4${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['postalCode']);
 											        	  } else {
 											        		  $(".address4${status1.index}"+i).text("");  
+											        	  }if(jsonObject${status1.index}[i]['mplClosingTime'] != null && jsonObject${status1.index}[i]['mplOpeningTime'] != null) {
+											        	  	$(".pickup${status1.index}"+i).text(jsonObject${status1.index}[i]['mplOpeningTime']+"AM - "+jsonObject${status1.index}[i]['mplClosingTime']+"PM");
+											        	  } else {
+											        		  $(".pickup${status1.index}"+i).text("");  
 											        	  }
+											        	  
+											        	  //console.log(jsonObject${status1.index}[i]['mplWorkingDays']);
+											        	  var	collectionDays${status1.index} = jsonObject${status1.index}[i]['mplWorkingDays'].split(",");
+															//var	collectionDays${status1.index}${status.index} = ["0","1","2","3","4","5","6"];
+															var weekDays = ["0","1","2","3","4","5","6"];
+															var collectionWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+															    missing${status1.index} = new Array();
+															var count = 0;
+															var k = 0,
+															    lenC = weekDays.length;
+
+															for ( ; k < lenC; k++ ) {
+															    if ( collectionDays${status1.index}.indexOf(weekDays[k]) == -1 ) {
+																 	missing${status1.index}[count] = weekDays[k]; count++; 
+																}
+															}
+															$(".weeklyOff${status1.index}"+i).text("Changed");
+															if(missing${status1.index}.length < 1) {
+																$(".weeklyOff${status1.index}"+i).text("Weekly Off : All Days Open");
+															}
+															else {
+																/* console.log("Working"); */
+																$(".weeklyOff${status1.index}"+i).text("Weekly Off : ");
+																for(var y = 0; y < missing${status1.index}.length; y++) {
+																	$(".weeklyOff${status1.index}"+i).append(collectionWeek[missing${status1.index}[y]]);
+																	if(y != missing${status1.index}.length-1) {
+																		$(".weeklyOff${status1.index}"+i).append(", ");
+																	}
+																}
+															} 
+											        	  
 											        	/*   console.log(jsonObject${status1.index}[i]['name']);
 											        	  console.log(jsonObject${status1.index}[i]['address']['line1']);
 											        	  console.log(jsonObject${status1.index}[i]['geoPoint']['latitude']);
