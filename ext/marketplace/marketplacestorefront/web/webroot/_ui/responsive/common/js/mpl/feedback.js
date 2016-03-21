@@ -1289,15 +1289,9 @@ $(document).ready(function(){
 		if($('.promo-block .promo-img').children().length == 0){
 			$('.promo-block .pdp-promoDesc').css({'float':'none','margin':'0px auto'});
 		}
-
-		
-			
-
-			$(document).on("click",'.select-size',function() {
-				$(this).toggleClass('active');
-			});
-			$(document).on("click",".mini-transient-bag",function(){
-				$(this).remove();
+					
+			$(document).on("click",".mini-cart-close",function(){
+				$(this).parents('.mini-transient-bag').remove();
 			});
 			
 			/*$(document).on("click","#addToCartButton, .serp-addtobag.js-add-to-cart",function(){
@@ -1336,4 +1330,20 @@ $(document).ready(function(){
 		            }
 		        }, 100);
 		    });
+		$(document).on("click",'.select-size',function() {
+			$(this).toggleClass('active');
+		});
+		var selectOpen = false;
+		$(document).on("mouseleave",'.select-size',function() {
+			if($('.select-size').hasClass("active")) {
+				selectOpen = true;
+			}
+		});
+		$(document).on("click",function() {
+			if(selectOpen) {
+				$('.select-size').removeClass('active');
+				selectOpen = false;
+			}
+		});
+		
 });

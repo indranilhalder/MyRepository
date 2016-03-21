@@ -59,7 +59,7 @@ public class MplSendOrderFromCommerceToCRMImpl implements MplSendOrderFromCommer
 	}
 
 	@Override
-	public void orderCreationDataToCRM(final Order orderData)
+	public void orderCreationDataToCRM(final Order orderData) throws Exception
 	{
 		final Client client = Client.create();
 		WebResource webResource = null;
@@ -80,50 +80,38 @@ public class MplSendOrderFromCommerceToCRMImpl implements MplSendOrderFromCommer
 					configurationService.getConfiguration().getString("crm.ordercreate.endpoint.url")).build());
 		}
 
-		try
+
+		final JAXBContext context = JAXBContext.newInstance(Order.class);
+
+		if (null != context)
 		{
-			final JAXBContext context = JAXBContext.newInstance(Order.class);
+			marshaller = context.createMarshaller();
 
-			if (null != context)
+			if (null != marshaller)
 			{
-				marshaller = context.createMarshaller();
-
-				if (null != marshaller)
-				{
-					marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-					marshaller.marshal(orderData, writer);
-				}
+				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+				marshaller.marshal(orderData, writer);
 			}
-
-			xmlString = writer.toString();
-			xmlString = xmlString.substring(204);
-			xmlString = xmlString.replace("ns2:order", "order");
-			xmlString = ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><order>").concat(xmlString);
-
-			LOG.info(xmlString);
-
-
-			if (null != webResource)
-			{
-				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").entity(xmlString)
-						.post(ClientResponse.class);
-			}
-
-
-			LOG.info(Integer.valueOf(response.getStatus()));
-
+		}
+		xmlString = writer.toString();
+		xmlString = xmlString.substring(204);
+		xmlString = xmlString.replace("ns2:order", "order");
+		xmlString = ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><order>").concat(xmlString);
+		LOG.info(xmlString);
+		if (null != webResource)
+		{
+			response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").entity(xmlString)
+					.post(ClientResponse.class);
+		}
+		if (response.getStatus() != 200)
+		{
+			throw new Exception(Integer.valueOf(response.getStatus()).toString() + MarketplacecclientservicesConstants.E0019);
+		}
+		else
+		{
 			final String output = response.getEntity(String.class);
-
-			LOG.info("<--------------Response output---------------->  " + output);
-
+			LOG.info("Response output order Create : " + output);
 		}
-
-		catch (final Exception ex)
-		{
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex.getMessage());
-
-		}
-
 
 	}
 }

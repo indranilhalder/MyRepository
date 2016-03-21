@@ -1283,7 +1283,8 @@ h2 {
               display: block;
               width: 100%;
               margin-top: 15px;
-              text-transform: uppercase; }
+              text-transform: uppercase; 
+                  height: 40px;}
               header .content .right > ul > li.sign-in .sign-in-info form button[type="submit"]:hover {
                 background: #88102C; }
             header .content .right > ul > li.sign-in .sign-in-info form .forgot-password {
@@ -6857,7 +6858,7 @@ text-transform: uppercase;
 .checkout.wrapper .left-block p.items-no {
   margin-bottom: 15px; }
 .checkout.wrapper .left-block .button {
-  width: 348px;
+  width:46.154%;
     margin: 30px auto;
     height: 40px !important;}
     @media(max-width:650px){
@@ -8884,6 +8885,9 @@ footer .banner {
       padding: 10px 0;
       font-size: 12px;
       font-weight: normal; }
+      .sign-in.tab-view .tabs > li .left p{
+      font-size:14px;
+       font-weight: 500;}
       @media (min-width: 790px) {
         .sign-in.tab-view .tabs > li .left form label {
           letter-spacing: 1.2px; } }
@@ -10562,6 +10566,7 @@ body .account .right-account .order-history .pagination li{
     height: 20px;
     /* min-width: 200px */
     background-color: #fbba21;
+    display:table;
 }
 .product-info .product-image-container .main-image .brush-strokes-sprite{
 	display: none;
@@ -17450,6 +17455,7 @@ font-weight:normal;
 	line-height: 19px;
   font-size: 14px;
   padding: 0 25px;
+  font-weight:500;
 }
 
 @media (max-width:790px)
@@ -17513,6 +17519,9 @@ ul.helpmeshop-list{
 .left p
 {
 	font-size:12px;
+}
+.left p, .right p {
+    text-align: left;
 }
 ul.social-connect > li a
 {
@@ -23952,7 +23961,7 @@ header .content .search .links li.ui-menu-item  div.name
 header .content .search .links li.product.ui-menu-item  div.name
 {
 	margin-left:10px;
-	font-weight:normal;
+	font-weight:600;
 }
 header .content .search .links li  div.price
 {
@@ -27314,7 +27323,7 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	color:#ff2c43;
 }
 .off-bag span:last-child {
-	color:#ff2c43;
+	color:#000;
 	margin-left:4px;
 }
 body .account .right-account .order-history.order-details li.item .status .message.processing-stage-arrow1 {
@@ -29478,6 +29487,12 @@ footer>ul>li>.toggle>img{
     position: relative;
     padding-bottom: 60px;
 }
+#newAndExclusive .newExclusiveElement{
+    padding: 0px 7% 0px;}
+@media (max-width:790px){
+	#newAndExclusive .newExclusiveElement{
+    padding: 0px 12.5% 0px;}
+}
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
     background: transparent;
@@ -29512,10 +29527,12 @@ a.button.trending-button:hover{
 }
 #newAndExclusive .New_Exclusive_title{
 	font-weight:600;
+	font-size:16px;
 }
 #newAndExclusive .New_Exclusive_title,#newAndExclusive .New_Exclusive_price{
 	margin:10px 0;
 	color:#333;
+	text-align:left;
 }
 footer .footer-text {
 	clear:both;
@@ -29566,12 +29583,16 @@ vertical-align: middle;
 	padding:0 10px;
     box-sizing: border-box;
 }
-.home-brands-you-love-side-image.left {
+.home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
 vertical-align:top;
+padding: 0 2.8%;
 }
-.home-brands-you-love-side-image.right {
-	vertical-align:top;
+@media (max-width:650px){
+.home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
+padding: 0 29%;
+}	
 }
+ 
 .home-brands-you-love-main-image {
     width: 48%;
     display: inline-block;
@@ -29626,7 +29647,7 @@ width:100%;
 }
 .home-brands-you-love-wrapper h1{
 	text-align: center;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 600;
 }
 
@@ -29722,11 +29743,7 @@ font-family:DejaVu Sans;
 	font-weight:500;
 
 }
-#bestPicks .short-info span:nth-child(2),#bestPicks .short-info p:nth-child(2){
-	font-size:16px;
-	font-weight:600;
 
-}
 #bestPicks .short-info a {
     font-size: 12px;
     font-family: "Avenir Next";
@@ -29851,13 +29868,25 @@ p.showcase-para {
 }
 .showcase-center h3{
 	font-weight:600;
+	font-size:16px;
 }
-.showcase-center h3, .showcase-center p{line-height: 20px;}
+.showcase-center h3, .showcase-center p{
+	line-height: 20px;
+	text-align:left;
+}
 .showcase-section .desc-section{
 width:33.33%;
 float:left;
 text-align:center;
 padding: 0px 5px 10px;
+}
+.showcase-section .desc-section:last-child {
+    padding: 0px 7.5% 10px;
+}
+@media (max-width:650px){
+	.showcase-section .desc-section:last-child {
+    padding: 0px 30.5% 10px;
+}
 }
 a.button.trending-button {
     background: transparent;
@@ -30592,6 +30621,15 @@ width: calc(100% - -30px);
 }
 #sharepretext,#shareposttext{
 	color:#60A119;
+}
+#otherSellerLinkId .other-sellers-info{
+	    color: #A9143C;
+	text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-decoration: underline;
+    font-weight: 600;
+    line-height: 1.5;
 }
 /*--------------maincss-----------*/
 .row

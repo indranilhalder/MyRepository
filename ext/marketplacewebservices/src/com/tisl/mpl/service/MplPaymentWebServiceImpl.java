@@ -47,7 +47,6 @@ import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentModeSpecificPromotionRestrictionModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -310,9 +309,9 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * "getPaymentMode : paymentMode  JSON Response : " + paymentMode); // Payment Mode Map final Map<String, Double>
 	 * paymentModeMap = new HashMap<String, Double>(); try { final JSONObject rec_paymode = (JSONObject)
 	 * JSONValue.parse(paymentMode);
-	 * 
+	 *
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response : " + rec_paymode);
-	 * 
+	 *
 	 * // Fetch Details from Json final String debit = rec_paymode.get(MarketplacewebservicesConstants.DEBIT) != null ?
 	 * rec_paymode.get( MarketplacewebservicesConstants.DEBIT).toString() :
 	 * MarketplacewebservicesConstants.DECIMALULLCHK; final String credit =
@@ -322,10 +321,10 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * MarketplacewebservicesConstants.EMI).toString() : MarketplacewebservicesConstants.DECIMALULLCHK; final String
 	 * netBanking = rec_paymode.get(MarketplacewebservicesConstants.NETBANKING) != null ? rec_paymode.get(
 	 * MarketplacewebservicesConstants.NETBANKING).toString() : MarketplacewebservicesConstants.DECIMALULLCHK;
-	 * 
+	 *
 	 * // Get data in Double value final Double debit_amt = new Double(debit); final Double credit_amt = new
 	 * Double(credit); final Double emi_amt = new Double(emi); final Double net_amt = new Double(netBanking);
-	 * 
+	 *
 	 * // Validate Payment Mode Value and set value into map if (debit != MarketplacewebservicesConstants.DECIMALULLCHK)
 	 * { paymentModeMap.put(MarketplacewebservicesConstants.DEBIT, debit_amt); } if (credit !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.CREDIT,
@@ -333,7 +332,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * paymentModeMap.put(MarketplacewebservicesConstants.EMI, emi_amt); } if (netBanking !=
 	 * MarketplacewebservicesConstants.DECIMALULLCHK) { paymentModeMap.put(MarketplacewebservicesConstants.NETBANKING,
 	 * net_amt); }
-	 * 
+	 *
 	 * LOG.debug("getPaymentMode : rec_paymode  JSON Response paymentModeMap : " + paymentModeMap); } catch (final
 	 * EtailBusinessExceptions | EtailNonBusinessExceptions e) { throw e; } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } // returns a Map return
@@ -455,8 +454,6 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 * @param cartId
 	 * @param userID
 	 * @return PaymentServiceWsData
-	 * @see com.tisl.mpl.wsDTO.PaymentServiceWsData#updateCardTransactionDetails(com.tisl.mpl.juspay.response.GetOrderStatusResponse,
-	 *      java.util.Map, java.lang.String)
 	 */
 	@Override
 	public PaymentServiceWsData updateCardTransactionDetails(final GetOrderStatusResponse orderStatusResponseJuspay,
@@ -878,10 +875,13 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				// EBS DownTime Y
 				if (StringUtils.isNotEmpty(ebsDowntime) && ebsDowntime.equalsIgnoreCase("Y"))
 				{
-					// BinModel is not null
-					if (null != bin)
+					//Modified for TISPRO-175 :
+					if (null != bin && StringUtils.isNotEmpty(bin.getBankName()))
 					{
-						binData.setBankName(bin.getBank().getBankName());
+						LOG.debug("> Inside ebsdowntime Y with bank name " + bin.getBankName());
+
+						binData.setBankName(bin.getBankName());
+						promoPriceData.setBankName(bin.getBankName());
 						if (StringUtils.isNotEmpty(bin.getIssuingCountry()) && bin.getIssuingCountry().equalsIgnoreCase("India"))
 						{
 							binData.setIsValid(true);
@@ -894,15 +894,11 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 							promoPriceData.setIsDomestic(Boolean.FALSE);
 							promoPriceData.setError(MarketplacewebservicesConstants.EBSDOWNINTERNATIONAL);
 						}
-						if (null != bin.getBank() && null != bin.getBank().getBankName())
-						{
-							promoPriceData.setBankName(bin.getBank().getBankName());
-						}
 					}
-					//	EBS DownTime N
 					else
 					{
-						promoPriceData.setBankName("");
+						LOG.debug("> Inside ebsdowntime Y with no bank details");
+						promoPriceData.setBankName(MarketplacecommerceservicesConstants.EMPTY);
 						binData.setIsValid(false);
 						promoPriceData.setIsDomestic(Boolean.TRUE);
 						promoPriceData.setError(MarketplacewebservicesConstants.EBSDOWNNOBINRY);
@@ -913,29 +909,23 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				{
 					if (null != bin)
 					{
-						promoPriceData.setBankName(bin.getBank().getBankName());
-						binData.setIsValid(true);
+						promoPriceData.setBankName(bin.getBankName());
 						toProceedWithNoBinFlag = true;
 						toProceedFlag = true;
-						if (null != bin.getBank() && null != bin.getBank().getBankName())
-						{
-							promoPriceData.setBankName(bin.getBank().getBankName());
-						}
 					}
 					else
 					{
-						promoPriceData.setBankName("");
-						binData.setIsValid(true);
+						promoPriceData.setBankName(MarketplacecommerceservicesConstants.EMPTY);
 						toProceedWithNoBinFlag = true;
 					}
+					binData.setIsValid(true);
 					promoPriceData.setEbsDown(Boolean.FALSE);
-
 				}
 
-				if (null != bin && null != bin.getBank() && toProceedFlag)
+				if (null != bin && null != bin.getBankName() && toProceedFlag)
 				{
 					//setting the bank in session to be used for Promotion
-					getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBank());
+					getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
 					promoPriceData.setBinCheck(Boolean.TRUE);
 				}
 				else
@@ -946,7 +936,6 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 						getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, null);
 						promoPriceData.setBinCheck(Boolean.TRUE);
 					}
-
 				}
 				if (null != bin && null != bin.getCardType())
 				{
@@ -954,15 +943,10 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 				}
 				else
 				{
-					promoPriceData.setCardType(" ");
+					promoPriceData.setCardType(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				}
 			}
-			/*
-			 * // Get Bank Model for Saved Card else if (null != bankName && null == binNo &&
-			 * !paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD)) { bin = getBinService().checkBin(binNo);
-			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBank()); validFlag =
-			 * true; }
-			 */
+
 			// Set Bank in Session as null for COD
 			else if (StringUtils.isEmpty(binNo) && StringUtils.isEmpty(bankName)
 					&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
@@ -974,8 +958,8 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			else if (StringUtils.isEmpty(binNo) && StringUtils.isNotEmpty(bankName)
 					&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING))
 			{
-				final BankModel bankModel = getMplPaymentWebDAO().savedCardBankFromBin(bankName);
-				getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bankModel);
+
+				getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bankName);
 				promoPriceData.setBinCheck(Boolean.TRUE);
 			}
 			else
@@ -1130,7 +1114,7 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 	 *
 	 * @param prodPromo
 	 * @param orderPromo
-	 * @return
+	 * @return PotentialRestrictionData
 	 */
 	private PotentialRestrictionData productAndCartpromotion(final ProductPromotionModel prodPromo,
 			final OrderPromotionModel orderPromo)
@@ -1580,4 +1564,3 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 		this.cartService = cartService;
 	}
 }
-

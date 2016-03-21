@@ -3558,7 +3558,7 @@ function sendTealiumData(){
 		        		
 		        	}else{
 		        		
-		        	}
+		        	
 			        	utag.link({
 				            "link_name": 'Final Checkout',
 				            "event_type": 'PayNow',
@@ -3566,6 +3566,7 @@ function sendTealiumData(){
 				            "product_id": utag.data.product_id
 		
 				        });
+		        	}
 		        }
 	        
 	   } catch (e) {
