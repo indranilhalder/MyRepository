@@ -443,6 +443,7 @@
 									</c:if>
 									
 									<div class="item-fulfillment">
+									<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 										<p>
 											<spring:message code="mpl.myBag.fulfillment"></spring:message>
 											<!-- TISEE-6290 -->
@@ -461,6 +462,7 @@
 											</c:forEach>
 											<!-- TISEE-6290 -->
 										</p>
+									</c:if>
 										<p>
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
