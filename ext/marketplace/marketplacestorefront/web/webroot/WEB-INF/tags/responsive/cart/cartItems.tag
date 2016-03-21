@@ -382,7 +382,7 @@ function addToWishlistFromCart() {
 		                <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
 		                <h3 class="product-name">
 		                <ycommerce:testId code="cart_product_name">
-											<a href="${productUrl}">${entry.product.name}</a>
+											<a href="${productUrl}">${entry.product.productTitle}</a>
 											<input type="hidden" name="productArrayForIA" value="${entry.product.code}"/>
 						</ycommerce:testId>
 			                </h3>
