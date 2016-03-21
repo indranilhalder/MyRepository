@@ -39,6 +39,7 @@ INSERT_UPDATE UserGroup;UID[unique=true];groups(uid)[mode=replace];locname[lang=
 ;sendinvcsagentgroup;;"Send invoice Customer Service Agent Group"
 ;fraudcsagentgroup;;"Fruad Agent Customer Service Agent Group"
 ;rejectreturncsagentgroup;;"reject returnCustomer Service Agent Group"
+;synccsagentgroup;;"Sync Service Agent Group"
 
 
 
