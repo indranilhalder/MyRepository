@@ -22733,6 +22733,9 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 }
 .serp-addtobag.js-add-to-cart {
 	background-color: rgba(248, 249, 251,0);
+	font-size: 12px !important;
+    line-height: 24px !important;
+    font-weight: 600 !important;
 } 
 .product-tile .image .quickview a{
 	position:relative;
@@ -22769,7 +22772,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
     -moz-transition: opacity 0.3s;
     transition: opacity 0.3s;
 }
-.product-tile:hover .image .quickview .serp-addtobag{
+.product-tile .image .quickview .serp-addtobag{
 font-size:12px;
 font-weight:500;
 font-weight:600;
@@ -22780,7 +22783,7 @@ font-weight:600;
 
 	
 }
-.product-tile:hover .image .quickview .serp-addtobag span:before {
+.product-tile .image .quickview .serp-addtobag span:before {
     font-family: 'icomoon';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
