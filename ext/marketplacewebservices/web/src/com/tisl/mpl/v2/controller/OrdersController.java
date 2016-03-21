@@ -667,9 +667,9 @@ public class OrdersController extends BaseCommerceController
 				{
 					orderWsDTO.setSubTotal(orderDetail.getSubTotal().getValue().toString());
 				}
-				if (orderDetail.getCouponDiscount() != null)
+				if (null != orderDetail.getCouponDiscount() && null != orderDetail.getCouponDiscount().getValue())
 				{
-					orderWsDTO.setCouponDiscount(orderDetail.getCouponDiscount());
+					orderWsDTO.setCouponDiscount(orderDetail.getCouponDiscount().getValue().toString());
 				}
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
