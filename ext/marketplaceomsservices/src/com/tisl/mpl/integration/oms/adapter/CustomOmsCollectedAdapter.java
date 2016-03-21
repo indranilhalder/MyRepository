@@ -14,7 +14,6 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -63,14 +62,28 @@ public class CustomOmsCollectedAdapter
 		}
 		try
 		{
-			DateTime dateTime=new DateTime(consignmentModel.getDeliveryDate().getTime());
-			
-    			String contentForSMS= MarketplaceomsordersConstants.ORDER_COLLECTED_SMS
-							.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, orderData.getCustomerData().getFirstName())
-							.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, orderData.getCode())
-							.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, orderData.getStore())
-							.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, dateTime.toString());
-    		
+		
+    			String contentForSMS= MarketplaceomsordersConstants.ORDER_COLLECTED_SMS;
+    			          if(null !=orderData && null != orderData.getCustomerData() ){
+    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, (StringUtils.isEmpty(orderData.getCustomerData().getFirstName())) ? MarketplaceomsordersConstants.EMPTY : orderData.getCustomerData().getFirstName());
+    			          }else{
+    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, "");
+    			          }
+    			          if(null != orderModel){
+    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, (StringUtils.isEmpty(orderModel.getCode())) ? MarketplaceomsordersConstants.EMPTY:  orderModel.getCode());
+    			          }else {
+    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, "");
+    			          }
+    			          if(null != orderModel && null!= orderModel.getStore()){
+    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, (StringUtils.isEmpty(orderModel.getStore().getName())) ? MarketplaceomsordersConstants.EMPTY :  orderModel.getStore().getName());
+    			          }else{
+    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, ""); 
+    			          }
+    			          if(null != consignmentModel){
+    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, (StringUtils.isEmpty(consignmentModel.getDeliveryDate().toString())) ? MarketplaceomsordersConstants.EMPTY :  consignmentModel.getDeliveryDate().toString());
+    			          }else{
+    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, ""); 
+    			          }
     			final String mobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
 						: orderModel.getPickupPersonMobile();
     			
