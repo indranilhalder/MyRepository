@@ -2662,6 +2662,7 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					
 					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
 					<attribute qualifier="ischeckedMyRewards"
 						autocreate="true" type="java.lang.Boolean" generate="true">
@@ -4589,10 +4590,21 @@
                     <attribute qualifier="ipAddress" type="java.lang.String">
 						<modifiers optional="true" />
 						<persistence type="property" />
+					</attribute>					
+					<attribute qualifier="exportedToCrmRetryCount" type="java.lang.Integer">
+						<description>Hold a counter of how many times the order was attempted to be sent to crm.
+						</description>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<persistence type="property"/>
 					</attribute>
-
-
-
+					<attribute qualifier="omsSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="crmSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
