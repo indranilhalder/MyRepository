@@ -196,6 +196,10 @@
 						  .continue_holder {
 						  	width: 250px !important;
 						  }
+						  
+						  .collectionDays {
+						  	display: none !important;
+						  }
 						  					 	
 					</style>
 					<script>
@@ -365,6 +369,36 @@
 					}
 				}
 			});
+			
+			function submitPickupPersionDetails() {
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPickupPersonDetails";
+				var dataString = 'pickupPersonName=' + pickupPersonName+ '&pickupPersonMobile=' + pickupPersonMobile;
+					$.ajax({
+					url : requiredUrl,
+					data : dataString,
+					success : function(data) {
+						//console.log("success call for pickup person details"+data);
+						$("#pickupPersonSubmit").text("1");
+						$(".pickUpPersonAjax").fadeIn(100);
+						$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
+
+					},
+					error : function(xhr, status, error) {
+						console.log(error);	
+					}
+				});
+			}
+			
+			function submitPickupPersonDetailsOnLoad() {
+				if($("#pickupPersonName").val().length >= "1" && $("#pickupPersonMobile").val().length >= "1") {
+					submitPickupPersionDetails();
+				}
+			}
+			
+			setTimeout(submitPickupPersonDetailsOnLoad(), 2000);
+			
 			$("#savePickupPersondDetails").click(function(){
 				$(".pickupPersonSubmitError").hide();
 				$(".pickUpPersonAjax").hide();
@@ -416,22 +450,7 @@
 						$(".pickupPersonMobileError").text("Enter only numbers");
 					} */
 					else {
-						var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPickupPersonDetails";
-						var dataString = 'pickupPersonName=' + pickupPersonName+ '&pickupPersonMobile=' + pickupPersonMobile;
-							$.ajax({
-							url : requiredUrl,
-							data : dataString,
-							success : function(data) {
-								//console.log("success call for pickup person details"+data);
-								$("#pickupPersonSubmit").text("1");
-								$(".pickUpPersonAjax").fadeIn(100);
-								$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
-		
-							},
-							error : function(xhr, status, error) {
-								console.log(error);	
-							}
-						});
+						submitPickupPersionDetails();
 					}
 				}
 			});
@@ -668,17 +687,46 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}" style="text-transform: uppercase;" >PiQ up hrs
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs
 																<br/>
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
 																	${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM
 																	</c:if>
 																</span>
+																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
+																<span class="weeklyOff${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize;"></span>
 																
 																
 										</li>
 										<script>
 											$(document).ready(function() {
+												var	collectionDays${status1.index}${status.index} = $(".collectionDays${status1.index}${status.index}").text().split(",");
+												//var	collectionDays${status1.index}${status.index} = ["0","1","2","3","4","5","6"];
+												var weekDays = ["0","1","2","3","4","5","6"];
+												var collectionWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+												    missing${status1.index}${status.index} = new Array();
+												var count = 0;
+												var i = 0,
+												    lenC = weekDays.length;
+
+												for ( ; i < lenC; i++ ) {
+												    if ( collectionDays${status1.index}${status.index}.indexOf(weekDays[i]) == -1 ) {
+													 	missing${status1.index}${status.index}[count] = weekDays[i]; count++; 
+													}
+												}
+												//console.log(missing${status1.index}${status.index});
+												if(missing${status1.index}${status.index}.length < 1) {
+													$(".weeklyOff${status1.index}${status.index}").text("Weekly Off : All Days Open");
+												}
+												else {
+													$(".weeklyOff${status1.index}${status.index}").text("Weekly Off : ");
+													for(var y = 0; y < missing${status1.index}${status.index}.length; y++) {
+														$(".weeklyOff${status1.index}${status.index}").append(collectionWeek[missing${status1.index}${status.index}[y]]);
+														if(y != missing${status1.index}${status.index}.length-1) {
+															$(".weeklyOff${status1.index}${status.index}").append(", ");
+														}
+													}
+												}
 												$(".select_store").hide();
 												var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
 												$(".continue_btn").click(function(e){
@@ -769,35 +817,40 @@
 							    //console.log(iconURLPrefix${status1.index});
 							    
 							    
-							    var icons = [
-														      iconURLPrefix${status1.index} + 'markergrey1.png',
-														      iconURLPrefix${status1.index} + 'markergrey2.png',
-														      iconURLPrefix${status1.index} + 'markergrey3.png',
-														      iconURLPrefix${status1.index} + 'markergrey4.png',
-														      iconURLPrefix${status1.index} + 'markergrey5.png',
-														      iconURLPrefix${status1.index} + 'markergrey6.png'
-														    ]
+							    var icons = [		iconURLPrefix${status1.index} + 'markergrey1.png',
+													iconURLPrefix${status1.index} + 'markergrey2.png',
+													iconURLPrefix${status1.index} + 'markergrey3.png',
+													iconURLPrefix${status1.index} + 'markergrey4.png',
+													iconURLPrefix${status1.index} + 'markergrey5.png',
+													iconURLPrefix${status1.index} + 'markergrey6.png',
+													iconURLPrefix${status1.index} + 'markergrey7.png',
+													iconURLPrefix${status1.index} + 'markergrey8.png',
+													iconURLPrefix${status1.index} + 'markergrey9.png',
+													iconURLPrefix${status1.index} + 'markergrey10.png',
+													iconURLPrefix${status1.index} + 'markergrey11.png',
+													iconURLPrefix${status1.index} + 'markergrey12.png',
+													iconURLPrefix${status1.index} + 'markergrey13.png',
+													iconURLPrefix${status1.index} + 'markergrey14.png',
+													iconURLPrefix${status1.index} + 'markergrey15.png',
+													iconURLPrefix${status1.index} + 'markergrey16.png',
+													iconURLPrefix${status1.index} + 'markergrey17.png',
+													iconURLPrefix${status1.index} + 'markergrey18.png',
+													iconURLPrefix${status1.index} + 'markergrey19.png',
+													iconURLPrefix${status1.index} + 'markergrey20.png',
+													iconURLPrefix${status1.index} + 'markergrey21.png',
+													iconURLPrefix${status1.index} + 'markergrey22.png',
+													iconURLPrefix${status1.index} + 'markergrey23.png',
+													iconURLPrefix${status1.index} + 'markergrey24.png',
+													iconURLPrefix${status1.index} + 'markergrey25.png'
+											    ];
 							    
-							    var icons${status1.index} = [
-							      iconURLPrefix${status1.index} + 'markergrey1.png',
-							      iconURLPrefix${status1.index} + 'markergrey2.png',
-							      iconURLPrefix${status1.index} + 'markergrey3.png',
-							      iconURLPrefix${status1.index} + 'markergrey4.png',
-							      iconURLPrefix${status1.index} + 'markergrey5.png',
-							      iconURLPrefix${status1.index} + 'markergrey6.png'
-							    ]
+							    var icons${status1.index} = icons;
+							      
 							    var iconsLength = icons${status1.index}.length;
 							    
 							    $(".radio_btn${status1.index}").click(function(){
 							    	var number = $(this).val();
-							    	icons${status1.index} = [
-														      iconURLPrefix${status1.index} + 'markergrey1.png',
-														      iconURLPrefix${status1.index} + 'markergrey2.png',
-														      iconURLPrefix${status1.index} + 'markergrey3.png',
-														      iconURLPrefix${status1.index} + 'markergrey4.png',
-														      iconURLPrefix${status1.index} + 'markergrey5.png',
-														      iconURLPrefix${status1.index} + 'markergrey6.png'
-														    ]
+							    	icons${status1.index} = icons;
 							    	number = number.replace("address","");
 							    	//number++;
 							    	var myCounter = "1";
