@@ -22752,6 +22752,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 .product-tile .image .quickview span {
     text-transform: uppercase;
     color: #A9143C;
+    font-weight: 600;
    }
     .product-tile .image .quickview span:before {
     font-family: 'icomoon';
@@ -22796,6 +22797,7 @@ font-weight:600;
     top: 3px;
     position: relative;
     font-weight: bold;
+    line-height: 14px;
 }}
 .address-form .control-label.add-address-left-label{
 	    text-transform: uppercase;
