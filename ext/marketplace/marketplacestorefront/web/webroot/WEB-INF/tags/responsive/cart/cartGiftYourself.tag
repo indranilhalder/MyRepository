@@ -55,7 +55,7 @@ $( document ).ready(function() {
 		        $('#ajax-loader').show();
 		    },
 			success : function(data) {
-				addToBagButton.parents(".item-edit-details").append('<li style="color: #a9143c;">Bagged and Ready</li>');
+				addToBagButton.parents(".item-edit-details").append('<li style="color: #60A119;">Bagged and Ready</li>');
 				addToBagButton.prop("disabled",true);
 				addToBagButton.css("opacity","0.5");
 				setTimeout(function(){

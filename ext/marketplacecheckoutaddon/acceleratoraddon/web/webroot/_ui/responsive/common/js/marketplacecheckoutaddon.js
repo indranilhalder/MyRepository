@@ -2711,7 +2711,7 @@ function checkPincodeServiceability(buttonType)
 		
 		$( "#error-Id").hide();
 		$("#emptyId").css({
-			"color":"red",
+			"color":"#ff1c47",
 			"display":"block",
 			});
 
@@ -2725,7 +2725,7 @@ function checkPincodeServiceability(buttonType)
 		//$("#expresscheckoutid").hide();
 		//$("#checkoutBtnIdButton").show();
 		$("#error-Id").css({
-			"color":"red",
+			"color":"#ff1c47",
 			"display":"block",
 
 			});

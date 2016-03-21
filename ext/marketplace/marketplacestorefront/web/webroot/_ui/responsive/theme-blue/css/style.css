@@ -13467,12 +13467,17 @@ div.get-in-touch h2,
     font-size: 42px;
     margin-bottom: 40px;
 }
-.no-results h3,
+
 div.get-in-touch h3,
 .rewards div.customer-service h3,
 .contact-us-header h3 {
     color: #A9143C;
     font-size: 24px;
+    padding: 40px 0;
+}
+.no-results h3{
+ color: #ff1c47;	
+  font-size: 24px;
     padding: 40px 0;
 }
 .no-results h4 span,
@@ -20622,7 +20627,7 @@ margin-bottom:10px;
 font-weight:600;
 }
 .error-message{
-color:red;
+color:#ff1c47;
 font-size:12px;
 display: inline-block;
 padding-top: 5px;
@@ -24140,7 +24145,7 @@ span.brand-subdesc {
 }
 
 .cart.wrapper .content {
-	color: #A9143C;
+	color: #60A119;
 	font-size: 24px;
 	padding: 40px 0 20px 0;
 	text-align: center;
@@ -24334,7 +24339,8 @@ body #account-invite .right-account>div form .mytextarea {
  padding:5px 10px;}
 .feedBack-block .feed-back-form td{ 
      font-size: 16px;
-    font-weight: 600;}
+    font-weight: 600;
+    color:#60A119;}
 .feedBack-block .feed-back{
 	margin:0 auto;
 }
@@ -24443,7 +24449,7 @@ div.other-sellers .add-to-wishlist-popover-table tbody tr td{
 #addedMessage{
 	text-align: center;
     display: block;
-    color: blue;
+    color: #60A119;
     margin:5px 0px;
 }
 
@@ -30584,6 +30590,9 @@ width: calc(100% - -30px);
    color:#fff;
 	
 }
+#sharepretext,#shareposttext{
+	color:#60A119;
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -31572,17 +31581,17 @@ textarea.input-lg, select[multiple].input-lg {
 .has-error .help-block, .has-error .radio,
 	.has-error .checkbox, .has-error .radio-inline, .has-error .checkbox-inline,.has-error.help-block
 	{
-	color: #ff4444;
+	color: #ff1c47;
 }
 
 .has-error .form-control {
-	border-color: #ff4444;
+	border-color: #ff1c47;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 .has-error .form-control:focus {
-	border-color: #ff1111;
+	border-color: #ff1c47;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px
 		#ffaaaa;
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ffaaaa;

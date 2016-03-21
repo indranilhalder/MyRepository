@@ -1037,7 +1037,7 @@ display:none;
 				</button>
 				<span id="email_quick" style="display:none"></span>
 				<span id="emailError_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailError"/></span>
-				<span id="emailSuccess_quick" style="display:none;color:#00CBE9"><spring:theme code="email.emailSuccess"/></span>
+				<span id="emailSuccess_quick" style="display:none;color:#60A119"><spring:theme code="email.emailSuccess"/></span>
 				<span id="emailUnSuccess_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailUnSuccess"/></span>
 				<span id="emailEmpty_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailEmpty"/></span>
 				<span id="validateemail_quick" style="display:none;color:#ff1c47"><spring:theme code="email.validate"/></span>
