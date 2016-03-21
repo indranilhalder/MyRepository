@@ -144,7 +144,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.YcommercewebservicesConstants;
-import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.FeedbackArea;
 import com.tisl.mpl.core.enums.Frequency;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
@@ -164,6 +163,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
@@ -201,6 +201,7 @@ import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
+import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMIBankWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
@@ -380,6 +381,7 @@ public class UsersController extends BaseCommerceController
 	private ProductDetailsHelper productDetailsHelper;
 
 	@Autowired
+	private MplCouponWebFacade mplCouponWebFacade;
 	private GigyaFacade gigyaFacade;
 
 	//@Autowired
@@ -505,8 +507,14 @@ public class UsersController extends BaseCommerceController
 			isNewusers = newCustomer.equalsIgnoreCase(MarketplacecommerceservicesConstants.Y) ? true : false;
 			result = mobileUserService.loginUser(emailId, password);
 			gigyaWsDTO = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
-			result.setSessionSecret(gigyaWsDTO.getSessionSecret());
-			result.setSessionToken(gigyaWsDTO.getSessionToken());
+			if (StringUtils.isNotEmpty(gigyaWsDTO.getSessionSecret()))
+			{
+				result.setSessionSecret(gigyaWsDTO.getSessionSecret());
+			}
+			if (StringUtils.isNotEmpty(gigyaWsDTO.getSessionToken()))
+			{
+				result.setSessionToken(gigyaWsDTO.getSessionToken());
+			}
 			//Return result
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -3797,7 +3805,7 @@ public class UsersController extends BaseCommerceController
 					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
 					{
 						final String gigyaMethod = configurationService.getConfiguration()
-								.getString(MarketplacecclientservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
+								.getString(MarketplacewebservicesConstants.GIGYA_METHOD_UPDATE_USERINFO);
 						String fnameGigya = null;
 						String lnameGigya = null;
 
@@ -4148,7 +4156,14 @@ public class UsersController extends BaseCommerceController
 				else
 				{
 					final UserModel user = userService.getCurrentUser();
-					getCustomerAccountService().changePassword(user, old, newPassword);
+					try
+					{
+						getCustomerAccountService().changePassword(user, old, newPassword);
+					}
+					catch (final Exception e)
+					{
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B0009);
+					}
 				}
 				CustomerModel currentUser = null;
 				try
@@ -4472,6 +4487,10 @@ public class UsersController extends BaseCommerceController
 								if (StringUtils.isNotEmpty(emibanking.getName().getBankName()))
 								{
 									eMIBankWsDTO.setEmiBank(emibanking.getName().getBankName());
+								}
+								if (StringUtils.isNotEmpty(emibanking.getCode()))
+								{
+									eMIBankWsDTO.setCode(emibanking.getCode());
 								}
 								if (StringUtils.isNotEmpty(emibanking.getEmiLowerLimit().toString()))
 								{
@@ -6459,6 +6478,65 @@ public class UsersController extends BaseCommerceController
 		}
 		return profileUpdateUrl;
 	}
+
+	/**
+	 * @Description : For getting the details of all the Coupons available for the User
+	 * @param emailId
+	 * @param currentPage
+	 * @param pageSize
+	 * @param usedCoupon
+	 * @param sortCode
+	 * @return CommonCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailId}/getCoupons", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public CommonCouponsDTO getCoupons(@PathVariable final String emailId, @RequestParam final int currentPage,
+			/* @RequestParam final int pageSize, */ @RequestParam final String usedCoupon,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sortCode)
+					throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	{
+		CommonCouponsDTO couponDto = new CommonCouponsDTO();
+		try
+		{
+			//couponDto = mplCouponWebFacade.getCoupons(currentPage, pageSize, emailId, usedCoupon, sortCode);
+			couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			couponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				couponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				couponDto.setErrorCode(e.getErrorCode());
+			}
+			couponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				couponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				couponDto.setErrorCode(e.getErrorCode());
+			}
+			couponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return couponDto;
+	}
+
 
 	/**
 	 * @description method is called to generate update profileURL mobile service

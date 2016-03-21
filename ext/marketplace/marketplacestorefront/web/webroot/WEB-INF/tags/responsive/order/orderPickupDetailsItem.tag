@@ -25,18 +25,16 @@
 	                                                      	<c:set var="pos" value="${entry.deliveryPointOfService.address}"/>
 	                                                   <c:set var="storeId" value="${entry.deliveryPointOfService.address.id}"/>
 	                                                      <address>
-																${pos.firstName}&nbsp;
-																${pos.lastName}<br>
-																${pos.companyName} <br>
-																${pos.line1}&nbsp;
-																${pos.line2}
-																${pos.town}, <br>
-																${pos.state},
-																${pos.country.name},
-																${pos.postalCode}
-																${pos.country.isocode} <br>
-																+91&nbsp; ${pos.phone} <br>
-															</address>
+											                 <c:if test="${not empty entry.deliveryPointOfService.name}">${entry.deliveryPointOfService.name}<br></c:if>
+												             <c:if test="${not empty pos.line1}">${pos.line1}&nbsp;</c:if>
+												             <c:if test="${not empty pos.line2}">${pos.line2}</c:if>
+												             <c:if test="${not empty pos.town}">	${pos.town}, <br></c:if>
+												             <c:if test="${not empty pos.state}">	${pos.state},</c:if>
+												             <c:if test="${not empty pos.country.name}">${pos.country.name},</c:if>
+												             <c:if test="${not empty pos.postalCode}">	${pos.postalCode} &nbsp;</c:if>
+												             <c:if test="${not empty pos.country.isocode}">${pos.country.isocode} <br></c:if>
+												             <c:if test="${not empty pos.phone}">+91&nbsp; ${pos.phone} <br></c:if>
+														</address>
 															</div>
 									</c:if>
 							</c:if>			

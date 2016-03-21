@@ -228,6 +228,12 @@
 		<entry key="ORDCOLTD" value="ORDER_COLLECTED" />
 		<entry key="ORDUNCTD" value="ORDER_UNCOLLECTED"/>
 		<entry key="RETUIRTO" value="RETURNINITIATED_BY_RTO "/>
+	    <entry key="PODREALO" value="PARTIALLY_ORDER_REALLOCATED" />
+		<entry key="PCNCINTE" value="PARTIALLY_CNC_INITIATED" />
+		<entry key="PRDYCOLT" value="PARTIALLY_READY_FOR_COLLECTION" />
+		<entry key="PORDCOLT" value="PARTIALLY_ORDER_COLLECTED" />
+		<entry key="PORDUNCT" value="PARTIALLY_ORDER_UNCOLLECTED" />
+		<entry key="PRETUIRT" value="PARTIALLY_RETURNINITIATED_BY_RTO" />
 	    				
 	</util:map>
 </beans>

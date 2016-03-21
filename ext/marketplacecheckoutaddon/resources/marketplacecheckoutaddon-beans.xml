@@ -54,5 +54,9 @@
 		<property name="mplOpeningTime" type="String"/>
 		<property name="mplClosingTime" type="String"/>
 	</bean>
-
+	<bean class="com.tisl.mpl.facades.data.FreebieProduct">
+		<property name="sellerName" type="String"/>
+		<property name="qty" type="Long"/>
+		<property name="product" type="de.hybris.platform.commercefacades.product.data.ProductData"/>
+	</bean>
 </beans>

@@ -3099,7 +3099,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						LOG.debug("populateDataForSoftReservation :  entryModel.getQuantity() is null or empty");
 					}
 
-					if (entryModel.getDeliveryPointOfService() != null)
+					if (entryModel.getDeliveryPointOfService() != null && !entryModel.getGiveAway().booleanValue())
 					{
 						cartSoftReservationData.setStoreId(entryModel.getDeliveryPointOfService().getSlaveId());
 					}
@@ -3115,6 +3115,26 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						{
 							final String ussId = entryModel.getAssociatedItems().get(0);
 							cartSoftReservationData.setParentUSSID(ussId);
+							String deliveryModeForFreebie = getDeliverModeForABgetC(ussId, abstractOrderModel);
+							if (null != deliveryModeForFreebie)
+							{
+								if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+								{
+									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
+								}
+								else if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+								{
+									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
+								}
+								else if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+								{
+									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
+								}
+								if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
+								{
+									cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
+								}
+							}
 							cartSoftReservationData.setIsAFreebie(MarketplacecommerceservicesConstants.Y);
 						}
 					}

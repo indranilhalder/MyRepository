@@ -2,22 +2,20 @@ package com.tisl.mpl.core.cronjobs.delisting;
 
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
-import de.hybris.platform.util.CSVReader;
-import de.hybris.platform.util.CSVWriter;
+import de.hybris.platform.servicelayer.model.ModelService;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MarketplaceDelistModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.model.SellerInformationModel;
 
@@ -26,6 +24,7 @@ import com.tisl.mpl.model.SellerInformationModel;
  * @author TCS
  *
  */
+//TISPRD-207 Changes
 public class DelistingProcessorImpl implements DelistingProcessor
 {
 
@@ -33,9 +32,24 @@ public class DelistingProcessorImpl implements DelistingProcessor
 	private MplDelistingService mplDelistingService;
 
 	@Autowired
-	private DelistingErrorHandling delistErrorHandling;
+	private ModelService modelService;
 
+	/**
+	 * @return the modelService
+	 */
+	public ModelService getModelService()
+	{
+		return modelService;
+	}
 
+	/**
+	 * @param modelService
+	 *           the modelService to set
+	 */
+	public void setModelService(final ModelService modelService)
+	{
+		this.modelService = modelService;
+	}
 
 	/**
 	 * @return the mplDelistingService
@@ -54,133 +68,97 @@ public class DelistingProcessorImpl implements DelistingProcessor
 		this.mplDelistingService = mplDelistingService;
 	}
 
-	/**
-	 * @return the delistErrorHandling
-	 */
-	public DelistingErrorHandling getDelistErrorHandling()
-	{
-		return delistErrorHandling;
-	}
-
-	/**
-	 * @param delistErrorHandling
-	 *           the delistErrorHandling to set
-	 */
-	public void setDelistErrorHandling(final DelistingErrorHandling delistErrorHandling)
-	{
-		this.delistErrorHandling = delistErrorHandling;
-	}
-
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(DelistingProcessorImpl.class.getName());
 
-	/**
-	 * @Descriptiion: Process uploaded .csv File to create Promotion/Restriction
-	 * @param : input
-	 * @param : output
-	 * @param : flag
-	 */
-	//@Description: Variable Declaration for Promotions
-	private static final int SELLERID = 0;
-	private static final int DELISTING = 1;
-	private static final int DELIST = 2;
-	private static final int BLOCKOMS = 2;
+
+	//@Description: Variable Declaration for Mapping
+	private static final Integer SELLERID = Integer.valueOf("0");
+	private static final Integer DELISTING = Integer.valueOf("1");
+	private static final Integer DELIST = Integer.valueOf("2");
+	private static final Integer BLOCKOMS = Integer.valueOf("2");
 
 
 	/**
-	 * @Description: For Creating Promotion in bulk
-	 * @param reader
-	 * @param writer
-	 * @param map
-	 * @param errorPosition
-	 * @param headerRowIncluded
+	 * @Javadoc
+	 * @Description:The process method is called by the Delisting Job in order to Retry for the Failed Records
 	 */
 
-	public void process(final CSVReader reader, final CSVWriter writer, final Map<Integer, String> map,
-			final Integer errorPosition, final boolean headerRowIncluded, final boolean flag)
+	@Override
+	public void process()
 	{
-		LOG.debug("Checking For Errors");
+		LOG.debug("Retry Mechanism Started");
 
-
-		while (reader.readNextLine())
+		try
 		{
-			final Map<Integer, String> line = reader.getLine();
+			final List<MarketplaceDelistModel> delistingRecord = getMplDelistingService().findUnprocessedRecord();
+			final List<MarketplaceDelistModel> savingList = new ArrayList<>();
 
-			boolean errorline = false;
-
-			final String sellerId = line.get(Integer.valueOf(SELLERID));
-
-			final String delisting = line.get(Integer.valueOf(DELISTING));
-
-			if (sellerId.isEmpty())
+			for (final MarketplaceDelistModel singleRecord : delistingRecord)
 			{
-				LOG.error("Seller ID is Empty for Line " + reader.getCurrentLineNumber());
-				errorline = true;
 
-			}
-			else if (delisting.isEmpty())
-			{
-				if (!delisting.equalsIgnoreCase("Y") && !delisting.equalsIgnoreCase("N"))
+
+				//Differentiating Between Seller and USSID
+
+				if (StringUtils.isEmpty(singleRecord.getDelistUssid()))
 				{
-					LOG.error("Delisting Data not in Sync for line number" + reader.getCurrentLineNumber());
-					errorline = true;
-				}
-			}
 
-			if (!errorline)
-			{
 
-				if (flag)
-				{
-					processDatatoModelSeller(line, writer);
+					LOG.debug("Retry Mechanism Started for Seller " + singleRecord.getSellerID());
+					final Map<Integer, String> sellerList = new HashMap<>();
+					sellerList.put(SELLERID, singleRecord.getSellerID());
+					sellerList.put(DELISTING, singleRecord.getDelistingStatus());
+					sellerList.put(BLOCKOMS, singleRecord.getIsBlockOMS());
+
+					LOG.debug("Retry Mechanism Started for Seller " + singleRecord.getSellerID());
+
+					singleRecord.setIsProcessed(processDatatoModelSeller(sellerList));
+					savingList.add(singleRecord);
+
 
 				}
+
 				else
 				{
-					processDatatoModelUssid(line, writer);
+					final Map<Integer, String> ussidList = new HashMap<>();
+
+					//					final StringBuilder stBUssidList = new StringBuilder(100);
+					LOG.debug("Retry Mechanism Started for Seller " + singleRecord.getSellerID() + " and USSID :"
+							+ singleRecord.getDelistUssid());
+
+					ussidList.put(SELLERID, singleRecord.getSellerID());
+					ussidList.put(DELISTING, singleRecord.getDelistingStatus());
+					ussidList.put(DELIST, singleRecord.getDelistUssid());
+					singleRecord.setIsProcessed(processDatatoModelUssid(ussidList));
+					savingList.add(singleRecord);
 
 				}
-
 			}
+			LOG.debug("Updating Delisting Records");
+			modelService.saveAll(savingList);
 
 		}
 
-
+		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException | EtailNonBusinessExceptions exception)
+		{
+			LOG.error(exception.getMessage());
+		}
 	}
 
-	@Override
-	public void processFile(final InputStream input, final OutputStream output, final boolean flag) throws IOException
-	{
-		final CSVWriter writer = getCSVWriter(output);
-		final CSVReader reader = new CSVReader(input, "UTF-8");
-		reader.setFieldSeparator(new char[]
-		{ MarketplacecommerceservicesConstants.FIELD_SEPARATOR });
-
-		final Map<Integer, String> map = new HashMap<Integer, String>();
-		final boolean headerRowIncluded = false;
-
-		final Integer errorPosition = Integer.valueOf(0);
-		process(reader, writer, map, errorPosition, headerRowIncluded, flag);
-		reader.close();
-		writer.close();
-	}
-
-	/**
-	 * @Descriptiion: Splits Data Based on Separator
-	 * @param: output
+	/*
+	 * @Javadoc
+	 *
+	 * @Description : Hot Folder Converter picks each line from the Seller-Delisting file in the form of Map and feeds to
+	 * this method
+	 *
+	 * @param :line
+	 *
+	 * @return : isProcessed
 	 */
 	@Override
-	public CSVWriter getCSVWriter(final OutputStream output) throws UnsupportedEncodingException
-	{
-		final CSVWriter csvWriter = new CSVWriter(output, "UTF-8");
-		csvWriter.setFieldseparator(MarketplacecommerceservicesConstants.FIELD_SEPARATOR);
-		return csvWriter;
-	}
-
-	private void processDatatoModelSeller(final Map<Integer, String> line, final CSVWriter writer)
+	public boolean processDatatoModelSeller(final Map<Integer, String> line)
 	{
 		LOG.debug("Processing Data in processDatatoModelSeller ");
-		boolean isIncorrectCode = false;
 		try
 		{
 			if (line.get(Integer.valueOf(SELLERID)) != null)
@@ -188,46 +166,50 @@ public class DelistingProcessorImpl implements DelistingProcessor
 				final String sellerID = line.get(Integer.valueOf(SELLERID));
 				final List<SellerInformationModel> list = getMplDelistingService().getAllUSSIDforSeller(sellerID);
 
-				if (list != null && !list.isEmpty())
+				if (CollectionUtils.isNotEmpty(list))
 				{
 					getMplDelistingService().delistSeller(list, line.get(Integer.valueOf(DELISTING)),
 							line.get(Integer.valueOf(BLOCKOMS)));
+					return true;
+
 				}
 				else
 				{
 					LOG.error(sellerID + " Not Found in database");
+					return false;
 				}
 			}
 			else
 			{
-				isIncorrectCode = true;
-				final List<Integer> errorColumnList = errorListData(line, isIncorrectCode);
 				LOG.error("SellerId is null");
-				try
-				{
-					getDelistErrorHandling().writeErrorData(writer, line, errorColumnList, line,
-							MarketplacecommerceservicesConstants.ERRORMESSAGE);
-				}
-				catch (final IOException exception)
-				{
-					LOG.error(exception.getMessage());
-				}
+
+				return false;
 			}
 		}
-		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException exception)
+		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException | EtailNonBusinessExceptions exception)
 		{
-			final List<Integer> errorColumnList = errorListData(line, isIncorrectCode);
 			LOG.error(exception.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			return false;
+
 		}
 	}
 
+	/*
+	 * @Javadoc
+	 *
+	 * @Description : Hot Folder Converter picks each line from USSID delisting in the form of Map and feeds to this
+	 * method
+	 *
+	 * @param :line
+	 *
+	 * @return : boolean
+	 */
 
-
-	private void processDatatoModelUssid(final Map<Integer, String> line, final CSVWriter writer)
+	@Override
+	public boolean processDatatoModelUssid(final Map<Integer, String> line)
 	{
 		LOG.debug("Processing Data in processDatatoModelUssid ");
-		boolean isIncorrectCode = false;
+		boolean delistingSucccessful = true;
 		try
 		{
 			if (line.get(Integer.valueOf(SELLERID)) != null)
@@ -238,77 +220,38 @@ public class DelistingProcessorImpl implements DelistingProcessor
 				for (final String ussid : ussidlist)
 				{
 					final List<SellerInformationModel> list = getMplDelistingService().getModelforUSSID(ussid);
-					if (list != null && !list.isEmpty())
+					if (CollectionUtils.isNotEmpty(list))
 					{
-						getMplDelistingService().delistUSSID(list, line.get(Integer.valueOf(DELISTING)));
+						delistingSucccessful = getMplDelistingService().delistUSSID(list, line.get(Integer.valueOf(DELISTING)))
+								&& delistingSucccessful;
+						//return true;
 					}
 					else
 					{
+						delistingSucccessful = false;
 						LOG.error(ussid + " Not Found in database");
+						//return false;
 					}
 				}
 
 			}
 			else
 			{
-				isIncorrectCode = true;
-				final List<Integer> errorColumnList = errorListData(line, isIncorrectCode);
 				LOG.error("SellerId is null");
-				try
-				{
-					getDelistErrorHandling().writeErrorData(writer, line, errorColumnList, line,
-							MarketplacecommerceservicesConstants.ERRORMESSAGE);
-				}
-				catch (final IOException exception)
-				{
-					LOG.error(exception.getMessage());
-				}
+				delistingSucccessful = false;
+				return delistingSucccessful;
 
 			}
 		}
-		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException exception)
+		catch (final ModelSavingException | ModelNotFoundException | NumberFormatException | EtailNonBusinessExceptions exception)
 		{
-			final List<Integer> errorColumnList = errorListData(line, isIncorrectCode);
 			LOG.error(exception.getMessage());
-			populateErrorEntry(line, writer, errorColumnList);
+			delistingSucccessful = false;
+			return delistingSucccessful;
 
 		}
+		return delistingSucccessful;
 	}
 
-	/**
-	 * @Description : Populate error entry to file
-	 * @param line
-	 * @param writer
-	 * @param errorColumnList
-	 */
-	private void populateErrorEntry(final Map<Integer, String> line, final CSVWriter writer, final List<Integer> errorColumnList)
-	{
-		try
-		{
-			getDelistErrorHandling().writeErrorData(writer, line, errorColumnList, line,
-					MarketplacecommerceservicesConstants.ERRORMESSAGE);
-		}
-		catch (final IOException e)
-		{
-			LOG.debug(e.getMessage());
-		}
-	}
-
-	/**
-	 * @Description: Validates Data Uploaded
-	 * @param line
-	 * @param isIncorrectCode
-	 * @return data
-	 */
-	private List<Integer> errorListData(final Map<Integer, String> line, final boolean isIncorrectCode)
-	{
-		final List<Integer> data = new ArrayList<>();
-
-		if (isIncorrectCode)
-		{
-			data.add(Integer.valueOf(SELLERID));
-		}
-		return data;
-	}
 
 }

@@ -20,7 +20,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
@@ -102,12 +101,6 @@ public class OfferPageController extends AbstractSearchPageController
 					searchBreadcrumbBuilder.getBreadcrumbs(null, offerSearch.getSearchPageData()));
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 					Collections.singletonList(new Breadcrumb("#", "Offers", LAST_LINK_CLASS)));
-			/* TISEEII-1145 fixes start */
-			if (CollectionUtils.isNotEmpty(offerSearch.getSearchPageData().getResults()))
-			{
-				model.addAttribute("departmentHierarchyData", offerSearch.getSearchPageData().getDepartmentHierarchyData());
-			}
-			/* TISEEII-1145 fixes end */
 			model.addAttribute("offer", offerID);
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(OFFER_LISTING_CMS_PAGE_ID));

@@ -418,6 +418,7 @@ public class MarketplacewebservicesConstants
 	public static final String CHANNEL_WEBMOBILE = "WebMobile";
 	public static final String CHANNEL_MOBILE = "Mobile";
 
+	public static final String MPLSTORE = "mpl";
 
 
 	public static final String CUSTOMERQUERY = "select {c:pk} from {customer As c} where {c.originalUid}=?originalUid".intern();
@@ -472,6 +473,18 @@ public class MarketplacewebservicesConstants
 	public static final String AFFILIATEID = "affiliateId";
 	public static final String EQUALS = "=";
 
+	public static final String PAGE_VAL = "Page";
+	public static final String PAGE_ALL = "All";
+	public static final String SHOW = "show";
+	public static final String SORT = "sort";
+
+	public static final String PAZE_SIZE_COUPONS = "mpl.account.coupon.pazesize";
+	//closed coupon
+	public static final String PAZE_SIZE_VOUCHER = "mpl.account.voucher.pazesize";
+
 	public static final String USE_GIGYA = "gigya.use".intern();
 	public static final String NO = "N";
+	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
+
 }
+
