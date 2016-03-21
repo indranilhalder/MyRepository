@@ -875,8 +875,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 						consignmentModel = mplOrderService.fetchConsignment(orderEntry.getConsignment().getCode());
 						//TISEE-1067
 						consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-						if (null != consignmentModel.getInvoice() && null != consignmentModel.getInvoice().getInvoiceUrl()
-								&& consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED))
+						if (null != consignmentModel.getInvoice()
+								&& null != consignmentModel.getInvoice().getInvoiceUrl()
+								&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 						{
 							sortInvoice.put(orderEntry.getTransactionId(), true);
 							final String tranSactionId = orderEntry.getTransactionId();
@@ -962,9 +964,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 									if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
 									{
 										consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-										if (consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-												&& null != consignmentModel
-												&& consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
+										if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
+												&& null != consignmentModel)
 										{
 											final Date sDate = new Date();
 											final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
