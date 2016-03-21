@@ -1377,7 +1377,8 @@
 		<property name="discountPrice" type="String" />
 		<property name="convenienceCharge" type="String" />
 		<property name="orderStatusMessage" type="String" />
-		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!-- <property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" /> -->
+		<property name="couponDiscount" type="String" />
 	</bean>
 <bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />
