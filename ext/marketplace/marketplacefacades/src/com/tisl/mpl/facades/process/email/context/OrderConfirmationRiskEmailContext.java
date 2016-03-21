@@ -16,6 +16,8 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 
 import java.util.List;
 
+import org.apache.velocity.tools.generic.NumberTool;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
@@ -50,6 +52,7 @@ public class OrderConfirmationRiskEmailContext extends AbstractEmailContext<Orde
 	private static final String CUSTOMER = "Customer";
 	private static final String COMMA = ",";
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
+	private static final String NUMBERTOOL = "numberTool";
 
 
 
@@ -107,6 +110,8 @@ public class OrderConfirmationRiskEmailContext extends AbstractEmailContext<Orde
 		}
 		put(NAMEOFPERSON, (name.length() > 0 ? name : CUSTOMER));
 		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+		put(NUMBERTOOL, new NumberTool());
+
 		/*
 		 * if (null != customer.getDisplayName()) { if (!customer.getDisplayName().equals(" ")) { put(CUSTOMER_NAME,
 		 * customer.getDisplayName()); } else { put(CUSTOMER_NAME, "Customer"); } } else { put(CUSTOMER_NAME, "Customer");
