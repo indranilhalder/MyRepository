@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.service;
 
@@ -9,9 +9,11 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
- import java.util.List;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -28,7 +30,7 @@ import com.tisl.mpl.wsdto.SlaveInfoDTO;
 
 /**
  * @author TECHOUTS Service class which implements MPLSlaveMasterService interface.
- * 
+ *
  */
 public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 {
@@ -46,9 +48,12 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 	@Resource(name = "commonI18NService")
 	private CommonI18NService commonI18NService;
 
+	@Resource(name = "baseStoreService")
+	private BaseStoreService baseStoreService;
+
 	/**
 	 * @author TECH This method is to insert or update slaves based on slaveId.
-	 * 
+	 *
 	 * @param sellerSlaveDto
 	 * @return status, if successful insert/update then return success or failure flag.
 	 */
@@ -98,7 +103,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
 						{
-							posModel.setType(PointOfServiceTypeEnum.POS);
+							posModel.setType(PointOfServiceTypeEnum.STORE);
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getClicknCollect()))
 						{
@@ -540,9 +545,10 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 							LOG.debug("Exception while saving model: " + e.getMessage());
 						}
 					}
-					else {
+					else
+					{
 						status = MarketplacecommerceservicesConstants.ERROR_FLAG;
-						LOG.debug("Update PointOfService only if input type is"+"SLV_TYPE_STORE");
+						LOG.debug("Update PointOfService only if input type is" + "SLV_TYPE_STORE");
 					}
 				}
 				else
@@ -564,9 +570,13 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 						{
 							posModel.setName(slaveInfoDto.getName());
 						}
+						//Added logic to handle POS to connect to BaseStore.
 						if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
 						{
-							posModel.setType(PointOfServiceTypeEnum.POS);
+							posModel.setType(PointOfServiceTypeEnum.STORE);
+							//Set BaseStore Type also
+							final BaseStoreModel baseStoreModel = baseStoreService.getCurrentBaseStore();
+							posModel.setBaseStore(baseStoreModel);
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getClicknCollect()))
 						{
@@ -800,7 +810,8 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 							LOG.debug("Exception while saving model: " + e.getMessage());
 						}
 					}
-					else {
+					else
+					{
 						status = MarketplacecommerceservicesConstants.ERROR_FLAG;
 						LOG.debug("PointOfService type only supports" + "SLV_TYPE_STORE");
 					}
@@ -815,7 +826,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 	 * @author TECH This method calls cao to get POS ,given sellerId and Store Name.
 	 * @param sellerId
 	 * @param storeName
-	 * 
+	 *
 	 * @return pos model.
 	 */
 	public PointOfServiceModel findPOSBySellerAndSlave(final String sellerId, final String storeName)
