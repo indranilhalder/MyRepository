@@ -26,11 +26,15 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.helper.ProductDetailsHelper;
 
 
 /**
@@ -57,7 +61,12 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String COMMA = ",";
 	private static final String CUSTOMER = "Customer";
 	private static final String SPACE = " ";
+	private static final String MATH = "math";
+	private static final String NUMBERTOOL = "numberTool";
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
+
+	@Resource(name = "productDetailsHelper")
+	private ProductDetailsHelper productDetailsHelper;
 
 
 	@Override
@@ -71,11 +80,17 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				.getOrder().getConvenienceCharges().doubleValue();
 
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
+		//final Double inalTotapPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
+		//final String totalPrice = String.format("%,.2f", FinalTotapPrice);
 
-		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
-				+ " convenienceCharges:" + convenienceCharges);
+		//final PriceData totalPriceData = productDetailsHelper.formPriceData(totalPrice);
+
+
+		LOG.info(" *********************- totalPrice:" + " orderTotalPrice:" + orderTotalPrice + " convenienceCharges:"
+				+ convenienceCharges);
 
 		final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
+
 		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
 		final String orderCode = orderProcessModel.getOrder().getCode();
 
@@ -140,7 +155,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		//			put(CUSTOMER_NAME, "Customer");
 		//		}
 
-		put("math", new MathTool());
+		put(MATH, new MathTool());
+		put(NUMBERTOOL, new NumberTool());
 
 	}
 

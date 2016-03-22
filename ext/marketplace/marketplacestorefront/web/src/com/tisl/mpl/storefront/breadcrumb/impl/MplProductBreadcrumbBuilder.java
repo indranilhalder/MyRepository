@@ -97,6 +97,6 @@ public class MplProductBreadcrumbBuilder extends ProductBreadcrumbBuilder
 	public Breadcrumb getProductBreadcrumb(final ProductModel product)
 	{
 		final String productUrl = getProductModelUrlResolver().resolve(product);
-		return new Breadcrumb(productUrl, product.getName(), null);
+		return new Breadcrumb(productUrl, product.getTitle(), null);
 	}
 }
