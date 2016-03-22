@@ -6858,7 +6858,7 @@ text-transform: uppercase;
 .checkout.wrapper .left-block p.items-no {
   margin-bottom: 15px; }
 .checkout.wrapper .left-block .button {
-  width:46.154%;
+  width:41.17%;
     margin: 30px auto;
     height: 40px !important;}
     @media(max-width:650px){
@@ -8867,7 +8867,8 @@ footer .banner {
     @media (min-width: 790px) {
       .sign-in.tab-view .tabs > li .left {
         width: 50%;
-        float: left; }
+        float: left; 
+        position:relative;}
         .sign-in.tab-view .tabs > li .left #checkBox {
         width: 115%;
         } }
@@ -24536,6 +24537,7 @@ body .account .right-account .mpl-addressPopup.modal .addressItem  ul li {
 }
 body .account .right-account .mpl-addressPopup.modal .addressItem .address-deleteConfirmation{
 	font-size:12px;
+	color: #ff1c47;
 }
 body .account .right-account .mpl-addressPopup.modal .confirm-deletionButton
  {
@@ -30631,6 +30633,10 @@ width: calc(100% - -30px);
     font-weight: 600;
     line-height: 1.5;
 }
+#errorCreate,.wishlist-deletion-confirmation{
+line-height: normal;
+    color: #ff1c47;
+}
 /*--------------maincss-----------*/
 .row
 {
@@ -32104,7 +32110,6 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 
 .nav>li>a:hover, .nav>li>a:focus {
 	text-decoration: none;
-	color:black !important;
 }
 
 .nav>li.disabled>a {
@@ -32278,9 +32283,21 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 
 .alert-dismissable .close, .alert-dismissible .close {
 	position: relative;
-	top: -2px;
+	top: -6px !important;
 	right: -21px;
-	color: inherit;
+	color: transparent;
+    background-image: url(../images/Delete.png);
+    height: 24px;
+    width: 24px;
+}
+.alert-dismissable.alert-info .close, .alert-dismissible.alert-info .close {
+	position: relative;
+	top: -6px !important;
+	right: -21px;
+	color: transparent;
+    background-image: url(../images/Clear.png);
+    height: 24px;
+    width: 24px;
 }
 @media (max-width:790px) {
 	.alert-dismissable .close, .alert-dismissible .close {
@@ -32304,20 +32321,17 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 }
 
 .alert-info {
-	/* background-color: #d9edf7;
-	border-color: #bce8f1;
-	color: #31708f; */
-	background-color: #f2dede;
-	border-color: #ebccd1;
-	color:#000;
+	border-color: #60A119;
+    color: #60A119;
+    background-color: rgba(96, 161, 25, 0.1);
 }
 
 .alert-info hr {
-	border-top-color: #a6e1ec;
+	border-top-color: #60A119;
 }
 
 .alert-info .alert-link {
-	color: #245269;
+	color: #60A119;
 }
 
 .alert-warning {
@@ -32337,23 +32351,24 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
 .alert-danger {
 	background-color: #f2dede;
 	border-color: #ebccd1;
-	color: #ff4444;
+	color: #ff1c47;
 }
 
 .alert-danger hr {
 	border-top-color: #e4b9c0;
 }
 .alert.alert-danger a.close{
-	color: #ff4444;
-    	font-size: 16px;
-    	font-weight: bold;
-    	margin-right: 10px;
-    	float: left;
-    	margin-top: -3px;
+	color: transparent;
+    margin-right: 10px;
+    float: left;
+    margin-top: -6px;
+    background-image: url(../images/Delete.png);
+    height: 24px;
+    width: 24px;
 }
 
 .alert-danger .alert-link {
-	color: #ff1111;
+	color: #ff1c47;
 }
 
 @
@@ -36929,12 +36944,12 @@ span.mini-cart-close {
     border-top-color: #a9143c;
 }
 #checkBox .popover.top{
-        max-width: 45%;
+           max-width: 345px;
     border: 1px solid #a9143c;
     border-radius: 5px;
-    width: 45% !important;
-    right: 0px !important;
-    left: 0 !important;
+    width: 345px !important;
+    /* right: 0px !important; */
+    left: 189px !important;
     margin: auto;
     margin-top: -10px;
 }
