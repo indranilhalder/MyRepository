@@ -112,19 +112,20 @@ public class MarketplacewebservicesConstants
 			.intern();
 	public static final String ORIGINALUID = "originalUid".intern();
 	public static final String CARDREFNUMBER = "cardRefNo".intern();
-
-	public static final String POS_QUERY_FOR_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId}=?slaveId"
-			.intern();
-
-	public static final String POS_QUERY_FOR_POSNAME = "select {pos:pk} from {PointOfService As pos} where {pos.name}=?name"
-			.intern();
-	public static final String POS_SLAVEID = "slaveId".intern();
-
-	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.sellerId}=?sellerId and {pos.slaveId}=?slaveId"
-			.intern();
+	
+	public static final String POS_ACTIVE = "active".intern();
 	public static final String POS_SELLERID = "sellerId".intern();
 	public static final String POS_NAME = "name".intern();
+	public static final String POS_SLAVEID = "slaveId".intern();
 
+	public static final String POS_QUERY_FOR_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId}=?slaveId and {pos.active}=?active"
+			.intern();
+
+	public static final String POS_QUERY_FOR_POSNAME = "select {pos:pk} from {PointOfService As pos} where {pos.name}=?name and {pos.active}=?active"
+			.intern();
+	
+	public static final String POS_QUERY_FOR_SELLER_AND_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.sellerId}=?sellerId and {pos.slaveId}=?slaveId and {pos.active}=?active"
+			.intern();
 
 	public static final String COD_ELIGIBLE = "Eligible for COD";
 	//	public static final String SSHIP_ELIGIBLE = "One or more items in your order are Seller Fulfilled. Hence, No COD mode is available."
@@ -476,4 +477,9 @@ public class MarketplacewebservicesConstants
 	public static final String USE_GIGYA = "gigya.use".intern();
 	public static final String NO = "N";
 	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
+	
+	public static final String SLV_TYPE_STORE = "SLV_TYPE_STORE";
+	public static final String SLV_TYPE_WAREHOUSE = "SLV_TYPE_WAREHOUSE";
+	public static final String INACTIVE = "N";
+	public static final String ACTIVE = "Y";
 }
