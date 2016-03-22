@@ -1002,6 +1002,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	
 	
 	
+	/**
+	 * This method is called when "Checkout" button is clicked in CS Cockpit
+	 */
 	@Override
 	public void triggerCheckout() throws ValidationException
 	{
@@ -1015,6 +1018,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			setDeliveryModeIfAvailable(cartModel);
 			setPaymentAddressIfAvailable(cartModel);
 			
+			//Custom to handle voucher custom code
 			getMplVoucherService().checkCartWithVoucher(cartModel);
 				     
 			WidgetBrowserModel checkoutBrowser = getCheckoutBrowser();
