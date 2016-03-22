@@ -8,9 +8,6 @@ $emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/market
 
 
 
-# Import config properties into impex macros
-UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
-
 # Language
 $lang=en   
 
