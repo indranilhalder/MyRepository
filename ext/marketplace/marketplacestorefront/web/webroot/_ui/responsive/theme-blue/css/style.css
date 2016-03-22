@@ -36882,6 +36882,7 @@ display:block;
     border-radius: 4px;
     border: 1px solid transparent;
     padding-bottom: 25px;
+    display: none;
 }
  
  .overLayStoreFinderText h1 {

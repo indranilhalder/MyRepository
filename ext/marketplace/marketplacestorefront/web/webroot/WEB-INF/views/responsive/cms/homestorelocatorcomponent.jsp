@@ -2,7 +2,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key=${googleApiKey}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="jquery.tools.min.js"></script>
 <script>
@@ -56,7 +56,11 @@ function initialize(locatorJson,lat,lot)
     var mapProp = {
   	center:myCenter,
   	zoom:initialZoom,
-  	disableDefaultUI:true,
+  	zoomControl:true,
+  	zoomControlOptions:{
+  		position:google.maps.ControlPosition.RIGHT_TOP
+  	},
+  	disableDefaultUI:false,
   	mapTypeId:google.maps.MapTypeId.ROADMAP };
 
     var map=new google.maps.Map(document.getElementById("home-googleMap"),mapProp);
@@ -123,6 +127,7 @@ autoCenter(markers,map);
    // controlUI.title = 'Set map to London';
     controlDiv.appendChild(controlUI);
     var controlText = document.getElementById('overLayStoreFinderText');
+    controlText.style.display = 'block';
     controlUI.appendChild(controlText);
     
   }  
@@ -232,9 +237,8 @@ function HomeLegendsControl(controlDiv, map) {
 	    rewards on all your purchases across brands   online or in-store.
 	</span>
 	   
-	   <a href="${request.contextPath}/aboutus" class="r2-arrow">Learn more about our services</a>
+	    <a href="${request.contextPath}/aboutus" class="r2-arrow">Learn more about our services</a>
 		<a href="${request.contextPath}/store-finder" class="r2-arrow"> Find a Store</a>
-	 
 </div>
 
 
