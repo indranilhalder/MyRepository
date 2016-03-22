@@ -875,8 +875,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 						consignmentModel = mplOrderService.fetchConsignment(orderEntry.getConsignment().getCode());
 						//TISEE-1067
 						consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-						if (null != consignmentModel.getInvoice() && null != consignmentModel.getInvoice().getInvoiceUrl()
-								&& consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED))
+						if (null != consignmentModel.getInvoice()
+								&& null != consignmentModel.getInvoice().getInvoiceUrl()
+								&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 						{
 							sortInvoice.put(orderEntry.getTransactionId(), true);
 							final String tranSactionId = orderEntry.getTransactionId();
@@ -962,7 +964,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 									if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
 									{
 										consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-										if (consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+										if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 												&& null != consignmentModel)
 										{
 											final Date sDate = new Date();
@@ -1044,7 +1047,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
-			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE,getMplOrderFacade().filterDeliveryMode());
+			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE, getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
@@ -1745,9 +1748,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 					returnLogisticsCheck = false;
 				}
 			}
-			returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
-
-
 			model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
 
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);

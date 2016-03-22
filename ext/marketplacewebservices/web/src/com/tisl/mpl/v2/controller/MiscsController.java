@@ -54,6 +54,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
@@ -61,6 +62,10 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.storelocator.location.Location;
+import de.hybris.platform.storelocator.location.impl.LocationDTO;
+import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.util.Config;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import com.tisl.mpl.service.MplSlaveMasterService;
@@ -131,11 +136,13 @@ import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.populator.HttpRequestCustomerUpdatePopulator;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.service.HomescreenService;
@@ -263,6 +270,9 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private MplSlaveMasterService mplSlaveMasterService;
+	
+	@Resource(name="pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
 
 	/**
 	 * @return the configurationService
@@ -542,6 +552,9 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+	
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
 
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
@@ -1375,8 +1388,20 @@ public class MiscsController extends BaseController
 					 * data.setIsDeliveryDateRequired(MarketplacewebservicesConstants.NA); requestData.add(data); } }
 					 */
 					List<PinCodeResponseData> response = null;
-					response = pinCodeFacade.getResonseForPinCode(productCodeStr, pin,
-							productDetailsHelper.populatePinCodeServiceData(productCodeStr));
+					final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+					if( null != pinCodeModelObj)
+					{
+   					String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null ? Config.getParameter("marketplacestorefront.configure.radius") : "0";
+   					LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
+   					final LocationDTO dto = new LocationDTO();
+   					dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+   					dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+   					final Location myLocation = new LocationDtoWrapper(dto);
+   					LOG.debug("Selected Location for Latitude..:" + myLocation.getGPS().getDecimalLatitude());
+   					LOG.debug("Selected Location for Longitude..:" + myLocation.getGPS().getDecimalLongitude());
+   					response = pinCodeFacade.getResonseForPinCode(productCodeStr, pin,
+   							pincodeServiceFacade.populatePinCodeServiceData(productCodeStr, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
+					}
 					if (null != response)
 					{
 						dataList.setPincodeListResponse(response);

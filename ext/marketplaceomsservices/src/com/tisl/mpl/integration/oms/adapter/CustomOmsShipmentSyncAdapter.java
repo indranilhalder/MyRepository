@@ -482,16 +482,8 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 			
 			if(shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED)){
 				LOG.debug("Calling deliverd Initiation process started");
-				
-				final String appDwldUrl = getConfigurationService().getConfiguration().getString(
-						MarketplaceomsordersConstants.SMS_SERVICE_APP_DWLD_URL);
-				
-				final String orderNumber = (StringUtils.isEmpty(shipment.getOrderId())) ? MarketplaceomsordersConstants.EMPTY
-						: shipment.getOrderId();
-				final String mobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
-						: orderModel.getPickupPersonMobile();
-				
-				customOmsCollectedAdapter.sendNotificationForDelivery(orderModel, orderNumber,mobileNumber, appDwldUrl);
+				OrderData orderData =customOmsCancelAdapter.convertToData(orderModel);
+				customOmsCollectedAdapter.sendNotificationForOrderCollected(orderModel, orderData, consignmentModel);
 			}
 			
 			createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
