@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.velocity.tools.generic.MathTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -63,6 +64,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 	private static final String CARRIER = "carrier";
 	private static final String CUSTOMER = "Customer";
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
+	private static final String NUMBERTOOL = "numberTool";
 	private static final String COMMA = ",";
 
 
@@ -156,6 +158,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 			put(CUSTOMER_NAME, CUSTOMER);
 		}
 		put("math", new MathTool());
+		put(NUMBERTOOL, new NumberTool());
 	}
 
 	@Override
