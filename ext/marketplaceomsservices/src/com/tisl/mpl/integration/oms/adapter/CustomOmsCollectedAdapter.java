@@ -79,7 +79,7 @@ public class CustomOmsCollectedAdapter
     			          }else{
     			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, ""); 
     			          }
-    			          if(null != consignmentModel){
+    			          if(null != consignmentModel && null !=consignmentModel.getDeliveryDate() ){
     			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, (StringUtils.isEmpty(consignmentModel.getDeliveryDate().toString())) ? MarketplaceomsordersConstants.EMPTY :  consignmentModel.getDeliveryDate().toString());
     			          }else{
     			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, ""); 
