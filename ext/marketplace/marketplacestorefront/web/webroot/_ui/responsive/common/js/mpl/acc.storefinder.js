@@ -105,6 +105,8 @@ ACC.storefinder = {
 			}
 			
 			var map = new google.maps.Map(document.getElementById("store-finder-map"), mapOptions);
+			 //To create bounds.
+			 var bounds = new google.maps.LatLngBounds();
 			
 			for (var i = 0; i < storeData.length; i++) { 
 			 var localStoreInfo=storeData[i];
@@ -125,6 +127,8 @@ ACC.storefinder = {
 				//opacity:0.6
 			});
 			
+			//Add marker to bounds
+			bounds.extend(marker.position);
 			var infowindow = new google.maps.InfoWindow({
 				content: "",
 				disableAutoPan: false,
@@ -155,6 +159,8 @@ ACC.storefinder = {
 		      })(marker, i));
 			marker.setMap(map);	 
 			}
+			//Auto set bounds
+		    map.fitBounds(bounds);
 			/* Create a DIV to hold the control and call StoreFinderLegendsControl() */
 		    var homeLegendsControlDiv = document.createElement('div');
 		    var homeLegendsControl = new ACC.storefinder.StoreFinderLegendsControl(homeLegendsControlDiv, map);
@@ -211,6 +217,7 @@ ACC.storefinder = {
 
 	getStoreData: function(page){
 		ACC.storefinder.storeSearchData.page = page;
+		ACC.storefinder.storeSearchData.show="All"
 		url= $(".js-store-finder").data("url");
 		$.ajax({
 			url: url,
