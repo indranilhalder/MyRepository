@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
@@ -32,7 +33,7 @@ import com.hybris.oms.domain.buc.report.SellerAndLogisticsPerfRpt.dto.SellerAndL
 
 /**
  * @author Pradeep
- * 
+ *
  */
 public class PincodeLogisticsListController extends DefaultWidgetController
 {
@@ -65,9 +66,9 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 	}
 
 	/**
-	 * 
+	 *
 	 * @param startendTime
-	 * 
+	 *
 	 */
 	@SocketEvent(socketId = "startendDates")
 	public void editListView(final String startendDates)
@@ -86,7 +87,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 
 	/**
 	 * export csv file from listview
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 
@@ -102,7 +103,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 
 	/**
 	 * This function used to export listbox to csv from listbox
-	 * 
+	 *
 	 * @param listbox
 	 * @throws InterruptedException
 	 */
@@ -150,7 +151,14 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 
 			cellLabel.append(item.getCustomerId().concat(saperator));
 			cellLabel.append(item.getEmail().concat(saperator));
-			cellLabel.append(item.getMobileNo().concat(saperator));
+			if (StringUtils.isEmpty(item.getMobileNo()))
+			{
+				cellLabel.append("NA".concat(saperator));
+			}
+			else
+			{
+				cellLabel.append(item.getMobileNo().concat(saperator));
+			}
 			cellLabel.append(String.valueOf(item.getTatConf2Hotc()).concat(saperator));
 			cellLabel.append(String.valueOf(item.getActualTatOrder2Hotc()).concat(saperator));
 			cellLabel.append(String.valueOf(item.getTatConfHotc2Delvd()).concat(saperator));
