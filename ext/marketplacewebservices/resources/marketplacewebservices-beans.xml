@@ -1377,7 +1377,8 @@
 		<property name="discountPrice" type="String" />
 		<property name="convenienceCharge" type="String" />
 		<property name="orderStatusMessage" type="String" />
-		<property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!-- <property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" /> -->
+		<property name="couponDiscount" type="String" />
 	</bean>
 <bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />
@@ -1632,6 +1633,12 @@
     	<property name="readStatus" type="Boolean"></property>
     	<property name="consignmentId" type="String"></property>
     	<property name="actualOrderDetailStatus" type="String"></property>
+    	<!--coupon changes	 -->
+    	<property name="couponCode" type="String"></property>
+    	<property name="couponNotificationPassDate" type="String"></property>
+    	<property name="actualCouponMessage" type="String"></property>
+    	<property name="displayCouponMessage" type="String"></property>
+    	<!-- coupon changes end -->
     </bean>
     
     
