@@ -64,7 +64,11 @@
 			<button type="submit" onclick="return checkSignUpValidation('Checkout'); "><spring:theme code='${actionNameKey}' /></button>
 		</ycommerce:testId>
 	</div>
-
+	
+	<div class="exist-account">
+	<span>Already have a TataCLiQ account?  </span>
+	<span><a href="/store/mpl/en/login"> &nbsp;  SignIn here</a></span>
+	</div>
 	
 </form:form>
 

@@ -102,7 +102,7 @@
 }
 
 .compareError {
-	color: red;
+	color: #ff1c47;
 	font-size: 16px;
 	margin-bottom: 15px;
 	font-weight: 500;

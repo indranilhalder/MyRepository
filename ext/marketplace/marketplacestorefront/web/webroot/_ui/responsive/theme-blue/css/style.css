@@ -17,9 +17,12 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   i{
   font-style:italic;
   }
-/* html,body,main {
-	overflow-x:hidden;
-} */
+ html,body,main {
+	height: 100%;
+} 
+body.page-notFound{
+	height:auto;
+}
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block; }
@@ -8356,6 +8359,7 @@ div.wishlist-content .pagination {
 }
 .mainContent-wrapper {
 	position:relative;
+	min-height: 100%;
 }
 
   @media(min-width:790px) {
@@ -8366,7 +8370,7 @@ div.wishlist-content .pagination {
 	 	padding-bottom:0px;
 	 }
 	 .mainContent-wrapper footer {
-	position: relative;
+	position: absolute;
 	width:100%;
 	bottom:0;
 }
@@ -8901,6 +8905,7 @@ footer .banner {
 		    display: initial;
 		    line-height: 16.5px;
 		    text-decoration: none;
+		        padding: 0;
           }
          
     .sign-in.tab-view .tabs > li .left form input {
@@ -24951,7 +24956,7 @@ div#cartItems.products p{
 	min-height: 35px;
 	line-height: 18px;
 	border-top: 1px solid #ccc;
-	padding: 10px 5px 5px 5px;
+	padding: 10px 5px 10px 5px;
 }
 
 .trackorder-dropdown li:nth-of-type(1) {
@@ -25493,7 +25498,7 @@ padding:0;
     -ms-appearance: none;
     -o-appearance: none;
 }
-#addToCartFormQuick #addToCartButton{
+#addToCartFormQuick #addToCartButton,#addToCartSizeGuide #addToCartButton{
 	color: #fff;
      background-color: #A9143C;
 }
@@ -26355,11 +26360,14 @@ float:left;
 height:40px;
 line-height:40px;
 }
-.checkout-shipping ul.social-connect{
-width:100%;
-}
+
 .sign-in.tab-view .tabs > li#sign_up_content .social-connect{
 padding-top:25px;
+}
+}
+@media(max-width:790px){
+	.checkout-shipping ul.social-connect{
+width:100%;
 }
 }
 @media(min-width:651px){
@@ -29722,56 +29730,53 @@ margin: 10px 0px;
 	max-width: 100%;
 }
 #bestPicks .short-info span , #bestPicks .short-info p{
-    font-size: 12px;
+    /*font-size: 12px;
     font-family: "Avenir Next";
     color:#333;
-    /* font-weight: 500; */
-    text-align: center;
+     font-weight: 500; 
+    text-align: center;*/
     line-height: 1;
     display: inline-block;
     padding: 4px;
     width: 100%;
     word-break: break-word;
 }
-@media (max-width:650px ){
-#bestPicks .short-info span, #bestPicks .short-info p{
-text-align:center;}}
-#bestPicks .short-info span:last-child,#bestPicks .short-info p:last-child{
+/* #bestPicks .short-info span:last-child,#bestPicks .short-info p:last-child{
 font-family:DejaVu Sans;
 	font-size:98%;
-	/* display:inline !important; */
+	display:inline !important;
 	background:transparent !important;
 	border:none;
-	/* font-weight:500; */
+	font-weight:500;
 
-}
+} */
 
 #bestPicks .short-info a {
-    font-size: 12px;
+    /*font-size: 12px;
     font-family: "Avenir Next";
-    /* font-weight: 600; */
-    text-align: center;
+     font-weight: 600; 
+    text-align: center;*/
     line-height: 1;
     display: inline-block;
     padding: 4px;
     width: 100%;
 }
 #bestPicks .short-info a span,#bestPicks .short-info a p {
-    font-size: 12px;
+    /*font-size: 12px;
     font-family: "Avenir Next";
     color:inherit;
-    /* font-weight: 600; */
-    text-align: center;
+     font-weight: 600; 
+    text-align: center;*/
     line-height: 1;
     display: inline-block;
     width: 100%;
     padding: 0;
 }
 #bestPicks .short-info span a,#bestPicks .short-info p a {
-    font-size: 12px;
+     /*font-size: 12px;
     font-family: "Avenir Next";
-    /* font-weight: 600; */
-    text-align: center;
+    font-weight: 600;
+    text-align: center; */
     line-height: 1;
     display: inline-block;
     width: 100%;
@@ -36654,7 +36659,6 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item .produ
 header .content .right>ul>li.transient-mini-bag .mini-transient-bag .item .product-img img
 	{
 	max-width: 100%;
-	max-height: 90px;
 	height: auto;
 	    margin: 5px auto;
 	
@@ -36817,7 +36821,6 @@ span.mini-cart-close {
 .error-template-message {
 	margin-top: 5px;
 	border-top: 2px solid #979797;
-	padding-bottom: 120px;
 }
 
 .error-template-message .error_container>ul {
@@ -36880,7 +36883,7 @@ span.mini-cart-close {
 		width: calc(100% - 30px);
 		width: -webkit-calc(100% - 30px);
 		margin: auto;
-		padding-bottom: 50px;
+		padding-bottom:50px;
 	}
 	.error-template-message .error_container ul li.left_col,
 		.error-template-message .error_container ul li.right_col {
@@ -36900,6 +36903,7 @@ span.mini-cart-close {
 		        border-bottom: 1px dashed #a9143c;
     			padding: 0;
     			display: inline-block;
+    			margin-bottom: 2px;
     			width: 152px;
           }
           .sign-in.tab-view .tabs > li .left form div#checkBox label a.tata-rewards:after{
@@ -36976,7 +36980,8 @@ span.mini-cart-close {
 .exist-account{
 padding: 20px;
 margin-bottom: 10px;
-padding-bottom: 5px;}
+padding-bottom: 5px;
+    text-align: center;}
 .exist-account span{
 font-size: 11px;
     font-weight: normal;
