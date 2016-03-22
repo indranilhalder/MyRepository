@@ -386,23 +386,31 @@ public class ProductPageController extends AbstractPageController
 				{
 					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
 				}
+				//TISPRO-208
+				if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
+							new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+				}
 			}
 			else if (CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+				//TISPRO-208
+				if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
+							new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(0).getName()));
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+				}
 			}
-
-			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
-
-			{
-				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
-						new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
-			}
-			else
-			{
-				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
-			}
-
 			if (null != sizeSelected)
 			{
 				model.addAttribute(ModelAttributetConstants.SELECTEDSIZE, sizeSelected);
