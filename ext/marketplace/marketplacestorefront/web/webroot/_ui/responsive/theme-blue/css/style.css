@@ -36939,6 +36939,9 @@ display:block;
 	height: 94%
 } 
 
+.headline.findaStoreHeadLin {
+    padding-left: 10px;
+}
 .input-group-btn>.store-btn {
 	font-size: 12px;
     text-align: center;
