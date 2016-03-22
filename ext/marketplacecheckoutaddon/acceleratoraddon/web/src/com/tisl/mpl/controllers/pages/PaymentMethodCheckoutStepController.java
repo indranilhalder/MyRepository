@@ -50,6 +50,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -1574,6 +1575,41 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 								&& cartEntryModel.getAssociatedItems() != null && cartEntryModel.getAssociatedItems().size() > 0)
 						{
 							saveDeliveryMethForFreebie(cartEntryModel, freebieModelMap, freebieParentQtyMap);
+							//start populate deliveryPointOfService for freebie
+							if (LOG.isDebugEnabled())
+							{
+								LOG.debug("***Before Populating deliveryPointOfService for freebie product has ussID "
+										+ cartEntryModel.getSelectedUSSID());
+							}
+							PointOfServiceModel posModel = null;
+							for (final String ussid : cartEntryModel.getAssociatedItems())
+							{
+								for (final AbstractOrderEntryModel cartHasFreebieEntryModel : cart.getEntries())
+								{
+									if (cartHasFreebieEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
+									{
+										if (null != cartHasFreebieEntryModel.getDeliveryPointOfService())
+										{
+											if (LOG.isDebugEnabled())
+											{
+												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + ussid);
+											}
+											posModel = cartHasFreebieEntryModel.getDeliveryPointOfService();
+										}
+									}
+								}
+							}
+							if (null != posModel)
+							{
+								cartEntryModel.setDeliveryPointOfService(posModel);
+								modelService.save(cartEntryModel);
+							}
+							if (LOG.isDebugEnabled())
+							{
+								LOG.debug("After Populating deliveryPointOfService for freebie product has ussID "
+										+ cartEntryModel.getSelectedUSSID());
+							}
+							//end populate deliveryPointOfService for freebie
 						}
 					}
 				}

@@ -47,6 +47,14 @@ public class CustomAddressPopulator extends AddressPopulator
 		target.setDefaultAddress(isDefaultAddress(target)); //Added for checkout journey modification
 		target.setLine3(source.getAddressLine3()); //Added for checkout journey modification
 		target.setLocality(source.getLocality()); //Added for checkout journey modification
+		if (null != source.getCity())
+		{
+			target.setCity(source.getCity());//added for stores
+		}
+		if (null != source.getLandmark())
+		{
+			target.setLandmark(source.getLandmark());//added for stores
+		}
 
 	}
 

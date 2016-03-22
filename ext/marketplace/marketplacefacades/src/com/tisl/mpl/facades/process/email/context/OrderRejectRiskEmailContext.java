@@ -40,9 +40,18 @@ public class OrderRejectRiskEmailContext extends AbstractEmailContext<OrderProce
 		//final String contactUsLink = Localization.getLocalizedString("marketplace.contactus.link");
 		final String contactUsLink = configurationService.getConfiguration().getString("marketplace.contactus.link");
 		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
-		put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+		if (deliveryAddress != null)
+		{
+			put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+			put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+		}
+		else
+		{
+			put(DISPLAY_NAME, CUSTOMER_NAME);
+			put(CUSTOMER_NAME, CUSTOMER_NAME);
+		}
 		put(CONTACT_US_LINK, contactUsLink);
-		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+
 		if (null != orderProcessModel.getOrder())
 		{
 			final OrderModel order = orderProcessModel.getOrder();
