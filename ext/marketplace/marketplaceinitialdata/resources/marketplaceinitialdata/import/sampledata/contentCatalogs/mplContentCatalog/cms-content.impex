@@ -1270,25 +1270,68 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='compare'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section1Slot-compare;Section1;;Section1Slot-compare;;;
 
-#Error Pages
+### for new 404 page
 
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
-;;ErrorParagraphComponent;Error Paragraph Component;ErrorParagraphComponent;;;;
+;;ErrorParagraphComponent404;Error Paragraph Component for 404 page;ErrorParagraphComponent404;;;;
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;MiddleContent-NotFoundError;Middle Content Slot;true;ErrorParagraphComponent;;;
+;;MiddleContent-NotFoundError;Middle Content Slot;true;ErrorParagraphComponent404;;;
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='notFound'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;MiddleContent-NotFoundError;MiddleContent;;MiddleContent-NotFoundError;;;
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;MiddleContent-NonBusinessError;Middle Content Slot;true;ErrorParagraphComponent;;;
+;;MiddleContent-NonBusinessError;Middle Content Slot;true;ErrorParagraphComponent404;;;
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='nonBusinessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;MiddleContent-NonBusinessError;MiddleContent;;MiddleContent-NonBusinessError;;;
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;MiddleContent-BusinessError;Middle Content Slot;true;ErrorParagraphComponent;;;
+;;MiddleContent-BusinessError;Middle Content Slot;true;ErrorParagraphComponent404;;;
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='businessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;MiddleContent-BusinessError;MiddleContent;;MiddleContent-BusinessError;;;
+
+
+
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
+;;ErrorPageImageComponent;Error Image Component;ErrorPageImageComponent;;;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;SideContent-NotFoundError;Side Content Slot;true;ErrorPageImageComponent;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='notFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-NotFoundError;SideContent;;SideContent-NotFoundError;SideContent;;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;SideContent-NonBusinessError;Side Content Slot;true;ErrorPageImageComponent;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='nonBusinessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-NonBusinessError;SideContent;;SideContent-NonBusinessError;SideContent;;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;SideContent-BusinessError;Side Content Slot;true;ErrorPageImageComponent;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='businessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-BusinessError;SideContent;;SideContent-BusinessError;SideContent;;;
+
+##########  for 404 page footer override
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;FooterContent-BusinessError;Empty Footer Slot;true;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='businessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;FooterContent-BusinessError;Footer;;FooterContent-BusinessError;;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;FooterContent-NonBusinessError;Empty Footer Slot;true;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='nonBusinessErrorFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;FooterContent-NonBusinessError;Footer;;FooterContent-NonBusinessError;;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;FooterContent-NotFound;Empty Footer Slot;true;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='notFound'];contentSlot(uid,$contentCV)[unique=true];;;
+;;FooterContent-NotFound;Footer;;FooterContent-NotFound;;;

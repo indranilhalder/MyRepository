@@ -696,3 +696,27 @@ UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
  ;;nonBusinessErrorFound;"Tata MarketPlace"
  ;;businessErrorFound;"Tata MarketPlace"
  ;;notFound;"Tata MarketPlace"
+ 
+ #### for new 404 page
+ 
+ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/404_Graphic_M.png;404_Graphic_M.png;$siteResource/images/theme/404_Graphic_M.png;;
+ 
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;ErrorPageImageComponent;/images/theme/404_Graphic_M.png;
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;ErrorParagraphComponent404;"<div class='top'>
+<p class='title_captn'>Oops! Something went wrong here..</p>
+<p>We can't find the page you are looking for. Please checkout our help center or head back to homepage.</p>
+</div>
+<div class='middle'>
+<ul>
+    <li><a href='#' onclick='history.go(-1);return false;'>Return to previous page</a></li>
+    <li><a href='/store/'>Tata Cliq Homepage</a></li>
+    <li><a href='#'>Help center</a></li>
+</ul>
+</div>
+<div class='bottom'>
+<p>Have a question? Please feel free to reach us at 1800 201 301 (available 24/7)</p>
+</div>"
