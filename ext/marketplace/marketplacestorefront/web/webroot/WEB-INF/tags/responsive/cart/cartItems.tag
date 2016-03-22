@@ -581,7 +581,7 @@ function addToWishlistFromCart() {
 												<c:choose>
     											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc}">
         												<del>
-															<format:price priceData="${entry.totalPrice}" displayFreeForZero="true" />
+															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
 		 												</del>
     											</c:when>    
     											<c:otherwise>
