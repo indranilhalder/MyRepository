@@ -19,6 +19,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplacewebservicesConstants;
+import com.tisl.mpl.coupon.constants.MarketplacecouponConstants;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -99,21 +101,37 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 		{
 			applycouponDto.setStatus(MarketplacecommerceservicesConstants.FAILURE);
 
-			if (null != e.getMessage() && e.getMessage().contains(MarketplacecommerceservicesConstants.B9501))
+			if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCPRICEEXCEEDED))
 			{
-				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9803);
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9501);
 			}
-			else if (null != e.getMessage() && e.getMessage().contains(MarketplacecommerceservicesConstants.B9502))
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCINVALID))
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9503);
 			}
-			else if (null != e.getMessage() && e.getMessage().contains(MarketplacecommerceservicesConstants.B9504))
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCEXPIRED))
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9505);
 			}
-			else if (null != e.getMessage() && e.getMessage().contains(MarketplacecommerceservicesConstants.B9506))
+			else if (null != e.getMessage() && e.getMessage().contains(MarketplacewebservicesConstants.EXCISSUE))
 			{
 				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9507);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCNOTAPPLICABLE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9509);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCNOTRESERVABLE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9510);
+			}
+			else if (e.getMessage().contains(MarketplacewebservicesConstants.EXCFREEBIE))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9511);
+			}
+			else if (e.getMessage().contains(MarketplacecouponConstants.EXCUSERINVALID))
+			{
+				throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9512);
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -195,7 +213,7 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 				.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 		releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
 		releaseCouponsDTO.setErrorCode(MarketplacecommerceservicesConstants.B9508);
-
+		releaseCouponsDTO.setError(MarketplacewebservicesConstants.COUPONRELISSUE);
 		return releaseCouponsDTO;
 	}
 

@@ -35,8 +35,8 @@ import com.tisl.mpl.solrfacet.search.service.MplProductSearchService;
  * @author 314180
  *
  */
-public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends DefaultSolrProductSearchFacade
-		implements MplProductSearchFacade
+public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends DefaultSolrProductSearchFacade implements
+		MplProductSearchFacade
 {
 	/**
 	 *
@@ -85,8 +85,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 					@Override
 					public ProductSearchPageData<SearchStateData, ITEM> execute()
 					{
-						return (ProductSearchPageData<SearchStateData, ITEM>) getProductCategorySearchPageConverter()
-								.convert(getMplProductSearchService().mplProductSearch(decodeState(searchState), pageableData));
+						return (ProductSearchPageData<SearchStateData, ITEM>) getProductCategorySearchPageConverter().convert(
+								getMplProductSearchService().mplProductSearch(decodeState(searchState), pageableData));
 					}
 				});
 	}
@@ -119,17 +119,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		try
 		{
 
-			return getThreadContextService().executeInContext(
-					new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-					{
-						@Override
-						public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-						{
-							return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-									.convert(getProductSearchService().searchAgain(decodeStateDropDown(searchState, brandCode, type),
-											pageableData));
-						}
-					});
+			return getThreadContextService()
+					.executeInContext(
+							new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+							{
+								@Override
+								public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+								{
+									return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+											.convert(
+													getProductSearchService().searchAgain(decodeStateDropDown(searchState, brandCode, type),
+															pageableData));
+								}
+							});
 
 
 		}
@@ -150,8 +152,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	 * @param type
 	 * @return SolrSearchQueryData
 	 */
-	protected final SolrSearchQueryData decodeStateDropDown(final SearchStateData searchState, final String code,
-			final String type)
+	protected final SolrSearchQueryData decodeStateDropDown(final SearchStateData searchState, final String code, final String type)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
@@ -195,17 +196,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	{
 
 		Assert.notNull(searchState, MarketplacecommerceservicesConstants.SEARCH_STATE_DATA_MSG);
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService()
-										.searchAgain(decodeStateConceirge(searchState, categoryCode, age, reasonOrEvent), pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(
+														decodeStateConceirge(searchState, categoryCode, age, reasonOrEvent), pageableData));
+							}
+						});
 
 
 
@@ -273,7 +276,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.solrfacet.search.MplProductSearchFacade#mplProductSearch(de.hybris.platform.commercefacades.search.
 	 * data.SearchStateData, de.hybris.platform.commerceservices.search.pagedata.PageableData, java.lang.String)
@@ -290,8 +293,8 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 					@Override
 					public ProductSearchPageData<SearchStateData, ITEM> execute()
 					{
-						return (ProductSearchPageData<SearchStateData, ITEM>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(decodeState(searchState, categoryCode), pageableData));
+						return (ProductSearchPageData<SearchStateData, ITEM>) getProductCategorySearchPageConverter().convert(
+								getProductSearchService().searchAgain(decodeState(searchState, categoryCode), pageableData));
 					}
 				});
 	}
@@ -312,17 +315,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			final String type, final PageableData pageableData)
 	{
 		// YTODO Auto-generated method stub
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(decodeSellerStateDropDown(searchState, sellerId),
-										pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(decodeSellerStateDropDown(searchState, sellerId),
+														pageableData));
+							}
+						});
 	}
 
 
@@ -347,7 +352,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 
 			searchQueryData.setSellerID(sellerId);
-			//	searchQueryData.setSns(searchState.isSns());
+			searchQueryData.setSns(searchState.isSns());
 		}
 
 
@@ -368,17 +373,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			final PageableData pageableData, final String categoryCode, final String channel)
 	{
 		// YTODO Auto-generated method stub
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService()
-										.searchAgain(decodeOfferStateDropDown(searchState, offerId, categoryCode, channel), pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(
+														decodeOfferStateDropDown(searchState, offerId, categoryCode, channel), pageableData));
+							}
+						});
 	}
 
 
@@ -489,17 +496,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	{
 		Assert.notNull(searchState, MarketplacecommerceservicesConstants.SEARCH_STATE_DATA_MSG);
 
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(decodeSellerState(searchState, categoryCode, sellerId),
-										pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(decodeSellerState(searchState, categoryCode, sellerId),
+														pageableData));
+							}
+						});
 	}
 
 
@@ -522,17 +531,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	{
 
 		Assert.notNull(searchState, MarketplacecommerceservicesConstants.SEARCH_STATE_DATA_MSG);
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(decodeStateCollection(searchState, collectionId),
-										pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(decodeStateCollection(searchState, collectionId),
+														pageableData));
+							}
+						});
 
 	}
 
@@ -544,17 +555,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	{
 
 		Assert.notNull(searchState, MarketplacecommerceservicesConstants.SEARCH_STATE_DATA_MSG);
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService()
-										.searchAgain(decodeStateConceirge(searchState, categoryCode, age, reasonOrEvent), pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(
+														decodeStateConceirge(searchState, categoryCode, age, reasonOrEvent), pageableData));
+							}
+						});
 
 	}
 
@@ -586,17 +599,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			final PageableData pageableData)
 	{
 		// YTODO Auto-generated method stub
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(decodeSellerListingStateDropDown(searchState, sellerId),
-										pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(
+														decodeSellerListingStateDropDown(searchState, sellerId), pageableData));
+							}
+						});
 	}
 
 
@@ -630,17 +645,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			final PageableData pageableData, final String categoryCode)
 	{
 		// YTODO Auto-generated method stub
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService()
-										.searchAgain(decodeOfferListingStateDropDown(searchState, offerId, categoryCode), pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(
+														decodeOfferListingStateDropDown(searchState, offerId, categoryCode), pageableData));
+							}
+						});
 	}
 
 	/**
@@ -677,17 +694,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		try
 		{
 
-			return getThreadContextService().executeInContext(
-					new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-					{
-						@Override
-						public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-						{
-							return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-									.convert(getProductSearchService().searchAgain(decodeSearchCategoryState(searchState, categoryCode),
-											pageableData));
-						}
-					});
+			return getThreadContextService()
+					.executeInContext(
+							new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+							{
+								@Override
+								public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+								{
+									return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+											.convert(
+													getProductSearchService().searchAgain(
+															decodeSearchCategoryState(searchState, categoryCode), pageableData));
+								}
+							});
 
 
 		}
@@ -778,16 +797,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		Assert.notNull(searchState, "SearchStateData must not be null.");
 		try
 		{
-			return getThreadContextService().executeInContext(
-					new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-					{
-						@Override
-						public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-						{
-							return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-									.convert(getProductSearchService().searchAgain(decodeState(searchState, categoryCode), pageableData));
-						}
-					});
+			return getThreadContextService()
+					.executeInContext(
+							new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+							{
+								@Override
+								public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+								{
+									return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+											.convert(
+													getProductSearchService()
+															.searchAgain(decodeState(searchState, categoryCode), pageableData));
+								}
+							});
 
 		}
 		catch (final NullPointerException e)
@@ -808,17 +830,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			final PageableData pageableData)
 	{
 		// YTODO Auto-generated method stub
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(decodeCouponStateDropDown(searchState, couponId),
-										pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(decodeCouponStateDropDown(searchState, couponId),
+														pageableData));
+							}
+						});
 	}
 
 
@@ -841,17 +865,19 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			final PageableData pageableData)
 	{
 		// YTODO Auto-generated method stub
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(decodeCouponListingStateDropDown(searchState, couponId),
-										pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(
+														decodeCouponListingStateDropDown(searchState, couponId), pageableData));
+							}
+						});
 	}
 
 
@@ -875,16 +901,18 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			final SearchStateData searchState, final PageableData pageableData)
 	{
 		// YTODO Auto-generated method stub
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(mplOnlineAndNewProductFind(searchState), pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(
+												getProductSearchService().searchAgain(mplOnlineAndNewProductFind(searchState), pageableData));
+							}
+						});
 	}
 
 	/**
@@ -915,16 +943,17 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> searchAllOffers(final SearchStateData searchState,
 			final PageableData pageableData)
 	{
-		return getThreadContextService().executeInContext(
-				new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
-				{
-					@Override
-					public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
-					{
-						return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
-								.convert(getProductSearchService().searchAgain(decodeSearchAllOffers(searchState), pageableData));
-					}
-				});
+		return getThreadContextService()
+				.executeInContext(
+						new ThreadContextService.Executor<ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>, ThreadContextService.Nothing>()
+						{
+							@Override
+							public ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData> execute()
+							{
+								return (ProductCategorySearchPageData<SearchStateData, ITEM, CategoryData>) getProductCategorySearchPageConverter()
+										.convert(getProductSearchService().searchAgain(decodeSearchAllOffers(searchState), pageableData));
+							}
+						});
 	}
 
 	protected SolrSearchQueryData decodeSearchAllOffers(final SearchStateData searchState)

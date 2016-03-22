@@ -474,7 +474,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INR = "INR";
 	public static final String HD = "HD";
 	public static final String ED = "ED";
-	public static final String CnC = "CNC";	//Changed after SAP code merging
+	public static final String CnC = "CNC"; //Changed after SAP code merging
 	public static final String CC = "CC";
 
 	public static final String X = "X";
@@ -830,6 +830,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9507 = "B9507";
 	public static final String B9508 = "B9508";
 	public static final String B9509 = "B9509";
+	public static final String B9510 = "B9510";
+	public static final String B9511 = "B9511";
+	public static final String B9512 = "B9512";
+	public static final String B9513 = "B9513";
 
 	//Mobile web service error codes ends
 
