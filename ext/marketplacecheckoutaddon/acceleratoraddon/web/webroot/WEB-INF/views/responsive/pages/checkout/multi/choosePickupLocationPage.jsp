@@ -40,12 +40,13 @@
 					 	
 					 	.radio_btn {
 							display: block !important;;
-						    height: 15px;
-						    width: 15px;
+						    height: 15px !important;
+						    width: 15px !important;
 						    cursor: pointer;
 						   	float: left;
+						   	border-radius: 50% !important;
+							padding: 0px !important;
 						    margin-left: -38px !important;
-						    border-radius: 10px;
 						}
 						
 						.radio_btn2 {
@@ -190,7 +191,16 @@
 						  	padding-left: 5px;
 							overflow-x: hidden;
 							overflow-y: scroll;
-						  }					 	
+						  }
+						  
+						  .continue_holder {
+						  	width: 250px !important;
+						  }
+						  
+						  .collectionDays {
+						  	display: none !important;
+						  }
+						  					 	
 					</style>
 					<script>
 					//TISST-13010
@@ -251,6 +261,10 @@
 	        }
 	    }
 		
+		function checkMobileNumberSpace(number) {			
+			return /\s/g.test(number);
+		}
+		
 	    function checkWhiteSpace(text) {
 	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
 	        var number = new RegExp(/\d/g);
@@ -294,49 +308,26 @@
 	    }
 	
 		$(document).ready(function(){
+			if($(document).width() <= "1300") {
+				$(".right-block").css("width", "324px");
+				var mapWidth = $(".header4").width();
+				mapWidth = parseInt(mapWidth)+10;
+				$(".mapWidth").css("width", mapWidth+"px")
+				
+			}
 			$(".pickUpPersonAjax").hide();
 			$(".pickupPersonSubmitError").hide();
 			
 			$("#pickupPersonSubmit").hide();
 			$("#pickupPersonName").keyup(function(){
-				var pickupPersonName = $("#pickupPersonName").val();
-				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
-				var statusName = allLetter(pickUpPersonNam);
-				if(statusName == false) {
-					$(".pickupPersonNameError").show();
-					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
-				}
-				else {
-					$(".pickupPersonNameError").hide();
-				}
-			});
-			$("#pickupPersonMobile").keyup(function(){
-				var pickupPersonMobile = $("#pickupPersonMobile").val();
-				var isString = isNaN($('#pickupPersonMobile').val());
-				if(isString==true) {
-						$(".pickupPersonMobileError").show();
-						$(".pickupPersonMobileError").text("Enter only numbers");
-					}
-				else if($('#pickupPersonMobile').val().length >= "11") {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
-				} else {
-					$(".pickupPersonMobileError").hide();
-				}
-			});
-			$("#savePickupPersondDetails").click(function(){
 				$(".pickupPersonSubmitError").hide();
 				$(".pickUpPersonAjax").hide();
 				//alert("hello")
 				$(".pickupPersonMobileError").hide();
 				$(".pickupPersonNameError").hide();
 				$(".pickupDetails").hide();
-				
-				console.log("Working");
 				var pickupPersonName = $("#pickupPersonName").val();
-				
 				var pickupPersonMobile = $("#pickupPersonMobile").val();
-				var isString = isNaN($('#pickupPersonMobile').val());
 				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
 				var statusName = allLetter(pickUpPersonNam);
 				var nameCheck = checkWhiteSpace($("#pickupPersonName").val());
@@ -352,44 +343,116 @@
 					$(".pickupPersonNameError").show();
 					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
 				}
-				else if($('#pickupPersonMobile').val().length <= "9") {
-					if(isString==true) {
+			});
+			$("#pickupPersonMobile").keyup(function(){
+				$(".pickupPersonSubmitError").hide();
+				$(".pickUpPersonAjax").hide();
+				//alert("hello")
+				$(".pickupPersonMobileError").hide();
+				$(".pickupPersonNameError").hide();
+				$(".pickupDetails").hide();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				var mobileSpaceCheck = checkMobileNumberSpace($('#pickupPersonMobile').val());
+				if($('#pickupPersonMobile').val().length <= "10") {
+					if(isString==true || mobileSpaceCheck==true) {
 						$(".pickupPersonMobileError").show();
 						$(".pickupPersonMobileError").text("Enter only numbers");
 					}
-					else {
+					else if ($('#pickupPersonMobile').val().length <= "9") {
 						$(".pickupPersonMobileError").show();
 						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
 					}
+					else if($('#pickupPersonMobile').val().indexOf("-") > -1 || $('#pickupPersonMobile').val().indexOf("+") > -1 ) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
 				}
-				else if($('#pickupPersonMobile').val().length > "10") {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+			});
+			
+			function submitPickupPersionDetails() {
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPickupPersonDetails";
+				var dataString = 'pickupPersonName=' + pickupPersonName+ '&pickupPersonMobile=' + pickupPersonMobile;
+					$.ajax({
+					url : requiredUrl,
+					data : dataString,
+					success : function(data) {
+						//console.log("success call for pickup person details"+data);
+						$("#pickupPersonSubmit").text("1");
+						$(".pickUpPersonAjax").fadeIn(100);
+						$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
+
+					},
+					error : function(xhr, status, error) {
+						console.log(error);	
+					}
+				});
+			}
+			
+			function submitPickupPersonDetailsOnLoad() {
+				if($("#pickupPersonName").val().length >= "1" && $("#pickupPersonMobile").val().length >= "1") {
+					submitPickupPersionDetails();
 				}
-				else if(isString==true) {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only numbers");
-				}
-				else {
-					var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPickupPersonDetails";
-					var dataString = 'pickupPersonName=' + pickupPersonName+ '&pickupPersonMobile=' + pickupPersonMobile;
-						$.ajax({
-						url : requiredUrl,
-						data : dataString,
-						success : function(data) {
-							//console.log("success call for pickup person details"+data);
-							$("#pickupPersonSubmit").text("1");
-							$(".pickUpPersonAjax").fadeIn(100);
-							$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
-	
-						},
-						error : function(xhr, status, error) {
-							console.log(error);	
-						}
-					});
-				}
-					
+			}
+			
+			setTimeout(submitPickupPersonDetailsOnLoad(), 2000);
+			
+			$("#savePickupPersondDetails").click(function(){
+				$(".pickupPersonSubmitError").hide();
+				$(".pickUpPersonAjax").hide();
+				//alert("hello")
+				$(".pickupPersonMobileError").hide();
+				$(".pickupPersonNameError").hide();
+				$(".pickupDetails").hide();
 				
+				console.log("Working");
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
+				var statusName = allLetter(pickUpPersonNam);
+				var nameCheck = checkWhiteSpace($("#pickupPersonName").val());
+				var mobileSpaceCheck = checkMobileNumberSpace($('#pickupPersonMobile').val());
+				if($('#pickupPersonName').val().length <= "3"){ 
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
+				}
+				else if(nameCheck == false){
+					   $(".pickupPersonNameError").show();
+					   $(".pickupPersonNameError").text("Spaces cannot be allowed");
+				 }
+				else if(statusName == false) {
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
+				}
+				else if($('#pickupPersonMobile').val().length <= "10") {
+					if(isString==true || mobileSpaceCheck==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+					else if ($('#pickupPersonMobile').val().length <= "9") {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
+					}
+					else if($('#pickupPersonMobile').val().indexOf("-") > -1 || $('#pickupPersonMobile').val().indexOf("+") > -1 ) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+				
+					/* else if($('#pickupPersonMobile').val().length > "10") {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+					} */
+					/* else if(isString==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					} */
+					else {
+						submitPickupPersionDetails();
+					}
+				}
 			});
 			
 			$(".pickupDetails").hide();
@@ -507,7 +570,8 @@
 								});
 							</script>
 						</li>
-							<!-- Freebie Product Details -->
+						
+						<!-- Freebie Product Details -->
 							
 								 <c:if test="${not empty poses.product.freebieProducts}">
 									<c:forEach items="${poses.product.freebieProducts}" var="freebieProds">
@@ -544,6 +608,7 @@
 								</c:forEach>
 							</c:if>
 							<!-- /. Freebie Product Details -->
+							
 							<li class="item delivery_options item${status1.index}">
 								<ul>
 										<li>
@@ -622,17 +687,46 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}" style="text-transform: lowercase" >STORE TIMINGS
-																<br/>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
+																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM</span>
 																	</c:if>
-																</span>
+																
+																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
+																<span class="weeklyOff${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize;"></span>
 																
 																
 										</li>
 										<script>
 											$(document).ready(function() {
+												var	collectionDays${status1.index}${status.index} = $(".collectionDays${status1.index}${status.index}").text().split(",");
+												//var	collectionDays${status1.index}${status.index} = ["0","1","2","3","4","5","6"];
+												var weekDays = ["0","1","2","3","4","5","6"];
+												var collectionWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+												    missing${status1.index}${status.index} = new Array();
+												var count = 0;
+												var i = 0,
+												    lenC = weekDays.length;
+
+												for ( ; i < lenC; i++ ) {
+												    if ( collectionDays${status1.index}${status.index}.indexOf(weekDays[i]) == -1 ) {
+													 	missing${status1.index}${status.index}[count] = weekDays[i]; count++; 
+													}
+												}
+												//console.log(missing${status1.index}${status.index});
+												if(missing${status1.index}${status.index}.length < 1) {
+													$(".weeklyOff${status1.index}${status.index}").text("Weekly Off : All Days Open");
+												}
+												else {
+													$(".weeklyOff${status1.index}${status.index}").text("Weekly Off : ");
+													for(var y = 0; y < missing${status1.index}${status.index}.length; y++) {
+														$(".weeklyOff${status1.index}${status.index}").append(collectionWeek[missing${status1.index}${status.index}[y]]);
+														if(y != missing${status1.index}${status.index}.length-1) {
+															$(".weeklyOff${status1.index}${status.index}").append(", ");
+														}
+													}
+												}
 												$(".select_store").hide();
 												var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
 												$(".continue_btn").click(function(e){
@@ -675,7 +769,7 @@
 								</li>
 							
 							<li>
-													<ul id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
+													<ul class="mapWidth" id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
 													<ul id="maphide${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
@@ -722,36 +816,22 @@
 							    
 							    //console.log(iconURLPrefix${status1.index});
 							    
-							    
-							    var icons = [
-														      iconURLPrefix${status1.index} + 'markergrey1.png',
-														      iconURLPrefix${status1.index} + 'markergrey2.png',
-														      iconURLPrefix${status1.index} + 'markergrey3.png',
-														      iconURLPrefix${status1.index} + 'markergrey4.png',
-														      iconURLPrefix${status1.index} + 'markergrey5.png',
-														      iconURLPrefix${status1.index} + 'markergrey6.png'
-														    ]
-							    
-							    var icons${status1.index} = [
-							      iconURLPrefix${status1.index} + 'markergrey1.png',
-							      iconURLPrefix${status1.index} + 'markergrey2.png',
-							      iconURLPrefix${status1.index} + 'markergrey3.png',
-							      iconURLPrefix${status1.index} + 'markergrey4.png',
-							      iconURLPrefix${status1.index} + 'markergrey5.png',
-							      iconURLPrefix${status1.index} + 'markergrey6.png'
-							    ]
+							    var icons = new Array();
+							    for(var i=1;i<=25;i++) {
+						    		icons[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+								}
+							    var icons${status1.index} = new Array();
+							    for(var i=1;i<=25;i++) {
+						    		icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+							    }
+ 
 							    var iconsLength = icons${status1.index}.length;
 							    
 							    $(".radio_btn${status1.index}").click(function(){
 							    	var number = $(this).val();
-							    	icons${status1.index} = [
-														      iconURLPrefix${status1.index} + 'markergrey1.png',
-														      iconURLPrefix${status1.index} + 'markergrey2.png',
-														      iconURLPrefix${status1.index} + 'markergrey3.png',
-														      iconURLPrefix${status1.index} + 'markergrey4.png',
-														      iconURLPrefix${status1.index} + 'markergrey5.png',
-														      iconURLPrefix${status1.index} + 'markergrey6.png'
-														    ]
+							    	for(var i=1;i<=25;i++) {
+							    		icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+								    }
 							    	number = number.replace("address","");
 							    	//number++;
 							    	var myCounter = "1";
@@ -781,7 +861,7 @@
 									    	  contentType : "application/json; charset=utf-8",
 									          data : dataString${status1.index},   
 									          success : function(data) {
-									        	 //console.log(data);
+									        	 console.log(data);
 										          var response${status1.index} = JSON.stringify(data);
 										          var jsonObject${status1.index} = JSON.parse(response${status1.index});
 										          $("#changeValue${status1.index}").text(pinvalue${status1.index});
@@ -790,7 +870,10 @@
 										          if(jsonObject${status1.index}.length != "0") {
 										        	  $("input[name='address${status1.index}']").prop('checked', false);
 										        	  $(".removeColor${status1.index} .radio_color").removeClass("colorChange");
-										        	  icons${status1.index} = icons;
+										        	  //icons${status1.index} = icons;
+										        	  for(var i=1;i<=25;i++) {
+												    	icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+												      }
 										        	  processMap${status1.index}();
 										        	  $(".delivered${status1.index}").show();
 										        	  $("#map${status1.index}").show();
@@ -818,7 +901,42 @@
 											        	  	$(".address4${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['postalCode']);
 											        	  } else {
 											        		  $(".address4${status1.index}"+i).text("");  
+											        	  }if(jsonObject${status1.index}[i]['mplClosingTime'] != null && jsonObject${status1.index}[i]['mplOpeningTime'] != null) {
+											        	  	$(".pickup${status1.index}"+i).text(jsonObject${status1.index}[i]['mplOpeningTime']+"AM - "+jsonObject${status1.index}[i]['mplClosingTime']+"PM");
+											        	  } else {
+											        		  $(".pickup${status1.index}"+i).text("");  
 											        	  }
+											        	  
+											        	  //console.log(jsonObject${status1.index}[i]['mplWorkingDays']);
+											        	  var	collectionDays${status1.index} = jsonObject${status1.index}[i]['mplWorkingDays'].split(",");
+															//var	collectionDays${status1.index}${status.index} = ["0","1","2","3","4","5","6"];
+															var weekDays = ["0","1","2","3","4","5","6"];
+															var collectionWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+															    missing${status1.index} = new Array();
+															var count = 0;
+															var k = 0,
+															    lenC = weekDays.length;
+
+															for ( ; k < lenC; k++ ) {
+															    if ( collectionDays${status1.index}.indexOf(weekDays[k]) == -1 ) {
+																 	missing${status1.index}[count] = weekDays[k]; count++; 
+																}
+															}
+															$(".weeklyOff${status1.index}"+i).text("Changed");
+															if(missing${status1.index}.length < 1) {
+																$(".weeklyOff${status1.index}"+i).text("Weekly Off : All Days Open");
+															}
+															else {
+																/* console.log("Working"); */
+																$(".weeklyOff${status1.index}"+i).text("Weekly Off : ");
+																for(var y = 0; y < missing${status1.index}.length; y++) {
+																	$(".weeklyOff${status1.index}"+i).append(collectionWeek[missing${status1.index}[y]]);
+																	if(y != missing${status1.index}.length-1) {
+																		$(".weeklyOff${status1.index}"+i).append(", ");
+																	}
+																}
+															} 
+											        	  
 											        	/*   console.log(jsonObject${status1.index}[i]['name']);
 											        	  console.log(jsonObject${status1.index}[i]['address']['line1']);
 											        	  console.log(jsonObject${status1.index}[i]['geoPoint']['latitude']);
@@ -832,14 +950,7 @@
 											          	}
 											          $(".latlng${status1.index}").text(changecordinates${status1.index});
 											          processMap${status1.index}();
-											          $('.scrollThis').each(function(){
-															if($(this).find("li").length <= '2'){
-																$(this).css({"overflow-y" : "hidden"});	
-															}
-															else {
-																$(this).css({"overflow-y" : "scroll"});
-															}
-														});
+											          
 										        	} else {
 										        		$(".pincodeServicable${status1.index}").show();
 										        		$(".delivered${status1.index}").hide();
@@ -897,13 +1008,7 @@
 
 							      markers.push(marker);
 
-							      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-							        return function() {
-							          infowindow.setContent(loc${status1.index}[i][0]);
-							          infowindow.open(map, marker);
-							          
-							        }
-							      })(marker, i));
+							      
 							      
 							      iconCounter++;
 							      // We only have a limited number of possible icon colors, so we may have to restart the counter
@@ -971,7 +1076,7 @@
 		</div>
 		</div>
 		
-		<div class="right-block shipping" style="margin-top: 74px;">
+		<div class="right-block shipping" style="margin-top: 80px;">
 				<div class="checkout-order-summary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
@@ -1001,14 +1106,6 @@
 		</div>
 		<script>
 			$(document).ready(function(){
-				$('.scrollThis').each(function(){
-					if($(this).find("li").length <= '2'){
-						$(this).css({"overflow-y" : "hidden"});	
-					}
-					else {
-						$(this).css({"overflow-y" : "scroll"});
-					}
-				});
 				var productUrlNew = $(".productUrlName").attr("href");
 				var latestProductUrl = ACC.config.encodedContextPath + productUrlNew;
 				$(".productUrlName").attr("href", latestProductUrl);
