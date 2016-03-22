@@ -18,25 +18,28 @@
 						<c:set scope="page"  var="activeCheckoutStepNumber"  value="${checkoutStep.stepNumber}"/>
 						<li class="sign-in active">
 						<span>${checkoutStep.stepNumber}</span>
-						<a href="${stepUrl}" class="step-head js-checkout-step active">
+						<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
+						<%-- <a href="${stepUrl}" class="step-head js-checkout-step active">
 							<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
-						</a>
+						</a> --%>
 						</li>
 					</c:when>
 					<c:when test="${checkoutStep.stepNumber > activeCheckoutStepNumber}">
 					<li class="delivery">
 					<span>${checkoutStep.stepNumber}</span>
-						<a href="${stepUrl}" class="step-head js-checkout-step ">
+					<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
+						<%-- <a href="${stepUrl}" class="step-head js-checkout-step ">
 							<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
-						</a>
+						</a> --%>
 						</li>
 					</c:when>
 					<c:otherwise>
 					<li class="payments step-done">
 					<span>${checkoutStep.stepNumber}</span>
-						<a href="${stepUrl}" class="step-head js-checkout-step ">
+					<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
+						<%-- <a href="${stepUrl}" class="step-head js-checkout-step ">
 							<spring:theme code="checkout.multi.${checkoutStep.progressBarId}"/>
-						</a>
+						</a> --%>
 						</li>
 					</c:otherwise>
 				</c:choose>
