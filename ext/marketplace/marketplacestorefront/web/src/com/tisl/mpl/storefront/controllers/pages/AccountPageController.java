@@ -1447,7 +1447,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_SUBMIT, method = RequestMethod.POST)
 	public String returnPincodeAvailability(final ReturnPincodeCheckForm returnAddress, final Model model,
-			final BindingResult bindingResult, final HttpServletRequest request) throws CMSItemNotFoundException
+			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		final String errorMsg = returnItemFormValidator.returnValidate(returnAddress);
 		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -1807,6 +1807,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String transactionId = returnRequestForm.getTransactionId();
 
 			final ReturnItemAddressData returnAddrData = (ReturnItemAddressData) session.getAttribute(RETURN_ADDRESS);
+			final String pinCode=returnAddrData.getPincode();
 			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 			for (final OrderEntryData entry : subOrderEntries)
 			{
@@ -1870,7 +1871,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
-					.checkReturnLogistics(subOrderDetails);
+					.checkReturnLogistics(subOrderDetails,pinCode);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
