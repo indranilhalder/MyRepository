@@ -486,18 +486,11 @@ public class MarketplacewebservicesConstants
 	public static final String USE_GIGYA = "gigya.use".intern();
 	public static final String NO = "N";
 	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
-<<<<<<< HEAD
-=======
-
->>>>>>> BRANCH_TCS-HYCOMM-R2_2SPRINT-111_22-03-2016_20-17-00
 	//Coupon Exception Message
 	public static final String EXCPRICEEXCEEDED = "total price exceeded".intern();
 	public static final String EXCINVALID = "Voucher not found".intern();
 	public static final String EXCEXPIRED = "Voucher cannot be redeemed".intern();
-<<<<<<< HEAD
 
-=======
->>>>>>> BRANCH_TCS-HYCOMM-R2_2SPRINT-111_22-03-2016_20-17-00
 	public static final String EXCISSUE = "Error while".intern();
 	public static final String EXCNOTAPPLICABLE = "Voucher is not applicable".intern();
 	public static final String EXCNOTRESERVABLE = "Voucher is not reservable".intern();
@@ -505,14 +498,9 @@ public class MarketplacewebservicesConstants
 	public static final String EXCUSERINVALID = "User not valid".intern();
 
 	public static final String COUPONRELISSUE = "Issue with voucher release ".intern();
-<<<<<<< HEAD
 	
 	public static final String SLV_TYPE_STORE = "SLV_TYPE_STORE";
 	public static final String SLV_TYPE_WAREHOUSE = "SLV_TYPE_WAREHOUSE";
 	public static final String INACTIVE = "N";
 	public static final String ACTIVE = "Y";
-=======
-
->>>>>>> BRANCH_TCS-HYCOMM-R2_2SPRINT-111_22-03-2016_20-17-00
 }
-
