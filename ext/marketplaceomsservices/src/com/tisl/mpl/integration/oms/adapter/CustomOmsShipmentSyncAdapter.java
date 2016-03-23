@@ -623,7 +623,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 			final OrderModel orderModel)
 	{
 		if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) || ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN
-				.equals(newStatus)) && CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+				.equals(newStatus)) || (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 		{
 			try
 			{
@@ -649,6 +649,11 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 					{
 						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
 					}
+					//CM 1: Added as part of R2.1 to handle new order status 'RETURNINITIATED_BY_RTO'
+					else if (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
+					{
+						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
+					} //CM 1 end
 					else
 					{
 						refundEntryModel.setReason(RefundReason.SITEERROR);
