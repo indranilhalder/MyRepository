@@ -416,11 +416,13 @@
 															<c:set var="storeId" value="${pos.id}" />
 															
 											    <c:set value="${subOrder.entries}" var="parentRefEntries" />
+											    <c:set value="0" var="cncQuantity" />
 	                                            <c:forEach items="${subOrder.entries}" var="parentRefEntry">
 		                                           <c:if	test="${parentRefEntry.deliveryPointOfService.address.id eq pos.id}">
-		                                                 <h3>${parentRefEntry.quantity} Product(s)-Collect</h3>
-		                                          </c:if>
+		                                                  <c:set value="${cncQuantity+parentRefEntry.quantity}" var="cncQuantity" />     
+		                                           </c:if>
 	                                            </c:forEach> 
+	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
 															<br>

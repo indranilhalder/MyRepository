@@ -187,9 +187,9 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 
 					List<String> nonChangableOrdeStatus = Arrays.asList(
 							OrderStatus.PAYMENT_FAILED.getCode(),
-							OrderStatus.RETURNINITIATED_BY_RTO.getCode());
-					OrderStatus.REFUND_INITIATED.getCode();
-					OrderStatus.RETURN_INITIATED.getCode();
+							OrderStatus.RETURNINITIATED_BY_RTO.getCode(),
+					OrderStatus.REFUND_INITIATED.getCode(),
+					OrderStatus.RETURN_INITIATED.getCode());
 					List<String> nonChangableOrdeStatusList = Arrays.asList(
 							ConsignmentStatus.CANCELLATION_INITIATED.getCode(),
 							ConsignmentStatus.CANCELLED.getCode(),

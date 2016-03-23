@@ -66,7 +66,7 @@
 						
 						.continue_btn {
 							border: none;
-						    background-color: #00cbe9;
+						    background-color: #A9143C;
 						    color: #fff;
 						    clear: both;
 						    line-height: 30px;
@@ -82,7 +82,7 @@
 						}
 						
 						.continue_btn:hover {
-							 background: #009fb6 !important;
+							 background: #88102C !important;
 							 text-decoration: none;
 							 cursor: pointer;
 							 color: #fff !important;
@@ -527,13 +527,13 @@
 								<li class="store header5"><spring:theme code="checkout.multi.cnc.store.closeto"/>
 								
 								<c:if test="${not empty defaultPincode}">
-									<span style="color: #00cbe9!important;" id="changeValue${status1.index}">
+									<span style="color: #A9143C!important;" id="changeValue${status1.index}">
 										${defaultPincode}
 									</span>	
 								</c:if>
 								</li>
 								<li class="delivery header4"><a 
-														onclick="history.go(-1);" style="color: #00cbe9 !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
+														onclick="history.go(-1);" style="color: #A9143C !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
