@@ -69,8 +69,12 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -81,6 +85,7 @@ import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -118,6 +123,7 @@ import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exceptions.InvalidPaymentInfoException;
@@ -128,6 +134,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
@@ -146,11 +153,13 @@ import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.voucher.data.VoucherDataList;
+import com.tisl.mpl.wsdto.ApplyCouponsDTO;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.MplCartPinCodeResponseWsDTO;
+import com.tisl.mpl.wsdto.ReleaseCouponsDTO;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 import com.tisl.mpl.wsdto.ValidateOtpWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
@@ -236,6 +245,13 @@ public class CartsController extends BaseCommerceController
 	private WishlistFacade wishlistFacade;
 
 	private static final String APPLICATION_TYPE = "application/json";
+
+
+	@Autowired
+	private MplCouponWebFacade mplCouponWebFacade;
+
+	@Autowired
+	private MplCouponFacade mplCouponFacade;
 
 	/**
 	 * @return the calculationStrategy
@@ -3489,6 +3505,157 @@ public class CartsController extends BaseCommerceController
 		}
 
 		return validateOtpWsDto;
+	}
+
+	/**
+	 * @description apply the Coupon at payment page and get discount
+	 * @param cartId
+	 * @param couponCode
+	 * @return ApplyCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 * @throws NumberFormatException
+	 * @throws JaloInvalidParameterException
+	 * @throws VoucherOperationException
+	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{cartId}/applyCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ApplyCouponsDTO applyCoupons(@PathVariable final String cartId, @RequestParam final String couponCode)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
+	{
+		ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
+		CartModel cartModel = null;
+		try
+		{
+			cartModel = mplPaymentWebFacade.findCartValues(cartId);
+			if (cartModel == null)
+			{
+				LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+			}
+			else
+			{
+				cartModel.setChannel(SalesApplication.MOBILE);
+				getModelService().save(cartModel);
+				applycouponDto = mplCouponWebFacade.applyVoucher(couponCode, cartModel);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				applycouponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				applycouponDto.setErrorCode(e.getErrorCode());
+			}
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			if (null != cartModel)
+			{
+				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				applycouponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				applycouponDto.setErrorCode(e.getErrorCode());
+			}
+			applycouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			if (null != cartModel)
+			{
+				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+			}
+		}
+		return applycouponDto;
+	}
+
+	/**
+	 * @description release the Coupon for the particular user
+	 * @param cartId
+	 * @param couponCode
+	 * @return ReleaseCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 * @throws NumberFormatException
+	 * @throws JaloInvalidParameterException
+	 * @throws VoucherOperationException
+	 * @throws CalculationException
+	 * @throws JaloSecurityException
+	 * @throws JaloPriceFactoryException
+	 * @throws CalculationException
+	 */
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{cartId}/releaseCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public ReleaseCouponsDTO releaseCoupons(@PathVariable final String cartId, @RequestParam final String couponCode)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, CalculationException
+	{
+		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
+		CartModel cartModel = null;
+		try
+		{
+			cartModel = mplPaymentWebFacade.findCartValues(cartId);
+			if (cartModel == null)
+			{
+				LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+			}
+			else
+			{
+				cartModel.setChannel(SalesApplication.MOBILE);
+				getModelService().save(cartModel);
+				releaseCouponDto = mplCouponWebFacade.releaseVoucher(couponCode, cartModel);
+			}
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				releaseCouponDto.setError(e.getErrorMessage());
+			}
+			releaseCouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			if (null != cartModel)
+			{
+				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				releaseCouponDto.setError(e.getErrorMessage());
+			}
+			releaseCouponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			if (null != cartModel)
+			{
+				releaseCouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
+						.createPrice(cartModel, cartModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+			}
+		}
+		return releaseCouponDto;
 	}
 
 	/**
