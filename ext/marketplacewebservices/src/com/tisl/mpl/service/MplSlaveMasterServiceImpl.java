@@ -286,13 +286,8 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 								posModel.setReturnPin(slaveInfoDto.getReturnPin());
 							}
 						}
-						if (StringUtils.isNotEmpty(slaveInfoDto.getActive()))
-						{
-							if (!slaveInfoDto.getActive().equalsIgnoreCase(posModel.getActive()))
-							{
-								posModel.setReturnPin(slaveInfoDto.getActive());
-							}
-						}
+						posModel.setActive(MarketplacewebservicesConstants.ACTIVE);
+						
 						if (StringUtils.isNotEmpty(slaveInfoDto.getEmail0()))
 						{
 							if (!slaveInfoDto.getEmail0().equalsIgnoreCase(posModel.getEmail0()))
