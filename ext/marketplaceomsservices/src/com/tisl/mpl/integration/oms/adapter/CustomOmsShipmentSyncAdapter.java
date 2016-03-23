@@ -480,7 +480,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 				}
 			}
 			
-			if(shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED)){
+			if(consignmentModel.getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) && shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED)){
 				LOG.debug("Calling deliverd Initiation process started");
 				OrderData orderData =customOmsCancelAdapter.convertToData(orderModel);
 				customOmsCollectedAdapter.sendNotificationForOrderCollected(orderModel, orderData, consignmentModel);
