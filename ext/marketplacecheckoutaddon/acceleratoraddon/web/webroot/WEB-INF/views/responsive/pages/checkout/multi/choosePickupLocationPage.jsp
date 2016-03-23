@@ -200,6 +200,34 @@
 						  .collectionDays {
 						  	display: none !important;
 						  }
+						  
+						  .pickup {
+						  	    height: 160px !important;
+						  }
+						  
+						  .pickuppersonWidth {
+							  	width: 100% !important;
+								margin-bottom: 20px;
+								background-color: rgb(255, 255, 255);
+								border-radius: 4px;
+								box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+								height: 136px !important;
+								border: 1px solid rgb(240, 244, 245);
+						  }
+						  
+						  .panel-body {
+					  			margin-top: 14px;
+								height: 107px !important;
+								padding: 15px;
+								margin-bottom: 20px;
+						  }
+						  
+						  .text_in {
+								font-size: 10px !important;
+								margin-top: 2px !important;
+								margin-left: -2px !important;
+								text-align: center;
+							}
 						  					 	
 					</style>
 					<script>
@@ -690,7 +718,7 @@
 																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
 																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM</span>
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
 																	</c:if>
 																
 																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
@@ -902,7 +930,7 @@
 											        	  } else {
 											        		  $(".address4${status1.index}"+i).text("");  
 											        	  }if(jsonObject${status1.index}[i]['mplClosingTime'] != null && jsonObject${status1.index}[i]['mplOpeningTime'] != null) {
-											        	  	$(".pickup${status1.index}"+i).text(jsonObject${status1.index}[i]['mplOpeningTime']+"AM - "+jsonObject${status1.index}[i]['mplClosingTime']+"PM");
+											        	  	$(".pickup${status1.index}"+i).text(jsonObject${status1.index}[i]['mplOpeningTime']+" - "+jsonObject${status1.index}[i]['mplClosingTime']);
 											        	  } else {
 											        		  $(".pickup${status1.index}"+i).text("");  
 											        	  }
