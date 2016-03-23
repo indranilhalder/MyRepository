@@ -118,7 +118,7 @@ public class MarketplacewebservicesConstants
 	public static final String POS_NAME = "name".intern();
 	public static final String POS_SLAVEID = "slaveId".intern();
 
-	public static final String POS_QUERY_FOR_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId}=?slaveId and {pos.active}=?active"
+	public static final String POS_QUERY_FOR_SLAVE = "select {pos:pk} from {PointOfService As pos} where {pos.slaveId}=?slaveId"
 			.intern();
 
 	public static final String POS_QUERY_FOR_POSNAME = "select {pos:pk} from {PointOfService As pos} where {pos.name}=?name and {pos.active}=?active"
