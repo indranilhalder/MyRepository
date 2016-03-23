@@ -792,8 +792,25 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						{
 							for (String ussid : abstractCartEntry.getAssociatedItems())
 							{
-								final Long quant = freebieParentQtyMap.get(ussId);
-								freebieProductsWithQuant.put(ussid, quant);
+								//check for freebie entry in the cart
+								if (cartModel != null && cartModel.getEntries() != null)
+								{
+									for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+									{
+										if (cartEntryModel != null && cartEntryModel.getSelectedUSSID() != null && cartEntryModel.getGiveAway() != null 
+												&& cartEntryModel.getGiveAway().booleanValue())
+										{
+											
+											if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
+											{
+												LOG.info("Freebie Parent Product USSID" + abstractCartEntry.getSelectedUSSID());
+												LOG.info("Freebie Product USSID" + ussid);
+												final Long quant = freebieParentQtyMap.get(ussId);
+												freebieProductsWithQuant.put(ussid, quant);
+											}
+										}
+									}
+								}
 							}
 						}
 						int quan = abstractCartEntry.getQuantity().intValue();
