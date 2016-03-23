@@ -653,7 +653,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 					else if (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
 					{
 						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
-					} //CM 1 end
+					}
 					else
 					{
 						refundEntryModel.setReason(RefundReason.SITEERROR);

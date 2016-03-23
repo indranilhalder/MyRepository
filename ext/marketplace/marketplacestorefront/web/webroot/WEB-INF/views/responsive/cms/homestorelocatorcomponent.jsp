@@ -237,8 +237,9 @@ function HomeLegendsControl(controlDiv, map) {
 	    rewards on all your purchases across brands   online or in-store.
 	</span>
 	   
-	    <a href="${request.contextPath}/aboutus" class="r2-arrow">Learn more about our services</a>
+	   <a href="${request.contextPath}/aboutus" class="r2-arrow">Learn more about our services</a>
 		<a href="${request.contextPath}/store-finder" class="r2-arrow"> Find a Store</a>
+	 
 </div>
 
 
