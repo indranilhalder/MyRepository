@@ -56,7 +56,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String COD_CHARGES = "codCharge";
 
 
-
+	private static final String STORENAME = "storeName";
 	private static final String MOBILENUMBER = "mobilenumber";
 	private static final String NAMEOFPERSON = "nameofperson";
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
@@ -105,6 +105,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
 				final AddressModel storeAddr = model.getAddress();
 				storeAddrList.add(storeAddr);
+				put(STORENAME, model.getName());
 				put(CUSTOMER_NAME, CUSTOMER);
 
 			}

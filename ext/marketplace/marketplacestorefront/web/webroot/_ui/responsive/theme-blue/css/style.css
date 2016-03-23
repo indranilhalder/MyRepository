@@ -236,8 +236,8 @@ xpopup
 
 
 .savenewid{
-	background-color: #00cbe9!important;
-    border-color: #00cbe9!important;
+	background-color: #A9143C!important;
+    border-color: #A9143C!important;
     color: #fff!important;
 	width: 13em!important;
 	margin-left: 10px;
@@ -36882,6 +36882,7 @@ display:block;
     border-radius: 4px;
     border: 1px solid transparent;
     padding-bottom: 25px;
+    display: none;
 }
  
  .overLayStoreFinderText h1 {
@@ -36938,6 +36939,9 @@ display:block;
 	height: 94%
 } 
 
+.headline.findaStoreHeadLin {
+    padding-left: 10px;
+}
 .input-group-btn>.store-btn {
 	font-size: 12px;
     text-align: center;
