@@ -26,15 +26,12 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.helper.ProductDetailsHelper;
 
 
 /**
@@ -65,8 +62,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String NUMBERTOOL = "numberTool";
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
 
-	@Resource(name = "productDetailsHelper")
-	private ProductDetailsHelper productDetailsHelper;
+
 
 
 	@Override
@@ -80,10 +76,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				.getOrder().getConvenienceCharges().doubleValue();
 
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
-		//final Double inalTotapPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
-		//final String totalPrice = String.format("%,.2f", FinalTotapPrice);
 
-		//final PriceData totalPriceData = productDetailsHelper.formPriceData(totalPrice);
 
 
 		LOG.info(" *********************- totalPrice:" + " orderTotalPrice:" + orderTotalPrice + " convenienceCharges:"
