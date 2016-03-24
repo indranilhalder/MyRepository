@@ -6816,6 +6816,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 		neededStatus.add(OrderStatus.REFUND_IN_PROGRESS);
 		neededStatus.add(OrderStatus.CLOSED_ON_CANCELLATION);
 		neededStatus.add(OrderStatus.CANCELLING);
+		neededStatus.add(OrderStatus.CANCELLATION_INITIATED);
 		return neededStatus;
 	}
 }
