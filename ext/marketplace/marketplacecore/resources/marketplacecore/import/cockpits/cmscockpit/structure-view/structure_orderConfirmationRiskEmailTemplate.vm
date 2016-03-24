@@ -72,20 +72,37 @@
 					<cockpit code="fast" />
 				</td>
 			</tr>
+			
+			<tr>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="trackbtn" />
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Tip" />
+				</td>
+				
+			</tr>
+			
 			<tr>
 				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="OrderConfirmBannerTwo" />
+					<cockpit code="AppDownloadUrl" />
 				</td>
 			</tr>
 			<tr>
 				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="OrderConfirmsmileyimg" />
+					<cockpit code="smileyimg" />
 				</td>
 			</tr>
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
-					<cockpit code="OrderConfirmfb" />
-					<cockpit code="OrderConfirmgplus" />
+					<cockpit code="fb" />
+					<cockpit code="tweet" />
+					<cockpit code="youtube" />
+					<cockpit code="insta" />
 				</td>
 			</tr>
 		</tbody>
