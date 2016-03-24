@@ -13525,9 +13525,10 @@ div.get-in-touch ul li,
 .contact-us-header ul li img {
 	display: block;
 	float: left;
+	margin-right:15px;
+	margin-top:5px;
 }
 .contact-us-header ul li > div {
-	margin-top: 15px;
 	float: left;
 }
 .no-results ul li span,
