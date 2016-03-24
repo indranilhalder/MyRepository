@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.velocity.tools.generic.MathTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
@@ -52,6 +52,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String AWBNUMBER = "trackingId";
 	private static final String CARRIER = "carrier";
 	private static final String CUSTOMER = "Customer";
+	private static final String NUMBERTOOL = "numberTool";
 	private static final String COMMA = ",";
 
 
@@ -123,7 +124,8 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 
 
 		put(DELIVERYADDRESS, deliveryAddr);
-		put("math", new MathTool());
+
+		put(NUMBERTOOL, new NumberTool());
 
 		put(MOBILENUMBER, (null != deliveryAddress.getPhone1() ? deliveryAddress.getPhone1() : deliveryAddress.getCellphone()));
 

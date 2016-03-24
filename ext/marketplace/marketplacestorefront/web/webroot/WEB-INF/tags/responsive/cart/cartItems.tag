@@ -382,7 +382,7 @@ function addToWishlistFromCart() {
 		                <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
 		                <h3 class="product-name">
 		                <ycommerce:testId code="cart_product_name">
-											<a href="${productUrl}">${entry.product.name}</a>
+											<a href="${productUrl}">${entry.product.productTitle}</a>
 											<input type="hidden" name="productArrayForIA" value="${entry.product.code}"/>
 						</ycommerce:testId>
 			                </h3>
@@ -577,7 +577,18 @@ function addToWishlistFromCart() {
 											--%>
 										</c:when>
 										<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
-												<span><format:price priceData="${entry.totalPrice}"/></span>
+													<%-- TISPRO-215--%>
+												<c:choose>
+    											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc}">
+        												<del>
+															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
+		 												</del>
+    											</c:when>    
+    											<c:otherwise>
+       													<span><format:price priceData="${entry.totalPrice}"/></span>
+   												 </c:otherwise>
+												</c:choose>
+												<%-- TISPRO-215 ends --%>
 											</c:when>
 											<c:otherwise>
 												<c:choose>
