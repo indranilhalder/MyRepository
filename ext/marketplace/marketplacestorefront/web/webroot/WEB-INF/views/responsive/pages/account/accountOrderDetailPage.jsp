@@ -352,7 +352,7 @@
 									</c:if> --%>
 							</div>
 						</li>
-	                            <c:set var="editButton" value="enable" />
+	                            <c:set var="button" value="true" />
 								<c:set var="entryCount" value="0"></c:set>
 								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 									varStatus="status">
@@ -443,6 +443,7 @@
 									</c:if>
 									
 									<div class="item-fulfillment">
+									<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 										<p>
 											<spring:message code="mpl.myBag.fulfillment"></spring:message>
 											<!-- TISEE-6290 -->
@@ -461,6 +462,7 @@
 											</c:forEach>
 											<!-- TISEE-6290 -->
 										</p>
+									</c:if>
 										<p>
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
@@ -473,14 +475,28 @@
 														<%-- <div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div>  --%>
 														&nbsp; &nbsp;
 														<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+														<c:set var="editButton" value="enable" />  
+										                  <c:if test="${button ne false}">  
+											             	 <c:choose>
+												                <c:when test="${not empty entry.consignment.status}">
+												                   <c:set var="status">${entry.consignment.status}</c:set>
+												                   <c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
+														              <c:if test="${sellerOrderStatus eq status}">
+														                 <c:set var="editButton" value="disable" />
+														              </c:if>
+													              </c:forEach>
+												               </c:when> 
+												               <c:otherwise>
+                                                                 <c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
+														             <c:if test="${sellerOrderStatus eq sellerOrder.status}">
+														              <c:set var="editButton" value="disable" />
+														            </c:if>
+														         </c:forEach>
+                                                              </c:otherwise>
+											               </c:choose>
+										               </c:if>
 														
-														<c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
-														<c:if test="${sellerOrderStatus eq sellerOrder.status }">
-														     <c:set var="editButton" value="disable" />
-														</c:if>
-													   </c:forEach>
-														
-														<c:if test="${editButton eq 'enable'}">
+												<c:if test="${editButton eq 'enable' and button ne false}">
 														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
@@ -488,7 +504,7 @@
 														<!-- <a type="button" id="button" class="pickupeditbtn" 
 														style="width: 11px; padding-top: 7px; padding-left: -45px; font-weight: 100;margin-left: 15pc;">Edit
 													    </a> -->
-													   <c:set var="editButton" value="disable" />
+													  <c:set var="button" value="false" />
 													   <div class="container pickup_Edit"
 														style="margin-left: 181px; margin-top: -22px;">
 														

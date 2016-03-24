@@ -76,6 +76,8 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 	
 	/** The Constant NO_RESPONSE_FROM_SERVER. */
 	private static final String NO_RESPONSE_FROM_SERVER = "noResponseFromServer";
+	private static final String CAN_NOT_PLACE_CNC_ORDER = "CncOrderPlacingNotAllowed";
+	private static final String INFO = "info";
 
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger
@@ -249,8 +251,10 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 	   {
 	     BasketController basketController = ((CheckoutController)widget.getWidgetController()).getBasketController();
 	     boolean changed = false;
-	 
-	     if (initial)
+	    
+	   
+	     
+	       if (initial )
 	     {
 	    	 
 	    	 List<MplZoneDeliveryModeValueModel> deliveryModes = ((MarketplaceCheckoutController) widget
@@ -286,9 +290,26 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 	       {
 	         Listitem selectedItem = (Listitem)selectedItems.iterator().next();
 	         TypedObject selectedDeliveryMode = (TypedObject)selectedItem.getValue();
+	         
 	         if (selectedDeliveryMode != null)
 	         {
-	        	 
+	        	 try{
+	        	 MplZoneDeliveryModeValueModel selectedDeliveryModeValue=(MplZoneDeliveryModeValueModel)selectedDeliveryMode.getObject();
+	        	 if(selectedDeliveryModeValue.getDeliveryMode().getName().equalsIgnoreCase(MarketplaceCockpitsConstants.delNameMap
+							.get("CnC"))) {
+		        	 changed = ((CheckoutController)widget.getWidgetController()).getBasketController().setCartEntryDeliveryMode(item, null);
+		        	
+		        	 try {
+						Messagebox.show(LabelUtils.getLabel(widget,
+									CAN_NOT_PLACE_CNC_ORDER, new Object[0]), INFO,
+									Messagebox.OK, Messagebox.INFORMATION);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        	 
+		         }
+	        	 else { 
 	        	 try{ 
 	        		        		 
 	        		 ((MarketplaceCheckoutController)widget.getWidgetController()).validateWithOMS(item, selectedDeliveryMode);
@@ -307,12 +328,16 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 		        		    }
 	           //changed = ((CheckoutController)widget.getWidgetController()).getBasketController().setCartEntryDeliveryMode(item, selectedDeliveryMode);
 	         }
+	         }catch(Exception e) {
+	        	 LOG.debug("Exception "+e);
+	         }
+	         }
 	         else{
 	        	 changed = ((CheckoutController)widget.getWidgetController()).getBasketController().setCartEntryDeliveryMode(item, null);
 	         }
+	         }
 	       }
 	       
-	     }
 	     else if (event instanceof MouseEvent)
 
 	     {
@@ -514,11 +539,9 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 						Listitem deliveryModeItem = new Listitem(
 								sb.toString(),
 								getCockpitTypeService().wrapItem(deliveryEntry));
-						if(!deliveryEntry.getDeliveryMode().getName().equalsIgnoreCase(
-								MarketplaceCockpitsConstants.delNameMap
-								.get("CnC"))) {
+						
 						deliveryModeItem.setParent(deliveryModeDropdown);
-						}
+						
 						
 						if (deliveryModeModel !=null && ObjectUtils.nullSafeEquals(deliveryModeModel
 								.getDeliveryMode().getCode(), deliveryEntry

@@ -86,75 +86,72 @@
 				hideErrorMessage();
 				 //alert("coming"); 
 				 
-			if($("#firstName").val().length <= 3 || $("#lastName").val().length <= 2 || isNaN($("#mobileNo").val()) == true || $("#mobileNo").val().length < 10 || $("#addressLane1").val().length <= 4 || $("#addressLane2").val().length <= 4 || isNaN($("#pincode").val()) == true || $("#pincode").val().length < 5 ||$("#landmark").val().length <= 5 || $("#city").val().length <= 1 || $("#state").val().length <= 1 || $("#country").val().length <= 1) {	
-				e.preventDefault();
-					if ($("#firstName").val().length <= 3) {
-						$(".firstNameError").show();
-						$(".firstNameError").text("Enter Atleat 4 letters");
-					} 
-					
-					if ($("#lastName").val().length <= 2) {
-						$(".lastNameError").show();
-						$(".lastNameError").text("Enter Atleast 3 Letters ");
-					} 
-					
-					
-						
-					if (isNaN($("#mobileNo").val()) == true) {
-						$(".mobileNumberError").show();
-						$(".mobileNumberError").text("Enter only Numbers");
-					} else if (isNaN($("#mobileNo").val()) == false){
-						if ($("#mobileNo").val().length < 10) {
-							$(".mobileNumberError").show();
-							$(".mobileNumberError").text("Enter 10 digit mobile number");
-						}
-					} 
+				if ($("#firstName").val().length < 1 || $("#lastName").val().length <1 || isNaN($("#mobileNo").val()) == true || $("#mobileNo").val().length < 10 || $("#addressLane1").val().length < 1 || $("#addressLane2").val().length < 1 || isNaN($("#pincode").val()) == true || $("#pincode").val().length < 5 || $("#landmark").val().length < 1 || $("#city").val().length < 1 || $("#state").val() == "00"){	
+					e.preventDefault();
+					if ($("#firstName").val().length <1 ) {
+			            $(".firstNameError").show();
+			            $(".firstNameError").text("First Name cannot be Blank");
+			        }
 
-					if ($("#addressLane1").val().length <= 4) {
-							$(".address1Error").show();
-							$(".address1Error").text(" Enter Above 5 Characters");
-						} 				
-						
-					if ($("#addressLane2").val().length <= 4) {
-							$(".address2Error").show();
-							$(".address2Error").text("Enter Above 5 Characters");
-						} 
-	
-					if (isNaN($("#pincode").val()) == true) {
-							$(".pincodeNoError").show();
-							$(".pincodeNoError").text("Enter only Numbers");
-						} else if (isNaN($("#pincode").val()) == false) {
-							if ($("#pincode").val().length < 5) {
-								$(".pincodeNoError").show();
-								$(".pincodeNoError").text("Enter 6 digit pincode");
-							}
-						}
-			
-						 
-					if ($("#landmark").val().length <= 4) {
-							$(".landMarkError").show();
-							$(".landMarkError").text("Enter Above 5 Characters");
-						}
-		
-					if ($("#city").val().length <= 1) {
-							$(".cityError").show();
-							$(".cityError").text("Enter Above 1 Characters");
-						} 
-						
-		
-					if ($("#state").val().length <= 1) {
-							$(".stateError").show();
-							$(".stateError").text("Enter Above 1 Characters");
-						} 
-						
-					if ($("#country").val().length <= 1) {
-							$(".countryError").show();
-							$(".countryError").text("Enter Above 1 Characters");
-						}
-				} 
-				else {
-						
-				}
+			        if ($("#lastName").val().length < 1) {
+			            $(".lastNameError").show();
+			            $(".lastNameError").text("Last Name cannot be Blank ");
+			        }
+
+
+
+			        if (isNaN($("#mobileNo").val()) == true) {
+			            $(".mobileNumberError").show();
+			            $(".mobileNumberError").text("Enter only Numbers");
+			        } else if (isNaN($("#mobileNo").val()) == false) {
+			            if ($("#mobileNo").val().length < 10) {
+			                $(".mobileNumberError").show();
+			                $(".mobileNumberError").text("Please enter mobile no.");
+			            }
+			        }
+
+
+			        if ($("#addressLane1").val().length < 1) {
+			            $(".address1Error").show();
+			            $(".address1Error").text("Address Line 1 cannot be blank");
+			        }
+
+			        if ($("#addressLane2").val().length < 1) {
+			            $(".address2Error").show();
+			            $(".address2Error").text("Address Line 2 cannot be blank");
+			        }
+
+
+
+			        if (isNaN($("#pincode").val()) == true) {
+			            $(".pincodeNoError").show();
+			            $(".pincodeNoError").text("Enter only Numbers");
+			        } else if (isNaN($("#pincode").val()) == false) {
+			            if ($("#pincode").val().length < 5) {
+			                $(".pincodeNoError").show();
+			                $(".pincodeNoError").text("Please enter a pincode");
+			            }
+			        }
+
+
+			        if ($("#landmark").val().length < 1) {
+			            $(".landMarkError").show();
+			            $(".landMarkError").text("Landmark cannot be blank");
+			        }
+
+			        if ($("#city").val().length < 1) {
+			            $(".cityError").show();
+			            $(".cityError").text("City cannot be blank");
+			        }
+
+
+			        if ( $("#state").val() == "00") {
+			            $(".stateError").show();
+			            $(".stateError").text("Please choose a state");
+			        }
+			    } else {
+						$("#returnPincodeCheckForm").submit();
+			   		 }
 			});
 			
 			function hideErrorMessage() {
@@ -342,7 +339,10 @@
 					$(".landmark").val("${returnPincodeCheckForm.landmark }");
 					$(".city").val("${returnPincodeCheckForm.city }");
 					$(".state").val("${returnPincodeCheckForm.state }");
-					$("country").val("${returnPincodeCheckForm.country }");
+					$(".country").val("${returnPincodeCheckForm.country }");
+					$(".country").css('pointer-events', 'none');
+					$(".country").attr('tabindex', '-1');
+					$(".country").val("India");
 				}
 				document.onload = loadFormData();
 				$.delay(1000, function(){

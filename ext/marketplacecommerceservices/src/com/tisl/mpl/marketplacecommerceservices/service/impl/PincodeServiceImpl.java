@@ -15,6 +15,7 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -92,6 +93,35 @@ public class PincodeServiceImpl implements PincodeService
 		return pincodeModel;
 	}
 
+	/**
+	 * Fetch all the Stores for a Pincode and radius.
+	 * @param gps
+	 * @param distance
+	 * @return Stores 
+	 */
+	@Override
+	public Collection<PointOfServiceModel> getStoresForPincode(GPS gps, double distance)
+	{
+		try
+		{
+			Collection<PointOfServiceModel> result = new ArrayList<PointOfServiceModel>();
+			result = getPincodeDao().getAllGeocodedPOS(gps, distance);
+			return result;
+		}
+		catch (final PointOfServiceDaoException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
+		catch (final LocationInstantiationException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
+		catch (final GeoLocatorException e)
+		{
+			throw new LocationServiceException(e.getMessage(), e);
+		}
+	}
+	
 	protected double calculateDistance(final GPS referenceGps, final PointOfServiceModel posModel) throws GeoLocatorException,
 			LocationServiceException
 	{
