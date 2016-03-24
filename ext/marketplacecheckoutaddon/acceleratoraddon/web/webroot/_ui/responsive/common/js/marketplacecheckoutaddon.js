@@ -2139,6 +2139,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	else if(letters.test(result) == false)  
 	{ 
 		$("#firstnameError").show();
+		/*Error message changed TISPRD-427*/
 		$("#firstnameError").html("<p>First Name must be alphabet only</p>");
 		validate= false;
 	}  
@@ -2157,6 +2158,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	else if(letters.test(result) == false)  
 	{ 
 		$("#lastnameError").show();
+		/*Error message changed TISPRD-427*/
 		$("#lastnameError").html("<p>Last Name must be alphabet only</p>");
 		validate= false;
 	} 

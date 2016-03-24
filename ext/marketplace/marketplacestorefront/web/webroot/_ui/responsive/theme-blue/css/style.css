@@ -6854,7 +6854,7 @@ text-transform: uppercase;
 .checkout.wrapper .left-block p.items-no {
   margin-bottom: 15px; }
 .checkout.wrapper .left-block .button {
-  width:46%;
+  width:46.154%;
     margin: 30px auto;
     height: 40px !important;}
     @media(max-width:650px){
@@ -29456,6 +29456,10 @@ footer>ul>li>.toggle>img{
 }
 #newAndExclusive .newExclusiveElement{
     padding: 0px 7% 0px;}
+@media (max-width:790px){
+	#newAndExclusive .newExclusiveElement{
+    padding: 0px 12.5% 0px;}
+}
 #newAndExclusive a.new_exclusive_viewAll{
 	display: block;
     background: transparent;
@@ -29549,6 +29553,11 @@ vertical-align: middle;
 .home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
 vertical-align:top;
 padding: 0 2.8%;
+}
+@media (max-width:650px){
+.home-brands-you-love-side-image.left, .home-brands-you-love-side-image.right {
+padding: 0 29%;
+}	
 }
  
 .home-brands-you-love-main-image {
@@ -29678,56 +29687,53 @@ margin: 10px 0px;
 	max-width: 100%;
 }
 #bestPicks .short-info span , #bestPicks .short-info p{
-    font-size: 12px;
+    /* font-size: 12px;
     font-family: "Avenir Next";
     color:#333;
     font-weight: 500;
-    text-align: center;
+    text-align: center; */
     line-height: 1;
     display: inline-block;
     padding: 4px;
     width: 100%;
     word-break: break-word;
 }
-@media (max-width:650px ){
-#bestPicks .short-info span, #bestPicks .short-info p{
-text-align:center;}}
-#bestPicks .short-info span:last-child,#bestPicks .short-info p:last-child{
+/* #bestPicks .short-info span:last-child,#bestPicks .short-info p:last-child{
 font-family:DejaVu Sans;
 	font-size:98%;
-	/* display:inline !important; */
+	display:inline !important;
 	background:transparent !important;
 	border:none;
 	font-weight:500;
 
-}
+} */
 
 #bestPicks .short-info a {
-    font-size: 12px;
+    /* font-size: 12px;
     font-family: "Avenir Next";
     font-weight: 600;
-    text-align: center;
+    text-align: center; */
     line-height: 1;
     display: inline-block;
     padding: 4px;
     width: 100%;
 }
 #bestPicks .short-info a span,#bestPicks .short-info a p {
-    font-size: 12px;
+    /* font-size: 12px;
     font-family: "Avenir Next";
     color:inherit;
     font-weight: 600;
-    text-align: center;
+    text-align: center; */
     line-height: 1;
     display: inline-block;
     width: 100%;
     padding: 0;
 }
 #bestPicks .short-info span a,#bestPicks .short-info p a {
-    font-size: 12px;
+    /* font-size: 12px;
     font-family: "Avenir Next";
     font-weight: 600;
-    text-align: center;
+    text-align: center; */
     line-height: 1;
     display: inline-block;
     width: 100%;
@@ -29840,6 +29846,11 @@ padding: 0px 5px 10px;
 }
 .showcase-section .desc-section:last-child {
     padding: 0px 7.5% 10px;
+}
+@media (max-width:650px){
+	.showcase-section .desc-section:last-child {
+    padding: 0px 30.5% 10px;
+}
 }
 a.button.trending-button {
     background: transparent;
