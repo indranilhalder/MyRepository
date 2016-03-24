@@ -28,6 +28,7 @@ public final class MarketplaceFulfilmentProcessConstants extends GeneratedMarket
 	public static final String OMS_INVENTORY_RESV_TYPE_PAYMENT = "payment";
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERHELD = "orderheld";
 	public static final String OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE = "orderDeallocate";
+	public static final String PINCODE = "000000";
 
 	public static final String HOME_DELIVERY = "home-delivery";
 	public static final String EXPRESS_DELIVERY = "express-delivery";
