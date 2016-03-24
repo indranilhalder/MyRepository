@@ -37,7 +37,7 @@ public final class MarketplaceBinDbConstants /* extends GeneratedMarketplaceBinD
 	public static final String BANK_FILE_LOCATION = "payment.bank.csv.path".intern();
 	public static final String BANK_FILE_LOCATION_DATA = "${HYBRIS_DATA_DIR}/feed/bank".intern();
 	public static final String BANK_FILE_NAME = "bank_data_master".intern();
-
+	public static final String BANK_FILE_SLASH = "\"".intern();
 	public static final String BANK_FILE_DELIMITTER = ",".intern();
 	public static final String BANK_FILE_NEW_LINE_SEPARATOR = "\n".intern();
 

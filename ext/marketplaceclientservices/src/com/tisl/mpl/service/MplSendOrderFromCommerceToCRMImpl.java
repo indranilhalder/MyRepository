@@ -105,7 +105,7 @@ public class MplSendOrderFromCommerceToCRMImpl implements MplSendOrderFromCommer
 		}
 		if (response.getStatus() != 200)
 		{
-			throw new Exception(Integer.valueOf(response.getStatus()).toString() + MarketplacecclientservicesConstants.E0019);
+			throw new Exception(response.getStatus() + MarketplacecclientservicesConstants.E0019);
 		}
 		else
 		{

@@ -26,15 +26,12 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.helper.ProductDetailsHelper;
 
 
 /**
@@ -64,10 +61,6 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String MATH = "math";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
-
-	@Resource(name = "productDetailsHelper")
-	private ProductDetailsHelper productDetailsHelper;
-
 
 	@Override
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
