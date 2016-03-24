@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<!--
+	ATTENTION: This is just an example file. You have to edit it according to your needs.
+-->
+
+<items 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:noNamespaceSchemaLocation="items.xsd">
+
+	<itemtypes>
+	
+	<itemtype code="SPMaster" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.SPMaster"
+			singleton="true">
+			<deployment table="SPMaster" typecode="20000" />
+			<attributes>
+				<attribute qualifier="USSID" type="java.lang.String">
+					<description>USSID</description>
+					<modifiers optional="true"/>
+					<persistence type="property" />
+				</attribute>
+				<attribute qualifier="LISTINGID" type="java.lang.String">
+					<description>LISTINGID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+
+				<attribute qualifier="IS_PRD_UPLOADED" type="java.lang.String">
+					<description>IS_PRD_UPLOADED</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="EAN" type="java.lang.String">
+					<description>EAN</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SELLER_SKU_ID" type="java.lang.String">
+					<description>SELLER_SKU_ID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SELLER_ID" type="java.lang.String">
+					<description>SELLER_ID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_ONBOARD_STATUS" type="java.lang.String">
+					<description>SP_PRD_ONBOARD_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_ONBOARD_FAIL_RES" type="java.lang.String">
+					<description>SP_PRD_ONBOARD_FAIL_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_SENT_PRD_TO_PCM" type="java.lang.String">
+					<description>SP_SENT_PRD_TO_PCM</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+			
+				<attribute qualifier="SP_PRD_LISTED_STATUS" type="java.lang.String">
+					<description>SP_PRD_LISTED_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_LISTED_FAIL_REASONS" type="java.lang.String">
+					<description>SP_PRD_LISTED_FAIL_REASONS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_PRICE_STATUS" type="java.lang.String">
+					<description>SP_PRD_PRICE_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_INV_STATUS" type="java.lang.String">
+					<description>SP_PRD_INV_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="USER_UPLOADED_FILENAME" type="java.lang.String">
+					<description>USER_UPLOADED_FILENAME</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="UPLOADED_USERNAME" type="java.lang.String">
+					<description>UPLOADED_USERNAME</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="SP_EXPORT_FILENAME" type="java.lang.String">
+					<description>SP_EXPORT_FILENAME</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="PRODUCT_CREATEDTS" type="java.util.Date">
+					<description>PRODUCT_CREATEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="PRODUCT_MODIFIEDTS" type="java.util.Date">
+					<description>PRODUCT_MODIFIEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+
+			</attributes>
+		</itemtype>
+		
+		<itemtype code="COMMaster" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.COMMaster"
+			singleton="true">
+			<deployment table="COMMaster" typecode="20001" />
+			<attributes>
+				<attribute qualifier="USSID" type="java.lang.String">
+					<description>USSID</description>
+					<modifiers optional="true"/>
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="LISTINGID" type="java.lang.String">
+					<description>LISTINGID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="EAN" type="java.lang.String">
+					<description>EAN</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SELLER_SKU_ID" type="java.lang.String">
+					<description>SELLER_SKU_ID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SELLER_ID" type="java.lang.String">
+					<description>SELLER_ID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PRODUCT_TITLE" type="java.lang.String">
+					<description>PRODUCT_TITLE</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="BRAND" type="java.lang.String">
+					<description>BRAND</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="IA_PRD_IMPORT_STATUS" type="java.lang.String">
+					<description>IA_PRD_IMPORT_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+			
+				<attribute qualifier="ECOM_PRD_IMPORT_STATUS" type="java.lang.String">
+					<description>ECOM_PRD_IMPORT_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_IMPORT_FAIL_RES" type="java.lang.String">
+					<description>ECOM_PRD_IMPORT_FAIL_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_INV_STATUS" type="java.lang.String">
+					<description>ECOM_PRD_INV_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_PRICE_STATUS" type="java.lang.String">
+					<description>ECOM_PRD_PRICE_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="ECOM_PRD_AVAILABLE_FOR_SELL" type="java.lang.String">
+					<description>ECOM_PRD_AVAILABLE_FOR_SELL</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="ECOM_PRD_OVERALL_FAILURE_RES" type="java.lang.String">
+					<description>ECOM_PRD_OVERALL_FAILURE_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="ECOM_IS_PRD_REACHED_ONLINE" type="java.lang.String">
+					<description>ECOM_IS_PRD_REACHED_ONLINE</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="PRODUCT_CREATEDTS" type="java.util.Date">
+					<description>PRODUCT_CREATEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="PRODUCT_MODIFIEDTS" type="java.util.Date">
+					<description>PRODUCT_MODIFIEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+			<attribute qualifier="ENTRY_DATE" type="java.util.Date">
+					<description>ENTRY_DATE</description>
+					<modifiers optional="true"/>
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+		
+		
+		<itemtype code="PCMMaster" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.PCMMaster"
+			singleton="true">
+			<deployment table="PCMMaster" typecode="20002" />
+			<attributes>
+				<attribute qualifier="USSID" type="java.lang.String">
+					<description>USSID</description>
+					<modifiers optional="true"/>
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="LISTINGID" type="java.lang.String">
+					<description>LISTINGID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_IMPORT_STATUS" type="java.lang.String">
+					<description>PCM_PRD_IMPORT_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_IMPORT_FAIL_RES" type="java.lang.String">
+					<description>PCM_PRD_IMPORT_FAIL_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_APPROVAL_STATUS" type="java.lang.String">
+					<description>PCM_PRD_APPROVAL_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_APPROVAL_REJ_RES" type="java.lang.String">
+					<description>PCM_PRD_APPROVAL_REJ_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_SENT_TO_IA" type="java.lang.String">
+					<description>PCM_PRD_SENT_TO_IA</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_SENT_TO_SP" type="java.lang.String">
+					<description>PCM_PRD_SENT_TO_SP</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+			
+				<attribute qualifier="PCM_PRD_SENT_TO_ECOM" type="java.lang.String">
+					<description>PCM_PRD_SENT_TO_ECOM</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PRODUCT_TITLE" type="java.lang.String">
+					<description>PRODUCT_TITLE</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SELLER_SKU_ID" type="java.lang.String">
+					<description>SELLER_SKU_ID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SELLER_ID" type="java.lang.String">
+					<description>SELLER_ID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="L1" type="java.lang.String">
+					<description>L1</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="L2" type="java.lang.String">
+					<description>L2</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="L3" type="java.lang.String">
+					<description>L3</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="L4" type="java.lang.String">
+					<description>L4</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="L4_CODE" type="java.lang.String">
+					<description>L4_CODE</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="EAN" type="java.lang.String">
+					<description>EAN</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="BRAND" type="java.lang.String">
+					<description>BRAND</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PRODUCT_CREATEDTS" type="java.util.Date">
+					<description>PRODUCT_CREATEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="PRODUCT_MODIFIEDTS" type="java.util.Date">
+					<description>PRODUCT_MODIFIEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+
+			</attributes>
+		</itemtype>
+	
+	
+	<itemtype code="PDMaster" autocreate="true"
+			generate="true" extends="GenericItem" jaloclass="com.tisl.mpl.core.jalo.PDMaster"
+			singleton="true">
+			<deployment table="PDMaster" typecode="20003" />
+			<attributes>
+				<attribute qualifier="USSID" type="java.lang.String">
+					<description>USSID</description>
+					<modifiers optional="true"/>
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="LISTINGID" type="java.lang.String">
+					<description>LISTINGID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="OVERALL_STATUS" type="java.lang.String">
+					<description>OVERALL_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="OVERALL_FAIL_REASONS" type="java.lang.String">
+					<description>OVERALL_FAIL_REASONS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="IS_PRD_UPLOADED" type="java.lang.String">
+					<description>IS_PRD_UPLOADED</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_ONBOARD_STATUS" type="java.lang.String">
+					<description>SP_PRD_ONBOARD_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_ONBOARD_FAIL_RES" type="java.lang.String">
+					<description>SP_PRD_ONBOARD_FAIL_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_SENT_PRD_TO_PCM" type="java.lang.String">
+					<description>SP_SENT_PRD_TO_PCM</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+			
+				<attribute qualifier="PCM_PRD_IMPORT_STATUS" type="java.lang.String">
+					<description>PCM_PRD_IMPORT_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_IMPORT_FAIL_RES" type="java.lang.String">
+					<description>PCM_PRD_IMPORT_FAIL_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_APPROVAL_STATUS" type="java.lang.String">
+					<description>PCM_PRD_APPROVAL_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PCM_PRD_APPROVAL_REJ_RES" type="java.lang.String">
+					<description>PCM_PRD_APPROVAL_REJ_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="PCM_PRD_SENT_TO_IA" type="java.lang.String">
+					<description>PCM_PRD_SENT_TO_IA</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="PCM_PRD_SENT_TO_SP" type="java.lang.String">
+					<description>PCM_PRD_SENT_TO_SP</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				
+				<attribute qualifier="PCM_PRD_SENT_TO_ECOM" type="java.lang.String">
+					<description>PCM_PRD_SENT_TO_ECOM</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="IA_PRD_IMPORT_STATUS" type="java.lang.String">
+					<description>IA_PRD_IMPORT_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_IMPORT_STATUS" type="java.lang.String">
+					<description>ECOM_PRD_IMPORT_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_IMPORT_FAIL_RES" type="java.lang.String">
+					<description>ECOM_PRD_IMPORT_FAIL_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_LISTED_STATUS" type="java.lang.String">
+					<description>SP_PRD_LISTED_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_LISTED_FAIL_REASONS" type="java.lang.String">
+					<description>SP_PRD_LISTED_FAIL_REASONS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_PRICE_STATUS" type="java.lang.String">
+					<description>SP_PRD_PRICE_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_PRD_INV_STATUS" type="java.lang.String">
+					<description>SP_PRD_INV_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="OMS_PRD_INV_STATUS" type="java.lang.String">
+					<description>OMS_PRD_INV_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_INV_STATUS" type="java.lang.String">
+					<description>ECOM_PRD_INV_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_PRICE_STATUS" type="java.lang.String">
+					<description>ECOM_PRD_PRICE_STATUS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_AVAILABLE_FOR_SELL" type="java.lang.String">
+					<description>ECOM_PRD_AVAILABLE_FOR_SELL</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_OVERALL_FAILURE_RES" type="java.lang.String">
+					<description>ECOM_PRD_OVERALL_FAILURE_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PRODUCT_TITLE" type="java.lang.String">
+					<description>PRODUCT_TITLE</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SELLER_SKU_ID" type="java.lang.String">
+					<description>SELLER_SKU_ID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SELLER_ID" type="java.lang.String">
+					<description>SELLER_ID</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="L1" type="java.lang.String">
+					<description>L1</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="L2" type="java.lang.String">
+					<description>L2</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="L3" type="java.lang.String">
+					<description>L3</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="L4" type="java.lang.String">
+					<description>L4</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="USER_UPLOADED_FILENAME" type="java.lang.String">
+					<description>USER_UPLOADED_FILENAME</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="UPLOADED_USERNAME" type="java.lang.String">
+					<description>UPLOADED_USERNAME</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="SP_EXPORT_FILENAME" type="java.lang.String">
+					<description>SP_EXPORT_FILENAME</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="EAN" type="java.lang.String">
+					<description>EAN</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="BRAND" type="java.lang.String">
+					<description>BRAND</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PRODUCT_CREATEDTS" type="java.util.Date">
+					<description>PRODUCT_CREATEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="PRODUCT_MODIFIEDTS" type="java.util.Date">
+					<description>PRODUCT_MODIFIEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ROW_MODIFIEDTS" type="java.util.Date">
+					<description>ROW_MODIFIEDTS</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="OMS_PRD_OVERALL_FAILURE_RES" type="java.lang.String">
+					<description>OMS_PRD_OVERALL_FAILURE_RES</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_IS_PRD_REACHED_ONLINE" type="java.lang.String">
+					<description>ECOM_IS_PRD_REACHED_ONLINE</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+				
+				<attribute qualifier="ECOM_PRD_INV_COUNT" type="java.lang.String">
+					<description>ECOM_PRD_INV_COUNT</description>
+					<modifiers optional="true" />
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+	
+	
+	
+	</itemtypes>
+</items>
