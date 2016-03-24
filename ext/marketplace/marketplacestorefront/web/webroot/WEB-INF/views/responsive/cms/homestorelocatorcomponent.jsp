@@ -143,6 +143,12 @@ function autoCenter(markers,map ) {
     }
     //  Fit these bounds to the map
     map.fitBounds(bounds);
+  //To control max zoom label
+	google.maps.event.addListenerOnce(map, 'bounds_changed', function(event){
+		  if(this.getZoom()>20);{
+			  this.setZoom(20); 
+		  }
+		});
   }
  
 function applyGamma(map) {

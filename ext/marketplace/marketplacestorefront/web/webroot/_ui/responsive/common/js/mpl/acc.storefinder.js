@@ -165,6 +165,14 @@ ACC.storefinder = {
 		    homeLegendsControlDiv.index = 1;
 			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
 			map.fitBounds(bounds);
+			
+			//To control max zoom label
+			google.maps.event.addListenerOnce(map, 'bounds_changed', function(event){
+				  if(this.getZoom()>20);{
+					  this.setZoom(20); 
+				  }
+				});
+			
 		}
 		
 	},
