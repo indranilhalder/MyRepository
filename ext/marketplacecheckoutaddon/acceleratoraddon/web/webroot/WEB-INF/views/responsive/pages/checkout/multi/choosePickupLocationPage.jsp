@@ -66,7 +66,7 @@
 						
 						.continue_btn {
 							border: none;
-						    background-color: #00cbe9;
+						    background-color: #A9143C;
 						    color: #fff;
 						    clear: both;
 						    line-height: 30px;
@@ -82,7 +82,7 @@
 						}
 						
 						.continue_btn:hover {
-							 background: #009fb6 !important;
+							 background: #88102C !important;
 							 text-decoration: none;
 							 cursor: pointer;
 							 color: #fff !important;
@@ -200,6 +200,34 @@
 						  .collectionDays {
 						  	display: none !important;
 						  }
+						  
+						  .pickup {
+						  	    height: 160px !important;
+						  }
+						  
+						  .pickuppersonWidth {
+							  	width: 100% !important;
+								margin-bottom: 20px;
+								background-color: rgb(255, 255, 255);
+								border-radius: 4px;
+								box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+								height: 136px !important;
+								border: 1px solid rgb(240, 244, 245);
+						  }
+						  
+						  .panel-body {
+					  			margin-top: 14px;
+								height: 107px !important;
+								padding: 15px;
+								margin-bottom: 20px;
+						  }
+						  
+						  .text_in {
+								font-size: 10px !important;
+								margin-top: 2px !important;
+								margin-left: -2px !important;
+								text-align: center;
+							}
 						  					 	
 					</style>
 					<script>
@@ -499,13 +527,13 @@
 								<li class="store header5"><spring:theme code="checkout.multi.cnc.store.closeto"/>
 								
 								<c:if test="${not empty defaultPincode}">
-									<span style="color: #00cbe9!important;" id="changeValue${status1.index}">
+									<span style="color: #A9143C!important;" id="changeValue${status1.index}">
 										${defaultPincode}
 									</span>	
 								</c:if>
 								</li>
 								<li class="delivery header4"><a 
-														onclick="history.go(-1);" style="color: #00cbe9 !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
+														onclick="history.go(-1);" style="color: #A9143C !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -690,7 +718,7 @@
 																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
 																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM</span>
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
 																	</c:if>
 																
 																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
@@ -902,7 +930,7 @@
 											        	  } else {
 											        		  $(".address4${status1.index}"+i).text("");  
 											        	  }if(jsonObject${status1.index}[i]['mplClosingTime'] != null && jsonObject${status1.index}[i]['mplOpeningTime'] != null) {
-											        	  	$(".pickup${status1.index}"+i).text(jsonObject${status1.index}[i]['mplOpeningTime']+"AM - "+jsonObject${status1.index}[i]['mplClosingTime']+"PM");
+											        	  	$(".pickup${status1.index}"+i).text(jsonObject${status1.index}[i]['mplOpeningTime']+" - "+jsonObject${status1.index}[i]['mplClosingTime']);
 											        	  } else {
 											        		  $(".pickup${status1.index}"+i).text("");  
 											        	  }
