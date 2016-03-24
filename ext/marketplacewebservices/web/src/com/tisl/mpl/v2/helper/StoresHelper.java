@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.v2.helper;
 
@@ -43,33 +43,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.dao.MplSlaveMasterDAO;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
-import com.tisl.mpl.v2.controller.CartsController;
 
 
 @Component
 public class StoresHelper extends AbstractHelper
 {
-	
+
 	private final static Logger LOG = Logger.getLogger(StoresHelper.class);
-	
+
 	private static final double EARTH_PERIMETER = 40075000.0;
 	@Resource(name = "storeFinderFacade")
 	private StoreFinderFacade storeFinderFacade;
-	
+
 	@Autowired
 	private MplSlaveMasterDAO mplSlaveMasterDao;
-	
-	@Resource(name="pointOfServiceConverter")
+
+	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
-	
-	@Resource(name="pincodeServiceFacade")
+
+	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
-	
-	@Resource(name="pincodeService")
+
+	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
 
 	@Cacheable(value = "storeCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(false,false,'DTO',#query,#latitude,#longitude,#currentPage,#pageSize,#sort,#radius,#accuracy,#fields)")
@@ -89,8 +89,8 @@ public class StoresHelper extends AbstractHelper
 	{
 		if (radius > EARTH_PERIMETER)
 		{
-			throw new RequestParameterException("Radius cannot be greater than Earth's perimeter",
-					RequestParameterException.INVALID, "radius");
+			throw new RequestParameterException("Radius cannot be greater than Earth's perimeter", RequestParameterException.INVALID,
+					"radius");
 		}
 
 		final double radiusToSearch = getInKilometres(radius, accuracy);
@@ -116,6 +116,7 @@ public class StoresHelper extends AbstractHelper
 
 	/**
 	 * Retrieves store for a given storedId.
+	 * 
 	 * @param storeId
 	 * @param fields
 	 * @return Binds store in a dto and return it.
@@ -128,7 +129,7 @@ public class StoresHelper extends AbstractHelper
 			LOG.debug("from locationDetails method");
 		}
 		PointOfServiceData pointOfServiceData = null;
-		PointOfServiceData pointOfServiceDataWithError = new PointOfServiceData();
+		final PointOfServiceData pointOfServiceDataWithError = new PointOfServiceData();
 		try
 		{
 			final PointOfServiceModel posModel = mplSlaveMasterDao.checkPOSForSlave(storeId);
@@ -136,31 +137,32 @@ public class StoresHelper extends AbstractHelper
 			{
 				pointOfServiceData = pointOfServiceConverter.convert(posModel);
 			}
-			else 
+			else
 			{
 				pointOfServiceDataWithError.setStatus("Store is not available for given store ID:  " + storeId);
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.error("Exception while calling locationDetails to get store for slaveId");
-			pointOfServiceDataWithError.setStatus("Something went wrong");
+			pointOfServiceDataWithError.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
 			e.printStackTrace();
 		}
 		if (null != pointOfServiceDataWithError.getStatus())
 		{
 			return dataMapper.map(pointOfServiceDataWithError, PointOfServiceWsDTO.class, fields);
 		}
-		else 
+		else
 		{
 			return dataMapper.map(pointOfServiceData, PointOfServiceWsDTO.class, fields);
 		}
-		
+
 	}
 
-	
+
 	/**
 	 * This method retrieves all the Stores for given pincode.
+	 * 
 	 * @param latitude
 	 * @param longitude
 	 * @param pincode
@@ -168,7 +170,7 @@ public class StoresHelper extends AbstractHelper
 	 * @return binds the response to ws dto and returns it.
 	 */
 	//@Cacheable(value = "storeCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(false,false,'storeDetails',#storeId,#fields)")
-	public ListOfPointOfServiceWsDTO getAllStoresForPincode(final String latitude, final String longitude,final String pincode,
+	public ListOfPointOfServiceWsDTO getAllStoresForPincode(final String latitude, final String longitude, final String pincode,
 			final String fields)
 	{
 		if (LOG.isDebugEnabled())
@@ -176,9 +178,9 @@ public class StoresHelper extends AbstractHelper
 			LOG.debug("from getAllStoresForPincode method");
 		}
 		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
-		ListOfPointOfServiceData listOfPosData = new ListOfPointOfServiceData();
+		final ListOfPointOfServiceData listOfPosData = new ListOfPointOfServiceData();
 		final LocationDTO dto = new LocationDTO();
-		String	radius = Config.getParameter("marketplacestorefront.configure.radius");
+		String radius = Config.getParameter("marketplacestorefront.configure.radius");
 		if (null == radius)
 		{
 			radius = "0";
@@ -196,7 +198,7 @@ public class StoresHelper extends AbstractHelper
 			else
 			{
 				//fetch latitude and longitude for a pincode from comm
-				PincodeModel pincodeModel = pincodeService.getLatAndLongForPincode(pincode);
+				final PincodeModel pincodeModel = pincodeService.getLatAndLongForPincode(pincode);
 				if (null != pincodeModel)
 				{
 					dto.setLatitude(pincodeModel.getLatitude().toString());
@@ -204,24 +206,25 @@ public class StoresHelper extends AbstractHelper
 					myLocation = new LocationDtoWrapper(dto);
 					posData = pincodeServiceFacade.getStoresForPincode(myLocation.getGPS(), radius);
 				}
-				else 
+				else
 				{
-					listOfPosData.setStatus("Something went wrong");
+					listOfPosData.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
 				}
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.error("Exception in calling getAllStoresForPincode");
 			e.printStackTrace();
-			listOfPosData.setStatus("Something went wrong");
+			listOfPosData.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
 		}
 		listOfPosData.setStores(posData);
 		return dataMapper.map(listOfPosData, ListOfPointOfServiceWsDTO.class, fields);
 	}
-	
+
 	/**
 	 * Gets StoreAts with ussid and Ats for given pincode and ussid.
+	 * 
 	 * @param pincode
 	 * @param ussId
 	 * @param fields
@@ -236,7 +239,7 @@ public class StoresHelper extends AbstractHelper
 		}
 		List<StoreLocationResponseData> storesLocationResponse = new ArrayList<StoreLocationResponseData>();
 		StoreLocationResponseData storeLocationResData = null;
-		StoreLocationResponseData storeLocationResData1 = new StoreLocationResponseData();
+		final StoreLocationResponseData storeLocationResData1 = new StoreLocationResponseData();
 		try
 		{
 			storesLocationResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, null);
@@ -244,27 +247,28 @@ public class StoresHelper extends AbstractHelper
 			{
 				storeLocationResData = storesLocationResponse.get(0);
 			}
-			else 
+			else
 			{
-				storeLocationResData1.setStatus("Something went wrong");
+				storeLocationResData1.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
 			}
-			
+
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.error("Exception in storeLocationAts call");
-			storeLocationResData1.setStatus("Something went wrong");
+			storeLocationResData1.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
 		}
 		if (null != storeLocationResData)
 		{
 			return dataMapper.map(storeLocationResData, StoreLocationResponseDataWsDTO.class, fields);
 		}
-		else 
+		else
 		{
 			return dataMapper.map(storeLocationResData1, StoreLocationResponseDataWsDTO.class, fields);
 		}
-		
+
 	}
+
 	protected double getInKilometres(final double radius, final double accuracy)
 	{
 		return (radius + accuracy) / 1000.0;
