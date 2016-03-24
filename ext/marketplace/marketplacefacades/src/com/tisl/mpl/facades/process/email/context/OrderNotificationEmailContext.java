@@ -73,10 +73,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				.getOrder().getConvenienceCharges().doubleValue();
 
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
-		//final Double inalTotapPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
-		//final String totalPrice = String.format("%,.2f", FinalTotapPrice);
 
-		//final PriceData totalPriceData = productDetailsHelper.formPriceData(totalPrice);
 
 
 		LOG.info(" *********************- totalPrice:" + " orderTotalPrice:" + orderTotalPrice + " convenienceCharges:"
