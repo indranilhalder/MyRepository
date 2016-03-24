@@ -20,6 +20,10 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 html,body,main {
 	height:100%;
 }
+
+body.page-notFound{
+	height:auto;
+}
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block; }
@@ -27,8 +31,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 body {
   line-height: 1;
    -webkit-font-smoothing: subpixel-antialiased;
-   max-width:1400px;
-   margin: 0 auto; }
+  }
 
 ol, ul {
   list-style: none; }
@@ -49,6 +52,9 @@ blockquote, q {
 	padding-right:0px !important;
 }
 
+body .mainContent-wrapper > .container{
+  max-width:1400px;
+   margin: 0 auto;}
 blockquote:before, blockquote:after, q:before, q:after {
   content: '';
   content: none; }
@@ -615,7 +621,7 @@ input:focus {
     text-align: left;
     border: 1px solid #DFD1D5;
     position: relative;
-    padding-top: 48px;
+    padding-top: 47px;
     font-size: 16px;
     font-weight: 500;
     height: 50px;
@@ -8362,9 +8368,10 @@ div.wishlist-content .pagination {
 	 	padding-bottom:0px;
 	 }
 	 .mainContent-wrapper footer {
-	position: relative;
+	position: absolute;
 	width:100%;
 	bottom:0;
+	    left: 0px;
 }
   body.page-checkout-login  .body-Content,  body.page-multiStepCheckoutSummaryPage  .body-Content{
   	padding-bottom:0px;
