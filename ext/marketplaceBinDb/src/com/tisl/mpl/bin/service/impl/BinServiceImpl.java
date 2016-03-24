@@ -178,9 +178,9 @@ public class BinServiceImpl implements BinService
 		if (bankData.contains(MarketplaceBinDbConstants.COMMA))
 		{
 			final StringBuilder sb = new StringBuilder();
-			sb.append("\"");
+			sb.append(MarketplaceBinDbConstants.BANK_FILE_SLASH);
 			sb.append(bankData);
-			sb.append("\"");
+			sb.append(MarketplaceBinDbConstants.BANK_FILE_SLASH);
 			pojo.setBankCode(sb.toString());
 			pojo.setBankName(sb.toString());
 		}

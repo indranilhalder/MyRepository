@@ -62,9 +62,6 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String NUMBERTOOL = "numberTool";
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
 
-
-
-
 	@Override
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
 	{
