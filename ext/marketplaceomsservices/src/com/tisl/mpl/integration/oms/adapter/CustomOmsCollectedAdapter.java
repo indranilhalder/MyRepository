@@ -62,28 +62,36 @@ public class CustomOmsCollectedAdapter
 		}
 		try
 		{
-		
-    			String contentForSMS= MarketplaceomsordersConstants.ORDER_COLLECTED_SMS;
-    			          if(null !=orderData && null != orderData.getCustomerData() ){
-    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, (StringUtils.isEmpty(orderData.getCustomerData().getFirstName())) ? MarketplaceomsordersConstants.EMPTY : orderData.getCustomerData().getFirstName());
-    			          }else{
-    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, "");
-    			          }
-    			          if(null != orderModel){
-    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, (StringUtils.isEmpty(orderModel.getCode())) ? MarketplaceomsordersConstants.EMPTY:  orderModel.getCode());
-    			          }else {
-    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, "");
-    			          }
-    			          if(null != orderModel && null!= orderModel.getStore()){
-    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, (StringUtils.isEmpty(orderModel.getStore().getName())) ? MarketplaceomsordersConstants.EMPTY :  orderModel.getStore().getName());
-    			          }else{
-    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, ""); 
-    			          }
-    			          if(null != consignmentModel){
-    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, (StringUtils.isEmpty(consignmentModel.getDeliveryDate().toString())) ? MarketplaceomsordersConstants.EMPTY :  consignmentModel.getDeliveryDate().toString());
-    			          }else{
-    			         	contentForSMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, ""); 
-    			          }
+			String customerName=null;
+			String orderNumber=null;
+			String storeName=null;
+			String deliverdDate=null;
+		   if(null !=orderData && null != orderData.getCustomerData()) {
+		   	customerName=(null !=orderData.getCustomerData().getFirstName() &&  StringUtils.isNotEmpty(orderData.getCustomerData().getFirstName())) ?orderData.getCustomerData().getFirstName()  : " Customer " ;
+		   }else{
+		   	customerName= MarketplaceomsordersConstants.EMPTY;	 
+		   }
+		   if(null != orderModel){
+		   	orderNumber= (null != orderModel.getCode() &&  StringUtils.isNotEmpty(orderModel.getCode())) ?  orderModel.getCode() :  MarketplaceomsordersConstants.EMPTY ;
+		   }else{
+		   	orderNumber= MarketplaceomsordersConstants.EMPTY;	 
+		   }
+		  
+		   if(null != consignmentModel.getDeliveryPointOfService()){
+		   		  if(consignmentModel.getDeliveryPointOfService()!=null && consignmentModel.getDeliveryPointOfService().getDisplayName()!=null && StringUtils.isNotEmpty(consignmentModel.getDeliveryPointOfService().getDisplayName())) {
+		   			  storeName=consignmentModel.getDeliveryPointOfService().getDisplayName();
+		   		  }else{
+		   			  storeName= MarketplaceomsordersConstants.EMPTY;
+		   		  }
+		   }else{
+		   	 storeName= MarketplaceomsordersConstants.EMPTY;	 
+		   }
+		   if(null !=consignmentModel.getDeliveryDate()){
+		   	deliverdDate=(null!= consignmentModel.getDeliveryDate().toString() && StringUtils.isNotEmpty(consignmentModel.getDeliveryDate().toString())) ? consignmentModel.getDeliveryDate().toString() : MarketplaceomsordersConstants.EMPTY ; 
+		   }else{
+		   	deliverdDate= MarketplaceomsordersConstants.EMPTY;	 
+		   }
+    			String contentForSMS= MarketplaceomsordersConstants.ORDER_COLLECTED_SMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, customerName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, orderNumber).replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, storeName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, deliverdDate);
     			final String mobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
 						: orderModel.getPickupPersonMobile();
     			

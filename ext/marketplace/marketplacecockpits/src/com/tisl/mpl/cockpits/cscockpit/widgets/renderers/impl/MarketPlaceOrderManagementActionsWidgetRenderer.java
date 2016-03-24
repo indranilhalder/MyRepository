@@ -187,8 +187,9 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 
 					List<String> nonChangableOrdeStatus = Arrays.asList(
 							OrderStatus.PAYMENT_FAILED.getCode(),
-							OrderStatus.RETURNINITIATED_BY_RTO.getCode());
-
+							OrderStatus.RETURNINITIATED_BY_RTO.getCode(),
+					OrderStatus.REFUND_INITIATED.getCode(),
+					OrderStatus.RETURN_INITIATED.getCode());
 					List<String> nonChangableOrdeStatusList = Arrays.asList(
 							ConsignmentStatus.CANCELLATION_INITIATED.getCode(),
 							ConsignmentStatus.CANCELLED.getCode(),
@@ -204,16 +205,15 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 							ConsignmentStatus.QC_FAILED.getCode(),
 							ConsignmentStatus.REFUND_IN_PROGRESS.getCode(),
 							ConsignmentStatus.REFUND_INITIATED.getCode(),
+							ConsignmentStatus.REVERSE_AWB_ASSIGNED.getCode(),
 							ConsignmentStatus.RETURN_CANCELLED.getCode(),
 							ConsignmentStatus.RETURN_CLOSED.getCode(),
 							ConsignmentStatus.RETURN_INITIATED.getCode(),
 							ConsignmentStatus.RETURN_RECEIVED.getCode(),
 							ConsignmentStatus.RETURN_TO_ORIGIN.getCode(),
-							ConsignmentStatus.RETURN_COMPLETED.getCode());
-					nonChangableOrdeStatusList.contains(orderStatus
-							.toUpperCase());
-					ConsignmentStatus.ORDER_COLLECTED.getCode().equals(
-							orderStatus);
+							ConsignmentStatus.RETURN_COMPLETED.getCode(),
+							ConsignmentStatus.RETURNINITIATED_BY_RTO.getCode());
+					
 					if (entry.getQuantity() <= 0
 							|| nonChangableOrdeStatus.contains(orderStatus.toUpperCase())
 							|| nonChangableOrdeStatusList.contains(orderStatus.toUpperCase())) {
