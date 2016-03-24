@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.v2.controller;
 
@@ -24,10 +24,6 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 
-import java.util.List;
-
-import com.tisl.mpl.v2.helper.StoresHelper;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.tisl.mpl.v2.helper.StoresHelper;
 
 
 /**
@@ -78,8 +76,8 @@ public class StoresController extends BaseController
 			@RequestParam(required = false, defaultValue = "asc") final String sort,
 			@RequestParam(required = false, defaultValue = DEFAULT_SEARCH_RADIUS_METRES) final double radius,
 			@RequestParam(required = false, defaultValue = DEFAULT_ACCURACY) final double accuracy,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletResponse response)
-			throws RequestParameterException
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields,
+			final HttpServletResponse response) throws RequestParameterException
 	{
 		final StoreFinderSearchPageWsDTO result = storesHelper.locationSearch(query, latitude, longitude, currentPage, pageSize,
 				sort, radius, accuracy, addPaginationField(fields));
@@ -151,7 +149,7 @@ public class StoresController extends BaseController
 		}
 		return storesHelper.locationDetails(storeId, fields);
 	}
-	
+
 	/**
 	 * Returns StoreAtsResponse with ussid and list of Ats.
 	 *
@@ -172,6 +170,6 @@ public class StoresController extends BaseController
 		}
 		return storesHelper.storesAtCart(pincode, ussId, fields);
 	}
-	
-	
+
+
 }

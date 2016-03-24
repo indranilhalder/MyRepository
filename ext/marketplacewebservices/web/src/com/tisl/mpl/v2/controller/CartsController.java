@@ -123,7 +123,6 @@ import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exceptions.InvalidPaymentInfoException;
@@ -250,8 +249,6 @@ public class CartsController extends BaseCommerceController
 	@Autowired
 	private MplCouponWebFacade mplCouponWebFacade;
 
-	@Autowired
-	private MplCouponFacade mplCouponFacade;
 
 	/**
 	 * @return the calculationStrategy
