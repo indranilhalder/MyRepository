@@ -33,7 +33,7 @@ import com.hybris.oms.domain.buc.report.SellerAndLogisticsPerfRpt.dto.SellerAndL
 
 /**
  * @author Pradeep
- *
+ * 
  */
 public class PincodeLogisticsListController extends DefaultWidgetController
 {
@@ -66,9 +66,9 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 	}
 
 	/**
-	 *
+	 * 
 	 * @param startendTime
-	 *
+	 * 
 	 */
 	@SocketEvent(socketId = "startendDates")
 	public void editListView(final String startendDates)
@@ -87,7 +87,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 
 	/**
 	 * export csv file from listview
-	 *
+	 * 
 	 * @throws InterruptedException
 	 */
 
@@ -103,7 +103,7 @@ public class PincodeLogisticsListController extends DefaultWidgetController
 
 	/**
 	 * This function used to export listbox to csv from listbox
-	 *
+	 * 
 	 * @param listbox
 	 * @throws InterruptedException
 	 */

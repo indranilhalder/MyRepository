@@ -418,7 +418,8 @@
 											    <c:set value="${subOrder.entries}" var="parentRefEntries" />
 											    <c:set value="0" var="cncQuantity" />
 	                                            <c:forEach items="${subOrder.entries}" var="parentRefEntry">
-		                                           <c:if	test="${parentRefEntry.deliveryPointOfService.address.id eq pos.id}">
+		                                           <c:if	test="${parentRefEntry.deliveryPointOfService.address.id eq pos.id 
+		                                           and parentRefEntry.mplDeliveryMode.code eq 'click-and-collect'}">
 		                                                  <c:set value="${cncQuantity+parentRefEntry.quantity}" var="cncQuantity" />     
 		                                           </c:if>
 	                                            </c:forEach> 
@@ -489,8 +490,9 @@
 													              </c:forEach>
 												               </c:when> 
 												               <c:otherwise>
+												                    <c:set var="status">${sellerOrder.status}</c:set>
                                                                  <c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
-														             <c:if test="${sellerOrderStatus eq sellerOrder.status}">
+														             <c:if test="${sellerOrderStatus eq status}">
 														              <c:set var="editButton" value="disable" />
 														            </c:if>
 														         </c:forEach>

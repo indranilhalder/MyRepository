@@ -1,4 +1,6 @@
 /*
+
+
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -119,6 +121,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ELECTORNICS = "MPH12";
 	public static final String CATEGORY_APPAREL = "Clothing";
 	public static final String CATEGORY_ELECTORNICS = "Electronics";
+
 
 	//Return Item
 	public static final String REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE = "SORRY! We cannot pickup from the address provided, Please provide other address or You can Self - ship and let us know!";
@@ -471,7 +474,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INR = "INR";
 	public static final String HD = "HD";
 	public static final String ED = "ED";
-	public static final String CnC = "CNC";	//Changed after SAP code merging
+	public static final String CnC = "CNC"; //Changed after SAP code merging
 	public static final String CC = "CC";
 
 	public static final String X = "X";
@@ -817,6 +820,21 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9101 = "B9101";
 	public static final String B9102 = "B9102";
 	public static final String B9310 = "B9310";
+	public static final String B9500 = "B9500";
+	public static final String B9501 = "B9501";
+	public static final String B9502 = "B9502";
+	public static final String B9503 = "B9503";
+	public static final String B9504 = "B9504";
+	public static final String B9505 = "B9505";
+	public static final String B9506 = "B9506";
+	public static final String B9507 = "B9507";
+	public static final String B9508 = "B9508";
+	public static final String B9509 = "B9509";
+	public static final String B9510 = "B9510";
+	public static final String B9511 = "B9511";
+	public static final String B9512 = "B9512";
+	public static final String B9513 = "B9513";
+
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1469,3 +1487,4 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
+
