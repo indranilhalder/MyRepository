@@ -621,7 +621,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 	{
 		if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) || ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN
 				.equals(newStatus)) || (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus)) || (ConsignmentStatus.QC_FAILED.equals(newStatus)) || (ConsignmentStatus.RETURN_CLOSED.equals(newStatus)) 
-				&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+            ||(ConsignmentStatus.RETURN_CANCELLED.equals(newStatus)) && CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 		{
 			try
 			{
@@ -632,8 +632,6 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 				{
 					final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(orderModel);
 					returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
-
-
 					refundEntryModel = modelService.create(RefundEntryModel.class);
 					refundEntryModel.setOrderEntry(orderEntry);
 					refundEntryModel.setReturnRequest(returnRequestModel);
