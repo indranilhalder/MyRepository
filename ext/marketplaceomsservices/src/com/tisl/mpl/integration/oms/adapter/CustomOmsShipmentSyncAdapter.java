@@ -92,9 +92,6 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 	private MplCheckInvoice checkInvoice;
 	private TimeService timeService;
 	private static final Logger LOG = Logger.getLogger(CustomOmsShipmentSyncAdapter.class);
-
-	@Autowired
-	private OrderFacade orderFacade;
 	
 	@Autowired
 	private TicketCreationCRMservice ticketCreate;
@@ -623,7 +620,8 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 			final OrderModel orderModel)
 	{
 		if ((ConsignmentStatus.RETURN_INITIATED.equals(newStatus) || ConsignmentStatus.LOST_IN_TRANSIT.equals(newStatus) || ConsignmentStatus.RETURN_TO_ORIGIN
-				.equals(newStatus)) || (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
+				.equals(newStatus)) || (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus)) || (ConsignmentStatus.QC_FAILED.equals(newStatus)) || (ConsignmentStatus.RETURN_CLOSED.equals(newStatus)) 
+				&& CollectionUtils.isNotEmpty(consignmentModel.getConsignmentEntries()))
 		{
 			try
 			{
@@ -649,10 +647,18 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 					{
 						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
 					}
-					//CM 1: Added as part of R2.1 to handle new order status 'RETURNINITIATED_BY_RTO'
+					//CM 1: Added as part of R2.1 to handle new order status 'RETURNINITIATED_BY_RTO','QC_FAILED','RETURN_CLOSED'
 					else if (ConsignmentStatus.RETURNINITIATED_BY_RTO.equals(newStatus))
 					{
 						refundEntryModel.setReason(RefundReason.RETURNTOORIGIN);
+					}
+					else if (ConsignmentStatus.QC_FAILED.equals(newStatus))
+					{
+						refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
+					}
+					else if (ConsignmentStatus.RETURN_CLOSED.equals(newStatus))
+					{
+						refundEntryModel.setReason(RefundReason.LOSTINTRANSIT);
 					}
 					else
 					{
