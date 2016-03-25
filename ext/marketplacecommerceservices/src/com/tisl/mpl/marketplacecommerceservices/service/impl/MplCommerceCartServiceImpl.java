@@ -3099,7 +3099,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						LOG.debug("populateDataForSoftReservation :  entryModel.getQuantity() is null or empty");
 					}
 
-					if (entryModel.getDeliveryPointOfService() != null && !entryModel.getGiveAway().booleanValue())
+					if (entryModel.getDeliveryPointOfService() != null)
 					{
 						cartSoftReservationData.setStoreId(entryModel.getDeliveryPointOfService().getSlaveId());
 					}
