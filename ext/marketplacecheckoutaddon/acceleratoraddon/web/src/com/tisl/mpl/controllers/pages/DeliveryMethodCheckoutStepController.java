@@ -788,25 +788,29 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					if (abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
 					{
-						if (null != abstractCartEntry.getAssociatedItems() && abstractCartEntry.getAssociatedItems().size() > 0)
+						
+						if (null != freebieParentQtyMap)
 						{
-							for (String ussid : abstractCartEntry.getAssociatedItems())
+							if (null != abstractCartEntry.getAssociatedItems() && abstractCartEntry.getAssociatedItems().size() > 0)
 							{
-								//check for freebie entry in the cart
-								if (cartModel != null && cartModel.getEntries() != null)
+								for (String ussid : abstractCartEntry.getAssociatedItems())
 								{
-									for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+									//check for freebie entry in the cart
+									if (cartModel != null && cartModel.getEntries() != null)
 									{
-										if (cartEntryModel != null && cartEntryModel.getSelectedUSSID() != null && cartEntryModel.getGiveAway() != null 
-												&& cartEntryModel.getGiveAway().booleanValue())
+										for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 										{
-											
-											if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
+											if (cartEntryModel != null && cartEntryModel.getSelectedUSSID() != null
+													&& cartEntryModel.getGiveAway() != null && cartEntryModel.getGiveAway().booleanValue())
 											{
-												LOG.info("Freebie Parent Product USSID" + abstractCartEntry.getSelectedUSSID());
-												LOG.info("Freebie Product USSID" + ussid);
-												final Long quant = freebieParentQtyMap.get(ussId);
-												freebieProductsWithQuant.put(ussid, quant);
+
+												if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
+												{
+													LOG.info("Freebie Parent Product USSID" + abstractCartEntry.getSelectedUSSID());
+													LOG.info("Freebie Product USSID" + ussid);
+													final Long quant = freebieParentQtyMap.get(ussId);
+													freebieProductsWithQuant.put(ussid, quant);
+												}
 											}
 										}
 									}
@@ -991,8 +995,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 									{
 										if (cartHasFreebieEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
 										{
-											cartHasFreebieEntryModel.setDeliveryPointOfService(posModel);
-											modelService.save(cartHasFreebieEntryModel);
+											//check for freebie entry
+											if (cartHasFreebieEntryModel.getGiveAway() != null && cartHasFreebieEntryModel.getGiveAway().booleanValue())
+											{
+												LOG.info("Save Store for freebie product " + cartHasFreebieEntryModel.getSelectedUSSID());
+												cartHasFreebieEntryModel.setDeliveryPointOfService(posModel);
+												modelService.save(cartHasFreebieEntryModel);
+											}
 										}
 									}
 								}
