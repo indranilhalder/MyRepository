@@ -16,7 +16,7 @@
 					 <input id="storefinderNoresult" name="storefinderNoresult" type="hidden" value="<spring:theme code="storelocator.error.no.results.title" text="No store results were found for your search criteria."/>"/>
 <div class="row">
 	<div class="col-lg-8">
-		<div class="headline findaStoreHeadLin"><spring:theme code="storeFinder.find.a.store" /></div>
+		<%-- <div class="headline findaStoreHeadLin"><spring:theme code="storeFinder.find.a.store" /></div> --%>
 		 
 		<div class="store-finder-search">
 			<div class="row">
