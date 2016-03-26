@@ -649,6 +649,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("Express checkout Having Delivery Mode as CNC: ");
 						LOG.debug("forward to cart page as Express Checkout is not supported for CNC mode ");
 					}
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+							"deliverymode.express.checkout.cnc.invalid");
 					//forward to cart page as Express Checkout is not supported for CNC mode
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 				}
@@ -703,6 +705,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("Express checkout Having Mixed Delivery Mode as CNC and HD/Ed: ");
 						LOG.debug("forward to cart page as Express Checkout is not supported for CNC mode ");
 					}
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+							"deliverymode.express.checkout.cnc.invalid");
 					//forward to cart page as Express Checkout is not supported for CNC mode
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 				}
@@ -849,8 +853,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				//freebie starts
 				if (freebieProductsWithQuant.size() > 0)
 				{
-					final FreebieProduct freebieProductData = new FreebieProduct();
 					for (Map.Entry<String, Long> entry : freebieProductsWithQuant.entrySet()) {
+						final FreebieProduct freebieProductData = new FreebieProduct();
 					    String uss = entry.getKey();
 					    Long qty = entry.getValue();
 					    final SellerInformationModel sellerInfo = mplSellerInformationService.getSellerDetail(uss);
