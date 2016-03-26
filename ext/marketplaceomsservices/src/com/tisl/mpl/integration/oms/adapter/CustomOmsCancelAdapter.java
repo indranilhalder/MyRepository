@@ -133,7 +133,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	
 
 	
-	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
+	public boolean createTicketInCRM(final OrderData subOrderDetails, final String subOrderEntryTransactionId,
 			final String ticketTypeCode, final String reasonCode, final String refundType, 
 			final CustomerData customerData, final OrderModel subOrderModel)
 	{
@@ -143,7 +143,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			final List<SendTicketLineItemData> lineItemDataList = new ArrayList<SendTicketLineItemData>();
 			final SendTicketRequestData sendTicketRequestData = new SendTicketRequestData();
 
-			final List<AbstractOrderEntryModel> orderEntries = associatedEntries(subOrderModel, subOrderEntry.getTransactionId());
+			final List<AbstractOrderEntryModel> orderEntries = associatedEntries(subOrderModel, subOrderEntryTransactionId);
 			for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntries)
 			{
 				final SendTicketLineItemData sendTicketLineItemData = new SendTicketLineItemData();
@@ -422,7 +422,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 	
 	boolean initiateCancellation(final String ticketTypeCode, final OrderData subOrderDetails,
-			final OrderEntryData subOrderEntry, final OrderModel subOrderModel, final String reasonCode)
+			final String subOrderEntryTrnxId, final OrderModel subOrderModel, final String reasonCode)
 	{
 		boolean cancellationInitiated = false;
 
@@ -431,7 +431,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			if ("C".equalsIgnoreCase(ticketTypeCode))
 			{
 				final MplOrderCancelRequest orderCancelRequest = buildCancelRequest(reasonCode, subOrderModel,
-						subOrderEntry.getTransactionId());
+						subOrderEntryTrnxId);
 				requestOrderCancel(subOrderDetails, subOrderModel, orderCancelRequest);
 			}
 			cancellationInitiated = true;
@@ -662,7 +662,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		modelService.save(orderRequestRecord);
 	}
 	
-	PushNotificationData frameCancelPushNotification(final OrderModel subOrderModel, final Integer suborderEntryNumber,
+	PushNotificationData frameCancelPushNotification(final OrderModel subOrderModel, final String suborderEntryNumber,
 			final String reasonCode, final CustomerData customerData)
 	{
 		PushNotificationData pushData = null;
@@ -672,9 +672,10 @@ public class CustomOmsCancelAdapter implements Serializable
 			String cancelReason = null;
 			String cancelledItems = null;
 			AbstractOrderEntryModel entry = null;
+			Long subOrderNumber=Long.valueOf(suborderEntryNumber);
 			for (final AbstractOrderEntryModel orderEntry : subOrderModel.getEntries())
 			{
-				if (null != orderEntry.getEntryNumber() && orderEntry.getEntryNumber().intValue() == suborderEntryNumber.intValue())
+				if (null != orderEntry.getEntryNumber() && orderEntry.getEntryNumber().longValue() == subOrderNumber.longValue())
 				{
 					entry = orderEntry;
 					break;
@@ -711,7 +712,7 @@ public class CustomOmsCancelAdapter implements Serializable
 				for (final AbstractOrderEntryModel orderEntry : orderMod.getEntries())
 				{
 					if (null != orderEntry.getEntryNumber()
-							&& orderEntry.getEntryNumber().intValue() == suborderEntryNumber.intValue())
+							&& orderEntry.getEntryNumber().longValue() == subOrderNumber.longValue())
 					{
 						cancelledEntry = orderEntry;
 						break;

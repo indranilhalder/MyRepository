@@ -452,7 +452,38 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 				LOG.debug("Calling cancel Initiation process started");
 				OrderData orderData =customOmsCancelAdapter.convertToData(orderModel);
 				LOG.debug("orderData:"+orderData);
-				for(OrderEntryData subOrderEntries: orderData.getEntries()){
+				
+				for(AbstractOrderEntryModel orderEntryModel:orderModel.getEntries()){
+				 for(ConsignmentEntryModel consigmEntry:orderEntryModel.getConsignmentEntries()){
+					if(consigmEntry.getConsignment().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) && shipmentNewStatus.equals(ConsignmentStatus.CANCELLATION_INITIATED)){
+						LOG.debug("******************"+consigmEntry.getConsignment().getStatus());
+						LOG.debug("******************"+orderEntryModel.getTransactionID());
+						LOG.debug("******************"+orderEntryModel.getOrderLineId());
+					   customOmsCancelAdapter.createTicketInCRM(orderData, orderEntryModel.getTransactionID(), MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
+								MarketplaceomsordersConstants.REFUND_TYPE_CODE,  orderData.getCustomerData(), orderModel);
+						customOmsCancelAdapter.initiateCancellation(MarketplaceomsordersConstants.TICKET_TYPE_CODE, orderData, orderEntryModel.getTransactionID(), orderModel, MarketplaceomsordersConstants.REASON_CODE);
+						final String trackOrderUrl = configurationService.getConfiguration().getString(
+								MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+								+ orderModel.getCode();
+						final OrderProcessModel orderProcessModel = new OrderProcessModel();
+						orderProcessModel.setOrder(orderModel);
+						orderProcessModel.setOrderTrackUrl(trackOrderUrl);
+						final OrderRefundCreditedEvent orderRefundCreditedEvent = new OrderRefundCreditedEvent(orderProcessModel);
+						try
+						{
+							eventService.publishEvent(orderRefundCreditedEvent);
+						}
+						catch (final Exception e1)
+						{
+							LOG.error("Exception during sending mail or SMS >> " + e1.getMessage());
+						}
+						customOmsCancelAdapter.frameCancelPushNotification(orderModel, orderEntryModel.getOrderLineId(), MarketplaceomsordersConstants.REASON_CODE, orderData.getCustomerData());
+						
+					}
+				 }
+				}
+				
+			/*	for(OrderEntryData subOrderEntries: orderData.getEntries()){
 					if(subOrderEntries.getConsignment().getStatus().equals(ConsignmentStatus.CANCELLATION_INITIATED)){
 					customOmsCancelAdapter.createTicketInCRM(orderData, subOrderEntries, MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
 							MarketplaceomsordersConstants.REFUND_TYPE_CODE,  orderData.getCustomerData(), orderModel);
@@ -474,7 +505,9 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 					}
 					customOmsCancelAdapter.frameCancelPushNotification(orderModel, subOrderEntries.getEntryNumber(), MarketplaceomsordersConstants.REASON_CODE, orderData.getCustomerData());
 					}
-				}
+				}*/
+				
+				
 			}
 			
 			if(ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) && shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED)){
