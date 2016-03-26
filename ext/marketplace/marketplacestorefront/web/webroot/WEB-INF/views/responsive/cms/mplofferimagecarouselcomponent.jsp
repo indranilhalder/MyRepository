@@ -4,6 +4,9 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
 <div class="carousel-component">
+<div class="feature-collections">
+<h1>${component.title}</h1>
+</div>
 	<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference offersCarousel" id="shopByLookCarousel">
 		<c:forEach items="${component.collectionItems}" var="item">
 			<c:url value="${item.url}" var="url" />
