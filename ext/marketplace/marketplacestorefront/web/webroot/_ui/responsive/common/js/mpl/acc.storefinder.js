@@ -48,7 +48,7 @@ ACC.storefinder = {
 
 	bindPagination:function ()
 	{
-        console.debug("bindPagination"+document.getElementById("store-finder-map"));
+        //console.debug("bindPagination"+document.getElementById("store-finder-map"));
 	},
 
 	bindStoreChange:function()
@@ -60,7 +60,7 @@ ACC.storefinder = {
 		
 		$(document).on("change","#storelocator-query",function(e){
 			 
-			console.debug($("#storelocator-query").val())
+			//console.debug($("#storelocator-query").val())
 			var inputtext=$("#storelocator-query").val();
 			if(inputtext){ 
 			$('#storeSearchTextValue').text(inputtext);
@@ -164,12 +164,14 @@ ACC.storefinder = {
 		    var homeLegendsControl = new ACC.storefinder.StoreFinderLegendsControl(homeLegendsControlDiv, map);
 		    homeLegendsControlDiv.index = 1;
 			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
+			
 			map.fitBounds(bounds);
 			
 			//To control max zoom label
 			google.maps.event.addListenerOnce(map, 'bounds_changed', function(event){
-				  if(this.getZoom()>20);{
-					  this.setZoom(20); 
+				console.info(this.getZoom());
+				  if(this.getZoom()>18){
+					  this.setZoom(18); 
 				  }
 				});
 			
@@ -191,10 +193,10 @@ ACC.storefinder = {
 				geocoder.geocode({ 'address': q }, function(results, status) {
 				    if (status == google.maps.GeocoderStatus.OK) {
 				    	var searchLocation = results[0].geometry.location;
-				    	console.log("Check for logs.")
+				    	//console.log("Check for logs.")
 				    	lat=searchLocation.lat();
 				    	lng=searchLocation.lng();
-				    	console.log(lat);
+				    	//console.log(lat);
 				    	ACC.storefinder.getInitStoreData(null,lat,lng);
 				    }else{
 				    	ACC.storefinder.getInitStoreData(null,lat,lng);
@@ -231,7 +233,7 @@ ACC.storefinder = {
 			type: "get",
 			success: function (response){
 				console.info("ajax..got sucess full data.");
-				console.info(response);
+				//console.info(response);
 				if(response){
 				ACC.storefinder.storeData = $.parseJSON(response);
 				ACC.storefinder.refreshNavigation();
@@ -360,16 +362,19 @@ removeGamma:function(map) {
 		//controlDiv.style.background='white';
 		controlDiv.style.padding='10px';
 		 // Setup the different icons and shadows
-	    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+	    var iconURLPrefix = ACC.config.commonResourcePath+"/images/";
 	    
 	    var icons = [
-	      iconURLPrefix + 'red-dot.png',
-	      iconURLPrefix + 'green-dot.png',
-	      iconURLPrefix + 'blue-dot.png',
-	      iconURLPrefix + 'orange-dot.png',
-	      iconURLPrefix + 'purple-dot.png',
-	      iconURLPrefix + 'pink-dot.png',      
-	      iconURLPrefix + 'yellow-dot.png'
+	      iconURLPrefix + 'Bestseller_Legend.png',
+	      iconURLPrefix + 'CottonWorld_Legend.png',
+	      iconURLPrefix + 'Croma_Legend.png',
+	      iconURLPrefix + 'Dell_Legend.png',
+	      iconURLPrefix + 'Inc5_Legend.png',
+	      iconURLPrefix + 'Killer_Legend.png',
+	      iconURLPrefix + 'Lenovo_Legend.png',
+	      iconURLPrefix + 'Metro_Legend.png',
+	      iconURLPrefix + 'Tresmode_Legend.png',
+	      iconURLPrefix + 'Westside_Legend.png',
 	    ]
 	    var iconsLength = icons.length;
 	    var controlUI = document.createElement('div');
@@ -377,14 +382,20 @@ removeGamma:function(map) {
 	      controlUI.style.textAlign = 'center';
 	      controlUI.style.right='60px';
 	      controlUI.style.padding='10px';
+	      
 	      controlDiv.appendChild(controlUI);
 	      
 	    for (var i = 0; i < icons.length; i++) { 
 	    	 var div = document.createElement('div');
-	         div.innerHTML = "Sample Data" +'<img src="' + icons[i] + '"> ';
-	         controlUI.appendChild(div);
-	    }
-	    console.info(controlDiv);  
+		      var img1=document.createElement('img');
+		      img1.src=icons[i];
+		      img1.className='googleMapLegends';
+		      div.appendChild(img1);
+		      controlUI.appendChild(div);
+		     }
+	     // div.innerHTML = '<img src="' + ACC.config.commonResourcePath +"/images/Bestseller_Legend.png" + '" style="googleMapLegends"> ';
+	      
+	      console.info(controlDiv);  
 	  // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 	    
 	}

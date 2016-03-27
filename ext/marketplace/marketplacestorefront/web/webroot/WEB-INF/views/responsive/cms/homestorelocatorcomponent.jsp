@@ -145,8 +145,8 @@ function autoCenter(markers,map ) {
     map.fitBounds(bounds);
   //To control max zoom label
 	google.maps.event.addListenerOnce(map, 'bounds_changed', function(event){
-		  if(this.getZoom()>20);{
-			  this.setZoom(20); 
+		  if(this.getZoom()>18){
+			  this.setZoom(18); 
 		  }
 		});
   }
@@ -189,14 +189,18 @@ function staticLegends(map){
 //Add a Home control that returns the user to London
 function HomeLegendsControl(controlDiv, map) {
 	
-	 // Setup the different icons and shadows
-    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+	var iconURLPrefix = ACC.config.commonResourcePath+"/images/";
     var icons = [
-      iconURLPrefix + 'red-dot.png',
-      iconURLPrefix + 'green-dot.png',
-      iconURLPrefix + 'blue-dot.png',
-      iconURLPrefix + 'orange-dot.png',
-      iconURLPrefix + 'purple-dot.png',
+      iconURLPrefix + 'Bestseller_Legend.png',
+      iconURLPrefix + 'CottonWorld_Legend.png',
+      iconURLPrefix + 'Croma_Legend.png',
+      iconURLPrefix + 'Dell_Legend.png',
+      iconURLPrefix + 'Inc5_Legend.png',
+      iconURLPrefix + 'Killer_Legend.png',
+      iconURLPrefix + 'Lenovo_Legend.png',
+      iconURLPrefix + 'Metro_Legend.png',
+      iconURLPrefix + 'Tresmode_Legend.png',
+      iconURLPrefix + 'Westside_Legend.png',
     ]
     var iconsLength = icons.length;
     
@@ -207,13 +211,15 @@ function HomeLegendsControl(controlDiv, map) {
     var legend = document.getElementById('legend');
      
       for (var i = 0; i < icons.length; i++) { 
-    	 var div = document.createElement('div');
-         div.innerHTML = "Sample Data" +'<img src="' + icons[i] + '"> ';
-         div.style=legendStyle;
+    	  var div = document.createElement('div');
+	      var img1=document.createElement('img');
+	      img1.src=icons[i];
+	      img1.className='googleMapLegends';
+	      div.appendChild(img1);
          legend.appendChild(div);
     } 
       console.info(legend);
-      controlDiv.style.padding = '25px';
+      controlDiv.style.padding = '10px';
       var controlUI = document.createElement('div');
       controlUI.style.backgroundColor = '#ffffff';
       controlUI.style.textAlign = 'center';
