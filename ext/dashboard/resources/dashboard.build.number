@@ -1,8 +1,0 @@
-#Ant properties
-#Tue Oct 13 07:30:16 UTC 2015
-builddate=20151013 0730
-description=dashboard
-name=dashboard
-vendor=hybris
-version=5.5.1.5
-version.api=5.5.1
