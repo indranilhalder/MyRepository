@@ -5,7 +5,9 @@ import de.hybris.platform.commerceservices.model.process.StoreFrontCustomerProce
 import de.hybris.platform.commerceservices.url.UrlResolver;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.model.PDPEmailProcessModel;
@@ -28,8 +30,15 @@ public class PDPEmailContext extends CustomerEmailContext
 	private UrlResolver<ProductModel> productModelUrlResolver;
 	private static final String CUSTOMER_EMAIL = "customerEmail";
 	private static final String PRODUCT_NAME = "productName";
+
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
 	//	@Autowired
 	//	private UserService userService;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	protected UrlResolver<ProductModel> getProductModelUrlResolver()
 	{
@@ -73,9 +82,16 @@ public class PDPEmailContext extends CustomerEmailContext
 					put(PRODUCT_NAME, product.getName());
 				}
 
-
-
 			}
+
+			final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+					"1800-208-8282");
+			put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+			final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail",
+					"hello@tatacliq.com");
+			put(CUSTOMER_CARE_EMAIL, customerCareEmail);
 		}
 	}
 }
