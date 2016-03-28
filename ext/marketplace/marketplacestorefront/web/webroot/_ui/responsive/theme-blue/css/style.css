@@ -1556,7 +1556,7 @@ h2 {
         @media (min-width:791px) and (max-width: 1050px) {
           header .content nav > ul > li {
             margin-right: 0;
-            width: 120px; }
+            width: 115px; }
             
               header .content nav > ul > li > .toggle:after {
 			    margin-left: 3px;
@@ -7735,7 +7735,7 @@ text-transform: uppercase;}
 .newsletter button:hover {		
     background: #d89400; }
 
- @media ( min-width :790px) {
+ @media ( min-width :791px) {
 	.newsletter {
 		padding-left: 0;
 		text-align: left;
@@ -8199,7 +8199,7 @@ div.wishlist-content .pagination {
 	color: #A9143C;
 }
 
-@media ( min-width : 790px) {
+@media ( min-width : 791px) {
 	.social {
 		padding-left: 0;
 		padding-bottom: 15px;
@@ -8362,9 +8362,9 @@ div.wishlist-content .pagination {
 	min-height: 100%;
 }
 
-  @media(min-width:790px) {
+  @media(min-width:791px) {
 	   .body-Content {
-/* 	 	padding-bottom:430px; */
+ 	 	padding-bottom:445px; 
 	 }
 	  body.page-productDetails .body-Content {
 	 	padding-bottom:0px;
@@ -8532,7 +8532,7 @@ footer .banner {
 	background: linear-gradient(91deg, #A9143C 0%, #21f7ff 99%), url('../images/header-grad.png'); */
 }
 
-@media ( min-width : 790px) {
+@media ( min-width : 791px) {
 	footer {
 		clear: both;
 	}
@@ -8796,7 +8796,7 @@ footer .banner {
   clear: both;
   content: "";
   display: table; }
-@media (min-width: 790px) {
+@media (min-width: 791px) {
   .sign-in.tab-view {
     margin-top: 20px;
     width: 80%;
@@ -8809,7 +8809,7 @@ footer .banner {
   width: 100%;
   float: left;
   display: table; }
-  @media (min-width: 790px) {
+  @media (min-width: 791px) {
     .sign-in.tab-view .nav {
       width: 42%; } }
   .sign-in.tab-view .nav li {
@@ -8827,7 +8827,7 @@ footer .banner {
     vertical-align: middle;
     float: none;
      }
-    @media (min-width: 790px) {
+    @media (min-width: 791px) {
       .sign-in.tab-view .nav li {
         font-size: 20px;
          } }
@@ -8873,7 +8873,7 @@ footer .banner {
     position: relative; }
     .sign-in.tab-view .tabs > li.active {
       display: inline-block; }
-    @media (min-width: 790px) {
+    @media (min-width: 791px) {
       .sign-in.tab-view .tabs > li .left {
         width: 50%;
         float: left; 
@@ -8886,7 +8886,7 @@ footer .banner {
       margin-bottom: 15px;
       font-size: 14px;
     font-weight: 500; }
-      @media (min-width: 790px) {
+      @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left p {
           line-height: 1.5;
           margin-bottom: 0; } }
@@ -8898,7 +8898,7 @@ footer .banner {
       .sign-in.tab-view .tabs > li .left p{
       font-size:14px;
        font-weight: 500;}
-      @media (min-width: 790px) {
+      @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left form label {
           letter-spacing: 1.2px; } }
           .sign-in.tab-view .tabs > li .left form div#checkBox label,.sign-in.tab-view .tabs > li .left form div#checkBox label a{
@@ -8919,7 +8919,7 @@ footer .banner {
       line-height: 40px;
       font-size:12px;
       border: 1px solid #DFD1D5; }
-      @media (min-width: 790px) {
+      @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left form input {
           width: 100%;
           height: 30px;
@@ -8943,7 +8943,7 @@ footer .banner {
       font-weight: normal;
       letter-spacing: 1.2px;
       margin: 10px auto; }
-      @media (min-width: 790px) {
+      @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left form button {
           width: 100%;
           display: inline-block; } }
@@ -8961,7 +8961,7 @@ footer .banner {
       letter-spacing: 1.2px;
       text-decoration: underline;
       color: #A9143C;; }
-      @media (min-width: 790px) {
+      @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .left form a {
           width: 100%; } }
     .sign-in.tab-view .tabs > li .or {
@@ -8975,7 +8975,7 @@ footer .banner {
       -ms-transform: translateX(-50%) translateY(-50%);
       -o-transform: translateX(-50%) translateY(-50%);
       transform: translateX(-50%) translateY(-50%); }
-      @media (min-width: 790px) {
+      @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .or {
           position: absolute;
           margin: 0;
@@ -8990,7 +8990,7 @@ footer .banner {
       padding-right: 0;
       padding-top: 110px;
       background: transparent; }
-      @media (min-width: 790px) {
+      @media (min-width: 791px) {
         .sign-in.tab-view .tabs > li .register-section .social-connect {
           width: 40%;
           float: right;
@@ -9002,7 +9002,7 @@ footer .banner {
       .sign-in.tab-view .tabs > li .social-connect span {
         display: block;
         text-align: center; }
-        @media (min-width: 790px) {
+        @media (min-width: 791px) {
           .sign-in.tab-view .tabs > li .social-connect span {
             float: left;
             position: absolute;
@@ -9028,7 +9028,7 @@ footer .banner {
         text-transform: uppercase;
         border: 2px solid #ffb30c;
         color: #ffb30c; }
-        @media (min-width: 790px) {
+        @media (min-width: 791px) {
           .sign-in.tab-view .tabs > li .social-connect a.button {
             width: 80%;
             height: 30px;
@@ -9045,7 +9045,7 @@ footer .banner {
           background: #ffb30c;
           color: #fff;
           margin-right: 20px; }
-          @media (min-width: 790px) {
+          @media (min-width: 791px) {
             .sign-in.tab-view .tabs > li .social-connect a.button:before {
               height: 28px; } }
         .sign-in.tab-view .tabs > li .social-connect a.button.fb:before {
@@ -9065,7 +9065,7 @@ footer .banner {
   width: 100%;
   display: inline-block;
   float: left; }
-  @media (min-width: 790px) {
+  @media (min-width: 791px) {
     .sign-in.wrapper .sign-in.tab-view {
       width: 60%; } }
 .sign-in.wrapper .benefits {
@@ -9073,14 +9073,14 @@ footer .banner {
   display: inline-block;
   float: right;
  }
-  @media (min-width: 790px) {
+  @media (min-width: 791px) {
     .sign-in.wrapper .benefits {
       width: 35%; } }
   .sign-in.wrapper .benefits h2 {
     font-family: inherit;
     padding: 40px 0;
     text-align: center; }
-    @media (min-width: 790px) {
+    @media (min-width: 791px) {
       .sign-in.wrapper .benefits h2 {
         padding: 40px 0 0; } }
   .sign-in.wrapper .benefits ul li {
@@ -9090,7 +9090,7 @@ footer .banner {
     display: inline-block;
     width: 100%; }
     
-    @media (min-width: 790px) and (max-width: 800px) {
+    @media (min-width: 791px) and (max-width: 800px) {
     	.sign-in.wrapper .benefits ul li {
     		padding: 11px 22px;
     	}
@@ -20211,7 +20211,7 @@ color: #ff829a;
 	 header .content .bottom.active nav > ul > li:first-child + li
           {
           	padding:0px;
-          	width:120px;
+          	width:115px;
           	padding-top:10px;
           }
         /*   header .content .bottom.active nav
@@ -29048,7 +29048,7 @@ header.compact .content .right>ul>li.wishlist .wishlist-info {
   background-size: 1.4em 1.4em;
   background-repeat: repeat;
 }
-@media(min-width:791px){
+@media(min-width:319px){
 #loginDiv,#loginDiv td, #loginDiv table, #loginDiv tr, #loginDiv tbody, #loginDiv div,
 #loginDivReg,#loginDivReg td, #loginDivReg table, #loginDivReg tr, #loginDivReg tbody, #loginDivReg div,
 #loginDivCheckout,#loginDivCheckout td, #loginDivCheckout table, #loginDivCheckout tr, #loginDivCheckout tbody, #loginDivCheckout div,
@@ -36985,8 +36985,7 @@ span.mini-cart-close {
     text-align: center;
 }
 #checkBox .popover.top{
-        max-width: 80%;
-        width: 80% !important;
+        width: 300px !important;
 }
 }
 .exist-account{
@@ -37008,4 +37007,45 @@ font-size: 11px;
     font-size: 11px;
     line-height: 12px;
 display:inline;}
+@media(max-width:903px) and (min-width:791px){
+	#checkBox .popover.top{
+    left: 66px !important;
+}
+}
+@media(max-width:790px) and (min-width:651px){
+	#checkBox .popover.top{
+    left: 209px !important;
+}
+}
+@media(max-width:650px) and (min-width:386px){
+	#checkBox .popover.top{
+    left: 40px !important;
+}
+#checkBox .popover.top>.arrow{
+    left: auto !important;
+    right: 47px !important;
+}
+}
+@media(max-width:385px) and (min-width:354px){
+	#checkBox .popover.top{
+    left: 60px !important;
+    width: 250px !important;
+}
+#checkBox .popover.top>.arrow{
+    left: auto !important;
+    right: 17px !important;
+}
+
+}
+@media(max-width:353px){
+	#checkBox .popover.top{
+    left: 20px !important;
+    width: 250px !important;
+}
+#checkBox .popover.top>.arrow{
+    left: auto !important;
+    right: 100px !important;
+}
+
+}
 /*tata rewards css ends*/
