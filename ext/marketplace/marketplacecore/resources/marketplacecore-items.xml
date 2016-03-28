@@ -3995,6 +3995,15 @@
 				</attributes>
 			</itemtype>
 			<!-- End -->
+			
+			<!-- for offer Image carousel component  -->
+				<itemtype code="MplOfferImageCarouselComponent" extends="ImageCarouselComponent"
+ 				generate="true" autocreate="true"
+ 				jaloclass="com.tisl.mpl.jalo.cms.components.MplOfferImageCarouselComponent">
+ 				<description>It represents an offer Image Carousel component with extending  attributes from
+ 				ImageCarouselComponent .</description>
+ 				 			</itemtype>
+			
 		</typegroup>
 
 		<typegroup name="EmailProcesses">

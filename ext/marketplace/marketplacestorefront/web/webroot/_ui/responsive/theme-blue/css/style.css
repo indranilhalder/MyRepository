@@ -36787,7 +36787,7 @@ display:block;
 /*Store Finder and Home store locator css start here*/
 .store-finder-map {
     width:1300px;
-    height:400px;
+    height:450px;
     margin-left:20.5px;
 }
 
@@ -36983,5 +36983,11 @@ display:block;
 	display: inline-block;
     text-decoration: none;
     border-bottom: 0.5px solid
+}
+
+.googleMapLegends{
+  width:290px;
+  height:30px;
+  background-color : transparent;
 }
 /*Store Finder and Home store locator css end here*/
