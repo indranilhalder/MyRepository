@@ -418,7 +418,8 @@
 											    <c:set value="${subOrder.entries}" var="parentRefEntries" />
 											    <c:set value="0" var="cncQuantity" />
 	                                            <c:forEach items="${subOrder.entries}" var="parentRefEntry">
-		                                           <c:if	test="${parentRefEntry.deliveryPointOfService.address.id eq pos.id}">
+		                                           <c:if	test="${parentRefEntry.deliveryPointOfService.address.id eq pos.id 
+		                                           and parentRefEntry.mplDeliveryMode.code eq 'click-and-collect'}">
 		                                                  <c:set value="${cncQuantity+parentRefEntry.quantity}" var="cncQuantity" />     
 		                                           </c:if>
 	                                            </c:forEach> 
@@ -489,8 +490,9 @@
 													              </c:forEach>
 												               </c:when> 
 												               <c:otherwise>
+												                    <c:set var="status">${sellerOrder.status}</c:set>
                                                                  <c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
-														             <c:if test="${sellerOrderStatus eq sellerOrder.status}">
+														             <c:if test="${sellerOrderStatus eq status}">
 														              <c:set var="editButton" value="disable" />
 														            </c:if>
 														         </c:forEach>
@@ -1566,18 +1568,60 @@ $(function() {
 		}
 	}
 	
+	function checkWhiteSpace(text) {
+        var letters = new RegExp(/^(\w+\s?)*\s*$/);
+        var number = new RegExp(/\d/g);
+        if(letters.test(text))
+	        {
+	        	if(number.test(text))
+		        {
+		            return false;
+		        }
+		        else
+		        {
+		            var enteredText = text.split(" ");
+                    var length = enteredText.length;
+                    var count = 0;
+                    var countArray = new Array();
+                    for(var i=0;i<=length-1;i++) {
+                        if(enteredText[i]==" " || enteredText[i]=="" || enteredText[i]==null) {
+                            countArray[i] = "space";
+                            count++;
+                        } else {
+                            countArray[i] = "text";
+                        }
+                    }
+                    var lengthC = countArray.length;
+                    for(var i=0;i<=lengthC-1;i++) {
+                        //console.log(countArray[i+1]);
+                        if(countArray[i] == "space" && countArray[i+1] == "space" || countArray[i] == "text" && countArray[i+1] == "space" && countArray[i+2] == "text" || countArray[i] == "text" && countArray[i+1] == "space") {
+                            return false;
+                            break;
+                        } else if (i == lengthC-1) {
+                        	return true;
+                        	break;
+                        }   
+                    }
+		        }
+	        }
+	        else
+	        {
+	            return false;
+	        }
+    }
+	
 	 function editPickUpDetails(orderId) {
 		      var name=$("#pickUpName").val();
 		      var mobile=$("#pickMobileNo").val(); 	 
 		      var isString = isNaN(mobile);
 		      var mobile=mobile.trim();
-		      var regExp = new RegExp("^[a-zA-Z]+[ ]?[a-zA-Z]+$");
+		      //var regExp = new RegExp("^[a-zA-Z]+[ ]?[a-zA-Z]+$");
 		      $(".pickupPersonNameError, .pickupPersonMobileError").hide();
 		       if(name.length <= 3 ){    
 		    	     $(".pickupPersonNameError").show();
 		    	     $(".pickupPersonNameError").text("Enter Atleast 4 Letters");
 		      }
-		       else if(regExp.test(name) == false){
+		       else if(checkWhiteSpace(name) == false){
 		    	     $(".pickupPersonNameError").show();
 		    	     $(".pickupPersonNameError").text("Enter only Alphabet");
 		       }	       
@@ -1622,8 +1666,10 @@ $(function() {
 	}	 
 	$(document).ready(function(){
 		    var length = $(".returnStatus .dot").length;
-		    var percent = 100/parseInt(length);
-		    $(".returnStatus .dot").css("width", percent+"%");
+		    if(length >=3) {
+			    var percent = 100/parseInt(length);
+			    $(".returnStatus .dot").css("width", percent+"%");
+		    }
 		    
 		 $(".pickupeditbtn").click(function(){
 			
