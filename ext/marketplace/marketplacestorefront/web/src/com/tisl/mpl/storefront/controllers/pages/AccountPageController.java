@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.EmailVal
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.PasswordValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ProfileValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.verification.AddressVerificationResultHandler;
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
@@ -58,7 +59,6 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.Gender;
-import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -6800,22 +6800,30 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	public List<OrderStatus> isEditable()
+	public List<ConsignmentStatus> isEditable()
 	{
-		final List<OrderStatus> neededStatus = new ArrayList<OrderStatus>();
-		neededStatus.add(OrderStatus.ORDER_COLLECTED);
-		neededStatus.add(OrderStatus.ORDER_UNCOLLECTED);
-		neededStatus.add(OrderStatus.RETURN_INITIATED);
-		neededStatus.add(OrderStatus.RETURNINITIATED_BY_RTO);
-		neededStatus.add(OrderStatus.RETURN_CLOSED);
-		neededStatus.add(OrderStatus.QC_FAILED);
-		neededStatus.add(OrderStatus.CLOSED_ON_RETURN_TO_ORIGIN);
-		neededStatus.add(OrderStatus.RETURN_CANCELLED);
-		neededStatus.add(OrderStatus.COD_CLOSED_WITHOUT_REFUND);
-		neededStatus.add(OrderStatus.REFUND_INITIATED);
-		neededStatus.add(OrderStatus.REFUND_IN_PROGRESS);
-		neededStatus.add(OrderStatus.CLOSED_ON_CANCELLATION);
-		neededStatus.add(OrderStatus.CANCELLING);
+		final List<ConsignmentStatus> neededStatus = new ArrayList<ConsignmentStatus>();
+		neededStatus.add(ConsignmentStatus.RETURN_INITIATED);
+		neededStatus.add(ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND);
+		neededStatus.add(ConsignmentStatus.RETURN_TO_ORIGIN);
+		neededStatus.add(ConsignmentStatus.LOST_IN_TRANSIT);
+		neededStatus.add(ConsignmentStatus.REVERSE_AWB_ASSIGNED);
+		neededStatus.add(ConsignmentStatus.RETURN_RECEIVED);
+		neededStatus.add(ConsignmentStatus.RETURN_CLOSED);
+		neededStatus.add(ConsignmentStatus.RETURN_CANCELLED);
+		neededStatus.add(ConsignmentStatus.REDISPATCH_INITIATED);
+		neededStatus.add(ConsignmentStatus.CLOSED_ON_RETURN_TO_ORIGIN);
+		neededStatus.add(ConsignmentStatus.REFUND_INITIATED);
+		neededStatus.add(ConsignmentStatus.REFUND_IN_PROGRESS);
+		neededStatus.add(ConsignmentStatus.RETURN_REJECTED);
+		neededStatus.add(ConsignmentStatus.QC_FAILED);
+		neededStatus.add(ConsignmentStatus.CLOSED_ON_CANCELLATION);
+		neededStatus.add(ConsignmentStatus.CANCELLATION_INITIATED);
+		neededStatus.add(ConsignmentStatus.RETURN_COMPLETED);
+		neededStatus.add(ConsignmentStatus.ORDER_CANCELLED);
+		neededStatus.add(ConsignmentStatus.ORDER_COLLECTED);
+		neededStatus.add(ConsignmentStatus.ORDER_UNCOLLECTED);
+		neededStatus.add(ConsignmentStatus.RETURNINITIATED_BY_RTO);
 		return neededStatus;
 	}
 }

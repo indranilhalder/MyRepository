@@ -56,7 +56,6 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String COD_CHARGES = "codCharge";
 
 
-	private static final String STORENAME = "storeName";
 	private static final String MOBILENUMBER = "mobilenumber";
 	private static final String NAMEOFPERSON = "nameofperson";
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
@@ -96,16 +95,15 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(SHIPPINGCHARGE, shippingCharge);
 		//Setting first name and last name to NAMEOFPERSON
 		final StringBuilder name = new StringBuilder(150);
-		final Set<AddressModel> storeAddrList = new HashSet<AddressModel>();
+		final Set<PointOfServiceModel> storeAddrList = new HashSet<PointOfServiceModel>();
 		final StringBuilder deliveryAddr = new StringBuilder(150);
 		for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
 		{
 			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 			{
 				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
-				final AddressModel storeAddr = model.getAddress();
-				storeAddrList.add(storeAddr);
-				put(STORENAME, model.getName());
+				storeAddrList.add(model);
+				put(CNCSTOREADDRESS, storeAddrList);
 				put(CUSTOMER_NAME, CUSTOMER);
 
 			}
@@ -135,11 +133,6 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 					.append(COMMA).append(deliveryAddress.getAddressLine3()).append(COMMA).append(deliveryAddress.getTown())
 					.append(COMMA).append(deliveryAddress.getDistrict()).append(COMMA).append(deliveryAddress.getPostalcode());
 			put(DELIVERYADDRESS, deliveryAddr);
-		}
-
-		if (storeAddrList.size() > 0)
-		{
-			put(CNCSTOREADDRESS, storeAddrList);
 		}
 		put(COD_CHARGES, orderProcessModel.getOrder().getConvenienceCharges());
 

@@ -12,6 +12,10 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 
 
@@ -28,6 +32,7 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 	private static final String PICKUP_PERSON_NUMBER = "pickupPersonNo";
 	private static final String STORE_NAME = "storeName";
 	private static final String CUSTOMER_NAME = "customerName";
+	private static final String TIME = "time";
 	private static final Logger LOG = Logger.getLogger(OrderCollectedByPersonNotificationEmailContext.class);
 
 	@Override
@@ -35,6 +40,9 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 	{
 		super.init(orderProcessModel, emailPageModel);
 		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		put(TIME,dateFormat.format(cal.getTime()));
 		LOG.info("Order Collected By Nominal Person Email Context Class");
 		put(ORDERCODE, orderProcessModel.getOrder().getCode());
 		LOG.debug("Order Colletcted By Nominal Person Email Context ");
@@ -53,7 +61,7 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 		}
 		else
 		{
-			put(CUSTOMER_NAME, CUSTOMER_NAME);
+			put(CUSTOMER_NAME, CUSTOMER);
 		}
 
 	}

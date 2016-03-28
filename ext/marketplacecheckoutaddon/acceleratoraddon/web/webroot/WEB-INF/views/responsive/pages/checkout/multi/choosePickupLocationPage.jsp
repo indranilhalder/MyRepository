@@ -28,7 +28,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,places&callback=initializeGoogleMaps"></script>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <div class="checkout-content cart checkout wrapper">
 
 	<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
@@ -128,12 +128,17 @@
 						
 						.pickUpPersonAjax {
 						    text-align: left;
-						    padding: 5px 0px 5px 5px;
+						    padding: 10px;
 						    /* padding-top: 5px; */
 						    background: #D2F7F3;
 						    margin-bottom: 10px;
 						    color: #000;
 						    margin-top: -15px;
+						}
+						
+						.pickupText {
+							color: #A9143C;
+							padding-left: 15px; 
 						}
 						
 						@media (max-width:650px){
@@ -150,8 +155,8 @@
 						  	width: 920px !important;
 						  }
 						  .savenewid {
-						  	background: #00cbe9 !important;
-						  	border-color: #00cbe9 !important;
+						  	background: #A9143C !important;
+						  	border-color: #A9143C !important;
 						  	height: 40px !important;
 						  }
 						  
@@ -227,6 +232,11 @@
 								margin-top: 2px !important;
 								margin-left: -2px !important;
 								text-align: center;
+							}
+							
+							.fa-times {
+								cursor: pointer;
+								color: #A9143C;
 							}
 						  					 	
 					</style>
@@ -408,9 +418,11 @@
 					data : dataString,
 					success : function(data) {
 						//console.log("success call for pickup person details"+data);
-						$("#pickupPersonSubmit").text("1");
 						$(".pickUpPersonAjax").fadeIn(100);
-						$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
+						if($("#pickupPersonSubmit").text() != "1") {
+							$(".pickUpPersonAjax").append("<span class='pickupText'>Pickup Person Details Have Successfully Added.</span>");
+						}
+						$("#pickupPersonSubmit").text("1");
 
 					},
 					error : function(xhr, status, error) {
@@ -418,6 +430,10 @@
 					}
 				});
 			}
+			
+			$(".pickUpPersonAjax i").click(function(){
+				$(".pickUpPersonAjax").fadeOut(100);
+			});
 			
 			function submitPickupPersonDetailsOnLoad() {
 				if($("#pickupPersonName").val().length >= "1" && $("#pickupPersonMobile").val().length >= "1") {
@@ -1052,7 +1068,9 @@
 							      //  Go through each...
 							      for (var i = 0; i < markers.length; i++) {  
 											bounds.extend(markers[i].position);
-											
+											if(length${status1.index} <= 2) {
+												map.setZoom--;
+											}
 							      }
 							      //  Fit these bounds to the map
 							      map.fitBounds(bounds);
@@ -1072,30 +1090,33 @@
 			<span class="select_store error_txt" style="text-align: left;font-size: 15px;">
 			<spring:theme code="checkout.multi.cnc.select.products.validate.msg"/></span>
 			<div class="container" id='pickup'>
-       		<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
-     			 <div class="panel panel-body" style="margin-top: 14px;">
-     			 	<div class="col-md-12 pickupDetails error_txt">
-     			 	<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
-     			 	</div>
-     			 	<div class="pickUpPersonAjax">
-     			 	</div>
-     			 	<form name="pickupPersonDetails" action="#">
-     				 <div class="col-md-3">
-      					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
-       					 <div class="col-md-3">
-        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
-        					<div class="error_txt pickupPersonNameError"></div>
-            			</div>
-            			<div class="col-md-3">
-							<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
-							<div class="error_txt pickupPersonMobileError"></div>
-        			    </div>
-			             <div class="col-md-3">
-			             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
-			          <div id="pickupPersonSubmit"></div>
-			          <div class="error_txt pickupPersonSubmitError"></div>
-			            </div>
-			           </form>
+				<div class="panel">
+					<div class="pickUpPersonAjax">
+	     			 		<i class='fa fa-times'></i>
+	   			 	</div>
+   			 	</div>
+       			<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
+     			 	<div class="panel panel-body" style="margin-top: 14px;">
+     			 		<div class="col-md-12 pickupDetails error_txt">
+     			 		<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
+     			 		</div>
+	     			 	<form name="pickupPersonDetails" action="#">
+	     				 <div class="col-md-3">
+	      					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
+	       					 <div class="col-md-3">
+	        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
+	        					<div class="error_txt pickupPersonNameError"></div>
+	            			</div>
+	            			<div class="col-md-3">
+								<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
+								<div class="error_txt pickupPersonMobileError"></div>
+	        			    </div>
+				             <div class="col-md-3">
+				             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+				          <div id="pickupPersonSubmit"></div>
+				          <div class="error_txt pickupPersonSubmitError"></div>
+				            </div>
+				           </form>
 			            <div class="col-md-12" style="padding-top: 10px;">
 			            	<spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/>
 			            </div>
@@ -1104,7 +1125,7 @@
 		</div>
 		</div>
 		
-		<div class="right-block shipping" style="margin-top: 80px;">
+		<div class="right-block shipping" style="margin-top: 74px;">
 				<div class="checkout-order-summary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />

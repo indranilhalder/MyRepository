@@ -409,7 +409,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 					{
 						final boolean returnReqSuccess = createRefund(subOrderModel, abstractOrderEntryModel, reasonCode,
-								salesApplication);
+								salesApplication,returnAddress.getPincode());
 
 						LOG.debug("**********************************Return request successful :" + returnReqSuccess);
 					}
@@ -691,7 +691,112 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 		return returnReqCreated;
 	}
+	
+	/**
+	 * @author Techouts
+	 * @param subOrderModel
+	 * @param abstractOrderEntryModel
+	 * @param reasonCode
+	 * @param salesApplication
+	 * @param pinCode
+	 * @return boolean
+	 */
+	private boolean createRefund(final OrderModel subOrderModel, final AbstractOrderEntryModel abstractOrderEntryModel,
+			final String reasonCode, final SalesApplication salesApplication, final String pinCode)
+	{
 
+		boolean returnReqCreated = false;
+		boolean returnLogisticsCheck = true;
+		try
+		{
+			final ReturnRequestModel returnRequestModel = returnService.createReturnRequest(subOrderModel);
+			returnRequestModel.setRMA(returnService.createRMA(returnRequestModel));
+			//TISEE-5471
+			final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(subOrderModel.getCode());
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails,pinCode);
+			if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
+			{
+				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
+				{
+					if (StringUtils.isNotEmpty(response.getIsReturnLogisticsAvailable())
+							&& response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
+					{
+						returnLogisticsCheck = false;
+						break;
+					}
+				}
+			}
+			else
+			{
+				returnLogisticsCheck = false;
+			}
+			LOG.info(">> createRefund >>  Setting Type of Return " + returnLogisticsCheck);
+			if (returnLogisticsCheck)
+			{
+				//LOG.info(">> createRefund >> if >> Setting Type of Return " + returnLogisticsCheck);
+				returnRequestModel.setTypeofreturn(TypeofReturn.REVERSE_PICKUP);
+			}
+			else
+			{
+				//LOG.info("Setting Type of Return::::::" + returnLogisticsCheck);
+				returnRequestModel.setTypeofreturn(TypeofReturn.SELF_COURIER);
+			}
+
+			if (salesApplication != null)
+			{
+				returnRequestModel.setReturnRaisedFrom(salesApplication);
+			}
+			//End
+
+			if (null != abstractOrderEntryModel)
+			{
+				final RefundEntryModel refundEntryModel = modelService.create(RefundEntryModel.class);
+				refundEntryModel.setOrderEntry(abstractOrderEntryModel);
+				refundEntryModel.setReturnRequest(returnRequestModel);
+				refundEntryModel.setReason(RefundReason.valueOf(getReasonDesc(reasonCode)));
+				refundEntryModel.setStatus(ReturnStatus.RETURN_INITIATED);
+				refundEntryModel.setAction(ReturnAction.IMMEDIATE);
+				refundEntryModel.setNotes(getReasonDesc(reasonCode));
+				refundEntryModel.setExpectedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
+				refundEntryModel.setReceivedQuantity(abstractOrderEntryModel.getQuantity());//Single line quantity
+				refundEntryModel.setRefundedDate(new Date());
+				final List<PaymentTransactionModel> tranactions = subOrderModel.getPaymentTransactions();
+				if (CollectionUtils.isNotEmpty(tranactions))
+				{
+					final PaymentTransactionEntryModel paymentTransEntry = tranactions.iterator().next().getEntries().iterator()
+							.next();
+
+					if (paymentTransEntry.getPaymentMode() != null && paymentTransEntry.getPaymentMode().getMode() != null
+							&& "COD".equalsIgnoreCase(paymentTransEntry.getPaymentMode().getMode()))
+					{
+						refundEntryModel.setAmount(NumberUtils.createBigDecimal("0"));
+					}
+					else
+					{
+						final double amount = (abstractOrderEntryModel.getNetAmountAfterAllDisc() != null ? abstractOrderEntryModel
+								.getNetAmountAfterAllDisc().doubleValue() : 0D)
+								+ (abstractOrderEntryModel.getCurrDelCharge() != null ? abstractOrderEntryModel.getCurrDelCharge()
+										.doubleValue() : 0D);
+
+						refundEntryModel.setAmount(NumberUtils.createBigDecimal(Double.toString(amount)));
+					}
+				}
+				modelService.save(refundEntryModel);
+			}
+
+			modelService.save(returnRequestModel);
+
+			LOG.debug("*************** RMA number:" + returnRequestModel.getRMA());
+			returnReqCreated = true;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+			//return returnReqCreated;
+		}
+
+		return returnReqCreated;
+	}
 
 	private String getReasonDesc(final String reasonCode)
 	{
