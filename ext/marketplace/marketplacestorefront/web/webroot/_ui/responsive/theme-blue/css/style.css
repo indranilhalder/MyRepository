@@ -20,7 +20,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
  html,body,main {
 	height: 100%;
 } 
-body.page-notFound{
+body.page-notFound, body.page-nonBusinessErrorFound{
 	height:auto;
 }
 /* HTML5 display-role reset for older browsers */
@@ -8775,6 +8775,11 @@ footer .banner {
 .top.checkout-top .content ul li.step-done a {
 	    margin-left: 42px;
 }
+@media(max-width:650px){
+	.top.checkout-top .content ul li.step-done a {
+	padding-left: 0;
+    padding-right: 0;}
+}
 
 /* 	.top.checkout-top .content ul li a.active:after{				
 	  content: "";				
@@ -13977,8 +13982,7 @@ body.get-in-touch .shop-promos {
     transition: color 0.3s, background 0.3s;
 }
 .customer-care-tabs>.tabs .customer-care-tab>ul>li.second .message button:hover {
-    background-color: #fff;
-    color: #A9143C;
+    background-color: #88102C;
     -webkit-transition: color 0.15s, background 0.15s;
     -moz-transition: color 0.15s, background 0.15s;
     transition: color 0.15s, background 0.15s;
@@ -14212,8 +14216,7 @@ body.get-in-touch .shop-promos {
 }
 
 .wrapper.contactUsForm .file-input button:hover{
-	background-color: #fff;
-	color: #A9143C;
+	background-color: #88102C;
 }
 
 .customer-care-boxes {
@@ -18812,13 +18815,13 @@ height: 0;
     padding: 3px 5px;
     border: 1px solid #e4e4e4;
     background-color: #fff;
-    color: #565656;
+    color: #ff1c47;
     display: block;
     max-width: 105px;
     width: 100%;
 }
 .stockLevelStatus:hover{
-    color: #565656;
+    color: #ff1c47;
 }
 .out-of-stock-product{
 	opacity: .3 !important;
@@ -21103,7 +21106,6 @@ font-weight:600;
 .top.checkout-top .content ul li.step-done:before {
     height: 30px;
     width: 30px;
-    margin-left: 20px;
     background-size: 100%;
 }
 .secureTransaction{
@@ -22259,6 +22261,9 @@ body .account .new-address form div#checkBox label
   width: 100%;
   margin-bottom: 15px;
   line-height:12px;
+}
+.return-requestInvoice span{
+	color:#60A119;
 }
 .forgot-password-container label, .click2chat-container label, .click2call-container label, .create-new-wishlist-popup-container label{
   width: 100%;
@@ -24334,6 +24339,7 @@ body #account-invite .right-account>div form .mytextarea {
     resize: none;
     margin-bottom: 20px;
     padding: 5px 10px;
+    color: #60A119;
 }
 
 .owl-carousel .owl-controls .owl-buttons .disabled{
@@ -25961,12 +25967,12 @@ padding-left: 0px;}
 	    border: 2px solid #DFD1D5;
 }
 #returnRequestForm .submit-request,#returnRequestForm .request-cancel-submitButton {
-	width:200px;
+	width: 200px;
     color: #fff;
-    height: 30px;
+    height: 40px;
     line-height: 2px;
-    font-size:10px !important;
-    letter-spacing:1px;
+    font-size: 12px !important;
+    letter-spacing: 1.5px;
 
 }
 .return-requestInvoice .cancellation-request-block h1 {
@@ -32303,6 +32309,11 @@ a.list-group-item.active>.badge, .nav-pills>.active>a>.badge {
     background-image: url(../images/Clear.png);
     height: 24px;
     width: 24px;
+    float: left;
+    opacity: 1;
+    left: 0px;
+    margin-right: 10px;
+    display: block;
 }
 @media (max-width:790px) {
 	.alert-dismissable .close, .alert-dismissible .close {
@@ -32530,7 +32541,8 @@ button.close {
 }
 
 .modal-open {
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 	padding-right: 0px !important;	
 } 
 
