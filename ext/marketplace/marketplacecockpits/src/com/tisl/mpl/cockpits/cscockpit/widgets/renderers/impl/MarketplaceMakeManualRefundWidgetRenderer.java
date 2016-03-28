@@ -125,7 +125,8 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 											if (status
 													.equals(ConsignmentStatus.QC_FAILED)
 													|| status
-															.equals(ConsignmentStatus.RETURN_CLOSED)) {
+															.equals(ConsignmentStatus.RETURN_CLOSED) || status
+															.equals(ConsignmentStatus.RETURN_CANCELLED)) {
 												Vbox orderParentVbox = new Vbox();
 												// orderParentVbox.setSclass("manualRefundVbox");
 												createOrderDataTable(
@@ -338,7 +339,8 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 										if (status
 												.equals(ConsignmentStatus.QC_FAILED)
 												|| status
-														.equals(ConsignmentStatus.RETURN_CLOSED)) {
+														.equals(ConsignmentStatus.RETURN_CLOSED) ||  status
+														.equals(ConsignmentStatus.RETURN_CANCELLED)) {
 											Listitem tableRow = new Listitem();
 											// tableRow.setSclass("manualPaymentTableRow");
 											createDataRow(
