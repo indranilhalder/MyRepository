@@ -47,9 +47,16 @@
 			var anchorPoint = splitter[1];
 			
 			if(anchorPoint == 'trackOrder'){
+				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 				$('html, body').animate({
-			        scrollTop: $('#anchor').offset().top
+			        scrollTop: $('#shipping-track-order').offset().top - 150
 			    }, 500);
+				}
+				else{
+					$('html, body').animate({
+				        scrollTop: $('#shipping-track-order').offset().top - 10
+				    }, 500);
+				}
 			}
 		}
 		
