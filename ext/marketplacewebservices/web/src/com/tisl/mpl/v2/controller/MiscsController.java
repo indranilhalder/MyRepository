@@ -132,7 +132,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
-import com.tisl.mpl.helper.ProductDetailsHelper;
+
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
@@ -179,7 +179,7 @@ import com.tisl.mpl.wsdto.VersionListResponseData;
 import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import com.tisl.mpl.wsdto.SellerSlaveDTO;
 import com.tisl.mpl.wsdto.SlaveInfoDTO;
 
@@ -207,8 +207,6 @@ public class MiscsController extends BaseController
 	@Resource
 	private ModelService modelService;
 
-	@Autowired
-	private ProductDetailsHelper productDetailsHelper;
 
 	@Autowired
 	private ForgetPasswordFacade forgetPasswordFacade;

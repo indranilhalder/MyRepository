@@ -8,7 +8,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.event.EventService;
-import de.hybris.platform.servicelayer.model.ModelService;
+
 
 import javax.xml.bind.JAXBException;
 
@@ -33,8 +33,6 @@ public class CustomOmsCollectedAdapter
 	private static final Logger LOG = Logger.getLogger(CustomOmsCollectedAdapter.class);
 	
 	
-	@Autowired
-	private ModelService modelService;
 	
 	@Autowired
 	private EventService eventService;

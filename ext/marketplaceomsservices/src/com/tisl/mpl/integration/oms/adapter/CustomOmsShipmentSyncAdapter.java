@@ -8,9 +8,9 @@ import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
-import de.hybris.platform.commercefacades.order.OrderFacade;
+
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.ItemModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -48,7 +48,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.util.StringUtils;
+
 
 import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.shipping.Shipment;
@@ -94,18 +94,10 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 	private TimeService timeService;
 	private static final Logger LOG = Logger.getLogger(CustomOmsShipmentSyncAdapter.class);
 	
-	@Autowired
-	private TicketCreationCRMservice ticketCreate;
-	
-	@Autowired
-	private ReturnLogisticsService returnLogistics;
-	
-	@Autowired
-	private MplOrderService mplOrderService;
 	
 	
-	@Autowired
-	private MplJusPayRefundService mplJusPayRefundService;
+	
+	
 	
 	
 	

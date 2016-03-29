@@ -7,7 +7,7 @@ import de.hybris.platform.basecommerce.enums.CancelReason;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.basecommerce.enums.OrderCancelEntryStatus;
 import de.hybris.platform.basecommerce.enums.OrderModificationEntryStatus;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
+
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
@@ -33,7 +33,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.user.UserService;
+
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -63,7 +63,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
-import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
+
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
 import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
@@ -88,15 +88,12 @@ public class CustomOmsCancelAdapter implements Serializable
 	@Autowired
 	private OrderCancelService orderCancelService;
 	
-	@Autowired
-	private UserService userService;
 	
 	
 	@Autowired
 	private OrderModelService orderModelService;
 	
-	@Autowired
-	private CustomerFacade customerFacade;
+	
 	
 	@Autowired
 	private Converter<OrderModel, OrderData> orderConverter;
@@ -125,8 +122,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	@Autowired
 	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
 	
-	@Resource(name = "emailAndSmsNotification")
-	private EmailAndSmsNotification emailAndSmsNotification;
+	
 	
 	@Autowired
 	private BusinessProcessService businessProcessService;

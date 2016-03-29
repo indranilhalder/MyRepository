@@ -24,7 +24,7 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 
-import java.util.List;
+
 
 import com.tisl.mpl.v2.helper.StoresHelper;
 

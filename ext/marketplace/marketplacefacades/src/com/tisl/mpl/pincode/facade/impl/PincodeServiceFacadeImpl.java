@@ -97,8 +97,6 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		try
 		{
 			List<PinCodeResponseData> response = null;
-			final List<StoreLocationResponseData> storeLocationResponseDataList = null;
-			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 			//call to commerce db to get the latitude and longitude
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 			if( null != pinCodeModelObj){

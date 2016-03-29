@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.dao;
 
-import de.hybris.platform.basecommerce.constants.GeneratedBasecommerceConstants.Enumerations.PointOfServiceTypeEnum;
+
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;

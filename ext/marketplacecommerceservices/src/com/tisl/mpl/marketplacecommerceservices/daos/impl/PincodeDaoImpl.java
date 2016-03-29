@@ -86,7 +86,7 @@ public class PincodeDaoImpl implements PincodeDao
 		PincodeModel pincodeModel = null;
 		try
 		{
-			final StringBuilder query = new StringBuilder();
+			final StringBuilder query = new StringBuilder(50);
 			query.append("SELECT {PK} FROM {").append(PincodeModel._TYPECODE).append("} WHERE {").append("pincode")
 					.append("} = ?pincode");
 			LOG.debug(" Query for Pincode Service:" + query.toString());
@@ -126,7 +126,7 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double lonMax = Double.valueOf(((GPS) corners.get(1)).getDecimalLongitude());
 			final Double latMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLatitude());
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
-			final StringBuilder query = new StringBuilder();
+			final StringBuilder query = new StringBuilder(280);
 			query.append("SELECT {PK} FROM {").append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append("} WHERE {")
 					.append("latitude").append("} is not null AND {").append("longitude").append("} is not null AND {")
 					.append("latitude").append("} >= ?latMin AND {").append("latitude").append("} <= ?latMax AND {")
@@ -170,7 +170,7 @@ public class PincodeDaoImpl implements PincodeDao
 			final Double lonMax = Double.valueOf(((GPS) corners.get(1)).getDecimalLongitude());
 			final Double latMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLatitude());
 			final Double lonMin = Double.valueOf(((GPS) corners.get(0)).getDecimalLongitude());
-			final StringBuilder query = new StringBuilder();
+			final StringBuilder query = new StringBuilder(200);
 			query.append("SELECT {PK} FROM {").append(GeneratedBasecommerceConstants.TC.POINTOFSERVICE).append("} WHERE {")
 					.append("latitude").append("} is not null AND {").append("longitude").append("} is not null AND {")
 					.append("latitude").append("} >= ?latMin AND {").append("latitude").append("} <= ?latMax AND {")
