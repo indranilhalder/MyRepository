@@ -81,6 +81,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
+	final String radius = "marketplacestorefront.configure.radius";
 	/**
 	 * This method is used to check pincode is serviceable are not
 	 * 
@@ -100,7 +101,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			//call to commerce db to get the latitude and longitude
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 			if( null != pinCodeModelObj){
-			 String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null ? Config.getParameter("marketplacestorefront.configure.radius") : "0";
+			 String configurableRadius = Config.getParameter(radius) != null ? Config.getParameter(radius) : "0";
 			LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
 			final LocationDTO dto = new LocationDTO();
 			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
@@ -153,7 +154,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 			if (null != pinCodeModelObj){
-			final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius")!=null ? Config.getParameter("marketplacestorefront.configure.radius") : "0";
+			final String configurableRadius = Config.getParameter(radius)!=null ? Config.getParameter(radius) : "0";
 			LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
 			final LocationDTO dto = new LocationDTO();
 			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
