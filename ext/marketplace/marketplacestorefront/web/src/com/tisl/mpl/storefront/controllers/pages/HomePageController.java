@@ -107,6 +107,13 @@ public class HomePageController extends AbstractPageController
 
 	private static final String EMPTY_STRING = "";
 
+	private static final String EXCEPTION_MESSAGE_PRICE = "Exception to fetch price for product code";
+
+	private static final String EXCEPTION_MESSAGE_SHOWCASE = "Exception  in getJSONForShowCaseItem";
+
+	private static final String EXCEPTION_MESSAGE_NEWEXCLUSIVE = "Exception in getNewAndExclusive";
+
+
 	/**
 	 * @description this is called to load home page
 	 * @param logout
@@ -151,25 +158,43 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		JSONObject brandsYouLoveJson = new JSONObject();
-		final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section3Slot-Homepage",
-				version);
-
-
-		if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
+		try
 		{
-			components = homepageSection3Slot.getCmsComponents();
-		}
+			final ContentSlotModel homepageSection3Slot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
+					"Section3Slot-Homepage", version);
 
 
-		for (final AbstractCMSComponentModel component : components)
-		{
-			LOG.info("Found Component>>>>with id :::" + component.getUid());
-
-			if (component instanceof MplShowcaseComponentModel)
+			if (CollectionUtils.isNotEmpty(homepageSection3Slot.getCmsComponents()))
 			{
-				final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
-				brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
+				components = homepageSection3Slot.getCmsComponents();
 			}
+
+
+			for (final AbstractCMSComponentModel component : components)
+			{
+				LOG.info("Found Component>>>>with id :::" + component.getUid());
+
+				if (component instanceof MplShowcaseComponentModel)
+				{
+					final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
+					brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
+				}
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 
 
@@ -296,17 +321,17 @@ public class HomePageController extends AbstractPageController
 				catch (final EtailBusinessExceptions e)
 				{
 					price = EMPTY_STRING;
-					LOG.error("Exception to fetch price for product code" + firstProduct.getCode());
+					LOG.error(EXCEPTION_MESSAGE_PRICE + firstProduct.getCode());
 				}
 				catch (final EtailNonBusinessExceptions e)
 				{
 					price = EMPTY_STRING;
-					LOG.error("Exception to fetch price for product code" + firstProduct.getCode());
+					LOG.error(EXCEPTION_MESSAGE_PRICE + firstProduct.getCode());
 				}
 				catch (final Exception e)
 				{
 					price = EMPTY_STRING;
-					LOG.error("Exception to fetch price for product code" + firstProduct.getCode());
+					LOG.error(EXCEPTION_MESSAGE_PRICE + firstProduct.getCode());
 				}
 				showCaseItemJson.put("firstProductPrice", price);
 
@@ -322,22 +347,22 @@ public class HomePageController extends AbstractPageController
 					String price = null;
 					try
 					{
-						price = getProductPrice(firstProduct);
+						price = getProductPrice(secondProduct);
 					}
 					catch (final EtailBusinessExceptions e)
 					{
 						price = EMPTY_STRING;
-						LOG.error("Exception to fetch price for product code" + secondProduct.getCode());
+						LOG.error(EXCEPTION_MESSAGE_PRICE + secondProduct.getCode());
 					}
 					catch (final EtailNonBusinessExceptions e)
 					{
 						price = EMPTY_STRING;
-						LOG.error("Exception to fetch price for product code" + secondProduct.getCode());
+						LOG.error(EXCEPTION_MESSAGE_PRICE + secondProduct.getCode());
 					}
 					catch (final Exception e)
 					{
 						price = EMPTY_STRING;
-						LOG.error("Exception to fetch price for product code" + secondProduct.getCode());
+						LOG.error(EXCEPTION_MESSAGE_PRICE + secondProduct.getCode());
 					}
 					showCaseItemJson.put("secondProductPrice", price);
 				}
@@ -363,15 +388,15 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("Exception  in getJSONForShowCaseItem", e);
+			LOG.error(EXCEPTION_MESSAGE_SHOWCASE, e);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("Exception  in getJSONForShowCaseItem", e);
+			LOG.error(EXCEPTION_MESSAGE_SHOWCASE, e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception  in getJSONForShowCaseItem", e);
+			LOG.error(EXCEPTION_MESSAGE_SHOWCASE, e);
 		}
 		return showCaseItemJson;
 	}
@@ -380,18 +405,60 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getBestPicks", method = RequestMethod.GET)
 	public JSONObject getBestPicks(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section4CSlot-Homepage", version);
-		return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
+		JSONObject getBestPicksJson = new JSONObject();
+		try
+		{
+			final ContentSlotModel homepageSection4CSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
+					"Section4CSlot-Homepage", version);
+			//return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
+			getBestPicksJson = homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return getBestPicksJson;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getProductsYouCare", method = RequestMethod.GET)
 	public JSONObject getProductsYouCare(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section4DSlot-Homepage", version);
-		return homepageComponentService.getProductsYouCareJSON(homepageSection4DSlot);
+		JSONObject getProductsYouCareJson = new JSONObject();
+		try
+		{
+			final ContentSlotModel homepageSection4DSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
+					"Section4DSlot-Homepage", version);
+			getProductsYouCareJson = homepageComponentService.getProductsYouCareJSON(homepageSection4DSlot);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return getProductsYouCareJson;
 	}
 
 
@@ -448,17 +515,17 @@ public class HomePageController extends AbstractPageController
 							catch (final EtailBusinessExceptions e)
 							{
 								price = EMPTY_STRING;
-								LOG.error("Exception to fetch price for product code" + product.getCode());
+								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
 							}
 							catch (final EtailNonBusinessExceptions e)
 							{
 								price = EMPTY_STRING;
-								LOG.error("Exception to fetch price for product code" + product.getCode());
+								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
 							}
 							catch (final Exception e)
 							{
 								price = EMPTY_STRING;
-								LOG.error("Exception to fetch price for product code" + product.getCode());
+								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
 							}
 							newAndExclusiveProductJson.put("productPrice", price);
 							newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
@@ -470,17 +537,17 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("exception in getNewAndExclusive ", e);
+			LOG.error(EXCEPTION_MESSAGE_NEWEXCLUSIVE, e);
 
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error("exception in getNewAndExclusive ", e);
+			LOG.error(EXCEPTION_MESSAGE_NEWEXCLUSIVE, e);
 
 		}
 		catch (final Exception e)
 		{
-			LOG.error("exception in getNewAndExclusive ", e);
+			LOG.error(EXCEPTION_MESSAGE_NEWEXCLUSIVE, e);
 		}
 		return newAndExclusiveJson;
 
@@ -540,13 +607,33 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getPromoBannerHomepage", method = RequestMethod.GET)
 	public JSONObject getPromoBannerHomepage(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section4ASlot-Homepage",
+		JSONObject getPromoBannerHomepageJson = new JSONObject();
+		try
+		{
+			final ContentSlotModel homepageSection4ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
+					"Section4ASlot-Homepage",
 
-				version);
+					version);
 
-		//return getJsonBanner(homepageSection4ASlot, "promo");
-		return homepageComponentService.getJsonBanner(homepageSection4ASlot, "promo");
+			//return getJsonBanner(homepageSection4ASlot, "promo");
+			getPromoBannerHomepageJson = homepageComponentService.getJsonBanner(homepageSection4ASlot, "promo");
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return getPromoBannerHomepageJson;
 	}
 
 	/* Home Page StayQued */
@@ -554,12 +641,34 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getStayQuedHomepage", method = RequestMethod.GET)
 	public JSONObject getStayQuedHomepage(@RequestParam(VERSION) final String version)
 	{
-		final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
-				"Section5ASlot-Homepage",
+		JSONObject getStayQuedHomepageJson = new JSONObject();
+		try
+		{
+			final ContentSlotModel homepageSection5ASlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
+					"Section5ASlot-Homepage",
 
-				version);
-		//return getJsonBanner(homepageSection5ASlot, "stayQued");
-		return homepageComponentService.getJsonBanner(homepageSection5ASlot, "stayQued");
+					version);
+			//return getJsonBanner(homepageSection5ASlot, "stayQued");
+			getStayQuedHomepageJson = homepageComponentService.getJsonBanner(homepageSection5ASlot, "stayQued");
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+
+		return getStayQuedHomepageJson;
 
 	}
 
@@ -570,25 +679,44 @@ public class HomePageController extends AbstractPageController
 	{
 		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
 		JSONObject collectionShowcase = new JSONObject();
-		final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section6Slot-Homepage",
-				version);
-		if (CollectionUtils.isNotEmpty(homepageSection6Slot.getCmsComponents()))
+		try
 		{
-			components = homepageSection6Slot.getCmsComponents();
-		}
-
-
-		for (final AbstractCMSComponentModel component : components)
-		{
-			LOG.info("Found Component>>>>with id :::" + component.getUid());
-
-			if (component instanceof MplShowcaseComponentModel)
+			final ContentSlotModel homepageSection6Slot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
+					"Section6Slot-Homepage", version);
+			if (CollectionUtils.isNotEmpty(homepageSection6Slot.getCmsComponents()))
 			{
-				final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
-				collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
+				components = homepageSection6Slot.getCmsComponents();
 			}
+
+
+			for (final AbstractCMSComponentModel component : components)
+			{
+				LOG.info("Found Component>>>>with id :::" + component.getUid());
+
+				if (component instanceof MplShowcaseComponentModel)
+				{
+					final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
+					collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
+				}
+			}
+
 		}
 
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
 
 		return collectionShowcase;
 

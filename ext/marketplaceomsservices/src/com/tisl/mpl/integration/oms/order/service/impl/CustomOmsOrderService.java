@@ -6,7 +6,6 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandConfiguration;
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandFactory;
 import de.hybris.platform.integration.oms.order.data.OrderPlacementResult;
-import de.hybris.platform.integration.oms.order.service.OmsOrderService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.ticket.enums.CsTicketCategory;
@@ -25,8 +24,6 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 
 import com.hybris.commons.client.RestCallException;
 import com.hybris.oms.api.order.OrderFacade;
@@ -37,7 +34,7 @@ import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.service.MplSendOrderFromCommerceToCRM;
 
 
-public class CustomOmsOrderService implements OmsOrderService
+public class CustomOmsOrderService implements MplOmsOrderService
 {
 	private static final Logger LOG = Logger.getLogger(CustomOmsOrderService.class);
 	private OndemandHystrixCommandConfiguration hystrixCommandConfig;
@@ -46,49 +43,58 @@ public class CustomOmsOrderService implements OmsOrderService
 	private TicketBusinessService ticketBusinessService;
 	private ModelService modelService;
 	private OndemandHystrixCommandFactory ondemandHystrixCommandFactory;
-
-
-	@Autowired
 	private MplSendOrderFromCommerceToCRM ordercreation;
-	@Autowired
 	private MplCustomerWebService mplCustomerWebService;
 
-
-
-	public OrderPlacementResult createOmsOrder(final OrderModel orderModel)
+	@Override
+	public OrderPlacementResult createCrmOrder(final OrderModel orderModel)
 	{
-		orderModel.setExportedToOmsRetryCount(Integer.valueOf(orderModel.getExportedToOmsRetryCount().intValue() + 1));
-		getModelService().save(orderModel);
+		//orderModel.setExportedToCrmRetryCount(Integer.valueOf(orderModel.getExportedToCrmRetryCount().intValue() + 1));
+		//getModelService().save(orderModel);
 		OrderPlacementResult result = null;
 		Order order = null;
-
 		try
 		{
-			//Order request xml and response xml changes made for Audit purpose
-
 			order = getOrderConverter().convert(orderModel);
-			LOG.debug(">>>>>>>>>>>>> before OMS order call <<<<<<<<<<<<<<<<");
-			ordercreation.orderCreationDataToCRM(order);
-			LOG.debug(">>>>>>>>>>>>> After CRM order call <<<<<<<<<<<<<<<<");
-			if (null != orderModel.getUser().getUid())
+			LOG.debug("Before CRM order call for : " + order.getOrderId());
+			getOrdercreation().orderCreationDataToCRM(order);
+			LOG.debug("After CRM order call for : " + order.getOrderId());
+			if (orderModel.getUser() != null && null != orderModel.getUser().getUid())
 			{
-				LOG.debug(">>>>>>>>>>>>> calling customer update after order place <<<<<<<<<<<<<<<<");
-				mplCustomerWebService.customerModeltoWsData((CustomerModel) orderModel.getUser(), "U", false);
-				LOG.debug(">>>>>>>>>>>>>******* customer update success *********<<<<<<<<<<<<<<<<");
+				LOG.debug("Customer update after order place for Order : " + order.getOrderId() + " and Customer"
+						+ orderModel.getUser().getUid());
+				getMplCustomerWebService().customerModeltoWsData((CustomerModel) orderModel.getUser(), "U", false);
+				LOG.debug("Customer update success");
 			}
+			result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("CreateOmsOrder -- Exception occured while placing order due to  ", ex);
+			result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, ex);
+		}
+		return result;
+	}
 
+	@Override
+	public OrderPlacementResult createOmsOrder(final OrderModel orderModel)
+	{
+		OrderPlacementResult result = null;
+		Order order = null;
+		try
+		{
+			order = getOrderConverter().convert(orderModel);
+			//Order request xml and response xml changes made for Audit purpose
 			final String requestXml = getOrderAuditXml(order);
-
 			if (StringUtils.isNotEmpty(requestXml))
 			{
 				orderModel.setRequestXML(requestXml);
 			}
 			else
 			{
-				LOG.debug("CustomOmsOrderService : createOmsOrder requestXml is null or empty ");
+				LOG.debug("createOmsOrder requestXml is null or empty ");
 			}
 			getModelService().save(orderModel);
-
 
 			final Order orderResponse = getOrderRestClient().createOrder(order);
 			final String responseXml = getOrderAuditXml(orderResponse);
@@ -99,15 +105,9 @@ public class CustomOmsOrderService implements OmsOrderService
 			}
 			else
 			{
-				LOG.debug("CustomOmsOrderService : createOmsOrder responseXml is null or empty ");
+				LOG.debug("createOmsOrder responseXml is null or empty ");
 			}
-
 			getModelService().save(orderModel);
-
-
-
-
-
 			result = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
 
 		}
@@ -120,11 +120,9 @@ public class CustomOmsOrderService implements OmsOrderService
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("CustomOmsOrderService >> createOmsOrder >> Exception occured while placing order due to  ", ex);
+			LOG.error("CreateOmsOrder >> Exception occured while placing order due to ", ex);
 			result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, ex);
 		}
-
-
 		if (OrderPlacementResult.Status.SUCCESS.equals(result.getResult()))
 		{
 			orderModel.setOrderExportTime(new Date());
@@ -181,8 +179,8 @@ public class CustomOmsOrderService implements OmsOrderService
 		final Order order = returnOrder(orderModel);
 		try
 		{
-			ordercreation.orderCreationDataToCRM(order);
-			LOG.debug(">>>>>>>>>>>>> After CRM order call <<<<<<<<<<<<<<<<");
+			getOrdercreation().orderCreationDataToCRM(order);
+			LOG.debug("After CRM order call for Ticket for order :" + order.getOrderId());
 		}
 		catch (final Exception ex)
 		{
@@ -221,12 +219,8 @@ public class CustomOmsOrderService implements OmsOrderService
 					marshaller.marshal(order, writer);
 				}
 			}
-
 			xmlString = writer.toString();
-			/*
-			 * if (xmlString.length() > 4000) { xmlString = xmlString.substring(0, 3998); }
-			 */
-			LOG.debug("Order create xml end   =======================");
+			LOG.debug("Order create xml end");
 		}
 		catch (final Exception ex)
 		{
@@ -250,7 +244,6 @@ public class CustomOmsOrderService implements OmsOrderService
 		return this.orderConverter;
 	}
 
-	@Required
 	public void setOrderConverter(final Converter<OrderModel, Order> orderConverter)
 	{
 		this.orderConverter = orderConverter;
@@ -261,7 +254,6 @@ public class CustomOmsOrderService implements OmsOrderService
 		return this.orderRestClient;
 	}
 
-	@Required
 	public void setOrderRestClient(final OrderFacade orderRestClient)
 	{
 		this.orderRestClient = orderRestClient;
@@ -272,7 +264,6 @@ public class CustomOmsOrderService implements OmsOrderService
 		return this.ticketBusinessService;
 	}
 
-	@Required
 	public void setTicketBusinessService(final TicketBusinessService ticketBusinessService)
 	{
 		this.ticketBusinessService = ticketBusinessService;
@@ -283,7 +274,6 @@ public class CustomOmsOrderService implements OmsOrderService
 		return this.modelService;
 	}
 
-	@Required
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
@@ -294,7 +284,6 @@ public class CustomOmsOrderService implements OmsOrderService
 		return this.ondemandHystrixCommandFactory;
 	}
 
-	@Required
 	public void setOndemandHystrixCommandFactory(final OndemandHystrixCommandFactory ondemandHystrixCommandFactory)
 	{
 		this.ondemandHystrixCommandFactory = ondemandHystrixCommandFactory;
@@ -315,5 +304,22 @@ public class CustomOmsOrderService implements OmsOrderService
 	public void setOrdercreation(final MplSendOrderFromCommerceToCRM ordercreation)
 	{
 		this.ordercreation = ordercreation;
+	}
+
+	/**
+	 * @return the mplCustomerWebService
+	 */
+	public MplCustomerWebService getMplCustomerWebService()
+	{
+		return mplCustomerWebService;
+	}
+
+	/**
+	 * @param mplCustomerWebService
+	 *           the mplCustomerWebService to set
+	 */
+	public void setMplCustomerWebService(final MplCustomerWebService mplCustomerWebService)
+	{
+		this.mplCustomerWebService = mplCustomerWebService;
 	}
 }

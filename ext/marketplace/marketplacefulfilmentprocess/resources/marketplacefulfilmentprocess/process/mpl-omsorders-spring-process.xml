@@ -59,6 +59,9 @@
 		<property name="orderRestClient" ref="omsOrderRestClient" />
 		<property name="ticketBusinessService" ref="ticketBusinessService" />
 		<property name="modelService" ref="modelService" />
+		<property name="ordercreation" ref="ordercreation" />
+		<property name="mplCustomerWebService" ref="mplCustomerWebService" />
+		
 	</bean>
 	
 	
@@ -70,6 +73,7 @@
 		<property name="retryDelay" value="${hybris.omsorders.retryDelay}"/>
 		<property name="catalogVersionService" ref="catalogVersionService"/>
 		<property name="impersonationService" ref="impersonationService"/>
+		<property name="modelService" ref="modelService"/>
 	</bean>
 	
 	

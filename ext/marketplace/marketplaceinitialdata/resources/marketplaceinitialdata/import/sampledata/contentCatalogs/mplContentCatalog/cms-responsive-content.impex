@@ -339,11 +339,30 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 #The Products You Care About
 
 #MplCategoryCarouselComponent changes starts
-INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
-;;TMPProductsCareCategoriesCarouselComponent;Products You Care About Categories Carousel Component;MSH1011,MSH1111,MSH13,MSH12,MSH1010102,MSH1112103;TMPProductsCareCategoriesCarouselComponent;thumbnail
+#INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(code,$productCV);&componentRef;imageSize(code)
+#;;TMPProductsCareCategoriesCarouselComponent;Products You Care About Categories Carousel Component;MSH1011,MSH1111,MSH13,MSH12,MSH1010102,MSH1112103;TMPProductsCareCategoriesCarouselComponent;thumbnail
+
+#INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+#;;Section4DSlot-Homepage;TMPProductsCareCategoriesCarouselComponent
+
+#INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+#;;Section4DSlot-Homepage;Section4D;;Section4DSlot-Homepage;;;
+
+#TISPRD-630
+
+INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];name;categories(&componentRef);&componentRef;imageSize(code)
+;;ProductsYouCareCategoriesCarouselComponent;Products You Care About Categories Carousel Component;DressesImageCategoryComponent,TopsandTShirtsImageCategoryComponent,SkirtsImageCategoryComponent,KurtaKurtisImageCategoryComponent,SmartphonesImageCategoryComponent,TabletsImageCategoryComponent;ProductsYouCareCategoriesCarouselComponent;thumbnail
+
+INSERT_UPDATE MplImageCategoryComponent;$contentCV[unique=true];uid[unique=true];name;category(code,$productCV);&componentRef;isImageFromPCM[default='true']
+;;DressesImageCategoryComponent;Dresses Image Category Component;MSH1010100;DressesImageCategoryComponent
+;;TopsandTShirtsImageCategoryComponent;Tops and TShirts Image CategoryComponent;MSH1111100;TopsandTShirtsImageCategoryComponent
+;;SkirtsImageCategoryComponent;Skirts Image Category Component;MSH1011100;SkirtsImageCategoryComponent
+;;KurtaKurtisImageCategoryComponent;Kurta Kurtis Image Category Component;MSH1012100;KurtaKurtisImageCategoryComponent
+;;SmartphonesImageCategoryComponent;Smartphones Image Category Component;MSH1210100;SmartphonesImageCategoryComponent
+;;TabletsImageCategoryComponent;Tablets Image Category Component;MSH1211;TabletsImageCategoryComponent
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
-;;Section4DSlot-Homepage;TMPProductsCareCategoriesCarouselComponent
+;;Section4DSlot-Homepage;ProductsYouCareCategoriesCarouselComponent
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section4DSlot-Homepage;Section4D;;Section4DSlot-Homepage;;;

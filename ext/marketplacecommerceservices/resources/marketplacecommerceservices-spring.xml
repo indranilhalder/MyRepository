@@ -171,6 +171,7 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+    <!-- For Bulk Product Upload on HMC Configuration Screen -->
 	<bean id="productPromotionInterceptor" class="com.tisl.mpl.interceptor.ProductPromotionInterceptor">
 	</bean>
 
