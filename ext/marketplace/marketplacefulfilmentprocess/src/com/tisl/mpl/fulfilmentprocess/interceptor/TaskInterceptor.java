@@ -48,7 +48,7 @@ public class TaskInterceptor implements RemoveInterceptor
 				sb.append(task.getExpirationDate());
 				sb.append(",failed="); 
 				sb.append(task.getFailed());
-				sb.append(",runningOnClusterNode=") 
+				sb.append(",runningOnClusterNode=") ;
 				sb.append(task.getRunningOnClusterNode());
 				sb.append(",nodeId=");
                 sb.append(task.getNodeId());
