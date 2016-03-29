@@ -3,6 +3,7 @@ ACC.carousel = {
 	_autoload: [
 	     "myFun",
 	     "shopByLookCarousel",
+	     "offersCarousel",
 	     "categoryCarousel",
 	     "myStyleCarousel",
 	     "heroProductCarousel",
@@ -98,6 +99,19 @@ ACC.carousel = {
 			navigationText :[],
 			pagination:false,
 			items:2,
+			itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : false
+		});
+	},
+	offersCarousel: function(){
+		$(".offersCarousel").owlCarousel({
+			navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:4,
 			itemsDesktop : false, 
 			itemsDesktopSmall : false, 
 			itemsTablet: false, 

@@ -232,3 +232,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.sellerDetails.js"></script>
 </c:if> 
+<!-- Js entry for store finder -->
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder')}">
+ <script type="text/javascript" src="${commonResourcePath}/js/mpl/acc.storefinder.js"></script>
+</c:if>

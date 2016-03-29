@@ -232,9 +232,16 @@
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
+				<attribute qualifier="excludedProductCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion should not be applied for list of product codes separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
 				<attribute qualifier="productCodeList" autocreate="true"
 					generate="true" type="java.lang.String">
-					<description>Promotion to be applied for list of products separated by comma </description>
+					<description>Promotion to be applied for list of product codes separated by comma </description>
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
@@ -276,6 +283,13 @@
 				<attribute qualifier="secondProducts" autocreate="true"
 					generate="true" type="ProductCollection">
 					<description>The B products that the promotion should not be applied to</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute qualifier="secondProductCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion to be applied for list of second product codes separated by comma </description>
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
@@ -368,6 +382,13 @@
 				<attribute qualifier="secondProducts" autocreate="true"
 					generate="true" type="ProductCollection">
 					<description>The B products that the promotion should not be applied to</description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
+				<attribute qualifier="secondProductCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion to be applied for list of second product codes separated by comma </description>
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
@@ -846,6 +867,13 @@
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
+				<attribute qualifier="secondProductCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion to be applied for list of second product codes separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>
 				<attribute autocreate="true" qualifier="secondCategories"
 					type="CategoryCollection">
 					<description>the categories the given voucher is valid for.</description>
@@ -1252,6 +1280,9 @@
 					<description>This attribute will signfy the status of the seller product assciation. This will be used for delisting process</description>
 					<modifiers read="true" write="true" optional="true"
 						unique="false" />
+						<!-- TISPRD-207 Changes Start-->
+						<defaultvalue>em().getEnumerationValue("sellerAssociationStatusEnum","yes")</defaultvalue>
+						<!-- TISPRD-207 Changes End-->
 					<persistence type='property'>
 					<columntype database='oracle'>
 						<value>VARCHAR2(50)</value>
@@ -1712,6 +1743,13 @@
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
 				</attribute>
+				<attribute qualifier="secondProductCodeList" autocreate="true"
+					generate="true" type="java.lang.String">
+					<description>Promotion to be applied for list of second product codes separated by comma </description>
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="false"
+						optional="true" />
+				</attribute>				
 				<attribute autocreate="true" qualifier="secondCategories"
 					type="CategoryCollection">
 					<description>the categories the given voucher is valid for.</description>
@@ -2318,6 +2356,42 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
+					
+					<!--Newly Added R2 Three More Attributes In Seller Master -->
+				
+					<attribute autocreate="true" qualifier="isupdate"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+
+					<attribute autocreate="true" qualifier="collectionDays"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="daysToExtend"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="extensionTimes"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
+					<attribute autocreate="true" qualifier="clicknCollect"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>	
 	</itemtypes>

@@ -4,15 +4,23 @@
 package com.tisl.mpl.facade.product.impl;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SizeGuideModel;
@@ -21,7 +29,6 @@ import com.tisl.mpl.facade.comparator.SizeGuideComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.marketplacecommerceservices.service.SizeGuideService;
-import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.SizeGuideWsDTO;
 import com.tisl.mpl.wsdto.SizeGuideWsData;
 import com.tisl.mpl.wsdto.SizeGuideWsDataValue;
@@ -51,7 +58,10 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	@Resource(name = "sizeGuideComparator")
 	private SizeGuideComparator sizeGuideComparator;
-
+	@Resource(name = "productService")
+	private ProductService productService;
+	@Resource(name = "accProductFacade")
+	private ProductFacade productFacade;
 
 	/**
 	 * @description It is used for fetching all distinct Size Guides of an online product
@@ -106,7 +116,11 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return sizeGuideSortedDatas;
 	}
@@ -129,10 +143,29 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 		try
 		{
-			final Map<String, List<SizeGuideData>> sizeGuideDatas = getProductSizeguide(productCode, "x");
+			ProductModel productModel = null;
+			ProductData productData = null;
+			if (StringUtils.isNotEmpty(productCode))
+			{
+				productModel = productService.getProductForCode(productCode);
+			}
+			if (null != productModel)
+			{
+				productData = productFacade.getProductForOptions(productModel,
+						Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+								ProductOption.CATEGORIES, ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL,
+								ProductOption.CLASSIFICATION));
+			}
+
+			Map<String, List<SizeGuideData>> sizeGuideDatas = null;
+			/* TISMOBQ-42 */
+			if (StringUtils.isNotEmpty(productCode) && null != productData && StringUtils.isNotEmpty(productData.getRootCategory()))
+			{
+				sizeGuideDatas = getProductSizeguide(productCode, productData.getRootCategory());
+			}
 
 			/* Converting the SizeGuide Model to SizeGuide Web service Data transaction */
-			if (sizeGuideDatas != null)
+			if (null != sizeGuideDatas)
 			{
 				sizeGuideDataList = new ArrayList<SizeGuideWsData>();
 				for (final String dimension : sizeGuideDatas.keySet())
@@ -173,9 +206,10 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			//ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			sizeDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			sizeDTO.setError(MarketplacecommerceservicesConstants.SIZEGUIDE_NOT_FOUND);
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return sizeDTO;
 	}
@@ -251,7 +285,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */
 

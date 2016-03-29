@@ -27,8 +27,10 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
+import com.tisl.mpl.wsdto.AddressInfoDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 import com.tisl.mpl.wsdto.TicketlineItemsXMLData;
+
 
 
 /**
@@ -51,6 +53,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 	public void ticketCreationModeltoWsDTO(final SendTicketRequestData sendTicketRequestData) throws JAXBException
 
 	{
+		final AddressInfoDTO addressInfo = new AddressInfoDTO();
 		try
 		{
 			LOG.debug("....called ticket create to crm interface.....");
@@ -73,16 +76,60 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			if (null != sendTicketRequestData.getTicketType())
 			{
 				ticket.setTicketType(sendTicketRequestData.getTicketType());
+				LOG.debug("ticket create:TicketType>>>>> " + sendTicketRequestData.getTicketType());
 			}
+			if (null != sendTicketRequestData.getTicketSubType())
+			{
+				ticket.setTicketSubType(sendTicketRequestData.getTicketSubType());
+				LOG.debug("ticket create:TicketSubType>>>>> " + sendTicketRequestData.getTicketSubType());
+
+			}
+			if (null != sendTicketRequestData.getSource())
+			{
+				ticket.setSource(sendTicketRequestData.getSource());
+				LOG.debug("ticket create:Ticket Source>>>>> " + sendTicketRequestData.getSource());
+
+			}
+
+			if (null != sendTicketRequestData.getAlternateContactName())
+			{
+				ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+				LOG.debug("ticket create:Ticket AlternateContactName>>>>> " + sendTicketRequestData.getAlternateContactName());
+			}
+
+			if (null != sendTicketRequestData.getAlternatePhoneNo())
+			{
+				ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
+				LOG.debug("ticket create:Ticket AlternatePhoneNo>>>>> " + sendTicketRequestData.getAlternatePhoneNo());
+
+			}
+
 			if (null != sendTicketRequestData.getRefundType())
 			{
 				ticket.setRefundType(sendTicketRequestData.getRefundType());
+				LOG.debug("ticket create:Ticket RefundType>>>>> " + sendTicketRequestData.getRefundType());
+
 			}
 			if (null != sendTicketRequestData.getReturnCategory())
 			{
 				ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
-			}
+				LOG.debug("ticket create:Ticket ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
 
+			}
+			if (null != sendTicketRequestData.getAddressInfo())
+			{
+				addressInfo.setShippingFirstName(sendTicketRequestData.getAddressInfo().getShippingFirstName());
+				addressInfo.setShippingLastName(sendTicketRequestData.getAddressInfo().getShippingLastName());
+				addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
+				addressInfo.setAddress1(sendTicketRequestData.getAddressInfo().getAddress1());
+				addressInfo.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
+				addressInfo.setCountry(sendTicketRequestData.getAddressInfo().getCountry());
+				addressInfo.setCity(sendTicketRequestData.getAddressInfo().getCity());
+				addressInfo.setState(sendTicketRequestData.getAddressInfo().getState());
+				addressInfo.setPincode(sendTicketRequestData.getAddressInfo().getPincode());
+				addressInfo.setLandmark(sendTicketRequestData.getAddressInfo().getLandmark());
+			}
+			ticket.setAddressInfo(addressInfo);
 			final List<SendTicketLineItemData> sendTicketLineItemDataList = sendTicketRequestData.getLineItemDataList();
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
 			if (null != sendTicketLineItemDataList)
@@ -148,6 +195,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		LOG.info("Marshalling to file!!!!");
 		final StringWriter sw = new StringWriter();
 		m.marshal(ticketMasterXml, sw);
+		LOG.debug(" <<<<<<<<<<<<<< CRM Ticket Xml File >>>>>>>>>>>>>>>> " + m);
 		final String xmlString = sw.toString();
 		LOG.debug(xmlString);
 		if (null != xmlString && webResource != null)
@@ -192,15 +240,48 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			if (null != sendTicketRequestData.getTicketType())
 			{
 				ticket.setTicketType(sendTicketRequestData.getTicketType());
+				LOG.debug("ticket create:TicketType>>>>> " + sendTicketRequestData.getTicketType());
 			}
 			if (null != sendTicketRequestData.getRefundType())
 			{
 				ticket.setRefundType(sendTicketRequestData.getRefundType());
+				LOG.debug("ticket create:RefundType>>>>> " + sendTicketRequestData.getRefundType());
+
 			}
 			if (null != sendTicketRequestData.getReturnCategory())
 			{
 				ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
+				LOG.debug("ticket create: ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
+
 			}
+
+
+			if (null != sendTicketRequestData.getAlternateContactName())
+			{
+				ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+				LOG.debug("ticket create: AlternateContactName>>>>> " + sendTicketRequestData.getAlternateContactName());
+
+			}
+			if (null != sendTicketRequestData.getAlternatePhoneNo())
+			{
+				ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
+				LOG.debug("ticket create: AlternatePhoneNo>>>>> " + sendTicketRequestData.getAlternatePhoneNo());
+
+			}
+			if (null != sendTicketRequestData.getSource())
+			{
+				ticket.setSource(sendTicketRequestData.getSource());
+				LOG.debug("ticket create: Source>>>>> " + sendTicketRequestData.getSource());
+
+			}
+			if (null != sendTicketRequestData.getTicketSubType())
+			{
+				ticket.setTicketSubType(sendTicketRequestData.getTicketSubType());
+				LOG.debug("ticket create:TicketSubType>>>>> " + sendTicketRequestData.getTicketSubType());
+
+			}
+
+
 
 			final List<SendTicketLineItemData> sendTicketLineItemDataList = sendTicketRequestData.getLineItemDataList();
 			final ArrayList<TicketlineItemsXMLData> ticketlineItemsXMLDataList = new ArrayList<TicketlineItemsXMLData>();
@@ -268,8 +349,13 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					.post(ClientResponse.class);
 			LOG.debug(":::::::::::::::::::::response:::" + response);
 		}
+
 		final int responseCode = response.getStatus();
+
 		LOG.debug("output " + responseCode);
+
+		LOG.debug("The Response status is  " + response.getClientResponseStatus().getFamily());
+
 		return responseCode;
 	}
 

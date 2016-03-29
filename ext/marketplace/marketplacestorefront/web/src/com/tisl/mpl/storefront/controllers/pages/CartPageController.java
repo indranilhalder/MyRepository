@@ -89,6 +89,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -452,7 +453,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 * 
+	 *
 	 * @param model ,redirectModel
 	 */
 
@@ -702,13 +703,30 @@ public class CartPageController extends AbstractPageController
 
 						final SellerInformationModel sellerInfoForWishlist = mplSellerInformationService.getSellerDetail(entryModel
 								.getUssid());
+						//TISPRO-165 Putting Fulfillment type for Treat Yourself Section
+						if (sellerInfoForWishlist != null
+								&& sellerInfoForWishlist.getRichAttribute() != null
+								&& sellerInfoForWishlist.getRichAttribute().size() > 0
+								&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0).getDeliveryFulfillModes() != null
+								&& ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0).getDeliveryFulfillModes()
+										.getCode() != null)
 
-						final String sellerName = sellerInfoForWishlist.getSellerName();
-						if (entryModel.getUssid() != null && null != sellerName)
 						{
-							ussidMap.put(productData.getCode(), entryModel.getUssid());
-							model.addAttribute("ussidMap", ussidMap);
-							model.addAttribute("sellerName", sellerName);
+							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoForWishlist.getRichAttribute()).get(0)
+									.getDeliveryFulfillModes().getCode();
+
+							final String sellerName = sellerInfoForWishlist.getSellerName();
+							if (entryModel.getUssid() != null && null != sellerName)
+							{
+								ussidMap.put(productData.getCode(), entryModel.getUssid());
+								model.addAttribute("ussidMap", ussidMap);
+								model.addAttribute("sellerName", sellerName);
+							}
+							if (StringUtils.isNotEmpty(fulfillmentType))
+							{
+								model.addAttribute("fulfillmentType", fulfillmentType);
+
+							}
 						}
 						for (final OrderEntryData cart : cartData.getEntries())
 						{
@@ -757,6 +775,9 @@ public class CartPageController extends AbstractPageController
 
 			final String cartItemDelisted = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID);
+
+			final String payNowCouponCheck = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID);
+
 			//TISEE-3676
 			if (StringUtils.isNotEmpty(cartItemDelisted)
 					&& cartItemDelisted.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
@@ -793,6 +814,12 @@ public class CartPageController extends AbstractPageController
 			{
 				getSessionService().removeAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID);
 				GlobalMessages.addErrorMessage(model, MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_MESSAGE);
+			}
+			else if (StringUtils.isNotEmpty(payNowCouponCheck)
+					&& payNowCouponCheck.equalsIgnoreCase(MarketplacecommerceservicesConstants.TRUE))
+			{
+				getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.PAYNOWCOUPONINVALID);
+				GlobalMessages.addErrorMessage(model, MarketplacecheckoutaddonConstants.COUPONINVALID);
 			}
 		}
 	}
@@ -1062,7 +1089,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1107,7 +1134,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

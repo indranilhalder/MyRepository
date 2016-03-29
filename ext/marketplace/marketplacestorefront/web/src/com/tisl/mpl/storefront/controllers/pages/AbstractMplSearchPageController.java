@@ -133,6 +133,22 @@ public abstract class AbstractMplSearchPageController extends AbstractPageContro
 		model.addAttribute("isShowPageAllowed", calculateShowPaged(searchPageData, showMode));
 	}
 
+	protected void populateModelForCouponHistory(final Model model, final SearchPageData<?> searchPageData, final ShowMode showMode)
+	{
+		final int totalNoOfPages = searchPageData.getPagination().getNumberOfPages();
+		int numberPagesShown = getSiteConfigService().getInt(PAGINATION_NUMBER_OF_RESULTS_COUNT_COUPON, 2);
+		if (numberPagesShown > totalNoOfPages)
+		{
+			LOG.debug("*************** coupons : Set Number Of Pages Shown as 2 as its found greater than Total No Of Pages ***********");
+			numberPagesShown = 5;
+		}
+
+		model.addAttribute("numberPagesShownhist", Integer.valueOf(numberPagesShown));
+		model.addAttribute("searchPageDatahist", searchPageData);
+		model.addAttribute("isShowAllAllowedhist", calculateShowAll(searchPageData, showMode));
+		model.addAttribute("isShowPageAllowedhist", calculateShowPaged(searchPageData, showMode));
+	}
+
 	protected Boolean calculateShowAll(final SearchPageData<?> searchPageData, final ShowMode showMode)
 	{
 		return Boolean.valueOf((showMode != ShowMode.All && //

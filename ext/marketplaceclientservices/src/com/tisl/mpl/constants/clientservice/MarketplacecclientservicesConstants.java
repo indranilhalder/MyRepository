@@ -88,6 +88,7 @@ public class MarketplacecclientservicesConstants
 	public static final String RATING_PROXY_SET = "proxy.enabled".intern();
 	public static final String RATING_APIKEY = "gigya.apikey".intern();
 	public static final String RATING_PROXY = "proxy.address".intern();
+	public static final String BY_DATE = "byDate";
 	public static final String RATING_PROXY_PORT = "proxy.port".intern();
 	public static final String RATING_PROXY_ENABLED = "proxy.enabled".intern();
 	public static final String HTTPS_PROXYSET = "https.proxySet";
@@ -189,4 +190,17 @@ public class MarketplacecclientservicesConstants
 	public static final String REVIEWS_UID_EXCEPTION = "Gigya 'getReviewsByUID'  UID error";
 
 	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
+
+
+	public static final String URLFOR_STORELOC_FIRSTPHASE = "oms.storelocationserviceability.firstxmlphase";
+	public static final String URLFOR_STORELOC_SECONDPHASE = "oms.storelocationserviceability.secondxmlphase";
+	public static final String URLFOR_STORELOC_THIRDPHASE = "oms.storelocationserviceability.thirdxmlphase";
+
+	public static final String URLFOR_STORELOC_REALCALL = "oms.storelocationserviceability.realtimecall";
+	public static final String URLFOR_STORELOC_MOCKURL = "oms.storelocator.serviceabilility.url";
+	public static final String URLFOR_STORELOC_URL = "oms.storelocator.serviceabilility.url";
+	public static final String SESSIONTOKEN = "sessionToken".intern();
+	public static final String SESSIONSECRET = "sessionSecret".intern();
+	public static final String TARGETENV = "targetEnv";
+	public static final String MOBILE = "mobile";
 }

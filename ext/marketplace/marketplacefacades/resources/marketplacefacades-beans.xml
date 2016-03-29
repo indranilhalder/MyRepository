@@ -103,6 +103,7 @@
 		<property name="isDeliveryDateRequired" type="String"></property>
 		<property name="productCode" type="String"></property>
 		<property name="cartId" type="String"></property>
+		<property name="store" type="java.util.List&lt;java.lang.String>"></property>
 	</bean>
 
 
@@ -165,6 +166,8 @@
 		<property name="leastSizeProduct" type="String" />
 		<property name="productTitle" type="String" />
 		<!-- pdp changes ends -->
+		<property name="freebieProducts" type="java.util.List&lt;com.tisl.mpl.facades.data.FreebieProduct>"/>
+		<!--added freebieProducts to display at cnc page  -->
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -341,6 +344,8 @@
 		extends="de.hybris.platform.commercefacades.order.data.AbstractOrderData">
 		<property name="sellerOrderList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.OrderData>" />
+			<property name="pickupName" type="String"/>
+			<property name="pickupPhoneNumber" type="String"/>		
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.OrderDataTransactionForXML">
@@ -756,5 +761,24 @@
 	<bean class="de.hybris.platform.commercefacades.search.data.SearchStateData">
 		<property name="sns" type="boolean"/>
 	</bean>
-</beans>
 
+	<!-- Return Item Address Data -->
+	<bean class="com.tisl.mpl.facades.data.ReturnItemAddressData">
+		<property name="firstName" type="String"></property>
+		<property name="lastName" type="String"></property>
+		<property name="mobileNo" type="String"></property>
+		<property name="addressLane1" type="String"></property>
+		<property name="addressLane2" type="String"></property>
+		<property name="pincode" type="String"></property>
+		<property name="landmark" type="String"></property>
+		<property name="city" type="String"></property>
+		<property name="state" type="String"></property>
+		<property name="country" type="String"></property>
+		<property name="ussid" type="String"></property>
+		<property name="orderCode" type="String"></property>
+		<property name="refundType" type="String"></property>
+		<property name="ticketTypeCode" type="String"></property>
+		<property name="transactionId" type="String"></property>
+	</bean>
+
+</beans>

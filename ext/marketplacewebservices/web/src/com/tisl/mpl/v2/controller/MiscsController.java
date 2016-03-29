@@ -54,6 +54,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
@@ -61,6 +62,10 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.storelocator.location.Location;
+import de.hybris.platform.storelocator.location.impl.LocationDTO;
+import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.util.Config;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 
@@ -125,21 +130,23 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
-import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.populator.HttpRequestCustomerUpdatePopulator;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.service.HomescreenService;
 import com.tisl.mpl.service.MplCustomCategoryService;
 import com.tisl.mpl.service.MplRestrictionServiceImpl;
 import com.tisl.mpl.service.MplSellerMasterService;
+import com.tisl.mpl.service.MplSlaveMasterService;
 import com.tisl.mpl.service.MplValidateAgainstXSDService;
 import com.tisl.mpl.service.MplVersionService;
 import com.tisl.mpl.solrfacet.search.impl.DefaultMplProductSearchFacade;
@@ -163,6 +170,8 @@ import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.RestrictionPins;
 import com.tisl.mpl.wsdto.SearchDropdownWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
+import com.tisl.mpl.wsdto.SellerSlaveDTO;
+import com.tisl.mpl.wsdto.SlaveInfoDTO;
 import com.tisl.mpl.wsdto.StateListWsDto;
 import com.tisl.mpl.wsdto.StateWsDto;
 import com.tisl.mpl.wsdto.UserResultWsDto;
@@ -195,10 +204,6 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	@Resource
 	private ModelService modelService;
-
-	@Autowired
-	private ProductDetailsHelper productDetailsHelper;
-
 	@Autowired
 	private ForgetPasswordFacade forgetPasswordFacade;
 
@@ -256,6 +261,12 @@ public class MiscsController extends BaseController
 	private UpdateFeedbackFacade updateFeedbackFacade;
 	@Autowired
 	private MplNetBankingFacade mplNetBankingFacade;
+
+	@Autowired
+	private MplSlaveMasterService mplSlaveMasterService;
+
+	@Resource(name = "pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
 
 	/**
 	 * @return the configurationService
@@ -536,6 +547,9 @@ public class MiscsController extends BaseController
 	@Autowired
 	private PriceDataFactory priceDataFactory;
 
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
+
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
 	 */
@@ -698,6 +712,92 @@ public class MiscsController extends BaseController
 		}
 
 
+	}
+
+	/**
+	 * This is the rest call for SlaveMaster.
+	 *
+	 * @author TECHOUTS
+	 * @param slaves
+	 * @param request
+	 * @return WebSerResponseWsDTO
+	 */
+	@RequestMapping(value = "/{baseSiteId}/slaveMaster", method = RequestMethod.POST)
+	@ResponseBody
+	public WebSerResponseWsDTO saveSellerSlave(final InputStream slaves, final HttpServletRequest request)
+	{
+		final WebSerResponseWsDTO userResult = new WebSerResponseWsDTO(); //Object to store result
+		BufferedReader br = null;
+		final StringBuilder sb = new StringBuilder();
+		String saveStatus;
+		final Map map;
+		try
+		{
+			String line;
+			br = new BufferedReader(new InputStreamReader(slaves));
+			while ((line = br.readLine()) != null)
+			{
+				sb.append(line); //Storing data in String Builder object to in order to persist input stream.
+			}
+
+			final ServletContext servletContext = request.getSession().getServletContext();
+			final String relativeWebPath = MarketplacecommerceservicesConstants.SLAVE_MASTER_XSD_PATH;
+			final String absoluteDiskPath = servletContext.getRealPath(relativeWebPath);
+			final InputStream is0 = new ByteArrayInputStream(sb.toString().getBytes());
+			map = mplValidateAgainstXSDService.validateAgainstXSD(is0, absoluteDiskPath); //Validating XML input received XSD.
+
+
+			final InputStream is1 = new ByteArrayInputStream(sb.toString().getBytes());
+			final XStream xstream = new XStream();
+			xstream.processAnnotations(SellerSlaveDTO.class); // inform XStream to parse annotations in SellerInformationWSDTO class
+			xstream.processAnnotations(SlaveInfoDTO.class); // and in two other classes...
+			final String dateFormat = MarketplacecommerceservicesConstants.XSD_DATE_FORMAT;
+			final String timeFormat = "";
+			final String[] acceptableFormats =
+			{ timeFormat };
+			xstream.registerConverter(new DateConverter(dateFormat, acceptableFormats, true));
+			final SellerSlaveDTO sellerSlavedto = (SellerSlaveDTO) xstream.fromXML(is1); // parse
+			saveStatus = mplSlaveMasterService.insertUpdate(sellerSlavedto);
+			if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_CODE_1))
+			{
+				userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				userResult.setError(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
+				LOG.debug(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
+				return userResult;
+			}
+			if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_FLAG))
+			{
+				userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+				LOG.debug(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+				return userResult;
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
+			return userResult;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
+			return userResult;
+		}
+		catch (final Exception e)
+		{
+			userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+			userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			LOG.error(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG + ":" + e);
+			return userResult;
+		}
+		LOG.debug(MarketplacecommerceservicesConstants.DATA_SAVED_MSG);
+		userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
+		LOG.debug(map);
+		return userResult;
 	}
 
 	/**
@@ -1006,8 +1106,8 @@ public class MiscsController extends BaseController
 					String substr = "";
 					substr = searchString.substring(0, searchString.length() - 1);
 
-					wsData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(substr), component
-							.getMaxSuggestions().intValue()));
+					wsData.setSuggestions(
+							subList(productSearchFacade.getAutocompleteSuggestions(substr), component.getMaxSuggestions().intValue()));
 
 				}
 				final SearchStateData searchState = new SearchStateData();
@@ -1285,8 +1385,21 @@ public class MiscsController extends BaseController
 					 * data.setIsDeliveryDateRequired(MarketplacewebservicesConstants.NA); requestData.add(data); } }
 					 */
 					List<PinCodeResponseData> response = null;
-					response = pinCodeFacade.getResonseForPinCode(productCodeStr, pin,
-							productDetailsHelper.populatePinCodeServiceData(productCodeStr));
+					final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+					if (null != pinCodeModelObj)
+					{
+						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null
+								? Config.getParameter("marketplacestorefront.configure.radius") : "0";
+						LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
+						final LocationDTO dto = new LocationDTO();
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						final Location myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude..:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude..:" + myLocation.getGPS().getDecimalLongitude());
+						response = pinCodeFacade.getResonseForPinCode(productCodeStr, pin, pincodeServiceFacade
+								.populatePinCodeServiceData(productCodeStr, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
+					}
 					if (null != response)
 					{
 						dataList.setPincodeListResponse(response);
@@ -1558,7 +1671,7 @@ public class MiscsController extends BaseController
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
-			throws CMSItemNotFoundException
+					throws CMSItemNotFoundException
 	{
 		String returnValue = null;
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();

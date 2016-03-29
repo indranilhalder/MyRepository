@@ -3,12 +3,17 @@
  */
 package com.tisl.mpl.promotion.service.impl;
 
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.jalo.Category;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.europe1.model.PriceRowModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.security.JaloSecurityException;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.util.ArrayList;
@@ -19,6 +24,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -44,6 +50,13 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 	private static final Logger LOG = Logger.getLogger(UpdatePromotionalPriceServiceImpl.class);
 
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	private CatalogVersionService catalogVersionService;
+	@Autowired
+	private ConfigurationService configurationService;
+
 	public ModelService getModelService()
 	{
 		return modelService;
@@ -58,7 +71,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.promotion.service.UpdatePromotionalPriceService#updatePromotionalPrice(java.util.Collection,
 	 * java.util.Collection, java.lang.Double, java.util.Date, java.util.Date, boolean)
 	 */
@@ -71,6 +84,9 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		try
 		{
 			final List<String> product = new ArrayList<String>();
+			List<String> stagedProductList = new ArrayList<String>();
+			final List<String> promoproductList = new ArrayList<String>();
+
 			if (products != null && !products.isEmpty())
 			{
 				for (final Product itrProduct : products)
@@ -78,6 +94,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))
 					{
 						product.add(itrProduct.getAttribute("pk").toString());
+						promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString()); //For staged Product Details
 					}
 				}
 			}
@@ -92,6 +109,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))////call same method for product
 						{
 							product.add(itrProduct.getAttribute("pk").toString());
+							promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString()); //For staged Product Details
 						}
 					}
 
@@ -105,6 +123,12 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 			if (!product.isEmpty())
 			{
+				stagedProductList = getStagedProductDetails(promoproductList); // For adding the staged catalog price Row for Product
+				if (CollectionUtils.isNotEmpty(stagedProductList))
+				{
+					product.addAll(stagedProductList);
+				}
+
 				boolean updateSpecialPrice = false;
 				final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product);
 				for (final PriceRowModel price : priceRow)
@@ -164,6 +188,30 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		}
 	}
 
+	/**
+	 * For TISPRD-383 Get Staged Product Details
+	 *
+	 * @param productList
+	 * @return stagedProductList
+	 */
+	private List<String> getStagedProductDetails(final List<String> productList)
+	{
+		final List<String> stagedProductList = new ArrayList<String>();
+
+		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
+				.getConfiguration().getString("cronjob.promotion.catelog"), MarketplacecommerceservicesConstants.STAGED);
+
+		if (CollectionUtils.isNotEmpty(productList))
+		{
+			for (final String productCode : productList)
+			{
+				final ProductModel product = productService.getProductForCode(catalogVersionModel, productCode);
+				stagedProductList.add(product.getPk().toString());
+			}
+		}
+
+		return stagedProductList;
+	}
 
 	/**
 	 * @Description: To check whether to update the special price or not if seller restriction exists
@@ -191,11 +239,14 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 	@Override
 	public void disablePromotionalPrice(final List<Product> products, final List<Category> categories, final boolean isEnabled,
-			final Integer priority, final List<String> brands)
+			final Integer priority, final List<String> brands, final Long quantity)
 	{
 		try
 		{
 			final List<String> product = new ArrayList<String>();
+			List<String> stagedProductList = new ArrayList<String>();
+			final List<String> promoproductList = new ArrayList<String>();
+
 			if (products != null && !products.isEmpty())
 			{
 				for (final Product itrProduct : products)
@@ -203,6 +254,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))
 					{
 						product.add(itrProduct.getAttribute("pk").toString());
+						promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString());
 					}
 
 
@@ -218,6 +270,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))//call same method for product
 						{
 							product.add(itrProduct.getAttribute("pk").toString());
+							promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString());
 						}
 
 					}
@@ -231,11 +284,23 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 			if (!product.isEmpty())
 			{
+				stagedProductList = getStagedProductDetails(promoproductList); // For adding the staged catalog price Row for Product
+				if (CollectionUtils.isNotEmpty(stagedProductList))
+				{
+					product.addAll(stagedProductList);
+				}
 
 				final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product);
 				for (final PriceRowModel price : priceRow)
 				{
 					if (!isEnabled)
+					{
+						price.setPromotionStartDate(null);
+						price.setPromotionEndDate(null);
+						price.setIsPercentage(null);
+						price.setPromotionValue(null);
+					}
+					else if (null != quantity && quantity.longValue() > 1) //For TISPRD-383 : If Validated remove Special Price Details
 					{
 						price.setPromotionStartDate(null);
 						price.setPromotionEndDate(null);
@@ -530,6 +595,63 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 		return superCategories;
 
 
+	}
+
+
+	/**
+	 * @return the productService
+	 */
+	public ProductService getProductService()
+	{
+		return productService;
+	}
+
+
+	/**
+	 * @param productService
+	 *           the productService to set
+	 */
+	public void setProductService(final ProductService productService)
+	{
+		this.productService = productService;
+	}
+
+
+	/**
+	 * @return the catalogVersionService
+	 */
+	public CatalogVersionService getCatalogVersionService()
+	{
+		return catalogVersionService;
+	}
+
+
+	/**
+	 * @param catalogVersionService
+	 *           the catalogVersionService to set
+	 */
+	public void setCatalogVersionService(final CatalogVersionService catalogVersionService)
+	{
+		this.catalogVersionService = catalogVersionService;
+	}
+
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
 	}
 
 

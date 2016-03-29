@@ -25,5 +25,42 @@
 		<property name="flag" type="boolean"/>
 	</bean>
 	-->
+	<bean class="com.tisl.mpl.facades.data.StoreLocationRequestData">
+	  <property name="ussId" type="String" />
+	  <property name="storeId" type="java.util.List&lt;java.lang.String>"></property>
+	  <property name="fulfillmentType" type="String"/>
+	  <property name="transportMode" type="String"/>
+	  <property name="price" type="double"/>
+	   <property name="sellerId" type="String"/>
+</bean>
 
+	<bean class="com.tisl.mpl.facades.data.ATSResponseData">
+	  <property name="storeId" type="String" />
+	  <property name="quantity" type="int"></property>
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.data.StoreLocationResponseData">
+	  <property name="ussId" type="String" />
+	  <property name="ats" type="java.util.List&lt;com.tisl.mpl.facades.data.ATSResponseData>"/>
+	  <property name="error" type="String"/>
+	  <property name="errorCode" type="String"/>
+	  <property name="status" type="String"/>
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.data.ProudctWithPointOfServicesData">
+		<property name="product" type="de.hybris.platform.commercefacades.product.data.ProductData"/>
+		<property name="pointOfServices" type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>"/>
+		<property name="ussId" type="String"/>
+		<property name="sellerName" type="String"/>
+	</bean>
+	<bean class="de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData">
+		<property name="mplOpeningTime" type="String"/>
+		<property name="mplClosingTime" type="String"/>
+		<property name="mplWorkingDays" type="String"/>
+	</bean>
+	<bean class="com.tisl.mpl.facades.data.FreebieProduct">
+		<property name="sellerName" type="String"/>
+		<property name="qty" type="Long"/>
+		<property name="product" type="de.hybris.platform.commercefacades.product.data.ProductData"/>
+	</bean>
 </beans>

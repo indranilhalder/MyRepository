@@ -9,11 +9,15 @@
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement"%>
 
 <c:url value="/store-finder" var="storeFinderFormAction" />
-
+<input id="initialZoom" name="initialZoom" type="hidden" value="${initialZoom}"/>
+					 <input name="markerZoom" id="markerZoom" type="hidden" value="${markerZoom}"/>
+					 <input id="defLatitude" name="defLatitude" type="hidden" value="${latitude}"/>
+					 <input id="defLongitude" name="defLongitude" type="hidden" value="${longitude}"/>
+					 <input id="storefinderNoresult" name="storefinderNoresult" type="hidden" value="<spring:theme code="storelocator.error.no.results.title" text="No store results were found for your search criteria."/>"/>
 <div class="row">
 	<div class="col-lg-8">
-		<div class="headline"><spring:theme code="storeFinder.find.a.store" /></div>
-		
+		<%-- <div class="headline findaStoreHeadLin"><spring:theme code="storeFinder.find.a.store" /></div> --%>
+		 
 		<div class="store-finder-search">
 			<div class="row">
 				<div class="col-sm-6">
@@ -22,23 +26,32 @@
 							<div class="input-group">
 								<formElement:formInputBox idKey="storelocator-query" labelKey="storelocator.query" path="q" labelCSS="sr-only" inputCSS="form-control js-store-finder-search-input" mandatory="true"  placeholder="pickup.search.message" />
 								<span class="input-group-btn">
-									<button class="btn btn-primary" type="submit" data-search-empty="<spring:theme code="storelocator.error.no.results.subtitle" text="Check that you entered a valid postcode or place name."/>">
-										<span class="glyphicon glyphicon-search"></span>
+									<button class="store-btn btn-primary" type="submit" data-search-empty="<spring:theme code="storelocator.error.no.results.subtitle" text="Check that you entered a valid postcode or place name."/>">
+										<!-- <span class="glyphicon glyphicon-search"></span> -->
+										<span>Find A Store</span>
 									</button>
 								</span>
 							</div>
 						</ycommerce:testId>
 					</form:form>
 				</div>
-				<div class="col-sm-6">
+			</div>
+			<div class="row">
+			 <div class="col-sm-6">
 					<ycommerce:testId code="storeFinder_nearMe_button">
-						<button id="findStoresNearMe" class="btn btn-primary btn-block" type="button" disabled>
+						<%-- <button id="findStoresNearMe" class="btn-link" type="button">
 							<spring:theme code="storeFinder.findStoresNearMe"/>
-						</button>
+						</button> --%>
+						 <a id="findStoresNearMe" class="findStoresNearMe" disabled><spring:theme code="storeLocator.findStoresNearMe"/></a>
 					</ycommerce:testId>
 				
 				</div>
+				<div class="col-sm-6">
+				     <span class="storeNear"><spring:theme code="storeLocator.stores.Near"/></span>
+					 <label class="storeSearchTextValue" id="storeSearchTextValue"></label>
+				</div>
 			</div>
+			
 		</div>
 	</div>
 </div>

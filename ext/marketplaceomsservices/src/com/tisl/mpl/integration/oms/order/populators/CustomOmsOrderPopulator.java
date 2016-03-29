@@ -28,6 +28,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -168,7 +169,7 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 
 
 				final PaymentInfoModel paymentInfoSource = source.getPaymentInfo();
-				Address billingAddress = new Address();
+				Address billingAddress = null;
 				if (paymentMode != null && !paymentMode.equalsIgnoreCase(MarketplaceomsordersConstants.COD))
 				{
 					if (paymentInfoSource != null)
@@ -185,7 +186,14 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 								billingAddress = getAddressConverter().convert(address);
 							}
 						}
-						paymentInfo.setBillingAddress(billingAddress);
+						if(billingAddress != null)
+						{
+						  paymentInfo.setBillingAddress(billingAddress);
+						}
+						else
+						{
+							LOG.debug("Billing address is null");
+						}
 					}
 				}
 				else
@@ -194,7 +202,14 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 					{
 						billingAddress = getAddressConverter().convert(address);
 					}
-					paymentInfo.setBillingAddress(billingAddress);
+					if(billingAddress != null)
+					{
+					    paymentInfo.setBillingAddress(billingAddress);
+					}
+					else
+					{
+						LOG.debug("Billing address is null");
+					}
 				}
 				paymentInfos.add(paymentInfo);
 
@@ -211,9 +226,18 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			target.setUsername(((CustomerModel) source.getUser()).getCustomerID());
 		}
 
-		//stubbed as there is not there in user or address table
-		target.setFirstName(source.getDeliveryAddress().getFirstname());
-		target.setLastName(source.getDeliveryAddress().getLastname());
+		if (source.getDeliveryAddress() != null)
+		{
+			//stubbed as there is not there in user or address table
+			if (StringUtils.isNotBlank(source.getDeliveryAddress().getFirstname()))
+			{
+				target.setFirstName(source.getDeliveryAddress().getFirstname());
+			}
+			if (StringUtils.isNotBlank(source.getDeliveryAddress().getFirstname()))
+			{
+				target.setLastName(source.getDeliveryAddress().getLastname());
+			}
+		}
 
 		//target.setCancellable(true);
 	}
@@ -254,10 +278,22 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			shippingLastName = lastName;
 		}
 
-		target.setFirstName(firstName);
-		target.setLastName(lastName);
-		target.setShippingFirstName(shippingFirstName);
-		target.setShippingLastName(shippingLastName);
+		if (StringUtils.isNotBlank(firstName))
+		{
+			target.setFirstName(firstName);
+		}
+		if (StringUtils.isNotBlank(lastName))
+		{
+			target.setLastName(lastName);
+		}
+		if (StringUtils.isNotBlank(shippingFirstName))
+		{
+			target.setShippingFirstName(shippingFirstName);
+		}
+		if (StringUtils.isNotBlank(shippingLastName))
+		{
+			target.setShippingLastName(shippingLastName);
+		}
 	}
 
 	protected boolean isGuestCustomerOrder(final OrderModel order)

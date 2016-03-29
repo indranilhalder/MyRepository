@@ -3,9 +3,12 @@
 // */
 package com.tisl.mpl.facades.account.register.impl;
 
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
+import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
@@ -19,17 +22,21 @@ import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -42,17 +49,28 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.data.SendTicketLineItemData;
+import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.MplOrderFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
+import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
+import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
+import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.service.ReturnLogisticsService;
+import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
 
 /**
@@ -78,6 +96,27 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	private ConfigurationService configurationService;
 	@Autowired
 	private CustomerAccountService customerAccountService;
+
+	@Autowired
+	private CustomOmsOrderService customOmsOrderService;
+
+	@Autowired
+	private CustomerFacade customerFacade;
+
+	@Autowired
+	private OrderModelService orderModelService;
+
+	@Autowired
+	private ReturnLogisticsService returnLogistics;
+
+	@Autowired
+	private TicketCreationCRMservice ticketCreate;
+
+	@Autowired
+	private ModelService modelService;
+
+	@Autowired
+	private OrderModelDao orderModelDao;
 
 	protected static final Logger LOG = Logger.getLogger(DefaultMplOrderFacade.class);
 
@@ -489,8 +528,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		//TISEE-1067
 		if (null != orderEntryData.getConsignment()
 				&& orderEntryData.getConsignment().getStatus() != null
-				&& orderEntryData.getConsignment().getStatus().getCode()
-						.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) && sortInvoice.containsKey(tranSactionId))
+				&& (orderEntryData.getConsignment().getStatus().getCode()
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment()
+						.getStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
+				&& sortInvoice.containsKey(tranSactionId))
 		{
 			orderEntryData.setShowInvoiceStatus(sortInvoice.get(tranSactionId).booleanValue());
 		}
@@ -578,8 +619,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					final int actualReturnWindow = Integer.parseInt(richAttributeModel.get(0).getReturnWindow());
 					if (null != orderEntryData.getConsignment()
 							&& null != orderEntryData.getConsignment().getStatus()
-							&& orderEntryData.getConsignment().getStatus().getCode()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+							&& (orderEntryData.getConsignment().getStatus().getCode()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || orderEntryData.getConsignment()
+									.getStatus().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.COLLECTED))
 							&& returnWindow <= actualReturnWindow)
 					{
 						orderEntryData.setItemReturnStatus(true);
@@ -692,6 +734,348 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		return isCheckChildCancellable;
 	}
 
+
+
+
+	@Override
+	public String editPickUpInfo(final String orderId, final String name, final String mobile)
+	{
+
+
+		try
+		{
+			LOG.debug("Send PickUpDetails Based On OrderId");
+			orderModelService.updatePickUpDetailService(orderId, name, mobile);
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			LOG.error("Update PickDetails that time Error Rasing");
+			return MarketplaceFacadesConstants.STATUS_FAILURE;
+		}
+		LOG.info("Update PickUp Details successfully");
+		return MarketplaceFacadesConstants.STATUS_SUCESS;
+	}
+
+	@Override
+	public void createCrmTicketUpdatePickDetails(final String orderId)
+	{
+		OrderModel orderModel = null;
+		try
+		{
+			orderModel = orderModelDao.getOrderModel(orderId);
+
+			if (orderModel != null)
+			{
+				try
+				{
+					LOG.info(" OMS Call From Commerece when PickUp Person Details Updated");
+					customOmsOrderService.upDatePickUpDetails(orderModel);
+
+				}
+				catch (final Exception e)
+				{
+					LOG.error("update pickup_person details then ");
+
+				}
+				for (final OrderModel childOrders : orderModel.getChildOrders())
+				{
+					for (final AbstractOrderEntryModel entry : childOrders.getEntries())
+					{
+						if (null != entry
+								&& entry.getMplDeliveryMode().getDeliveryMode().getCode()
+										.equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+						{
+							final SendTicketRequestData ticket = new SendTicketRequestData();
+							final CustomerData customerData = customerFacade.getCurrentCustomer();
+							if (null != customerData)
+							{
+								ticket.setCustomerID(customerData.getUid());
+							}
+							final List<SendTicketLineItemData> lineItemData = new ArrayList<SendTicketLineItemData>();
+							final SendTicketLineItemData reqData = new SendTicketLineItemData();
+							reqData.setLineItemId(entry.getOrderLineId());
+							lineItemData.add(reqData);
+							ticket.setLineItemDataList(lineItemData);
+							ticket.setSource(MarketplacecommerceservicesConstants.SOURCE);
+							ticket.setOrderId(orderModel.getCode());
+							ticket.setTicketType(MarketplacecommerceservicesConstants.TICKET_TYPE);
+							ticket.setTicketSubType(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE);
+							ticket.setAlternateContactName(orderModel.getPickupPersonName());
+							ticket.setAlternatePhoneNo(orderModel.getPickupPersonMobile());
+
+							final String asyncEnabled = configurationService.getConfiguration()
+									.getString(MarketplacecommerceservicesConstants.ASYNC_ENABLE).trim();
+							//create ticket only if async is not working
+							if (asyncEnabled.equalsIgnoreCase("N"))
+							{
+								LOG.debug(" ****** Before CRM Ticket Creatin *********");
+								ticketCreate.ticketCreationModeltoWsDTO(ticket);
+								LOG.debug(" ******* After CRM Ticket Creatin ********");
+							}
+							else
+							{
+								// CRM ticket Cron JOB data preparation
+								saveTicketDetailsInCommerce(ticket);
+							}
+
+						}
+
+					}
+				}
+			}
+		}
+		catch (final JAXBException ex)
+		{
+			LOG.error(" >> Exception occured while CRM ticket creation", ex);
+		}
+	}
+
+
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
+	 */
+	@Override
+	public void createcrmTicketForCockpit(final OrderModel mainOrder, final String costomerId, final String source)
+
+	{
+		LOG.debug("Insise createcrmTicketForCockpit method");
+		/* final OrderModel orderModel = null; */
+		try
+		{
+			customOmsOrderService.upDatePickUpDetails(mainOrder);
+		}
+		catch (final Exception e)
+		{
+			LOG.debug("Excepton at OMS Calling  >>>>>" + e);
+		}
+
+		final String mainOrderId = mainOrder.getCode();
+		try
+		{
+			final List<OrderModel> ordermodel = mainOrder.getChildOrders();
+			for (final OrderModel model : ordermodel)
+			{
+				final String subOrderId = model.getCode();
+				final List<AbstractOrderEntryModel> entries = model.getEntries();
+				for (final AbstractOrderEntryModel entry : entries)
+				{
+					String orderStatus = entry.getOrder().getStatus().getCode();
+					try
+					{
+						if (CollectionUtils.isNotEmpty(entry.getConsignmentEntries()))
+						{
+							final ConsignmentStatus consignmentStatus = entry.getConsignmentEntries().iterator().next().getConsignment()
+									.getStatus();
+							orderStatus = consignmentStatus.getCode();
+
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.debug("Consignment Entries Null" + e);
+					}
+					if (entry.getMplDeliveryMode().getDeliveryMode().getCode()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+							&& entry.getQuantity().intValue() > 0 && checkStastus(orderStatus))
+
+
+					{
+
+						final SendTicketRequestData ticket = new SendTicketRequestData();
+
+						final List<SendTicketLineItemData> lineItemData = new ArrayList<SendTicketLineItemData>();
+						final SendTicketLineItemData reqData = new SendTicketLineItemData();
+						reqData.setLineItemId(entry.getOrderLineId());
+						lineItemData.add(reqData);
+						ticket.setLineItemDataList(lineItemData);
+						if (null != entry.getOrderLineId())
+						{
+							ticket.setOrderId(mainOrderId);
+						}
+						if (null != subOrderId)
+						{
+							ticket.setSubOrderId(subOrderId);
+						}
+						if (null != costomerId)
+						{
+							ticket.setCustomerID(costomerId);
+						}
+						if (null != source)
+						{
+							ticket.setSource(source);
+						}
+
+						ticket.setTicketType(MarketplacecommerceservicesConstants.TICKET_TYPE);
+						ticket.setTicketSubType(MarketplacecommerceservicesConstants.TICKET_SUB_TYPE);
+
+						if (null != mainOrder.getPickupPersonName())
+						{
+							ticket.setAlternateContactName(mainOrder.getPickupPersonName());
+						}
+						if (null != mainOrder.getPickupPersonMobile())
+						{
+							ticket.setAlternatePhoneNo(mainOrder.getPickupPersonMobile());
+						}
+
+						final String asyncEnabled = configurationService.getConfiguration()
+								.getString(MarketplacecommerceservicesConstants.ASYNC_ENABLE).trim();
+						//create ticket only if async is not working
+						if (asyncEnabled.equalsIgnoreCase("N"))
+						{
+							LOG.debug(" ****** Before CRM Ticket Creatin *********");
+							ticketCreate.ticketCreationModeltoWsDTO(ticket);
+							LOG.debug(" ******* After CRM Ticket Creatin ********");
+						}
+						else
+						{
+							// CRM ticket Cron JOB data preparation
+							saveTicketDetailsInCommerce(ticket);
+						}
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			LOG.error("<<<<<<<<<<<Exception Rasing convert OrderModel to SendTicketRequestData Wto of class>>>>>>>>" + e);
+		}
+	}
+
+
+	// For checking order entry status
+
+	private boolean checkStastus(final String orderEntryStatus)
+	{
+		LOG.debug("Checking order status for CRM Ticket");
+		final List<String> nonChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_FAILED.getCode(),
+				OrderStatus.RETURNINITIATED_BY_RTO.getCode());
+
+		final List<String> nonChangableOrdeStatusList = Arrays.asList(ConsignmentStatus.CANCELLATION_INITIATED.getCode(),
+				ConsignmentStatus.CANCELLED.getCode(), ConsignmentStatus.CLOSED_ON_CANCELLATION.getCode(),
+				ConsignmentStatus.CLOSED_ON_RETURN_TO_ORIGIN.getCode(), ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND.getCode(),
+				ConsignmentStatus.ORDER_CANCELLED.getCode(), ConsignmentStatus.ORDER_COLLECTED.getCode(),
+				ConsignmentStatus.ORDER_REJECTED.getCode(), ConsignmentStatus.ORDER_UNCOLLECTED.getCode(),
+				ConsignmentStatus.QC_FAILED.getCode(), ConsignmentStatus.REFUND_IN_PROGRESS.getCode(),
+				ConsignmentStatus.REFUND_INITIATED.getCode(), ConsignmentStatus.RETURN_CANCELLED.getCode(),
+				ConsignmentStatus.RETURN_CLOSED.getCode(), ConsignmentStatus.RETURN_INITIATED.getCode(),
+				ConsignmentStatus.RETURN_RECEIVED.getCode(), ConsignmentStatus.RETURN_TO_ORIGIN.getCode(),
+				ConsignmentStatus.RETURN_COMPLETED.getCode());
+
+		if (nonChangableOrdeStatus.contains(orderEntryStatus)
+				|| nonChangableOrdeStatusList.contains(orderEntryStatus.toUpperCase()))
+		{
+			return false;
+		}
+
+		return true;
+
+	}
+
+
+
+
+	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)
+	{
+		String crmRequest = null;
+
+		final CRMTicketDetailModel ticket = modelService.create(CRMTicketDetailModel.class);
+		if (null != sendTicketRequestData.getCustomerID())
+		{
+			ticket.setCustomerID(sendTicketRequestData.getCustomerID());
+			LOG.debug("ticket create: customer Id>>>>> " + sendTicketRequestData.getCustomerID());
+		}
+		if (null != sendTicketRequestData.getOrderId())
+		{
+			ticket.setOrderId(sendTicketRequestData.getOrderId());
+			LOG.debug("ticket create:order Id>>>>> " + sendTicketRequestData.getOrderId());
+		}
+		if (null != sendTicketRequestData.getSubOrderId())
+		{
+			ticket.setSubOrderId(sendTicketRequestData.getSubOrderId());
+			LOG.debug("ticket create:suborder Id>>>>> " + sendTicketRequestData.getSubOrderId());
+		}
+
+		if (null != sendTicketRequestData.getTicketType())
+		{
+			ticket.setTicketType(sendTicketRequestData.getTicketType());
+			LOG.debug("ticket create: TicketType>>>>> " + sendTicketRequestData.getTicketType());
+		}
+		if (null != sendTicketRequestData.getTicketSubType())
+		{
+			ticket.setTicketSubType(sendTicketRequestData.getTicketSubType());
+			LOG.debug("ticket create: TicketSubType>>>>> " + sendTicketRequestData.getTicketSubType());
+		}
+		if (null != sendTicketRequestData.getRefundType())
+		{
+			ticket.setRefundType(sendTicketRequestData.getRefundType());
+			LOG.debug("ticket create: RefundType>>>>> " + sendTicketRequestData.getRefundType());
+
+		}
+		if (null != sendTicketRequestData.getReturnCategory())
+		{
+			ticket.setReturnCategory(sendTicketRequestData.getReturnCategory());
+			LOG.debug("ticket create: ReturnCategory>>>>> " + sendTicketRequestData.getReturnCategory());
+
+		}
+		if (null != sendTicketRequestData.getSource())
+		{
+			ticket.setSource(sendTicketRequestData.getSource());
+			LOG.debug("ticket create: Source>>>>> " + sendTicketRequestData.getSource());
+
+		}
+
+
+		if (null != sendTicketRequestData.getAlternateContactName())
+		{
+			ticket.setAlternateContactName(sendTicketRequestData.getAlternateContactName());
+			LOG.debug("ticket create: AlternateContactName>>>>> " + sendTicketRequestData.getAlternateContactName());
+
+		}
+		if (null != sendTicketRequestData.getAlternatePhoneNo())
+		{
+			ticket.setAlternatePhoneNo(sendTicketRequestData.getAlternatePhoneNo());
+			LOG.debug("ticket create: AlternatePhoneNo>>>>> " + sendTicketRequestData.getAlternatePhoneNo());
+
+		}
+
+		final TicketMasterXMLData ticketXmlData = ticketCreate.ticketCreationModeltoXMLData(sendTicketRequestData);
+		if (ticketXmlData != null)
+		{
+			try
+			{
+				crmRequest = ticketCreate.createCRMRequestXml(ticketXmlData);
+			}
+			catch (final JAXBException ex)
+			{
+				LOG.info(MarketplacecclientservicesConstants.EXCEPTION_IS);
+
+			}
+			ticket.setCRMRequest(crmRequest);
+		}
+		modelService.save(ticket);
+	}
+
+	/**
+	 * This method used for sorting deliveryMode in sequence of HD ED CNC
+	 *
+	 * @return List Of deliveryMode
+	 */
+	@Override
+	public List<String> filterDeliveryMode()
+	{
+		final List<String> deliveryMode = new ArrayList<String>();
+		deliveryMode.add(MarketplaceFacadesConstants.HD);
+		deliveryMode.add(MarketplaceFacadesConstants.EXPRESS);
+		deliveryMode.add(MarketplaceFacadesConstants.C_C);
+		return deliveryMode;
+	}
+
 	/**
 	 * @return the mplSellerInformationService
 	 */
@@ -708,5 +1092,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	{
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
+
 
 }

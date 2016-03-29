@@ -9,6 +9,7 @@ import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
@@ -157,19 +158,20 @@ public class SalesOrderXMLUtility
 			final List<PaymentTransactionModel> list = orderData.getPaymentTransactions();
 			if (null != list && !list.isEmpty())
 			{
-				for (final PaymentTransactionModel oModel : list)
+				for (final PaymentTransactionModel ptModel : list)
 				{
 
-					// check COD
-					for (final PaymentTransactionEntryModel paymentObj : oModel.getEntries())
+					// check COD TISPRD-361
+					if (null != ptModel.getEntries())
 					{
-						if (null != paymentObj.getPaymentMode() && null != paymentObj.getPaymentMode().getMode()
-								&& paymentObj.getPaymentMode().getMode().equalsIgnoreCase("COD"))
+						for (final PaymentTransactionEntryModel paymentObj : ptModel.getEntries())
 						{
-							isCOD = true;
-							LOG.debug("After check cod");
+							if (null != paymentObj.getType() && paymentObj.getType().equals(PaymentTransactionType.COD_PAYMENT))
+							{
+								isCOD = true;
+								LOG.debug("After check cod");
+							}
 						}
-
 					}
 				}
 			}
@@ -350,7 +352,28 @@ public class SalesOrderXMLUtility
 					{
 						xmlToFico = false;
 					}
-
+					//deliveryMode
+					if (null != entry.getMplDeliveryMode() && xmlToFico)
+					{
+						LOG.debug("DeliveryMode Setting into childOrderDataforXml");
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+						{
+							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.CnC);
+						}
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+						{
+							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.HD);
+						}
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+						{
+							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.ED);
+						}
+						LOG.info("DeliveryMode For FICO  >>>>>>>> " + entry.getMplDeliveryMode().getDeliveryMode().getCode());
+					}
+					else
+					{
+						xmlToFico = false;
+					}
 					if (null != (entry.getOrderLineId()) || null != (entry.getTransactionID()) && xmlToFico)
 					{
 						xmlData.setTransactionId((entry.getOrderLineId() != null) ? entry.getOrderLineId() : entry.getTransactionID());

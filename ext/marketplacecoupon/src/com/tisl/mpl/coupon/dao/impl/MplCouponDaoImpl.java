@@ -9,12 +9,17 @@ import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.servicelayer.search.SearchResult;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +61,17 @@ public class MplCouponDaoImpl implements MplCouponDao
 		try
 		{
 			final String queryString = MarketplacecouponConstants.VOUCHERWITHINDATEQUERY;
+			LOG.debug("queryString: " + queryString);
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			return getFlexibleSearchService().<VoucherModel> search(query).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
 		catch (final Exception e)
 		{
@@ -106,13 +120,14 @@ public class MplCouponDaoImpl implements MplCouponDao
 					//.append(" AND  {vin.user}='")
 					.append(customer.getPk().getLongValue())
 					.append(
-							"'  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} ASC");
+							"'  }}) AND {v.redemptionQuantityLimit} > ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}}) ORDER BY {dr.startdate} DESC");
 			//.append(" }})")
 			//.append(" AND {v.redemptionQuantityLimit} >")
 			//.append(" ({{select count(*) from {VoucherInvalidation as vin} where {vin.voucher}={v.pk}}})")
 			//.append(" ORDER BY {dr.startdate} ASC");
 
 			final String CLOSED_VOUCHER = queryBiulder.toString();
+			LOG.debug("queryString: " + CLOSED_VOUCHER);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, CLOSED_VOUCHER
 
@@ -121,6 +136,14 @@ public class MplCouponDaoImpl implements MplCouponDao
 
 			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
 
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
 		catch (final Exception e)
 		{
@@ -146,27 +169,34 @@ public class MplCouponDaoImpl implements MplCouponDao
 		{
 			final StringBuilder queryBiulder = new StringBuilder(600);
 			final Map queryParams = new HashMap();
-			queryParams.put(MarketplacecouponConstants.CUSTOMERPK, customer);
 
-			queryBiulder
-					.append(
-							"select {vi.pk} from {VoucherInvalidation as vi JOIN voucher as v ON  {v.pk}={vi.voucher}  JOIN order as or ON {vi.order}={or.pk}} where  {vi.user} like('%")
-					.append(customer.getPk().getLongValue()).append("%') ORDER BY {vi.creationtime} DESC");
+			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			//			final Calendar calendar = Calendar.getInstance();
+			//			calendar.add(Calendar.MONTH, -6);
+			//			final Date sixMonthsBeforeDate = calendar.getTime();
+			//			final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
+			final String currentDate = formatter.format(new Date());
 
-			//final String VOUCHER_HISTORY_QUERY = "select {vi.pk} from {VoucherInvalidation as vi JOIN voucher as v ON  {v.pk}={vi.voucher}  "
-			//		+ "JOIN order as or ON {vi.order}={or.pk}} where  {vi.user} like"
-			//		+ "('%"
-			//		+ customer.getPk().getLongValue()
-			//		+ "%') ORDER BY {vi.creationtime} DESC";
+			queryBiulder.append("select {vi.pk} from {VoucherInvalidation as vi JOIN Order as odr ON {vi.order}={odr.pk}}")
+					.append(" where {vi.user} like").append("('%").append(customer.getPk().getLongValue()).append("%')")
+					.append("and {odr.date} > to_date('").append(currentDate).append("', 'MM/DD/YYYY') - INTERVAL '6' MONTH ")
+					.append("ORDER BY {vi.creationtime} DESC");
 
 			final String VOUCHER_HISTORY_QUERY = queryBiulder.toString();
-
-			LOG.debug("Query :::::::::::::::" + VOUCHER_HISTORY_QUERY);
+			LOG.debug("queryString: " + VOUCHER_HISTORY_QUERY);
 			final List sortQueries = Arrays.asList(new SortQueryData[]
 			{ createSortQueryData(MarketplacecouponConstants.BYDATE, VOUCHER_HISTORY_QUERY) });
 
 			return getPagedFlexibleSearchService().search(sortQueries, MarketplacecouponConstants.BYDATE, queryParams, pageableData);
 
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
 		catch (final Exception e)
 		{
@@ -174,6 +204,80 @@ public class MplCouponDaoImpl implements MplCouponDao
 		}
 	}
 
+	/**
+	 * Method used to find voucher invalidations for a user
+	 *
+	 * @param customer
+	 * @return List<VoucherInvalidationModel>
+	 *
+	 */
+	@Override
+	public Map<String, Double> findVoucherHistoryAllInvalidations(final CustomerModel customer)
+	{
+		try
+		{
+			final StringBuilder queryBiulder = new StringBuilder(500);
+			final SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			//final Calendar calendar = Calendar.getInstance();
+			//calendar.add(Calendar.MONTH, -6);
+			//final Date sixMonthsBeforeDate = calendar.getTime();
+			//final String dateSixMonthsBefore = formatter.format(sixMonthsBeforeDate);
+			final String currentDate = formatter.format(new Date());
+			//final double totalSaving = 0;
+			//final int totalCount = 0;
+
+			queryBiulder.append("SELECT COUNT(distinct{vi.voucher}),SUM({vi.savedAmount}) FROM {VoucherInvalidation as vi JOIN ")
+					.append("Order AS odr ON {vi.order}={odr.pk}} WHERE {vi.user} LIKE ").append("('%")
+					.append(customer.getPk().getLongValue()).append("%')").append("AND {odr.date} > to_date('").append(currentDate)
+					.append("', 'MM/DD/YYYY') - INTERVAL '6' MONTH");
+
+			final String queryString = queryBiulder.toString();
+			final FlexibleSearchQuery voucherInvalidationSumQuery = new FlexibleSearchQuery(queryString);
+			voucherInvalidationSumQuery.setResultClassList(Arrays.asList(Integer.class, Double.class));
+			final SearchResult<List<Object>> result = flexibleSearchService.search(voucherInvalidationSumQuery);
+
+			final Map<String, Double> totalSavingSumMap = new HashMap<String, Double>();
+			for (final List<Object> obj : result.getResult())
+			{
+				final Integer count = (Integer) obj.get(0);
+				final Double saving = (Double) obj.get(1);
+
+				totalSavingSumMap.put(String.valueOf(count), saving);
+				//				final int countInt = Integer.parseInt(count);
+				//				if (countInt > 1)
+				//				{
+				//					totalCount = totalCount + 1;
+				//				}
+				//				else
+				//				{
+				//					totalCount = totalCount + countInt;
+				//				}
+				//
+				//				final Double saving = (Double) obj.get(1);
+				//				totalSaving = totalSaving + saving.doubleValue();
+			}
+			//			if (totalCount > 0 && totalSaving > 0)
+			//			{
+			//				final Double totalSavingDouble = new Double(totalSaving);
+			//				totalSavingSumMap.put(String.valueOf(totalCount), totalSavingDouble);
+			//			}
+
+			return totalSavingSumMap;
+
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	/**
 	 * Method used to create sort query data

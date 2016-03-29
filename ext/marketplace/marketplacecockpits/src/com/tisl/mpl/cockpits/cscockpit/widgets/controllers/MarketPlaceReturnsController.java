@@ -25,5 +25,9 @@ public interface MarketPlaceReturnsController extends ReturnsController {
 
 	public boolean isFreebieAvaialble(
 			List<ObjectValueContainer> orderEntryReturnsRecords);
-
+	
+	public List<ReturnLogistics> getReturnLogisticsList(
+			final InputWidget<DefaultListWidgetModel<TypedObject>, ReturnsController> widget,
+			final List<ObjectValueContainer> returnObjectValueContainers,String pinCode);
+	
 }

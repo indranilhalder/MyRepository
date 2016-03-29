@@ -4,12 +4,17 @@
 package com.tisl.mpl.facades.payment.impl;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.order.CartService;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.processengine.BusinessProcessService;
@@ -54,6 +59,7 @@ import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.PaymentService;
@@ -68,6 +74,7 @@ import com.tisl.mpl.juspay.response.StoredCard;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -104,6 +111,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	@Autowired
 	private SendSMSFacade sendSMSFacade;
 
+
+
+	@Resource(name = "mplCustomAddressFacade")
+	private MplCustomAddressFacade mplCustomAddressFacade;
+
 	private static final Logger LOG = Logger.getLogger(MplPaymentFacadeImpl.class);
 
 	/**
@@ -116,7 +128,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store) throws EtailNonBusinessExceptions
+	public Map<String, Boolean> getPaymentModes(final String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions
 	{
 
 		//Declare variable
@@ -127,13 +139,48 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 
+			boolean flag = false;
+			CartData cartData=null;
+			if (isMobile)
+			{
+				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
+				cartData = cartDataMobile;
+			}
+			else
+			{
+				cartData = getMplCustomAddressFacade().getCheckoutCart();
+			}
+			
+			
+			for (final OrderEntryData entry : cartData.getEntries())
+			{
+
+				if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getCode() != null)
+				{
+					if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+					{
+						LOG.info("Any product Content CnC Then break loop and change flag value");
+						flag = true;
+						break;
+					}
+				}
+			}
+
 			if (CollectionUtils.isNotEmpty(paymentTypes))
 			{
 				//looping through the mode to get payment Types
 				for (final PaymentTypeModel mode : paymentTypes)
 				{
 					//retrieving the data
-					data.put(mode.getMode(), mode.getIsAvailable());
+					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					{
+						LOG.debug("Ignoring to add COD payment for CNC Product ");
+					}
+					else
+					{
+						LOG.info("****Print all Payment type ");
+						data.put(mode.getMode(), mode.getIsAvailable());
+					}
 				}
 			}
 			else
@@ -1104,15 +1151,19 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 * @param totalCODCharge
 	 *
 	 */
+	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge)
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge) throws EtailNonBusinessExceptions
 	{
 		//getting the current user
 		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
 		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
 		final CartModel cart = getCartService().getSessionCart();
 		final List<AbstractOrderEntryModel> entries = cart.getEntries();
+
+		//setting payment transaction for COD
 		getMplPaymentService().setPaymentTransactionForCOD(paymentMode, cart);
+
 		if (null != mplCustomer)
 		{
 			if (StringUtils.isNotEmpty(mplCustomer.getName()) && !mplCustomer.getName().equalsIgnoreCase(" "))
@@ -1321,22 +1372,81 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	}
 
 
-
 	/**
-	 * This method applies the promotion on the cart for Payment page
-	 *
-	 * @param cartData
-	 * @param cart
 	 * @return MplPromoPriceData
-	 *
+	 * @throws CalculationException
+	 * @throws JaloPriceFactoryException
+	 * @throws JaloSecurityException
+	 * @throws VoucherOperationException
+	 * @throws JaloInvalidParameterException
+	 * @throws NumberFormatException
+	 * @throws ModelSavingException
+	 * @throws EtailNonBusinessExceptions
 	 */
+
 	@Override
-	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws VoucherOperationException,
-			EtailNonBusinessExceptions
+	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions
+
 	{
 		return getMplPaymentService().applyPromotions(cartData, cart);
 	}
 
+
+	/*
+	 * @Description : saving bank name in session -- TISPRO-179
+	 *
+	 * @param bankName
+	 *
+	 * @return Boolean
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+
+	@Override
+	public Boolean setBankForSavedCard(final String bankName) throws EtailNonBusinessExceptions
+	{
+		final long startTime = System.currentTimeMillis();
+		Boolean sessionStatus = Boolean.FALSE;
+		try
+		{
+			//TISPRO-179
+			final BankModel bankModel = getMplPaymentService().getBankDetailsForBank(bankName);
+
+			if (bankModel != null)
+			{
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN, bankModel);
+				sessionStatus = Boolean.TRUE;
+			}
+
+			final long iterationTime = System.currentTimeMillis();
+			LOG.debug("Inside setBankForSavedCard=====exiting loop=====" + (iterationTime - startTime));
+			LOG.debug("From session=====Bank:::::::"
+					+ getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN));
+			if (null == (getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION)))
+			{
+				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
+						MarketplacecommerceservicesConstants.PAYMENTMODE);
+				for (final Map.Entry<String, Double> entry : paymentInfo.entrySet())
+				{
+					if (!(MarketplacecommerceservicesConstants.WALLET.equalsIgnoreCase(entry.getKey())))
+					{
+						getSessionService().setAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION, entry.getKey());
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("No bank " + bankName + " is matched with the local bank model " + e);
+		}
+
+		final long endTime = System.currentTimeMillis();
+		LOG.debug("Time taken within Controller setBankForSavedCard()=====" + (endTime - startTime));
+
+		return sessionStatus;
+	}
 
 	//Getters and setters
 	/**
@@ -1540,6 +1650,27 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void setSendSMSFacade(final SendSMSFacade sendSMSFacade)
 	{
 		this.sendSMSFacade = sendSMSFacade;
+	}
+
+
+
+	/**
+	 * @return the mplCustomAddressFacade
+	 */
+	public MplCustomAddressFacade getMplCustomAddressFacade()
+	{
+		return mplCustomAddressFacade;
+	}
+
+
+
+	/**
+	 * @param mplCustomAddressFacade
+	 *           the mplCustomAddressFacade to set
+	 */
+	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
+	{
+		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
 
 }

@@ -769,6 +769,8 @@
 		<property name="defaultAddress" type="boolean" />
 
 		
+		<property name="city" type="String" />
+		<property name="landmark" type="String" />
 	</bean>
 	<!--End Of Adding New Properties To AddressWsDTO -->
 	<!-- Get Cart details -->
@@ -833,6 +835,8 @@
 		<property name="errorCode" type="String" />
 		<property name="customerId" type="String" />
 		<property name="isTemporaryPassword" type="String" />
+		<property name="sessionToken" type="String" />
+		<property name="sessionSecret" type="String" />
 	</bean>
 	<!-- Registration Mobile web service -->
 
@@ -1375,6 +1379,8 @@
 		<property name="discountPrice" type="String" />
 		<property name="convenienceCharge" type="String" />
 		<property name="orderStatusMessage" type="String" />
+		<!-- <property name="couponDiscount" type="de.hybris.platform.commercefacades.product.data.PriceData" /> -->
+		<property name="couponDiscount" type="String" />
 	</bean>
 <bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />
@@ -1629,6 +1635,12 @@
     	<property name="readStatus" type="Boolean"></property>
     	<property name="consignmentId" type="String"></property>
     	<property name="actualOrderDetailStatus" type="String"></property>
+    	<!--coupon changes	 -->
+    	<property name="couponCode" type="String"></property>
+    	<property name="couponNotificationPassDate" type="String"></property>
+    	<property name="actualCouponMessage" type="String"></property>
+    	<property name="displayCouponMessage" type="String"></property>
+    	<!-- coupon changes end -->
     </bean>
     
     
@@ -2075,8 +2087,200 @@
 
 		<property name="status" type="String" />
 		<property name="sellerMaster" type="com.tisl.mpl.model.SellerMasterModel" />
-
 	</bean>
     
+      <bean class="com.tisl.mpl.wsdto.CommonCouponsDTO">
+		<property name="usedCouponsList" type="java.util.List&lt;com.tisl.mpl.wsdto.UsedCouponsDTO>" />
+		<property name="unusedCouponsList" type="java.util.List&lt;com.tisl.mpl.wsdto.UnusedCouponsDTO>" />
+		<property name="totalCount" type="String" />
+		<property name="totalUniqueCouponsUsed" type="String" />
+		<property name="totalSavings" type="String" />
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		
+	</bean>
+	
+	
+	 <bean class="com.tisl.mpl.wsdto.UsedCouponsDTO">
+		<property name="couponCode" type="String" />
+		<property name="orderDate" type="String" />
+		<property name="description" type="String" />
+		<property name="orderNo" type="String" />
+	</bean>
+	
+	
+	 <bean class="com.tisl.mpl.wsdto.UnusedCouponsDTO">
+		<property name="couponCode" type="String" />
+		<property name="expiryDate" type="String" />
+		<property name="description" type="String" />
+		<property name="couponType" type="String" />
+		<property name="redemptionQtyLimitPerUser" type="String" />
+		<property name="couponCreationDate" type="String" />			
+	</bean>
+   
+   
+    <bean class="com.tisl.mpl.wsdto.ApplyCouponsDTO">
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="couponDiscount" type="String" />
+		<property name="discount" type="String" />
+		<property name="total" type="String" />
+		</bean>
+     <bean class="com.tisl.mpl.wsdto.GigyaWsDTO">
+		<property name="status" type="String" />
+		<property name="sessionToken" type="String" />
+        <property name="error" type="String" />
+		<property name="errorCode" type="String" />
+		<property name="sessionSecret" type="String" />
+
+	</bean>
+
+	<bean
+		class="de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData">
+		<property name="sellerId" type="String" />
+		<property name="slaveId" type="String" />
+		<property name="clicknCollect" type="String" />
+		<property name="remark" type="String" />
+		<property name="orderAcceptanceTAT" type="int" />
+		<property name="orderProcessingTAT" type="int" />
+		<property name="orderCutoffTimeHD" type="String" />
+		<property name="orderCutoffTimeED" type="String" />
+		<property name="isReturnable" type="String" />
+		<property name="parkingAvailable" type="String" />
+		<property name="location" type="String" />
+		<property name="storeSize" type="String" />
+		<property name="footFall" type="String" />
+		<property name="normalRetailSalesOfStore" type="String" />
+		<property name="ownerShip" type="String" />
+		<property name="managerName" type="String" />
+		<property name="managerPhone" type="String" />
+		<property name="mplStoreImage" type="String" />
+		<property name="storeContactNumber" type="String" />
+		<property name="returnstoreID" type="String" />
+		<property name="returnAddress1" type="String" />
+		<property name="returnAddress2" type="String" />
+		<property name="returnCountry" type="String" />
+		<property name="returnState" type="String" />
+		<property name="returnCity" type="String" />
+		<property name="returnPin" type="String" />
+		<property name="active" type="String" />
+		<property name="email0" type="String" />
+		<property name="email1" type="String" />
+		<property name="email2" type="String" />
+		<property name="email3" type="String" />
+		<property name="email4" type="String" />
+		<property name="email5" type="String" />
+		<property name="email6" type="String" />
+		<property name="email7" type="String" />
+		<property name="email8" type="String" />
+		<property name="email9" type="String" />
+		<property name="phoneNo0" type="String" />
+		<property name="phoneNo1" type="String" />
+		<property name="phoneNo2" type="String" />
+		<property name="phoneNo3" type="String" />
+		<property name="phoneNo4" type="String" />
+		<property name="phoneNo5" type="String" />
+		<property name="phoneNo6" type="String" />
+		<property name="phoneNo7" type="String" />
+		<property name="phoneNo8" type="String" />
+		<property name="phoneNo9" type="String" />
+		<property name="error" type="String"/>
+		<property name="errorCode" type="String"/>
+		<property name="status" type="String"/>	
+
+	</bean>
+
+	<bean
+		class="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO">
+		<property name="sellerId" type="String" />
+		<property name="slaveId" type="String" />
+		<property name="clicknCollect" type="String" />
+		<property name="mplWorkingDays" type="String" />
+		<property name="remark" type="String" />
+		<property name="orderAcceptanceTAT" type="int" />
+		<property name="orderProcessingTAT" type="int" />
+		<property name="orderCutoffTimeHD" type="String" />
+		<property name="orderCutoffTimeED" type="String" />
+		<property name="isReturnable" type="String" />
+		<property name="parkingAvailable" type="String" />
+		<property name="location" type="String" />
+		<property name="storeSize" type="String" />
+		<property name="footFall" type="String" />
+		<property name="normalRetailSalesOfStore" type="String" />
+		<property name="ownerShip" type="String" />
+		<property name="managerName" type="String" />
+		<property name="managerPhone" type="String" />
+		<property name="mplStoreImage" type="String" />
+		<property name="storeContactNumber" type="String" />
+		<property name="returnstoreID" type="String" />
+		<property name="returnAddress1" type="String" />
+		<property name="returnAddress2" type="String" />
+		<property name="returnCountry" type="String" />
+		<property name="returnState" type="String" />
+		<property name="returnCity" type="String" />
+		<property name="returnPin" type="String" />
+		<property name="active" type="String" />
+		<property name="email0" type="String" />
+		<property name="email1" type="String" />
+		<property name="email2" type="String" />
+		<property name="email3" type="String" />
+		<property name="email4" type="String" />
+		<property name="email5" type="String" />
+		<property name="email6" type="String" />
+		<property name="email7" type="String" />
+		<property name="email8" type="String" />
+		<property name="email9" type="String" />
+		<property name="phoneNo0" type="String" />
+		<property name="phoneNo1" type="String" />
+		<property name="phoneNo2" type="String" />
+		<property name="phoneNo3" type="String" />
+		<property name="phoneNo4" type="String" />
+		<property name="phoneNo5" type="String" />
+		<property name="phoneNo6" type="String" />
+		<property name="phoneNo7" type="String" />
+		<property name="phoneNo8" type="String" />
+		<property name="phoneNo9" type="String" />
+		<property name="error" type="String"/>
+		<property name="errorCode" type="String"/>
+		<property name="status" type="String"/>	
+	</bean>
+
+	<bean
+		class="de.hybris.platform.commercewebservicescommons.dto.store.ListOfPointOfServiceWsDTO">
+		<property name="stores"
+			type="java.util.List&lt;de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO>" />
+		<property name="error" type="String"/>
+		<property name="errorCode" type="String"/>
+		<property name="status" type="String"/>
+	</bean>
+	<bean
+		class="de.hybris.platform.commercefacades.storelocator.data.ListOfPointOfServiceData">
+		<property name="stores"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
+		<property name="error" type="String"/>
+		<property name="errorCode" type="String"/>
+		<property name="status" type="String"/>	
+	</bean>
+	<bean class="de.hybris.platform.commercefacades.dto.storeats.ATSResponseDataWsDTO">
+		<property name="storeId" type="String"/>
+		<property name="quantity" type="int"/>
+	</bean>
+	<bean class="de.hybris.platform.commercefacades.dto.storeats.StoreLocationResponseDataWsDTO">
+		<property name="ats"
+			type="java.util.List&lt;de.hybris.platform.commercefacades.dto.storeats.ATSResponseDataWsDTO>" />
+		<property name="ussId" type="String"></property>
+		<property name="error" type="String"/>
+		<property name="errorCode" type="String"/>
+		<property name="status" type="String"/>	
+	</bean>
     
+     <bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO">
+		<property name="status" type="String" />
+		<property name="error" type="String" />
+		<property name="errorCode" type="String" />	
+		<property name="total" type="String" />
+	</bean> 
+	
 </beans>

@@ -36,12 +36,11 @@ import de.hybris.platform.commercefacades.product.data.FeatureData;
 import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
-import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
-import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.product.ProductService;
@@ -49,6 +48,10 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.storelocator.location.Location;
+import de.hybris.platform.storelocator.location.impl.LocationDTO;
+import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
+import de.hybris.platform.util.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -89,8 +92,6 @@ import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
-import com.tisl.mpl.constants.MplGlobalCodeConstants;
-import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -98,15 +99,15 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
-import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
-import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -181,6 +182,7 @@ public class ProductPageController extends AbstractPageController
 	private static final String SKU_ID_FOR_COD = "skuIdForCod";
 	private static final String SKU_ID_FOR_HD = "skuIdForHD";
 	private static final String SKU_ID_FOR_ED = "skuIdForED";
+	private static final String SKU_ID_FOR_CNC = "skuIdForCNC";
 
 	private static final String CUSTOMER_CARE_NUMBER = "1-800-282-8282";
 	private static final String CUSTOMER_CARE_EMAIL = "hello@tatacliq.com";
@@ -242,7 +244,11 @@ public class ProductPageController extends AbstractPageController
 	@Autowired
 	private UserService userService;
 
+	@Resource(name = "pincodeService")
+	private PincodeService pincodeService;
 
+	@Resource(name = "pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
 
 	/**
 	 * @param buyBoxFacade
@@ -404,14 +410,40 @@ public class ProductPageController extends AbstractPageController
 
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 		}
+		/*
+		 * catch (final EtailNonBusinessExceptions e) { ExceptionUtil.etailNonBusinessExceptionHandler(e); }
+		 */
 		catch (final EtailNonBusinessExceptions e)
 		{
+			if (MarketplacecommerceservicesConstants.E0018.equalsIgnoreCase(e.getErrorCode()))
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
+			}
+			else
+			{
+				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, "dataissue");
+			}
+
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
 		}
 		return ControllerConstants.Views.Fragments.Product.SizeGuidePopup;
 
 
 	}
+
+
+	/**
+	 * Get buybox data in respect of productCode and sellerId for sizeguide
+	 *
+	 * @param productCode
+	 * @param sellerId
+	 * @return
+	 * @throws JSONException
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 * @throws com.granule.json.JSONException
+	 */
 
 
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
@@ -420,100 +452,41 @@ public class ProductPageController extends AbstractPageController
 			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId) throws JSONException,
 			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
+		LOG.debug(String.format("BUYBOZFORSIZEGUIDEAJAX : productCode:  %s | sellerId : %s ", productCode, sellerId));
+
 		final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
 		{
+			//	This method is responsible to get the buybox data for the given product code and seller ID
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
 			if (buyboxdata != null)
 			{
-				//				if (null != buyboxdata.getAvailable())
-				//				{
-				//				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE)
-				//						&& null != sessionService.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
-				//				{
-				//					for (final PinCodeResponseData response : (List<PinCodeResponseData>) sessionService
-				//							.getAttribute(ModelAttributetConstants.PINCODE_DETAILS))
-				//					{
-				//						LOG.debug("response.getUssid()********************  " + response.getUssid());
-				//						if (response.getUssid().equals(buyboxdata.getSellerArticleSKU()))
-				//						{
-				//							LOG.debug("response.getIsServicable()********************  " + response.getIsServicable());
-				//							if (response.getIsServicable().equalsIgnoreCase("Y"))
-				//							{
-				//								buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, response.getStockCount());
-				//							}
-				//							buyboxJson
-				//									.put(ControllerConstants.Views.Fragments.Product.PINCODE_SERVICABILITY, response.getIsServicable());
-				//
-				//						}
-				//					}
-				//
-				//				}
-				//				else
-				//				{
-				if (null != buyboxdata.getAvailable())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, buyboxdata.getAvailable());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK, ModelAttributetConstants.NOVALUE);
-				}
-				//}
-				if (null != buyboxdata.getSpecialPrice() && null != buyboxdata.getSpecialPrice().getFormattedValue()
-						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice()
-							.getFormattedValue());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, ModelAttributetConstants.NOVALUE);
-				}
-				if (null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
-						&& !buyboxdata.getPrice().getFormattedValue().isEmpty())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, buyboxdata.getPrice().getFormattedValue());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE, ModelAttributetConstants.NOVALUE);
-				}
-				if (null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
-						&& !buyboxdata.getMrp().getFormattedValue().isEmpty())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, buyboxdata.getMrp().getFormattedValue());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP, ModelAttributetConstants.NOVALUE);
-				}
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
+						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
+						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
+						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
+						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE,
+						null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
+								&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
+								: ModelAttributetConstants.NOVALUE);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
+						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
+								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
+								: ModelAttributetConstants.NOVALUE);
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-				if (null != buyboxdata.getSellerName())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, buyboxdata.getSellerName());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME, ModelAttributetConstants.EMPTY);
-				}
-				if (null != buyboxdata.getSellerArticleSKU())
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, buyboxdata.getSellerArticleSKU());
-				}
-				else
-				{
-					buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU, ModelAttributetConstants.EMPTY);
-				}
-				//				}
-				//				else
-				//				{
-				//
-				//					LOG.debug("***************************Inproper BuyBox data********************");
-				//					buyboxJson.put(ModelAttributetConstants.NOSELLER, ControllerConstants.Views.Fragments.Product.NO_PRODUCT);
-				//
-				//				}
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME,
+						null != buyboxdata.getSellerName() ? buyboxdata.getSellerName() : ModelAttributetConstants.EMPTY);
+
+				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU,
+						null != buyboxdata.getSellerArticleSKU() ? buyboxdata.getSellerArticleSKU() : ModelAttributetConstants.EMPTY);
 			}
 			else
 			{
@@ -536,62 +509,77 @@ public class ProductPageController extends AbstractPageController
 		return buyboxJson;
 	}
 
+	/**
+	 * Set the hedder data of the sizeguide
+	 *
+	 * @param sizeguideList
+	 * @param categoryType
+	 * @return
+	 */
 	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList, final String categoryType)
 	{
 		final Map<String, String> headerMap = new HashMap<String, String>();
 		final List<String> headerMapData = new ArrayList<String>();
-		for (final String key : sizeguideList.keySet())
+		try
 		{
-			if (categoryType.equalsIgnoreCase(CLOTHING))
-			{
-				for (final SizeGuideData data : sizeguideList.get(key))
-				{
 
-					if (null == headerMap.get(data.getDimensionSize()))
+			for (final String key : sizeguideList.keySet())
+			{
+				if (categoryType.equalsIgnoreCase(CLOTHING))
+				{
+					for (final SizeGuideData data : sizeguideList.get(key))
 					{
-						headerMap.put(data.getDimensionSize(), data.getDimensionSize());
+
+						if (null == headerMap.get(data.getDimensionSize()))
+						{
+							headerMap.put(data.getDimensionSize(), data.getDimensionSize());
+						}
+
 					}
 
 				}
-
-			}
-			else if (categoryType.equalsIgnoreCase(FOOTWEAR))
-			{
-				for (final SizeGuideData data : sizeguideList.get(key))
+				else if (categoryType.equalsIgnoreCase(FOOTWEAR))
 				{
-					if (data.getAge() != null)
+					for (final SizeGuideData data : sizeguideList.get(key))
 					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.age"), "Y");
-					}
-					if (data.getDimension() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlength"), "Y");
-					}
-					if (data.getDimensionSize() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.UK"), "Y");
-					}
-					if (data.getDimensionValue() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.Witdth"), "Y");
-					}
-					if (data.getEuroSize() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.EURO"), "Y");
-					}
-					if (data.getUsSize() != null)
-					{
-						headerMap.put(configurationService.getConfiguration().getString("footwear.header.US"), "Y");
+						if (data.getAge() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.age"), "Y");
+						}
+						if (data.getDimension() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.footlength"), "Y");
+						}
+						if (data.getDimensionSize() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.UK"), "Y");
+						}
+						if (data.getDimensionValue() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.Witdth"), "Y");
+						}
+						if (data.getEuroSize() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.EURO"), "Y");
+						}
+						if (data.getUsSize() != null)
+						{
+							headerMap.put(configurationService.getConfiguration().getString("footwear.header.US"), "Y");
+						}
 					}
 				}
 			}
-		}
-		for (final String keyData : headerMap.keySet())
-		{
-			headerMapData.add(keyData);
-		}
+			for (final String keyData : headerMap.keySet())
+			{
+				headerMapData.add(keyData);
+			}
 
-		Collections.sort(headerMapData, sizeGuideHeaderComparator);
+			Collections.sort(headerMapData, sizeGuideHeaderComparator);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 		return headerMapData;
 	}
 
@@ -621,11 +609,36 @@ public class ProductPageController extends AbstractPageController
 
 			if (pin.matches(regex))
 			{
-				sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
-				response = pinCodeFacade.getResonseForPinCode(productCode, pin, populatePinCodeServiceData(productCode));
-				//sessionService.setAttribute(ModelAttributetConstants.PINCODE_DETAILS, response);
-			}
+				LOG.debug("productCode:" + productCode + "pinCode:" + pin);
+				final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+				final LocationDTO dto = new LocationDTO();
+				Location myLocation = null;
+				if (null != pinCodeModelObj)
+				{
+					try
+					{
+						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+						LOG.debug("configurableRadius is:" + configurableRadius);
+						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
+						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
+						myLocation = new LocationDtoWrapper(dto);
+						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
+						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
+						sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
+						response = pinCodeFacade.getResonseForPinCode(
+								productCode,
+								pin,
+								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS(),
+										Double.parseDouble(configurableRadius)));
 
+						return response;
+					}
+					catch (final Exception e)
+					{
+						LOG.error("configurableRadius values is empty please add radius property in properties file ");
+					}
+				}
+			}
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -688,8 +701,11 @@ public class ProductPageController extends AbstractPageController
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			populateProductData(productData, model);
 			final List<String> deliveryInfoList = new ArrayList<String>();
+
 			deliveryInfoList.add(ModelAttributetConstants.EXPRESS_DELIVERY);
 			deliveryInfoList.add(ModelAttributetConstants.HOME_DELIVERY);
+			deliveryInfoList.add(ModelAttributetConstants.CLICK_AND_COLLECT);
+
 			/* deliverychange */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfoList);
 			updatePageTitle(productData, model);
@@ -700,6 +716,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(ModelAttributetConstants.SELLERS_SKU_ID_LIST, form.getSellersSkuListId());
 			model.addAttribute(SKU_ID_FOR_ED, form.getSkuIdForED());
 			model.addAttribute(SKU_ID_FOR_HD, form.getSkuIdForHD());
+			model.addAttribute(SKU_ID_FOR_CNC, form.getSkuIdForCNC());
 			model.addAttribute(SKU_ID_FOR_COD, form.getSkuIdForCod());
 			model.addAttribute(ModelAttributetConstants.SKU_IDS_WITH_NO_STOCK, form.getSkuIdsWithNoStock());
 			final List<PinCodeResponseData> stockDataArray = new ArrayList<PinCodeResponseData>();
@@ -1023,6 +1040,7 @@ public class ProductPageController extends AbstractPageController
 
 			deliveryInfo.add(ModelAttributetConstants.EXPRESS_DELIVERY);
 			deliveryInfo.add(ModelAttributetConstants.HOME_DELIVERY);
+			deliveryInfo.add(ModelAttributetConstants.CLICK_AND_COLLECT);
 
 			/* delivery change */
 			/* final Map<String, String> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfo); */
@@ -1500,108 +1518,6 @@ public class ProductPageController extends AbstractPageController
 		return flag;
 	}
 
-
-
-	/**
-	 * @param deliveryMode
-	 * @param ussid
-	 * @return deliveryModeData
-	 */
-	private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid)
-	{
-		final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-		final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
-				.populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-
-		final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
-		deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
-		deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
-		deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
-		deliveryModeData.setSellerArticleSKU(ussid);
-		deliveryModeData.setDeliveryCost(priceData);
-		return deliveryModeData;
-	}
-
-
-
-	/**
-	 * populating the request data to be send to oms
-	 *
-	 * @param productCode
-	 * @return requestData
-	 */
-	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode)
-	{
-
-		final List<PincodeServiceData> requestData = new ArrayList<>();
-		PincodeServiceData data = null;
-		MarketplaceDeliveryModeData deliveryModeData = null;
-		try
-		{
-			final ProductModel productModel = productService.getProductForCode(productCode);
-			final ProductData productData = productFacade.getProductForOptions(productModel,
-					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
-
-			for (final SellerInformationData seller : productData.getSeller())
-			{
-				final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>();
-				data = new PincodeServiceData();
-				if ((null != seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty()))
-				{
-					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
-					{
-						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
-						deliveryModeList.add(deliveryModeData);
-					}
-					data.setDeliveryModes(deliveryModeList);
-				}
-				if (null != seller.getFullfillment() && StringUtils.isNotEmpty(seller.getFullfillment()))
-				{
-					data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase()));
-				}
-				if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode())))
-				{
-					data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase()));
-				}
-				if (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY)))
-				{
-					data.setPrice(new Double(seller.getSpPrice().getValue().doubleValue()));
-				}
-				else if (null != seller.getMopPrice() && !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY)))
-				{
-					data.setPrice(new Double(seller.getMopPrice().getValue().doubleValue()));
-				}
-				else if (null != seller.getMrpPrice() && !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY)))
-				{
-					data.setPrice(new Double(seller.getMrpPrice().getValue().doubleValue()));
-				}
-				else
-				{
-					LOG.info("*************** No price avaiable for seller :" + seller.getSellerID());
-					continue;
-				}
-				if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod()))
-				{
-					data.setIsCOD(seller.getIsCod());
-				}
-				data.setSellerId(seller.getSellerID());
-				data.setUssid(seller.getUssid());
-				data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N);
-				requestData.add(data);
-			}
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		}
-
-		catch (final Exception e)
-		{
-
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		return requestData;
-	}
 
 	/**
 	 * This method is responsible for fetching winning seller USSID, price and other seller count It will be invoked by
