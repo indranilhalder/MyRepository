@@ -714,7 +714,7 @@ UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[la
 <ul>
     <li><a href='#' onclick='history.go(-1);return false;'>Return to previous page</a></li>
     <li><a href='/store/'>Tata Cliq Homepage</a></li>
-    <li><a href='#'>Help center</a></li>
+    <li><a href='/store/mpl/en/contact'>Help center</a></li>
 </ul>
 </div>
 <div class='bottom'>
