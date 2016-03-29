@@ -336,7 +336,7 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 								<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
-								<input type="submit" value="${facetData.code}" class="js-less-facet-values-link"  />
+								<input type="submit" value="<spring:theme code="search.nav.facetShowLess_${facetData.code}" />" class="js-less-facet-values-link"  />
 								</form>
 				
 					<%-- <a href="#" class="js-less-facet-values-link"><spring:theme code="search.nav.facetShowLess_${facetData.code}" /></a> --%>
