@@ -442,7 +442,7 @@ public final class HybrisDataConverter
 			String categoryId = "";
 			String productUnitPrice = "";
 			String productSubCategoryName = "";
-			if (productData != null)
+			if (productData != null && productData.getCategories()!=null)
 			{
 				for (final CategoryData category : productData.getCategories())
 				{

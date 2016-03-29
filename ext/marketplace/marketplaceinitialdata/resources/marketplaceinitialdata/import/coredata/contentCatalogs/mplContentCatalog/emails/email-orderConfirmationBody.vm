@@ -160,13 +160,19 @@ Confirmed!<br>
                       #if($ctx.storeAddress)
                       #foreach( $store in ${ctx.storeAddress} )
                         <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">
-                        #if($store.line1)$store.line1#end
-                        #if($store.line2)$store.line2#end
-                        #if($store.landmark)$store.landmark#end
-                        #if($store.city)$store.city#end
-                        #if($store.state)$store.state#end
-                        #if($store.postalcode)$store.postalcode#end
-                        </td><br>
+                        #if($store.name)Store Name : ${store.name}#end</br>
+                        #if($store.address.line1)$store.address.line1,#end
+                        #if($store.address.line2)$store.address.line2,#end
+                        #if($store.address.addressLine3)$store.address.addressLine3,#end
+                        #if($store.address.appartment)$store.address.appartment,#end
+                        #if($store.address.landmark)$store.address.landmark,#end
+                        #if($store.address.city)$store.address.city,#end
+                        #if($store.address.district)$store.address.district,#end
+                        #if($store.address.state)$store.address.state,#end
+                        #if($store.address.country.name)$store.address.country.name,#end
+                        #if($store.address.postalcode)$store.address.postalcode,#end
+                        #if($store.address.phone1)$store.address.phone1#end
+                        </td></br>
                       #end
                       #end
                       </tr>

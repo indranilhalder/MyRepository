@@ -42,6 +42,7 @@ import de.hybris.platform.catalog.constants.CatalogConstants;
 import de.hybris.platform.catalog.jalo.CatalogVersion;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
+import de.hybris.platform.cockpit.widgets.browsers.WidgetBrowserModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -998,6 +999,48 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	{
 		return getVoucherModelService().isReservable(voucher, voucherCode, cartModel);
 	}	
+	
+	
+	
+	/**
+	 * This method is called when "Checkout" button is clicked in CS Cockpit
+	 */
+	@Override
+	public void triggerCheckout() throws ValidationException
+	{
+		try
+		{
+			CartModel cartModel = getCartModel();
+				
+			calculateCartInContext(cartModel);
+			validateBasketReadyForCheckout(cartModel);
+			setDeliveryAddressIfAvailable(cartModel);
+			setDeliveryModeIfAvailable(cartModel);
+			setPaymentAddressIfAvailable(cartModel);
+			
+			//Custom to handle voucher custom code
+			getMplVoucherService().checkCartWithVoucher(cartModel);
+				     
+			WidgetBrowserModel checkoutBrowser = getCheckoutBrowser();
+				     
+			getWidgetHelper().openAndFocusBrowser(checkoutBrowser);
+			getWidgetHelper().focusWidget(checkoutBrowser.getBrowserCode(), getCheckoutBrowserDefaultWidgetCode());
+		}catch (final VoucherOperationException e)
+		{
+			LOG.error(e);
+		}
+		catch(final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch(final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+		}
+	}
+	
+	
+	
 	
 	/**
 	 * @return the mplVoucherService

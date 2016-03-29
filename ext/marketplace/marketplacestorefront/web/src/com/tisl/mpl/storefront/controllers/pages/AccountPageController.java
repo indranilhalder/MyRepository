@@ -26,6 +26,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.EmailVal
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.PasswordValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.validation.ProfileValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.verification.AddressVerificationResultHandler;
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
@@ -58,7 +59,6 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.Gender;
-import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -875,8 +875,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 						consignmentModel = mplOrderService.fetchConsignment(orderEntry.getConsignment().getCode());
 						//TISEE-1067
 						consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-						if (null != consignmentModel.getInvoice() && null != consignmentModel.getInvoice().getInvoiceUrl()
-								&& consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED))
+						if (null != consignmentModel.getInvoice()
+								&& null != consignmentModel.getInvoice().getInvoiceUrl()
+								&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 						{
 							sortInvoice.put(orderEntry.getTransactionId(), true);
 							final String tranSactionId = orderEntry.getTransactionId();
@@ -962,7 +964,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 									if (null != orderEntry.getConsignment() && null != orderEntry.getConsignment().getStatus())
 									{
 										consignmentStatus = orderEntry.getConsignment().getStatus().getCode();
-										if (consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
+										if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED))
 												&& null != consignmentModel)
 										{
 											final Date sDate = new Date();
@@ -1044,7 +1047,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<CancellationReasonModel> cancellationReason = getMplOrderFacade().getCancellationReason();
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER, orderDetail);
 			model.addAttribute(ModelAttributetConstants.SUB_ORDER_STATUS, isEditable());
-			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE,getMplOrderFacade().filterDeliveryMode());
+			model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE, getMplOrderFacade().filterDeliveryMode());
 			model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 			model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
 			model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
@@ -1444,7 +1447,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_SUBMIT, method = RequestMethod.POST)
 	public String returnPincodeAvailability(final ReturnPincodeCheckForm returnAddress, final Model model,
-			final BindingResult bindingResult, final HttpServletRequest request) throws CMSItemNotFoundException
+			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
 		final String errorMsg = returnItemFormValidator.returnValidate(returnAddress);
 		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -1745,9 +1748,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 					returnLogisticsCheck = false;
 				}
 			}
-			returnLogisticsCheck = (boolean) session.getAttribute(RETURN_Logistics_Availability);
-
-
 			model.addAttribute(ModelAttributetConstants.RETURNLOGCHECK, returnLogisticsCheck);
 
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, subOrderEntry);
@@ -1807,6 +1807,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String transactionId = returnRequestForm.getTransactionId();
 
 			final ReturnItemAddressData returnAddrData = (ReturnItemAddressData) session.getAttribute(RETURN_ADDRESS);
+			final String pinCode=returnAddrData.getPincode();
 			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 			for (final OrderEntryData entry : subOrderEntries)
 			{
@@ -1870,7 +1871,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
-					.checkReturnLogistics(subOrderDetails);
+					.checkReturnLogistics(subOrderDetails,pinCode);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
@@ -6799,22 +6800,30 @@ public class AccountPageController extends AbstractMplSearchPageController
 	}
 
 
-	public List<OrderStatus> isEditable()
+	public List<ConsignmentStatus> isEditable()
 	{
-		final List<OrderStatus> neededStatus = new ArrayList<OrderStatus>();
-		neededStatus.add(OrderStatus.ORDER_COLLECTED);
-		neededStatus.add(OrderStatus.ORDER_UNCOLLECTED);
-		neededStatus.add(OrderStatus.RETURN_INITIATED);
-		neededStatus.add(OrderStatus.RETURNINITIATED_BY_RTO);
-		neededStatus.add(OrderStatus.RETURN_CLOSED);
-		neededStatus.add(OrderStatus.QC_FAILED);
-		neededStatus.add(OrderStatus.CLOSED_ON_RETURN_TO_ORIGIN);
-		neededStatus.add(OrderStatus.RETURN_CANCELLED);
-		neededStatus.add(OrderStatus.COD_CLOSED_WITHOUT_REFUND);
-		neededStatus.add(OrderStatus.REFUND_INITIATED);
-		neededStatus.add(OrderStatus.REFUND_IN_PROGRESS);
-		neededStatus.add(OrderStatus.CLOSED_ON_CANCELLATION);
-		neededStatus.add(OrderStatus.CANCELLING);
+		final List<ConsignmentStatus> neededStatus = new ArrayList<ConsignmentStatus>();
+		neededStatus.add(ConsignmentStatus.RETURN_INITIATED);
+		neededStatus.add(ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND);
+		neededStatus.add(ConsignmentStatus.RETURN_TO_ORIGIN);
+		neededStatus.add(ConsignmentStatus.LOST_IN_TRANSIT);
+		neededStatus.add(ConsignmentStatus.REVERSE_AWB_ASSIGNED);
+		neededStatus.add(ConsignmentStatus.RETURN_RECEIVED);
+		neededStatus.add(ConsignmentStatus.RETURN_CLOSED);
+		neededStatus.add(ConsignmentStatus.RETURN_CANCELLED);
+		neededStatus.add(ConsignmentStatus.REDISPATCH_INITIATED);
+		neededStatus.add(ConsignmentStatus.CLOSED_ON_RETURN_TO_ORIGIN);
+		neededStatus.add(ConsignmentStatus.REFUND_INITIATED);
+		neededStatus.add(ConsignmentStatus.REFUND_IN_PROGRESS);
+		neededStatus.add(ConsignmentStatus.RETURN_REJECTED);
+		neededStatus.add(ConsignmentStatus.QC_FAILED);
+		neededStatus.add(ConsignmentStatus.CLOSED_ON_CANCELLATION);
+		neededStatus.add(ConsignmentStatus.CANCELLATION_INITIATED);
+		neededStatus.add(ConsignmentStatus.RETURN_COMPLETED);
+		neededStatus.add(ConsignmentStatus.ORDER_CANCELLED);
+		neededStatus.add(ConsignmentStatus.ORDER_COLLECTED);
+		neededStatus.add(ConsignmentStatus.ORDER_UNCOLLECTED);
+		neededStatus.add(ConsignmentStatus.RETURNINITIATED_BY_RTO);
 		return neededStatus;
 	}
 }

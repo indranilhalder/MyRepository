@@ -36,8 +36,6 @@ import de.hybris.platform.commercefacades.product.data.FeatureData;
 import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
-import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
-import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
@@ -50,7 +48,6 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -95,8 +92,6 @@ import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
-import com.tisl.mpl.constants.MplGlobalCodeConstants;
-import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -104,16 +99,15 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
-import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
-import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
+import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -252,6 +246,9 @@ public class ProductPageController extends AbstractPageController
 
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
+
+	@Resource(name = "pincodeServiceFacade")
+	private PincodeServiceFacade pincodeServiceFacade;
 
 	/**
 	 * @param buyBoxFacade
@@ -628,9 +625,11 @@ public class ProductPageController extends AbstractPageController
 						LOG.debug("Selected Location for Latitude:" + myLocation.getGPS().getDecimalLatitude());
 						LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
 						sessionService.setAttribute(ModelAttributetConstants.PINCODE, pin);
-						response = pinCodeFacade.getResonseForPinCode(productCode, pin,
-
-						populatePinCodeServiceData(productCode, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
+						response = pinCodeFacade.getResonseForPinCode(
+								productCode,
+								pin,
+								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS(),
+										Double.parseDouble(configurableRadius)));
 
 						return response;
 					}
@@ -1519,125 +1518,6 @@ public class ProductPageController extends AbstractPageController
 		return flag;
 	}
 
-
-
-	/**
-	 * @param deliveryMode
-	 * @param ussid
-	 * @return deliveryModeData
-	 */
-	private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid)
-	{
-		final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-		final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
-				.populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-
-		final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
-		deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
-		deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
-		deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
-		deliveryModeData.setSellerArticleSKU(ussid);
-		deliveryModeData.setDeliveryCost(priceData);
-		return deliveryModeData;
-	}
-
-
-
-	/**
-	 * populating the request data to be send to oms
-	 *
-	 * @param productCode
-	 * @return requestData
-	 */
-	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps,
-			final Double configurableRadius)
-	{
-
-		final List<PincodeServiceData> requestData = new ArrayList<>();
-		PincodeServiceData data = null;
-		MarketplaceDeliveryModeData deliveryModeData = null;
-		try
-		{
-			final ProductModel productModel = productService.getProductForCode(productCode);
-			final ProductData productData = productFacade.getProductForOptions(productModel,
-					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
-
-			for (final SellerInformationData seller : productData.getSeller())
-			{
-				final List<MarketplaceDeliveryModeData> deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>();
-				data = new PincodeServiceData();
-				if ((null != seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty()))
-				{
-					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
-					{
-						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
-						deliveryModeList.add(deliveryModeData);
-					}
-					data.setDeliveryModes(deliveryModeList);
-				}
-				if (null != seller.getFullfillment() && StringUtils.isNotEmpty(seller.getFullfillment()))
-				{
-					data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase()));
-				}
-				if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode())))
-				{
-					data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase()));
-				}
-				if (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY)))
-				{
-					data.setPrice(new Double(seller.getSpPrice().getValue().doubleValue()));
-				}
-				else if (null != seller.getMopPrice() && !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY)))
-				{
-					data.setPrice(new Double(seller.getMopPrice().getValue().doubleValue()));
-				}
-				else if (null != seller.getMrpPrice() && !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY)))
-				{
-					data.setPrice(new Double(seller.getMrpPrice().getValue().doubleValue()));
-				}
-				else
-				{
-					LOG.info("*************** No price avaiable for seller :" + seller.getSellerID());
-					continue;
-				}
-				if (null != seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod()))
-				{
-					data.setIsCOD(seller.getIsCod());
-				}
-				LOG.debug("Current locations for Seller Id:" + seller.getSellerID());
-
-				final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
-						seller.getSellerID());
-
-				if (null != storeList && storeList.size() > 0)
-				{
-					final List<String> locationList = new ArrayList<String>();
-					for (final Location location : storeList)
-					{
-						LOG.debug("Slave Ids for Stores::" + location.getName());
-						locationList.add(location.getName());
-					}
-					LOG.debug("Total Slave Ids List for given Pincode :" + locationList.size());
-					data.setStore(locationList);
-				}
-				data.setSellerId(seller.getSellerID());
-				data.setUssid(seller.getUssid());
-				data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N);
-				requestData.add(data);
-			}
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		}
-
-		catch (final Exception e)
-		{
-
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		return requestData;
-	}
 
 	/**
 	 * This method is responsible for fetching winning seller USSID, price and other seller count It will be invoked by

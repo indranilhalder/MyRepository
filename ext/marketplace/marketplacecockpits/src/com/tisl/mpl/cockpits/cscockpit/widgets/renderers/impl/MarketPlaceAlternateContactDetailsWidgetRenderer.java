@@ -156,11 +156,12 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 								.setSclass("pickupNameFieldTextBox");
 						String errorMsgName = LabelUtils.getLabel(widget,
 								"error.msg.name", new Object[0]);
-						/*pickupNameFieldTextBox.setConstraint("/[a-zA-Z]*$/:"
-								+ errorMsgName);*/
-						//pickupNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"+ errorMsgName);
-						pickupNameFieldTextBox.setMaxlength(30);
-						pickupNameFieldTextBox.setConstraint("/^[a-zA-Z]+[ ]?[a-zA-Z]*$/:"+ errorMsgName);
+						pickupNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"+ errorMsgName);
+//						pickupNameFieldTextBox.setConstraint("/[a-zA-Z]*$/:"
+//								+ errorMsgName);
+						
+//						pickupNameFieldTextBox.setMaxlength(30);
+//						pickupNameFieldTextBox.setConstraint("/^[a-zA-Z]+[ ]?[a-zA-Z]*$/:"+ errorMsgName);
 						
 					}// if
 				}// try
@@ -299,13 +300,13 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 				return false;
 			}
 			
-			 else if (pickupNameFieldTextBox.getValue().startsWith(" ")) {
+			/* else if (pickupNameFieldTextBox.getValue().startsWith(" ")) {
 					Messagebox.show(LabelUtils.getLabel(widget,
 							"Doesn't_start_with_space"), LabelUtils.getLabel(widget,
 							FAILED_TO_VALIDATE_PICKUP_DETAILS_FORM), Messagebox.OK,
 							Messagebox.ERROR);
 					return false;
-				}
+				}*/
 
 			else if (pickupNameFieldTextBox.getValue().length() > 225) {
 				Messagebox.show(LabelUtils.getLabel(widget,

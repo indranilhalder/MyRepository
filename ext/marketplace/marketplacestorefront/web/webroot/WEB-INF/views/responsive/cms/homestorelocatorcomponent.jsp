@@ -2,9 +2,9 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;key=${googleApiKey}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<script src="jquery.tools.min.js"></script>
+ 
 <script>
 
 $(document).ready(function(){
@@ -27,7 +27,7 @@ $(document).ready(function(){
 
 function getDataFromServer(lat,lot){
 	$.ajax({
-        url :  ACC.config.encodedContextPath +"/view/HomeStoreLocatorComponentController"+"/"+lat+"/"+lot,
+        url :  ACC.config.encodedContextPath +"/view/HomeStoreLocatorComponentController"+"/"+lat+"/"+lot+"/",
         type: "GET",
         dataType : "json",
   	    cache: false,
@@ -56,7 +56,11 @@ function initialize(locatorJson,lat,lot)
     var mapProp = {
   	center:myCenter,
   	zoom:initialZoom,
-  	disableDefaultUI:true,
+  	zoomControl:true,
+  	zoomControlOptions:{
+  		position:google.maps.ControlPosition.RIGHT_TOP
+  	},
+  	disableDefaultUI:false,
   	mapTypeId:google.maps.MapTypeId.ROADMAP };
 
     var map=new google.maps.Map(document.getElementById("home-googleMap"),mapProp);
@@ -123,6 +127,7 @@ autoCenter(markers,map);
    // controlUI.title = 'Set map to London';
     controlDiv.appendChild(controlUI);
     var controlText = document.getElementById('overLayStoreFinderText');
+    controlText.style.display = 'block';
     controlUI.appendChild(controlText);
     
   }  
@@ -138,6 +143,12 @@ function autoCenter(markers,map ) {
     }
     //  Fit these bounds to the map
     map.fitBounds(bounds);
+  //To control max zoom label
+	google.maps.event.addListenerOnce(map, 'bounds_changed', function(event){
+		  if(this.getZoom()>18){
+			  this.setZoom(18); 
+		  }
+		});
   }
  
 function applyGamma(map) {
@@ -178,14 +189,18 @@ function staticLegends(map){
 //Add a Home control that returns the user to London
 function HomeLegendsControl(controlDiv, map) {
 	
-	 // Setup the different icons and shadows
-    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+	var iconURLPrefix = ACC.config.commonResourcePath+"/images/";
     var icons = [
-      iconURLPrefix + 'red-dot.png',
-      iconURLPrefix + 'green-dot.png',
-      iconURLPrefix + 'blue-dot.png',
-      iconURLPrefix + 'orange-dot.png',
-      iconURLPrefix + 'purple-dot.png',
+      iconURLPrefix + 'Bestseller_Legend.png',
+      iconURLPrefix + 'CottonWorld_Legend.png',
+      iconURLPrefix + 'Croma_Legend.png',
+      iconURLPrefix + 'Dell_Legend.png',
+      iconURLPrefix + 'Inc5_Legend.png',
+      iconURLPrefix + 'Killer_Legend.png',
+      iconURLPrefix + 'Lenovo_Legend.png',
+      iconURLPrefix + 'Metro_Legend.png',
+      iconURLPrefix + 'Tresmode_Legend.png',
+      iconURLPrefix + 'Westside_Legend.png',
     ]
     var iconsLength = icons.length;
     
@@ -196,13 +211,15 @@ function HomeLegendsControl(controlDiv, map) {
     var legend = document.getElementById('legend');
      
       for (var i = 0; i < icons.length; i++) { 
-    	 var div = document.createElement('div');
-         div.innerHTML = "Sample Data" +'<img src="' + icons[i] + '"> ';
-         div.style=legendStyle;
+    	  var div = document.createElement('div');
+	      var img1=document.createElement('img');
+	      img1.src=icons[i];
+	      img1.className='googleMapLegends';
+	      div.appendChild(img1);
          legend.appendChild(div);
     } 
       console.info(legend);
-      controlDiv.style.padding = '25px';
+      controlDiv.style.padding = '10px';
       var controlUI = document.createElement('div');
       controlUI.style.backgroundColor = '#ffffff';
       controlUI.style.textAlign = 'center';

@@ -71,7 +71,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.promotion.service.UpdatePromotionalPriceService#updatePromotionalPrice(java.util.Collection,
 	 * java.util.Collection, java.lang.Double, java.util.Date, java.util.Date, boolean)
 	 */
@@ -94,7 +94,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))
 					{
 						product.add(itrProduct.getAttribute("pk").toString());
-						promoproductList.add(itrProduct.getAttribute("code").toString()); //For staged Product Details
+						promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString()); //For staged Product Details
 					}
 				}
 			}
@@ -109,7 +109,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))////call same method for product
 						{
 							product.add(itrProduct.getAttribute("pk").toString());
-							promoproductList.add(itrProduct.getAttribute("code").toString()); //For staged Product Details
+							promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString()); //For staged Product Details
 						}
 					}
 
@@ -254,7 +254,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))
 					{
 						product.add(itrProduct.getAttribute("pk").toString());
-						promoproductList.add(itrProduct.getAttribute("code").toString());
+						promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString());
 					}
 
 
@@ -270,7 +270,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))//call same method for product
 						{
 							product.add(itrProduct.getAttribute("pk").toString());
-							promoproductList.add(itrProduct.getAttribute("code").toString());
+							promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString());
 						}
 
 					}

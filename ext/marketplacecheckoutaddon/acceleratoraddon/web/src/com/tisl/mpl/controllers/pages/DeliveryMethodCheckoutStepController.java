@@ -397,27 +397,27 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
-//			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
-//			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-//
-//			if (cartModel != null && cartModel.getEntries() != null)
-//			{
-//				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-//				{
-//					if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
-//							&& cartEntryModel.getSelectedUSSID() != null)
-//					{
-//						freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-//						freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-//					}
-//				}
-//			}
-//
-//			applyPromotions();
-//
-//			getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
-//
-//			LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+
+			if (cartModel != null && cartModel.getEntries() != null)
+			{
+				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+				{
+					if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
+							&& cartEntryModel.getSelectedUSSID() != null)
+					{
+						freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+						freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+					}
+				}
+			}
+
+			applyPromotions();
+
+			getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+
+			LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
 
 			timeOutSet(model);
 
@@ -575,26 +575,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//handle freebie
 		final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 		final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
-		if (cartModel != null && cartModel.getEntries() != null)
-		{
-			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-			{
-				if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
-						&& cartEntryModel.getSelectedUSSID() != null)
-				{
-					freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-					freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-				}
-			}
-		}
-
-		applyPromotions();
-
-		getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
-		if (LOG.isDebugEnabled())
-		{
-			LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
-		}
 		
 		final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 		
@@ -669,6 +649,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("Express checkout Having Delivery Mode as CNC: ");
 						LOG.debug("forward to cart page as Express Checkout is not supported for CNC mode ");
 					}
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+							"deliverymode.express.checkout.cnc.invalid");
 					//forward to cart page as Express Checkout is not supported for CNC mode
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 				}
@@ -690,6 +672,26 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						}
 					}
 				}
+				if (cartModel != null && cartModel.getEntries() != null)
+				{
+					for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+					{
+						if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
+								&& cartEntryModel.getSelectedUSSID() != null)
+						{
+							freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+							freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+						}
+					}
+				}
+
+				applyPromotions();
+
+				getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
+				}
 
 			}
 			if (count >0 && delModeCount > 0)
@@ -703,6 +705,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("Express checkout Having Mixed Delivery Mode as CNC and HD/Ed: ");
 						LOG.debug("forward to cart page as Express Checkout is not supported for CNC mode ");
 					}
+					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
+							"deliverymode.express.checkout.cnc.invalid");
 					//forward to cart page as Express Checkout is not supported for CNC mode
 					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 				}
@@ -788,12 +792,33 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				{
 					if (abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId))
 					{
-						if (null != abstractCartEntry.getAssociatedItems() && abstractCartEntry.getAssociatedItems().size() > 0)
+						
+						if (null != freebieParentQtyMap)
 						{
-							for (String ussid : abstractCartEntry.getAssociatedItems())
+							if (null != abstractCartEntry.getAssociatedItems() && abstractCartEntry.getAssociatedItems().size() > 0)
 							{
-								final Long quant = freebieParentQtyMap.get(ussId);
-								freebieProductsWithQuant.put(ussid, quant);
+								for (String ussid : abstractCartEntry.getAssociatedItems())
+								{
+									//check for freebie entry in the cart
+									if (cartModel != null && cartModel.getEntries() != null)
+									{
+										for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+										{
+											if (cartEntryModel != null && cartEntryModel.getSelectedUSSID() != null
+													&& cartEntryModel.getGiveAway() != null && cartEntryModel.getGiveAway().booleanValue())
+											{
+
+												if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
+												{
+													LOG.info("Freebie Parent Product USSID" + abstractCartEntry.getSelectedUSSID());
+													LOG.info("Freebie Product USSID" + ussid);
+													final Long quant = freebieParentQtyMap.get(ussId);
+													freebieProductsWithQuant.put(ussid, quant);
+												}
+											}
+										}
+									}
+								}
 							}
 						}
 						int quan = abstractCartEntry.getQuantity().intValue();
@@ -828,8 +853,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				//freebie starts
 				if (freebieProductsWithQuant.size() > 0)
 				{
-					final FreebieProduct freebieProductData = new FreebieProduct();
 					for (Map.Entry<String, Long> entry : freebieProductsWithQuant.entrySet()) {
+						final FreebieProduct freebieProductData = new FreebieProduct();
 					    String uss = entry.getKey();
 					    Long qty = entry.getValue();
 					    final SellerInformationModel sellerInfo = mplSellerInformationService.getSellerDetail(uss);
@@ -898,6 +923,11 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						{
 							final String closingTime = pointOfServiceModel.getMplClosingTime();
 							posData.setMplClosingTime(closingTime);
+						}
+						if (null != pointOfServiceModel.getMplWorkingDays())
+						{
+							final String mplWorkingDays = pointOfServiceModel.getMplWorkingDays();
+							posData.setMplWorkingDays(mplWorkingDays);
 						}
 						
 						posDataList.add(posData);
@@ -969,8 +999,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 									{
 										if (cartHasFreebieEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
 										{
-											cartHasFreebieEntryModel.setDeliveryPointOfService(posModel);
-											modelService.save(cartHasFreebieEntryModel);
+											//check for freebie entry
+											if (cartHasFreebieEntryModel.getGiveAway() != null && cartHasFreebieEntryModel.getGiveAway().booleanValue())
+											{
+												LOG.info("Save Store for freebie product " + cartHasFreebieEntryModel.getSelectedUSSID());
+												cartHasFreebieEntryModel.setDeliveryPointOfService(posModel);
+												modelService.save(cartHasFreebieEntryModel);
+											}
 										}
 									}
 								}

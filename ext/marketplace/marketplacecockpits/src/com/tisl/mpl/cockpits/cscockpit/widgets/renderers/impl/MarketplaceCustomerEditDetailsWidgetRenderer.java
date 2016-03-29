@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.zkoss.util.Dates;
@@ -61,6 +62,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.ForgetPasswordService;
 public class MarketplaceCustomerEditDetailsWidgetRenderer extends
 		AbstractCockpitEditorWidgetRenderer<InputWidget<CustomerItemWidgetModel, CustomerController>>
 {
+	private static final Logger LOG = Logger.getLogger(MarketplaceCustomerEditDetailsWidgetRenderer.class);
 
 	private WidgetDetailRenderer<TypedObject, Widget> footerRenderer;
 	private static final String EMPTY_SPACE = " ";
@@ -842,20 +844,77 @@ public class MarketplaceCustomerEditDetailsWidgetRenderer extends
 			{
 				final Map.Entry<String, String> entry = entries.next();
 
-				if (entry.getKey().equalsIgnoreCase("fName")
-						&& !entry.getValue().equalsIgnoreCase(customerCurrentData.getFirstName()))
+//				if (entry.getKey().equalsIgnoreCase("fName") && ((entry.getValue().isEmpty() && 
+//						null!=customerCurrentData.getFirstName()) || (!entry.getValue().isEmpty() 
+//								&& null==customerCurrentData.getFirstName()))
+//						&& !entry.getValue().equalsIgnoreCase(customerCurrentData.getFirstName()))
+//				{
+//					updatedDetailList.add("fn");
+//				}
+//				else if (entry.getKey().equalsIgnoreCase("lName") && ((entry.getValue().isEmpty() && 
+//						null!=customerCurrentData.getLastName()) || (!entry.getValue().isEmpty() 
+//								&& null==customerCurrentData.getLastName()))
+//						&& !entry.getValue().equalsIgnoreCase(customerCurrentData.getLastName()))
+//				{
+//					updatedDetailList.add("ln");
+//				}
+				//TISEEII-1177
+				if(entry.getKey().equalsIgnoreCase("fName") && !entry.getValue().isEmpty())
 				{
-					updatedDetailList.add("fn");
+					if(StringUtils.isEmpty(customerCurrentData.getFirstName()) || 
+							(StringUtils.isNotEmpty(customerCurrentData.getFirstName()) && 
+							!entry.getValue().equalsIgnoreCase(customerCurrentData.getFirstName())))
+					{
+						updatedDetailList.add("fn");
+					}
 				}
-				if (entry.getKey().equalsIgnoreCase("lName") && !entry.getValue().equalsIgnoreCase(customerCurrentData.getLastName()))
+				else if(entry.getKey().equalsIgnoreCase("fName") && entry.getValue().isEmpty())
 				{
-					updatedDetailList.add("ln");
+					if(StringUtils.isNotEmpty(customerCurrentData.getFirstName()))
+					{
+						updatedDetailList.add("fn");
+					}
 				}
-				if (entry.getKey().equalsIgnoreCase("nName") && !entry.getValue().equalsIgnoreCase(customerCurrentData.getNickName()))
+				else if(entry.getKey().equalsIgnoreCase("lName") && !entry.getValue().isEmpty())
 				{
-					updatedDetailList.add("nn");
+					if(StringUtils.isEmpty(customerCurrentData.getLastName()) || 
+							(StringUtils.isNotEmpty(customerCurrentData.getLastName()) && 
+							!entry.getValue().equalsIgnoreCase(customerCurrentData.getLastName())))
+					{
+						updatedDetailList.add("ln");
+					}
 				}
-				if (entry.getKey().equalsIgnoreCase("dOfBirth"))
+				else if(entry.getKey().equalsIgnoreCase("lName") && entry.getValue().isEmpty())
+				{
+					if(StringUtils.isNotEmpty(customerCurrentData.getLastName()))
+					{
+						updatedDetailList.add("ln");
+					}
+				}
+				else if(entry.getKey().equalsIgnoreCase("nName") && !entry.getValue().isEmpty())
+				{
+					if(StringUtils.isEmpty(customerCurrentData.getNickName()) || 
+							(StringUtils.isNotEmpty(customerCurrentData.getNickName()) && 
+							!entry.getValue().equalsIgnoreCase(customerCurrentData.getNickName())))
+					{
+						updatedDetailList.add("nn");
+					}
+				}
+				else if(entry.getKey().equalsIgnoreCase("nName") && entry.getValue().isEmpty())
+				{
+					if(StringUtils.isNotEmpty(customerCurrentData.getNickName()))
+					{
+						updatedDetailList.add("nn");
+					}
+				}
+//				else if (entry.getKey().equalsIgnoreCase("nName") && ((entry.getValue().isEmpty() && 
+//						null!=customerCurrentData.getNickName()) || (!entry.getValue().isEmpty() 
+//								&& null==customerCurrentData.getNickName()))
+//						&& !entry.getValue().equalsIgnoreCase(customerCurrentData.getNickName()))
+//				{
+//					updatedDetailList.add("nn");
+//				}
+				else if (entry.getKey().equalsIgnoreCase("dOfBirth"))
 				{
 
 					if (null != entry.getValue() && !MarketplacecommerceservicesConstants.EMPTY.equals(entry.getValue()))
@@ -893,7 +952,7 @@ public class MarketplaceCustomerEditDetailsWidgetRenderer extends
 					}
 
 				}
-				if (entry.getKey().equalsIgnoreCase("dOfAnniversary"))
+				else if (entry.getKey().equalsIgnoreCase("dOfAnniversary"))
 				{
 
 					if (null != entry.getValue() && !MarketplacecommerceservicesConstants.EMPTY.equals(entry.getValue()))
@@ -931,12 +990,12 @@ public class MarketplaceCustomerEditDetailsWidgetRenderer extends
 					}
 				}
 
-				if (entry.getKey().equalsIgnoreCase("mNumber")
+				else if (entry.getKey().equalsIgnoreCase("mNumber")
 						&& !entry.getValue().equalsIgnoreCase(customerCurrentData.getMobileNumber()))
 				{
 					updatedDetailList.add("mob");
 				}
-				if (entry.getKey().equalsIgnoreCase("gender"))
+				else if (entry.getKey().equalsIgnoreCase("gender"))
 				{
 					boolean flag = Boolean.FALSE;
 					if (null != entry.getValue() && !MarketplacecommerceservicesConstants.EMPTY.equals(entry.getValue()))
@@ -968,11 +1027,16 @@ public class MarketplaceCustomerEditDetailsWidgetRenderer extends
 						}
 					}
 				}
-				if (entry.getKey().equalsIgnoreCase("emailId")
+				else if (entry.getKey().equalsIgnoreCase("emailId")
 						&& !entry.getValue().equalsIgnoreCase(customerCurrentData.getOriginalUid()))
 				{
 					updatedDetailList.add("email");
 				}
+			}
+			
+			for(String detail:updatedDetailList)
+			{
+				LOG.debug("Changed attribute::::::"+detail);
 			}
 
 			storeFrontCustomerProcessModel.setSite(baseSiteService.getCurrentBaseSite());

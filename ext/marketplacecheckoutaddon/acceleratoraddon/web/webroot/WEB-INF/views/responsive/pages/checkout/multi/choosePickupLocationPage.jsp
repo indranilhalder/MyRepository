@@ -28,7 +28,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,places&callback=initializeGoogleMaps"></script>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <div class="checkout-content cart checkout wrapper">
 
 	<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
@@ -40,12 +40,13 @@
 					 	
 					 	.radio_btn {
 							display: block !important;;
-						    height: 15px;
-						    width: 15px;
+						    height: 15px !important;
+						    width: 15px !important;
 						    cursor: pointer;
 						   	float: left;
+						   	border-radius: 50% !important;
+							padding: 0px !important;
 						    margin-left: -38px !important;
-						    border-radius: 10px;
 						}
 						
 						.radio_btn2 {
@@ -65,7 +66,7 @@
 						
 						.continue_btn {
 							border: none;
-						    background-color: #00cbe9;
+						    background-color: #A9143C;
 						    color: #fff;
 						    clear: both;
 						    line-height: 30px;
@@ -81,7 +82,7 @@
 						}
 						
 						.continue_btn:hover {
-							 background: #009fb6 !important;
+							 background: #88102C !important;
 							 text-decoration: none;
 							 cursor: pointer;
 							 color: #fff !important;
@@ -127,12 +128,17 @@
 						
 						.pickUpPersonAjax {
 						    text-align: left;
-						    padding: 5px 0px 5px 5px;
+						    padding: 10px;
 						    /* padding-top: 5px; */
 						    background: #D2F7F3;
 						    margin-bottom: 10px;
 						    color: #000;
 						    margin-top: -15px;
+						}
+						
+						.pickupText {
+							color: #A9143C;
+							padding-left: 15px; 
 						}
 						
 						@media (max-width:650px){
@@ -149,8 +155,8 @@
 						  	width: 920px !important;
 						  }
 						  .savenewid {
-						  	background: #00cbe9 !important;
-						  	border-color: #00cbe9 !important;
+						  	background: #A9143C !important;
+						  	border-color: #A9143C !important;
 						  	height: 40px !important;
 						  }
 						  
@@ -190,7 +196,49 @@
 						  	padding-left: 5px;
 							overflow-x: hidden;
 							overflow-y: scroll;
-						  }					 	
+						  }
+						  
+						  .continue_holder {
+						  	width: 250px !important;
+						  }
+						  
+						  .collectionDays {
+						  	display: none !important;
+						  }
+						  
+						  .pickup {
+						  	    height: 160px !important;
+						  }
+						  
+						  .pickuppersonWidth {
+							  	width: 100% !important;
+								margin-bottom: 20px;
+								background-color: rgb(255, 255, 255);
+								border-radius: 4px;
+								box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+								height: 136px !important;
+								border: 1px solid rgb(240, 244, 245);
+						  }
+						  
+						  .panel-body {
+					  			margin-top: 14px;
+								height: 107px !important;
+								padding: 15px;
+								margin-bottom: 20px;
+						  }
+						  
+						  .text_in {
+								font-size: 10px !important;
+								margin-top: 2px !important;
+								margin-left: -2px !important;
+								text-align: center;
+							}
+							
+							.fa-times {
+								cursor: pointer;
+								color: #A9143C;
+							}
+						  					 	
 					</style>
 					<script>
 					//TISST-13010
@@ -251,6 +299,10 @@
 	        }
 	    }
 		
+		function checkMobileNumberSpace(number) {			
+			return /\s/g.test(number);
+		}
+		
 	    function checkWhiteSpace(text) {
 	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
 	        var number = new RegExp(/\d/g);
@@ -294,49 +346,26 @@
 	    }
 	
 		$(document).ready(function(){
+			if($(document).width() <= "1300") {
+				$(".right-block").css("width", "324px");
+				var mapWidth = $(".header4").width();
+				mapWidth = parseInt(mapWidth)+10;
+				$(".mapWidth").css("width", mapWidth+"px")
+				
+			}
 			$(".pickUpPersonAjax").hide();
 			$(".pickupPersonSubmitError").hide();
 			
 			$("#pickupPersonSubmit").hide();
 			$("#pickupPersonName").keyup(function(){
-				var pickupPersonName = $("#pickupPersonName").val();
-				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
-				var statusName = allLetter(pickUpPersonNam);
-				if(statusName == false) {
-					$(".pickupPersonNameError").show();
-					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
-				}
-				else {
-					$(".pickupPersonNameError").hide();
-				}
-			});
-			$("#pickupPersonMobile").keyup(function(){
-				var pickupPersonMobile = $("#pickupPersonMobile").val();
-				var isString = isNaN($('#pickupPersonMobile').val());
-				if(isString==true) {
-						$(".pickupPersonMobileError").show();
-						$(".pickupPersonMobileError").text("Enter only numbers");
-					}
-				else if($('#pickupPersonMobile').val().length >= "11") {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
-				} else {
-					$(".pickupPersonMobileError").hide();
-				}
-			});
-			$("#savePickupPersondDetails").click(function(){
 				$(".pickupPersonSubmitError").hide();
 				$(".pickUpPersonAjax").hide();
 				//alert("hello")
 				$(".pickupPersonMobileError").hide();
 				$(".pickupPersonNameError").hide();
 				$(".pickupDetails").hide();
-				
-				console.log("Working");
 				var pickupPersonName = $("#pickupPersonName").val();
-				
 				var pickupPersonMobile = $("#pickupPersonMobile").val();
-				var isString = isNaN($('#pickupPersonMobile').val());
 				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
 				var statusName = allLetter(pickUpPersonNam);
 				var nameCheck = checkWhiteSpace($("#pickupPersonName").val());
@@ -352,44 +381,122 @@
 					$(".pickupPersonNameError").show();
 					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
 				}
-				else if($('#pickupPersonMobile').val().length <= "9") {
-					if(isString==true) {
+			});
+			$("#pickupPersonMobile").keyup(function(){
+				$(".pickupPersonSubmitError").hide();
+				$(".pickUpPersonAjax").hide();
+				//alert("hello")
+				$(".pickupPersonMobileError").hide();
+				$(".pickupPersonNameError").hide();
+				$(".pickupDetails").hide();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				var mobileSpaceCheck = checkMobileNumberSpace($('#pickupPersonMobile').val());
+				if($('#pickupPersonMobile').val().length <= "10") {
+					if(isString==true || mobileSpaceCheck==true) {
 						$(".pickupPersonMobileError").show();
 						$(".pickupPersonMobileError").text("Enter only numbers");
 					}
-					else {
+					else if ($('#pickupPersonMobile').val().length <= "9") {
 						$(".pickupPersonMobileError").show();
 						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
 					}
+					else if($('#pickupPersonMobile').val().indexOf("-") > -1 || $('#pickupPersonMobile').val().indexOf("+") > -1 ) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
 				}
-				else if($('#pickupPersonMobile').val().length > "10") {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
-				}
-				else if(isString==true) {
-					$(".pickupPersonMobileError").show();
-					$(".pickupPersonMobileError").text("Enter only numbers");
-				}
-				else {
-					var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPickupPersonDetails";
-					var dataString = 'pickupPersonName=' + pickupPersonName+ '&pickupPersonMobile=' + pickupPersonMobile;
-						$.ajax({
-						url : requiredUrl,
-						data : dataString,
-						success : function(data) {
-							//console.log("success call for pickup person details"+data);
-							$("#pickupPersonSubmit").text("1");
-							$(".pickUpPersonAjax").fadeIn(100);
-							$(".pickUpPersonAjax").text("Pickup Person Details Have Successfully Added.");
-	
-						},
-						error : function(xhr, status, error) {
-							console.log(error);	
+			});
+			
+			function submitPickupPersionDetails() {
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var requiredUrl = ACC.config.encodedContextPath +"/checkout/multi/delivery-method/addPickupPersonDetails";
+				var dataString = 'pickupPersonName=' + pickupPersonName+ '&pickupPersonMobile=' + pickupPersonMobile;
+					$.ajax({
+					url : requiredUrl,
+					data : dataString,
+					success : function(data) {
+						//console.log("success call for pickup person details"+data);
+						$(".pickUpPersonAjax").fadeIn(100);
+						if($("#pickupPersonSubmit").text() != "1") {
+							$(".pickUpPersonAjax").append("<span class='pickupText'>Pickup Person Details Have Successfully Added.</span>");
 						}
-					});
+						$("#pickupPersonSubmit").text("1");
+
+					},
+					error : function(xhr, status, error) {
+						console.log(error);	
+					}
+				});
+			}
+			
+			$(".pickUpPersonAjax i").click(function(){
+				$(".pickUpPersonAjax").fadeOut(100);
+			});
+			
+			function submitPickupPersonDetailsOnLoad() {
+				if($("#pickupPersonName").val().length >= "1" && $("#pickupPersonMobile").val().length >= "1") {
+					submitPickupPersionDetails();
 				}
-					
+			}
+			
+			setTimeout(submitPickupPersonDetailsOnLoad(), 2000);
+			
+			$("#savePickupPersondDetails").click(function(){
+				$(".pickupPersonSubmitError").hide();
+				$(".pickUpPersonAjax").hide();
+				//alert("hello")
+				$(".pickupPersonMobileError").hide();
+				$(".pickupPersonNameError").hide();
+				$(".pickupDetails").hide();
 				
+				console.log("Working");
+				var pickupPersonName = $("#pickupPersonName").val();
+				var pickupPersonMobile = $("#pickupPersonMobile").val();
+				var isString = isNaN($('#pickupPersonMobile').val());
+				var pickUpPersonNam = document.pickupPersonDetails.pickupPersonName;
+				var statusName = allLetter(pickUpPersonNam);
+				var nameCheck = checkWhiteSpace($("#pickupPersonName").val());
+				var mobileSpaceCheck = checkMobileNumberSpace($('#pickupPersonMobile').val());
+				if($('#pickupPersonName').val().length <= "3"){ 
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
+				}
+				else if(nameCheck == false){
+					   $(".pickupPersonNameError").show();
+					   $(".pickupPersonNameError").text("Spaces cannot be allowed");
+				 }
+				else if(statusName == false) {
+					$(".pickupPersonNameError").show();
+					$(".pickupPersonNameError").text("Please Enter Only Alphabets");
+				}
+				else if($('#pickupPersonMobile').val().length <= "10") {
+					if(isString==true || mobileSpaceCheck==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+					else if ($('#pickupPersonMobile').val().length <= "9") {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter 10 Digit Number");
+					}
+					else if($('#pickupPersonMobile').val().indexOf("-") > -1 || $('#pickupPersonMobile').val().indexOf("+") > -1 ) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					}
+				
+					/* else if($('#pickupPersonMobile').val().length > "10") {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only 10 Digit Number");
+					} */
+					/* else if(isString==true) {
+						$(".pickupPersonMobileError").show();
+						$(".pickupPersonMobileError").text("Enter only numbers");
+					} */
+					else {
+						submitPickupPersionDetails();
+					}
+				}
 			});
 			
 			$(".pickupDetails").hide();
@@ -436,13 +543,13 @@
 								<li class="store header5"><spring:theme code="checkout.multi.cnc.store.closeto"/>
 								
 								<c:if test="${not empty defaultPincode}">
-									<span style="color: #00cbe9!important;" id="changeValue${status1.index}">
+									<span style="color: #A9143C!important;" id="changeValue${status1.index}">
 										${defaultPincode}
 									</span>	
 								</c:if>
 								</li>
 								<li class="delivery header4"><a 
-														onclick="history.go(-1);" style="color: #00cbe9 !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
+														onclick="history.go(-1);" style="color: #A9143C !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -507,7 +614,8 @@
 								});
 							</script>
 						</li>
-							<!-- Freebie Product Details -->
+						
+						<!-- Freebie Product Details -->
 							
 								 <c:if test="${not empty poses.product.freebieProducts}">
 									<c:forEach items="${poses.product.freebieProducts}" var="freebieProds">
@@ -544,6 +652,7 @@
 								</c:forEach>
 							</c:if>
 							<!-- /. Freebie Product Details -->
+							
 							<li class="item delivery_options item${status1.index}">
 								<ul>
 										<li>
@@ -622,17 +731,46 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}" style="text-transform: lowercase" >STORE TIMINGS
-																<br/>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
+																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	${pos.mplOpeningTime}AM - ${pos.mplClosingTime}PM
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
 																	</c:if>
-																</span>
+																
+																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
+																<span class="weeklyOff${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize;"></span>
 																
 																
 										</li>
 										<script>
 											$(document).ready(function() {
+												var	collectionDays${status1.index}${status.index} = $(".collectionDays${status1.index}${status.index}").text().split(",");
+												//var	collectionDays${status1.index}${status.index} = ["0","1","2","3","4","5","6"];
+												var weekDays = ["0","1","2","3","4","5","6"];
+												var collectionWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+												    missing${status1.index}${status.index} = new Array();
+												var count = 0;
+												var i = 0,
+												    lenC = weekDays.length;
+
+												for ( ; i < lenC; i++ ) {
+												    if ( collectionDays${status1.index}${status.index}.indexOf(weekDays[i]) == -1 ) {
+													 	missing${status1.index}${status.index}[count] = weekDays[i]; count++; 
+													}
+												}
+												//console.log(missing${status1.index}${status.index});
+												if(missing${status1.index}${status.index}.length < 1) {
+													$(".weeklyOff${status1.index}${status.index}").text("Weekly Off : All Days Open");
+												}
+												else {
+													$(".weeklyOff${status1.index}${status.index}").text("Weekly Off : ");
+													for(var y = 0; y < missing${status1.index}${status.index}.length; y++) {
+														$(".weeklyOff${status1.index}${status.index}").append(collectionWeek[missing${status1.index}${status.index}[y]]);
+														if(y != missing${status1.index}${status.index}.length-1) {
+															$(".weeklyOff${status1.index}${status.index}").append(", ");
+														}
+													}
+												}
 												$(".select_store").hide();
 												var checked${status1.index} = $("input[name='address${status1.index}']:checked").val();
 												$(".continue_btn").click(function(e){
@@ -675,7 +813,7 @@
 								</li>
 							
 							<li>
-													<ul id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
+													<ul class="mapWidth" id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
 													<ul id="maphide${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
@@ -722,36 +860,22 @@
 							    
 							    //console.log(iconURLPrefix${status1.index});
 							    
-							    
-							    var icons = [
-														      iconURLPrefix${status1.index} + 'markergrey1.png',
-														      iconURLPrefix${status1.index} + 'markergrey2.png',
-														      iconURLPrefix${status1.index} + 'markergrey3.png',
-														      iconURLPrefix${status1.index} + 'markergrey4.png',
-														      iconURLPrefix${status1.index} + 'markergrey5.png',
-														      iconURLPrefix${status1.index} + 'markergrey6.png'
-														    ]
-							    
-							    var icons${status1.index} = [
-							      iconURLPrefix${status1.index} + 'markergrey1.png',
-							      iconURLPrefix${status1.index} + 'markergrey2.png',
-							      iconURLPrefix${status1.index} + 'markergrey3.png',
-							      iconURLPrefix${status1.index} + 'markergrey4.png',
-							      iconURLPrefix${status1.index} + 'markergrey5.png',
-							      iconURLPrefix${status1.index} + 'markergrey6.png'
-							    ]
+							    var icons = new Array();
+							    for(var i=1;i<=25;i++) {
+						    		icons[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+								}
+							    var icons${status1.index} = new Array();
+							    for(var i=1;i<=25;i++) {
+						    		icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+							    }
+ 
 							    var iconsLength = icons${status1.index}.length;
 							    
 							    $(".radio_btn${status1.index}").click(function(){
 							    	var number = $(this).val();
-							    	icons${status1.index} = [
-														      iconURLPrefix${status1.index} + 'markergrey1.png',
-														      iconURLPrefix${status1.index} + 'markergrey2.png',
-														      iconURLPrefix${status1.index} + 'markergrey3.png',
-														      iconURLPrefix${status1.index} + 'markergrey4.png',
-														      iconURLPrefix${status1.index} + 'markergrey5.png',
-														      iconURLPrefix${status1.index} + 'markergrey6.png'
-														    ]
+							    	for(var i=1;i<=25;i++) {
+							    		icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+								    }
 							    	number = number.replace("address","");
 							    	//number++;
 							    	var myCounter = "1";
@@ -781,7 +905,7 @@
 									    	  contentType : "application/json; charset=utf-8",
 									          data : dataString${status1.index},   
 									          success : function(data) {
-									        	 //console.log(data);
+									        	 console.log(data);
 										          var response${status1.index} = JSON.stringify(data);
 										          var jsonObject${status1.index} = JSON.parse(response${status1.index});
 										          $("#changeValue${status1.index}").text(pinvalue${status1.index});
@@ -790,7 +914,10 @@
 										          if(jsonObject${status1.index}.length != "0") {
 										        	  $("input[name='address${status1.index}']").prop('checked', false);
 										        	  $(".removeColor${status1.index} .radio_color").removeClass("colorChange");
-										        	  icons${status1.index} = icons;
+										        	  //icons${status1.index} = icons;
+										        	  for(var i=1;i<=25;i++) {
+												    	icons${status1.index}[i-1] = iconURLPrefix${status1.index} + 'markergrey' + i +'.png'
+												      }
 										        	  processMap${status1.index}();
 										        	  $(".delivered${status1.index}").show();
 										        	  $("#map${status1.index}").show();
@@ -818,7 +945,42 @@
 											        	  	$(".address4${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['postalCode']);
 											        	  } else {
 											        		  $(".address4${status1.index}"+i).text("");  
+											        	  }if(jsonObject${status1.index}[i]['mplClosingTime'] != null && jsonObject${status1.index}[i]['mplOpeningTime'] != null) {
+											        	  	$(".pickup${status1.index}"+i).text(jsonObject${status1.index}[i]['mplOpeningTime']+" - "+jsonObject${status1.index}[i]['mplClosingTime']);
+											        	  } else {
+											        		  $(".pickup${status1.index}"+i).text("");  
 											        	  }
+											        	  
+											        	  //console.log(jsonObject${status1.index}[i]['mplWorkingDays']);
+											        	  var	collectionDays${status1.index} = jsonObject${status1.index}[i]['mplWorkingDays'].split(",");
+															//var	collectionDays${status1.index}${status.index} = ["0","1","2","3","4","5","6"];
+															var weekDays = ["0","1","2","3","4","5","6"];
+															var collectionWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+															    missing${status1.index} = new Array();
+															var count = 0;
+															var k = 0,
+															    lenC = weekDays.length;
+
+															for ( ; k < lenC; k++ ) {
+															    if ( collectionDays${status1.index}.indexOf(weekDays[k]) == -1 ) {
+																 	missing${status1.index}[count] = weekDays[k]; count++; 
+																}
+															}
+															$(".weeklyOff${status1.index}"+i).text("Changed");
+															if(missing${status1.index}.length < 1) {
+																$(".weeklyOff${status1.index}"+i).text("Weekly Off : All Days Open");
+															}
+															else {
+																/* console.log("Working"); */
+																$(".weeklyOff${status1.index}"+i).text("Weekly Off : ");
+																for(var y = 0; y < missing${status1.index}.length; y++) {
+																	$(".weeklyOff${status1.index}"+i).append(collectionWeek[missing${status1.index}[y]]);
+																	if(y != missing${status1.index}.length-1) {
+																		$(".weeklyOff${status1.index}"+i).append(", ");
+																	}
+																}
+															} 
+											        	  
 											        	/*   console.log(jsonObject${status1.index}[i]['name']);
 											        	  console.log(jsonObject${status1.index}[i]['address']['line1']);
 											        	  console.log(jsonObject${status1.index}[i]['geoPoint']['latitude']);
@@ -832,14 +994,7 @@
 											          	}
 											          $(".latlng${status1.index}").text(changecordinates${status1.index});
 											          processMap${status1.index}();
-											          $('.scrollThis').each(function(){
-															if($(this).find("li").length <= '2'){
-																$(this).css({"overflow-y" : "hidden"});	
-															}
-															else {
-																$(this).css({"overflow-y" : "scroll"});
-															}
-														});
+											          
 										        	} else {
 										        		$(".pincodeServicable${status1.index}").show();
 										        		$(".delivered${status1.index}").hide();
@@ -897,13 +1052,7 @@
 
 							      markers.push(marker);
 
-							      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-							        return function() {
-							          infowindow.setContent(loc${status1.index}[i][0]);
-							          infowindow.open(map, marker);
-							          
-							        }
-							      })(marker, i));
+							      
 							      
 							      iconCounter++;
 							      // We only have a limited number of possible icon colors, so we may have to restart the counter
@@ -919,7 +1068,9 @@
 							      //  Go through each...
 							      for (var i = 0; i < markers.length; i++) {  
 											bounds.extend(markers[i].position);
-											
+											if(length${status1.index} <= 2) {
+												map.setZoom--;
+											}
 							      }
 							      //  Fit these bounds to the map
 							      map.fitBounds(bounds);
@@ -939,30 +1090,33 @@
 			<span class="select_store error_txt" style="text-align: left;font-size: 15px;">
 			<spring:theme code="checkout.multi.cnc.select.products.validate.msg"/></span>
 			<div class="container" id='pickup'>
-       		<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
-     			 <div class="panel panel-body" style="margin-top: 14px;">
-     			 	<div class="col-md-12 pickupDetails error_txt">
-     			 	<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
-     			 	</div>
-     			 	<div class="pickUpPersonAjax">
-     			 	</div>
-     			 	<form name="pickupPersonDetails" action="#">
-     				 <div class="col-md-3">
-      					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
-       					 <div class="col-md-3">
-        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
-        					<div class="error_txt pickupPersonNameError"></div>
-            			</div>
-            			<div class="col-md-3">
-							<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
-							<div class="error_txt pickupPersonMobileError"></div>
-        			    </div>
-			             <div class="col-md-3">
-			             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
-			          <div id="pickupPersonSubmit"></div>
-			          <div class="error_txt pickupPersonSubmitError"></div>
-			            </div>
-			           </form>
+				<div class="panel">
+					<div class="pickUpPersonAjax">
+	     			 		<i class='fa fa-times'></i>
+	   			 	</div>
+   			 	</div>
+       			<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
+     			 	<div class="panel panel-body" style="margin-top: 14px;">
+     			 		<div class="col-md-12 pickupDetails error_txt">
+     			 		<spring:theme code="checkout.multi.cnc.pickup.details.validation.msg"/>
+     			 		</div>
+	     			 	<form name="pickupPersonDetails" action="#">
+	     				 <div class="col-md-3">
+	      					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
+	       					 <div class="col-md-3">
+	        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name"  value="${pickupPersonName}"/><br/>
+	        					<div class="error_txt pickupPersonNameError"></div>
+	            			</div>
+	            			<div class="col-md-3">
+								<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number" value="${pickUpPersonMobile}"/><br/>
+								<div class="error_txt pickupPersonMobileError"></div>
+	        			    </div>
+				             <div class="col-md-3">
+				             <button type="button"  class="savenewid" id="savePickupPersondDetails" style="height: 40px !important"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+				          <div id="pickupPersonSubmit"></div>
+				          <div class="error_txt pickupPersonSubmitError"></div>
+				            </div>
+				           </form>
 			            <div class="col-md-12" style="padding-top: 10px;">
 			            	<spring:theme code="checkout.multi.cnc.pickup.details.below.msg"/>
 			            </div>
@@ -1001,14 +1155,6 @@
 		</div>
 		<script>
 			$(document).ready(function(){
-				$('.scrollThis').each(function(){
-					if($(this).find("li").length <= '2'){
-						$(this).css({"overflow-y" : "hidden"});	
-					}
-					else {
-						$(this).css({"overflow-y" : "scroll"});
-					}
-				});
 				var productUrlNew = $(".productUrlName").attr("href");
 				var latestProductUrl = ACC.config.encodedContextPath + productUrlNew;
 				$(".productUrlName").attr("href", latestProductUrl);
