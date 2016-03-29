@@ -42,7 +42,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Resource;
+
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -129,9 +129,9 @@ public class CustomOmsCancelAdapter implements Serializable
 	
 
 	
-	public boolean createTicketInCRM(final OrderData subOrderDetails, final String subOrderEntryTransactionId,
+	public boolean createTicketInCRM( final String subOrderEntryTransactionId,
 			final String ticketTypeCode, final String reasonCode, final String refundType, 
-			final CustomerData customerData, final OrderModel subOrderModel)
+			 final OrderModel subOrderModel)
 	{
 		boolean ticketCreationStatus = false;
 		try
@@ -156,8 +156,8 @@ public class CustomOmsCancelAdapter implements Serializable
 					sendTicketRequestData.setRefundType(refundType);
 					boolean returnLogisticsCheck = true;
 					//Start
-
-					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails);
+					
+					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderModel);
 					if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 					{
 						for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -192,10 +192,11 @@ public class CustomOmsCancelAdapter implements Serializable
 
 				lineItemDataList.add(sendTicketLineItemData);
 			}
-			sendTicketRequestData.setCustomerID(customerData.getUid());
+			//sendTicketRequestData.setCustomerID(customerData.getUid());
+			sendTicketRequestData.setCustomerID(subOrderModel.getUser().getUid());
 			sendTicketRequestData.setLineItemDataList(lineItemDataList);
 			sendTicketRequestData.setOrderId(subOrderModel.getParentReference().getCode());
-			sendTicketRequestData.setSubOrderId(subOrderDetails.getCode());
+			sendTicketRequestData.setSubOrderId(subOrderModel.getCode());
 			sendTicketRequestData.setTicketType(ticketTypeCode);
 
 			final String asyncEnabled = configurationService.getConfiguration()
@@ -270,31 +271,30 @@ public class CustomOmsCancelAdapter implements Serializable
 		return orderEntries;
 	}
 	
-	
-	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderData orderDetails)
+	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderModel subOrderModel)
 	{
 		try
 		{
-			final List<OrderEntryData> entries = orderDetails.getEntries();
+			final List<AbstractOrderEntryModel> entries = subOrderModel.getEntries();
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			String transactionId = "";
-			for (final OrderEntryData eachEntry : entries)
+			for (final AbstractOrderEntryModel eachEntry : entries)
 			{
 				final ReturnLogistics returnLogistics = new ReturnLogistics();
 				//TISEE-5557
-				if (!(eachEntry.isGiveAway() || eachEntry.isIsBOGOapplied()))
+				if (!(eachEntry.getGiveAway().booleanValue() || eachEntry.getIsBOGOapplied().booleanValue()))
 				//	|| (null != eachEntry.getAssociatedItems() && !eachEntry.getAssociatedItems().isEmpty())))
 				{
-					returnLogistics.setOrderId(orderDetails.getCode());
+					returnLogistics.setOrderId(subOrderModel.getCode());
 					if (StringUtils.isNotEmpty(eachEntry.getOrderLineId()))
 					{
 						transactionId = eachEntry.getOrderLineId();
 						returnLogistics.setTransactionId(eachEntry.getOrderLineId());
 					}
-					else if (StringUtils.isNotEmpty(eachEntry.getTransactionId()))
+					else if (StringUtils.isNotEmpty(eachEntry.getTransactionID()))
 					{
-						transactionId = eachEntry.getTransactionId();
-						returnLogistics.setTransactionId(eachEntry.getTransactionId());
+						transactionId = eachEntry.getTransactionID();
+						returnLogistics.setTransactionId(eachEntry.getTransactionID());
 					}
 				}
 				returnLogisticsList.add(returnLogistics);
@@ -346,9 +346,9 @@ public class CustomOmsCancelAdapter implements Serializable
 					LOG.debug("*****Reverse logistics availabilty  Response orderline is null*********");
 					final ReturnLogisticsResponseData returnLogRespData = new ReturnLogisticsResponseData();
 					returnLogRespData.setIsReturnLogisticsAvailable("N");
-					if (null != orderDetails.getCode())
+					if (null != subOrderModel.getCode())
 					{
-						returnLogRespData.setOrderId(orderDetails.getCode());
+						returnLogRespData.setOrderId(subOrderModel.getCode());
 						returnLogRespData
 								.setResponseMessage(MarketplaceomsordersConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
 						returnLogRespData
@@ -417,7 +417,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		modelService.save(ticket);
 	}
 	
-	boolean initiateCancellation(final String ticketTypeCode, final OrderData subOrderDetails,
+	boolean initiateCancellation(final String ticketTypeCode,
 			final String subOrderEntryTrnxId, final OrderModel subOrderModel, final String reasonCode)
 	{
 		boolean cancellationInitiated = false;
@@ -428,7 +428,8 @@ public class CustomOmsCancelAdapter implements Serializable
 			{
 				final MplOrderCancelRequest orderCancelRequest = buildCancelRequest(reasonCode, subOrderModel,
 						subOrderEntryTrnxId);
-				requestOrderCancel(subOrderDetails, subOrderModel, orderCancelRequest);
+			//	requestOrderCancel(subOrderDetails, subOrderModel, orderCancelRequest);
+				requestOrderCancel( subOrderModel, orderCancelRequest);
 			}
 			cancellationInitiated = true;
 		}
@@ -527,7 +528,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		return orderCancelRequest;
 	}
 	
-	private void requestOrderCancel(final OrderData subOrderDetails, final OrderModel subOrderModel,
+	private void requestOrderCancel(final OrderModel subOrderModel,
 			final MplOrderCancelRequest orderCancelRequest) throws OrderCancelException
 	{
 		//cancel Order
@@ -536,7 +537,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		
 		if (OrderCancelEntryStatus.DENIED.equals(orderRequestRecord.getCancelResult()))
 		{
-			final String orderCode = subOrderDetails.getCode();
+			final String orderCode = subOrderModel.getCode();
 
 			String message = MarketplaceomsordersConstants.EMPTY;
 			if (orderRequestRecord.getRefusedMessage() != null)
@@ -659,7 +660,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 	
 	PushNotificationData frameCancelPushNotification(final OrderModel subOrderModel, final String suborderEntryNumber,
-			final String reasonCode, final CustomerData customerData)
+			final String reasonCode)
 	{
 		PushNotificationData pushData = null;
 		try
@@ -722,9 +723,11 @@ public class CustomOmsCancelAdapter implements Serializable
 			cancelReason = getReasonForCancellation(reasonCode);
 
 			CustomerModel customer = getModelService().create(CustomerModel.class);
-			if (null != customerData.getUid() && !customerData.getUid().isEmpty())
+			//if (null != customerData.getUid() && !customerData.getUid().isEmpty())
+			if (null != subOrderModel.getUser().getUid() && !subOrderModel.getUser().getUid().isEmpty())
 			{
-				customer = getMplSNSMobilePushService().getCustForUId(customerData.getUid());
+				//customer = getMplSNSMobilePushService().getCustForUId(customerData.getUid());
+				customer = getMplSNSMobilePushService().getCustForUId(subOrderModel.getUser().getUid());
 				if (null != customer && null != customer.getDeviceKey() && !customer.getDeviceKey().isEmpty()
 						&& null != customer.getOriginalUid() && !customer.getOriginalUid().isEmpty() && null != customer.getIsActive()
 						&& !customer.getIsActive().isEmpty() && customer.getIsActive().equalsIgnoreCase("Y"))

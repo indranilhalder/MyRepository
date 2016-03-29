@@ -3,8 +3,9 @@
  */
 package com.tisl.mpl.integration.oms.adapter;
 
-import de.hybris.platform.commercefacades.order.data.OrderData;
+
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.event.EventService;
@@ -42,7 +43,7 @@ public class CustomOmsCollectedAdapter
 	
 	private static final String UPDATE_CONSIGNMENT = "updateConsignment:: Inside ";
 	
-	public void sendNotificationForOrderCollected(final OrderModel orderModel, final OrderData orderData, final ConsignmentModel consignmentModel)
+	public void sendNotificationForOrderCollected(final OrderModel orderModel, final ConsignmentModel consignmentModel)
 	{
 		
 		LOG.debug(UPDATE_CONSIGNMENT + MarketplaceomsordersConstants.ORDER_STATUS_COLLECTED);
@@ -64,8 +65,17 @@ public class CustomOmsCollectedAdapter
 			String orderNumber=null;
 			String storeName=null;
 			String deliverdDate=null;
-		   if(null !=orderData && null != orderData.getCustomerData()) {
-		   	customerName=(null !=orderData.getCustomerData().getFirstName() &&  StringUtils.isNotEmpty(orderData.getCustomerData().getFirstName())) ?orderData.getCustomerData().getFirstName()  : " Customer " ;
+			String pickUpPersonName=null;
+			
+			
+			if(null !=orderModel && null != orderModel.getPickupPersonName()) {
+				pickUpPersonName=(null !=orderModel.getPickupPersonName() &&  StringUtils.isNotEmpty(orderModel.getPickupPersonName())) ? orderModel.getPickupPersonName()  : " Customer " ;
+		   }else{
+		   	pickUpPersonName= " Customer ";	 
+		   }
+			
+		   if(null !=orderModel && null != orderModel.getUser()) {
+		   	customerName=(null !=orderModel.getUser().getName() &&  StringUtils.isNotEmpty(orderModel.getUser().getName())) ? orderModel.getUser().getName()  : " Customer " ;
 		   }else{
 		   	customerName= MarketplaceomsordersConstants.EMPTY;	 
 		   }
@@ -89,15 +99,39 @@ public class CustomOmsCollectedAdapter
 		   }else{
 		   	deliverdDate= MarketplaceomsordersConstants.EMPTY;	 
 		   }
-    			String contentForSMS= MarketplaceomsordersConstants.ORDER_COLLECTED_SMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, customerName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, orderNumber).replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, storeName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, deliverdDate);
-    			final String mobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
+    			String contentForSMS= MarketplaceomsordersConstants.ORDER_COLLECTED_SMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, pickUpPersonName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, orderNumber).replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, storeName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, deliverdDate);
+    			if(orderModel != null && orderModel.getPickupPersonMobile()!= null ){
+						final String mobileNumber = (StringUtils.isEmpty(orderModel.getPickupPersonMobile())) ? MarketplaceomsordersConstants.EMPTY
 						: orderModel.getPickupPersonMobile();
     			
-    			final SendSMSRequestData smsRequestData = new SendSMSRequestData();
-   			smsRequestData.setSenderID(MarketplaceomsordersConstants.SMS_SENDER_ID);
-   			smsRequestData.setContent(contentForSMS);
-   			smsRequestData.setRecipientPhoneNumber(mobileNumber);
-   			sendSMSService.sendSMS(smsRequestData);
+						final SendSMSRequestData smsRequestData = new SendSMSRequestData();
+						smsRequestData.setSenderID(MarketplaceomsordersConstants.SMS_SENDER_ID);
+						smsRequestData.setContent(contentForSMS);
+						smsRequestData.setRecipientPhoneNumber(mobileNumber);
+						//Send SMS to PickupPerson
+						sendSMSService.sendSMS(smsRequestData);
+						LOG.debug("Sending SMS to Pickup Person Mobile Successfully >> ");
+    			}
+   			//Send SMS to Customer
+					CustomerModel customer=null;
+					if(orderModel.getUser() != null && orderModel.getUser() instanceof CustomerModel){
+						customer=(CustomerModel) orderModel.getUser();
+					}
+					if(customer!=null && customer.getMobileNumber()  !=null ){
+						final String customerMobile = (StringUtils.isEmpty(customer.getMobileNumber())) ? MarketplaceomsordersConstants.EMPTY
+						: customer.getMobileNumber();
+							if(customerMobile!= null && StringUtils.isNotEmpty(customerMobile)){
+								String contentSMSForCustomer= MarketplaceomsordersConstants.ORDER_COLLECTED_SMS_CUSTOMER.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED_CUSTOMER, customerName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED_CUSTOMER, pickUpPersonName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED_CUSTOMER, storeName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED_CUSTOMER, deliverdDate).replace(MarketplaceomsordersConstants.SMS_VARIABLE_FOUR_ORD_COLLECTED_CUSTOMER, orderNumber);
+								final SendSMSRequestData smsRequestDataforCustomer = new SendSMSRequestData();
+								smsRequestDataforCustomer.setSenderID(MarketplaceomsordersConstants.SMS_SENDER_ID);
+								smsRequestDataforCustomer.setContent(contentSMSForCustomer);
+								smsRequestDataforCustomer.setRecipientPhoneNumber(customerMobile);
+								sendSMSService.sendSMS(smsRequestDataforCustomer);
+								LOG.debug("Sending SMS to Customer Mobile Successfully >> ");
+							}else{
+								LOG.debug("Please provied Mobile Number for the Customer");
+							}
+					}
     			
 		}
 		catch ( final EtailNonBusinessExceptions ex)
