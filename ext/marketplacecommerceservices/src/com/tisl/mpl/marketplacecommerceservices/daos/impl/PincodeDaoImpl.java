@@ -44,7 +44,7 @@ public class PincodeDaoImpl implements PincodeDao
 	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(PincodeDaoImpl.class);
 	
-	private final String LATITUDE = "latitude"";
+	private final String LATITUDE = "latitude";
 	private final String LONGITUDE = "longitude";
 	private final String IS_NOT_NULL = "} is not null AND {"; 
 	/*
