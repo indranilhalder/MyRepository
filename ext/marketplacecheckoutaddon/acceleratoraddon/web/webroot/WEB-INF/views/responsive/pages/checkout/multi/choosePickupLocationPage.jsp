@@ -1137,6 +1137,13 @@
 			</div>
 		<div class="continue_holder">
 			<c:choose>
+				<c:when test="${expCheckout gt 0}">
+					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/payment-method/add" type="button">
+					<div class="continue_btn">
+						CONTINUE
+					</div>
+					</a>
+				</c:when>
 				<c:when test="${delModeCount gt 0}">
 				
 				<form:form id="selectDeliveryMethodForm1" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
