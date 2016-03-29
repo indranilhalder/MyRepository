@@ -344,12 +344,9 @@
 																			<c:set var="displayed" value="false" />
 																			<c:forEach items="${promotion.consumedEntries}"
 																				var="consumedEntry">
-																				<c:if
-																					test="${not displayed && consumedEntry.orderEntryNumber == entry.entryNumber}">
+																				<c:if test="${not displayed && not entry.isBOGOapplied && entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
 																					<c:set var="displayed" value="true" />
-
 																					<li><span>${promotion.description}</span></li>
-
 																				</c:if>
 																			</c:forEach>
 																		</c:forEach>
