@@ -198,6 +198,7 @@ ACC.product = {
 },
 
 sendAddToBagWl: function(formId){
+	
 	var dataString=$('#'+formId).serialize();	
 	$.ajax({
 		url : ACC.config.encodedContextPath + "/cart/add",
@@ -210,11 +211,11 @@ sendAddToBagWl: function(formId){
 		success : function(data) {
 			if(data.indexOf("cnt:") >= 0){
 				$("#"+formId+"Title").html("");
-				$("#"+formId+"Title").html("<font color='#00CBE9'>"+$('#addtobagwl').text()+"</font>");
-				$("#"+formId+"Title").show().fadeOut(6000);
-				
+				//$("#"+formId+"Title").html("<font color='#00CBE9'>"+$('#addtobagwl').text()+"</font>");
+				//$("#"+formId+"Title").show().fadeOut(6000);
 				var formId_splitdata = [];
 				formId_splitdata = formId.split("_");
+				ACC.product.showTransientCart(formId_splitdata[2]);
 				ACC.product.addToBagFromWl(formId_splitdata[2],true);
 				//$("#"+formId+"Title").show().fadeOut(7000);
 				//ACC.product.displayAddToCart(data,formId,false);				
@@ -581,12 +582,13 @@ sendAddToBag : function(formId, isBuyNow) {
 		
 		var input_name="qty";
 		var stock_id="stock";
+		var ussid="ussid";
 		var dataString=$('#'+formId).serialize();	
 		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
-
+		var ussid = $("#"+formId+" :input[name='" +  ussid +"']").val(); 
 		//alert("dataString: "+dataString+" quantity: "+quantity+" stock: "+stock);
 		$.ajax({
 			url : ACC.config.encodedContextPath + "/cart/add",
@@ -600,16 +602,16 @@ sendAddToBag : function(formId, isBuyNow) {
 				//alert("data: "+data);
 				if(data.indexOf("cnt:") >= 0){
 					//alert("addtobag");
-				$("#"+formId+"TitleSuccess").html("");
-				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+				//$("#"+formId+"TitleSuccess").html("");
+				//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
 
-				$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+				//$("#"+formId+"TitleSuccess").show().fadeOut(5000);
 
-				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
-				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+				//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
+				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
 
 				//alert("data form id: "+$("#"+formId+" "+".addToCartSerpTitle"));
-				
+				ACC.product.showTransientCart(ussid);	
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
