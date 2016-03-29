@@ -21,10 +21,12 @@ import de.hybris.platform.commerceservices.model.process.StoreFrontCustomerProce
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 
@@ -39,8 +41,11 @@ public class CustomerEmailContext extends AbstractEmailContext<StoreFrontCustome
 	private static final String CUSTOMER_PASSWORD = "customerPassword";
 	private static final String IS_CUSTOMER_CREATED_IN_CSCOCKPIT = "customerCreatedInCscockpit";
 
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
-
+	@Autowired
+	private ConfigurationService configurationService;
 
 	private static final Logger LOG = Logger.getLogger(CustomerEmailContext.class);
 
@@ -71,6 +76,17 @@ public class CustomerEmailContext extends AbstractEmailContext<StoreFrontCustome
 				put(IS_CUSTOMER_CREATED_IN_CSCOCKPIT, Boolean.TRUE);
 				put(CUSTOMER_PASSWORD, storeFrontCustomerProcessModel.getPassword());
 			}
+
+
+			final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+					"1800-208-8282");
+			put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+			final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail",
+					"hello@tatacliq.com");
+			put(CUSTOMER_CARE_EMAIL, customerCareEmail);
+
 		}
 		catch (final Exception e)
 		{

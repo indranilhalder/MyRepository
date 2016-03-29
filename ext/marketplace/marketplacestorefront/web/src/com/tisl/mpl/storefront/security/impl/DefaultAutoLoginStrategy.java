@@ -23,13 +23,11 @@ import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.core.Registry;
-import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -83,11 +81,6 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 	@Autowired
 	private ModelService modelService;
 
-	private Converter<CartModel, CartData> mplExtendedCartConverter;
-
-	/**
-	 * New Code
-	 */
 
 	private static final String CART_MERGED = "cartMerged";
 

@@ -42,7 +42,7 @@
 								<td><p style="font-size: 13px; padding-left: 40px; padding-right: 40px; ">Tata CliQ.... The Joy of Shopping<p></td>
 							</tr>
 							<tr>
-								<td><p style="font-size: 13px; padding-left: 40px; padding-right: 40px; "><b><a href="mailto:hello@tatacliq.com" style="color: #11309F;">www.tataCliQ.com</a></b><p></font>
+								<td><p style="font-size: 13px; padding-left: 40px; padding-right: 40px; "><b><a href="mailto:${ctx.customerCareEmail}" style="color: #11309F;">www.tataCliQ.com</a></b><p></font>
 								</td>	
 							</tr>
 							
@@ -50,7 +50,7 @@
 								<br>
 								<td>
 									<br>
-									<p style="padding-left: 40px; padding-right: 40px;"><font color="#848484" size="2" face="Arial, Helvetica, sans-serif">This email can't receive replies. For more information, visit Tata CliQ's<a href="mailto:hello@tatacliq.com" style="color: #11309F;">hello@tatacliq.com</a> or write to us at	<a href="mailto:hello@tatacliq.com" style="color: #11309F;">hello@tatacliq.com</a>.</font></p>
+									<p style="padding-left: 40px; padding-right: 40px;"><font color="#848484" size="2" face="Arial, Helvetica, sans-serif">This email can't receive replies. For more information, visit Tata CliQ's<a href="mailto:${ctx.customerCareEmail}" style="color: #11309F;">${ctx.customerCareEmail}</a> or write to us at	<a href="mailto:${ctx.customerCareEmail}" style="color: #11309F;">${ctx.customerCareEmail}</a>.</font></p>
 								</td>
 							</tr>
 							<tr>

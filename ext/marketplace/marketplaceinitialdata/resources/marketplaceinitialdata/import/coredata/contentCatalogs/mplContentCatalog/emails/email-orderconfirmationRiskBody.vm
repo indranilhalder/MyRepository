@@ -329,7 +329,7 @@
 <td align="left" valign="top">&nbsp;</td>
 <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="550" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:hello@tatacliq.com" style="color:#606060;">CLIQhelpers</a> (or perform at our mid-week karaoke night). You can also shoot an email to <a href="mailto:hello@tatacliq.com" style="color:#606060;">hello@tatacliq.com</a>.</td>
+<td width="550" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">CLIQhelpers</a> (or perform at our mid-week karaoke night). You can also shoot an email to <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">${ctx.customerCareEmail}</a>.</td>
 </tr>
 </table></td>
 <td align="left" valign="top">&nbsp;</td>
