@@ -733,7 +733,6 @@ public class MiscsController extends BaseController
 		BufferedReader br = null;
 		final StringBuilder sb = new StringBuilder();
 		String saveStatus;
-		final Map map;
 		try
 		{
 			String line;
@@ -747,7 +746,7 @@ public class MiscsController extends BaseController
 			final String relativeWebPath = MarketplacecommerceservicesConstants.SLAVE_MASTER_XSD_PATH;
 			final String absoluteDiskPath = servletContext.getRealPath(relativeWebPath);
 			final InputStream is0 = new ByteArrayInputStream(sb.toString().getBytes());
-			map = mplValidateAgainstXSDService.validateAgainstXSD(is0, absoluteDiskPath); //Validating XML input received XSD.
+			mplValidateAgainstXSDService.validateAgainstXSD(is0, absoluteDiskPath); //Validating XML input received XSD.
 
 			
 				final InputStream is1 = new ByteArrayInputStream(sb.toString().getBytes());
