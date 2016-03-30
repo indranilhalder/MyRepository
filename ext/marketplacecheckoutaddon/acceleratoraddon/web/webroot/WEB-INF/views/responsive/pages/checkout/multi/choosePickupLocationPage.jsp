@@ -617,6 +617,7 @@
 						
 						<!-- Freebie Product Details -->
 							
+								
 								 <c:if test="${not empty poses.product.freebieProducts}">
 									<c:forEach items="${poses.product.freebieProducts}" var="freebieProds">
 										<%-- ${freebieProds.associateProductData.code}
@@ -640,9 +641,21 @@
 																<a href="${freebieProds.product.url}"><div
 																		class="name product-name">${freebieProds.product.name}</div></a>
 															</ycommerce:testId>
-															<div class="freebieId"><b>Product ID:</b> ${freebieProds.product.code}</div>
-															<div class="sellerName"><b>Seller:</b> ${freebieProds.sellerName}</div>
-															<div class="freebieQty"><b>Qty:</b> ${freebieProds.qty}</div>
+															<c:if test="${not empty freebieProds.product.code}">
+															<div class="freebieId">Product ID: ${freebieProds.product.code}</div>
+															</c:if>
+															<c:if test="${not empty poses.product.size}">
+															<div class="freebieSize"><spring:theme code="text.size"/> ${freebieProds.product.size}</div>
+															</c:if>
+															<c:if test="${not empty poses.product.colour}">
+															<div class="freebieColor"><spring:theme code="text.colour"/> ${freebieProds.product.colour}</div>
+															</c:if>
+															<c:if test="${not empty freebieProds.sellerName}">
+															<div class="sellerName"><spring:theme code="text.seller.name"/> ${freebieProds.sellerName}</div>
+															</c:if>
+															<c:if test="${not empty freebieProds.qty}">
+															<div class="freebieQty"><spring:theme code="text.qty"/> ${freebieProds.qty}</div>
+															</c:if>
 														</div>
 													</div>
 												</li>
@@ -667,21 +680,20 @@
 														<a class="productUrlName" href="${poses.product.url}"><div class="name product-name">${poses.product.name}</div></a>
 													</ycommerce:testId>
 																									<!-- start TISEE-4631 TISUAT-4229 -->
-												
+												<c:if test="${not empty poses.product.code}">
+															<div class="freebieId">Product ID: ${poses.product.code}</div>
+												</c:if>
 												<c:if test="${fn:toUpperCase(poses.product.rootCategory) != 'ELECTRONICS'}">
-												 	
 												 	<ycommerce:testId code="cart_product_size">
 												 		<c:if test="${not empty poses.product.size}">
-												 			<div class="size"><b><spring:theme code="text.size"/>${poses.product.size}</b></div>
+												 			<div class="size"><spring:theme code="text.size"/>${poses.product.size}</div>
 												 		</c:if>
-														
 													</ycommerce:testId>
-													<ycommerce:testId code="cart_product_colour">
+												 	<ycommerce:testId code="cart_product_colour">
 														<c:if test="${not empty poses.product.colour}">
-															<div class="colour"><b><spring:theme code="text.colour"/>${poses.product.colour}</b></div>
+															<div class="colour"><spring:theme code="text.colour"/>${poses.product.colour}</div>
 														</c:if>
 													</ycommerce:testId>
-													${poses.product.code}
 													<div class="item-price delivery-price">
 														<format:price priceData="${poses.product.price}"/>
 													</div>
@@ -689,9 +701,14 @@
 												<!-- end TISEE-4631 TISUAT-4229 -->
 												<!-- end TISEE-4631 TISUAT-4229 -->
 												<ycommerce:testId code="cart_product_colour">
-													<c:if test="${not empty sellerName}">
-														<div class="colour"><b><spring:theme code="text.seller.name"/>	<b>${poses.sellerName}</b></b></div>
+													<c:if test="${not empty poses.sellerName}">
+														<div class="colour"><spring:theme code="text.seller.name"/> ${poses.sellerName}</div>
 													</c:if>
+													<ycommerce:testId code="cart_product_quantity">
+														<c:if test="${not empty poses.product.colour}">
+															<div class="quantity"><spring:theme code="text.qty"/> ${poses.quantity}</div>
+														</c:if>
+													</ycommerce:testId>
 												</ycommerce:testId>
 												</div>
 									      </div>
