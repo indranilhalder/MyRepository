@@ -611,7 +611,10 @@ sendAddToBag : function(formId, isBuyNow) {
 				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
 
 				//alert("data form id: "+$("#"+formId+" "+".addToCartSerpTitle"));
-				ACC.product.showTransientCart(ussid);	
+				ACC.product.showTransientCart(ussid);
+				ACC.product.scrollForTransientCart();
+				
+					
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
@@ -864,6 +867,7 @@ sendAddToBag : function(formId, isBuyNow) {
 					+ "/cart/showTransientCart",
 			data:dataString,
 			success : function(response) {
+				$('.mini-transient-bag').remove();
 				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
 				
 				if(typeof response.offer!=='undefined'){
@@ -872,6 +876,14 @@ sendAddToBag : function(formId, isBuyNow) {
 				
 				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
 				$('.transient-mini-bag').append(transientCartHtml);
+				
+				if ($("header .content .bottom").hasClass("active")){
+					$("header .content .right>ul>li.transient-mini-bag .mini-transient-bag").css({
+						"position": "fixed",
+						"top": "80px",
+						"right": "0px"
+					});
+		}
 				
 				setTimeout(function(){
 					$('.mini-transient-bag').fadeOut(2000);
@@ -895,10 +907,9 @@ sendAddToBag : function(formId, isBuyNow) {
 	{
 		if($(window).width() > 773) {
 			$("#cboxClose").click();
-		 $('html,body').animate({
-		            scrollTop: 0
-		        }, 500);
-		 
+			$('body.modal-open').css('overflow-y','hidden');
+			$(".modal").modal('hide');
+			$('body').css('overflow-y','auto');
 		} 
 		
 	}
