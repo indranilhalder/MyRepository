@@ -457,7 +457,7 @@
 				$(".pickupPersonNameError").hide();
 				$(".pickupDetails").hide();
 				
-				console.log("Working");
+				//console.log("Working");
 				var pickupPersonName = $("#pickupPersonName").val();
 				var pickupPersonMobile = $("#pickupPersonMobile").val();
 				var isString = isNaN($('#pickupPersonMobile').val());
@@ -730,8 +730,8 @@
 												<div class='pin bounce'>
 													<span class="text_in">${status.count}</span>
 														</div>
-															<label class="radio_sel${status1.index}${status.index} displayName${status1.index}${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
-															</label>
+															<label class="radio_sel${status1.index}${status.index} displayName${status1.index}${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}</label>
+															<label class="radio_sel${status1.index}${status.index} name${status1.index}${status.index} radio_color delivery-address" style="display: none;">${pos.name}</label>
 																<%-- <span class="radio_sel${status1.index}${status.index} radio_color displayName${status1.index}${status.index}">${pos.displayName}</span> --%>
 																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.line1}">
@@ -824,7 +824,7 @@
 												$("#address${status1.index}${status.index}").click(function(){
 													$(".removeColor${status1.index} .radio_color").removeClass("colorChange");
 													$(".select_store").hide();
-													var name${status.index} = $(".displayName${status1.index}${status.index}").text();
+													var name${status.index} = $(".name${status1.index}${status.index}").text();
 													openPopForAdddPosToCartEntry('${poses.ussId}',name${status.index});
 													$(".radio_sel${status1.index}${status.index}").addClass("colorChange");
 												});
@@ -958,7 +958,7 @@
 									    	  contentType : "application/json; charset=utf-8",
 									          data : dataString${status1.index},   
 									          success : function(data) {
-									        	 console.log(data);
+									        	 //console.log(data);
 										          var response${status1.index} = JSON.stringify(data);
 										          var jsonObject${status1.index} = JSON.parse(response${status1.index});
 										          $("#changeValue${status1.index}").text(pinvalue${status1.index});
@@ -981,6 +981,10 @@
 											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['displayName']);
 											        	  } else {
 											        		  $(".displayName${status1.index}"+i).text("");
+											        	  }if(jsonObject${status1.index}[i]['name'] != null) {
+											        	  	  $(".name${status1.index}"+i).text(jsonObject${status1.index}[i]['name']);
+											        	  } else {
+											        		  $(".name${status1.index}"+i).text("");
 											        	  } if(jsonObject${status1.index}[i]['address']['line1'] != null) {
 										        			  $(".address1${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['line1']);
 											        	  } else { 
