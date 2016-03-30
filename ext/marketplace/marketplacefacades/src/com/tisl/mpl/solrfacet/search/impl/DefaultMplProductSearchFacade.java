@@ -351,7 +351,7 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 			searchQueryData.setFilterTerms(Collections.singletonList(solrSearchQueryTermData));
 
 			searchQueryData.setSellerID(sellerId);
-			//	searchQueryData.setSns(searchState.isSns());
+			searchQueryData.setSns(searchState.isSns());
 		}
 
 

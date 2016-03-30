@@ -2112,7 +2112,7 @@ function validatePin() {
 }  
 
 
-$("#newAddressButton").click(function() {
+$("#newAddressButton,#newAddressButtonUp").click(function() {
 	var validate=true;
 	var regPostcode = /^([1-9])([0-9]){5}$/;
     var mob = /^[1-9]{1}[0-9]{9}$/;
@@ -2139,6 +2139,7 @@ $("#newAddressButton").click(function() {
 	else if(letters.test(result) == false)  
 	{ 
 		$("#firstnameError").show();
+		/*Error message changed TISPRD-427*/
 		$("#firstnameError").html("<p>First Name must be alphabet only</p>");
 		validate= false;
 	}  
@@ -2157,6 +2158,7 @@ $("#newAddressButton").click(function() {
 	else if(letters.test(result) == false)  
 	{ 
 		$("#lastnameError").show();
+		/*Error message changed TISPRD-427*/
 		$("#lastnameError").html("<p>Last Name must be alphabet only</p>");
 		validate= false;
 	} 
@@ -3546,13 +3548,27 @@ function sendTealiumData(){
 		        
 		        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
 		        {
-		        	utag.link({
-			            "link_name": 'Final Checkout',
-			            "event_type": 'PayNow',
-			            "payment_method": "" + payment_mode + "|" + payment_type,
-			            "product_id": utag.data.product_id
-	
-			        });
+		        	
+		        	if(payment_mode === "COD"){
+		        		utag.link({
+				            "link_name": 'Final Checkout',
+				            "event_type": 'PayNow',
+				            "payment_method": "" + payment_type,
+				            "product_id": utag.data.product_id
+		
+				        });
+		        		
+		        	}else{
+		        		
+		        	
+			        	utag.link({
+				            "link_name": 'Final Checkout',
+				            "event_type": 'PayNow',
+				            "payment_method": "" + payment_mode + "|" + payment_type,
+				            "product_id": utag.data.product_id
+		
+				        });
+		        	}
 		        }
 	        
 	   } catch (e) {

@@ -39,5 +39,5 @@ public interface MarketPlaceOrderController extends OrderController {
 
 	public boolean isOrderCODforManualRefund(OrderModel object,
 			List<OrderEntryModel> manualRefundList);
-
+	public boolean syncOrder(OrderModel order);
 }

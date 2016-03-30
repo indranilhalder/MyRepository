@@ -335,8 +335,8 @@ font-weight: normal;
 	color: #fff;
 	background-color: #ffb810;
 	text-decoration: none;
-	height: 45px;
-	line-height: 45px;
+	height: 40px;
+	line-height: 40px;
 	padding: 0 60px;
 }
 #ratingDiv .gig-rating-button:hover {

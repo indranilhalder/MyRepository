@@ -4,6 +4,7 @@ import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.ItemModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.integration.oms.OrderWrapper;
+import de.hybris.platform.integration.oms.adapter.DefaultOmsOrderSyncAdapter;
 import de.hybris.platform.integration.oms.adapter.OmsSyncAdapter;
 import de.hybris.platform.omsorders.services.query.daos.SyncDao;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -27,9 +28,9 @@ import com.hybris.oms.domain.order.OrderLine;
  */
 
 
-public class CustomOmsOrderSyncAdapter implements OmsSyncAdapter<Order, OrderModel>
+public class CustomOmsOrderSyncAdapter extends DefaultOmsOrderSyncAdapter
 {
-	private OmsSyncAdapter<OrderWrapper, ConsignmentModel> omsShipmentSyncAdapter;
+	private OmsSyncAdapter<OrderWrapper, ConsignmentModel> omsShipmentSyncAdapterCustom;
 	private ModelService modelService;
 	private SyncDao<OrderModel> orderSyncDao;
 
@@ -46,7 +47,7 @@ public class CustomOmsOrderSyncAdapter implements OmsSyncAdapter<Order, OrderMod
 			if (!(OrderStatus.CANCELLING.equals(orderModel.getStatus())))
 			{
 				final OrderWrapper orderWrapper = new OrderWrapper(sOrder);
-				this.omsShipmentSyncAdapter.update(orderWrapper, orderModel);
+				getOmsShipmentSyncAdapterCustom().update(orderWrapper, orderModel);
 
 			}
 		}
@@ -110,6 +111,7 @@ public class CustomOmsOrderSyncAdapter implements OmsSyncAdapter<Order, OrderMod
 		return sellerOrder;
 	}
 
+	@Override
 	protected void processOrderStatus(@SuppressWarnings("unused") final OrderModel order, final OrderStatus newOrderStatus)
 	{
 		if (newOrderStatus == null)
@@ -119,22 +121,18 @@ public class CustomOmsOrderSyncAdapter implements OmsSyncAdapter<Order, OrderMod
 		OrderStatus.CANCELLED.equals(newOrderStatus);
 	}
 
+	@Override
 	@Required
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
 	}
 
+	@Override
 	@Required
 	public void setOrderSyncDao(final SyncDao<OrderModel> orderSyncDao)
 	{
 		this.orderSyncDao = orderSyncDao;
-	}
-
-	@Required
-	public void setOmsShipmentSyncAdapter(final OmsSyncAdapter<OrderWrapper, ConsignmentModel> omsShipmentSyncAdapter)
-	{
-		this.omsShipmentSyncAdapter = omsShipmentSyncAdapter;
 	}
 
 
@@ -143,14 +141,6 @@ public class CustomOmsOrderSyncAdapter implements OmsSyncAdapter<Order, OrderMod
 	public OrderModel update(final Order dto, final ItemModel parent)
 	{
 		return null;
-	}
-
-	/**
-	 * @return the omsShipmentSyncAdapter
-	 */
-	public OmsSyncAdapter<OrderWrapper, ConsignmentModel> getOmsShipmentSyncAdapter()
-	{
-		return omsShipmentSyncAdapter;
 	}
 
 	/**
@@ -167,6 +157,24 @@ public class CustomOmsOrderSyncAdapter implements OmsSyncAdapter<Order, OrderMod
 	public SyncDao<OrderModel> getOrderSyncDao()
 	{
 		return orderSyncDao;
+	}
+
+	/**
+	 * @return the omsShipmentSyncAdapterCustom
+	 */
+	public OmsSyncAdapter<OrderWrapper, ConsignmentModel> getOmsShipmentSyncAdapterCustom()
+	{
+		return omsShipmentSyncAdapterCustom;
+	}
+
+	/**
+	 * @param omsShipmentSyncAdapterCustom
+	 *           the omsShipmentSyncAdapterCustom to set
+	 */
+	@Required
+	public void setOmsShipmentSyncAdapterCustom(final OmsSyncAdapter<OrderWrapper, ConsignmentModel> omsShipmentSyncAdapterCustom)
+	{
+		this.omsShipmentSyncAdapterCustom = omsShipmentSyncAdapterCustom;
 	}
 
 

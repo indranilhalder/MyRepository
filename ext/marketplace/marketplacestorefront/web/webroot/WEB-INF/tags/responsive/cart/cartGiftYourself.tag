@@ -55,7 +55,7 @@ $( document ).ready(function() {
 		        $('#ajax-loader').show();
 		    },
 			success : function(data) {
-				addToBagButton.parents(".item-edit-details").append('<li style="color: #00cbe9;">Bagged and Ready</li>');
+				addToBagButton.parents(".item-edit-details").append('<li style="color: #a9143c;">Bagged and Ready</li>');
 				addToBagButton.prop("disabled",true);
 				addToBagButton.css("opacity","0.5");
 				setTimeout(function(){
@@ -98,12 +98,15 @@ $( document ).ready(function() {
 						<div class="product">
 						
 							<p class="company"></p>
+							
+							<!-- TISSIT-1916 -->
+							<h3 class="product-brand-name"><a href="${productUrl}">${product.brand.brandname}</a></h3>
 							<a href="${productUrl}"><h3 class="product-name">${product.name}</h3></a>
 								<c:if test="${not empty product.size}">
 								<p class="size">Size: ${product.size}</p>
 								</c:if>
-								<!--TISPRO-165  -->
 								
+								<!--TISPRO-165  -->			
 								<c:choose>
 								
 									<c:when test="${fn:toLowerCase(fulfillmentType) eq 'tship'}">

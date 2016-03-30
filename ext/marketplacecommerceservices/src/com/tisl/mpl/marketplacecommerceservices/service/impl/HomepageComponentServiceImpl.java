@@ -22,9 +22,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
+import com.tisl.mpl.core.model.MplImageCategoryComponentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
@@ -141,12 +143,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	}
 
 
-	@Override
-	public JSONObject getBrandsYouLoveJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
-	{
-		// YTODO Auto-generated method stub
-		return null;
-	}
+
 
 
 	@Override
@@ -160,81 +157,82 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			components = contentSlot.getCmsComponents();
 		}
 
+		String title = MarketplacecommerceservicesConstants.EMPTY;
+		String mediaUrl = MarketplacecommerceservicesConstants.EMPTY;
+
+		final JSONArray subComponentJsonArray = new JSONArray();
+
 		for (final AbstractCMSComponentModel component : components)
 		{
+			//Forming JSON is the component is of MplCategoryCarouselComponentModel type
 			if (component instanceof MplCategoryCarouselComponentModel)
 			{
 				final MplCategoryCarouselComponentModel productYouCareCarouselComponent = (MplCategoryCarouselComponentModel) component;
-				String title = "";
+
 				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
 				{
 					title = productYouCareCarouselComponent.getTitle();
 				}
 
-				productYouCare.put(TITLE, title);
 
-				final JSONArray subComponentJsonArray = new JSONArray();
 				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
 				{
-					String categoryName = "";
-					String categoryCode = "";
-
-
 					for (final CategoryModel category : productYouCareCarouselComponent.getCategories())
 					{
-						final JSONObject youCareCategoryJSON = new JSONObject();
-						if (null != category.getName())
-						{
-							categoryName = category.getName();
-
-						}
-						youCareCategoryJSON.put("categoryName", categoryName);
-
-						if (null != category.getCode())
-						{
-							categoryCode = category.getCode();
-
-						}
-						youCareCategoryJSON.put("categoryCode", categoryCode);
-
-						boolean mediaFound = false;
-						if (null != category.getMedias())
-						{
-							for (final MediaModel categoryMedia : category.getMedias())
-							{
-								if (null != categoryMedia.getMediaFormat()
-										&& categoryMedia.getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H")
-										&& null != categoryMedia.getURL2())
-								{
-									youCareCategoryJSON.put("mediaURL", getMediaUrlStrategy(categoryMedia.getURL2()));
-									mediaFound = true;
-								}
-							}
-
-							if (!mediaFound)
-							{
-								youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
-							}
-
-
-						}
-						else
-						{
-
-							youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
-						}
-
-						subComponentJsonArray.add(youCareCategoryJSON);
+						final JSONObject categoryJSON = getCategoryJSON(category);
+						categoryJSON.put("mediaURL", getCategoryMediaUrl(category));
+						subComponentJsonArray.add(categoryJSON);
 					}
 				}
-				else
-				{
-					LOG.error("No Category found for productYouCareCarouselComponent");
-				}
 
-				productYouCare.put("categories", subComponentJsonArray);
+
 
 			}
+			//Forming JSON is the component is of MplAdvancedCategoryCarouselComponentModel type for overriding PCM provided Category Images
+			if (component instanceof MplAdvancedCategoryCarouselComponentModel)
+			{
+
+				final MplAdvancedCategoryCarouselComponentModel productYouCareCarouselComponent = (MplAdvancedCategoryCarouselComponentModel) component;
+
+				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
+				{
+					title = productYouCareCarouselComponent.getTitle();
+				}
+
+				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
+				{
+					for (final MplImageCategoryComponentModel imageCategoryComponent : productYouCareCarouselComponent.getCategories())
+					{
+						if (imageCategoryComponent.getCategory() != null)
+						{
+							final JSONObject categoryJSON = getCategoryJSON(imageCategoryComponent.getCategory());
+							if (imageCategoryComponent.getIsImageFromPCM().booleanValue())
+							{
+								mediaUrl = getCategoryMediaUrl(imageCategoryComponent.getCategory());
+
+							}
+							else
+							{
+								if (null != imageCategoryComponent.getImage()
+										&& StringUtils.isNotEmpty(imageCategoryComponent.getImage().getURL()))
+								{
+									mediaUrl = imageCategoryComponent.getImage().getURL();
+								}
+
+							}
+
+							categoryJSON.put("mediaURL", mediaUrl);
+							subComponentJsonArray.add(categoryJSON);
+						}
+
+
+					}
+				}
+
+			}
+
+			productYouCare.put(TITLE, title);
+			productYouCare.put("categories", subComponentJsonArray);
 
 
 		}
@@ -242,19 +240,58 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	}
 
 
-	@Override
-	public JSONObject getNewandExclusiveJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
+	/**
+	 * @param category
+	 * @return JSONObject
+	 */
+	private JSONObject getCategoryJSON(final CategoryModel category)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		final JSONObject categoryJSON = new JSONObject();
+		if (StringUtils.isNotEmpty(category.getName()))
+		{
+			categoryJSON.put("categoryName", category.getName());
+
+		}
+
+		if (StringUtils.isNotEmpty(category.getCode()))
+		{
+			categoryJSON.put("categoryCode", category.getCode());
+
+		}
+
+
+
+		return categoryJSON;
+
 	}
 
 
-	@Override
-	public JSONObject getShowCaseJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
+	/**
+	 * @param category
+	 */
+	private String getCategoryMediaUrl(final CategoryModel category)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+
+		String mediaUrl = MISSING_IMAGE_URL;
+		if (null != category.getMedias())
+		{
+			for (final MediaModel categoryMedia : category.getMedias())
+			{
+				if (null != categoryMedia.getMediaFormat()
+						&& categoryMedia.getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H")
+						&& null != categoryMedia.getURL2())
+				{
+					mediaUrl = getMediaUrlStrategy(categoryMedia.getURL2());
+
+				}
+			}
+
+
+		}
+		return mediaUrl;
+
+
+
 	}
 
 
@@ -428,7 +465,11 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 	private String getMediaUrlStrategy(final String mediaUrl)
 	{
-		LOG.debug("Media Url is :::::::" + mediaUrl);
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Media Url is :::::::" + mediaUrl);
+		}
+
 		String newMediaUrl = mediaUrl;
 		if (StringUtils.isNotEmpty(mediaUrl))
 		{
@@ -439,8 +480,11 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 
 		}
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Media Url without protocol is :::::::" + newMediaUrl);
+		}
 
-		LOG.debug("Media Url without protocol is :::::::" + newMediaUrl);
 		return newMediaUrl;
 
 	}
