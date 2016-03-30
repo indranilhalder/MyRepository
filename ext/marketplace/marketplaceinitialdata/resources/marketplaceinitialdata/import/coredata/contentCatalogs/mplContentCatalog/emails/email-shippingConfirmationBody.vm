@@ -26,25 +26,12 @@
 		</tr>
 		
 		<tr>
-			<td align="left" valign="top">
-			
-				<table width="600" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td width="13" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="13" height="1" /></td>
-						<td width="550" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="15" /></td>
-						<td width="12" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="12" height="1" /></td>
-					</tr>
-					<tr style="font-weight:bold;font-style:italics;display:inline-block">
+			<td align="left" valign="top" style="display:inherit;">
+			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:0px">It's a bird! It's a plane!</h2>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">No,it's your package!</h2>
+				<table width="600" border="0" cellspacing="0" cellpadding="0" style="padding-left:13px;">
 					
-						<h2 style="padding-left: 13px;color: #AA133D;margin-bottom: 2px;margin-top:0px">It's a bird! It's a plane!</h2>
-						
-						</tr>
-						
-						<tr style="font-weight:bold;font-style:italics">
 					
-						 <h2 style="padding-left: 13px;color: #AA133D;margin-top: 4px;margin-bottom:0px">No,it's your package!</h2>
-						
-						</tr>
 					<tr>
 						<td align="left" valign="top">&nbsp;</td>
 						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
@@ -168,9 +155,9 @@
 				  <td align="left" valign="top">&nbsp;</td>
 				</tr>
 								<tr>
-				  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="3" /></td>
+				  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="3" style="opacity:0;"/></td>
 				  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"></td>
-				  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="3" /></td>
+				  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="3" style="opacity:0;"/></td>
 				</tr>
 				
 				<tr>
@@ -299,8 +286,8 @@ sign for it, so if you're not going to be around, think of a back-up plan.</td>
 					
 					
 					<tr>
-					  <td align="left" valign="top">&nbsp;</td>
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+				
+					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
 						  </tr>
@@ -316,8 +303,8 @@ sign for it, so if you're not going to be around, think of a back-up plan.</td>
 					  <td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
 					</tr>
 					<tr>
-					  <td align="left" valign="top">&nbsp;</td>
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  
+					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">© 2016 Tata CLiQ | All Rights Reserved</td>
 						  <td width="240" align="left" valign="top">&nbsp;</td>
