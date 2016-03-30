@@ -153,6 +153,7 @@
 						  }		
 						  #pickup {
 						  	width: 920px !important;
+						  	padding-top: 15px;
 						  }
 						  .savenewid {
 						  	background: #A9143C !important;
@@ -237,6 +238,11 @@
 							.fa-times {
 								cursor: pointer;
 								color: #A9143C;
+							}
+							
+							.pincodeValidation {
+								clear: both;
+								padding-top: 5px;
 							}
 						  					 	
 					</style>
@@ -548,8 +554,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4"><a 
-														onclick="history.go(-1);" style="color: #A9143C !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
+								<li class="delivery header4"><a href="../choose" onclick="window.history.back(); return false;" style="color: #A9143C !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -836,10 +841,10 @@
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">
 															<div class="col-md-8 col-sm-8 col-xs-8">
-																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" placeholder="Enter Pincode to Change.">
+																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" maxlength="6" placeholder="Enter Pincode to Change.">
 															</div>
 															<div class="col-md-4 col-sm-4 col-xs-4">
-																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #333 !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>
+																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #A9143C !important; border: none !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>
 															</div>
 														</div>
 														<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;">
@@ -903,14 +908,45 @@
 							    	//console.log(url);
 							    });
 								
-							    
+							    $(".changepin${status1.index}").keyup(function(){
+							    	$(".pincodeValidation").hide();
+								    var pinvalue${status1.index} = $(".changepin${status1.index}").val();
+									var pinlength = pinvalue${status1.index}.length;
+									var isString = isNaN($(".changepin${status1.index}").val());
+									var mobileSpaceCheck = checkMobileNumberSpace($(".changepin${status1.index}").val());
+									if($(".changepin${status1.index}").val().length <= "6") {
+										if(isString==true || mobileSpaceCheck==true) {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Enter Only Digits");
+										}
+										else if($(".changepin${status1.index}").val().indexOf("-") > -1 || $(".changepin${status1.index}").val().indexOf("+") > -1 ) {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Enter Only Digits");
+										}
+									}
+							    });
 								$(".submitPincode${status1.index}").click(function(){
 									$(".removeColor${status1.index} .radio_color").removeClass("colorChange");
 									$(".pincodeServicable${status1.index}").hide();
 									$(".pincodeValidation").hide();
 									var pinvalue${status1.index} = $(".changepin${status1.index}").val();
 									var pinlength = pinvalue${status1.index}.length;
-									if(pinlength == "6") {
+									var isString = isNaN($(".changepin${status1.index}").val());
+									var mobileSpaceCheck = checkMobileNumberSpace($(".changepin${status1.index}").val());
+									if($(".changepin${status1.index}").val().length <= "6") {
+										if(isString==true || mobileSpaceCheck==true) {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Enter Only Digits");
+										}
+										else if ($(".changepin${status1.index}").val().length <= "5") {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Please Enter 6 Digits");
+										}
+										else if($(".changepin${status1.index}").val().indexOf("-") > -1 || $(".changepin${status1.index}").val().indexOf("+") > -1 ) {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Enter Only Digits");
+										}
+										else {
 										var productcode${status1.index} = "${poses.product.code}";
 										var sellerId = "${poses.ussId}";
 										var dataString${status1.index} = "pin=" + pinvalue${status1.index} + "&productCode="+ productcode${status1.index} + "&sellerId="+sellerId;
@@ -941,7 +977,10 @@
 										        	  $("#maphide${status1.index}").hide();
 											          var changecordinates${status1.index} = " ";
 											          for(var i=0;i<jsonObject${status1.index}.length;i++) {
-											        	  
+											        	  $(".removeColor${status1.index}").remove();
+											        	  $(".delivered${status1.index}").prepend("<li style='width: 240px !important;' class='removeColor${status1.index}'></li>");
+											        	  var count = parseInt(i) + 1;
+											        	  $(".removeColor${status1.index}").prepend("<input class='radio_btn radio_btn${status1.index}' type='radio' name='address${status1.index}' id='address${status1.index}"+i+"' value='address"+i+"'><div class='pin bounce'><span class='text_in'>"+count+"</span></div><label class='radio_sel${status1.index}"+i+" displayName${status1.index}"+i+" radio_color delivery-address' style='color: #ADA6A6;'></label><span class='radio_sel${status1.index}"+i+" radio_color address1${status1.index}"+i+"'></span><span class='radio_sel${status1.index}"+i+" radio_color address2${status1.index}"+i+"'></span><span class='radio_sel${status1.index}"+i+" radio_color address3${status1.index}"+i+"'></span><span class='radio_sel${status1.index}"+i+" radio_color address4${status1.index}"+i+"'></span><span class='radio_sel${status1.index}"+i+" radio_color' style='text-transform: uppercase;' >PiQ up hrs</span><span class='pickup${status1.index}"+i+" radio_sel${status1.index}"+i+" radio_color'></span><span class='collectionDays${status1.index}"+i+" collectionDays'></span><span class='weeklyOff${status1.index}"+i+" radio_sel${status1.index}"+i+" radio_color' style='text-transform: capitalize;'></span>");
 											        	  if(jsonObject${status1.index}[i]['displayName'] != null) {
 											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['displayName']);
 											        	  } else {
@@ -1029,9 +1068,7 @@
 										
 										$(".txt${status1.index}").show();
 										$(".input${status1.index}").hide();
-									} else {
-										$(".pincodeValidation").show();
-										$(".pincodeValidation").text("Please Enter 6 digits Only");
+									} 
 									}
 								});
 								processMap${status1.index}();
@@ -1085,12 +1122,18 @@
 							      //  Go through each...
 							      for (var i = 0; i < markers.length; i++) {  
 											bounds.extend(markers[i].position);
-											if(length${status1.index} <= 2) {
-												map.setZoom--;
-											}
 							      }
 							      //  Fit these bounds to the map
 							      map.fitBounds(bounds);
+							      zoomChangeBoundsListener = 
+							    	    google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+							    	    	if(length${status1.index} <= 2) {
+								    	    	if (this.getZoom()){
+								    	            this.setZoom(16);
+								    	        }
+							    	    	}
+							    	});
+						    	setTimeout(function(){google.maps.event.removeListener(zoomChangeBoundsListener)}, 2000);
 							    }
 							    autoCenter();
 							    
