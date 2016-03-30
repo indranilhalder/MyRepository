@@ -72,11 +72,19 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	
 	public static final String SMS_SERVICE_APP_DWLD_URL = "marketplace.sms.app.download.url";
 	
-	public static final String ORDER_COLLECTED_SMS = "Hi {0} Your {1}  has been successfully collected from {2} on {3}";
+	public static final String ORDER_COLLECTED_SMS = "Hi {0} , Your {1}  has been successfully collected from {2} on {3}";
 	public static final String SMS_VARIABLE_ZERO_ORD_COLLECTED = "{0}";
 	public static final String SMS_VARIABLE_ONE_ORD_COLLECTED = "{1}";
 	public static final String SMS_VARIABLE_TWO_ORD_COLLECTED = "{2}";
 	public static final String SMS_VARIABLE_THREE_ORD_COLLECTED = "{3}";
+	
+	
+	public static final String ORDER_COLLECTED_SMS_CUSTOMER = "Hi {0} , {1}  has successfully collected your package from {2} on {3} with {4}";
+	public static final String SMS_VARIABLE_ZERO_ORD_COLLECTED_CUSTOMER = "{0}";
+	public static final String SMS_VARIABLE_ONE_ORD_COLLECTED_CUSTOMER = "{1}";
+	public static final String SMS_VARIABLE_TWO_ORD_COLLECTED_CUSTOMER = "{2}";
+	public static final String SMS_VARIABLE_THREE_ORD_COLLECTED_CUSTOMER = "{3}";
+	public static final String SMS_VARIABLE_FOUR_ORD_COLLECTED_CUSTOMER = "{4}";
 	
 	private MarketplaceomsordersConstants()
 	{

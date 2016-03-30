@@ -36,6 +36,7 @@ import de.hybris.platform.commercefacades.product.data.FeatureData;
 import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
@@ -48,6 +49,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
@@ -92,16 +94,19 @@ import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
+
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
+
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
+
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
@@ -235,8 +240,6 @@ public class ProductPageController extends AbstractPageController
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
 
-	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
 
 	@Autowired
 	private SizeGuideHeaderComparator sizeGuideHeaderComparator;

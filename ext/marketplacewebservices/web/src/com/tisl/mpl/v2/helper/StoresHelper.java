@@ -50,6 +50,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 
 
+
 @Component
 public class StoresHelper extends AbstractHelper
 {
@@ -145,7 +146,8 @@ public class StoresHelper extends AbstractHelper
 		catch (final Exception e)
 		{
 			LOG.error("Exception while calling locationDetails to get store for slaveId");
-			pointOfServiceDataWithError.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
+			pointOfServiceDataWithError.setStatus("Something went wrong while calling location Details");
+
 			e.printStackTrace();
 		}
 		if (null != pointOfServiceDataWithError.getStatus())
@@ -208,7 +210,7 @@ public class StoresHelper extends AbstractHelper
 				}
 				else
 				{
-					listOfPosData.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
+					listOfPosData.setStatus("Something went wrong while fetching latitude and longitude for a pincode from comm");
 				}
 			}
 		}
@@ -216,7 +218,7 @@ public class StoresHelper extends AbstractHelper
 		{
 			LOG.error("Exception in calling getAllStoresForPincode");
 			e.printStackTrace();
-			listOfPosData.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
+			listOfPosData.setStatus("Something went wrong in calling getAllStoresForPincode");
 		}
 		listOfPosData.setStores(posData);
 		return dataMapper.map(listOfPosData, ListOfPointOfServiceWsDTO.class, fields);
@@ -249,14 +251,14 @@ public class StoresHelper extends AbstractHelper
 			}
 			else
 			{
-				storeLocationResData1.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
+				storeLocationResData1.setStatus("Something went wrong in storesAtCart");
 			}
 
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception in storeLocationAts call");
-			storeLocationResData1.setStatus(MarketplacewebservicesConstants.SOMEWRONG);
+			storeLocationResData1.setStatus("Something went wrong in storeLocationAts call ");
 		}
 		if (null != storeLocationResData)
 		{

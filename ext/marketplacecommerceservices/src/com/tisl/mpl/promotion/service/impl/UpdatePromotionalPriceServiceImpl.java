@@ -57,6 +57,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	@Autowired
 	private ConfigurationService configurationService;
 
+	private final String CODE = "code";
 	public ModelService getModelService()
 	{
 		return modelService;
