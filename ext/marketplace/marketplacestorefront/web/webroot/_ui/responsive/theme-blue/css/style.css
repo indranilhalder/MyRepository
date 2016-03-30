@@ -652,6 +652,9 @@ input:focus {
     	display: inline-block;
     	color: #000;
          }
+      .select-view .select-list > .selected#micrositesearchBoxSpan:after {
+    	color: #fff;
+         }
     @media (max-width: 900px) {
       .select-view .select-list > .selected {
         font-size: 14px; } }
@@ -682,6 +685,8 @@ input:focus {
       .select-view .select-list li:hover {
         color: #000;
         font-weight: 500; }
+      .select-view .select-list .micrositeDropdown  li:hover {
+        color: #fff;}
       @media (max-width: 900px) {
         .select-view .select-list li {
           padding-left: 10px; } }
@@ -30636,17 +30641,31 @@ right: 0px !important;
     margin: auto;}
 }
 
-/* @media(min-width:1300px){
+ @media(min-width:1300px){
 .top.checkout-top{
 width: calc(100% - -110px);
 width: -webkit-calc(100% - -110px);
 margin-left: -55px;
 }
-} */
-.top.checkout-top{
-	width:100%;
+} 
+@media(max-width:1299px) and (min-width:651px){
+ .top.checkout-top{
+	width: calc(100% - -60px);
+    width: -webkit-calc(100% - -60px);
+    margin-left: -30px;
+ }
 }
-
+@media(max-width:650px){
+ .top.checkout-top{
+	width: calc(100% - -28px);
+    width: -webkit-calc(100% - -28px);
+    margin-left: -14px;
+ }
+}
+body.page-checkout-login .top.checkout-top{
+	width: 100%;
+    margin-left: 0px;
+ }
 #buyNowButton{
 	margin-top: 20px;
     line-height: 12px;
