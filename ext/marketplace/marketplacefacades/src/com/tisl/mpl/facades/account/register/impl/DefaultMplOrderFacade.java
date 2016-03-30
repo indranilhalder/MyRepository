@@ -67,7 +67,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationServ
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
-import com.tisl.mpl.service.ReturnLogisticsService;
+
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
