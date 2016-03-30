@@ -214,7 +214,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 		{
 			orderModel.setCode(orderId);
 			orderModel = flexibleSearchService.getModelByExample(orderModel);
-			LOG.debug(orderId + "" + name + "" + mobile);
+			LOG.debug(orderId + ":" + name + ":" + mobile);
 			LOG.debug("*****************************");
 			if (null != name)
 			{

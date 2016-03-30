@@ -82,7 +82,7 @@
 						</c:if>
 					</c:forEach>
 				</div>
-				<c:if test="${ycommerce:doesPotentialPromotionExistForOrderEntry(cartData, entry.entryNumber) && showPotentialPromotions}">
+				<c:if test="${ycommerce:doesPotentialPromotionExistForOrderEntry(cartData, entry.entryNumber) && showPotentialPromotions && (entry.isBOGOapplied || entry.giveAway)}">
 					<ul>
 						<c:forEach items="${cartData.potentialProductPromotions}" var="promotion">
 							<c:set var="displayed" value="false"/>
@@ -95,7 +95,7 @@
 						</c:forEach>
 					</ul>
 				</c:if>
-				<c:if test="${ycommerce:doesAppliedPromotionExistForOrderEntry(cartData, entry.entryNumber)}">
+				<c:if test="${ycommerce:doesAppliedPromotionExistForOrderEntry(cartData, entry.entryNumber) && (entry.isBOGOapplied || entry.giveAway)}">
 					<ul>
 						<c:forEach items="${cartData.appliedProductPromotions}" var="promotion">
 							<c:set var="displayed" value="false"/>

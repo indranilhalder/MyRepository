@@ -106,8 +106,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	@Autowired
 	private OrderModelService orderModelService;
 
-	@Autowired
-	private ReturnLogisticsService returnLogistics;
 
 	@Autowired
 	private TicketCreationCRMservice ticketCreate;

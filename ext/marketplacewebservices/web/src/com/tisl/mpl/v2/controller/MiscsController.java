@@ -130,6 +130,7 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
+
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
@@ -180,6 +181,9 @@ import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
 
+import com.tisl.mpl.wsdto.SellerSlaveDTO;
+import com.tisl.mpl.wsdto.SlaveInfoDTO;
+
 
 /**
  * @author TCS
@@ -204,6 +208,7 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	@Resource
 	private ModelService modelService;
+
 	@Autowired
 	private ForgetPasswordFacade forgetPasswordFacade;
 
@@ -716,11 +721,12 @@ public class MiscsController extends BaseController
 
 	/**
 	 * This is the rest call for SlaveMaster.
-	 *
+
 	 * @author TECHOUTS
 	 * @param slaves
 	 * @param request
-	 * @return WebSerResponseWsDTO
+
+	 * @return 
 	 */
 	@RequestMapping(value = "/{baseSiteId}/slaveMaster", method = RequestMethod.POST)
 	@ResponseBody
@@ -730,7 +736,7 @@ public class MiscsController extends BaseController
 		BufferedReader br = null;
 		final StringBuilder sb = new StringBuilder();
 		String saveStatus;
-		final Map map;
+
 		try
 		{
 			String line;
@@ -744,34 +750,39 @@ public class MiscsController extends BaseController
 			final String relativeWebPath = MarketplacecommerceservicesConstants.SLAVE_MASTER_XSD_PATH;
 			final String absoluteDiskPath = servletContext.getRealPath(relativeWebPath);
 			final InputStream is0 = new ByteArrayInputStream(sb.toString().getBytes());
-			map = mplValidateAgainstXSDService.validateAgainstXSD(is0, absoluteDiskPath); //Validating XML input received XSD.
+			mplValidateAgainstXSDService.validateAgainstXSD(is0, absoluteDiskPath); //Validating XML input received XSD.
 
 
-			final InputStream is1 = new ByteArrayInputStream(sb.toString().getBytes());
-			final XStream xstream = new XStream();
-			xstream.processAnnotations(SellerSlaveDTO.class); // inform XStream to parse annotations in SellerInformationWSDTO class
-			xstream.processAnnotations(SlaveInfoDTO.class); // and in two other classes...
-			final String dateFormat = MarketplacecommerceservicesConstants.XSD_DATE_FORMAT;
-			final String timeFormat = "";
-			final String[] acceptableFormats =
-			{ timeFormat };
-			xstream.registerConverter(new DateConverter(dateFormat, acceptableFormats, true));
-			final SellerSlaveDTO sellerSlavedto = (SellerSlaveDTO) xstream.fromXML(is1); // parse
-			saveStatus = mplSlaveMasterService.insertUpdate(sellerSlavedto);
-			if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_CODE_1))
-			{
-				userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-				userResult.setError(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
-				LOG.debug(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
-				return userResult;
-			}
-			if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_FLAG))
-			{
-				userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-				userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
-				LOG.debug(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
-				return userResult;
-			}
+			
+				final InputStream is1 = new ByteArrayInputStream(sb.toString().getBytes());
+				final XStream xstream = new XStream();
+				xstream.processAnnotations(SellerSlaveDTO.class); // inform XStream to parse annotations in SellerInformationWSDTO class
+				xstream.processAnnotations(SlaveInfoDTO.class); // and in two other classes...
+				final String dateFormat = MarketplacecommerceservicesConstants.XSD_DATE_FORMAT;
+				final String timeFormat = "";
+				final String[] acceptableFormats =
+				{ timeFormat };
+				xstream.registerConverter(new DateConverter(dateFormat, acceptableFormats, true));
+				final SellerSlaveDTO sellerSlavedto = (SellerSlaveDTO) xstream.fromXML(is1); // parse
+				saveStatus = mplSlaveMasterService.insertUpdate(sellerSlavedto);
+				if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_CODE_1))
+
+				{
+					userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					userResult.setError(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
+					LOG.debug(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
+					return userResult;
+
+				}
+				if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_FLAG))
+
+				{
+					userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+					userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+					LOG.debug(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
+					return userResult;
+
+				}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -796,7 +807,7 @@ public class MiscsController extends BaseController
 		}
 		LOG.debug(MarketplacecommerceservicesConstants.DATA_SAVED_MSG);
 		userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
-		LOG.debug(map);
+
 		return userResult;
 	}
 

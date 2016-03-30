@@ -71,10 +71,11 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 
 		//product super category like electronics,clothing are being populated by interceptor.
 		productData.setRootCategory(productModel.getProductCategoryType());
-
-		final Collection<CategoryModel> categories = getCommerceProductService()
-				.getSuperCategoriesExceptClassificationClassesForProduct(productModel);
-		productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
+		
+		  final Collection<CategoryModel> categories = getCommerceProductService()
+		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
+		  productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
+		 
 
 	}
 

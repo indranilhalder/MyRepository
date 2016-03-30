@@ -263,12 +263,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(">>> Cancel Refund exception occured : ", e);
+			LOG.error(">>> Cancel Refund exception occured in implementCancelOrReturn Etail Non BusinessException: ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(">>> Cancel Refund exception occured : ", e);
+			LOG.error(">>> Cancel Refund exception occured in implementCancelOrReturn in implementCancelOrReturn ", e);
 		}
 
 
@@ -418,12 +418,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(">>> Cancel Refund exception occured : ", e);
+			LOG.error(">>> Cancel Refund exception occured in implementReturnItem etail non business exception : ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(">>> Cancel Refund exception occured : ", e);
+			LOG.error(">>> Cancel Refund exception occured in implementReturnItem : ", e);
 		}
 
 
@@ -1011,7 +1011,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final JAXBException ex)
 		{
-			LOG.error(" >> Exception occured while CRM ticket creation", ex);
+			LOG.error(" >> Exception occured while CRM ticket creation JAXBException", ex);
 		}
 		catch (final Exception ex)
 		{
@@ -1089,7 +1089,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				lineItemDataList.add(sendTicketLineItemData);
 			}
-			if (sendTicketRequestData.getTicketSubType() != "RSS")
+			if (!((sendTicketRequestData.getTicketSubType()).equals("RSS")))
 			{
 				addressInfo.setShippingFirstName(returnAddress.getFirstName());
 				addressInfo.setShippingLastName(returnAddress.getLastName());
@@ -1128,11 +1128,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final JAXBException ex)
 		{
-			LOG.error(" >> Exception occured while CRM ticket creation", ex);
+			LOG.error(" >> Exception occured while CRM ticket creation in createTicketInCRM JaxbException", ex);
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(" >> Exception occured while CRM ticket creation", ex);
+			LOG.error(" >> Exception occured while CRM ticket creation in createTicketInCRM", ex);
 		}
 
 		return ticketCreationStatus;

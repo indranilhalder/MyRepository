@@ -3,7 +3,7 @@
  */
 package com.tisl.mpl.dao;
 
-import de.hybris.platform.basecommerce.constants.GeneratedBasecommerceConstants.Enumerations.PointOfServiceTypeEnum;
+
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -63,12 +63,12 @@ public class MplSlaveMasterDAOImpl implements MplSlaveMasterDAO
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + ": " + e.getMessage());
+			LOG.debug("FlexibleSearchException Exception while quering POS for a slaveId: " + slaveId + ": " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + ": " + e.getMessage());
+			LOG.debug("UnknownIdentifierException Exception while quering POS for a slaveId: " + slaveId + ": " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
 		catch (final Exception e)
@@ -110,17 +110,17 @@ public class MplSlaveMasterDAOImpl implements MplSlaveMasterDAO
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + "And SellerId " + sellerId + ":" + e.getMessage());
+			LOG.debug("FlexibleSearchException Exception while quering POS for a slaveId in findPOSForSellerAndSlave: " + slaveId + "And SellerId " + sellerId + ":" + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + "And SellerId " + sellerId + ": " + e.getMessage());
+			LOG.debug("UnknownIdentifierException Exception while quering POS for a slaveId in findPOSForSellerAndSlave: " + slaveId + "And SellerId " + sellerId + ": " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + "And SellerId " + sellerId + ": " + e.getMessage());
+			LOG.debug("Exception while quering POS for a slaveId in findPOSForSellerAndSlave: " + slaveId + "And SellerId " + sellerId + ": " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return null;

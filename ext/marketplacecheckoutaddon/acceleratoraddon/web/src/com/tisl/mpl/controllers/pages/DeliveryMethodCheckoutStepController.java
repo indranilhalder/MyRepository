@@ -46,6 +46,7 @@ import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -333,55 +334,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute("selectPickupDetails", selectPickupDetails);
 				return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method" + MarketplacecheckoutaddonConstants.MPLDELIVERYCHECKURL;
 			}
-			String deliveryCode = null;
-			if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
-			{
-				for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
-				{
-					deliveryCode = deliveryEntry.getDeliveryCode();
-					if (StringUtils.isNotEmpty(deliveryCode))
-					{
-						Double deliveryCost = 0.0;
-						if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
-						{
-							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-									deliveryEntry.getSellerArticleSKU());
-							deliveryCost = 0.0;
-						}else {
-							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-									deliveryEntry.getSellerArticleSKU());
-						}
-						finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
-					}
-				}
-			}
-
+			//populate mplZone delivery mode
+			finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
 		}
 		else 
 		{
-			String deliveryCode = null;
-			if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
-			{
-				for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
-				{
-					deliveryCode = deliveryEntry.getDeliveryCode();
-					if (StringUtils.isNotEmpty(deliveryCode))
-					{
-						Double deliveryCost = 0.0;
-						if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
-						{
-							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-									deliveryEntry.getSellerArticleSKU());
-							deliveryCost = 0.0;
-						}else {
-							deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-									deliveryEntry.getSellerArticleSKU());
-						}
-						finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
-					}
-				}
-			}
-
+			//populate mplZone delivery mode
+			finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
 		}
 		
 		try
@@ -400,18 +359,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
 			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
-			if (cartModel != null && cartModel.getEntries() != null)
-			{
-				for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-				{
-					if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
-							&& cartEntryModel.getSelectedUSSID() != null)
-					{
-						freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-						freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-					}
-				}
-			}
+			//populate freebie data
+			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 
 			applyPromotions();
 
@@ -559,14 +508,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		session.setAttribute("deliveryMethodForm" , deliveryMethodForm);
 		
 		final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
-//		if (cartData.getDeliveryAddress() != null)
-//		{
-//			if (LOG.isDebugEnabled())
-//			{
-//				LOG.debug("Express checkout : ");
-//			}
-//			return getCheckoutStep().nextStep();
-//		}		
 		model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 		this.prepareDataForPage(model);
 		
@@ -582,6 +523,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		int count= 0;
 		//count other modes in cart entries 
 		int delModeCount = 0;
+		int expCheckout = 0;
 		
 		//retrieve pincode from session
 		String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
@@ -647,12 +589,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					if (LOG.isDebugEnabled())
 					{
 						LOG.debug("Express checkout Having Delivery Mode as CNC: ");
-						LOG.debug("forward to cart page as Express Checkout is not supported for CNC mode ");
 					}
-					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-							"deliverymode.express.checkout.cnc.invalid");
-					//forward to cart page as Express Checkout is not supported for CNC mode
-					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+					cartModel.setDeliveryAddress(null);
+					try
+					{
+						modelService.save(cartModel);
+					}
+					catch (ModelSavingException e)
+					{
+						LOG.error("Exception while saving CardModel" + e.getMessage());
+					}
 				}
 				String deliveryCode = null;
 				if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
@@ -672,43 +618,58 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						}
 					}
 				}
-				if (cartModel != null && cartModel.getEntries() != null)
-				{
-					for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
-					{
-						if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
-								&& cartEntryModel.getSelectedUSSID() != null)
-						{
-							freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
-							freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
-						}
-					}
-				}
-
+				//populate freebie data
+				populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
+				
 				applyPromotions();
-
-				getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
-				if (LOG.isDebugEnabled())
-				{
-					LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
-				}
+				
+				timeOutSet(model);
 
 			}
 			if (count >0 && delModeCount > 0)
 			{
 				//for express checkout
-				//if cart entries contains one of delivery modes as cnc then just redirect to cart page.
 				if (cartData.getDeliveryAddress() != null)
 				{
+					expCheckout++;
 					if (LOG.isDebugEnabled())
 					{
 						LOG.debug("Express checkout Having Mixed Delivery Mode as CNC and HD/Ed: ");
-						LOG.debug("forward to cart page as Express Checkout is not supported for CNC mode ");
 					}
-					GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.INFO_MESSAGES_HOLDER,
-							"deliverymode.express.checkout.cnc.invalid");
-					//forward to cart page as Express Checkout is not supported for CNC mode
-					return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+					//TISST-13012
+					try
+					{
+						final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
+						if (cartItemDelistedStatus)
+						{
+							return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+						}
+						//populate freebie data
+						populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
+						
+						applyPromotions();
+
+						timeOutSet(model);
+						
+						String deliveryCode = null;
+						Double finalDeliveryCost = Double.valueOf(0.0);
+						//populate mplzone delivery mode
+						finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm);
+						final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
+						final boolean calculationStatus = getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost,
+								deliveryChargePromotionMap); //TIS 400
+					}
+					catch (final EtailBusinessExceptions e)
+					{
+						ExceptionUtil.etailBusinessExceptionHandler(e, null);
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+					}
+					catch (final Exception e)
+					{
+						ExceptionUtil
+								.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+						getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+					}
 				}
 			}
 			if (count>0)
@@ -746,6 +707,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute("pickUpPersonMobile", pickUpPersonMobile);
 				model.addAttribute("delModeCount",delModeCount);
 				model.addAttribute("cnccount",count);
+				model.addAttribute("expCheckout", expCheckout);
 				model.addAttribute("defaultPincode", defaultPincode);
 				model.addAttribute("pwpos", productWithPOS);
 				model.addAttribute("CSRFToken", CSRFTokenManager.getTokenForSession(request.getSession()));
@@ -2053,6 +2015,75 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		model.addAttribute(MarketplacecheckoutaddonConstants.TIMEOUT, timeOut);
 	}
 
+	/**
+	 * Populates freebie data
+	 * @author TECH
+	 * @param cartModel
+	 * @param freebieModelMap
+	 * @param freebieParentQtyMap
+	 */
+	private void populateFreebieProductData(final CartModel cartModel, final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, 
+			final Map<String, Long> freebieParentQtyMap)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from populateFreebieProductData method");
+			LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
+		}
+		if (cartModel != null && cartModel.getEntries() != null)
+		{
+			for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
+			{
+				if (cartEntryModel != null && !cartEntryModel.getGiveAway().booleanValue()
+						&& cartEntryModel.getSelectedUSSID() != null)
+				{
+
+					freebieModelMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getMplDeliveryMode());
+					freebieParentQtyMap.put(cartEntryModel.getSelectedUSSID(), cartEntryModel.getQuantity());
+				}
+			}
+		}
+		getMplCheckoutFacade().saveDeliveryMethForFreebie(cartModel, freebieModelMap, freebieParentQtyMap);
+	}
+	
+	/**
+	 * Populates mplZoneDeliveryMode.
+	 * @author TECH
+	 * @param deliveryMethodForm
+	 * @return finalDeliveryCost
+	 */
+	private Double populateMplZoneDeliveryMode(final DeliveryMethodForm deliveryMethodForm)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from populateMplZoneDeliveryMode method");
+		}
+		String deliveryCode = null;
+		Double finalDeliveryCost = Double.valueOf(0.0);
+		//populate mplzone delivery mode
+		if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
+		{
+			for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
+			{
+				deliveryCode = deliveryEntry.getDeliveryCode();
+				if (StringUtils.isNotEmpty(deliveryCode))
+				{
+					Double deliveryCost = 0.0;
+					if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
+					{
+						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+								deliveryEntry.getSellerArticleSKU());
+						deliveryCost = 0.0;
+					}else {
+						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+								deliveryEntry.getSellerArticleSKU());
+					}
+					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
+				}
+			}
+		}
+		return finalDeliveryCost;
+	}
 
 	/**
 	 * @return the mplCartFacade
