@@ -910,7 +910,8 @@
 				<value>PICK_IN_PROGRESS</value>
 				<value>PICK_HOLD</value>
 				<value>PICK_CONFIRMED</value>
-				<value>PACKED</value>
+				<!-- commented by because for packed status cancellation is not possible ( TISUATC-99) -->
+				<!-- <value>PACKED</value> -->
 				<value>ORDER_REJECTED</value>
 				<value>AWB_ASSIGNED</value>
 				<value>PRINT_SHIPPING_LABEL</value>
