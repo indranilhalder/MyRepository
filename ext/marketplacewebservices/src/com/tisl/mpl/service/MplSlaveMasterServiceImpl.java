@@ -83,7 +83,8 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 				}
 				if (posModel != null)
 				{
-					if (StringUtils.isNotEmpty(slaveInfoDto.getType()) && slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_STORE))
+					if (StringUtils.isNotEmpty(slaveInfoDto.getType())
+							&& slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_STORE))
 					{
 						//update the store
 						if (StringUtils.isNotEmpty(slaveInfoDto.getSellerid()))
@@ -94,13 +95,10 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 							}
 
 						}
+						//set POS displayName to slave Name.
 						if (StringUtils.isNotEmpty(slaveInfoDto.getName()))
 						{
-							if (slaveInfoDto.getName().equalsIgnoreCase(posModel.getName()))
-							{
-								posModel.setName(slaveInfoDto.getName());
-							}
-
+							posModel.setDisplayName(slaveInfoDto.getName());
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
 						{
@@ -287,7 +285,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 							}
 						}
 						posModel.setActive(MarketplacewebservicesConstants.ACTIVE);
-						
+
 						if (StringUtils.isNotEmpty(slaveInfoDto.getEmail0()))
 						{
 							if (!slaveInfoDto.getEmail0().equalsIgnoreCase(posModel.getEmail0()))
@@ -541,21 +539,23 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 							LOG.debug("Exception while saving model: " + e.getMessage());
 						}
 					}
-					else if (StringUtils.isNotEmpty(slaveInfoDto.getType()) && slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_WAREHOUSE))
+					else if (StringUtils.isNotEmpty(slaveInfoDto.getType())
+							&& slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_WAREHOUSE))
 					{
 						posModel.setActive(MarketplacewebservicesConstants.INACTIVE);
 						modelService.save(posModel);
 					}
-					else 
+					else
 					{
 						status = MarketplacecommerceservicesConstants.ERROR_FLAG;
-						LOG.debug("Update PointOfService only if input type is  "+ slaveInfoDto.getType());
+						LOG.debug("Update PointOfService only if input type is  " + slaveInfoDto.getType());
 						LOG.debug("Make Store as Inactive if input type is " + slaveInfoDto.getType());
 					}
 				}
 				else
 				{
-					if (StringUtils.isNotEmpty(slaveInfoDto.getType()) && slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_STORE))
+					if (StringUtils.isNotEmpty(slaveInfoDto.getType())
+							&& slaveInfoDto.getType().equalsIgnoreCase(MarketplacewebservicesConstants.SLV_TYPE_STORE))
 					{
 						posModel = (PointOfServiceModel) modelService.create(PointOfServiceModel.class);
 
@@ -567,10 +567,13 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 						if (StringUtils.isNotEmpty(slaveInfoDto.getSlaveid()))
 						{
 							posModel.setSlaveId(slaveInfoDto.getSlaveid());
+							//As per discussion we need to store slave id to POS name.
+							posModel.setName(slaveInfoDto.getSlaveid());
 						}
+						//set display Name.
 						if (StringUtils.isNotEmpty(slaveInfoDto.getName()))
 						{
-							posModel.setName(slaveInfoDto.getName());
+							posModel.setDisplayName(slaveInfoDto.getName());
 						}
 						//Added logic to handle POS to connect to BaseStore.
 						if (StringUtils.isNotEmpty(slaveInfoDto.getType()))
@@ -831,6 +834,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 	 *
 	 * @return pos model.
 	 */
+	@Override
 	public PointOfServiceModel findPOSBySellerAndSlave(final String sellerId, final String storeName)
 	{
 		LOG.debug("in service of findPOSBySellerAndSlave  ");
@@ -850,6 +854,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 	 * @param posName
 	 * @return pos model
 	 */
+	@Override
 	public PointOfServiceModel findPOSByName(final String posName)
 	{
 		LOG.debug("from findPOSByName method in service");

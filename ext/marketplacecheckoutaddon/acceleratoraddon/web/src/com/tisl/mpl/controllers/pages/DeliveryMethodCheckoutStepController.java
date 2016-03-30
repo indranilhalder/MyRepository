@@ -875,7 +875,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					AddressData addData = new AddressData();
 					if (null != pointOfServiceModel)
 					{
-						posData.setDisplayName(pointOfServiceModel.getName());
+						posData.setDisplayName(pointOfServiceModel.getDisplayName());
+						posData.setName(pointOfServiceModel.getName());
 						if (pointOfServiceModel.getLatitude() != null)
 						{
 							geo.setLatitude(pointOfServiceModel.getLatitude());

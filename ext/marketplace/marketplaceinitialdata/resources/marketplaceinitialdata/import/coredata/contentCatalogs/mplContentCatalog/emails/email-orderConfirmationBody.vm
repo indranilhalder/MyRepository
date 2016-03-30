@@ -160,7 +160,7 @@ Confirmed!<br>
                       #if($ctx.storeAddress)
                       #foreach( $store in ${ctx.storeAddress} )
                         <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">
-                        #if($store.name)Store Name : ${store.name}#end</br>
+                        #if($store.name)Store Name : ${store.displayName}#end</br>
                         #if($store.address.line1)$store.address.line1,#end
                         #if($store.address.line2)$store.address.line2,#end
                         #if($store.address.addressLine3)$store.address.addressLine3,#end

@@ -16,8 +16,6 @@
  --%>	
 	<!-- <table class="orderListTable"> -->
 			<c:forEach items="${orderGroup.entries}" var="entry"> 
-			
-		
  <c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
        <c:if test="${storeId ne entry.deliveryPointOfService.address.id}">
 	       <div class="headline" style="margin-left: 16px;">
@@ -25,7 +23,7 @@
 	                                                      	<c:set var="pos" value="${entry.deliveryPointOfService.address}"/>
 	                                                   <c:set var="storeId" value="${entry.deliveryPointOfService.address.id}"/>
 	                                                      <address>
-											                 <c:if test="${not empty entry.deliveryPointOfService.name}">${entry.deliveryPointOfService.name}<br></c:if>
+											                 <c:if test="${not empty entry.deliveryPointOfService.displayName}">${entry.deliveryPointOfService.displayName}<br></c:if>
 												             <c:if test="${not empty pos.line1}">${pos.line1}&nbsp;</c:if>
 												             <c:if test="${not empty pos.line2}">${pos.line2}</c:if>
 												             <c:if test="${not empty pos.town}">	${pos.town}, <br></c:if>

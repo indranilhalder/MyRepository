@@ -431,7 +431,7 @@
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
-															  <c:if test="${not empty entry.deliveryPointOfService.name}"> ${fn:escapeXml(entry.deliveryPointOfService.name)}<br></c:if>
+															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}<br></c:if>
 															  <c:if test="${not empty pos.line1}">	${fn:escapeXml(pos.line1)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.line2}">${fn:escapeXml(pos.line2)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.state}">${fn:escapeXml(pos.state)},&nbsp;</c:if>
