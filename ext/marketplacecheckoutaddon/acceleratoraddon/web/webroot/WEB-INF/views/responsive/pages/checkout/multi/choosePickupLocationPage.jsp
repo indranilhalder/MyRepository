@@ -977,10 +977,6 @@
 										        	  $("#maphide${status1.index}").hide();
 											          var changecordinates${status1.index} = " ";
 											          for(var i=0;i<jsonObject${status1.index}.length;i++) {
-											        	  $(".removeColor${status1.index}").remove();
-											        	  $(".delivered${status1.index}").prepend("<li style='width: 240px !important;' class='removeColor${status1.index}'></li>");
-											        	  var count = parseInt(i) + 1;
-											        	  $(".removeColor${status1.index}").prepend("<input class='radio_btn radio_btn${status1.index}' type='radio' name='address${status1.index}' id='address${status1.index}"+i+"' value='address"+i+"'><div class='pin bounce'><span class='text_in'>"+count+"</span></div><label class='radio_sel${status1.index}"+i+" displayName${status1.index}"+i+" radio_color delivery-address' style='color: #ADA6A6;'></label><span class='radio_sel${status1.index}"+i+" radio_color address1${status1.index}"+i+"'></span><span class='radio_sel${status1.index}"+i+" radio_color address2${status1.index}"+i+"'></span><span class='radio_sel${status1.index}"+i+" radio_color address3${status1.index}"+i+"'></span><span class='radio_sel${status1.index}"+i+" radio_color address4${status1.index}"+i+"'></span><span class='radio_sel${status1.index}"+i+" radio_color' style='text-transform: uppercase;' >PiQ up hrs</span><span class='pickup${status1.index}"+i+" radio_sel${status1.index}"+i+" radio_color'></span><span class='collectionDays${status1.index}"+i+" collectionDays'></span><span class='weeklyOff${status1.index}"+i+" radio_sel${status1.index}"+i+" radio_color' style='text-transform: capitalize;'></span>");
 											        	  if(jsonObject${status1.index}[i]['displayName'] != null) {
 											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['displayName']);
 											        	  } else {
