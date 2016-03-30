@@ -42,7 +42,7 @@ ACC.storefinder = {
 	 
 			ACC.storefinder.bindStoreTestChange();
 		}
-		$("storeFinder").addClass("display: block");
+		//$("storeFinder").addClass("display: block");
 	},
 
 
@@ -58,14 +58,19 @@ ACC.storefinder = {
 			 
 		});
 		
-		$(document).on("change","#storelocator-query",function(e){
+		/*$(document).on("change","#storelocator-query",function(e){
 			 
 			//console.debug($("#storelocator-query").val())
 			var inputtext=$("#storelocator-query").val();
 			if(inputtext){ 
 			$('#storeSearchTextValue').text(inputtext);
 			}
-		})
+		})*/
+		$("#storelocator-query").keyup(function(){
+			$('#storeSearchTextValue').text($("#storelocator-query").val());
+		});
+		
+		$('#storeSearchTextValue').text($("#storelocator-query").val());
 
 	},
 
@@ -96,6 +101,7 @@ ACC.storefinder = {
 				panControl: false,
 				streetViewControl: false,
 				zoomControl:true,
+				scrollwheel: false,
 			  	zoomControlOptions:{
 			  		position:google.maps.ControlPosition.RIGHT_TOP
 			  	},
@@ -135,7 +141,7 @@ ACC.storefinder = {
 				maxWidth:100
 			});
 			google.maps.event.addListener(infowindow,'closeclick',function(){
-				ACC.storefinder.removeGamma(map);
+				//ACC.storefinder.removeGamma(map);
 				});
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
@@ -154,7 +160,7 @@ ACC.storefinder = {
 		          infowindow.open(map, marker);
 		          map.setZoom(markerZoom);
 		          map.setCenter(marker.getPosition());
-		          ACC.storefinder.applyGamma(map);
+		          //ACC.storefinder.applyGamma(map);
 		        }
 		      })(marker, i));
 			marker.setMap(map);	 
@@ -214,10 +220,9 @@ ACC.storefinder = {
 
 		//$(".js-store-finder").hide();
 		$(document).on("click",'#findStoresNearMe', function(e){
-			//e.preventDefault()
-			$('#findStoresNearMe').addClass("disabled");
+			$('#storeSearchTextValue').text('Your Location');
+			$('#storelocator-query').val('Current Location')
 			ACC.storefinder.getInitStoreData(null,ACC.storefinder.coords.latitude,ACC.storefinder.coords.longitude);
-			$('#findStoresNearMe').removeAttr("disabled");
 		})
 
 
@@ -274,7 +279,7 @@ ACC.storefinder = {
 	init:function(){
 		//$("#findStoresNearMe").attr("disabled","disabled");
 		var initialZoom=Number($("#initialZoom"));
-		$('#findStoresNearMe').addClass("disabled");
+		$('#findStoresNearMe').attr("disabled");
 		if(navigator.geolocation){
 			navigator.geolocation.getCurrentPosition(
 				function (position){
@@ -302,6 +307,7 @@ ACC.storefinder = {
 			panControl: false,
 			streetViewControl: false,
 			zoomControl:true,
+			scrollwheel: false,
 		  	zoomControlOptions:{
 		  		position:google.maps.ControlPosition.RIGHT_TOP
 		  	},
