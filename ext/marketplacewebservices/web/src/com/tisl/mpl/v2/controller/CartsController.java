@@ -72,7 +72,6 @@ import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
 import de.hybris.platform.jalo.security.JaloSecurityException;
-import de.hybris.platform.order.CartService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
@@ -123,7 +122,6 @@ import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exceptions.InvalidPaymentInfoException;
@@ -282,8 +280,8 @@ public class CartsController extends BaseCommerceController
 
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
-	@Autowired
-	private CartService cartService;
+	//@Autowired
+	//private CartService cartService;
 	//@Autowired
 	//private CommerceCartService commerceCartService;
 	@Autowired
@@ -2015,10 +2013,10 @@ public class CartsController extends BaseCommerceController
 			}
 			/*
 			 * String cartIdentifier; Collection<CartModel> cartModelList = null;
-			 * 
+			 *
 			 * cartModelList = mplCartFacade.getCartDetails(customerFacade.getCurrentCustomer().getUid());
-			 * 
-			 * 
+			 *
+			 *
 			 * if (null != cartModelList && cartModelList.size() > 0) { for (final CartModel cartModel : cartModelList) {
 			 * if (userFacade.isAnonymousUser()) { cartIdentifier = cartModel.getGuid(); } else { cartIdentifier =
 			 * cartModel.getCode(); } if (cartIdentifier.equals(cartId)) {
@@ -2548,7 +2546,7 @@ public class CartsController extends BaseCommerceController
 						 * double totalPrice = 0.0D; if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty())
 						 * { for (final AbstractOrderEntryModel entry : cartModel.getEntries()) { totalPrice = totalPrice +
 						 * (entry.getBasePrice().doubleValue() * entry.getQuantity().doubleValue()); }
-						 * 
+						 *
 						 * final PriceData priceDiscount = cartData.getTotalDiscounts(); if (null != priceDiscount && null !=
 						 * priceDiscount.getFormattedValue()) {
 						 * cartDetailsData.setDiscountPrice(String.valueOf(priceDiscount.getFormattedValue())); } }
@@ -3155,30 +3153,30 @@ public class CartsController extends BaseCommerceController
 	 */
 
 	/*
-	 * 
+	 *
 	 * //GetOrderStatusResponse
-	 * 
+	 *
 	 * @Secured( { ROLE_CLIENT, CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	 * 
+	 *
 	 * @RequestMapping(value = "/{cartId}/updateTransactionDetailsforCOD", method = RequestMethod.POST, produces =
 	 * "application/json")
-	 * 
+	 *
 	 * @ResponseBody public PaymentServiceWsData updateTransactionDetailsforCOD(@RequestParam final String paymentMode,
-	 * 
+	 *
 	 * @PathVariable final String cartId, @PathVariable final String userId, @RequestParam final String custName,
-	 * 
+	 *
 	 * @RequestParam final Double cartValue, @RequestParam final Double totalCODCharge, @RequestParam final String
 	 * otpPin) { PaymentServiceWsData updateTransactionDtls = new PaymentServiceWsData();
-	 * 
+	 *
 	 * LOG.debug(String.format("PaymentMode: %s | CartId: %s | UserId : %s | Cart value :  %s | COD charge:  %s",
 	 * paymentMode, cartId, userId, cartValue, totalCODCharge));
-	 * 
+	 *
 	 * try { updateTransactionDtls = mplPaymentWebFacade.updateCODTransactionDetails(paymentMode, cartId, custName,
 	 * cartValue, totalCODCharge, userId); } catch (final Exception e) {
 	 * updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 	 * updateTransactionDtls.setError(MarketplacecommerceservicesConstants.ORDER_ERROR);
 	 * LOG.error(MarketplacewebservicesConstants.UPDATE_COD_TRAN_FAILED, e); }
-	 * 
+	 *
 	 * try { if (updateTransactionDtls.getStatus().equalsIgnoreCase(MarketplacewebservicesConstants.UPDATE_SUCCESS)) {
 	 * final UserModel user = extUserService.getUserForOriginalUid(userId); final String validationMsg =
 	 * mplPaymentFacade.validateOTPforCODWeb(user.getUid(), otpPin); if (null != validationMsg) { if (validationMsg ==
@@ -3188,10 +3186,10 @@ public class CartsController extends BaseCommerceController
 	 * updateTransactionDtls.setOrderId(orderdata.getCode()); } else {
 	 * updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 	 * updateTransactionDtls.setError(MarketplacecommerceservicesConstants.ORDER_ERROR); }
-	 * 
+	 *
 	 * } else { updateTransactionDtls.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 	 * updateTransactionDtls.setError(MarketplacecommerceservicesConstants.OTPERROR);
-	 * 
+	 *
 	 * } } } } catch (final EtailNonBusinessExceptions ex) { // Error message for All Exceptions
 	 * ExceptionUtil.etailNonBusinessExceptionHandler(ex); if (null != ex.getErrorMessage()) {
 	 * updateTransactionDtls.setError(ex.getErrorMessage()); } } catch (final EtailBusinessExceptions ex) { // Error
@@ -3200,9 +3198,9 @@ public class CartsController extends BaseCommerceController
 	 * Error message for All Exceptions if (null != ((EtailBusinessExceptions) ex).getErrorMessage()) {
 	 * updateTransactionDtls.setError(((EtailBusinessExceptions) ex).getErrorMessage()); } } return
 	 * updateTransactionDtls;
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * // Update Transaction Details for Credit Card /Debit Card / EMI
 	 *//**
 	 * @Description Update Transaction and related Retails for Credit Card /Debit Card / EMI and Create Card
@@ -3215,26 +3213,26 @@ public class CartsController extends BaseCommerceController
 	 */
 	/*
 	 * //GetOrderStatusResponse
-	 * 
+	 *
 	 * @Secured( { ROLE_CLIENT, CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	 * 
+	 *
 	 * @RequestMapping(value = "/{cartId}/updateTransactionDetailsforCard", method = RequestMethod.POST, produces =
 	 * "application/json")
-	 * 
+	 *
 	 * @ResponseBody public PaymentServiceWsData updateTransactionDetailsforCard(@RequestParam final String
 	 * juspayOrderID,
-	 * 
+	 *
 	 * @RequestParam final String paymentMode, @PathVariable final String userId, @PathVariable final String cartId) {
 	 * PaymentServiceWsData updateTransactionDtls = new PaymentServiceWsData();
-	 * 
+	 *
 	 * LOG.debug(String.format("Order Status Response : %s ", juspayOrderID)); LOG.debug(String.format(
 	 * "PaymentMode: %s | CartId: %s | UserId : %s", paymentMode, cartId, userId));
-	 * 
+	 *
 	 * try { updateTransactionDtls = mplPaymentWebFacade.updateCardTransactionDetails(juspayOrderID, paymentMode, cartId,
 	 * userId);
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * LOG.debug(String.format("Update transaction details status %s ", ((null != updateTransactionDtls.getStatus()) ?
 	 * updateTransactionDtls.getStatus() : ""))); } catch (final Exception e) {
 	 * updateTransactionDtls.setError(MarketplacewebservicesConstants.UPDATE_CARD_TRAN_FAILED);
@@ -3245,7 +3243,7 @@ public class CartsController extends BaseCommerceController
 	 * updateTransactionDtls.setOrderId(orderData.getCode()); } else {
 	 * updateTransactionDtls.setError(MarketplacewebservicesConstants.ORDER_ERROR); } } else {
 	 * updateTransactionDtls.setError(MarketplacewebservicesConstants.PAYMENTUPDATE_ERROR); }
-	 * 
+	 *
 	 * } catch (final EtailNonBusinessExceptions ex) { // Error message for All Exceptions
 	 * ExceptionUtil.etailNonBusinessExceptionHandler(ex); if (null != ex.getErrorMessage()) {
 	 * updateTransactionDtls.setError(ex.getErrorMessage()); } } catch (final EtailBusinessExceptions ex) { // Error
@@ -3254,7 +3252,7 @@ public class CartsController extends BaseCommerceController
 	 * Error message for All Exceptions if (null != ((EtailBusinessExceptions) ex).getErrorMessage()) {
 	 * updateTransactionDtls.setError(((EtailBusinessExceptions) ex).getErrorMessage()); } } return
 	 * updateTransactionDtls;
-	 * 
+	 *
 	 * }
 	 */
 

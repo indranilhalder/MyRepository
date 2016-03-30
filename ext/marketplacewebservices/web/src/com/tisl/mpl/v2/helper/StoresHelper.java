@@ -43,7 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.dao.MplSlaveMasterDAO;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
@@ -90,8 +89,8 @@ public class StoresHelper extends AbstractHelper
 	{
 		if (radius > EARTH_PERIMETER)
 		{
-			throw new RequestParameterException("Radius cannot be greater than Earth's perimeter", RequestParameterException.INVALID,
-					"radius");
+			throw new RequestParameterException("Radius cannot be greater than Earth's perimeter",
+					RequestParameterException.INVALID, "radius");
 		}
 
 		final double radiusToSearch = getInKilometres(radius, accuracy);
@@ -117,7 +116,7 @@ public class StoresHelper extends AbstractHelper
 
 	/**
 	 * Retrieves store for a given storedId.
-	 * 
+	 *
 	 * @param storeId
 	 * @param fields
 	 * @return Binds store in a dto and return it.
@@ -164,7 +163,7 @@ public class StoresHelper extends AbstractHelper
 
 	/**
 	 * This method retrieves all the Stores for given pincode.
-	 * 
+	 *
 	 * @param latitude
 	 * @param longitude
 	 * @param pincode
@@ -226,7 +225,7 @@ public class StoresHelper extends AbstractHelper
 
 	/**
 	 * Gets StoreAts with ussid and Ats for given pincode and ussid.
-	 * 
+	 *
 	 * @param pincode
 	 * @param ussId
 	 * @param fields

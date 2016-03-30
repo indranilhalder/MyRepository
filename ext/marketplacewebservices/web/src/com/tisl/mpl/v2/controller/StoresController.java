@@ -24,10 +24,6 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 
-
-
-import com.tisl.mpl.v2.helper.StoresHelper;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.v2.helper.StoresHelper;
+
 
 
 /**
@@ -80,8 +77,8 @@ public class StoresController extends BaseController
 			@RequestParam(required = false, defaultValue = "asc") final String sort,
 			@RequestParam(required = false, defaultValue = DEFAULT_SEARCH_RADIUS_METRES) final double radius,
 			@RequestParam(required = false, defaultValue = DEFAULT_ACCURACY) final double accuracy,
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields,
-			final HttpServletResponse response) throws RequestParameterException
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletResponse response)
+			throws RequestParameterException
 	{
 		final StoreFinderSearchPageWsDTO result = storesHelper.locationSearch(query, latitude, longitude, currentPage, pageSize,
 				sort, radius, accuracy, addPaginationField(fields));
