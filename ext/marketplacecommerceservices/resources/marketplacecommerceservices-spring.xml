@@ -1629,7 +1629,6 @@
 		<property name="addressLocationParser" ref="firstPlacemarkWinsGoogleResponseParser"/>
 		<property name="routeDataParser" ref="routeDataGoogleResponseParser"/>
 		<property name="directionsUrlBuilder" ref="geolocationDirectionsUrlBuilder"/>
-		<property name="googleKey" value="${googleApiKey}"/>
 	</bean>
 	
 	<!-- Store Locator Beans end here -->
