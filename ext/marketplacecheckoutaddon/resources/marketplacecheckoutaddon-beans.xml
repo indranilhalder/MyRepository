@@ -52,6 +52,7 @@
 		<property name="pointOfServices" type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>"/>
 		<property name="ussId" type="String"/>
 		<property name="sellerName" type="String"/>
+		<property name="quantity" type="Long"/>
 	</bean>
 	<bean class="de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData">
 		<property name="mplOpeningTime" type="String"/>

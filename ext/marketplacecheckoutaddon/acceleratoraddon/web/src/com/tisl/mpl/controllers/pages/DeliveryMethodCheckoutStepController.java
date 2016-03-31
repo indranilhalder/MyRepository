@@ -846,6 +846,18 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				//freebie ends
 				pwPOS.setUssId(ussId);
 				pwPOS.setSellerName(sellerName);
+				for (final AbstractOrderEntryModel abstractCartEntry : cartModel1.getEntries())
+				{
+					if (null != abstractCartEntry)
+					{
+						if (abstractCartEntry.getSelectedUSSID().equalsIgnoreCase(ussId) && abstractCartEntry.getGiveAway() != null
+								&& !abstractCartEntry.getGiveAway().booleanValue())
+						{
+							final Long quantity =abstractCartEntry.getQuantity();
+							pwPOS.setQuantity(quantity);
+						}
+					}
+				}
 				if (LOG.isDebugEnabled())
 				{
 					LOG.debug("get stores from commerce based on SellerId and StoredId(slaveId)");

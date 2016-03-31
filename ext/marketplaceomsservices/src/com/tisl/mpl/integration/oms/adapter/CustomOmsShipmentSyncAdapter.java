@@ -207,7 +207,7 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 				{
 					LOG.info("ConsignmentModel Not created but Trying to create ConsignmentEntry for Line : " + line.getId());
 				}
-				if (line.getQcReasonCode() != null && ConsignmentStatus.QC_FAILED.equals(existingConsignmentModel.getStatus()))
+				if (line.getQcReasonCode() != null &&( ConsignmentStatus.QC_FAILED.equals(existingConsignmentModel.getStatus())|| ConsignmentStatus.RETURN_CANCELLED.equals(existingConsignmentModel.getStatus())))
 				{
 					updateReturnReason(line, orderModel);
 				}
@@ -452,6 +452,14 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 						LOG.debug("********Consignment Status**********"+consigmEntry.getConsignment().getStatus());
 						LOG.debug("********Transaction Id**********"+orderEntryModel.getTransactionID());
 						LOG.debug("********OrderLine Id**********"+orderEntryModel.getOrderLineId());
+						
+						final ConsignmentModel existingConsignmentModel = consignmentModel;
+						existingConsignmentModel.setStatus(shipmentNewStatus);
+						LOG.debug("New Consignment Status :"+existingConsignmentModel.getStatus());
+					    saveAndNotifyConsignment(existingConsignmentModel);
+						modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, existingConsignmentModel.getCode()));
+						LOG.debug("Order History entry created for" + orderModel.getCode() + "Line ID" + existingConsignmentModel.getCode());
+						
 					   customOmsCancelAdapter.createTicketInCRM( orderEntryModel.getTransactionID(), MarketplaceomsordersConstants.TICKET_TYPE_CODE, MarketplaceomsordersConstants.EMPTY,
 								MarketplaceomsordersConstants.REFUND_TYPE_CODE, orderModel);
 						customOmsCancelAdapter.initiateCancellation(MarketplaceomsordersConstants.TICKET_TYPE_CODE, orderEntryModel.getTransactionID(), orderModel, MarketplaceomsordersConstants.REASON_CODE);
