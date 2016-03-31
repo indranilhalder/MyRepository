@@ -42,7 +42,7 @@
 							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
 						</tr>
   <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Welcome! We're going to get you exclusive brands and handpicked collections because we like to see you super happy. </td>
+    <td align="left" colspan="3" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Welcome! We're going to get you exclusive brands and handpicked collections because we like to see you super happy. </td>
   </tr>
   <tr>
     <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:5px; color:#606060;">&nbsp;</td>
@@ -76,9 +76,9 @@
   <td align="left" valign="top">&nbsp;</td>
   <td align="center" valign="top"><table width="37%" border="0" cellspacing="0" cellpadding="0">
     <tbody><tr>
-      <td width="8%" align="left" valign="top">${ctx.cmsSlotContents.letsgoshopping1}</td>
-      <td width="81%" align="center" valign="middle" bgcolor="#EE0C6E" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">Let's go shopping!</td>
-     <td width="11%" align="left" valign="top">${ctx.cmsSlotContents.letsgoshopping2}</td>
+      
+      <td width="81%" align="center" valign="middle" bgcolor="#EE0C6E" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;padding:6px 0">Let's go shopping!</td>
+     
     </tr>
   </tbody></table></td>
   <td align="left" valign="top">&nbsp;</td>
@@ -196,7 +196,7 @@
   <td align="left" valign="top" style="padding-left:13px"><table width="564" border="0" cellspacing="0" cellpadding="0">
 <tr>
 					  
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:support@tataCliQ.com">support@tataCliQ.com</a></p></td>
 						  </tr>
