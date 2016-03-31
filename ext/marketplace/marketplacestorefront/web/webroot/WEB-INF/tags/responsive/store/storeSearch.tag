@@ -79,7 +79,7 @@
 				</ycommerce:testId>
 			</form:form>
 		</div>
-		<div class="col-md-6 col-sm-6 col-lg-6 storesnear">
+		<div class="col-md-6 col-sm-6 col-lg-6 storesnear" id="storesnear">
 			<span class=""><spring:theme code="storeLocator.stores.Near"/></span>
 			 <label class="storeSearchTextValue" id="storeSearchTextValue"></label>
 		</div>
