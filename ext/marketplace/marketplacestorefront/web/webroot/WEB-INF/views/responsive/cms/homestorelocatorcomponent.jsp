@@ -57,6 +57,7 @@ function initialize(locatorJson,lat,lot)
   	center:myCenter,
   	zoom:initialZoom,
   	zoomControl:true,
+  	scrollwheel: false,
   	zoomControlOptions:{
   		position:google.maps.ControlPosition.RIGHT_TOP
   	},
@@ -99,7 +100,7 @@ function initialize(locatorJson,lat,lot)
 	 
 	 //Create info box
 			google.maps.event.addListener(infowindow,'closeclick',function(){
-				 removeGamma(map);
+				 //removeGamma(map);
 				});
 	 
 	//Create event listner for click on marker event.
@@ -109,7 +110,7 @@ function initialize(locatorJson,lat,lot)
 							          infowindow.open(map, marker);
 							          map.setZoom(markerZoom);
 							          map.setCenter(marker.getPosition());
-							          applyGamma(map);
+							          //applyGamma(map);
 							        }
 							      })(marker, i));
 marker.setMap(map);	  

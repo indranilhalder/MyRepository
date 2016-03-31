@@ -36784,11 +36784,12 @@ display:block;
 
 /* TISPRD-216 defect fix ends */
 
+
 /*Store Finder and Home store locator css start here*/
 .store-finder-map {
-    width:1300px;
+    width:100%;
     height:450px;
-    margin-left:20.5px;
+    /* margin-left:20.5px; */
 }
 
 .home-googleMap {
@@ -36957,14 +36958,16 @@ display:block;
     line-height: 40px;
 	margin-top: 17px;
 	float: left;
-	width: 110%;
+	width: 120px !important;
+	min-width: 120px !important;
 	margin-left: 10px;
 }
 .findStoresNearMe{
-	margin-left:-241px;
 	color: #00cbe9;
     text-decoration: none;
     border-bottom: 0.5px solid;
+    /* margin-left: 429px; */
+    position: absolute;
 }
 
 .findStoresNearMe a:hover {
@@ -36982,7 +36985,7 @@ display:block;
 	color: #00cbe9;
 	display: inline-block;
     text-decoration: none;
-    border-bottom: 0.5px solid
+    border-bottom: 0.5px solid;
 }
 
 .googleMapLegends{
