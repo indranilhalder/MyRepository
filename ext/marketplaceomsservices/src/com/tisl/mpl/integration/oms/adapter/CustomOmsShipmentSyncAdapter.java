@@ -64,7 +64,8 @@ import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
  * @author TCS
  *
  */
-public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter
+public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter implements
+		CustomOmsSyncAdapter<OrderWrapper, ConsignmentModel>
 {
 	@Autowired
 	private MplSendSMSService sendSMSService;
@@ -93,6 +94,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter
 	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
 
 
+
+	@Override
 	public ConsignmentModel update(final OrderWrapper wrapper, final ItemModel parent)
 	{
 		ConsignmentModel consignmentFinal = null;
@@ -725,9 +728,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter
 	 * ConsignmentModel consignment : orderModel.getConsignments()) { for (final ConsignmentEntryModel s :
 	 * consignment.getConsignmentEntries()) { if (s.getOrderEntry().getEntryNumber().equals(line.getOrderLineId())) {
 	 * return consignment; } }
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * return null; }
 	 */
 
@@ -777,11 +780,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter
 	public void setConsignmentProcessNotifier(final ModelChangeNotifier<ConsignmentModel> consignmentProcessNotifier)
 	{
 		this.consignmentProcessNotifier = consignmentProcessNotifier;
-	}
-
-	public ConsignmentModel update(final OrderWrapper dto, final Date updateTime)
-	{
-		return null;
 	}
 
 	/**
@@ -854,4 +852,6 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter
 	{
 		this.configurationService = configurationService;
 	}
+
+
 }
