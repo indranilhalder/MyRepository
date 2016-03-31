@@ -95,6 +95,12 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 							}
 
 						}
+						//Set Image urls
+						if (StringUtils.isNotBlank(slaveInfoDto.getStoreImage()))
+						{
+							posModel.setMplStoreImage(slaveInfoDto.getStoreImage());
+						}
+
 						//set POS displayName to slave Name.
 						if (StringUtils.isNotEmpty(slaveInfoDto.getName()))
 						{
@@ -563,6 +569,11 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 						if (StringUtils.isNotEmpty(slaveInfoDto.getSellerid()))
 						{
 							posModel.setSellerId(slaveInfoDto.getSellerid());
+						}
+						//Set store images
+						if (StringUtils.isNotBlank(slaveInfoDto.getStoreImage()))
+						{
+							posModel.setMplStoreImage(slaveInfoDto.getStoreImage());
 						}
 						if (StringUtils.isNotEmpty(slaveInfoDto.getSlaveid()))
 						{
