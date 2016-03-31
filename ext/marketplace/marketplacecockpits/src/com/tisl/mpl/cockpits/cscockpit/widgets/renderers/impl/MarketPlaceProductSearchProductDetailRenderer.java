@@ -700,10 +700,12 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 				deliverymodeLabel = new Label(
 						MarketplaceCockpitsConstants.delNameMap
 								.get(deliveryMode));
+				if(null != deliveryMode) {
 				if(deliveryMode.equals("CNC")) {
 					deliverymodeLabel = new Label(
 						MarketplaceCockpitsConstants.delNameMap
 						.get("CnC"));
+				}
 				}
 				deliverymodeLabel.setStyle(LABELSTYLE);
 				deliverymodeLabel.setParent(cell);
