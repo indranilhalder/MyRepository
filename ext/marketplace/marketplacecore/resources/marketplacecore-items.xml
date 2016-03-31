@@ -2117,6 +2117,10 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
+						
+					
+						
+						
 				</attributes>
 			</itemtype>
 
@@ -5416,6 +5420,15 @@
 						<description>The sales application for which the order was placed.</description>
 						<persistence type="property" />
 						<defaultvalue>em().getEnumerationValue("SalesApplication","Web")</defaultvalue>
+					</attribute>
+					
+						<attribute autocreate="true" qualifier="isExpressCheckoutSelected"
+						type="java.lang.Boolean">
+						<persistence type="property" qualifier="isExpressCheckoutSelected">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
 					</attribute>
 				</attributes>
 			</itemtype>
