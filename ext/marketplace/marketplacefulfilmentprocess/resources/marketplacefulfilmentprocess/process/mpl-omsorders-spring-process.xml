@@ -208,11 +208,11 @@
 		<property name="modelService" ref="modelService" />
 	</bean>	 -->
 	
-		 <alias name="defaultOmsOrderSyncAdapter" alias="defaultOmsOrderSyncAdapter" />
-	<bean id="defaultOmsOrderSyncAdapter"
-		class="com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter"
+	<alias name="customOmsOrderSyncAdapter" alias="omsOrderSyncAdapter" />
+	<bean id="customOmsOrderSyncAdapter"
+		class="com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter" parent="defaultOmsOrderSyncAdapter"
 		scope="tenant">
-		<property name="omsShipmentSyncAdapter" ref="omsShipmentSyncAdapter" />
+		<property name="omsShipmentSyncAdapterCustom" ref="omsShipmentSyncAdapter" />
 		<property name="modelService" ref="modelService" />
 		<property name="orderSyncDao" ref="orderSyncDao" />
 	</bean>
@@ -227,6 +227,12 @@
 		class="com.tisl.mpl.oms.dao.impl.CustomSyncQueryDao"
 		scope="tenant">
 		<constructor-arg value="Order" />
+	</bean>
+	<bean id="omsOrderUpdateTaskRunner"
+		  class="de.hybris.platform.integration.oms.order.dataimport.task.OmsOrderUpdateTaskRunner">
+		<property name="omsOrderService" ref="omsOrderService"/>
+		<property name="omsOrderAdapter" ref="omsOrderSyncAdapter"/>
+		<property name="modelService" ref="modelService"/>
 	</bean>
 			
 </beans>

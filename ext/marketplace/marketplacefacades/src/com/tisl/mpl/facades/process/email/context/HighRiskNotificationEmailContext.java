@@ -8,6 +8,9 @@ import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmai
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.NotifyPaymentGroupProcessModel;
@@ -20,6 +23,12 @@ import com.tisl.mpl.core.model.NotifyPaymentGroupProcessModel;
 public class HighRiskNotificationEmailContext extends AbstractEmailContext<NotifyPaymentGroupProcessModel>
 {
 	private static final String JUSPAYORDERID = "juspayOrderId";
+
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	@Override
 	public void init(final NotifyPaymentGroupProcessModel notifyPaymentGroupProcessModel, final EmailPageModel emailPageModel)
@@ -37,6 +46,14 @@ public class HighRiskNotificationEmailContext extends AbstractEmailContext<Notif
 
 		put(EMAIL, notifyPaymentGroupProcessModel.getRecipientEmail());
 		put(DISPLAY_NAME, notifyPaymentGroupProcessModel.getRecipientEmail());
+
+		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+				"1800-208-8282");
+		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
+		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
 	}
 
 	/*

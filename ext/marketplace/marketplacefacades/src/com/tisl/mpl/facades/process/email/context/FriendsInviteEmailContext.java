@@ -5,11 +5,13 @@ package com.tisl.mpl.facades.process.email.context;
 
 import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.commerceservices.model.process.StoreFrontCustomerProcessModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.model.FriendsInviteProcessModel;
 
@@ -33,6 +35,13 @@ public class FriendsInviteEmailContext extends CustomerEmailContext
 	private String affiliateId;
 	private static final String UTF_8 = "UTF-8";
 	private static final String LOGIN = "/login";
+
+
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 
 
@@ -94,7 +103,19 @@ public class FriendsInviteEmailContext extends CustomerEmailContext
 				put(getAffiliateId(), ((FriendsInviteProcessModel) storeFrontCustomerProcessModel).getAffiliateId());
 				setAffiliateId(((FriendsInviteProcessModel) storeFrontCustomerProcessModel).getAffiliateId());
 				put(INVITE_URL, ((FriendsInviteProcessModel) storeFrontCustomerProcessModel).getInviteBaseUrl());
+
 			}
+
+
+			final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+					"1800-208-8282");
+			put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+			final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail",
+					"hello@tatacliq.com");
+			put(CUSTOMER_CARE_EMAIL, customerCareEmail);
+
 		}
 	}
 
