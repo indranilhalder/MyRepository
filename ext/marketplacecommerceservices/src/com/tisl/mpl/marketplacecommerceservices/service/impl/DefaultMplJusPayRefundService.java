@@ -877,7 +877,6 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
 						+ orderEntry.getCurrDelCharge().doubleValue();
 
-
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
 
@@ -894,6 +893,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 				refundTransactionMappingModel.setCreationtime(new Date());
 				refundTransactionMappingModel.setRefundType(juspayRefundType);
+				refundTransactionMappingModel.setRefundAmount(new Double(refundedAmount));//TISPRO-216 : Refund amount Set in RTM
 				getModelService().save(refundTransactionMappingModel);
 			}
 		}

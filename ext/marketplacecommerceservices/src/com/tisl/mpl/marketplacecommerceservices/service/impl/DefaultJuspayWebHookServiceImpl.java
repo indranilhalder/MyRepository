@@ -505,15 +505,15 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
-							MarketplacecommerceservicesConstants.SUCCESS, refund.getAmount(), PaymentTransactionType.CANCEL, REFUND,
-							getWebhookUniqueRequestId(rtmModel));
+							MarketplacecommerceservicesConstants.SUCCESS, rtmModel.getRefundAmount(), PaymentTransactionType.CANCEL,
+							REFUND, getWebhookUniqueRequestId(rtmModel));//TISPRO-216 : Refund Amt Picked from RTM
 					newStatus = ConsignmentStatus.ORDER_CANCELLED;
 				}
 				else if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.FAILURE))
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
-							MarketplacecommerceservicesConstants.FAILURE, refund.getAmount(), PaymentTransactionType.CANCEL,
-							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));
+							MarketplacecommerceservicesConstants.FAILURE, rtmModel.getRefundAmount(), PaymentTransactionType.CANCEL,
+							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));//TISPRO-216 : Refund Amt Picked from RTM
 					newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
 				}
 
@@ -566,8 +566,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
-							MarketplacecommerceservicesConstants.SUCCESS, refund.getAmount(), PaymentTransactionType.RETURN, REFUND,
-							getWebhookUniqueRequestId(rtmModel));
+							MarketplacecommerceservicesConstants.SUCCESS, rtmModel.getRefundAmount(), PaymentTransactionType.RETURN,
+							REFUND, getWebhookUniqueRequestId(rtmModel));//TISPRO-216 : Refund Amt Picked from RTM
 
 					newStatus = ConsignmentStatus.RETURN_COMPLETED;
 				}
@@ -575,8 +575,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				else if (refund.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.FAILURE))
 				{
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
-							MarketplacecommerceservicesConstants.FAILURE, refund.getAmount(), PaymentTransactionType.RETURN,
-							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));
+							MarketplacecommerceservicesConstants.FAILURE, rtmModel.getRefundAmount(), PaymentTransactionType.RETURN,
+							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));//TISPRO-216 : Refund Amt Picked from RTM
 
 					newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
 				}
@@ -660,8 +660,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					orderStatusSpecifier.setOrderStatus(order, OrderStatus.ORDER_CANCELLED);
 
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
-							MarketplacecommerceservicesConstants.SUCCESS, refund.getAmount(), PaymentTransactionType.CANCEL, REFUND,
-							getWebhookUniqueRequestId(rtmModel));
+							MarketplacecommerceservicesConstants.SUCCESS, rtmModel.getRefundAmount(), PaymentTransactionType.CANCEL,
+							REFUND, getWebhookUniqueRequestId(rtmModel));//TISPRO-216 : Refund Amt Picked from RTM
 
 					notPending = true;
 				}
@@ -671,8 +671,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					orderStatusSpecifier.setOrderStatus(order, OrderStatus.REFUND_IN_PROGRESS);
 
 					paymentTransactionModel = getMplJusPayRefundService().createPaymentTransactionModel(order,
-							MarketplacecommerceservicesConstants.FAILURE, refund.getAmount(), PaymentTransactionType.CANCEL,
-							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));
+							MarketplacecommerceservicesConstants.FAILURE, rtmModel.getRefundAmount(), PaymentTransactionType.CANCEL,
+							REFUND_FAIL, getWebhookUniqueRequestId(rtmModel));//TISPRO-216 : Refund Amt Picked from RTM
 
 					notPending = true;
 				}

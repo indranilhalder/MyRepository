@@ -229,6 +229,9 @@ public class MarketPlaceDefaultCancellationController extends
 												.setCreationtime(new Date());
 										refundTransactionMappingModel
 												.setRefundType(JuspayRefundType.CANCELLED);
+										refundTransactionMappingModel
+												.setRefundAmount(modificationEntry.getOrderEntry().getNetAmountAfterAllDisc()
+														+modificationEntry.getOrderEntry().getCurrDelCharge());//TISPRO-216 : Refund amount Set in RTM
 										getModelService().save(
 												refundTransactionMappingModel);
 									} else {
