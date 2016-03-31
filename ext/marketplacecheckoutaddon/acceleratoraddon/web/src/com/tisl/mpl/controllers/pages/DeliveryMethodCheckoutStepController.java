@@ -774,8 +774,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 												{
 													LOG.info("Freebie Parent Product USSID" + abstractCartEntry.getSelectedUSSID());
 													LOG.info("Freebie Product USSID" + ussid);
-													final Long quant = freebieParentQtyMap.get(ussId);
-													freebieProductsWithQuant.put(ussid, quant);
+													freebieProductsWithQuant.put(ussid, cartEntryModel.getQuantity());
 												}
 											}
 										}
