@@ -486,8 +486,14 @@ public class CustomOmsShipmentSyncAdapter implements OmsSyncAdapter<OrderWrapper
 			}
 			
 			if(ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) && shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED)){
-				LOG.debug("Calling deliverd Initiation process started");		
-				customOmsCollectedAdapter.sendNotificationForOrderCollected(orderModel,  consignmentModel);
+				LOG.debug("Calling delivered Initiation process started");	
+				for(AbstractOrderEntryModel orderEntryModel:orderModel.getEntries()){
+					 for(ConsignmentEntryModel consigmEntry:orderEntryModel.getConsignmentEntries()){
+					     if(consigmEntry.getConsignment().getStatus().equals(ConsignmentStatus.READY_FOR_COLLECTION) && shipmentNewStatus.equals(ConsignmentStatus.ORDER_COLLECTED)){
+				        customOmsCollectedAdapter.sendNotificationForOrderCollected(orderModel,  consignmentModel,orderEntryModel);
+					     }
+					}
+				}
 			}
 			
 			createRefundEntry(shipmentNewStatus, consignmentModel, orderModel);
