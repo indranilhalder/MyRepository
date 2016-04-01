@@ -44,6 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,9 +52,11 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.jalo.BuyABFreePrecentageDiscount;
 import com.tisl.mpl.jalo.BuyAPercentageDiscount;
 import com.tisl.mpl.jalo.BuyAandBPrecentageDiscount;
 import com.tisl.mpl.jalo.BuyAandBgetC;
+import com.tisl.mpl.jalo.BuyXItemsofproductAgetproductBforfree;
 import com.tisl.mpl.jalo.CustomProductBOGOFPromotion;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
@@ -294,6 +297,8 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 			if (null != item && ((item instanceof ProductPromotion) || (item instanceof OrderPromotion)))
 			{
 				getPromotionSendMailService().sendMail(item);
+
+				checkForMsgModify(item, currentValues, initialValues);
 			}
 
 			//			if (null != item && item instanceof Voucher)
@@ -318,8 +323,29 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	}
 
 	/**
-	 * @Description: To populate data for Promotion Price Modification
+	 * Check for Message Modification
+	 *
+	 * @param item
+	 * @param currentValues
 	 * @param initialValues
+	 */
+	private void checkForMsgModify(final Item item, final Map currentValues, final Map initialValues)
+	{
+		if (MapUtils.isNotEmpty(currentValues) && currentValues.containsKey("messageFired"))
+		{
+			LOG.debug("***Fired Message Has been modified****");
+			if (item instanceof BuyXItemsofproductAgetproductBforfree || item instanceof BuyABFreePrecentageDiscount)
+			{
+				LOG.debug("***Modifying Promotion Fired Mesage ****");
+				getSellerBasedPromotionService().modifyFiredMessage(initialValues.get(MarketplaceCoreConstants.PROMOCODE).toString());
+			}
+		}
+
+	}
+
+	/**
+	 * @Description: To populate data for Promotion Price Modification
+	 * @param item
 	 * @return: void
 	 */
 	@SuppressWarnings("boxing")
