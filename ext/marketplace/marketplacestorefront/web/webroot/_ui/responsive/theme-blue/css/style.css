@@ -5660,9 +5660,9 @@ text-transform: uppercase;
         .cart.wrapper .left-block input[type="checkbox"] + label[for^="bank-option-"]:before, .cart.wrapper .left-block input[type="radio"] + label[for^="bank-option-"]:before, .confirmation .left-block input[type="checkbox"] + label[for^="bank-option-"]:before, .confirmation .left-block input[type="radio"] + label[for^="bank-option-"]:before {
           top: 35%; }
     .cart.wrapper .left-block input[type="checkbox"] + label, .confirmation .left-block input[type="checkbox"] + label {
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
+          font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
       -webkit-transition: color 0.3s, box-shadow 0.3s, background 0.3s;
       -moz-transition: color 0.3s, box-shadow 0.3s, background 0.3s;
       transition: color 0.3s, box-shadow 0.3s, background 0.3s; }
@@ -5687,12 +5687,6 @@ text-transform: uppercase;
       top: 2px; }
       .cart.wrapper .left-block .addressEntry input[type="radio"] + label:before{
       top: -7px; }
-      @media (max-width: 650px) {
-        .cart.wrapper .left-block input[type="radio"] + label:before, .confirmation .left-block input[type="radio"] + label:before {
-          width: 12px;
-          height: 12px;
-          border-width: 3px;}
-          }
     .cart.wrapper .left-block input[type="checkbox"]:checked + label, .confirmation .left-block input[type="checkbox"]:checked + label {
       color: #A9143C;
       -webkit-transition: color 0.15s, box-shadow 0.15s, background 0.15s;
@@ -5772,7 +5766,10 @@ text-transform: uppercase;
   .cart.wrapper .left-block .payments.tab-view, .confirmation .left-block .payments.tab-view {
     width: 100%;
     margin: 10px 0;
-    clear: both; }
+    clear: both; 
+    border: 1px solid #f0f4f5;
+    padding: 20px 20px 20px 15px;
+    }
     .cart.wrapper .left-block .payments.tab-view::after, .confirmation .left-block .payments.tab-view::after {
       clear: both;
       content: "";
@@ -5793,18 +5790,20 @@ text-transform: uppercase;
 }
       .cart.wrapper .left-block .payments.tab-view .pay p, .confirmation .left-block .payments.tab-view .pay p {
         text-align: center;
-        font-weight: 500; }
+        font-weight: 500; 
+        font-size: 14px;
+        line-height: 18px;}
         .cart.wrapper .left-block .payments.tab-view .pay p a, .confirmation .left-block .payments.tab-view .pay p a {
           color: #A9143C;
           text-transform: uppercase;
           text-decoration: underline;
-          font-size: 10px;
-          font-weight: 600;
+          font-size: 14px;
+    		font-weight: 500;
           display: block;
           margin-top: 10px; }
           @media (min-width: 650px) {
             .cart.wrapper .left-block .payments.tab-view .pay p a, .confirmation .left-block .payments.tab-view .pay p a {
-              display: inline;
+              display: inline-block;
               margin-top: 0; } }
       .cart.wrapper .left-block .payments.tab-view .pay .button, .confirmation .left-block .payments.tab-view .pay .button {
         background-color: #a9143c;
@@ -5820,7 +5819,7 @@ text-transform: uppercase;
       .cart.wrapper .left-block .payments.tab-view .new-card h2, .confirmation .left-block .payments.tab-view .new-card h2 {
         font-size: 18px;
         font-weight: 500;
-        margin: 5px 0 10px; }
+        padding: 20px 0 10px; }
       .cart.wrapper .left-block .payments.tab-view .new-card ul.accepted-cards, .confirmation .left-block .payments.tab-view .new-card ul.accepted-cards {
         margin: 10px 0; }
       .cart.wrapper .left-block .payments.tab-view .new-card fieldset, .confirmation .left-block .payments.tab-view .new-card fieldset {
@@ -5850,8 +5849,9 @@ text-transform: uppercase;
 .confirmation .left-block .payments.tab-view .new-card fieldset .full label {
     display: block;
     margin-bottom: 5px;
-    font-size: 10px;
-    font-weight: 600
+   font-size: 14px;
+    font-weight: 500;
+    color: #333;
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .half label:after,
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full label:after,
@@ -5882,7 +5882,7 @@ text-transform: uppercase;
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full:nth-child(2n),
 .confirmation .left-block .payments.tab-view .new-card fieldset .full:nth-child(2n) {
     padding-left: 0;
-    padding-right: 10px
+    padding-right: 20px
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.account-only,
 .confirmation .left-block .payments.tab-view .new-card fieldset .full.account-only {
@@ -5890,7 +5890,8 @@ text-transform: uppercase;
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select,
 .confirmation .left-block .payments.tab-view .new-card fieldset .full.exp select {
-    width: 48%
+    min-width: 70px;
+    width:48%;
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select:first-of-type,
 .confirmation .left-block .payments.tab-view .new-card fieldset .full.exp select:first-of-type {
@@ -5908,9 +5909,9 @@ text-transform: uppercase;
             display: none; }
           .cart.wrapper .left-block .payments.tab-view .new-card fieldset .half label, .confirmation .left-block .payments.tab-view .new-card fieldset .half label {
             display: block;
-            font-size: 10px;
-            font-weight: 600;
-            margin-bottom: 5px; }
+            font-size: 14px;
+    		font-weight: 500;
+   			 margin-bottom: 5px; }
             .cart.wrapper .left-block .payments.tab-view .new-card fieldset .half label span, .confirmation .left-block .payments.tab-view .new-card fieldset .half label span {
               float: right;
               color: #A9143C;
@@ -5954,38 +5955,38 @@ text-transform: uppercase;
     margin-top:0px;
 }
     .cart.wrapper .left-block .payments.tab-view .nav, .confirmation .left-block .payments.tab-view .nav {
-      width: 20%;
+      width: 25%;
       float: left;
       padding-right: 5px; }
       .cart.wrapper .left-block .payments.tab-view .nav li, .confirmation .left-block .payments.tab-view .nav li {
-        padding: 10px;
-        margin: 10px 0;
-        font-weight: 500;
-        cursor: pointer;
-        border: 1px solid #f0f4f5;
-        background: #f0f4f5;
-        -webkit-transition: background 0.3s, color 0.3s;
-        -moz-transition: background 0.3s, color 0.3s;
-        transition: background 0.3s, color 0.3s; }
+        padding: 16px 10px;
+    margin: 1px 0;
+    font-weight: 500;
+    color: #4A4A4A;
+    height: 46px;
+    cursor: pointer;
+    background: #EDEEF0;}
        
         .cart.wrapper .left-block .payments.tab-view .nav li span.mobile-back, .confirmation .left-block .payments.tab-view .nav li span.mobile-back {
           display: none; }
         .cart.wrapper .left-block .payments.tab-view .nav li:first-child, .confirmation .left-block .payments.tab-view .nav li:first-child {
           margin-top: 0; }
         .cart.wrapper .left-block .payments.tab-view .nav li.active,.cart.wrapper .left-block .payments.tab-view .nav li:hover, .confirmation .left-block .payments.tab-view .nav li.active,.confirmation .left-block .payments.tab-view .nav li:hover {
-          background: #fff;
-          color: #A9143C;
-          -webkit-transition: background 0.3s, color 0.3s;
-          -moz-transition: background 0.3s, color 0.3s;
-          transition: background 0.3s, color 0.3s; }
-          @media (max-width: 790px) {
-    .cart.wrapper .left-block .payments.tab-view .nav li,
-    .confirmation .left-block .payments.tab-view .nav li {
-        padding: 10px 1px;
-    }
+            background: #fbba21;
+    		color: #fff; }
+    		@media (min-width: 651px){
+        .cart.wrapper .left-block .payments.tab-view .nav li:hover:after, .cart.wrapper .left-block .payments.tab-view .nav li.active:after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top:0;
+    border-bottom: 23px solid transparent;
+    border-top: 23px solid transparent;
+    border-left: 10px solid #fbba21;
+}
 }
     .cart.wrapper .left-block .payments.tab-view .tabs, .confirmation .left-block .payments.tab-view .tabs {
-      width: 80%;
+      width: 75%;
       float: right;
       margin: 0; }
       .cart.wrapper .left-block .payments.tab-view .tabs > li, .confirmation .left-block .payments.tab-view .tabs > li {
@@ -6077,8 +6078,7 @@ text-transform: uppercase;
         margin-right: 0; }
       .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item > ul li, .confirmation .left-block .payments.tab-view .tabs .product-block.net-bank li.item > ul li {
         width: 25%;
-        padding: 15px 0;
-        height:40px; }
+        height:33px; }
       .cart.wrapper .left-block .payments.tab-view .tabs .product-block.emi .bank-select label, .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select label, .confirmation .left-block .payments.tab-view .tabs .product-block.emi .bank-select label, .confirmation .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select label {
         display: block;
         font-size: 10px;
@@ -6098,7 +6098,7 @@ text-transform: uppercase;
         line-height: 15px;
         font-size: 11px; }
       .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item, .confirmation .left-block .payments.tab-view .tabs .product-block li.item {
-        padding: 15px;
+        padding: 0px 15px;
         clear: both; }
         .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item::after, .confirmation .left-block .payments.tab-view .tabs .product-block li.item::after {
           clear: both;
@@ -6136,13 +6136,13 @@ text-transform: uppercase;
           float: right; }
           .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv label, .confirmation .left-block .payments.tab-view .tabs .product-block li.item .cvv label {
             display: block;
-            font-weight: 600;
-            font-size: 10px;
+           font-weight: 500;
+   		   font-size: 14px;
             margin-bottom: 5px; }
           .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv input, .confirmation .left-block .payments.tab-view .tabs .product-block li.item .cvv input {
             border: 1px solid #DFD1D5;
             height: 30px;
-            width: 100%; }
+            width: 40%; }
   @media (max-width: 650px) {
     .cart.wrapper .left-block .payments.tab-view, .confirmation .left-block .payments.tab-view {
       margin-top: 30px; }
@@ -6175,13 +6175,13 @@ text-transform: uppercase;
     		line-height: 45px;
     		padding: 0 15px;
            }
-          .cart.wrapper .left-block .payments.tab-view .nav li:after, .confirmation .left-block .payments.tab-view .nav li:after {
+      /*     .cart.wrapper .left-block .payments.tab-view .nav li:after, .confirmation .left-block .payments.tab-view .nav li:after {
           	font-family: 'FontAwesome';
     		-webkit-font-smoothing: antialiased;
     		-moz-osx-font-smoothing: grayscale;
             content: "\f054";
             position: absolute;
-            right: 15px; }
+            right: 15px; } */
           .cart.wrapper .left-block .payments.tab-view .nav li.active, .confirmation .left-block .payments.tab-view .nav li.active {
             padding-left: 0; }
             .cart.wrapper .left-block .payments.tab-view .nav li.active span, .confirmation .left-block .payments.tab-view .nav li.active span {
@@ -6674,6 +6674,9 @@ text-transform: uppercase;
           width: 17%;
           border: 1px solid #f0f4f5;
           vertical-align: middle; }
+          .cart.wrapper .payments.tab-view .product-block li.header ul li,.cart.wrapper .payments.tab-view .product-block li.item{
+          border: none;
+          }
           @media (min-width: 650px) {
             .cart.wrapper .product-block li.header ul li, .confirmation .product-block li.header ul li {
               width: 20%;
@@ -18237,13 +18240,14 @@ header .content .bottom .search .select-list select
 #card .form-group select, #bankNameForEMI, #bankCodeSelection {
   border-radius: 0;
   border: 1px solid rgb(209, 222, 225);
-  font-size:12px;
+  font-size:14px;
   line-height:18px;
   font-weight:500;
   margin-bottom: 0;
 }
 	#bankNameForEMI, #bankCodeSelection {
   padding:0px 15px;
+  width:auto;
 }
 .checkout-paymentmethod span{
 	display:block;
@@ -18283,8 +18287,12 @@ line-height:normal;
 }
 
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li{
-  width: 24%;
-  padding: 15px 0;
+  width: 29%;
+    padding: 0;
+    border: 1px solid #CECFCE;
+    border-radius: 5px;
+    line-height: 30px;
+    margin: 10px 1.8%;
 }
 .cart.wrapper .product-block li.item.cardForm > ul > li{
   float:none;
@@ -20570,7 +20578,14 @@ body .account .right-account .navigation .order-history
     margin-bottom: 5px;
     padding-left: 10px;
     margin-left:-2px;
+    height: 49px;
 }
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp {
+    width: 31%;
+ }
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.cvv {
+    width: 54%;
+ }
 .cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .half {
     width: 50%;
    float: none;
@@ -20595,28 +20610,26 @@ body .account .right-account .navigation .order-history
 }
 
 #EMITermTable{
-border:1px solid #f0f4f5;
-border-bottom:none;
+border:1px solid #cdcdcd;
 width:100%;
-font-size:11px;
+font-size:14px;
  margin-top: 10px;
+ margin-bottom: 10px;
+ font-weight: 500;
 }
 #EMITermTable th{
-background-color:#f0f4f5;
-height:40px;
-font-weight:600;
-vertical-align: middle;
-text-align:center;
+    font-weight: 500;
+    vertical-align: middle;
+    text-align: left;
+    padding: 10px 5px;
+    border-bottom:1px solid #cdcdcd;
 }
-#EMITermTable tr{
-border-bottom: 1px solid #f0f4f5;
-}
+
 #EMITermTable td{
   position:relative;
   vertical-align: middle;
   padding: 8px 15px;
-  border:1px solid #DFD1D5;
-  text-align:center;
+  text-align: left;
 }
 #EMITermTable td input[type="radio"]{
 display:none !important;
@@ -20626,16 +20639,19 @@ position:relative
 }
 #EMITermTable td input[type="radio"] + label:before{
   top: -2px;
+  box-shadow: 0 0 0 2px #a9143c;
+}
+#EMITermTable td input[type="radio"]:checked + label:before{
+  background-color: #a9143c;
+  border:2px solid #fff;
 }
 .cod-container{
-border:1px solid rgb(219, 234, 250);
-margin:10px 0px;
-padding:10px;
-font-size:12px;
+padding:0px 10px;
+font-size:14px;
 }
 .cod-container label{
 font-weight:bold;
-font-size:12px;
+font-size:14px;
 }
 .cod-container label input{
 margin-bottom:0px;
@@ -20652,8 +20668,7 @@ padding:10px;
  width: 200px;
  border:0px;
    line-height: 3px;
-   margin: 0px auto;
-   margin-bottom: 20px;
+   margin: 30px auto;
        opacity: 0.9;
        transition: background 0.3s;
 }
@@ -20662,11 +20677,14 @@ padding:10px;
 margin-top:5px;
 }
 a#cvvHelp{
-color: #A9143C;
-      font-size: 10px;
-    font-weight: 600;
-  text-transform: uppercase;
-  text-decoration: underline;
+	color: #A9143C;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: underline;
+    margin-top: 10px;
+    margin-left: 10px;
+    display: inline-block;
 }
 a#cvvHelp:hover{
 color: #A9143C;
@@ -20674,7 +20692,7 @@ color: #A9143C;
 
 #resendOTPMessage{
 margin-bottom:10px;
-font-weight:600;
+font-weight:500;
 }
 .error-message{
 color:#ff1c47;
@@ -20683,7 +20701,7 @@ display: inline-block;
 padding-top: 5px;
 }
 #mobilePrefix{
-	width:40px;
+	width:50px;
 	height:30px;
 }
 #otpMobileNUMField{
@@ -21037,9 +21055,6 @@ body.account .right-account ul.saved-cards>li img {
 width:100%;
 border: 1px solid #DFD1D5;
 }
-.cart.wrapper .left-block .payments.tab-view .nav{
-    margin-top: -10px;
-}
 .cart.wrapper .left-block form{
     margin: 0;
 }
@@ -21082,9 +21097,13 @@ ul.accepted-cards li span img{
     box-shadow: 1px 1px 10px #666;
 }
  .cart.wrapper .left-block .payments.tab-view .nav li span{
-        font-size:12px;
-        line-height: normal;
-        font-weight: 600;
+            font-size: 14px;
+    		line-height: 16px;
+    		font-weight: 500;
+    		display: block;
+    		text-overflow: ellipsis;
+    		white-space: nowrap;
+    		overflow: hidden;
         }
  @media ( max-width :650px) {
 	.cart.wrapper .left-block .payments.tab-view .new-card #billingAddress fieldset .half
@@ -26172,11 +26191,11 @@ line-height:19px;
 .cod-container p {
     margin: 0 0 10px;
     line-height:20px;
-    color: rgb(51, 51, 51);
-    font-weight: 600;
+    color: #333;
+    font-weight: 500;
 }
 .cod-container h4{
-	 font-size: 18px;
+	 font-size: 16px;
    font-weight: 500;
 	margin: 10px 0;
     line-height: 20px;
@@ -26189,17 +26208,18 @@ line-height:19px;
     font-weight: 500;
 }
 .cod-container label.cod-mob-label {
-	font-weight: 600;
+	    font-weight: 500;
     line-height: 20px;
-    font-size: 12px;
+    font-size: 14px;
 }
 .cod-container #enterOTP label {
-    font-weight: 600;
+    font-weight: 500;
     line-height:30px;
 }
 .cod-container #enterOTP label input {
     padding: 0px 10px;
     height: 30px;
+        display: block;
 }
 .cod-container input[disabled],.cod-container select[disabled] {
     background-color: #eee;
@@ -26234,6 +26254,7 @@ line-height:19px;
 @media(max-width:650px){
 	.cart.wrapper .left-block .payments.tab-view .new-card input[type="checkbox"]+label{
 	margin-top:5px;
+	    font-size: 12px;
 	}
 	.cart.wrapper .left-block .button{
 	line-height:1;
@@ -26242,10 +26263,7 @@ line-height:19px;
 	display:block;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs > li .product-block li.item.new-form form h2:first-child ~ label{
-	    transform: translate(40%);
-	    -webkit-transform: translate(40%);
-	    -moz-transform: translate(40%);
-	    -ms-transform: translate(40%);
+	   font-size: 12px;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs > li .product-block li.header{
 	display:block;
@@ -26264,16 +26282,15 @@ line-height:19px;
     width: 100%;
     font-size: 16px;
     font-weight: 600;
-    text-align: center;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs > li .product-block li.item.new-form form h2:first-child {
 	font-size:14px;
 	text-align:left;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs > li .product-block li.item.new-form form #billingAddress h2{
-	font-size:16px;
-	text-align:center;
-	font-weight:600;
+	font-size: 14px;
+    /* text-align: center; */
+    font-weight: 500;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.header > ul li.pincode-button{
 	float:right;
@@ -26284,13 +26301,14 @@ line-height:19px;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs .product-block.emi li.item{
 	padding:0;
+	margin: 0;
 	}
 	.cod-container h4{
-	font-size:14px;
-	font-weight:600;
+	font-size: 16px;
+    font-weight: 500;
 	}
 	#otpMobileNUMField{
-	width:84%;
+	width:75%;
 	}
 	.cod-container #enterOTP label input {
     width: 75%;
@@ -26305,7 +26323,7 @@ line-height:19px;
 	content:'';
 	margin-right:0px;
 	}
-	.cart.wrapper .left-block .payments.tab-view .nav li.active:after{
+	/* .cart.wrapper .left-block .payments.tab-view .nav li.active:after{
 	font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -26313,11 +26331,11 @@ line-height:19px;
     position: absolute;
     right: 15px;
     color:#A9143C;
-	}
+	} 
 	
 	.cart.wrapper .left-block .payments.tab-view .nav li.active,.cart.wrapper .left-block .payments.tab-view .nav li:hover{
 	border:1px solid #f0f4f5;
-	}
+	}*/
 	.cart.wrapper .left-block .payments.tab-view .tabs li.change-payment{
 	border:1px solid #f0f4f5;
 	padding: 15px;
@@ -26338,14 +26356,14 @@ line-height:19px;
 	    opacity: 0.7;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs{
-	display:none;
+	margin-top:50px;
 	}
 	.hide-menu{
 	display:none;
 	}
 	.cart.wrapper .left-block .payments.tab-view .nav li.active{
-	color:#000;
-	background:#f0f4f5;
+	color:#fff;
+	background: #fbba21;
 	margin:0px;
 	width:100%;
 	}
@@ -26511,7 +26529,7 @@ body .account .right-account .order-history .navigation2 #ofPagination{
 	float: right;
 	}
 #billingAddress{
-	margin-top:30px;
+	margin-top:20px;
 }
 .cart.wrapper .right-block .block.bottom.order-details>ul li.item .product .method h3{
 	font-weight:600;
@@ -26694,6 +26712,7 @@ li#savedCVVError{
 }
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select{
 	margin-top:15px;
+	text-align: center;
 }
   .updatePassword{
 	padding: 10px;
@@ -26950,7 +26969,7 @@ ul.links .product .Best-Sellers {
 	padding-right: 10px;
 	}
 	.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_month,.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select.card_exp_year{
-	padding-left:0px;
+	padding-left:5px;
 	}
 	
 }
@@ -27605,7 +27624,13 @@ display:table-footer-group;
 .cart.wrapper .left-block .item.cardForm li input[type="radio"] + label:before{
 top:0;
 bottom:0;
+    left: 5px;
 margin:auto;
+    box-shadow: 0 0 0 2px #a9143c;
+} 
+.cart.wrapper .left-block .item.cardForm li input[type="radio"]:checked + label:before{
+background-color: #a9143c;
+border: 2px solid #fff;
 } 
 .cart.wrapper .left-block .item.cardForm li input[type="radio"] + label img{
 max-width:100%;
@@ -36239,12 +36264,11 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 	padding: 2px;
 }
 
-#EMITermTable th {
-	padding: 2px;
-}
-
 #EMITermTable td {
-	padding: 2px;
+	padding: 10px 5px;
+}
+#EMITermTable td:first-child {
+	padding-left: 10px;
 }
 
 #sendOTPNumber {
@@ -36357,18 +36381,20 @@ button#expressCheckoutButtonId.express-checkout-disabled:hover {
 #card .form-group input, #otpNUMField, #otpMobileNUMField, #mobilePrefix
 	{
 	border-radius: 0;
-	border: 1px solid #DFD1D5;
+	border: 1px solid #CDCDCD;
 }
 
 #mobilePrefix {
 	padding: 14px 7px;
 	border-radius:0px;
+	font-size: 14px;
 }
 input#otpMobileNUMField
 {
 	height:30px;
 	border-radius:0px;
 	border:1px solid #DFD1D5;
+	font-size: 14px;
 }
 input#otpMobileNUMField:focus {
 	-webkit-box-shadow:none;
@@ -36393,10 +36419,6 @@ input#otpMobileNUMField:focus {
 	width: 100%;
 }
 
-#cvvHelp {
-	float: right;
-}
-
 .card_exp_year, .card_exp_month {
 	width: 48%
 }
@@ -36408,7 +36430,7 @@ input#otpMobileNUMField:focus {
 	/* padding: 15px !important; */
 	background-image: none !important;
 	/* 	width: 50% !important; */
-	margin: auto;
+	margin: 10px auto 30px;
 	opacity: 0.9;
 	transition: background 0.3s;
 }
@@ -37099,3 +37121,233 @@ display:inline;}
 	color: #60A119;
 }
 /*tata rewards css ends*/
+.cart.wrapper .left-block .payments.tab-view .nav li span:before{
+font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-left: -35px;
+    font-size: 14px;
+    margin-top: -8px;
+    position: absolute;
+   }
+  @media(min-width:1051px){
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentCredit:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentCredit:before{
+	    content: url(../images/credit-cards-white.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentCredit:before{
+	content: url(../images/credit-cards-black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentDebit:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentDebit:before{
+	    content: url(../images/Debit-Card-White.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentDebit:before{
+	content: url(../images/Debit-Card-black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentNetbanking:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentNetbanking:before{
+	    content: url(../images/Net-Banking-White.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentNetbanking:before{
+	content: url(../images/Net-Banking-Black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentEMI:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentEMI:before{
+	    content: url(../images/EMI-White.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentEMI:before{
+	content: url(../images/EMI-Black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentCOD:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentCOD:before{
+	    content: url(../images/COD-White.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentCOD:before{
+	content: url(../images/COD-Black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span {
+    padding-left: 35px;
+}
+
+
+}
+.paymentHeaderHeight{
+	    font-size: 16px !important;
+    color: #333333;
+    font-weight: 500 !important;
+    letter-spacing: 1px;
+    
+}
+#emi-notice{
+font-size: 14px;
+    font-weight: 500;
+    }
+    #emi-plan{
+    font-size:16px;
+    font-weight: 500;
+    margin:15px 0;
+    padding-top:15px;
+    color: #333;
+    border-top: 1px solid #cdcdcd;
+    }
+  @media(max-width:650px){
+  .cart.wrapper .left-block .payments.tab-view .nav li span:before{
+    margin-left: -35px;
+    font-size: 14px;
+    margin-top: 0px;
+    position: absolute;
+   }
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentCredit:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentCredit:before{
+	    content: url(../images/credit-cards-white.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentCredit:before{
+	content: url(../images/credit-cards-black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentDebit:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentDebit:before{
+	    content: url(../images/Debit-Card-White.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentDebit:before{
+	content: url(../images/Debit-Card-black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentNetbanking:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentNetbanking:before{
+	    content: url(../images/Net-Banking-White.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentNetbanking:before{
+	content: url(../images/Net-Banking-Black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentEMI:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentEMI:before{
+	    content: url(../images/EMI-White.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentEMI:before{
+	content: url(../images/EMI-Black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li.active span#viewPaymentCOD:before,
+.cart.wrapper .left-block .payments.tab-view .nav li:hover span#viewPaymentCOD:before{
+	    content: url(../images/COD-White.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span#viewPaymentCOD:before{
+	content: url(../images/COD-Black.png);
+}
+.cart.wrapper .left-block .payments.tab-view .nav li span {
+    padding-left: 50px;
+}
+.paymentHeaderHeight{
+font-size: 14px !important;
+text-align:left;
+ height:42px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .half label, .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full label,
+a#cvvHelp,.payment-redirect,.cart.wrapper .left-block .payments.tab-view .pay p,.cart.wrapper .left-block .payments.tab-view .pay p a,
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv label {
+    font-size: 12px;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item > ul li{
+    width: 100%;
+}
+.checkout.wrapper .product-block.net-bank li.item {
+    margin-top: -15px;
+}
+.cod-container,.cod-container label.cod-mob-label,#mobilePrefix,input#otpMobileNUMField,.cod-container label,#emi-notice {
+    font-size: 12px;
+}
+#bankNameForEMI{
+width:auto;
+}
+#EMITermTable {
+    word-break: break-all;
+}
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv input{
+	background-image: url('../images/CVV.png');
+    background-position: 98% 53%;
+    background-repeat: no-repeat;
+    padding-right: 45px;
+}
+
+
+.cart.wrapper .left-block .payments.tab-view input:focus {
+    border: 1px solid #AB8791 !important;
+}
+.cart.wrapper .left-block .payments.tab-view p.payment-redirect {
+    text-align: center;
+    color: #A9143C;
+    margin-bottom: 30px;
+    margin-top: -10px;
+    font-size:14px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked + label + fieldset, .cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked ~ h2{
+	display:none;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li {
+    padding: 0;
+    border: 1px solid #CECFCE;
+    border-radius: 5px;
+    line-height: 30px;
+    margin: 10px 1.8%;
+}
+@media (max-width:1023px) and (min-width:651px){
+	.cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li {
+    width: 45%;
+}
+}
+@media (max-width:1285px) and (min-width:791px){
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp {
+    width: 50%;
+    padding-right: 5px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.cvv {
+    width: 50%;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv input, .confirmation .left-block .payments.tab-view .tabs .product-block li.item .cvv input {
+    width: 80%;
+}
+a#cvvHelp {
+    margin-left: 0px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select, .confirmation .left-block .payments.tab-view .new-card fieldset .full.exp select {
+    max-width: 124px;
+}
+}
+@media (max-width:790px) and (min-width:651px){
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp {
+    width: 70%;
+    padding-right: 5px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.cvv {
+    width: 55%;
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .cvv input, .confirmation .left-block .payments.tab-view .tabs .product-block li.item .cvv input {
+    width: 80%;
+}
+a#cvvHelp {
+    margin-left: 0px;
+}
+.cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp select, .confirmation .left-block .payments.tab-view .new-card fieldset .full.exp select {
+    max-width: 124px;
+}
+
+}
+.cart.wrapper .left-block .payments.tab-view .new-card #save-card + label{
+margin-top:10px;
+}
+#bankCodeSelection{
+	width: auto;
+    padding-right: 25px;
+}
+@media(max-width:850px){
+#EMITermTable{
+font-size:12px;
+}
+}
+@media(max-width:790px){
+#EMITermTable td{
+padding:10px 2px;
+}
+}
+li#newCard p{
+font-size:14px;}

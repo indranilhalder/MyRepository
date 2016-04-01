@@ -537,7 +537,7 @@
 							
 								<li id="newCard" class="item new-form active">
 									<form class="juspay_inline_form new-card" id="payment_form" autocomplete="off" >
-										<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterCardDetails"/></h2>
+										<%-- Payment new UI<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterCardDetails"/></h2> --%>
 										<p><spring:theme code="text.we.accept"/></p>
 										<ul class="accepted-cards">
 											<li><span class="visa"><img src="${commonResourcePath}/images/Visa.png"></span></li>
@@ -608,12 +608,13 @@
 						                            </div>
 						                            
 													<div class="controls full cvv">
-														<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a>
+														
 														<%-- <input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>"> --%>
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
 						                           		<span class="error-message" id="cvvError"></span> 
+						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a>
 						                            </div>
 												</fieldset>
 		            							<div class="controls" id="billingAddress">

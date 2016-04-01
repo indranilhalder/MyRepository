@@ -424,11 +424,12 @@ $(document).ready(function(){
 			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI");
 			 $(window).on('load resize',function(){	
 			 paymentModes.on("click",function(e) {
-				 if($(window).width()<651){
+				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
+				/*if($(window).width()<651){
 				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
 				 $(this).parents('ul.nav').addClass('hide-menu');
 				 $(this).parents('.left-block').find('h1.payment-options').addClass('hide-menu');
-				 }
+				 }*/
 				 if(paymentModes.parent().hasClass("active")){
 					 paymentModes.parent().removeClass("active");
 				 }
@@ -436,11 +437,11 @@ $(document).ready(function(){
 				 $('ul.accepted-cards li').removeClass('active-card');
 			 });
 			
-			 $('.cart.wrapper .left-block .payments.tab-view .tabs li.change-payment').click(function(){
+			/* $('.cart.wrapper .left-block .payments.tab-view .tabs li.change-payment').click(function(){
 				 $(this).parent().hide(200);
 				 $(this).parent().siblings('ul.nav').removeClass('hide-menu');
 				 $(this).parents('.left-block').find('h1.payment-options').removeClass('hide-menu');
-			 });
+			 });*/
 			 });
 			 if($("#savedCard").css("display") === "block") {
 				 $(".newCardPayment").css("display","none");
@@ -1195,9 +1196,24 @@ $(document).ready(function(){
 		$(".customer-service .left-nav-footer-mobile").append("<option value="+link+" data-href="+link+">"+title+"</option>");
 		}
 	});
+	if($("#sameAsShipping").is(":checked")){
+		$("#sameAsShipping").prev('h2').hide();
+		$("#sameAsShipping").parents('#billingAddress').next().hide();
+	}
+	else{
+		$("#sameAsShipping").prev('h2').show();
+		$("#sameAsShipping").parents('#billingAddress').next().show();
+	}
 	$("#sameAsShipping").click(function(){
 		if($("#sameAsShipping").is(":checked")){
-			$("#billingAddress fieldset .error-message").html("");}
+			$("#billingAddress fieldset .error-message").html("");
+			$(this).prev('h2').hide();
+			$(this).parents('#billingAddress').next().hide();
+		}
+		else{
+			$(this).prev('h2').show();
+			$(this).parents('#billingAddress').next().show();
+		}
 		});
 
 	$(window).on("load resize", function() {
@@ -1354,6 +1370,5 @@ $(document).ready(function(){
 			else{
 				$(".body-Content").css('padding-bottom','0px');
 			}
-		});
-		
+		});		
 });
