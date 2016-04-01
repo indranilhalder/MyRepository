@@ -9,7 +9,7 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.v2.controller;
 
@@ -24,10 +24,6 @@ import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsD
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
 
-
-
-import com.tisl.mpl.v2.helper.StoresHelper;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,6 +34,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.tisl.mpl.v2.helper.StoresHelper;
+
 
 
 /**
@@ -151,7 +150,7 @@ public class StoresController extends BaseController
 		}
 		return storesHelper.locationDetails(storeId, fields);
 	}
-	
+
 	/**
 	 * Returns StoreAtsResponse with ussid and list of Ats.
 	 *
@@ -172,6 +171,6 @@ public class StoresController extends BaseController
 		}
 		return storesHelper.storesAtCart(pincode, ussId, fields);
 	}
-	
-	
+
+
 }

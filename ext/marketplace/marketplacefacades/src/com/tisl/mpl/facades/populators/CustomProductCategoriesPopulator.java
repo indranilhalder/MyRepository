@@ -11,6 +11,7 @@ import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
+
 import java.util.Collection;
 
 import javax.annotation.Resource;
@@ -28,8 +29,8 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
  * @param <SOURCE>
  * @param <TARGET>
  */
-public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGET extends ProductData> extends
-		ProductCategoriesPopulator<SOURCE, TARGET>
+public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGET extends ProductData>
+		extends ProductCategoriesPopulator<SOURCE, TARGET>
 {
 
 	@Resource
@@ -64,8 +65,8 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
-	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
-			EtailNonBusinessExceptions
+	public void populate(final SOURCE productModel, final TARGET productData)
+			throws ConversionException, EtailNonBusinessExceptions
 	{
 
 		//product super category like electronics,clothing are being populated by interceptor.
@@ -75,6 +76,7 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
 		  productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
 		 
+
 	}
 
 

@@ -57,7 +57,6 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	@Autowired
 	private ConfigurationService configurationService;
 
-	private final String CODE = "code";
 	public ModelService getModelService()
 	{
 		return modelService;
@@ -95,7 +94,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))
 					{
 						product.add(itrProduct.getAttribute("pk").toString());
-						promoproductList.add(itrProduct.getAttribute(CODE).toString()); //For staged Product Details
+						promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString()); //For staged Product Details
 					}
 				}
 			}
@@ -110,7 +109,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))////call same method for product
 						{
 							product.add(itrProduct.getAttribute("pk").toString());
-							promoproductList.add(itrProduct.getAttribute(CODE).toString()); //For staged Product Details
+							promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString()); //For staged Product Details
 						}
 					}
 
@@ -255,7 +254,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 					if (getBrandsForProduct(itrProduct, brands) && validateProductData(itrProduct, priority))
 					{
 						product.add(itrProduct.getAttribute("pk").toString());
-						promoproductList.add(itrProduct.getAttribute(CODE).toString());
+						promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString());
 					}
 
 
@@ -271,7 +270,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 						if (getBrandsForProduct(itrProduct, brands) && validateCategoryProductData(itrProduct, priority))//call same method for product
 						{
 							product.add(itrProduct.getAttribute("pk").toString());
-							promoproductList.add(itrProduct.getAttribute(CODE).toString());
+							promoproductList.add(itrProduct.getAttribute(MarketplacecommerceservicesConstants.CODE).toString());
 						}
 
 					}
