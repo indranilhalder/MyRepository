@@ -33,7 +33,7 @@
 					
 					
 					<tr>
-						<td align="left" valign="top">&nbsp;</td>
+						
 						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						
 							
@@ -57,7 +57,7 @@
 							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
 						</tr>
 						<tr>
-  <td align="left" valign="top">&nbsp;</td>
+ 
   <td align="left" valign="top"><table width="451" border="0" cellspacing="0" cellpadding="0" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; font-weight:bold;">
     <tbody><tr>
       <td width="298" align="left" valign="top">If you're wondering what we're talking about, </td>
@@ -72,7 +72,7 @@
 							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
 						</tr>
 						<tr>
-							 <td align="left" valign="top" >&nbsp;</td>
+							 
 							 <td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr style="padding-left:10px;">
 						  <td width="180" height="35" align="left" valign="middle" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;"><strong>Order reference number:</strong></td>
@@ -92,7 +92,7 @@
 							  <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
 							</tr>
 							<tr>
-				  <td align="left" valign="top">&nbsp;</td>
+				 
 				  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="5"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#676767;word-break: break-word;">
 					<tr bgcolor="#f5f5f5">
 					  <td colspan="6" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:15px; color:#aa133d;padding-left:0px;font-weight:bold">Order number:<span style="color:#000">${ctx.orderCode}</span></td>
@@ -134,7 +134,7 @@
 				  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="10" style="opacity:0;" /></td>
 				</tr>
 				<tr>
-<td align="left" valign="top">&nbsp;</td>
+
 <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#AA133D;"><table width="405" border="0" cellspacing="0" cellpadding="0" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; font-weight:bold;">
 <tbody><tr>
 <td width="500" align="left" valign="top">We hope you're happy with your order. If not, </td>
@@ -157,7 +157,7 @@
 				
 				
 				<tr>
-					  <td align="left" valign="top">&nbsp;</td>
+					 
 					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
                 <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
@@ -170,7 +170,7 @@
 					  <td align="left" valign="top">&nbsp;</td>
 					</tr>
 					<tr>
-					  <td align="left" valign="top">&nbsp;</td>
+					  
 					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 
@@ -208,7 +208,7 @@
 					
 					
 					<tr>
-					  <td align="left" valign="top">&nbsp;</td>
+					  
 					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
