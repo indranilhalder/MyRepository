@@ -192,6 +192,7 @@
 							    <li class="item footwear">
 							
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
+									<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 									<ul>
 
 									<c:if test="${age=='Y' }">
@@ -271,19 +272,20 @@
 			<product:footwearNote/></div>
 			</c:if>		
 		</div>
-			
-		<div class="img">
-		    <c:choose>
-		    <c:when test="${product.rootCategory=='Clothing'}">
-			<img src="${imageURL}" alt="sizeGuideImage" />
-			</c:when>
-			<c:when test="${product.rootCategory=='Footwear'}">
-			<img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" />
-			</c:when>
-			</c:choose>
-		</div>
-		
-		<div class="details">
+
+			<div class="img">
+				<c:choose>
+					<c:when test="${product.rootCategory=='Clothing'}">
+						<img src="${imageURL}" alt="sizeGuideImage" />
+					</c:when>
+					<c:when test="${product.rootCategory=='Footwear'}">
+						<%-- <img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" /> --%>
+						<img src="${imageURL}" alt="sizeGuideImage" />
+					</c:when>
+				</c:choose>
+			</div>
+
+			<div class="details">
 	 	<span id="noProductForSelectedSeller"> <font color="#ff1c47">
 			<spring:theme code="product.product.size.guide.notavail"/></font>
 			<!-- <h3> Selected Size is not available for this Seller </h3> -->
