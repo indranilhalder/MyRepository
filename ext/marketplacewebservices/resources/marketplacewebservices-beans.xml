@@ -2189,7 +2189,11 @@
 		<property name="error" type="String"/>
 		<property name="errorCode" type="String"/>
 		<property name="status" type="String"/>	
-
+		
+		<!-- Added for image handling -->
+        <property name="regularImgUrl" type="String"/>
+        <property name="onHoverImgUrl" type="String"/>
+        <property name="onClickImgUrl" type="String"/>
 	</bean>
 
 	<bean
