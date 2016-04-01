@@ -22,6 +22,8 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 } 
 body.page-notFound, body.page-nonBusinessErrorFound{
 	height:auto;
+}
+body.page-notFound{
 	    background: url('../images/404-page-bg.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
