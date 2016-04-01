@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.facades.process.email.context;
 
@@ -24,7 +24,6 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 	private static final String ORDERCODE = "orderCode";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String CUSTOMER = "Customer";
-	private static final String REFUND_AMOUNT = "amountrefunded";
 
 	@Override
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
@@ -32,17 +31,17 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 		super.init(orderProcessModel, emailPageModel);
 		put(ORDERCODE, orderProcessModel.getOrder().getCode());
 		final OrderModel orderModel = orderProcessModel.getOrder();
-		final AddressModel address=orderModel.getDeliveryAddress();
-		if(address !=null)
+		final AddressModel address = orderModel.getDeliveryAddress();
+		if (address != null)
 		{
-			if(address.getFirstname()!=null)
+			if (address.getFirstname() != null)
 			{
-			put(CUSTOMER_NAME,address.getFirstname());
+				put(CUSTOMER_NAME, address.getFirstname());
 			}
 		}
 		else
 		{
-			put(CUSTOMER_NAME,CUSTOMER);
+			put(CUSTOMER_NAME, CUSTOMER);
 		}
 		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
@@ -51,21 +50,21 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 
 
 	@Override
-	protected BaseSiteModel getSite(OrderProcessModel businessProcessModel)
+	protected BaseSiteModel getSite(final OrderProcessModel businessProcessModel)
 	{
 		return businessProcessModel.getOrder().getSite();
 	}
 
 
 	@Override
-	protected CustomerModel getCustomer(OrderProcessModel businessProcessModel)
+	protected CustomerModel getCustomer(final OrderProcessModel businessProcessModel)
 	{
 		return (CustomerModel) businessProcessModel.getOrder().getUser();
 	}
 
 
 	@Override
-	protected LanguageModel getEmailLanguage(OrderProcessModel businessProcessModel)
+	protected LanguageModel getEmailLanguage(final OrderProcessModel businessProcessModel)
 	{
 		return businessProcessModel.getOrder().getLanguage();
 	}
