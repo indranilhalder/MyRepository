@@ -53,6 +53,7 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 		//target.setPostalZone(source.getPostalcode());
 		target.setCityName(source.getTown());
 		target.setPinCode(source.getPostalcode());
+      target.setLandmark(source.getLandmark());
 
 		if (StringUtil.isNotEmpty(source.getDistrict()))
 		{
