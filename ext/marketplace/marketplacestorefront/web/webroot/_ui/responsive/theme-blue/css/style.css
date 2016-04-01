@@ -22,6 +22,11 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 } 
 body.page-notFound, body.page-nonBusinessErrorFound{
 	height:auto;
+	    background: url('../images/404-page-bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -36863,11 +36868,11 @@ header .content .right>ul>li.transient-mini-bag .mini-transient-bag>ul>li:not(.i
 .transient-offer {
 	background-color: #ffb810;
 	padding: 2px 4px;
-	text-transform: uppercase;
 	line-height: normal;
 	display: inline-block;
 	color: #000 !important;
 	font-weight: 500;
+	word-break: break-all;
 }
 
 span.mini-cart-close {
