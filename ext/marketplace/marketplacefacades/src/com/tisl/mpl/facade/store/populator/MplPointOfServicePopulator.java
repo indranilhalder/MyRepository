@@ -7,7 +7,9 @@ import de.hybris.platform.commercefacades.storelocator.converters.populator.Poin
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 
 
 /**
@@ -232,24 +234,30 @@ public class MplPointOfServicePopulator extends PointOfServicePopulator
 		}
 
 		//Added to handle image url.
-		if (StringUtils.isNotBlank(source.getMplStoreImage()))
+
+		final List<String> imageUrls = source.getMplImageUrls();
+
+		if (CollectionUtils.isNotEmpty(imageUrls))
 		{
-			final String[] imgArr = source.getMplStoreImage().split("#");
-			for (final String imgUrl : imgArr)
+			for (final String imgUrl : imageUrls)
 			{
-				if (imgUrl.contains("_Regular"))
+				if (imgUrl.toLowerCase().startsWith("http"))
 				{
-					target.setRegularImgUrl(imgUrl);
-				}
-				else if (imgUrl.contains("_onHover"))
-				{
-					target.setOnHoverImgUrl(imgUrl);
-				}
-				else if (imgUrl.contains("_onClick"))
-				{
-					target.setOnClickImgUrl(imgUrl);
+					if (imgUrl.contains("_Regular"))
+					{
+						target.setRegularImgUrl(imgUrl);
+					}
+					else if (imgUrl.contains("_onHover"))
+					{
+						target.setOnHoverImgUrl(imgUrl);
+					}
+					else if (imgUrl.contains("_onClick"))
+					{
+						target.setOnClickImgUrl(imgUrl);
+					}
 				}
 			}
+
 		}
 	}
 
