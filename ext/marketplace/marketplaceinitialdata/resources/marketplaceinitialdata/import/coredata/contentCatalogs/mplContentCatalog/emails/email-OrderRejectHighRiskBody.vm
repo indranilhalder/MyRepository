@@ -33,7 +33,7 @@
 					
 					
 					<tr>
-						<td align="left" valign="top">&nbsp;</td>
+						
 						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						
 							
@@ -58,7 +58,7 @@
 						</tr>
 						
 						<tr>
-						<td align="left" valign="top">&nbsp;</td>
+						
 						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						
 						  <tr>
@@ -75,7 +75,7 @@
 						</tr>
 						
 						<tr>
-  <td align="left" valign="top">&nbsp;</td>
+  
   <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; font-weight:bold;">For any clarifications, please feel free to	<a href="${ctx.customerFirstPage}" style="color:#AA133D"><strong>contact us.</strong></a></td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
@@ -100,7 +100,7 @@
 				
 				
 				<tr>
-					  <td align="left" valign="top">&nbsp;</td>
+					  
 					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
                 <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
@@ -113,7 +113,7 @@
 					  <td align="left" valign="top">&nbsp;</td>
 					</tr>
 					<tr>
-					  <td align="left" valign="top">&nbsp;</td>
+					
 					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 
@@ -134,7 +134,7 @@
 					
 					
 					<tr>
-					  <td align="left" valign="top">&nbsp;</td>
+					 
 					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
