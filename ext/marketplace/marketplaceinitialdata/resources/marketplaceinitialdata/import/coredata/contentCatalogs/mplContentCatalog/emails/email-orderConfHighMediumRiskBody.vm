@@ -27,7 +27,7 @@
 
 
 <tr>
-  <td height="26" align="left" valign="top">&nbsp;</td>
+
   <td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
   <tr>
   <td  align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
@@ -45,7 +45,7 @@
 </tr>
 
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
+  
   <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Our folks here noticed that your order <strong>${ctx.orderReferenceNumber}</strong>,
 placed on <strong>${ctx.orderDate}</strong> has just a few details we're not completely sure about.</td>
   <td align="left" valign="top">&nbsp;</td>
@@ -62,7 +62,7 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
 <td height="12" colspan="3" align="left" valign="top" style="padding:0; margin:0">&nbsp;</td>
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
+ 
   <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; font-weight:bold">For any clarifications, please feel free to	<a href="${ctx.contactUsLink}" style="color:#AA133D"><strong>contact us.</strong></a></td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
@@ -76,15 +76,18 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
 
 
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
+ 
   <td align="left" valign="top"><table width="570" border="0" cellspacing="0" cellpadding="0">
     <tbody><tr>
       <td width="32" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;">${ctx.cmsSlotContents.Tip}</td>
       <td align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"> </td>
     </tr>
     <tr>
-      <td colspan="2" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><img src="images/spacer.jpg" class="spacer-img" width="1" height="15"></td>
-    </tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
   </tbody></table></td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
@@ -93,7 +96,7 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
 
 
 <tr>
-<td align="left" valign="top">&nbsp;</td>
+
 <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table border="0" cellspacing="0" cellpadding="0">
 <tbody><tr>
 
@@ -109,8 +112,11 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
 
  
   <tr>
-    <td colspan="2" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="1"></td>
-  </tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
 </tbody></table></td>
 
 </tr>
@@ -121,7 +127,7 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
 <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
-					  <td align="left" valign="top">&nbsp;</td>
+					  
 					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
@@ -161,10 +167,11 @@ placed on <strong>${ctx.orderDate}</strong> has just a few details we're not com
   <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="15" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
 <tr>
 					 
 					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px;"><table width="550" border="0" cellspacing="0" cellpadding="0">
