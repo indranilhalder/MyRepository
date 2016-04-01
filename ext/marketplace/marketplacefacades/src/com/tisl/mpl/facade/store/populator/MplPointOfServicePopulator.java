@@ -1,11 +1,14 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.facade.store.populator;
 
 import de.hybris.platform.commercefacades.storelocator.converters.populator.PointOfServicePopulator;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
+
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * @author TECH
@@ -16,12 +19,13 @@ public class MplPointOfServicePopulator extends PointOfServicePopulator
 
 	/**
 	 * Populates mpl new fiels fro PointOfService.
+	 *
 	 * @param pointOfServiceModel
 	 * @param pointOfServiceData
-	 * 
+	 *
 	 */
 	@Override
-	public void populate(PointOfServiceModel source, PointOfServiceData target)
+	public void populate(final PointOfServiceModel source, final PointOfServiceData target)
 	{
 		// populate existing fields
 		super.populate(source, target);
@@ -225,6 +229,27 @@ public class MplPointOfServicePopulator extends PointOfServicePopulator
 		if (null != source.getPhoneNo9())
 		{
 			target.setPhoneNo9(source.getPhoneNo9());
+		}
+
+		//Added to handle image url.
+		if (StringUtils.isNotBlank(source.getMplStoreImage()))
+		{
+			final String[] imgArr = source.getMplStoreImage().split("#");
+			for (final String imgUrl : imgArr)
+			{
+				if (imgUrl.contains("_Regular"))
+				{
+					target.setRegularImgUrl(imgUrl);
+				}
+				else if (imgUrl.contains("_onHover"))
+				{
+					target.setOnHoverImgUrl(imgUrl);
+				}
+				else if (imgUrl.contains("_onClick"))
+				{
+					target.setOnClickImgUrl(imgUrl);
+				}
+			}
 		}
 	}
 
