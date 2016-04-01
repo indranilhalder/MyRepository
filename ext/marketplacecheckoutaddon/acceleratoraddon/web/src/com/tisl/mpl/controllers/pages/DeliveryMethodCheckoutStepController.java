@@ -774,8 +774,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 												{
 													LOG.info("Freebie Parent Product USSID" + abstractCartEntry.getSelectedUSSID());
 													LOG.info("Freebie Product USSID" + ussid);
-													final Long quant = freebieParentQtyMap.get(ussId);
-													freebieProductsWithQuant.put(ussid, quant);
+													freebieProductsWithQuant.put(ussid, cartEntryModel.getQuantity());
 												}
 											}
 										}
@@ -875,7 +874,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					AddressData addData = new AddressData();
 					if (null != pointOfServiceModel)
 					{
-						posData.setDisplayName(pointOfServiceModel.getName());
+						posData.setDisplayName(pointOfServiceModel.getDisplayName());
+						posData.setName(pointOfServiceModel.getName());
 						if (pointOfServiceModel.getLatitude() != null)
 						{
 							geo.setLatitude(pointOfServiceModel.getLatitude());

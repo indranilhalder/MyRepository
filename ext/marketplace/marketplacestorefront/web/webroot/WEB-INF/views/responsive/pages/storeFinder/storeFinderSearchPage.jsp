@@ -21,6 +21,7 @@
 			"line2" : "${pos.address.line2}",
 			"town" : "${pos.address.town}",
 			"iconUrl" : "${pos.mapIcon.url}",
+			"mplStoreImage" : "${pos.mplStoreImage}",
 			"postalCode" : "${pos.address.postalCode}",
 			"latitude" : "${pos.geoPoint.latitude}",
 			"longitude" : "${pos.geoPoint.longitude}",

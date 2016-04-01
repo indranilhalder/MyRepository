@@ -67,9 +67,13 @@ ACC.storefinder = {
 			}
 		})*/
 		$("#storelocator-query").keyup(function(){
+			if(!$("#storelocator-query").val()){
+				$("#storesnear").hide();
+			}else {
+			$("#storesnear").show();
 			$('#storeSearchTextValue').text($("#storelocator-query").val());
+			}
 		});
-		
 		$('#storeSearchTextValue').text($("#storelocator-query").val());
 
 	},
@@ -220,6 +224,7 @@ ACC.storefinder = {
 
 		//$(".js-store-finder").hide();
 		$(document).on("click",'#findStoresNearMe', function(e){
+			$("#storesnear").show();
 			$('#storeSearchTextValue').text('Your Location');
 			$('#storelocator-query').val('Current Location')
 			ACC.storefinder.getInitStoreData(null,ACC.storefinder.coords.latitude,ACC.storefinder.coords.longitude);
@@ -278,6 +283,7 @@ ACC.storefinder = {
 
 	init:function(){
 		//$("#findStoresNearMe").attr("disabled","disabled");
+		$("#storesnear").hide();
 		var initialZoom=Number($("#initialZoom"));
 		$('#findStoresNearMe').attr("disabled");
 		if(navigator.geolocation){

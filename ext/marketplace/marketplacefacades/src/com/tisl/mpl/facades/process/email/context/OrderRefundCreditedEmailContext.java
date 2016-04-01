@@ -7,8 +7,8 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.core.model.c2l.LanguageModel;
-
-
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 
@@ -22,13 +22,28 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 {
 
 	private static final String ORDERCODE = "orderCode";
+	private static final String CUSTOMER_NAME = "customerName";
+	private static final String CUSTOMER = "Customer";
+	private static final String REFUND_AMOUNT = "amountrefunded";
 
 	@Override
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(orderProcessModel, emailPageModel);
 		put(ORDERCODE, orderProcessModel.getOrder().getCode());
-
+		final OrderModel orderModel = orderProcessModel.getOrder();
+		final AddressModel address=orderModel.getDeliveryAddress();
+		if(address !=null)
+		{
+			if(address.getFirstname()!=null)
+			{
+			put(CUSTOMER_NAME,address.getFirstname());
+			}
+		}
+		else
+		{
+			put(CUSTOMER_NAME,CUSTOMER);
+		}
 		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
 	}

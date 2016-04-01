@@ -38,7 +38,7 @@
 	<li class="section cncOrderInfo">
 		<div class="title"><spring:theme code="checkout.multi.items.to.pickup" text="Store Address:"/></div>
 		<div class="address">
-			${groupData.deliveryPointOfService.name}
+			${groupData.deliveryPointOfService.displayName}
 			<br>
 			<c:if test="${ not empty groupData.deliveryPointOfService.address.line1 }">
 						${fn:escapeXml(groupData.deliveryPointOfService.address.line1)},&nbsp;

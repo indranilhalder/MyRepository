@@ -3,13 +3,16 @@
  */
 package com.tisl.mpl.integration.oms.adapter;
 
-
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.event.EventService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.bind.JAXBException;
 
@@ -43,7 +46,7 @@ public class CustomOmsCollectedAdapter
 	
 	private static final String UPDATE_CONSIGNMENT = "updateConsignment:: Inside ";
 	
-	public void sendNotificationForOrderCollected(final OrderModel orderModel, final ConsignmentModel consignmentModel)
+	public void sendNotificationForOrderCollected(final OrderModel orderModel, final ConsignmentModel consignmentModel,AbstractOrderEntryModel orderEntryModel)
 	{
 		
 		LOG.debug(UPDATE_CONSIGNMENT + MarketplaceomsordersConstants.ORDER_STATUS_COLLECTED);
@@ -69,35 +72,38 @@ public class CustomOmsCollectedAdapter
 			
 			
 			if(null !=orderModel && null != orderModel.getPickupPersonName()) {
-				pickUpPersonName=(null !=orderModel.getPickupPersonName() &&  StringUtils.isNotEmpty(orderModel.getPickupPersonName())) ? orderModel.getPickupPersonName()  : " Customer " ;
+				pickUpPersonName=(null !=orderModel.getPickupPersonName() &&  StringUtils.isNotEmpty(orderModel.getPickupPersonName())) ? orderModel.getPickupPersonName()  : MarketplaceomsordersConstants.CUSTOMER_NAME ;
 		   }else{
-		   	pickUpPersonName= " Customer ";	 
+		   	pickUpPersonName= MarketplaceomsordersConstants.CUSTOMER_NAME;	 
 		   }
 			
 		   if(null !=orderModel && null != orderModel.getUser()) {
-		   	customerName=(null !=orderModel.getUser().getName() &&  StringUtils.isNotEmpty(orderModel.getUser().getName())) ? orderModel.getUser().getName()  : " Customer " ;
+		   	customerName=(null !=orderModel.getUser().getName() &&  StringUtils.isNotEmpty(orderModel.getUser().getName())) ? orderModel.getUser().getName()  : MarketplaceomsordersConstants.CUSTOMER_NAME ;
 		   }else{
-		   	customerName= MarketplaceomsordersConstants.EMPTY;	 
+		   	customerName= MarketplaceomsordersConstants.CUSTOMER_NAME;	 
 		   }
 		   if(null != orderModel){
-		   	orderNumber= (null != orderModel.getCode() &&  StringUtils.isNotEmpty(orderModel.getCode())) ?  orderModel.getCode() :  MarketplaceomsordersConstants.EMPTY ;
+		   	orderNumber= (null != orderModel.getCode() &&  StringUtils.isNotEmpty(orderModel.getCode())) ?  orderModel.getCode() :  MarketplaceomsordersConstants.ORDER_ID ;
 		   }else{
-		   	orderNumber= MarketplaceomsordersConstants.EMPTY;	 
+		   	orderNumber= MarketplaceomsordersConstants.ORDER_ID;	 
 		   }
-		  
-		   if(null != consignmentModel.getDeliveryPointOfService()){
-		   		  if(consignmentModel.getDeliveryPointOfService()!=null && consignmentModel.getDeliveryPointOfService().getDisplayName()!=null && StringUtils.isNotEmpty(consignmentModel.getDeliveryPointOfService().getDisplayName())) {
-		   			  storeName=consignmentModel.getDeliveryPointOfService().getDisplayName();
+		   
+		   if(null != orderEntryModel.getDeliveryPointOfService()){
+		   		  if(orderEntryModel.getDeliveryPointOfService()!=null && orderEntryModel.getDeliveryPointOfService().getDisplayName()!=null && StringUtils.isNotEmpty(orderEntryModel.getDeliveryPointOfService().getDisplayName())) {
+		   			  storeName=orderEntryModel.getDeliveryPointOfService().getDisplayName();
 		   		  }else{
-		   			  storeName= MarketplaceomsordersConstants.EMPTY;
+		   			  storeName= MarketplaceomsordersConstants.STORE_NAME;
 		   		  }
 		   }else{
-		   	 storeName= MarketplaceomsordersConstants.EMPTY;	 
+		   	 storeName= MarketplaceomsordersConstants.STORE_NAME;	 
 		   }
+		   DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+		   Date currentDate=new Date();
 		   if(null !=consignmentModel.getDeliveryDate()){
-		   	deliverdDate=(null!= consignmentModel.getDeliveryDate().toString() && StringUtils.isNotEmpty(consignmentModel.getDeliveryDate().toString())) ? consignmentModel.getDeliveryDate().toString() : MarketplaceomsordersConstants.EMPTY ; 
+		   	String formatDate= dateFormatter.format(consignmentModel.getDeliveryDate());
+		   	deliverdDate=(null!= formatDate && StringUtils.isNotEmpty(formatDate)) ? formatDate : dateFormatter.format(currentDate); 
 		   }else{
-		   	deliverdDate= MarketplaceomsordersConstants.EMPTY;	 
+		   	deliverdDate=dateFormatter.format(currentDate);
 		   }
     			String contentForSMS= MarketplaceomsordersConstants.ORDER_COLLECTED_SMS.replace(MarketplaceomsordersConstants.SMS_VARIABLE_ZERO_ORD_COLLECTED, pickUpPersonName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_ONE_ORD_COLLECTED, orderNumber).replace(MarketplaceomsordersConstants.SMS_VARIABLE_TWO_ORD_COLLECTED, storeName).replace(MarketplaceomsordersConstants.SMS_VARIABLE_THREE_ORD_COLLECTED, deliverdDate);
     			if(orderModel != null && orderModel.getPickupPersonMobile()!= null ){
