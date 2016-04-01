@@ -148,8 +148,7 @@ public class MplCancelOrderTicketImpl implements MplCancelOrderTicket
 								// Making RTM entry to be picked up by webhook job
 								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
 										RefundTransactionMappingModel.class);
-								refundTransactionMappingModel.setRefundedOrderEntry(orderModel.getChildOrders().get(0).getEntries()
-										.get(0));
+								refundTransactionMappingModel.setRefundedOrderEntry(subOrderEntryModel);
 								refundTransactionMappingModel.setJuspayRefundId(refundID);
 								refundTransactionMappingModel.setCreationtime(new Date());
 								//refundTransactionMappingModel.setRefundTime(new Date());
