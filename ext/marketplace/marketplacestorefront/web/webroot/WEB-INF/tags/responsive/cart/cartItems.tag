@@ -108,7 +108,7 @@ function addToWishlistForCart(ussid,productCode)
 		return false;
 	}
     if(wishName==undefined||wishName==null){
-    	$("#wishlistErrorId").html("Please select an wishlist");
+    	$("#wishlistErrorId").html("Please select a wishlist");
     	$("#wishlistErrorId").css("display","block");
     	return false;
     }
@@ -382,7 +382,7 @@ function addToWishlistFromCart() {
 		                <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
 		                <h3 class="product-name">
 		                <ycommerce:testId code="cart_product_name">
-											<a href="${productUrl}">${entry.product.name}</a>
+											<a href="${productUrl}">${entry.product.productTitle}</a>
 											<input type="hidden" name="productArrayForIA" value="${entry.product.code}"/>
 						</ycommerce:testId>
 			                </h3>
@@ -578,7 +578,18 @@ function addToWishlistFromCart() {
 											--%>
 										</c:when>
 										<c:when test="${entry.basePrice.formattedValue == entry.totalPrice.formattedValue}">
-												<span><format:price priceData="${entry.totalPrice}"/></span>
+													<%-- TISPRO-215--%>
+												<c:choose>
+    											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc}">
+        												<del>
+															<format:price priceData="${entry.totalPrice}" displayFreeForZero="false" />
+		 												</del>
+    											</c:when>    
+    											<c:otherwise>
+       													<span><format:price priceData="${entry.totalPrice}"/></span>
+   												 </c:otherwise>
+												</c:choose>
+												<%-- TISPRO-215 ends --%>
 											</c:when>
 											<c:otherwise>
 												<c:choose>
@@ -621,11 +632,11 @@ function addToWishlistFromCart() {
 								<c:when test="${not empty entry.cartLevelDisc}">
 								<c:choose>
 								<c:when test="${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage}">
-								<span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/>&nbsp;<del><format:price priceData="${entry.netSellingPrice}"/></del></span>
+								<span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span>
 								</c:when>
 								<c:otherwise>
 								<c:if test="${not empty entry.productLevelDisc}">
-								<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/>&nbsp;<del><format:price priceData="${entry.netSellingPrice}"/></del></span>
+								<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span>
 								</c:if>
 								</c:otherwise>
 								</c:choose>
@@ -633,11 +644,11 @@ function addToWishlistFromCart() {
 								<c:otherwise>
 								<c:choose>
 								<c:when test="${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage}">
-								<span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/>&nbsp;<format:price priceData="${entry.netSellingPrice}"/></span>
+								<span class="off-bag">${entry.prodLevelPercentage}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.netSellingPrice}"/></span>
 								</c:when>
 								<c:otherwise>
 								<c:if test="${not empty entry.productLevelDisc}">
-								<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/>&nbsp;<format:price priceData="${entry.netSellingPrice}"/></span>
+								<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><format:price priceData="${entry.netSellingPrice}"/></span>
 								</c:if>
 								</c:otherwise>
 								</c:choose>
@@ -647,12 +658,12 @@ function addToWishlistFromCart() {
 							<c:choose>
 								<c:when test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
 								<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
-								<span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/>&nbsp;<format:price priceData="${entry.amountAfterAllDisc}"/></span>
+								<span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
 								</c:if>
 								</c:when>
 								<c:otherwise>
 								<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
-								<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/>&nbsp;<format:price priceData="${entry.amountAfterAllDisc}"/></span>
+								<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
 								</c:if>
 								</c:otherwise>
 							</c:choose></c:if>

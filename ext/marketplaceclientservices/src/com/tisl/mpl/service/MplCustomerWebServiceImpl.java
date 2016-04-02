@@ -62,10 +62,11 @@ public class MplCustomerWebServiceImpl implements MplCustomerWebService
 
 	/**
 	 * @param customerWsData
+	 * @throws Exception
 	 * @description method is called to create CRM Customer
 	 */
 	@Override
-	public void customerDataToCRM(final MplCustomerWsData customerWsData)
+	public void customerDataToCRM(final MplCustomerWsData customerWsData) throws Exception
 	{
 
 		final Client client = Client.create();
@@ -77,48 +78,50 @@ public class MplCustomerWebServiceImpl implements MplCustomerWebService
 		LOG.debug("Realtime call CRM : inside customerDataToCRM");
 		if (null != client && null != configurationService)
 		{
-			final String password = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
-			final String userId = configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
+			final String password = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
+			final String userId = configurationService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
 			client.addFilter(new HTTPBasicAuthFilter(userId, password));
-			webResource = client.resource(UriBuilder.fromUri(configurationService.getConfiguration()
-					.getString(MarketplacecclientservicesConstants.CRM_CUSTOMER_CREATEUPDATE_URL)).build());
+			webResource = client.resource(UriBuilder.fromUri(
+					configurationService.getConfiguration().getString(
+							MarketplacecclientservicesConstants.CRM_CUSTOMER_CREATEUPDATE_URL)).build());
 		}
 
-		try
+
+		final JAXBContext context = JAXBContext.newInstance(MplCustomerWsData.class);
+
+		if (null != context)
 		{
-			final JAXBContext context = JAXBContext.newInstance(MplCustomerWsData.class);
+			marshaller = context.createMarshaller();
 
-			if (null != context)
-			{
-				marshaller = context.createMarshaller();
-
-			}
-			if (null != marshaller)
-			{
-				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			}
-
-			if (null != marshaller)
-			{
-				marshaller.marshal(customerWsData, stringWriter);
-			}
-			xmlString = stringWriter.toString();
-			LOG.debug(xmlString);
-			if (null != webResource)
-			{
-				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").entity(xmlString)
-						.post(ClientResponse.class);
-			}
-			LOG.debug(response);
 		}
-
-		catch (final Exception ex)
+		if (null != marshaller)
 		{
-			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
-
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 		}
+
+		if (null != marshaller)
+		{
+			marshaller.marshal(customerWsData, stringWriter);
+		}
+		xmlString = stringWriter.toString();
+		LOG.debug(xmlString);
+		if (null != webResource)
+		{
+			response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").entity(xmlString)
+					.post(ClientResponse.class);
+		}
+		if (response.getStatus() != 200)
+		{
+			throw new Exception(Integer.valueOf(response.getStatus()).toString() + MarketplacecclientservicesConstants.E0020);
+		}
+		else
+		{
+			final String output = response.getEntity(String.class);
+			LOG.debug("Response output Customer Update : " + output);
+		}
+
 	}
 
 	/**

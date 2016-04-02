@@ -16,7 +16,7 @@
              <cms:pageSlot position="Section2C"
 					var="feature">
 					<c:if test="${not empty feature.media.url}">
-					<img class="background" src="${feature.media.url}" />
+					<%-- <img class="background" src="${feature.media.url}" /> --%>
 					</c:if>
 				</cms:pageSlot>
                

@@ -107,9 +107,9 @@
     <td valign="top" style="border-bottom:1px solid #b7b7b7;  border-left:1px solid #b7b7b7; padding:14px 4px;">$entry.orderLineId</td>
     <td valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$entry.product.name</td>
     <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$entry.quantity</td>
-    <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$entry.netAmountAfterAllDisc</td>
-    <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$entry.currDelCharge</td>
-    <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; border-right:1px solid #b7b7b7; padding:14px 4px;">$entry.convenienceChargeApportion</td>
+    <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
+    <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$ctx.numberTool.format("#0.00", $entry.currDelCharge)</td>
+    <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; border-right:1px solid #b7b7b7; padding:14px 4px;">$ctx.numberTool.format("#0.00", $entry.convenienceChargeApportion)</td>
   </tr>
   #set ($srNo=$srNo+1)
   #set($shippingCharge=$shippingCharge+$entry.currDelCharge)
@@ -137,14 +137,14 @@
         <tr>
           <td width="9" align="left" valign="middle">&nbsp;</td>
           <td width="54" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#000000;"><strong>Total:</strong></td>
-          <td width="221" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">${ctx.totalPrice}</td>
+          <td width="221" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">$ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
           </tr>
         </table></td>
       <td width="279" align="left" valign="middle" bgcolor="#b9b9b9" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#000000;"><table width="211" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td width="13" height="23" align="left" valign="middle">&nbsp;</td>
           <td width="76" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#000000;" ><strong>Shipping:</strong></td>
-          <td width="122" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">INR&nbsp; $shippingCharge</td>
+          <td width="122" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">INR&nbsp; $ctx.numberTool.format("#0.00",$shippingCharge)</td>
           </tr>
         </table></td>
       </tr>
