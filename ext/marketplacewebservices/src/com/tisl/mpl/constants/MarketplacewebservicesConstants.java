@@ -503,4 +503,5 @@ public class MarketplacewebservicesConstants
 	public static final String SLV_TYPE_WAREHOUSE = "SLV_TYPE_WAREHOUSE";
 	public static final String INACTIVE = "N";
 	public static final String ACTIVE = "Y";
+	public static final String SOMEWRONG = "Something went wrong".intern();
 }

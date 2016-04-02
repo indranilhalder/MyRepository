@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -27,7 +28,6 @@ import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -45,10 +45,10 @@ public class MplBuyBoxUtility
 	private static final String FOOTWEAR = "footwear";
 	private static final String COLORFAMILYFOOTWEAR = "brandcolorfootwear";
 	private static final String COLORELECTRONICS = "colorelectronics";
-	
+
 	//---------------Solve for Issue TISPRD-58---------------------//
 
-	
+
 	private BuyBoxService buyBoxService;
 
 	@Autowired
@@ -127,7 +127,7 @@ public class MplBuyBoxUtility
 		return buyBoxWinnerModel;
 	}
 
-    public List<PcmProductVariantModel> compareVariants(final ProductModel baseProduct,
+	public List<PcmProductVariantModel> compareVariants(final ProductModel baseProduct,
 			final PcmProductVariantModel selectedVariantModel)
 	{
 		boolean isSizeVariantPresent = false;
@@ -163,8 +163,10 @@ public class MplBuyBoxUtility
 			variantComparator.setVariantType("size");
 			Collections.sort(pcmProductVariantModelList, variantComparator);
 		}
-		/*Forcing the capacity check condition for only "Electronics" products
-		  Fix for TISSTRT - 984::Prices of apparel products are not displayed in SERP page with size variants */
+		/*
+		 * Forcing the capacity check condition for only "Electronics" products Fix for TISSTRT - 984::Prices of apparel
+		 * products are not displayed in SERP page with size variants
+		 */
 		if (isCapacityVariantPresent && selectedVariantModel.getProductCategoryType().equalsIgnoreCase("Electronics"))
 		{
 			variantComparator.setVariantType("capacity");
@@ -339,9 +341,9 @@ public class MplBuyBoxUtility
 	{
 		this.variantComparator = variantComparator;
 	}
-	
-	
-	
+
+
+
 	public String getVariantColour(final PcmProductVariantModel variantProductModel, final List<ProductFeatureModel> features)
 	{
 		String variantColor = "";
@@ -395,5 +397,3 @@ public class MplBuyBoxUtility
 		return variantColor;
 	}
 }
-
-
