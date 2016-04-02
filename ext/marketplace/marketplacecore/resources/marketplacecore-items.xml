@@ -1368,6 +1368,24 @@
 							unique="false" />
 						<persistence type="property" />
 					</attribute>
+	<!-- Added for Deep Linking in Mobile apps -->
+					<attribute qualifier="deeplinkType" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the type of the banner's deeplink reference</description>
+					</attribute>
+					<attribute qualifier="deeplinkTypeId" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the typeID of the banner's deeplink reference</description>
+					</attribute>
+					<attribute qualifier="deeplinkTypeVal" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the value reference of the banner's deeplink reference</description>
+					</attribute>
+					<!-- Added for Deep Linking in Mobile apps - End -->
+				
 					<!-- End -->
 				</attributes>
 			</itemtype>
@@ -3755,6 +3773,28 @@
 						<persistence type="property" />
 						<description>This is a description of the banner that might be shown below the banner</description>
 					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="SimpleCMSComponent" generate="false"
+				autocreate="false">
+				<attributes>
+					<attribute qualifier="deeplinkType" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the type of the banner's deeplink reference</description>
+					</attribute>
+					<attribute qualifier="deeplinkTypeId" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the typeID of the banner's deeplink reference</description>
+					</attribute>
+					<attribute qualifier="deeplinkTypeVal" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the value reference of the banner's deeplink reference</description>
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 

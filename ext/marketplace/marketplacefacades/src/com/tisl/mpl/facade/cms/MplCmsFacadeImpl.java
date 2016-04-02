@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.facade.cms;
 
+import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
 import de.hybris.platform.category.impl.DefaultCategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -10,10 +11,15 @@ import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentMod
 import de.hybris.platform.cms2.model.contents.components.CMSParagraphComponentModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercesearch.model.SolrHeroProductDefinitionModel;
 import de.hybris.platform.commercesearch.searchandizing.heroproduct.HeroProductDefinitionService;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -21,12 +27,14 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -34,6 +42,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.core.enums.CMSChannel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
+import com.tisl.mpl.facades.cms.data.BannerComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionHeroComponentData;
 import com.tisl.mpl.facades.cms.data.CollectionPageData;
@@ -43,11 +52,14 @@ import com.tisl.mpl.facades.cms.data.ComponentData;
 import com.tisl.mpl.facades.cms.data.HeroComponentData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
 import com.tisl.mpl.facades.cms.data.HomePageComponentData;
-import com.tisl.mpl.facades.cms.data.HomePageData;
 import com.tisl.mpl.facades.cms.data.LinkedCollectionsData;
+import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
+import com.tisl.mpl.facades.cms.data.ProductListComponentData;
 import com.tisl.mpl.facades.cms.data.PromotionComponentData;
 import com.tisl.mpl.facades.cms.data.SectionData;
+import com.tisl.mpl.facades.cms.data.TextComponentData;
+import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCMSPageServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -59,6 +71,7 @@ import com.tisl.mpl.model.cms.components.MobileCollectionBannerComponentModel;
 import com.tisl.mpl.model.cms.components.MobileCollectionLinkComponentModel;
 import com.tisl.mpl.model.cms.components.PromotionalProductsComponentModel;
 import com.tisl.mpl.model.cms.components.SmallBrandMobileAppComponentModel;
+import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 
 
 /**
@@ -111,6 +124,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	private MplSellerMasterService sellerMasterService;
 
 	private static final Logger LOG = Logger.getLogger(MplCmsFacadeImpl.class);
+	@Resource(name = "productFacade")
+	private ProductFacade productFacade;
+
+	@Resource(name = "buyBoxFacade")
+	private BuyBoxFacade buyBoxFacade;
+
+	@Resource(name = "productService")
+	private ProductService productService;
 
 	/**
 	 * @return the sellerMasterService
@@ -296,7 +317,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
@@ -321,13 +342,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHomePageForMobile()
 	 */
 	@Override
-	public HomePageData getHomePageForMobile()
+	public MplPageData getHomePageForMobile()
 	{
-		final ContentPageModel contentPage = getMplCMSPageService().getHomePageForMobile();
+		final ContentPageModel contentPage = getMplCMSPageService().getHomePageForMobile("");
 
 		final List<HomePageComponentData> componentDatas = new ArrayList<HomePageComponentData>();
 
@@ -386,17 +407,165 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 				}
 			}
-			final HomePageData homePage = new HomePageData();
-			homePage.setComponents(componentDatas);
+			final MplPageData homePage = new MplPageData();
+			//homePage.setComponents(componentDatas);
 			return homePage;
 		}
 
 		return null;
 	}
 
+
+	@Override
+	public List<MplPageData> getPageInformationForPageId(final String homePageUid)
+	{
+		final ContentPageModel contentPage = getMplCMSPageService().getHomePageForMobile(homePageUid);
+
+		final List<MplPageData> componentDatas = new ArrayList<MplPageData>();
+		final List<Date> lastModifiedTimes = new ArrayList<Date>();
+		//final int count = 0;
+
+		if (contentPage != null)
+		{
+			for (final ContentSlotForPageModel contentSlotForPage : contentPage.getContentSlots())
+			{
+				final MplPageData homePageData = new MplPageData();
+				final List<TextComponentData> texts = new ArrayList<TextComponentData>();
+				final List<BannerComponentData> banners = new ArrayList<BannerComponentData>();
+				final List<ProductListComponentData> productForShowCase = new ArrayList<ProductListComponentData>();
+
+				for (final AbstractCMSComponentModel abstractCMSComponentModel : contentSlotForPage.getContentSlot()
+						.getCmsComponents())
+				{
+					lastModifiedTimes.add(abstractCMSComponentModel.getModifiedtime());
+					homePageData.setSectionId(contentSlotForPage.getPosition());
+					if (abstractCMSComponentModel instanceof CMSParagraphComponentModel)
+					{
+						final CMSParagraphComponentModel paragraphComponent = (CMSParagraphComponentModel) abstractCMSComponentModel;
+						//homePageData.setSectionName(sectionDescription.getContent());
+						final TextComponentData textComponent = new TextComponentData();
+						if (paragraphComponent.getContent() != null)
+						{
+							textComponent.setText(paragraphComponent.getContent());
+						}
+						if (paragraphComponent.getDeeplinkType() != null)
+						{
+							textComponent.setType(paragraphComponent.getDeeplinkType());
+						}
+						if (paragraphComponent.getDeeplinkTypeId() != null)
+						{
+							textComponent.setTypeId(paragraphComponent.getDeeplinkTypeId());
+						}
+						if (paragraphComponent.getDeeplinkTypeVal() != null)
+						{
+							textComponent.setTypeVal(paragraphComponent.getDeeplinkTypeVal());
+						}
+						texts.add(textComponent);
+					}
+					else if (abstractCMSComponentModel instanceof SimpleBannerComponentModel)
+					{
+						final SimpleBannerComponentModel bannerComponent = (SimpleBannerComponentModel) abstractCMSComponentModel;
+						final BannerComponentData banner = new BannerComponentData();
+						if (bannerComponent.getMedia() != null)
+						{
+							if (bannerComponent.getMedia().getDescription() != null)
+							{
+								banner.setImageDiscription(bannerComponent.getMedia().getDescription());
+							}
+							if (bannerComponent.getMedia().getUrl2() != null)
+							{
+								banner.setUrl(bannerComponent.getMedia().getUrl2());
+							}
+							if (bannerComponent.getDeeplinkType() != null)
+							{
+								banner.setType(bannerComponent.getDeeplinkType());
+							}
+							if (bannerComponent.getDeeplinkTypeId() != null)
+							{
+								banner.setTypeId(bannerComponent.getDeeplinkTypeId());
+							}
+							if (bannerComponent.getDeeplinkType() != null)
+							{
+								banner.setTypeVal(bannerComponent.getDeeplinkTypeVal());
+							}
+							banners.add(banner);
+						}
+						//homePageData.setBannerComponents(bannerComponents);
+					}
+					else if (abstractCMSComponentModel instanceof ProductCarouselComponentModel)
+					{
+						final ProductCarouselComponentModel productCarousel = (ProductCarouselComponentModel) abstractCMSComponentModel;
+						final List<String> products = productCarousel.getProductCodes();
+						for (final String productCode : products)
+						{
+							final ProductListComponentData productComp = new ProductListComponentData();
+							final ProductData product = productFacade.getProductForCodeAndOptions(productCode,
+									Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
+							ProductModel productModel = null;
+							final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
+							try
+							{
+								productModel = productService.getProductForCode(productCode);
+								productComp.setImage(productModel.getPicture().getUrl2());
+							}
+							catch (final Exception e)
+							{
+								//handle exception logic TBD
+							}
+							if (product.getName() != null)
+							{
+								productComp.setName(product.getName());
+							}
+							if (buyboxdata.getPrice() != null)
+							{
+								productComp.setPrice(buyboxdata.getMrp().getFormattedValue());
+							}
+							if (buyboxdata.getMrp() != null)
+							{
+								productComp.setSlashedPrice(buyboxdata.getPrice().getFormattedValue());
+							}
+							productForShowCase.add(productComp);
+
+							if (productModel != null)
+							{
+								if (productModel.getDeeplinkType() != null)
+								{
+									productComp.setType(productModel.getDeeplinkType());
+								}
+								if (productModel.getDeeplinkTypeId() != null)
+								{
+									productComp.setTypeId(productModel.getDeeplinkTypeId());
+								}
+								if (productModel.getDeeplinkTypeVal() != null)
+								{
+									productComp.setTypeVal(productModel.getDeeplinkTypeVal());
+								}
+							}
+						}
+
+						//homePageData.setBannerComponents(bannerComponents);
+					}
+					//homePageData.setSequence(new Integer(count));  // Sonar Fixes
+
+					//componentDatas.add(homePageData);
+				}
+				Collections.sort(lastModifiedTimes);
+				homePageData.setLastModifiedTime(lastModifiedTimes.get(lastModifiedTimes.size() - 1));
+				homePageData.setTextComponents(texts);
+				homePageData.setProductComponents(productForShowCase);
+				homePageData.setBannerComponents(banners);
+				componentDatas.add(homePageData);
+			}
+		}
+
+		return componentDatas;
+	}
+
+
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateCategoryLandingPageForMobile()
 	 */
 	@Override
@@ -512,7 +681,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.cms.MplCmsFacade#populateSubBrandLandingPageForMobile(de.hybris.platform.cms2.model.pages.
 	 * ContentPageModel, java.lang.String)
@@ -563,7 +732,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populatePageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -710,7 +879,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getCategoryNameForCode(java.lang.String)
 	 */
 	@Override
@@ -722,7 +891,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getHeroProducts(java.lang.String)
 	 */
 	@Override
@@ -796,7 +965,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerLandingPageForMobile()
 	 */
 	@Override
@@ -837,7 +1006,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 				 * (SmallBrandMobileAppComponentModel) abstractCMSComponentModel; final ComponentData componentData =
 				 * getMobileCategoryComponentConverter().convert(smallBrandMobileComponentModel);
 				 * componentDatas.add(componentData);
-				 *
+				 * 
 				 * }
 				 */
 				else if (abstractCMSComponentModel instanceof PromotionalProductsComponentModel)
@@ -895,7 +1064,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getSellerMasterName(java.lang.String)
 	 */
 	@Override
@@ -907,7 +1076,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateSellerPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -923,7 +1092,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#populateOfferPageType(java.lang.String, boolean)
 	 */
 	@Override
@@ -936,6 +1105,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 		return contentPageData;
 	}
+
 
 
 }
