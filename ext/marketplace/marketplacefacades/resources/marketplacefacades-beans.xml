@@ -613,8 +613,40 @@
     	<property name="contentId" type="String"></property>
     </bean>
     
-    <bean class="com.tisl.mpl.facades.cms.data.HomePageData">
-    	<property name="components" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.HomePageComponentData>"/>
+    <bean class="com.tisl.mpl.facades.cms.data.BannerComponentData">
+    	<property name="image" type="String" />
+    	<property name="url" type="String" />
+    	<property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    	<property name="imageDiscription" type="String" />
+    </bean>
+
+    <bean class="com.tisl.mpl.facades.cms.data.TextComponentData">
+    	<property name="text" type="String" />
+    	<property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    </bean>
+     
+    <bean class="com.tisl.mpl.facades.cms.data.ProductListComponentData">
+    	<property name="image" type="String" />
+    	<property name="name" type="String" />
+    	<property name="price" type="String" />
+    	<property name="slashedPrice" type="String" />
+    	<property name="url" type="String" />
+    	<property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    </bean>
+    
+    <bean class="com.tisl.mpl.facades.cms.data.MplPageData">
+    	<property name="sectionId" type="String" />
+    	<property name="textComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.TextComponentData>"/>
+    	<property name="bannerComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.BannerComponentData>"/>
+    	<property name="productComponents" type="java.util.List&lt;com.tisl.mpl.facades.cms.data.ProductListComponentData>"/>
+    	<property name="sectionName" type="String" />
+       	<property name="lastModifiedTime" type="java.util.Date" />
     </bean>    
 
     <bean class="com.tisl.mpl.facades.cms.data.CollectionPageData">

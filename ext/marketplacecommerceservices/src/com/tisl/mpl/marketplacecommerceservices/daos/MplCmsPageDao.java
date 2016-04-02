@@ -24,8 +24,6 @@ public interface MplCmsPageDao extends CMSPageDao
 
 	ContentPageModel getCategoryLandingPageForMobile(CategoryModel category, CMSChannel cms);
 
-	ContentPageModel getHomePageForMobile(CMSChannel cms);
-
 	ContentPageModel getLandingPageForSeller(SellerMasterModel sellerMaster);
 
 	ContentPageModel getCollectionLandingPageForMobile(CMSChannel cms, MplShopByLookModel shopByLook);
@@ -35,5 +33,11 @@ public interface MplCmsPageDao extends CMSPageDao
 	ContentPageModel getSellerLandingPageForMobile(SellerMasterModel sellerMasterModel, CMSChannel cms);
 
 	ContentSlotModel getContentSlotByUidForPage(String pageId, String contentSlotId, String catalogVersion);
+	/**
+	 * @param cms
+	 * @param MOBILE_UID
+	 * @return
+	 */
+	ContentPageModel getHomePageForMobile(CMSChannel cms, String MOBILE_UID);
 }
 
