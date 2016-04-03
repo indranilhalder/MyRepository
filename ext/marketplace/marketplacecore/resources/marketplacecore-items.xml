@@ -3831,7 +3831,6 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-
 			<itemtype code="ContentPage" autocreate="false" generate="false">
 				<description>Extends existing Content Page Model with additional attributes.</description>
 
