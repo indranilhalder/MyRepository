@@ -3794,6 +3794,27 @@
 				</attributes>
 			</itemtype>
 
+			<itemtype code="SimpleCMSComponent" generate="false"
+				autocreate="false">
+				<attributes>
+					<attribute qualifier="deeplinkType" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the type of the banner's deeplink reference</description>
+					</attribute>
+					<attribute qualifier="deeplinkTypeId" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the typeID of the banner's deeplink reference</description>
+					</attribute>
+					<attribute qualifier="deeplinkTypeVal" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is the value reference of the banner's deeplink reference</description>
+					</attribute>					
+				</attributes>
+			</itemtype>
+			
 			<itemtype code="ContentPage" autocreate="false" generate="false">
 				<description>Extends existing Content Page Model with additional attributes.</description>
 
