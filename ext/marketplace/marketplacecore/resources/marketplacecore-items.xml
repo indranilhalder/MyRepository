@@ -3828,10 +3828,10 @@
 						generate="true" autocreate="true">
 						<persistence type="property" />
 						<description>This is the value reference of the banner's deeplink reference</description>
-					</attribute>					
+					</attribute>
 				</attributes>
 			</itemtype>
-			
+
 			<itemtype code="ContentPage" autocreate="false" generate="false">
 				<description>Extends existing Content Page Model with additional attributes.</description>
 
