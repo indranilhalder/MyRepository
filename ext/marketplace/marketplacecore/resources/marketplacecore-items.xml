@@ -101,8 +101,8 @@
 
 		<collectiontype elementtype="CMSMediaParagraphComponent" code="imageCollection"
  				autocreate="true" generate="true" type="list"/>
-
-
+		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
+				autocreate="true" generate="true" type="list"/>
 	</collectiontypes>
 
 
@@ -7691,6 +7691,12 @@
 							optional="true" />
 					</attribute>
 					<attribute autocreate="true" qualifier="phoneNo9" type="java.lang.String"
+						generate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="mplImageUrls" type="mplImageUrl"
 						generate="true">
 						<persistence type="property" />
 						<modifiers read="true" write="true" search="true"
