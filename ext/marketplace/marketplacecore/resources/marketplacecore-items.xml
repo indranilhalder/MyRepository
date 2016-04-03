@@ -101,6 +101,7 @@
 
 		<collectiontype elementtype="CMSMediaParagraphComponent" code="imageCollection"
  				autocreate="true" generate="true" type="list"/>
+
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 				autocreate="true" generate="true" type="list"/>
 	</collectiontypes>
