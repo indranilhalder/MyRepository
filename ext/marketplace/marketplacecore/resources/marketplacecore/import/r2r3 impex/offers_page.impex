@@ -37,7 +37,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SearchBox;;;searchbox
 ;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
 ;NavigationBar;;;navigation
-;Section1;;MplSequentialBannerComponent;
+;Section1;;RotatingImagesComponent;
 ;Section2;;MplOfferImageCarouselComponent;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
@@ -66,13 +66,13 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;offersPage;OffersPage;OffersPageTemplate;/offersPage
 
 #HotDealImageCarouselComponent
-INSERT_UPDATE MplOfferImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(&componentRef)
-;;HotDealImageCarouselComponent1;Hot Deal Image Carousel Component;Hot Deal Images ;HotDealImageCarouselComponent;BestPicksItems1Component,BestPicksItems2Component,BestPicksItems3Component,BestPicksItems4Component,BestPicksItems5Component,BestPicksItems6Component,BestPicksItems7Component,BestPicksItems8Component,BestPicksItems9Component,BestPicksItems10Component
-;;HotDealImageCarouselComponent2;Hot Deal Image Carousel Component;Hot Deal Images ;HotDealImageCarouselComponent;BestPicksItems1Component,BestPicksItems2Component,BestPicksItems3Component,BestPicksItems4Component,BestPicksItems5Component,BestPicksItems6Component,BestPicksItems7Component,BestPicksItems8Component,BestPicksItems9Component,BestPicksItems10Component
-;;HotDealImageCarouselComponent3;Hot Deal Image Carousel Component;Hot Deal Images ;HotDealImageCarouselComponent;BestPicksItems1Component,BestPicksItems2Component,BestPicksItems3Component,BestPicksItems4Component,BestPicksItems5Component,BestPicksItems6Component,BestPicksItems7Component,BestPicksItems8Component,BestPicksItems9Component,BestPicksItems10Component
+INSERT_UPDATE MplOfferImageCarouselComponent;$contentCV[unique=true];uid[unique=true];name;title;&componentRef;collectionItems(uid,$contentCV)
+;;HotDealImageCarouselComponent1;Hot Deal Image Carousel Component 1;Hot Deal Images 1;HotDealImageCarouselComponent1;BestPicksItems1Component,BestPicksItems2Component,BestPicksItems3Component,BestPicksItems4Component,BestPicksItems5Component,BestPicksItems6Component,BestPicksItems7Component,BestPicksItems8Component,BestPicksItems9Component,BestPicksItems10Component
+;;HotDealImageCarouselComponent2;Hot Deal Image Carousel Component 2;Hot Deal Images 2;HotDealImageCarouselComponent2;BestPicksItems1Component,BestPicksItems2Component,BestPicksItems3Component,BestPicksItems4Component,BestPicksItems5Component,BestPicksItems6Component,BestPicksItems7Component,BestPicksItems8Component,BestPicksItems9Component,BestPicksItems10Component
+;;HotDealImageCarouselComponent3;Hot Deal Image Carousel Component 3;Hot Deal Images 3;HotDealImageCarouselComponent3;BestPicksItems1Component,BestPicksItems2Component,BestPicksItems3Component,BestPicksItems4Component,BestPicksItems5Component,BestPicksItems6Component,BestPicksItems7Component,BestPicksItems8Component,BestPicksItems9Component,BestPicksItems10Component
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true] ; uid[unique=true]              ; name     		             ; active ;cmsComponents(uid,$contentCV);;;            
-			 ; 			  ; Section1-offersPageSlot   ; slot for Section1 for offers Page    ; true   ;TMPSequentialHomepageBannerComponent;;;
+			 ; 			  ; Section1-offersPageSlot   ; slot for Section1 for offers Page    ; true   ;HomepageCarouselBannerComponent;;;
 			 ; 			  ; Section2-offersPageSlot   ; slot for Section2 for offers Page    ; true   ;HotDealImageCarouselComponent1,HotDealImageCarouselComponent2,HotDealImageCarouselComponent3;;;
 	       
 			 

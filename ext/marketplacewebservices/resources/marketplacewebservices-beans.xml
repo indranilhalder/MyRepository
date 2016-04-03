@@ -1652,11 +1652,50 @@
      	<property name="targetType" type="String"></property>
      	<property name="contentId" type="String"></property>
     </bean>
+
+ <bean class="com.tisl.mpl.wsdto.BannerComponentWsDTO">
+    	<property name="image" type="String" />
+    	<property name="url" type="String" />
+    	<property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    	<property name="imageDiscription" type="String" />
+    </bean>
     
-    <bean class="com.tisl.mpl.wsdto.HomePageWsDTO">
-    	<property name="components" type="java.util.List&lt;com.tisl.mpl.wsdto.HomePageComponentWsDTO>"/>
+     <bean class="com.tisl.mpl.wsdto.TextComponentWsDTO">
+        <property name="text" type="String" />
+        <property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    </bean>
+    
+     <bean class="com.tisl.mpl.wsdto.ProductListComponentWsDTO">
+    	<property name="image" type="String" />
+    	<property name="name" type="String" />
+    	<property name="price" type="String" />
+    	<property name="slashedPrice" type="String" />
+    	<property name="url" type="String" />
+    	<property name="type" type="String" />
+    	<property name="typeId" type="String" />
+    	<property name="typeVal" type="String" />
+    </bean>
+    
+   
+    <bean class="com.tisl.mpl.wsdto.MplPageWsDTO">
+    	<property name="sectionId" type="String" />
+    	<property name="textComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.TextComponentWsDTO>"/>
+    	<property name="bannerComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.BannerComponentWsDTO>"/>
+    	<property name="productComponents" type="java.util.List&lt;com.tisl.mpl.wsdto.ProductListComponentWsDTO>"/>
+    	<property name="sectionName" type="String" />
+    </bean>
+
+   
+    <bean class="com.tisl.mpl.wsdto.MplPageComponentsWsDTO">
+    	<property name="mplPageComponent" type="java.util.List&lt;com.tisl.mpl.wsdto.MplPageWsDTO>" />
+    	<property name="lastModifiedTime" type="java.lang.String" />
 	</bean>
-     <bean class="com.tisl.mpl.wsdto.PotentialPromotionData">
+   
+    <bean class="com.tisl.mpl.wsdto.PotentialPromotionData">
     	<property name="promoMessage" type="String" />
     </bean>
     
@@ -2189,7 +2228,11 @@
 		<property name="error" type="String"/>
 		<property name="errorCode" type="String"/>
 		<property name="status" type="String"/>	
-
+		
+		<!-- Added for image handling -->
+        <property name="regularImgUrl" type="String"/>
+        <property name="onHoverImgUrl" type="String"/>
+        <property name="onClickImgUrl" type="String"/>
 	</bean>
 
 	<bean
