@@ -142,8 +142,11 @@ UPDATE MplShowcaseItemComponent;$contentCV[unique=true];uid[unique=true];headerT
 ####The Products You Care About
 
 #MplCategoryCarouselComponent changes starts
-INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title
-;;TMPProductsCareCategoriesCarouselComponent;Products You Care About
+#INSERT_UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title
+#;;TMPProductsCareCategoriesCarouselComponent;Products You Care About
+
+INSERT_UPDATE MplAdvancedCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title
+;;ProductsYouCareCategoriesCarouselComponent;Products You Care About
 ########
 
 

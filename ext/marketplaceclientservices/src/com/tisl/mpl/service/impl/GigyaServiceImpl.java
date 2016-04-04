@@ -585,10 +585,16 @@ public class GigyaServiceImpl implements GigyaService
 
 	}
 
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.GigyaService#gigyaLoginHelperforMobile(de.hybris.platform.core.model.user.CustomerModel,
+	 * boolean)
+	 */
 	@Override
 	public GigyaWsDTO gigyaLoginHelperforMobile(final CustomerModel customerModel, final boolean isNewUser)
 	{
-		//	final List<String> cookieData = new ArrayList<>();
 		final GigyaWsDTO gigyaWsDTO = new GigyaWsDTO();
 		try
 		{

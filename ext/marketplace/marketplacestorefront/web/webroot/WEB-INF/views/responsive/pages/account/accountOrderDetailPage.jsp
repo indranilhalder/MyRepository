@@ -606,7 +606,7 @@
 													Price:
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
-														<format:price priceData="${entry.totalPrice}"
+														<format:price priceData="${entry.amountAfterAllDisc}"
 															displayFreeForZero="true" />
 													</ycommerce:testId>
 												</p>

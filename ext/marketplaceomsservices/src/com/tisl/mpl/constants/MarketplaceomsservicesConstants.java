@@ -27,6 +27,7 @@ public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceo
 
 	public static final String ORDER_TYPE_NEW_CONSTANTS = "NEW";
 	public static final String DEFAULT_CHANNEL_CONSTANTS = "WEB";
+	public static final String SUCCESS = "SUCCESS";
 
 	public static final String QUERYPART = "{p:";
 	
