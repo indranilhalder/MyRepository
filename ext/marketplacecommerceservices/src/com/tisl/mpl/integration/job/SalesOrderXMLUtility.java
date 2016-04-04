@@ -36,7 +36,6 @@ import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -64,8 +63,8 @@ public class SalesOrderXMLUtility
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
 
-	@Autowired
-	private MplSellerInformationService mplSellerInformationService;
+	//@Autowired
+	//private MplSellerInformationService mplSellerInformationService;
 
 	/**
 	 * @Description: Generate XML Data for Order
