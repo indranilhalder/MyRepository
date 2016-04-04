@@ -815,7 +815,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Passwords do not match</font>";
+			document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Oops! The passwords don't match.</font>";
 			flag = false;
 		}
 		else{
