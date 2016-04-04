@@ -8,6 +8,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement"%>
 <style>
+     .findStoreNearMeDisable{
+       pointer-events:none;
+     }
 	.store-finder-search {
 		margin-bottom: 10px;
 	}
