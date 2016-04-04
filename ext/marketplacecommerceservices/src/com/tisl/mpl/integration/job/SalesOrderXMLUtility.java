@@ -180,77 +180,79 @@ public class SalesOrderXMLUtility
 			{
 				//checkCanellation(orderData);
 				xmlToFico = true;
-
-				if (!checkCOD(order))
+				if (null != order.getPaymentInfo())
 				{
-					final SalesOrderXMLData salesXMLData = new SalesOrderXMLData();
-					LOG.debug("COD Check done");
-					if (null != order.getCode() && xmlToFico)
+					if (!checkCOD(order))
 					{
-						salesXMLData.setOrderId(order.getCode());
-						LOG.info("order id in SalesOrder" + order.getCode());
-					}
-					else
-					{
-						xmlToFico = false;
-					}
-
-					if (null != order.getDate() && xmlToFico)
-					{
-						salesXMLData.setOrderDate(sdformat.format(order.getDate()));
-					}
-					else
-					{
-						xmlToFico = false;
-					}
-					salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
-					if (null != order.getPaymentTransactions() && xmlToFico)
-					{
-						final List<PaymentTransactionModel> list = order.getPaymentTransactions();
-						if (null != list && !list.isEmpty())
+						final SalesOrderXMLData salesXMLData = new SalesOrderXMLData();
+						LOG.debug("COD Check done");
+						if (null != order.getCode() && xmlToFico)
 						{
-							for (final PaymentTransactionModel oModel : list)
-							{
+							salesXMLData.setOrderId(order.getCode());
+							LOG.info("order id in SalesOrder" + order.getCode());
+						}
+						else
+						{
+							xmlToFico = false;
+						}
 
-								if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
-										&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+						if (null != order.getDate() && xmlToFico)
+						{
+							salesXMLData.setOrderDate(sdformat.format(order.getDate()));
+						}
+						else
+						{
+							xmlToFico = false;
+						}
+						salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
+						if (null != order.getPaymentTransactions() && xmlToFico)
+						{
+							final List<PaymentTransactionModel> list = order.getPaymentTransactions();
+							if (null != list && !list.isEmpty())
+							{
+								for (final PaymentTransactionModel oModel : list)
 								{
-									LOG.debug("Inside Parent order: Pyment Transaction model");
-									salesXMLData.setMerchantCode(oModel.getPaymentProvider());
-									if (null != oModel.getCode())
+
+									if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
+											&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 									{
-										payemntrefid = oModel.getCode();
-										LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-									}
-									else
-									{
-										xmlToFico = false;
+										LOG.debug("Inside Parent order: Pyment Transaction model");
+										salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										if (null != oModel.getCode())
+										{
+											payemntrefid = oModel.getCode();
+											LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
+										}
+										else
+										{
+											xmlToFico = false;
+										}
+
 									}
 
 								}
+							}
 
+						}
+						else
+						{
+							xmlToFico = false;
+						}
+
+						if (null != order.getChildOrders() && !order.getChildOrders().isEmpty() && xmlToFico)
+						{
+							LOG.debug(" child order data not null");
+							List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
+							subOrderDataList = getSubOrderData(order.getChildOrders());
+							LOG.debug("after sub order data list call");
+							if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
+							{
+								salesXMLData.setSubOrderList(subOrderDataList);
+								LOG.debug("set sub order list");
 							}
 						}
-
+						bulkSalesDataList.add(salesXMLData);
 					}
-					else
-					{
-						xmlToFico = false;
-					}
-
-					if (null != order.getChildOrders() && !order.getChildOrders().isEmpty() && xmlToFico)
-					{
-						LOG.debug(" child order data not null");
-						List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
-						subOrderDataList = getSubOrderData(order.getChildOrders());
-						LOG.debug("after sub order data list call");
-						if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
-						{
-							salesXMLData.setSubOrderList(subOrderDataList);
-							LOG.debug("set sub order list");
-						}
-					}
-					bulkSalesDataList.add(salesXMLData);
 				}
 			}
 		}
