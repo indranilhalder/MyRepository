@@ -13,7 +13,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
@@ -40,6 +39,7 @@ import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
@@ -96,7 +96,8 @@ public class MarketplaceServiceabilityCheckHelperImpl implements
 	public BuyBoxService getBuyBoxService() {
 		return buyBoxService;
 	}
-
+	@Autowired
+	private SessionService sessionService;
 	@Required
 	public void setBuyBoxService(BuyBoxService buyBoxService) {
 		this.buyBoxService = buyBoxService;
@@ -132,6 +133,13 @@ public class MarketplaceServiceabilityCheckHelperImpl implements
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
 			final LocationDTO dto = new LocationDTO();
 			Location myLocation = null;
+			boolean isPincodeServicable=Boolean.TRUE;
+			sessionService.setAttribute("isPincodeServicable",isPincodeServicable);
+			if(null == pinCodeModelObj) {
+				
+				sessionService.setAttribute("isPincodeServicable",false);
+			}
+	
 			if (null != pinCodeModelObj)
 			{
 				try

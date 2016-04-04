@@ -200,10 +200,16 @@
 			<http-only>true</http-only>
 		</cookie-config> 
 		<!-- Session timeout of 30 minutes -->
-		<session-timeout>30</session-timeout>
+		
 		<!-- <cookie-config>
 			<name>SID</name>
 		</cookie-config> -->
+		
+	   	<cookie-config>
+			<secure>true</secure>
+			<http-only>true</http-only>
+		</cookie-config>
+       <session-timeout>30</session-timeout>
 	</session-config>
 
 

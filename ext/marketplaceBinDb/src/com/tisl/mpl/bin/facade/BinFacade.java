@@ -4,6 +4,7 @@
 package com.tisl.mpl.bin.facade;
 
 import com.tisl.mpl.binDb.model.BinModel;
+import com.tisl.mpl.data.BinData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
@@ -20,5 +21,7 @@ public interface BinFacade
 	 * @return BinModel
 	 * @throws EtailNonBusinessExceptions
 	 */
-	public BinModel performBinCheck(final String bin) throws EtailNonBusinessExceptions;
+	BinModel performBinCheck(final String bin) throws EtailNonBusinessExceptions;
+
+	BinData binCheck(final String binNumber) throws EtailNonBusinessExceptions;
 }

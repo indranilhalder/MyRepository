@@ -92,7 +92,6 @@ ACC.storefinder = {
 		storeInformation = ACC.storefinder.storeId;
 		 var markerZoom= Number($("#markerZoom").val());
 		 var initialZoom=  Number($("#initialZoom").val());
-		var mapIcons={"TATA Store":"https://maps.google.com/mapfiles/marker" + 'A' + ".png"};
 		
 		if($(".js-store-finder-map").length > 0)
 		{			
@@ -122,19 +121,17 @@ ACC.storefinder = {
 			 var localStoreInfo=storeData[i];
 				
 			var comIcon="";
-			if(!(localStoreInfo["iconUrl"])){
-				comIcon="https://maps.google.com/mapfiles/marker" + 'A' + ".png"
+			if(!(localStoreInfo["regularImgUrl"])){
+				comIcon="";
 			 }else {
-				 comIcon=localStoreInfo["iconUrl"];
-				 mapIcons[localStoreInfo["displayName"]] = comIcon;
+				 comIcon=localStoreInfo["regularImgUrl"];
 			   }
 				 
 			var  marker = new google.maps.Marker({
 				position: new google.maps.LatLng(localStoreInfo["latitude"], localStoreInfo["longitude"]),
 				map: map,
-				title: localStoreInfo["name"],
+				title: localStoreInfo["displayName"],
 				icon: comIcon,
-				//opacity:0.6
 			});
 			
 			//Added bounds.
@@ -147,10 +144,22 @@ ACC.storefinder = {
 			google.maps.event.addListener(infowindow,'closeclick',function(){
 				//ACC.storefinder.removeGamma(map);
 				});
+			
+			 //For marker mover
+			 google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+										        return function() {
+										          if(!(storeData[i].onHoverImgUrl)){
+										        	  console.debug("No Hover image.");
+										          }else{
+										        	  marker.setIcon(storeData[i].onHoverImgUrl);  
+										          }
+										        }
+										      })(marker, i));
+			
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
 		          var infoMsg=storeData[i];
-		          var infoString="<div style=\"width:200px; height:100px\">"+infoMsg["displayName"]+" "+infoMsg["name"]+"</br> Distance Appx."+infoMsg["formattedDistance"]+" </br>"+infoMsg["line1"]
+		          var infoString="<div style=\"width:200px; height:100px\">"+infoMsg["displayName"]+ "</br> Distance Appx."+infoMsg["formattedDistance"]+" </br>"+infoMsg["line1"]
 					+" "+infoMsg["line2"];
 		          var openingMsg="";
 		          if(infoMsg["openings"]){
@@ -164,7 +173,12 @@ ACC.storefinder = {
 		          infowindow.open(map, marker);
 		          map.setZoom(markerZoom);
 		          map.setCenter(marker.getPosition());
-		          //ACC.storefinder.applyGamma(map);
+		          if(!(storeData[i].onClickImgUrl)){
+		        	  console.debug("No On image.");
+		          }else{
+		        	  console.debug("locatorJson[i].onClickImgUrl");
+		        	  marker.setIcon(locatorJson[i].onClickImgUrl);  
+		          };
 		        }
 		      })(marker, i));
 			marker.setMap(map);	 
@@ -375,7 +389,7 @@ removeGamma:function(map) {
 		controlDiv.style.padding='10px';
 		 // Setup the different icons and shadows
 	    var iconURLPrefix = ACC.config.commonResourcePath+"/images/";
-	    
+	    console.log(iconURLPrefix);
 	    var icons = [
 	      iconURLPrefix + 'Bestseller_Legend.png',
 	      iconURLPrefix + 'CottonWorld_Legend.png',

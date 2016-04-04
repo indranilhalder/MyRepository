@@ -124,6 +124,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
 				addressInfo.setAddress1(sendTicketRequestData.getAddressInfo().getAddress1());
 				addressInfo.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
+				addressInfo.setAddress3(sendTicketRequestData.getAddressInfo().getAddress3());
 				addressInfo.setCountry(sendTicketRequestData.getAddressInfo().getCountry());
 				addressInfo.setCity(sendTicketRequestData.getAddressInfo().getCity());
 				addressInfo.setState(sendTicketRequestData.getAddressInfo().getState());

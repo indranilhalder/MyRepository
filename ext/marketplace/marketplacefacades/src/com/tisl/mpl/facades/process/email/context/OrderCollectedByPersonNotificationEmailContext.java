@@ -40,9 +40,9 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 	{
 		super.init(orderProcessModel, emailPageModel);
 		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
-		put(TIME,dateFormat.format(cal.getTime()));
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		final Calendar cal = Calendar.getInstance();
+		put(TIME, dateFormat.format(cal.getTime()));
 		LOG.info("Order Collected By Nominal Person Email Context Class");
 		put(ORDERCODE, orderProcessModel.getOrder().getCode());
 		LOG.debug("Order Colletcted By Nominal Person Email Context ");
@@ -50,7 +50,7 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 		put(PICKUP_PERSON_NUMBER, orderProcessModel.getOrder().getPickupPersonMobile());
 		for (final AbstractOrderEntryModel entry : orderProcessModel.getOrder().getEntries())
 		{
-			final String storeName = entry.getDeliveryPointOfService().getName();
+			final String storeName = entry.getDeliveryPointOfService().getDisplayName();
 			put(STORE_NAME, storeName);
 		}
 		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();

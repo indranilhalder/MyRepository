@@ -83,22 +83,36 @@ function initialize(locatorJson,lat,lot)
   for (var i = 0; i < locatorJson.length; i++) { 
 	 var icon="";
 	 var marker="";
-	 //Create marker.
-	 if(!(locatorJson[i].mapIcon)){
-		  marker=new google.maps.Marker({
-		 		position: new google.maps.LatLng(locatorJson[i].geoPoint.latitude,locatorJson[i].geoPoint.longitude)
-			   });
-	 }else {
-		 icon=locatorJson[i].mapIcon.url;
+	 var mplStoreImage=locatorJson[i].mplStoreImage;
+	 console.log(mplStoreImage)
+	 var normalMarkerIcon="";
+	 var onClickMarkerIcon="";
+	 var onHoverIcon="";
+	 if(!(locatorJson[i].regularImgUrl)){
+		 marker=new google.maps.Marker({
+	 		 position: new google.maps.LatLng(locatorJson[i].geoPoint.latitude,locatorJson[i].geoPoint.longitude)
+		   });
+	 }else{
+		//Create marker.
 	     marker=new google.maps.Marker({
  		 position: new google.maps.LatLng(locatorJson[i].geoPoint.latitude,locatorJson[i].geoPoint.longitude),
- 		 icon:icon
+ 		 icon:locatorJson[i].regularImgUrl
 	   });
-	 
 	 }
+	 
+	 //For marker mover
+	 google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+								        return function() {
+								          if(!(locatorJson[i].onHoverImgUrl)){
+								        	  console.debug("No Hover image.");
+								          }else{
+								        	  marker.setIcon(locatorJson[i].onHoverImgUrl);  
+								          }
+								        }
+								      })(marker, i));
 	 markers.push(marker);
 	 
-	 //Create info box
+	       //Create info box
 			google.maps.event.addListener(infowindow,'closeclick',function(){
 				 //removeGamma(map);
 				});
@@ -106,11 +120,16 @@ function initialize(locatorJson,lat,lot)
 	//Create event listner for click on marker event.
     google.maps.event.addListener(marker, 'click', (function(marker, i) {
 							        return function() {
-							          infowindow.setContent("Store Name: "+locatorJson[i].name);
+							          infowindow.setContent("Store Name: "+locatorJson[i].displayName);
 							          infowindow.open(map, marker);
 							          map.setZoom(markerZoom);
 							          map.setCenter(marker.getPosition());
-							          //applyGamma(map);
+							          if(!(locatorJson[i].onClickImgUrl)){
+							        	  console.debug("No On image.");
+							          }else{
+							        	  console.info("locatorJson[i].onClickImgUrl");
+							        	  marker.setIcon(locatorJson[i].onHoverImgUrl);  
+							          }
 							        }
 							      })(marker, i));
 marker.setMap(map);	  

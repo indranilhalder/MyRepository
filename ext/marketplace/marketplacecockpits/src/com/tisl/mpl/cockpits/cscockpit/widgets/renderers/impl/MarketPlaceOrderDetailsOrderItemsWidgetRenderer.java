@@ -246,7 +246,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 					.getDeliveryMode().getName();
 			PointOfServiceModel pointOfService = entrymodel
 					.getDeliveryPointOfService();
-		
+	
 			if (deliveryMode
 					.equalsIgnoreCase(MarketplaceCockpitsConstants.delNameMap
 							.get("CnC")) && null != entrymodel
@@ -254,9 +254,10 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 
 				Listcell listcell = new Listcell();
 				try {
-					if (pointOfService.getBaseStore().getName() != null) {
+					if (pointOfService.getDisplayName() != null) {
+						
 						Label label = new Label();
-						label.setValue(pointOfService.getName().concat(","));
+						label.setValue(pointOfService.getDisplayName().concat(","));
 						label.setParent(listcell);
 						Div div = new Div();
 						div.setParent(listcell);

@@ -36,6 +36,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -73,6 +74,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 
 	private static final String CHECKOUT_URL = "/checkout";
 	private static final String CART_MERGED = "cartMerged";
+	private static final String LOGIN_SUCCESS = "loginSuccess";
 
 	@Autowired
 	private ExtendedUserService extUserService;
@@ -114,6 +116,12 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 	{
 
 		getCustomerFacade().loginSuccess();
+
+		final HttpSession session = request.getSession();
+
+		session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
+
+
 
 		/* Gigya code commented for non existence in Release1 */
 
@@ -179,8 +187,7 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 			getSessionService().setAttribute(WebConstants.CART_RESTORATION_SHOW_MESSAGE, Boolean.TRUE);
 			try
 			{
-				getSessionService().setAttribute(
-						WebConstants.CART_RESTORATION,
+				getSessionService().setAttribute(WebConstants.CART_RESTORATION,
 						getCartFacade().restoreCartAndMerge(getMostRecentSavedCart(getCartFacade().getSessionCart()).getGuid(),
 								getCartFacade().getSessionCart().getGuid()));
 				request.setAttribute(CART_MERGED, Boolean.TRUE);
@@ -247,8 +254,8 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 				{
 					pw.print(request.getContextPath());
 				}
-				else if (null != referringController
-						&& referringController.equalsIgnoreCase(RequestMappingUrlConstants.LINK_CHECKOUT))
+				else
+					if (null != referringController && referringController.equalsIgnoreCase(RequestMappingUrlConstants.LINK_CHECKOUT))
 				{
 					pw.print(request.getContextPath() + RequestMappingUrlConstants.LINK_CHECKOUT);
 				}

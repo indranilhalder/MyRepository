@@ -20,10 +20,10 @@
    						checkIsServicable();
    				}
 	</script>
-
-<span class="continue-shopping">
+<!-- TISCR-320 -->
+<%-- <span class="continue-shopping">
 <a href="${continueShoppingUrl}"><spring:theme code="general.continue.shopping"/></a>
-   </span>
+   </span> --%>
   
    
 
