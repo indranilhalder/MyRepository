@@ -10,6 +10,11 @@
     text-align: center;
     background-color: #a9143c;
     color: #fff;
+<<<<<<< HEAD
+=======
+   /*  background: -webkit-linear-gradient(91deg, #3f90e4 0%, #21f7ff 99%), url('../images/header-grad.png');
+    background: linear-gradient(91deg, #3f90e4 0%, #21f7ff 99%), url('../images/header-grad.png'); */
+>>>>>>> refs/remotes/origin/GOLDEN_PROD_SUPPORT
     text-transform: uppercase;
     display: block;
     line-height: 30px;

@@ -52,6 +52,7 @@
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
 		
 
+
 	<!-- SystemSetup for the MarketplaceCore -->
 	<bean id="acceleratorCoreSystemSetup" class="com.tisl.mpl.core.setup.CoreSystemSetup"
 		parent="abstractCoreSystemSetup" />
@@ -441,6 +442,7 @@
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean> 
+
 
 	<bean id="sendOrderToCRMEventListner" class=" com.tisl.mpl.marketplaceomsservices.event.SendOrderToCRMEventListner"
 		parent="abstractSiteEventListener">
@@ -1351,4 +1353,3 @@
    	</bean>
    	
 </beans>
-

@@ -2318,12 +2318,12 @@
 		<property name="errorCode" type="String"/>
 		<property name="status" type="String"/>	
 	</bean>
-    
+
      <bean class="com.tisl.mpl.wsdto.ReleaseCouponsDTO">
 		<property name="status" type="String" />
 		<property name="error" type="String" />
 		<property name="errorCode" type="String" />	
 		<property name="total" type="String" />
-	</bean> 
-	
+	</bean>
+
 </beans>

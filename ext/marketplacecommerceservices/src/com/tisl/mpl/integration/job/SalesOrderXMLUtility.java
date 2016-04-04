@@ -8,9 +8,8 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.payment.enums.PaymentTransactionType;
-import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 
 import java.io.StringReader;
@@ -148,33 +147,14 @@ public class SalesOrderXMLUtility
 		return xmlString;
 	}
 
-	private boolean checkCOD(final OrderModel orderData)
+	private boolean checkCOD(final OrderModel orderModel)
 	{
 		boolean isCOD = false;
-
-
-		if (null != orderData.getPaymentTransactions())
+		//TISPRO-192
+		if (null != orderModel.getPaymentInfo() && orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
 		{
-			final List<PaymentTransactionModel> list = orderData.getPaymentTransactions();
-			if (null != list && !list.isEmpty())
-			{
-				for (final PaymentTransactionModel ptModel : list)
-				{
-
-					// check COD TISPRD-361
-					if (null != ptModel.getEntries())
-					{
-						for (final PaymentTransactionEntryModel paymentObj : ptModel.getEntries())
-						{
-							if (null != paymentObj.getType() && paymentObj.getType().equals(PaymentTransactionType.COD_PAYMENT))
-							{
-								isCOD = true;
-								LOG.debug("After check cod");
-							}
-						}
-					}
-				}
-			}
+			isCOD = true;
+			LOG.debug("After check cod");
 		}
 		return isCOD;
 	}
