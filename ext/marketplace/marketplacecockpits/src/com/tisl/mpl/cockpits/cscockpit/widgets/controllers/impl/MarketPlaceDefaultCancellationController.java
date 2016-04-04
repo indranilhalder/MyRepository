@@ -193,6 +193,10 @@ public class MarketPlaceDefaultCancellationController extends
 									.getOrderEntriesModificationEntries()) {
 								OrderEntryModel orderEntry = modificationEntry
 										.getOrderEntry();
+								double deliveryCost = orderEntry
+										.getCurrDelCharge() != null ? orderEntry
+										.getCurrDelCharge()
+										: NumberUtils.DOUBLE_ZERO;
 								ConsignmentStatus newStatus = null;
 								// If CosignmentEnteries are present then update
 								// OMS with the state.
@@ -229,6 +233,9 @@ public class MarketPlaceDefaultCancellationController extends
 												.setCreationtime(new Date());
 										refundTransactionMappingModel
 												.setRefundType(JuspayRefundType.CANCELLED);
+										refundTransactionMappingModel
+												.setRefundAmount(orderEntry.getNetAmountAfterAllDisc()
+														+deliveryCost);//TISPRO-216 : Refund amount Set in RTM
 										getModelService().save(
 												refundTransactionMappingModel);
 									} else {
@@ -244,10 +251,6 @@ public class MarketPlaceDefaultCancellationController extends
 
 								}
 
-								double deliveryCost = orderEntry
-										.getCurrDelCharge() != null ? orderEntry
-										.getCurrDelCharge()
-										: NumberUtils.DOUBLE_ZERO;
 								double totalprice = orderEntry
 										.getNetAmountAfterAllDisc();
 								orderEntry

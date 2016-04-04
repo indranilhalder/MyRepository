@@ -132,7 +132,7 @@
 </tr>
 <tr>
   <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">In case you need help, please call us on 1-800-123-4567 or email us at <a href="mailto:support@tataCliQ.com" style="color:#606060;">support@tataCliQ.com</a>.</td>
+  <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">In case you need help, please call us on ${ctx.customerCareNumber} or email us at <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">${ctx.customerCareEmail}</a>.</td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
@@ -181,7 +181,7 @@
 <td align="left" valign="top">&nbsp;</td>
 <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="95%" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:hello@tatacliq.com" style="color:#606060;">CLIQhelpers</a>(or join our weekly bowling tournament). You can also shoot an email to <a href="mailto:hello@tatacliq.com" style="color:#606060;">hello@tatacliq.com</a>.</td>
+    <td width="95%" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">CLIQhelpers</a>(or join our weekly bowling tournament). You can also shoot an email to <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">${ctx.customerCareEmail}</a>.</td>
   </tr>
 </table></td>
 <td align="left" valign="top">&nbsp;</td>

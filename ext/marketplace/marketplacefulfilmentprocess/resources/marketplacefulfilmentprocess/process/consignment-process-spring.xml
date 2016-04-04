@@ -59,9 +59,9 @@
 		<property name="process2WarehouseAdapter" ref="process2WarehouseAdapter"/>
 	</bean>
 
-<alias name="defaultOmsShipmentSyncAdapter" alias="omsShipmentSyncAdapter" />
-	<bean id="defaultOmsShipmentSyncAdapter"
-		class="com.tisl.mpl.integration.oms.adapter.CustomOmsShipmentSyncAdapter"
+<alias name="customOmsShipmentSyncAdapter" alias="omsShipmentSyncAdapter" />
+	<bean id="customOmsShipmentSyncAdapter"
+		class="com.tisl.mpl.integration.oms.adapter.CustomOmsShipmentSyncAdapter" parent="defaultOmsShipmentSyncAdapter"
 		scope="tenant">
 		<property name="consignmentStatusMappingStrategy" ref="consignmentStatusMappingStrategy" />
 		<property name="omsShipmentReverseConverter" ref="omsShipmentReverseConverter" />

@@ -660,14 +660,18 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  html += '<p class="normal discprice">₹'+parseInt(obj.discounted_price)+'</p>';
 	  }
 	  }
+	  else if(Math.round(obj.original_price) == (obj.price)){
+		  html += '<p class="normal moprice">₹'+parseInt(obj.price)+'</p>';
+	  }
 	  else if(obj.price != null || obj.price != '' || obj.price != "undefined"){
 		  if(parseInt(obj.price) > 0){
 		  if(obj.original_price != null && parseInt(obj.original_price) > parseInt(obj.price) ){
 			  html += '<p class="old mrprice">₹'+parseInt(obj.original_price)+'</p>';
 		  }
-		  html += '<p class="normal moprice">₹'+parseInt(obj.price)+'</p>';
+		  html += '<p class="sale moprice">₹'+parseInt(obj.price)+'</p>';
 		  }
 	  }
+	 
 	  if(!obj.sizes){
 		  html += '</div></div></a>';
 		  html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'+obj.site_product_id+'"></p>';
