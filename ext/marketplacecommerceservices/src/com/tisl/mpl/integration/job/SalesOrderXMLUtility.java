@@ -39,7 +39,7 @@ import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
-import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+//import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pojo.BulkSalesOrderXMLData;
 import com.tisl.mpl.pojo.ChildOrderXMlData;
