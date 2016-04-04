@@ -471,7 +471,7 @@ public class ProductPageController extends AbstractPageController
 	 *
 	 * @param productCode
 	 * @param sellerId
-	 * @return
+	 * @return JSONObject
 	 * @throws JSONException
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
@@ -547,7 +547,7 @@ public class ProductPageController extends AbstractPageController
 	 *
 	 * @param sizeguideList
 	 * @param categoryType
-	 * @return
+	 * @return List<String>
 	 */
 	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList, final String categoryType)
 	{
@@ -621,7 +621,6 @@ public class ProductPageController extends AbstractPageController
 	 *
 	 * @param pin
 	 * @param productCode
-	 * @param seller
 	 * @param model
 	 * @return String
 	 * @throws CMSItemNotFoundException
