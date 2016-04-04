@@ -191,12 +191,14 @@ function editAddress(addressId) {
     		console.log("Reasone code : "+Rejectionselectedvalue);
         	if(reasonCode==null)
         	{
-        		alert("Do let us know why you would like to cancel this item.");
+        		//alert("Do let us know why you would like to cancel this item.");
+        		$("#blankReasonError").show();
         		return false;
         	}
         	else if(nowValue !=Rejectionselectedvalue)
         	{
-        		alert("Do let us know why you would like to cancel this item.");
+        		//alert("Do let us know why you would like to cancel this item.");
+        		$("#blankReasonError").show();
         		return false;
         	}	
         	else

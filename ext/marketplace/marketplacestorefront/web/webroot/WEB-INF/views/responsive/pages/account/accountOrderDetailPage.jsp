@@ -527,6 +527,7 @@
 																		<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
 																	</c:forEach>
 																</form:select>
+																<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;">Do let us know why you would like to cancel this item.</div>
 															</div>
 															<c:set var="ussidClass" value="${orderEntrySellerSKU}"></c:set>
 															<!-- <c:forEach items="${entry.associatedItems}" var="associatedUssid">
