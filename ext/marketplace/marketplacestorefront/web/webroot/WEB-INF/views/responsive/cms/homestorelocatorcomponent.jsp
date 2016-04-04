@@ -19,7 +19,10 @@ $(document).ready(function(){
 	    	 getDataFromServer(lat,lot);
 	    },function() {
 	    	getDataFromServer(lat,lot);
-	    });
+	    },{ 
+			enableHighAccuracy: true,
+			timeout : 30000
+	});
 	  }else{
 		  getDataFromServer(lat,lot);
 	  }

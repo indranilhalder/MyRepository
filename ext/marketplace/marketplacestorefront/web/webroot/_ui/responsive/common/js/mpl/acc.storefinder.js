@@ -211,9 +211,12 @@ ACC.storefinder = {
 			var q = $(".js-store-finder-search-input").val();
 
 			if(q.length>0){
-				 var geocoder = new google.maps.Geocoder();
+				var geocoder = new google.maps.Geocoder();
 				var lat='0';
 				var lng='0';
+				if(q.trim()=='Current Location' && ACC.storefinder.coords.latitude ){
+					ACC.storefinder.getInitStoreData(null,ACC.storefinder.coords.latitude,ACC.storefinder.coords.longitude);
+				}else{
 				geocoder.geocode({ 'address': q }, function(results, status) {
 				    if (status == google.maps.GeocoderStatus.OK) {
 				    	var searchLocation = results[0].geometry.location;
@@ -226,7 +229,7 @@ ACC.storefinder = {
 				    	ACC.storefinder.getInitStoreData(null,lat,lng);
 				    } 
 				        }); 
-				// ACC.storefinder.getInitStoreData(q);
+				}
 			}else{
 				if($(".js-storefinder-alert").length<1){
 					var emptySearchMessage = $(".btn-primary").data("searchEmpty")
@@ -295,22 +298,30 @@ ACC.storefinder = {
 		$(".js-store-finder-pager-next").removeAttr("disabled")*/
 	},
 
+	geo_error: function() {
+		console.log("An error occurred during Geo coding lookup...");
+	},
+	
 	init:function(){
-		//$("#findStoresNearMe").attr("disabled","disabled");
 		$("#storesnear").hide();
 		var initialZoom=Number($("#initialZoom"));
-		$('#findStoresNearMe').attr("disabled");
+		$("#findStoresNearMe").addClass("findStoreNearMeDisable");
 		if(navigator.geolocation){
+			var geo_options = { 
+					enableHighAccuracy: true,
+					timeout : 30000
+			}
 			navigator.geolocation.getCurrentPosition(
 				function (position){
 					ACC.storefinder.coords = position.coords;
-					$('#findStoresNearMe').removeAttr("disabled");
+					//$('#findStoresNearMe').removeAttr("disabled");
+					$("#findStoresNearMe").removeClass("findStoreNearMeDisable");
 				},
 				function (error)
 				{
 					console.log("An error occurred... The error code and message are: " + error.code + "/" + error.message);
 				}
-			);
+			,ACC.storefinder.geo_error,geo_options);
 		}
 	},
 	loadinitGoogleMap:function(){
@@ -356,6 +367,8 @@ ACC.storefinder = {
 	{   
 		var errorMsg=$("#storefinderNoresult").val();
 		globalErrorPopup(errorMsg);
+		ACC.global.addGoogleMapsApi("ACC.storefinder.loadinitGoogleMap");
+		//loadinitGoogleMap();
 	} 
 	,
 applyGamma:function(map) {
