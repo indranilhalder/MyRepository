@@ -3004,17 +3004,17 @@ function checkSignInValidation(path){
 	$("#signinEmailIdDiv").hide();
 	if(emailId == null || emailId == ""){
 		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("E-mail cannot be left empty");	
+		$("#signinEmailIdDiv").html("Please enter all mandatory fields");	
 		validationResult=false;
 	}
 	else if(!emailPattern.test(emailId)){
 		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("Please enter a valid email ID");
+		$("#signinEmailIdDiv").html("Please enter all mandatory fields");
 		validationResult=false;
 	}
 	else if(password==null || password=="" || password.length==0){
 		$("#signinPasswordDiv").show();
-		$("#signinPasswordDiv").html("Password cannot be left empty");
+		$("#signinPasswordDiv").html("Please enter all mandatory fields");
 		validationResult=false;
 	}
 	
