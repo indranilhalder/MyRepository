@@ -3,14 +3,7 @@
  */
 package com.tisl.mpl.integration.job;
 
-import de.hybris.platform.catalog.model.classification.ClassificationClassModel;
-import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.core.Registry;
-import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
-import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.payment.model.PaymentTransactionModel;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -35,13 +28,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pojo.BulkSalesOrderXMLData;
 import com.tisl.mpl.pojo.ChildOrderXMlData;
 import com.tisl.mpl.pojo.SalesOrderXMLData;
@@ -314,7 +304,7 @@ public class SalesOrderXMLUtility
 	private List<ChildOrderXMlData> getChildOrderDataForXML(final List<AbstractOrderEntryModel> entries)
 	{
 		final List<ChildOrderXMlData> childOrderDataList = new ArrayList<ChildOrderXMlData>();
-		List<String> categoryList = new ArrayList<String>();
+		final List<String> categoryList = new ArrayList<String>();
 		LOG.debug("Abstract order entry " + entries);
 		if (null != entries && !entries.isEmpty())
 		{
@@ -403,44 +393,13 @@ public class SalesOrderXMLUtility
 						}
 						LOG.debug("after price set");
 					}
-
-					if (xmlToFico)
+					//TISPRD-901
+					if (null != entry.getFulfillmentType() && xmlToFico)
 					{
-						final String ussId = entry.getSelectedUSSID();
-
-						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
-						if (sellerInfoModel != null
-								&& sellerInfoModel.getRichAttribute() != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
-						{
-							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModes().getCode();
-							LOG.debug("inside rich attribute model" + fulfillmentType.toUpperCase() + " for ussid :" + ussId);
-							xmlData.setFulfillmentType(fulfillmentType.toUpperCase());
-						}
+						xmlData.setFulfillmentType(entry.getFulfillmentType());
+						LOG.debug("set fulfilment mode");
 					}
 
-					//	if (null != product.getSellerInformationRelator() && xmlToFico)
-					//					{
-					//						final Collection<SellerInformationModel> sellerinfolist = product.getSellerInformationRelator();
-					//						if (sellerinfolist.size() > 0)
-					//						{
-					//							for (final SellerInformationModel sellerEntry : sellerinfolist)
-					//							{
-					//								if (sellerEntry.getRichAttribute().size() > 0)
-					//								{
-					//									for (final RichAttributeModel richEntry : sellerEntry.getRichAttribute())
-					//									{
-					//										LOG.debug("inside rich attribute model" + richEntry.getDeliveryFulfillModes());
-					//										xmlData.setFulfillmentType(richEntry.getDeliveryFulfillModes().toString().toUpperCase());
-					//										LOG.debug("set fulfilment mode");
-					//									}
-					//								}
-					//							}
-					//						}
-					//					}
-					//
 					if (null != entry.getMplDeliveryMode() && xmlToFico)
 					{
 						LOG.debug("inside del mode" + entry.getMplDeliveryMode());
