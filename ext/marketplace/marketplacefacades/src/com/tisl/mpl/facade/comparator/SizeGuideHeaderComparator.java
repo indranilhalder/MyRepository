@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 
@@ -22,14 +21,12 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 	private Pattern regexPattern;
 	private List<List<String>> sizeSystems;
 
-	private static final Logger LOG = Logger.getLogger(SizeGuideHeaderComparator.class);
-
 	/**
 	 * This method is responsible for sizes to be displayed in size chart
 	 *
 	 *
-	 * @param sizeData1
-	 * @param sizeData2
+	 * @param arg0
+	 * @param arg1
 	 *
 	 */
 
@@ -162,8 +159,8 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 	/**
 	 * Compares two alphaNumeric string
 	 *
-	 * @param value1
-	 * @param value2
+	 * @param firstString
+	 * @param secondString
 	 */
 	/* Changes for TISPRO-250 */
 	protected int alphaNumericCompare(final String firstString, final String secondString)
