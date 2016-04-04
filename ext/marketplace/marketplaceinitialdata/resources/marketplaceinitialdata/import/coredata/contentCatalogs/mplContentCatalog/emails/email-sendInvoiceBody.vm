@@ -1,230 +1,97 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-		<title>Order Delivery</title>
-		<style>
- 		img.spacer-img {
- 			opacity:0;
- 			}
- 			.headerImage img{
- 			width:100%;
- 			}
-			.tableHeader td,.tableBody td{
-			border-bottom:1px solid #f4f4f4;
-			}
- 			
-		</style> 
-	</head>
-	<body style="margin:8px; background-color:#fff;">
-	
-	<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #cccccc; table-layout: fixed;">
-		<tr>
-			<td style="display:block" width="600" align="left" valign="top" class="headerImage">${ctx.cmsSlotContents.InvoiceSiteLogo}
-</td>
-		</tr>
-		
-		<tr>
-			<td align="left" valign="top" style="display:inherit;">
+<!DOCTYPE html>
+<head>
+<title>TATA - CLiQ</title>
+</head>
+
+<body>
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;" >
+  <tr>
+    <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" valign="top" bgcolor="#ffffff">${ctx.cmsSlotContents.InvoiceSiteLogo}</td>
+      </tr>
+ 
+      <tr>
+        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="13">&nbsp;</td>
+            <td>
 			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:0px">One Happy Shopper's</h2>
-			 <h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">Invoice Coming Up!</h2>
-				<table width="600" border="0" cellspacing="0" cellpadding="0" style="padding-left:13px;">
-					
-					
-					<tr>
-						
-						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
-						
-							
-						<tr>
-						
-							
-							<td width="486" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#000;"><font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.displayName},</font></td>
-						</tr>
-						<tr>
-							<td height="10" colspan="2" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-						</tr>
-						  <tr>
-							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We heard you wanted a copy of your order's invoice. So we've attached it for you.</td>
-						  </tr>
-						</table></td>
-						<td align="left" valign="top">&nbsp;</td>
-						</tr>
-						<tr>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-						</tr>
-						
-						<tr>
-						
-						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
-						
-							
-						
-						
-						  <tr>
-							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;"><strong>${ctx.orderCode}</strong> with <strong>${ctx.transactionID}</strong></td>
-						  </tr>
-						</table></td>
-						<td align="left" valign="top">&nbsp;</td>
-						</tr>
-						
-						<tr>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-						</tr>
-						
-						<tr>
-						
-						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
-						
-							
-						
-						
-						  <tr>
-							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We have tons of new stuff for you at TataCliq. So what are you waiting for?</strong></td>
-						  </tr>
-						</table></td>
-						<td align="left" valign="top">&nbsp;</td>
-						</tr>
-						
-						<tr>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-						</tr>
-						
-						<tr>
-	
-	<td align="center" valign="top"><table width="36%" border="0" cellspacing="0" cellpadding="0">
-	<tbody><tr bgcolor="#f5f5f5">
-	
-	
-	</tr>
-	<tr>
-	<td width="8%" align="left" valign="top">${ctx.cmsSlotContents.Invoiceletsgoshopping1}</td>
-	<td width="81%" align="center" valign="middle" bgcolor="#EE0C6E" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;"><a href="${ctx.websiteUrl}" style="color: #fff;text-decoration:none;">Let's go shopping!</a></td>
-	<td width="11%" align="left" valign="top">${ctx.cmsSlotContents.Invoiceletsgoshopping2}</td>
-	</tr>
-	</tbody></table></td>
-	<td align="left" valign="top">&nbsp;</td>
-	</tr>
-	
-	<tr>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-						</tr>
-						
-						
-																					
-						
-								
-				
-				
-			
-				
-				
-				
-				
-				
-				<tr>
-					 
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-						<tr>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">Invoice Coming Up!</h2>
+			<br>
+			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.displayName},</font>
+                  <br>
+                  <br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">We heard you wanted a copy of your order's invoice. So we've attached it for you.<br>
+                  <br>
+                  </font>
+				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;"><strong>${ctx.orderCode}</strong> with <strong>${ctx.transactionID}</strong><br>
+                  <br>
+                  </font>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">We have tons of new stuff for you at TataCliq. So what are you waiting for?<br>
+                  <br>
+                  </font>
+				  <div style="font-family:Arial, Helvetica, sans-serif;font-size: 16px;color:#AA133D;background-color:#EE0C6E;text-align: center;width: 25%;margin: auto;height: 35px;padding: 0 17px;
+"><a href="${ctx.websiteUrl}" style="color: #fff;text-decoration:none;line-height: 35px;font-weight:bold">Let's go shopping!</a><br>
+                  
+                  </div>
+				  <br>
+				  </td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      
+      <tr>
+        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="13">&nbsp;</td>
+            <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+             
+             
+             
+              
+              <tr>
                 <td height="60" align="left" valign="top">${ctx.cmsSlotContents.InvoiceTip}</td>
               </tr>
-						
-						<tr>
-                
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Window shopping at TataCliq is not for the faint-hearted. With so many great things to check out,we reckon you'll be a regular here in no time!
+ </span></td>
               </tr>
-						</table></td>
-					  <td align="left" valign="top">&nbsp;</td>
-					</tr>
-					<tr>
-					  
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table border="0" cellspacing="0" cellpadding="0">
-						<tr>
-						 
-						  <td rowspan="2" align="left" valign="top" color="#000" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">
-							
-							
-							
-							  Window shopping at TataCliq is not for the faint-hearted. With so many great things to check out,we reckon you'll be a regular here in no time!
-							 
-							</span></td>
-						  
-						  </tr>
-						
-						</table></td>
-					  <td align="left" valign="top">&nbsp;</td>
-					</tr>
-					
-					
-					
-					<tr>
-					 
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-					  <tr>
+              <tr>
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
-						<tr>
-						  <td>${ctx.cmsSlotContents.Invoicesmileyimg}</td></td>
-						  </tr>
-						</table></td>
-					  <td align="left" valign="top">&nbsp;</td>
-					</tr>
-					
-					
-					<tr>
-					
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
-						  </tr>
-						 
-						</table></td>
-					  <td align="left" valign="top">&nbsp;</td>
-					</tr>
-					<tr>
-					  <td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-					  <td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-					  <td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-					</tr>
-					<tr>
-					 
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-						 <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">© 2016 Tata CLiQ | All Rights Reserved</td>
-						  <td width="240" align="left" valign="top">&nbsp;</td>
-						  <td width="121" align="left" valign="top"><table width="70" border="0" cellspacing="0" cellpadding="0" align="right">
-							<tr>
-							<tr>
-							  <td width="8" align="left" valign="middle"><a href="https://www.facebook.com"  style="border:none;">${ctx.cmsSlotContents.Invoicefb}</td>
-							  <td width="8" align="left" valign="middle"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</td></td>
-							   <td width="8" align="left" valign="middle"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</td>
-							   <td width="8" align="left" valign="middle"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</td>
-							  
-							  </tr>
-							  
-							  </tr>
-							</table></td>
-						  </tr>
-						
-						</table></td>
-					  <td align="left" valign="top">&nbsp;</td>
-					</tr>
-					<tr>
-						  <td align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
-						  <td align="left" valign="top">&nbsp;</td>
-						  <td align="left" valign="top">&nbsp;</td>
-						  </tr>
-				</table>
-			
-		</tr>
-	</table>
+              <tr>
+                <td>${ctx.cmsSlotContents.Invoicesmileyimg}</td>
+              </tr>
+              <tr>
+                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
+                    <td>&nbsp;</td>
+                    <td width="27" align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.Invoicefb}</a></td>
+                    <td width="27" align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
+                    <td width="27" align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                    <td width="27" align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              </table></td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td bgcolor="#fbfbfb">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
 </body>
 </html>
