@@ -6570,6 +6570,12 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TISPRO-216 -->
+					<attribute type="java.lang.Double" qualifier="refundAmount">
+						<defaultvalue>false</defaultvalue>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
