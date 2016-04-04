@@ -19472,7 +19472,7 @@ header .content .marketplace.compact {
   line-height: 50px;
   text-align: center;
   margin-left: 0;
-  z-index: -1;
+ /*  z-index: -1; */
 }
 header .content .marketplace.compact a img{
  width: 130px;
@@ -33830,7 +33830,7 @@ main {
 }
 
 .simple-banner-component a {
-	display: block;
+	display: inline-block;
 }
 
 .image-map-component img {
@@ -36524,6 +36524,17 @@ height:200px;
 div.productInfo ul li span.product-size.carousel-size{
 display:block;
 }
-
+  .listing-leftmenu .checkbox-menu > a, .listing-leftmenu .checkbox-menu input[type='submit'] {
+    color: #A9143C;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin: 5px 0px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: block;
+    border:none;
+        -webkit-appearance: none;
+     }
 /* TISPRD-216 defect fix ends */
 
