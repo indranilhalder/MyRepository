@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 
 /**
- * @author 592991
+ * @author TCS
  *
  */
 public class SizeGuideHeaderComparator implements Comparator<String>
@@ -21,6 +21,8 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 	private String pattern;
 	private Pattern regexPattern;
 	private List<List<String>> sizeSystems;
+
+	private static final Logger LOG = Logger.getLogger(SizeGuideHeaderComparator.class);
 
 	/**
 	 * This method is responsible for sizes to be displayed in size chart
@@ -110,6 +112,10 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 			//values out of size-systems are placed as last thus so big number.
 			return Double.compare(modifiedValue1, modifiedValue2);
 		}
+		else if (value1SizeSystemIndex == -1 && value2SizeSystemIndex == -1)
+		{
+			return alphaNumericCompare(value1, value2);
+		}
 		//no luck - assume values are equal
 		return 0;
 	}
@@ -145,18 +151,20 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 	protected int numericCompare(final String value1, final String value2)
 	{
 		/* Changes for TISPRO-250 */
-		if (StringUtils.isAlphanumeric(value1) && StringUtils.isAlphanumeric(value2))
-		{
-			return alphaNumericCompare(value1, value2);
-		}
-		else
-		{
-			final double number1 = getNumber(value1);
-			final double number2 = getNumber(value2);
-			return Double.compare(number1, number2);
-		}
+		int retValue = 0;
+		final double number1 = getNumber(value1);
+		final double number2 = getNumber(value2);
+		retValue = Double.compare(number1, number2);
+		return retValue;
 	}
 
+
+	/**
+	 * Compares two alphaNumeric string
+	 *
+	 * @param value1
+	 * @param value2
+	 */
 	/* Changes for TISPRO-250 */
 	protected int alphaNumericCompare(final String firstString, final String secondString)
 	{
@@ -221,8 +229,9 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 
 			if (Character.isDigit(space1[0]) && Character.isDigit(space2[0]))
 			{
-				final Integer firstNumberToCompare = new Integer(Integer.parseInt(str1.trim()));
-				final Integer secondNumberToCompare = new Integer(Integer.parseInt(str2.trim()));
+				final Integer firstNumberToCompare = Integer.valueOf(Integer.parseInt(str1.trim()));
+				//new Integer(Integer.parseInt(str1.trim()));
+				final Integer secondNumberToCompare = Integer.valueOf(Integer.parseInt(str2.trim()));//;new Integer(Integer.parseInt(str2.trim()));
 				result = firstNumberToCompare.compareTo(secondNumberToCompare);
 			}
 			else
