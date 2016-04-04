@@ -20,15 +20,14 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
  html,body,main {
 	height: 100%;
 } 
-body.page-notFound, body.page-nonBusinessErrorFound{
-	height:auto;
-}
-body.page-notFound{
+
+body.template-pages-layout-errorPageTemplate{
 	    background: url('../images/404-page-bg.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    height:auto;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -15245,7 +15244,7 @@ body .account .right-account form input:focus {
     border-color: #AB8791;
 }
 body .account .right-account form .half {
-    width: 49%;
+    width: 49.8%;
     float: left;
 }
 body .account .right-account form .half input {
@@ -36451,10 +36450,10 @@ input#otpMobileNUMField:focus {
 	font-size: 12px;
 }
 
-@media ( min-width :1024px) and ( max-width : 1366px) {
+/* @media ( min-width :1024px) and ( max-width : 1366px) {
 	#submitPaymentFormCODButton {
 		width: 100% !important;
-	}
+	} */
 	@media ( min-width :1014px) and ( max-width : 1023px) {
 		#selectMode button {
 			width: 24%; 
@@ -36465,7 +36464,7 @@ input#otpMobileNUMField:focus {
 			width: 48%;
 		}
 	}
-	@media ( min-width :876px) and ( max-width : 1023px) {
+	/* @media ( min-width :876px) and ( max-width : 1023px) {
 		.make_payment, #paymentFormButton button {
 			width: 50% !important;
 		}
@@ -36484,7 +36483,7 @@ input#otpMobileNUMField:focus {
 		#submitPaymentFormCODButton {
 			width: 50% !important;
 		}
-	}
+	} */
 	.credit-card-group, .debit-card-group {
 		clear: both;
 		float: none;
@@ -37287,9 +37286,9 @@ width:auto;
     margin-top: -10px;
     font-size:14px;
 }
-.cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked + label + fieldset, .cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked ~ h2{
+/* .cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked + label + fieldset, .cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked ~ h2{
 	display:none;
-}
+} */
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li {
     padding: 0;
     border: 1px solid #CECFCE;
