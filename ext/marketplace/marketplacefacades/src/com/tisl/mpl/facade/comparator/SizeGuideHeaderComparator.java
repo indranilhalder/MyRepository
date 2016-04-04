@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 
@@ -20,6 +21,7 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 	private String pattern;
 	private Pattern regexPattern;
 	private List<List<String>> sizeSystems;
+	private static final Logger LOG = Logger.getLogger(SizeGuideHeaderComparator.class);
 
 	/**
 	 * This method is responsible for sizes to be displayed in size chart
@@ -111,6 +113,7 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 		}
 		else if (value1SizeSystemIndex == -1 && value2SizeSystemIndex == -1)
 		{
+			LOG.debug("calling alpha Numeric Compare");
 			return alphaNumericCompare(value1, value2);
 		}
 		//no luck - assume values are equal
