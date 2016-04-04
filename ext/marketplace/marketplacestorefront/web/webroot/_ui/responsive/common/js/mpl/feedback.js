@@ -20,6 +20,7 @@
 		 	$("#invalidEmail").show();
 		 	return false;
 		 } else {
+			 $("#shareFeedback").hide();
 			 return true;
 		 }
 		 
@@ -42,6 +43,7 @@
 		 if (x.value.trim().length<=0)  
 		 { 	
 		 	$("#invalidFeedback").show();
+		 	$("#shareFeedback").show();
 		 	return false;
 		 } else {
 			 return true;

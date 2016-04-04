@@ -42,11 +42,15 @@
 </form>
 
 <form id="feedBackFormNo" action="#nogo">
+
 <table class="feedback-thankyou" style="display: none;">
 		<tr>
 			<td><spring:theme code="text.thankyou.feedback" /></td>
 		</tr>
 	</table>
+	<div id="shareFeedback"
+		style="display: none; font-size: 16px; font-weight: 600; color: #60A119; padding-left: 32%;">Do
+		share your feedback - we love to hear what our friends think.</div>
 	<table class="feed-back-categories" style="display: none;">
 		<tr>
 			<td><spring:theme code="text.category" /></td>
