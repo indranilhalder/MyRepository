@@ -6,6 +6,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandConfiguration;
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandFactory;
 import de.hybris.platform.integration.oms.order.data.OrderPlacementResult;
+import de.hybris.platform.integration.oms.order.service.impl.DefaultOmsOrderService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.ticket.enums.CsTicketCategory;
@@ -34,7 +35,7 @@ import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.service.MplSendOrderFromCommerceToCRM;
 
 
-public class CustomOmsOrderService implements MplOmsOrderService
+public class CustomOmsOrderService extends DefaultOmsOrderService implements MplOmsOrderService
 {
 	private static final Logger LOG = Logger.getLogger(CustomOmsOrderService.class);
 	private OndemandHystrixCommandConfiguration hystrixCommandConfig;
@@ -133,6 +134,7 @@ public class CustomOmsOrderService implements MplOmsOrderService
 
 	}
 
+	@Override
 	public UpdatedSinceList<String> getUpdatedOrderIds(final Date updatedSince)
 	{
 		UpdatedSinceList<String> listofOrders = null;
@@ -142,6 +144,7 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		return listofOrders;
 	}
 
+	@Override
 	public void flagTheOrderAsFailed(final OrderModel orderModel, final Throwable cause)
 	{
 		final String ticketTitle = Localization.getLocalizedString("message.ticket.ordernotsent.title");
@@ -150,6 +153,7 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		createTicket(ticketTitle, ticketMessage, orderModel, CsTicketCategory.PROBLEM, CsTicketPriority.HIGH);
 	}
 
+	@Override
 	public Order getOrderByOrderId(final String orderId)
 	{
 		Order order = null;
@@ -157,6 +161,7 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		return order;
 	}
 
+	@Override
 	protected CsTicketModel createTicket(final String subject, final String description, final OrderModel orderModel,
 			final CsTicketCategory category, final CsTicketPriority priority)
 	{
@@ -197,9 +202,9 @@ public class CustomOmsOrderService implements MplOmsOrderService
 
 	/*
 	 * @Desc Used for generating xml
-	 *
+	 * 
 	 * @param order
-	 *
+	 * 
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
@@ -229,61 +234,73 @@ public class CustomOmsOrderService implements MplOmsOrderService
 		return xmlString;
 	}
 
+	@Override
 	public OndemandHystrixCommandConfiguration getHystrixCommandConfig()
 	{
 		return this.hystrixCommandConfig;
 	}
 
+	@Override
 	public void setHystrixCommandConfig(final OndemandHystrixCommandConfiguration hystrixCommandConfig)
 	{
 		this.hystrixCommandConfig = hystrixCommandConfig;
 	}
 
+	@Override
 	public Converter<OrderModel, Order> getOrderConverter()
 	{
 		return this.orderConverter;
 	}
 
+	@Override
 	public void setOrderConverter(final Converter<OrderModel, Order> orderConverter)
 	{
 		this.orderConverter = orderConverter;
 	}
 
+	@Override
 	public OrderFacade getOrderRestClient()
 	{
 		return this.orderRestClient;
 	}
 
+	@Override
 	public void setOrderRestClient(final OrderFacade orderRestClient)
 	{
 		this.orderRestClient = orderRestClient;
 	}
 
+	@Override
 	public TicketBusinessService getTicketBusinessService()
 	{
 		return this.ticketBusinessService;
 	}
 
+	@Override
 	public void setTicketBusinessService(final TicketBusinessService ticketBusinessService)
 	{
 		this.ticketBusinessService = ticketBusinessService;
 	}
 
+	@Override
 	public ModelService getModelService()
 	{
 		return this.modelService;
 	}
 
+	@Override
 	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
 	}
 
+	@Override
 	protected OndemandHystrixCommandFactory getOndemandHystrixCommandFactory()
 	{
 		return this.ondemandHystrixCommandFactory;
 	}
 
+	@Override
 	public void setOndemandHystrixCommandFactory(final OndemandHystrixCommandFactory ondemandHystrixCommandFactory)
 	{
 		this.ondemandHystrixCommandFactory = ondemandHystrixCommandFactory;
