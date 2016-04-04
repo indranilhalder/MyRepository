@@ -265,8 +265,8 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
@@ -311,8 +311,8 @@ public class CartPageController extends AbstractPageController
 							&& entryOld.getSelectedSellerInformation() != null
 							&& entryOld.getSelectedSellerInformation().getUssid() != null
 							&& entryLatest.getSelectedSellerInformation().getUssid()
-									.equalsIgnoreCase(entryOld.getSelectedSellerInformation().getUssid())
-							&& !entryOld.isGiveAway() && !entryLatest.isGiveAway())
+									.equalsIgnoreCase(entryOld.getSelectedSellerInformation().getUssid()) && !entryOld.isGiveAway()
+							&& !entryLatest.isGiveAway())
 					{
 
 						final BigDecimal updatedTotalPrice = new BigDecimal(entryLatest.getTotalPrice().getValue().toString());
@@ -331,16 +331,15 @@ public class CartPageController extends AbstractPageController
 						final int res = updatedTotalPrice.compareTo(oldTotalPrice);
 						if (res != 0)
 						{
-							priceModified.put(entryLatest.getEntryNumber().toString(),
-									cart.getCurrency().getSymbol() + entryOld.getTotalPrice().getValue());
+							priceModified.put(entryLatest.getEntryNumber().toString(), cart.getCurrency().getSymbol()
+									+ entryOld.getTotalPrice().getValue());
 							priceModifiedMssg.put(entryLatest.getEntryNumber().toString(), "Sorry! The price of this item has changed.");
 						}
-
-						final double oldPromoValue = (entryOld.getQuantity().doubleValue()
-								* Double.parseDouble(entryOld.getBasePrice().getValue().toString()))
+						final double oldPromoValue = (entryOld.getQuantity().doubleValue() * Double.parseDouble(entryOld.getBasePrice()
+								.getValue().toString()))
 								- Double.parseDouble(entryOld.getTotalPrice().getValue().toString());
-						final double latestPromoValue = (entryLatest.getQuantity().doubleValue()
-								* Double.parseDouble(entryLatest.getBasePrice().getValue().toString()))
+						final double latestPromoValue = (entryLatest.getQuantity().doubleValue() * Double.parseDouble(entryLatest
+								.getBasePrice().getValue().toString()))
 								- Double.parseDouble(entryLatest.getTotalPrice().getValue().toString());
 
 						if (oldPromoValue != latestPromoValue)
@@ -348,8 +347,8 @@ public class CartPageController extends AbstractPageController
 							promoModified.put(entryLatest.getEntryNumber().toString(), "Promotion has been modified");
 						}
 						//TISEE-535
-						final BigDecimal basetotal = new BigDecimal(
-								entryLatest.getBasePrice().getValue().doubleValue() * entryLatest.getQuantity());
+						final BigDecimal basetotal = new BigDecimal(entryLatest.getBasePrice().getValue().doubleValue()
+								* entryLatest.getQuantity());
 						final PriceData baseTotalPrice = priceDataFactory.create(PriceDataType.BUY, basetotal,
 								MarketplaceFacadesConstants.INR);
 
@@ -362,8 +361,8 @@ public class CartPageController extends AbstractPageController
 							if (entryOld.getCartLevelDisc() != null && entryOld.getCartLevelDisc().getValue() != null)
 							{
 								final double oldCartLevelDiscount = Double.parseDouble(entryOld.getCartLevelDisc().getValue().toString());
-								final double latestCartLevelDiscount = Double
-										.parseDouble(entryLatest.getCartLevelDisc().getValue().toString());
+								final double latestCartLevelDiscount = Double.parseDouble(entryLatest.getCartLevelDisc().getValue()
+										.toString());
 
 								//Adding to model
 								compareCartLevelDiscount(oldCartLevelDiscount, latestCartLevelDiscount, model);
@@ -438,8 +437,8 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
@@ -512,8 +511,8 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
@@ -619,16 +618,16 @@ public class CartPageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			getFrontEndErrorHelper().callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 		return returnPage;
 	}
 
-	private void createProductList(final Model model, final CartData cartData)
-			throws CMSItemNotFoundException, EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
+	private void createProductList(final Model model, final CartData cartData) throws CMSItemNotFoundException,
+			EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
 	{
 		LOG.debug("Entring into createProductList" + "Class NamecreateProductList :" + className);
 		boolean hasPickUpCartEntries = false;
@@ -663,8 +662,8 @@ public class CartPageController extends AbstractPageController
 	/**
 	 * Get Product Delivery Modes
 	 */
-	private void prepareDataForPage(final Model model, final CartData cartData)
-			throws CMSItemNotFoundException, EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
+	private void prepareDataForPage(final Model model, final CartData cartData) throws CMSItemNotFoundException,
+			EtailNonBusinessExceptions, EtailBusinessExceptions, Exception
 	{
 		LOG.debug("Entring into prepareDataForPage" + "Class NameprepareDataForPage :" + className);
 		final Map<String, String> ussidMap = new HashMap<String, String>();
@@ -1030,8 +1029,10 @@ public class CartPageController extends AbstractPageController
 							{
 								for (final PinCodeResponseData pinCodeResponseData : responseData)
 								{
-									if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null && pinCodeResponseData
-											.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
+									if (pinCodeResponseData != null
+											&& pinCodeResponseData.getIsServicable() != null
+											&& pinCodeResponseData.getIsServicable()
+													.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
 									{
 										isServicable = MarketplacecommerceservicesConstants.N;
 										break;
@@ -1243,8 +1244,8 @@ public class CartPageController extends AbstractPageController
 	 *
 	 * @param ProductCode
 	 */
-	private void removeEntryByProductCode(final String ProductCode)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions, Exception
+	private void removeEntryByProductCode(final String ProductCode) throws EtailBusinessExceptions, EtailNonBusinessExceptions,
+			Exception
 	{
 		LOG.debug("Entring into removeEntryByProductCode" + "Class NameremoveEntryByProductCode :" + className);
 		final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);

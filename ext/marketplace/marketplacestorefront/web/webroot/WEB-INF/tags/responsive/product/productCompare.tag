@@ -220,7 +220,7 @@
 	<div class="compare-wrapper">
 		<h2 class="comapreProducts">Compare Products</h2>
 		<p class="compare-titleContent">Compare upto 4 products</p>
-		<a href="#" class="closeLink">Close</a>
+		<a class="closeLink">Close</a>
 		<p class="compare-selectedProducts">
 			<span class="showSelections">See Selections</span> <span
 				class="hideSelections">Hide Selections</span>

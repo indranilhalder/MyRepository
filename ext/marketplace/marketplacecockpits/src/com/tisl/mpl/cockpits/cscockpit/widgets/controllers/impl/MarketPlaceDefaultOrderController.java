@@ -33,6 +33,8 @@ import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
+import com.tisl.mpl.integration.oms.adapter.CustomOmsOrderSyncAdapter;
+import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
@@ -92,7 +94,12 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 
 	@Autowired
 	private RegisterCustomerFacade registerCustomerFacade;
-
+	
+	@Autowired
+	private CustomOmsOrderService omsOrderService;
+	@Autowired
+	private CustomOmsOrderSyncAdapter customOmsOrderSyncAdapter;
+	
 	private static final Logger LOG = Logger
 			.getLogger(MarketPlaceDefaultOrderController.class);
 
@@ -200,6 +207,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 									.setCreationtime(new Date());
 							refundTransactionMappingModel
 									.setRefundType(JuspayRefundType.RETURN);
+							refundTransactionMappingModel
+									.setRefundAmount(orderEntry.
+											getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
 							getModelService().save(
 									refundTransactionMappingModel);
 						} else {
@@ -240,6 +250,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 				refundTransactionMappingModel.setCreationtime(new Date());
 				refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+				refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
 				getModelService().save(refundTransactionMappingModel);
 			}
 			// TISSIT-1784 Code addition ended
@@ -296,6 +307,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								.setCreationtime(new Date());
 						refundTransactionMappingModel
 								.setRefundType(JuspayRefundType.REFUND_DELIVERY_CHARGE);
+						refundTransactionMappingModel
+								.setRefundAmount(totalRefundDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 						getModelService().save(refundTransactionMappingModel);
 					}
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
@@ -535,6 +548,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 		}
 		return false;
 	}
+	
 
 	@Override
 	public boolean isOrderCODforDeliveryCharges(OrderModel order,
@@ -585,5 +599,23 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean syncOrder(OrderModel order){
+		LOG.debug("Going for Manal Sync of Order" +order.getCode());
+		order=getParentOrder(order);
+		customOmsOrderSyncAdapter.update(omsOrderService.getOrderByOrderId(order.getCode()), new Date());
+		LOG.debug("Manal Order Sync is Completed Successfully" +order.getCode());
+		return true;
+	}
+
+	private OrderModel getParentOrder(OrderModel order) {
+		// TODO Auto-generated method stub
+		if(order.getParentReference()!=null){
+			order=order.getParentReference();
+			getParentOrder(order);
+		}
+		return order;
 	}
 }

@@ -615,8 +615,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GENERATEOTPURL, method = RequestMethod.POST)
 	@RequireHardLogIn
-	public @ResponseBody String generateOTPforCOD(final Model model, final String mobileNumber)
-			throws InvalidKeyException, NoSuchAlgorithmException
+
+	public @ResponseBody String generateOTPforCOD(final Model model, final String mobileNumber) throws InvalidKeyException,
+			NoSuchAlgorithmException
+
 	{
 		//getting current user
 		final String mplCustomerID = (null == getUserService().getCurrentUser().getUid()) ? ""
@@ -790,9 +792,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					MarketplacecheckoutaddonConstants.CHECKOUTRESPONSEURL, MarketplacecheckoutaddonConstants.CHECKOUTCALLBACKURL);
 			model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, silentOrderPageData);
 			paymentForm.setParameters(silentOrderPageData.getParameters());
-			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORMMPLURL,
-					MarketplacecheckoutaddonConstants.PAYMENTVIEWURL);
-
+			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORMMPLURL, MarketplacecheckoutaddonConstants.PAYMENTVIEWURL);
 			setupMplPaymentPage(model);
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
 		}
@@ -1229,6 +1229,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.B6007, e);
 		}
+		catch (final Exception e)
+		{
+			LOG.error(MarketplacecheckoutaddonConstants.B6007, e);
+		}
 
 		final String ebsDowntime = getConfigurationService().getConfiguration()
 				.getString(MarketplacecheckoutaddonConstants.EBSDOWNTIME);
@@ -1613,6 +1617,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			catch (final Exception e)
 			{
 				LOG.error("Error while generating JSON ", e);
+				ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Error while generating JSON ", e);
 			}
 			responseData.setUssidPriceDetails(jsonResponse);
 		}
@@ -1865,7 +1874,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	private void saveDeliveryMethForFreebie(final AbstractOrderEntryModel cartEntryModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
-					throws Exception
+			throws Exception
 	{
 
 		MplZoneDeliveryModeValueModel mplDeliveryMode = null;

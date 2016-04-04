@@ -334,23 +334,24 @@
 																	</c:if>
 																</div>
 															</c:forEach>
-															<c:if
-																test="${not empty orderHistoryDetail.appliedProductPromotions}">
-																<ul>
-																	<c:forEach
-																		items="${orderHistoryDetail.appliedProductPromotions}"
-																		var="promotion">
-																		<c:set var="displayed" value="false" />
-																		<c:forEach items="${promotion.consumedEntries}"
-																			var="consumedEntry">
-																			<c:if
-																				test="${not displayed && consumedEntry.orderEntryNumber == entry.entryNumber}">
-																				<c:set var="displayed" value="true" />
-																				<li><span>${promotion.description}</span></li>
-																			</c:if>
+															<c:if test="${entry.giveAway || entry.isBOGOapplied}">
+																<c:if
+																	test="${not empty orderHistoryDetail.appliedProductPromotions}">
+																	<ul>
+																		<c:forEach
+																			items="${orderHistoryDetail.appliedProductPromotions}"
+																			var="promotion">
+																			<c:set var="displayed" value="false" />
+																			<c:forEach items="${promotion.consumedEntries}"
+																				var="consumedEntry">
+																				<c:if test="${not displayed && not entry.isBOGOapplied && entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+																					<c:set var="displayed" value="true" />
+																					<li><span>${promotion.description}</span></li>
+																				</c:if>
+																			</c:forEach>
 																		</c:forEach>
-																	</c:forEach>
-																</ul>
+																	</ul>
+																</c:if>
 															</c:if>
 														</p>
 													</div>

@@ -13,8 +13,12 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.List;
+
+import org.apache.velocity.tools.generic.NumberTool;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
@@ -50,8 +54,13 @@ public class OrderConfirmationRiskEmailContext extends AbstractEmailContext<Orde
 	private static final String CUSTOMER = "Customer";
 	private static final String COMMA = ",";
 	public static final String TRACK_ORDER_URL = "trackOrderUrl";
+	private static final String NUMBERTOOL = "numberTool";
 
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
+	@Autowired
+	private ConfigurationService configurationService;
 
 
 	@Override
@@ -107,11 +116,21 @@ public class OrderConfirmationRiskEmailContext extends AbstractEmailContext<Orde
 		}
 		put(NAMEOFPERSON, (name.length() > 0 ? name : CUSTOMER));
 		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+		put(NUMBERTOOL, new NumberTool());
+
 		/*
 		 * if (null != customer.getDisplayName()) { if (!customer.getDisplayName().equals(" ")) { put(CUSTOMER_NAME,
 		 * customer.getDisplayName()); } else { put(CUSTOMER_NAME, "Customer"); } } else { put(CUSTOMER_NAME, "Customer");
 		 * }
 		 */
+
+		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+				"1800-208-8282");
+		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
+		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
 
 
 	}

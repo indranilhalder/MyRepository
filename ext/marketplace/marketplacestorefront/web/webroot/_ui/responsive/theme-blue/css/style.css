@@ -29,6 +29,10 @@ body.template-pages-layout-errorPageTemplate{
     background-size: cover;
     height:auto;
 }
+
+body.page-notFound{
+	height:auto;
+}
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block; }
@@ -36,8 +40,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 body {
   line-height: 1;
    -webkit-font-smoothing: subpixel-antialiased;
-   max-width:1400px;
-   margin: 0 auto; }
+  }
 
 ol, ul {
   list-style: none; }
@@ -58,6 +61,9 @@ blockquote, q {
 	padding-right:0px !important;
 }
 
+body .mainContent-wrapper > .container{
+  max-width:1400px;
+   margin: 0 auto;}
 blockquote:before, blockquote:after, q:before, q:after {
   content: '';
   content: none; }
@@ -625,7 +631,7 @@ input:focus {
     text-align: left;
     border: 1px solid #DFD1D5;
     position: relative;
-    padding-top: 48px;
+    padding-top: 47px;
     font-size: 16px;
     font-weight: 500;
     height: 50px;
@@ -8394,6 +8400,7 @@ div.wishlist-content .pagination {
 	position: absolute;
 	width:100%;
 	bottom:0;
+	    left: 0px;
 }
   body.page-checkout-login  .body-Content,  body.page-multiStepCheckoutSummaryPage  .body-Content{
   	padding-bottom:0px;
@@ -13601,9 +13608,10 @@ div.get-in-touch ul li,
 .contact-us-header ul li img {
 	display: block;
 	float: left;
+	margin-right:15px;
+	margin-top:5px;
 }
 .contact-us-header ul li > div {
-	margin-top: 15px;
 	float: left;
 }
 .no-results ul li span,
@@ -19544,7 +19552,7 @@ header .content .marketplace.compact {
   line-height: 50px;
   text-align: center;
   margin-left: 0;
-  z-index: -1;
+ /*  z-index: -1; */
 }
 header .content .marketplace.compact a img{
  width: 130px;
@@ -22838,6 +22846,9 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 .serp-addtobag.js-add-to-cart {
 	background-color: rgba(248, 249, 251,0);
 	    line-height: 14px;
+	font-size: 12px !important;
+    line-height: 24px !important;
+    font-weight: 600 !important;
 } 
 .product-tile .image .quickview a{
 	position:relative;
@@ -22854,6 +22865,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 .product-tile .image .quickview span {
     text-transform: uppercase;
     color: #A9143C;
+    font-weight: 600;
    }
     .product-tile .image .quickview span:before {
     font-family: 'icomoon';
@@ -22874,7 +22886,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
     -moz-transition: opacity 0.3s;
     transition: opacity 0.3s;
 }
-.product-tile:hover .image .quickview .serp-addtobag{
+.product-tile .image .quickview .serp-addtobag{
 font-size:12px;
 font-weight:500;
 font-weight:600;
@@ -22885,7 +22897,7 @@ font-weight:600;
 
 	
 }
-.product-tile:hover .image .quickview .serp-addtobag span:before {
+.product-tile .image .quickview .serp-addtobag span:before {
     font-family: 'icomoon';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -22898,6 +22910,7 @@ font-weight:600;
     top: 3px;
     position: relative;
     font-weight: bold;
+    line-height: 14px;
 }}
 .address-form .control-label.add-address-left-label{
 	    text-transform: uppercase;
@@ -29800,7 +29813,7 @@ margin: 10px 0px;
 	max-width: 100%;
 }
 #bestPicks .short-info span , #bestPicks .short-info p{
-    /*font-size: 12px;
+    /* font-size: 12px;
     font-family: "Avenir Next";
     color:#333;
      font-weight: 500; 
@@ -29822,7 +29835,7 @@ font-family:DejaVu Sans;
 } */
 
 #bestPicks .short-info a {
-    /*font-size: 12px;
+    /* font-size: 12px;
     font-family: "Avenir Next";
      font-weight: 600; 
     text-align: center;*/
@@ -29832,7 +29845,7 @@ font-family:DejaVu Sans;
     width: 100%;
 }
 #bestPicks .short-info a span,#bestPicks .short-info a p {
-    /*font-size: 12px;
+    /* font-size: 12px;
     font-family: "Avenir Next";
     color:inherit;
      font-weight: 600; 
@@ -29843,7 +29856,7 @@ font-family:DejaVu Sans;
     padding: 0;
 }
 #bestPicks .short-info span a,#bestPicks .short-info p a {
-     /*font-size: 12px;
+    /* font-size: 12px;
     font-family: "Avenir Next";
     font-weight: 600;
     text-align: center; */
@@ -33981,7 +33994,7 @@ main {
 }
 
 .simple-banner-component a {
-	display: block;
+	display: inline-block;
 }
 
 .image-map-component img {
@@ -36672,7 +36685,18 @@ height:200px;
 div.productInfo ul li span.product-size.carousel-size{
 display:block;
 }
-
+  .listing-leftmenu .checkbox-menu > a, .listing-leftmenu .checkbox-menu input[type='submit'] {
+    color: #A9143C;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin: 5px 0px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: block;
+    border:none;
+        -webkit-appearance: none;
+     }
 /* TISPRD-216 defect fix ends */
 /*mini transient bag css changes starts*/
 header .content .right>ul>li.transient-mini-bag {

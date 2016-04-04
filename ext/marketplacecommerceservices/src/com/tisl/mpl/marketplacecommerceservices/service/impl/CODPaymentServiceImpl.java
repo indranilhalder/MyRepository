@@ -56,7 +56,7 @@ public class CODPaymentServiceImpl implements CODPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService#getTransactionModel(de.hybris.platform.core
 	 * .model.order.CartModel)
@@ -111,7 +111,7 @@ public class CODPaymentServiceImpl implements CODPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService#getPaymentTransactionEntryModel(de.hybris.platform
 	 * .payment.model.PaymentTransactionModel)
@@ -120,28 +120,20 @@ public class CODPaymentServiceImpl implements CODPaymentService
 	public void getPaymentTransactionEntryModel(final PaymentTransactionModel paymentTransactionModel, final CartModel cart,
 			final Double amount)
 	{
-		// YTODO Auto-generated method stub
 		final PaymentTransactionEntryModel paymentTransactionEntryModel = getModelService().create(
 				PaymentTransactionEntryModel.class);
-		final String codCode = getCodCodeGenerator().generate().toString();
-
-		//paymentTransactionEntryModel.setType(value);
+		//Reverting BACK TISPRO-192 as Order was not getting placed from CSCOCKPIT
 		paymentTransactionEntryModel.setPaymentTransaction(paymentTransactionModel);
 		paymentTransactionEntryModel.setCurrency(cart.getCurrency());
+		paymentTransactionEntryModel.setTransactionStatus(getConfigurationService().getConfiguration().getString(
+				"payment.transactionStatus"));
 
-		//TISPRO-192
-		//		paymentTransactionEntryModel.setTransactionStatus(getConfigurationService().getConfiguration().getString(
-		//				"payment.transactionStatus"));
-		paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
-		//paymentTransactionEntryModel.setCode(paymentTransactionModel.getCode());
-		paymentTransactionEntryModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
-		paymentTransactionEntryModel.setAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
-		//		paymentTransactionEntryModel.setTransactionStatusDetails(getConfigurationService().getConfiguration().getString(
-		//				"payment.transactionStatusDetails"));
+		paymentTransactionEntryModel.setCode(paymentTransactionModel.getCode());
+		paymentTransactionEntryModel.setAmount(new BigDecimal(amount.doubleValue()));
+		paymentTransactionEntryModel.setTransactionStatusDetails(getConfigurationService().getConfiguration().getString(
+				"payment.transactionStatusDetails"));
 		paymentTransactionEntryModel.setTime(new Date());
-		//		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
-		paymentTransactionEntryModel.setType(PaymentTransactionType.COD_PAYMENT);
-		//paymentTransactionEntryModel.setPaymentMode(OTPTypeEnum.COD.toString());
+		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
 		paymentTransactionEntryModel.setPaymentMode(mplPaymentDaoImpl.getPaymentMode(OTPTypeEnum.COD.toString()));
 		getModelService().save(paymentTransactionEntryModel);
 
@@ -188,7 +180,7 @@ public class CODPaymentServiceImpl implements CODPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService#getPaymentTransactionEntryModel(de.hybris.platform
 	 * .payment.model.PaymentTransactionModel)
