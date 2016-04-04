@@ -6106,10 +6106,16 @@ text-transform: uppercase;
         background-position: 95% 53%; }
       .cart.wrapper .left-block .payments.tab-view .tabs .product-block.emi .bank-select p, .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select p, .confirmation .left-block .payments.tab-view .tabs .product-block.emi .bank-select p, .confirmation .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select p {
         margin: 10px 0;
-        font-weight: 600;
-        color: #A9143C;
-        line-height: 15px;
-        font-size: 11px; }
+        font-weight: 500;
+       color: #333;
+    line-height: 15px;
+    font-size: 16px; }
+     .cart.wrapper .left-block .payments.tab-view .tabs .product-block.emi .bank-select p.emi-plan{
+     border-top: 1px solid #cdcdcd;
+    padding-top: 15px;
+    margin-top:20px;
+    margin-bottom:15px;
+     }
       .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item, .confirmation .left-block .payments.tab-view .tabs .product-block li.item {
         padding: 0px 15px;
         clear: both; }
