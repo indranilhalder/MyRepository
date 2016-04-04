@@ -313,7 +313,7 @@ public class SalesOrderXMLUtility
 	private List<ChildOrderXMlData> getChildOrderDataForXML(final List<AbstractOrderEntryModel> entries)
 	{
 		final List<ChildOrderXMlData> childOrderDataList = new ArrayList<ChildOrderXMlData>();
-		final List<String> categoryList = new ArrayList<String>();
+		List<String> categoryList = new ArrayList<String>();
 		LOG.debug("Abstract order entry " + entries);
 		if (null != entries && !entries.isEmpty())
 		{
