@@ -22,8 +22,10 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,6 +52,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.promotion.service.SellerBasedPromotionService;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -80,6 +83,9 @@ public class MiniCartController extends AbstractController
 
 	@Resource(name = "cmsComponentService")
 	private CMSComponentService cmsComponentService;
+
+	@Resource(name = "sellerBasedPromotionService")
+	private SellerBasedPromotionService promotionService;
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
@@ -202,21 +208,38 @@ public class MiniCartController extends AbstractController
 
 				if (StringUtils.isNotEmpty(requiredCartEntry.getProductPromoCode()))
 				{
-					transientCartJSON.put("offer", requiredCartEntry.getProductPromoCode());
+					try
+					{
+						List<AbstractPromotionModel> promotions = new ArrayList<AbstractPromotionModel>();
+						promotions = promotionService.fetchPromotionDetails(requiredCartEntry.getProductPromoCode());
+						if (promotions != null && promotions.size() > 0)
+						{
+							transientCartJSON.put("offer", promotions.get(0).getTitle());
+						}
+					}
+					catch (final EtailBusinessExceptions e)
+					{
+						ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+					}
+					catch (final EtailNonBusinessExceptions e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+					}
+
+					catch (final Exception e)
+					{
+						ExceptionUtil.etailNonBusinessExceptionHandler(
+								new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+
+					}
+
+
+
 				}
 			}
 
-			/*
-			 * final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(productData.getCode()); String productPrice =
-			 * MarketplacecommerceservicesConstants.EMPTY;
-			 *
-			 * if (buyBoxData != null) {
-			 *
-			 * if (buyBoxData.getSpecialPrice() != null) { productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
-			 * } else if (buyBoxData.getPrice() != null) { productPrice = buyBoxData.getPrice().getFormattedValue(); } else
-			 * { productPrice = buyBoxData.getMrp().getFormattedValue(); } } transientCartJSON.put("productPrice",
-			 * productPrice);
-			 */
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -227,6 +250,12 @@ public class MiniCartController extends AbstractController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 
 		}
 
