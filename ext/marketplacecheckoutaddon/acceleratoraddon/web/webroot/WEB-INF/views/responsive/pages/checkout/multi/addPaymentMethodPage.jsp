@@ -618,8 +618,8 @@
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
-						                           		<span class="error-message" id="cvvError"></span> 
 						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a>
+						                           		<span class="error-message" id="cvvError"></span> 
 						                            </div>
 												</fieldset>
 		            							<div class="controls" id="billingAddress">

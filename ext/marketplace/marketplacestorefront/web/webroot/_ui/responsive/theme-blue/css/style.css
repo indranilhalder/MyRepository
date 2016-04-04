@@ -5995,6 +5995,7 @@ text-transform: uppercase;
     border-bottom: 23px solid transparent;
     border-top: 23px solid transparent;
     border-left: 10px solid #fbba21;
+    z-index: 1;
 }
 }
     .cart.wrapper .left-block .payments.tab-view .tabs, .confirmation .left-block .payments.tab-view .tabs {
@@ -6031,7 +6032,7 @@ text-transform: uppercase;
               max-width: -webkit-calc(100% - 115px);
               max-width: calc(100% - 115px); } }
         .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.header > ul li.pincode-button, .confirmation .left-block .payments.tab-view .tabs .product-block li.header > ul li.pincode-button {
-          width: 50%;
+          width: 30%;
           font-size: 9px;
           cursor: pointer; }
           @media (min-width: 650px) {
@@ -6105,10 +6106,16 @@ text-transform: uppercase;
         background-position: 95% 53%; }
       .cart.wrapper .left-block .payments.tab-view .tabs .product-block.emi .bank-select p, .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select p, .confirmation .left-block .payments.tab-view .tabs .product-block.emi .bank-select p, .confirmation .left-block .payments.tab-view .tabs .product-block.net-bank .bank-select p {
         margin: 10px 0;
-        font-weight: 600;
-        color: #A9143C;
-        line-height: 15px;
-        font-size: 11px; }
+        font-weight: 500;
+       color: #333;
+    line-height: 15px;
+    font-size: 16px; }
+     .cart.wrapper .left-block .payments.tab-view .tabs .product-block.emi .bank-select p.emi-plan{
+     border-top: 1px solid #cdcdcd;
+    padding-top: 15px;
+    margin-top:20px;
+    margin-bottom:15px;
+     }
       .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item, .confirmation .left-block .payments.tab-view .tabs .product-block li.item {
         padding: 0px 15px;
         clear: both; }
@@ -6704,12 +6711,16 @@ text-transform: uppercase;
         .cart.wrapper .product-block li.header ul li.pincode-button, .confirmation .product-block li.header ul li.pincode-button {
           text-align:center;
           color:#A9143C;
-          font-size: 10px;
-          font-weight: 600;
-          letter-spacing: 1.2px;
-          text-transform: uppercase;
+		    font-size: 16px;
+		    font-weight: 600;
+		    letter-spacing: 1px;
+		    text-transform: capitalize;
           text-decoration: underline;
           cursor:pointer; }
+        .cart.wrapper .product-block li.header ul li.pincode-button.paymentHeaderHeight{
+		    font-size: 14px !important; }
+          
+          
  .cart.wrapper .product-block li.header ul li.pincode-button:hover,
 .confirmation .product-block li.header ul li.pincode-button:hover {
   color: #A9143C;
@@ -8688,9 +8699,10 @@ footer .banner {
         position: relative;
         display: inline-block;
         font-family: inherit;
+        color: #857D7B;
         font-size: 28px;
     font-weight: 600;
-       padding: 10px 20px;
+       padding: 20px;
         -webkit-transition: color 0.3s;
         -moz-transition: color 0.3s;
         transition: color 0.3s; 
@@ -8700,6 +8712,9 @@ footer .banner {
        border-left: 1px solid #fff;
     	border-right: 1px solid #fff;
        } 
+       .top.checkout-top .content ul li.active {
+       color:#fff;
+       }
         .top.checkout-top .content ul li:first-child{
         border-left: none;
         }
@@ -8803,7 +8818,7 @@ footer .banner {
 .top.checkout-top .content ul li.delivery a {
     cursor: default;
 }
-.top.checkout-top .content ul li.step-done a {
+.top.checkout-top .content ul li.step-done span {
 	    margin-left: 42px;
 }
 @media(max-width:650px){
@@ -20592,7 +20607,6 @@ body .account .right-account .navigation .order-history
     margin-bottom: 5px;
     padding-left: 10px;
     margin-left:-2px;
-    height: 49px;
 }
 .cart.wrapper .left-block .payments.tab-view .new-card fieldset .full.exp {
     width: 31%;
@@ -20714,6 +20728,10 @@ font-size:12px;
 display: inline-block;
 padding-top: 5px;
 }
+.error-message#cvvError{
+	clear: both;
+    float: left;
+	}
 #mobilePrefix{
 	width:50px;
 	height:30px;
@@ -20731,9 +20749,9 @@ div#savedEMICard,div#savedCreditCard,div#savedDebitCard{
 div#savedCreditCard .credit-card-group .left-align-form,div#savedDebitCard .debit-card-group .left-align-form{
 	float:left;
 }
-div#savedDebitCard .debit-card-group .right-align-form, div#savedEMICard .credit-card-group .right-align-form{
+/* div#savedDebitCard .debit-card-group .right-align-form, div#savedEMICard .credit-card-group .right-align-form{
 	float:right;
-}
+} */
 div#savedCreditCard .credit-card-group .left-align-form .radio .creditCardsRadio{
 	margin-top:-13px;
 }
@@ -21082,7 +21100,8 @@ top:0px !important;
 div.radio{
 margin-right:10px;
 }
-div#savedCreditCard .credit-card-group .right-align-form {
+div#savedCreditCard .credit-card-group .right-align-form, 
+div#savedDebitCard .debit-card-group .right-align-form {
   display:inline-block;
   width:150px;
   vertical-align:top;
@@ -21166,7 +21185,7 @@ font-weight:600;
 } */
 .top.checkout-top .content ul li{
 	font-size:17px;
-	    padding: 0px;
+	padding: 10px 0px;
 }
 .top.checkout-top .content ul li.step-done:before {
     height: 25px;
@@ -26298,7 +26317,7 @@ line-height:19px;
 	}
 	#card .product-block li.header ul li:first-child,#netbanking .product-block li.header ul li:first-child,#emi .product-block li.header ul li:first-child,#COD .product-block li.header ul li:first-child {
 	display: inline-block;
-    width: 100%;
+    width: 69%;
     font-size: 16px;
     font-weight: 600;
 	}
@@ -26619,9 +26638,6 @@ li#savedCVVError{
 	display:none;}
 	body .account .account-header select.menu-select {
 		color:#000;
-	}
-	div#savedCreditCard .credit-card-group .right-align-form {
-		width:80px;
 	}
 	.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .card {
 		    width: -webkit-calc(100% - 160px);
@@ -37310,9 +37326,9 @@ width:auto;
     margin-top: -10px;
     font-size:14px;
 }
-/* .cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked + label + fieldset, .cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked ~ h2{
+.cart.wrapper .left-block .payments.tab-view .new-card input#sameAsShipping:checked + label + fieldset{
 	display:none;
-} */
+}
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block.net-bank li.item.cardForm > ul li {
     padding: 0;
     border: 1px solid #CECFCE;
@@ -37381,3 +37397,22 @@ padding:10px 2px;
 }
 li#newCard p{
 font-size:14px;}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedCreditCard .cvv input,.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item div#savedDebitCard .cvv input{
+    width: 75%;
+}
+@media(max-width:890px) and (min-width:651px){
+	div#savedCreditCard .credit-card-group .right-align-form,div#savedDebitCard .debit-card-group .right-align-form{
+	display:block;
+	}
+	.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .card{
+	width:100%;
+	}
+}
+@media(max-width:450px){
+	div#savedCreditCard .credit-card-group .right-align-form,div#savedDebitCard .debit-card-group .right-align-form{
+	display:block;
+	}
+	.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.item .card{
+	width:100%;
+	}
+}

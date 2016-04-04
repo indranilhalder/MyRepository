@@ -1202,24 +1202,20 @@ $(document).ready(function(){
 		$(".customer-service .left-nav-footer-mobile").append("<option value="+link+" data-href="+link+">"+title+"</option>");
 		}
 	});
-	/*if($("#sameAsShipping").is(":checked")){
+	if($("#sameAsShipping").is(":checked")){
 		$("#sameAsShipping").prev('h2').hide();
-		$("#sameAsShipping").parents('#billingAddress').next().hide();
 	}
 	else{
 		$("#sameAsShipping").prev('h2').show();
-		$("#sameAsShipping").parents('#billingAddress').next().show();
-	}*/
+	}
 	$("#sameAsShipping").click(function(){
 		if($("#sameAsShipping").is(":checked")){
 			$("#billingAddress fieldset .error-message").html("");
-			//$(this).prev('h2').hide();
-			//$(this).parents('#billingAddress').next().hide();
+			$(this).prev('h2').hide();
 		}
-		/*else{
+		else{
 			$(this).prev('h2').show();
-			$(this).parents('#billingAddress').next().show();
-		}*/
+		}
 		});
 
 	$(window).on("load resize", function() {
