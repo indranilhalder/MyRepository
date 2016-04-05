@@ -741,7 +741,7 @@ public class ProductPageController extends AbstractPageController
 
 			deliveryInfoList.add(ModelAttributetConstants.EXPRESS_DELIVERY);
 			deliveryInfoList.add(ModelAttributetConstants.HOME_DELIVERY);
-
+			deliveryInfoList.add(ModelAttributetConstants.CLICK_AND_COLLECT);
 
 			/* deliverychange */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfoList);
@@ -753,7 +753,7 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(ModelAttributetConstants.SELLERS_SKU_ID_LIST, form.getSellersSkuListId());
 			model.addAttribute(SKU_ID_FOR_ED, form.getSkuIdForED());
 			model.addAttribute(SKU_ID_FOR_HD, form.getSkuIdForHD());
-
+			model.addAttribute(SKU_ID_FOR_CNC, form.getSkuIdForCNC());
 			model.addAttribute(SKU_ID_FOR_COD, form.getSkuIdForCod());
 			model.addAttribute(ModelAttributetConstants.SKU_IDS_WITH_NO_STOCK, form.getSkuIdsWithNoStock());
 			final List<PinCodeResponseData> stockDataArray = new ArrayList<PinCodeResponseData>();
