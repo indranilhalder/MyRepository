@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.fulfilmentprocess.utility.GenericUtility;
+
 
 /**
  * @author TCS
@@ -114,7 +116,7 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 		else if (value1SizeSystemIndex == -1 && value2SizeSystemIndex == -1)
 		{
 			LOG.debug("calling alpha Numeric Compare");
-			return alphaNumericCompare(value1, value2);
+			return GenericUtility.alphaNumericCompare(value1, value2);
 		}
 		//no luck - assume values are equal
 		return 0;
@@ -159,93 +161,7 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 	}
 
 
-	/**
-	 * Compares two alphaNumeric string
-	 *
-	 * @param firstString
-	 * @param secondString
-	 */
-	/* Changes for TISPRO-250 */
-	protected int alphaNumericCompare(final String firstString, final String secondString)
-	{
-		if (secondString == null || firstString == null)
-		{
-			return 0;
-		}
 
-		final int lengthFirstStr = firstString.length();
-		final int lengthSecondStr = secondString.length();
-
-		int index1 = 0;
-		int index2 = 0;
-
-		while (index1 < lengthFirstStr && index2 < lengthSecondStr)
-		{
-			char ch1 = firstString.charAt(index1);
-			char ch2 = secondString.charAt(index2);
-
-			final char[] space1 = new char[lengthFirstStr];
-			final char[] space2 = new char[lengthSecondStr];
-
-			int loc1 = 0;
-			int loc2 = 0;
-
-			do
-			{
-				space1[loc1++] = ch1;
-				index1++;
-
-				if (index1 < lengthFirstStr)
-				{
-					ch1 = firstString.charAt(index1);
-				}
-				else
-				{
-					break;
-				}
-			}
-			while (Character.isDigit(ch1) == Character.isDigit(space1[0]));
-
-			do
-			{
-				space2[loc2++] = ch2;
-				index2++;
-
-				if (index2 < lengthSecondStr)
-				{
-					ch2 = secondString.charAt(index2);
-				}
-				else
-				{
-					break;
-				}
-			}
-			while (Character.isDigit(ch2) == Character.isDigit(space2[0]));
-
-			final String str1 = new String(space1);
-			final String str2 = new String(space2);
-
-			int result;
-
-			if (Character.isDigit(space1[0]) && Character.isDigit(space2[0]))
-			{
-				final Integer firstNumberToCompare = Integer.valueOf(Integer.parseInt(str1.trim()));
-				//new Integer(Integer.parseInt(str1.trim()));
-				final Integer secondNumberToCompare = Integer.valueOf(Integer.parseInt(str2.trim()));//;new Integer(Integer.parseInt(str2.trim()));
-				result = firstNumberToCompare.compareTo(secondNumberToCompare);
-			}
-			else
-			{
-				result = str1.compareTo(str2);
-			}
-
-			if (result != 0)
-			{
-				return result;
-			}
-		}
-		return lengthFirstStr - lengthSecondStr;
-	}
 
 	/**
 	 * @param value
@@ -291,7 +207,7 @@ public class SizeGuideHeaderComparator implements Comparator<String>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 
