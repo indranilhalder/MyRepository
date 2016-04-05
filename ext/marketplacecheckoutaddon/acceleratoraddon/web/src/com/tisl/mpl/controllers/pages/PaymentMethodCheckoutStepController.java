@@ -1549,16 +1549,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//Getting the fields from delivery address
 		try
 		{
-
-			final String firstName = cartData.getDeliveryAddress().getFirstName();
-			final String lastName = cartData.getDeliveryAddress().getLastName();
-			final String addressLine1 = cartData.getDeliveryAddress().getLine1();
-			final String addressLine2 = cartData.getDeliveryAddress().getLine2();
-			final String addressLine3 = cartData.getDeliveryAddress().getLine3();
-			final String country = cartData.getDeliveryAddress().getCountry().getName();
-			final String state = cartData.getDeliveryAddress().getState();
-			final String city = cartData.getDeliveryAddress().getTown();
-			final String pincode = cartData.getDeliveryAddress().getPostalCode();
+			if (cartData.getDeliveryAddress() != null)
+			{
+				final String firstName = cartData.getDeliveryAddress().getFirstName();
+				final String lastName = cartData.getDeliveryAddress().getLastName();
+				final String addressLine1 = cartData.getDeliveryAddress().getLine1();
+				final String addressLine2 = cartData.getDeliveryAddress().getLine2();
+				final String addressLine3 = cartData.getDeliveryAddress().getLine3();
+				final String country = cartData.getDeliveryAddress().getCountry().getName();
+				final String state = cartData.getDeliveryAddress().getState();
+				final String city = cartData.getDeliveryAddress().getTown();
+				final String pincode = cartData.getDeliveryAddress().getPostalCode();
 
 			concatAddress = firstName + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + lastName
 					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + addressLine1
@@ -1567,6 +1568,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + country + MarketplacecheckoutaddonConstants.STRINGSEPARATOR
 					+ state + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + city
 					+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + pincode;
+			}
+			return concatAddress;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
