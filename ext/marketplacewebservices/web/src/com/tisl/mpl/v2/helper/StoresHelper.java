@@ -43,10 +43,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.dao.MplSlaveMasterDAO;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 
@@ -238,36 +241,48 @@ public class StoresHelper extends AbstractHelper
 		{
 			LOG.debug("from storesAtCart method");
 		}
-		List<StoreLocationResponseData> storesLocationResponse = new ArrayList<StoreLocationResponseData>();
-		StoreLocationResponseData storeLocationResData = null;
-		final StoreLocationResponseData storeLocationResData1 = new StoreLocationResponseData();
+		List<StoreLocationResponseData> storesLocationResponse =null;
+		StoreLocationResponseData storeLocationResData = new StoreLocationResponseData();
 		try
 		{
 			storesLocationResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, null);
 			if (null != storesLocationResponse && storesLocationResponse.size() > 0)
 			{
 				storeLocationResData = storesLocationResponse.get(0);
+				storeLocationResData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
 			{
-				storeLocationResData1.setStatus("Something went wrong in storesAtCart");
+				LOG.debug(" no store found for pincode and ussid" + pincode+"  "+ ussId);			
+				EtailBusinessExceptions error=new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9517);
+				ExceptionUtil.etailBusinessExceptionHandler(error,null);
+				storeLocationResData.setError(error.getErrorMessage());
+				storeLocationResData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			}
-
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				storeLocationResData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				storeLocationResData.setErrorCode(e.getErrorCode());
+			}
+			storeLocationResData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception in storeLocationAts call");
-			storeLocationResData1.setStatus("Something went wrong in storeLocationAts call ");
+			if (null != e.getMessage())
+			{
+				storeLocationResData.setError(e.getMessage());
+			}
+			storeLocationResData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		if (null != storeLocationResData)
-		{
-			return dataMapper.map(storeLocationResData, StoreLocationResponseDataWsDTO.class, fields);
-		}
-		else
-		{
-			return dataMapper.map(storeLocationResData1, StoreLocationResponseDataWsDTO.class, fields);
-		}
-
+		return dataMapper.map(storeLocationResData, StoreLocationResponseDataWsDTO.class, fields);
 	}
 
 	protected double getInKilometres(final double radius, final double accuracy)

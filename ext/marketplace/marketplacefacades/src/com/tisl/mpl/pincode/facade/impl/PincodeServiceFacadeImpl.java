@@ -174,15 +174,15 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			{
 				return storeLocationResponseDataList;
 			}
+		 }else{
+			 LOG.error(" pincode model not found for given pincode "+pincode);
+			 throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9515);
 		 }
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			throw e;
 		}
-
-
-		return null;
 	}
 
 	/**
