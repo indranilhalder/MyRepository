@@ -17,7 +17,7 @@
             <td width="13">&nbsp;</td>
             <td>
 			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;">You're Genuinely Awesome. So We'll Make Sure</h2>
-			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:4px">Your Order Is Too.</h2><br>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 12px;margin-top:4px">Your Order Is Too.</h2><br>
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName} ,</font>
                   <br>
                   <br>
