@@ -109,10 +109,13 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 		var priceArrayList = [];
 		if (sizeMatched != "") {
 			minPriceSize = sizeMatched;
+			if(x[sizeMatched]!=undefined){
 			minPriceValue = x[sizeMatched];
-			 console.log("size match for single variant"
+			console.log("size match for single variant"
 					+ minPriceSize + "price"
 					+ minPriceValue); 
+			}
+			 
 		} else {
 			for (h = 0; h < serpSizeList.length; h++) {
 				var sizePrice = serpSizeList[h];
