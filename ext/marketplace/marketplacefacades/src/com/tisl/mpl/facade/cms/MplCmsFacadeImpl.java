@@ -510,7 +510,7 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							}
 							catch (final Exception e)
 							{
-								//handle exception logic TBD
+								LOG.warn("Encountered error while seting product image. ", e);
 							}
 							if (product.getName() != null)
 							{
