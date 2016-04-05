@@ -808,7 +808,7 @@ function displayFormForCC(){
 		$(".accepted-cards .visa").parent().css("display","inline-block");
 		$(".accepted-cards .master").parent().css("display","inline-block");
 		$(".accepted-cards .amex").parent().css("display","inline-block");
-		populateBillingAddress();
+	//	populateBillingAddress();
 		if($("#paymentMode").val()!='EMI'){
 			applyPromotion(null);
 		}
