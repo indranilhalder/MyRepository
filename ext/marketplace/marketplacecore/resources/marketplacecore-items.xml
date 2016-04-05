@@ -5220,6 +5220,14 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Start TISPRD-871 -->
+					<attribute qualifier="juspayRequestId" type="java.lang.String">
+						<description>JuspayRquestId for ORDER_CANCELLED and RETURN_COMPLETED status</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- End TISPRD-871 -->
 				</attributes>
 			</itemtype>
 
