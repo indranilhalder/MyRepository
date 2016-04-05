@@ -73,7 +73,7 @@
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 				
-				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
+				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/check" method="post" commandName="deliveryMethodForm">
 				<!-- TISCR-305 starts -->
 				<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 				<!-- TISCR-305 ends -->
