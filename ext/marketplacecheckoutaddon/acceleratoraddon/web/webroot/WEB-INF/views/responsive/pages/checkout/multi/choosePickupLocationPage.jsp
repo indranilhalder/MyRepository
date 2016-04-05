@@ -649,10 +649,10 @@
 															<c:if test="${not empty freebieProds.product.code}">
 															<div class="freebieId">Product ID: ${freebieProds.product.code}</div>
 															</c:if>
-															<c:if test="${not empty poses.product.size}">
+															<c:if test="${not empty freebieProds.product.size}">
 															<div class="freebieSize"><spring:theme code="text.size"/> ${freebieProds.product.size}</div>
 															</c:if>
-															<c:if test="${not empty poses.product.colour}">
+															<c:if test="${not empty freebieProds.product.colour}">
 															<div class="freebieColor"><spring:theme code="text.colour"/> ${freebieProds.product.colour}</div>
 															</c:if>
 															<c:if test="${not empty freebieProds.sellerName}">
