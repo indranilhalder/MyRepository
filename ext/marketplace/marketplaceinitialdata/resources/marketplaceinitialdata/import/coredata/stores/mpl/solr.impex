@@ -118,6 +118,11 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 
 ;$solrIndexedType; isVariant              ;boolean;            ;    ;    ;    ;    ;    ;mplIsVariantValueProvider;
 ;$solrIndexedType; inStockFlagForAddtoCart;boolean;            ;    ;    ;    ;    ;    ;mplProductInStockFlagValueProvider;
+#new changes
+;$solrIndexedType; displayStock			  ;string ;	  	;	;	 ;true;;;mplProductStockeValueProvider; 
+;$solrIndexedType; displayPrice    	      ;string ;     ;	;    ;true;;;mplSwatchPriceValueProvider;
+;$solrIndexedType; displayUrl			  ;string ;	    ;	;	 ;true;;;mplSwatchUrlValueProvider; 
+;$solrIndexedType; displayMrpPrice		  ;string ;	  	;	;	 ;true;;;mplProductMrpValueProvider; 								
 
 									
 # Category fields

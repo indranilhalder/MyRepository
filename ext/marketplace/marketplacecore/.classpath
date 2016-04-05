@@ -16,5 +16,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceomsservices"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceclientservices"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lucenesearch"/>
+	<classpathentry kind="lib" path="lib/json-simple-1.1.jar"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>
