@@ -903,7 +903,7 @@ function editAddress(addressId) {
         }
         else if (!regexCharSpace.test(document.getElementById("firstName").value)) { 
         	$("#errddressfn").css({"display":"block"});
-            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should contain alphabates and space only</font>";
+            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain numeric and special characters</font>";
             flagFn = false;
         }
         if (addressForm.lastName.value == null || addressForm.lastName.value == "") {
@@ -913,7 +913,7 @@ function editAddress(addressId) {
         }
         else if (!regexCharSpace.test(document.getElementById("lastName").value)) { 
         	$("#errddressln").css({"display":"block"});
-            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should contain alphabates and space only</font>";
+            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain numeric and special characters</font>";
             flagLn = false;
         }
         if (addressForm.line1.value == null || addressForm.line1.value == "") {

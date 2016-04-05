@@ -5228,6 +5228,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- End TISPRD-871 -->
+					<attribute qualifier="fulfillmentType" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="returnWindow" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
