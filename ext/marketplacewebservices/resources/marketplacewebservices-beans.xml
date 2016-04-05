@@ -672,6 +672,7 @@
 			<property name="cartPercentagePromotion" type="String" />
 			<property name="trackingAWB" type="String" />
 		<property name="returnAWB" type="String" />
+		<property name="storeDetails" type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />	
 	</bean>
 	<!-- 	-->	
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -795,7 +796,10 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.CartOfferDetailsWsDTO>" />
 		<!-- new count variable added  -->
 		<property name="count" type="int" />	
-		<property name="delistedMessage" type="String" />	
+		<property name="delistedMessage" type="String" />
+		<property name="pickupPersonName" type="String" />
+		<property name="pickupPersonMobile" type="String" />
+		
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
 		<property name="data" type="String" />
@@ -1351,7 +1355,10 @@
 		<property name="totalDiscount" type="String" />
 		<!-- <property name="statusDisplayMsg"
 			type="java.util.Map&lt;String,String>" /> -->
+		<property name="pickupPersonName" type="String" />
+		<property name="pickupPersonMobile" type="String" />	
 	</bean>
+	
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
 		<property name="pincodeListResponse"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.PinCodeResponseData>" />
@@ -1447,6 +1454,7 @@
 		<property name="returnAWB" type="String" />
 		<property name="logisticName" type="String" />
 		<property name="reverseLogisticName" type="String" />
+		<property name="storeDetails" type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />	
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.StatusResponseListDTO">
 		<property name="statusList" type="java.util.List&lt;com.tisl.mpl.wsdto.StatusResponseDTO>" />
@@ -1498,6 +1506,8 @@
 		<property name="paymentCardExpire" type="String" />
 			<property name="orderHistorySize" type="String" />
 		<property name="totalDiscounts" type="String" />
+		<property name="pickupPersonName" type="String" />
+		<property name="pickupPersonMobile" type="String" />
 	</bean>
 	
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">

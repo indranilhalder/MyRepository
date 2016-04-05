@@ -377,4 +377,22 @@
 	<bean id="mplSlaveMasterService" class="com.tisl.mpl.service.MplSlaveMasterServiceImpl"/>	
 	<bean id="mplSlaveMasterDao" class="com.tisl.mpl.dao.MplSlaveMasterDAOImpl"/>
 
+	<alias alias="mplDataMapper" name="defaultMplDataMapper"/>
+	<bean id="defaultMplDataMapper" class="de.hybris.platform.commercewebservicescommons.mapping.impl.DefaultDataMapper">
+		<property name="fieldSetBuilder" ref="mplFieldSetBuilder"/>
+	</bean>
+
+	<alias alias="mplFieldSetBuilder" name="defaultMplFieldSetBuilder"/>
+	<bean id="defaultMplFieldSetBuilder"
+	      class="de.hybris.platform.commercewebservicescommons.mapping.impl.DefaultFieldSetBuilder">
+		<property name="defaultRecurrencyLevel" value="4"/>
+		<property name="defaultMaxFieldSetSize" value="50000"/>
+		<property name="fieldSetLevelHelper" ref="mplFieldSetLevelHelper"/>
+	</bean>
+
+	<alias alias="mplFieldSetLevelHelper" name="defaultMplFieldSetLevelHelper"/>
+	<bean id="defaultMplFieldSetLevelHelper"
+	      class="de.hybris.platform.commercewebservicescommons.mapping.impl.DefaultFieldSetLevelHelper">
+	</bean>
+
 </beans>

@@ -66,6 +66,7 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		addPrincipalInformation(source, target);
 		addConvinienceCharges(source, target);
 		addVoucherDiscount(source, target);
+		addPickupPersonDetails(source,target);
 
 		if (CollectionUtils.isNotEmpty(source.getAllPromotionResults()))
 		{
@@ -311,6 +312,12 @@ public class MplOrderPopulator extends AbstractOrderPopulator<OrderModel, OrderD
 		}
 
 		target.setCouponDiscount(createPrice(source, Double.valueOf(discounts)));
+	}
+	
+	private void addPickupPersonDetails(final OrderModel source, final OrderData target)
+	{
+		target.setPickupName(source.getPickupPersonName());
+		target.setPickupPhoneNumber(source.getPickupPersonMobile());
 	}
 
 }
