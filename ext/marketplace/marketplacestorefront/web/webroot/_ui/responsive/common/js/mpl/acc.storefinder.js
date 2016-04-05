@@ -217,7 +217,7 @@ ACC.storefinder = {
 				if(q.trim()=='Current Location' && ACC.storefinder.coords.latitude ){
 					ACC.storefinder.getInitStoreData(null,ACC.storefinder.coords.latitude,ACC.storefinder.coords.longitude);
 				}else{
-				geocoder.geocode({ 'address': q }, function(results, status) {
+				geocoder.geocode({ 'address': q + ' India' }, function(results, status) {
 				    if (status == google.maps.GeocoderStatus.OK) {
 				    	var searchLocation = results[0].geometry.location;
 				    	//console.log("Check for logs.")
