@@ -57,6 +57,10 @@
     .inputBoxHeight {
 	  height: 80px !important;
 	}
+	
+	.btn-info {
+		background-color: #A9143C !important;
+	}
 </style>
 
 <script type="text/javascript">
@@ -172,7 +176,6 @@
 		});
 	</script>
 
-	<div class="body-Content">
 		<div
 			class="/checkout-content cart checkout wrapper">
 			<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
@@ -283,10 +286,10 @@
 									<div class="col-md-1"></div>
 									<c:choose>
 										<c:when test="${returnLogisticsCheck eq false}">
-											<input type="button" id="proceedBtnNew" value="Proceed" class="btn btn-info" data-url="${request.contextPath}/my-account/order/returnReplace?orderCode=${returnPincodeCheckForm.orderCode}&ussid=${returnPincodeCheckForm.ussid}&transactionId=${returnPincodeCheckForm.transactionId}" style="border: none; width: 100px;" />
+											<input type="button" id="proceedBtnNew" value="Self Ship" class="btn btn-info" data-url="${request.contextPath}/my-account/order/returnReplace?orderCode=${returnPincodeCheckForm.orderCode}&ussid=${returnPincodeCheckForm.ussid}&transactionId=${returnPincodeCheckForm.transactionId}" style="border: none; width: 100px;" />
 										</c:when>
 										<c:otherwise>
-											<input type="button" id="proceedBtn" value="Proceed" class="btn btn-info"	style="border: none; width: 100px;" disabled />
+											<input type="button" id="proceedBtn" value="Self Ship" class="btn btn-info"	style="border: none; width: 100px;" disabled />
 										</c:otherwise>
 									</c:choose>									
 								</div>
@@ -309,7 +312,6 @@
 				</div>
 			</div>
 
-		</div>
 		<script>
 			$(document).ready(function() {
 				function selectState(stateName){
@@ -345,9 +347,13 @@
 					$(".country").val("India");
 				}
 				document.onload = loadFormData();
-				$.delay(1000, function(){
+				/* $.delay(1000, function(){
 					loadFormData();
-				});
+				}); */
+				
+				setTimeout(function(){ loadFormData(); }, 100);
+				
+				
 				
 			});
 		</script>
