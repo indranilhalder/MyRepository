@@ -654,6 +654,9 @@ input:focus {
     	display: inline-block;
     	color: #000;
          }
+      .select-view .select-list > .selected.micrositeSellerName:after {
+    	color: #fff;
+         }
     @media (max-width: 900px) {
       .select-view .select-list > .selected {
         font-size: 14px; } }
@@ -1513,6 +1516,10 @@ h2 {
             width: -webkit-calc(100% - 208px);
             width: calc(100% - 208px); 
         }
+          header.brand-header .content nav > ul > li:first-child  > ul:hover {
+            width: -webkit-calc(100% - 285px);
+            width: calc(100% - 285px); 
+        }
 
             
         header .content nav > ul > li:first-child + li {
@@ -1546,7 +1553,7 @@ h2 {
             font-weight: 100;
                 content: "\f0d7";
 		    display: inline-block;
-		    color: #000;
+		    color: #fff;
 		    position: relative;
 		    margin-left: 9px;
 		    top: 2px;
@@ -1814,6 +1821,9 @@ h2 {
             -webkit-transition: color 0.15s;
             -moz-transition: color 0.15s;
             transition: color 0.15s; }
+          header .content nav > ul > li#shopMicrositeSeller:hover > .toggle {
+            color: #fff;
+            }
             /* header .content nav > ul > li:hover > .toggle:after {
               font-family: 'FontAwesome';
               -webkit-font-smoothing: antialiased;
@@ -4275,6 +4285,9 @@ h2 {
 	position: relative;
 	overflow: hidden;
 }
+.feature-collections ul.collections li.chef.sub {
+	background: #fafafa;
+}
 
 .feature-collections ul.collections li::after {
 	clear: both;
@@ -5459,6 +5472,8 @@ text-transform: uppercase;
         text-align: center; }
       .cart.wrapper .right-block .block .checkout-types li, .cart.wrapper .right-block .block .checkout-types span, .confirmation .right-block .block .checkout-types li, .confirmation .right-block .block .checkout-types span {
         margin: 10px 0; }
+        .cart.wrapper .right-block .block .checkout-types li#expresscheckoutid p{
+            margin-bottom: 10px;}
       .cart.wrapper .right-block .block .checkout-types p, .confirmation .right-block .block .checkout-types p {
         margin-top: 10px; }
       .cart.wrapper .right-block .block .checkout-types .checkout-button button, .confirmation .right-block .block .checkout-types .checkout-button button {
@@ -17331,20 +17346,24 @@ font-weight:normal;
 	  header .content nav > ul > li:nth-of-type(1) > ul {		
 	  		left: 185px;		
 	  }		
-	    header.brand-header .content  .bottom.active nav > ul > li:first-child > ul
-          {
-          	left:159px !important;;
-          }
-	  .brand header .content nav > ul > li:nth-of-type(1) > ul {		
-	  		left: 5px;		
-	  }		
 	  header .content nav > ul > li:nth-of-type(2) > ul {		
 	  		left: 365px;		
 	  }		
-	  .brand header .content nav > ul > li:nth-of-type(2) > ul {		
-	  		left: 135px;		
-	  }		
   }		
+     @media (min-width:791px) and  (max-width:820px)		
+  {		
+  header.brand-header .content .bottom.active nav{
+  padding-left: 70px !important;
+  }
+	    header.brand-header .content  .bottom.active nav > ul > li:first-child > ul
+          {
+          	left:250px !important;
+          }
+           header.brand-header .content   .bottom.active nav > ul > li:first-child  > ul:hover {
+            width: -webkit-calc(100% - 255px) !important;
+            width: calc(100% - 255px) !important; 
+           }
+	    }	
   header .content .right > ul > li.logIn-hi{
   padding:0px;
   }
@@ -18450,6 +18469,13 @@ width:100%;
 	overflow: hidden;
 	width: auto;
 } 
+.electronics-brand .feature-categories.custom-feature.wrapper {
+	    background-color: #e6e6e6;
+	    padding:0px;
+} 
+.electronics-brand .feature-categories.custom-feature.wrapper > .content{
+	    background-color: #fff;
+} 
 
 .electronics-brand header .bottom .marketplace{
 	height: 60px;
@@ -19269,13 +19295,12 @@ header.brand-header .content .bottom .marketplace {
 
 header.brand-header .content .bottom nav {
 	color: #fff;
-    padding-left: 50px;
+    padding-left: 100px;
     margin-left: 20px;
 }
 
 header.brand-header .content .bottom nav>ul>li>.toggle {
 	padding-top: 15px;
-	line-height: 55px
 }
 
 header.brand-header .content .bottom nav>ul>li:hover {
@@ -19285,7 +19310,7 @@ header.brand-header .content .bottom nav>ul>li:hover {
 header.brand-header .content .bottom nav>ul>li>ul {
 	background-color: #b9b9b9;
 	top: 80px;
-	left: 245px;
+	left: 280px;
 }
 
 @media ( max-width :790px) {
@@ -19492,9 +19517,6 @@ body.template-pages-layout-micrositePage1 header.brand-header .select-view{
     background-color:#000;
     color:#fff;
     border-color:#fff;
-}
-body.template-pages-layout-micrositePage1 header .content .bottom .brand-logo .simple-banner-component{	
-	 padding-top:10px; 
 }
 }
 body.template-pages-layout-micrositePage1 header .content .bottom .brand-logo .simple-banner-component{
@@ -20156,6 +20178,10 @@ color: #ff829a;
             width: -webkit-calc(100% - 185px);
             width: calc(100% - 185px); 
            }
+         header.brand-header .content   .bottom.active nav > ul > li:first-child  > ul:hover {
+            width: -webkit-calc(100% - 285px);
+            width: calc(100% - 285px); 
+           }
            header .content .bottom.active .bag a:before
            {
            	  font-family: 'icomoon';
@@ -20295,6 +20321,9 @@ display: inline-block;
   float: left;
   width: 100%;
 }
+.account-only.product .product-tile .short-info .company {
+  font-size: 14px;
+ }
 .product-tile .short-info .company, .product-tile .short-info .price {
   font-size: 12px;
   font-family: "Avenir Next", "Courier New";
@@ -24017,23 +24046,22 @@ span.brand-subdesc {
 	width:35%;
 }
 .add_to_cart_form .out_of_stock #add_to_wishlist, #add_to_wishlist-sizeguide{
-    font-size: 12px;
+   font-size: 12px;
     letter-spacing: 1px;
-    line-height: 55px;
-    height: 55px;
+    height: 42px;
     width: 100%;
     padding: 0;
     font-weight: 500;
     clear: both;
-    color: #fff;
-    background-color: #A9143C;
+    color: #A9143C;
+    background-color: #fff;
     vertical-align: middle;
     text-transform: uppercase;
     text-align: center;
     font-family: "Avenir Next";
     display: block;
-    margin-top:5px;
-    border:0px;
+    margin-top: 5px;
+    border: 1px solid #a9143c;
 } 
 
 .out_of_stock {
@@ -26533,8 +26561,6 @@ li#savedCVVError{
 @media(min-width:651px){
 	.facet-name.js-facet-name h4.tree-dept{
 		    padding-bottom: 10px;
-	    text-transform: uppercase;
-	    font-size: 14px;
 	      padding-left: 10px;
 	}
 	#savedCreditCard .credit-card-group,#savedDebitCard .debit-card-group,#savedEMICard .credit-card-group{
@@ -28195,7 +28221,7 @@ body.page-reviews .my-reviews .product-tile .short-info .product-name {
     font-size: 14px;
 }
 body.page-reviews .review-list .product-tile .short-info .product-name {
-    font-size: 12px;
+    font-size: 16px;
     margin-bottom: 5px;
 }
 body .account .right-account .my-reviews .wrapper p.noReview {
@@ -29342,6 +29368,9 @@ position:relative;
 	border-bottom:1px solid #ccc;
 }
 @media (min-width: 651px){
+	.shop-promos .promos{
+	border-top: 1px solid #ccc;
+}
 .shop-promos .promos li {
 	border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
@@ -29544,7 +29573,26 @@ footer .footer-text {
     box-sizing: border-box;
     vertical-align: top;
     text-align: center;
+     transition: all .2s ease-in-out;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    
 }
+@media (min-width: 791px){
+	.home-brands-you-love-carousel-brands {
+     transition: all .2s ease-in-out;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    
+}
+.home-brands-you-love-carousel-brands:hover {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+}}
 .home-brands-you-love-carousel-brands img,.home-brands-you-love-side-image img,.home-brands-you-love-main-image img{
 max-width:100%;
 vertical-align: middle;
@@ -29756,7 +29804,7 @@ font-family:DejaVu Sans;
     font-weight: 600;
 	    margin: 15px auto;
     text-transform: uppercase;
-    display: none;
+    display: block;
     width: 200px;
     text-align: center;
     letter-spacing: 1.5px;
@@ -30146,7 +30194,11 @@ width: 100px !important;
 }
 
 .home-brands-you-love-wrapper p.home-brands-you-love-main-image-desc {
-	padding-top: 20px;
+	text-align: center;
+    padding: 10px;
+    width: 40%;
+    margin: auto;
+    line-height: 20px;
 }
 .home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading {
 	padding-top: 6px;
