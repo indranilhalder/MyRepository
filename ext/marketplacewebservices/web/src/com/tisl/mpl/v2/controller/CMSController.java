@@ -64,9 +64,6 @@ public class CMSController extends BaseController
 {
 	private final String MOBILE_DISCOVER_UID = "MobileHomepageDiscover";
 	private final String MOBILE_SHOWCASE_UID = "MobileHomepageShowCase";
-	private final String MOBILE_HOMEPAGE_UID = "MobileHomepage";
-	private static final String MOBILE_BRANDPAGE_UID = "MobileBrandPage";
-	private static final String MOBILE_CATEGORYPAGE_UID = "MobileCategoryPage";
 	private static final String MOBILE_DEALSBANNERPAGE_UID = "MobileDealsBannerPage";
 	private static final String MOBILE_DEALSPRODUCTPAGE_UID = "MobileDealsProductPage";
 
