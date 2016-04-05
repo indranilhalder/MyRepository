@@ -41,7 +41,6 @@ import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -540,19 +539,27 @@ public class SalesOrderReverseXMLUtility
 							LOG.debug("after price set");
 						}
 
-						final String ussId = entry.getSelectedUSSID();
+						/*
+						 * final String ussId = entry.getSelectedUSSID();
+						 * 
+						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
+						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
+						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
+						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() !=
+						 * null) { final String fulfillmentType = ((List<RichAttributeModel>)
+						 * sellerInfoModel.getRichAttribute()).get(0) .getDeliveryFulfillModes().getCode();
+						 * LOG.debug("inside rich attribute model" + fulfillmentType.toUpperCase() + " for ussid :" + ussId);
+						 * xmlData.setFulfillmentType(fulfillmentType.toUpperCase()); }
+						 */
 
-						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
-						if (sellerInfoModel != null
-								&& sellerInfoModel.getRichAttribute() != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+
+						//TISPRD-901
+						if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 						{
-							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModes().getCode();
-							LOG.debug("inside rich attribute model" + fulfillmentType.toUpperCase() + " for ussid :" + ussId);
-							xmlData.setFulfillmentType(fulfillmentType.toUpperCase());
+							xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
+							LOG.debug("set fulfilment mode");
 						}
+
 
 						//						if (null != product.getSellerInformationRelator() && xmlToFico)
 						//						{

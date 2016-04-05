@@ -49,9 +49,9 @@
 	
 	
 	
-	<alias name="defaultOmsOrderService2" alias="omsOrderService" />
-	<bean name="defaultOmsOrderService2"
-		class="com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService"
+	<alias name="customOmsOrderService" alias="omsOrderService" />
+	<bean name="customOmsOrderService"
+		class="com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService" parent="defaultOmsOrderService"
 		scope="tenant">
 		<property name="hystrixCommandConfig" ref="orderServiceCommandConfig" />
 		<property name="ondemandHystrixCommandFactory" ref="ondemandHystrixCommandFactory" />

@@ -59,6 +59,7 @@ import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
@@ -1009,8 +1010,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		for (int qty = 0; qty < quantity; qty++)
 		{
 
-			final OrderEntryModel orderEntryModel = getOrderService().addNewEntry(clonedSubOrder,
-					abstractOrderEntryModel.getProduct(), 1, abstractOrderEntryModel.getUnit(), -1, false);
+			OrderEntryModel orderEntryModel = getOrderService().addNewEntry(clonedSubOrder, abstractOrderEntryModel.getProduct(), 1,
+					abstractOrderEntryModel.getUnit(), -1, false);
 			orderEntryModel.setBasePrice(abstractOrderEntryModel.getBasePrice());
 			final SellerInformationModel sellerDetails = cachedSellerInfoMap.get(abstractOrderEntryModel.getSelectedUSSID());
 			final String sellerID = sellerDetails.getSellerID();
@@ -1123,8 +1124,49 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						- productApportionvalue - bogoCouponApportion))));
 				orderEntryModel.setCurrDelCharge(deliveryCharge);
 			}
+
+			orderEntryModel = setAdditionalDetails(orderEntryModel);
+
 		}
 	}
+
+	/**
+	 * Set FullFillment Type and Return Window
+	 *
+	 * @param oModel
+	 * @return orderEntryModel
+	 */
+	private OrderEntryModel setAdditionalDetails(final OrderEntryModel oModel)
+	{
+		final OrderEntryModel orderEntryModel = oModel;
+		List<RichAttributeModel> richAttributeModelList = null;
+
+		if (StringUtils.isNotEmpty(oModel.getSelectedUSSID()))
+		{
+			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+					oModel.getSelectedUSSID());
+			if (null != sellerInfoModel && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
+			{
+				richAttributeModelList = new ArrayList<RichAttributeModel>(sellerInfoModel.getRichAttribute());
+				if (CollectionUtils.isNotEmpty(richAttributeModelList))
+				{
+					final RichAttributeModel model = richAttributeModelList.get(0);
+					if (StringUtils.isNotEmpty(model.getReturnWindow()))
+					{
+						orderEntryModel.setReturnWindow(model.getReturnWindow());
+					}
+
+					if (null != model.getDeliveryFulfillModes() && StringUtils.isNotEmpty(model.getDeliveryFulfillModes().getCode()))
+					{
+						orderEntryModel.setFulfillmentType(model.getDeliveryFulfillModes().getCode());
+					}
+				}
+			}
+		}
+		return orderEntryModel;
+	}
+
+
 
 	private String generateSubOrderCode()
 	{
