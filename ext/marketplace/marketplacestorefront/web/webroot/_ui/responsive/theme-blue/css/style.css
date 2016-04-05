@@ -37433,3 +37433,8 @@ font-size:14px;}
 	.cart.wrapper .left-block .item.cardForm label {
     color: #666666;
 }
+@media(min-width:651px){
+	div#savedEMICard, div#savedCreditCard, div#savedDebitCard {
+    padding-left: 15px;
+}
+}
