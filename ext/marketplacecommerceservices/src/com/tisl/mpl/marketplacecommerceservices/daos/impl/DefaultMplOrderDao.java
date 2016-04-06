@@ -80,7 +80,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put("type", "SubOrder");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "SubOrder");
 			List sortQueries;
 			if ((status != null) && (status.length > 0))
 			{
@@ -134,7 +134,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put("type", "Parent");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "Parent");
 			List sortQueries;
 			if ((status != null) && (status.length > 0))
 			{
@@ -190,7 +190,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put("type", "Parent");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "Parent");
 			queryParams.put("creationtime", fromDate);
 
 			final List sortQueries = Arrays
@@ -344,7 +344,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final String query = "SELECT {om:pk} FROM {Order as om} WHERE {guid} = ?guid and {type} = ?type";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("guid", cartModel.getGuid());
-			flexiQuery.addQueryParameter("type", "Parent");
+			flexiQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, "Parent");
 			final List<OrderModel> orderModelList = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return (CollectionUtils.isNotEmpty(orderModelList)) ? orderModelList : null;
 		}
