@@ -1059,12 +1059,19 @@
 										        		$("#map${status1.index}").hide();
 										        		$("#maphide${status1.index}").show();
 										        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+										        		$("#changeValue${status1.index}").text(pinvalue${status1.index});
 										        	}
 				
 									           
 									          },
 									          error : function(xhr, data, error) {
 									        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
+									        	  	$(".pincodeServicable${status1.index}").show();
+									        		$(".delivered${status1.index}").hide();
+									        		$("#map${status1.index}").hide();
+									        		$("#maphide${status1.index}").show();
+									        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+									        		$("#changeValue${status1.index}").text(pinvalue${status1.index});
 												}
 									         });
 										
