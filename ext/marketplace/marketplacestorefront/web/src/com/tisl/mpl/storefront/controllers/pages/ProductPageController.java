@@ -237,9 +237,6 @@ public class ProductPageController extends AbstractPageController
 	private SizeGuideFacade sizeGuideFacade;
 
 	@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;
-
-	@Autowired
 	private SizeGuideHeaderComparator sizeGuideHeaderComparator;
 
 	@Autowired
