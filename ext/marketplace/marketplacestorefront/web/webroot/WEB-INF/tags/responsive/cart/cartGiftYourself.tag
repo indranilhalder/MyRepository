@@ -58,7 +58,7 @@ $( document ).ready(function() {
 				//addToBagButton.parents(".item-edit-details").append('<li style="color: #60A119;">Bagged and Ready</li>');
 				addToBagButton.prop("disabled",true);
 				addToBagButton.css("opacity","0.5");
-				ACC.product.showTransientCart(ussid);
+				//ACC.product.showTransientCart(ussid);
 				setTimeout(function(){
 					window.location.reload();
 				},"3000");
