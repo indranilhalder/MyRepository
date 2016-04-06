@@ -4,11 +4,12 @@
 </head>
 
 <body>
-<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;" >
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;">
   <tr>
     <td><table width="598" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td align="left" valign="top" bgcolor="#ffffff">${ctx.cmsSlotContents.HOTCSiteLogo}</td>
+        <td align="left" valign="top" bgcolor="#ffffff">
+${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
       </tr>
  
       <tr>
@@ -22,18 +23,20 @@
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName},</font>
                   <br>
                   <br>
-                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">Our folks here just deployed your package. We hope you're ready!<br>
-                  <br>
-                  </font></td>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#606060;">Our folks here just deployed your package. We hope you're ready!</font>
+				  <br><br>
+                 </td>
             <td width="13">&nbsp;</td>
           </tr>
         </table></td>
       </tr>
-      <tr>
+     
+	 
+	 <tr>
         <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="20" height="35" bgcolor="#f5f5f5">&nbsp;</td>
-            <td width="138" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order placed on:</td>
+            <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order placed on:</td>
             <td width="123" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">$ctx.orderDate</td>
             <td>&nbsp;</td>
           </tr>
@@ -41,11 +44,11 @@
 		<br>
 		</td>
       </tr>
-	  <tr>
+	  	 <tr>
         <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="20" height="35" bgcolor="#f5f5f5">&nbsp;</td>
-            <td width="115" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Delivering to:</td>
+            <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Delivering to:</td>
             <td width="123" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">${ctx.deliveryAddress}</td>
             <td>&nbsp;</td>
           </tr>
@@ -53,7 +56,7 @@
 		<br>
 		</td>
       </tr>
-	 <tr>
+	  	 <tr>
         <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="20" height="35" bgcolor="#f5f5f5">&nbsp;</td>
@@ -81,13 +84,12 @@
                         <td width="120" height="55" align="center">Transaction <br>
                           ID</td>
                         <td width="130" align="center">Product</td>
-                        <td width="50" align="center">Qty</td>
-                        <td width="80" align="center">Price</td>
-                        <td width="120" align="center">Shipping charges<br>
+                        <td width="80" align="center">Qty</td>
+                        <td width="120" align="center">Price</td>
+						  <td width="120" align="center">Shipping charges<br>
                           (if any) </td>
-						  <td width="120" align="center">COD Charges<br>
+                        <td width="120" align="center">COD Charges<br>
                           (if any) </td>
-                       
                       </tr>
                     </table></td>
                   </tr>
@@ -101,53 +103,36 @@
                         <td width="50" align="center" >$entry.quantity</td>
                         <td width="80" align="center">$entry.netAmountAfterAllDisc</td>
                         <td width="120" align="center" >$entry.currDelCharge</td>
-                        <td align="center" >$ctx.math.roundTo(2, $entry.convenienceChargeApportion)</td>
+                        <td width="120" align="center" >$ctx.math.roundTo(2, $entry.convenienceChargeApportion)</td>
+						
                       </tr>
                     </table></td>
                   </tr>
-				    #set ($srNo=$srNo+1)
-    #end
-                 
+				     #set ($srNo=$srNo+1)
+				#end
                   
                 </table>
 				<br>
 				</td>
               </tr>
+              
+             
               <tr>
-                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="280" height="35" align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#aa133d; font-weight:bold;"></td>
-                    <td>&nbsp;</td>
-                    <td width="157" align="right" bgcolor="#EE0C6E" style="padding:0 12px;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;">${ctx.cmsSlotContents.HOTCTrackOrder1}</a></td>
-                  </tr>
-                </table>
-				<br></td>
+                <td>&nbsp;</td>
               </tr>
-              <tr>
-                <td bgcolor="#f3f3f3"><table width="572" border="0" cellspacing="0" cellpadding="0" >
-                  <tr>
-                    <td width="10" >&nbsp;</td>
-                    <td width="265" align="left" valign="top" style="padding-right:10px;vertical-align:middle;">${ctx.cmsSlotContents.HOTCDeliveryPerson1}</td>
-                    <td>&nbsp;</td>
-                    <td width="265" align="left" valign="top"><table width="394" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td height="35" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#202020;">Your package is being sent to you by :<strong style="color:#000">$ctx.carrier</strong></td>
-                      </tr>
-                      <tr>
-                        <td height="1" bgcolor="#ececec"></td>
-                      </tr>
-                      <tr>
-                        <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">Here's your tracking number:<strong style="color:#000">$ctx.deliveryAddress</strong></td>
-                      </tr>
-                      <tr>
-                        <td height="15"></td>
-                      </tr>
-                    </table></td>
-                    <td width="10">&nbsp;</td>
-                  </tr>
-                </table></td>
+			    <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;text-align:center;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a;padding: 10px 10px;background-color:#aa133d;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;">${ctx.cmsSlotContents.HOTCTrackOrder1}</a></span></td>
               </tr>
-              <tr>
+			  <tr>
+                <td>&nbsp;</td>
+              </tr>
+			   <tr style="word-break:break-word;">
+                <td colspan="1" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;background-color:#f3f3f3;color:#aa133d;"><table><tr style="color:#aa133d;"><td style="width:161px;padding-right:25px;">
+				<span>${ctx.cmsSlotContents.HOTCDeliveryPerson1}</span>
+				</td><td><table><tr style="color:#aa133d;"><td>Your package is being sent to you by: <strong style="color:#4a4a4a;">$ctx.carrier</strong></td></tr><tr style="color:#aa133d;"><td>Here's your tracking number: <strong style="color:#4a4a4a;">$ctx.deliveryAddress</strong></td></tr></table></td></tr></table></td>
+				
+              </tr>
+			  <tr>
                 <td>&nbsp;</td>
               </tr>
 			  <tr>
@@ -156,10 +141,10 @@
 			  <tr>
                 <td>&nbsp;</td>
               </tr>
-              <tr>
-                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
+			  <tr>
+               <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
               </tr>
-              <tr>
+			 <tr>
                 <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Quote your <strong>order reference number</strong> to get information 
 								about
 							  
@@ -179,12 +164,17 @@
 							 
 							  information about an individual product, quote its <strong>transaction ID.</strong></span></td>
               </tr>
+			 
+			 
+              
+              
               <tr>
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
               <tr>
                 <td>${ctx.cmsSlotContents.smileyimg}</td>
               </tr>
+			  
               <tr>
                 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
               </tr>
