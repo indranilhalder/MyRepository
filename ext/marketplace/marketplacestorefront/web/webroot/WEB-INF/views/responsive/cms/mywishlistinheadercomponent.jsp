@@ -21,7 +21,10 @@
 	href="<c:url value="/my-account/wishList"/>"
 	data-count="${wishlistproductcount}" id="myWishlistHeader"><spring:theme
 			code="header.link.myWishList" /></a>
-	<div class="wishlist-info"></div></li>
+	<div class="wishlist-info"></div>
+		<span id="movedtowishlist.cartmsg" style="display:none;color:#60A119; ">We've moved it to your wishlist</span><%-- <spring:theme code="moved.wishlist.cart.msg"/></span> --%>
+		</li>
+
 <div class="modal fade" id="createNewList">
 
 
