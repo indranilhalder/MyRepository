@@ -8814,6 +8814,7 @@ footer .banner {
 .top.checkout-top .content ul li a {
 	color: #857D7B;
 	white-space: nowrap;
+	padding: 0;
 }
 .top.checkout-top .content ul li.delivery a {
     cursor: default;
