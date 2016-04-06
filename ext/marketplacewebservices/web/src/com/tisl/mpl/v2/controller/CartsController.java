@@ -3744,7 +3744,7 @@ public class CartsController extends BaseCommerceController
 		{
 			if (null != cartId)
 			{
-				LOG.debug("************ get cart details mobile web service *********" + cartId);
+				LOG.debug("************ get cart details with POS mobile web service *********" + cartId);
 				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, pincode);
 			}
 		}
@@ -3888,7 +3888,7 @@ public class CartsController extends BaseCommerceController
 
 			if (null != cartId)
 			{
-				LOG.debug("************ get cart details mobile web service *********" + cartId);
+				LOG.debug("************ in addStoreToCCEntry :get cart details mobile web service *********" + cartId);
 				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, null, null);
 				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 			}
@@ -3971,7 +3971,7 @@ public class CartsController extends BaseCommerceController
 					//save the cart with pickup person details
 					modelService.save(cartModel);
 
-					LOG.debug("************ get cart details mobile web service *********" + cartId);
+					LOG.debug("************ in addPickupPersonDetails :get cart details mobile web service *********" + cartId);
 					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, null, null);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 				}
