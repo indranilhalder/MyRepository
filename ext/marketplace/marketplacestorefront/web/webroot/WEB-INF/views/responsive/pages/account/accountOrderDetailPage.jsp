@@ -28,7 +28,7 @@
 
 
 <template:page pageTitle="${pageTitle}">
-	<div class="account">
+	<div class="account" id="anchorHead">
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
 			<%--  <select class="menu-select">
@@ -154,7 +154,7 @@
 							</ul>
 
 
-							<div class="totals">
+							<div class="totals" id="anchor">
 								<h3>Total:</h3>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
@@ -308,7 +308,7 @@
 
 
 
-						<li class="item delivered first">
+						<li class="item delivered first" id="shipping-track-order">
 							<div class="item-header">
 								<c:set var="entryCount" value="0"></c:set>
 								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
@@ -527,6 +527,7 @@
 																		<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
 																	</c:forEach>
 																</form:select>
+																<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;">Do let us know why you would like to cancel this item.</div>
 															</div>
 															<c:set var="ussidClass" value="${orderEntrySellerSKU}"></c:set>
 															<!-- <c:forEach items="${entry.associatedItems}" var="associatedUssid">

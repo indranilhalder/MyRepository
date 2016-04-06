@@ -28,14 +28,14 @@ $(document).ready(function(){
 		
 	var emailPattern=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	if($("input[name=j_username]").val() == ""){
-	$("#errorHolder").text("Username cannot be left empty");
+	$("#errorHolder").text("Please enter all mandatory fields");
 	return false;
 	}else if(!emailPattern.test($("input[name=j_username]").val())){
-		$("#errorHolder").text("Please Enter Valid E-mail ID");
+		$("#errorHolder").text("Please enter all mandatory fields");
 		return false;
 		}
 		else if($("input[name=j_password]").val() == ""){
-	$("#errorHolder").text("Password cannot be left empty");
+	$("#errorHolder").text("Please enter all mandatory fields");
 	return false;
 	}else{
 		// TISPRO-183

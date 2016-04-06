@@ -206,9 +206,9 @@
 															code="text.orderHistory.number" /></span>#${orderHistoryDetail.code}</li>
 
 												<li class="links"><a
-													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
+													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
 															code="text.orderHistory.view.order" /></a> <a
-													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
+													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"><spring:theme
 															code="text.orderHistory.track.order" /></a></li>
 											</ul>
 										</li>
@@ -467,7 +467,7 @@
 																				<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
 																			</c:forEach>
 																		</form:select> 
-																		
+																		<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;">Do let us know why you would like to cancel this item.</div> 
 																	</div>
 																	<form:hidden path="ticketTypeCode"
 																		class="ticketTypeCodeClass" value="C" />

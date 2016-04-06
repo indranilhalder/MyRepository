@@ -340,4 +340,6 @@ public interface MplCartFacade extends CartFacade
 	 */
 	boolean isCartEntryDelistedMobile(final CartModel cartModel)
 			throws CommerceCartModificationException, EtailNonBusinessExceptions;
+
+	OrderEntryData getCartEntryByUssid(final String ussid, CartData cart);
 }

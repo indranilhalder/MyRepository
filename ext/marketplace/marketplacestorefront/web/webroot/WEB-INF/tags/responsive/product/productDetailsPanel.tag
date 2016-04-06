@@ -123,7 +123,8 @@ tr.d0 td {
 				</cms:pageSlot>
 
 			</div>
-
+			
+			
 			<span id="defaultWishId" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
 			<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
 			<span id="wishlistnotblank" style="display:none"><spring:theme code="wishlist.notblank"/></span>

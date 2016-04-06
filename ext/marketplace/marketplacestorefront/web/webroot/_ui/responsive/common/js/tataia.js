@@ -414,9 +414,10 @@ function submitAddToCart(site_productid,site_ussid){
     success : function(data) {
 		if(data.indexOf("cnt:") >= 0){
 		$("#status"+site_product_id).html("");
-		$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
-		$("#status"+site_product_id).show().fadeOut(5000);
+		//$("#status"+site_product_id).html("<font color='#00CBE9'>Bagged and ready!</font>");
+		//$("#status"+site_product_id).show().fadeOut(5000);
 		//ACC.product.displayAddToCart(data,formId,false);
+		ACC.product.showTransientCart(site_uss_id); 
 		$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 		
 		//TISEE-882

@@ -350,6 +350,22 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 		data.setLogin(form.getEmail().toLowerCase());
 		data.setPassword(form.getPwd());
 		data.setAffiliateId(form.getAffiliateId());
+
+
+		//implementation for TISCR-278 :start
+
+		if (null != request.getParameter(ModelAttributetConstants.CHECK_MY_REWARDS)
+				&& request.getParameter(ModelAttributetConstants.CHECK_MY_REWARDS).equalsIgnoreCase(ModelAttributetConstants.TRUE))
+		{
+
+			data.setCheckTataRewards(true);
+
+		}
+
+
+		//implementation for TISCR-278 :end
+
+
 		try
 		{
 			if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
