@@ -369,11 +369,12 @@
 															</c:if>
 
 														</c:if>
+														<!-- changes for TISSTRT-1173 -->
 														<c:if test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 															<a
-																href="${request.contextPath}/my-account/order/returnReplace?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+																href="${request.contextPath}/my-account/order/returnReplace?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
 																<spring:theme code="text.account.returnReplace"
-																	text="Return Item" />
+																	text="Return Item"/> 
 															</a>
 														</c:if>
 
@@ -466,8 +467,9 @@
 																			<c:forEach items="${cancellationReason}" var="reason">
 																				<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
 																			</c:forEach>
-																		</form:select> 
-																		<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;">Do let us know why you would like to cancel this item.</div> 
+																		</form:select>
+																		<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;"><spring:theme
+																					code="text.cancel.requestDropdown.selected.error" text="Do let us know why you would like to cancel this item."/></div> 
 																	</div>
 																	<form:hidden path="ticketTypeCode"
 																		class="ticketTypeCodeClass" value="C" />
