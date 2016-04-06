@@ -176,7 +176,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			}
 		 }else{
 			 LOG.error(" pincode model not found for given pincode "+pincode);
-			 throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9515);
+			 throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
 		 }
 		}
 		catch (final Exception e)
