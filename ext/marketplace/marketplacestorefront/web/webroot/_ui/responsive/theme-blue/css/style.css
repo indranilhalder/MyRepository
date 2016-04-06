@@ -246,12 +246,12 @@ xpopup
 	margin-left: 10px;
 }
 
-.checkout-order-summary{
+/* .checkout-order-summary{
      width: 82%;
     margin-left: 69px;
 
 
-}
+} */
 #addnewid{
 	width: 15em;
     
@@ -315,12 +315,12 @@ xpopup
 }
 
 /* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-width : 320px) and (max-width : 480px) {
+/* @media only screen and (min-width : 320px) and (max-width : 480px) {
 #deliveryradioul, .checkout-table{
 	width: 300px!important;
 	height: 200px!important;
 }
-}
+} */
 
 
 
@@ -337,7 +337,7 @@ xpopup
 }
 
 /* Smartphones (portrait) ----------- */
-@media only screen and (max-width : 320px) {
+/* @media only screen and (max-width : 320px) {
 
 	#deliveryradioul, .checkout-table{
 	width: 300px!important;
@@ -346,10 +346,10 @@ xpopup
 }
 	
 	
-}
+} */
 
 /* iPads (portrait and landscape) ----------- */
-@media only screen and (min-width : 768px) and (max-width : 1024px) {
+/* @media only screen and (min-width : 768px) and (max-width : 1024px) {
 
 	#deliveryradioul, .checkout-table{
 	width: 580px!important;
@@ -359,11 +359,11 @@ xpopup
 	
 	
 	
-}
+} */
 	
 /* 
 Desktops and laptops ----------- */
-@media only screen  and (min-width : 1224px) {
+/* @media only screen  and (min-width : 1224px) {
 
 #deliveryradioul, .checkout-table{
 	width: 920px !important;
@@ -372,10 +372,10 @@ Desktops and laptops ----------- */
 }
 	
 	
-}
+} */
 
 /* Large screens ----------- */
-@media only screen  and (min-width : 1824px) {
+/* @media only screen  and (min-width : 1824px) {
 
 #deliveryradioul, .checkout-table{
 	width: 1300px!important;
@@ -385,7 +385,7 @@ Desktops and laptops ----------- */
 	
 	
 	
-}
+} */
 /* 
 
 
