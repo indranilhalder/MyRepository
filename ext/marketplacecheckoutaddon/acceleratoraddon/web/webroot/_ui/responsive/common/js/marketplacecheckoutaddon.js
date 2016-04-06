@@ -3003,13 +3003,13 @@ function checkSignInValidation(path){
 	$("#signinPasswordDiv").hide();
 	$("#signinEmailIdDiv").hide();
 	if(emailId == null || emailId == ""){
-		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("Please enter all mandatory fields");	
+		$("#signinPasswordDiv").show();
+		$("#signinPasswordDiv").html("Please enter all mandatory fields");	
 		validationResult=false;
 	}
 	else if(!emailPattern.test(emailId)){
-		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("Please enter all mandatory fields");
+		$("#signinPasswordDiv").show();
+		$("#signinPasswordDiv").html("Please enter all mandatory fields");
 		validationResult=false;
 	}
 	else if(password==null || password=="" || password.length==0){
