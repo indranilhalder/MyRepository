@@ -6904,7 +6904,8 @@ text-transform: uppercase;
   font-size:14px;
   }
 .checkout.wrapper .left-block p.items-no {
-  margin-bottom: 15px; }
+  margin-bottom: 15px;
+  font-size: 14px; }
 .checkout.wrapper .left-block .button {
   width:41.17%;
     margin: 30px auto;
