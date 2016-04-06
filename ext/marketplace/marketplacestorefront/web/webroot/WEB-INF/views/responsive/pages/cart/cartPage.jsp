@@ -56,7 +56,7 @@
 			<cms:pageSlot position="EmptyCartMiddleContent" var="feature" element="div"  >
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
-				<span id="removeproduct.cart.msg" style="display:none;color:#60A119;">And it's out!</span><%-- <spring:theme code="remove.product.cart.msg"/></span> --%>
+				<span id="removeFromCart_Cart" style="display:none;color:#60A119;"><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
 			</div>
 		</c:if>
 		</div>

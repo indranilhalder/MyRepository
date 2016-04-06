@@ -333,7 +333,7 @@ function addToWishlistFromCart() {
 </script>
 
 <ul class="product-block">
-		<span id="removeproduct.cart.msg" style="display:none;color:#60A119; ">And it's out!</span><%-- <spring:theme code="remove.product.cart.msg"/></span> --%>
+		<span id="removeFromCart_Cart" style="display:none;color:#60A119; "><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
    <li class="header">
    <ul>
    
