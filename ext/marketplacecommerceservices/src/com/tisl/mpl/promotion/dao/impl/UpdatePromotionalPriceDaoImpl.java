@@ -32,16 +32,17 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	private static final Logger LOG = Logger.getLogger(UpdatePromotionalPriceDaoImpl.class.getName());
 
 	/**
-	 * Fetch Price Row Details for Product(Staged + Online)
+	 * Fetch Price Row Details for Product(Staged + Online) Defect : Modified for TISPRD-938
 	 *
 	 * @param productList
 	 */
 	@Override
 	public List<PriceRowModel> fetchPricedData(final List<String> productList)
 	{
-		final int oracleAlloweLimit = 1000;
+		//Defect : Modified for TISPRD-938
+		final int oracleSafetyLimit = 900; // Keeping Safety Limit as 900 (Max Permissible Value : 1000)
 		int startIndex = 0;
-		int endIndex = oracleAlloweLimit;
+		int endIndex = oracleSafetyLimit;
 
 		List<PriceRowModel> priceRow = null;
 		final StringBuilder query = new StringBuilder(100);
@@ -54,7 +55,7 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 		final Map<String, Object> queryParams = new HashMap<String, Object>();
 		int count = 0;
 
-		if (productList.size() > oracleAlloweLimit)
+		if (productList.size() > oracleSafetyLimit) // Logic Condition : Product PK List exceeds the oracleSafetyLimit
 		{
 			query.append(queryHead);
 			while (true)
@@ -69,13 +70,13 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 				queryParams.put(paramName, subList);
 				query.append(queryPart1).append(queryPart2).append(queryPart3).append(paramName).append(queryPart4);
 				startIndex = endIndex;
-				if ((endIndex + oracleAlloweLimit) > productList.size())
+				if ((endIndex + oracleSafetyLimit) > productList.size())
 				{
 					endIndex = productList.size();
 				}
 				else
 				{
-					endIndex = endIndex + oracleAlloweLimit;
+					endIndex = endIndex + oracleSafetyLimit;
 				}
 
 				query.append("}}");
@@ -85,14 +86,15 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 					break;
 				}
 
-				LOG.debug("Query--------------------->:" + query.toString());
+				LOG.info("Sub Query for Price Row Fetch->:" + query.toString());
 			}
 
 			query.append(queryTail);
-			LOG.debug("--------FINAL-----------Query-->:" + query.toString());
+			LOG.info("--------FINAL-----------Query-->:" + query.toString());
 		}
 		else
 		{
+			// Logic Condition : Product PK List is less than the oracleSafetyLimit, Normal Query formation
 			query.append("SELECT {priMdl." + PriceRowModel.PK + "} ");
 			query.append("FROM {" + PriceRowModel._TYPECODE + " AS priMdl} ");
 			query.append("WHERE {priMdl." + PriceRowModel.PRODUCT + "} in (?" + PriceRowModel.PRODUCT + ")");
