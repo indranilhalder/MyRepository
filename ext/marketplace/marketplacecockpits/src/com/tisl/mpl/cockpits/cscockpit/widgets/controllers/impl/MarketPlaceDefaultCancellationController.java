@@ -308,8 +308,8 @@ public class MarketPlaceDefaultCancellationController extends
 						// consignmentModel
 						// .setStatus(ConsignmentStatus.CLOSED_ON_CANCELLATION);
 						// getModelService().save(consignmentModel);
-						mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,
-								ConsignmentStatus.CLOSED_ON_CANCELLATION);
+						/*mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,
+								ConsignmentStatus.CLOSED_ON_CANCELLATION);*/
 					}
 				}
 
