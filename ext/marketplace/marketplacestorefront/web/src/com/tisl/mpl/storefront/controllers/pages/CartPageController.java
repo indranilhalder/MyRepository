@@ -723,6 +723,7 @@ public class CartPageController extends AbstractPageController
 								ussidMap.put(productData.getCode(), entryModel.getUssid());
 								model.addAttribute("ussidMap", ussidMap);
 								model.addAttribute("sellerName", sellerName);
+								LOG.info("Category of the product selected >>>>>>>>>>>>>>>>>>" + productData.getRootCategory());
 							}
 							if (StringUtils.isNotEmpty(fulfillmentType))
 							{
