@@ -1148,7 +1148,7 @@ $(document).ready(function(){
 	$(window).on("load",function(e){
 		$('.sort-refine-bar.mobile').append('<span id="hidden-option-width" style="display: none;"></span>')
 		$(".sort-refine-bar select.black-arrow-left").css("display","block");
-		$(".sort-refine-bar select.black-arrow-left").css("background-position-x","30%");
+		/*$(".sort-refine-bar select.black-arrow-left").css("background-position-x","30%");*/
 		$(".sort-refine-bar select").change(function(){
 			 $("#hidden-option-width").html($(this).find('option:selected').text());
 			 var option_width=$("#hidden-option-width").width() + 30;
