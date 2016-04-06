@@ -135,25 +135,59 @@ $( document ).ready(function() {
 								</c:forEach>
 							<c:choose>
 								<c:when test="${product.buyBoxSellers[0].availableStock==0}">
-									<ul class="item-edit-details">
+									<ul class="">
 										<li><button id="addToCartButton" type="button"
-												class="addToBagButton" style="display: block !important;">
+												class="addToBagButton" style="display: block !important; width: 41%; margin-left: 32.5%;">
 												<spring:theme code="basket.add.to.basket" />
 											</button></li>
 									</ul>
 								</c:when>
 								<c:otherwise>
+								
+								
+								<c:if test="${(not empty product.size && product.rootCategory eq 'Clothing')||(not empty product.size && product.rootCategory eq 'Footwear')}">
+														<ul class="">
+											<li><button id="addToCartButton" type="button"
+													class="addToBagButton" style="display: block !important; width: 41%;margin-left: 32.5%;">
+													<spring:theme code="basket.add.to.basket" />
+													
+												</button></li>
+												</ul>
+													</c:if>
+                                                    
+													<c:if test="${empty product.size && product.rootCategory eq 'Electronics'}">
+														
+															<ul class="">
+											<li><button id="addToCartButton" type="button"
+													class="addToBagButton" style="display: block !important; width: 41%;margin-left: 32.5%;">
+													<spring:theme code="basket.add.to.basket" />
+													
+												</button></li>
+												</ul>
+										
+														</c:if>
+														<c:if test="${(empty product.size && product.rootCategory eq 'Clothing')||(empty product.size && product.rootCategory eq 'Footwear')}">
+														<span id="addToCartButtonId" style="display: none; width: 41%;margin-left: 32.5%;">
+															<button type="button" id="addToCartButton" 
+																class="blue button sizeNotSpecified_wl" data-toggle="modal"
+															data-target="#redirectsToPDP">
+																<spring:theme code="basket.add.to.basket" />
+															</button>
+														</span>
+														</c:if>
 									<ycommerce:testId code="addToCartButton">
 
-										<ul class="item-edit-details">
+										<%-- <ul class="item-edit-details">
 											<li><button id="addToCartButton" type="button"
 													class="addToBagButton" style="display: block !important;">
 													<spring:theme code="basket.add.to.basket" />
 												</button></li>
-										</ul>
+										</ul> --%>
 									</ycommerce:testId>
 								</c:otherwise>
 							</c:choose>
+							 <input type="hidden" class="redirectsToPdp_Wl" value="${product.url}" />
+							 <input type="hidden" id="redirectsToPdp_Wl" value="" />
 						</form:form>
 
 					</li>
@@ -200,6 +234,28 @@ $( document ).ready(function() {
 </div>
 <div class="overlay"></div>
 </div>
+
+<!--popup for redirect to PDP page start-->
+
+ 		<div class="modal fade" id="redirectsToPDP">
+ 		<div class="overlay" data-dismiss="modal"></div>
+			
+			<div class="modal-content content" style="width:35%; color:#000; font-size:12px; padding:0;">
+			<button type="button" class="close pull-right" style="height:auto !important;" aria-hidden="true" data-dismiss="modal"></button>
+				<!-- Dynamically Insert Content Here -->
+				<div class="modal-header">
+				<h4 class="modal-title">
+					<b><spring:theme code="text.wishlist.pdp" /></b>
+				</h4>
+				<div class="wishlist-redirects-to-pdp-block" style="font-size:12px;">
+				<label class="wishlist-redirects-to-pdp"><spring:theme
+							code="wishlist.redirectsToPdp.message" /></label>
+				</div>
+				<button class="redirectsToPdpPage" type="submit" style="padding:0 10px; height:30px !important; border: none;"><spring:theme code="text.wishlist.ok" /></button>
+				</div>
+				<!-- <button class="close" data-dismiss="modal"></button> -->
+			</div>
+		</div> 
 <%-- <c:if test="${fn:length(ProductDatas)>0}">
 	<ul class="cart-list">
 		<li class="product-item">

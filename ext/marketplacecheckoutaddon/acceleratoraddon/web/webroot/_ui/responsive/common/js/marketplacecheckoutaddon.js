@@ -2140,7 +2140,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	{ 
 		$("#firstnameError").show();
 		/*Error message changed TISPRD-427*/
-		$("#firstnameError").html("<p>First Name must be alphabet only</p>");
+		$("#firstnameError").html("<p>First name should not contain any special characters or space</p>");
 		validate= false;
 	}  
 	else
@@ -2159,7 +2159,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	{ 
 		$("#lastnameError").show();
 		/*Error message changed TISPRD-427*/
-		$("#lastnameError").html("<p>Last Name must be alphabet only</p>");
+		$("#lastnameError").html("<p>Last name should not contain any special characters or space</p>");
 		validate= false;
 	} 
 	else

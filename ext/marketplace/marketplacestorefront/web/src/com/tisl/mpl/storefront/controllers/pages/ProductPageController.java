@@ -16,6 +16,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ProductBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
@@ -367,7 +368,7 @@ public class ProductPageController extends AbstractPageController
 					ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
 
-
+			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
 			populateProductData(productData, model);
 			sizeguideList = sizeGuideFacade.getProductSizeguide(productCode, productData.getRootCategory());
 
@@ -387,10 +388,10 @@ public class ProductPageController extends AbstractPageController
 					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
 				}
 				//TISPRO-208
-				if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
+				if (CollectionUtils.isNotEmpty(breadcrumbList))
 				{
-					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
-							new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
+					final String categoryString = breadcrumbList.size() > 1 ? breadcrumbList.get(1).getName() : "";
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, new StringBuilder().append(categoryString));
 				}
 				else
 				{
@@ -401,10 +402,10 @@ public class ProductPageController extends AbstractPageController
 			{
 				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
 				//TISPRO-208
-				if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
+				if (CollectionUtils.isNotEmpty(breadcrumbList))
 				{
 					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
-							new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(0).getName()));
+							new StringBuilder().append(breadcrumbList.get(0).getName()));
 				}
 				else
 				{

@@ -132,7 +132,32 @@ ACC.productDetail = {
 			}
 		});
 		
-		// SizeGuide
+		
+		// Move to wish list msg
+		//alert(localStorage.getItem("movedToWishlist_msg"));
+		//alert(localStorage.getItem("removeFromCart_msgFromCart"));
+		if(localStorage.getItem("movedToWishlist_msgFromCart")=="Y")
+		{
+		$('#movedToWishlist_Cart').show();
+		setTimeout(function() {
+			  $("#movedToWishlist_Cart").fadeOut().empty();
+			}, 1500);
+		}
+		 localStorage.removeItem('movedToWishlist_msgFromCart');
+		 
+		 
+		 
+		 // remove from cart msg
+		 
+			if(localStorage.getItem("removeFromCart_msgFromCart")=="Y")
+			{
+			$('#removeFromCart_Cart').show();
+			setTimeout(function() {
+				  $("#removeFromCart_Cart").fadeOut().empty();
+				}, 1500);
+			}
+			 localStorage.removeItem('removeFromCart_msgFromCart');
+			 
 		
 		// Sise Guide Select Color
 		   
