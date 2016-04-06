@@ -760,22 +760,28 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @return List<OrderModel>
 	 *
 	 */
-	private List<OrderModel> getSubOrders(final OrderModel orderModel)
+	private List<OrderModel> getSubOrders(final OrderModel orderModel) throws InvalidCartException //TISPRD-958
 	{
 		/*
 		 * The sellerEntryMap holds the seller id as the key and the corresponding order line entries for that seller id
 		 * as value
 		 */
-		final Map<String, SellerInformationModel> cachedSellerInfoMap = new HashMap<String, SellerInformationModel>();
-		final Map<String, List<AbstractOrderEntryModel>> sellerEntryMap = createSellerEntryMap(orderModel, cachedSellerInfoMap);
-
 		final List<OrderModel> subOrders = new ArrayList<OrderModel>();
-
-		for (final Map.Entry<String, List<AbstractOrderEntryModel>> sellerEntry : sellerEntryMap.entrySet())
+		try
 		{
-			subOrders.add(createSubOrders(orderModel, sellerEntry.getValue(), cachedSellerInfoMap));
-		}
+			final Map<String, SellerInformationModel> cachedSellerInfoMap = new HashMap<String, SellerInformationModel>();
+			final Map<String, List<AbstractOrderEntryModel>> sellerEntryMap = createSellerEntryMap(orderModel, cachedSellerInfoMap);
 
+			for (final Map.Entry<String, List<AbstractOrderEntryModel>> sellerEntry : sellerEntryMap.entrySet())
+			{
+				subOrders.add(createSubOrders(orderModel, sellerEntry.getValue(), cachedSellerInfoMap));
+			}
+		}
+		catch (final Exception ex) //TISPRD-958
+		{
+			LOG.error("Exception occured while getSubOrders ", ex);
+			throw new InvalidCartException(ex);
+		}
 		return subOrders;
 	}
 
@@ -831,7 +837,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	private OrderModel createSubOrders(final OrderModel orderModel,
 			final List<AbstractOrderEntryModel> abstractOrderEntryModelList,
-			final Map<String, SellerInformationModel> cachedSellerInfoMap)
+			final Map<String, SellerInformationModel> cachedSellerInfoMap) throws Exception //TISPRD-958
 	{
 		Double deliveryCharge = Double.valueOf(0.0);
 		Double prevDelCharge = Double.valueOf(0.0);
@@ -995,6 +1001,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param quantity
 	 * @param clonedSubOrder
 	 * @param abstractOrderEntryModel
+	 * @param cartApportionValue
+	 * @param price
+	 * @param bogoQualifying
+	 * @param deliveryCharge
+	 * @param cachedSellerInfoMap
+	 * @param bogoCODPrice
+	 * @param bogoCartApportion
+	 * @param prevDelCharge
+	 * @throws Exception
 	 */
 	@SuppressWarnings("javadoc")
 	private void createOrderLine(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
@@ -1002,7 +1017,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final double price, final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying,
 			final Double deliveryCharge, final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
 			final double bogoCartApportion, final Double prevDelCharge, final double couponApportionValue,
-			final double bogoCouponApportion)
+			final double bogoCouponApportion) throws Exception
 
 	{
 
