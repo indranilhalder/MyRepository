@@ -20716,6 +20716,10 @@ font-size:12px;
 display: inline-block;
 padding-top: 5px;
 }
+#emiRangeError{
+color:#ff1c47;
+font-size:12px;	
+}
 .error-message#cvvError{
 	clear: both;
     float: left;
