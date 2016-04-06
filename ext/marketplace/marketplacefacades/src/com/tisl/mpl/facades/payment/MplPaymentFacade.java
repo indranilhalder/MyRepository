@@ -152,7 +152,7 @@ public interface MplPaymentFacade
 	 * @param totalCODCharge
 	 */
 	//TISPRD-361
-	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge) throws EtailNonBusinessExceptions;
+	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -269,11 +269,11 @@ public interface MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
