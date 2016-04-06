@@ -18310,6 +18310,8 @@ width: 12px;
 .cartPromotions{
 	text-align:center;
 	margin:15px auto;
+	background: #fafafa;
+    padding: 1px 0 15px;
 	
 }
 .cartPromotions .promotions{
@@ -30641,6 +30643,11 @@ right: 0px !important;
     text-decoration: underline;
     font-weight: 600;
     line-height: 1.5;
+}
+.brandLanding-shopButton.button{
+	height: 40px;
+    line-height: 1;
+    font-weight: 500;
 }
 /*--------------maincss-----------*/
 .row
