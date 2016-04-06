@@ -403,9 +403,9 @@ public class SalesOrderXMLUtility
 						LOG.debug("after price set");
 					}
 					//TISPRD-901
-					if (null != entry.getFulfillmentType() && xmlToFico)
+					if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 					{
-						xmlData.setFulfillmentType(entry.getFulfillmentType());
+						xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
 						LOG.debug("set fulfilment mode");
 					}
 
