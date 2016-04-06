@@ -93,7 +93,7 @@
 	//change serp product details based on filters
 function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel){
 	console.log("in search js..."+product+mrpPriceValue);
-	if(categoryTypeValue=='Apparel'){
+	if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
 	if(serpSizeList!=''){
 	var sizeMatched = checkSizeCount(list, serpSizeList);
 	var price1 = productPrice.replace("[[", "");
