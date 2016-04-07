@@ -512,6 +512,7 @@ function getBestPicksAjaxCall(){
 	});
 }
 
+
 // AJAX CALL BEST PICKS END
 
 //AJAX CALL PRODUCTS YOU CARE START

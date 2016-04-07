@@ -27,6 +27,7 @@
 			</c:forEach>
 		</div>
 	</div>
+	
 
 
 <!-- This is used for app download images in footer -->
