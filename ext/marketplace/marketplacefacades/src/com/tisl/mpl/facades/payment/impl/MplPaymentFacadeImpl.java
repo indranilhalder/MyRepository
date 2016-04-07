@@ -1093,7 +1093,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge) throws EtailNonBusinessExceptions
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge) throws EtailNonBusinessExceptions,
+			Exception
 	{
 		//getting the current user
 		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
@@ -1334,11 +1335,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 * 
+	 *
 	 * @param bankName
-	 * 
+	 *
 	 * @return Boolean
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 
