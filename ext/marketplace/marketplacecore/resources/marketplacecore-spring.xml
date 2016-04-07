@@ -1329,5 +1329,13 @@
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	<bean id="mplSwatchPromotionValueProvider" class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDisplayPromotionCodeValueProvider"
+	parent="abstractPropertyFieldValueProvider">
+		<property name="promotionsService" ref="promotionsService" />
+		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="timeService" ref="timeService" />
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
 	<!-- TISPRO_166 changes end -->
+	
 </beans>

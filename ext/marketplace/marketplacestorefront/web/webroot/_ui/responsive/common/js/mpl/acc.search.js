@@ -91,7 +91,7 @@
 		
 	}
 	//change serp product details based on filters
-function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel){
+function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
 	console.log("in search js..."+product+mrpPriceValue);
 	if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
 	if(serpSizeList!=''){
@@ -145,6 +145,8 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 	updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product);
 	//update product stock
 	updateProductStock(stockLevel,sizeMatched, serpSizeList,minPriceSize,product);
+	//updtae sale price
+	findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
 	//updating product url
 	var url1 = productUrl.replace("[[", "");
 	var url2 = url1.replace("]]", "");
@@ -199,6 +201,43 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 	}
 	}
 }
+}
+//find Onsale product based on filters		
+function findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product) {		
+//	alert("**Inside findOnSaleBasedOnMinPrice****")		
+	//Taking Promotion from minimum size minPriceSize		
+	var sizeMatched = checkSizeCount(list, serpSizeList);		
+	var promo1 = productPromotion.replace("[[", "");		
+	var promo2 = promo1.replace("]]", "");		
+	var arr = new Array();		
+	arr = promo2.split(',');		
+	
+	if(arr!= undefined) {		
+		
+	for (i = 0; i < arr.length; i++) {		
+				
+		var temp1 = arr[i].replace("]", "");		
+		var temp2 = temp1.replace("[", "");		
+		var x = JSON.parse(temp2);		
+				
+		if (sizeMatched != "") {		
+			if (x[sizeMatched] != undefined) {		
+			
+				 $("#on-sale_" + product).show();//showing on_sale tag		
+				break;		
+			}		
+			else {		
+				alert("UUUU");		
+				continue;		
+			}		
+		}		
+		else {		
+			alert("2.....")		
+			 $("#on-sale_"+ product).show();//showing on_sale tag		
+			break;		
+	}		
+	}		
+	}		
 }
 //get the minimum priced variant
 function findSizeBasedOnMinPrice(priceValue, priceArray) {
