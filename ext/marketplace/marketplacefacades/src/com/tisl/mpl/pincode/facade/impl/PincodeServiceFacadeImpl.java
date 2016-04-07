@@ -552,7 +552,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	 * @return pincode model
 	 */
 	@Override
-	public PincodeModel getLatAndLongForPincode(String pincode)
+	public PincodeModel getLatAndLongForPincode(final String pincode)
 	{
 		return pincodeService.getLatAndLongForPincode(pincode);
 	}
@@ -566,7 +566,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	 * @return List of Location object.
 	 */
 	@Override
-	public List<Location> getSortedLocationsNearby(GPS gps, double distance, String sellerId)
+	public List<Location> getSortedLocationsNearby(final GPS gps, final double distance, final String sellerId)
 	{
 		return pincodeService.getSortedLocationsNearby(gps, distance, sellerId);
 	}
