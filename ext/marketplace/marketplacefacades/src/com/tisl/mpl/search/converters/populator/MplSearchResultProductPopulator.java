@@ -148,6 +148,7 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 				System.out.println("##########displayPromotion" + displayPromotion);
 				target.setDisplayPromotion(displayPromotion);
 			}
+
 			if (getValue(source, "allPromotions") != null)
 			{
 

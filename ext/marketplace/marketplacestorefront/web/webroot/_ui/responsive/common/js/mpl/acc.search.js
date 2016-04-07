@@ -91,7 +91,7 @@
 		
 	}
 	//change serp product details based on filters
-function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
+function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel){
 	console.log("in search js..."+product+mrpPriceValue);
 	if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
 	if(serpSizeList!=''){
@@ -146,7 +146,7 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 	//update product stock
 	updateProductStock(stockLevel,sizeMatched, serpSizeList,minPriceSize,product);
 	//updtae sale price
-	findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
+	//findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
 	//updating product url
 	var url1 = productUrl.replace("[[", "");
 	var url2 = url1.replace("]]", "");

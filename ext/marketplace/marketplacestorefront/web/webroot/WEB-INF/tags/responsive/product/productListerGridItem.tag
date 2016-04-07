@@ -380,7 +380,7 @@
 		//find Onsale product based on filters
 	//   findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
 		//modify serp details based on filters
-		modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
+		modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel);
 	//	modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
 	});
 </script>

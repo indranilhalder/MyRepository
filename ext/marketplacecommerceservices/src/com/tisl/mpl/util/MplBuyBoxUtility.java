@@ -444,7 +444,8 @@ public class MplBuyBoxUtility
 		String variantColor = "";
 		for (final ProductFeatureModel productFeature : features)
 		{
-			if (variantProductModel.getProductCategoryType().equals(CLOTHING))
+
+			if (CLOTHING.equals(variantProductModel.getProductCategoryType()))
 			{
 				if (null != productFeature.getClassificationAttributeAssignment()
 						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
@@ -457,7 +458,7 @@ public class MplBuyBoxUtility
 				}
 
 			}
-			else if (variantProductModel.getProductCategoryType().equals(ELECTRONICS))
+			if (ELECTRONICS.equals(variantProductModel.getProductCategoryType()))
 			{
 				if (null != productFeature.getClassificationAttributeAssignment()
 						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
@@ -470,7 +471,7 @@ public class MplBuyBoxUtility
 				}
 
 			}
-			else if (variantProductModel.getProductCategoryType().equals(FOOTWEAR))
+			else if (FOOTWEAR.equals(variantProductModel.getProductCategoryType()))
 			{
 				if (null != productFeature.getClassificationAttributeAssignment()
 						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
