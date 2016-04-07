@@ -394,5 +394,6 @@
 	<bean id="defaultMplFieldSetLevelHelper"
 	      class="de.hybris.platform.commercewebservicescommons.mapping.impl.DefaultFieldSetLevelHelper">
 	</bean>
+	<bean id="mplSlaveMasterFacade" class="com.tisl.mpl.facade.impl.MplSlaveMasterFacadeImpl"/>
 
 </beans>

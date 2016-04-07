@@ -910,4 +910,19 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 			return null;
 		}
 	}
+
+	/**
+	 * Gets PointOfService Model for a given slaveId.
+	 * @param slaveId
+	 * @return PointOfService model.
+	 */
+	@Override
+	public PointOfServiceModel checkPOSForSlave(String slaveId)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from checkPOSForSlave method in service");
+		}
+		return mplSlaveMasterDao.checkPOSForSlave(slaveId);
+	}
 }
