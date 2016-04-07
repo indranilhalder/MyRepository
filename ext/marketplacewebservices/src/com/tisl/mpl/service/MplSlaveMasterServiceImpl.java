@@ -917,7 +917,7 @@ public class MplSlaveMasterServiceImpl implements MplSlaveMasterService
 	 * @return PointOfService model.
 	 */
 	@Override
-	public PointOfServiceModel checkPOSForSlave(String slaveId)
+	public PointOfServiceModel checkPOSForSlave(final String slaveId)
 	{
 		if (LOG.isDebugEnabled())
 		{
