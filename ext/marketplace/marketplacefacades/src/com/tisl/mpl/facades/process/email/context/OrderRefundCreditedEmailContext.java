@@ -7,15 +7,27 @@ import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.core.model.c2l.LanguageModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.returns.model.RefundEntryModel;
+import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 
 /**
- * @author Dileep
+ * @author Techouts
  *
  */
 public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderProcessModel>
@@ -24,14 +36,55 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 	private static final String ORDERCODE = "orderCode";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String CUSTOMER = "Customer";
+	private static final String TOTAL = "refundAomunt";
+	private static final String REFUND_ENTRY = "refundEntryModel";
+	@Autowired
+	private FlexibleSearchService flexibleSearchService;
+	private static final Logger LOG = Logger.getLogger(OrderRefundCreditedEmailContext.class);
 
 	@Override
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
 	{
+
+		LOG.info("Refund Email  Init method called");
+		final BigDecimal totalAmount = BigDecimal.ZERO;
 		super.init(orderProcessModel, emailPageModel);
-		put(ORDERCODE, orderProcessModel.getOrder().getCode());
+		final List<RefundEntryModel> refundEntryModel = new ArrayList<RefundEntryModel>();
 		final OrderModel orderModel = orderProcessModel.getOrder();
+		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
 		final AddressModel address = orderModel.getDeliveryAddress();
+		for (final AbstractOrderModel subOrder : orderProcessModel.getOrder().getChildOrders())
+		{
+			LOG.info("subOrder ID ===" + subOrder.getCode());
+			for (final AbstractOrderEntryModel entryModel : subOrder.getEntries())
+			{
+				LOG.info("entryModel==" + entryModel.getOrderLineId());
+				final RefundEntryModel refundEntry = new RefundEntryModel();
+				refundEntry.setOrderEntry(entryModel);
+				if (!CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntry)))
+				{
+					try
+					{
+						final List<RefundEntryModel> refundList = flexibleSearchService.getModelsByExample(refundEntry);
+						LOG.info("refundList ==== " + refundList);
+						LOG.info("refundList size  ==== " + refundList.size());
+						final BigDecimal refundAmount = BigDecimal.valueOf(entryModel.getNetAmountAfterAllDisc().doubleValue());
+						LOG.info("refundAmount ==== " + refundAmount);
+						totalAmount.add(refundAmount);
+						refundEntryModel.addAll(refundList);
+						LOG.info("refundEntryModel Size  ==== " + refundEntryModel.size());
+					}
+					catch (final Exception e)
+					{
+						LOG.info("Exception occurred " + e);
+					}
+				}
+			}
+
+		}
+		LOG.info("Amount refunded ======" + totalAmount);
+		put(REFUND_ENTRY, refundEntryModel);
+		put(TOTAL, totalAmount);
 		if (address != null)
 		{
 			if (address.getFirstname() != null)
@@ -43,7 +96,7 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 		{
 			put(CUSTOMER_NAME, CUSTOMER);
 		}
-		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
+		put(ORDERCODE, orderProcessModel.getOrder().getCode());
 		put(EMAIL, customer.getOriginalUid());
 	}
 
