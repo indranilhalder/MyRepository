@@ -543,4 +543,32 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		this.pincodeService = pincodeService;
 	}
 
+
+
+	/**
+	 * Get PincodeModel for given pincode
+	 * @author TECH
+	 * @param pincode
+	 * @return pincode model
+	 */
+	@Override
+	public PincodeModel getLatAndLongForPincode(final String pincode)
+	{
+		return pincodeService.getLatAndLongForPincode(pincode);
+	}
+
+	/**
+	 * Gets List of Location object for a given gps, distance and sellerId
+	 * @author TECH
+	 * @param gps
+	 * @param distance
+	 * @param sellerId
+	 * @return List of Location object.
+	 */
+	@Override
+	public List<Location> getSortedLocationsNearby(final GPS gps, final double distance, final String sellerId)
+	{
+		return pincodeService.getSortedLocationsNearby(gps, distance, sellerId);
+	}
+
 }

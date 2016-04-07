@@ -712,7 +712,7 @@
 														<div class="colour"><spring:theme code="text.seller.name"/> ${poses.sellerName}</div>
 													</c:if>
 													<ycommerce:testId code="cart_product_quantity">
-														<c:if test="${not empty poses.product.colour}">
+														<c:if test="${not empty poses.quantity}">
 															<div class="quantity"><spring:theme code="text.qty"/> ${poses.quantity}</div>
 														</c:if>
 													</ycommerce:testId>
@@ -755,10 +755,10 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize; display: inline-block;" >PiQ up hrs :</span>
 																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style=" display: inline-block; margin-left: 0px;">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
 																	</c:if>
 																
 																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
@@ -838,7 +838,7 @@
 							
 							<li>
 													<ul class="mapWidth" id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
-													<ul id="maphide${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
+													<ul id="maphide${status1.index}" style="display: none; width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">

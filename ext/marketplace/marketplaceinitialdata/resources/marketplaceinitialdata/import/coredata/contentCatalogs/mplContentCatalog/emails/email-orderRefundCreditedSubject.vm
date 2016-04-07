@@ -1,1 +1,1 @@
-Refund credited against ${ctx.product} return In ${ctx.storeName}
+Refund credited against one or more item(s)  In Tata Mall Order ref no ${ctx.orderCode}
