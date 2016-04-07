@@ -171,9 +171,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
 	
-	@Resource(name="addressConverter")
-	private Converter<AddressModel, AddressData> addressConverter;
-	
 	@Resource(name = "mplSlaveMasterFacade")
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
 	
