@@ -3801,7 +3801,7 @@ public class CartsController extends BaseCommerceController
 		try
 		{
 			//call service to retrieve POSModel for given posName
-			final PointOfServiceModel posModel = mplSlaveMasterService.findPOSByName(slaveId);
+			final PointOfServiceModel posModel = mplSlaveMasterService.checkPOSForSlave(slaveId);
 
 			if (null != posModel)
 			{

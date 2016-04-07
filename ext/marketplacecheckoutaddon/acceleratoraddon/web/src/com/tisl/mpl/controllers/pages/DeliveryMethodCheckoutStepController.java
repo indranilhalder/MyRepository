@@ -100,6 +100,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
+import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.ATSResponseData;
@@ -110,13 +111,11 @@ import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
-import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
+import com.tisl.mpl.marketplacecommerceservices.facades.MplSellerInformationFacade;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
-import com.tisl.mpl.service.MplSlaveMasterService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -161,9 +160,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Autowired
 	private CommerceCartService commerceCartService;
 
-	@Resource(name = "pincodeService")
-	private PincodeService pincodeService;
-
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 	
@@ -179,8 +175,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Resource(name="addressConverter")
 	private Converter<AddressModel, AddressData> addressConverter;
 	
-	@Resource(name = "mplSlaveMasterService")
-	private MplSlaveMasterService mplSlaveMasterService;
+	@Resource(name = "mplSlaveMasterFacade")
+	private MplSlaveMasterFacade mplSlaveMasterFacade;
 	
 	@Autowired
 	private MplCouponFacade mplCouponFacade;
@@ -191,7 +187,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	private final String selectAddress = "Select Address";
 	
 	@Autowired
-	private MplSellerInformationService mplSellerInformationService;
+	private MplSellerInformationFacade mplSellerInformationFacade;
 	
 	@Resource(name = ModelAttributetConstants.SESSION_SERVICE)
 	private SessionService sessionService;
@@ -207,7 +203,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	
 	@Resource(name = "userService")
 	private UserService userService;
-
+	
+	@Resource(name = "pointOfServiceConverter")
+	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
+	
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHOOSEVALUE, method = RequestMethod.GET)
@@ -566,7 +565,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						PincodeModel pinCodeModelObj = null;
 						if (null != defaultPincode)
 						{
-							pinCodeModelObj = pincodeService.getLatAndLongForPincode(defaultPincode);
+							pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(defaultPincode);
 						}
 						//read radius from local properties file which is configurable.
 						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
@@ -823,7 +822,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				LOG.debug("call to commerce db to get the seller details");
 			}
-			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
+			final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
 			if (sellerInfoModel != null)
 			{
 				String sellerName = sellerInfoModel.getSellerName();
@@ -839,7 +838,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						final FreebieProduct freebieProductData = new FreebieProduct();
 					    String uss = entry.getKey();
 					    Long qty = entry.getValue();
-					    final SellerInformationModel sellerInfo = mplSellerInformationService.getSellerDetail(uss);
+					    final SellerInformationModel sellerInfo = mplSellerInformationFacade.getSellerDetail(uss);
 					    if (null != sellerInfo)
 						{
 					   	 LOG.info("Associated Product USSID " + uss);
@@ -884,47 +883,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				}
 				for (int i = 0; i < storeLocationResponseData.getAts().size(); i++)
 				{
-					PointOfServiceModel posModel = mplSlaveMasterService.findPOSBySellerAndSlave(sellerInfoModel.getSellerID(),storeLocationResponseData.getAts().get(i).getStoreId());
+					PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(sellerInfoModel.getSellerID(),storeLocationResponseData.getAts().get(i).getStoreId());
 					posModelList.add(posModel);
 				}
 				for (PointOfServiceModel pointOfServiceModel : posModelList)
 				{
 					//prepare pos data objects
 					PointOfServiceData posData = new PointOfServiceData();
-					GeoPoint geo = new GeoPoint();
-					AddressData addData = new AddressData();
 					if (null != pointOfServiceModel)
 					{
-						posData.setDisplayName(pointOfServiceModel.getDisplayName());
-						posData.setName(pointOfServiceModel.getName());
-						if (pointOfServiceModel.getLatitude() != null)
-						{
-							geo.setLatitude(pointOfServiceModel.getLatitude());
-						}
-						if (pointOfServiceModel.getLongitude() != null)
-						{
-							geo.setLongitude(pointOfServiceModel.getLongitude());
-						}
-						posData.setGeoPoint(geo);
-						addData = addressConverter.convert(pointOfServiceModel.getAddress());
-						posData.setAddress(addData);
-						
-						if (null != pointOfServiceModel.getMplOpeningTime())
-						{
-							final String openingTime = pointOfServiceModel.getMplOpeningTime();
-							posData.setMplOpeningTime(openingTime);
-						}
-						if (null != pointOfServiceModel.getMplClosingTime())
-						{
-							final String closingTime = pointOfServiceModel.getMplClosingTime();
-							posData.setMplClosingTime(closingTime);
-						}
-						if (null != pointOfServiceModel.getMplWorkingDays())
-						{
-							final String mplWorkingDays = pointOfServiceModel.getMplWorkingDays();
-							posData.setMplWorkingDays(mplWorkingDays);
-						}
-						
+						posData = pointOfServiceConverter.convert(pointOfServiceModel);
 						posDataList.add(posData);
 					}
 				}
@@ -954,9 +922,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		String status = "yes";
 	
 		//call service to retrieve POSModel for given posName
-		final PointOfServiceModel posModel = mplSlaveMasterService.findPOSByName(posName);
+		final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSByName(posName);
 	
-		final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
+		final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(ussId);
 		try
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -1840,7 +1808,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		try
 		{
 			//calls commerce db to get all the stores in sorting order.
-			storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, sellerId);
+			storeList = pincodeServiceFacade.getSortedLocationsNearby(gps, configurableRadius, sellerId);
 		}
 		catch (Exception e)
 		{
@@ -1860,7 +1828,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		storeLocationRequestData.setUssId(sellerUssId);
 		//populate newly added fields
 		//get SellerInfo based on sellerUssid
-		final SellerInformationModel sellerInfoModel = mplSellerInformationService
+		final SellerInformationModel sellerInfoModel = mplSellerInformationFacade
 				.getSellerDetail(sellerUssId);
 		ProductModel productModel = null;
 		ProductData productData = null;
@@ -2065,7 +2033,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 	    LOG.debug("Current locations for Seller Id**********" + seller.getSellerID());
 	    @SuppressWarnings("boxing")
-	    final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
+	    final List<Location> storeList = pincodeServiceFacade.getSortedLocationsNearby(gps, configurableRadius,
 	      seller.getSellerID());
 	    LOG.debug("StoreList size is :" + storeList.size());
 	    if (storeList.size() > 0)
