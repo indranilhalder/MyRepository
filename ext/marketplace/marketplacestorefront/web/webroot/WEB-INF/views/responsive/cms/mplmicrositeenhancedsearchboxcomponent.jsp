@@ -26,7 +26,6 @@
 			
 		$("#micrositesearchButton").click(function(event) {
 				if($("#js-site-micrositesearch-input").val().trim()=="") {			
-					alert($("#js-site-micrositesearch-input").val());
 					event.preventDefault();
 					return false;
 				}
