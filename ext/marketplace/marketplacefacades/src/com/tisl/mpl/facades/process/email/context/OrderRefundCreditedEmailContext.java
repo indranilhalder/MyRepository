@@ -46,7 +46,7 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
 	{
 
-		LOG.info("Refund Email  Init method called");
+		LOG.debug("Refund Email  Init method called");
 		final BigDecimal totalAmount = BigDecimal.ZERO;
 		super.init(orderProcessModel, emailPageModel);
 		final List<RefundEntryModel> refundEntryModel = new ArrayList<RefundEntryModel>();
@@ -55,10 +55,10 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 		final AddressModel address = orderModel.getDeliveryAddress();
 		for (final AbstractOrderModel subOrder : orderProcessModel.getOrder().getChildOrders())
 		{
-			LOG.info("subOrder ID ===" + subOrder.getCode());
+			LOG.debug("subOrder ID ===" + subOrder.getCode());
 			for (final AbstractOrderEntryModel entryModel : subOrder.getEntries())
 			{
-				LOG.info("entryModel==" + entryModel.getOrderLineId());
+				LOG.debug("entryModel==" + entryModel.getOrderLineId());
 				final RefundEntryModel refundEntry = new RefundEntryModel();
 				refundEntry.setOrderEntry(entryModel);
 				if (!CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntry)))
@@ -66,23 +66,23 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 					try
 					{
 						final List<RefundEntryModel> refundList = flexibleSearchService.getModelsByExample(refundEntry);
-						LOG.info("refundList ==== " + refundList);
-						LOG.info("refundList size  ==== " + refundList.size());
+						LOG.debug("refundList ==== " + refundList);
+						LOG.debug("refundList size  ==== " + refundList.size());
 						final BigDecimal refundAmount = BigDecimal.valueOf(entryModel.getNetAmountAfterAllDisc().doubleValue());
-						LOG.info("refundAmount ==== " + refundAmount);
+						LOG.debug("refundAmount ==== " + refundAmount);
 						totalAmount.add(refundAmount);
 						refundEntryModel.addAll(refundList);
-						LOG.info("refundEntryModel Size  ==== " + refundEntryModel.size());
+						LOG.debug("refundEntryModel Size  = " + refundEntryModel.size());
 					}
 					catch (final Exception e)
 					{
-						LOG.info("Exception occurred " + e);
+						LOG.error("Exception occurred during Refund. subOrderID = " + subOrder.getCode(), e);
 					}
 				}
 			}
 
 		}
-		LOG.info("Amount refunded ======" + totalAmount);
+		LOG.debug("Amount refunded ======" + totalAmount);
 		put(REFUND_ENTRY, refundEntryModel);
 		put(TOTAL, totalAmount);
 		if (address != null)
