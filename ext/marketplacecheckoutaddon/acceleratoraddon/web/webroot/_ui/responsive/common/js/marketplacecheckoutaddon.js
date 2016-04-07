@@ -340,6 +340,7 @@ function submitForm(){
 		{
 			$("#otpNUM, #sendOTPNumber, #paymentFormButton, #sendOTPButton, #otpSentMessage").css("display","block");
 			$("#emptyOTPMessage").css("display","none");
+			$('#paymentButtonId').prop('disabled', true); //TISPRD-958
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP/"+otpNUMField,
 			type: "POST",
@@ -356,12 +357,14 @@ function submitForm(){
 							$("#otpNUM, #sendOTPNumber, #enterOTP, #wrongOtpValidationMessage").css("display","block");		
 							$("#expiredOtpValidationMessage").css("display","none");
 							$("#otpSentMessage").css("display","none");
+							$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 						}
 						else if(response=="EXPIRED")
 						{
 							$("#otpNUM, #sendOTPNumber, #enterOTP, #expiredOtpValidationMessage").css("display","block");
 							$("#wrongOtpValidationMessage").css("display","none");	
 							$("#otpSentMessage").css("display","none");
+							$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 						}
 						else{
 							
@@ -386,6 +389,7 @@ function submitForm(){
 						$(".pay button").css("opacity","1");
 						$(".pay .spinner").remove();
 						$("#no-click").remove();
+						$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 					}
 				}
 			},
@@ -2748,26 +2752,34 @@ function checkPincodeServiceability(buttonType)
  				{
  				alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  	 			$("#isPincodeServicableId").val('N');
+ 	 			reloadpage(selectedPincode,buttonType);
  				}
  			else
  				{
  					populatePincodeDeliveryMode(response,buttonType);
+ 					reloadpage(selectedPincode,buttonType);
  				}
  			
  		},
  		error : function(resp) {
  			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  			$("#isPincodeServicableId").val('N');
+ 			reloadpage(selectedPincode,buttonType);
  		}
  	});
-	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
-	{
-		window.location.reload();
-		
-	}
+	
    }
 }
 
+function reloadpage(selectedPincode,buttonType) {
+	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
+	{		
+		if(buttonType != 'typeCheckout') {
+		  window.location.reload(); 
+		}
+		
+	}
+}
 
 function populatePincodeDeliveryMode(response,buttonType){
 	

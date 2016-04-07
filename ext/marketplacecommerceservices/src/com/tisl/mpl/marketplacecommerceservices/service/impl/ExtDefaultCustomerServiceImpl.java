@@ -8,6 +8,7 @@ import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParamete
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.customer.PasswordMismatchException;
 import de.hybris.platform.commerceservices.customer.impl.DefaultCustomerAccountService;
+import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.event.RegisterEvent;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -227,6 +228,9 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 				{
 					getUserService().setPassword(customerModel, password, getPasswordEncoding());
 				}
+				//Added for TISPRO-261 :
+				//Note : Customer when created from CS Cockpit will have REGISTERED as CustomerType
+				customerModel.setType(CustomerType.REGISTERED);
 				customerModel.setIsTemporaryPasswordChanged(Boolean.FALSE);
 				customerModel.setIsCustomerCreatedInCScockpit(Boolean.TRUE);
 
@@ -276,7 +280,6 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
 
 	/**
 	 * @description to register user
