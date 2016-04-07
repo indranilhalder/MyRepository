@@ -100,9 +100,11 @@ public interface MplPaymentService
 	 * @param cartValue
 	 * @param totalCODCharge
 	 * @param entries
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
 	 */
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
-			CartModel cartModel);
+			CartModel cartModel) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -123,10 +125,12 @@ public interface MplPaymentService
 	 *
 	 * @param paymentMode
 	 * @param cart
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
 	 *
 	 */
 	//TISPRD-361 method signature changes
-	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart) throws EtailNonBusinessExceptions;
+	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**

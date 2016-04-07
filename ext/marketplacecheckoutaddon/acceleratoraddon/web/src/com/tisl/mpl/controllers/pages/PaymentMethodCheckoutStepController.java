@@ -470,27 +470,42 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//saving COD Payment related info
 				getMplPaymentFacade().saveCODPaymentInfo(cartValue, totalCODCharge);
 			}
-
 			//adding Payment id to model
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
+			return placeOrder(model, redirectAttributes);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			//Start TISPRD-181
 			LOG.error("Exception while completing COD Payment", e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return getCheckoutStep().currentStep();
+			//End TISPRD-181
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("Exception while completing COD Payment", e);
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			//Start TISPRD-181
+			LOG.error("Exception while completing COD Payment", e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return getCheckoutStep().currentStep();
+			//End TISPRD-181
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception while completing COD Payment", e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return getCheckoutStep().currentStep();
 		}
-		//return to next step of checkout
-		return placeOrder(model, redirectAttributes);
+
 	}
 
 	/**

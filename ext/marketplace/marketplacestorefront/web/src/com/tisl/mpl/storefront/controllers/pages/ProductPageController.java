@@ -1206,7 +1206,7 @@ public class ProductPageController extends AbstractPageController
 							  //electronics
 							else
 							{
-								if (properitsValue.toLowerCase().contains(configurableAttributData.getName().toLowerCase()))
+								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
 
 								{
 

@@ -165,6 +165,12 @@
 		<property name="leastSizeProduct" type="String" />
 		<property name="productTitle" type="String" />
 		<!-- pdp changes ends -->
+		<!-- TISPRO-166 CHANGES -->
+	    <property name="displayPrice" type="java.util.List&lt;java.lang.String>"></property>
+	    <property name="displayUrl" type="java.util.List&lt;java.lang.String>"></property>
+         <property name="displayStock" type="java.util.List&lt;java.lang.String>"></property>
+         <property name="displayMrp" type="java.util.List&lt;java.lang.String>"></property>
+		<!-- pdp changes ends -->
 	</bean>
 
 	<!-- pdp changes begins -->

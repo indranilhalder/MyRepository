@@ -83,7 +83,6 @@ tr.d0 td {
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h2 class="company">${product.brand.brandname} by <span id="sellerNameId"></span></h2>
 				<h3 class="product-name">${product.productTitle}</h3>
-				
 			</ycommerce:testId>
 
 			<ycommerce:testId

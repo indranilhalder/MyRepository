@@ -1394,6 +1394,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
 
 
+	public static final String TYPE = "type";
 
 	private MarketplacecommerceservicesConstants()
 	{

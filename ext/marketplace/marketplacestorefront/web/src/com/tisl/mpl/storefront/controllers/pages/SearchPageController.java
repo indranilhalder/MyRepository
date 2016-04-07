@@ -57,6 +57,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -67,6 +68,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+import com.granule.json.JSONException;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -113,8 +117,8 @@ public class SearchPageController extends AbstractSearchPageController
 	public static final String REDIRECT_PREFIX = "redirect:";
 
 	private static final String BLANKSTRING = "";
-	
-	
+
+
 	@Autowired
 	private CatalogVersionService catalogVersionService;
 	@Resource(name = "productSearchFacade")
@@ -399,13 +403,34 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "sort", required = false) final String sortCode,
 			@RequestParam(value = "text", required = false) final String searchText,
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
-			final Model model) throws CMSItemNotFoundException
+			final Model model) throws CMSItemNotFoundException, JSONException, ParseException
 	{
 
-		/* Storing the user preferred search results count - START */
-		final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
+		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));
+		model.addAttribute("searchQueryValue", searchQuery);
+		final String[] temp = searchQuery.split(":");
+		final int countFreq = Iterables.frequency(splitStr, "size");
+		//  int preCount=0
+		int countValue = 0;
+		for (int i = 0; i < temp.length; i++)
+		{
+			if (temp[i].equals("size"))
+			{
+				countValue++;
+				//countFreq = 1;
+			}
+			else if (countValue >= 1)
+			{
+				if (countValue == countFreq)
+				{
+					break;
+				}
+			}
+		}
 
 		int count = getSearchPageSize();
+		final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 		if (preferencesData != null && preferencesData.getPageSize() != null)
 		{
 			count = preferencesData.getPageSize().intValue();
@@ -477,6 +502,92 @@ public class SearchPageController extends AbstractSearchPageController
 
 		return getViewForPage(model);
 	}
+
+	//	@RequestMapping(method = RequestMethod.GET, params = "q")
+	//	public String refineSearch(@RequestParam("q") final String searchQuery,
+	//			@RequestParam(value = ModelAttributetConstants.PAGE, defaultValue = "0") final int page,
+	//			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
+	//			@RequestParam(value = "sort", required = false) final String sortCode,
+	//			@RequestParam(value = "text", required = false) final String searchText,
+	//			@RequestParam(value = "pageSize", required = false) final Integer pageSize, final HttpServletRequest request,
+	//			final Model model) throws CMSItemNotFoundException
+	//	{
+	//
+	//		/* Storing the user preferred search results count - START */
+	//		final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
+	//
+	//		int count = getSearchPageSize();
+	//		if (preferencesData != null && preferencesData.getPageSize() != null)
+	//		{
+	//			count = preferencesData.getPageSize().intValue();
+	//		}
+	//
+	//		final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
+	//				searchQuery, page, showMode, sortCode, count);
+	//		/* Storing the user preferred search results count - END */
+	//
+	//		final String searchCategory = request.getParameter(ModelAttributetConstants.SEARCH_CATEGORY);
+	//		String searchCode = searchCategory;
+	//		if (searchCategory != null && searchCategory.startsWith(DROPDOWN_CATEGORY))
+	//		{
+	//			if (searchCategory.substring(0, 5).equals(searchCategory))
+	//			{
+	//				searchCode = searchCategory;
+	//			}
+	//			else
+	//			{
+	//				searchCode = searchCategory.substring(0, 5);
+	//			}
+	//		}
+	//
+	//		model.addAttribute("searchCode", searchCode);
+	//		model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
+	//		model.addAttribute("isConceirge", "false");
+	//		if (searchPageData != null)
+	//		{
+	//			model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
+	//			model.addAttribute("departments", searchPageData.getDepartments());
+	//			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> competingProductsSearchPageData = mplCompetingProductsUtility
+	//					.getCompetingProducts(searchPageData);
+	//
+	//			if (competingProductsSearchPageData != null)
+	//			{
+	//				model.addAttribute("competingProductsSearchPageData", competingProductsSearchPageData);
+	//			}
+	//
+	//		}
+	//
+	//		populateModel(model, searchPageData, showMode);
+	//		model.addAttribute(MarketplaceCoreConstants.USER_LOCATION, customerLocationService.getUserLocation());
+	//
+	//		if (searchPageData.getPagination().getTotalNumberOfResults() == 0)
+	//		{
+	//			updatePageTitle(searchPageData.getFreeTextSearch(), model);
+	//			storeCmsPageInModel(model, getContentPageForLabelOrId(NO_RESULTS_CMS_PAGE_ID));
+	//		}
+	//		else
+	//		{
+	//			storeContinueUrl(request);
+	//			updatePageTitle(searchPageData.getFreeTextSearch(), model);
+	//			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
+	//		}
+	//		model.addAttribute(WebConstants.BREADCRUMBS_KEY, searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData));
+	//		model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
+	//
+	//		final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
+	//				ModelAttributetConstants.SEARCH_META_DESC, null, ModelAttributetConstants.SEARCH_META_DESC,
+	//				getI18nService().getCurrentLocale())
+	//				+ " "
+	//				+ searchText
+	//				+ " "
+	//				+ getMessageSource().getMessage(ModelAttributetConstants.SEARCH_META_DESC_ON, null,
+	//						ModelAttributetConstants.SEARCH_META_DESC_ON, getI18nService().getCurrentLocale()) + " " + getSiteName());
+	//
+	//		final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchText);
+	//		setUpMetaData(model, metaKeywords, metaDescription);
+	//
+	//		return getViewForPage(model);
+	//	}
 
 	/**
 	 *
@@ -862,7 +973,7 @@ public class SearchPageController extends AbstractSearchPageController
 			{
 				model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
 			}
-			     // --------------Issue TISSIT-1827 solved ------------//
+			// --------------Issue TISSIT-1827 solved ------------//
 			model.addAttribute(ModelAttributetConstants.SEARCH_CATEGORY, searchCategory);
 			//	final String metaKeywords = MetaSanitizerUtil.sanitizeKeywords(searchPageData.getFreeTextSearch());
 			final String metaDescription = MetaSanitizerUtil.sanitizeDescription(getMessageSource().getMessage(
