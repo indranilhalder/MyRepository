@@ -1742,7 +1742,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 					.getAttribute(RETURN_Logistics_Availability);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
-				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
+				if(response.getTransactionId().trim().equalsIgnoreCase(transactionId.trim()))
+				{
+					model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
+				}
 				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
 				{
 					returnLogisticsCheck = false;
