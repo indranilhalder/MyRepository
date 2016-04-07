@@ -712,7 +712,7 @@
 														<div class="colour"><spring:theme code="text.seller.name"/> ${poses.sellerName}</div>
 													</c:if>
 													<ycommerce:testId code="cart_product_quantity">
-														<c:if test="${not empty poses.product.colour}">
+														<c:if test="${not empty poses.quantity}">
 															<div class="quantity"><spring:theme code="text.qty"/> ${poses.quantity}</div>
 														</c:if>
 													</ycommerce:testId>
