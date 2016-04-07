@@ -487,6 +487,12 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 								new Object[0]), INFO, Messagebox.OK,
 								Messagebox.ERROR);
 					}
+					catch (Exception e) {
+						Messagebox
+						.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
+								new Object[0]), INFO, Messagebox.OK,
+								Messagebox.ERROR);
+					}
 				}
 			Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 				((CheckoutController) widget.getWidgetController()).getBasketController()

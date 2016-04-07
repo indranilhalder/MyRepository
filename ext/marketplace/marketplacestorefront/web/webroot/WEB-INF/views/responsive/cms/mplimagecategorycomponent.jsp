@@ -12,7 +12,7 @@
 	<c:if test="${not empty component.filterBySellerName}">
 
 		<c:param name="q"
-			value=":relevance:seller:${component.filterBySellerName}"></c:param>
+			value=":relevance:sellerId:${component.filterBySellerName}"></c:param>
 	</c:if>
 	<c:if test="${not empty component.filterByBrandName}">
 

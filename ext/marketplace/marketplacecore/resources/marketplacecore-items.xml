@@ -4579,10 +4579,21 @@
                     <attribute qualifier="ipAddress" type="java.lang.String">
 						<modifiers optional="true" />
 						<persistence type="property" />
+					</attribute>					
+					<attribute qualifier="exportedToCrmRetryCount" type="java.lang.Integer">
+						<description>Hold a counter of how many times the order was attempted to be sent to crm.
+						</description>
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+						<persistence type="property"/>
 					</attribute>
-
-
-
+					<attribute qualifier="omsSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="crmSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -5205,6 +5216,24 @@
 						/> </attribute> -->
 
 					<attribute qualifier="parentTransactionID" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- Start TISPRD-871 -->
+					<attribute qualifier="juspayRequestId" type="java.lang.String">
+						<description>JuspayRquestId for ORDER_CANCELLED and RETURN_COMPLETED status</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- End TISPRD-871 -->
+					<attribute qualifier="fulfillmentType" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="returnWindow" type="java.lang.String">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<persistence type="property" />
@@ -6555,6 +6584,12 @@
 						read="true" write="true" optional="false" /> <persistence type="property" 
 						/> </attribute> -->
 					<attribute type="java.lang.Boolean" qualifier="isProcessed">
+						<defaultvalue>false</defaultvalue>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TISPRO-216 -->
+					<attribute type="java.lang.Double" qualifier="refundAmount">
 						<defaultvalue>false</defaultvalue>
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />

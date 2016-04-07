@@ -8,6 +8,7 @@ ACC.autocomplete = {
 	{
 		
 		// extend the default autocomplete widget, to solve issue on multiple instances of the searchbox component
+		var  count=1;
 		$.widget( "custom.yautocomplete", $.ui.autocomplete, {
 			_create:function(){
 				
@@ -33,10 +34,8 @@ ACC.autocomplete = {
 					window.location.href = ui.item.url;
 				}
 			},_renderItem : function (ul, item){
-				
-				if (item.type == "autoSuggestion"){
-					/*var renderHtml = "<a href='?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";*/
-					var renderHtml = "<a href='" + ACC.config.encodedContextPath + "/search/?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
+			if (item.type == "autoSuggestion"){
+					var renderHtml = "<a href='?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
 					return $("<li>")
 							.data("item.autocomplete", item)
 							.append(renderHtml)
@@ -121,56 +120,56 @@ ACC.autocomplete = {
 				$.getJSON(self.options.autocompleteUrl, {term: request.term, category: selectedCat}, function (data)
 				{
 					var autoSearchData = [];
-//					if(data.suggestions != null){
-//						$.each(data.suggestions, function (i, obj)
-//						{
-//							autoSearchData.push({
-//								value: obj.term,
-//								url: ACC.config.encodedContextPath + "/search?text=" + obj.term,
-//								type: "autoSuggestion"
-//							});
-//						});
-//					}
-					
+					var suggestedString="";
 					if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 				       	{
 						
 							if(i==0){
-								
 								if(data.brands.length!=undefined && data.brands.length>0){
-							
-							autoSearchData.push({
-								value: obj.term,
-								searchterm:term,
-								url: ACC.config.encodedContextPath + "/search?text=" + obj.term +"&best_search_keyword="+term,
-								type: "autoSuggestion"
-							});
-							
-							
-								}
-							}
-						});
-				     	}
-					if(data.brands != null){
-						
-						/*if(data.brands[0]!= undefined){
-							
-							
-						
-						autoSearchData.push(
-								{value: data.brands[0].name,
-									code: data.brands[0].code,
-									desc: data.brands[0].description,	
-									//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + data.brands[0],
-									url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Abrand%3A" +  data.brands[0].code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-									term: data.searchTerm,
-									type: "brands",
-									index: 0,
-									valueset: false
+								//	var suggestedString="";
+									if (/\s/.test(obj.term)) {
+										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
+									}
+									else{
+										suggestedString=obj.term;
+									}
+									autoSearchData.push({
+										value: suggestedString,
+										searchterm:term,
+										url: ACC.config.encodedContextPath + "/search?text=" + suggestedString +"&best_search_keyword="+term,
+										type: "autoSuggestion"
 									});
-						
-						}*/
+									
+									
+										}
+									}
+								});
+						     	}
+							
+//								var suggestedString="";
+//								if(data.brands.length!=undefined && data.brands.length>0){
+//									if (/\s/.test(obj.term)) {
+//										suggestedString=item.value.substr(0,obj.term.indexOf(' '));
+//									}
+//									else{
+//										suggestedString=obj.term;
+//										
+//									}
+//									}
+//							autoSearchData.push({
+//								value: suggestedString,
+//								searchterm:term,
+//								url: ACC.config.encodedContextPath + "/search?text=" + obj.term +"&best_search_keyword="+term,
+//								type: "autoSuggestion"
+//							});
+//							
+//							
+//								}
+//							}
+//						});
+//				     	}
+					if(data.brands != null){
 						$.each(data.brands, function (i, obj)
 						{
 							autoSearchData.push(
@@ -188,18 +187,23 @@ ACC.autocomplete = {
 						});
 					}
 					
-					
+			
 					if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 						{
 							if(i==0){
-								
-								if(data.categories.length!=undefined && data.categories.length>0){	
-									
-							autoSearchData.push({
-								value: obj.term,
+								var suggestedString="";
+								if(data.categories.length!=undefined && data.categories.length>0){
+									if (/\s/.test(obj.term)) {
+										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
+									}
+									else{
+										suggestedString=obj.term;
+									}
+							    autoSearchData.push({
+								value: suggestedString,
 								searchterm:term,
-								url: ACC.config.encodedContextPath + "/search?text=" + obj.term,
+								url: ACC.config.encodedContextPath + "/search?text=" + suggestedString,
 								type: "autoSuggestion"
 							});
 							
@@ -209,22 +213,6 @@ ACC.autocomplete = {
 					}
 					
 					if(data.categories != null){
-						
-						/*if(data.categories[0]!= undefined){
-							
-							autoSearchData.push(
-									{value: data.categories[0].name,
-										code: data.categories[0].code,
-										desc: data.categories[0].description,	
-										//url:  "/mpl/en/search/?text=" + data.searchTerm + "&searchCategory=" + data.brands[0],
-										url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" +  data.categories[0].code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
-										term: data.searchTerm,
-										type: "category",
-										index: 0,
-										valueset: false
-										});
-						}*/
-						
 						$.each(data.categories, function (i, obj)
 						{
 							autoSearchData.push(
@@ -232,7 +220,9 @@ ACC.autocomplete = {
 										code: obj.code,
 										desc: obj.description,	
 										//url: ACC.config.contextPath + obj.url + "/?q=" + data.searchTerm + "&text=" + data.searchTerm +"&searchCategory="+selectedCat,
-										url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										//Fix for TISPRO-237 :: Search - Getting wrong top line when SERP is loaded from SNS
+										//url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
 										term: data.searchTerm,
 										type: "category",
 										index: i,
@@ -270,9 +260,8 @@ ACC.autocomplete = {
 					if(data.suggestions != null){
 					$.each(data.suggestions, function (i, obj)
 			       	{
-					
+					 
 						if(i!=0){
-							
 							if((data.categories.length!=undefined && data.categories.length>0) ||
 									(data.brands.length!=undefined && data.brands.length>0)){
 						autoSearchData.push({

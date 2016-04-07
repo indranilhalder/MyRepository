@@ -340,6 +340,7 @@ function submitForm(){
 		{
 			$("#otpNUM, #sendOTPNumber, #paymentFormButton, #sendOTPButton, #otpSentMessage").css("display","block");
 			$("#emptyOTPMessage").css("display","none");
+			$('#paymentButtonId').prop('disabled', true); //TISPRD-958
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/validateOTP/"+otpNUMField,
 			type: "POST",
@@ -356,12 +357,14 @@ function submitForm(){
 							$("#otpNUM, #sendOTPNumber, #enterOTP, #wrongOtpValidationMessage").css("display","block");		
 							$("#expiredOtpValidationMessage").css("display","none");
 							$("#otpSentMessage").css("display","none");
+							$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 						}
 						else if(response=="EXPIRED")
 						{
 							$("#otpNUM, #sendOTPNumber, #enterOTP, #expiredOtpValidationMessage").css("display","block");
 							$("#wrongOtpValidationMessage").css("display","none");	
 							$("#otpSentMessage").css("display","none");
+							$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 						}
 						else{
 							
@@ -386,6 +389,7 @@ function submitForm(){
 						$(".pay button").css("opacity","1");
 						$(".pay .spinner").remove();
 						$("#no-click").remove();
+						$('#paymentButtonId').prop('disabled', false); //TISPRD-958
 					}
 				}
 			},
@@ -2112,7 +2116,7 @@ function validatePin() {
 }  
 
 
-$("#newAddressButton").click(function() {
+$("#newAddressButton,#newAddressButtonUp").click(function() {
 	var validate=true;
 	var regPostcode = /^([1-9])([0-9]){5}$/;
     var mob = /^[1-9]{1}[0-9]{9}$/;
@@ -2139,7 +2143,8 @@ $("#newAddressButton").click(function() {
 	else if(letters.test(result) == false)  
 	{ 
 		$("#firstnameError").show();
-		$("#firstnameError").html("<p>First Name must be alphabet only</p>");
+		/*Error message changed TISPRD-427*/
+		$("#firstnameError").html("<p>First name should not contain any special characters or space</p>");
 		validate= false;
 	}  
 	else
@@ -2157,7 +2162,8 @@ $("#newAddressButton").click(function() {
 	else if(letters.test(result) == false)  
 	{ 
 		$("#lastnameError").show();
-		$("#lastnameError").html("<p>Last Name must be alphabet only</p>");
+		/*Error message changed TISPRD-427*/
+		$("#lastnameError").html("<p>Last name should not contain any special characters or space</p>");
 		validate= false;
 	} 
 	else
@@ -2746,26 +2752,32 @@ function checkPincodeServiceability(buttonType)
  				{
  				alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  	 			$("#isPincodeServicableId").val('N');
+ 	 			reloadpage(selectedPincode);
  				}
  			else
  				{
  					populatePincodeDeliveryMode(response,buttonType);
+ 					reloadpage(selectedPincode);
  				}
  			
  		},
  		error : function(resp) {
  			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  			$("#isPincodeServicableId").val('N');
+ 			reloadpage(selectedPincode);
  		}
  	});
+	
+   }
+}
+
+function reloadpage(selectedPincode) {
 	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
 	{
 		window.location.reload();
 		
 	}
-   }
 }
-
 
 function populatePincodeDeliveryMode(response,buttonType){
 	
@@ -3546,13 +3558,27 @@ function sendTealiumData(){
 		        
 		        if(!(utag.data.product_id === "" || utag.data.product_id === undefined))
 		        {
-		        	utag.link({
-			            "link_name": 'Final Checkout',
-			            "event_type": 'PayNow',
-			            "payment_method": "" + payment_mode + "|" + payment_type,
-			            "product_id": utag.data.product_id
-	
-			        });
+		        	
+		        	if(payment_mode === "COD"){
+		        		utag.link({
+				            "link_name": 'Final Checkout',
+				            "event_type": 'PayNow',
+				            "payment_method": "" + payment_type,
+				            "product_id": utag.data.product_id
+		
+				        });
+		        		
+		        	}else{
+		        		
+		        	
+			        	utag.link({
+				            "link_name": 'Final Checkout',
+				            "event_type": 'PayNow',
+				            "payment_method": "" + payment_mode + "|" + payment_type,
+				            "product_id": utag.data.product_id
+		
+				        });
+		        	}
 		        }
 	        
 	   } catch (e) {

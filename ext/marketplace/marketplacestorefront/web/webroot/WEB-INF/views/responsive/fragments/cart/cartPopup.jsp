@@ -36,7 +36,7 @@
 											<p class="company"></p>
 											<h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
 											<%-- <h3 class="product-fullfilment"><spring:theme code="mpl.myBag.fulfillment"></spring:theme> --%>
-											<h3 class="product-name"><a href="${entryProductUrl}">${entry.product.name}</a></h3>
+											<h3 class="product-name"><a href="${entryProductUrl}">${entry.product.productTitle}</a></h3>
 																		
 							<%-- <c:choose>
 							

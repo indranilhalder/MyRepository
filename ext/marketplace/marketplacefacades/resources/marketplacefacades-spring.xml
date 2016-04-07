@@ -1271,6 +1271,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	<bean id="sizeGuideComparator"
 	      class="com.tisl.mpl.facade.comparator.SizeGuideComparator">
+		<!-- <property name="pattern" value="^[0-9]+$"/> -->
+		<!-- Changes for TISPRO-250 -->
 		<property name="pattern" value="^[0-9]+$"/>
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
@@ -1296,6 +1298,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="sizeGuideHeaderComparator"
 	      class="com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator">
 		<property name="pattern" value="^[0-9]+$"/>
+		<!-- Changes for TISPRO-250 -->
+		<!-- <property name="pattern" value="[0-9]+(\.[0-9])*"/> -->
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1391,5 +1395,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<!-- <property name="enumerationService" ref="enumerationService"/>
 		<property name="priceDataFactory" ref="priceDataFactory"/> -->
 	</bean>
-	
+	<bean id="gigyaFacade"
+		class="com.tisl.mpl.facades.account.reviews.impl.GigyaFacadeImpl">
+	</bean>
 </beans>

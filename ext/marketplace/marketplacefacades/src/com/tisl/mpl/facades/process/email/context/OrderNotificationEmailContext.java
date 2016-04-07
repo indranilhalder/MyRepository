@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -57,8 +58,9 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String COMMA = ",";
 	private static final String CUSTOMER = "Customer";
 	private static final String SPACE = " ";
+	private static final String MATH = "math";
+	private static final String NUMBERTOOL = "numberTool";
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
-
 
 	@Override
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
@@ -72,10 +74,13 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 
-		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
-				+ " convenienceCharges:" + convenienceCharges);
+
+
+		LOG.info(" *********************- totalPrice:" + " orderTotalPrice:" + orderTotalPrice + " convenienceCharges:"
+				+ convenienceCharges);
 
 		final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
+
 		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
 		final String orderCode = orderProcessModel.getOrder().getCode();
 
@@ -140,7 +145,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		//			put(CUSTOMER_NAME, "Customer");
 		//		}
 
-		put("math", new MathTool());
+		put(MATH, new MathTool());
+		put(NUMBERTOOL, new NumberTool());
 
 	}
 

@@ -476,7 +476,8 @@ function editAddress(addressId) {
 //    Update Profile *********************************************
     function validateForm() {
 		$("#errdoaDay,#errdobDay").empty();
-		var regexCharSpace = /^[a-zA-Z ]*$/;
+//		var regexCharSpace = /^[a-zA-Z ]*$/;
+		var regexCharSpace = /^[a-zA-Z]+$/;
 		var mob = /^[1-9]{1}[0-9]{9}$/;
 		var regexSpace = /\s/;
 		var regexDate = /^(?=\d{2}([-.,\/])\d{2}\1\d{4}$)(?:0[1-9]|1\d|[2][0-8]|29(?!.02.(?!(?!(?:[02468][1-35-79]|[13579][0-13-57-9])00)\d{2}(?:[02468][048]|[13579][26])))|30(?!.02)|31(?=.(?:0[13578]|10|12))).(?:0[1-9]|1[012]).\d{4}$/;
@@ -490,7 +491,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should contain alphabates and space only</font>";
+				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
 				proceed = false;
 			}
 		}
@@ -501,7 +502,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should contain alphabates and space only</font>";
+				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
 				proceed = false;
 			}
 		}
@@ -803,8 +804,8 @@ function editAddress(addressId) {
 			//Fix for defect TISEE-3986 : handling special character like #
 			var currentPassword = $("#currentPassword").val();			
 			var newPassword= $("#newPassword").val();			
-			newPassword= encodeURIComponent(newPassword);
-			$("#newPassword").val(newPassword);
+			newEncodedPassword= encodeURIComponent(newPassword);
+			$("#newPassword").val(newEncodedPassword);
 			
 			var checkNewPassword = $("#checkNewPassword").val();			
 			checkNewPassword= encodeURIComponent(checkNewPassword);
@@ -878,7 +879,8 @@ function editAddress(addressId) {
     function validateAccountAddress() {
     	   
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
-        var regexCharSpace = /^[a-zA-Z ]*$/;
+//        var regexCharSpace = /^[a-zA-Z ]*$/;
+        var regexCharSpace = /^[a-zA-Z]+$/;
 //        var regexCharSpace = /^[a-zA-Z]+(\s[a-zA-Z]+)?$/;
         var regexSpace = /\s/;
         var equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/;
@@ -903,7 +905,7 @@ function editAddress(addressId) {
         }
         else if (!regexCharSpace.test(document.getElementById("firstName").value)) { 
         	$("#errddressfn").css({"display":"block"});
-            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should contain alphabates and space only</font>";
+            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
             flagFn = false;
         }
         if (addressForm.lastName.value == null || addressForm.lastName.value == "") {
@@ -913,7 +915,7 @@ function editAddress(addressId) {
         }
         else if (!regexCharSpace.test(document.getElementById("lastName").value)) { 
         	$("#errddressln").css({"display":"block"});
-            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should contain alphabates and space only</font>";
+            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
             flagLn = false;
         }
         if (addressForm.line1.value == null || addressForm.line1.value == "") {

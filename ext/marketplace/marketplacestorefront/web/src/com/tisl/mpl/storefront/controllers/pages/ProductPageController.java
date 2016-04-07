@@ -16,6 +16,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ProductBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
@@ -286,11 +287,13 @@ public class ProductPageController extends AbstractPageController
 			{
 				returnStatement = redirection;
 			}
+
 			else
 			{
 				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
 				{
 					model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+
 				}
 
 				populateProductDetailForDisplay(productModel, model, request);
@@ -320,18 +323,23 @@ public class ProductPageController extends AbstractPageController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			returnStatement = frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+
+
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+
 		}
+
 
 		return returnStatement;
 	}
@@ -360,7 +368,7 @@ public class ProductPageController extends AbstractPageController
 					ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
 
-
+			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
 			populateProductData(productData, model);
 			sizeguideList = sizeGuideFacade.getProductSizeguide(productCode, productData.getRootCategory());
 
@@ -379,23 +387,31 @@ public class ProductPageController extends AbstractPageController
 				{
 					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
 				}
+				//TISPRO-208
+				if (CollectionUtils.isNotEmpty(breadcrumbList))
+				{
+					final String categoryString = breadcrumbList.size() > 1 ? breadcrumbList.get(1).getName() : "";
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, new StringBuilder().append(categoryString));
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+				}
 			}
 			else if (CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
+				//TISPRO-208
+				if (CollectionUtils.isNotEmpty(breadcrumbList))
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
+							new StringBuilder().append(breadcrumbList.get(0).getName()));
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+				}
 			}
-
-			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
-
-			{
-				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
-						new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
-			}
-			else
-			{
-				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
-			}
-
 			if (null != sizeSelected)
 			{
 				model.addAttribute(ModelAttributetConstants.SELECTEDSIZE, sizeSelected);
@@ -794,6 +810,7 @@ public class ProductPageController extends AbstractPageController
 			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
 		}
+
 		return returnStatement;
 
 	}
@@ -892,6 +909,7 @@ public class ProductPageController extends AbstractPageController
 			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 
+
 		return returnStatement;
 	}
 
@@ -929,6 +947,7 @@ public class ProductPageController extends AbstractPageController
 					.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
 			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
 		}
+
 
 		return returnStatement;
 	}
@@ -1017,6 +1036,7 @@ public class ProductPageController extends AbstractPageController
 			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
 		}
 		return returnStatement;
+
 
 	}
 
@@ -1186,7 +1206,7 @@ public class ProductPageController extends AbstractPageController
 							  //electronics
 							else
 							{
-								if (properitsValue.toLowerCase().contains(configurableAttributData.getName().toLowerCase()))
+								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
 
 								{
 
@@ -1467,6 +1487,11 @@ public class ProductPageController extends AbstractPageController
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return emiBankNames;

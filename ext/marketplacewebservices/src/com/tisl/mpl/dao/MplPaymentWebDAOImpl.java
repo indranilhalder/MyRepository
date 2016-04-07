@@ -16,7 +16,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.model.SavedCardModel;
@@ -250,62 +249,11 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 		}
 	}
 
-	/**
-	 * This method get Bank Model from Bin Number
-	 *
-	 * @param bin
-	 * @return BankModel
-	 * @throws EtailNonBusinessExceptions
-	 */
-	@Override
-	public BankModel fetchBankFromBin(final String bin) throws EtailNonBusinessExceptions
-	{
-		try
-		{
-			BinModel binModel = null;
-			final String queryString = MarketplacewebservicesConstants.BANKFORBINQUERY;
-
-			//forming the flexible search query
-			final FlexibleSearchQuery bankQuery = new FlexibleSearchQuery(queryString);
-			bankQuery.addQueryParameter(MarketplacewebservicesConstants.BINNO, bin);
-
-			LOG.info("**************** fetchBankFromBin Query ******************** : bankQuery : " + bankQuery);
-
-			final List<BinModel> binList = flexibleSearchService.<BinModel> search(bankQuery).getResult();
-
-			LOG.info("**************** fetchBankFromBin ******************** : binList : " + binList);
-
-			if (null != binList && !binList.isEmpty())
-			{
-				//fetching BIN data from DB using flexible search query
-				binModel = binList.get(0);
-
-				//returning bank against the bin
-				return binModel.getBank();
-			}
-			else
-			{
-				return null;
-			}
-		}
-		catch (final FlexibleSearchException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
-		}
-		catch (final UnknownIdentifierException e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-	}
 
 	/**
 	 * This method fetches the details from Bank Name
 	 *
-	 * @param bin
+	 * @param bankName
 	 * @return BankModel
 	 * @throws EtailNonBusinessExceptions
 	 */
@@ -407,7 +355,7 @@ public class MplPaymentWebDAOImpl implements MplPaymentWebDAO
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.dao.MplPaymentWebDAO#orderPromotions()
 	 */
 	@Override
