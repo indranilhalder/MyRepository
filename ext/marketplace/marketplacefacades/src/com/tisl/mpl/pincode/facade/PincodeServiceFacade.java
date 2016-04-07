@@ -24,7 +24,7 @@ public interface PincodeServiceFacade
 	 * @param pincodeValue
 	 */
 	public List<StoreLocationResponseData> getListofStoreLocationsforPincode(final String pincode, final String sellerUssId,
-			String productCode);
+			final String productCode);
 
 	/**
 	 * 
@@ -32,7 +32,7 @@ public interface PincodeServiceFacade
 	 * @param productCode
 	 * @return
 	 */
-	public boolean checkPincodeServiceble(final String pincode, String productCode);
+	public boolean checkPincodeServiceble(final String pincode, final String productCode);
 
 	/**
 	 * @param productCode
@@ -64,5 +64,5 @@ public interface PincodeServiceFacade
 	 * @param distance
 	 * @param sellerId
 	 */
-	List<Location> getSortedLocationsNearby(final GPS gps, final double distance, String sellerId);
+	List<Location> getSortedLocationsNearby(final GPS gps, final double distance, final String sellerId);
 }
