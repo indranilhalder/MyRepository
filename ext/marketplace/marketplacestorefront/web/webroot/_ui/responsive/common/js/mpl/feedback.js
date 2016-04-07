@@ -1151,7 +1151,7 @@ $(document).ready(function(){
 		/*$(".sort-refine-bar select.black-arrow-left").css("background-position-x","30%");*/
 		$(".sort-refine-bar select").change(function(){
 			 $("#hidden-option-width").html($(this).find('option:selected').text());
-			 var option_width=$("#hidden-option-width").width() + 30;
+			 var option_width=$("#hidden-option-width").width() + 22;
 			$(".sort-refine-bar select.black-arrow-left").css("background-position-x",option_width);
 		});
 	});
