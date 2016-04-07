@@ -432,11 +432,12 @@
 											<c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 												<a
-													href="${request.contextPath}/my-account/order/returnReplace?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+													href="${request.contextPath}/my-account/order/returnReplace?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
 											</c:if>
+											<!-- changes for TISSTRT-1173 -->
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
 													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
@@ -527,7 +528,8 @@
 																		<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
 																	</c:forEach>
 																</form:select>
-																<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;">Do let us know why you would like to cancel this item.</div>
+																<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;"><spring:theme
+																					code="text.cancel.requestDropdown.selected.error" text="Do let us know why you would like to cancel this item."/></div>
 															</div>
 															<c:set var="ussidClass" value="${orderEntrySellerSKU}"></c:set>
 															<!-- <c:forEach items="${entry.associatedItems}" var="associatedUssid">

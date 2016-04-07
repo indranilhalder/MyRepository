@@ -137,7 +137,8 @@ function editAddress(addressId) {
     $(".submit-request").click(function(){
     	if($("#reasonSelectBox").val()==null)
     	{
-    		alert("Please select a reason");
+//    		alert("Please select a reason");
+    		$("#blankReturnReasonError").show();
     		return false;
     	}
     	else
@@ -150,7 +151,9 @@ function editAddress(addressId) {
     	window.location=ACC.config.encodedContextPath + "/my-account"+"/orders";
     });
     
-    
+    function reasonSelectChange(){
+    	$("#blankReturnReasonError").hide();
+    }
 
     
 /*-------------- For account address --------------*/
@@ -160,6 +163,15 @@ function editAddress(addressId) {
     	$("#cancellationreasonSelectBox_"+transactionId+" option#defaultReason").attr("selected","selected");
     	if(bogoCheck=='true'){
     		alert("All the related products in the promotion will get cancelled");
+//    		globalErrorPopup('All the related products in the promotion will get cancelled');
+    	}
+    }
+    
+   //changes for TISSTRT-1173
+    function openReturnPage(bogoCheck,transactionId){
+      if(bogoCheck=='true'){
+    		alert("All  related products in the promotion will get returned");
+//    		globalErrorPopup('All  related products in the promotion will get returned');
     	}
     }
     
@@ -167,6 +179,7 @@ function editAddress(addressId) {
     
     function setDropDownValue(transactionId)
     {
+    	$("#blankReasonError").hide();
     	Rejectionselectedvalue = $("#cancellationreasonSelectBox_"+transactionId+" option:selected").val();
     }
     
@@ -541,6 +554,15 @@ function editAddress(addressId) {
 				document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid Email ID</font>";
 				proceed = false;
 			}
+		}
+		else{
+			//changes for TISSTRT-1160
+			$("#errEmail").css({
+				"display" : "block",
+				"margin-top" : "10px"
+			});
+			document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter an Email ID</font>";
+			proceed = false;
 		}
 		
 
