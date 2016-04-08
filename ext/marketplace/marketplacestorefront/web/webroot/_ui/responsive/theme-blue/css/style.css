@@ -26601,6 +26601,8 @@ color:#A9143C;
 .product-block.wishlist .item .desktop #addToCartButton{
 	    background-color: #A9143C !important;
     border-color: #A9143C !important;
+    color:#fff;
+    height:30px !important;
 
 }
 
