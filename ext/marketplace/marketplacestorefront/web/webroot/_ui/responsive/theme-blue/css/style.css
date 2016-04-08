@@ -21082,6 +21082,7 @@ ul.accepted-cards li span img{
 }
 .marketplace-checkout .simple-banner-component img{
 	cursor:default;
+	height:40px;
 }
 
 .secureTransaction{
