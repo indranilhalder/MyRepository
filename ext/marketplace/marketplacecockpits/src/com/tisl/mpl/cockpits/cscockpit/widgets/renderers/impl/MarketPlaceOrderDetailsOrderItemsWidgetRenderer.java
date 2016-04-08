@@ -79,7 +79,6 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 	private CommonI18NService commonI18NService;
 	private SessionService sessionService;
 
-	// Added 
 	boolean cncOrderPresent = Boolean.FALSE;
 
 	@Autowired
@@ -115,7 +114,6 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 	@Autowired
 	private PopupWindowCreator popupWindowCreator;
 
-	// Added
 
 	protected Listhead populateHeaderRow(
 			ListboxWidget<OrderItemWidgetModel, OrderController> widget,
@@ -132,10 +130,10 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 			for (ColumnGroupConfiguration col : columns) {
 				String label = (col instanceof DefaultColumnGroupConfiguration) ? ((DefaultColumnGroupConfiguration) col)
 						.getLabelWithFallback() : col.getLabel();
+						
 				row.appendChild(new Listheader(label));
 			}
 		}
-		// Added
 
 		final TypedObject order = widget.getWidgetController()
 				.getCurrentOrder();
@@ -163,7 +161,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		if (cncOrderPresent) {
 			listheader = new Listheader(LabelUtils.getLabel(widget,
 					"storeAddress", new Object[0]));
-			listheader.setWidth("100px");
+			listheader.setWidth("95px");
 			row.appendChild(listheader);
 		}
 
@@ -187,6 +185,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 
 	protected void populateMasterRow(ListboxWidget widget, Listitem row,
 			Object context, TypedObject item) {
+		
 		row.setHeight("80px");
 		PropertyDescriptor entryNumberPD = getCockpitTypeService()
 				.getPropertyDescriptor("AbstractOrderEntry.entryNumber");
@@ -209,7 +208,6 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 
 		row.appendChild(new Listcell(entryNumberString));
 
-		// Added by Prasad
 		AbstractOrderEntryModel entrymodel = (AbstractOrderEntryModel) item
 				.getObject();
 
@@ -238,8 +236,6 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 					}
 				});
 
-		// added
-		
 		if (cncOrderPresent) {
 
 			String deliveryMode = entrymodel.getMplDeliveryMode()
@@ -255,86 +251,65 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 				Listcell listcell = new Listcell();
 				try {
 					if (pointOfService.getDisplayName() != null) {
-						
-						Label label = new Label();
-						label.setValue(pointOfService.getDisplayName().concat(","));
-						label.setParent(listcell);
-						Div div = new Div();
-						div.setParent(listcell);
-						listcell.setParent(row);
+						addLabel(pointOfService.getDisplayName().concat(","),listcell , row);
+					
 					}
 				} catch (Exception e) {
-					LOG.error("PointOfService Store Name  is null");
+					LOG.debug("PointOfService DisplayName   is null");
 
 				}
+				
 				try {
 					if (pointOfService.getAddress().getLine1() != null) {
-						listcell.setParent(row);
-						Label label = new Label();
-						label.setValue(pointOfService.getAddress().getLine1().concat(","));
-						label.setParent(listcell);
-						Div div = new Div();
-						div.setParent(listcell);
-						listcell.setParent(row);
+						
+						addLabel(pointOfService.getAddress().getLine1().concat(","),listcell , row);
+						
 					}
 				} catch (Exception e) {
-					LOG.error("PointOfService Address Line1 is null");
+					LOG.debug("PointOfService Address Line1 is null");
 
 				}
+				
 				try {
 					if (pointOfService.getAddress().getLine2() != null) {
-						listcell.setParent(row);
-						Label label = new Label();
-						label.setValue(pointOfService.getAddress().getLine2().concat(","));
-						label.setParent(listcell);
-						Div div = new Div();
-						div.setParent(listcell);
-						listcell.setParent(row);
+						
+						addLabel(pointOfService.getAddress().getLine2().concat(","),listcell , row);
+
 					}
 				} catch (Exception e) {
-					LOG.error("PointOfService Address Line2 is null");
+					LOG.debug("PointOfService Address Line2 is null");
 
 				}
+				
 				try {
 					if (pointOfService.getAddress().getDistrict() != null) {
-						Label label = new Label();
-						label.setValue(pointOfService.getAddress()
-								.getDistrict().concat(","));
-						label.setParent(listcell);
-						Div div = new Div();
-						div.setParent(listcell);
-						listcell.setParent(row);
+						
+						addLabel(pointOfService.getAddress().getDistrict().concat(","),listcell , row);
+
 					}
 				} catch (Exception e) {
-					LOG.error("PointOfService Address District is null");
+					LOG.debug("PointOfService Address District is null");
 				}
 
 				try {
 					if (pointOfService.getAddress().getCountry().getName() != null) {
-						Label label = new Label();
-						label.setValue(pointOfService.getAddress().getCountry()
-								.getName().concat(","));
-						label.setParent(listcell);
-						listcell.setParent(row);
+						
+						addLabel(pointOfService.getAddress().getCountry().getName().concat(","),listcell , row);
+			
 					}
 				} catch (Exception e) {
-					LOG.error("PointOfService Address Country is null");
+					LOG.debug("PointOfService Address Country is null");
 
 				}
 
 				try {
 					if (pointOfService.getAddress().getPostalcode() != null) {
-						Label label = new Label();
-						label.setValue(pointOfService.getAddress()
-								.getPostalcode().concat(" :"));
-						label.setParent(listcell);
-						Div div = new Div();
-						div.setParent(listcell);
-						listcell.setParent(row);
+						
+						addLabel(pointOfService.getAddress().getPostalcode().concat(" :"),listcell , row);
 
 					}
 				} catch (Exception e) {
-					LOG.error("PointOfService Address Postalcode is null");
+					LOG.debug("PointOfService Address Postalcode is null");
 				}
 			} 
 			
@@ -342,7 +317,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 
 				row.appendChild(new Listcell(" "));
 			}
-			
+	
 		}
 
 		Double basePriceValue = ObjectGetValueUtils.getDoubleValue(
@@ -367,6 +342,22 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		row.appendChild(new Listcell(qtyString));
 	}
 
+	
+	// Added By Techouts  to display StoreAddress 
+	
+	private void addLabel(String name , Listcell cell , Listitem row ) { 
+		Label label = new Label();
+		label.setMaxlength(13);
+		label.setMultiline(true);
+		label.setHyphen(true);
+		label.setValue(name);
+		label.setParent(cell);
+		Div div = new Div();
+		div.setParent(cell);
+		cell.setParent(row);
+		
+	}
+	
 	private void createTotalPriceLink(final Widget widget, final Div container,
 			final TypedObject item, String totalPriceString) {
 		Toolbarbutton viewTotalPriceDetails = new Toolbarbutton(

@@ -174,15 +174,15 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			{
 				return storeLocationResponseDataList;
 			}
+		 }else{
+			 LOG.error(" pincode model not found for given pincode "+pincode);
+			 throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
 		 }
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			throw e;
 		}
-
-
-		return null;
 	}
 
 	/**
@@ -541,6 +541,34 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	public void setPincodeService(final PincodeService pincodeService)
 	{
 		this.pincodeService = pincodeService;
+	}
+
+
+
+	/**
+	 * Get PincodeModel for given pincode
+	 * @author TECH
+	 * @param pincode
+	 * @return pincode model
+	 */
+	@Override
+	public PincodeModel getLatAndLongForPincode(final String pincode)
+	{
+		return pincodeService.getLatAndLongForPincode(pincode);
+	}
+
+	/**
+	 * Gets List of Location object for a given gps, distance and sellerId
+	 * @author TECH
+	 * @param gps
+	 * @param distance
+	 * @param sellerId
+	 * @return List of Location object.
+	 */
+	@Override
+	public List<Location> getSortedLocationsNearby(final GPS gps, final double distance, final String sellerId)
+	{
+		return pincodeService.getSortedLocationsNearby(gps, distance, sellerId);
 	}
 
 }

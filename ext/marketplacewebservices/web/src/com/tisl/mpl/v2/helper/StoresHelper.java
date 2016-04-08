@@ -43,10 +43,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.dao.MplSlaveMasterDAO;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 
@@ -128,36 +131,35 @@ public class StoresHelper extends AbstractHelper
 		{
 			LOG.debug("from locationDetails method");
 		}
-		PointOfServiceData pointOfServiceData = null;
-		final PointOfServiceData pointOfServiceDataWithError = new PointOfServiceData();
+		PointOfServiceData pointOfServiceData = new PointOfServiceData();
 		try
 		{
 			final PointOfServiceModel posModel = mplSlaveMasterDao.checkPOSForSlave(storeId);
 			if (null != posModel)
 			{
 				pointOfServiceData = pointOfServiceConverter.convert(posModel);
+				pointOfServiceData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
 			{
-				pointOfServiceDataWithError.setStatus("Store is not available for given store ID:  " + storeId);
+				LOG.debug(" no store found for storeId" + storeId);
+				final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9518);
+				ExceptionUtil.etailBusinessExceptionHandler(error, null);
+				pointOfServiceData.setError(error.getErrorMessage());
+				pointOfServiceData.setSlaveId(storeId);
+				pointOfServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			}
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception while calling locationDetails to get store for slaveId");
-			pointOfServiceDataWithError.setStatus("Something went wrong while calling location Details");
-
-			e.printStackTrace();
+			LOG.error("Exception in storeLocationAts call");
+			if (null != e.getMessage())
+			{
+				pointOfServiceData.setError(e.getMessage());
+			}
+			pointOfServiceData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		if (null != pointOfServiceDataWithError.getStatus())
-		{
-			return dataMapper.map(pointOfServiceDataWithError, PointOfServiceWsDTO.class, fields);
-		}
-		else
-		{
-			return dataMapper.map(pointOfServiceData, PointOfServiceWsDTO.class, fields);
-		}
-
+		return dataMapper.map(pointOfServiceData, PointOfServiceWsDTO.class, fields);
 	}
 
 
@@ -209,15 +211,24 @@ public class StoresHelper extends AbstractHelper
 				}
 				else
 				{
-					listOfPosData.setStatus("Something went wrong while fetching latitude and longitude for a pincode from comm");
+					LOG.error(" pincode model not found for given pincode " + pincode);
+					final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
+					ExceptionUtil.etailBusinessExceptionHandler(error, null);
+					listOfPosData.setError(error.getErrorMessage());
+					listOfPosData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+
 				}
 			}
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception in calling getAllStoresForPincode");
-			e.printStackTrace();
-			listOfPosData.setStatus("Something went wrong in calling getAllStoresForPincode");
+			LOG.error("Something went wrong in calling getAllStoresForPincode");
+
+			if (null != e.getMessage())
+			{
+				listOfPosData.setError(e.getMessage());
+			}
+			listOfPosData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		listOfPosData.setStores(posData);
 		return dataMapper.map(listOfPosData, ListOfPointOfServiceWsDTO.class, fields);
@@ -238,36 +249,48 @@ public class StoresHelper extends AbstractHelper
 		{
 			LOG.debug("from storesAtCart method");
 		}
-		List<StoreLocationResponseData> storesLocationResponse = new ArrayList<StoreLocationResponseData>();
-		StoreLocationResponseData storeLocationResData = null;
-		final StoreLocationResponseData storeLocationResData1 = new StoreLocationResponseData();
+		List<StoreLocationResponseData> storesLocationResponse = null;
+		StoreLocationResponseData storeLocationResData = new StoreLocationResponseData();
 		try
 		{
 			storesLocationResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pincode, ussId, null);
 			if (null != storesLocationResponse && storesLocationResponse.size() > 0)
 			{
 				storeLocationResData = storesLocationResponse.get(0);
+				storeLocationResData.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 			}
 			else
 			{
-				storeLocationResData1.setStatus("Something went wrong in storesAtCart");
+				LOG.debug(" no store found for pincode and ussid" + pincode + "  " + ussId);
+				final EtailBusinessExceptions error = new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9517);
+				ExceptionUtil.etailBusinessExceptionHandler(error, null);
+				storeLocationResData.setError(error.getErrorMessage());
+				storeLocationResData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			}
-
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				storeLocationResData.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				storeLocationResData.setErrorCode(e.getErrorCode());
+			}
+			storeLocationResData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception in storeLocationAts call");
-			storeLocationResData1.setStatus("Something went wrong in storeLocationAts call ");
+			LOG.error("Exception in storeLocationAts call " + e.getMessage());
+			if (null != e.getMessage())
+			{
+				storeLocationResData.setError(e.getMessage());
+			}
+			storeLocationResData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		if (null != storeLocationResData)
-		{
-			return dataMapper.map(storeLocationResData, StoreLocationResponseDataWsDTO.class, fields);
-		}
-		else
-		{
-			return dataMapper.map(storeLocationResData1, StoreLocationResponseDataWsDTO.class, fields);
-		}
-
+		return dataMapper.map(storeLocationResData, StoreLocationResponseDataWsDTO.class, fields);
 	}
 
 	protected double getInKilometres(final double radius, final double accuracy)

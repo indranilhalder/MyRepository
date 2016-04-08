@@ -139,7 +139,7 @@ ACC.storefinder = {
 			var infowindow = new google.maps.InfoWindow({
 				content: "",
 				disableAutoPan: false,
-				maxWidth:100
+				maxWidth:300 
 			});
 			google.maps.event.addListener(infowindow,'closeclick',function(){
 				//ACC.storefinder.removeGamma(map);
@@ -159,17 +159,49 @@ ACC.storefinder = {
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
 		          var infoMsg=storeData[i];
-		          var infoString="<div style=\"width:200px; height:100px\">"+infoMsg["displayName"]+ "</br> Distance Appx."+infoMsg["formattedDistance"]+" </br>"+infoMsg["line1"]
-					+" "+infoMsg["line2"];
-		          var openingMsg="";
-		          if(infoMsg["openings"]){
-		        	  var opening=infoMsg["openings"];
-		        	  for (var key in opening) {
-		    	          var value = opening[key];
-		    	          openingMsg +="</br>"+ key+" : "+value;
-		    	        } 
+		          var infoString="<div>"+"<p>" +infoMsg["displayName"]+ "</p><p>Distance Appx."+infoMsg["formattedDistance"]+"</p> <p>"+infoMsg["line1"]
+					+" "+infoMsg["line2"]+infoMsg["postalCode"]+"</p>";
+		          if(infoMsg["mplOpeningTime"] && infoMsg["mplClosingTime"]){
+		        	  infoString=infoString+'<p>PiQ UP HRS : '+ infoMsg["mplOpeningTime"]+'-'+infoMsg["mplClosingTime"]+"</p>";
 		          }
-		          infowindow.setContent(infoString+openingMsg+"</div>");
+		         // console.log(infoMsg["mplWorkingDays"]);
+		          if(infoMsg["mplWorkingDays"]){
+		        	    var	collectionDays = infoMsg["mplWorkingDays"].split(",");
+						var weekDays = ["0","1","2","3","4","5","6"];
+						var collectionWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+						var missing = new Array();
+						var count = 0;
+						var j = 0;
+						var lenC = weekDays.length;
+
+						for ( ; j < lenC; j++ ) {
+						    if ( collectionDays.indexOf(weekDays[j]) == -1 ) {
+							 	missing[count] = weekDays[j]; count++; 
+							}
+						}
+						if(missing.length < 1) {
+							infoString=infoString+"<p>Weekly Off : All Days Open </p>" ;
+							//console.log("Weekly Off : All Days Open");
+						}
+						else {
+							infoString=infoString+"<p>Weekly Off : ";
+							var weekOff="";
+							for(var y = 0; y < missing.length; y++) {
+								console.log(collectionWeek[missing[y]]);
+								weekOff=weekOff+collectionWeek[missing[y]];
+								if(y != missing.length-1) {
+									console.log(',');
+									weekOff=weekOff+',';
+									 
+								}
+							}
+							
+							infoString=infoString+weekOff+"</p>"
+						}
+
+		          }
+		         
+		          infowindow.setContent(infoString+"</div>");
 		          infowindow.open(map, marker);
 		          map.setZoom(markerZoom);
 		          map.setCenter(marker.getPosition());
@@ -211,10 +243,13 @@ ACC.storefinder = {
 			var q = $(".js-store-finder-search-input").val();
 
 			if(q.length>0){
-				 var geocoder = new google.maps.Geocoder();
+				var geocoder = new google.maps.Geocoder();
 				var lat='0';
 				var lng='0';
-				geocoder.geocode({ 'address': q }, function(results, status) {
+				if(q.trim()=='Current Location' && ACC.storefinder.coords.latitude ){
+					ACC.storefinder.getInitStoreData(null,ACC.storefinder.coords.latitude,ACC.storefinder.coords.longitude);
+				}else{
+				geocoder.geocode({ 'address': q + ' India' }, function(results, status) {
 				    if (status == google.maps.GeocoderStatus.OK) {
 				    	var searchLocation = results[0].geometry.location;
 				    	//console.log("Check for logs.")
@@ -226,7 +261,7 @@ ACC.storefinder = {
 				    	ACC.storefinder.getInitStoreData(null,lat,lng);
 				    } 
 				        }); 
-				// ACC.storefinder.getInitStoreData(q);
+				}
 			}else{
 				if($(".js-storefinder-alert").length<1){
 					var emptySearchMessage = $(".btn-primary").data("searchEmpty")
@@ -295,22 +330,30 @@ ACC.storefinder = {
 		$(".js-store-finder-pager-next").removeAttr("disabled")*/
 	},
 
+	geo_error: function() {
+		console.log("An error occurred during Geo coding lookup...");
+	},
+	
 	init:function(){
-		//$("#findStoresNearMe").attr("disabled","disabled");
 		$("#storesnear").hide();
 		var initialZoom=Number($("#initialZoom"));
-		$('#findStoresNearMe').attr("disabled");
+		$("#findStoresNearMe").addClass("findStoreNearMeDisable");
 		if(navigator.geolocation){
+			var geo_options = { 
+					enableHighAccuracy: true,
+					timeout : 30000
+			}
 			navigator.geolocation.getCurrentPosition(
 				function (position){
 					ACC.storefinder.coords = position.coords;
-					$('#findStoresNearMe').removeAttr("disabled");
+					//$('#findStoresNearMe').removeAttr("disabled");
+					$("#findStoresNearMe").removeClass("findStoreNearMeDisable");
 				},
 				function (error)
 				{
 					console.log("An error occurred... The error code and message are: " + error.code + "/" + error.message);
 				}
-			);
+			,ACC.storefinder.geo_error,geo_options);
 		}
 	},
 	loadinitGoogleMap:function(){
@@ -356,6 +399,8 @@ ACC.storefinder = {
 	{   
 		var errorMsg=$("#storefinderNoresult").val();
 		globalErrorPopup(errorMsg);
+		ACC.global.addGoogleMapsApi("ACC.storefinder.loadinitGoogleMap");
+		//loadinitGoogleMap();
 	} 
 	,
 applyGamma:function(map) {

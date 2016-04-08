@@ -8,6 +8,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement"%>
 <style>
+     .findStoreNearMeDisable{
+       pointer-events:none;
+     }
 	.store-finder-search {
 		margin-bottom: 10px;
 	}
@@ -68,7 +71,7 @@
 			<form:form action="${storeFinderFormAction}" method="get" commandName="storeFinderForm">
 				<ycommerce:testId code="storeFinder_search_box">
 					<div class="input-group">
-						<formElement:formInputBox idKey="storelocator-query" labelKey="storelocator.query" path="q" labelCSS="sr-only" inputCSS="form-control js-store-finder-search-input" mandatory="true"  placeholder="pickup.search.message" autocomplete="false" />
+						<formElement:formInputBox idKey="storelocator-query"  labelKey="storelocator.query" path="q" labelCSS="sr-only" inputCSS="form-control js-store-finder-search-input" mandatory="true"  placeholder="pickup.search.message" autocomplete="off" />
 						<span class="input-group-btn">
 							<button class="store-btn btn-primary" type="submit" data-search-empty="<spring:theme code="storelocator.error.no.results.subtitle" text="Check that you entered a valid postcode or place name."/>">
 								<!-- <span class="glyphicon glyphicon-search"></span> -->

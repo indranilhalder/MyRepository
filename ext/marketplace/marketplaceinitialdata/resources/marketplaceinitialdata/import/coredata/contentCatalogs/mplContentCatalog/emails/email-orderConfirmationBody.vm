@@ -189,7 +189,7 @@ Confirmed!<br>
 
 
                         <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:13px; color:#202020; padding:5px 0;">
-                        #if($store.name)Store Name : ${store.displayName}#end</br>
+                        #if($store.displayName)Store Name : ${store.displayName}#end<br/>
                         #if($store.address.line1)$store.address.line1,#end
                         #if($store.address.line2)$store.address.line2,#end
                         #if($store.address.addressLine3)$store.address.addressLine3,#end
@@ -201,7 +201,7 @@ Confirmed!<br>
                         #if($store.address.country.name)$store.address.country.name,#end
                         #if($store.address.postalcode)$store.address.postalcode,#end
                         #if($store.address.phone1)$store.address.phone1#end
-                        </td></br>
+                        </td><br/>
                       #end
                       #end
                       </tr>

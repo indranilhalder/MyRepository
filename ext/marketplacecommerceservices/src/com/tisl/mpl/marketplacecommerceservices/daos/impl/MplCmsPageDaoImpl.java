@@ -31,9 +31,7 @@ import com.tisl.mpl.model.SellerMasterModel;
  */
 public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDao
 {
-
 	//private final String MOBILE_UID = "MobileHomepage";	//SONAR Fix for unused private field
-
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
@@ -137,7 +135,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
-	public ContentPageModel getHomePageForMobile(final CMSChannel cms, final String MOBILE_UID)
+	public ContentPageModel getHomePageForMobile(final CMSChannel cms, final String pageUid)
 	{
 		// YTODO Auto-generated method stub
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
@@ -148,7 +146,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				.append("} = ?version");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
-		query.addQueryParameter("uid", MOBILE_UID);
+		query.addQueryParameter("uid", pageUid);
 		query.addQueryParameter("version", ONLINE_CATALOG_VERSION);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, cms);
 

@@ -30,9 +30,11 @@ import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
 import de.hybris.platform.commercewebservicescommons.dto.order.OrderHistoryListWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.order.OrderWsDTO;
+import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.ProductLowStockException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.StockSystemException;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.WebserviceValidationException;
+import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.strategies.CartLoaderStrategy;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -202,6 +204,8 @@ public class OrdersController extends BaseCommerceController
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
+	@Resource(name = "mplDataMapper")
+	protected DataMapper mplDataMapper;
 
 	/**
 	 * @return the mplSellerInformationService
@@ -1139,7 +1143,10 @@ public class OrdersController extends BaseCommerceController
 			{
 				orderTrackingWsDTO.setBillingAddress(setAddress(orderDetail, 1));
 				orderTrackingWsDTO.setDeliveryAddress(setAddress(orderDetail, 2));
-
+				
+				orderTrackingWsDTO.setPickupPersonName(orderDetail.getPickupName());				
+			   	orderTrackingWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
+				
 				orderTrackingWsDTO.setGiftWrapCharge(MarketplacecommerceservicesConstants.ZERO);
 				if (null != orderDetail.getCreated())
 				{
@@ -1240,6 +1247,10 @@ public class OrdersController extends BaseCommerceController
 								//								if (!entry.isGiveAway())
 								//								{
 								orderproductdto.setImageURL(setImageURL(product));
+								if(null !=entry.getDeliveryPointOfService()){
+									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
+								}
+								
 								if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
 								{
 									orderproductdto.setPrice(entry.getAmountAfterAllDisc().getValue().toString());
@@ -1988,8 +1999,32 @@ public class OrdersController extends BaseCommerceController
 		}
 		return getOrderHistoryListWsDTO;
 	}
+	
+	/**
+	 * @description method is to update the pickup person details for an order
+	 * @param orderId
+	 * @param name
+	 * @param mobile
+	 * @return OrderTrackingWsDTO (will be get on redirection)
+	 */
 
-
+	@Secured(
+			{ "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	@CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 120)
+	@RequestMapping(value = "/users/{userId}/updatePickupDetails",method = RequestMethod.POST)
+	public String updatePickupDetails(@RequestParam(required=true,value = "orderId") final String orderId,@PathVariable String userId,@PathVariable String baseSiteId,
+			@RequestParam(required=true,value = "name") final String name, @RequestParam(required=true,value = "mobile") final String mobile,@RequestParam(value="access_token") String token)
+	{
+		
+		if (orderId != null && name != null && mobile != null)
+		{
+			mplOrderFacade.editPickUpInfo(orderId, name, mobile);
+		}
+		//redirect to order details page to get the all the information of an order
+		String redirectURL="redirect:/v2/"+baseSiteId+"/users/"+userId+"/getSelectedOrder/"+orderId+"?access_token="+token;
+		return redirectURL;
+	}
+ 
 	/**
 	 * @description: To find the Cancellation is enabled/disabled on Order status
 	 * @param: currentStatus

@@ -1,4 +1,3 @@
-
 /**
  *
  */
@@ -33,11 +32,11 @@ public interface MplCmsPageDao extends CMSPageDao
 	ContentPageModel getSellerLandingPageForMobile(SellerMasterModel sellerMasterModel, CMSChannel cms);
 
 	ContentSlotModel getContentSlotByUidForPage(String pageId, String contentSlotId, String catalogVersion);
+
 	/**
 	 * @param cms
-	 * @param MOBILE_UID
-	 * @return
+	 * @param pageUid
+	 * @return ContentPageModel
 	 */
-	ContentPageModel getHomePageForMobile(CMSChannel cms, String MOBILE_UID);
+	ContentPageModel getHomePageForMobile(CMSChannel cms, String pageUid);
 }
-

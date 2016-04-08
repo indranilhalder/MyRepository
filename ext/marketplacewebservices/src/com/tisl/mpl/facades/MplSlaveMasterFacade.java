@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.tisl.mpl.service;
+package com.tisl.mpl.facades;
 
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
@@ -9,10 +9,10 @@ import com.tisl.mpl.wsdto.SellerSlaveDTO;
 
 
 /**
- * @author TECHOUTS
+ * @author TECH
  * 
  */
-public interface MplSlaveMasterService
+public interface MplSlaveMasterFacade
 {
 	/**
 	 * 
@@ -34,11 +34,14 @@ public interface MplSlaveMasterService
 	 * @return returns POSModel for given pos.
 	 */
 	public PointOfServiceModel findPOSByName(final String posName);
-	
+
 	/**
-	 * Gets PointOfService model for a given slaveId.
+	 * Get a PointOfService model for a given slaveId
+	 * 
+	 * @author TECH
 	 * @param slaveId
-	 * @return PointOfService model
+	 * @return PointOfServiceModel
 	 */
 	public PointOfServiceModel checkPOSForSlave(final String slaveId);
+
 }

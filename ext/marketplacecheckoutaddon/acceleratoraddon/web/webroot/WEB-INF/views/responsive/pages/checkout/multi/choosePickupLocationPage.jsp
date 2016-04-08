@@ -235,10 +235,16 @@
 								text-align: center;
 							}
 							
-							.fa-times {
-								cursor: pointer;
-								color: #A9143C;
-							}
+							.changeDeliveryMethod {
+							    background: none !important;
+							    border: none !important;
+							    text-transform: capitalize !important;
+							    font-weight: 600 !important;
+							    text-align: left !important;
+							    font-size: 14px !important;
+							    letter-spacing: normal !important;
+							    color: #A9143C !important;
+    						}
 							
 							.pincodeValidation {
 								clear: both;
@@ -437,10 +443,6 @@
 				});
 			}
 			
-			$(".pickUpPersonAjax i").click(function(){
-				$(".pickUpPersonAjax").fadeOut(100);
-			});
-			
 			function submitPickupPersonDetailsOnLoad() {
 				if($("#pickupPersonName").val().length >= "1" && $("#pickupPersonMobile").val().length >= "1") {
 					submitPickupPersionDetails();
@@ -554,7 +556,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4"><a href="../choose" onclick="window.history.back(); return false;" style="color: #A9143C !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
+								<li class="delivery header4"><button style="font-size: 14px !important;" class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -649,10 +651,10 @@
 															<c:if test="${not empty freebieProds.product.code}">
 															<div class="freebieId">Product ID: ${freebieProds.product.code}</div>
 															</c:if>
-															<c:if test="${not empty poses.product.size}">
+															<c:if test="${not empty freebieProds.product.size}">
 															<div class="freebieSize"><spring:theme code="text.size"/> ${freebieProds.product.size}</div>
 															</c:if>
-															<c:if test="${not empty poses.product.colour}">
+															<c:if test="${not empty freebieProds.product.colour}">
 															<div class="freebieColor"><spring:theme code="text.colour"/> ${freebieProds.product.colour}</div>
 															</c:if>
 															<c:if test="${not empty freebieProds.sellerName}">
@@ -710,7 +712,7 @@
 														<div class="colour"><spring:theme code="text.seller.name"/> ${poses.sellerName}</div>
 													</c:if>
 													<ycommerce:testId code="cart_product_quantity">
-														<c:if test="${not empty poses.product.colour}">
+														<c:if test="${not empty poses.quantity}">
 															<div class="quantity"><spring:theme code="text.qty"/> ${poses.quantity}</div>
 														</c:if>
 													</ycommerce:testId>
@@ -753,10 +755,10 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize; display: inline-block;" >PiQ up hrs :</span>
 																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style=" display: inline-block; margin-left: 0px;">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
 																	</c:if>
 																
 																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
@@ -836,7 +838,7 @@
 							
 							<li>
 													<ul class="mapWidth" id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
-													<ul id="maphide${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
+													<ul id="maphide${status1.index}" style="display: none; width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">
@@ -1057,12 +1059,19 @@
 										        		$("#map${status1.index}").hide();
 										        		$("#maphide${status1.index}").show();
 										        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+										        		$("#changeValue${status1.index}").text(pinvalue${status1.index});
 										        	}
 				
 									           
 									          },
 									          error : function(xhr, data, error) {
 									        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
+									        	  	$(".pincodeServicable${status1.index}").show();
+									        		$(".delivered${status1.index}").hide();
+									        		$("#map${status1.index}").hide();
+									        		$("#maphide${status1.index}").show();
+									        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+									        		$("#changeValue${status1.index}").text(pinvalue${status1.index});
 												}
 									         });
 										
@@ -1076,6 +1085,15 @@
 							   
 							    
 						    function processMap${status1.index}() {	
+						    	var loc${status1.index} = $(".latlng${status1.index}").text();
+								loc${status1.index} = loc${status1.index}.split("@");
+								var length${status1.index} = loc${status1.index}.length;
+								
+								for(var i=0;i<length${status1.index};i++){
+									loc${status1.index}[i] = loc${status1.index}[i].split(",");
+									for(var j=0;j<loc${status1.index}[i].length;j++) {
+									}
+								}
 							    var map = new google.maps.Map(document.getElementById('map${status1.index}'), {
 							      zoom: 10,
 							      center: new google.maps.LatLng(-37.92, 151.25),
@@ -1125,15 +1143,6 @@
 							      }
 							      //  Fit these bounds to the map
 							      map.fitBounds(bounds);
-							      zoomChangeBoundsListener = 
-							    	    google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
-							    	    	if(length${status1.index} <= 2) {
-								    	    	if (this.getZoom()){
-								    	            this.setZoom(16);
-								    	        }
-							    	    	}
-							    	});
-						    	setTimeout(function(){google.maps.event.removeListener(zoomChangeBoundsListener)}, 2000);
 							    }
 							    autoCenter();
 							    
@@ -1151,9 +1160,7 @@
 			<spring:theme code="checkout.multi.cnc.select.products.validate.msg"/></span>
 			<div class="container" id='pickup'>
 				<div class="panel">
-					<div class="pickUpPersonAjax">
-	     			 		<i class='fa fa-times'></i>
-	   			 	</div>
+					<div class="pickUpPersonAjax"></div>
    			 	</div>
        			<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
      			 	<div class="panel panel-body" style="margin-top: 14px;">
@@ -1225,6 +1232,12 @@
 				var productUrlNew = $(".productUrlName").attr("href");
 				var latestProductUrl = ACC.config.encodedContextPath + productUrlNew;
 				$(".productUrlName").attr("href", latestProductUrl);
+				
+				$(".changeDeliveryMethod").click(function(e){
+					//var attr = $(this).attr();
+					e.preventDefault();
+					window.history.back();
+				});
 					
 			});
 		</script>

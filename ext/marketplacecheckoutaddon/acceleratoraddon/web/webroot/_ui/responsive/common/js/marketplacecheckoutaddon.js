@@ -1524,31 +1524,39 @@ $("#otpMobileNUMField").focus(function(){
  
  
 
- function populateBillingAddress(){	
-	 $("#firstNameError, #lastNameError, #address1Error, #address2Error, #address3Error, #cityError, #stateError, #pinError").text("");
-	 $.ajax({
-			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setShippingAddress",
-			type: "GET",
-			cache: false,
-			success : function(response) {
-				var values=response.split("|");
-				$("#firstName").val(values[0]);
-				$("#lastName").val(values[1]);
-				$("#address1").val(values[2]);
-				$("#address2").val(values[3]);
-				$("#address3").val(values[4]);
-				$("#country").val(values[5]);
-				$("#state").val(values[6]);
-				$("#city").val(values[7]);
-				$("#pincode").val(values[8]);
-				$("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", true);
-				$("#country").attr("disabled", true);
-			},
-			error : function(resp) {
-			}
-		});
- }
- 
+ function populateBillingAddress(){ 
+	 $("#firstNameError, #lastNameError, #address1Error, #address2Error, #address3Error, #cityError, #stateError, #pinError").text(""); 
+	 $.ajax({ 
+	 url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/setShippingAddress", 
+	 type: "GET", 
+	 cache: false, 
+	 success : function(response) { 
+	 if(response!="") 
+	 { 
+	 var values=response.split("|"); 
+	 $("#firstName").val(values[0]); 
+	 $("#lastName").val(values[1]); 
+	 $("#address1").val(values[2]); 
+	 $("#address2").val(values[3]); 
+	 $("#address3").val(values[4]); 
+	 $("#country").val(values[5]); 
+	 $("#state").val(values[6]); 
+	 $("#city").val(values[7]); 
+	 $("#pincode").val(values[8]); 
+	 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", true); 
+	 $("#country").attr("disabled", true); 
+	 } 
+	 else 
+	 { 
+	 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false); 
+	 $("#country").attr("disabled", false); 
+	 $("#country").val("India"); 
+	 } 
+	 }, 
+	 error : function(resp) { 
+	 } 
+	 }); 
+	 }
 	 
  	 
 function savedCardForm(){
