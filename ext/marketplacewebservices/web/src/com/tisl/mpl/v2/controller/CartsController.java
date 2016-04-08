@@ -247,6 +247,8 @@ public class CartsController extends BaseCommerceController
 	@Autowired
 	private WishlistFacade wishlistFacade;
 
+
+
 	private static final String APPLICATION_TYPE = "application/json";
 
 
@@ -3801,7 +3803,7 @@ public class CartsController extends BaseCommerceController
 		try
 		{
 			//call service to retrieve POSModel for given posName
-			final PointOfServiceModel posModel = mplSlaveMasterService.checkPOSForSlave(slaveId);
+			final PointOfServiceModel posModel = mplSlaveMasterService.findPOSByName(slaveId);
 
 			if (null != posModel)
 			{
