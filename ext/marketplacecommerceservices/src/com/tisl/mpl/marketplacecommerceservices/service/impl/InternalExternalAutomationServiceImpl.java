@@ -71,6 +71,9 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	private static final String COMMA_DELIMITER = ",";
+	private static final String HTTP = "http://";
+	private static final String HTTPS = "https://";
+	private static final String MICROSITE_SEPARATOR = "/m/";
 
 	/*
 	 * All banner components are scanned and results are returned as Map
@@ -118,7 +121,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							campaignDataSeqBanner = new InternalCampaignReportData();
 							// Storing data for generating Internal Report
 							campaignDataSeqBanner.setAssetName(componentItr.getName());
-							if (contentPageItr.getLabel().contains("/m/"))
+							if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 							{
 								campaignDataSeqBanner.setSourcePage(contentPageItr.getLabel().substring(
 										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
@@ -149,7 +152,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									try
 									{
 										if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-												&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
+												&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 										{
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
@@ -158,7 +161,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										}
 										else if (null != bigPromoBanner.getBannerImage()
 												&& null != bigPromoBanner.getBannerImage().getURL()
-												&& !bigPromoBanner.getBannerImage().getURL().startsWith("https://"))
+												&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 										{
 
 											sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
@@ -201,7 +204,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 								CategoryBigPromoBanner = "";
 							}
 							campaignDataBigPromoBanner.setIcid(componentItr.getPk().toString());
-							if (contentPageItr.getLabel().contains("/m/"))
+							if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 							{
 								campaignDataBigPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
 										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
@@ -217,7 +220,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							{
 
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 								{
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
@@ -225,7 +228,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageSize = findIamgeSize(imageUrl);
 								}
 								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& !bigPromoBanner.getBannerImage().getURL().startsWith("https://"))
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 								{
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
@@ -259,7 +262,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							campaignDataBigFourPromoBanner.setIcid(componentItr.getPk().toString());
 							campaignDataBigFourPromoBanner.setAssetName(componentItr.getName());
-							if (contentPageItr.getLabel().contains("/m/"))
+							if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 							{
 								campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
 										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
@@ -273,7 +276,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							{
 
 								if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& !bigPromoBanner.getBannerImage().getURL().startsWith("http://"))
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTP))
 								{
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
@@ -281,7 +284,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									imageSize = findIamgeSize(imageUrl);
 								}
 								else if (null != bigPromoBanner.getBannerImage() && null != bigPromoBanner.getBannerImage().getURL()
-										&& !bigPromoBanner.getBannerImage().getURL().startsWith("https://"))
+										&& !bigPromoBanner.getBannerImage().getURL().startsWith(HTTPS))
 								{
 
 									sb = new StringBuffer(bigPromoBanner.getBannerImage().getURL());
@@ -320,7 +323,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									}
 									campaignDataBigFourPromoBanner.setIcid(differentBanner.getPk().toString());
 									campaignDataBigFourPromoBanner.setAssetName(differentBanner.getName());
-									if (contentPageItr.getLabel().contains("/m/"))
+									if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 									{
 										campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
 												contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
@@ -333,7 +336,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									try
 									{
 										if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
-												&& !differentBanner.getMedia().getURL().startsWith("http://"))
+												&& !differentBanner.getMedia().getURL().startsWith(HTTP))
 										{
 											sb = new StringBuffer(differentBanner.getMedia().getURL());
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
@@ -342,7 +345,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											campaignDataBigFourPromoBanner.setSize(imageSize);
 										}
 										else if (null != differentBanner.getMedia() && null != differentBanner.getMedia().getURL()
-												&& !differentBanner.getMedia().getURL().startsWith("https://"))
+												&& !differentBanner.getMedia().getURL().startsWith(HTTPS))
 										{
 											sb = new StringBuffer(differentBanner.getMedia().getURL());
 											sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
@@ -355,7 +358,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 											final MediaModel special = ((MplBigFourPromoBannerComponentModel) differentBanner)
 													.getBannerImage();
 											campaignDataBigFourPromoBanner.setMediaType(special.getMime());
-											if (null != special.getURL() || special.getURL().startsWith("http://"))
+											if (null != special.getURL())
 											{
 												sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
 														.getBannerImage().getURL());
@@ -363,7 +366,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												imageUrl = sb.toString();
 												imageSize = findIamgeSize(imageUrl);
 											}
-											else if (special.getURL().startsWith("https://"))
+											else if (special.getURL().startsWith(HTTPS))
 											{
 												sb = new StringBuffer(((MplBigFourPromoBannerComponentModel) differentBanner)
 														.getBannerImage().getURL());
@@ -378,7 +381,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 										{
 											final MediaModel special = ((MplBigPromoBannerComponentModel) differentBanner).getBannerImage();
 											campaignDataBigFourPromoBanner.setMediaType(special.getMime());
-											if (null != special.getURL() || special.getURL().startsWith("http://"))
+											if (null != special.getURL())
 											{
 												sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
 														.getURL());
@@ -386,7 +389,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 												imageUrl = sb.toString();
 												imageSize = findIamgeSize(imageUrl);
 											}
-											else if (special.getURL().startsWith("https://"))
+											else if (special.getURL().startsWith(HTTPS))
 											{
 												sb = new StringBuffer(((MplBigPromoBannerComponentModel) differentBanner).getBannerImage()
 														.getURL());
@@ -427,7 +430,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							}
 							campaignDataBigFourPromoBanner.setIcid(componentItr.getPk().toString());
 							campaignDataBigFourPromoBanner.setAssetName(componentItr.getName());
-							if (contentPageItr.getLabel().contains("/m/"))
+							if (contentPageItr.getLabel().contains(MICROSITE_SEPARATOR))
 							{
 								campaignDataBigFourPromoBanner.setSourcePage(contentPageItr.getLabel().substring(
 										contentPageItr.getLabel().lastIndexOf("/") + 1, contentPageItr.getLabel().length()));
@@ -440,7 +443,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 							try
 							{
 								if (null != simple.getMedia() && null != simple.getMedia().getURL()
-										&& !simple.getMedia().getURL().startsWith("http://"))
+										&& !simple.getMedia().getURL().startsWith(HTTP))
 								{
 									sb = new StringBuffer(simple.getMedia().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTP);
@@ -449,7 +452,7 @@ public class InternalExternalAutomationServiceImpl implements InternalExternalAu
 									campaignDataBigFourPromoBanner.setSize(imageSize);
 								}
 								else if (null != simple.getMedia() && null != simple.getMedia().getURL()
-										&& !simple.getMedia().getURL().startsWith("https://"))
+										&& !simple.getMedia().getURL().startsWith(HTTPS))
 								{
 									sb = new StringBuffer(simple.getMedia().getURL());
 									sb.insert(0, MarketplacecommerceservicesConstants.HTTPS);
