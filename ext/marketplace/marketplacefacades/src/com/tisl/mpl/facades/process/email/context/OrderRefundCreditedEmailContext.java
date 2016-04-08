@@ -47,7 +47,7 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 	{
 
 		LOG.debug("Refund Email  Init method called");
-		final BigDecimal totalAmount = BigDecimal.ZERO;
+		BigDecimal totalAmount = BigDecimal.ZERO;
 		super.init(orderProcessModel, emailPageModel);
 		final List<RefundEntryModel> refundEntryModel = new ArrayList<RefundEntryModel>();
 		final OrderModel orderModel = orderProcessModel.getOrder();
@@ -70,7 +70,7 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 						LOG.debug("refundList size  ==== " + refundList.size());
 						final BigDecimal refundAmount = BigDecimal.valueOf(entryModel.getNetAmountAfterAllDisc().doubleValue());
 						LOG.debug("refundAmount ==== " + refundAmount);
-						totalAmount.add(refundAmount);
+						totalAmount = totalAmount.add(refundAmount);
 						refundEntryModel.addAll(refundList);
 						LOG.debug("refundEntryModel Size  = " + refundEntryModel.size());
 					}
