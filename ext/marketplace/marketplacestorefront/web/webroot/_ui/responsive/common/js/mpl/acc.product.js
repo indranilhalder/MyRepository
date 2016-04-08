@@ -518,8 +518,8 @@ sendAddToBag : function(formId, isBuyNow) {
 					$("#"+formId+"Title").show().fadeOut(5000);
 				}
 				else if(data=="outofinventory"){
-					 $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
-					 $("#"+formId+"noInventory").show().fadeOut(6000);
+					 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
+					$("#addToCartFormnoInventory").show().fadeOut(6000);
 			   	     return false;
 				}
 				else if(data=="willexceedeinventory"){

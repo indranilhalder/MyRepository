@@ -36729,7 +36729,6 @@ display:block;
 header .content .right>ul>li.transient-mini-bag {
 	z-index: 5;
 }
-
 header .content .right>ul>li.transient-mini-bag .mini-transient-bag {
 	position: absolute;
 	width: 300px;
@@ -37468,4 +37467,7 @@ font-size:14px;}
 }
 	.cart.wrapper .right-block.shipping .block h2, .cart.wrapper .right-block.billing .block h2 {
         font-size: 18px; }
+}
+#micrositesearchButton{
+	Z-INDEX:500;
 }
