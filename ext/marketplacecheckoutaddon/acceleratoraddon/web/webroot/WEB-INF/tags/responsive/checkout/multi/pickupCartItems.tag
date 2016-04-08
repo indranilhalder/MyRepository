@@ -38,7 +38,7 @@
 	<li class="section cncOrderInfo">
 		<div class="title"><spring:theme code="checkout.multi.items.to.pickup" text="Store Address:"/></div>
 		<div class="address">
-			${groupData.deliveryPointOfService.name}
+			${groupData.deliveryPointOfService.displayName}
 			<br>
 			<c:if test="${ not empty groupData.deliveryPointOfService.address.line1 }">
 						${fn:escapeXml(groupData.deliveryPointOfService.address.line1)},&nbsp;
@@ -82,7 +82,7 @@
 						</c:if>
 					</c:forEach>
 				</div>
-				<c:if test="${ycommerce:doesPotentialPromotionExistForOrderEntry(cartData, entry.entryNumber) && showPotentialPromotions}">
+				<c:if test="${ycommerce:doesPotentialPromotionExistForOrderEntry(cartData, entry.entryNumber) && showPotentialPromotions && (entry.isBOGOapplied || entry.giveAway)}">
 					<ul>
 						<c:forEach items="${cartData.potentialProductPromotions}" var="promotion">
 							<c:set var="displayed" value="false"/>
@@ -95,7 +95,7 @@
 						</c:forEach>
 					</ul>
 				</c:if>
-				<c:if test="${ycommerce:doesAppliedPromotionExistForOrderEntry(cartData, entry.entryNumber)}">
+				<c:if test="${ycommerce:doesAppliedPromotionExistForOrderEntry(cartData, entry.entryNumber) && (entry.isBOGOapplied || entry.giveAway)}">
 					<ul>
 						<c:forEach items="${cartData.appliedProductPromotions}" var="promotion">
 							<c:set var="displayed" value="false"/>

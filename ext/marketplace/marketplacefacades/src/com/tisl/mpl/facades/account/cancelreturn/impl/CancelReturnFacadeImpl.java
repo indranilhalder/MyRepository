@@ -263,12 +263,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(">>> Cancel Refund exception occured : ", e);
+			LOG.error(">>> Cancel Refund exception occured in implementCancelOrReturn Etail Non BusinessException: ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(">>> Cancel Refund exception occured : ", e);
+			LOG.error(">>> Cancel Refund exception occured in implementCancelOrReturn in implementCancelOrReturn ", e);
 		}
 
 
@@ -418,12 +418,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(">>> Cancel Refund exception occured : ", e);
+			LOG.error(">>> Cancel Refund exception occured in implementReturnItem etail non business exception : ", e);
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
 		catch (final Exception e)
 		{
-			LOG.error(">>> Cancel Refund exception occured : ", e);
+			LOG.error(">>> Cancel Refund exception occured in implementReturnItem : ", e);
 		}
 
 
@@ -1011,7 +1011,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final JAXBException ex)
 		{
-			LOG.error(" >> Exception occured while CRM ticket creation", ex);
+			LOG.error(" >> Exception occured while CRM ticket creation JAXBException", ex);
 		}
 		catch (final Exception ex)
 		{
@@ -1089,13 +1089,14 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 				lineItemDataList.add(sendTicketLineItemData);
 			}
-			if (sendTicketRequestData.getTicketSubType() != "RSS")
+			if (!((sendTicketRequestData.getTicketSubType()).equals("RSS")))
 			{
 				addressInfo.setShippingFirstName(returnAddress.getFirstName());
 				addressInfo.setShippingLastName(returnAddress.getLastName());
 				addressInfo.setPhoneNo(returnAddress.getMobileNo());
 				addressInfo.setAddress1(returnAddress.getAddressLane1());
 				addressInfo.setAddress2(returnAddress.getAddressLane2());
+				addressInfo.setAddress3(returnAddress.getCity());
 				addressInfo.setCountry(returnAddress.getCountry());
 				addressInfo.setCity(returnAddress.getCity());
 				addressInfo.setState(returnAddress.getState());
@@ -1128,11 +1129,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		catch (final JAXBException ex)
 		{
-			LOG.error(" >> Exception occured while CRM ticket creation", ex);
+			LOG.error(" >> Exception occured while CRM ticket creation in createTicketInCRM JaxbException", ex);
 		}
 		catch (final Exception ex)
 		{
-			LOG.error(" >> Exception occured while CRM ticket creation", ex);
+			LOG.error(" >> Exception occured while CRM ticket creation in createTicketInCRM", ex);
 		}
 
 		return ticketCreationStatus;
@@ -1184,6 +1185,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		if (null != sendTicketRequestData.getAddressInfo().getAddress2())
 		{
 			ticket.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
+		}
+		if(null != sendTicketRequestData.getAddressInfo().getAddress3())
+		{
+			ticket.setAddress3(sendTicketRequestData.getAddressInfo().getAddress3());
 		}
 		if (null != sendTicketRequestData.getAddressInfo().getCity())
 		{

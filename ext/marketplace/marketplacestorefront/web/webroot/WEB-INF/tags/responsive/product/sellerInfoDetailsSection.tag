@@ -39,7 +39,7 @@
 						</p>
 						<div id="otherSellerLinkId" style="display: none">
 							<span id="otherSellersId"></span>&nbsp;<span
-								class="other-sellers-info" style="color: #00cbe9;"><spring:theme
+								class="other-sellers-info" style="color: #a9143c;"><spring:theme
 									code="product.othersellersForNoStock"></spring:theme></span>&nbsp;
 						</div>
 					</button>
@@ -63,4 +63,5 @@
 						</tbody>
 
 					</table>
+
 					</div>

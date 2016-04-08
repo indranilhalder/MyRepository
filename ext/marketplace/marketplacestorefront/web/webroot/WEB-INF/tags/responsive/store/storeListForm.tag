@@ -42,5 +42,3 @@
 
 </div>
 <!-- <div id="home-googleMap" class="home-googleMap"> -->
-
-

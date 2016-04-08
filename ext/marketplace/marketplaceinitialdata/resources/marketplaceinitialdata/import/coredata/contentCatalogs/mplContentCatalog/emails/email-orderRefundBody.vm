@@ -85,9 +85,9 @@
     <tr>
       <td valign="middle" style="border-bottom:1px solid #b7b7b7;  border-left:1px solid #b7b7b7; padding:8px 4px;">$ctx.transactionId</td>
       <td valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.nameOfProduct</td>
-      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.amountrefunded <br />
+      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.numberTool.format("#0.00",$ctx.amountrefunded)<br />
       against product</td>
-      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.deliveryCharge<br />
+      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.numberTool.format("#0.00",$ctx.deliveryCharge)<br />
         against delivery, <br />
         if any</td>
       <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; border-right:1px solid #b7b7b7; padding:8px 4px;">Back to Source <br />

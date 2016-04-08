@@ -31,15 +31,15 @@ import com.tisl.mpl.model.SellerMasterModel;
  */
 public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDao
 {
-
-	private final String MOBILE_UID = "MobileHomepage";
-
+	//private final String MOBILE_UID = "MobileHomepage";	//SONAR Fix for unused private field
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
 	private static final String SELECT_CLASS = "Select {";
 
 	private static final String FROM_CLASS = "} From {";
+
+	private static final Object ONLINE_CATALOG_VERSION = "Online";
 
 
 
@@ -131,19 +131,23 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
-	public ContentPageModel getHomePageForMobile(final CMSChannel cms)
+	public ContentPageModel getHomePageForMobile(final CMSChannel cms, final String pageUid)
 	{
 		// YTODO Auto-generated method stub
 		final StringBuilder queryString = new StringBuilder(SELECT_CLASS).append(ContentPageModel.PK).append(FROM_CLASS)
-				.append(ContentPageModel._TYPECODE).append("} Where {").append(ContentPageModel.UID).append("} = ?uid")
-				.append(" And {").append(ContentPageModel.CHANNEL).append("} = ?channel");
+				.append(ContentPageModel._TYPECODE).append(" AS C}, {").append(CatalogVersionModel._TYPECODE)
+				.append(" AS CV} Where {C:").append(ContentPageModel.UID).append("} = ?uid").append(" And {C:")
+				.append(ContentPageModel.CHANNEL).append("} = ?channel").append(" And {C:").append(ContentPageModel.CATALOGVERSION)
+				.append("} = {CV:").append(CatalogVersionModel.PK).append(" } AND {CV:").append(CatalogVersionModel.VERSION)
+				.append("} = ?version");
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString.toString());
-		query.addQueryParameter("uid", MOBILE_UID);
+		query.addQueryParameter("uid", pageUid);
+		query.addQueryParameter("version", ONLINE_CATALOG_VERSION);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CHANNEL, cms);
 
 		final List<ContentPageModel> contentPages = flexibleSearchService.<ContentPageModel> search(query).getResult();

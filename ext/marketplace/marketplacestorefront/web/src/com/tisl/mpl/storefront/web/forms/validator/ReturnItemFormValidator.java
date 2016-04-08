@@ -4,10 +4,9 @@
 package com.tisl.mpl.storefront.web.forms.validator;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
-import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 import com.tisl.mpl.storefront.web.forms.ReturnPincodeCheckForm;
 
@@ -26,8 +25,6 @@ public class ReturnItemFormValidator
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
 
-	@Autowired
-	private AccountAddressFacade accountAddressFacade;
 
 	public String returnValidate(final ReturnPincodeCheckForm addressForm)
 	{

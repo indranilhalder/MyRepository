@@ -20,14 +20,18 @@ public class GigyaFacadeImpl implements GigyaFacade
 {
 	@Autowired
 	public GigyaService gigyaService;
-
-
-
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facades.account.reviews.GigyaFacade#notifyGigya(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void notifyGigya(final String siteUid, final String gigyaUid, final String fName, final String lName,
 			final String eMail, final String gigyaMethod)
 	{
 		gigyaService.notifyGigya(siteUid, gigyaUid, fName, lName, eMail, gigyaMethod);
+
 	}
 
 	/**
@@ -38,6 +42,7 @@ public class GigyaFacadeImpl implements GigyaFacade
 	@Override
 	public GigyaWsDTO gigyaLoginHelper(final CustomerModel customerModel, final boolean isNewUser)
 	{
+
 		return gigyaService.gigyaLoginHelperforMobile(customerModel, isNewUser);
 	}
 

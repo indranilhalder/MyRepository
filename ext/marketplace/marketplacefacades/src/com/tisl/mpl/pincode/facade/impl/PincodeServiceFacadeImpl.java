@@ -81,6 +81,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
+	final String radius = "marketplacestorefront.configure.radius";
 	/**
 	 * This method is used to check pincode is serviceable are not
 	 * 
@@ -97,12 +98,10 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		try
 		{
 			List<PinCodeResponseData> response = null;
-			final List<StoreLocationResponseData> storeLocationResponseDataList = null;
-			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 			//call to commerce db to get the latitude and longitude
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 			if( null != pinCodeModelObj){
-			 String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null ? Config.getParameter("marketplacestorefront.configure.radius") : "0";
+			 String configurableRadius = Config.getParameter(radius) != null ? Config.getParameter(radius) : "0";
 			LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
 			final LocationDTO dto = new LocationDTO();
 			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
@@ -155,7 +154,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 			if (null != pinCodeModelObj){
-			final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius")!=null ? Config.getParameter("marketplacestorefront.configure.radius") : "0";
+			final String configurableRadius = Config.getParameter(radius)!=null ? Config.getParameter(radius) : "0";
 			LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
 			final LocationDTO dto = new LocationDTO();
 			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
@@ -175,15 +174,15 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			{
 				return storeLocationResponseDataList;
 			}
+		 }else{
+			 LOG.error(" pincode model not found for given pincode "+pincode);
+			 throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9516);
 		 }
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			throw e;
 		}
-
-
-		return null;
 	}
 
 	/**
@@ -542,6 +541,34 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	public void setPincodeService(final PincodeService pincodeService)
 	{
 		this.pincodeService = pincodeService;
+	}
+
+
+
+	/**
+	 * Get PincodeModel for given pincode
+	 * @author TECH
+	 * @param pincode
+	 * @return pincode model
+	 */
+	@Override
+	public PincodeModel getLatAndLongForPincode(final String pincode)
+	{
+		return pincodeService.getLatAndLongForPincode(pincode);
+	}
+
+	/**
+	 * Gets List of Location object for a given gps, distance and sellerId
+	 * @author TECH
+	 * @param gps
+	 * @param distance
+	 * @param sellerId
+	 * @return List of Location object.
+	 */
+	@Override
+	public List<Location> getSortedLocationsNearby(final GPS gps, final double distance, final String sellerId)
+	{
+		return pincodeService.getSortedLocationsNearby(gps, distance, sellerId);
 	}
 
 }

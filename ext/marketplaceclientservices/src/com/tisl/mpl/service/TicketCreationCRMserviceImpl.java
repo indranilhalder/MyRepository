@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -123,6 +124,7 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
 				addressInfo.setAddress1(sendTicketRequestData.getAddressInfo().getAddress1());
 				addressInfo.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
+				addressInfo.setAddress3(sendTicketRequestData.getAddressInfo().getAddress3());
 				addressInfo.setCountry(sendTicketRequestData.getAddressInfo().getCountry());
 				addressInfo.setCity(sendTicketRequestData.getAddressInfo().getCity());
 				addressInfo.setState(sendTicketRequestData.getAddressInfo().getState());

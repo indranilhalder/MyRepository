@@ -28,7 +28,6 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Span;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
-
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceSearchCommandController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
@@ -64,6 +63,7 @@ import de.hybris.platform.cscockpit.widgets.popup.PopupWindowCreator;
 import de.hybris.platform.cscockpit.widgets.renderers.details.impl.ProductSearchProductDetailRenderer;
 import de.hybris.platform.europe1.model.PriceRowModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.util.WeakArrayList;
 
 // TODO: Auto-generated Javadoc
@@ -105,7 +105,8 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 
 	@Autowired
 	private ConfigurationService configurationService;
-
+	@Autowired
+	private SessionService sessionService;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -525,12 +526,20 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 								+ product.getCode()
 								+ "on OMS server, hence the popup would contain non real time data");
 					}
-				} else {
+				} 
+				boolean isPincodeServicable = sessionService.getAttribute("isPincodeServicable");
+				LOG.debug("isPincodeServicable====="+sessionService.getAttribute("isPincodeServicable"));
+				LOG.debug("isPincodeServicable====="+isPincodeServicable);
+			   if(!isPincodeServicable){
+				populateProductDetailsPopup(widget, productDetailDiv, popupWindow,
+						item);
+				}
+				/*else {
 					popupMessage(widget, "noResponseForProduct");
 					LOG.info("There is no response from the server for product:"
 							+ product.getCode()
 							+ ", hence the popup would contain non real time data");
-				}
+				}*/
 
 			}
 
@@ -700,10 +709,12 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 				deliverymodeLabel = new Label(
 						MarketplaceCockpitsConstants.delNameMap
 								.get(deliveryMode));
+				if(null != deliveryMode) {
 				if(deliveryMode.equals("CNC")) {
 					deliverymodeLabel = new Label(
 						MarketplaceCockpitsConstants.delNameMap
 						.get("CnC"));
+				}
 				}
 				deliverymodeLabel.setStyle(LABELSTYLE);
 				deliverymodeLabel.setParent(cell);
@@ -851,6 +862,13 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 			// delivery mode
 			cell = new Listcell();
 			cell.setParent(productDetailItem);
+			boolean isPincodeServicable = Boolean.TRUE;
+			try{
+			 isPincodeServicable = sessionService.getAttribute("isPincodeServicable");
+			}catch(Exception e) {
+				LOG.debug("isPincodeServicable is null");
+			}
+			if(isPincodeServicable) {
 			for (MarketplaceDeliveryModeData dData : sData.getDeliveryModes()) {
 				label = new Label(dData.getName());
 				label.setStyle(LABELSTYLE);
@@ -872,7 +890,14 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 				label.setStyle(LABELSTYLE);
 				label.setParent(cell);
 			}
-
+			}
+			
+			if(!isPincodeServicable) {
+				cell = new Listcell();
+				cell.setParent(productDetailItem);
+				label = new Label();
+				label.setParent(cell);
+			}
 			// shipment Mode
 			cell = new Listcell();
 			cell.setParent(productDetailItem);

@@ -259,11 +259,19 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		}
 		else
 		{
+			if(source.getUser() != null && StringUtils.isNotBlank(((CustomerModel)source.getUser()).getFirstName()))
+			{
+				firstName=((CustomerModel)source.getUser()).getFirstName();
+				lastName=((CustomerModel)source.getUser()).getLastName();
+			}
+			else
+			{
 			final String[] names = getCustomerNameStrategy().splitName(source.getUser().getName());
 			if (names != null)
 			{
 				firstName = names[0];
 				lastName = names[1];
+			}
 			}
 		}
 

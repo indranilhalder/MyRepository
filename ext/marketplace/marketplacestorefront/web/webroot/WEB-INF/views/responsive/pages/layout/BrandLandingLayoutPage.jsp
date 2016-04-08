@@ -2,9 +2,9 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags" %>
 
-<div class="brand">
-<template:page pageTitle="${pageTitle}">
 
+<template:page pageTitle="${pageTitle}">
+<div class="brand">
 	<cms:pageSlot position="Section1" var="feature">
 		<cms:component component="${feature}" element="div" class="" />
 	</cms:pageSlot>
@@ -35,9 +35,9 @@
 
 	</div>
 
-	
+</div>  	
 </template:page>
-</div>
+
 
 <!-- <style>
 

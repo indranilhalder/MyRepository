@@ -13,10 +13,15 @@
  */
 package com.tisl.mpl.storefront.security.impl;
 
+import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.security.AutoLoginStrategy;
 import de.hybris.platform.acceleratorstorefrontcommons.security.GUIDCookieStrategy;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
+import de.hybris.platform.commercefacades.order.CartFacade;
+import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commerceservices.enums.CustomerType;
+import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
+import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -24,6 +29,9 @@ import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.jalo.user.User;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
+
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -31,6 +39,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -71,6 +81,8 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 	@Autowired
 	private ModelService modelService;
 
+
+	private static final String CART_MERGED = "cartMerged";
 
 	/**
 	 * @return the extUserService
@@ -175,13 +187,61 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 				getCustomerFacade().loginSuccess();
 				getGuidCookieStrategy().setCookie(request, response);
 				generateAttribute(request);
+				/**
+				 * New Code Added TISPRD-687
+				 */
+
+				final UserModel userModel = userService.getUserForUID(username);
 				getRememberMeServices().loginSuccess(request, response, token);
 				// finally, set user in session
-				final UserModel userModel = userService.getUserForUID(username);
+
 				final User user = modelService.getSource(userModel);
 				JaloSession.getCurrentSession().setUser(user);
 				LOG.debug("Method login SOCIAL RETURN USER USERNAME " + username);
 				LOG.debug("Method login SOCIAL RETURN USER PASSWORD " + password);
+
+
+				request.setAttribute(CART_MERGED, Boolean.FALSE);
+				if (!getCartFacade().hasEntries())
+				{
+					getSessionService().setAttribute(WebConstants.CART_RESTORATION_SHOW_MESSAGE, Boolean.TRUE);
+					try
+					{
+						getSessionService().setAttribute(WebConstants.CART_RESTORATION, getCartFacade().restoreSavedCart(null));
+					}
+					catch (final CommerceCartRestorationException e)
+					{
+						getSessionService().setAttribute(WebConstants.CART_RESTORATION_ERROR_STATUS,
+								WebConstants.CART_RESTORATION_ERROR_STATUS);
+					}
+				}
+				else if (getCartFacade().hasSessionCart() && !getCartFacade().getSessionCart().getEntries().isEmpty()
+						&& getMostRecentSavedCart(getCartFacade().getSessionCart()) != null)//, userModel.getCarts()) != null
+				{
+					getSessionService().setAttribute(WebConstants.CART_RESTORATION_SHOW_MESSAGE, Boolean.TRUE);
+					try
+					{
+						getSessionService().setAttribute(
+								WebConstants.CART_RESTORATION,
+								getCartFacade().restoreCartAndMerge(getMostRecentSavedCart(getCartFacade().getSessionCart()).getGuid(),
+										getCartFacade().getSessionCart().getGuid()));
+						request.setAttribute(CART_MERGED, Boolean.TRUE);
+					}
+					catch (final CommerceCartRestorationException e)
+					{
+						getSessionService().setAttribute(WebConstants.CART_RESTORATION_ERROR_STATUS,
+								WebConstants.CART_RESTORATION_ERROR_STATUS);
+					}
+					catch (final CommerceCartMergingException e)
+					{
+						LOG.error("User saved cart could not be merged");
+					}
+				}
+
+				/**
+				 * New Code Ends TISPRD-687
+				 */
+
 			}
 
 
@@ -192,6 +252,36 @@ public class DefaultAutoLoginStrategy implements AutoLoginStrategy
 			LOG.error("Failure during autoLogin", e);
 		}
 	}
+
+	protected CartFacade getCartFacade()
+	{
+		return Registry.getApplicationContext().getBean("cartFacade", CartFacade.class);
+	}
+
+	protected SessionService getSessionService()
+	{
+		return Registry.getApplicationContext().getBean("sessionService", SessionService.class);
+	}
+
+
+
+	protected CartData getMostRecentSavedCart(final CartData currentCart)
+	{
+		final List<CartData> userCarts = getCartFacade().getCartsForCurrentUser();
+		if (CollectionUtils.isNotEmpty(userCarts))
+		{
+			for (final CartData cart : userCarts)
+			{
+				if (!StringUtils.equals(cart.getGuid(), currentCart.getGuid()))
+				{
+					return cart;
+				}
+			}
+		}
+		return null;
+	}
+
+
 
 	protected AuthenticationManager getAuthenticationManager()
 	{

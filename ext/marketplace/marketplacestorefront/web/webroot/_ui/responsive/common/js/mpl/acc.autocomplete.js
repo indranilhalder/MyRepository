@@ -120,13 +120,19 @@ ACC.autocomplete = {
 				$.getJSON(self.options.autocompleteUrl, {term: request.term, category: selectedCat}, function (data)
 				{
 					var autoSearchData = [];
+
+					var suggestedString="";
+
 					if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 				       	{
 						
 							if(i==0){
 								if(data.brands.length!=undefined && data.brands.length>0){
-									var suggestedString="";
+
+								//	var suggestedString="";
+
+
 									if (/\s/.test(obj.term)) {
 										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
 									}
@@ -219,7 +225,9 @@ ACC.autocomplete = {
 										code: obj.code,
 										desc: obj.description,	
 										//url: ACC.config.contextPath + obj.url + "/?q=" + data.searchTerm + "&text=" + data.searchTerm +"&searchCategory="+selectedCat,
-										url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										//Fix for TISPRO-237 :: Search - Getting wrong top line when SERP is loaded from SNS
+										//url:  "/mpl/en/search/?q=" + data.searchTerm + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
+										url:  "/mpl/en/search/?q=" + suggestedString + "%3Arelevance%3Acategory%3A" + obj.code+"&search_category="+selectedCat+"&best_search_keyword="+term+ "&searchCategory=" + selectedCat,
 										term: data.searchTerm,
 										type: "category",
 										index: i,

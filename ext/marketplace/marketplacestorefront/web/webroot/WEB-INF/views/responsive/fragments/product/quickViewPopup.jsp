@@ -245,9 +245,10 @@ tr.d0 td {
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
 				+ "/addToWishListInPDP";
 	    var sizeSelected=true;
-	    if( $("#variant,#sizevariant option:selected").val()=="#"){
+	    if($("#isSizeSelectedQV").val()==''){
 	    	sizeSelected=false;
-	    }
+		}
+	    
 		var dataString = 'wish=' + wishName + '&product=' + productCodePost
 				+ '&ussid=' + ussidValue+'&sizeSelected=' + sizeSelected;
       

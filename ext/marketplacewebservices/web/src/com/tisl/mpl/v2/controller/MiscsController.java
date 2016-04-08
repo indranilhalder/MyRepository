@@ -181,6 +181,7 @@ import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 import com.tisl.mpl.wsdto.WthhldTAXWsDTO;
 
 
+
 /**
  * @author TCS
  */
@@ -204,6 +205,7 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	@Resource
 	private ModelService modelService;
+
 	@Autowired
 	private ForgetPasswordFacade forgetPasswordFacade;
 
@@ -720,6 +722,7 @@ public class MiscsController extends BaseController
 	 * @author TECHOUTS
 	 * @param slaves
 	 * @param request
+	 *
 	 * @return WebSerResponseWsDTO
 	 */
 	@RequestMapping(value = "/{baseSiteId}/slaveMaster", method = RequestMethod.POST)
@@ -730,7 +733,7 @@ public class MiscsController extends BaseController
 		BufferedReader br = null;
 		final StringBuilder sb = new StringBuilder();
 		String saveStatus;
-		final Map map;
+
 		try
 		{
 			String line;
@@ -744,7 +747,8 @@ public class MiscsController extends BaseController
 			final String relativeWebPath = MarketplacecommerceservicesConstants.SLAVE_MASTER_XSD_PATH;
 			final String absoluteDiskPath = servletContext.getRealPath(relativeWebPath);
 			final InputStream is0 = new ByteArrayInputStream(sb.toString().getBytes());
-			map = mplValidateAgainstXSDService.validateAgainstXSD(is0, absoluteDiskPath); //Validating XML input received XSD.
+			mplValidateAgainstXSDService.validateAgainstXSD(is0, absoluteDiskPath); //Validating XML input received XSD.
+
 
 
 			final InputStream is1 = new ByteArrayInputStream(sb.toString().getBytes());
@@ -759,18 +763,22 @@ public class MiscsController extends BaseController
 			final SellerSlaveDTO sellerSlavedto = (SellerSlaveDTO) xstream.fromXML(is1); // parse
 			saveStatus = mplSlaveMasterService.insertUpdate(sellerSlavedto);
 			if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_CODE_1))
+
 			{
 				userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				userResult.setError(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
 				LOG.debug(MarketplacecommerceservicesConstants.ERROR_MSG_INVALID_TYPE_CODE);
 				return userResult;
+
 			}
 			if (saveStatus.equals(MarketplacecommerceservicesConstants.ERROR_FLAG))
+
 			{
 				userResult.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 				userResult.setError(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
 				LOG.debug(MarketplacecommerceservicesConstants.SELLER_MASTER_ERROR_MSG);
 				return userResult;
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -796,7 +804,7 @@ public class MiscsController extends BaseController
 		}
 		LOG.debug(MarketplacecommerceservicesConstants.DATA_SAVED_MSG);
 		userResult.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
-		LOG.debug(map);
+
 		return userResult;
 	}
 
@@ -1106,8 +1114,8 @@ public class MiscsController extends BaseController
 					String substr = "";
 					substr = searchString.substring(0, searchString.length() - 1);
 
-					wsData.setSuggestions(
-							subList(productSearchFacade.getAutocompleteSuggestions(substr), component.getMaxSuggestions().intValue()));
+					wsData.setSuggestions(subList(productSearchFacade.getAutocompleteSuggestions(substr), component
+							.getMaxSuggestions().intValue()));
 
 				}
 				final SearchStateData searchState = new SearchStateData();
@@ -1388,8 +1396,8 @@ public class MiscsController extends BaseController
 					final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)
 					{
-						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null
-								? Config.getParameter("marketplacestorefront.configure.radius") : "0";
+						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null ? Config
+								.getParameter("marketplacestorefront.configure.radius") : "0";
 						LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
 						final LocationDTO dto = new LocationDTO();
 						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
@@ -1397,8 +1405,11 @@ public class MiscsController extends BaseController
 						final Location myLocation = new LocationDtoWrapper(dto);
 						LOG.debug("Selected Location for Latitude..:" + myLocation.getGPS().getDecimalLatitude());
 						LOG.debug("Selected Location for Longitude..:" + myLocation.getGPS().getDecimalLongitude());
-						response = pinCodeFacade.getResonseForPinCode(productCodeStr, pin, pincodeServiceFacade
-								.populatePinCodeServiceData(productCodeStr, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
+						response = pinCodeFacade.getResonseForPinCode(
+								productCodeStr,
+								pin,
+								pincodeServiceFacade.populatePinCodeServiceData(productCodeStr, myLocation.getGPS(),
+										Double.parseDouble(configurableRadius)));
 					}
 					if (null != response)
 					{
@@ -1671,7 +1682,7 @@ public class MiscsController extends BaseController
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
 			@RequestParam final String searchText, @RequestParam final String comment, @RequestParam final String category)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		String returnValue = null;
 		final UserResultWsDto userResultWsDto = new UserResultWsDto();

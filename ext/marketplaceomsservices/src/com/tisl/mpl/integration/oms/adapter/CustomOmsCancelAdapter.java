@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.integration.oms.adapter;
 
@@ -7,9 +7,7 @@ import de.hybris.platform.basecommerce.enums.CancelReason;
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.basecommerce.enums.OrderCancelEntryStatus;
 import de.hybris.platform.basecommerce.enums.OrderModificationEntryStatus;
-import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
-import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
@@ -20,11 +18,14 @@ import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.omsorders.notification.ModelChangeNotifier;
 import de.hybris.platform.ordercancel.OrderCancelEntry;
 import de.hybris.platform.ordercancel.OrderCancelException;
 import de.hybris.platform.ordercancel.OrderCancelService;
 import de.hybris.platform.ordercancel.model.OrderCancelRecordEntryModel;
+import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordermodify.model.OrderEntryModificationRecordEntryModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.payment.enums.PaymentTransactionType;
 import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
@@ -33,7 +34,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
-import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.servicelayer.time.TimeService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -42,7 +43,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -50,6 +50,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsordersConstants;
@@ -63,7 +64,6 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
-import com.tisl.mpl.marketplaceomsservices.daos.EmailAndSmsNotification;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
 import com.tisl.mpl.ordercancel.MplOrderCancelRequest;
@@ -76,66 +76,64 @@ import com.tisl.mpl.wsdto.TicketMasterXMLData;
 import com.tisl.mpl.xml.pojo.OrderLineDataResponse;
 import com.tisl.mpl.xml.pojo.ReturnLogisticsResponse;
 
+
 /**
  * @author Tech
  *
  */
 public class CustomOmsCancelAdapter implements Serializable
 {
-	
+
 	private static final Logger LOG = Logger.getLogger(CustomOmsCancelAdapter.class);
-	
+
 	@Autowired
 	private OrderCancelService orderCancelService;
-	
-	@Autowired
-	private UserService userService;
-	
-	
+
+
+
 	@Autowired
 	private OrderModelService orderModelService;
-	
-	@Autowired
-	private CustomerFacade customerFacade;
-	
+
+
+
 	@Autowired
 	private Converter<OrderModel, OrderData> orderConverter;
-	
+
 	@Autowired
 	private PriceDataFactory priceDataFactory;
-	
+
 	@Autowired
 	private TicketCreationCRMservice ticketCreate;
-	
+
 	@Autowired
 	private ConfigurationService configurationService;
-	
+
 	@Autowired
 	private ReturnLogisticsService returnLogistics;
-	
+
 	@Autowired
 	private ModelService modelService;
-	
+
 	@Autowired
 	private MplOrderService mplOrderService;
-	
+
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService;
-	
+
 	@Autowired
 	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
-	
-	@Resource(name = "emailAndSmsNotification")
-	private EmailAndSmsNotification emailAndSmsNotification;
-	
+
+
+
 	@Autowired
 	private BusinessProcessService businessProcessService;
-	
 
-	
-	public boolean createTicketInCRM(final OrderData subOrderDetails, final String subOrderEntryTransactionId,
-			final String ticketTypeCode, final String reasonCode, final String refundType, 
-			final CustomerData customerData, final OrderModel subOrderModel)
+	private ModelChangeNotifier<ConsignmentModel> consignmentProcessNotifier;
+
+	private TimeService timeService;
+
+	public boolean createTicketInCRM(final String subOrderEntryTransactionId, final String ticketTypeCode,
+			final String reasonCode, final String refundType, final OrderModel subOrderModel)
 	{
 		boolean ticketCreationStatus = false;
 		try
@@ -161,7 +159,7 @@ public class CustomOmsCancelAdapter implements Serializable
 					boolean returnLogisticsCheck = true;
 					//Start
 
-					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails);
+					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderModel);
 					if (CollectionUtils.isNotEmpty(returnLogisticsRespList))
 					{
 						for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
@@ -196,10 +194,11 @@ public class CustomOmsCancelAdapter implements Serializable
 
 				lineItemDataList.add(sendTicketLineItemData);
 			}
-			sendTicketRequestData.setCustomerID(customerData.getUid());
+			//sendTicketRequestData.setCustomerID(customerData.getUid());
+			sendTicketRequestData.setCustomerID(subOrderModel.getUser().getUid());
 			sendTicketRequestData.setLineItemDataList(lineItemDataList);
 			sendTicketRequestData.setOrderId(subOrderModel.getParentReference().getCode());
-			sendTicketRequestData.setSubOrderId(subOrderDetails.getCode());
+			sendTicketRequestData.setSubOrderId(subOrderModel.getCode());
 			sendTicketRequestData.setTicketType(ticketTypeCode);
 
 			final String asyncEnabled = configurationService.getConfiguration()
@@ -229,7 +228,7 @@ public class CustomOmsCancelAdapter implements Serializable
 
 		return ticketCreationStatus;
 	}
-	
+
 	private List<AbstractOrderEntryModel> associatedEntries(final OrderModel subOrderDetails, final String transactionId)
 	{
 		final List<AbstractOrderEntryModel> orderEntries = new ArrayList<>();
@@ -273,32 +272,31 @@ public class CustomOmsCancelAdapter implements Serializable
 
 		return orderEntries;
 	}
-	
-	
-	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderData orderDetails)
+
+	public List<ReturnLogisticsResponseData> checkReturnLogistics(final OrderModel subOrderModel)
 	{
 		try
 		{
-			final List<OrderEntryData> entries = orderDetails.getEntries();
+			final List<AbstractOrderEntryModel> entries = subOrderModel.getEntries();
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
 			String transactionId = "";
-			for (final OrderEntryData eachEntry : entries)
+			for (final AbstractOrderEntryModel eachEntry : entries)
 			{
 				final ReturnLogistics returnLogistics = new ReturnLogistics();
 				//TISEE-5557
-				if (!(eachEntry.isGiveAway() || eachEntry.isIsBOGOapplied()))
+				if (!(eachEntry.getGiveAway().booleanValue() || eachEntry.getIsBOGOapplied().booleanValue()))
 				//	|| (null != eachEntry.getAssociatedItems() && !eachEntry.getAssociatedItems().isEmpty())))
 				{
-					returnLogistics.setOrderId(orderDetails.getCode());
+					returnLogistics.setOrderId(subOrderModel.getCode());
 					if (StringUtils.isNotEmpty(eachEntry.getOrderLineId()))
 					{
 						transactionId = eachEntry.getOrderLineId();
 						returnLogistics.setTransactionId(eachEntry.getOrderLineId());
 					}
-					else if (StringUtils.isNotEmpty(eachEntry.getTransactionId()))
+					else if (StringUtils.isNotEmpty(eachEntry.getTransactionID()))
 					{
-						transactionId = eachEntry.getTransactionId();
-						returnLogistics.setTransactionId(eachEntry.getTransactionId());
+						transactionId = eachEntry.getTransactionID();
+						returnLogistics.setTransactionId(eachEntry.getTransactionID());
 					}
 				}
 				returnLogisticsList.add(returnLogistics);
@@ -350,9 +348,9 @@ public class CustomOmsCancelAdapter implements Serializable
 					LOG.debug("*****Reverse logistics availabilty  Response orderline is null*********");
 					final ReturnLogisticsResponseData returnLogRespData = new ReturnLogisticsResponseData();
 					returnLogRespData.setIsReturnLogisticsAvailable("N");
-					if (null != orderDetails.getCode())
+					if (null != subOrderModel.getCode())
 					{
-						returnLogRespData.setOrderId(orderDetails.getCode());
+						returnLogRespData.setOrderId(subOrderModel.getCode());
 						returnLogRespData
 								.setResponseMessage(MarketplaceomsordersConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
 						returnLogRespData
@@ -369,7 +367,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			throw new EtailNonBusinessExceptions(ex, MarketplaceomsordersConstants.E0000);
 		}
 	}
-	
+
 	private void saveTicketDetailsInCommerce(final SendTicketRequestData sendTicketRequestData)
 	{
 		String crmRequest = null;
@@ -420,9 +418,9 @@ public class CustomOmsCancelAdapter implements Serializable
 		}
 		modelService.save(ticket);
 	}
-	
-	boolean initiateCancellation(final String ticketTypeCode, final OrderData subOrderDetails,
-			final String subOrderEntryTrnxId, final OrderModel subOrderModel, final String reasonCode)
+
+	boolean initiateCancellation(final String ticketTypeCode, final String subOrderEntryTrnxId, final OrderModel subOrderModel,
+			final String reasonCode, final ConsignmentModel consignmentModel)
 	{
 		boolean cancellationInitiated = false;
 
@@ -430,9 +428,9 @@ public class CustomOmsCancelAdapter implements Serializable
 		{
 			if ("C".equalsIgnoreCase(ticketTypeCode))
 			{
-				final MplOrderCancelRequest orderCancelRequest = buildCancelRequest(reasonCode, subOrderModel,
-						subOrderEntryTrnxId);
-				requestOrderCancel(subOrderDetails, subOrderModel, orderCancelRequest);
+				final MplOrderCancelRequest orderCancelRequest = buildCancelRequest(reasonCode, subOrderModel, subOrderEntryTrnxId);
+				//	requestOrderCancel(subOrderDetails, subOrderModel, orderCancelRequest);
+				requestOrderCancel(subOrderModel, orderCancelRequest, consignmentModel);
 			}
 			cancellationInitiated = true;
 		}
@@ -445,13 +443,13 @@ public class CustomOmsCancelAdapter implements Serializable
 		{
 			ex.printStackTrace();
 			throw new EtailNonBusinessExceptions(ex, MarketplaceomsordersConstants.E0000);
-			
+
 		}
 		return cancellationInitiated;
 	}
-	
-	private MplOrderCancelRequest buildCancelRequest(final String reasonCode,
-			final OrderModel subOrderModel, final String transactionId) throws OrderCancelException
+
+	private MplOrderCancelRequest buildCancelRequest(final String reasonCode, final OrderModel subOrderModel,
+			final String transactionId) throws OrderCancelException
 	{
 
 		final List orderCancelEntries = new ArrayList();
@@ -521,26 +519,27 @@ public class CustomOmsCancelAdapter implements Serializable
 
 
 			refundAmount = refundAmount + orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
-			
+
 			refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
 
 		}
 		//Setting Refund Amount
 		orderCancelRequest.setAmountToRefund(new Double(refundAmount));
-	
+
 		return orderCancelRequest;
 	}
-	
-	private void requestOrderCancel(final OrderData subOrderDetails, final OrderModel subOrderModel,
-			final MplOrderCancelRequest orderCancelRequest) throws OrderCancelException
+
+	private void requestOrderCancel(final OrderModel subOrderModel, final MplOrderCancelRequest orderCancelRequest,
+			final ConsignmentModel consignmentModel) throws OrderCancelException
 	{
 		//cancel Order
-		
-		final OrderCancelRecordEntryModel orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest,subOrderModel.getUser());
-		
+
+		final OrderCancelRecordEntryModel orderRequestRecord = orderCancelService.requestOrderCancel(orderCancelRequest,
+				subOrderModel.getUser());
+
 		if (OrderCancelEntryStatus.DENIED.equals(orderRequestRecord.getCancelResult()))
 		{
-			final String orderCode = subOrderDetails.getCode();
+			final String orderCode = subOrderModel.getCode();
 
 			String message = MarketplaceomsordersConstants.EMPTY;
 			if (orderRequestRecord.getRefusedMessage() != null)
@@ -556,12 +555,13 @@ public class CustomOmsCancelAdapter implements Serializable
 		}
 		else
 		{
-			initiateRefund( subOrderModel, orderRequestRecord);
+			initiateRefund(subOrderModel, orderRequestRecord, consignmentModel);
 		}
 	}
-	
-	private void initiateRefund( final OrderModel subOrderModel,
-			final OrderCancelRecordEntryModel orderRequestRecord)
+
+
+	private void initiateRefund(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord,
+			final ConsignmentModel consignmentModel)
 	{
 
 		PaymentTransactionModel paymentTransactionModel = null;
@@ -625,6 +625,8 @@ public class CustomOmsCancelAdapter implements Serializable
 								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
 										Double.valueOf(refundAmount), newStatus);
 
+								updateConsignmentStatus(consignmentModel, subOrderModel, newStatus);
+
 							}
 						}
 					}
@@ -635,6 +637,7 @@ public class CustomOmsCancelAdapter implements Serializable
 					////TISSIT-1801
 					mplJusPayRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
 							JuspayRefundType.CANCELLED, uniqueRequestId);
+					updateConsignmentStatus(consignmentModel, subOrderModel, ConsignmentStatus.REFUND_INITIATED);
 				}
 			}
 			catch (final Exception e)
@@ -643,6 +646,7 @@ public class CustomOmsCancelAdapter implements Serializable
 				////TISSIT-1801
 				mplJusPayRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
 						JuspayRefundType.CANCELLED, uniqueRequestId);
+				updateConsignmentStatus(consignmentModel, subOrderModel, ConsignmentStatus.REFUND_INITIATED);
 			}
 		}
 		else
@@ -661,9 +665,36 @@ public class CustomOmsCancelAdapter implements Serializable
 				: MarketplacecommerceservicesConstants.EMPTY);
 		modelService.save(orderRequestRecord);
 	}
-	
+
+	protected void updateConsignmentStatus(final ConsignmentModel consignmentModel, final OrderModel subOrderModel,
+			final ConsignmentStatus consignmentStatus)
+	{
+		consignmentModel.setStatus(consignmentStatus);
+		LOG.debug("******************:" + consignmentModel.getStatus());
+		saveAndNotifyConsignment(consignmentModel);
+		modelService.save(createHistoryLog(consignmentStatus.toString(), subOrderModel, consignmentModel.getCode()));
+		LOG.info("Order History entry created for" + subOrderModel.getCode() + "Line ID" + consignmentModel.getCode());
+	}
+
+	protected void saveAndNotifyConsignment(final ConsignmentModel consignmentModel)
+	{
+		getModelService().save(consignmentModel);
+		getConsignmentProcessNotifier().notify(consignmentModel);
+		LOG.info("Consignment updated with::" + consignmentModel.getStatus());
+	}
+
+	protected OrderHistoryEntryModel createHistoryLog(final String description, final OrderModel order, final String lineId)
+	{
+		final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
+		historyEntry.setTimestamp(getTimeService().getCurrentTime());
+		historyEntry.setOrder(order);
+		historyEntry.setLineId(lineId);
+		historyEntry.setDescription(description);
+		return historyEntry;
+	}
+
 	PushNotificationData frameCancelPushNotification(final OrderModel subOrderModel, final String suborderEntryNumber,
-			final String reasonCode, final CustomerData customerData)
+			final String reasonCode)
 	{
 		PushNotificationData pushData = null;
 		try
@@ -672,7 +703,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			String cancelReason = null;
 			String cancelledItems = null;
 			AbstractOrderEntryModel entry = null;
-			Long subOrderNumber=Long.valueOf(suborderEntryNumber);
+			final Long subOrderNumber = Long.valueOf(suborderEntryNumber);
 			for (final AbstractOrderEntryModel orderEntry : subOrderModel.getEntries())
 			{
 				if (null != orderEntry.getEntryNumber() && orderEntry.getEntryNumber().longValue() == subOrderNumber.longValue())
@@ -711,8 +742,7 @@ public class CustomOmsCancelAdapter implements Serializable
 			{
 				for (final AbstractOrderEntryModel orderEntry : orderMod.getEntries())
 				{
-					if (null != orderEntry.getEntryNumber()
-							&& orderEntry.getEntryNumber().longValue() == subOrderNumber.longValue())
+					if (null != orderEntry.getEntryNumber() && orderEntry.getEntryNumber().longValue() == subOrderNumber.longValue())
 					{
 						cancelledEntry = orderEntry;
 						break;
@@ -726,9 +756,11 @@ public class CustomOmsCancelAdapter implements Serializable
 			cancelReason = getReasonForCancellation(reasonCode);
 
 			CustomerModel customer = getModelService().create(CustomerModel.class);
-			if (null != customerData.getUid() && !customerData.getUid().isEmpty())
+			//if (null != customerData.getUid() && !customerData.getUid().isEmpty())
+			if (null != subOrderModel.getUser().getUid() && !subOrderModel.getUser().getUid().isEmpty())
 			{
-				customer = getMplSNSMobilePushService().getCustForUId(customerData.getUid());
+				//customer = getMplSNSMobilePushService().getCustForUId(customerData.getUid());
+				customer = getMplSNSMobilePushService().getCustForUId(subOrderModel.getUser().getUid());
 				if (null != customer && null != customer.getDeviceKey() && !customer.getDeviceKey().isEmpty()
 						&& null != customer.getOriginalUid() && !customer.getOriginalUid().isEmpty() && null != customer.getIsActive()
 						&& !customer.getIsActive().isEmpty() && customer.getIsActive().equalsIgnoreCase("Y"))
@@ -758,6 +790,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		}
 		return pushData;
 	}
+
 	private String getReasonForCancellation(final String reasonCode)
 	{
 		//Get the reason from Global Code master
@@ -784,13 +817,14 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param orderConverter the orderConverter to set
+	 * @param orderConverter
+	 *           the orderConverter to set
 	 */
-	public void setOrderConverter(Converter<OrderModel, OrderData> orderConverter)
+	public void setOrderConverter(final Converter<OrderModel, OrderData> orderConverter)
 	{
 		this.orderConverter = orderConverter;
 	}
-	
+
 	protected OrderData convertToData(final OrderModel orderModel)
 	{
 		OrderData orderData = null;
@@ -899,7 +933,7 @@ public class CustomOmsCancelAdapter implements Serializable
 		return orderData;
 
 	}
-	
+
 	private PriceData createPrice(final AbstractOrderModel source, final Double val)
 	{
 		if (source == null)
@@ -921,7 +955,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 
-	
+
 	/**
 	 * @return the priceDataFactory
 	 */
@@ -931,9 +965,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param priceDataFactory the priceDataFactory to set
+	 * @param priceDataFactory
+	 *           the priceDataFactory to set
 	 */
-	public void setPriceDataFactory(PriceDataFactory priceDataFactory)
+	public void setPriceDataFactory(final PriceDataFactory priceDataFactory)
 	{
 		this.priceDataFactory = priceDataFactory;
 	}
@@ -947,9 +982,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param modelService the modelService to set
+	 * @param modelService
+	 *           the modelService to set
 	 */
-	public void setModelService(ModelService modelService)
+	public void setModelService(final ModelService modelService)
 	{
 		this.modelService = modelService;
 	}
@@ -963,9 +999,10 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param mplSNSMobilePushService the mplSNSMobilePushService to set
+	 * @param mplSNSMobilePushService
+	 *           the mplSNSMobilePushService to set
 	 */
-	public void setMplSNSMobilePushService(MplSNSMobilePushServiceImpl mplSNSMobilePushService)
+	public void setMplSNSMobilePushService(final MplSNSMobilePushServiceImpl mplSNSMobilePushService)
 	{
 		this.mplSNSMobilePushService = mplSNSMobilePushService;
 	}
@@ -979,13 +1016,40 @@ public class CustomOmsCancelAdapter implements Serializable
 	}
 
 	/**
-	 * @param businessProcessService the businessProcessService to set
+	 * @param businessProcessService
+	 *           the businessProcessService to set
 	 */
-	public void setBusinessProcessService(BusinessProcessService businessProcessService)
+	public void setBusinessProcessService(final BusinessProcessService businessProcessService)
 	{
 		this.businessProcessService = businessProcessService;
 	}
-	
-	
 
+	private ModelChangeNotifier<ConsignmentModel> getConsignmentProcessNotifier()
+	{
+		return this.consignmentProcessNotifier;
+	}
+
+	@Required
+	public void setConsignmentProcessNotifier(final ModelChangeNotifier<ConsignmentModel> consignmentProcessNotifier)
+	{
+		this.consignmentProcessNotifier = consignmentProcessNotifier;
+	}
+
+	/**
+	 * @return the timeService
+	 */
+	public TimeService getTimeService()
+	{
+		return timeService;
+	}
+
+	/**
+	 * @param timeService
+	 *           the timeService to set
+	 */
+	@Required
+	public void setTimeService(final TimeService timeService)
+	{
+		this.timeService = timeService;
+	}
 }

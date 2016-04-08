@@ -171,6 +171,7 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+    <!-- For Bulk Product Upload on HMC Configuration Screen -->
 	<bean id="productPromotionInterceptor" class="com.tisl.mpl.interceptor.ProductPromotionInterceptor">
 
 	</bean>
@@ -910,7 +911,8 @@
 				<value>PICK_IN_PROGRESS</value>
 				<value>PICK_HOLD</value>
 				<value>PICK_CONFIRMED</value>
-				<value>PACKED</value>
+				<!-- commented by because for packed status cancellation is not possible ( TISUATC-99) -->
+				<!-- <value>PACKED</value> -->
 				<value>ORDER_REJECTED</value>
 				<value>AWB_ASSIGNED</value>
 				<value>PRINT_SHIPPING_LABEL</value>
@@ -1628,11 +1630,13 @@
 		<property name="addressLocationParser" ref="firstPlacemarkWinsGoogleResponseParser"/>
 		<property name="routeDataParser" ref="routeDataGoogleResponseParser"/>
 		<property name="directionsUrlBuilder" ref="geolocationDirectionsUrlBuilder"/>
-		<property name="googleKey" value="${googleApiKey}"/>
 	</bean>
 	
 	<!-- Store Locator Beans end here -->
 
+	<bean id="mplSellerInformationFacade"
+		class="com.tisl.mpl.marketplacecommerceservices.facades.impl.MplSellerInformationFacadeImpl">
+	</bean>
 
 	</beans>
 

@@ -1,8 +1,6 @@
 $(document).ready(function(){
 	var isAjaxCalled = false;
 	
-	
-	
 	$("#socialLogin").hover(function(e){
 		if(isAjaxCalled == false){
 			$.ajax({
@@ -27,6 +25,7 @@ $(document).ready(function(){
 	//ajax spring login authentication
 
 	$("#triggerLoginAjax").click(function(){
+		
 	var emailPattern=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 	if($("input[name=j_username]").val() == ""){
 	$("#errorHolder").text("Username cannot be left empty");
@@ -40,7 +39,8 @@ $(document).ready(function(){
 	return false;
 	}else{
 		// TISPRO-183
-		utag.link({ "event_type" : "Login", "link_name" : "Login" });
+		
+		//utag.link({ "event_type" : "Login", "link_name" : "Login" });
 		//TISSIT-1703
 		var hostName=window.location.host;
 		if(hostName.indexOf(':') >=0)
@@ -93,4 +93,33 @@ $(document).ready(function(){
 			}
 		}
 	});
+	
+	$(".header-myAccountSignOut").click(function(){
+		window.localStorage.removeItem("eventFired");
+	});
+	
+	
+	//TISPRO-183 -- Firing Tealium event only after successful user login
+	if(loginStatus){
+		if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
+			localStorage.setItem("eventFired","true");
+			console.log("Login Success!!!");
+			if(typeof utag == "undefined"){
+				console.log("Utag is undefined")
+			}
+			else{
+				console.log("Firing Tealium Event");
+				utag.link({ "event_type" : "Login", "link_name" : "Login" });
+			}
+			
+			//fireTealiumEvent();
+			
+			
+			
+		}  
+	}
+	
 });
+
+
+

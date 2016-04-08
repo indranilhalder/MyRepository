@@ -153,6 +153,7 @@
 						  }		
 						  #pickup {
 						  	width: 920px !important;
+						  	padding-top: 15px;
 						  }
 						  .savenewid {
 						  	background: #A9143C !important;
@@ -234,9 +235,20 @@
 								text-align: center;
 							}
 							
-							.fa-times {
-								cursor: pointer;
-								color: #A9143C;
+							.changeDeliveryMethod {
+							    background: none !important;
+							    border: none !important;
+							    text-transform: capitalize !important;
+							    font-weight: 600 !important;
+							    text-align: left !important;
+							    font-size: 14px !important;
+							    letter-spacing: normal !important;
+							    color: #A9143C !important;
+    						}
+							
+							.pincodeValidation {
+								clear: both;
+								padding-top: 5px;
 							}
 						  					 	
 					</style>
@@ -431,10 +443,6 @@
 				});
 			}
 			
-			$(".pickUpPersonAjax i").click(function(){
-				$(".pickUpPersonAjax").fadeOut(100);
-			});
-			
 			function submitPickupPersonDetailsOnLoad() {
 				if($("#pickupPersonName").val().length >= "1" && $("#pickupPersonMobile").val().length >= "1") {
 					submitPickupPersionDetails();
@@ -451,7 +459,7 @@
 				$(".pickupPersonNameError").hide();
 				$(".pickupDetails").hide();
 				
-				console.log("Working");
+				//console.log("Working");
 				var pickupPersonName = $("#pickupPersonName").val();
 				var pickupPersonMobile = $("#pickupPersonMobile").val();
 				var isString = isNaN($('#pickupPersonMobile').val());
@@ -548,8 +556,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4"><a 
-														onclick="history.go(-1);" style="color: #A9143C !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
+								<li class="delivery header4"><button style="font-size: 14px !important;" class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -617,6 +624,7 @@
 						
 						<!-- Freebie Product Details -->
 							
+								
 								 <c:if test="${not empty poses.product.freebieProducts}">
 									<c:forEach items="${poses.product.freebieProducts}" var="freebieProds">
 										<%-- ${freebieProds.associateProductData.code}
@@ -640,9 +648,21 @@
 																<a href="${freebieProds.product.url}"><div
 																		class="name product-name">${freebieProds.product.name}</div></a>
 															</ycommerce:testId>
-															<div class="freebieId"><b>Product ID:</b> ${freebieProds.product.code}</div>
-															<div class="sellerName"><b>Seller:</b> ${freebieProds.sellerName}</div>
-															<div class="freebieQty"><b>Qty:</b> ${freebieProds.qty}</div>
+															<c:if test="${not empty freebieProds.product.code}">
+															<div class="freebieId">Product ID: ${freebieProds.product.code}</div>
+															</c:if>
+															<c:if test="${not empty freebieProds.product.size}">
+															<div class="freebieSize"><spring:theme code="text.size"/> ${freebieProds.product.size}</div>
+															</c:if>
+															<c:if test="${not empty freebieProds.product.colour}">
+															<div class="freebieColor"><spring:theme code="text.colour"/> ${freebieProds.product.colour}</div>
+															</c:if>
+															<c:if test="${not empty freebieProds.sellerName}">
+															<div class="sellerName"><spring:theme code="text.seller.name"/> ${freebieProds.sellerName}</div>
+															</c:if>
+															<c:if test="${not empty freebieProds.qty}">
+															<div class="freebieQty"><spring:theme code="text.qty"/> ${freebieProds.qty}</div>
+															</c:if>
 														</div>
 													</div>
 												</li>
@@ -667,21 +687,20 @@
 														<a class="productUrlName" href="${poses.product.url}"><div class="name product-name">${poses.product.name}</div></a>
 													</ycommerce:testId>
 																									<!-- start TISEE-4631 TISUAT-4229 -->
-												
+												<c:if test="${not empty poses.product.code}">
+															<div class="freebieId">Product ID: ${poses.product.code}</div>
+												</c:if>
 												<c:if test="${fn:toUpperCase(poses.product.rootCategory) != 'ELECTRONICS'}">
-												 	
 												 	<ycommerce:testId code="cart_product_size">
 												 		<c:if test="${not empty poses.product.size}">
-												 			<div class="size"><b><spring:theme code="text.size"/>${poses.product.size}</b></div>
+												 			<div class="size"><spring:theme code="text.size"/>${poses.product.size}</div>
 												 		</c:if>
-														
 													</ycommerce:testId>
-													<ycommerce:testId code="cart_product_colour">
+												 	<ycommerce:testId code="cart_product_colour">
 														<c:if test="${not empty poses.product.colour}">
-															<div class="colour"><b><spring:theme code="text.colour"/>${poses.product.colour}</b></div>
+															<div class="colour"><spring:theme code="text.colour"/>${poses.product.colour}</div>
 														</c:if>
 													</ycommerce:testId>
-													${poses.product.code}
 													<div class="item-price delivery-price">
 														<format:price priceData="${poses.product.price}"/>
 													</div>
@@ -689,9 +708,14 @@
 												<!-- end TISEE-4631 TISUAT-4229 -->
 												<!-- end TISEE-4631 TISUAT-4229 -->
 												<ycommerce:testId code="cart_product_colour">
-													<c:if test="${not empty sellerName}">
-														<div class="colour"><b><spring:theme code="text.seller.name"/>	<b>${poses.sellerName}</b></b></div>
+													<c:if test="${not empty poses.sellerName}">
+														<div class="colour"><spring:theme code="text.seller.name"/> ${poses.sellerName}</div>
 													</c:if>
+													<ycommerce:testId code="cart_product_quantity">
+														<c:if test="${not empty poses.quantity}">
+															<div class="quantity"><spring:theme code="text.qty"/> ${poses.quantity}</div>
+														</c:if>
+													</ycommerce:testId>
 												</ycommerce:testId>
 												</div>
 									      </div>
@@ -708,8 +732,8 @@
 												<div class='pin bounce'>
 													<span class="text_in">${status.count}</span>
 														</div>
-															<label class="radio_sel${status1.index}${status.index} displayName${status1.index}${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}
-															</label>
+															<label class="radio_sel${status1.index}${status.index} displayName${status1.index}${status.index} radio_color delivery-address" style="color: #ADA6A6;">${pos.displayName}</label>
+															<label class="radio_sel${status1.index}${status.index} name${status1.index}${status.index} radio_color delivery-address" style="display: none;">${pos.name}</label>
 																<%-- <span class="radio_sel${status1.index}${status.index} radio_color displayName${status1.index}${status.index}">${pos.displayName}</span> --%>
 																<span class="radio_sel${status1.index}${status.index} radio_color address1${status1.index}${status.index}">
 																	<c:if test="${not empty pos.address.line1}">
@@ -731,10 +755,10 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize; display: inline-block;" >PiQ up hrs :</span>
 																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style=" display: inline-block; margin-left: 0px;">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
 																	</c:if>
 																
 																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
@@ -802,7 +826,7 @@
 												$("#address${status1.index}${status.index}").click(function(){
 													$(".removeColor${status1.index} .radio_color").removeClass("colorChange");
 													$(".select_store").hide();
-													var name${status.index} = $(".displayName${status1.index}${status.index}").text();
+													var name${status.index} = $(".name${status1.index}${status.index}").text();
 													openPopForAdddPosToCartEntry('${poses.ussId}',name${status.index});
 													$(".radio_sel${status1.index}${status.index}").addClass("colorChange");
 												});
@@ -814,15 +838,15 @@
 							
 							<li>
 													<ul class="mapWidth" id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
-													<ul id="maphide${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
+													<ul id="maphide${status1.index}" style="display: none; width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">
 															<div class="col-md-8 col-sm-8 col-xs-8">
-																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" placeholder="Enter Pincode to Change.">
+																<input type="text" name="changepin${status1.index}" class="changepin${status1.index}" maxlength="6" placeholder="Enter Pincode to Change.">
 															</div>
 															<div class="col-md-4 col-sm-4 col-xs-4">
-																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #333 !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>
+																<button class="submitPincode submitPincode${status1.index}" style="height: 40px !important; background: #A9143C !important; border: none !important; color: #fff !important;" name="submitPincode${status1.index}">Submit</button>
 															</div>
 														</div>
 														<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;">
@@ -886,14 +910,45 @@
 							    	//console.log(url);
 							    });
 								
-							    
+							    $(".changepin${status1.index}").keyup(function(){
+							    	$(".pincodeValidation").hide();
+								    var pinvalue${status1.index} = $(".changepin${status1.index}").val();
+									var pinlength = pinvalue${status1.index}.length;
+									var isString = isNaN($(".changepin${status1.index}").val());
+									var mobileSpaceCheck = checkMobileNumberSpace($(".changepin${status1.index}").val());
+									if($(".changepin${status1.index}").val().length <= "6") {
+										if(isString==true || mobileSpaceCheck==true) {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Enter Only Digits");
+										}
+										else if($(".changepin${status1.index}").val().indexOf("-") > -1 || $(".changepin${status1.index}").val().indexOf("+") > -1 ) {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Enter Only Digits");
+										}
+									}
+							    });
 								$(".submitPincode${status1.index}").click(function(){
 									$(".removeColor${status1.index} .radio_color").removeClass("colorChange");
 									$(".pincodeServicable${status1.index}").hide();
 									$(".pincodeValidation").hide();
 									var pinvalue${status1.index} = $(".changepin${status1.index}").val();
 									var pinlength = pinvalue${status1.index}.length;
-									if(pinlength == "6") {
+									var isString = isNaN($(".changepin${status1.index}").val());
+									var mobileSpaceCheck = checkMobileNumberSpace($(".changepin${status1.index}").val());
+									if($(".changepin${status1.index}").val().length <= "6") {
+										if(isString==true || mobileSpaceCheck==true) {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Enter Only Digits");
+										}
+										else if ($(".changepin${status1.index}").val().length <= "5") {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Please Enter 6 Digits");
+										}
+										else if($(".changepin${status1.index}").val().indexOf("-") > -1 || $(".changepin${status1.index}").val().indexOf("+") > -1 ) {
+											$(".pincodeValidation").show();
+											$(".pincodeValidation").text("Enter Only Digits");
+										}
+										else {
 										var productcode${status1.index} = "${poses.product.code}";
 										var sellerId = "${poses.ussId}";
 										var dataString${status1.index} = "pin=" + pinvalue${status1.index} + "&productCode="+ productcode${status1.index} + "&sellerId="+sellerId;
@@ -905,7 +960,7 @@
 									    	  contentType : "application/json; charset=utf-8",
 									          data : dataString${status1.index},   
 									          success : function(data) {
-									        	 console.log(data);
+									        	 //console.log(data);
 										          var response${status1.index} = JSON.stringify(data);
 										          var jsonObject${status1.index} = JSON.parse(response${status1.index});
 										          $("#changeValue${status1.index}").text(pinvalue${status1.index});
@@ -924,11 +979,14 @@
 										        	  $("#maphide${status1.index}").hide();
 											          var changecordinates${status1.index} = " ";
 											          for(var i=0;i<jsonObject${status1.index}.length;i++) {
-											        	  
 											        	  if(jsonObject${status1.index}[i]['displayName'] != null) {
 											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['displayName']);
 											        	  } else {
 											        		  $(".displayName${status1.index}"+i).text("");
+											        	  }if(jsonObject${status1.index}[i]['name'] != null) {
+											        	  	  $(".name${status1.index}"+i).text(jsonObject${status1.index}[i]['name']);
+											        	  } else {
+											        		  $(".name${status1.index}"+i).text("");
 											        	  } if(jsonObject${status1.index}[i]['address']['line1'] != null) {
 										        			  $(".address1${status1.index}"+i).text(jsonObject${status1.index}[i]['address']['line1']);
 											        	  } else { 
@@ -1001,20 +1059,25 @@
 										        		$("#map${status1.index}").hide();
 										        		$("#maphide${status1.index}").show();
 										        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+										        		$("#changeValue${status1.index}").text(pinvalue${status1.index});
 										        	}
 				
 									           
 									          },
 									          error : function(xhr, data, error) {
 									        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
+									        	  	$(".pincodeServicable${status1.index}").show();
+									        		$(".delivered${status1.index}").hide();
+									        		$("#map${status1.index}").hide();
+									        		$("#maphide${status1.index}").show();
+									        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+									        		$("#changeValue${status1.index}").text(pinvalue${status1.index});
 												}
 									         });
 										
 										$(".txt${status1.index}").show();
 										$(".input${status1.index}").hide();
-									} else {
-										$(".pincodeValidation").show();
-										$(".pincodeValidation").text("Please Enter 6 digits Only");
+									} 
 									}
 								});
 								processMap${status1.index}();
@@ -1022,6 +1085,15 @@
 							   
 							    
 						    function processMap${status1.index}() {	
+						    	var loc${status1.index} = $(".latlng${status1.index}").text();
+								loc${status1.index} = loc${status1.index}.split("@");
+								var length${status1.index} = loc${status1.index}.length;
+								
+								for(var i=0;i<length${status1.index};i++){
+									loc${status1.index}[i] = loc${status1.index}[i].split(",");
+									for(var j=0;j<loc${status1.index}[i].length;j++) {
+									}
+								}
 							    var map = new google.maps.Map(document.getElementById('map${status1.index}'), {
 							      zoom: 10,
 							      center: new google.maps.LatLng(-37.92, 151.25),
@@ -1068,9 +1140,6 @@
 							      //  Go through each...
 							      for (var i = 0; i < markers.length; i++) {  
 											bounds.extend(markers[i].position);
-											if(length${status1.index} <= 2) {
-												map.setZoom--;
-											}
 							      }
 							      //  Fit these bounds to the map
 							      map.fitBounds(bounds);
@@ -1091,9 +1160,7 @@
 			<spring:theme code="checkout.multi.cnc.select.products.validate.msg"/></span>
 			<div class="container" id='pickup'>
 				<div class="panel">
-					<div class="pickUpPersonAjax">
-	     			 		<i class='fa fa-times'></i>
-	   			 	</div>
+					<div class="pickUpPersonAjax"></div>
    			 	</div>
        			<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
      			 	<div class="panel panel-body" style="margin-top: 14px;">
@@ -1137,6 +1204,13 @@
 			</div>
 		<div class="continue_holder">
 			<c:choose>
+				<c:when test="${expCheckout gt 0}">
+					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/payment-method/add" type="button">
+					<div class="continue_btn">
+						CONTINUE
+					</div>
+					</a>
+				</c:when>
 				<c:when test="${delModeCount gt 0}">
 				
 				<form:form id="selectDeliveryMethodForm1" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
@@ -1158,6 +1232,12 @@
 				var productUrlNew = $(".productUrlName").attr("href");
 				var latestProductUrl = ACC.config.encodedContextPath + productUrlNew;
 				$(".productUrlName").attr("href", latestProductUrl);
+				
+				$(".changeDeliveryMethod").click(function(e){
+					//var attr = $(this).attr();
+					e.preventDefault();
+					window.history.back();
+				});
 					
 			});
 		</script>

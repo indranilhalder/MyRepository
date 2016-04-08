@@ -14,7 +14,7 @@
 <body style="margin:0;">
 <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #cccccc">
 <tr>
-<td width="600" align="left" valign="top">${ctx.cmsSlotContents.SiteLogo}</td>
+<td width="600" align="left" valign="top">${ctx.cmsSlotContents.TopContent}</td>
 </tr>
 <tr>
 <td align="left" valign="top"><table width="600" border="0" cellspacing="0" cellpadding="0">
@@ -43,9 +43,9 @@
 
 <tr>
   <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We know that there's no feeling like getting that refund you really wanted.  <br />
-    So we're accepting your return request and refunding a  
-    total amount of $ctx.amountrefunded INR for your Order number: $ctx.orderCode</td>
+  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">
+    We're writing to inform you that the refund has been credited against return of item(s) from Tata Mall order ${ctx.orderCode}.Total amount of INR ${ctx.refundAomunt} is refunded
+    </td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
@@ -68,7 +68,7 @@
 </tr>
 
 <tr>
-<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.app}</td>
+<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.cmsSlotContents.handpick}</td>
 </tr>
 
 <tr>
@@ -78,7 +78,7 @@
 </tr>
 
 <tr>
-<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.app}</td>
+<td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.cmsSlotContents.slashImgOne}</td>
 </tr>
 
 <tr>
@@ -86,12 +86,14 @@
   <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
   <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
 </tr>
-
 <tr>
-  <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.fb}</td>
-  <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.twitter}</td>
-  <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.youtube}</td>
-  <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">${ctx.gplus}</td>
+  <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+</tr>
+<tr>
+  #if($ctx.cmsSlotContents.fb)<td width="27" align="right"><a href="https://www.facebook.com/"></a>${ctx.cmsSlotContents.fb}</td>#end
+  #if($ctx.cmsSlotContents.youtube)<td width="27" align="right"><a href="https://www.youtube.com/"></a>${ctx.cmsSlotContents.youtube}</td>#end
+  #if($ctx.cmsSlotContents.twitter)<td width="27" align="right"><a href="https://twitter.com/"></a>${ctx.cmsSlotContents.twitter}</td>#end
+  #if($ctx.cmsSlotContents.gplus)<td width="27" align="right"><a href="https://plus.google.com/"></a>${ctx.cmsSlotContents.gplus}</td>#end
 </tr>
 
    

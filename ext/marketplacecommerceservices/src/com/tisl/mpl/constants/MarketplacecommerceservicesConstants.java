@@ -834,7 +834,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9511 = "B9511";
 	public static final String B9512 = "B9512";
 	public static final String B9513 = "B9513";
-
+	public static final String B9514 = "B9514";
+	public static final String B9515 = "B9515";
+	public static final String B9516 = "B9516";
+	public static final String B9517 = "B9517";
+	public static final String B9518 = "B9518";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1441,6 +1445,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Month list
 
+
 	public static final String COUPONREDEEMERROR = "Coupon cannot be redeemed".intern();
 	public static final String COUPONTOPCOUNT = "coupon.display.topCount";
 	public static final String COUPONTOPCOUNTDEFVAL = "5";
@@ -1454,6 +1459,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EXCNOTRESERVABLE = "Voucher is not reservable".intern();
 	public static final String EXCFREEBIE = "freebie".intern();
 	public static final String EXCUSERINVALID = "User not valid".intern();
+
 
 	public static final String USER = "User".intern();
 	public static final String DATE = "Date".intern();
@@ -1479,6 +1485,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ACTIVE = "Y";
 
 	public static final String BANKNAME = "bankName";
+	public static final String EBS_DOWNTIME = "payment.ebs.downtime".intern();
+
+	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
+
+	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
+
 
 	private MarketplacecommerceservicesConstants()
 	{
@@ -1487,4 +1499,3 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
-

@@ -1,4 +1,3 @@
-
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -64,13 +63,24 @@ var homePageBannerTimeout='${timeout}';
 						</c:when>
 
 						<c:otherwise>
-							<a tabindex="-1" href="${encodedUrl}"
-								<c:if test="${banner.external}"> target="_blank"</c:if>> <img
+						<c:choose>
+							<c:when test="${fn:contains(encodedUrl,'?')}">
+								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
+								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
 								title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
-
+								</a>
+							</c:when>
+							<c:otherwise>
+								<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
+								<c:if test="${banner.external}"> target="_blank"</c:if>><img
+								src="${banner.media.url}"
+								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
+								title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 							</a>
+							</c:otherwise>
+						</c:choose>
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -131,13 +141,24 @@ var homePageBannerTimeout='${timeout}';
 						</c:when>
 
 						<c:otherwise>
-							<a tabindex="-1" href="${encodedUrl}"
+						<c:choose>
+							<c:when test="${fn:contains(encodedUrl,'?')}">
+								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
 								title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
-
+								</a>
+							</c:when>
+							<c:otherwise>
+								<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
+								<c:if test="${banner.external}"> target="_blank"</c:if>><img
+								src="${banner.media.url}"
+								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
+								title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 							</a>
+							</c:otherwise>
+						</c:choose>
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -147,9 +168,9 @@ var homePageBannerTimeout='${timeout}';
 	</div>
 	</c:otherwise>
 	</c:choose>
-<script>
-
-	$(document).ready(function(){
+	
+	<script>
+$(document).ready(function(){
 		$(".hero li").each(function() {
 			if($(this).has("href")){
 				var icid = $(this).attr("data-bannerid");
@@ -159,7 +180,4 @@ var homePageBannerTimeout='${timeout}';
 			}
 		});
 	});
-
-</script> 
-
-
+</script>
