@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.util;
 
-//import de.hybris.platform.catalog.model.ProductFeatureModel;
-//import de.hybris.platform.catalog.model.classification.ClassificationAttributeValueModel;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -13,7 +11,11 @@ import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,11 +61,18 @@ public class MplBuyBoxUtility
 	{
 		final BuyBoxModel buyBoxWinnerModel = getBuyBoxPrice(productModel);
 		Double price = Double.valueOf(0);
-		price = buyBoxWinnerModel.getPrice();
-
-		if (buyBoxWinnerModel.getSpecialPrice() != null && buyBoxWinnerModel.getSpecialPrice().intValue() > 0)
+		if (buyBoxWinnerModel != null)
 		{
-			price = buyBoxWinnerModel.getSpecialPrice();
+			price = buyBoxWinnerModel.getPrice();
+
+			if (buyBoxWinnerModel.getSpecialPrice() != null && buyBoxWinnerModel.getSpecialPrice().intValue() > 0)
+			{
+				price = buyBoxWinnerModel.getSpecialPrice();
+			}
+		}
+		else
+		{
+			price = productModel.getMrp();
 		}
 		return price;
 	}
@@ -72,14 +81,31 @@ public class MplBuyBoxUtility
 	{
 		final BuyBoxModel buyBoxWinnerModel = getBuyBoxPrice(productModel);
 		Double mrpPrice = Double.valueOf(0);
-		mrpPrice = buyBoxWinnerModel.getMrp();
+		if (buyBoxWinnerModel != null)
+		{
+			mrpPrice = buyBoxWinnerModel.getMrp();
+		}
+		else
+		{
+			mrpPrice = productModel.getMrp();
+		}
 		return mrpPrice;
 	}
 
 	public String getLeastSizeProduct(final ProductModel productModel) throws EtailNonBusinessExceptions
 	{
 		final BuyBoxModel buyBoxWinnerModel = getBuyBoxPrice(productModel);
-		return buyBoxWinnerModel.getProduct();
+		String productCode = null;
+		if (buyBoxWinnerModel != null)
+		{
+			productCode = buyBoxWinnerModel.getProduct();
+		}
+		else
+		{
+			productCode = productModel.getCode();
+		}
+		return productCode;
+
 	}
 
 	public BuyBoxModel getBuyBoxPrice(final ProductModel productModel) throws EtailNonBusinessExceptions
@@ -106,25 +132,80 @@ public class MplBuyBoxUtility
 				productCode = variantProductsInCondition;
 			}
 
-		}
-
-		//Get simple product code other than variant
-		//if (sortedVariantsList.size() == 0)
+		} //Get simple product code other than variant
+		Map<BuyBoxModel, Double> priceValueMap = new HashMap<BuyBoxModel, Double>();
+		final Map<BuyBoxModel, Double> finalpriceValueMap = new HashMap<BuyBoxModel, Double>();
+		BuyBoxModel buyBoxModel = null;
 		if (CollectionUtils.isEmpty(sortedVariantsList))
 		{
 			productCode = getInConditionProductCodes(productModel.getCode(), "");
+			final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productCode);
+			if (productModel instanceof PcmProductVariantModel)
+			{
+				priceValueMap = getLeastPriceModel(buyBoxModelList, priceValueMap);
+			}
+			finalpriceValueMap.putAll(priceValueMap);
 		}
-
-		//Get buyboxmodel for products from
-		final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productCode);
-
-		//Get buybox map
-		final Map<String, List<BuyBoxModel>> buyBoxMap = getBuyBoxMap(buyBoxModelList);
-
-		final BuyBoxModel buyBoxWinnerModel = getBuyBoxWinnerModel(buyBoxModelList, sortedVariantsList, buyBoxMap);
-
-		return buyBoxWinnerModel;
+		else
+		{
+			for (final PcmProductVariantModel productVariant : sortedVariantsList)
+			{
+				//final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productCode);
+				final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productVariant.getCode());
+				priceValueMap = getLeastPriceModel(buyBoxModelList, priceValueMap);
+				finalpriceValueMap.putAll(priceValueMap);
+			}
+		}
+		final List<Map.Entry<BuyBoxModel, Double>> priceList = new LinkedList<Map.Entry<BuyBoxModel, Double>>(
+				priceValueMap.entrySet());
+		Collections.sort(priceList, new Comparator<Map.Entry<BuyBoxModel, Double>>()
+		{
+			@Override
+			public int compare(final Map.Entry<BuyBoxModel, Double> o1, final Map.Entry<BuyBoxModel, Double> o2)
+			{
+				return (o1.getValue()).compareTo(o2.getValue());
+			}
+		});
+		final Map<BuyBoxModel, Double> sortedMap = new LinkedHashMap<BuyBoxModel, Double>();
+		for (final Iterator<Map.Entry<BuyBoxModel, Double>> it = priceList.iterator(); it.hasNext();)
+		{
+			final Map.Entry<BuyBoxModel, Double> entry = it.next();
+			sortedMap.put(entry.getKey(), entry.getValue());
+			buyBoxModel = entry.getKey();
+			break;
+		}
+		return buyBoxModel;
 	}
+
+
+	private Map<BuyBoxModel, Double> getLeastPriceModel(final List<BuyBoxModel> buyBoxModelList,
+			final Map<BuyBoxModel, Double> priceValueMap)
+	{
+		//final List<Double> priceValues = new ArrayList<Double>();
+		//	BuyBoxModel buyBoxModel = null;
+		//final Map<BuyBoxModel, Double> priceValueMap = new HashMap<BuyBoxModel, Double>();
+		for (final BuyBoxModel buyBox : buyBoxModelList)
+		{
+			if (buyBox.getSpecialPrice().doubleValue() > 0.0)
+			{
+				priceValueMap.put(buyBox, buyBox.getSpecialPrice());
+				//	priceValues.add(buyBox.getSpecialPrice());
+			}
+			else if (buyBox.getPrice().doubleValue() > 0.0)
+			{
+				priceValueMap.put(buyBox, buyBox.getPrice());
+				//priceValues.add(buyBox.getPrice());
+			}
+			else
+			{
+				priceValueMap.put(buyBox, buyBox.getMrp());
+				//	priceValues.add(buyBox.getMrp());
+			}
+		}
+		return priceValueMap;
+
+	}
+
 
 	public List<PcmProductVariantModel> compareVariants(final ProductModel baseProduct,
 			final PcmProductVariantModel selectedVariantModel)
@@ -152,11 +233,8 @@ public class MplBuyBoxUtility
 				{
 					isCapacityVariantPresent = true;
 				}
-
 			}
-
 		}
-
 		if (isSizeVariantPresent)
 		{
 			variantComparator.setVariantType("size");
@@ -172,113 +250,135 @@ public class MplBuyBoxUtility
 
 	}
 
-	public BuyBoxModel getBuyBoxWinnerModel(final List<BuyBoxModel> buyBoxModelList,
-			final List<PcmProductVariantModel> sortedVariantsList, final Map<String, List<BuyBoxModel>> buyBoxMap)
-			throws EtailNonBusinessExceptions
-	{
+	/**
+	 *
+	 * @param buyBoxModelList
+	 * @param sortedVariantsList
+	 * @param buyBoxMap
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	//	public BuyBoxModel getBuyBoxWinnerModel(final List<BuyBoxModel> buyBoxModelList,
+	//			final List<PcmProductVariantModel> sortedVariantsList, final Map<String, List<BuyBoxModel>> buyBoxMap)
+	//			throws EtailNonBusinessExceptions
+	//	{
+	//
+	//
+	//		BuyBoxModel buyBoxWinnerModel = new BuyBoxModel();
+	//
+	//		//if (sortedVariantsList.size() > 0)
+	//		if (CollectionUtils.isNotEmpty(sortedVariantsList))
+	//		{
+	//			buyBoxWinnerModel = getLeastVariantSizeModel(sortedVariantsList, buyBoxMap);
+	//		}
+	//		else
+	//		{
+	//			// BuyBox winner Price Model
+	//			buyBoxWinnerModel = buyBoxModelList.get(0);
+	//			for (final BuyBoxModel buyBox : buyBoxModelList)
+	//			{
+	//				if (buyBox.getAvailable().intValue() > 0)
+	//				{
+	//					buyBoxWinnerModel = buyBox;
+	//					break;
+	//				}
+	//			}
+	//		}
+	//
+	//		return buyBoxWinnerModel;
+	//	}
 
+	//	/**
+	//	 *
+	//	 * @param sortedVariantsList
+	//	 * @param buyBoxMap
+	//	 * @return
+	//	 * @throws EtailNonBusinessExceptions
+	//	 */
+	//	public BuyBoxModel getLeastVariantSizeModel(final List<PcmProductVariantModel> sortedVariantsList,
+	//			final Map<String, List<BuyBoxModel>> buyBoxMap) throws EtailNonBusinessExceptions
+	//	{
+	//		int leastVariant = 0;
+	//		boolean isAllOutofStock = false;
+	//		BuyBoxModel buyBoxWinnerModel = new BuyBoxModel();
+	//		BuyBoxModel leastSizebuyBoxWithoutStock = new BuyBoxModel();
+	//		// Iterate VariantSize product code and identify least size price.
+	//		for (final PcmProductVariantModel variantOptionData : sortedVariantsList)
+	//		{
+	//			final List<BuyBoxModel> productBBModelList = buyBoxMap.get(variantOptionData.getCode());
+	//			//if (productBBModelList != null && productBBModelList.size() > 0)
+	//			if (CollectionUtils.isNotEmpty(productBBModelList))
+	//			{
+	//				if (leastVariant == 0)
+	//				{
+	//					// BuyBox winner Price Model
+	//					buyBoxWinnerModel = productBBModelList.get(0);
+	//				}
+	//				boolean isInStock = false;
+	//				for (final BuyBoxModel buyBox : productBBModelList)
+	//				{
+	//					if (buyBox.getAvailable().intValue() > 0)
+	//					{
+	//						buyBoxWinnerModel = buyBox;
+	//						isAllOutofStock = true;
+	//						isInStock = true;
+	//						break;
+	//					}
+	//				}
+	//
+	//				if (!isInStock && leastVariant == 0)
+	//				{
+	//					leastSizebuyBoxWithoutStock = productBBModelList.get(0);
+	//				}
+	//				leastVariant = leastVariant + 1;
+	//
+	//			}
+	//
+	//			if (!isAllOutofStock)
+	//			{
+	//				buyBoxWinnerModel = leastSizebuyBoxWithoutStock;
+	//			}
+	//			else
+	//			{
+	//				break;//break the loop as we find instock buybox model
+	//			}
+	//		}
+	//		return buyBoxWinnerModel;
+	//	}
 
-		BuyBoxModel buyBoxWinnerModel = new BuyBoxModel();
+	/**
+	 *
+	 * @param buyBoxModelList
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	//	public Map getBuyBoxMap(final List<BuyBoxModel> buyBoxModelList) throws EtailNonBusinessExceptions
+	//	{
+	//		final Map<String, List<BuyBoxModel>> buyBoxMap = new HashMap<String, List<BuyBoxModel>>();
+	//
+	//		// Iterate BuyBox results and add into Map<ProductCode,List<BuyBoxModel>> format
+	//		//if (buyBoxModelList != null && buyBoxModelList.size() > 0)
+	//		if (CollectionUtils.isNotEmpty(buyBoxModelList))
+	//		{
+	//			for (final BuyBoxModel buyBoxModel : buyBoxModelList)
+	//			{
+	//				List<BuyBoxModel> bbList = new ArrayList<BuyBoxModel>();
+	//				if (null != buyBoxMap.get(buyBoxModel.getProduct()))
+	//				{
+	//					bbList = buyBoxMap.get(buyBoxModel.getProduct());
+	//					bbList.add(buyBoxModel);
+	//				}
+	//				else
+	//				{
+	//					bbList.add(buyBoxModel);
+	//				}
+	//				buyBoxMap.put(buyBoxModel.getProduct(), bbList);
+	//			}
+	//
+	//		}
+	//		return buyBoxMap;
+	//	}
 
-		//if (sortedVariantsList.size() > 0)
-		if (CollectionUtils.isNotEmpty(sortedVariantsList))
-		{
-			buyBoxWinnerModel = getLeastVariantSizeModel(sortedVariantsList, buyBoxMap);
-		}
-		else
-		{
-			// BuyBox winner Price Model
-			buyBoxWinnerModel = buyBoxModelList.get(0);
-			for (final BuyBoxModel buyBox : buyBoxModelList)
-			{
-				if (buyBox.getAvailable().intValue() > 0)
-				{
-					buyBoxWinnerModel = buyBox;
-					break;
-				}
-			}
-		}
-
-		return buyBoxWinnerModel;
-	}
-
-	public BuyBoxModel getLeastVariantSizeModel(final List<PcmProductVariantModel> sortedVariantsList,
-			final Map<String, List<BuyBoxModel>> buyBoxMap) throws EtailNonBusinessExceptions
-	{
-		int leastVariant = 0;
-		boolean isAllOutofStock = false;
-		BuyBoxModel buyBoxWinnerModel = new BuyBoxModel();
-		BuyBoxModel leastSizebuyBoxWithoutStock = new BuyBoxModel();
-		// Iterate VariantSize product code and identify least size price.
-		for (final PcmProductVariantModel variantOptionData : sortedVariantsList)
-		{
-			final List<BuyBoxModel> productBBModelList = buyBoxMap.get(variantOptionData.getCode());
-			//if (productBBModelList != null && productBBModelList.size() > 0)
-			if (CollectionUtils.isNotEmpty(productBBModelList))
-			{
-				if (leastVariant == 0)
-				{
-					// BuyBox winner Price Model
-					buyBoxWinnerModel = productBBModelList.get(0);
-				}
-				boolean isInStock = false;
-				for (final BuyBoxModel buyBox : productBBModelList)
-				{
-					if (buyBox.getAvailable().intValue() > 0)
-					{
-						buyBoxWinnerModel = buyBox;
-						isAllOutofStock = true;
-						isInStock = true;
-						break;
-					}
-				}
-
-				if (!isInStock && leastVariant == 0)
-				{
-					leastSizebuyBoxWithoutStock = productBBModelList.get(0);
-				}
-				leastVariant = leastVariant + 1;
-
-			}
-
-			if (!isAllOutofStock)
-			{
-				buyBoxWinnerModel = leastSizebuyBoxWithoutStock;
-			}
-			else
-			{
-				break;//break the loop as we find instock buybox model
-			}
-		}
-		return buyBoxWinnerModel;
-	}
-
-	public Map getBuyBoxMap(final List<BuyBoxModel> buyBoxModelList) throws EtailNonBusinessExceptions
-	{
-		final Map<String, List<BuyBoxModel>> buyBoxMap = new HashMap<String, List<BuyBoxModel>>();
-
-		// Iterate BuyBox results and add into Map<ProductCode,List<BuyBoxModel>> format
-		//if (buyBoxModelList != null && buyBoxModelList.size() > 0)
-		if (CollectionUtils.isNotEmpty(buyBoxModelList))
-		{
-			for (final BuyBoxModel buyBoxModel : buyBoxModelList)
-			{
-				List<BuyBoxModel> bbList = new ArrayList<BuyBoxModel>();
-				if (null != buyBoxMap.get(buyBoxModel.getProduct()))
-				{
-					bbList = buyBoxMap.get(buyBoxModel.getProduct());
-					bbList.add(buyBoxModel);
-				}
-				else
-				{
-					bbList.add(buyBoxModel);
-				}
-				buyBoxMap.put(buyBoxModel.getProduct(), bbList);
-			}
-
-		}
-		return buyBoxMap;
-	}
 
 	public String getInConditionProductCodes(final String productCode, final String queryString)
 	{
@@ -344,7 +444,8 @@ public class MplBuyBoxUtility
 		String variantColor = "";
 		for (final ProductFeatureModel productFeature : features)
 		{
-			if (variantProductModel.getProductCategoryType().equals(CLOTHING))
+
+			if (CLOTHING.equals(variantProductModel.getProductCategoryType()))
 			{
 				if (null != productFeature.getClassificationAttributeAssignment()
 						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
@@ -357,7 +458,7 @@ public class MplBuyBoxUtility
 				}
 
 			}
-			else if (variantProductModel.getProductCategoryType().equals(ELECTRONICS))
+			if (ELECTRONICS.equals(variantProductModel.getProductCategoryType()))
 			{
 				if (null != productFeature.getClassificationAttributeAssignment()
 						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
@@ -370,7 +471,7 @@ public class MplBuyBoxUtility
 				}
 
 			}
-			else if (variantProductModel.getProductCategoryType().equals(FOOTWEAR))
+			else if (FOOTWEAR.equals(variantProductModel.getProductCategoryType()))
 			{
 				if (null != productFeature.getClassificationAttributeAssignment()
 						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
