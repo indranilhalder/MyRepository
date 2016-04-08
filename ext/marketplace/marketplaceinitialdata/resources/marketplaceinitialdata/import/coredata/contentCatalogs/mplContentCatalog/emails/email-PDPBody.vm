@@ -14,6 +14,11 @@
 			.tableHeader td,.tableBody td{
 			border-bottom:1px solid #f4f4f4;
 			}
+			tr > td > span > span > a{
+			pointer-events: none !important;
+			 color: #4a4a4a !important;
+			 text-decoration: none !important;
+			}
  			
 		</style> 
 	</head>
@@ -113,7 +118,7 @@
 						
 
 						  <tr>
-							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;text-decoration:none;pointer-events:none;">${ctx.customerEmail}</td>
+							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;text-decoration:none;pointer-events:none;"><span><span>${ctx.customerEmail}</span></span></td>
 						  </tr>
 						</table></td>
 						<td align="left" valign="top">&nbsp;</td>
