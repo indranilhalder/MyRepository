@@ -3867,5 +3867,5 @@ function sendTealiumData(){
 	   } catch (e) {
 		// TODO: handle exception
 	   }     
-
+}
 
