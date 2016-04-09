@@ -1,3 +1,4 @@
+
 /**
  *
  */
@@ -132,8 +133,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					if (existingConsignmentModel == null)
 					{
 
+
 						if (shipmentMustBeCreated(shipment))
 						{
+
 
 							consignmentFinal = createNewConsignment(shipmentWrapper, orderModel);
 
@@ -147,6 +150,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				}
 
 			}
+
+
+
+
 
 
 
@@ -513,6 +520,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
 				{
 
+
 					LOG.info("updateConsignment:: Inside ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus) >>> shipmentCurrentStatus >>"
 							+ shipmentCurrentStatus
 							+ "<<shipmentNewStatus>>"
@@ -843,8 +851,10 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 	 * return consignment; } }
 	 * 
 
+
 	 * }
 	 * 
+
 
 	 * return null; }
 	 */
@@ -1009,3 +1019,4 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		this.customOmsCollectedAdapter = customOmsCollectedAdapter;
 	}	
 }
+

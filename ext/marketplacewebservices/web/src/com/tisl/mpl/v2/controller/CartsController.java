@@ -294,8 +294,8 @@ public class CartsController extends BaseCommerceController
 
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
-	//@Autowired
-	//private CartService cartService;
+	//	@Autowired
+	//	private CartService cartService;
 	//@Autowired
 	//private CommerceCartService commerceCartService;
 	@Autowired

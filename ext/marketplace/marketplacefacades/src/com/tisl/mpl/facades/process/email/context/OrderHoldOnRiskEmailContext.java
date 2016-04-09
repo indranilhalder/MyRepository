@@ -85,6 +85,7 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 
 		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
 		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
+
 	}
 
 	@Override
@@ -106,4 +107,9 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 	{
 		return orderProcessModel.getOrder().getLanguage();
 	}
+
+
+
+
 }
+

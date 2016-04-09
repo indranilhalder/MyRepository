@@ -141,6 +141,7 @@
 		<entry key="ORDUNCTD" value="ORDER_UNCOLLECTED"/>
 		<entry key="RETUIRTO" value="RETURNINITIATED_BY_RTO "/>					
 
+		<entry key="CNLREFND" value="ORDER_CANCELLED" />					
 	</util:map>
 	
 	<alias name="defaultOrderStatusMapping" alias="orderStatusMapping" />

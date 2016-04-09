@@ -98,4 +98,9 @@ public class OrderRejectRiskEmailContext extends AbstractEmailContext<OrderProce
 	{
 		return orderProcessModel.getOrder().getLanguage();
 	}
+
+
+
+
 }
+

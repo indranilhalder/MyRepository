@@ -368,8 +368,10 @@ function submitForm(){
 						}
 						else{
 
+
 							//TISPRO-153
 							sendTealiumData();	
+
 
 							$("#form-actions, #otpNUM").css("display","block");
 							$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
@@ -1188,6 +1190,7 @@ $("#otpMobileNUMField").focus(function(){
 	  // TISPRO-153		
 		sendTealiumData();
 
+
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
 		
@@ -1201,6 +1204,7 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
+
 
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
@@ -1269,8 +1273,10 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 
+
 	  // TISPRO-153
 		sendTealiumData();
+
 
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
@@ -1576,6 +1582,31 @@ $("#otpMobileNUMField").focus(function(){
 
 	 }); 
 	 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	 
@@ -2606,8 +2637,10 @@ function submitNBForm(){
 				}
 				else{
 
+
 					//TISPRO-153
 					sendTealiumData();
+
 
 					$("#juspayOrderId").val(response);
 					var juspayOrderId=$("#juspayOrderId").val();
@@ -2624,11 +2657,13 @@ function submitNBForm(){
 								var url = juspayResponse.payment.authentication.url;
 								var method = juspayResponse.payment.authentication.method;
 
+
 								if(method === "POST") {
 									var frm = document.createElement("form")
 									frm.style.display = "none"; // ensure that the form is hidden from the user
 									frm.setAttribute("method", method);
 									frm.setAttribute("action", url);
+
 
 									var params = juspayResponse.payment.authentication.params;
 									for(var key in params) {
@@ -2838,6 +2873,8 @@ function populatePincodeDeliveryMode(response,buttonType){
 
 
 
+
+
 	console.log(response);
 	
 	var values=response.split("|");
@@ -2876,6 +2913,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 			console.log("This is NO");
 		}	
 	}
+
 
 
 	for ( var key in deliveryModeJsonObj) {
@@ -3780,6 +3818,8 @@ function sendTealiumData(){
 		        } else if (payment_mode === "Credit Card" || payment_mode === "Debit Card") {	
 
 
+
+
 		            payment_type = jQuery("li.active-card span").attr("class") || "Saved Card";
 	
 		        } else if (payment_mode === "NetBanking") {
@@ -3827,4 +3867,5 @@ function sendTealiumData(){
 	   } catch (e) {
 		// TODO: handle exception
 	   }     
-}
+
+
