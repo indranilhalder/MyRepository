@@ -784,115 +784,132 @@ url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdE
     width: 100%;
     top: 50%; }
 * {
-*   -webkit-box-sizing: border-box;
-*   	-moz-box-sizing: border-box;
-*   		box-sizing: border-box; }
-*   		*:before, *:after {
-*   			-webkit-box-sizing: border-box;
-*   				-moz-box-sizing: border-box;
-*   					box-sizing: border-box;
-*   					}
-*
-*   					.wrapper {
-*   					  margin: 0 auto;
-*   					    position: relative;
-*   					      max-width: 1300px;
-*   					        padding: 0 10px;
-*   					          width: 100%; }
-*
-*   					          body {
-*   					            font-family: "Avenir Next";
-*   					              font-size: 12px; }
-*
-*   					              a.button, button, select {
-*   					                -webkit-appearance: none;
-*   					                  -moz-appearance: none;
-*   					                    -ms-appearance: none;
-*   					                      -o-appearance: none;
-*   					                        appearance: none;
-*   					                          height: 50px;
-*   					                            line-height: 50px;
-*   					                              vertical-align: middle;
-*   					                                font-size: 12px;
-*   					                                  border-radius: 0;
-*   					                                    background-color: #fff;
-*   					                                      border: 2px solid #000;
-*   					                                        padding: 13px 18px;
-*   					                                          cursor: pointer;
-*   					                                            font-family: "Avenir Next", "Courier New";
-*   					                                              -webkit-transition: background 0.3s;
-*   					                                                -moz-transition: background 0.3s;
-*   					                                                  transition: background 0.3s; }
-*   					                                                    input {
-*   					                                                       -webkit-appearance: none;
-*   					                                                         -moz-appearance: none;
-*   					                                                           -ms-appearance: none;
-*   					                                                             -o-appearance: none;
-*   					                                                               appearance: none;
-*   					                                                                 height: 50px;
-*   					                                                                   line-height: 50px;
-*   					                                                                     vertical-align: middle;
-*   					                                                                       font-size: 12px;
-*   					                                                                         border-radius: 0;
-*   					                                                                           background-color: #fff;
-*   					                                                                             border: 2px solid #000;
-*   					                                                                               padding: 13px 18px;
-*   					                                                                                 cursor: text;
-*   					                                                                                   font-family: "Avenir Next", "Courier New";
-*   					                                                                                     -webkit-transition: background 0.3s;
-*   					                                                                                       -moz-transition: background 0.3s;
-*   					                                                                                         transition: background 0.3s;}
-*
-*   					                                                                                         a.button, button {
-*   					                                                                                           border: none;
-*   					                                                                                             display: block;
-*   					                                                                                               font-size: 16px;
-*   					                                                                                                 cursor: pointer;
-*   					                                                                                                   font-weight: bold;
-*   					                                                                                                     line-height: 24px;
-*   					                                                                                                       text-align: center;
-*   					                                                                                                         font-family: "Avenir Next";
-*   					                                                                                                           letter-spacing: 1px;
-*   					                                                                                                             vertical-align: middle;
-*   					                                                                                                               text-transform: uppercase;
-*   					                                                                                                                 -webkit-transition: background 0.3s;
-*   					                                                                                                                     -moz-transition: background 0.3s;
-*   					                                                                                                                         transition: background 0.3s; }
-*   					                                                                                                                             a.button:hover,
-*   					                                                                                                                             button:hover {
-*   					                                                                                                                                 -webkit-transition: background 0.3s;
-*   					                                                                                                                                     -moz-transition: background 0.3s;
-*   					                                                                                                                                         transition: background 0.3s
-*   					                                                                                                                                         }
-*   					                                                                                                                                           a.button.blue, button.blue {
-*   					                                                                                                                                               color: #fff;
-*   					                                                                                                                                                   background-color: #A9143C; }
-*   					                                                                                                                                                     a.button.gray, button.gray {
-*   					                                                                                                                                                         color: #fff;
-*   					                                                                                                                                                             background-color: gray; }
-*   					                                                                                                                                                                 
-*   					                                                                                                                                                                     a.button.orange, button.orange {
-*   					                                                                                                                                                                         color: #fff;
-*   					                                                                                                                                                                             background-color: #ffb810; }
-*   					                                                                                                                                                                               a.button.red, button.red {
-*   					                                                                                                                                                                                   color: #fff;
-*   					                                                                                                                                                                                       background-color: #A9143C; }
-*   					                                                                                                                                                                                         a.button.green, button.green {
-*   					                                                                                                                                                                                             color: #fff;
-*   					                                                                                                                                                                                                 background-color: #399992; }
-*   					                                                                                                                                                                                                   a.button.light-blue, button.light-blue {
-*   					                                                                                                                                                                                                       color: #fff;
-*   					                                                                                                                                                                                                           background-color: #A9143C;
-*   					                                                                                                                                                                                                                }
-*   					                                                                                                                                                                                                                    /* a.button.light-blue:hover, button.light-blue:hover {
-*   					                                                                                                                                                                                                                          background-color: #21f7ff;
-*   					                                                                                                                                                                                                                                 } */
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+*:before, *:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.wrapper {
+	margin: 0 auto;
+	position: relative;
+	max-width: 1300px;
+	padding: 0 10px;
+	width: 100%;
+}
+
+body {
+	font-family: "Avenir Next";
+	font-size: 12px;
+}
+
+a.button, button, select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	-o-appearance: none;
+	appearance: none;
+	height: 50px;
+	line-height: 50px;
+	vertical-align: middle;
+	font-size: 12px;
+	border-radius: 0;
+	background-color: #fff;
+	border: 2px solid #000;
+	padding: 13px 18px;
+	cursor: pointer;
+	font-family: "Avenir Next", "Courier New";
+	-webkit-transition: background 0.3s;
+	-moz-transition: background 0.3s;
+	transition: background 0.3s;
+}
+
+input {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	-o-appearance: none;
+	appearance: none;
+	height: 50px;
+	line-height: 50px;
+	vertical-align: middle;
+	font-size: 12px;
+	border-radius: 0;
+	background-color: #fff;
+	border: 2px solid #000;
+	padding: 13px 18px;
+	cursor: text;
+	font-family: "Avenir Next", "Courier New";
+	-webkit-transition: background 0.3s;
+	-moz-transition: background 0.3s;
+	transition: background 0.3s;
+}
+
+a.button, button {
+	border: none;
+	display: block;
+	font-size: 16px;
+	cursor: pointer;
+	font-weight: bold;
+	line-height: 24px;
+	text-align: center;
+	font-family: "Avenir Next";
+	letter-spacing: 1px;
+	vertical-align: middle;
+	text-transform: uppercase;
+	-webkit-transition: background 0.3s;
+	-moz-transition: background 0.3s;
+	transition: background 0.3s;
+}
+
+a.button:hover, button:hover {
+	-webkit-transition: background 0.3s;
+	-moz-transition: background 0.3s;
+	transition: background 0.3s
+}
+
+a.button.blue, button.blue {
+	color: #fff;
+	background-color: #A9143C;
+}
+
+a.button.gray, button.gray {
+	color: #fff;
+	background-color: gray;
+}
+
+a.button.orange, button.orange {
+	color: #fff;
+	background-color: #ffb810;
+}
+
+a.button.red, button.red {
+	color: #fff;
+	background-color: #A9143C;
+}
+
+a.button.green, button.green {
+	color: #fff;
+	background-color: #399992;
+}
+
+a.button.light-blue, button.light-blue {
+	color: #fff;
+	background-color: #A9143C;
+}
 
 a {
-  text-decoration: none;
-  color: #000;
-  cursor: pointer; }
-  a, a:after {
+	text-decoration: none;
+	color: #000;
+	cursor: pointer;
+}
+
+a, a:after {
     -webkit-transition: color 0.3s, border-color 0.3s, background 0.3s;
     -moz-transition: color 0.3s, border-color 0.3s, background 0.3s;
     transition: color 0.3s, border-color 0.3s, background 0.3s; }
