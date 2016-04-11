@@ -125,13 +125,11 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 			if (getValue(source, "displayUrl") != null)
 			{
 				final List<String> displayUrl = (List<String>) getValue(source, "displayUrl");
-				//	System.out.println("##########displayUrl" + displayUrl);
 				target.setDisplayUrl(displayUrl);
 			}
 			if (getValue(source, "displayStock") != null)
 			{
 				final List<String> displayStock = (List<String>) getValue(source, "displayStock");
-				//	System.out.println("##########displayStock" + displayStock);
 				target.setDisplayStock(displayStock);
 			}
 
@@ -140,8 +138,13 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 
 				final List<String> displayMrpPrice = (List<String>) getValue(source, "displayMrpPrice");
 				target.setDisplayMrp(displayMrpPrice);
-				//System.out.println("##########displayStock" + target.getDisplayMrp());
 			}
+			if (getValue(source, "displayPromotion") != null)
+			{
+				final List<String> displayPromotion = (List<String>) getValue(source, "displayPromotion");
+				target.setDisplayPromotion(displayPromotion);
+			}
+
 			if (getValue(source, "allPromotions") != null)
 			{
 
@@ -216,20 +219,20 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 * 
+	 *
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 * 
-	 * 
+	 *
+	 *
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * } }
 	 */
 
