@@ -552,6 +552,7 @@
 	<alias name="sellerBasedPromotionService" alias="sellerBasedPromotionService" />
 	<bean id="sellerBasedPromotionService"
 		class="com.tisl.mpl.promotion.service.SellerBasedPromotionServiceImpl">
+		<property name="modelService" ref="modelService" />
 		<property name="sellerBasedPromotionDao" ref="sellerBasedPromotionDao" />
 	</bean>
 
