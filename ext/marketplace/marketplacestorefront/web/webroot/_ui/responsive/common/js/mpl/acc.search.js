@@ -294,6 +294,7 @@ function updateProductStock(sizeStockLevel,sizeMatched, serpSizeList,minPriceSiz
 //update product minimum price and mrp
 function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product) {
 //  var mrpPriceValue = '${product.displayMrp}';
+	if(mrpPriceValue!=""){
 	console.log("###"+mrpPriceValue);
     var productCode='${product.code}';
 	var mrpPrice1 = mrpPriceValue.replace("[[", "");
@@ -336,6 +337,7 @@ function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,m
 				}
 			}
 		}
+	}
 	}
 	}
 }
