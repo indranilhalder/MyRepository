@@ -18531,6 +18531,14 @@ width:100%;
 	width: auto;
 } 
 
+.electronics-brand .feature-categories.custom-feature.wrapper {
+ 	    background-color: #e6e6e6;
+ 	    padding:0px;
+ } 
+ .electronics-brand .feature-categories.custom-feature.wrapper > .content{
+ 	    background-color: #fff;
+ } 
+
 .electronics-brand header .bottom .marketplace{
 	height: 60px;
   padding-top: 10px;
