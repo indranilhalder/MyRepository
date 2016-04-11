@@ -621,7 +621,7 @@ input:focus {
     text-align: left;
     border: 1px solid #DFD1D5;
     position: relative;
-    padding-top: 47px;
+    padding-top: 48px;
     font-size: 16px;
     font-weight: 500;
     height: 50px;
@@ -687,6 +687,8 @@ input:focus {
       .select-view .select-list li:hover {
         color: #000;
         font-weight: 500; }
+    header.brand-header  .select-view .select-list li:hover {
+        color: #fff; }
       @media (max-width: 900px) {
         .select-view .select-list li {
           padding-left: 10px; } }
@@ -1551,14 +1553,18 @@ h2 {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             font-weight: 100;
-                content: "\f0d7";
+                content: "\f107";
 		    display: inline-block;
-		    color: #fff;
+		    color: #000;
 		    position: relative;
-		    margin-left: 9px;
-		    top: 2px;
-		    font-size: 12px;
-		    line-height: 10px; }}
+		    margin-left: 5px;
+		    top: 3px;
+		    font-size: 20px;
+		    line-height: 10px; }
+         header.brand-header .content nav > ul > li > .toggle:after {
+		    color: #fff;
+		    }
+		    }
         @media (min-width:791px) and (max-width: 1050px) {
           header .content nav > ul > li {
             margin-right: 0;
@@ -1566,8 +1572,7 @@ h2 {
             
               header .content nav > ul > li > .toggle:after {
 			    margin-left: 3px;
-			    top: 1px;
-			    font-size: 12px;
+			    top: 3px;
 			}
 			header .content nav > ul > li:first-child  {
               padding-right: 0;
@@ -10042,16 +10047,6 @@ body .account .right-account .order-history .pagination li{
 .listing-leftmenu .checkbox-menu {
   padding: 10px;
   clear:both; }
-
-  .listing-leftmenu .checkbox-menu > a {
-    color: #A9143C;
-    text-decoration: underline;
-    text-transform: uppercase;
-    font-size: 12px;
-    margin: 5px 0px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    display: block; }
     .listing-leftmenu .checkbox-menu > a.more {
       margin-bottom: 0;
       margin-top: 20px; }
@@ -17292,6 +17287,8 @@ font-weight:normal;
     	text-overflow: ellipsis;
   		overflow: hidden; 
   		color: #666; } 		
+header.brand-header .select-view .select-list li {		
+       		color: #fff; } 		
       		
   @media(min-width:791px)		
   {		
@@ -18887,10 +18884,9 @@ input[type="checkbox"]#brandSelectAll + label{
 .product-facet .facet .facet-name .brandSelectAllMain label{
 	color: #A9143C;
     text-decoration: underline;
-    text-transform: uppercase;
-    font-size: 12px;
+    font-size: 14px;
     margin-top: 10px;
-    font-weight: bold;
+    font-weight: 600;
     letter-spacing: 1px;
     cursor:pointer;
 }
@@ -30588,7 +30584,6 @@ li#ratingDiv {
      line-height: 15px;
      height: 17px;
      font-weight: 500;
-     text-transform: capitalize;
      margin-top: 9px;
      display: block;
      letter-spacing: 1px;}
@@ -30597,7 +30592,6 @@ li#ratingDiv {
     font-size: 13px;
     line-height: 13px;
     font-weight: 600;
-    text-transform: capitalize;
     letter-spacing: 1px;
      }
  }
@@ -36587,14 +36581,18 @@ display:block;
   .listing-leftmenu .checkbox-menu > a, .listing-leftmenu .checkbox-menu input[type='submit'] {
     color: #A9143C;
     text-decoration: underline;
-    text-transform: uppercase;
-    font-size: 12px;
+    font-size: 14px;
     margin: 5px 0px;
-    font-weight: bold;
+    font-weight: 600;
     letter-spacing: 1px;
     display: block;
     border:none;
         -webkit-appearance: none;
      }
 /* TISPRD-216 defect fix ends */
-
+ header.brand-header .content .search form input#js-site-micrositesearch-input::-webkit-input-placeholder{
+color:#fff; }
+ header.brand-header .content .search form input#js-site-micrositesearch-input::-moz-placeholder{
+ color:#fff;}
+  header.brand-header .content .search form input#js-site-micrositesearch-input::-ms-input-placeholder{
+  color:#fff;}
