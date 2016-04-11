@@ -46,7 +46,7 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 	public void init(final OrderProcessModel orderProcessModel, final EmailPageModel emailPageModel)
 	{
 
-		LOG.info("Refund Email  Init method called");
+		LOG.debug("Refund Email  Init method called");
 
 		super.init(orderProcessModel, emailPageModel);
 		final List<RefundEntryModel> refundEntryModel = new ArrayList<RefundEntryModel>();
@@ -56,10 +56,10 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 		double totalAmountValue = 0;
 		for (final AbstractOrderModel subOrder : orderProcessModel.getOrder().getChildOrders())
 		{
-			LOG.info("subOrder ID " + subOrder.getCode());
+			LOG.debug("subOrder ID " + subOrder.getCode());
 			for (final AbstractOrderEntryModel entryModel : subOrder.getEntries())
 			{
-				LOG.info("entryModel :" + entryModel.getOrderLineId());
+				LOG.debug("entryModel :" + entryModel.getOrderLineId());
 				final RefundEntryModel refundEntry = new RefundEntryModel();
 				refundEntry.setOrderEntry(entryModel);
 				if (!CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntry)))
@@ -69,17 +69,17 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 						final List<RefundEntryModel> refundList = flexibleSearchService.getModelsByExample(refundEntry);
 						totalAmountValue += entryModel.getNetAmountAfterAllDisc().doubleValue();
 						refundEntryModel.addAll(refundList);
-						LOG.info("refundEntryModel Size" + refundEntryModel.size());
+						LOG.debug("refundEntryModel Size" + refundEntryModel.size());
 					}
 					catch (final Exception e)
 					{
-						LOG.info("Exception occurred " + e);
+						LOG.error("Exception occurred during refund email notification: " + e);
 					}
 				}
 			}
 
 		}
-		LOG.info("Amount refunded ======" + totalAmountValue);
+		LOG.debug("Amount refunded ======" + totalAmountValue);
 		put(REFUND_ENTRY, refundEntryModel);
 		put(TOTAL, String.valueOf(totalAmountValue));
 		if (address != null)
