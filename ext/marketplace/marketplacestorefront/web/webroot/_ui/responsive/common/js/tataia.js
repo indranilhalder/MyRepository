@@ -660,14 +660,18 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  html += '<p class="normal discprice">₹'+parseInt(obj.discounted_price)+'</p>';
 	  }
 	  }
+	  else if(Math.round(obj.original_price) == (obj.price)){
+		  html += '<p class="normal moprice">₹'+parseInt(obj.price)+'</p>';
+	  }
 	  else if(obj.price != null || obj.price != '' || obj.price != "undefined"){
 		  if(parseInt(obj.price) > 0){
 		  if(obj.original_price != null && parseInt(obj.original_price) > parseInt(obj.price) ){
 			  html += '<p class="old mrprice">₹'+parseInt(obj.original_price)+'</p>';
 		  }
-		  html += '<p class="normal moprice">₹'+parseInt(obj.price)+'</p>';
+		  html += '<p class="sale moprice">₹'+parseInt(obj.price)+'</p>';
 		  }
 	  }
+	 
 	  if(!obj.sizes){
 		  html += '</div></div></a>';
 		  html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'+obj.site_product_id+'"></p>';
@@ -690,10 +694,10 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  } else {
 		  obj.sizes.sort() /*Not a string-based size array, sort normally*/
 		  }
-		   	html += '<span style="padding-bottom: 0;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
+		   	html += '</div><span style="padding-bottom: 0;line-height:2;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
 		  }
 		  } 
-	  html += '</div></div></a>';
+	  html += '</div></a>';
 	  html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'+obj.site_product_id+'"></p>';
 	  html += '</li>';
 	  return html;
@@ -843,12 +847,14 @@ function updatePage(response, widgetMode) {
     catHtml += '</ul></div></div>';
     
     if(slider) {
-    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
+    	    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
     		html += '<h1><span style="color: black !important;">Best Sellers</span>';
     	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
     		html += '<h1><span style="color: black !important;">You May Also Need</span>';
     	}else{
+    		
     		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
+    		
     	}
       
       /*For hot we need a scrolldown bar to select filters*/

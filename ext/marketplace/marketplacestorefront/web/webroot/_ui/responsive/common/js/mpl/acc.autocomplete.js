@@ -120,19 +120,14 @@ ACC.autocomplete = {
 				$.getJSON(self.options.autocompleteUrl, {term: request.term, category: selectedCat}, function (data)
 				{
 					var autoSearchData = [];
-
 					var suggestedString="";
-
 					if(data.suggestions != null){
 						$.each(data.suggestions, function (i, obj)
 				       	{
 						
 							if(i==0){
 								if(data.brands.length!=undefined && data.brands.length>0){
-
 								//	var suggestedString="";
-
-
 									if (/\s/.test(obj.term)) {
 										suggestedString=obj.term.substr(0,obj.term.indexOf(' '));
 									}

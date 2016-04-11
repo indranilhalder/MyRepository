@@ -293,6 +293,11 @@ public class CartPageController extends AbstractPageController
 
 
 
+
+
+
+
+
 		{
 			final Map<String, String> priceModified = new HashMap<String, String>();
 			final Map<String, String> priceModifiedMssg = new HashMap<String, String>();
@@ -300,10 +305,18 @@ public class CartPageController extends AbstractPageController
 			final Map<String, String> promoModified = new HashMap<String, String>();
 			if (cartDataOld != null && cartDataLatest != null && cartDataOld.getEntries() != null)
 
+
 			{
 				for (final OrderEntryData entryOld : cartDataOld.getEntries())
 				{
 					for (final OrderEntryData entryLatest : cartDataLatest.getEntries())
+
+
+
+
+
+
+
 
 					{
 						if (entryLatest.getSelectedSellerInformation() != null
@@ -320,6 +333,10 @@ public class CartPageController extends AbstractPageController
 							if (entryLatest.isIsBOGOapplied())
 							{
 
+
+
+
+
 								final Long qty = entryLatest.getQuantity();
 								@SuppressWarnings(MarketplacecommerceservicesConstants.BOXING)
 								final Long priceForStrikeOff = ((entryLatest.getBasePrice().getValue().longValue()) * qty);
@@ -327,19 +344,43 @@ public class CartPageController extends AbstractPageController
 								final PriceData strikeoffprice = priceDataFactory.create(PriceDataType.BUY, strikeOffPrice,
 										MarketplaceFacadesConstants.INR);
 
+
 								model.addAttribute("strikeoffprice", strikeoffprice);
 							}
+
+
+
+
+
+
+
+
 
 
 							final int res = updatedTotalPrice.compareTo(oldTotalPrice);
 							if (res != 0)
 							{
 
+
+
+
+
+
+
+
+
 								priceModified.put(entryLatest.getEntryNumber().toString(), cart.getCurrency().getSymbol()
 										+ entryOld.getTotalPrice().getValue());
 								priceModifiedMssg.put(entryLatest.getEntryNumber().toString(),
 										"Sorry! The price of this item has changed.");
 							}
+
+
+
+
+
+
+
 
 
 							final double oldPromoValue = (entryOld.getQuantity().doubleValue() * Double.parseDouble(entryOld
@@ -349,10 +390,19 @@ public class CartPageController extends AbstractPageController
 									.getBasePrice().getValue().toString()))
 									- Double.parseDouble(entryLatest.getTotalPrice().getValue().toString());
 
+
 							if (oldPromoValue != latestPromoValue)
+
+
+
 							{
 
+
+
+
 								promoModified.put(entryLatest.getEntryNumber().toString(), "Promotion has been modified");
+
+
 							}
 
 							//TISEE-535
@@ -367,6 +417,7 @@ public class CartPageController extends AbstractPageController
 							model.addAttribute(ModelAttributetConstants.BASEPRICEMAP, basePriceMap);
 
 							if (entryLatest.getCartLevelDisc() != null && entryLatest.getCartLevelDisc().getValue() != null)
+
 
 
 							{
@@ -411,6 +462,10 @@ public class CartPageController extends AbstractPageController
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
 		}
+
+
+
+
 
 	}
 
@@ -518,22 +573,27 @@ public class CartPageController extends AbstractPageController
 			// Override the Checkout Flow setting in the session
 			if (checkoutFlow != null && StringUtils.isNotBlank(checkoutFlow.getCode()))
 
+
 			
 			
 			{
 				SessionOverrideCheckoutFlowFacade.setSessionOverrideCheckoutFlow(checkoutFlow);
 			}
 
+
 			// Override the Checkout PCI setting in the session
 			if (checkoutPci != null && StringUtils.isNotBlank(checkoutPci.getCode()))
 			{
+
 				SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
 			}			
+
 			// Redirect to the start of the checkout flow to begin the checkout process
 			// We just redirect to the generic '/checkout' page which will actually select the checkout flow
 			// to use. The customer is not necessarily logged in on this request, but will be forced to login
 			// when they arrive on the '/checkout' page.
           }
+
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -649,6 +709,7 @@ public class CartPageController extends AbstractPageController
 			}
 
 
+
 			prepareDataForPage(model, cartData);
 
 		}
@@ -734,9 +795,9 @@ public class CartPageController extends AbstractPageController
 		clearSessionRestorationData();
 
 		model.addAttribute("isOmsEnabled", Boolean.valueOf(getSiteConfigService().getBoolean("oms.enabled", false)));
-		//model.addAttribute("supportedCountries", getMplCartFacade().getDeliveryCountries());
-		//model.addAttribute("expressCheckoutAllowed", Boolean.valueOf(checkoutFacade.isExpressCheckoutAllowedForCart()));
-		//model.addAttribute("taxEstimationEnabled", Boolean.valueOf(checkoutFacade.isTaxEstimationEnabledForCart()));
+
+
+
 
 		//TISST-13012
 		if (StringUtils.isNotEmpty(cartData.getGuid()))
@@ -765,6 +826,10 @@ public class CartPageController extends AbstractPageController
 								ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
 								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
 								ProductOption.DELIVERY_MODE_AVAILABILITY));
+						if (!entryModel.getSizeSelected().booleanValue())
+						{
+							productData.setSize(StringUtils.EMPTY);
+						}
 						productData = wishlistFacade.getBuyBoxPrice(entryModel.getUssid(), productData);
 
 						final SellerInformationModel sellerInfoForWishlist = mplSellerInformationService.getSellerDetail(entryModel
@@ -787,6 +852,7 @@ public class CartPageController extends AbstractPageController
 								ussidMap.put(productData.getCode(), entryModel.getUssid());
 								model.addAttribute("ussidMap", ussidMap);
 								model.addAttribute("sellerName", sellerName);
+								LOG.info("Category of the product selected >>>>>>>>>>>>>>>>>>" + productData.getRootCategory());
 							}
 							if (StringUtils.isNotEmpty(fulfillmentType))
 							{
@@ -931,14 +997,7 @@ public class CartPageController extends AbstractPageController
 		LOG.debug("Entring into validateCart" + "Class NamevalidateCart :" + className);
 		List<CartModificationData> modifications = new ArrayList<CartModificationData>();
 
-
-
 		modifications = getMplCartFacade().validateCartData();
-
-
-
-
-
 
 		if (CollectionUtils.isNotEmpty(modifications))
 		{
@@ -1315,6 +1374,7 @@ public class CartPageController extends AbstractPageController
 			@SuppressWarnings(MarketplacecommerceservicesConstants.UNUSED) final HttpServletRequest request,
 			@SuppressWarnings(MarketplacecommerceservicesConstants.UNUSED) final HttpServletResponse response)
 			throws CMSItemNotFoundException
+
 	{LOG.debug("Entring into showWishListsForCartPage" + "Class NameshowWishListsForCartPag :" + className);
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
 		final UserModel user = userService.getCurrentUser();
@@ -1694,3 +1754,4 @@ public class CartPageController extends AbstractPageController
 		this.mplCouponFacade = mplCouponFacade;
 	}
 }
+
