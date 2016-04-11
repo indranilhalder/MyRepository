@@ -24023,11 +24023,11 @@ span.brand-subdesc {
 {
 	max-width:200px;
 	margin:0 auto 50px;
-	background-color:#1a1a1a !important;
+	background-color:#a9143c !important;
 	color:#fff;
 	text-transform: uppercase;
     font-size: 12px !important;
-    font-weight: bold;
+    font-weight: 600;
 }
 .brandLanding-shopButton:hover
 {
