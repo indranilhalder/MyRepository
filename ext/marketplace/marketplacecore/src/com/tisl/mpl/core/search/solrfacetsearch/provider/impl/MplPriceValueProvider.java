@@ -117,8 +117,17 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 							if (null != rangeKey)
 							{
 								rangeNameList = getRangeNameList(indexedProperty, value, rangeKey);
-								final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, currency
-										.getIsocode().toLowerCase());
+								String currencyValue = "";
+								if (currency.getIsocode() != null)
+								{
+									currencyValue = currency.getIsocode().toLowerCase();
+								}
+								else
+								{
+									currencyValue = currency.getIsocode();
+								}
+								final Collection<String> fieldNames = this.fieldNameProvider
+										.getFieldNames(indexedProperty, currencyValue);
 								for (final String fieldName : fieldNames)
 								{
 									if (rangeNameList != null)
