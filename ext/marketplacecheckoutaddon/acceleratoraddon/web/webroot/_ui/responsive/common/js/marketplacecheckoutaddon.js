@@ -97,6 +97,8 @@ function refresh(){
 }
 
 
+
+
 function displayNetbankingForm(){
 	refresh();
 	$("#paymentMode").val("Netbanking");
@@ -107,6 +109,8 @@ function displayNetbankingForm(){
 	$("#paymentDetails, #netbanking, #make_nb_payment").css("display","block");
 	$("#submitButtons, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton").css("display","none");
 }
+
+
 
 
 function displayEMIForm(){
@@ -126,6 +130,8 @@ function displayEMIForm(){
 	$("#emi-notice").hide();
 	$("#emiNoBankError").hide();
 }
+
+
 
 
 function displayCODForm()
@@ -220,6 +226,8 @@ function displayCODForm()
 }
 
 
+
+
 function displayDebitCardForm(){
 	refresh();
 	$("#paymentMode").val("Debit Card");
@@ -228,6 +236,7 @@ function displayDebitCardForm(){
 	$(".name_on_card").val("");	
 	displayDCForm();
 }
+
 
 
 function displayDCForm(){
@@ -297,6 +306,7 @@ function displayDCForm(){
 
 
 
+
 function displayCreditCardForm(){		
 	refresh();
 	$("#paymentMode").val("Credit Card");
@@ -308,6 +318,8 @@ function displayCreditCardForm(){
 	$(".name_on_card").val("");	
 	displayFormForCC();
 }
+
+
 
 
 function submitForm(){
@@ -355,8 +367,12 @@ function submitForm(){
 							$("#otpSentMessage").css("display","none");
 						}
 						else{
+
+
 							//TISPRO-153
 							sendTealiumData();	
+
+
 							$("#form-actions, #otpNUM").css("display","block");
 							$("#wrongOtpValidationMessage, #expiredOtpValidationMessage").css("display","none");
 							$("#otpSentMessage").css("display","none");
@@ -1173,6 +1189,8 @@ $("#otpMobileNUMField").focus(function(){
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 	  // TISPRO-153		
 		sendTealiumData();
+
+
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
 		
@@ -1186,6 +1204,8 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
+
+
 				if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -1252,8 +1272,12 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay").append('<img src="/store/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 25%;bottom: 30px; height: 30px;">');
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+
+
 	  // TISPRO-153
 		sendTealiumData();
+
+
 		var firstName=$("#firstName").val();
 		var lastName=$("#lastName").val();
 		var addressLine1=$("#address1").val();
@@ -1555,8 +1579,36 @@ $("#otpMobileNUMField").focus(function(){
 	 }, 
 	 error : function(resp) { 
 	 } 
+
 	 }); 
 	 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	 
  	 
 function savedCardForm(){
@@ -2141,7 +2193,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	{ 
 		$("#firstnameError").show();
 		/*Error message changed TISPRD-427*/
-		$("#firstnameError").html("<p>First Name must be alphabet only</p>");
+		$("#firstnameError").html("<p>First name should not contain any special characters or space</p>");
 		validate= false;
 	}  
 	else
@@ -2160,7 +2212,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 	{ 
 		$("#lastnameError").show();
 		/*Error message changed TISPRD-427*/
-		$("#lastnameError").html("<p>Last Name must be alphabet only</p>");
+		$("#lastnameError").html("<p>Last name should not contain any special characters or space</p>");
 		validate= false;
 	} 
 	else
@@ -2584,8 +2636,12 @@ function submitNBForm(){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add"); 
 				}
 				else{
+
+
 					//TISPRO-153
 					sendTealiumData();
+
+
 					$("#juspayOrderId").val(response);
 					var juspayOrderId=$("#juspayOrderId").val();
 					$.ajax({
@@ -2600,11 +2656,15 @@ function submitNBForm(){
 								//console.log(juspayResponse);
 								var url = juspayResponse.payment.authentication.url;
 								var method = juspayResponse.payment.authentication.method;
+
+
 								if(method === "POST") {
 									var frm = document.createElement("form")
 									frm.style.display = "none"; // ensure that the form is hidden from the user
 									frm.setAttribute("method", method);
 									frm.setAttribute("action", url);
+
+
 									var params = juspayResponse.payment.authentication.params;
 									for(var key in params) {
 								    var value = params[key];
@@ -2811,6 +2871,10 @@ function populatePincodeDeliveryMode(response,buttonType){
 	//response='N|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"2","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":2},{"fulfilmentType":null,"isPrepaidEligible":null,"ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":null,"cod":null,"transportMode":null,"isCODLimitFailed":null,"deliveryDate":null,"isServicable":"N","stockCount":null}]';	
 
 
+
+
+
+
 	console.log(response);
 	
 	var values=response.split("|");
@@ -2849,6 +2913,8 @@ function populatePincodeDeliveryMode(response,buttonType){
 			console.log("This is NO");
 		}	
 	}
+
+
 
 	for ( var key in deliveryModeJsonObj) {
 	var ussId= deliveryModeJsonObj[key].ussid;
@@ -3750,6 +3816,10 @@ function sendTealiumData(){
 		            payment_type = jQuery("select#bankNameForEMI").val();
 	
 		        } else if (payment_mode === "Credit Card" || payment_mode === "Debit Card") {	
+
+
+
+
 		            payment_type = jQuery("li.active-card span").attr("class") || "Saved Card";
 	
 		        } else if (payment_mode === "NetBanking") {
@@ -3798,3 +3868,4 @@ function sendTealiumData(){
 		// TODO: handle exception
 	   }     
 }
+

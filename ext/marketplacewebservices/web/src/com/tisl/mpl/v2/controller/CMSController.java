@@ -64,12 +64,15 @@ public class CMSController extends BaseController
 {
 	private final String MOBILE_DISCOVER_UID = "MobileHomepageDiscover";
 	private final String MOBILE_SHOWCASE_UID = "MobileHomepageShowCase";
+	//private final String MOBILE_HOMEPAGE_UID = "MobileHomepage";	//SONAR Fix
+	//private static final String MOBILE_BRANDPAGE_UID = "MobileBrandPage";	//SONAR Fix
+	//private static final String MOBILE_CATEGORYPAGE_UID = "MobileCategoryPage";	//SONAR Fix
 	private static final String MOBILE_DEALSBANNERPAGE_UID = "MobileDealsBannerPage";
 	private static final String MOBILE_DEALSPRODUCTPAGE_UID = "MobileDealsProductPage";
 
 	/*
 	 * private static final Set<CatalogOption> OPTIONS;
-	 * 
+	 *
 	 * static { OPTIONS = getOptions(); }
 	 */
 

@@ -31,6 +31,7 @@ import com.tisl.mpl.model.SellerMasterModel;
  */
 public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDao
 {
+	//private final String MOBILE_UID = "MobileHomepage";	//SONAR Fix for unused private field
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
@@ -130,7 +131,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override

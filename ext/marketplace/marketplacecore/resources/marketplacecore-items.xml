@@ -90,6 +90,7 @@
 		<collectiontype code="voucherCustomerUidList"
 			elementtype="java.lang.String" autocreate="true" generate="true" type="list" />	
 
+
 		<collectiontype code="productBasedCoupon"
 			elementtype="Product" autocreate="true" generate="true" type="list" />	
 		<collectiontype code="categoryBasedCoupon"
@@ -104,6 +105,7 @@
 
 		<collectiontype elementtype="java.lang.String" code="mplImageUrl"
 				autocreate="true" generate="true" type="list"/>
+
 	</collectiontypes>
 
 
@@ -734,7 +736,9 @@
 
 
 
+
 	</enumtypes>
+
 
 
 
@@ -3443,6 +3447,7 @@
 						<description>This attribute represents the list of footer images</description>
 					</attribute>
 
+
 					<attribute qualifier="footerAppImageList" type="FooterImageCollection"
 						generate="true" autocreate="true">
 						<persistence type="property" />
@@ -3450,6 +3455,8 @@
 					</attribute>
 
 					<attribute qualifier="footerText" type="localized:java.lang.String" generate="true" autocreate="true">
+
+
 
 						<persistence type="property">
 							<columntype database="oracle">
@@ -3754,6 +3761,7 @@
 				Image to be displayed</description> <persistence type="property" /> </attribute> 
 				</attributes> </itemtype> -->
 				
+
 			<!--End of Shop By Department -->
 
 			<!-- Video Component added -->
@@ -3997,6 +4005,8 @@
 					<attribute type="Media" qualifier="logo"
 						autocreate="true" generate="true">
 
+
+
 						<description>This attribute is for storing the brand logo to be displayed</description>
 						<modifiers read="true" write="true" search="true" />
 						<persistence type='property' />
@@ -4074,6 +4084,7 @@
 
 						</persistence>
 					</attribute>
+
 
 					<attribute type="java.lang.String" qualifier="bannerUrl"
 						autocreate="true" generate="true">
@@ -5361,6 +5372,24 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Start TISPRD-871 -->
+					<attribute qualifier="juspayRequestId" type="java.lang.String">
+						<description>JuspayRquestId for ORDER_CANCELLED and RETURN_COMPLETED status</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- End TISPRD-871 -->
+					<attribute qualifier="fulfillmentType" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="returnWindow" type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -5877,7 +5906,11 @@
 					</attribute>
 					<attribute qualifier="targetCollection" type="MplShopByLook"
 						autocreate="true" generate="true">
+
+
 						<modifiers read="true" write="true" search="true" />
+
+
 						<persistence type="property" />
 					</attribute> -->
 					<attribute qualifier="associatedCategory" type="targetCategoryCollection"
@@ -5928,6 +5961,8 @@
 						<modifiers read="true" write="true" search="true" />
 						<persistence type="property" />
 					</attribute>
+
+
 
 
 					<attribute qualifier="targetProduct" type="Product"
@@ -6747,6 +6782,12 @@
 						<modifiers read="true" write="true" optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- TISPRO-216 -->
+					<attribute type="java.lang.Double" qualifier="refundAmount">
+						<defaultvalue>false</defaultvalue>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
@@ -6932,12 +6973,14 @@
 
 
 
+
 						<description>priority start date</description>
 						<modifiers read="true" write="true" optional="true"
 							unique="false" />
 						<persistence type="property" />
 					</attribute>
 				<attribute autocreate="true"  qualifier="priorityEndDate" type="java.util.Date">
+
 
 
 
@@ -7010,6 +7053,7 @@
 
 
 
+
 						<description>L3 level priority for category</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7020,6 +7064,7 @@
 
 
 
+
 						<description>L4 level priority for category</description>
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<modifiers read="true" write="true" optional="true"
@@ -7027,6 +7072,7 @@
 						<persistence type="property" />
 					</attribute>
 				<attribute autocreate="true"  qualifier="ProductPriority" type="java.lang.Integer">
+
 
 
 
@@ -7046,6 +7092,7 @@
 			</itemtype>
 		<!-- 	seller priority cron job -->
 			<itemtype code="UpdateSellerPriorityJob" extends="CronJob" autocreate="true" generate="true"
+
 
 
 				jaloclass="com.tisl.mpl.core.jalo.UpdateSellerPriorityJob">

@@ -193,6 +193,10 @@ public class MarketPlaceDefaultCancellationController extends
 									.getOrderEntriesModificationEntries()) {
 								OrderEntryModel orderEntry = modificationEntry
 										.getOrderEntry();
+								double deliveryCost = orderEntry
+										.getCurrDelCharge() != null ? orderEntry
+										.getCurrDelCharge()
+										: NumberUtils.DOUBLE_ZERO;
 								ConsignmentStatus newStatus = null;
 								// If CosignmentEnteries are present then update
 								// OMS with the state.
@@ -229,6 +233,9 @@ public class MarketPlaceDefaultCancellationController extends
 												.setCreationtime(new Date());
 										refundTransactionMappingModel
 												.setRefundType(JuspayRefundType.CANCELLED);
+										refundTransactionMappingModel
+												.setRefundAmount(orderEntry.getNetAmountAfterAllDisc()
+														+deliveryCost);//TISPRO-216 : Refund amount Set in RTM
 										getModelService().save(
 												refundTransactionMappingModel);
 									} else {
@@ -244,15 +251,16 @@ public class MarketPlaceDefaultCancellationController extends
 
 								}
 
-								double deliveryCost = orderEntry
-										.getCurrDelCharge() != null ? orderEntry
-										.getCurrDelCharge()
-										: NumberUtils.DOUBLE_ZERO;
-								double totalprice = orderEntry
-										.getNetAmountAfterAllDisc();
-								orderEntry
-										.setRefundedDeliveryChargeAmt(deliveryCost);
+								double totalprice = orderEntry.getNetAmountAfterAllDisc();
+								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
 								orderEntry.setCurrDelCharge(0D);
+								
+								//Start TISPRD-871
+								if(newStatus.equals(ConsignmentStatus.ORDER_CANCELLED)){
+									orderEntry.setJuspayRequestId(uniqueRequestId);
+								}
+								//End TISPRD-871
+								
 								getModelService().save(orderEntry);
 								mplJusPayRefundService.makeRefundOMSCall(
 										orderEntry, paymentTransactionModel,
@@ -267,38 +275,6 @@ public class MarketPlaceDefaultCancellationController extends
 						mplJusPayRefundService.createCancelRefundPgErrorEntry(orderCancelRecord, PaymentTransactionType.CANCEL,
 								JuspayRefundType.CANCELLED, uniqueRequestId);
 						
-//						for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
-//								.getOrderEntriesModificationEntries()) {
-//							OrderEntryModel orderEntry = modificationEntry
-//									.getOrderEntry();
-//							if (orderEntry != null) {
-//								//mplJusPayRefundService.makeOMSStatusUpdate(orderEntry,ConsignmentStatus.REFUND_IN_PROGRESS);
-//								
-//								
-//								double deliveryCost = orderEntry
-//										.getCurrDelCharge() != null ? orderEntry
-//										.getCurrDelCharge()
-//										: NumberUtils.DOUBLE_ZERO;
-//								double totalprice = orderEntry.getNetAmountAfterAllDisc();
-//								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
-//								orderEntry.setCurrDelCharge(0D);
-//								getModelService().save(orderEntry);
-//								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,totalprice + deliveryCost, ConsignmentStatus.REFUND_IN_PROGRESS);
-//								
-//							}
-//						}
-//						//TISSIT-1790 Code addition ended
-//						paymentTransactionModel = mplJusPayRefundService
-//								.createPaymentTransactionModel(
-//										orderCancelRecord.getOriginalVersion()
-//												.getOrder(),
-//										MarketplaceCockpitsConstants.FAILURE,
-//										orderCancelRecord.getRefundableAmount(),
-//										PaymentTransactionType.CANCEL,
-//										"NO Response FROM PG", uniqueRequestId);
-//						mplJusPayRefundService.attachPaymentTransactionModel(
-//								orderCancelRecord.getOriginalVersion()
-//										.getOrder(), paymentTransactionModel);
 					}
 				} catch (Exception e) {
 					LOG.error(e.getMessage(), e);
@@ -308,47 +284,6 @@ public class MarketPlaceDefaultCancellationController extends
 					mplJusPayRefundService.createCancelRefundExceptionEntry(orderCancelRecord, PaymentTransactionType.CANCEL,
 							JuspayRefundType.CANCELLED, uniqueRequestId);
 					
-					
-//					for (OrderEntryModificationRecordEntryModel modificationEntry : orderCancelRecord
-//							.getOrderEntriesModificationEntries()) {
-//						OrderEntryModel orderEntry = modificationEntry
-//								.getOrderEntry();
-//						if (orderEntry != null)
-//						{
-//							// Do not save status updates in commerce, rather
-//							// update it on OMS and let it come in sync.
-//							
-//							double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge(): NumberUtils.DOUBLE_ZERO;
-//							double totalprice = orderEntry.getNetAmountAfterAllDisc();
-//							orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
-//							orderEntry.setCurrDelCharge(0D);
-//							getModelService().save(orderEntry);
-//							mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,totalprice + deliveryCost, ConsignmentStatus.REFUND_INITIATED);
-//							
-//							// TISSIT-1784 Code addition started
-//							
-//							// Making RTM entry to be picked up by webhook job	
-//							RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
-//							refundTransactionMappingModel.setRefundedOrderEntry(orderEntry);
-//							refundTransactionMappingModel.setJuspayRefundId(paymentTransactionModel.getCode());
-//							refundTransactionMappingModel.setCreationtime(new Date());
-//							refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED);
-//							getModelService().save(refundTransactionMappingModel);
-//							// TISSIT-1784 Code addition ended
-//						}
-//					}
-//
-//					paymentTransactionModel = mplJusPayRefundService
-//							.createPaymentTransactionModel(orderCancelRecord
-//									.getOriginalVersion().getOrder(),
-//									MarketplaceCockpitsConstants.FAILURE, orderCancelRecord
-//											.getRefundableAmount(),
-//									PaymentTransactionType.CANCEL,
-//									"An Exception Occured.", UUID.randomUUID()
-//											.toString());
-//					mplJusPayRefundService.attachPaymentTransactionModel(
-//							orderCancelRecord.getOriginalVersion().getOrder(),
-//							paymentTransactionModel);
 
 				}
 

@@ -18,8 +18,8 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   font-style:italic;
   }
 html,body,main {
-	/*  height:100%;  */
-	overflow-x: hidden;
+	height:100%;
+
 }
 
 body.page-notFound{
@@ -83,7 +83,9 @@ img[src='']{
 
 /* -------------------------------- 
 
+
 Modules - reusable parts of our design
+
 
 -------------------------------- */
 .img-replace {
@@ -97,7 +99,9 @@ Modules - reusable parts of our design
 
 /* -------------------------------- 
 
+
 Main components 
+
 
 -------------------------------- */
 
@@ -110,7 +114,9 @@ Main components
 
 /* -------------------------------- 
 
+
 xpopup 
+
 
 -------------------------------- */
 .cd-popup {
@@ -246,12 +252,13 @@ xpopup
 	margin-left: 10px;
 }
 
-.checkout-order-summary{
+/* .checkout-order-summary{
      width: 82%;
     margin-left: 69px;
 
 
-}
+} */
+
 #addnewid{
 	width: 15em;
     
@@ -315,12 +322,13 @@ xpopup
 }
 
 /* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-width : 320px) and (max-width : 480px) {
+/* @media only screen and (min-width : 320px) and (max-width : 480px) {
 #deliveryradioul, .checkout-table{
 	width: 300px!important;
 	height: 200px!important;
 }
-}
+} */
+
 
 
 
@@ -337,7 +345,7 @@ xpopup
 }
 
 /* Smartphones (portrait) ----------- */
-@media only screen and (max-width : 320px) {
+/* @media only screen and (max-width : 320px) {
 
 	#deliveryradioul, .checkout-table{
 	width: 300px!important;
@@ -346,10 +354,11 @@ xpopup
 }
 	
 	
-}
+} */
+
 
 /* iPads (portrait and landscape) ----------- */
-@media only screen and (min-width : 768px) and (max-width : 1024px) {
+/* @media only screen and (min-width : 768px) and (max-width : 1024px) {
 
 	#deliveryradioul, .checkout-table{
 	width: 580px!important;
@@ -359,11 +368,12 @@ xpopup
 	
 	
 	
-}
+} */
+
 	
 /* 
 Desktops and laptops ----------- */
-@media only screen  and (min-width : 1224px) {
+/* @media only screen  and (min-width : 1224px) {
 
 #deliveryradioul, .checkout-table{
 	width: 920px !important;
@@ -372,10 +382,11 @@ Desktops and laptops ----------- */
 }
 	
 	
-}
+} */
+
 
 /* Large screens ----------- */
-@media only screen  and (min-width : 1824px) {
+/* @media only screen  and (min-width : 1824px) {
 
 #deliveryradioul, .checkout-table{
 	width: 1300px!important;
@@ -385,7 +396,7 @@ Desktops and laptops ----------- */
 	
 	
 	
-}
+} */
 /* 
 
 
@@ -522,6 +533,142 @@ Samsung Galaxy S5 -----------
 	
 }
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 */
 
 
@@ -788,6 +935,8 @@ url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdE
   -webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box; }
+
+
 *:before, *:after {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -797,13 +946,16 @@ url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdE
 .wrapper {
   margin: 0 auto;
   position: relative;
+
   max-width: 1300px;
   padding: 0 10px;
   width: 100%; }
 
+
 body {
   font-family: "Avenir Next";
   font-size: 12px; }
+
 
 a.button, button, select {
   -webkit-appearance: none;
@@ -844,6 +996,28 @@ a.button, button, select {
   -moz-transition: background 0.3s;
   transition: background 0.3s;}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 a.button, button {
   border: none;
   display: block;
@@ -856,6 +1030,7 @@ a.button, button {
   letter-spacing: 1px;
   vertical-align: middle;
   text-transform: uppercase;
+
   -webkit-transition: background 0.3s;
     -moz-transition: background 0.3s;
     transition: background 0.3s; }
@@ -865,6 +1040,7 @@ button:hover {
     -moz-transition: background 0.3s;
     transition: background 0.3s
 }
+
   a.button.blue, button.blue {
     color: #fff;
     background-color: #A9143C; }
@@ -872,15 +1048,25 @@ button:hover {
     color: #fff;
     background-color: gray; }
     
+
+
+
+
     a.button.orange, button.orange {
     color: #fff;
     background-color: #ffb810; }
+
+
   a.button.red, button.red {
     color: #fff;
     background-color: #A9143C; }
+
+
   a.button.green, button.green {
     color: #fff;
     background-color: #399992; }
+
+
   a.button.light-blue, button.light-blue {
     color: #fff;
     background-color: #A9143C;
@@ -889,10 +1075,23 @@ button:hover {
       background-color: #21f7ff;
        } */
 
+
+
+
+
+
+
+
+
+
+
+
 a {
   text-decoration: none;
   color: #000;
   cursor: pointer; }
+
+
   a, a:after {
     -webkit-transition: color 0.3s, border-color 0.3s, background 0.3s;
     -moz-transition: color 0.3s, border-color 0.3s, background 0.3s;
@@ -2115,6 +2314,7 @@ h2 {
             /* header .content nav > ul > li:first-child + li > ul {
                 left: 355px;
             } */
+
         }
         @media (min-width:791px) and (max-width: 900px) {
             header .content nav > ul > li:first-child  > ul {
@@ -4264,12 +4464,14 @@ h2 {
 /* .shop-promos .promos li span:last-child {
 	font-weight: 600;
 	text-transform: uppercase;
+
 	font-size: 12px;
 } */
 
 /* .shop-promos .promos li span:last-child:after {
 	content: "";
 	position: relative;
+
 	height: 0;
 	width: 0;
 	border-bottom: 4.5px solid transparent;
@@ -5226,6 +5428,7 @@ text-transform: uppercase;
         display: inline-block;
         font-size: 14px; } 
         }
+
 
 .shop-sale {
   text-align: center; }
@@ -9178,6 +9381,7 @@ footer .banner {
   /*       .top.checkout-top .content ul li.step-done > span {
           display:none;
           } */
+
           @media (min-width: 650px) {
             .top.checkout-top .content ul li span {
               top: 57px;
@@ -10520,6 +10724,7 @@ body .account .right-account .order-history .pagination li{
   clear:both; }
 
   .listing-leftmenu .checkbox-menu > a, .listing-leftmenu .checkbox-menu input[type='submit'] {
+
     color: #A9143C;
     text-decoration: underline;
     text-transform: uppercase;
@@ -10531,6 +10736,7 @@ body .account .right-account .order-history .pagination li{
     border:none;
         -webkit-appearance: none;
      }
+
     .listing-leftmenu .checkbox-menu > a.more {
       margin-bottom: 0;
       margin-top: 20px; }
@@ -10625,6 +10831,7 @@ body .account .right-account .order-history .pagination li{
     right: 5px;
     background-image: none;
     display: table;
+
 	text-align: center;}
       .shop-sale.wrapper .product-tile .image .new {
      /*  width: 38%;
@@ -10634,6 +10841,9 @@ body .account .right-account .order-history .pagination li{
       }
     .product-tile .image .online-exclusive, .product-tile .image .on-sale {
       position: absolute;
+
+
+
        top:0px;
        right:5px; }
        .product-tile .image .online-exclusive img.brush-strokes-sprite, .product-tile .image .on-sale img.brush-strokes-sprite,
@@ -10671,6 +10881,7 @@ body .account .right-account .order-history .pagination li{
     
         	}
     .product-tile .image .on-sale {
+
 
      background-color: #ffb810;
      height: 20px;
@@ -13501,7 +13712,9 @@ div.pdp .reviews .toolbar select.white {
     .modal.size-guide .sizes > h3 {		
         padding-left: 10px;		
     }		
+
 } */		
+
 .modal.size-guide .sizes .tables {		
     padding: 0 10px;		
     text-align: left;		
@@ -17144,9 +17357,12 @@ body .account .right-account .order-history.order-details li.item .status .messa
 }
 /* body .account .right-account .order-history.order-details li.item .status .message.cancellation {
     color: #A9143C;
+
     z-index: 100;
     
    
+
+
 } */
 body .account .right-account .order-history.order-details li.item .status .message.trackOrdermessage_00cbe9 {
     color: #A9143C;
@@ -20683,8 +20899,10 @@ color: #ff829a;
           }
         /*   header .content .bottom.active nav
           {
+
           	margin-left:20px;
           } */
+
      header .content  .bottom.active .search form
      {
      	margin-right:0px;
@@ -23433,6 +23651,7 @@ div.complete-your-look h1 {
      right: 25px;
   }
 
+
 .feature-collections ul.collections li.chef a:hover {
     color: #A9143C;
     -webkit-transition: color 0.15s;
@@ -24620,6 +24839,8 @@ span.brand-subdesc {
 	.trending .select-view {
 		width:240px;
 		position: static;
+
+
 	}
 	.trending .select-view .selected {
 		text-align:left;
@@ -26601,6 +26822,8 @@ color:#A9143C;
 .product-block.wishlist .item .desktop #addToCartButton{
 	    background-color: #A9143C !important;
     border-color: #A9143C !important;
+    color:#fff;
+    height:30px !important;
 
 }
 
@@ -28253,6 +28476,7 @@ table.track-table-head,table.track-table{
 	border-left:1px solid #C0C0C0;
 	border-right:1px solid #C0C0C0;
 }
+
  table.track-table-head tr{
 	background:#C0C0C0;
 	color:#000000;
@@ -28452,6 +28676,7 @@ color: #ff1c47;
           font-weight: 100;
           content: "\f056";
           color: #ff1c47;
+
           font-size: 14px;
           display: inline-block;
           position:relative;
@@ -28903,6 +29128,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	{
 	height: 142px;
 }
+
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box>h2
 	{
@@ -30238,6 +30464,7 @@ font-family:DejaVu Sans;
 	border:none;
 	font-weight:500;
 
+
 } */
 
 #bestPicks .short-info a {
@@ -30939,9 +31166,11 @@ header div.bottom .marketplace.linear-logo {
 	footer>ul>li ul li {
 		line-height: 30px;
 	}
+
 	header div.bottom .marketplace {
 		display: none;
 	}
+
 	header div.bottom .marketplace.linear-logo {
 		display: block;
 	}
@@ -30971,6 +31200,7 @@ header div.bottom .marketplace.linear-logo {
 	}
 }
 
+
 body .account .right-account .reviews .review-list .wrapper>li .review .details .comment-img{
 display:inline-block;
 }
@@ -30997,6 +31227,7 @@ input#typeOfProduct::-moz-placeholder {
 input#typeOfProduct:-ms-input-placeholder {
  	line-height: 20px;
 } */
+
 
 .footwear_left div, .footwear_right div {
 	padding: 0 10px;
@@ -37062,6 +37293,18 @@ height:200px;
 div.productInfo ul li span.product-size.carousel-size{
 display:block;
 }
+.listing-leftmenu .checkbox-menu > a, .listing-leftmenu .checkbox-menu input[type='submit'] {
+    color: #A9143C;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin: 5px 0px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: block;
+    border:none;
+        -webkit-appearance: none;
+     }
 
 /* TISPRD-216 defect fix ends */
 
@@ -37194,6 +37437,9 @@ display:block;
     text-align: center;
     font-size: 20px;
     font-weight: 600;
+
+
+
     text-transform: uppercase;
     font-size: 14px;
     color: #000;
@@ -37228,6 +37474,8 @@ display:block;
 	font-size: 12px;
     text-align: center;
     max-width: 300px;
+
+
     letter-spacing: 1px;
     font-weight: 500;
     display: inline-block;

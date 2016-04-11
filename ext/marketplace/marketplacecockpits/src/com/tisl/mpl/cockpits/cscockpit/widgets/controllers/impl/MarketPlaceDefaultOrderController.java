@@ -207,6 +207,9 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 									.setCreationtime(new Date());
 							refundTransactionMappingModel
 									.setRefundType(JuspayRefundType.RETURN);
+							refundTransactionMappingModel
+									.setRefundAmount(orderEntry.
+											getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
 							getModelService().save(
 									refundTransactionMappingModel);
 						} else {
@@ -217,6 +220,12 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								paymentTransactionModel,
 								orderEntry.getNetAmountAfterAllDisc(),
 								newStatus);
+						
+						//Start TISPRD-871
+						if(newStatus.equals(ConsignmentStatus.RETURN_COMPLETED)){
+							orderEntry.setJuspayRequestId(uniqueRequestId);
+							getModelService().save(orderEntry);
+						}
 					}
 				}
 			} else {
@@ -247,6 +256,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 				refundTransactionMappingModel.setCreationtime(new Date());
 				refundTransactionMappingModel.setRefundType(JuspayRefundType.RETURN);
+				refundTransactionMappingModel.setRefundAmount(orderEntry.getNetAmountAfterAllDisc());//TISPRO-216 : Refund amount Set in RTM
 				getModelService().save(refundTransactionMappingModel);
 			}
 			// TISSIT-1784 Code addition ended
@@ -303,6 +313,8 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								.setCreationtime(new Date());
 						refundTransactionMappingModel
 								.setRefundType(JuspayRefundType.REFUND_DELIVERY_CHARGE);
+						refundTransactionMappingModel
+								.setRefundAmount(totalRefundDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 						getModelService().save(refundTransactionMappingModel);
 					}
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
