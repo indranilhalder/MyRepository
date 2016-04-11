@@ -235,6 +235,7 @@
 		<property name="uid" type="String"></property>
 		<property name="signature" type="String"></property>
 		<property name="timestamp" type="String"></property>
+		<property name="checkTataRewards" type="boolean"></property>
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.TrackOrderData">
@@ -473,6 +474,8 @@
 			type="java.util.Date"></property>
 		<property name="imeiDetails"
 			type="de.hybris.platform.commercefacades.order.data.ImeiDetailData"></property>
+			<property name="productPromoCode"
+			type="String"></property>
 	</bean>
 	
 	<bean class="de.hybris.platform.commercefacades.order.data.ImeiDetailData">

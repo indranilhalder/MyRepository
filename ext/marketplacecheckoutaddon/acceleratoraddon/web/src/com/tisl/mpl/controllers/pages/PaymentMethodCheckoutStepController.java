@@ -201,6 +201,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.PAYMENT_METHOD)
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException
 	{
+
+		final CartModel serviceCart = getCartService().getSessionCart();
+		serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(true));
+		modelService.save(serviceCart);
 		//redirecting to previous page for anonymous user
 		if (getUserFacade().isAnonymousUser())
 		{
@@ -628,6 +632,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequireHardLogIn
 	public @ResponseBody String generateOTPforCOD(final Model model, final String mobileNumber) throws InvalidKeyException,
 			NoSuchAlgorithmException
+
 	{
 		//getting current user
 		final String mplCustomerID = (null == getUserService().getCurrentUser().getUid()) ? "" : getUserService().getCurrentUser()
@@ -802,7 +807,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.SOPPAGEDATA, silentOrderPageData);
 			paymentForm.setParameters(silentOrderPageData.getParameters());
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORMMPLURL, MarketplacecheckoutaddonConstants.PAYMENTVIEWURL);
-
 			setupMplPaymentPage(model);
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTFORM, paymentForm);
 		}
@@ -1238,7 +1242,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error(MarketplacecheckoutaddonConstants.B6007, e);
 		}
-
 		final String ebsDowntime = getConfigurationService().getConfiguration().getString(
 				MarketplacecheckoutaddonConstants.EBSDOWNTIME);
 
@@ -1620,6 +1623,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				LOG.error("Error while generating JSON ", e);
 				ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			}
+
 			catch (final Exception e)
 			{
 				LOG.error("Error while generating JSON ", e);

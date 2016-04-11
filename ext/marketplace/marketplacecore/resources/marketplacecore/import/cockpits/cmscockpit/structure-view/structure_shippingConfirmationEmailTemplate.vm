@@ -10,77 +10,46 @@
 				<td height="125px" width="25%" colspan="2" rowspan="2" class="structureViewSection">
 					<cockpit code="HOTCSiteLogo" />
 				</td>
-				<td colspan="2" class="structureViewSection">
-					<cockpit code="HeaderLinks" />
-					<cockpit code="SearchBox" />
-				</td>
-				<td width="20%" colspan="2" rowspan="1" class="structureViewSection">
-					<cockpit code="MiniCart" />
-				</td>
+				
 			</tr>
-			<tr>
-				<td colspan="6" class="structureViewSection">
-					<cockpit code="NavigationBar" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="6" class="structureViewSection">
-					<cockpit code="BottomHeaderSlot"/>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="HOTCOrderReferenceNumber1" />
-				</td>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="HOTCOrderReferenceNumber2" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="HOTCTip" />
-				</td>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="HOTCDescription" />
-				</td>
-			</tr>
+			
 			<tr>
 				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="HOTCTrackOrder1" />
 				</td>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="HOTCTrackOrder2" />
-				</td>
+				
 			</tr>
 			<tr>
 				<td colspan="2" width="25%" height="249px" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="HOTCDeliveryPerson1" />
 					
 				</td>
-				<td colspan="2" height="249px" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="brand" />
+				
+			</tr>
+			
+			<tr>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Tip" />
 				</td>
-				<td width="30%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="exp" />
-				</td>
-				<td width="40%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="fast" />
-				</td>
+				
 			</tr>
 			<tr>
 				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="ShippingConfirmationBannerTwo" />
+					<cockpit code="AppDownloadUrl" />
 				</td>
 			</tr>
+			
 			<tr>
 				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="HOTCsmileyimg" />
+					<cockpit code="smileyimg" />
 				</td>
 			</tr>
-			<tr>
+		<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
-					<cockpit code="HOTCfb" />
-					<cockpit code="HOTCgplus" />
+					<cockpit code="fb" />
+					<cockpit code="tweet" />
+					<cockpit code="youtube" />
+					<cockpit code="insta" />
 				</td>
 			</tr>
 		</tbody>

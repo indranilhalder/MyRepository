@@ -698,5 +698,6 @@ public final class ModelAttributetConstants
 
 	public static final String SELECTEDSIZE = "sizeSelectedSizeGuide";
 	public static final String NOVALUE = "0.0";
+	public static final String CHECK_MY_REWARDS = "check_MyRewards";
 
 }

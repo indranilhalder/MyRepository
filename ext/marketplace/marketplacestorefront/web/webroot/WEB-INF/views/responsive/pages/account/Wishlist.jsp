@@ -187,7 +187,7 @@
 				</div>
 				</c:if>
 				<c:if test="${isDelisted eq 'true'}">
-								<div><spring:theme code="wishlist.delistedProducts" /></div>
+								<div style="color:#ff1c47;"><spring:theme code="wishlist.delistedProducts" /></div>
 								</c:if>
 				<div id="cartItems" class="products">
 					<input type="hidden" id="count" value="${fn:length(WishlistProductDataList)}"/>

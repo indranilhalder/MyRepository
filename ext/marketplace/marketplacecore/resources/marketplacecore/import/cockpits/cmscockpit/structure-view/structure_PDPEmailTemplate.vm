@@ -8,26 +8,33 @@
 			</tr>
 			<tr>
 				<td height="125px" width="25%" colspan="2" rowspan="2" class="structureViewSection">
-					<cockpit code="pdp_Header" />
+					<cockpit code="SiteLogo" />
 				</td>
 			</tr>
 			<tr>
 				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="pdp_tips" />
 				</td>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="pdp_rightBanner" />
-				</td>
+				
 			</tr>
 			<tr>
 				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="pdp_app" />
 				</td>
 			</tr>
+			
+			<tr>
+				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="smileyimg" />
+				</td>
+			</tr>
+			
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
-					<cockpit code="pdp_fb" />
-					<cockpit code="pdp_gplus" />
+					<cockpit code="fb" />
+					<cockpit code="tweet" />
+					<cockpit code="youtube" />
+					<cockpit code="insta" />
 				</td>
 			</tr>
 		</tbody>
