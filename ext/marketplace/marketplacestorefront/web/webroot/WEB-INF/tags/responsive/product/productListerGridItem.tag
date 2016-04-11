@@ -304,7 +304,7 @@
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->
 						<%-- <li>Size : ${product.displaySize}</li> --%>
-						<!-- TISSTRT - 985::Size of footwear products are not displayed in SERP page-->
+						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
 							                          || product.productCategoryType eq 'Footwear') }">
