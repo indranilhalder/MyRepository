@@ -809,7 +809,10 @@ display:none;
 					<spring:theme code="product.variants.out.of.stock" />
 				</button> --%>
 			</c:when>
-			<c:otherwise>			
+			<c:otherwise>
+			<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
+			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
+			</p></span>			
 					<button id="addToCartButton" type="${buttonType}"
 						class="btn-block js-add-to-cart">
 						<spring:theme code="basket.add.to.basket" />

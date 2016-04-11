@@ -220,6 +220,12 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								paymentTransactionModel,
 								orderEntry.getNetAmountAfterAllDisc(),
 								newStatus);
+						
+						//Start TISPRD-871
+						if(newStatus.equals(ConsignmentStatus.RETURN_COMPLETED)){
+							orderEntry.setJuspayRequestId(uniqueRequestId);
+							getModelService().save(orderEntry);
+						}
 					}
 				}
 			} else {

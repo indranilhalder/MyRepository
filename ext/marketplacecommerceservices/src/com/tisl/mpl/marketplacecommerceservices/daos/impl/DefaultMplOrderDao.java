@@ -8,6 +8,7 @@ import de.hybris.platform.commerceservices.search.flexiblesearch.data.SortQueryD
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -78,7 +80,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put("type", "SubOrder");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "SubOrder");
 			List sortQueries;
 			if ((status != null) && (status.length > 0))
 			{
@@ -132,7 +134,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put("type", "Parent");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "Parent");
 			List sortQueries;
 			if ((status != null) && (status.length > 0))
 			{
@@ -188,7 +190,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put("type", "Parent");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "Parent");
 			queryParams.put("creationtime", fromDate);
 
 			final List sortQueries = Arrays
@@ -321,6 +323,30 @@ public class DefaultMplOrderDao implements MplOrderDao
 			{
 				return null;
 			}
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
+	 * @Desc : To fetch order model list for a guid //TISPRD-181
+	 * @param cartModel
+	 * @return List<OrderModel>
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public List<OrderModel> getOrderForGuid(final CartModel cartModel) throws EtailNonBusinessExceptions
+	{
+		try
+		{
+			final String query = "SELECT {om:pk} FROM {Order as om} WHERE {guid} = ?guid and {type} = ?type";
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.addQueryParameter("guid", cartModel.getGuid());
+			flexiQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, "Parent");
+			final List<OrderModel> orderModelList = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
+			return (CollectionUtils.isNotEmpty(orderModelList)) ? orderModelList : null;
 		}
 		catch (final Exception e)
 		{
