@@ -78,8 +78,8 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 					{
 						final String rangeKey = getPriceRangeKey(product, productCurrency);
 						rangeNameList = getRangeNameList(indexedProperty, value, rangeKey);
-						final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
-								productCurrency.getIsocode().toLowerCase());
+						final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, productCurrency
+								.getIsocode().toLowerCase());
 						for (final String fieldName : fieldNames)
 						{
 							if (rangeNameList.isEmpty())
@@ -117,8 +117,17 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 							if (null != rangeKey)
 							{
 								rangeNameList = getRangeNameList(indexedProperty, value, rangeKey);
-								final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty,
-										currency.getIsocode().toLowerCase());
+								String currencyValue = "";
+								if (currency.getIsocode() != null)
+								{
+									currencyValue = currency.getIsocode().toLowerCase();
+								}
+								else
+								{
+									currencyValue = currency.getIsocode();
+								}
+								final Collection<String> fieldNames = this.fieldNameProvider
+										.getFieldNames(indexedProperty, currencyValue);
 								for (final String fieldName : fieldNames)
 								{
 									if (rangeNameList != null)
@@ -161,8 +170,8 @@ public class MplPriceValueProvider extends AbstractPropertyFieldValueProvider im
 		}
 		catch (final Exception e)
 		{
-			throw new FieldValueProviderException(
-					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName(), e);
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
 		return fieldValues;
 	}

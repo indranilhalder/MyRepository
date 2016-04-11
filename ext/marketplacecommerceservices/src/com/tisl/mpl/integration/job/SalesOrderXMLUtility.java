@@ -36,11 +36,10 @@ import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
-import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+//import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pojo.BulkSalesOrderXMLData;
 import com.tisl.mpl.pojo.ChildOrderXMlData;
@@ -64,8 +63,8 @@ public class SalesOrderXMLUtility
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
 
-	@Autowired
-	private MplSellerInformationService mplSellerInformationService;
+	//@Autowired
+	//private MplSellerInformationService mplSellerInformationService;
 
 	/**
 	 * @Description: Generate XML Data for Order
@@ -180,77 +179,79 @@ public class SalesOrderXMLUtility
 			{
 				//checkCanellation(orderData);
 				xmlToFico = true;
-
-				if (!checkCOD(order))
+				if (null != order.getPaymentInfo())
 				{
-					final SalesOrderXMLData salesXMLData = new SalesOrderXMLData();
-					LOG.debug("COD Check done");
-					if (null != order.getCode() && xmlToFico)
+					if (!checkCOD(order))
 					{
-						salesXMLData.setOrderId(order.getCode());
-						LOG.info("order id in SalesOrder" + order.getCode());
-					}
-					else
-					{
-						xmlToFico = false;
-					}
-
-					if (null != order.getDate() && xmlToFico)
-					{
-						salesXMLData.setOrderDate(sdformat.format(order.getDate()));
-					}
-					else
-					{
-						xmlToFico = false;
-					}
-					salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
-					if (null != order.getPaymentTransactions() && xmlToFico)
-					{
-						final List<PaymentTransactionModel> list = order.getPaymentTransactions();
-						if (null != list && !list.isEmpty())
+						final SalesOrderXMLData salesXMLData = new SalesOrderXMLData();
+						LOG.debug("COD Check done");
+						if (null != order.getCode() && xmlToFico)
 						{
-							for (final PaymentTransactionModel oModel : list)
-							{
+							salesXMLData.setOrderId(order.getCode());
+							LOG.info("order id in SalesOrder" + order.getCode());
+						}
+						else
+						{
+							xmlToFico = false;
+						}
 
-								if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
-										&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+						if (null != order.getDate() && xmlToFico)
+						{
+							salesXMLData.setOrderDate(sdformat.format(order.getDate()));
+						}
+						else
+						{
+							xmlToFico = false;
+						}
+						salesXMLData.setOrderType(MarketplacecommerceservicesConstants.PREPAID_SPACE);
+						if (null != order.getPaymentTransactions() && xmlToFico)
+						{
+							final List<PaymentTransactionModel> list = order.getPaymentTransactions();
+							if (null != list && !list.isEmpty())
+							{
+								for (final PaymentTransactionModel oModel : list)
 								{
-									LOG.debug("Inside Parent order: Pyment Transaction model");
-									salesXMLData.setMerchantCode(oModel.getPaymentProvider());
-									if (null != oModel.getCode())
+
+									if (null != oModel.getStatus() && null != oModel.getPaymentProvider()
+											&& oModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 									{
-										payemntrefid = oModel.getCode();
-										LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
-									}
-									else
-									{
-										xmlToFico = false;
+										LOG.debug("Inside Parent order: Pyment Transaction model");
+										salesXMLData.setMerchantCode(oModel.getPaymentProvider());
+										if (null != oModel.getCode())
+										{
+											payemntrefid = oModel.getCode();
+											LOG.debug("Inside Parent order: Pyment Transaction model" + payemntrefid);
+										}
+										else
+										{
+											xmlToFico = false;
+										}
+
 									}
 
 								}
+							}
 
+						}
+						else
+						{
+							xmlToFico = false;
+						}
+
+						if (null != order.getChildOrders() && !order.getChildOrders().isEmpty() && xmlToFico)
+						{
+							LOG.debug(" child order data not null");
+							List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
+							subOrderDataList = getSubOrderData(order.getChildOrders());
+							LOG.debug("after sub order data list call");
+							if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
+							{
+								salesXMLData.setSubOrderList(subOrderDataList);
+								LOG.debug("set sub order list");
 							}
 						}
-
+						bulkSalesDataList.add(salesXMLData);
 					}
-					else
-					{
-						xmlToFico = false;
-					}
-
-					if (null != order.getChildOrders() && !order.getChildOrders().isEmpty() && xmlToFico)
-					{
-						LOG.debug(" child order data not null");
-						List<SubOrderXMLData> subOrderDataList = new ArrayList<SubOrderXMLData>();
-						subOrderDataList = getSubOrderData(order.getChildOrders());
-						LOG.debug("after sub order data list call");
-						if (null != subOrderDataList && !subOrderDataList.isEmpty() && xmlToFico)
-						{
-							salesXMLData.setSubOrderList(subOrderDataList);
-							LOG.debug("set sub order list");
-						}
-					}
-					bulkSalesDataList.add(salesXMLData);
 				}
 			}
 		}
@@ -401,44 +402,13 @@ public class SalesOrderXMLUtility
 						}
 						LOG.debug("after price set");
 					}
-
-					if (xmlToFico)
+					//TISPRD-901
+					if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 					{
-						final String ussId = entry.getSelectedUSSID();
-
-						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
-						if (sellerInfoModel != null
-								&& sellerInfoModel.getRichAttribute() != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
-						{
-							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModes().getCode();
-							LOG.debug("inside rich attribute model" + fulfillmentType.toUpperCase() + " for ussid :" + ussId);
-							xmlData.setFulfillmentType(fulfillmentType.toUpperCase());
-						}
+						xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
+						LOG.debug("set fulfilment mode");
 					}
 
-					//	if (null != product.getSellerInformationRelator() && xmlToFico)
-					//					{
-					//						final Collection<SellerInformationModel> sellerinfolist = product.getSellerInformationRelator();
-					//						if (sellerinfolist.size() > 0)
-					//						{
-					//							for (final SellerInformationModel sellerEntry : sellerinfolist)
-					//							{
-					//								if (sellerEntry.getRichAttribute().size() > 0)
-					//								{
-					//									for (final RichAttributeModel richEntry : sellerEntry.getRichAttribute())
-					//									{
-					//										LOG.debug("inside rich attribute model" + richEntry.getDeliveryFulfillModes());
-					//										xmlData.setFulfillmentType(richEntry.getDeliveryFulfillModes().toString().toUpperCase());
-					//										LOG.debug("set fulfilment mode");
-					//									}
-					//								}
-					//							}
-					//						}
-					//					}
-					//
 					if (null != entry.getMplDeliveryMode() && xmlToFico)
 					{
 						LOG.debug("inside del mode" + entry.getMplDeliveryMode());

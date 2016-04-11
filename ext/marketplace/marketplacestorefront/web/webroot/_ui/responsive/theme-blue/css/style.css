@@ -18476,6 +18476,14 @@ width:100%;
 	    background-color: #fff;
 } 
 
+.electronics-brand .feature-categories.custom-feature.wrapper {
+ 	    background-color: #e6e6e6;
+ 	    padding:0px;
+ } 
+ .electronics-brand .feature-categories.custom-feature.wrapper > .content{
+ 	    background-color: #fff;
+ } 
+
 .electronics-brand header .bottom .marketplace{
 	height: 60px;
   padding-top: 10px;
@@ -36596,3 +36604,6 @@ color:#fff; }
  color:#fff;}
   header.brand-header .content .search form input#js-site-micrositesearch-input::-ms-input-placeholder{
   color:#fff;}
+#micrositesearchButton{
+	Z-INDEX:500;
+}

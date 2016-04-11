@@ -857,8 +857,7 @@ function updatePage(response, widgetMode) {
     	else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
     		html += '<h1><span style="color: black !important;">Best Sellers</span>';
     	}else{
-    		 html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
-    		
+    		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
     	}
       
       /*For hot we need a scrolldown bar to select filters*/

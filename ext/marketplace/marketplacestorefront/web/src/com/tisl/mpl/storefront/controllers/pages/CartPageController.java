@@ -685,6 +685,10 @@ public class CartPageController extends AbstractPageController
 								ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
 								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
 								ProductOption.DELIVERY_MODE_AVAILABILITY));
+						if (!entryModel.getSizeSelected().booleanValue())
+						{
+							productData.setSize(StringUtils.EMPTY);
+						}
 						productData = wishlistFacade.getBuyBoxPrice(entryModel.getUssid(), productData);
 
 						final SellerInformationModel sellerInfoForWishlist = mplSellerInformationService.getSellerDetail(entryModel
@@ -707,6 +711,7 @@ public class CartPageController extends AbstractPageController
 								ussidMap.put(productData.getCode(), entryModel.getUssid());
 								model.addAttribute("ussidMap", ussidMap);
 								model.addAttribute("sellerName", sellerName);
+								LOG.info("Category of the product selected >>>>>>>>>>>>>>>>>>" + productData.getRootCategory());
 							}
 							if (StringUtils.isNotEmpty(fulfillmentType))
 							{

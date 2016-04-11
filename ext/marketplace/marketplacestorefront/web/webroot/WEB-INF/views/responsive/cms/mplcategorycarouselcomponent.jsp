@@ -25,7 +25,7 @@
 					<c:if test="${not empty component.sellerName}">
 
 						<c:param name="q"
-							value=":relevance:seller:${component.sellerName}"></c:param>
+							value=":relevance:sellerId:${component.sellerName}"></c:param>
 					</c:if>
 				</c:url>
 				<li>
@@ -81,7 +81,7 @@
 					<c:if test="${not empty component.sellerName}">
 
 						<c:param name="q"
-							value=":relevance:seller:${component.sellerName}"></c:param>
+							value=":relevance:sellerId:${component.sellerName}"></c:param>
 					</c:if>
 				</c:url>
 				<div class="item slide">

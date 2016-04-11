@@ -5,6 +5,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <script language='javascript'>
 	$(document).ready(function() {
+		
 		var mSellerName = '${mSellerName}';
 		$(".micrositeSellerName").html(mSellerName);
 	
@@ -21,19 +22,18 @@
 				$(this).parents('.select-list').find('ul').slideUp();
 				$("#js-site-micrositesearch-input").focus(); 
 			});
-	
+		
 			
-		$("#search_form_microsite").submit(function(event) {
-			if($("#js-site-micrositesearch-input").val().trim()=="") {
-			
-				var actionText = ACC.config.contextPath;
-
-				var dropdownValue = $("#micrositeSearchCategory").val();
-				var dropdownName = $("#micrositeSearchCategory").find('option:selected').text();
-				if(dropdownValue=="all"){
+		$("#micrositesearchButton").click(function(event) {
+				if($("#js-site-micrositesearch-input").val().trim()=="") {			
+					event.preventDefault();
 					return false;
 				}
+				
 				else{
+					var actionText = ACC.config.contextPath;
+					var dropdownValue = $("#micrositeSearchCategory").val();
+					var dropdownName = $("#micrositeSearchCategory").find('option:selected').text();
 					
 					if (dropdownValue.startsWith("category-")) {
 						actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("category-",""));
@@ -44,9 +44,9 @@
 					
 				}
 				
-				$("#search_form_microsite :input").prop("disabled", true);
+				/* $("#search_form_microsite :input").prop("disabled", true); */
 				$('#search_form_microsite').attr('action',actionText);
-			} 
+			 
 		});
 		
 		/*------------Start of SNS auto complete for microsite page----------*/
@@ -90,7 +90,7 @@
 
 	<form id="search_form_microsite" name="search_form_microsite" method="get" action="${searchUrl}">
 
-
+	 <button id="micrositesearchButton"></button>
 				
 		<input type="hidden" name="mSellerID" 
 				value="${mSellerID}" /> 
@@ -112,10 +112,10 @@
 		</div> 
 --%>
 
-		<span> <ycommerce:testId code="header_search_button">
+		<%-- <span> <ycommerce:testId code="header_search_button">
 				<button></button>
 			</ycommerce:testId>
-		</span>
+		</span> --%>
 
 		<!-- search category List -->
 
