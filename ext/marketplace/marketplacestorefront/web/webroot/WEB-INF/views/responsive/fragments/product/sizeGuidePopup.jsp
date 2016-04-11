@@ -280,7 +280,7 @@
 					</c:when>
 					<c:when test="${product.rootCategory=='Footwear'}">
 						<%-- <img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" /> --%>
-						<img src="${imageURL}" alt="sizeGuideImage" />
+						<img src="${imageURL}" alt="sizeGuideImage" style="max-width:65%;" />
 					</c:when>
 				</c:choose>
 			</div>

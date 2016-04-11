@@ -2752,29 +2752,31 @@ function checkPincodeServiceability(buttonType)
  				{
  				alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  	 			$("#isPincodeServicableId").val('N');
- 	 			reloadpage(selectedPincode);
+ 	 			reloadpage(selectedPincode,buttonType);
  				}
  			else
  				{
  					populatePincodeDeliveryMode(response,buttonType);
- 					reloadpage(selectedPincode);
+ 					reloadpage(selectedPincode,buttonType);
  				}
  			
  		},
  		error : function(resp) {
  			alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
  			$("#isPincodeServicableId").val('N');
- 			reloadpage(selectedPincode);
+ 			reloadpage(selectedPincode,buttonType);
  		}
  	});
 	
    }
 }
 
-function reloadpage(selectedPincode) {
+function reloadpage(selectedPincode,buttonType) {
 	if ($('#giftYourselfProducts').html().trim().length > 0 && selectedPincode!=null && selectedPincode != undefined && selectedPincode!="") 
-	{
-		window.location.reload();
+	{		
+		if(buttonType != 'typeCheckout') {
+		  window.location.reload(); 
+		}
 		
 	}
 }
