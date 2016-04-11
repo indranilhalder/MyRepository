@@ -20,7 +20,7 @@ public class ExtRegisterForm extends RegisterForm
 {
 
 	private String affiliateId;
-	private boolean check_MyRewards;
+	private boolean checkMyRewards;
 
 	/**
 	 * @return the affiliateId
@@ -42,18 +42,18 @@ public class ExtRegisterForm extends RegisterForm
 	/**
 	 * @return the check_MyRewards
 	 */
-	public boolean isCheck_MyRewards()
+	public boolean isCheckMyRewards()
 	{
-		return check_MyRewards;
+		return checkMyRewards;
 	}
 
 	/**
-	 * @param check_MyRewards
+	 * @param checkMyRewards
 	 *           the check_MyRewards to set
 	 */
-	public void setCheck_MyRewards(final boolean check_MyRewards)
+	public void setCheckMyRewards(final boolean checkMyRewards)
 	{
-		this.check_MyRewards = check_MyRewards;
+		this.checkMyRewards = checkMyRewards;
 	}
 
 
