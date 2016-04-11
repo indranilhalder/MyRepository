@@ -13,5 +13,5 @@ import de.hybris.platform.integration.oms.OrderWrapper;
  */
 public interface CustomOmsSyncAdapter<Source extends OrderWrapper, Target extends ItemModel>
 {
-	public abstract Target update(Source paramSource, ItemModel paramItemModel);
+	Target update(Source paramSource, ItemModel paramItemModel);
 }

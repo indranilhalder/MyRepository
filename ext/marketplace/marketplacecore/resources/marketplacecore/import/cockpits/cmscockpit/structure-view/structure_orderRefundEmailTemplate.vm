@@ -30,17 +30,22 @@
 			</tr>
 			
 			<tr>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="Tip" />
-				</td>
+				
 				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Description" />
 				</td>
 			</tr>
 			
 			<tr>
+				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="Tip" />
+				</td>
+				
+			</tr>
+			
+			<tr>
 				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="RefundBanner" />
+					<cockpit code="AppDownloadUrl" />
 				</td>
 			</tr>
 			<tr>
@@ -51,7 +56,9 @@
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
 					<cockpit code="fb" />
-					<cockpit code="gplus" />
+					<cockpit code="tweet" />
+					<cockpit code="youtube" />
+					<cockpit code="insta" />
 				</td>
 			</tr>
 		</tbody>
