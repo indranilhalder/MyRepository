@@ -1699,7 +1699,7 @@ public class ProductPageController extends AbstractPageController
 	 * @param productCode
 	 * @return requestData
 	 */
-	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode)
+/*	private List<PincodeServiceData> populatePinCodeServiceData(final String productCode)
 	{
 
 		final List<PincodeServiceData> requestData = new ArrayList<>();
@@ -1770,7 +1770,7 @@ public class ProductPageController extends AbstractPageController
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return requestData;
-	}
+	}*/
 
 	/**
 	 * This method is responsible for fetching winning seller USSID, price and other seller count It will be invoked by
