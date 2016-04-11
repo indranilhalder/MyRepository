@@ -92,7 +92,8 @@
 	}
 	//change serp product details based on filters
 function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
-	console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);
+	console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);	
+	console.log("original prices for "+product+$("#price_"+product).text()+$("#priceEqual_"+product).text());
 	if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
 	if(serpSizeList!=''){
 	var sizeMatched = checkSizeCount(list, serpSizeList);
