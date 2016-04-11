@@ -54,7 +54,8 @@ function navigateToPage(queryString,textString)
 		<form class="brandSearchForm" action="#" id="brandNoFormSubmit">
 		
 		<button></button>
-				<input class="brandSearchTxt" type="text" placeholder="Enter your brand">
+		        <spring:theme code="text.brandSearch.placeholder" var="brandSearchPlaceholder" />
+				<input class="brandSearchTxt" type="text" placeholder="${brandSearchPlaceholder}">
 			</form>
 			
 		<input type="checkbox" id="brandSelectAll" data-url="">
