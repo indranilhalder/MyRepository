@@ -372,12 +372,12 @@
 		var mrpPriceValue = '${product.displayMrp}';
 		var sizeStockLevel = '${product.displayStock}';
 		var productPromotion =  '${product.displayPromotion}';
-        console.log("#####"+productPromotion);
+      //  console.log("#####"+productPromotion);
 		//find Onsale product based on filters
-	    findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
+	   // findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
 		//modify serp details based on filters
-		modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel);
-	//	modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
+	//	modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel);
+		modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,sizeStockLevel,productPromotion);
 	});
 </script>
 <style>
