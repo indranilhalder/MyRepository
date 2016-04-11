@@ -156,7 +156,7 @@ public class MplBuyBoxUtility
 			}
 		}
 		final List<Map.Entry<BuyBoxModel, Double>> priceList = new LinkedList<Map.Entry<BuyBoxModel, Double>>(
-				priceValueMap.entrySet());
+				finalpriceValueMap.entrySet());
 		Collections.sort(priceList, new Comparator<Map.Entry<BuyBoxModel, Double>>()
 		{
 			@Override
