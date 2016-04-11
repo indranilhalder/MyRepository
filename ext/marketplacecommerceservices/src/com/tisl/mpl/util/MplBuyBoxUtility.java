@@ -150,14 +150,13 @@ public class MplBuyBoxUtility
 		{
 			for (final PcmProductVariantModel productVariant : sortedVariantsList)
 			{
-				//final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productCode);
 				final List<BuyBoxModel> buyBoxModelList = buyBoxService.getBuyboxPricesForSearch(productVariant.getCode());
 				priceValueMap = getLeastPriceModel(buyBoxModelList, priceValueMap);
 				finalpriceValueMap.putAll(priceValueMap);
 			}
 		}
 		final List<Map.Entry<BuyBoxModel, Double>> priceList = new LinkedList<Map.Entry<BuyBoxModel, Double>>(
-				priceValueMap.entrySet());
+				finalpriceValueMap.entrySet());
 		Collections.sort(priceList, new Comparator<Map.Entry<BuyBoxModel, Double>>()
 		{
 			@Override
@@ -181,25 +180,20 @@ public class MplBuyBoxUtility
 	private Map<BuyBoxModel, Double> getLeastPriceModel(final List<BuyBoxModel> buyBoxModelList,
 			final Map<BuyBoxModel, Double> priceValueMap)
 	{
-		//final List<Double> priceValues = new ArrayList<Double>();
-		//	BuyBoxModel buyBoxModel = null;
-		//final Map<BuyBoxModel, Double> priceValueMap = new HashMap<BuyBoxModel, Double>();
+
 		for (final BuyBoxModel buyBox : buyBoxModelList)
 		{
-			if (buyBox.getSpecialPrice().doubleValue() > 0.0)
+			if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
 			{
 				priceValueMap.put(buyBox, buyBox.getSpecialPrice());
-				//	priceValues.add(buyBox.getSpecialPrice());
 			}
-			else if (buyBox.getPrice().doubleValue() > 0.0)
+			else if (null != buyBox.getPrice() && buyBox.getPrice().doubleValue() > 0.0)
 			{
 				priceValueMap.put(buyBox, buyBox.getPrice());
-				//priceValues.add(buyBox.getPrice());
 			}
 			else
 			{
 				priceValueMap.put(buyBox, buyBox.getMrp());
-				//	priceValues.add(buyBox.getMrp());
 			}
 		}
 		return priceValueMap;
@@ -222,11 +216,9 @@ public class MplBuyBoxUtility
 			final String variantColor = getVariantColour(pcmVariantProductModel, pcmVariantProductModel.getFeatures());
 			if (selectedColor.equalsIgnoreCase(variantColor))
 			{
-
-				pcmProductVariantModelList.add(pcmVariantProductModel);
-
 				if (null != pcmVariantProductModel.getSize())
 				{
+					pcmProductVariantModelList.add(pcmVariantProductModel);
 					isSizeVariantPresent = true;
 				}
 				if (null != pcmVariantProductModel.getCapacity())
@@ -453,8 +445,11 @@ public class MplBuyBoxUtility
 								.equalsIgnoreCase(COLORAPPAREL))
 
 				{
-					variantColor = productFeature.getValue().toString();
-					break;
+					if (null != productFeature.getValue())
+					{
+						variantColor = productFeature.getValue().toString();
+						break;
+					}
 				}
 
 			}
@@ -466,8 +461,11 @@ public class MplBuyBoxUtility
 								.equalsIgnoreCase(COLORELECTRONICS))
 
 				{
-					variantColor = productFeature.getValue().toString();
-					break;
+					if (null != productFeature.getValue())
+					{
+						variantColor = productFeature.getValue().toString();
+						break;
+					}
 				}
 
 			}
@@ -479,8 +477,11 @@ public class MplBuyBoxUtility
 								.equalsIgnoreCase(COLORFAMILYFOOTWEAR))
 
 				{
-					variantColor = productFeature.getValue().toString();
-					break;
+					if (null != productFeature.getValue())
+					{
+						variantColor = productFeature.getValue().toString();
+						break;
+					}
 
 				}
 			}
