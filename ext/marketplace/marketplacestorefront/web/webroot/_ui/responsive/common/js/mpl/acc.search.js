@@ -92,7 +92,7 @@
 	}
 	//change serp product details based on filters
 function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
-	console.log("in search js..."+product+mrpPriceValue);
+	console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);
 	if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
 	if(serpSizeList!=''){
 	var sizeMatched = checkSizeCount(list, serpSizeList);
@@ -128,6 +128,7 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 			}
 		}
 	}
+	}
 	if (sizeMatched == "") {
 		priceValueList.sort(function(a, b) {
 			return a - b
@@ -140,7 +141,7 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 	 console.log("nminPrice" + minPriceValue + "minsize"
 			+ minPriceSize); 
 	//updating product minimum price
-     $("#price_"+product).html("");
+    $("#price_"+product).html("");
 	$("#price_"+product).html("&#8377;"+minPriceValue);  
 	//set product mrp
 	updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product);
@@ -156,6 +157,7 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 	var arr = new Array();
 	arr = url2.split(',');
 	for (i = 0; i < arr.length; i++) {
+		if(arr[i]!=""){
 		var x = JSON.parse(arr[i]);
 		if (sizeMatched != "") {
 			if (x[sizeMatched] != undefined) {
@@ -201,7 +203,7 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 				}
 			}
 		}
-	}
+	}//
 	}
 	}
 }
@@ -320,7 +322,7 @@ function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,m
 							$("#priceEqual_"+product).html("&#8377;"+minPriceValue);
 						}else if(mrpPriceData[minPriceSize]>minPriceValue){
 							$("#mrpprice_"+product).html("");
-							$("#mrpprice_"+product).html("&#8377;"+(mrpPriceData[sizeMatched])); 
+							$("#mrpprice_"+product).html("&#8377;"+(mrpPriceData[minPriceSize])); 
 							$("#price_"+product).html("");
 							$("#price_"+product).html("&#8377;"+minPriceValue);
 						}
