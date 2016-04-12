@@ -52,8 +52,7 @@ ACC.quickview = {
 
 
 function quickviewGallery() {
-	//$(document).ready(function(){
-	$(window).load(function(){
+	$(document).ready(function(){
 		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
 		var thumbnailImageHeight = (mainImageHeight / 5);
 		$(".imageList ul li img").css("height", thumbnailImageHeight);
