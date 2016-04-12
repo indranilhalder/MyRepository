@@ -341,7 +341,7 @@
 						<form:form action="update-nickName" method="post" commandName="mplCustomerProfileForm">
 						<fieldset>
 							<div class="full">
-								<label><spring:theme text="Nick Name" /></label>
+								<%-- <label><spring:theme text="Nick Name" /></label> --%>
 										<form:input path="nickName" id="profilenickName"
 										onkeyup="kpressnn()"	 maxlength="40" />
 								<div class="errorMessage"><div id="errnn"></div></div>

@@ -261,7 +261,8 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			{
 				if (enumerationValueModel != null)
 				{
-					frequency.add(enumerationValueModel.getCode());
+					//frequency.add(enumerationValueModel.getCode());
+					frequency.add(enumerationValueModel.getName());
 				}
 			}
 			return frequency;
@@ -271,6 +272,7 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
 
 	/**
 	 * @description method is called to get the type of Feedback

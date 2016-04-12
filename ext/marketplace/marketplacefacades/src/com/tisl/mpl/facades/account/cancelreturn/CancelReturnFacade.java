@@ -61,7 +61,8 @@ public interface CancelReturnFacade
 	 * @param order
 	 * @param orderLineId
 	 * @return
+	 * @throws Exception
 	 */
-	public List<OrderEntryData> associatedEntriesData(OrderModel order, String orderLineId);
+	public List<OrderEntryData> associatedEntriesData(OrderModel order, String orderLineId) throws Exception;
 
 }
