@@ -27471,6 +27471,12 @@ body .right-account .order-details .deliveryTrack .dot-arrow{
     right: 0;
     margin: auto;
 }
+body .account .right-account .order-history.order-details li.item .status .message.active_viewMore{
+	z-index : 102;
+}
+body .right-account .order-details .deliveryTrack .dot-arrow.active_arrow{
+	z-index : 105;
+}
 
 body .account .right-account .order-history.order-details li.item .status .message:before{
 	content:'';
