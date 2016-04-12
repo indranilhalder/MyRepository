@@ -1149,6 +1149,7 @@ function displayDeliveryDetails(sellerName) {
 				}
 				if (deliveryModes.indexOf("HD") == -1) {
 					$("#home").hide();
+					$(".hdclass").hide();
 				} else {
 					var start=parseInt($("#homeStartId").val())+leadTime;
 					var end=parseInt($("#homeEndId").val())+leadTime;
@@ -1158,6 +1159,7 @@ function displayDeliveryDetails(sellerName) {
 				
 				if (deliveryModes.indexOf("ED") == -1) {
 					$("#express").hide();
+					$(".edclass").hide();
 				} else {
 					var start=$("#expressStartId").val();
 					var end=$("#expressEndId").val();
