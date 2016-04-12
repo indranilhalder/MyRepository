@@ -20,6 +20,7 @@
 		 	$("#invalidEmail").show();
 		 	return false;
 		 } else {
+			 $("#shareFeedback").hide();
 			 return true;
 		 }
 		 
@@ -42,6 +43,7 @@
 		 if (x.value.trim().length<=0)  
 		 { 	
 		 	$("#invalidFeedback").show();
+		 	$("#shareFeedback").show();
 		 	return false;
 		 } else {
 			 return true;
@@ -424,11 +426,12 @@ $(document).ready(function(){
 			 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI");
 			 $(window).on('load resize',function(){	
 			 paymentModes.on("click",function(e) {
-				 if($(window).width()<651){
+				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
+				/*if($(window).width()<651){
 				 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);
 				 $(this).parents('ul.nav').addClass('hide-menu');
 				 $(this).parents('.left-block').find('h1.payment-options').addClass('hide-menu');
-				 }
+				 }*/
 				 if(paymentModes.parent().hasClass("active")){
 					 paymentModes.parent().removeClass("active");
 				 }
@@ -436,11 +439,11 @@ $(document).ready(function(){
 				 $('ul.accepted-cards li').removeClass('active-card');
 			 });
 			
-			 $('.cart.wrapper .left-block .payments.tab-view .tabs li.change-payment').click(function(){
+			/* $('.cart.wrapper .left-block .payments.tab-view .tabs li.change-payment').click(function(){
 				 $(this).parent().hide(200);
 				 $(this).parent().siblings('ul.nav').removeClass('hide-menu');
 				 $(this).parents('.left-block').find('h1.payment-options').removeClass('hide-menu');
-			 });
+			 });*/
 			 });
 			 if($("#savedCard").css("display") === "block") {
 				 $(".newCardPayment").css("display","none");
@@ -1145,10 +1148,10 @@ $(document).ready(function(){
 	$(window).on("load",function(e){
 		$('.sort-refine-bar.mobile').append('<span id="hidden-option-width" style="display: none;"></span>')
 		$(".sort-refine-bar select.black-arrow-left").css("display","block");
-		$(".sort-refine-bar select.black-arrow-left").css("background-position-x","30%");
+		/*$(".sort-refine-bar select.black-arrow-left").css("background-position-x","30%");*/
 		$(".sort-refine-bar select").change(function(){
 			 $("#hidden-option-width").html($(this).find('option:selected').text());
-			 var option_width=$("#hidden-option-width").width() + 30;
+			 var option_width=$("#hidden-option-width").width() + 22;
 			$(".sort-refine-bar select.black-arrow-left").css("background-position-x",option_width);
 		});
 	});
@@ -1201,9 +1204,20 @@ $(document).ready(function(){
 		$(".customer-service .left-nav-footer-mobile").append("<option value="+link+" data-href="+link+">"+title+"</option>");
 		}
 	});
+	if($("#sameAsShipping").is(":checked")){
+		$("#sameAsShipping").prev('h2').hide();
+	}
+	else{
+		$("#sameAsShipping").prev('h2').show();
+	}
 	$("#sameAsShipping").click(function(){
 		if($("#sameAsShipping").is(":checked")){
-			$("#billingAddress fieldset .error-message").html("");}
+			$("#billingAddress fieldset .error-message").html("");
+			$(this).prev('h2').hide();
+		}
+		else{
+			$(this).prev('h2').show();
+		}
 		});
 
 	$(window).on("load resize", function() {
@@ -1295,8 +1309,47 @@ $(document).ready(function(){
 		if($('.promo-block .promo-img').children().length == 0){
 			$('.promo-block .pdp-promoDesc').css({'float':'none','margin':'0px auto'});
 		}
-
-		
+					
+			$(document).on("click",".mini-cart-close",function(){
+				$(this).parents('.mini-transient-bag').remove();
+			});
+			
+			/*$(document).on("click","#addToCartButton, .serp-addtobag.js-add-to-cart",function(){
+				if($(window).width() > 773) {
+					$("#cboxClose").click();
+				 $('html,body').animate({
+				            scrollTop: 0
+				        }, 500);
+				 
+				} 
+				
+				});*/
+		/*	$('.tata-rewards').popover({
+			    html: 'true',
+			    placement: 'top',
+			    trigger: 'hover',
+			    content: $(".reward-popover").html()
+			});*/
+			
+			$('.tata-rewards').popover({
+				html: 'true',
+			    placement: 'top',
+			    trigger: 'manual',
+			    content: $(".reward-popover").html()
+		    }).on("mouseenter", function () {
+		        var _this = this;
+		        $(this).popover("show");
+		        $(this).siblings(".popover").on("mouseleave", function () {
+		            $(_this).popover('hide');
+		        });
+		    }).on("mouseleave", function () {
+		        var _this = this;
+		        setTimeout(function () {
+		            if (!$(".popover:hover").length) {
+		                $(_this).popover("hide")
+		            }
+		        }, 100);
+		    });
 		$(document).on("click",'.select-size',function() {
 			$(this).toggleClass('active');
 		});
@@ -1314,13 +1367,12 @@ $(document).ready(function(){
 		});
 		
 		$(window).on("load resize", function() {
-			 			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
-							var footer_height=$('footer').height() + 20 + 'px';
-			 				$(".body-Content").css('padding-bottom',footer_height);
-			 			}
-			 			else{
-			 				$(".body-Content").css('padding-bottom','0px');
-						}
-					});
-		
+			if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+				var footer_height=$('footer').height() + 20 + 'px';
+				$(".body-Content").css('padding-bottom',footer_height);
+			}
+			else{
+				$(".body-Content").css('padding-bottom','0px');
+			}
+		});		
 });

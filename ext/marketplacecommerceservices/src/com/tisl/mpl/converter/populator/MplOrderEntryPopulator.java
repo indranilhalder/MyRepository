@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
@@ -228,6 +229,14 @@ public class MplOrderEntryPopulator implements Populator<AbstractOrderEntryModel
 			{
 				target.setQualifyingCount(source.getQualifyingCount());
 			}
+
+			//Added
+
+			if (StringUtils.isNotEmpty(source.getProductPromoCode()))
+			{
+				target.setProductPromoCode(source.getProductPromoCode());
+			}
+
 
 
 		}

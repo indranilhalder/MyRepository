@@ -21,7 +21,7 @@
 	<div class="checkout-shipping-items">
 		<h1>
 			
-			<spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption" text="Choose Your Delivery Options"></spring:theme></br>
+			<spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption"></spring:theme></br>
 			
 			 
 		</h1>

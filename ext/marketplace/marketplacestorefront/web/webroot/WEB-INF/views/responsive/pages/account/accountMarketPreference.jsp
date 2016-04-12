@@ -28,21 +28,21 @@
 	<template:page pageTitle="${pageTitle}">
 		<c:url var="mainUrl" value="/my-account/marketplace-preference"></c:url>
 		<c:if test="${not empty result && result eq 'success'}">
-			<div class="alert alert-info">
+			<div class="alert alert-info alert-dismissible">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b>SUCCESS: </b></strong><spring:theme code="text.account.preference.save.success" text="Your preferences has been updated"/>
+	    		<spring:theme code="text.account.preference.save.success" text="Your preferences has been updated"/>
   			</div>
 		</c:if>
 		<c:if test="${not empty result && result eq 'unsubscribed'}">
-			<div class="alert alert-info">
+			<div class="alert alert-danger">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b></b></strong><spring:theme code="text.account.preference.save.unsubscribed" text="Aww snap, you're leaving. Is it something we said?"/>
+	    		<spring:theme code="text.account.preference.save.unsubscribed" text="Aww snap, you're leaving. Is it something we said?"/>
   			</div>
 		</c:if>
 		<c:if test="${not empty result && result eq 'failure'}">
 			<div class="alert alert-danger">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b>ERROR: </b></strong><spring:theme code="text.account.preference.save.failure" text="Your preferences has not been updated"/>
+	    		<spring:theme code="text.account.preference.save.failure" text="Your preferences has not been updated"/>
   			</div>
 		</c:if>
 		
