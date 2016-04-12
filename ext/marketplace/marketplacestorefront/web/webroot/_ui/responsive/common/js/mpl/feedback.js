@@ -187,7 +187,7 @@ $(document).ready(function(){
 	/*----start of Sticky Bag --------*/
 		 
 			 var x = $(".js-mini-cart-count").text();
-			   $(".js-mini-cart-count-hover").text($(".js-mini-cart-count").text());
+			   $(".js-mini-cart-count-hover").text(parseInt($(".js-mini-cart-count").text()));
 			   
 				  
 			   $(window).scroll(function () {
