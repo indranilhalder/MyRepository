@@ -151,7 +151,7 @@ ACC.storefinder = {
 		          var infoString="<div>"+"<p>" +infoMsg["displayName"]+ "</p><p>Distance Appx."+infoMsg["formattedDistance"]+"</p> <p>"+infoMsg["line1"]
 					+" "+infoMsg["line2"]+infoMsg["postalCode"]+"</p>";
 		          if(infoMsg["mplOpeningTime"] && infoMsg["mplClosingTime"]){
-		        	  infoString=infoString+'<p>PiQ UP HRS : '+ infoMsg["mplOpeningTime"]+'-'+infoMsg["mplClosingTime"]+"</p>";
+		        	  infoString=infoString+'<p>PiQ up hrs : '+ infoMsg["mplOpeningTime"]+'-'+infoMsg["mplClosingTime"]+"</p>";
 		          }
 		         // console.log(infoMsg["mplWorkingDays"]);
 		          if(infoMsg["mplWorkingDays"]){
