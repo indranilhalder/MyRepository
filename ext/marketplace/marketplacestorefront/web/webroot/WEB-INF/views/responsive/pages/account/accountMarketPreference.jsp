@@ -290,6 +290,7 @@
 	</template:page>
 </div>
 
+
 <%-- <script type="text/javascript" src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 <template:javaScriptVariables />
 <script type="text/javascript" src="${commonResourcePath}/js/acc.accountaddress.js"></script>
