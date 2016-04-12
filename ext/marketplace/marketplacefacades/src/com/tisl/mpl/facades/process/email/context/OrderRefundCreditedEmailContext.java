@@ -52,13 +52,12 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 		final OrderModel orderModel = orderProcessModel.getOrder();
 		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
 		final AddressModel address = orderModel.getDeliveryAddress();
-		double totalAmountValue = 0;
-		for (final AbstractOrderModel subOrder : orderProcessModel.getOrder().getChildOrders())
-		{
-			LOG.debug("subOrder ID " + subOrder.getCode());
-			for (final AbstractOrderEntryModel entryModel : subOrder.getEntries())
+		double totalAmountValue = 0.0;
+		
+			LOG.debug("Refund Order Id  " + orderProcessModel.getOrder().getCode());
+			for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
 			{
-				LOG.debug("entryModel :" + entryModel.getOrderLineId());
+				LOG.debug("Refund Entries transactionId :" + entryModel.getOrderLineId());
 				final RefundEntryModel refundEntry = new RefundEntryModel();
 				refundEntry.setOrderEntry(entryModel);
 				if (!CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntry)))
@@ -77,7 +76,6 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 				}
 			}
 
-		}
 		LOG.debug("Amount refunded ======" + totalAmountValue);
 		put(REFUND_ENTRY, refundEntryModel);
 		put(TOTAL, String.valueOf(totalAmountValue));
