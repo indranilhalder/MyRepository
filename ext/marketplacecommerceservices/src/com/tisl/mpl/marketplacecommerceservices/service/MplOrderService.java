@@ -6,6 +6,7 @@ package com.tisl.mpl.marketplacecommerceservices.service;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -87,5 +88,16 @@ public interface MplOrderService
 	 */
 	SearchPageData<OrderModel> getPagedFilteredParentOrderHistory(CustomerModel paramCustomerModel,
 			BaseStoreModel paramBaseStoreModel, PageableData paramPageableData, Date fromDate);
+
+	/*
+	 * @Desc : used to check if BuyAandBGetC is applied on order entry or not TISPRO-249
+	 *
+	 * @param orderEntryModel
+	 *
+	 * @return boolean
+	 *
+	 * @throws Exception
+	 */
+	boolean checkIfBuyABGetCApplied(final AbstractOrderEntryModel orderEntryModel) throws Exception;
 
 }

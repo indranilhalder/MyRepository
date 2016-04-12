@@ -11,7 +11,7 @@
 
 <div id="ReviewSecion" class="reviews" >
 <div class="header ">
-      <h2>Reviews</h2>
+      <h2>Your Rating</h2>
 </div>
 <div class="overview">
 <div class="tabs-block">

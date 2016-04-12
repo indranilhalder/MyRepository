@@ -133,6 +133,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private MplCheckoutFacade mplCheckoutFacade;
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
 
+
 	protected static final Logger LOG = Logger.getLogger(CancelReturnFacadeImpl.class);
 
 
@@ -818,7 +819,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 *
 	 */
 	private MplCancelOrderRequest populateOrderLineData(final OrderEntryData subOrderEntry, final String ticketTypeCode,
-			final OrderModel subOrderModel, final String reasonCode)
+			final OrderModel subOrderModel, final String reasonCode) throws Exception
 	{
 
 		final MplCancelOrderRequest orderLineRequest = new MplCancelOrderRequest();
@@ -864,7 +865,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @throws OrderCancelException
 	 */
 	private MplOrderCancelRequest buildCancelRequest(final String reasonCode, final OrderModel subOrderModel,
-			final String transactionId) throws OrderCancelException
+			final String transactionId) throws OrderCancelException, Exception
 	{
 
 		final List orderCancelEntries = new ArrayList();
@@ -1193,9 +1194,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	/*
 	 * @desc Saving order history for cancellation as OMS is not sending
-	 * 
+	 *
 	 * @param subOrderData
-	 * 
+	 *
 	 * @param subOrderModel
 	 */
 	private void createHistoryEntry(final AbstractOrderEntryModel orderEntryModel, final OrderModel orderModel,
@@ -1216,16 +1217,20 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @return List<OrderEntryData>
 	 */
 	private List<AbstractOrderEntryModel> associatedEntries(final OrderModel subOrderDetails, final String transactionId)
+			throws Exception
 	{
 		final List<AbstractOrderEntryModel> orderEntries = new ArrayList<>();
 
-		//final String associatedItemUssid = "";
-		//final String productPromoCode = "";
 		//TISSIT-1720
 		final List<String> parentTransactionIdList = new ArrayList<String>();
 		for (final AbstractOrderEntryModel subEntry : subOrderDetails.getEntries())
 		{
-			final String parentTransactionId = subEntry.getParentTransactionID();
+			//Start TISPRO-249
+			final String parentTransactionId = ((subEntry.getIsBOGOapplied().booleanValue() || subEntry.getGiveAway().booleanValue()) && mplOrderService
+					.checkIfBuyABGetCApplied(subEntry)) ? subEntry.getBuyABGetcParentTransactionId() : subEntry
+					.getParentTransactionID();
+			//End TISPRO-249
+
 			if (StringUtils.isNotEmpty(parentTransactionId)
 					&& (subEntry.getIsBOGOapplied().booleanValue() || subEntry.getGiveAway().booleanValue())
 					&& parentTransactionId.split(",").length > 1 && parentTransactionId.contains(transactionId))
@@ -1262,7 +1267,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		return orderEntries;
 	}
 
+	@Override
 	public List<OrderEntryData> associatedEntriesData(final OrderModel subOrderDetails, final String transactionId)
+			throws Exception
 	{
 		final List<OrderEntryData> entryData = new ArrayList<OrderEntryData>();
 		for (final AbstractOrderEntryModel orderEntry : associatedEntries(subOrderDetails, transactionId))
