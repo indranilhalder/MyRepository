@@ -385,6 +385,8 @@ public class HomePageController extends AbstractPageController
 			{
 				showCaseItemJson.put("bannerUrl", showcaseItem.getBannerUrl());
 			}
+
+			showCaseItemJson.put("icid", showcaseItem.getPk().getLongValueAsString());
 		}
 		catch (final EtailBusinessExceptions e)
 		{
