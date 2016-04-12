@@ -10,7 +10,8 @@
 <div class="right">
 	<div class="newsletter">
 			<h3><spring:theme code="text.newsletter.signup"/></h3>
-			<input type="text" name="email"  id="mailtext"  placeholder="Enter your email" />
+			<spring:theme code="text.newsletter.placeholder" var="newsletterPlaceholder" />
+			<input type="text" name="email"  id="mailtext"  placeholder="${newsletterPlaceholder}" />
 			<button id ="submit" type="submit" onclick="return emailvalidate();"><spring:theme code="footer.submit"/></button>
 			<div>&emsp;</div>
 			<div id="error_message" style="display:block;font-size:12px;"></div>
@@ -26,6 +27,7 @@
 			</c:forEach>
 		</div>
 	</div>
+	
 
 
 <!-- This is used for app download images in footer -->

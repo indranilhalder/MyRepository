@@ -838,7 +838,8 @@ function updatePage(response, widgetMode) {
     	sortHtml += '</ul></div></div>';
  
     var catHtml = '<div class="select-view ">'; 
-    catHtml += '<div class="select-list"><span class="selected hotSelected">'+hotDropdownselected+'</span><ul id="ia_category_select" style="width: auto;">';
+  //for release 2 changes in home-page headers-All Departments
+    catHtml += '<div class="select-list"><span class="selected hotSelected">All Departments</span><ul id="ia_category_select" style="width: auto;">';
     for (var i=0; i<categoryFilters.length; i++) {
     	if(i==0){
     		 catHtml += '<li class="category_li" id="allCat">All Department</li>';
@@ -852,10 +853,12 @@ function updatePage(response, widgetMode) {
     		html += '<h1><span style="color: black !important;">Best Sellers</span>';
     	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
     		html += '<h1><span style="color: black !important;">You May Also Need</span>';
+    	}
+    	    	//for release 2 changes in home-page headers-hot now
+    	else if(site_page_type === 'homepage' && widgetElement === 'ia_products_hot'){
+    		html += '<h1><span style="color: black !important;">Best Sellers</span>';
     	}else{
-    		
     		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
-    		
     	}
       
       /*For hot we need a scrolldown bar to select filters*/
@@ -901,7 +904,8 @@ function updatePage(response, widgetMode) {
       });
       if(widgetMode === "hot" && site_page_type == "homepage"){
           html += '</ul></div>';
-          html += '</div></div><a href="http://'+window.location.host+'/store/mpl/en/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">View All Trending Products</a>';
+        //for release 2 changes in home-page headers-view all trending
+          html += '</div></div><a href="http://'+window.location.host+'/store/mpl/en/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
           }
           else{
         	  html += '</ul></div>';
