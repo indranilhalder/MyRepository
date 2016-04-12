@@ -10,10 +10,10 @@
 
 <style>
 .out_of_stock {
-	color: #FE2E2E;
+	color: #ff1c47;
 }
 .dlist_message {
-	color: #FE2E2E;
+	color: #ff1c47;
 }
 .addToCartTitle{
 	display:none;

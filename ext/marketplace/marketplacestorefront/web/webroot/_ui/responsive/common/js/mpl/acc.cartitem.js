@@ -5,7 +5,7 @@ ACC.cartitem = {
 	bindCartItem : function() {
 
 		$(".remove-entry-button").on("click",function() {
-													
+			 localStorage.setItem("removeFromCart_msgFromCart", "Y");								
 					// var entryNumberMSD = $(this).attr('id').split("_");
 					
 					 /* $('#updateCartForm' + entryNumber[1]);

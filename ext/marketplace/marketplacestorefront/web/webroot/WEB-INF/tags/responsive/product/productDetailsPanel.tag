@@ -83,7 +83,6 @@ tr.d0 td {
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h2 class="company">${product.brand.brandname} by <span id="sellerNameId"></span></h2>
 				<h3 class="product-name">${product.productTitle}</h3>
-				
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -123,7 +122,8 @@ tr.d0 td {
 				</cms:pageSlot>
 
 			</div>
-
+			
+			
 			<span id="defaultWishId" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
 			<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
 			<span id="wishlistnotblank" style="display:none"><spring:theme code="wishlist.notblank"/></span>

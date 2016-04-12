@@ -201,7 +201,7 @@
 								</c:forEach>	
 							</ul>
 							<ul class="tabs">
-							<li class="change-payment">Change Payment Method</li>
+							<!-- <li class="change-payment">Change Payment Method</li> -->
 						<ycommerce:testId code="paymentDetailsForm">
 								
 							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${paymentFormMplUrl}" autocomplete="off" method="POST">
@@ -234,21 +234,22 @@
 						
 												<li class="item">
 													<div class="bank-select">
-														<label id="listOfEMiBank"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.listOfEMIBanks"/></label>
-														
+														<%-- <label id="listOfEMiBank"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.listOfEMIBanks"/></label> --%>
+														<p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p>
 														<select id="bankNameForEMI" onchange="getSelectedEMIBank()">
 														</select>
 														
-														<p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p>
+														
 														<span class="error-message" id="emiNoBankError">No Banks available.</span>
 														<span class="error-message" id="emiPromoError"></span>
-														<div id="radioForEMI" class="banks">	
+														<div id="radioForEMI" class="banks">
+														<p class="emi-plan">Select a plan</p>	
 										 					<table id="EMITermTable">
 													 			<th>&nbsp;</th>
-								        						<th><b><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.terms"/></b></th>
-								       							<th><b><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.interestRate"/></b></th>
-								       							<th><b><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.monthlyInstallment"/></b></th>
-								       							<th><b><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.interestPayable"/></b></th>
+								        						<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.terms"/></th>
+								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.interestRate"/></th>
+								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.monthlyInstallment"/></th>
+								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.interestPayable"/></th>
 															</table> 
 															<form:hidden path="selectedTerm" value="select"/>
 														</div>	
@@ -263,24 +264,24 @@
 				<!-- div for COD -->
 								<li id="COD">
 								<ul class="product-block net-bank">
-								<li class="header">
+								<%-- <li class="header">
 								<ul>
 											<li class="paymentHeaderHeight"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.title"/></li>
 										</ul>
-								</li>
+								</li> --%>
 								<li class="cod-container">
 									<div id="otpNUM" >
-										<p><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc"/></p>
+										<p style="color:#a9143c;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc"/></p>
 										<div class="amtPayable"><h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.amtPayable"/>
 										&nbsp;<span id="codAmount"></span></h4>&nbsp;<span id="convChargeMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.convChargeMsg"/></span>
 										</div><br> 
 										<div id="sendOTPNumber" >
 											<input type="hidden" id="codEligible" value="${codEligible}" />
 											<div class="description"><spring:theme code=""/></div>
-											<label name="Enter OTP:" class="cod-mob-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNo"/></label>
+											<label name="Enter OTP" class="cod-mob-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNo"/></label>
 												<input type="text" id="mobilePrefix" name="mobilePrefix" value="+91" disabled="disabled" /><input type="text" id="otpMobileNUMField" name="otpNUM" value="${cellNo}" maxlength="10"/>
 												<div id="mobileNoError" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage"/></div>
-												<p><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage"/></p>
+												<p style="color:#333;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage"/></p>
 											
 											<div id="sendOTPButton">
 													
@@ -293,7 +294,7 @@
 										</div>
 		
 										<div id="enterOTP">
-											<label name="Enter OTP:"><spring:theme code="checkout.multi.paymentMethod.CODPayment.enterOTP" text="Enter OTP:&nbsp;"/>
+											<label name="Enter OTP"><spring:theme code="checkout.multi.paymentMethod.CODPayment.enterOTP" text="Enter OTP:&nbsp;"/>
 												<input type="text" id="otpNUMField" name="otpNUM" onfocus="hideErrorMsg()" autocomplete="off"/>
 											</label>
 										</div>
@@ -315,13 +316,13 @@
 									<div id="wrongOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.wrongOtpValidationMessage"/>
 									</div>
 									
-									<div id="otpSentMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
+									<div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
 									</div>
 									
 									<div id="expiredOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiredOtpValidationMessage"/>
 									</div>
 									
-									<div id="fulfillmentMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.fulfillmentMessage"/>
+									<div id="fulfillmentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.fulfillmentMessage"/>
 									</div>
 									
 									<div id="codItemEligibilityMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codItemEligibilityMessage"/>
@@ -334,13 +335,15 @@
 										
 										<div id="paymentFormButton" class="pay">	
 						<!-- Terms & Conditions Link -->
-								<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-								<button type="button" class="make_payment button btn-block payment-button" onclick="submitForm()" id="paymentButtonId">			
 
+								<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
+								<button type="button" class="make_payment button btn-block payment-button" onclick="submitForm()" id="paymentButtonId">		
 									<div id="submitPaymentFormCODButton">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
 									</div>
 								</button>
+								<p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p>
+									<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 							</div>
 													
 									</li>
@@ -371,10 +374,9 @@
 									<div id="netbankingIssueError" class="error-message">
 										<spring:theme code="checkout.multi.paymentMethod.netbankingIssue.Error"/>
 									</div>
-									<br>
-									
+								
 									<c:if test="${not empty popularBankNames}">
-									<label class="popular-netbanks"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking.popularBanks"/></label>
+									<%-- <label class="popular-netbanks"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking.popularBanks"/></label> --%>
 									<ul>
 									<c:forEach var="bank" items="${popularBankNames}" varStatus="status">
 										
@@ -390,7 +392,7 @@
 								
 									<c:if test="${not empty otherBankNames}">
 									<div class="bank-select">
-										<label><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otherNBBanks"/></label>
+										<%-- <label><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otherNBBanks"/></label> --%>
 										<select name="NBBankCode" id="bankCodeSelection" onchange="deselectRadio()">
 											<option value="select"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.selectBank"/></option>		
 											<c:forEach var="bankMap" items="${otherBankNames}">
@@ -406,13 +408,16 @@
 										<spring:theme code="checkout.multi.paymentMethod.netbanking.Error"/>
 									</div>
 									
-									<p><spring:theme code="text.secure.payment.gateway"/></p>
+									
 								</li>
 									</ul>
 									<!-- Terms & Conditions Link -->
-									<div class="pay top-padding"><p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
+									<div class="pay top-padding">
 										<button type="button" class="make_payment button btn-block payment-button" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-									</p></div>
+										<p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p>
+										<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
+										
+									</div>
 								</li>	
 				<!-- End of Netbanking -->	
 						
@@ -528,8 +533,10 @@
 											<li>	
 		
 				<!-- Terms & Conditions Link -->
-											<div class="pay top-padding saved-card-button"><p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
+											<div class="pay top-padding saved-card-button">
 												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+												<p class="payment-redirect">You will be re-directed to secure payment gateway</p>
+												<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 											</div>
 										
 									</li>
@@ -537,7 +544,7 @@
 							
 								<li id="newCard" class="item new-form active">
 									<form class="juspay_inline_form new-card" id="payment_form" autocomplete="off" >
-										<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterCardDetails"/></h2>
+										<%-- Payment new UI<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterCardDetails"/></h2> --%>
 										<p><spring:theme code="text.we.accept"/></p>
 										<ul class="accepted-cards">
 											<li><span class="visa"><img src="${commonResourcePath}/images/Visa.png"></span></li>
@@ -608,11 +615,12 @@
 						                            </div>
 						                            
 													<div class="controls full cvv">
-														<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a>
+														
 														<%-- <input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>"> --%>
 														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
 						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label>
 						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
+						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelp"/></a>
 						                           		<span class="error-message" id="cvvError"></span> 
 						                            </div>
 												</fieldset>
@@ -680,8 +688,10 @@
 		            		<li>
 				<!-- Terms & Conditions Link -->
 			            		<div class="pay newCardPayment">
-									<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
+									
 									<button type="submit" class="make_payment button btn-block payment-button" id="make_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+									<p class="payment-redirect">You will be re-directed to secure payment gateway</p>
+									<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
 								</div>
 							</li>
 						</ul>					

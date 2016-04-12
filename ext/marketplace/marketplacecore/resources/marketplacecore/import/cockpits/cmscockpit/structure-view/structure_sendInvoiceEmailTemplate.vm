@@ -40,16 +40,13 @@
 				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="InvoiceTip" />
 				</td>
-				<td colspan="3" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="InvoiceDescription" />
-				</td>
-			</tr>	
 			
+			</tr>
 			<tr>
 				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
-					<cockpit code="InvoiceBanner2" />
+					<cockpit code="AppDownloadUrl" />
 				</td>
-			</tr>
+			</tr>	
 			<tr>
 				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="Invoicesmileyimg" />
@@ -58,7 +55,9 @@
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
 					<cockpit code="Invoicefb" />
-					<cockpit code="Invoicegplus" />
+					<cockpit code="tweet" />
+					<cockpit code="youtube" />
+					<cockpit code="insta" />
 				</td>
 			</tr>
 		</tbody>

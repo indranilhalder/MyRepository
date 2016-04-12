@@ -156,7 +156,7 @@
 	</template:page>
 	<style>
 	.error{
-		color: red;
+		color: #ff1c47;
 	}
 	.nextButton {
     background-color: #a9143c;

@@ -149,7 +149,9 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;NavigationBar;;;navigation
 ;MiddleContent;;CMSParagraphComponent
 ;BottomContent;;;wide
-;SideContent;;;narrow
+#;SideContent;;;narrow
+#### for new 404 page
+;SideContent;;CMSImageComponent;;
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
@@ -1456,7 +1458,7 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;update-email;Update Email Page;AccountPageTemplate;update-email
 ;;wishlist;Wishlist Page;AccountPageTemplate;wishlist
 ;;nonBusinessErrorFound;Non Business Error Found Page;ErrorPageTemplate;nonBusinessErrorFound
-;;businessErrorFound;Non Business Error Found Page;ErrorPageTemplate;businessErrorFound
+;;businessErrorFound;Business Error Found Page;ErrorPageTemplate;businessErrorFound
 ;;oauth2callback;O Auth2 Call back Page;AccountPageTemplate;oauth2callback
 ;;oauth2callbackInsta;O Auth2 Insta Call back Page;AccountPageTemplate;oauth2callbackInsta
 ;;trackOrder;track Order Page;LandingPage2Template;trackOrder
@@ -1516,6 +1518,14 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;aboutus;About Us;ContentPage1Template;/aboutus
+
+##### New page template
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;mytatarewards;My Tata Rewards;ContentPage1Template;/mytatarewards
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;tncmytatarewards;Tnc My Tata Rewards;ContentPage1Template;/tncmytatarewards
 
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']

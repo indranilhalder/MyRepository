@@ -14,6 +14,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+
 import de.hybris.platform.acceleratorfacades.flow.impl.SessionOverrideCheckoutFlowFacade;
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
@@ -189,11 +190,15 @@ public class CartPageController extends AbstractPageController
 			if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid()))
 			{
 				final CartModel serviceCart = getCartService().getSessionCart();
+
+				setExpressCheckout(serviceCart);
+
 				if (!serviceCart.getChannel().equals(SalesApplication.WEB))
 				{
 					serviceCart.setChannel(SalesApplication.WEB);
-					getModelService().save(serviceCart);
+					modelService.save(serviceCart);
 				}
+
 
 				//TISEE-3676 & TISEE-4013
 				final boolean deListedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart);
@@ -269,6 +274,20 @@ public class CartPageController extends AbstractPageController
 	}
 
 	/**
+	 * @param serviceCart
+	 */
+	private void setExpressCheckout(final CartModel serviceCart)
+	{
+		serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE);
+		if (serviceCart.getDeliveryAddress() != null)
+		{
+			serviceCart.setDeliveryAddress(null);
+			modelService.save(serviceCart);
+		}
+
+	}
+
+	/**
 	 *
 	 * @param cartDataOld
 	 * @param cartDataLatest
@@ -316,7 +335,6 @@ public class CartPageController extends AbstractPageController
 									+ entryOld.getTotalPrice().getValue());
 							priceModifiedMssg.put(entryLatest.getEntryNumber().toString(), "Sorry! The price of this item has changed.");
 						}
-
 						final double oldPromoValue = (entryOld.getQuantity().doubleValue() * Double.parseDouble(entryOld.getBasePrice()
 								.getValue().toString()))
 								- Double.parseDouble(entryOld.getTotalPrice().getValue().toString());
@@ -430,7 +448,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -470,6 +488,7 @@ public class CartPageController extends AbstractPageController
 				// Override the Checkout PCI setting in the session
 				if (checkoutPci != null && StringUtils.isNotBlank(checkoutPci.getCode()))
 				{
+					//SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
 					SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
 				}
 				// Redirect to the start of the checkout flow to begin the checkout process
@@ -685,10 +704,6 @@ public class CartPageController extends AbstractPageController
 								ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
 								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
 								ProductOption.DELIVERY_MODE_AVAILABILITY));
-						if (!entryModel.getSizeSelected().booleanValue())
-						{
-							productData.setSize(StringUtils.EMPTY);
-						}
 						productData = wishlistFacade.getBuyBoxPrice(entryModel.getUssid(), productData);
 
 						final SellerInformationModel sellerInfoForWishlist = mplSellerInformationService.getSellerDetail(entryModel
@@ -1099,7 +1114,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1154,7 +1169,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
