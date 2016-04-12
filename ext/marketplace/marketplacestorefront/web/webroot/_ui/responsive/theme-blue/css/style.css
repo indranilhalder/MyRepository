@@ -7871,7 +7871,7 @@ div.wishlist-nav ul.options li {
   div.wishlist-nav ul.options li a {
     font-weight: 600;
     font-size: 14px;
-    text-transform: uppercase; }
+    text-transform: none; }
     div.wishlist-nav ul.options li a:after {
       content: "";
       color: #000;
