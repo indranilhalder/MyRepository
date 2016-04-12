@@ -223,8 +223,7 @@
 						</fieldset>
 						<fieldset class="frequent">
 							<p>
-								<spring:theme code="text.marketplacePreferences.mailfrequency"
-									text="How often would you like to hear from us?" />
+								<spring:theme code="text.marketplacePreferences.mailfrequency" />
 							</p>
 							<div class="freq">
 								<c:forEach items="${frequencyList}" var="frequency" varStatus="status">

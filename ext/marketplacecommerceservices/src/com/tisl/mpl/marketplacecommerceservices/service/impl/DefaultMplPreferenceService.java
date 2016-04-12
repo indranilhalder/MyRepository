@@ -261,7 +261,8 @@ public class DefaultMplPreferenceService implements MplPreferenceService
 			{
 				if (enumerationValueModel != null)
 				{
-					frequency.add(enumerationValueModel.getCode());
+					//frequency.add(enumerationValueModel.getCode());
+					frequency.add(enumerationValueModel.getName());
 				}
 			}
 			return frequency;
