@@ -120,6 +120,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		model.addAttribute("searchCode", searchCode);
 		model.addAttribute("isCategoryPage", Boolean.TRUE);
+		model.addAttribute("searchQueryValue", searchQuery);
 		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 		//Set the drop down text if the attribute is not empty or null
 		if (dropDownText != null && !dropDownText.isEmpty())
