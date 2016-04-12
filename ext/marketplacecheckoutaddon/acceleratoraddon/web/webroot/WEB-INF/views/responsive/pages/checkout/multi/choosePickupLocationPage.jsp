@@ -855,7 +855,7 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize; display: inline-block;" >PiQ up hrs :</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: none; display: inline-block;" >PiQ up hrs :</span>
 																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
 																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style=" display: inline-block; margin-left: 0px;">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
