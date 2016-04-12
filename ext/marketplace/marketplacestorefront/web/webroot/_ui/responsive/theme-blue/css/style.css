@@ -10566,6 +10566,7 @@ body .account .right-account .order-history .pagination li{
 .product-info .product-image-container .image-list li img {
     /* border: 1px solid transparent; */
     cursor: pointer;
+    min-height:101.6px;
     /* -webkit-transition: border-color 0.15s;
     -moz-transition: border-color 0.15s;
     transition: border-color 0.15s; */
@@ -27868,6 +27869,11 @@ word-break: break-word;
 	list-style: none;
 }
 
+table.track-table-head,table.track-table{
+ border-left:1px solid #C0C0C0;
+ border-right:1px solid #C0C0C0;
+ }
+ 
  table.track-table-head tr{
 	background:#C0C0C0;
 	color:#000000;
