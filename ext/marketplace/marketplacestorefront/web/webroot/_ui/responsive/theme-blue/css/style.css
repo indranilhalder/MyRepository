@@ -29963,6 +29963,7 @@ height:80px;
     padding: 30px 0;
     font-weight: 500;
     font-size: 24px;
+    word-break: break-word;
 }
 .showcase-switch> div{
 width:33.33%;
@@ -29996,7 +29997,8 @@ p.showcase-para {
     text-align: center;
     font-size: 16px;
     line-height: 21px;
-    margin-left: 26px;
+    margin: 0px auto;
+    word-break: break-word;
 }
 
 .showcase-heading > div {
@@ -30324,6 +30326,7 @@ width: 100px !important;
     width: 40%;
     margin: auto;
     line-height: 20px;
+    word-break: break-word;
 }
 .home-brands-you-love-wrapper p.home-brands-you-love-main-image-heading {
 	padding-top: 6px;
