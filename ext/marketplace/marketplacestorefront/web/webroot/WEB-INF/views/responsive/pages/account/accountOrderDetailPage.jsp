@@ -1177,24 +1177,17 @@ $(function(){
 			$(this).next().find('li.progress').find(".cancellation.message").css("left",cancel_message_div_position);
 		}
 	});
-	$(".tracking-information").each(function(){
-		if($(this).find("ul li").length <=1) {
-			 //$(this).find("#track-more-info").hide(); 
-
-			/* $(this).find("#track-more-info").hide(); */
-
-		}
-		else {
-			//$(this).find("ul li").css("display","none");
-			$(".view-more-consignment-data").hide();
-			$(this).find("#track-more-info p").click(function(){
-				$(this).parent().siblings(".view-more-consignment-data").slideToggle();
+/* 	$(".tracking-information").each(function(){
+		
+		//$(".view-more-consignment-data").hide();
+		$(this).find("#track-more-info p.active").click(function(){
+			alert();
+			$(this).parent().siblings(".view-more-consignment-data").slideToggle();
 				$(this).toggleClass("active");
 				$(this).siblings().toggleClass("active");
 				//$(this).parents("#tracking-order").toggleClass("track-order-height");
 			});
-		}
- 	});
+ 	}); */
 	
 });
 
@@ -1242,12 +1235,14 @@ $(function() {
 		});
 				
 		$(".view-more-consignment").each(function () {
-			
+			$(this).parents('.tracking-information').find(".view-more-consignment-data").hide();
 			$(this).click(function() {
 			   	var orderLineId = $(this).attr("orderlineid");
 				var orderCode =$(this).attr("ordercode");
 				var index = $(this).attr("index");
 				checkAWBstatus(orderLineId,orderCode,"shippingStatusRecord" + orderLineId+"_"+index,"N");
+				$(this).parent().toggleClass("active");
+				$(this).parent().siblings().toggleClass("active");
 			});
 		});
 		
