@@ -24,7 +24,7 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  ;$solrIndexedType		   ;allPromotions					   ;"On Sale"
  ;$solrIndexedType		   ;allMobilePromotions				   ;"On Mobile Sale"
  ;$solrIndexedType		   ;price							   ;"Price"
- ;$solrIndexedType		   ;deliveryMode					   ;"Delivery Mode"
+ ;$solrIndexedType		   ;deliveryMode					   ;"Delivery"
  ;$solrIndexedType		   ;colour							   ;"Colour"
  ;$solrIndexedType		   ;size							   ;"Size"
  ;$solrIndexedType		   ;rating							   ;"Rating"
@@ -137,14 +137,15 @@ UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=
  
  
 # Define the available sorts
+#Release 2 changes for SERP 'Sort by' headers
 UPDATE SolrSort;indexedType(identifier)[unique=true];code[unique=true];name[lang=$lang]
 ;$solrIndexedType;relevance;Relevance
-;$solrIndexedType;name-asc;Name Ascending
-;$solrIndexedType;name-desc;Name Descending
-;$solrIndexedType;price-asc;Price Ascending
-;$solrIndexedType;price-desc;Price Descending
-;$solrIndexedType;isOffersExisting;Discount
-;$solrIndexedType;isProductNew;Newest
+;$solrIndexedType;name-asc;Brands A-Z
+;$solrIndexedType;name-desc;Brands Z-A
+;$solrIndexedType;price-asc;Price Low to High
+;$solrIndexedType;price-desc;Price High to Low
+;$solrIndexedType;isOffersExisting;Discounts
+;$solrIndexedType;isProductNew;Brand New
 
 # for footwear
 UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];displayName[lang=$lang]
