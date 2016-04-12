@@ -524,7 +524,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 						}
 					}
 				}
-				if (emailCheckFlag == true && null != abstractOrderEntryModel)
+				if (emailCheckFlag && null != abstractOrderEntryModel)
 				{
 					customOmsCollectedAdapter.sendNotificationForOrderCollected(orderModel, consignmentModel, abstractOrderEntryModel);
 				}
