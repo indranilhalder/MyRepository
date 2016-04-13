@@ -90,14 +90,14 @@
 							<c:when test="${accountPageAddress eq true}">
 								<ycommerce:testId code="multicheckout_saveAddress_button">
 									<button id="newAddressButtonAccount" class=" btn btn-primary btn-block" type="submit">
-										<spring:theme code="checkout.multi.deliveryAddress.continue" text="Continue"/>
+										<spring:theme code="mobile.checkout.continue.button" text="Continue"/>
 									</button>
 								</ycommerce:testId>
 							</c:when>
 							<c:otherwise>
 								<ycommerce:testId code="multicheckout_saveAddress_button">
 									<button id="newAddressButton" class="button" type="submit">
-										<spring:theme code="checkout.multi.deliveryAddress.continue" text="Continue"/>
+										<spring:theme code="mobile.checkout.continue.button" text="Continue"/>
 									</button>
 								</ycommerce:testId>
 							</c:otherwise>

@@ -165,14 +165,16 @@
 				<div class="top">
 					<div id="wishlistDetailItemNo">
 						<h2>${particularWishlistName}</h2>
-						<c:if test="${fn:length(WishlistProductDataList)>1}">
+						<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.items" />
+										</p>
+						<%-- <c:if test="${fn:length(WishlistProductDataList)>1}">
 									<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.items" />
 										</p>
 								</c:if>
 								<c:if test="${fn:length(WishlistProductDataList)<=1}">
 										<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.item" />
 										</p>
-								</c:if>
+								</c:if> --%>
 						<input type="hidden" id="wishlistCount" value="${fn:length(WishlistProductDataList)}"/>
 					</div>
 					<div class="wishlistPagination">

@@ -803,7 +803,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Please enter New Password</font>";
+			document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Please choose a New Password</font>";
 			flag = false;
 		}
 		if (document.getElementById("checkNewPassword").value == null
