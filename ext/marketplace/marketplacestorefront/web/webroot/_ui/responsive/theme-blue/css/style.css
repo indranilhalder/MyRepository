@@ -30303,8 +30303,8 @@ header .content .marketplace, header .content .brand-logo {
        margin-right: 25px;
   }
 header .content .bottom.active .marketplace a img {
-width: 100px !important;
-    height: 50px !important;
+width: 90px !important;
+  /*   height: 50px !important; */
     /* margin-top: 12px; */}
     header .content .bottom.active .marketplace {
    margin-right: 0px;  
