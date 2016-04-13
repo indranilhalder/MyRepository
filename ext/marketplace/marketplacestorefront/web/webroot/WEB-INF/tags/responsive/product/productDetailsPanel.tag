@@ -172,10 +172,11 @@ tr.d0 td {
 	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
 	<c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
+	<c:set var="footwear"><spring:theme code='product.footwear'/></c:set>  <!-- Added for TISPRO-271 --> 
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 <c:choose>
-		<c:when test="${productCategoryType==clothing}">
+		<c:when test="${productCategoryType==clothing || productCategoryType== footwear}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>
