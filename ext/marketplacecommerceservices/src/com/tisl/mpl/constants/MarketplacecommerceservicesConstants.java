@@ -1,6 +1,6 @@
 /*
 
- * [y] hybris Platform
+
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -122,8 +122,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CATEGORY_APPAREL = "Clothing";
 	public static final String CATEGORY_ELECTORNICS = "Electronics";
 
+
 	//Return Item
 	public static final String REVERCE_LOGISTIC_PINCODE_SERVICEABLE_NOTAVAIL_MESSAGE = "SORRY! We cannot pickup from the address provided, Please provide other address or You can Self - ship and let us know!";
+
 	//For Customer Facing Interceptor
 	public static final String NOTIFICATION_STATUS = "notification.status";
 	public static final String USE_NOTIFICATION = "notification.use";
@@ -223,6 +225,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String EMIBANKSQUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  order by {m.bankname}"
 			.intern();
+
+	//TISPRO-179
+	public static final String EMIBANK_FOR_BANKNAMES_QUERY = "select {b:pk} from {emiBank As b} ,{bank as m} where {b.emiLowerLimit}<=?cartValue and {b.emiUpperLimit}>=?cartValue and {b.name}={m.pk}  and upper({m.bankname}) = ?bankName order by {m.bankname}"
+			.intern();
+
+
 	public static final String EMIBANTERMSSQUERY = "select {e:pk} from {emibank as e},{bank as b} where {e.name}={b.pk} and {b.bankName}=?bank"
 			.intern();
 	public static final String PAYMENTTYPEFORAPPORTIONQUERY = "select {p:pk} from {PaymentType As p} WHERE {p.mode}=?paymentMode"
@@ -259,8 +267,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ALLPROMOTIONSQUERY = "select {p:pk} from {abstractPromotion as p} where {p.enabled}='1' and sysdate<={p.enddate} and sysdate>={p.startdate}"
 			.intern();
 
+	//TISPRO-179
 
 
+	public static final String BANKMODELQUERY = "select {bnk.pk} from {bank as bnk} where upper({bnk.bankname}) =?bankname";
 
 	//For Search Populator
 	public static final String BRAND = "brand";
@@ -809,6 +819,26 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9100 = "B9100";
 	public static final String B9101 = "B9101";
 	public static final String B9102 = "B9102";
+	public static final String B9310 = "B9310";
+	public static final String B9500 = "B9500";
+	public static final String B9501 = "B9501";
+	public static final String B9502 = "B9502";
+	public static final String B9503 = "B9503";
+	public static final String B9504 = "B9504";
+	public static final String B9505 = "B9505";
+	public static final String B9506 = "B9506";
+	public static final String B9507 = "B9507";
+	public static final String B9508 = "B9508";
+	public static final String B9509 = "B9509";
+	public static final String B9510 = "B9510";
+	public static final String B9511 = "B9511";
+	public static final String B9512 = "B9512";
+	public static final String B9513 = "B9513";
+	public static final String B9514 = "B9514";
+	public static final String B9515 = "B9515";
+	public static final String B9516 = "B9516";
+	public static final String B9517 = "B9517";
+	public static final String B9518 = "B9518";
 	//Mobile web service error codes ends
 
 	//Payment Error Codes
@@ -1134,6 +1164,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CANCEL_STATUS = "valid.order.statuses.CANCELLATION";
 	public static final String CANCEL_ORDER_STATUS = "valid.order.statuses.CANCELLATION_ORDER";
 	public static final String DELIVERED = "DELIVERED";
+	public static final String ORDER_COLLECTED = "ORDER_COLLECTED";
 	public static final String VALID_APPROVED = "valid.order.statuses.APPROVED";
 	public static final String VALID_SHIPPING = "valid.order.statuses.SHIPPING";
 	public static final String VALID_PROCESSING = "valid.order.statuses.PROCESSING";
@@ -1311,7 +1342,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_EXPRESS_DELIVERY = "Express Delivery ".intern();
 	// Seler Priority Report Query
 	// Within date range
-	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {sv.pk} from {SavedValues as sv JOIN MplSellerPriority as msp ON {sv.modifieditem}={msp.pk} and {sv.creationtime} BETWEEN '2016-01-27 19:42:21.961' and '2016-02-18 17:07:46.338'JOIN SavedValueEntryType as sve ON {sv.modificationtype}={sve.pk}} order by {sv.Timestamp} desc";
+	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {sv.pk} from {SavedValues as sv JOIN MplSellerPriority as msp ON {sv.modifieditem}={msp.pk} and {sv.creationtime} BETWEEN ?startDate and ?endDate JOIN SavedValueEntryType as sve ON {sv.modificationtype}={sve.pk}} order by {sv.Timestamp} desc";
 	//	public static final String SELLERPRIORITYWITHINDATEQUERY = "Select {s.pk} from {SavedValueEntry as se},{SavedValues as s}, {Bin as bk }, {SavedValueEntryType as st} where {s.modificationtype}={st.pk} and {st.code} = 'changed'and {s.modifieditem}={bk.pk} and {s.pk} = {se.Parent} and {s.creationtime} BETWEEN ?startDate and ?endDate ";
 
 	// full data
@@ -1330,6 +1361,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String CARD_TYPE_CREDIT = "CREDIT".intern();
 	public static final String CARD_TYPE_DEBIT = "DEBIT".intern();
+
 	public static final String VOUCHERWITHINDATEQUERYFROMCOUPONMODEL = "select {p:pk} from {VoucherStatusNotification as p} where {p.voucherStartDate}<=?sysdate and {p.voucherEndDate}>=?sysdate ";
 
 	//CRM Ticket Type
@@ -1341,6 +1373,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Coupon
 	public static final String ZEROPOINTZEROONE = "0.01".intern();
 	public static final String HUNDRED = "100".intern();
+
 
 	public static final String CAMPAIGN_DISCOUNT = "DISCOUNT OFFER".intern();
 	public static final String CAMPAIGN_FREEBIE = "FREEBIE OFFER".intern();
@@ -1369,6 +1402,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SPECIALPRICE_PRIORITY = "priority".intern();
 	public static final String HTTP = "http:".intern();
 	public static final String HTTPS = "https:".intern();
+	public static final String STAGED = "Staged".intern();
+
+
+
 
 	public static final String BANNER_IMAGE = "bannerImage";
 	public static final String BANNER_ALTTEXT = "bannerAltText";
@@ -1408,6 +1445,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Month list
 
+
 	public static final String COUPONREDEEMERROR = "Coupon cannot be redeemed".intern();
 	public static final String COUPONTOPCOUNT = "coupon.display.topCount";
 	public static final String COUPONTOPCOUNTDEFVAL = "5";
@@ -1421,6 +1459,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EXCNOTRESERVABLE = "Voucher is not reservable".intern();
 	public static final String EXCFREEBIE = "freebie".intern();
 	public static final String EXCUSERINVALID = "User not valid".intern();
+
 
 	public static final String USER = "User".intern();
 	public static final String DATE = "Date".intern();
@@ -1442,6 +1481,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
 
 	public static final String FIND_USER_BY_UID = "SELECT {u.pk} FROM {User as u} WHERE ({u.UID} = ?uid )";
+	//Added for constants for clickandcollect and active.
+	public static final String CLICK_N_COLLECT = "Y";
+	public static final String ACTIVE = "Y";
+
+	public static final String BANKNAME = "bankName";
+	public static final String EBS_DOWNTIME = "payment.ebs.downtime".intern();
+
+	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
+
+	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
+
 
 	private MarketplacecommerceservicesConstants()
 	{

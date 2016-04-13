@@ -2,26 +2,9 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<script src="jquery.tools.min.js"></script>
  
- <style>
-  .overLayStoreFinderText {
-    background: white;
-    left: 13px;
-    top: 140px;
-    opacity: 0.6;
-    filter: alpha(opacity=60); /* For IE8 and earlier */
-  }
-  
- 
-  #legend {
-	background: white;
-	padding: 10px;
-	height: 94%
-}  
-</style>
 <script>
 
 $(document).ready(function(){
@@ -36,7 +19,10 @@ $(document).ready(function(){
 	    	 getDataFromServer(lat,lot);
 	    },function() {
 	    	getDataFromServer(lat,lot);
-	    });
+	    },{ 
+			enableHighAccuracy: true,
+			timeout : 30000
+	});
 	  }else{
 		  getDataFromServer(lat,lot);
 	  }
@@ -44,7 +30,7 @@ $(document).ready(function(){
 
 function getDataFromServer(lat,lot){
 	$.ajax({
-        url :  ACC.config.encodedContextPath +"/view/HomeStoreLocatorComponentController"+"/"+lat+"/"+lot,
+        url :  ACC.config.encodedContextPath +"/view/HomeStoreLocatorComponentController"+"/"+lat+"/"+lot+"/",
         type: "GET",
         dataType : "json",
   	    cache: false,
@@ -73,7 +59,12 @@ function initialize(locatorJson,lat,lot)
     var mapProp = {
   	center:myCenter,
   	zoom:initialZoom,
-  	disableDefaultUI:true,
+  	zoomControl:true,
+  	scrollwheel: false,
+  	zoomControlOptions:{
+  		position:google.maps.ControlPosition.RIGHT_TOP
+  	},
+  	disableDefaultUI:false,
   	mapTypeId:google.maps.MapTypeId.ROADMAP };
 
     var map=new google.maps.Map(document.getElementById("home-googleMap"),mapProp);
@@ -95,34 +86,53 @@ function initialize(locatorJson,lat,lot)
   for (var i = 0; i < locatorJson.length; i++) { 
 	 var icon="";
 	 var marker="";
-	 //Create marker.
-	 if(!(locatorJson[i].mapIcon)){
-		  marker=new google.maps.Marker({
-		 		position: new google.maps.LatLng(locatorJson[i].geoPoint.latitude,locatorJson[i].geoPoint.longitude)
-			   });
-	 }else {
-		 icon=locatorJson[i].mapIcon.url;
+	 var mplStoreImage=locatorJson[i].mplStoreImage;
+	 console.log(mplStoreImage)
+	 var normalMarkerIcon="";
+	 var onClickMarkerIcon="";
+	 var onHoverIcon="";
+	 if(!(locatorJson[i].regularImgUrl)){
+		 marker=new google.maps.Marker({
+	 		 position: new google.maps.LatLng(locatorJson[i].geoPoint.latitude,locatorJson[i].geoPoint.longitude)
+		   });
+	 }else{
+		//Create marker.
 	     marker=new google.maps.Marker({
  		 position: new google.maps.LatLng(locatorJson[i].geoPoint.latitude,locatorJson[i].geoPoint.longitude),
- 		 icon:icon
+ 		 icon:locatorJson[i].regularImgUrl
 	   });
-	 
 	 }
+	 
+	 //For marker mover
+	 google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+								        return function() {
+								          if(!(locatorJson[i].onHoverImgUrl)){
+								        	  console.debug("No Hover image.");
+								          }else{
+								        	  marker.setIcon(locatorJson[i].onHoverImgUrl);  
+								          }
+								        }
+								      })(marker, i));
 	 markers.push(marker);
 	 
-	 //Create info box
+	       //Create info box
 			google.maps.event.addListener(infowindow,'closeclick',function(){
-				 removeGamma(map);
+				 //removeGamma(map);
 				});
 	 
 	//Create event listner for click on marker event.
     google.maps.event.addListener(marker, 'click', (function(marker, i) {
 							        return function() {
-							          infowindow.setContent("Store Name: "+locatorJson[i].name);
+							          infowindow.setContent("Store Name: "+locatorJson[i].displayName);
 							          infowindow.open(map, marker);
 							          map.setZoom(markerZoom);
 							          map.setCenter(marker.getPosition());
-							          applyGamma(map);
+							          if(!(locatorJson[i].onClickImgUrl)){
+							        	  console.debug("No On image.");
+							          }else{
+							        	  console.info("locatorJson[i].onClickImgUrl");
+							        	  marker.setIcon(locatorJson[i].onHoverImgUrl);  
+							          }
 							        }
 							      })(marker, i));
 marker.setMap(map);	  
@@ -140,6 +150,7 @@ autoCenter(markers,map);
    // controlUI.title = 'Set map to London';
     controlDiv.appendChild(controlUI);
     var controlText = document.getElementById('overLayStoreFinderText');
+    controlText.style.display = 'block';
     controlUI.appendChild(controlText);
     
   }  
@@ -155,6 +166,12 @@ function autoCenter(markers,map ) {
     }
     //  Fit these bounds to the map
     map.fitBounds(bounds);
+  //To control max zoom label
+	google.maps.event.addListenerOnce(map, 'bounds_changed', function(event){
+		  if(this.getZoom()>18){
+			  this.setZoom(18); 
+		  }
+		});
   }
  
 function applyGamma(map) {
@@ -185,7 +202,7 @@ function removeGamma(map) {
     });
 }
 function staticLegends(map){
-	 // Create a DIV to hold the control and call HomeControl()
+	 // Create a DIV to hold the control and call HomeLegendsControl()
     var homeLegendsControlDiv = document.createElement('div');
     var homeLegendsControl = new HomeLegendsControl(homeLegendsControlDiv, map);
     homeLegendsControlDiv.index = 2;
@@ -195,14 +212,18 @@ function staticLegends(map){
 //Add a Home control that returns the user to London
 function HomeLegendsControl(controlDiv, map) {
 	
-	 // Setup the different icons and shadows
-    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+	var iconURLPrefix = ACC.config.commonResourcePath+"/images/";
     var icons = [
-      iconURLPrefix + 'red-dot.png',
-      iconURLPrefix + 'green-dot.png',
-      iconURLPrefix + 'blue-dot.png',
-      iconURLPrefix + 'orange-dot.png',
-      iconURLPrefix + 'purple-dot.png',
+      iconURLPrefix + 'Bestseller_Legend.png',
+      iconURLPrefix + 'CottonWorld_Legend.png',
+      iconURLPrefix + 'Croma_Legend.png',
+      iconURLPrefix + 'Dell_Legend.png',
+      iconURLPrefix + 'Inc5_Legend.png',
+      iconURLPrefix + 'Killer_Legend.png',
+      iconURLPrefix + 'Lenovo_Legend.png',
+      iconURLPrefix + 'Metro_Legend.png',
+      iconURLPrefix + 'Tresmode_Legend.png',
+      iconURLPrefix + 'Westside_Legend.png',
     ]
     var iconsLength = icons.length;
     
@@ -213,19 +234,21 @@ function HomeLegendsControl(controlDiv, map) {
     var legend = document.getElementById('legend');
      
       for (var i = 0; i < icons.length; i++) { 
-    	 var div = document.createElement('div');
-         div.innerHTML = "Sample Data" +'<img src="' + icons[i] + '"> ';
-         div.style=legendStyle;
+    	  var div = document.createElement('div');
+	      var img1=document.createElement('img');
+	      img1.src=icons[i];
+	      img1.className='googleMapLegends';
+	      div.appendChild(img1);
          legend.appendChild(div);
     } 
       console.info(legend);
-      controlDiv.style.padding = '25px';
+      controlDiv.style.padding = '10px';
       var controlUI = document.createElement('div');
       controlUI.style.backgroundColor = '#ffffff';
       controlUI.style.textAlign = 'center';
       controlUI.style.right='60px';
-      opacity: 0.6;
-      filter: 'alpha(opacity=60)';
+     // opacity: 0.6;
+     // filter: 'alpha(opacity=60)';
      // controlUI.title = 'Set map to London';
       controlDiv.appendChild(controlUI);
       //var controlText = document.getElementById('overLayStoreFinderText');
@@ -242,16 +265,16 @@ function HomeLegendsControl(controlDiv, map) {
                          
           </div> 
 
-<div id="overLayStoreFinderText"  style="left: 13px !imprtant">
-	<h4>Be inspired online, or at one of our partner stores.</h4> 
-	<div class="overLayStoreFinderText">To Our seamless online and in-store experiences </br> 
-	    allow you to shop, make returns, and earn </br>
-	    rewards on all your purchases across brands </br> online or in-store. </br>
-	</div>
-	<div class="overLayStoreFinderText">
-		<a href="${request.contextPath}/store-finder"
-			style="text-decoration: none"> Find a Store >> </a>
-	</div>
+<div id="overLayStoreFinderText" class="overLayStoreFinderText">
+	<h1>Be inspired online, or at one of our partner stores.</h1> 
+	<span>To Our seamless online and in-store experiences  
+	    allow you to shop, make returns, and earn  
+	    rewards on all your purchases across brands   online or in-store.
+	</span>
+	   
+	   <a href="${request.contextPath}/aboutus" class="r2-arrow">Learn more about our services</a>
+		<a href="${request.contextPath}/store-finder" class="r2-arrow"> Find a Store</a>
+	 
 </div>
 
 
@@ -260,5 +283,3 @@ function HomeLegendsControl(controlDiv, map) {
    Find  a Store
 </a> --%>
  
- 
-

@@ -682,7 +682,12 @@ $language=language(isocode)[default='en'][unique=true];
 				$unit=unit(code)[default='pieces']
 				$clAttrModifiers=system='pcmClassification',version='1',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator,lang=en
 				$catalogversion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Staged'])[unique=true,default=mplProductCatalog:Staged]
-			    INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true]; unit[unique=true];size[unique=true];value[unique=true];categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;$catalogVersion
+			    
+			    
+			    <!-- Header Before -->
+			    <!-- INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true]; unit[unique=true];size[unique=true];value[unique=true];categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;$catalogVersion -->
+			   <!-- Header Changes regards to TISPRO-180 Cell decorator Introduced,unique constraint removed for value and unit-->
+			    INSERT_UPDATE SizeGuide;sizeGuideId[unique=true]; dimension[unique=true][cellDecorator=com.tisl.mpl.core.celldecorator.SizeGuideDimensionDecorator];unit;size[unique=true];value;categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;$catalogVersion
 			</value>
         </property>
         <property name="impexRow">
@@ -702,9 +707,11 @@ $language=language(isocode)[default='en'][unique=true];
 				$uidGroup=admingroup,marketplaceGroup,ETAILREAD
 				$supercategories=supercategories( code, catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged']));;;;;;;;;
                 $catalogVersion=catalogVersion(catalog(id[default='mplProductCatalog']),version[default='Staged'])[unique=true,default='mplProductCatalog:Staged'];;;;;;;;;
-               $sellerAssociationStatus=sellerAssociationStatus(code[default='yes'])
-               
-             INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[unique=true][mode=append];sellerArticleSku[unique=true][mode=append];USSID[unique=true][mode=append];sellerId;sellerName;sellerType;startDate[dateformat=yyyyMMddHHmmss];endDate[dateformat=yyyyMMddHHmmss];inwardDate[dateformat=yyyyMMddHHmmss];$catalogVersion;$sellerAssociationStatus
+             <!-- TISPRD-207 CHANGES -->
+<!--                 $sellerAssociationStatus=sellerAssociationStatus(code[default='yes']) -->
+               <!-- Previous header -->
+<!-- INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[unique=true][mode=append];sellerArticleSku[unique=true][mode=append];USSID[unique=true][mode=append];sellerId;sellerName;sellerType;startDate[dateformat=yyyyMMddHHmmss];endDate[dateformat=yyyyMMddHHmmss];inwardDate[dateformat=yyyyMMddHHmmss];$catalogVersion;$sellerAssociationStatus -->
+             INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[unique=true][mode=append];sellerArticleSku[unique=true][mode=append];USSID[unique=true][mode=append];sellerId;sellerName;sellerType;startDate[dateformat=yyyyMMddHHmmss];endDate[dateformat=yyyyMMddHHmmss];inwardDate[dateformat=yyyyMMddHHmmss];$catalogVersion
             </value>
         </property>
         <property name="impexRow">
@@ -821,4 +828,3 @@ $language=language(isocode)[default='en'][unique=true];
         </bean>
         
   </beans>
-

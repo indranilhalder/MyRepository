@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -118,7 +119,7 @@ public class OfferPageController extends AbstractSearchPageController
 
 	//Added to render all the offer related products
 	@RequestMapping(value = "/viewAllOffers", method = RequestMethod.GET)
-	public String displayNewAndExclusiveProducts(@RequestParam(value = "q", required = false) final String searchQuery,
+	public String displayOfferRelatedProducts(@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = "page", defaultValue = "0", required = false) final int page,
 			@RequestParam(value = "show", defaultValue = ModelAttributetConstants.PAGE_VAL) final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode, final HttpServletRequest request,
@@ -134,6 +135,16 @@ public class OfferPageController extends AbstractSearchPageController
 
 			model.addAttribute("hideDepartments", Boolean.TRUE);
 			model.addAttribute("otherProducts", true);
+
+			//Code to hide the applied facet for isOfferExisting
+			if (searchPageData.getBreadcrumbs() != null && searchPageData.getBreadcrumbs().size() == 1)
+			{
+				final String facetCode = searchPageData.getBreadcrumbs().get(0).getFacetCode();
+				if (StringUtils.isNotEmpty(facetCode) && facetCode.equalsIgnoreCase("isOffersExisting"))
+				{
+					searchPageData.setBreadcrumbs(null);
+				}
+			}
 
 
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY,
@@ -170,23 +181,20 @@ public class OfferPageController extends AbstractSearchPageController
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> performSearchForAllOffers(
 			final String searchQuery, final int page, final ShowMode showMode, final String sortCode, final int searchPageSize)
 	{
-		final PageableData pageableData = createPageableData(page, page, sortCode, ShowMode.Page);
+		final PageableData pageableData = createPageableData(page, searchPageSize, sortCode, ShowMode.Page);
 		final SearchStateData searchState = new SearchStateData();
 		final SearchQueryData searchQueryData = new SearchQueryData();
 
-		if (searchQuery == null)
-		{
-			searchState.setQuery(searchQueryData);
-
-		}
-		else
+		if (StringUtils.isNotEmpty(searchQuery))
 		{
 			searchQueryData.setValue(searchQuery);
 		}
 
+		searchState.setQuery(searchQueryData);
 
 		return searchFacade.searchAllOffers(searchState, pageableData);
 	}
+
 	//End
 
 	protected class OfferSearchEvaluator

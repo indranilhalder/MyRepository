@@ -76,7 +76,7 @@ $(".A-ZBrands")
 												+ "/atozbrands",
 										type : 'GET',
 										success : function(html) {
-											console.log(html)
+											//console.log(html)
 											if ($("div#appendedAtoZBrands") == null
 													|| $("div#appendedAtoZBrands").length == 0) {
 												$("li#atozbrandsdiplay")
@@ -154,7 +154,7 @@ function getBrandsYouLoveAjaxCall() {
 				data : dataString,
 				
 				success : function(response) {
-					console.log(response.subComponents);
+					//console.log(response.subComponents);
 					defaultComponentId="";
 					renderHtml = "<h1>" + response.title + "</h1>"
 							+ "<div class='home-brands-you-love-carousel'>";
@@ -162,7 +162,7 @@ function getBrandsYouLoveAjaxCall() {
 							.each(
 									response.subComponents,
 									function(k, v) {
-										console.log(v.brandLogoUrl);
+										//console.log(v.brandLogoUrl);
 										
 										if (!v.showByDefault) {
 											renderHtml += "<div class='home-brands-you-love-carousel-brands item' id='"
@@ -328,7 +328,7 @@ if ($('#brandsYouLove').children().length == 0 && $('#ia_site_page_id').val()=='
 		for ( var key in localStorage) {
 			if (key.indexOf("brandContent") >= 0) {
 				window.localStorage.removeItem(key);
-				console.log("Deleting.." + key);
+				//console.log("Deleting.." + key);
 			}
 		}
 	}
@@ -465,7 +465,7 @@ function getBestPicksAjaxCall(){
 							
 							if(v.url){
 								renderHtml += "<a href='"
-									+ v.url
+									+ v.url+"?icid="+v.icid
 									+ "' class='item'>";
 							}
 							
@@ -541,14 +541,14 @@ function getProductsYouCareAjaxCall(){
 				.each(
 						response.categories,function(k, v){
 							
-						console.log('Category name: '+v.categoryName);
-						console.log('Category code: '+v.categoryCode);
-						console.log('Category media url: '+v.mediaURL);
+						//console.log('Category name: '+v.categoryName);
+						//console.log('Category code: '+v.categoryCode);
+						//console.log('Category media url: '+v.mediaURL);
 						
 						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c/"+v.categoryCode;
 						//for url
 						renderHtml += "<a href='"
-							+ URL
+							+ URL+"?icid="+v.icid
 							+ "' class='item'>";
 						//for image
 						renderHtml += "<div class='home-product-you-care-carousel-img'> <img src='"
@@ -608,7 +608,7 @@ function getNewAndExclusiveAjaxCall(){
 		success : function(response) {
 			
 		
-			console.log(response.newAndExclusiveProducts);
+			//console.log(response.newAndExclusiveProducts);
 			var defaultHtml = "";
 			renderHtml = "<h1>" + response.title + "</h1>"
 					+ "<div class='carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference' id='new_exclusive'>";
@@ -618,7 +618,7 @@ function getNewAndExclusiveAjaxCall(){
 								
 									renderHtml += "<div class='item slide'><div class='newExclusiveElement'><a href='"+ACC.config.encodedContextPath+value.productUrl+"'><img src='"
 											+ value.productImageUrl
-											+ "'></img><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_title'><span class='priceFormat'>" + value.productPrice + "</span></p></a></div></div>"; 
+											+ "'></img><p class='New_Exclusive_title'>" + value.productTitle + "</p><p class='New_Exclusive_price'><span class='priceFormat'>" + value.productPrice + "</span></p></a></div></div>"; 
 											
 
 							});
@@ -690,7 +690,7 @@ function getPromoBannerHomepage(){
 		data : dataString,
 
 		success : function(response) {
-			console.log(response.bannerImage);
+			//console.log(response.bannerImage);
 			var defaultHtml = "";
 			var bannerUrlLink = response.bannerUrlLink;
 			var bannerImage = response.bannerImage;
@@ -738,7 +738,7 @@ function getStayQuedHomepage(){
 		data : dataString,
 		
 		success : function(response) {
-			console.log(response.bannerImage);
+			//console.log(response.bannerImage);
 			var defaultHtml = "";
 			var linkText = "";
 			var bannerUrlLink = response.bannerUrlLink;
@@ -753,7 +753,7 @@ function getStayQuedHomepage(){
 			} else {
 				linkText = promoText2;
 			}
-			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+ ACC.config.encodedContextPath+bannerUrlLink+'" class="button maroon">'+linkText+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
+			renderHtml = '<h1><span></span><span class="h1-qued">Stay Qued</span></h1><div class="qued-content">'+promoText1+'<a href="'+bannerUrlLink+'" class="button maroon">'+linkText+'</a></div><div class="qued-image"><img src="'+bannerImage+'" class="img-responsive"></div>'; 
 			$('#stayQued').html(renderHtml);
 
 		},
@@ -775,7 +775,7 @@ if ($('#showcase').children().length == 0 && $('#ia_site_page_id').val()=='homep
 		for ( var key in localStorage) {
 			if (key.indexOf("showcaseContent") >= 0) {
 				window.localStorage.removeItem(key);
-				console.log("Deleting.." + key);
+				//console.log("Deleting.." + key);
 			}
 		}
 	}
@@ -798,7 +798,7 @@ function getShowCaseAjaxCall() {
 				data : dataString,
 				
 				success : function(response) {
-					console.log(response.subComponents);
+					//console.log(response.subComponents);
 					defaultComponentId="";
 					renderHtml = "<h1>" + response.title + "</h1>"
 							+ "<div class='showcase-heading showcase-switch'>";
@@ -858,7 +858,7 @@ function getShowcaseContentAjaxCall(id) {
 					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml +="<div class='desc-section'>";
 						if(typeof response.bannerUrl !=="undefined"){
-							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"'>";
+							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"?icid="+v.icid+"'>";
 						}
 						defaultHtml += "<img src='"+ response.bannerImageUrl
 						+ "'></img>";	

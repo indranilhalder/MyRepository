@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import com.tisl.mpl.core.model.RefundTransactionMappingModel;
 import com.tisl.mpl.data.SendTicketLineItemData;
 import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCancelOrderTicket;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 
 
@@ -39,7 +41,8 @@ public class MplCancelOrderTicketImpl implements MplCancelOrderTicket
 	private TicketCreationCRMservice ticketCreate;
 	@Autowired
 	private ModelService modelService;
-
+	@Autowired
+	private MplJusPayRefundService mplJusPayRefundService;
 
 
 	/**
@@ -120,18 +123,46 @@ public class MplCancelOrderTicketImpl implements MplCancelOrderTicket
 	@Override
 	public void refundMapping(final String refundID, final OrderModel orderModel)
 	{
-		final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
-				RefundTransactionMappingModel.class);
-		refundTransactionMappingModel.setRefundedOrderEntry(orderModel.getChildOrders().get(0).getEntries().get(0));
-		refundTransactionMappingModel.setJuspayRefundId(refundID);
-		refundTransactionMappingModel.setCreationtime(new Date());
-		//refundTransactionMappingModel.setRefundTime(new Date());
-		refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED_FOR_RISK);
-		getModelService().save(refundTransactionMappingModel);
+		//TISPRO-216 Starts
+		if (CollectionUtils.isNotEmpty(orderModel.getChildOrders()))
+		{
+			for (final OrderModel subOrderModel : orderModel.getChildOrders())
+			{
+				if (subOrderModel != null && CollectionUtils.isNotEmpty(subOrderModel.getEntries()))
+				{
+					for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+					{
+						{
+							if (subOrderEntryModel != null)
+							{
+								double refundAmount = 0D;
+								double deliveryCost = 0D;
+								if (subOrderEntryModel.getCurrDelCharge() != null)
+								{
+									deliveryCost = subOrderEntryModel.getCurrDelCharge().doubleValue();
+								}
+
+								refundAmount = subOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
+
+								// Making RTM entry to be picked up by webhook job
+								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
+										RefundTransactionMappingModel.class);
+								refundTransactionMappingModel.setRefundedOrderEntry(subOrderEntryModel);
+								refundTransactionMappingModel.setJuspayRefundId(refundID);
+								refundTransactionMappingModel.setCreationtime(new Date());
+								//refundTransactionMappingModel.setRefundTime(new Date());
+								refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED_FOR_RISK);
+								refundTransactionMappingModel.setRefundAmount(new Double(refundAmount));//TISPRO-216 : Refund amount Set in RTM
+								getModelService().save(refundTransactionMappingModel);
+							}
+						}
+					}
+				}
+			}
+		}
+		//TISPRO-216 Ends
 	}
-
-
-
 
 	//Getters and setters
 	/**

@@ -1,12 +1,15 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import de.hybris.platform.core.enums.OrderStatus;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.zkoss.zk.ui.api.HtmlBasedComponent;
@@ -16,6 +19,7 @@ import org.zkoss.zul.Div;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 
+import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
 import de.hybris.platform.cockpit.session.UISessionUtils;
 import de.hybris.platform.cockpit.widgets.Widget;
@@ -128,6 +132,7 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 			for (AbstractOrderEntryModel entry : orderModel.getEntries()) {
 				Set<ConsignmentEntryModel> entries = new HashSet<>(
 						entry.getConsignmentEntries());
+				try{
 				if (CollectionUtils.isNotEmpty(entries)
 						&& MarketplaceCockpitsConstants.validInvoiceStatus
 								.contains(entries.iterator().next()
@@ -135,13 +140,16 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 					isInvoiceAvaialble = true;
 					break;
 				}
+				}catch(Exception e) {
+					Log.debug("Entries null"+ e);
+				}
 			}
 			return isInvoiceAvaialble && isAfter;
 		}
 		return false;
 	}
 
-	// Added for to test whether cnc  product is present or not
+	// Added for to test whether cnc product is present or not
 
 	protected boolean isCnCAvailable(TypedObject orderObject) {
 		AbstractOrderModel orderModel = (AbstractOrderModel) orderObject
@@ -160,44 +168,60 @@ public class MarketPlaceOrderManagementActionsWidgetRenderer extends
 						.equalsIgnoreCase(
 								MarketplaceCockpitsConstants.delNameMap
 										.get("CnC"))) {
-
+					
 					isCnCAvailable = true;
-                   
-					if ((entry.getQuantity() <= 0
-							|| orderStatus
-									.equalsIgnoreCase(OrderStatus.DELIVERED
-											.getCode())
-							|| orderStatus
-									.equalsIgnoreCase(OrderStatus.CANCELLATION_INITIATED
-											.getCode())
-							|| orderStatus
-									.equalsIgnoreCase(OrderStatus.CANCELLED
-											.getCode()) || orderStatus
-								.equalsIgnoreCase(OrderStatus.ORDER_CANCELLED
-										.getCode()))) {
+
+					orderStatus = orderModel.getStatus().getCode();
+					if (CollectionUtils.isNotEmpty(entry
+							.getConsignmentEntries())) {
+						try{
+						ConsignmentStatus consignmentStatus = entry
+								.getConsignmentEntries().iterator().next()
+								.getConsignment().getStatus();
+						orderStatus = consignmentStatus.getCode();
+						}catch(Exception e)
+						{
+							Log.debug("Exception "+e);
+						}
+					}
+
+					List<String> nonChangableOrdeStatus = Arrays.asList(
+							OrderStatus.PAYMENT_FAILED.getCode(),
+							OrderStatus.RETURNINITIATED_BY_RTO.getCode(),
+					OrderStatus.REFUND_INITIATED.getCode(),
+					OrderStatus.RETURN_INITIATED.getCode());
+					List<String> nonChangableOrdeStatusList = Arrays.asList(
+							ConsignmentStatus.CANCELLATION_INITIATED.getCode(),
+							ConsignmentStatus.CANCELLED.getCode(),
+							ConsignmentStatus.CLOSED_ON_CANCELLATION.getCode(),
+							ConsignmentStatus.CLOSED_ON_RETURN_TO_ORIGIN
+									.getCode(),
+							ConsignmentStatus.COD_CLOSED_WITHOUT_REFUND
+									.getCode(),
+							ConsignmentStatus.ORDER_CANCELLED.getCode(),
+							ConsignmentStatus.ORDER_COLLECTED.getCode(),
+							ConsignmentStatus.ORDER_REJECTED.getCode(),
+							ConsignmentStatus.ORDER_UNCOLLECTED.getCode(),
+							ConsignmentStatus.QC_FAILED.getCode(),
+							ConsignmentStatus.REFUND_IN_PROGRESS.getCode(),
+							ConsignmentStatus.REFUND_INITIATED.getCode(),
+							ConsignmentStatus.REVERSE_AWB_ASSIGNED.getCode(),
+							ConsignmentStatus.RETURN_CANCELLED.getCode(),
+							ConsignmentStatus.RETURN_CLOSED.getCode(),
+							ConsignmentStatus.RETURN_INITIATED.getCode(),
+							ConsignmentStatus.RETURN_RECEIVED.getCode(),
+							ConsignmentStatus.RETURN_TO_ORIGIN.getCode(),
+							ConsignmentStatus.RETURN_COMPLETED.getCode(),
+							ConsignmentStatus.RETURNINITIATED_BY_RTO.getCode());
+					
+					if (entry.getQuantity() <= 0
+							|| nonChangableOrdeStatus.contains(orderStatus.toUpperCase())
+							|| nonChangableOrdeStatusList.contains(orderStatus.toUpperCase())) {
 						isCnCAvailable = false;
 
 					}
 
-					else if (orderStatus
-							.equalsIgnoreCase(OrderStatus.CLOSED_ON_RETURN_TO_ORIGIN
-									.getCode())
-							|| orderStatus
-									.equalsIgnoreCase(OrderStatus.ORDER_REJECTED
-											.getCode())
-							|| orderStatus
-									.equalsIgnoreCase(OrderStatus.RETURN_COMPLETED
-											.getCode())
-							|| orderStatus
-									.equalsIgnoreCase(OrderStatus.REFUND_INITIATED
-											.getCode())
-							|| orderStatus
-									.equalsIgnoreCase(OrderStatus.ORDER_COLLECTED
-											.getCode())) {
-						isCnCAvailable = false;
-
-					}
-					else{
+					else {
 						return isCnCAvailable;
 					}
 				}

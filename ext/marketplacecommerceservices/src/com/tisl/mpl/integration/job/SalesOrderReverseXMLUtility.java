@@ -41,11 +41,9 @@ import org.xml.sax.InputSource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
-import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pojo.BulkSalesOrderXMLData;
 import com.tisl.mpl.pojo.ChildOrderXMlData;
@@ -66,8 +64,9 @@ public class SalesOrderReverseXMLUtility
 	private final static Logger LOG = Logger.getLogger(SalesOrderReverseXMLUtility.class.getName());
 	@Autowired
 	private PaymentInfoCancelReversalImpl paymentInfoCancelService;
-	@Autowired
-	private MplSellerInformationService mplSellerInformationService;
+	/*
+	 * @Autowired private MplSellerInformationService mplSellerInformationService;
+	 */
 
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
@@ -333,10 +332,13 @@ public class SalesOrderReverseXMLUtility
 								LOG.debug("set sub order list");
 							}
 						}
-						if (bulkSalesDataList != null)
+						//TISSIT-1780
+						if (salesXMLData != null && xmlToFico)
 						{
 							bulkSalesDataList.add(salesXMLData);
+							LOG.debug("xml order:" + salesXMLData.getOrderId());
 						}
+						LOG.debug("bulkSalesDataList Size" + bulkSalesDataList.size());
 					}
 
 				}
@@ -537,19 +539,27 @@ public class SalesOrderReverseXMLUtility
 							LOG.debug("after price set");
 						}
 
-						final String ussId = entry.getSelectedUSSID();
+						/*
+						 * final String ussId = entry.getSelectedUSSID();
+						 *
+						 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
+						 * if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null &&
+						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null &&
+						 * ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() !=
+						 * null) { final String fulfillmentType = ((List<RichAttributeModel>)
+						 * sellerInfoModel.getRichAttribute()).get(0) .getDeliveryFulfillModes().getCode();
+						 * LOG.debug("inside rich attribute model" + fulfillmentType.toUpperCase() + " for ussid :" + ussId);
+						 * xmlData.setFulfillmentType(fulfillmentType.toUpperCase()); }
+						 */
 
-						final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(ussId);
-						if (sellerInfoModel != null
-								&& sellerInfoModel.getRichAttribute() != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0) != null
-								&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
+
+						//TISPRD-901
+						if (StringUtils.isNotEmpty(entry.getFulfillmentType()) && xmlToFico)
 						{
-							final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-									.getDeliveryFulfillModes().getCode();
-							LOG.debug("inside rich attribute model" + fulfillmentType.toUpperCase() + " for ussid :" + ussId);
-							xmlData.setFulfillmentType(fulfillmentType.toUpperCase());
+							xmlData.setFulfillmentType(entry.getFulfillmentType().toUpperCase());
+							LOG.debug("set fulfilment mode");
 						}
+
 
 						//						if (null != product.getSellerInformationRelator() && xmlToFico)
 						//						{

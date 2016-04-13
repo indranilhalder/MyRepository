@@ -191,7 +191,6 @@ public class MarketplacecclientservicesConstants
 
 	public static final String GIGYA_METHOD_UPDATE_USERINFO = "gigya.userinfo.method".intern();
 
-
 	public static final String URLFOR_STORELOC_FIRSTPHASE = "oms.storelocationserviceability.firstxmlphase";
 	public static final String URLFOR_STORELOC_SECONDPHASE = "oms.storelocationserviceability.secondxmlphase";
 	public static final String URLFOR_STORELOC_THIRDPHASE = "oms.storelocationserviceability.thirdxmlphase";
@@ -199,4 +198,12 @@ public class MarketplacecclientservicesConstants
 	public static final String URLFOR_STORELOC_REALCALL = "oms.storelocationserviceability.realtimecall";
 	public static final String URLFOR_STORELOC_MOCKURL = "oms.storelocator.serviceabilility.url";
 	public static final String URLFOR_STORELOC_URL = "oms.storelocator.serviceabilility.url";
+
+	public static final String E0019 = "E0019";
+	public static final String E0020 = "E0020";
+
+	public static final String SESSIONTOKEN = "sessionToken".intern();
+	public static final String SESSIONSECRET = "sessionSecret".intern();
+	public static final String TARGETENV = "targetEnv";
+	public static final String MOBILE = "mobile";
 }

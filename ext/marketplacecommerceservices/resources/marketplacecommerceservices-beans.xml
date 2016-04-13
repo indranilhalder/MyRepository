@@ -29,7 +29,8 @@
 	<property name="state" type="String"/>
 	<property name="line3" type="String"/>
 	<property name="locality" type="String"/>
-	
+	<property name="city" type="String"/>
+	<property name="landmark" type="String"/>
 	</bean>
 	
 	
@@ -276,6 +277,8 @@
 	
 	<!-- Return Item AddressInfo Data -->
 	<bean class="com.tisl.mpl.data.ReturnAddressInfo">
+		<property name="shippingFirstName" type="String"/>
+		<property name="shippingLastName" type="String"/>
 		<property name="phoneNo" type="String"></property>
 		<property name="address1" type="String"></property>
 		<property name="address2" type="String"></property>

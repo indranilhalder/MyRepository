@@ -32,6 +32,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -58,6 +59,11 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 	private static final String DELIVERY_CHARGE = "deliveryCharge";
 	private static final String CUSTOMER = "Customer";
 	private static final String CONTACT_US_LINK = "contactUsLink";
+	private static final String NUMBERTOOL = "numberTool";
+
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -107,6 +113,16 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 		put(DELIVERY_CHARGE, Double.valueOf(deliveryCharge));
 		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
 		put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		put(NUMBERTOOL, new NumberTool());
+
+
+		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+				"1800-208-8282");
+		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
+		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
 	}
 
 

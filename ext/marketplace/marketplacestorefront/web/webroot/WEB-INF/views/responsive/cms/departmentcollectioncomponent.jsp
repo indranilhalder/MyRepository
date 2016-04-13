@@ -5,7 +5,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 
-	<div class="toggle"><spring:theme code="navigation.department.shopByDepartment"/></div>
+	<div class="toggle"><span><spring:theme code="navigation.department.shopBy"/></span>
+	<span><spring:theme code="navigation.department.shopByDepartment"/></span></div>
 
 			<ul>
 				

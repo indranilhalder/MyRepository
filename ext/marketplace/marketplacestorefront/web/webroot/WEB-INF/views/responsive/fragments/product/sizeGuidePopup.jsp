@@ -15,10 +15,14 @@
 <input type="hidden"  id="categoryType"  value="${product.rootCategory}"/>
 <input type="hidden"  name= "noseller" id="nosellerVal"  value=" "/>
 <div class="sizes">
-	
+
 	<h3>${brand}&nbsp;${category}&nbsp;Size Chart</h3>
 	<c:choose>
-	<c:when test="${not empty sizeguideData}">	
+		<c:when test="${sizeguideData eq 'dataissue'}">
+			<p style="color: #ff1c47;"><spring:theme code="product.error"/></p>
+		</c:when>
+		
+	<c:when test="${not empty sizeguideData and sizeguideData  ne 'dataissue'}">	
 		
 		<div class="tables">
 			<div class="footwear-size-table">
@@ -90,14 +94,14 @@
 
 					</td>
 
-						 <c:forEach items="${sizeguideData}" var="sizeGuide" >
+						 <%--<c:forEach items="${sizeguideData}" var="sizeGuide" >
 							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>	
 							<td>	
 							<ul>
 									<li  style="font-weight: bold">${sizeGuide.key}</li>
 							
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
-										<li>${sizeGuideValue.dimensionValue}
+										<li>${sizeGuideValue.dimensionSize} - ${sizeGuideValue.dimensionValue}
 											<c:choose>
 											<c:when test="${fn:containsIgnoreCase(sizeGuideValue.dimensionUnit , 'inch')}">"</c:when> 
 											<c:otherwise>${sizeGuideValue.dimensionUnit}</c:otherwise>
@@ -111,7 +115,51 @@
 									</c:if>
 								  </ul>
 						</td>	
-						</c:forEach>
+						</c:forEach> --%>
+						
+						<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="innerLoop">
+						<td>
+							<ul>
+								<li style="font-weight: bold">${sizeGuide.key}</li>
+								
+								<c:set var="outerCounter" value="0" />
+								<c:forEach items="${sizeGuide.value}" var="sizeGuideValue" varStatus="endInnerloop">
+									<c:set var="counter" value="0" />
+									<c:set var="count" value="0" />
+									<c:forEach items="${sizeguideHeader}" var="sizeGuideHeader" varStatus="finaInnerloop">
+									
+										<c:if test="${counter == 0}">
+											<c:choose>
+												<c:when test="${sizeGuideHeader eq sizeGuideValue.dimensionSize}">
+													
+													<c:set var="counter" value="1" />
+													<c:set var="outerCounter" value="${outerCounter+1}" />
+													<li>${sizeGuideValue.dimensionValue}
+														<c:choose>
+														<c:when test="${fn:containsIgnoreCase(sizeGuideValue.dimensionUnit , 'inch')}">"</c:when> 
+														<c:otherwise>${sizeGuideValue.dimensionUnit}</c:otherwise>
+														</c:choose>
+													</li>
+												</c:when>
+												
+												<c:otherwise>
+													
+													<c:if test="${count ge outerCounter}">
+													<li>&nbsp;</li>
+													<c:set var="outerCounter" value="${outerCounter+1}" />
+													</c:if>
+												</c:otherwise>
+											</c:choose>
+										</c:if>
+										<c:set var="count" value="${count+1}" />
+									</c:forEach>
+								</c:forEach>
+
+								
+
+							</ul>
+						</td>
+					</c:forEach>
 				</tr>	
 			</table> 
 		</div>
@@ -122,6 +170,7 @@
 							    <li class="item footwear">
 							
 									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
+									<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
 									<ul>
 
 									<c:if test="${age=='Y' }">
@@ -201,19 +250,20 @@
 			<product:footwearNote/></div>
 			</c:if>		
 		</div>
-			
-		<div class="img">
-		    <c:choose>
-		    <c:when test="${product.rootCategory=='Clothing'}">
-			<img src="${imageURL}" alt="sizeGuideImage" />
-			</c:when>
-			<c:when test="${product.rootCategory=='Footwear'}">
-			<img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" />
-			</c:when>
-			</c:choose>
-		</div>
-		
-		<div class="details">
+
+			<div class="img">
+				<c:choose>
+					<c:when test="${product.rootCategory=='Clothing'}">
+						<img src="${imageURL}" alt="sizeGuideImage" />
+					</c:when>
+					<c:when test="${product.rootCategory=='Footwear'}">
+						<%-- <img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" /> --%>
+						<img src="${imageURL}" alt="sizeGuideImage" />
+					</c:when>
+				</c:choose>
+			</div>
+
+			<div class="details">
 	 	<span id="noProductForSelectedSeller"> <font color="#ff1c47">
 			<spring:theme code="product.product.size.guide.notavail"/></font>
 			</span>

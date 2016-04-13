@@ -91,9 +91,9 @@
 			<map>
 				<entry key="BASIC" value="id"/>
 				<entry key="DEFAULT"
-				       value="BASIC,firstName,lastName,line1,line2,line3,phone,postalCode,town,region,country,addressType,state,defaultAddress"/>
+				       value="BASIC,firstName,lastName,line1,line2,line3,phone,postalCode,town,region,country,addressType,state,defaultAddress,city,landmark"/>
 				<entry key="FULL"
-				       value="region(FULL),lastName,titleCode,phone,companyName,country(FULL),id,title,postalCode,email,visibleInAddressBook,formattedAddress,town,firstName,line1,shippingAddress,line2,addressType,state"/>
+				       value="region(FULL),lastName,titleCode,phone,companyName,country(FULL),id,title,postalCode,email,visibleInAddressBook,formattedAddress,town,firstName,line1,shippingAddress,line2,addressType,state,city,landmark"/>
 			</map>
 		</property>
 	</bean>
@@ -378,10 +378,15 @@
 		          value="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO"/>
 		<property name="levelMapping">
 			<map>
-				<entry key="BASIC" value="name"/>
-				<entry key="DEFAULT" value="BASIC,displayName,address(DEFAULT),geoPoint,formattedDistance"/>
+				<entry key="BASIC" value="name,error,errorCode,status"/>
+				<entry key="DEFAULT" value="BASIC,displayName,address(DEFAULT),geoPoint,formattedDistance,sellerId,slaveId,clicknCollect,mplWorkingDays,remark,orderAcceptanceTAT,orderProcessingTAT,
+				       orderCutoffTimeHD,orderCutoffTimeED,isReturnable,parkingAvailable,location,storeSize,footFall,normalRetailSalesOfStore,ownerShip,managerName,
+				       managerPhone,storeContactNumber,returnstoreID,returnAddress1,returnAddress2,returnCountry,returnState,returnCity,returnPin,active,email0,
+				       email1,email2,email3,email4,email5,email6,email7,email8,email9,phoneNo0,phoneNo1,phoneNo2,phoneNo3,phoneNo4,phoneNo5,phoneNo6,phoneNo7,
+				       phoneNo8,phoneNo9,error,errorCode,status"/>
 				<entry key="FULL"
-				       value="storeImages(FULL),geoPoint(FULL),address(FULL),openingHours(FULL),description,storeContent,name,mapIcon(FULL),formattedDistance,displayName,url,distanceKm,features"/>
+				       value="storeImages(FULL),geoPoint(FULL),address(FULL),openingHours(FULL),description,storeContent,name,mapIcon(FULL),
+				       formattedDistance,displayName,url,distanceKm,features,error,errorCode,status"/>
 			</map>
 		</property>
 	</bean>
@@ -1825,4 +1830,45 @@
 		</property>
 	</bean>
 <!-- Version response -->	
+
+	<bean parent="fieldSetLevelMapping">
+		<property name="dtoClass"
+		          value="de.hybris.platform.commercewebservicescommons.dto.store.ListOfPointOfServiceWsDTO"/>
+		<property name="levelMapping">
+			<map>
+				<entry key="BASIC" value="stores,error,errorCode,status"/>
+				<entry key="DEFAULT"
+				       value="stores(DEFAULT),error,errorCode,status"/>
+				<entry key="FULL"
+				       value="stores(FULL),error,errorCode,status"/>
+			</map>
+		</property>
+	</bean>
+	<bean parent="fieldSetLevelMapping">
+		<property name="dtoClass"
+		          value="de.hybris.platform.commercefacades.dto.storeats.ATSResponseDataWsDTO"/>
+		<property name="levelMapping">
+			<map>
+				<entry key="BASIC"
+				       value="storeId,quantity"/>
+				<entry key="DEFAULT"
+				       value="storeId,quantity"/>
+				<entry key="FULL"
+				       value="storeId,quantity"/>
+			</map>
+		</property>
+	</bean>
+	<bean parent="fieldSetLevelMapping">
+		<property name="dtoClass"
+		          value="de.hybris.platform.commercefacades.dto.storeats.StoreLocationResponseDataWsDTO"/>
+		<property name="levelMapping">
+			<map>
+				<entry key="BASIC" value="ats,ussId,error,errorCode,status"/>
+				<entry key="DEFAULT"
+				       value="ats(DEFAULT),ussId,error,errorCode,status"/>
+				<entry key="FULL"
+				       value="ats(FULL),ussId,error,errorCode,status"/>
+			</map>
+		</property>
+	</bean>
 </beans>

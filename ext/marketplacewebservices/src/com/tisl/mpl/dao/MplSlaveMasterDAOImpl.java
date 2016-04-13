@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.dao;
 
+
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -62,12 +63,12 @@ public class MplSlaveMasterDAOImpl implements MplSlaveMasterDAO
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + ": " + e.getMessage());
+			LOG.debug("FlexibleSearchException Exception while quering POS for a slaveId: " + slaveId + ": " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + ": " + e.getMessage());
+			LOG.debug("UnknownIdentifierException Exception while quering POS for a slaveId: " + slaveId + ": " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
 		catch (final Exception e)
@@ -96,8 +97,9 @@ public class MplSlaveMasterDAOImpl implements MplSlaveMasterDAO
 			//create the flexible search query
 			LOG.debug("call to commerse db search for stores given sellerId and SlaveId ");
 			final FlexibleSearchQuery posQuery = new FlexibleSearchQuery(queryString);
-			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_NAME, slaveId);
+			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_SLAVEID, slaveId);
 			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_SELLERID, sellerId);
+			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_ACTIVE, MarketplacewebservicesConstants.ACTIVE);
 			final List<PointOfServiceModel> posList = flexibleSearchService.<PointOfServiceModel> search(posQuery).getResult();
 
 			if (!posList.isEmpty())
@@ -108,17 +110,17 @@ public class MplSlaveMasterDAOImpl implements MplSlaveMasterDAO
 		}
 		catch (final FlexibleSearchException e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + "And SellerId " + sellerId + ":" + e.getMessage());
+			LOG.debug("FlexibleSearchException Exception while quering POS for a slaveId in findPOSForSellerAndSlave: " + slaveId + "And SellerId " + sellerId + ":" + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
 		}
 		catch (final UnknownIdentifierException e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + "And SellerId " + sellerId + ": " + e.getMessage());
+			LOG.debug("UnknownIdentifierException Exception while quering POS for a slaveId in findPOSForSellerAndSlave: " + slaveId + "And SellerId " + sellerId + ": " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("Exception while quering POS for a slaveId: " + slaveId + "And SellerId " + sellerId + ": " + e.getMessage());
+			LOG.debug("Exception while quering POS for a slaveId in findPOSForSellerAndSlave: " + slaveId + "And SellerId " + sellerId + ": " + e.getMessage());
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return null;
@@ -138,6 +140,7 @@ public class MplSlaveMasterDAOImpl implements MplSlaveMasterDAO
 			//create the flexible search query
 			final FlexibleSearchQuery posQuery = new FlexibleSearchQuery(queryString);
 			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_NAME, posName);
+			posQuery.addQueryParameter(MarketplacewebservicesConstants.POS_ACTIVE, MarketplacewebservicesConstants.ACTIVE);
 			final List<PointOfServiceModel> posList = flexibleSearchService.<PointOfServiceModel> search(posQuery).getResult();
 
 			if (!posList.isEmpty())

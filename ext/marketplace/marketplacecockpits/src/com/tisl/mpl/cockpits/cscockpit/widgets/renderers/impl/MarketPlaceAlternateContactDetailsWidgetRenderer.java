@@ -14,9 +14,12 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.hamcrest.text.IsEmptyString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.zkoss.zhtml.Messagebox;
@@ -28,8 +31,10 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Space;
 import org.zkoss.zul.Textbox;
 
+import com.sun.org.apache.bcel.internal.generic.LSTORE;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.ItemModificationHistoryService;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCallContextController;
@@ -151,9 +156,13 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 								.setSclass("pickupNameFieldTextBox");
 						String errorMsgName = LabelUtils.getLabel(widget,
 								"error.msg.name", new Object[0]);
-						pickupNameFieldTextBox.setConstraint("/[a-zA-Z]*$/:"
-								+ errorMsgName);
-
+						pickupNameFieldTextBox.setConstraint("/[a-zA-Z, ]*$/:"+ errorMsgName);
+//						pickupNameFieldTextBox.setConstraint("/[a-zA-Z]*$/:"
+//								+ errorMsgName);
+						
+//						pickupNameFieldTextBox.setMaxlength(30);
+//						pickupNameFieldTextBox.setConstraint("/^[a-zA-Z]+[ ]?[a-zA-Z]*$/:"+ errorMsgName);
+						
 					}// if
 				}// try
 				catch (final Exception e) {
@@ -251,9 +260,9 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 		public void onEvent(final Event event) throws InterruptedException,
 				ParseException {
 			try {
-				handleUpdateDetails(widget, orderModel, mainOrder,
+				boolean updateSuccess = handleUpdateDetails(widget, orderModel, mainOrder,
 						pickupNameFieldTextBox, pickupPhoneFieldTextBox);
-
+                if(updateSuccess) {
 				TypedObject customer = marketplaceCallContextController
 						.getCurrentCustomer();
 				CustomerModel customermodel = (CustomerModel) customer
@@ -265,12 +274,16 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 						customerId, MarketplaceCockpitsConstants.SOURCE);
 
 				LOG.debug("Pick Up Details Store In CRM successfully");
+				Messagebox.show(LabelUtils.getLabel(widget,
+						CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
+						Messagebox.OK, Messagebox.INFORMATION);
+                }
 			} catch (final Exception e) {
 				LOG.error("unable to render listner", e);
 			}
 		}// onEvent
 
-		private void handleUpdateDetails(
+		private boolean handleUpdateDetails(
 				final Widget<DefaultItemWidgetModel, OrderManagementActionsWidgetController> widget,
 				final OrderModel order, final OrderModel mainOrder,
 				final Textbox pickupNameFieldTextBox,
@@ -284,13 +297,23 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 						"pickupNameFieldvalue"), LabelUtils.getLabel(widget,
 						FAILED_TO_VALIDATE_PICKUP_DETAILS_FORM), Messagebox.OK,
 						Messagebox.ERROR);
-				return;
-			} else if (pickupNameFieldTextBox.getValue().length() > 225) {
+				return false;
+			}
+			
+			/* else if (pickupNameFieldTextBox.getValue().startsWith(" ")) {
+					Messagebox.show(LabelUtils.getLabel(widget,
+							"Doesn't_start_with_space"), LabelUtils.getLabel(widget,
+							FAILED_TO_VALIDATE_PICKUP_DETAILS_FORM), Messagebox.OK,
+							Messagebox.ERROR);
+					return false;
+				}*/
+
+			else if (pickupNameFieldTextBox.getValue().length() > 225) {
 				Messagebox.show(LabelUtils.getLabel(widget,
 						"invalidpickupNameLength"), LabelUtils.getLabel(widget,
 						FAILED_TO_VALIDATE_PICKUP_DETAILS_FORM), Messagebox.OK,
 						Messagebox.ERROR);
-				return;
+				return false;
 			}
 
 			else if (StringUtils.isBlank(pickupPhoneFieldTextBox.getValue())
@@ -301,13 +324,13 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 						FAILED_TO_VALIDATE_PICKUP_DETAILS_FORM), Messagebox.OK,
 						Messagebox.ERROR);
 
-				return;
+				return false;
 			} else if (pickupPhoneFieldTextBox.getValue().length() > 10) {
 				Messagebox.show(LabelUtils.getLabel(widget,
 						"invalidPhoneLength"), LabelUtils.getLabel(widget,
 						FAILED_TO_VALIDATE_PICKUP_DETAILS_FORM), Messagebox.OK,
 						Messagebox.ERROR);
-				return;
+				return false;
 			} else if (!(pickupPhoneFieldTextBox.getValue()
 					.matches(PICKUP_PHONE_REGEX))) {
 
@@ -315,7 +338,7 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 						"mobileNumberValueIncorrect"), LabelUtils.getLabel(
 						widget, FAILED_TO_VALIDATE_PICKUP_DETAILS_FORM),
 						Messagebox.OK, Messagebox.ERROR);
-				return;
+				return false;
 			}
 
 			else {
@@ -357,12 +380,15 @@ public class MarketPlaceAlternateContactDetailsWidgetRenderer extends
 									.createModificationInfo(order));
 					modelService.save(order);
 					modelService.save(mainOrder);
-					Messagebox.show(LabelUtils.getLabel(widget,
+					
+					/*Messagebox.show(LabelUtils.getLabel(widget,
 							CUSTOMER_DETAILS_UPDATED, new Object[0]), INFO,
-							Messagebox.OK, Messagebox.INFORMATION);
+							Messagebox.OK, Messagebox.INFORMATION);*/
 
 				}// if(!error)
+				return valid;
 			}// if(valid)
+			return valid;
 
 		}// handleUpdateDetails
 

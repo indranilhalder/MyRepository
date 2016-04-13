@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.util;
 
+//import de.hybris.platform.catalog.model.ProductFeatureModel;
+//import de.hybris.platform.catalog.model.classification.ClassificationAttributeValueModel;
+import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -32,6 +36,17 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 public class MplBuyBoxUtility
 {
 	/* private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class); */
+
+	//---------------Solve for Issue TISPRD-58---------------------//
+	private static final String COLORAPPAREL = "colorapparel";
+	public static final String CLOTHING = "Clothing";
+	private static final String ELECTRONICS = "electronics";
+	private static final String FOOTWEAR = "footwear";
+	private static final String COLORFAMILYFOOTWEAR = "brandcolorfootwear";
+	private static final String COLORELECTRONICS = "colorelectronics";
+
+	//---------------Solve for Issue TISPRD-58---------------------//
+
 
 	private BuyBoxService buyBoxService;
 
@@ -114,17 +129,16 @@ public class MplBuyBoxUtility
 	public List<PcmProductVariantModel> compareVariants(final ProductModel baseProduct,
 			final PcmProductVariantModel selectedVariantModel)
 	{
-
 		boolean isSizeVariantPresent = false;
 		boolean isCapacityVariantPresent = false;
+		// String variantColor = "";
 		final List<PcmProductVariantModel> pcmProductVariantModelList = new ArrayList<PcmProductVariantModel>();
-
+		final String selectedColor = getVariantColour(selectedVariantModel, selectedVariantModel.getFeatures());
 		for (final VariantProductModel variantProductModel : baseProduct.getVariants())
 		{
 
 			final PcmProductVariantModel pcmVariantProductModel = (PcmProductVariantModel) variantProductModel;
-			final String selectedColor = selectedVariantModel.getColour() != null ? selectedVariantModel.getColour() : "";
-			final String variantColor = pcmVariantProductModel.getColour() != null ? pcmVariantProductModel.getColour() : "";
+			final String variantColor = getVariantColour(pcmVariantProductModel, pcmVariantProductModel.getFeatures());
 			if (selectedColor.equalsIgnoreCase(variantColor))
 			{
 
@@ -148,9 +162,10 @@ public class MplBuyBoxUtility
 			variantComparator.setVariantType("size");
 			Collections.sort(pcmProductVariantModelList, variantComparator);
 		}
-		/*Forcing the capacity check condition for only "Electronics" products
-		  Fix for TISSTRT - 984::Prices of apparel products are not displayed in SERP page with size variants */
-		
+		/*
+		 * Forcing the capacity check condition for only "Electronics" products Fix for TISSTRT - 984::Prices of apparel
+		 * products are not displayed in SERP page with size variants
+		 */
 		if (isCapacityVariantPresent && selectedVariantModel.getProductCategoryType().equalsIgnoreCase("Electronics"))
 		{
 			variantComparator.setVariantType("capacity");
@@ -326,4 +341,58 @@ public class MplBuyBoxUtility
 		this.variantComparator = variantComparator;
 	}
 
+
+
+	public String getVariantColour(final PcmProductVariantModel variantProductModel, final List<ProductFeatureModel> features)
+	{
+		String variantColor = "";
+		for (final ProductFeatureModel productFeature : features)
+		{
+			if (variantProductModel.getProductCategoryType().equals(CLOTHING))
+			{
+				if (null != productFeature.getClassificationAttributeAssignment()
+						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
+						&& productFeature.getClassificationAttributeAssignment().getClassificationAttribute().getCode()
+								.equalsIgnoreCase(COLORAPPAREL))
+
+				{
+					variantColor = productFeature.getValue().toString();
+					break;
+				}
+
+			}
+			else if (variantProductModel.getProductCategoryType().equals(ELECTRONICS))
+			{
+				if (null != productFeature.getClassificationAttributeAssignment()
+						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
+						&& productFeature.getClassificationAttributeAssignment().getClassificationAttribute().getCode()
+								.equalsIgnoreCase(COLORELECTRONICS))
+
+				{
+					variantColor = productFeature.getValue().toString();
+					break;
+				}
+
+			}
+			else if (variantProductModel.getProductCategoryType().equals(FOOTWEAR))
+			{
+				if (null != productFeature.getClassificationAttributeAssignment()
+						&& null != productFeature.getClassificationAttributeAssignment().getClassificationAttribute()
+						&& productFeature.getClassificationAttributeAssignment().getClassificationAttribute().getCode()
+								.equalsIgnoreCase(COLORFAMILYFOOTWEAR))
+
+				{
+					variantColor = productFeature.getValue().toString();
+					break;
+
+				}
+			}
+
+		}
+		if (StringUtils.isEmpty(variantColor))
+		{
+			variantColor = variantProductModel.getColour() != null ? variantProductModel.getColour() : "";
+		}
+		return variantColor;
+	}
 }

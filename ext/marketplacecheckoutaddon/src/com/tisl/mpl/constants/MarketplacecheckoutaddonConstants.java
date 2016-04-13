@@ -40,7 +40,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String SOPPAGEDATA = "silentOrderPageData";
 	public final static String PAYMENTFORMMPLURL = "paymentFormMplUrl";
 	public final static String PAYMENTVIEWURL = "/store/mpl/en/checkout/multi/payment-method/view";
-	public final static String LOGERROR = "Failed to build beginCreateSubscription request";
+	public final static String LOGERROR = "Failed to load Payment Page";
 	public final static String ERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.generalError";
 	public final static String PAYMENTTRANERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTransactionError";
 	public final static String TRANERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.transactionError";
@@ -210,7 +210,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CHANNEL_WEB = "WEB";
 
 	public static final String UPDATE_CHECK_PINCODE = "/updatePincodeCheck";
-	
+
 	//Payment Messages
 	public static final String CVV_HELP = "payment.cards.CVVHelpContent";
 	public static final String CVV_HELP_VAR = "cvvHelp";
@@ -233,8 +233,11 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String EXPYEARS = "noOfYearsFromCurrentYear";
 
 	public static final String MPLCOUPONURL = "/checkout/multi/coupon";
-	//delivery mode 
+	//delivery mode
 	public static final String CLICK_N_COLLECT = "click-and-collect";
+
+	public static final String PAYNOWCOUPONINVALID = "couponinvalid";
+	public static final String COUPONINVALID = "Applied coupon is not valid";
 
 	private MarketplacecheckoutaddonConstants()
 	{

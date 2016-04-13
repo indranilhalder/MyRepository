@@ -725,8 +725,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 	public VoucherModelService getVoucherModelService()
 	{
-
-
 		return voucherModelService;
 	}
 

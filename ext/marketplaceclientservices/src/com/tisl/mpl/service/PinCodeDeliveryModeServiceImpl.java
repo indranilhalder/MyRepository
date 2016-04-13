@@ -323,7 +323,7 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					{
 						if (null != storeLocationRequestDataList.get(i).getUssId())
 						{
-							storelocreqObj.setUssId(storeLocationRequestDataList.get(i).getUssId().toUpperCase());
+							storelocreqObj.setUssId(storeLocationRequestDataList.get(i).getUssId());
 						}
 						if (null != storeLocationRequestDataList.get(i).getStoreId())
 						{

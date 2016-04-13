@@ -1,1 +1,1 @@
-Hi you Order Collected By ${ctx.pickupPerson}
+Hi Your Order Collected By #if($ctx.pickupPerson)${ctx.pickupPerson}#end

@@ -67,6 +67,7 @@
 
 #pickName {
 	height: 25px !important;
+	white-space: nowrap;
 }
 .order {
 	margin-top: 8px !important;
@@ -351,7 +352,7 @@
 									</c:if> --%>
 							</div>
 						</li>
-	                            <c:set var="editButton" value="enable" />
+	                            <c:set var="button" value="true" />
 								<c:set var="entryCount" value="0"></c:set>
 								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 									varStatus="status">
@@ -396,6 +397,7 @@
 								</address>
 							</div>
 							</c:if>
+							<c:forEach items="${filterDeliveryMode}" var="deliveryType">
 							 <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 								varStatus="status">
 								<input type="hidden" id="subOrderCode"
@@ -403,6 +405,7 @@
 								<input type="hidden" id="newCode" value="${subOrder.code}" />
 								<c:forEach items="${sellerOrder.entries}" var="entry"
 									varStatus="entryStatus">
+									<c:if test="${deliveryType eq entry.mplDeliveryMode.code}">
 									<c:if
 											test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 								    <c:if test="${storeId ne entry.deliveryPointOfService.address.id}">
@@ -412,32 +415,38 @@
 																	<div class="item-header">
 															<c:set var="storeId" value="${pos.id}" />
 															
-													<h3>${entryCount-HD_ED_Count} Product(s)-Collect
-																In-Store</h3> 
+											    <c:set value="${subOrder.entries}" var="parentRefEntries" />
+											    <c:set value="0" var="cncQuantity" />
+	                                            <c:forEach items="${subOrder.entries}" var="parentRefEntry">
+		                                           <c:if	test="${parentRefEntry.deliveryPointOfService.address.id eq pos.id 
+		                                           and parentRefEntry.mplDeliveryMode.code eq 'click-and-collect'}">
+		                                                  <c:set value="${cncQuantity+parentRefEntry.quantity}" var="cncQuantity" />     
+		                                           </c:if>
+	                                            </c:forEach> 
+	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
 															<br>
 															<br>
-						
+						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
-																${fn:escapeXml(pos.firstName)}&nbsp;
-																${fn:escapeXml(pos.lastName)}<br>
-																${fn:escapeXml(pos.companyName)} <br>
-																${fn:escapeXml(pos.line1)}&nbsp;
-																${fn:escapeXml(pos.line2)}
-																${fn:escapeXml(pos.town)}, <br>
-																${fn:escapeXml(pos.state)},
-																${fn:escapeXml(pos.country.name)},
-																${fn:escapeXml(pos.postalCode)}
-																${fn:escapeXml(pos.country.isocode)} <br>
-																+91&nbsp; ${fn:escapeXml(pos.phone)} <br>
+															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}<br></c:if>
+															  <c:if test="${not empty pos.line1}">	${fn:escapeXml(pos.line1)}&nbsp;</c:if>
+															  <c:if test="${not empty pos.line2}">${fn:escapeXml(pos.line2)}&nbsp;</c:if>
+															  <c:if test="${not empty pos.state}">${fn:escapeXml(pos.state)},&nbsp;</c:if>
+															  <c:if test="${not empty pos.country.name}">${fn:escapeXml(pos.country.name)},&nbsp;</c:if>
+															  <c:if test="${not empty pos.postalCode}">${fn:escapeXml(pos.postalCode)}&nbsp;</c:if>
+															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}<br></c:if>
+															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)} <br></c:if>
 															</address>
+													</c:if>
 															</div>
 								  	        </c:if>
 									</c:if>
 									
 									<div class="item-fulfillment">
+									<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 										<p>
 											<spring:message code="mpl.myBag.fulfillment"></spring:message>
 											<!-- TISEE-6290 -->
@@ -456,6 +465,7 @@
 											</c:forEach>
 											<!-- TISEE-6290 -->
 										</p>
+									</c:if>
 										<p>
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
 											<span>${sellerOrder.code}</span>
@@ -468,14 +478,29 @@
 														<%-- <div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div>  --%>
 														&nbsp; &nbsp;
 														<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+														<c:set var="editButton" value="enable" />  
+										                  <c:if test="${button ne false}">  
+											             	 <c:choose>
+												                <c:when test="${not empty entry.consignment.status}">
+												                   <c:set var="status">${entry.consignment.status}</c:set>
+												                   <c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
+														              <c:if test="${sellerOrderStatus eq status}">
+														                 <c:set var="editButton" value="disable" />
+														              </c:if>
+													              </c:forEach>
+												               </c:when> 
+												               <c:otherwise>
+												                    <c:set var="status">${sellerOrder.status}</c:set>
+                                                                 <c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
+														             <c:if test="${sellerOrderStatus eq status}">
+														              <c:set var="editButton" value="disable" />
+														            </c:if>
+														         </c:forEach>
+                                                              </c:otherwise>
+											               </c:choose>
+										               </c:if>
 														
-														<c:forEach items="${subOrderStatus}" var="sellerOrderStatus">
-														<c:if test="${sellerOrderStatus eq sellerOrder.status }">
-														     <c:set var="editButton" value="disable" />
-														</c:if>
-													   </c:forEach>
-														
-														<c:if test="${editButton eq 'enable'}">
+												<c:if test="${editButton eq 'enable' and button ne false}">
 														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
@@ -483,7 +508,7 @@
 														<!-- <a type="button" id="button" class="pickupeditbtn" 
 														style="width: 11px; padding-top: 7px; padding-left: -45px; font-weight: 100;margin-left: 15pc;">Edit
 													    </a> -->
-													   <c:set var="editButton" value="disable" />
+													  <c:set var="button" value="false" />
 													   <div class="container pickup_Edit"
 														style="margin-left: 181px; margin-top: -22px;">
 														
@@ -501,7 +526,7 @@
 																		
 																		<div class="col-md-7"
 																			style="z-index: 99999 !important;">
-																			<input id="pickUpName" class="pickUpName" type="Text"
+																			<input id="pickUpName" class="pickUpName" type="Text" maxlength="30"
 																				name="pickUpName1"
 																				style="height: 28px; margin-top: 6px; z-index: 119; margin-left: 47px;"
 																				value="${sellerOrder.getPickupName()}" /> <br />
@@ -581,7 +606,7 @@
 													Price:
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
-														<format:price priceData="${entry.totalPrice}"
+														<format:price priceData="${entry.amountAfterAllDisc}"
 															displayFreeForZero="true" />
 													</ycommerce:testId>
 												</p>
@@ -605,7 +630,7 @@
 											<c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 												<a
-													href="${request.contextPath}/my-account/order/returnReplace?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
@@ -1146,11 +1171,13 @@
 																		${displayMsgVar}
 																		<!-- TISEE-5433 -->
 																		<c:if
-																			test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null'}">
+																			test="${not empty logistic[entry.orderLineId] and fn:toLowerCase(logistic[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
+																			}">
 																			<p>Logistics: ${logistic[entry.orderLineId]}</p>
 																		</c:if>
 																		<c:if
-																			test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null'}">
+																			test="${not empty awbNum[entry.orderLineId] and fn:toLowerCase(awbNum[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
+																			}">
 																			<c:choose>
 																				<c:when
 																					test="${not empty trackingurl[entry.orderLineId]}">
@@ -1276,10 +1303,12 @@
 
 																	${displayMsgVar}
 																	<!-- TISEE-5433 -->
-																	<c:if test="${not empty returnLogistic[entry.orderLineId] and fn:toLowerCase(returnLogistic[entry.orderLineId]) ne 'null'}">
+																	<c:if test="${not empty returnLogistic[entry.orderLineId] and fn:toLowerCase(returnLogistic[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
+																	}">
 																 	<p>Logistic : ${returnLogistic[entry.orderLineId]}</p>
 																 	</c:if>
-																 	<c:if test="${not empty returnAwbNum[entry.orderLineId] and fn:toLowerCase(returnAwbNum[entry.orderLineId]) ne 'null'}">
+																 	<c:if test="${not empty returnAwbNum[entry.orderLineId] and fn:toLowerCase(returnAwbNum[entry.orderLineId]) ne 'null' and entry.mplDeliveryMode.code ne 'click-and-collect'
+																 	}">
 																 		<c:choose>
 																 		<c:when test="${not empty trackingurl[entry.orderLineId]}">
 																 			<p>AWB No. <a href="${trackingurl[entry.orderLineId]}">${returnAwbNum[entry.orderLineId]}</a>
@@ -1327,10 +1356,10 @@
 										<!-- End Order Tracking diagram -->
 									</div>
 
-
+                                   </c:if>
+								</c:forEach>
 								</c:forEach>
 							</c:forEach>
-
 						</li>
 
 
@@ -1539,21 +1568,64 @@ $(function() {
 		}
 	}
 	
+	function checkWhiteSpace(text) {
+        var letters = new RegExp(/^(\w+\s?)*\s*$/);
+        var number = new RegExp(/\d/g);
+        if(letters.test(text))
+	        {
+	        	if(number.test(text))
+		        {
+		            return false;
+		        }
+		        else
+		        {
+		            var enteredText = text.split(" ");
+                    var length = enteredText.length;
+                    var count = 0;
+                    var countArray = new Array();
+                    for(var i=0;i<=length-1;i++) {
+                        if(enteredText[i]==" " || enteredText[i]=="" || enteredText[i]==null) {
+                            countArray[i] = "space";
+                            count++;
+                        } else {
+                            countArray[i] = "text";
+                        }
+                    }
+                    var lengthC = countArray.length;
+                    for(var i=0;i<=lengthC-1;i++) {
+                        //console.log(countArray[i+1]);
+                        if(countArray[i] == "space" && countArray[i+1] == "space" || countArray[i] == "text" && countArray[i+1] == "space" && countArray[i+2] == "text" || countArray[i] == "text" && countArray[i+1] == "space") {
+                            return false;
+                            break;
+                        } else if (i == lengthC-1) {
+                        	return true;
+                        	break;
+                        }   
+                    }
+		        }
+	        }
+	        else
+	        {
+	            return false;
+	        }
+    }
+	
 	 function editPickUpDetails(orderId) {
 		      var name=$("#pickUpName").val();
 		      var mobile=$("#pickMobileNo").val(); 	 
 		      var isString = isNaN(mobile);
-		      var nameValidation =/^[a-zA-Z()]+$/.test(name);
+		      var mobile=mobile.trim();
+		      //var regExp = new RegExp("^[a-zA-Z]+[ ]?[a-zA-Z]+$");
 		      $(".pickupPersonNameError, .pickupPersonMobileError").hide();
 		       if(name.length <= 3 ){    
 		    	     $(".pickupPersonNameError").show();
 		    	     $(".pickupPersonNameError").text("Enter Atleast 4 Letters");
 		      }
-		       else if(nameValidation== false){
+		       else if(checkWhiteSpace(name) == false){
 		    	     $(".pickupPersonNameError").show();
 		    	     $(".pickupPersonNameError").text("Enter only Alphabet");
 		       }	       
-		       else if (isString==true){
+		       else if(isString==true || mobile.trim()==''){
 		    	  $(".pickupPersonMobileError").show();
 		          $(".pickupPersonMobileError").text("Enter only numbers");
 		      }else if(mobile.length<=9 || mobile.length >= 11) {   
@@ -1593,6 +1665,12 @@ $(function() {
 		      } 
 	}	 
 	$(document).ready(function(){
+		    var length = $(".returnStatus .dot").length;
+		    if(length >=3) {
+			    var percent = 100/parseInt(length);
+			    $(".returnStatus .dot").css("width", percent+"%");
+		    }
+		    
 		 $(".pickupeditbtn").click(function(){
 			
 		

@@ -1281,7 +1281,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	<bean id="sizeGuideComparator"
 	      class="com.tisl.mpl.facade.comparator.SizeGuideComparator">
-		<property name="pattern" value="[0-9]+(\.[0-9])*"/>
+		<!-- <property name="pattern" value="^[0-9]+$"/> -->
+		<!-- Changes for TISPRO-250 -->
+		<property name="pattern" value="^[0-9]+$"/>
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1306,6 +1308,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="sizeGuideHeaderComparator"
 	      class="com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator">
 		<property name="pattern" value="^[0-9]+$"/>
+		<!-- Changes for TISPRO-250 -->
+		<!-- <property name="pattern" value="[0-9]+(\.[0-9])*"/> -->
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1425,6 +1429,11 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="voucherTransactionPopulator"
 			class="com.tisl.mpl.facades.populators.MplVoucherTransactionHistoryPopulator">
 	</bean>
+	
+	<alias name="mplPointOfServicePopulator" alias="pointOfServicePopulator"/>
+	<bean id="mplPointOfServicePopulator" class="com.tisl.mpl.facade.store.populator.MplPointOfServicePopulator" parent="defaultPointOfServicePopulator"/>
 
+	<bean id="gigyaFacade"
+		class="com.tisl.mpl.facades.account.reviews.impl.GigyaFacadeImpl">
+	</bean>
 </beans>
-

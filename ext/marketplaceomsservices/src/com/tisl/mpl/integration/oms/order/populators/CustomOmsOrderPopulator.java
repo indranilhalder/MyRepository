@@ -28,6 +28,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -228,8 +229,14 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		if (source.getDeliveryAddress() != null)
 		{
 			//stubbed as there is not there in user or address table
-			target.setFirstName(source.getDeliveryAddress().getFirstname());
-			target.setLastName(source.getDeliveryAddress().getLastname());
+			if (StringUtils.isNotBlank(source.getDeliveryAddress().getFirstname()))
+			{
+				target.setFirstName(source.getDeliveryAddress().getFirstname());
+			}
+			if (StringUtils.isNotBlank(source.getDeliveryAddress().getFirstname()))
+			{
+				target.setLastName(source.getDeliveryAddress().getLastname());
+			}
 		}
 
 		//target.setCancellable(true);
@@ -252,11 +259,19 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		}
 		else
 		{
+			if(source.getUser() != null && StringUtils.isNotBlank(((CustomerModel)source.getUser()).getFirstName()))
+			{
+				firstName=((CustomerModel)source.getUser()).getFirstName();
+				lastName=((CustomerModel)source.getUser()).getLastName();
+			}
+			else
+			{
 			final String[] names = getCustomerNameStrategy().splitName(source.getUser().getName());
 			if (names != null)
 			{
 				firstName = names[0];
 				lastName = names[1];
+			}
 			}
 		}
 
@@ -271,10 +286,22 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			shippingLastName = lastName;
 		}
 
-		target.setFirstName(firstName);
-		target.setLastName(lastName);
-		target.setShippingFirstName(shippingFirstName);
-		target.setShippingLastName(shippingLastName);
+		if (StringUtils.isNotBlank(firstName))
+		{
+			target.setFirstName(firstName);
+		}
+		if (StringUtils.isNotBlank(lastName))
+		{
+			target.setLastName(lastName);
+		}
+		if (StringUtils.isNotBlank(shippingFirstName))
+		{
+			target.setShippingFirstName(shippingFirstName);
+		}
+		if (StringUtils.isNotBlank(shippingLastName))
+		{
+			target.setShippingLastName(shippingLastName);
+		}
 	}
 
 	protected boolean isGuestCustomerOrder(final OrderModel order)

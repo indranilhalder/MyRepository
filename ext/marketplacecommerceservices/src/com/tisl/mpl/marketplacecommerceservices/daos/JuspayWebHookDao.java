@@ -107,4 +107,12 @@ public interface JuspayWebHookDao
 	 */
 	List<RefundTransactionMappingModel> fetchRefundTransactionMapping(String juspayRefundId);
 
+
+	/**
+	 * @Decsription : Fetch Submit Order Process Name From Base Store
+	 *
+	 * @return BaseStoreModel
+	 */
+	BaseStoreModel getSubmitOrderProcessName();
+
 }

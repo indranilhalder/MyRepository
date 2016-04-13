@@ -1,4 +1,5 @@
 /*Facebook Variables to be Provided by TCS*/
+
 var fbID = '';
 var fbAccessToken = '';
 
@@ -40,7 +41,7 @@ if (searchCategory_id){
 		}else if(searchCategory_id !== 'all'){
 			seller_id = searchCategory_id;	
 		}else{
-			category_id = 'all';
+			category_id = '';
 		}
 }
 if (searchCategory_idFromMicrosite){ // only for microsite search
@@ -48,7 +49,7 @@ if (searchCategory_idFromMicrosite){ // only for microsite search
 		brand_id = searchCategory_idFromMicrosite;
 		}
 		else{
-				category_id = 'all';
+				category_id = '';
 			}
 }
 // Array[productCode] for wishlist and cart pages
@@ -511,6 +512,9 @@ function popupwindow(productId) {
 			$(".imageList ul li img").css("height", "102px");
 		}
 });
+	  params = {'count' : '0', 'site_product_id': productId};
+	  params = buildParams(params);
+	  callRecApi(params, rootEP + '/SocialGenomix/recommendations/products/jsonp');
 }
 function compareDateWithToday(SaleDate) {
 	var today = new Date();
@@ -653,8 +657,11 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  else if(obj.price != null && parseInt(obj.price) > parseInt(obj.discounted_price) && parseInt(obj.price) > 0){
 			  html += '<p class="old moprice">₹'+parseInt(obj.price)+'</p>';
 		  }
-		  html += '<p class="sale discprice">₹'+parseInt(obj.discounted_price)+'</p>';
+		  html += '<p class="normal discprice">₹'+parseInt(obj.discounted_price)+'</p>';
 	  }
+	  }
+	  else if(Math.round(obj.original_price) == (obj.price)){
+		  html += '<p class="normal moprice">₹'+parseInt(obj.price)+'</p>';
 	  }
 	  else if(obj.price != null || obj.price != '' || obj.price != "undefined"){
 		  if(parseInt(obj.price) > 0){
@@ -664,6 +671,7 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  html += '<p class="sale moprice">₹'+parseInt(obj.price)+'</p>';
 		  }
 	  }
+	 
 	  if(!obj.sizes){
 		  html += '</div></div></a>';
 		  html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'+obj.site_product_id+'"></p>';
@@ -686,10 +694,10 @@ function makeProductHtml(widgetElement, obj, rid) {
 		  } else {
 		  obj.sizes.sort() /*Not a string-based size array, sort normally*/
 		  }
-		   	html += '<span style="padding-bottom: 0;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
+		   	html += '</div><span style="padding-bottom: 0;line-height:2;" class="sizesAvailable">Size : ['+obj.sizes+'] </span>';
 		  }
 		  } 
-	  html += '</div></div></a>';
+	  html += '</div></a>';
 	  html += '<p style="font-size: 12px;margin-top: 33px;color: rgb(255, 28, 71);" id="status'+obj.site_product_id+'"></p>';
 	  html += '</li>';
 	  return html;
@@ -839,12 +847,14 @@ function updatePage(response, widgetMode) {
     catHtml += '</ul></div></div>';
     
     if(slider) {
-    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
+    	    	if(site_page_type === 'search' && widgetElement === 'ia_products_search'){
     		html += '<h1><span style="color: black !important;">Best Sellers</span>';
     	}else if(site_page_type === 'viewSellers' && widgetElement === 'ia_products'){
     		html += '<h1><span style="color: black !important;">You May Also Need</span>';
     	}else{
+    		
     		html += '<h1><span style="color: black !important;">'+productWidgetTitle[jQuery.inArray(widgetMode, productWidget)]+'</span>';
+    		
     	}
       
       /*For hot we need a scrolldown bar to select filters*/
@@ -997,17 +1007,17 @@ function updatePage(response, widgetMode) {
     		/*Animate Carousel*/
     	      $("#" + widgetElement + "_list").owlCarousel({
     	    	  
-    	        items : 4,
-    	        scrollPerPage: true,
-    	        itemsDesktop : [1199,4],
-    	        itemsDesktopSmall : [980,3],
-    	        itemsTablet: [768,2],
-    	        itemsMobile : [479,1],
-    	        navigation: true,
-    	        navigationText : [],
-    	        pagination:false,
-    	        rewindNav : false
-    	      });
+    	    	  items : 4,
+    	          scrollPerPage: true,
+    	          itemsDesktop : [1199,3],
+    	          itemsDesktopSmall : [980,2],
+    	          itemsTablet: [768,2],
+    	          itemsMobile : [479,1],
+    	          navigation: true,
+    	          navigationText : [],
+    	          pagination:false,
+    	          rewindNav : false
+    	        });
     	} 
       /*Animate Carousel*/
       $("#" + widgetElement + "_list").owlCarousel({
@@ -1212,10 +1222,10 @@ var carousel = $("#mplCategoryCarousel");
 			navigation:true,
 			navigationText : [],
 			pagination:false,
-			itemsDesktop : [5000,4], 
-			itemsDesktopSmall : [1400,4], 
-			itemsTablet: [650,2], 
-			itemsMobile : [480,2], 
+			itemsDesktop : [1199,3],
+            itemsDesktopSmall : [980,2],
+            itemsTablet: [768,2],
+            itemsMobile : [479,1], 
 			rewindNav: false,
 			lazyLoad:true,
 			navigation : true,	        

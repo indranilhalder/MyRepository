@@ -42,6 +42,10 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final String TICKET_SUB_TYPE_CODE="UCP";
 	public static final String EMPTY = "".intern();
 	
+	public static final String CUSTOMER_NAME = "Customer".intern();
+	public static final String STORE_NAME = "Store".intern();
+	public static final String ORDER_ID = "Order".intern();
+	
 	public static final String ORDER_ERROR = "Order not found in current BaseStore";
 	public static final String ORDER_CURRENCY_ERROR = "source order currency must not be null";
 	
@@ -71,6 +75,21 @@ public final class MarketplaceomsordersConstants extends GeneratedMarketplaceoms
 	public static final String SMS_MESSAGE_ORDER_DELIVERY = "And it's done! You received {0} item(s) of your order # {1} today. We had tons of fun serving you. Thanks! To shop on the move, download our app at {2} .";
 	
 	public static final String SMS_SERVICE_APP_DWLD_URL = "marketplace.sms.app.download.url";
+	
+	public static final String ORDER_COLLECTED_SMS = "Hi {0},Your {1}  has been successfully collected from {2} on {3}";
+	public static final String SMS_VARIABLE_ZERO_ORD_COLLECTED = "{0}";
+	public static final String SMS_VARIABLE_ONE_ORD_COLLECTED = "{1}";
+	public static final String SMS_VARIABLE_TWO_ORD_COLLECTED = "{2}";
+	public static final String SMS_VARIABLE_THREE_ORD_COLLECTED = "{3}";
+	
+	
+	public static final String ORDER_COLLECTED_SMS_CUSTOMER = "Hi {0},{1}  has successfully collected your package from {2} on {3} with {4}";
+	public static final String SMS_VARIABLE_ZERO_ORD_COLLECTED_CUSTOMER = "{0}";
+	public static final String SMS_VARIABLE_ONE_ORD_COLLECTED_CUSTOMER = "{1}";
+	public static final String SMS_VARIABLE_TWO_ORD_COLLECTED_CUSTOMER = "{2}";
+	public static final String SMS_VARIABLE_THREE_ORD_COLLECTED_CUSTOMER = "{3}";
+	public static final String SMS_VARIABLE_FOUR_ORD_COLLECTED_CUSTOMER = "{4}";
+	
 	private MarketplaceomsordersConstants()
 	{
 		//empty to avoid instantiating this constant class

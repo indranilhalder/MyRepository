@@ -42,13 +42,13 @@ ACC.storefinder = {
 	 
 			ACC.storefinder.bindStoreTestChange();
 		}
-		$("storeFinder").addClass("display: block");
+		//$("storeFinder").addClass("display: block");
 	},
 
 
 	bindPagination:function ()
 	{
-        console.debug("bindPagination"+document.getElementById("store-finder-map"));
+        //console.debug("bindPagination"+document.getElementById("store-finder-map"));
 	},
 
 	bindStoreChange:function()
@@ -58,14 +58,23 @@ ACC.storefinder = {
 			 
 		});
 		
-		$(document).on("change","#storelocator-query",function(e){
+		/*$(document).on("change","#storelocator-query",function(e){
 			 
-			console.debug($("#storelocator-query").val())
+			//console.debug($("#storelocator-query").val())
 			var inputtext=$("#storelocator-query").val();
 			if(inputtext){ 
 			$('#storeSearchTextValue').text(inputtext);
 			}
-		})
+		})*/
+		$("#storelocator-query").keyup(function(){
+			if(!$("#storelocator-query").val()){
+				$("#storesnear").hide();
+			}else {
+			$("#storesnear").show();
+			$('#storeSearchTextValue').text($("#storelocator-query").val());
+			}
+		});
+		$('#storeSearchTextValue').text($("#storelocator-query").val());
 
 	},
 
@@ -83,7 +92,6 @@ ACC.storefinder = {
 		storeInformation = ACC.storefinder.storeId;
 		 var markerZoom= Number($("#markerZoom").val());
 		 var initialZoom=  Number($("#initialZoom").val());
-		var mapIcons={"TATA Store":"https://maps.google.com/mapfiles/marker" + 'A' + ".png"};
 		
 		if($(".js-store-finder-map").length > 0)
 		{			
@@ -95,63 +103,134 @@ ACC.storefinder = {
 				zoomControl: false,
 				panControl: false,
 				streetViewControl: false,
-				disableDefaultUI:true,
+				zoomControl:true,
+				scrollwheel: false,
+			  	zoomControlOptions:{
+			  		position:google.maps.ControlPosition.RIGHT_TOP
+			  	},
+			  	disableDefaultUI:false,
 				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				center: centerPoint
 			}
 			
 			var map = new google.maps.Map(document.getElementById("store-finder-map"), mapOptions);
-			
+			//To create bounds.
+		    var bounds = new google.maps.LatLngBounds();
+		    
 			for (var i = 0; i < storeData.length; i++) { 
 			 var localStoreInfo=storeData[i];
 				
 			var comIcon="";
-			if(!(localStoreInfo["iconUrl"])){
-				comIcon="https://maps.google.com/mapfiles/marker" + 'A' + ".png"
+			if(!(localStoreInfo["regularImgUrl"])){
+				comIcon="";
 			 }else {
-				 comIcon=localStoreInfo["iconUrl"];
-				 mapIcons[localStoreInfo["displayName"]] = comIcon;
+				 comIcon=localStoreInfo["regularImgUrl"];
 			   }
 				 
 			var  marker = new google.maps.Marker({
 				position: new google.maps.LatLng(localStoreInfo["latitude"], localStoreInfo["longitude"]),
 				map: map,
-				title: localStoreInfo["name"],
+				title: localStoreInfo["displayName"],
 				icon: comIcon,
-				//opacity:0.6
 			});
 			
+			//Added bounds.
+			bounds.extend(marker.position);
 			var infowindow = new google.maps.InfoWindow({
 				content: "",
 				disableAutoPan: false,
-				maxWidth:100
+				maxWidth:300 
 			});
 			google.maps.event.addListener(infowindow,'closeclick',function(){
-				ACC.storefinder.removeGamma(map);
+				//ACC.storefinder.removeGamma(map);
 				});
+			
+			 //For marker mover
+			 google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+										        return function() {
+										          if(!(storeData[i].onHoverImgUrl)){
+										        	  console.debug("No Hover image.");
+										          }else{
+										        	  marker.setIcon(storeData[i].onHoverImgUrl);  
+										          }
+										        }
+										      })(marker, i));
+			
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
 		          var infoMsg=storeData[i];
-		          var infoString="<div style=\"width:200px; height:100px\">"+infoMsg["displayName"]+" "+infoMsg["name"]+"</br> Distance Appx."+infoMsg["formattedDistance"]+" </br>"+infoMsg["line1"]
-					+" "+infoMsg["line2"];
-		          var openingMsg="";
-		          if(infoMsg["openings"]){
-		        	  var opening=infoMsg["openings"];
-		        	  for (var key in opening) {
-		    	          var value = opening[key];
-		    	          openingMsg +="</br>"+ key+" : "+value;
-		    	        } 
+		          var infoString="<div>"+"<p>" +infoMsg["displayName"]+ "</p><p>Distance Appx."+infoMsg["formattedDistance"]+"</p> <p>"+infoMsg["line1"]
+					+" "+infoMsg["line2"]+infoMsg["postalCode"]+"</p>";
+		          if(infoMsg["mplOpeningTime"] && infoMsg["mplClosingTime"]){
+		        	  infoString=infoString+'<p>PiQ UP HRS : '+ infoMsg["mplOpeningTime"]+'-'+infoMsg["mplClosingTime"]+"</p>";
 		          }
-		          infowindow.setContent(infoString+openingMsg+"</div>");
+		         // console.log(infoMsg["mplWorkingDays"]);
+		          if(infoMsg["mplWorkingDays"]){
+		        	    var	collectionDays = infoMsg["mplWorkingDays"].split(",");
+						var weekDays = ["0","1","2","3","4","5","6"];
+						var collectionWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+						var missing = new Array();
+						var count = 0;
+						var j = 0;
+						var lenC = weekDays.length;
+
+						for ( ; j < lenC; j++ ) {
+						    if ( collectionDays.indexOf(weekDays[j]) == -1 ) {
+							 	missing[count] = weekDays[j]; count++; 
+							}
+						}
+						if(missing.length < 1) {
+							infoString=infoString+"<p>Weekly Off : All Days Open </p>" ;
+							//console.log("Weekly Off : All Days Open");
+						}
+						else {
+							infoString=infoString+"<p>Weekly Off : ";
+							var weekOff="";
+							for(var y = 0; y < missing.length; y++) {
+								console.log(collectionWeek[missing[y]]);
+								weekOff=weekOff+collectionWeek[missing[y]];
+								if(y != missing.length-1) {
+									console.log(',');
+									weekOff=weekOff+',';
+									 
+								}
+							}
+							
+							infoString=infoString+weekOff+"</p>"
+						}
+
+		          }
+		         
+		          infowindow.setContent(infoString+"</div>");
 		          infowindow.open(map, marker);
 		          map.setZoom(markerZoom);
 		          map.setCenter(marker.getPosition());
-		          ACC.storefinder.applyGamma(map);
+		          if(!(storeData[i].onClickImgUrl)){
+		        	  console.debug("No On image.");
+		          }else{
+		        	  console.debug("locatorJson[i].onClickImgUrl");
+		        	  marker.setIcon(locatorJson[i].onClickImgUrl);  
+		          };
 		        }
 		      })(marker, i));
 			marker.setMap(map);	 
 			}
-			ACC.storefinder.staticLegends(map);
+			/* Create a DIV to hold the control and call StoreFinderLegendsControl() */
+		    var homeLegendsControlDiv = document.createElement('div');
+		    var homeLegendsControl = new ACC.storefinder.StoreFinderLegendsControl(homeLegendsControlDiv, map);
+		    homeLegendsControlDiv.index = 1;
+			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
+			
+			map.fitBounds(bounds);
+			
+			//To control max zoom label
+			google.maps.event.addListenerOnce(map, 'bounds_changed', function(event){
+				console.info(this.getZoom());
+				  if(this.getZoom()>18){
+					  this.setZoom(18); 
+				  }
+				});
+			
 		}
 		
 	},
@@ -164,7 +243,25 @@ ACC.storefinder = {
 			var q = $(".js-store-finder-search-input").val();
 
 			if(q.length>0){
-				ACC.storefinder.getInitStoreData(q);
+				var geocoder = new google.maps.Geocoder();
+				var lat='0';
+				var lng='0';
+				if(q.trim()=='Current Location' && ACC.storefinder.coords.latitude ){
+					ACC.storefinder.getInitStoreData(null,ACC.storefinder.coords.latitude,ACC.storefinder.coords.longitude);
+				}else{
+				geocoder.geocode({ 'address': q + ' India' }, function(results, status) {
+				    if (status == google.maps.GeocoderStatus.OK) {
+				    	var searchLocation = results[0].geometry.location;
+				    	//console.log("Check for logs.")
+				    	lat=searchLocation.lat();
+				    	lng=searchLocation.lng();
+				    	//console.log(lat);
+				    	ACC.storefinder.getInitStoreData(null,lat,lng);
+				    }else{
+				    	ACC.storefinder.getInitStoreData(null,lat,lng);
+				    } 
+				        }); 
+				}
 			}else{
 				if($(".js-storefinder-alert").length<1){
 					var emptySearchMessage = $(".btn-primary").data("searchEmpty")
@@ -176,10 +273,10 @@ ACC.storefinder = {
 
 		//$(".js-store-finder").hide();
 		$(document).on("click",'#findStoresNearMe', function(e){
-			//e.preventDefault()
-			$('#findStoresNearMe').addClass("disabled");
+			$("#storesnear").show();
+			$('#storeSearchTextValue').text('Your Location');
+			$('#storelocator-query').val('Current Location')
 			ACC.storefinder.getInitStoreData(null,ACC.storefinder.coords.latitude,ACC.storefinder.coords.longitude);
-			$('#findStoresNearMe').removeAttr("disabled");
 		})
 
 
@@ -195,7 +292,7 @@ ACC.storefinder = {
 			type: "get",
 			success: function (response){
 				console.info("ajax..got sucess full data.");
-				console.info(response);
+				//console.info(response);
 				if(response){
 				ACC.storefinder.storeData = $.parseJSON(response);
 				ACC.storefinder.refreshNavigation();
@@ -233,21 +330,30 @@ ACC.storefinder = {
 		$(".js-store-finder-pager-next").removeAttr("disabled")*/
 	},
 
+	geo_error: function() {
+		console.log("An error occurred during Geo coding lookup...");
+	},
+	
 	init:function(){
-		//$("#findStoresNearMe").attr("disabled","disabled");
+		$("#storesnear").hide();
 		var initialZoom=Number($("#initialZoom"));
-		$('#findStoresNearMe').addClass("disabled");
+		$("#findStoresNearMe").addClass("findStoreNearMeDisable");
 		if(navigator.geolocation){
+			var geo_options = { 
+					enableHighAccuracy: true,
+					timeout : 30000
+			}
 			navigator.geolocation.getCurrentPosition(
 				function (position){
 					ACC.storefinder.coords = position.coords;
-					$('#findStoresNearMe').removeAttr("disabled");
+					//$('#findStoresNearMe').removeAttr("disabled");
+					$("#findStoresNearMe").removeClass("findStoreNearMeDisable");
 				},
 				function (error)
 				{
 					console.log("An error occurred... The error code and message are: " + error.code + "/" + error.message);
 				}
-			);
+			,ACC.storefinder.geo_error,geo_options);
 		}
 	},
 	loadinitGoogleMap:function(){
@@ -263,12 +369,21 @@ ACC.storefinder = {
 			zoomControl: false,
 			panControl: false,
 			streetViewControl: false,
-			disableDefaultUI:true,
+			zoomControl:true,
+			scrollwheel: false,
+		  	zoomControlOptions:{
+		  		position:google.maps.ControlPosition.RIGHT_TOP
+		  	},
+		  	disableDefaultUI:false,
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			center: centerPoint
 		}
 	  var map = new google.maps.Map(document.getElementById("store-finder-map"), mapOptions);
-		ACC.storefinder.staticLegends(map);
+		/* Create a DIV to hold the control and call StoreFinderLegendsControl() */
+	    var homeLegendsControlDiv = document.createElement('div');
+	    var homeLegendsControl = new ACC.storefinder.StoreFinderLegendsControl(homeLegendsControlDiv, map);
+	    homeLegendsControlDiv.index = 1;
+		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(homeLegendsControlDiv);
 	}
 	,
 	bindStoreTestChange:function()
@@ -284,6 +399,8 @@ ACC.storefinder = {
 	{   
 		var errorMsg=$("#storefinderNoresult").val();
 		globalErrorPopup(errorMsg);
+		ACC.global.addGoogleMapsApi("ACC.storefinder.loadinitGoogleMap");
+		//loadinitGoogleMap();
 	} 
 	,
 applyGamma:function(map) {
@@ -311,34 +428,46 @@ removeGamma:function(map) {
 	    map.setOptions({
 	        styles: mapStyles
 	    });
-	}
-	,
-	staticLegends:function(map){
-		var legend = document.createElement('div');
-		legend.style.background='white';
-		legend.style.padding='10px';
+	},
+	StoreFinderLegendsControl:function (controlDiv,map){
+		//controlDiv.style.background='white';
+		controlDiv.style.padding='10px';
 		 // Setup the different icons and shadows
-	    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
-	    
+	    var iconURLPrefix = ACC.config.commonResourcePath+"/images/";
+	    console.log(iconURLPrefix);
 	    var icons = [
-	      iconURLPrefix + 'red-dot.png',
-	      iconURLPrefix + 'green-dot.png',
-	      iconURLPrefix + 'blue-dot.png',
-	      iconURLPrefix + 'orange-dot.png',
-	      iconURLPrefix + 'purple-dot.png',
-	      iconURLPrefix + 'pink-dot.png',      
-	      iconURLPrefix + 'yellow-dot.png'
+	      iconURLPrefix + 'Bestseller_Legend.png',
+	      iconURLPrefix + 'CottonWorld_Legend.png',
+	      iconURLPrefix + 'Croma_Legend.png',
+	      iconURLPrefix + 'Dell_Legend.png',
+	      iconURLPrefix + 'Inc5_Legend.png',
+	      iconURLPrefix + 'Killer_Legend.png',
+	      iconURLPrefix + 'Lenovo_Legend.png',
+	      iconURLPrefix + 'Metro_Legend.png',
+	      iconURLPrefix + 'Tresmode_Legend.png',
+	      iconURLPrefix + 'Westside_Legend.png',
 	    ]
 	    var iconsLength = icons.length;
-	    
-	    console.info(legend); 
+	    var controlUI = document.createElement('div');
+	      controlUI.style.backgroundColor = '#ffffff';
+	      controlUI.style.textAlign = 'center';
+	      controlUI.style.right='60px';
+	      controlUI.style.padding='10px';
+	      
+	      controlDiv.appendChild(controlUI);
+	      
 	    for (var i = 0; i < icons.length; i++) { 
 	    	 var div = document.createElement('div');
-	         div.innerHTML = "Sample Data" +'<img src="' + icons[i] + '"> ';
-	         legend.appendChild(div);
-	    }
-        
-	   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+		      var img1=document.createElement('img');
+		      img1.src=icons[i];
+		      img1.className='googleMapLegends';
+		      div.appendChild(img1);
+		      controlUI.appendChild(div);
+		     }
+	     // div.innerHTML = '<img src="' + ACC.config.commonResourcePath +"/images/Bestseller_Legend.png" + '" style="googleMapLegends"> ';
+	      
+	      console.info(controlDiv);  
+	  // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 	    
 	}
 };

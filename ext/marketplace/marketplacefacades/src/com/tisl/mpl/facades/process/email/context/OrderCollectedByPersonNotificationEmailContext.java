@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.facades.process.email.context;
 
@@ -11,6 +11,10 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +32,7 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 	private static final String PICKUP_PERSON_NUMBER = "pickupPersonNo";
 	private static final String STORE_NAME = "storeName";
 	private static final String CUSTOMER_NAME = "customerName";
+	private static final String TIME = "time";
 	private static final Logger LOG = Logger.getLogger(OrderCollectedByPersonNotificationEmailContext.class);
 
 	@Override
@@ -35,24 +40,34 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 	{
 		super.init(orderProcessModel, emailPageModel);
 		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		final Calendar cal = Calendar.getInstance();
+		put(TIME, dateFormat.format(cal.getTime()));
 		LOG.info("Order Collected By Nominal Person Email Context Class");
 		put(ORDERCODE, orderProcessModel.getOrder().getCode());
 		LOG.debug("Order Colletcted By Nominal Person Email Context ");
 		put(PICKUP_PERSON_NAME, orderProcessModel.getOrder().getPickupPersonName());
 		put(PICKUP_PERSON_NUMBER, orderProcessModel.getOrder().getPickupPersonMobile());
-		for(AbstractOrderEntryModel entry : orderProcessModel.getOrder().getEntries())
+		for (final AbstractOrderEntryModel entry : orderProcessModel.getOrder().getEntries())
 		{
-		  String storeName=entry.getDeliveryPointOfService().getName();
-		  put(STORE_NAME,storeName);
+			final String storeName = entry.getDeliveryPointOfService().getDisplayName();
+			put(STORE_NAME, storeName);
 		}
 		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
-		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		if (deliveryAddress != null)
+		{
+			put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		}
+		else
+		{
+			put(CUSTOMER_NAME, CUSTOMER);
+		}
 
 	}
 
 	@Override
-	protected BaseSiteModel getSite(OrderProcessModel businessProcessModel)
+	protected BaseSiteModel getSite(final OrderProcessModel businessProcessModel)
 	{
 
 		return businessProcessModel.getOrder().getSite();
@@ -60,7 +75,7 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 
 
 	@Override
-	protected CustomerModel getCustomer(OrderProcessModel businessProcessModel)
+	protected CustomerModel getCustomer(final OrderProcessModel businessProcessModel)
 	{
 
 		return (CustomerModel) businessProcessModel.getOrder().getUser();
@@ -68,7 +83,7 @@ public class OrderCollectedByPersonNotificationEmailContext extends AbstractEmai
 
 
 	@Override
-	protected LanguageModel getEmailLanguage(OrderProcessModel businessProcessModel)
+	protected LanguageModel getEmailLanguage(final OrderProcessModel businessProcessModel)
 	{
 		return businessProcessModel.getOrder().getLanguage();
 	}

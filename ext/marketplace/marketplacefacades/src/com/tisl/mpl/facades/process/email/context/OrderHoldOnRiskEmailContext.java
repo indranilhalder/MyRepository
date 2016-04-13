@@ -30,6 +30,10 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 	private static final String CUSTOMER_FIRST_PAGE = "customerFirstPage";
 	private static final String CONTACT_US_LINK = "contactUsLink";
 
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
+
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -71,7 +75,17 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 			 * if (null != customer.getFirstName()) { put(CUSTOMER_NAME, customer.getFirstName()); } else {
 			 * put(CUSTOMER_NAME, "Customer"); }
 			 */
+
 		}
+
+		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+				"1800-208-8282");
+		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
+		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
+
 	}
 
 	@Override
@@ -98,3 +112,4 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 
 
 }
+

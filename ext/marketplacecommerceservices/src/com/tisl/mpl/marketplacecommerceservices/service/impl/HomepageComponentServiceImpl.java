@@ -22,9 +22,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplAdvancedCategoryCarouselComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplCategoryCarouselComponentModel;
+import com.tisl.mpl.core.model.MplImageCategoryComponentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.model.cms.components.CMSMediaParagraphComponentModel;
@@ -48,6 +50,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	private static final String SEQUENCE_NUMBER = "SequenceNumber";
 	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
 	private static final String TITLE = "title";
+	private static final String ICID = "icid";
 
 	private static final Logger LOG = Logger.getLogger(HomepageComponentServiceImpl.class);
 
@@ -123,6 +126,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 								LOG.info("No URL for this item");
 							}
 							bestPickItemJson.put("url", linkUrl);
+							bestPickItemJson.put(ICID, bestPickItem.getPk().getLongValueAsString());
 							subComponentJsonArray.add(bestPickItemJson);
 
 						}
@@ -141,12 +145,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	}
 
 
-	@Override
-	public JSONObject getBrandsYouLoveJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
-	{
-		// YTODO Auto-generated method stub
-		return null;
-	}
+
 
 
 	@Override
@@ -160,99 +159,143 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 			components = contentSlot.getCmsComponents();
 		}
 
+		String title = MarketplacecommerceservicesConstants.EMPTY;
+		String mediaUrl = MarketplacecommerceservicesConstants.EMPTY;
+
+		final JSONArray subComponentJsonArray = new JSONArray();
+
 		for (final AbstractCMSComponentModel component : components)
 		{
+			//Forming JSON is the component is of MplCategoryCarouselComponentModel type
 			if (component instanceof MplCategoryCarouselComponentModel)
 			{
 				final MplCategoryCarouselComponentModel productYouCareCarouselComponent = (MplCategoryCarouselComponentModel) component;
-				String title = "";
+
 				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
 				{
 					title = productYouCareCarouselComponent.getTitle();
 				}
 
-				productYouCare.put(TITLE, title);
 
-				final JSONArray subComponentJsonArray = new JSONArray();
 				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
 				{
-					String categoryName = "";
-					String categoryCode = "";
-
-
 					for (final CategoryModel category : productYouCareCarouselComponent.getCategories())
 					{
-						final JSONObject youCareCategoryJSON = new JSONObject();
-						if (null != category.getName())
-						{
-							categoryName = category.getName();
-
-						}
-						youCareCategoryJSON.put("categoryName", categoryName);
-
-						if (null != category.getCode())
-						{
-							categoryCode = category.getCode();
-
-						}
-						youCareCategoryJSON.put("categoryCode", categoryCode);
-
-						boolean mediaFound = false;
-						if (null != category.getMedias())
-						{
-							for (final MediaModel categoryMedia : category.getMedias())
-							{
-								if (null != categoryMedia.getMediaFormat()
-										&& categoryMedia.getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H")
-										&& null != categoryMedia.getURL2())
-								{
-									youCareCategoryJSON.put("mediaURL", categoryMedia.getURL2());
-									mediaFound = true;
-								}
-							}
-
-							if (!mediaFound)
-							{
-								youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
-							}
-
-
-						}
-						else
-						{
-
-							youCareCategoryJSON.put("mediaURL", MISSING_IMAGE_URL);
-						}
-
-						subComponentJsonArray.add(youCareCategoryJSON);
+						final JSONObject categoryJSON = getCategoryJSON(category);
+						categoryJSON.put("mediaURL", getCategoryMediaUrl(category));
+						categoryJSON.put(ICID, productYouCareCarouselComponent.getPk().getLongValueAsString());
+						subComponentJsonArray.add(categoryJSON);
 					}
 				}
-				else
-				{
-					LOG.error("No Category found for productYouCareCarouselComponent");
-				}
 
-				productYouCare.put("categories", subComponentJsonArray);
+
 
 			}
+			//Forming JSON is the component is of MplAdvancedCategoryCarouselComponentModel type for overriding PCM provided Category Images
+			if (component instanceof MplAdvancedCategoryCarouselComponentModel)
+			{
+
+				final MplAdvancedCategoryCarouselComponentModel productYouCareCarouselComponent = (MplAdvancedCategoryCarouselComponentModel) component;
+
+				if (StringUtils.isNotEmpty(productYouCareCarouselComponent.getTitle()))
+				{
+					title = productYouCareCarouselComponent.getTitle();
+				}
+
+				if (CollectionUtils.isNotEmpty(productYouCareCarouselComponent.getCategories()))
+				{
+					for (final MplImageCategoryComponentModel imageCategoryComponent : productYouCareCarouselComponent.getCategories())
+					{
+						if (imageCategoryComponent.getCategory() != null)
+						{
+							final JSONObject categoryJSON = getCategoryJSON(imageCategoryComponent.getCategory());
+							if (imageCategoryComponent.getIsImageFromPCM().booleanValue())
+							{
+								mediaUrl = getCategoryMediaUrl(imageCategoryComponent.getCategory());
+
+							}
+							else
+							{
+								if (null != imageCategoryComponent.getImage()
+										&& StringUtils.isNotEmpty(imageCategoryComponent.getImage().getURL()))
+								{
+									mediaUrl = imageCategoryComponent.getImage().getURL();
+								}
+
+							}
+
+							categoryJSON.put("mediaURL", mediaUrl);
+							categoryJSON.put(ICID, imageCategoryComponent.getPk().getLongValueAsString());
+							subComponentJsonArray.add(categoryJSON);
+						}
+
+
+					}
+				}
+
+			}
+
+			productYouCare.put(TITLE, title);
+			productYouCare.put("categories", subComponentJsonArray);
+
+
 		}
 		return productYouCare;
 	}
 
 
-	@Override
-	public JSONObject getNewandExclusiveJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
+	/**
+	 * @param category
+	 * @return JSONObject
+	 */
+	private JSONObject getCategoryJSON(final CategoryModel category)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+		final JSONObject categoryJSON = new JSONObject();
+		if (StringUtils.isNotEmpty(category.getName()))
+		{
+			categoryJSON.put("categoryName", category.getName());
+
+		}
+
+		if (StringUtils.isNotEmpty(category.getCode()))
+		{
+			categoryJSON.put("categoryCode", category.getCode());
+
+		}
+
+
+
+		return categoryJSON;
+
 	}
 
 
-	@Override
-	public JSONObject getShowCaseJSON(final ContentSlotModel contentSlot) throws EtailNonBusinessExceptions
+	/**
+	 * @param category
+	 */
+	private String getCategoryMediaUrl(final CategoryModel category)
 	{
-		// YTODO Auto-generated method stub
-		return null;
+
+		String mediaUrl = MISSING_IMAGE_URL;
+		if (null != category.getMedias())
+		{
+			for (final MediaModel categoryMedia : category.getMedias())
+			{
+				if (null != categoryMedia.getMediaFormat()
+						&& categoryMedia.getMediaFormat().getQualifier().equalsIgnoreCase("324Wx324H")
+						&& null != categoryMedia.getURL2())
+				{
+					mediaUrl = getMediaUrlStrategy(categoryMedia.getURL2());
+
+				}
+			}
+
+
+		}
+		return mediaUrl;
+
+
+
 	}
 
 
@@ -422,6 +465,32 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 
 		}
 		return displayBanner;
+	}
+
+	private String getMediaUrlStrategy(final String mediaUrl)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Media Url is :::::::" + mediaUrl);
+		}
+
+		String newMediaUrl = mediaUrl;
+		if (StringUtils.isNotEmpty(mediaUrl))
+		{
+			if (mediaUrl.contains("http") || mediaUrl.contains("https"))
+			{
+				newMediaUrl = mediaUrl.substring((mediaUrl.lastIndexOf(':') + 1));
+			}
+
+
+		}
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Media Url without protocol is :::::::" + newMediaUrl);
+		}
+
+		return newMediaUrl;
+
 	}
 
 }

@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 
 import java.util.Collection;
 import java.util.List;
@@ -58,5 +59,10 @@ public interface MplPreferenceService
 	 * @param mplPreferenceData
 	 */
 	public void unsubscribeAllPreferences(MplPreferenceData mplPreferenceData);
+
+	/**
+	 * @param customerModel
+	 */
+	void saveUserSpecificMplPrefDataInitially(CustomerModel customerModel);
 
 }

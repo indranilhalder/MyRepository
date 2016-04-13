@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.hybris.oms.domain.contactupdate.AddressInfo;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -31,6 +31,7 @@ import com.tisl.mpl.data.SendTicketRequestData;
 import com.tisl.mpl.wsdto.AddressInfoDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 import com.tisl.mpl.wsdto.TicketlineItemsXMLData;
+
 
 
 /**
@@ -118,9 +119,12 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 			}
 			if (null != sendTicketRequestData.getAddressInfo())
 			{
+				addressInfo.setShippingFirstName(sendTicketRequestData.getAddressInfo().getShippingFirstName());
+				addressInfo.setShippingLastName(sendTicketRequestData.getAddressInfo().getShippingLastName());
 				addressInfo.setPhoneNo(sendTicketRequestData.getAddressInfo().getPhoneNo());
 				addressInfo.setAddress1(sendTicketRequestData.getAddressInfo().getAddress1());
 				addressInfo.setAddress2(sendTicketRequestData.getAddressInfo().getAddress2());
+				addressInfo.setAddress3(sendTicketRequestData.getAddressInfo().getAddress3());
 				addressInfo.setCountry(sendTicketRequestData.getAddressInfo().getCountry());
 				addressInfo.setCity(sendTicketRequestData.getAddressInfo().getCity());
 				addressInfo.setState(sendTicketRequestData.getAddressInfo().getState());
@@ -177,13 +181,14 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
 		{
-			final String password = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
-			final String userId = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
+			final String password = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
+			final String userId = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
 			client.addFilter(new HTTPBasicAuthFilter(userId, password));
-			webResource = client.resource(UriBuilder.fromUri(
-					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL)).build());
+			webResource = client.resource(UriBuilder
+					.fromUri(configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
+					.build());
 			LOG.debug("::::::::::::::::::::::::::::::::::::webResource:::" + webResource);
 		}
 		final JAXBContext context = JAXBContext.newInstance(TicketMasterXMLData.class);
@@ -271,6 +276,13 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 				LOG.debug("ticket create: Source>>>>> " + sendTicketRequestData.getSource());
 
 			}
+			if (null != sendTicketRequestData.getTicketSubType())
+			{
+				ticket.setTicketSubType(sendTicketRequestData.getTicketSubType());
+				LOG.debug("ticket create:TicketSubType>>>>> " + sendTicketRequestData.getTicketSubType());
+
+			}
+
 
 
 			final List<SendTicketLineItemData> sendTicketLineItemDataList = sendTicketRequestData.getLineItemDataList();
@@ -322,13 +334,14 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
 		{
-			final String password = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
-			final String userId = configurationService.getConfiguration().getString(
-					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
+			final String password = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
+			final String userId = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
 			client.addFilter(new HTTPBasicAuthFilter(userId, password));
-			webResource = client.resource(UriBuilder.fromUri(
-					configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL)).build());
+			webResource = client.resource(UriBuilder
+					.fromUri(configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.TICKET_CREATE_URL))
+					.build());
 			LOG.debug("::::::::::::::::::::::::::::::::::::webResource:::" + webResource);
 		}
 		LOG.debug(xmlString);

@@ -39,10 +39,9 @@
 					
 					<c:if
 						test="${breadcrumb.facetName ne 'inStockFlag' && breadcrumb.facetName ne 'sellerId' && breadcrumb.facetName ne 'isOffersExisting' && breadcrumb.facetName ne 'promotedProduct'}">
-
 						<li><c:url
 								value="${breadcrumb.removeQuery.url}&searchCategory=${searchCategory}"
-								var="removeQueryUrl" /> <input type="hidden"
+								var="removeQueryUrl" /><input type="hidden"
 							class="applied-color" value="${breadcrumb.facetValueName}">
 							${breadcrumb.facetValueName}&nbsp;<a href="${removeQueryUrl}"><span
 								class="remove_filter"></span></a></li>

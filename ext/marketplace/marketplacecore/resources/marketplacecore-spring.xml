@@ -24,6 +24,12 @@
 		resource="classpath:/marketplacecore/integration/hot-folder-common-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_import-spring.xml" />
+		
+		
+		<!-- TISPRD-207 Changes Start-->
+		<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_delist-spring.xml" />
+		<!-- TISPRD-207 Changes End-->
 	<!-- <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_classification-spring.xml" /> -->
 	<import
@@ -45,6 +51,7 @@
 	
 	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
 		
+
 
 	<!-- SystemSetup for the MarketplaceCore -->
 	<bean id="acceleratorCoreSystemSetup" class="com.tisl.mpl.core.setup.CoreSystemSetup"
@@ -435,6 +442,7 @@
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean> 
+
 
 	<bean id="sendOrderToCRMEventListner" class=" com.tisl.mpl.marketplaceomsservices.event.SendOrderToCRMEventListner"
 		parent="abstractSiteEventListener">
@@ -841,10 +849,11 @@
                 <property name="fieldNameProvider" ref="solrFieldNameProvider" />
         </bean>
 
-
+ 			
 	<bean id="mplSwatchSizeValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplSizeValueProvider"
 		parent="abstractPropertyFieldValueProvider">
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
 	
@@ -1344,4 +1353,3 @@
    	</bean>
    	
 </beans>
-

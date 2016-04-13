@@ -38,6 +38,8 @@ import com.tisl.mpl.model.BuyXItemsofproductAgetproductBforfreeModel;
 import com.tisl.mpl.model.EtailSellerSpecificRestrictionModel;
 import com.tisl.mpl.model.ExcludeManufacturersRestrictionModel;
 import com.tisl.mpl.model.ManufacturersRestrictionModel;
+import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.model.SellerMasterModel;
 
 
 public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider, Serializable
@@ -374,6 +376,15 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 							break;
 						}
 
+						//Seller restriction check for non free bee promotion
+						if (restriction instanceof EtailSellerSpecificRestrictionModel
+								&& !isPromoEligibleForproduct(restriction, productModel))
+						{
+							toRemovePromotionList.add(productPromotion);
+							excludePromotion = true;
+							break;
+						}
+
 						//checking Exclude brandRestriction
 						if (restriction instanceof ExcludeManufacturersRestrictionModel)
 						{
@@ -437,6 +448,49 @@ public class MplPromotionCodeValueProvider extends AbstractPropertyFieldValuePro
 		}
 
 		return promotions;
+
+	}
+
+	//Seller restriction check for non free bee promotion
+	private boolean isPromoEligibleForproduct(final AbstractPromotionRestrictionModel restriction, final ProductModel product)
+	{
+		List<String> allowedSellerList = null;
+		boolean eligibleForPromo = false;
+		if (restriction instanceof EtailSellerSpecificRestrictionModel)
+		{
+			allowedSellerList = new ArrayList<String>();
+			final EtailSellerSpecificRestrictionModel sellerRestriction = (EtailSellerSpecificRestrictionModel) restriction;
+			if (null != sellerRestriction.getSellerMasterList() && !sellerRestriction.getSellerMasterList().isEmpty())
+			{
+				final List<SellerMasterModel> sellerList = sellerRestriction.getSellerMasterList();
+				for (final SellerMasterModel seller : sellerList)
+				{
+					allowedSellerList.add(seller.getId());
+				}
+
+			}
+
+		}
+
+
+
+		if (null != allowedSellerList && !allowedSellerList.isEmpty())
+		{
+			for (final SellerInformationModel seller : product.getSellerInformationRelator())
+			{
+				if (allowedSellerList.contains(seller.getSellerID()))
+				{
+					eligibleForPromo = true;
+					break;
+				}
+			}
+		}
+
+		LOG.debug("!!!!!!!!!@@@@@@@@@@@@@@@@@@Product :" + product.getCode() + " allowed seller list:" + allowedSellerList
+				+ " eligibleForPromo:" + eligibleForPromo);
+
+
+		return eligibleForPromo;
 
 	}
 
