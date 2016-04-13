@@ -104,6 +104,7 @@
 						</c:choose>						
 					</c:otherwise>
 				</c:choose>
+				
 			
 			
 				<%-- <c:if test="${not noAddress}">

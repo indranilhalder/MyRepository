@@ -911,6 +911,7 @@ function editAddress(addressId) {
 		document.getElementById("errCnfNewpwd").innerHTML = "";
 	}
 	
+	
 //  End Update Password *********************************************
     
 //  Order history page *********************************************

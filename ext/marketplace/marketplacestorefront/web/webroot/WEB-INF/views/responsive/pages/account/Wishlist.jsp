@@ -190,6 +190,7 @@
 		
 					</div>
 					
+					
 					<!-- END OF PAGINATION STATIC COMPONENT -->
 				</div>
 				</c:if>
