@@ -133,7 +133,6 @@ import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -548,9 +547,6 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
-
-	@Resource(name = "pincodeService")
-	private PincodeService pincodeService;
 
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
@@ -1393,7 +1389,7 @@ public class MiscsController extends BaseController
 					 * data.setIsDeliveryDateRequired(MarketplacewebservicesConstants.NA); requestData.add(data); } }
 					 */
 					List<PinCodeResponseData> response = null;
-					final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+					final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)
 					{
 						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null ? Config

@@ -141,7 +141,7 @@ import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.facades.MplSellerInformationFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -150,7 +150,7 @@ import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.product.data.PromotionResultDataList;
 import com.tisl.mpl.request.support.impl.PaymentProviderRequestSupportedStrategy;
 import com.tisl.mpl.service.MplCartWebService;
-import com.tisl.mpl.service.MplSlaveMasterService;
+import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.stock.CommerceStockFacade;
 import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.DiscountUtility;
@@ -256,11 +256,11 @@ public class CartsController extends BaseCommerceController
 	private MplCouponWebFacade mplCouponWebFacade;
 
 
-	@Resource(name = "mplSlaveMasterService")
-	private MplSlaveMasterService mplSlaveMasterService;
+	@Resource(name = "mplSlaveMasterFacade")
+	private MplSlaveMasterFacade mplSlaveMasterFacade;
 
 	@Autowired
-	private MplSellerInformationService mplSellerInformationService;
+	private MplSellerInformationFacade mplSellerInformationFacade;
 
 
 	/**
@@ -3803,12 +3803,12 @@ public class CartsController extends BaseCommerceController
 		try
 		{
 			//call service to retrieve POSModel for given posName
-			final PointOfServiceModel posModel = mplSlaveMasterService.findPOSByName(slaveId);
+			final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSByName(slaveId);
 
 			if (null != posModel)
 			{
 
-				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(USSID);
+				final SellerInformationModel sellerInfoModel = mplSellerInformationFacade.getSellerDetail(USSID);
 
 				final CartModel cartModel = mplPaymentWebFacade.findCartValues(cartId);
 				if (cartModel != null && cartModel.getEntries() != null)
