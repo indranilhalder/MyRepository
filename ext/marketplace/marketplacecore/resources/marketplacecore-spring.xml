@@ -1338,4 +1338,7 @@
 	</bean>
 	<!-- TISPRO_166 changes end -->
 	
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
+	
 </beans>
