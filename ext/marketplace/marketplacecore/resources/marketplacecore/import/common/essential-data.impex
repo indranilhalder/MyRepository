@@ -289,14 +289,14 @@ INSERT_UPDATE globalIdentifierType;code[unique=true];name[lang=en]
 ;alternateEAN;AlternateEAN
 ;internalWMPID;InternalWMPID
 
-INSERT_UPDATE FeedbackCategory;code[unique=true];name[lang='en'];
+INSERT_UPDATE FeedbackCategory;code[unique=true];name[lang=en];
 ;IRRELEVANTRESULT;I didn't find what I was looking for;
 ;NOTSATISFIED;I didn't like what I saw;
 ;NORESULT;The search didn't through up any products;
 ;WRONGRESULT;Ummm... that's not what I searched for;
 
 
-INSERT_UPDATE frequency;code[unique=true];name[lang='en'];
+INSERT_UPDATE frequency;code[unique=true];name[lang=en];
 ;Daily;Daily;
 ;Weekly;Weekly;
 ;Bi_Weekly;Bi-Weekly;
