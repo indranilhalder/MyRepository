@@ -7226,5 +7226,43 @@
 			</itemtype>
 			</typegroup>
 			<!--                     Entry For Delist TISPRD-207 End                          -->
+			
+			
+			<typegroup name="CommerceFallBackMechanism">
+				<itemtype code="PincodeServiceabilityData" autocreate="true" generate="true" jaloclass="com.tisl.mpl.core.jalo.PincodeServiceabilityData">
+				<description>For Fallback Mechanism on COM end when OMS is down</description>
+				<deployment table="MplPincodeServiceability" typecode="15802" />
+					<attributes>
+					<attribute qualifier="pincode" type="java.lang.String">
+						<description>Defines the Pincode</description>
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="sellerId" type="java.lang.String">
+						<description>Defines the Seller ID </description>
+						<persistence type="property" />
+						<modifiers optional="false" />
+					</attribute>
+					<attribute qualifier="serviceableFlag" type="java.lang.String">
+						<description>Serviceability Flag</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="deliveryMode" type="java.lang.String">
+						<description>Type of Delivery Mode</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="fulfillmentType" type="java.lang.String">
+						<description>Defines Fulfillment Type </description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="version" type="java.lang.String">
+						<description>Defines the Version of the Data</description>
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+				</itemtype>
+			</typegroup>
+			
+			
 	</itemtypes>
 </items>
