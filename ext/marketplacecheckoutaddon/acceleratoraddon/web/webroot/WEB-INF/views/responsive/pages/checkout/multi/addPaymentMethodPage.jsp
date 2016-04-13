@@ -221,7 +221,7 @@
 			<!-- div for EMI -->	
 										<li id="emi">
 											<ul class="product-block emi">
-												<li class="header">
+												<%-- <li class="header">
 													<ul>
 														<li>
 															<div class="paymentHeaderHeight"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentEMI"/></div>
@@ -230,7 +230,7 @@
 												</li>
 												<li class="mobile-header">
 													<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentEMI"/></h2>
-												</li>
+												</li> --%>
 						
 												<li class="item">
 													<div class="bank-select">
@@ -281,7 +281,7 @@
 											<label name="Enter OTP" class="cod-mob-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNo"/></label>
 												<input type="text" id="mobilePrefix" name="mobilePrefix" value="+91" disabled="disabled" /><input type="text" id="otpMobileNUMField" name="otpNUM" value="${cellNo}" maxlength="10"/>
 												<div id="mobileNoError" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage"/></div>
-												<p style="color:#333;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage"/></p>
+												<p style="color:#333;"><a href="${request.contextPath}/checkout/multi/payment-method/add"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage"/></a></p>
 											
 											<div id="sendOTPButton">
 													
@@ -360,14 +360,14 @@
 								<li id="netbanking">
 								<ul class="product-block net-bank">
 								
-								<li class="header">
+								<%-- <li class="header">
 										<ul>
 											<li class="paymentHeaderHeight"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking"/></li>
 										</ul>
 									</li>
 									<li class="mobile-header">
 										<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking"/></h2>
-									</li>
+									</li> --%>
 										<li class="item cardForm">									
 										<input type="hidden" id="juspayOrderId" />
 										
@@ -426,14 +426,14 @@
 							<ul class="product-block">
 								<li class="header">
 									<ul>
-										<li>
+										<%-- <li>
 											<div id="ccHeader" class="paymentHeaderHeight">
 												<div class=""><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentCreditCard"/></div>
 											</div>
 											<div id="dcHeader" class="paymentHeaderHeight">
 												<div class=""><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentDebitCard"/></div>
 											</div>
-										</li>
+										</li> --%>
 						
 				<!-- STATIC COMPONENT ADDED -->
 										<li class="savedCard pincode-button paymentHeaderHeight" onClick="savedCardForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.savedCard"/></li>
@@ -441,14 +441,14 @@
 				<!-- STATIC COMPONENT ENDS HERE -->
 									</ul>
 								</li>
-								<li class="mobile-header">
+								<%-- <li class="mobile-header">
 									<div id="ccHeader">
 										<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentCreditCard"/></h2>
 									</div>
 									<div id="dcHeader">
 										<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentDebitCard"/></h2>
 									</div>
-								</li>		
+								</li> --%>		
 								<c:if test="${not empty creditCards || not empty debitCards}">
 									<li id="savedCard" class="item">
 										<form class="form-inline" id="card_form" autocomplete="off" >
