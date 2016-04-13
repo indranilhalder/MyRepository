@@ -7866,7 +7866,23 @@
 			<attributes>
 	             <attribute qualifier="userList" type="java.lang.String">
 	                <modifiers read="true" write="true" search="true" optional="true" />
-	                <persistence type="property" />
+	                <persistence type="property">
+						<columntype database="oracle">
+							<value>CLOB</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
 	             </attribute>
 			</attributes>
 		</itemtype>
