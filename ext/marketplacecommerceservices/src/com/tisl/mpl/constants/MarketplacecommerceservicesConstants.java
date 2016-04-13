@@ -1480,6 +1480,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SYSDATE = "sysdate".intern();
 	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
 
+	public static final String FIND_USER_BY_UID = "SELECT {u.pk} FROM {User as u} WHERE ({u.UID} = ?uid )";
 	//Added for constants for clickandcollect and active.
 	public static final String CLICK_N_COLLECT = "Y";
 	public static final String ACTIVE = "Y";

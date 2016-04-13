@@ -7860,6 +7860,17 @@
 		</typegroup>
 		<!-- Store Localotor end here -->
 		
+	<typegroup name="User">
+		<itemtype code="PrincipalGroup" generate="false"
+			autocreate="false">
+			<attributes>
+	             <attribute qualifier="userList" type="java.lang.String">
+	                <modifiers read="true" write="true" search="true" optional="true" />
+	                <persistence type="property" />
+	             </attribute>
+			</attributes>
+		</itemtype>
+	</typegroup>
 		<!--                     Entry For Delist TISPRD-207 Start                          -->
 		
 		<typegroup name = "DelistSeller">
