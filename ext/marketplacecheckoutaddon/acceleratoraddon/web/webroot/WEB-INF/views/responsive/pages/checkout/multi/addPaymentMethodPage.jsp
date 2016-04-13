@@ -377,7 +377,7 @@
 									</div>
 								
 									<c:if test="${not empty popularBankNames}">
-									<%-- <label class="popular-netbanks"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking.popularBanks"/></label> --%>
+									<label class="popular-netbanks"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking.popularBanks"/></label> 
 									<ul>
 									<c:forEach var="bank" items="${popularBankNames}" varStatus="status">
 										
