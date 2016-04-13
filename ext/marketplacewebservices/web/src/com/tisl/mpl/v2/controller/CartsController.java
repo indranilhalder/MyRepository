@@ -135,13 +135,14 @@ import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
+import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
+import com.tisl.mpl.marketplacecommerceservices.facades.MplSellerInformationFacade;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
-import com.tisl.mpl.marketplacecommerceservices.facades.MplSellerInformationFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -150,7 +151,6 @@ import com.tisl.mpl.order.data.OrderEntryDataList;
 import com.tisl.mpl.product.data.PromotionResultDataList;
 import com.tisl.mpl.request.support.impl.PaymentProviderRequestSupportedStrategy;
 import com.tisl.mpl.service.MplCartWebService;
-import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.stock.CommerceStockFacade;
 import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.DiscountUtility;
@@ -2531,14 +2531,40 @@ public class CartsController extends BaseCommerceController
 								cartId);
 						cartDetailsData.setProducts(gwlpList);
 
-						if (null != cartModel.getDeliveryAddress() && null != getShippingAddress(cartModel.getDeliveryAddress()))
+
+						int otherDelModeCount = 0;
+						for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 						{
-							cartDetailsData.setShippingAddress(getShippingAddress(cartModel.getDeliveryAddress()));
+							if (null != cartEntryModel && null != cartEntryModel.getGiveAway()
+									&& !cartEntryModel.getGiveAway().booleanValue())
+							{
+								if (null == cartEntryModel.getDeliveryPointOfService())
+								{
+									otherDelModeCount++;
+								}
+							}
 						}
-						else
+						//check for delivery address if other than cnc delivery mode presents
+						if (otherDelModeCount > 0)
 						{
-							cartDetailsData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-							cartDetailsData.setError(MarketplacecommerceservicesConstants.NODELIVERYADDRESS);
+							if (null != cartModel.getDeliveryAddress() && null != getShippingAddress(cartModel.getDeliveryAddress()))
+							{
+								cartDetailsData.setShippingAddress(getShippingAddress(cartModel.getDeliveryAddress()));
+							}
+							else
+							{
+								cartDetailsData.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+								cartDetailsData.setError(MarketplacecommerceservicesConstants.NODELIVERYADDRESS);
+							}
+						}
+						//set Pickup person details ,if cart contains
+						if (null != cartModel.getPickupPersonName())
+						{
+							cartDetailsData.setPickupPersonName(cartModel.getPickupPersonName());
+						}
+						if (null != cartModel.getPickupPersonMobile())
+						{
+							cartDetailsData.setPickupPersonMobile(cartModel.getPickupPersonMobile());
 						}
 						if (StringUtils.isNotEmpty(cartModel.getSubtotal().toString()))
 						{
@@ -3891,7 +3917,8 @@ public class CartsController extends BaseCommerceController
 			if (null != cartId)
 			{
 				LOG.debug("************ in addStoreToCCEntry :get cart details mobile web service *********" + cartId);
-				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, null, null);
+				final AddressListWsDTO addressListDTO = addressList(fields);
+				cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
 				cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 			}
 
@@ -3974,7 +4001,8 @@ public class CartsController extends BaseCommerceController
 					modelService.save(cartModel);
 
 					LOG.debug("************ in addPickupPersonDetails :get cart details mobile web service *********" + cartId);
-					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, null, null);
+					final AddressListWsDTO addressListDTO = addressList(fields);
+					cartDataDetails = mplCartWebService.getCartDetailsWithPOS(cartId, addressListDTO, null);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.SUCCESSS_RESP);
 				}
 			}
