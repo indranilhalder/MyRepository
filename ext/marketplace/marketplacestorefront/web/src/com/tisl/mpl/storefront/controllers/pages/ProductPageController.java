@@ -850,7 +850,7 @@ public class ProductPageController extends AbstractPageController
 		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 				ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
-		String returnStatement = null;
+		//String returnStatement = null;
 		try
 		{
 			populateProductData(productData, model);
@@ -898,23 +898,21 @@ public class ProductPageController extends AbstractPageController
 					.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU()).getFulfillment());
 
 
-			returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			//	ExceptionUtil.etailBusinessExceptionHandler(e, model);
-			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
-			//returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			model.addAttribute(ModelAttributetConstants.ERROR, ModelAttributetConstants.TRUE);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			model.addAttribute(ModelAttributetConstants.ERROR, ModelAttributetConstants.TRUE);
 		}
 
 
-		return returnStatement;
+		return ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 	}
 
 	@Deprecated
