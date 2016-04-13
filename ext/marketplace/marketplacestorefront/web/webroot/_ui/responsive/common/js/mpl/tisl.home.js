@@ -858,7 +858,7 @@ function getShowcaseContentAjaxCall(id) {
 					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml +="<div class='desc-section'>";
 						if(typeof response.bannerUrl !=="undefined"){
-							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"?icid="+v.icid+"'>";
+							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"?icid="+response.icid+"'>";
 						}
 						defaultHtml += "<img src='"+ response.bannerImageUrl
 						+ "'></img>";	
