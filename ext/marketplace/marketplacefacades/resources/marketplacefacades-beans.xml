@@ -166,8 +166,18 @@
 		<property name="leastSizeProduct" type="String" />
 		<property name="productTitle" type="String" />
 		<!-- pdp changes ends -->
+
 		<property name="freebieProducts" type="java.util.List&lt;com.tisl.mpl.facades.data.FreebieProduct>"/>
 		<!--added freebieProducts to display at cnc page  -->
+
+		<!-- TISPRO-166 CHANGES -->
+	    <property name="displayPrice" type="java.util.List&lt;java.lang.String>"></property>
+	    <property name="displayUrl" type="java.util.List&lt;java.lang.String>"></property>
+         <property name="displayStock" type="java.util.List&lt;java.lang.String>"></property>
+         <property name="displayMrp" type="java.util.List&lt;java.lang.String>"></property>
+         <property name="displayPromotion" type="java.util.List&lt;java.lang.String>"></property>
+		<!-- pdp changes ends -->
+
 	</bean>
 
 	<!-- pdp changes begins -->
