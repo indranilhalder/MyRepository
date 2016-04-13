@@ -1404,7 +1404,7 @@ public class ProductPageController extends AbstractPageController
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
 		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
-		//metadata.add(createMetaElement("title", metaTitle));
+		metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
 		//metadata.add(createMetaElement("productCode", productCode));
 		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 	}
