@@ -594,7 +594,7 @@ public class MarketplaceCheckoutControllerImpl extends
 
 	@Override
 	public boolean processPayment(CartModel cart) throws PaymentException,
-			ValidationException {
+			ValidationException ,Exception{
 
 		double unTotal = getCsCheckoutService().getUnauthorizedTotal(cart);
 

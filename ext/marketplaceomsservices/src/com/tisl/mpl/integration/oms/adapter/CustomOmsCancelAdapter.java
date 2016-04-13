@@ -565,6 +565,7 @@ public class CustomOmsCancelAdapter implements Serializable
 	{
 
 		PaymentTransactionModel paymentTransactionModel = null;
+		updateConsignmentStatus(consignmentModel, subOrderModel, ConsignmentStatus.CANCELLATION_INITIATED);
 		if (orderRequestRecord.getRefundableAmount() != null
 				&& orderRequestRecord.getRefundableAmount().doubleValue() > NumberUtils.DOUBLE_ZERO.doubleValue())
 		{

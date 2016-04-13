@@ -29,6 +29,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.voucher.VoucherFacade;
+import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
@@ -501,25 +502,41 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//adding Payment id to model
 			model.addAttribute(MarketplacecheckoutaddonConstants.PAYMENTID, null);
 			setCheckoutStepLinksForModel(model, getCheckoutStep());
+			return placeOrder(model, redirectAttributes);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			//Start TISPRD-181
 			LOG.error("Exception while completing COD Payment", e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return getCheckoutStep().currentStep();
+			//End TISPRD-181
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error("Exception while completing COD Payment", e);
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 
+			//Start TISPRD-181
+			LOG.error("Exception while completing COD Payment", e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return getCheckoutStep().currentStep();
+			//End TISPRD-181
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception while completing COD Payment", e);
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+			GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					MarketplacecheckoutaddonConstants.PAYMENTTRANERRORMSG);
+			return getCheckoutStep().currentStep();
 		}
 
-		//return to next step of checkout
-		return placeOrder(model, redirectAttributes);
+
 	}
 
 	/**
@@ -576,46 +593,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//final CartData cartData = getCheckoutFacade().getCheckoutCart(); //// Commented to refer marketplacefacade
 				final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
-
-
-
-
-
-
-
-
-
-
-
 				Long convenienceCharge = getBaseStoreService().getCurrentBaseStore().getConvenienceChargeForCOD();
 				if (null == convenienceCharge)
 				{
 					convenienceCharge = Long.valueOf(0);
 				}
 
-
-
 				//setting conv charge in cartmodel
 				cart.setConvenienceCharges(Double.valueOf(convenienceCharge.longValue()));
-
-
-
-
-
-
 
 				//saving the cartmodel
 				getMplPaymentFacade().saveCart(cart);
 
-
-
-
-
-
 				final PriceData totalPriceAfterConvCharge = getMplCustomAddressFacade().setTotalWithConvCharge(cart, cartData);
 				final PriceData conveniCharge = getMplCustomAddressFacade().addConvCharge(cart, cartData);
-
-
 
 				if (StringUtils.isNotEmpty(paymentMode))
 				{
@@ -940,6 +931,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//			}
 		//		}
 
+
 		//getting cart subtotal value
 		final Double cartValue = Double.valueOf(cartData.getSubTotal().getValue().doubleValue());
 		//getting totalprice of cart
@@ -965,6 +957,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//saving cartmodel
 		getMplPaymentFacade().saveCart(getCartService().getSessionCart());
 	}
+
 
 	/**
 	 *
@@ -1305,6 +1298,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			LOG.error(MarketplacecheckoutaddonConstants.B6006, e);
 		}
 
+
 		try
 		{
 			final List<String> countryList = getMplPaymentFacade().getCountries();
@@ -1587,6 +1581,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		{
 			LOG.error("Exception in setShippingAddress", e);
 		}
+
 		return concatAddress;
 	}
 
@@ -2507,4 +2502,5 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		this.voucherFacade = voucherFacade;
 	}
+
 }

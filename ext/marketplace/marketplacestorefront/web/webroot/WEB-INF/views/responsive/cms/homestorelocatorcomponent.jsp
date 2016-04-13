@@ -103,16 +103,6 @@ function initialize(locatorJson,lat,lot)
 	   });
 	 }
 	 
-	 //For marker mover
-	 google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
-								        return function() {
-								          if(!(locatorJson[i].onHoverImgUrl)){
-								        	  console.debug("No Hover image.");
-								          }else{
-								        	  marker.setIcon(locatorJson[i].onHoverImgUrl);  
-								          }
-								        }
-								      })(marker, i));
 	 markers.push(marker);
 	 
 	       //Create info box
@@ -131,7 +121,7 @@ function initialize(locatorJson,lat,lot)
 							        	  console.debug("No On image.");
 							          }else{
 							        	  console.info("locatorJson[i].onClickImgUrl");
-							        	  marker.setIcon(locatorJson[i].onHoverImgUrl);  
+							        	 // marker.setIcon(locatorJson[i].onHoverImgUrl);  
 							          }
 							        }
 							      })(marker, i));

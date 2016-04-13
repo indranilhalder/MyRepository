@@ -38,6 +38,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
 
@@ -130,7 +131,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private ReturnService returnService;
 	@Autowired
 	private ConfigurationService configurationService;
-
+	@Autowired
+	private SessionService sessionService;
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
 	private Converter<AbstractOrderEntryModel, OrderEntryData> orderEntryConverter;
@@ -1830,6 +1832,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 			final List<OrderEntryData> entries = orderDetails.getEntries();
 			final OrderModel orderModel = orderModelService.getOrder(orderDetails.getCode());
 			final List<ReturnLogistics> returnLogisticsList = new ArrayList<ReturnLogistics>();
+			String returningTransactionId;
+			returningTransactionId = sessionService.getAttribute("transactionId");
 			String transactionId = "";
 			for (final OrderEntryData eachEntry : entries)
 			{
@@ -1876,24 +1880,32 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						}
 						if (null != orderLine.getIsReturnLogisticsAvailable())
 						{
-							returnLogRespData.setIsReturnLogisticsAvailable(orderLine.getIsReturnLogisticsAvailable());
-							if (orderLine.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
+
+							if (orderLine.getTransactionId().trim().equalsIgnoreCase(returningTransactionId.trim()))
 							{
-								returnLogRespData
-										.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
-								returnLogRespData
-										.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
-							}
-							else
-							{
-								returnLogRespData
-										.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
-								returnLogRespData
-										.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+
+								returnLogRespData.setIsReturnLogisticsAvailable(orderLine.getIsReturnLogisticsAvailable());
+								
+								if (orderLine.getIsReturnLogisticsAvailable().equalsIgnoreCase("Y"))
+								{
+									returnLogRespData
+											.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_MESSAGE);
+									returnLogRespData
+											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_AVAILABLE_RESPONSE_DESC);
+								}
+								else
+								{
+									returnLogRespData
+											.setResponseMessage(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_MESSAGE);
+									returnLogRespData
+											.setResponseDescription(MarketplacecommerceservicesConstants.REVERSE_LOGISTIC_NOT_AVAILABLE_RESPONSE_DESC);
+								}
+
+								returnLogRespDataList.add(returnLogRespData);
+								responseList.add(orderLine);
+
 							}
 
-							returnLogRespDataList.add(returnLogRespData);
-							responseList.add(orderLine);
 						}
 					}
 				}
@@ -1930,10 +1942,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	/*
 	 * @desc Saving order history for cancellation as OMS is not sending
 	 *
-
 	 * @param subOrderData
 	 *
-
 	 * @param subOrderModel
 	 */
 	private void createHistoryEntry(final AbstractOrderEntryModel orderEntryModel, final OrderModel orderModel,

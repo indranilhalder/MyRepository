@@ -528,6 +528,106 @@
 			}
 		});
 	}
+	
+	function test(i, j) {
+		console.log(i+"@@"+j);
+		//alert("Hello");
+		var posData = $(".addPos"+i).text();
+		posData = posData.split('@');
+		openPopForAdddPosToCartEntry(posData[0], posData[1]);
+		
+		//Change color for Radio Button
+		
+		$(".removeColor"+i+" .radio_color").removeClass("colorChange");
+		$(".select_store").hide();
+		var name = $(".name"+i+""+j).text();
+		$(".radio_sel"+i+""+j).addClass("colorChange");
+		
+		
+		// Load Map for the selected Store
+		
+		console.log(posData[0]+" @@ "+posData[1]);
+		var iconURLPrefix = '${request.contextPath}/_ui/responsive/theme-blue/images/storemarkericons/';
+	    
+	    iconURLPrefix = iconURLPrefix.replace("/mpl/en/","/");
+	    var icons = new Array();
+		for(var y=0;y<25;y++) {
+			k = parseInt(y)+1;
+    		icons[y] = iconURLPrefix + 'markergrey' + k +'.png'
+	    }
+		
+		//console.log(icons);
+    	//number = number.replace("address","");
+    	//number++;
+    	var myCounter = "1";
+    	var iconNumber = parseInt(j) + parseInt(myCounter);
+    	var url =  iconURLPrefix + 'marker' + parseInt(iconNumber) +'.png';
+    	icons[j] = url;	
+    	console.log(icons[j]);
+		var loc = $(".latlng"+i).text();
+		//console.log(loc);
+		loc = loc.split("@");
+		var length = loc.length;
+		
+		for(var k=0;k<length;k++){
+			loc[k] = loc[k].split(",");
+			for(var l=0;l<loc[k].length;l++) {
+			}
+		}
+	    var map = new google.maps.Map(document.getElementById('map'+i), {
+	      zoom: 10,
+	      center: new google.maps.LatLng(-37.92, 151.25),
+	      mapTypeId: google.maps.MapTypeId.ROADMAP,
+	      mapTypeControl: false,
+	      streetViewControl: false,
+	      panControl: false,
+	      zoomControlOptions: {
+	         position: google.maps.ControlPosition.LEFT_BOTTOM
+	      }
+	    });
+	
+	    var infowindow = new google.maps.InfoWindow({
+	      maxWidth: 160
+	    });
+
+	    var markers = new Array();
+	    
+	    var iconCounter = 0;
+	    
+	    // Add the markers and infowindows to the map
+	    for (var y = 0; y < length; y++) {  
+	      var marker = new google.maps.Marker({
+	        position: new google.maps.LatLng(loc[y][1], loc[y][2]),
+	        map: map,
+	        icon: icons[iconCounter]
+	      });
+
+	      markers.push(marker);
+
+	      console.log("Lat :"+loc[y][1]+", Lng :"+loc[y][2]);
+	      
+	      iconCounter++;
+	      // We only have a limited number of possible icon colors, so we may have to restart the counter
+	      if(iconCounter >= "25") {
+	      	iconCounter = 0;
+	      	
+	      }
+	    }
+
+	    function autoCenter() {
+	      //  Create a new viewpoint bound
+	      var bounds = new google.maps.LatLngBounds();
+	      //  Go through each...
+	      for (var i = 0; i < markers.length; i++) {  
+					bounds.extend(markers[i].position);
+	      }
+	      //  Fit these bounds to the map
+	      map.fitBounds(bounds);
+	    }
+	    autoCenter();
+		
+		//openPopForAdddPosToCartEntry(ussid,name);
+	}
 </script>
 					
 					<ycommerce:testId code="checkoutStepTwo">
@@ -755,7 +855,7 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: capitalize; display: inline-block;" >PiQ up hrs :</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: none; display: inline-block;" >PiQ up hrs :</span>
 																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
 																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style=" display: inline-block; margin-left: 0px;">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
@@ -978,7 +1078,26 @@
 										        	  $("#map${status1.index}").show();
 										        	  $("#maphide${status1.index}").hide();
 											          var changecordinates${status1.index} = " ";
+											          $(".removeColor${status1.index}").remove();
 											          for(var i=0;i<jsonObject${status1.index}.length;i++) {
+											        	  var count = parseInt(i) + 1;
+											        	  var hello = "${status1.index}";
+											        	  //var name = jsonObject${status1.index}[i]['name'];
+											        	  $(".delivered${status1.index}").append("<li style='width: 240px !important;' class='removeColor${status1.index} remove${status1.index}"+i+"'><input onclick='test("+hello+", "+i+")' class='radio_btn radio_btn${status1.index}' name='address${status1.index}' id='address${status1.index}"+i+"' value='address0' type='radio'><div class='pin bounce'><span class='text_in'>"+count+"</span></div></li>")
+											        	  $(".remove${status1.index}"+i).append("<label class='radio_sel${status1.index}"+i+" displayName${status1.index}"+i+" radio_color delivery-address' style='color: #ADA6A6;'></label>");
+											        	  $(".remove${status1.index}"+i).append("<label class='addPos"+i+"' style='display: none;'>${poses.ussId}@"+jsonObject${status1.index}[i]['name']+"</label>");
+											        	  $(".remove${status1.index}"+i).append("<label class='radio_sel${status1.index}"+i+" name${status1.index}"+i+" radio_color delivery-address' style='display:none; color: #ADA6A6;'></label>");
+											        	  var initial = 1;
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color address"+initial+"${status1.index}"+i+"'></span>");
+											        	  initial++;
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color address"+initial+"${status1.index}"+i+"'></span>");
+											        	  initial++;
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color address"+initial+"${status1.index}"+i+"'></span>");
+											        	  initial++;
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color address"+initial+"${status1.index}"+i+"'></span>");
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color' style='text-transform: capitalize; display: inline-block;'>PiQ up hrs : </span>");
+											        	  $(".remove${status1.index}"+i).append("<span class='pickup${status1.index}"+i+" radio_sel${status1.index}"+i+" radio_color' style='display: inline-block; margin-left: 0px;'></span>");
+											        	  $(".remove${status1.index}"+i).append("<span class='weeklyOff${status1.index}"+i+" radio_sel${status1.index}"+i+" radio_color' style='text-transform: capitalize;'></span>");
 											        	  if(jsonObject${status1.index}[i]['displayName'] != null) {
 											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['displayName']);
 											        	  } else {

@@ -144,25 +144,14 @@ ACC.storefinder = {
 			google.maps.event.addListener(infowindow,'closeclick',function(){
 				//ACC.storefinder.removeGamma(map);
 				});
-			
-			 //For marker mover
-			 google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
-										        return function() {
-										          if(!(storeData[i].onHoverImgUrl)){
-										        	  console.debug("No Hover image.");
-										          }else{
-										        	  marker.setIcon(storeData[i].onHoverImgUrl);  
-										          }
-										        }
-										      })(marker, i));
-			
+					
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		        return function() {
 		          var infoMsg=storeData[i];
 		          var infoString="<div>"+"<p>" +infoMsg["displayName"]+ "</p><p>Distance Appx."+infoMsg["formattedDistance"]+"</p> <p>"+infoMsg["line1"]
 					+" "+infoMsg["line2"]+infoMsg["postalCode"]+"</p>";
 		          if(infoMsg["mplOpeningTime"] && infoMsg["mplClosingTime"]){
-		        	  infoString=infoString+'<p>PiQ UP HRS : '+ infoMsg["mplOpeningTime"]+'-'+infoMsg["mplClosingTime"]+"</p>";
+		        	  infoString=infoString+'<p>PiQ up hrs : '+ infoMsg["mplOpeningTime"]+'-'+infoMsg["mplClosingTime"]+"</p>";
 		          }
 		         // console.log(infoMsg["mplWorkingDays"]);
 		          if(infoMsg["mplWorkingDays"]){
@@ -209,7 +198,7 @@ ACC.storefinder = {
 		        	  console.debug("No On image.");
 		          }else{
 		        	  console.debug("locatorJson[i].onClickImgUrl");
-		        	  marker.setIcon(locatorJson[i].onClickImgUrl);  
+		        	  //marker.setIcon(locatorJson[i].onClickImgUrl);  
 		          };
 		        }
 		      })(marker, i));
@@ -285,6 +274,7 @@ ACC.storefinder = {
 
 	getStoreData: function(page){
 		ACC.storefinder.storeSearchData.page = page;
+		ACC.storefinder.storeSearchData.show='All';
 		url= $(".js-store-finder").data("url");
 		$.ajax({
 			url: url,

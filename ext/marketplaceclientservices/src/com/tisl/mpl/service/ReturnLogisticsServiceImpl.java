@@ -17,6 +17,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.sun.jersey.api.client.Client;
@@ -91,7 +92,11 @@ public class ReturnLogisticsServiceImpl implements ReturnLogisticsService
 					{
 						reqObj.setTransactionId(returnLogisticsObj.getTransactionId());
 					}
-					reqlist.add(reqObj);
+					if (StringUtils.isNotBlank(reqObj.getOrderId()) && StringUtils.isNotBlank(reqObj.getPinCode())
+							&& StringUtils.isNotBlank(reqObj.getTransactionId()))
+					{
+						reqlist.add(reqObj);
+					}
 				}
 				reqdata.setOrderlines(reqlist);
 				response = reverseLogistics(reqdata);
