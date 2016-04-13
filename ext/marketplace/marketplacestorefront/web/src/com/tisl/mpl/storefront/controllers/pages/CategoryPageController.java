@@ -421,6 +421,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 			}
 		}
-		return Integer.valueOf(Iterables.frequency(splitStr, "size")).intValue();
+		return Iterables.frequency(splitStr, "size");
 	}
 }
