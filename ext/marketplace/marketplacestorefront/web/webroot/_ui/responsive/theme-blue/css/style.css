@@ -23164,7 +23164,7 @@ div.complete-your-look h1 {
 }
 
 .brands-left h2 {
-	text-transform: uppercase;
+	text-transform: capitalize;
 	font-size: 14px;
 	font-weight: 700;
 	letter-spacing: 1px;
