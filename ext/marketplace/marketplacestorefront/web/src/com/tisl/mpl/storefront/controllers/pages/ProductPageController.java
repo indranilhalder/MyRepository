@@ -726,8 +726,7 @@ public class ProductPageController extends AbstractPageController
 				{
 					try
 					{
-						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
-						LOG.debug("configurableRadius is:" + configurableRadius);
+						
 						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
 						myLocation = new LocationDtoWrapper(dto);
@@ -737,8 +736,7 @@ public class ProductPageController extends AbstractPageController
 						response = pinCodeFacade.getResonseForPinCode(
 								productCode,
 								pin,
-								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS(),
-										Double.parseDouble(configurableRadius)));
+								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 
 						return response;
 					}

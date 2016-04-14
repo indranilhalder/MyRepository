@@ -7905,5 +7905,27 @@
 			</itemtype>
 			</typegroup>
 			<!--                     Entry For Delist TISPRD-207 End                          -->
+			
+		<typegroup name = "MplConfiguration">
+				<itemtype code="mplConfig" autocreate="true" generate="true">
+					<deployment table="MplConfig" typecode="15998" />
+						<attributes>
+							<attribute autocreate="true" qualifier="id" type="java.lang.String"
+								generate="true">
+								<persistence type="property" />
+								<modifiers unique="true" optional="false" />
+							</attribute>
+							<attribute autocreate="true" qualifier="description" type="java.lang.String"
+								generate="true">
+								<persistence type="property" />
+							</attribute>
+							<attribute autocreate="true" qualifier="value" type="java.lang.String"
+								generate="true">
+								<persistence type="property" />
+							</attribute>
+						</attributes>
+			  </itemtype>
+	   </typegroup>	
+	   
 	</itemtypes>
 </items>

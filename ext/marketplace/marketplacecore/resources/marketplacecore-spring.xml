@@ -1352,4 +1352,18 @@
    		autowire="byName" >
    	</bean>
    	
+   	<!-- ============== configure beans for mplConfig ============== -->
+		
+	<alias name="mplConfigService" alias="mplConfigService" /> 
+	
+	<bean id="mplConfigService" class="com.tisl.mpl.core.mplconfig.service.impl.MplConfigServiceImpl">
+    </bean>
+	
+	<alias name="mplConfigDao" alias="mplConfigDao" />
+	<bean id="mplConfigDao" class="com.tisl.mpl.core.mplconfig.dao.impl.MplConfigDaoImpl" >
+    </bean>
+
+	
+	<!-- ============== configure beans for mplConfig ============== -->
+   	
 </beans>
