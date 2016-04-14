@@ -43,7 +43,8 @@
 	 
 	 
       <tr>
-        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellp12 baje
+        dding="0">
           <tr>
             <td width="13">&nbsp;</td>
             <td><table width="572" border="0" cellspacing="0" cellpadding="0">
@@ -127,7 +128,7 @@
                     
                   
                 </table>
-				<div style="text-align:center;font-weight:bold;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;background-color:#aa133d;padding: 10px 15px;">${ctx.cmsSlotContents.trackbtn}</a></div>
+				<div style="text-align:center;font-weight:bold;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;padding: 10px 15px;">${ctx.cmsSlotContents.trackbtn}</a></div>
 				<br><br>
 				
 				</td>

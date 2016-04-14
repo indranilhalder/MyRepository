@@ -9,7 +9,7 @@
     <td><table width="598" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="left" valign="top" bgcolor="#ffffff">
-${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
+${ctx.cmsSlotContents.SiteLogo}</td>
       </tr>
  
       <tr>
