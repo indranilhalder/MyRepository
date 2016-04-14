@@ -37,6 +37,7 @@ import de.hybris.platform.commercefacades.product.data.FeatureData;
 import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
@@ -93,15 +94,19 @@ import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
+
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
+
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
@@ -257,7 +262,7 @@ public class ProductPageController extends AbstractPageController
 	}
 
 	/**
-	 * 
+	 *
 	 * @param productCode
 	 * @param dropDownText
 	 * @param model
@@ -458,7 +463,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * Get buybox data in respect of productCode and sellerId for sizeguide
-	 * 
+	 *
 	 * @param productCode
 	 * @param sellerId
 	 * @return JSONObject
@@ -470,8 +475,7 @@ public class ProductPageController extends AbstractPageController
 
 
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.BUYBOZFORSIZEGUIDEAJAX, method = RequestMethod.GET)
-	public @ResponseBody
-	JSONObject getBuyboxDataForSizeGuide(
+	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId) throws JSONException,
 			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
@@ -616,7 +620,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * Set the hedder data of the sizeguide
-	 * 
+	 *
 	 * @param sizeguideList
 	 * @param categoryType
 	 * @return List<String>
@@ -690,9 +694,10 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * this method checks the servicability of a pincode and fetches list of servicable sellers/skuids from oms
-	 * 
+	 *
 	 * @param pin
 	 * @param productCode
+	 * @param seller
 	 * @param model
 	 * @return String
 	 * @throws CMSItemNotFoundException
@@ -745,6 +750,7 @@ public class ProductPageController extends AbstractPageController
 
 
 
+
 			}
 
 		}
@@ -783,7 +789,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * Populating other sellers for displaying into sellersDetail page
-	 * 
+	 *
 	 * @param productCode
 	 * @param model
 	 * @param ussid
@@ -920,7 +926,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * Populating information for quick view
-	 * 
+	 *
 	 * @param productCode
 	 * @param model
 	 * @return ControllerConstants
@@ -1149,7 +1155,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * Populating all details of product from product model
-	 * 
+	 *
 	 * @param productModel
 	 * @param model
 	 * @param request
@@ -1254,7 +1260,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * Displaying classification attributes in the Details tab of the PDP page
-	 * 
+	 *
 	 * @param productData
 	 * @param model
 	 */
@@ -1297,7 +1303,7 @@ public class ProductPageController extends AbstractPageController
 							  //electronics
 							else
 							{
-								if (properitsValue.toLowerCase().contains(configurableAttributData.getName().toLowerCase()))
+								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
 
 								{
 
@@ -1337,7 +1343,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * @description Populating product data
-	 * 
+	 *
 	 * @param productData
 	 * @param model
 	 */
@@ -1463,8 +1469,8 @@ public class ProductPageController extends AbstractPageController
 	/**
 	 * This method is responsible for fetching winning seller USSID, price and other seller count It will be invoked by
 	 * PDP Ajax call and it will return JSON response
-	 * 
-	 * 
+	 *
+	 *
 	 * @param productCode
 	 * @return buyboxJson
 	 * @throws JSONException
@@ -1473,9 +1479,9 @@ public class ProductPageController extends AbstractPageController
 	 * @throws com.granule.json.JSONException
 	 */
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_VARIABLE_PATTERN + "/buybox", method = RequestMethod.GET)
-	public @ResponseBody
-	JSONObject getBuyboxPrice(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode)
-			throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+	public @ResponseBody JSONObject getBuyboxPrice(
+			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode) throws JSONException,
+			CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
@@ -1549,7 +1555,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * This is the GET method which fetches the list of banks
-	 * 
+	 *
 	 * @param productVal
 	 * @return List<String>
 	 */
@@ -1590,13 +1596,12 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * This is the GET method which fetches the bank terms for EMI mode of Payment
-	 * 
+	 *
 	 * @param selectedEMIBank
 	 * @return List<EMITermRateData>
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETTERMS, method = RequestMethod.GET)
-	public @ResponseBody
-	List<EMITermRateData> getBankTerms(final String productVal, final String selectedEMIBank)
+	public @ResponseBody List<EMITermRateData> getBankTerms(final String productVal, final String selectedEMIBank)
 	{
 		List<EMITermRateData> emiTermRate = null;
 
@@ -1624,7 +1629,7 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * This is the GET method which checks wether is logged in or not
-	 * 
+	 *
 	 * @return boolean
 	 */
 
@@ -1672,7 +1677,7 @@ public class ProductPageController extends AbstractPageController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -1682,53 +1687,113 @@ public class ProductPageController extends AbstractPageController
 	 */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * populating the request data to be send to oms
-	 * 
+	 *
 	 * @param productCode
 	 * @return requestData
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 * 
+	 *
+
+
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
+
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
+
+
 	 * productService.getProductForCode(productCode); final ProductData productData =
+
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 * 
+	 *
+
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
+
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
+
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
+
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
+
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
+
+
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
+
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
+
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
+
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
+
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
+
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
+
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
+
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
+
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
+
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
+
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
+
+
+
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
+
+
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
+
+
+
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
+
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
+
+
+
+
+
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 * 
+	 *
+
+
 	 * catch (final Exception e) {
-	 * 
+	 *
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
+
+
+
+
+
+
 
 	/**
 	 * This method is responsible for fetching winning seller USSID, price and other seller count It will be invoked by
 	 * PDP Ajax call and it will return JSON response
-	 * 
-	 * 
+	 *
+	 *
 	 * @param productCode
 	 * @return buyboxJson
 	 * @throws JSONException
@@ -1762,12 +1827,12 @@ public class ProductPageController extends AbstractPageController
 
 	/**
 	 * This method is responsible for sending emails
-	 * 
-	 * 
+	 *
+	 *
 	 * @param emailIds
 	 * @param productId
 	 * @return successful
-	 * 
+	 *
 	 */
 
 	@ResponseBody
@@ -1797,5 +1862,4 @@ public class ProductPageController extends AbstractPageController
 
 		return successful;
 	}
-
 }
