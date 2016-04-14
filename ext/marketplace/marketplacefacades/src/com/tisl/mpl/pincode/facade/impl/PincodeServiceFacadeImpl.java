@@ -22,7 +22,7 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-import de.hybris.platform.util.Config;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +39,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
@@ -72,7 +73,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	private ProductDetailsHelper productDetailsHelper;
 	private MplCartFacade mplCartFacade;
 	private PincodeService pincodeService;
-	
+	@Autowired
+	private MplConfigService mplConfigService;
+
 	private Converters converters;
 	
 	@Resource(name="pointOfServiceConverter")
@@ -81,7 +84,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
-	final String radius = "marketplacestorefront.configure.radius";
+
 	/**
 	 * This method is used to check pincode is serviceable are not
 	 * 
@@ -101,8 +104,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			//call to commerce db to get the latitude and longitude
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 			if( null != pinCodeModelObj){
-			 String configurableRadius = Config.getParameter(radius) != null ? Config.getParameter(radius) : "0";
-			LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
+			
 			final LocationDTO dto = new LocationDTO();
 			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 			dto.setLatitude(pinCodeModelObj.getLatitude().toString());
@@ -110,7 +112,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			LOG.debug("Selected Location for Latitude..:" + myLocation.getGPS().getDecimalLatitude());
 			LOG.debug("Selected Location for Longitude..:" + myLocation.getGPS().getDecimalLongitude());
 			response = pinCodeFacade.getResonseForPinCode(productCode, pincode,
-					populatePinCodeServiceData(productCode, myLocation.getGPS(), Double.parseDouble(configurableRadius)));
+					populatePinCodeServiceData(productCode, myLocation.getGPS()));
 
 			for (final PinCodeResponseData pinCodeResData : response)
 			{
@@ -154,15 +156,14 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 			if (null != pinCodeModelObj){
-			final String configurableRadius = Config.getParameter(radius)!=null ? Config.getParameter(radius) : "0";
-			LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
+			
 			final LocationDTO dto = new LocationDTO();
 			dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 			dto.setLatitude(pinCodeModelObj.getLatitude().toString());
 			final Location myLocation = new LocationDtoWrapper(dto);
 
 			final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequestData(sellerUssId,
-					myLocation.getGPS(), Double.parseDouble(configurableRadius));
+					myLocation.getGPS());
 			if(null!= storeLocationRequestData)
 			{
    			storeLocationRequestDataList.add(storeLocationRequestData);
@@ -193,12 +194,16 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	 * @param configurableRadius
 	 * @return
 	 */
-	public StoreLocationRequestData papulateClicknCollectRequestData(final String sellerUssId, final GPS gps,
-			final Double configurableRadius)
+	public StoreLocationRequestData papulateClicknCollectRequestData(final String sellerUssId, final GPS gps)
 	{
+		StoreLocationRequestData storeLocationRequestData = null;
+		try
+		{
 		LOG.debug("sellerUssId:" + sellerUssId);
 		final String pincodeSellerId = sellerUssId.substring(0, 6);
-		StoreLocationRequestData storeLocationRequestData = null;
+			final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+			final double configurableRadius = Double.parseDouble(configRadius);
+			LOG.debug("**********configrableRadius:" + configurableRadius);
 		final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius, pincodeSellerId);
 		LOG.debug("StoreList size is :" + storeList.size());
 		if (null != storeList && storeList.size() > 0)
@@ -270,7 +275,11 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 			}
 		}
 		storeLocationRequestData.setUssId(sellerUssId);
-		
+		}
+		catch (final Exception e)
+		{
+			LOG.error("No price avaiable for seller :" + e);
+		}
 		return storeLocationRequestData;
 	}
 
@@ -283,8 +292,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	 * @return
 	 */
 	@Override
-	public List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps,
-			final Double configurableRadius)
+	public List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps)
 	{
 		LOG.debug("in populatePinCodeServiceData method");
 		final List<PincodeServiceData> requestData = new ArrayList<PincodeServiceData>();
@@ -338,6 +346,9 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				{
 					data.setIsCOD(seller.getIsCod());
 				}
+				final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+				final double configurableRadius = Double.parseDouble(configRadius);
+				LOG.debug("**********configrableRadius:" + configurableRadius);
 				final List<Location> storeList = pincodeService.getSortedLocationsNearby(gps, configurableRadius,
 						seller.getSellerID());
 				if (null != storeList && storeList.size() > 0)

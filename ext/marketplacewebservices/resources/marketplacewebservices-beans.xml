@@ -2297,7 +2297,9 @@
 		<property name="phoneNo9" type="String" />
 		<property name="error" type="String"/>
 		<property name="errorCode" type="String"/>
-		<property name="status" type="String"/>	
+		<property name="status" type="String"/>
+		<property name="mplOpeningTime" type="String"/>
+		<property name="mplClosingTime" type="String"/>	
 	</bean>
 
 	<bean
