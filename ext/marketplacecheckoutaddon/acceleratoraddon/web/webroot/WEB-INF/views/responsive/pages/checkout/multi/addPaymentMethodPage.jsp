@@ -281,7 +281,8 @@
 											<label name="Enter OTP" class="cod-mob-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNo"/></label>
 												<input type="text" id="mobilePrefix" name="mobilePrefix" value="+91" disabled="disabled" /><input type="text" id="otpMobileNUMField" name="otpNUM" value="${cellNo}" maxlength="10"/>
 												<div id="mobileNoError" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage"/></div>
-												<p style="color:#333;"><a href="${request.contextPath}/checkout/multi/payment-method/add"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage"/></a></p>
+												<p style="color:#333;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage"/>
+												<a href="${request.contextPath}/checkout/multi/payment-method/add"><spring:theme code="checkout.multi.paymentMethod.cod.updateItHereLink"/></a></p>
 											
 											<div id="sendOTPButton">
 													
@@ -299,6 +300,7 @@
 											</label>
 										</div>
 									</div>
+									
 									
 									<!-- COD error messages -->
 									<div id="codMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
@@ -336,7 +338,6 @@
 										<div id="paymentFormButton" class="pay">	
 						<!-- Terms & Conditions Link -->
 
-								<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 								<button type="button" class="make_payment button btn-block payment-button" onclick="submitForm()" id="paymentButtonId">		
 									<div id="submitPaymentFormCODButton">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
@@ -376,7 +377,7 @@
 									</div>
 								
 									<c:if test="${not empty popularBankNames}">
-									<%-- <label class="popular-netbanks"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking.popularBanks"/></label> --%>
+									<label class="popular-netbanks"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentNetbanking.popularBanks"/></label> 
 									<ul>
 									<c:forEach var="bank" items="${popularBankNames}" varStatus="status">
 										

@@ -56,6 +56,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -109,6 +111,13 @@ public class CategoryPageController extends AbstractCategoryPageController
 	{
 		String searchCode = new String(categoryCode);
 
+		//applying search filters
+		if (searchQuery != null)
+		{
+			getfilterListCountForSize(searchQuery);
+			model.addAttribute("sizeCount", Integer.valueOf(getfilterListCountForSize(searchQuery)));
+			model.addAttribute("searchQueryValue", searchQuery);
+		}
 		//Storing the user preferred search results count
 		updateUserPreferences(pageSize);
 
@@ -120,7 +129,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 		}
 		model.addAttribute("searchCode", searchCode);
 		model.addAttribute("isCategoryPage", Boolean.TRUE);
-		model.addAttribute("searchQueryValue", searchQuery);
 		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 		//Set the drop down text if the attribute is not empty or null
 		if (dropDownText != null && !dropDownText.isEmpty())
@@ -389,4 +397,30 @@ public class CategoryPageController extends AbstractCategoryPageController
 		return productSearchFacade.categorySearch(categoryCode, searchState, pageableData);
 	}
 
+	private int getfilterListCountForSize(final String searchQuery)
+	{
+		final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
+		//		model.addAttribute("sizeCount", Integer.valueOf(Iterables.frequency(splitStr, "size")));
+		//		model.addAttribute("searchQueryValue", searchQuery);
+		final String[] temp = searchQuery.split(":");
+		final int countFreq = Iterables.frequency(splitStr, "size");
+		//  int preCount=0
+		int countValue = 0;
+		for (int i = 0; i < temp.length; i++)
+		{
+			if (temp[i].equals("size"))
+			{
+				countValue++;
+				//countFreq = 1;
+			}
+			else if (countValue >= 1)
+			{
+				if (countValue == countFreq)
+				{
+					break;
+				}
+			}
+		}
+		return Iterables.frequency(splitStr, "size");
+	}
 }
