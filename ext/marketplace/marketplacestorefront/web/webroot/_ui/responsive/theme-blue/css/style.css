@@ -17142,6 +17142,8 @@ body .compare>.wrapper {
     font-size: 14px;
     margin-bottom: 2px;
  }
+ .return-form .return-container .products .item .product-info .item-info{
+ line-height:1.2;}
 .return-form .return-container .products .item .product-info .item-details {
     display: none;
 }
