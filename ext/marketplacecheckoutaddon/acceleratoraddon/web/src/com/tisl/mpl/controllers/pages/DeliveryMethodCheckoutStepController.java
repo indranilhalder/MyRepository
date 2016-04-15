@@ -93,6 +93,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -202,6 +203,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
+	
+	
+	@Autowired
+	private MplConfigService mplConfigService;
 	
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
 
@@ -540,7 +545,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		//count other modes in cart entries 
 		int delModeCount = 0;
 		int expCheckout = 0;
-		
+		double configurableRadius = 0;
 		//retrieve pincode from session
 		String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 		if (cartModel != null && cartModel.getEntries() != null)
@@ -564,8 +569,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(defaultPincode);
 						}
 						//read radius from local properties file which is configurable.
-						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
-						LOG.info("configurableRadius**********." + Double.parseDouble(configurableRadius));
+						final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+						configurableRadius = Double.parseDouble(configRadius);
+						LOG.debug("**********configrableRadius:" + configurableRadius);
 						//this dto holds latitude and longitude
 						final LocationDTO dto = new LocationDTO();
 						if (null != pinCodeModelObj)
@@ -576,7 +582,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						final Location myLocation = new LocationDtoWrapper(dto);
 						//first calls commerce to get all the stores for a sellerId based on the given pincode
 						final StoreLocationRequestData storeLocationRequestData = papulateClicknCollectRequesrData(
-								cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), Double.parseDouble(configurableRadius));
+								cartEntryModel.getSelectedUSSID(), myLocation.getGPS(), configurableRadius);
 						storeLocationRequestDataList.add(storeLocationRequestData);
 					}
 					else
