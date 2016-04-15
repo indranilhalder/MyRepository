@@ -5,9 +5,21 @@
 User-agent: *
 
 # Block access to specific groups of pages
-Disallow: <c:url value="/cart" />
+<%-- Disallow: <c:url value="/cart" />
 Disallow: <c:url value="/checkout" />
-Disallow: <c:url value="/my-account" />
+Disallow: <c:url value="/my-account" /> --%>
+Disallow: <c:url value="/search/" />
+Disallow: <c:url value="/*req=*"/>
+Disallow: <c:url value="/*q=*"/>
+Disallow: <c:url value="/*offer=*"/>
+Disallow: <c:url value="/*iaclick=*"/>
+Disallow: <c:url value="/*searchCategory=*"/>
+Disallow: <c:url value="/*searchcategory=*"/>
+Disallow: <c:url value="/*pageSize=*"/>
+Disallow: <c:url value="/*selectedSize=*"/>
+Disallow: <c:url value="/*selectedsize=*"/>
+Disallow: <c:url value="/*/quickView"/>
+Disallow: <c:url value="/*/quickview"/>
 
 
 Request-rate: 1/10              # maximum rate is one page every 10 seconds

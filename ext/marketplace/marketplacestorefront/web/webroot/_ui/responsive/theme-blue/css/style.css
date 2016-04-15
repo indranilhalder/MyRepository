@@ -17142,6 +17142,8 @@ body .compare>.wrapper {
     font-size: 14px;
     margin-bottom: 2px;
  }
+ .return-form .return-container .products .item .product-info .item-info{
+ line-height:1.2;}
 .return-form .return-container .products .item .product-info .item-details {
     display: none;
 }
@@ -23164,7 +23166,7 @@ div.complete-your-look h1 {
 }
 
 .brands-left h2 {
-	text-transform: uppercase;
+	text-transform: capitalize;
 	font-size: 14px;
 	font-weight: 700;
 	letter-spacing: 1px;
