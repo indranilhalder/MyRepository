@@ -178,4 +178,14 @@ public class MarketplacecclientservicesConstants
 	public static final String SESSIONSECRET = "sessionSecret".intern();
 	public static final String TARGETENV = "targetEnv";
 	public static final String MOBILE = "mobile";
+
+
+	// Strat OMS Fallback constants
+	public static final String OMS_PINCODESERVICEABILITY_CON_TIMEOUT = "oms.pincodeserviceability.connection.timeout";
+	public static final String OMS_PINCODESERVICEABILITY_READ_TIMEOUT = "oms.pincodeserviceability.read.timeout";
+	public static final String OMS_INVETNORY_SOFTRESERV_CON_TIMEOUT = "oms.inventory.softreserv.connection.timeout";
+	public static final String OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT = "oms.inventory.softreserv.read.timeout";
+	public static final String OMS_SEND_ORDER_CON_TIMEOUT = "oms.send.order.connection.timeout";
+	public static final String OMS_SEND_ORDER_READ_TIMEOUT = "oms.send.order.read.timeout";
+	// Read OMS Fallback constants
 }
