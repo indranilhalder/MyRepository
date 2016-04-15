@@ -113,6 +113,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.ExtDefaultCommerceUpdateCartEntryStrategy;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
@@ -121,6 +122,7 @@ import com.tisl.mpl.service.InventoryReservationService;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
 import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
@@ -234,6 +236,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Resource(name = "mplPincodeServiceDao")
 	private MplPincodeServiceDao mplPincodeServiceDao;
+
+	@Resource
+	private MplStockService mplStockService;
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
@@ -1864,7 +1869,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			}
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
-				LOG.info(":::::::::::::::" + e.getErrorCode());
+				LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
 				if (null != e.getErrorCode()
 						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode())))
 				{
@@ -2050,7 +2055,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			//Marshal the employees list in console
 			jaxbMarshaller.marshal(responsefromOMS, stringWriter);
-			LOG.info("************Commerce response xml*************************" + stringWriter.toString());
+			LOG.info("************Commerce pincode response xml*************************" + stringWriter.toString());
 		}
 		catch (final Exception e)
 		{
@@ -3134,12 +3139,27 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
 
 		boolean inventoryReservationStatus = true;
+		InventoryReservListResponse inventoryReservListResponse = null;
 
 		if (requestType != null && !cartSoftReservationDatalist.isEmpty() && defaultPinCodeId != null)
 		{
-			final InventoryReservListResponse inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(
-					cartSoftReservationDatalist, abstractOrderModel.getGuid(), defaultPinCodeId, requestType);
-			LOG.debug("inventoryReservListResponse " + inventoryReservListResponse);
+			try
+			{
+				inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
+						abstractOrderModel.getGuid(), defaultPinCodeId, requestType);
+			}
+			catch (final ClientEtailNonBusinessExceptions e)
+			{
+				LOG.error("::::::Exception in calling OMS Inventory reservation:::::::::" + e.getErrorCode());
+				if (null != e.getErrorCode()
+						&& ("O0003".equalsIgnoreCase(e.getErrorCode()) || "O0004".equalsIgnoreCase(e.getErrorCode())))
+				{
+					inventoryReservListResponse = callInventoryReservationCommerce(cartSoftReservationDatalist);
+					//final String output = inventoryReservListResponse.getEntity(String.class);
+					//LOG.debug("*********************** Inventory Reservation response xml :" + output);
+				}
+			}
+
 
 			if (inventoryReservListResponse != null && CollectionUtils.isNotEmpty(inventoryReservListResponse.getItem()))
 			{
@@ -3172,6 +3192,78 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			inventoryReservationStatus = false;
 		}
 		return inventoryReservationStatus;
+	}
+
+	private InventoryReservListResponse callInventoryReservationCommerce(final List<CartSoftReservationData> cartdatalist)
+	{
+
+		LOG.info("*********************** Commerce Inventory Reservation *************");
+
+		final Map<String, Integer> reqUssidQuantityMap = new HashMap<String, Integer>();
+		Map<String, Integer> availableStockMap = null;
+		final List<String> ussidList = new ArrayList<String>();
+
+		for (final CartSoftReservationData reserveObj : cartdatalist)
+		{
+			ussidList.add(reserveObj.getUSSID());
+			reqUssidQuantityMap.put(reserveObj.getUSSID(), reserveObj.getQuantity());
+		}
+
+		String sellerArticleSKUs = GenericUtilityMethods.getcommaSepUSSIDs(ussidList);
+		if (null != sellerArticleSKUs && sellerArticleSKUs.length() > 0)
+		{
+			sellerArticleSKUs = sellerArticleSKUs.substring(0, sellerArticleSKUs.length() - 1);
+			availableStockMap = mplStockService.getAllStockLevelDetail(sellerArticleSKUs);
+		}
+
+		//Preparing response
+		final InventoryReservListResponse inventoryReservListResponse = new InventoryReservListResponse();
+		final List<InventoryReservResponse> inventoryReservResponseList = new ArrayList<InventoryReservResponse>();
+
+
+
+		for (final Map.Entry<String, Integer> entry : reqUssidQuantityMap.entrySet())
+		{
+			final InventoryReservResponse inventoryReservResponse = new InventoryReservResponse();
+			inventoryReservResponse.setUSSID(entry.getKey());
+
+			final Integer inventoryInComm = availableStockMap == null ? Integer.valueOf(0) : availableStockMap.get(entry.getKey());
+
+			if (null != inventoryInComm && entry.getValue().intValue() < inventoryInComm.intValue())
+			{
+				inventoryReservResponse.setReservationStatus("success");
+			}
+			else
+			{
+				inventoryReservResponse.setReservationStatus("failure");
+			}
+
+			inventoryReservResponseList.add(inventoryReservResponse);
+
+		}
+
+		inventoryReservListResponse.setItem(inventoryReservResponseList);
+
+		try
+		{
+			final StringWriter stringWriter = new StringWriter();
+			final JAXBContext jaxbContext = JAXBContext.newInstance(InventoryReservListResponse.class);
+			final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+
+			//Marshal the employees list in console
+			jaxbMarshaller.marshal(inventoryReservListResponse, stringWriter);
+			LOG.debug("************Commerce inventory response xml*************************" + stringWriter.toString());
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage());
+		}
+
+
+		return inventoryReservListResponse;
+
 	}
 
 	/*

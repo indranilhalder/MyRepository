@@ -52,8 +52,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Checks whether the requested Date lies within range provided
-	 * @param :
-	 *           start,end,comparableDate
+	 * @param : start,end,comparableDate
 	 * @return status
 	 */
 	public static boolean compareDate(final Date start, final Date end, final Date comparableDate)
@@ -76,8 +75,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Sends the year from Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return year
 	 */
 	public static String redirectYear(final Date date)
@@ -102,8 +100,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies Date with the required Year
-	 * @param :
-	 *           date,yeartoModify
+	 * @param : date,yeartoModify
 	 * @return modifedDate
 	 */
 	public static Date modifiedBDate(final Date date, final String yeartoModify)
@@ -133,8 +130,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Modifies the System Date according to the format dd/MM/yyyy
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return modifedDate
 	 */
 	public static Date modifiedSysDate(final Date date)
@@ -164,8 +160,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Calculates Number of Days Between Dates
-	 * @param :
-	 *           date1,date2
+	 * @param : date1,date2
 	 * @return noOfDays
 	 */
 	public static int noOfDaysCalculatorBetweenDates(final Date date1, final Date date2)
@@ -197,8 +192,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: Compares with System Date
-	 * @param :
-	 *           date
+	 * @param : date
 	 * @return flag
 	 */
 	public static boolean compareDateWithSysDate(final Date date)
@@ -222,8 +216,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks for Excluded Products
-	 * @param :
-	 *           Product product,List<Product> excludedProductList
+	 * @param : Product product,List<Product> excludedProductList
 	 * @return boolean
 	 */
 	public static boolean isProductExcluded(final Product product, final List<Product> excludedProductList)
@@ -238,8 +231,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Excluded Manufacturer Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionLists
+	 * @param : List<AbstractPromotionRestriction> restrictionLists
 	 * @return manufactureList
 	 */
 	public static List<String> getExcludeManufactureList(final List<AbstractPromotionRestriction> restrictionList)
@@ -263,8 +255,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks Manufacture Restriction
-	 * @param :
-	 *           List<AbstractPromotionRestriction> restrictionList
+	 * @param : List<AbstractPromotionRestriction> restrictionList
 	 * @return manufacturesRestriction
 	 */
 	//	public static ManufacturesRestriction getPromotionManufactureList(final List<AbstractPromotionRestriction> restrictionList)
@@ -283,8 +274,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks whether Product Exist in Category
-	 * @param :
-	 *           List<Category> categoryList,List<Category> productCategoryList
+	 * @param : List<Category> categoryList,List<Category> productCategoryList
 	 * @return boolean
 	 */
 	public static boolean productExistsIncat(final List<Category> categoryList, final List<String> productCategoryList)
@@ -305,8 +295,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description: @Promtion: Checks whther product lies in Excluded Manufacture List
-	 * @param :
-	 *           Product product, List<String> excludedManufactureList
+	 * @param : Product product, List<String> excludedManufactureList
 	 * @return boolean
 	 */
 	public static boolean isProductExcludedForManufacture(final Product product, final List<String> excludedManufactureList)
@@ -416,6 +405,28 @@ public class GenericUtilityMethods
 			{
 				//sellerArticleSKUsBuilder.append("'").append(sellerInformationData.getUssid()).append("',");
 				sellerArticleSKUsBuilder.append('\'').append(sellerInformationData.getUssid()).append('\'').append(',');
+			}
+
+			sellerArticleSKUs = sellerArticleSKUsBuilder.toString();
+		}
+
+		return sellerArticleSKUs;
+	}
+
+	/**
+	 *
+	 * @param sellerDataList
+	 * @return sellerArticleSKUs
+	 */
+	public static String getcommaSepUSSIDs(final List<String> ussidList)
+	{
+		String sellerArticleSKUs = null;
+		if (null != ussidList && !ussidList.isEmpty())
+		{
+			final StringBuilder sellerArticleSKUsBuilder = new StringBuilder();
+			for (final String ussid : ussidList)
+			{
+				sellerArticleSKUsBuilder.append('\'').append(ussid).append('\'').append(',');
 			}
 
 			sellerArticleSKUs = sellerArticleSKUsBuilder.toString();
@@ -643,8 +654,7 @@ public class GenericUtilityMethods
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
-	 * @param :
-	 *           SessionContext arg0,PromotionEvaluationContext arg1
+	 * @param : SessionContext arg0,PromotionEvaluationContext arg1
 	 */
 	public static void populateExcludedProductManufacturerList(final SessionContext arg0, final PromotionEvaluationContext arg1,
 			final List<Product> excludedProductList, final List<String> excludeManufactureList,
@@ -655,8 +665,8 @@ public class GenericUtilityMethods
 			if (productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS) != null
 					&& excludedProductList != null)
 			{
-				excludedProductList.addAll(
-						(List<Product>) productPromotion.getProperty(arg0, MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
+				excludedProductList.addAll((List<Product>) productPromotion.getProperty(arg0,
+						MarketplacecommerceservicesConstants.EXCLUDEDPRODUCTS));
 			}
 			if (excludeManufactureList != null)
 			{
@@ -692,8 +702,8 @@ public class GenericUtilityMethods
 			final SessionContext ctx, final PromotionEvaluationContext promoEvalCtx, final ProductPromotion productPromotion,
 			final List<AbstractPromotionRestriction> restrictionList)
 	{
-		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion)
-				&& getDefaultPromotionsManager().checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
+		return (getDefaultPromotionsManager().checkMinimumCategoryValue(validProductUssidMap, ctx, productPromotion) && getDefaultPromotionsManager()
+				.checkMinimumBrandAmount(ctx, promoEvalCtx, validProductUssidMap, restrictionList));
 
 	}
 
