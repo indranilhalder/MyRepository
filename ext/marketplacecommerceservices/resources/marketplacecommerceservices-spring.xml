@@ -1634,11 +1634,6 @@
 	</bean>
 	
 	<!-- Store Locator Beans end here -->
-
-	<bean id="mplSellerInformationFacade"
-		class="com.tisl.mpl.marketplacecommerceservices.facades.impl.MplSellerInformationFacadeImpl">
-	</bean>
-	
 	
 	<!-- UserGroupSaveInterceptor starts -->
 	<bean id="UserGroupSaveInterceptor" class="com.tisl.mpl.interceptor.UserGroupSaveInterceptor" />

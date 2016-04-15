@@ -219,7 +219,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				final String pickupPersonName = cartModel.getPickupPersonName();
 				final String pickupPersonMobile = cartModel.getPickupPersonMobile();
-				if ((pickupPersonName == null) && (pickupPersonMobile == null))
+				if ((pickupPersonName == null) || (pickupPersonMobile == null))
 				{
 					selectPickupDetails = true;
 					model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
