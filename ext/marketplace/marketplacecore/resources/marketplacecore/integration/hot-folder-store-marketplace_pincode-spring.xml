@@ -59,12 +59,12 @@
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
 			<value>
-				# Insert Pin code Serviceability Data
-				INSERT PincodeServiceabilityData;pincode;sellerId;serviceableFlag;deliveryMode;fulfillmentType;version[cellDecorator=com.tisl.mpl.core.celldecorator.MplPincodeDataVersionDecorator]
+				# Insert Pin code Serviceability Slave Data
+				INSERT PinServiceabilitySlaveData;pincode;sellerId;serviceableFlag;deliveryMode;fulfillmentType
 			</value>
 		</property>
 		<property name="impexRow">
-			<value>;{+0};{+1};{2};{3};{4};{5}</value>
+			<value>;{+0};{+1};{2};{3};{4}</value>
 		</property>
 	</bean> 
 	

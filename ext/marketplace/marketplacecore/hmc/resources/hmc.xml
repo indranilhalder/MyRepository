@@ -3189,9 +3189,50 @@
  <!-- Voucher HMC Modification ends -->
  
  
- 
+  <!-- For OMS Fallback Mechanism -->
  <type name="PincodeServiceabilityData" mode="append">
-
+		<organizer>
+			<search mode="append">
+				<condition attribute="pincode" />
+				<condition attribute="sellerId" />
+				<condition attribute="serviceableFlag" />
+				<condition attribute="deliveryMode" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="pincode" width="150"></attribute>
+						<attribute name="sellerId" width="200"></attribute>
+						<attribute name="serviceableFlag" width="200"></attribute>
+						<attribute name="deliveryMode" width="200"></attribute>
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="pincode" width="300" />
+						<attribute name="sellerId" width="200" />
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="pincode" />
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				<essentials>
+					<columnlayout>
+						<row>
+							<attribute name="pincode" />
+						</row>
+					</columnlayout>
+				</essentials>
+			</editor>
+		</organizer>
+	</type>
+	
+	
+	<type name="PinServiceabilitySlaveData" mode="append">
 		<organizer>
 			<search mode="append">
 				<condition attribute="pincode" />
