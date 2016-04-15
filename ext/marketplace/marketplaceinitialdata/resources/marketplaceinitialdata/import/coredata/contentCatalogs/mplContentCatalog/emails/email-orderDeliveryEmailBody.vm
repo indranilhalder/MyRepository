@@ -94,9 +94,9 @@ ${ctx.cmsSlotContents.SiteLogo}</td>
                         <td width="120" height="55" align="center" >$entry.orderLineId</td>
                         <td width="130" align="center">$entry.product.name</td>
                         <td width="50" align="center" >$entry.quantity</td>
-                        <td width="80" align="center">$entry.netAmountAfterAllDisc</td>
-                        <td width="120" align="center" >$entry.currDelCharge</td>
-						<td width="120" align="center" >$ctx.math.roundTo(2, $entry.convenienceChargeApportion)</td>
+                        <td width="80" align="center">$ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
+                        <td width="120" align="center" >$ctx.numberTool.format("#0.00", $entry.currDelCharge)</td>
+						<td width="120" align="center" >$ctx.numberTool.format("#0.00", $entry.convenienceChargeApportion)</td>
                         
                       </tr>
                     </table></td>
