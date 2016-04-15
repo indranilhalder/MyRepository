@@ -1571,4 +1571,9 @@
 	</bean>
 
 	<bean id="campaignData" class="com.tisl.mpl.pojo.CampaignData" />
+	<!-- Start : Oms fallback mechanism -->
+	<bean id="mplPincodeServiceDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPincodeServiceDaoImpl">
+	</bean>
+	<!-- Start : End fallback mechanism -->
 </beans>
