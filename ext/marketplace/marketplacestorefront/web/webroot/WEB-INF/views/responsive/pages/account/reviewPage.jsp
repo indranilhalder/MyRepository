@@ -76,6 +76,7 @@
 							</c:choose>
 			</div>
 		</div>
+		
 		<div class="reviews">
 					
 			<!--  Interface for customer own comments starts from here -->

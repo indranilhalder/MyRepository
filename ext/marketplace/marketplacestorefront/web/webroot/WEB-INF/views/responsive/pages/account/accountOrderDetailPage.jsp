@@ -31,6 +31,7 @@
 	<div class="account" id="anchorHead">
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
+			
 			<%--  <select class="menu-select">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value="Overview" data-href="account-overview.php"><spring:theme code="header.flyout.overview" /></option>

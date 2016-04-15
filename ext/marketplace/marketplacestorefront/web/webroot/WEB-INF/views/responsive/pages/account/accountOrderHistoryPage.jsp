@@ -72,7 +72,6 @@
 		<div class="wrapper">
 
 
-
 			<!----- Left Navigation Starts --------->
 			<%-- <div class="left-nav">
 				<ul>

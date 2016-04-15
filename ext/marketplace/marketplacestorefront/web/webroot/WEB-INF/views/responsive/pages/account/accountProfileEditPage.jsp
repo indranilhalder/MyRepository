@@ -43,8 +43,7 @@
       </select>
 </h1>
 
-<div class="wrapper">
-		
+<div class="wrapper">		
 		
 	<!----- Left Navigation Starts --------->
 			<%-- <div class="left-nav">

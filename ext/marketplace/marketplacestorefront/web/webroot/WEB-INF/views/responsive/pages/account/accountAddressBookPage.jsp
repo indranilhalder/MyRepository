@@ -362,8 +362,7 @@
 											</label>
 										 <div class="errorMessage">
 											<div id="errtype"></div>
-										</div> 
-								
+										</div> 					
 
 								<fieldset>
 

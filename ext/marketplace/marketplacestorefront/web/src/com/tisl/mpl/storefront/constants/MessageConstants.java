@@ -183,4 +183,5 @@ public final class MessageConstants
 	//reviews
 	public static final String TEXT_ACCOUNT_REVIEWS = "text.account.reviews";
 	public static final String PAZE_SIZE = "mpl.account.review.pazesize";
+
 }
