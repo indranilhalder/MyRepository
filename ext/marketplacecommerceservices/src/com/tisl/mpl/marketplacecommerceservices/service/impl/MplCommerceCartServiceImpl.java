@@ -53,6 +53,7 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
@@ -210,8 +211,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	@Autowired
 	private Wishlist2Service wishlistService;
 
-	//@Autowired
-	//private Converter<VariantProductModel, VariantOptionData> variantOptionDataConverter;
 
 	@Autowired
 	private PersistentKeyGenerator subOrderIdGenerator;
@@ -239,6 +238,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Resource
 	private MplStockService mplStockService;
+
+	@Resource(name = "baseStoreService")
+	private BaseStoreService baseStoreService;
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
@@ -1985,62 +1987,85 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final List<PincodeServiceData> pincodeServiceDataList)
 	{
 		LOG.info("*********************** Commerce Pincode Serviceability *************");
-		final Map<String, List<DeliveryModeResOMSWsDto>> deliveryModeMap = new HashMap<String, List<DeliveryModeResOMSWsDto>>();
 		final List<PinCodeDeliveryModeResponse> pinCodeDeliveryModeResponseList = new ArrayList<PinCodeDeliveryModeResponse>();
 		final PinCodeDeliveryModeListResponse responsefromOMS = new PinCodeDeliveryModeListResponse();
-		final List<PincodeServiceabilityDataModel> PincodeServiceabilityDataModelList = mplPincodeServiceDao
-				.getPincodeServicableDataAtCommerce(pin, pincodeServiceDataList);
-		LOG.info("*********************** Pincode serviceability response isEmpty() :"
-				+ PincodeServiceabilityDataModelList.isEmpty());
+		final List<PincodeServiceabilityDataModel> fallbackPincodeList = mplPincodeServiceDao.getPincodeServicableDataAtCommerce(
+				pin, pincodeServiceDataList);
+		LOG.info("*********************** Pincode serviceability response isEmpty() :" + fallbackPincodeList.isEmpty());
 
 		responsefromOMS.setPincode(pin);
-		for (final PincodeServiceabilityDataModel pincodeServiceabilityDataModel : PincodeServiceabilityDataModelList)
+
+		// Stock level data preparation for inventory
+
+		final List<String> ussidList = new ArrayList<String>();
+		for (final PincodeServiceData pincodeServiceData : pincodeServiceDataList)
 		{
-			final DeliveryModeResOMSWsDto deliveryModeResOMSWsDto = new DeliveryModeResOMSWsDto();
-			deliveryModeResOMSWsDto.setType(pincodeServiceabilityDataModel.getDeliveryMode());
-			deliveryModeResOMSWsDto.setInventory("100");
-			deliveryModeResOMSWsDto.setIsPincodeServiceable(pincodeServiceabilityDataModel.getServiceableFlag());
-			deliveryModeResOMSWsDto.setIsCOD("Y");
-			deliveryModeResOMSWsDto.setIsCODLimitFailed("N");
-			deliveryModeResOMSWsDto.setIsPrepaidEligible("Y");
-			deliveryModeResOMSWsDto.setDeliveryDate("2015-07-11T09:33:17Z");
-
-			if (deliveryModeMap.get(pincodeServiceabilityDataModel.getSellerId()) == null)
-			{
-				final List<DeliveryModeResOMSWsDto> deliveryModeResOMSWsDtoList = new ArrayList<DeliveryModeResOMSWsDto>();
-				deliveryModeResOMSWsDtoList.add(deliveryModeResOMSWsDto);
-				deliveryModeMap.put(pincodeServiceabilityDataModel.getSellerId(), deliveryModeResOMSWsDtoList);
-			}
-			else
-			{
-				final List<DeliveryModeResOMSWsDto> deliveryModeResOMSWsDtoList = deliveryModeMap.get(pincodeServiceabilityDataModel
-						.getSellerId());
-				deliveryModeResOMSWsDtoList.add(deliveryModeResOMSWsDto);
-				deliveryModeMap.put(pincodeServiceabilityDataModel.getSellerId(), deliveryModeResOMSWsDtoList);
-			}
-
+			ussidList.add(pincodeServiceData.getUssid());
+		}
+		String sellerArticleSKUs = GenericUtilityMethods.getcommaSepUSSIDs(ussidList);
+		if (null != sellerArticleSKUs && sellerArticleSKUs.length() > 0)
+		{
+			sellerArticleSKUs = sellerArticleSKUs.substring(0, sellerArticleSKUs.length() - 1);
 		}
 
-		//
-		final List<String> traversedSellerList = new ArrayList<String>();
-		for (final PincodeServiceabilityDataModel pincodeServiceabilityDataModel : PincodeServiceabilityDataModelList)
+		final Map<String, Integer> stockLevelMap = mplStockService.getAllStockLevelDetail(sellerArticleSKUs);
+
+		// Stock level data preparation for inventory
+
+		final Long codUpperLimit = getBaseStoreService().getCurrentBaseStore().getCodUpperLimit();
+		final Long codLowerLimit = getBaseStoreService().getCurrentBaseStore().getCodLowerLimit();
+		final Long prepaidUpperLimit = getBaseStoreService().getCurrentBaseStore().getPrepaidUpperLimit();
+		final Long prepaidLowerLimit = getBaseStoreService().getCurrentBaseStore().getPrepaidLowerLimit();
+
+		for (final PincodeServiceData pincodeServiceData : pincodeServiceDataList)
 		{
+			final List<DeliveryModeResOMSWsDto> deliveryModeResOMSWsDtoList = new ArrayList<DeliveryModeResOMSWsDto>();
+			final PinCodeDeliveryModeResponse pinCodeDeliveryModeResponse = new PinCodeDeliveryModeResponse();
 
-			if (traversedSellerList.isEmpty() || !traversedSellerList.contains(pincodeServiceabilityDataModel.getSellerId()))
+			for (final MarketplaceDeliveryModeData deliveryModeData : pincodeServiceData.getDeliveryModes())
 			{
-				final PinCodeDeliveryModeResponse pinCodeDeliveryModeResponse = new PinCodeDeliveryModeResponse();
-				pinCodeDeliveryModeResponse.setUSSID(getUssidBySellerId(pincodeServiceDataList,
-						pincodeServiceabilityDataModel.getSellerId()));
-				pinCodeDeliveryModeResponse.setFulfilmentType(pincodeServiceabilityDataModel.getFulfillmentType());
+				final String isDelieveryModePresent = isDelieveryModePresent(pincodeServiceData, fallbackPincodeList,
+						deliveryModeData.getCode());
 
-				pinCodeDeliveryModeResponse.setDeliveryMode(deliveryModeMap.get(pincodeServiceabilityDataModel.getSellerId()));
-				pinCodeDeliveryModeResponseList.add(pinCodeDeliveryModeResponse);
-				traversedSellerList.add(pincodeServiceabilityDataModel.getSellerId());
+				boolean isDataPresentInFallback = false;
+				String isPincodeServiceable = "N";
+				if (isDelieveryModePresent.indexOf('|') > 0)
+				{
+					isDataPresentInFallback = true;
+					isPincodeServiceable = isDelieveryModePresent.split("|")[1];
+				}
+
+
+				final Integer stockCount = (stockLevelMap.get(pincodeServiceData.getUssid()) != null) ? Integer.valueOf(stockLevelMap
+						.get(pincodeServiceData.getUssid()).intValue()) : Integer.valueOf(0);
+				final boolean isCodLimitFailed = (pincodeServiceData.getPrice().longValue() >= codLowerLimit.longValue() && pincodeServiceData
+						.getPrice().longValue() <= codUpperLimit.longValue()) ? false : true;
+				final boolean isCodEligible = (isCodLimitFailed || pincodeServiceData.getIsCOD().equalsIgnoreCase(
+						MarketplacecclientservicesConstants.N)) ? false : true;
+				final boolean isPrepaidEligible = (pincodeServiceData.getPrice().longValue() >= prepaidLowerLimit.longValue() && pincodeServiceData
+						.getPrice().longValue() <= prepaidUpperLimit.longValue()) ? true : false;
+
+				isPincodeServiceable = (!isDataPresentInFallback || (!isPrepaidEligible && !isCodEligible)) ? MarketplacecclientservicesConstants.N
+						: isPincodeServiceable;
+
+				final DeliveryModeResOMSWsDto deliveryModeResOMSWsDto = new DeliveryModeResOMSWsDto();
+				deliveryModeResOMSWsDto.setType(getDeliveryGlobalCode(deliveryModeData.getCode()));
+				deliveryModeResOMSWsDto.setInventory(String.valueOf(stockCount));
+				deliveryModeResOMSWsDto.setIsPincodeServiceable(isPincodeServiceable);
+				deliveryModeResOMSWsDto.setIsCOD((isCodEligible) ? MarketplacecclientservicesConstants.Y
+						: MarketplacecclientservicesConstants.N);
+				deliveryModeResOMSWsDto.setIsCODLimitFailed((isCodLimitFailed) ? MarketplacecclientservicesConstants.Y
+						: MarketplacecclientservicesConstants.N);
+				deliveryModeResOMSWsDto.setIsPrepaidEligible((isPrepaidEligible) ? MarketplacecclientservicesConstants.Y
+						: MarketplacecclientservicesConstants.N);
+				deliveryModeResOMSWsDto.setDeliveryDate("2015-07-11T09:33:17Z");
+				deliveryModeResOMSWsDtoList.add(deliveryModeResOMSWsDto);
 			}
-			else
-			{
-				continue;
-			}
+
+			pinCodeDeliveryModeResponse.setUSSID(pincodeServiceData.getUssid());
+			pinCodeDeliveryModeResponse.setFulfilmentType(pincodeServiceData.getFullFillmentType());
+			pinCodeDeliveryModeResponse.setDeliveryMode(deliveryModeResOMSWsDtoList);
+			pinCodeDeliveryModeResponseList.add(pinCodeDeliveryModeResponse);
 
 		}
 
@@ -2055,7 +2080,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			//Marshal the employees list in console
 			jaxbMarshaller.marshal(responsefromOMS, stringWriter);
-			LOG.info("************Commerce pincode response xml*************************" + stringWriter.toString());
+			LOG.info("************Commerce response xml*************************" + stringWriter.toString());
 		}
 		catch (final Exception e)
 		{
@@ -2064,18 +2089,88 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return responsefromOMS;
 	}
 
-	private String getUssidBySellerId(final List<PincodeServiceData> reqData, final String sellerId)
+	private boolean compareDeliveryModes(final String deliveryMode1, final String deliveryMode2)
 	{
-		String ussId = null;
-		for (final PincodeServiceData pincodeServiceData : reqData)
+		boolean isValid = false;
+		if (StringUtils.isNotEmpty(deliveryMode1)
+				&& StringUtils.isNotEmpty(deliveryMode2)
+				&& (deliveryMode1.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) || deliveryMode1
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
+				&& (deliveryMode2.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) || deliveryMode2
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.HD)))
 		{
-			if (pincodeServiceData.getSellerId().equalsIgnoreCase(sellerId))
+			isValid = true;
+		}
+		else if (StringUtils.isNotEmpty(deliveryMode1)
+				&& StringUtils.isNotEmpty(deliveryMode2)
+				&& (deliveryMode1.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) || deliveryMode1
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.ED))
+				&& (deliveryMode2.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) || deliveryMode2
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)))
+		{
+			isValid = true;
+		}
+		else if (StringUtils.isNotEmpty(deliveryMode1)
+				&& StringUtils.isNotEmpty(deliveryMode2)
+				&& (deliveryMode1.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) || deliveryMode1
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+				&& (deliveryMode2.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) || deliveryMode2
+						.equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC)))
+		{
+			isValid = true;
+		}
+
+		return isValid;
+	}
+
+
+	private String isDelieveryModePresent(final PincodeServiceData pincodeServiceData,
+			final List<PincodeServiceabilityDataModel> fallbackPincodeList, final String deliveryMode)
+	{
+		boolean infoPresent = false;
+		String isPincodeServiceable = MarketplacecommerceservicesConstants.N;
+		final StringBuilder response = new StringBuilder(100);
+		for (final PincodeServiceabilityDataModel fallbackPincodeData : fallbackPincodeList)
+		{
+			if (pincodeServiceData.getSellerId().equalsIgnoreCase(fallbackPincodeData.getSellerId())
+					&& pincodeServiceData.getFullFillmentType().equalsIgnoreCase(fallbackPincodeData.getFulfillmentType())
+					&& compareDeliveryModes(deliveryMode, fallbackPincodeData.getDeliveryMode()))
 			{
-				ussId = pincodeServiceData.getUssid();
+				infoPresent = true;
+				isPincodeServiceable = fallbackPincodeData.getServiceableFlag();
+				break;
 			}
 		}
-		return ussId;
+		if (infoPresent)
+		{
+			response.append(MarketplacecommerceservicesConstants.Y).append('|').append(isPincodeServiceable);
+		}
+		else
+		{
+			response.append(MarketplacecommerceservicesConstants.N);
+		}
+		return response.toString();
 	}
+
+	private String getDeliveryGlobalCode(final String deliveryCode)
+	{
+		String deliveryModeGlobalCode = MarketplacecommerceservicesConstants.EMPTY;
+		if (deliveryCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+		{
+			deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
+		}
+		else if (deliveryCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+		{
+			deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
+		}
+		else if (deliveryCode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+		{
+			deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CC;
+		}
+
+		return deliveryModeGlobalCode;
+	}
+
 
 	/*
 	 * @Desc fetching reservation details
@@ -4177,6 +4272,25 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			cartEntryModel.setMplDeliveryMode(mplDeliveryMode);
 			getModelService().save(cartEntryModel);
 		}
+	}
+
+
+	/**
+	 * @return the baseStoreService
+	 */
+	public BaseStoreService getBaseStoreService()
+	{
+		return baseStoreService;
+	}
+
+
+	/**
+	 * @param baseStoreService
+	 *           the baseStoreService to set
+	 */
+	public void setBaseStoreService(final BaseStoreService baseStoreService)
+	{
+		this.baseStoreService = baseStoreService;
 	}
 
 

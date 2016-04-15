@@ -1955,6 +1955,18 @@
 						<modifiers read="true" write="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Start OMS Fallback code -->
+					<attribute qualifier="prepaidUpperLimit" type="java.lang.Long">
+						<defaultvalue>Long.valueOf(1)</defaultvalue>
+						<description> To set prepaid upper limit in case of oms error </description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="prepaidLowerLimit" type="java.lang.Long">
+						<defaultvalue>Long.valueOf(100000)</defaultvalue>
+						<description> To set prepaid lower limit in case of oms error </description>
+						<persistence type="property" />
+					</attribute>
+					<!-- End OMS Fallback code -->
 				</attributes>
 			</itemtype>
 
