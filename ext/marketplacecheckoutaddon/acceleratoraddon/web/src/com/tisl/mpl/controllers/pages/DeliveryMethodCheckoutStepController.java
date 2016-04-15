@@ -111,7 +111,7 @@ import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
-import com.tisl.mpl.marketplacecommerceservices.facades.MplSellerInformationFacade;
+import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
@@ -2173,6 +2173,32 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		return finalDeliveryCost;
 	}
 
+	/**
+	 * Method call to remove delivery point of service when redirecting from store locator page to delivery method choose
+	 * page
+	 *
+	 * @author TECHOUTS
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHANGEDELIVERYMODE, method = RequestMethod.GET)
+	@RequireHardLogIn
+	public String chnageDeliveryMode(final Model model, final RedirectAttributes redirectAttributes)
+	{
+		final CartModel cartModel = getCartService().getSessionCart();
+
+		for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
+		{
+			if (cartEntry.getDeliveryPointOfService() != null)
+			{
+				cartEntry.setDeliveryPointOfService(null);
+				modelService.save(cartEntry);
+			}
+		}
+
+		return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/choose";
+
+	}
+	
+	
 	/**
 	 * @return the mplCartFacade
 	 */
