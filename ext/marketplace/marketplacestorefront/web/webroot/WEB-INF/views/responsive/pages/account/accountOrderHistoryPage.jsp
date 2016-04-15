@@ -30,7 +30,7 @@
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<h1 class="account-header">
-			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
+			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
 
 
 			<select class="menu-select"
@@ -70,7 +70,6 @@
 		</h1>
 
 		<div class="wrapper">
-
 
 
 			<!----- Left Navigation Starts --------->
