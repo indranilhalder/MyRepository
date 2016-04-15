@@ -31,7 +31,7 @@
 						<c:set var="mediaQualifier" value="${media.mediaFormat.qualifier}" />
 						<c:if
 							test="${not empty mediaQualifier && mediaQualifier eq '324Wx324H'}">
-							<a href="${categoryUrl}"><img src="${media.url2}"
+							<a href="${categoryUrl}?icid=${component.pk}"><img src="${media.url2}"
 								class="image" /></a>
 							<c:set var="mediaFound" value="true" />
 						</c:if>
@@ -40,14 +40,14 @@
 
 					</c:forEach>
 					<c:if test="${mediaFound eq 'false'}">
-						<a href="${categoryUrl}"><img
+						<a href="${categoryUrl}?icid=${component.pk}"><img
 							src="/store/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
 							class="image" /></a>
 					</c:if>
 				</c:when>
 
 				<c:otherwise>
-					<a href="${categoryUrl}"><img
+					<a href="${categoryUrl}?icid=${component.pk}"><img
 						src="/store/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
 						class="image" /></a>
 				</c:otherwise>
@@ -59,11 +59,11 @@
 		<c:otherwise>
 			<c:choose>
 				<c:when test="${not empty component.image}">
-					<a href="${categoryUrl}"><img src="${component.image.url}"
+					<a href="${categoryUrl}?icid=${component.pk}"><img src="${component.image.url}"
 						class="image" /></a>
 				</c:when>
 				<c:otherwise>
-					<a href="${categoryUrl}"><img
+					<a href="${categoryUrl}?icid=${component.pk}"><img
 						src="/store/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
 						class="image" /></a>
 				</c:otherwise>

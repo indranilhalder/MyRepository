@@ -1638,6 +1638,19 @@
 	<bean id="mplSellerInformationFacade"
 		class="com.tisl.mpl.marketplacecommerceservices.facades.impl.MplSellerInformationFacadeImpl">
 	</bean>
+	
+	
+	<!-- UserGroupSaveInterceptor starts -->
+	<bean id="UserGroupSaveInterceptor" class="com.tisl.mpl.interceptor.UserGroupSaveInterceptor" />
+
+	<bean id="UserGroupSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="UserGroupSaveInterceptor" />
+		<property name="typeCode" value="PrincipalGroup" />
+
+
+	</bean>
+	<!-- UserGroupSaveInterceptor ends -->	
 
 	</beans>
 

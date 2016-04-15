@@ -206,7 +206,7 @@ function registerUser(eventObject)
 				<c:when test="${empty showOnlySiteLogo }">
 					<div class="marketplace">
 						<cms:pageSlot position="SiteLogo" var="logo" limit="1">
-							<cms:component component="${logo}" />
+							<cms:component component="${logo}"/>
 						</cms:pageSlot>
 						<!-- <div class="mobile-bag bag">
 						TISPRD-32-fix
@@ -215,7 +215,7 @@ function registerUser(eventObject)
 					</div>
 					<div class="marketplace linear-logo">
 						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
-							<cms:component component="${logo}" />
+							<cms:component component="${logo}"/>
 						</cms:pageSlot>
 						<div class="mobile-bag bag">
 						<!-- TISPRD-32-fix -->
@@ -227,7 +227,7 @@ function registerUser(eventObject)
 					<div class="marketplace-checkout">
 						<c:if test="${empty hideLogo}">
 							<cms:pageSlot position="SiteLogo" var="logo" limit="1">
-								<cms:component component="${logo}" />
+								<cms:component component="${logo}"/>
 							</cms:pageSlot>
 						</c:if>
 					</div>
@@ -288,3 +288,11 @@ function registerUser(eventObject)
 		<cms:component component="${component}" />
 	</cms:pageSlot>
 </c:if>
+<script>
+$(document).ready(function(){
+	var href = $(".marketplace,.linear-logo").find("a").attr("href");
+	var p = href.split("?");
+	$(".marketplace").find("a").attr("href",p[0]);
+});
+
+</script>

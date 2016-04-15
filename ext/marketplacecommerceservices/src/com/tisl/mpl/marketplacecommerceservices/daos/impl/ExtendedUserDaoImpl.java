@@ -3,8 +3,10 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.internal.dao.DefaultGenericDao;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.Collections;
 import java.util.Date;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.CustomerOldEmailDetailsModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.ExtendedUserDao;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 
@@ -43,7 +46,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @extaccelerator.core.user.dao.ExtendedUserDao#findUserByUIDandSiteID(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -130,7 +133,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @extaccelerator.core.user.dao.ExtendedUserDao#findAllUsers()
 	 */
 	@Override
@@ -142,7 +145,7 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see core.user.dao.ExtendedUserDao#findNewAndModifiedUsersByDateRange(java.util.Date, java.util.Date)
 	 */
 	@Override
@@ -167,5 +170,44 @@ public class ExtendedUserDaoImpl extends DefaultGenericDao<CustomerModel> implem
 					+ " users with the unique emailid '" + uid + "'");
 		}
 		return resList.isEmpty() ? null : resList.get(0);
+	}
+
+
+
+	/**
+	 * This method is used to return userModel based on user ID
+	 *
+	 * @param uid
+	 * @return UserModel
+	 *
+	 */
+	@Override
+	public UserModel getUserByUid(final String uid)
+	{
+		try
+		{
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.FIND_USER_BY_UID);
+			query.addQueryParameter("UID", uid);
+			final List<UserModel> resList = getFlexibleSearchService().<UserModel> search(query).getResult();
+
+			if (resList.size() > 1)
+			{
+				throw new AmbiguousIdentifierException(MarketplacecommerceservicesConstants.FOUND + resList.size()
+						+ " users with the unique uid '" + uid + "'");
+			}
+			return resList.isEmpty() ? null : resList.get(0);
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 }
