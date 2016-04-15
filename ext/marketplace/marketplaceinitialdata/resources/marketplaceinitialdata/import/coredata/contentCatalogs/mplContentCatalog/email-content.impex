@@ -7,11 +7,52 @@ $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCata
 $wideContent=CMSImageComponent,BannerComponent
 
 # Import config properties into impex macros
-UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
 $jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
 
 $emailPackageName=com.tisl.mpl.facades.process.email.context
 
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;CustomerRegistrationEmailTemplate;$jarResourceCms/structure-view/structure_customerRegistrationEmailTemplate.vm
+;;CustomerRegistrationInCsEmailTemplate;$jarResourceCms/structure-view/structure_customerRegistrationInCsEmailTemplate.vm
+;;ForgottenPasswordEmailTemplate;$jarResourceCms/structure-view/structure_forgottenPasswordEmailTemplate.vm
+;;OrderConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_orderConfirmationEmailTemplate.vm
+;;DeliverySentEmailTemplate;$jarResourceCms/structure-view/structure_deliverySentEmailTemplate.vm
+;;ReadyForPickupEmailTemplate;$jarResourceCms/structure-view/structure_readyForPickupEmailTemplate.vm
+;;OrderCancelledEmailTemplate;$jarResourceCms/structure-view/structure_orderCancelledEmailTemplate.vm
+;;OrderRefundEmailTemplate;$jarResourceCms/structure-view/structure_orderRefundEmailTemplate.vm
+;;OrderCollectionReminderEmailTemplate;$jarResourceCms/structure-view/structure_orderCollectionReminderEmailTemplate.vm
+;;OrderMoveToCsEmailTemplate;$jarResourceCms/structure-view/structure_orderMoveToCSEmailTemplate.vm
+;;OrderPartiallyCanceledEmailTemplate;$jarResourceCms/structure-view/structure_orderPartiallyCanceledEmailTemplate.vm
+;;OrderPartiallyRefundedEmailTemplate;$jarResourceCms/structure-view/structure_orderPartiallyRefundedEmailTemplate.vm
+;;NotPickedUpConsignmentCanceledEmailTemplate;$jarResourceCms/structure-view/structure_notPickedUpConsignmentCanceledEmailTemplate.vm
+;;FriendsInviteEmailTemplate;$jarResourceCms/structure-view/structure_friendsInviteEmailTemplate.vm
+;;SendInvoiceEmailTemplate;$jarResourceCms/structure-view/structure_sendInvoiceEmailTemplate.vm
+;;SendUpdateEmailTemplate;$jarResourceCms/structure-view/structure_sendUpdateEmailTemplate.vm
+;;CustomerProfileUpdateEmailTemplate;$jarResourceCms/structure-view/structure_customerProfileUpdateEmailTemplate.vm
+;;ChangePasswordEmailTemplate;$jarResourceCms/structure-view/structure_changePasswordEmailTemplate.vm
+;;SubmitRequestEmailTemplate;$jarResourceCms/structure-view/structure_submitRequestEmailTemplate.vm
+#Shipping Confirmation Event
+;;ShippingConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_shippingConfirmationEmailTemplate.vm
+;;OrderOnHoldEmailTemplate;$jarResourceCms/structure-view/structure_orderOnHoldEmailTemplate.vm
+;;OrderRejectRiskEmailTemplate;$jarResourceCms/structure-view/structure_orderRejectRiskEmailTemplate.vm
+;;OrderConfirmationRiskEmailTemplate;$jarResourceCms/structure-view/structure_orderConfirmationRiskEmailTemplate.vm
+
+#Shipment out for delivery
+#;;OutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_outForDeliveryEmailTemplate.vm
+
+;;OrderDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderDeliveryEmailTemplate.vm
+
+###########PDP Email
+;;PDPEmailTemplate;$jarResourceCms/structure-view/structure_PDPEmailTemplate.vm
+
+###Email to notify market place when an order with high risk RMS score is registered
+;;HighRiskNotificationEmailTemplate;$jarResourceCms/structure-view/structure_highRiskNotificationEmailTemplate.vm
+###Email to notify market place user to take action when an order is put on HOLD
+;;TakeActionOnHeldOrderEmailTemplate;$jarResourceCms/structure-view/structure_takeActionOnHeldOrderEmailTemplate.vm
+
+###########PDP Email
   
 # Email page Template
 INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
@@ -58,47 +99,7 @@ INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;ac
 
 
 
-# Templates for CMS Cockpit Page Edit
-UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
-;;CustomerRegistrationEmailTemplate;$jarResourceCms/structure-view/structure_customerRegistrationEmailTemplate.vm
-;;CustomerRegistrationInCsEmailTemplate;$jarResourceCms/structure-view/structure_customerRegistrationInCsEmailTemplate.vm
-;;ForgottenPasswordEmailTemplate;$jarResourceCms/structure-view/structure_forgottenPasswordEmailTemplate.vm
-;;OrderConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_orderConfirmationEmailTemplate.vm
-;;DeliverySentEmailTemplate;$jarResourceCms/structure-view/structure_deliverySentEmailTemplate.vm
-;;ReadyForPickupEmailTemplate;$jarResourceCms/structure-view/structure_readyForPickupEmailTemplate.vm
-;;OrderCancelledEmailTemplate;$jarResourceCms/structure-view/structure_orderCancelledEmailTemplate.vm
-;;OrderRefundEmailTemplate;$jarResourceCms/structure-view/structure_orderRefundEmailTemplate.vm
-;;OrderCollectionReminderEmailTemplate;$jarResourceCms/structure-view/structure_orderCollectionReminderEmailTemplate.vm
-;;OrderMoveToCsEmailTemplate;$jarResourceCms/structure-view/structure_orderMoveToCSEmailTemplate.vm
-;;OrderPartiallyCanceledEmailTemplate;$jarResourceCms/structure-view/structure_orderPartiallyCanceledEmailTemplate.vm
-;;OrderPartiallyRefundedEmailTemplate;$jarResourceCms/structure-view/structure_orderPartiallyRefundedEmailTemplate.vm
-;;NotPickedUpConsignmentCanceledEmailTemplate;$jarResourceCms/structure-view/structure_notPickedUpConsignmentCanceledEmailTemplate.vm
-;;FriendsInviteEmailTemplate;$jarResourceCms/structure-view/structure_friendsInviteEmailTemplate.vm
-;;SendInvoiceEmailTemplate;$jarResourceCms/structure-view/structure_sendInvoiceEmailTemplate.vm
-;;SendUpdateEmailTemplate;$jarResourceCms/structure-view/structure_sendUpdateEmailTemplate.vm
-;;CustomerProfileUpdateEmailTemplate;$jarResourceCms/structure-view/structure_customerProfileUpdateEmailTemplate.vm
-;;ChangePasswordEmailTemplate;$jarResourceCms/structure-view/structure_changePasswordEmailTemplate.vm
-;;SubmitRequestEmailTemplate;$jarResourceCms/structure-view/structure_submitRequestEmailTemplate.vm
-#Shipping Confirmation Event
-;;ShippingConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_shippingConfirmationEmailTemplate.vm
-;;OrderOnHoldEmailTemplate;$jarResourceCms/structure-view/structure_orderOnHoldEmailTemplate.vm
-;;OrderRejectRiskEmailTemplate;$jarResourceCms/structure-view/structure_orderRejectRiskEmailTemplate.vm
-;;OrderConfirmationRiskEmailTemplate;$jarResourceCms/structure-view/structure_orderConfirmationRiskEmailTemplate.vm
 
-#Shipment out for delivery
-#;;OutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_outForDeliveryEmailTemplate.vm
-
-;;OrderDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderDeliveryEmailTemplate.vm
-
-###########PDP Email
-;;PDPEmailTemplate;$jarResourceCms/structure-view/structure_PDPEmailTemplate.vm
-
-###Email to notify market place when an order with high risk RMS score is registered
-;;HighRiskNotificationEmailTemplate;$jarResourceCms/structure-view/structure_highRiskNotificationEmailTemplate.vm
-###Email to notify market place user to take action when an order is put on HOLD
-;;TakeActionOnHeldOrderEmailTemplate;$jarResourceCms/structure-view/structure_takeActionOnHeldOrderEmailTemplate.vm
-
-###########PDP Email
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PDPEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;pdp_Header-PDPEmail;pdp_Header;;EmailPDPHeaderImageSlot;true
 ;;pdp_tips-PDPEmail;pdp_tips;;EmailPDPTipsImageSlot;true

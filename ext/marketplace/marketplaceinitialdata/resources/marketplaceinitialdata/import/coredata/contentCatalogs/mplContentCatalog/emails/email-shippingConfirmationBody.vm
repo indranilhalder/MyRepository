@@ -9,7 +9,7 @@
     <td><table width="598" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="left" valign="top" bgcolor="#ffffff">
-${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
+${ctx.cmsSlotContents.HOTCSiteLogo}</td>
       </tr>
  
       <tr>
@@ -101,9 +101,9 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
                         <td width="120" height="55" align="center" >$entry.orderLineId</td>
                         <td width="130" align="center">$entry.product.name</td>
                         <td width="50" align="center" >$entry.quantity</td>
-                        <td width="80" align="center">$entry.netAmountAfterAllDisc</td>
-                        <td width="120" align="center" >$entry.currDelCharge</td>
-                        <td width="120" align="center" >$ctx.math.roundTo(2, $entry.convenienceChargeApportion)</td>
+                        <td width="80" align="center">$ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
+                        <td width="120" align="center" >$ctx.numberTool.format("#0.00", $entry.currDelCharge)</td>
+                        <td width="120" align="center" >$ctx.numberTool.format("#0.00", $entry.convenienceChargeApportion)</td>
 						
                       </tr>
                     </table></td>
@@ -121,7 +121,7 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
                 <td>&nbsp;</td>
               </tr>
 			    <tr>
-                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;text-align:center;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a;padding: 10px 10px;background-color:#aa133d;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;">${ctx.cmsSlotContents.HOTCTrackOrder1}</a></span></td>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;text-align:center;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a;padding: 10px 10px;"><a href="${ctx.trackOrderUrl}" style="text-decoration:none; color:#fff;">${ctx.cmsSlotContents.HOTCTrackOrder1}</a></span></td>
               </tr>
 			  <tr>
                 <td>&nbsp;</td>
