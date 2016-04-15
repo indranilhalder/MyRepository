@@ -139,7 +139,7 @@ import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
-import com.tisl.mpl.marketplacecommerceservices.facades.MplSellerInformationFacade;
+import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
