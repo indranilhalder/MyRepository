@@ -6057,7 +6057,8 @@ text-transform: uppercase;
             .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.header > ul li.pincode-button, .confirmation .left-block .payments.tab-view .tabs .product-block li.header > ul li.pincode-button {
               width: 30%;
               margin-left: .5%;
-              min-width: 110px; } }
+              min-width: 110px;
+              float:right; } }
       .cart.wrapper .left-block .payments.tab-view .tabs .product-block.gift-card li.header > ul li:first-child, .confirmation .left-block .payments.tab-view .tabs .product-block.gift-card li.header > ul li:first-child {
         width: 100%;
         max-width:100%;}
@@ -17141,6 +17142,8 @@ body .compare>.wrapper {
     font-size: 14px;
     margin-bottom: 2px;
  }
+ .return-form .return-container .products .item .product-info .item-info{
+ line-height:1.2;}
 .return-form .return-container .products .item .product-info .item-details {
     display: none;
 }
@@ -18365,7 +18368,7 @@ width: 12px;
   margin-top: 0px;
 }
 .checkout.wrapper .left-block .payment-button{
-	line-height:3px;
+	line-height:16px;
 	border-color:#ff2c43;
 	background-color: #ff2c43;
 	font-weight:bold;
@@ -23163,7 +23166,7 @@ div.complete-your-look h1 {
 }
 
 .brands-left h2 {
-	text-transform: uppercase;
+	text-transform: capitalize;
 	font-size: 14px;
 	font-weight: 700;
 	letter-spacing: 1px;
@@ -30302,8 +30305,8 @@ header .content .marketplace, header .content .brand-logo {
        margin-right: 25px;
   }
 header .content .bottom.active .marketplace a img {
-width: 100px !important;
-    height: 50px !important;
+width: 90px !important;
+  /*   height: 50px !important; */
     /* margin-top: 12px; */}
     header .content .bottom.active .marketplace {
    margin-right: 0px;  
@@ -37544,6 +37547,9 @@ font-size:14px;}
 }
 	.cart.wrapper .right-block.shipping .block h2, .cart.wrapper .right-block.billing .block h2 {
         font-size: 18px; }
+}
+.cart.wrapper .left-block .payments.tab-view .tabs .product-block li.header {
+    height: auto;
 }
 #micrositesearchButton{
 	Z-INDEX:500;

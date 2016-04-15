@@ -65,7 +65,7 @@ public class MplBuyBoxUtility
 		{
 			price = buyBoxWinnerModel.getPrice();
 
-			if (buyBoxWinnerModel.getSpecialPrice() != null && buyBoxWinnerModel.getSpecialPrice().intValue() > 0)
+			if (null != buyBoxWinnerModel.getSpecialPrice() && buyBoxWinnerModel.getSpecialPrice().intValue() > 0)
 			{
 				price = buyBoxWinnerModel.getSpecialPrice();
 			}
