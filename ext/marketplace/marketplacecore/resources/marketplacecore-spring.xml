@@ -1340,5 +1340,12 @@
 	
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
+		
+    <!-- For COM Fallback Mechanism when OMS is down-->
+	<bean id="mplPincodeDataJob" class="com.tisl.mpl.core.pincode.jobs.MplPincodeDataJob"
+		autowire="byName">
+		<property name="mplPincodeService" ref="mplPincodeService" />
+	</bean>
+    
 	
 </beans>

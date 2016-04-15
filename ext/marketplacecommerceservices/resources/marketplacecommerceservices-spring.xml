@@ -1575,5 +1575,11 @@
 	<bean id="mplPincodeServiceDao"
 		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPincodeServiceDaoImpl">
 	</bean>
+	
+	<bean id="mplPincodeService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplPincodeService" >
+		<property name="mplPincodeServiceDao" ref="mplPincodeServiceDao" />
+		<property name="juspayWebHookService" ref="juspayWebHookService" />
+	</bean>
 	<!-- Start : End fallback mechanism -->
 </beans>
