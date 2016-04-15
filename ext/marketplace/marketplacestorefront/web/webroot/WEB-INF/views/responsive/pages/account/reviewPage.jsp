@@ -37,7 +37,6 @@
 	<div class="wrapper">
 	<user:accountLeftNav pageName="review"/>
 	<div class="right-account">
-
 		<div class="my-reviews">
 			<div class="wrapper">
 				<h2><spring:theme code="myaccount.review.productsToReview"/></h2>
