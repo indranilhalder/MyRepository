@@ -202,7 +202,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 					if (null == refund.getUniqueRequestId())
 					{
 						isError = true;
-						errorList.add(refund.getId());
+						errorList.add(hook.getOrderStatus().getOrderId());
 					}
 					else
 					{
@@ -443,12 +443,12 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			}
 		}
 
-		if (isError == true)
+		if (isError)
 		{
 			final Exception e = new Exception();
 			for (final String data : errorList)
 			{
-				LOG.error("Unique request ID missing for the following JuspayRefundResponseModel ID " + data, e);
+				LOG.error("Unique request ID missing for the following Juspay Order ID " + data, e);
 			}
 
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0021);
