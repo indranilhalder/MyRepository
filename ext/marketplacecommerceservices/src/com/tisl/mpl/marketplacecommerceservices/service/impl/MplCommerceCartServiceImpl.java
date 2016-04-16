@@ -62,6 +62,7 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1873,7 +1874,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
 				if (null != e.getErrorCode()
-						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode())))
+						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+								.equalsIgnoreCase(e.getErrorCode())))
 				{
 					response = callPincodeServiceabilityCommerce(pin, reqData);
 				}
@@ -2032,7 +2034,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				if (isDelieveryModePresent.indexOf('|') > 0)
 				{
 					isDataPresentInFallback = true;
-					isPincodeServiceable = isDelieveryModePresent.split("|")[1];
+					isPincodeServiceable = isDelieveryModePresent.split("\\|")[1];
 				}
 
 
@@ -2058,7 +2060,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						: MarketplacecclientservicesConstants.N);
 				deliveryModeResOMSWsDto.setIsPrepaidEligible((isPrepaidEligible) ? MarketplacecclientservicesConstants.Y
 						: MarketplacecclientservicesConstants.N);
-				deliveryModeResOMSWsDto.setDeliveryDate("2015-07-11T09:33:17Z");
+				deliveryModeResOMSWsDto.setDeliveryDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 				deliveryModeResOMSWsDtoList.add(deliveryModeResOMSWsDto);
 			}
 

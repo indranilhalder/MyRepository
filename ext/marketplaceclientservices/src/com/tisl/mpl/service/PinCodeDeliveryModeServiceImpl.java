@@ -250,6 +250,9 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_CON_TIMEOUT, "5000").trim();
 					final String readTimeout = configurationService.getConfiguration()
 							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_READ_TIMEOUT, "5000").trim();
+					final String httpErrorCode = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
+
 					client.setConnectTimeout(Integer.valueOf(connectionTimeout));
 					client.setReadTimeout(Integer.valueOf(readTimeout));
 					//End : Code added for OMS fallback cases
@@ -270,6 +273,18 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 					LOG.info("*********************** Pincode serviceability request xml :" + xmlString);
 					response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("X-tenantId", "single")
 							.entity(xmlString).post(ClientResponse.class);
+
+
+					LOG.info("*****Pincode serviceability response status code :" + response.getStatus());
+					if (httpErrorCode.contains(String.valueOf(response.getStatus())))
+					{
+						throw new ClientEtailNonBusinessExceptions("O0007");
+					}
+				}
+				catch (final ClientEtailNonBusinessExceptions ex)
+				{
+					LOG.error("Http Error in calling OMS - " + ex.getMessage());
+					throw ex;
 				}
 				catch (final Exception ex)
 				{
@@ -286,6 +301,11 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				final StringReader reader = new StringReader(output);
 				responsefromOMS = (PinCodeDeliveryModeListResponse) unmarshaller.unmarshal(reader);
 			}
+		}
+		catch (final ClientEtailNonBusinessExceptions ex)
+		{
+			LOG.error("Http Error in calling OMS - " + ex.getMessage());
+			throw ex;
 		}
 		catch (final Exception ex)
 		{
