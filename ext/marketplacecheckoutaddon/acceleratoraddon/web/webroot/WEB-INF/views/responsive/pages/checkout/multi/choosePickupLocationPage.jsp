@@ -1355,7 +1355,7 @@
 				$(".changeDeliveryMethod").click(function(e){
 					//var attr = $(this).attr();
 					e.preventDefault();
-					window.history.back();
+					location.replace("${request.contextPath}/checkout/multi/delivery-method/changeDeliveryMode");
 				});
 					
 			});
