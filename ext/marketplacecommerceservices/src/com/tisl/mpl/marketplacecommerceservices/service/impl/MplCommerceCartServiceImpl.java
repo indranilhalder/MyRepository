@@ -2060,7 +2060,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						: MarketplacecclientservicesConstants.N);
 				deliveryModeResOMSWsDto.setIsPrepaidEligible((isPrepaidEligible) ? MarketplacecclientservicesConstants.Y
 						: MarketplacecclientservicesConstants.N);
-				deliveryModeResOMSWsDto.setDeliveryDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+				deliveryModeResOMSWsDto.setDeliveryDate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new Date()));
+
 				deliveryModeResOMSWsDtoList.add(deliveryModeResOMSWsDto);
 			}
 
