@@ -39,6 +39,11 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 				.getAllCatalogVersions()));
 		OrderPlacementResult crmResult = null;
 		OrderPlacementResult omsResult = null;
+		//Test Condition - OMS Fallback
+		//		if (true)
+		//		{
+		//			return AbstractSimpleDecisionAction.Transition.NOK;
+		//		}
 		if (order.getCrmSubmitStatus() == null || !order.getCrmSubmitStatus().equals(MarketplaceomsservicesConstants.SUCCESS))
 		{
 			crmResult = CustomCreateOmsOrderAction.this.getOmsOrderService().createCrmOrder(order);

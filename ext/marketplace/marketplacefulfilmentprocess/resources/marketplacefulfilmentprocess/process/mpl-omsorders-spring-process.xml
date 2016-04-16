@@ -14,7 +14,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans.xsd">
+           http://www.springframework.org/schema/beans/spring-beans.xsd"
+       xmlns:p="http://www.springframework.org/schema/p"
+	 	xmlns:int-jms="http://www.springframework.org/schema/integration/jms">
 
 	<!-- Change for EBS -->
 	<alias name="defaultMplOmsCheckOrderAction" alias="omsCheckOrderAction"/>
@@ -76,7 +78,12 @@
 		<property name="modelService" ref="modelService"/>
 	</bean>
 	
-	
+	<!-- OMS Fallback Mechanism -->
+	<alias name="customSendOrderToQueueAction" alias="customSendOrderToQueueAction"/>
+	<bean name="customSendOrderToQueueAction" class="com.tisl.mpl.integration.oms.order.process.action.CustomSendOrderToQueueAction" parent="abstractAction"
+		  scope="tenant">
+		<property name="mplOrderToQueue" ref="mplOrderToQueue"/>
+	</bean>
 	
 	
 	<!-- populators and converters -->
@@ -234,5 +241,27 @@
 		<property name="omsOrderAdapter" ref="omsOrderSyncAdapter"/>
 		<property name="modelService" ref="modelService"/>
 	</bean>
+	
+	<!-- Beans for ActiveMQ Start -->
+	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
+		p:brokerURL="#{configurationService.configuration.getProperty('activeMQ.url')}" /> 
+
+	<bean id="cachedConnectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory"
+		p:targetConnectionFactory-ref="amqConnectionFactory"
+		p:sessionCacheSize="10" />
+
+	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="#{configurationService.configuration.getProperty('activeMQ.queueName')}" />
+	</bean>
+
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate"
+		p:connectionFactory-ref="cachedConnectionFactory"
+		p:defaultDestination-ref="destination" />
+		
+	<bean id="mplOrderToQueue" class="com.tisl.mpl.integration.oms.order.service.impl.OrderToQueue">
+		<property name="jmsTemplate" ref="jmsTemplate"></property>
+	</bean> 
+	<!-- Beans for ActiveMQ End -->
 			
 </beans>
