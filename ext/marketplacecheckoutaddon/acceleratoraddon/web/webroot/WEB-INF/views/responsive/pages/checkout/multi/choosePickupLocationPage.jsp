@@ -1324,7 +1324,7 @@
 		<div class="continue_holder">
 			<c:choose>
 				<c:when test="${expCheckout gt 0}">
-					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/payment-method/add" type="button">
+					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
 						CONTINUE
 					</div>
