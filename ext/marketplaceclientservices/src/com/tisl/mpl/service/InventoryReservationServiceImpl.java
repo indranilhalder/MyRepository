@@ -228,6 +228,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_CON_TIMEOUT, "5000").trim();
 				final String readTimeout = configurationService.getConfiguration()
 						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT, "5000").trim();
+				final String httpErrorCode = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 				client.setConnectTimeout(Integer.valueOf(connectionTimeout));
 				client.setReadTimeout(Integer.valueOf(readTimeout));
 				//End : Code added for OMS fallback cases
@@ -262,7 +264,11 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				}
 				if (null != response)
 				{
-					if (response.getStatus() == 200 && response.hasEntity())
+					if (httpErrorCode.contains(String.valueOf(response.getStatus())))
+					{
+						throw new ClientEtailNonBusinessExceptions("O0007");
+					}
+					else if (response.getStatus() == 200 && response.hasEntity())
 					{
 						final String output = response.getEntity(String.class);
 						LOG.debug("*********************** Inventory Reservation response xml :" + output);
@@ -286,6 +292,11 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					LOG.debug("***Error occured while connecting to OMS for inventory reservation ");
 				}
 
+			}
+			catch (final ClientEtailNonBusinessExceptions ex)
+			{
+				LOG.error("Http Error in calling OMS - " + ex.getMessage());
+				throw ex;
 			}
 			catch (final Exception ex)
 			{
