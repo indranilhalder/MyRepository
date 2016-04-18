@@ -808,8 +808,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 													LOG.info("Freebie Product USSID" + ussid);
 													if (cartEntryModel.getAssociatedItems().size() == 1)
 													{
-														final Long quant = freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(0));
-														freebieProductsWithQuant.put(cartEntryModel.getSelectedUSSID(), quant);
+														freebieProductsWithQuant.put(ussid, cartEntryModel.getQuantity());
 													}
 												}
 											}
