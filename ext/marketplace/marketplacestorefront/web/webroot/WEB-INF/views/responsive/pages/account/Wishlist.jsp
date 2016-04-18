@@ -72,14 +72,17 @@
 							<c:if test="${particularWishlistName eq wishlist.name}">
 							<li ><a class="selectedWishlist" href="${request.contextPath}/my-account/viewParticularWishlist?particularWishlist=${wishlist.name}"><span class="title">${wishlist.name}</span>
 						    	</a>
-						    	<c:if test="${fn:length(WishlistProductDataList)>1}">
+						    	<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.items" />
+										</p>
+										
+						    	<%-- <c:if test="${fn:length(WishlistProductDataList)>1}">
 									<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.items" />
 										</p>
 								</c:if>
 								<c:if test="${fn:length(WishlistProductDataList)<=1}">
 										<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.item" />
 										</p>
-								</c:if>
+								</c:if> --%>
 						    	
 						    	</li>
 							</c:if>	
@@ -87,13 +90,15 @@
 							<li>
 							
 							<a href="${request.contextPath}/my-account/viewParticularWishlist?particularWishlist=${wishlist.name}"><span class="title">${wishlist.name}</span>
-						    	</a>						    	
-						    	<c:if test="${fn:length(wishlist.entries)>1}">
+						    	</a>
+						    	<p>${fn:length(wishlist.entries)}<spring:theme code="text.items" /></p>
+						    							    	
+						    	<%-- <c:if test="${fn:length(wishlist.entries)>1}">
 								<p>${fn:length(wishlist.entries)}<spring:theme code="text.items" /></p>
 								</c:if>
 								<c:if test="${fn:length(wishlist.entries)<=1}">
 									<p>${fn:length(wishlist.entries)}<spring:theme code="text.item" /></p>
-								</c:if>
+								</c:if> --%>
 						    </li>  
 						    </c:if> 
 						</c:forEach>
@@ -160,14 +165,16 @@
 				<div class="top">
 					<div id="wishlistDetailItemNo">
 						<h2>${particularWishlistName}</h2>
-						<c:if test="${fn:length(WishlistProductDataList)>1}">
+						<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.items" />
+										</p>
+						<%-- <c:if test="${fn:length(WishlistProductDataList)>1}">
 									<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.items" />
 										</p>
 								</c:if>
 								<c:if test="${fn:length(WishlistProductDataList)<=1}">
 										<p>${fn:length(WishlistProductDataList)}<spring:theme code="text.item" />
 										</p>
-								</c:if>
+								</c:if> --%>
 						<input type="hidden" id="wishlistCount" value="${fn:length(WishlistProductDataList)}"/>
 					</div>
 					<div class="wishlistPagination">
@@ -182,6 +189,7 @@
 					</c:if>	
 		
 					</div>
+					
 					
 					<!-- END OF PAGINATION STATIC COMPONENT -->
 				</div>

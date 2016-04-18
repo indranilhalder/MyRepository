@@ -35,7 +35,7 @@
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<h1 class="account-header">
-			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
+			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
 			<select class="menu-select"
 				onchange="window.location=this.options[this.selectedIndex].value;">
 				<optgroup label="<spring:theme code="header.flyout.myaccount" />">
@@ -79,6 +79,7 @@
 		</h1>
 
 		<div class="wrapper">
+		
 			<!----- Left Navigation Starts --------->
 			<%-- <div class="left-nav">
 				<h1>

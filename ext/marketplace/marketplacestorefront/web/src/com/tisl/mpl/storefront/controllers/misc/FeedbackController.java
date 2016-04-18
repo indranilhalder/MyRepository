@@ -16,7 +16,6 @@ package com.tisl.mpl.storefront.controllers.misc;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
-import de.hybris.platform.enumeration.EnumerationService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -52,9 +51,6 @@ public class FeedbackController extends AbstractPageController
 
 	@Autowired
 	private UpdateFeedbackFacade updateFeedbackFacade;
-
-	@Autowired
-	private EnumerationService enumerationService;
 
 	@Autowired
 	private MplEnumerationHelper mplEnumerationHelper;
