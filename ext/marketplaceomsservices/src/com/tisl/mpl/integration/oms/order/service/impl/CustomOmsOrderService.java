@@ -7,6 +7,7 @@ import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandConf
 import de.hybris.platform.integration.commons.hystrix.OndemandHystrixCommandFactory;
 import de.hybris.platform.integration.oms.order.data.OrderPlacementResult;
 import de.hybris.platform.integration.oms.order.service.impl.DefaultOmsOrderService;
+import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.ticket.enums.CsTicketCategory;
@@ -18,6 +19,7 @@ import de.hybris.platform.util.localization.Localization;
 
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBContext;
@@ -30,6 +32,7 @@ import com.hybris.commons.client.RestCallException;
 import com.hybris.oms.api.order.OrderFacade;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.service.MplSendOrderFromCommerceToCRM;
@@ -57,9 +60,18 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		try
 		{
 			order = getOrderConverter().convert(orderModel);
-			LOG.debug("Before CRM order call for : " + order.getOrderId());
-			getOrdercreation().orderCreationDataToCRM(order);
-			LOG.debug("After CRM order call for : " + order.getOrderId());
+			final List<OrderHistoryEntryModel> orderHistory = orderModel.getHistoryEntries();
+			for (final OrderHistoryEntryModel orderHistoryEntryModel : orderHistory)
+			{
+				final String rmsverification = MarketplacecommerceservicesConstants.RMS_VERIFICATION_PENDING;
+				if (!(orderHistoryEntryModel.getDescription().equals(rmsverification)))
+				{
+					LOG.debug("Before CRM order call for : " + order.getOrderId());
+					getOrdercreation().orderCreationDataToCRM(order);
+				}
+
+				LOG.debug("After CRM order call for : " + order.getOrderId());
+			}
 			if (orderModel.getUser() != null && null != orderModel.getUser().getUid())
 			{
 				LOG.debug("Customer update after order place for Order : " + order.getOrderId() + " and Customer"
