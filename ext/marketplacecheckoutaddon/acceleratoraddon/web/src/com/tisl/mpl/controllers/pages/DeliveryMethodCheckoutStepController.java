@@ -984,16 +984,23 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 											if (cartHasFreebieEntryModel.getGiveAway() != null && cartHasFreebieEntryModel.getGiveAway().booleanValue())
 											{
 												LOG.info("Save Store for freebie product " + cartHasFreebieEntryModel.getSelectedUSSID());
-												String parentUssId = findParentUssId(cartHasFreebieEntryModel, cartModel);
-												for (final AbstractOrderEntryModel cEntry : cartModel.getEntries())
+												if (cartEntryModel.getAssociatedItems().size() == 1)
 												{
-													if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+													cartHasFreebieEntryModel.setDeliveryPointOfService(posModel);
+												}
+												else 
+												{
+													String parentUssId = findParentUssId(cartHasFreebieEntryModel, cartModel);
+													for (final AbstractOrderEntryModel cEntry : cartModel.getEntries())
 													{
-														final PointOfServiceModel freebiePosModel = cEntry.getDeliveryPointOfService();
-														cartHasFreebieEntryModel.setDeliveryPointOfService(freebiePosModel);
-														modelService.save(cartHasFreebieEntryModel);
+														if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+														{
+															final PointOfServiceModel freebiePosModel = cEntry.getDeliveryPointOfService();
+															cartHasFreebieEntryModel.setDeliveryPointOfService(freebiePosModel);
+														}
 													}
 												}
+												modelService.save(cartHasFreebieEntryModel);
 											}
 										}
 									}

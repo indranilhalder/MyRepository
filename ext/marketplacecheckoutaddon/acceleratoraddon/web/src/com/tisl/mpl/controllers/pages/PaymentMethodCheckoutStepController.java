@@ -1678,18 +1678,35 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										+ cartEntryModel.getSelectedUSSID());
 							}
 							PointOfServiceModel posModel = null;
-							String parentUssId = findParentUssId(cartEntryModel, cart);
 							for (final AbstractOrderEntryModel cEntry : cart.getEntries())
 							{
-								if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+								if (cartEntryModel.getAssociatedItems().size() == 1)
 								{
-									if (null != cEntry.getDeliveryPointOfService())
+									if (cEntry.getSelectedUSSID().equalsIgnoreCase(cartEntryModel.getAssociatedItems().get(0)))
 									{
-										if (LOG.isDebugEnabled())
+										if (null != cEntry.getDeliveryPointOfService())
 										{
-											LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
+											if (LOG.isDebugEnabled())
+											{
+												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + cartEntryModel.getAssociatedItems().get(0));
+											}
+											posModel = cEntry.getDeliveryPointOfService();
 										}
-										posModel = cEntry.getDeliveryPointOfService();
+									}
+								}
+								else 
+								{
+									String parentUssId = findParentUssId(cartEntryModel, cart);
+									if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+									{
+										if (null != cEntry.getDeliveryPointOfService())
+										{
+											if (LOG.isDebugEnabled())
+											{
+												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
+											}
+											posModel = cEntry.getDeliveryPointOfService();
+										}
 									}
 								}
 							}
