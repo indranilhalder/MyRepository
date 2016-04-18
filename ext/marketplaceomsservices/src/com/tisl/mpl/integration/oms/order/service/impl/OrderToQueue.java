@@ -3,12 +3,14 @@ package com.tisl.mpl.integration.oms.order.service.impl;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+
+import com.hybris.oms.domain.order.Order;
 
 
 /**
@@ -26,17 +28,18 @@ public class OrderToQueue
 		this.jmsTemplate = jmsTemplate;
 	}
 
-	public void sendMessage(final String order)
+	public void sendMessage(final Order order)
 	{
 
-		LOG.debug("**Sending Order***" + order);
+		LOG.debug("**Sending Order***" + order.getOrderId());
 		jmsTemplate.send(new MessageCreator()
 		{
 
 			public Message createMessage(final Session session) throws JMSException
 			{
-
-				final TextMessage message = session.createTextMessage(order);
+				final ObjectMessage message = session.createObjectMessage();
+				message.setObject(order);
+				//	final TextMessage message = session.createTextMessage(order);
 				return message;
 			}
 

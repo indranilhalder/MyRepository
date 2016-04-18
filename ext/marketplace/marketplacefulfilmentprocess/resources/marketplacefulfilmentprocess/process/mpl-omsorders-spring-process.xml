@@ -83,6 +83,8 @@
 	<bean name="customSendOrderToQueueAction" class="com.tisl.mpl.integration.oms.order.process.action.CustomSendOrderToQueueAction" parent="abstractAction"
 		  scope="tenant">
 		<property name="mplOrderToQueue" ref="mplOrderToQueue"/>
+		<!-- <property name="orderConverter" ref="omsOrderConverter" /> -->
+		<property name="omsOrderService" ref="omsOrderService" />
 	</bean>
 	
 	

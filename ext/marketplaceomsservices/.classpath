@@ -12,7 +12,6 @@
 	<classpathentry kind="lib" path="lib/oms-core-rest-client-5.5.1.0-RC4.jar"/>
 	<classpathentry kind="lib" path="lib/oms-rest-client-5.5.1.11.jar"/>
 	<classpathentry kind="lib" path="lib/omsordersserver.jar"/>
-	<classpathentry kind="lib" path="lib/oms-domain-objects-5.5.1.11.jar"/>
 	<classpathentry kind="src" output="eclipsebin/classes" path="src"/>
 	<classpathentry kind="src" output="eclipsebin/hmc/classes" path="hmc/src"/>
 	<classpathentry kind="src" output="eclipsebin/classes" path="testsrc"/>
@@ -22,5 +21,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/marketplaceclientservices"/>
 	<classpathentry kind="lib" path="lib/apache-activemq-4.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/javax.jms-api-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/oms-domain-objects-5.5.1.11.jar"/>
 	<classpathentry kind="output" path="eclipsebin/notused"/>
 </classpath>
