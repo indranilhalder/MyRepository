@@ -238,6 +238,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	public static final String PAYNOWCOUPONINVALID = "couponinvalid";
 	public static final String COUPONINVALID = "Applied coupon is not valid";
+	public static final String CHANGEDELIVERYMODE = "/changeDeliveryMode";
 
 	private MarketplacecheckoutaddonConstants()
 	{

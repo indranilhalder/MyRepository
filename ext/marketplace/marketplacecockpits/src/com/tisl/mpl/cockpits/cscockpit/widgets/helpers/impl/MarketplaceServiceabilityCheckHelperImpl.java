@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -17,8 +15,10 @@ import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl.MarketplaceSearchCommandControllerImpl;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.core.model.BuyBoxModel;
+import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
@@ -28,7 +28,6 @@ import com.tisl.mpl.service.PinCodeDeliveryModeService;
 import com.tisl.mpl.wsdto.DeliveryModeResOMSWsDto;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeResponse;
-
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
@@ -44,7 +43,6 @@ import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
-import de.hybris.platform.util.Config;
 import de.hybris.platform.util.WeakArrayList;
 
 // TODO: Auto-generated Javadoc
@@ -102,6 +100,8 @@ public class MarketplaceServiceabilityCheckHelperImpl implements
 	public void setBuyBoxService(BuyBoxService buyBoxService) {
 		this.buyBoxService = buyBoxService;
 	}
+	@Autowired
+	private MplConfigService mplConfigService;
 
 	/**
 	 * Gets the response for pin code.
@@ -125,9 +125,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements
 			final String pin, final String isDeliveryDateRequired, final String ussid) 
 					throws EtailNonBusinessExceptions, ClientEtailNonBusinessExceptions
 	{
-		
-		
-		// Added By Prasad 
 		List<PinCodeResponseData> response = null;
 			LOG.debug("productCode:" + product.getCode() + "pinCode:" + pin);
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
@@ -144,7 +141,8 @@ public class MarketplaceServiceabilityCheckHelperImpl implements
 			{
 				try
 				{
-					final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+				//	final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
+					final String configurableRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
 					LOG.debug("configurableRadius is:" + configurableRadius);
 					dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 					dto.setLatitude(pinCodeModelObj.getLatitude().toString());

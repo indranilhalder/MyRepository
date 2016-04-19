@@ -13,14 +13,11 @@ import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
-import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 
@@ -36,8 +33,6 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 	private static final String CUSTOMER = "Customer";
 	private static final String TOTAL = "refundAomunt";
 	private static final String REFUND_ENTRY = "refundEntryModel";
-	@Autowired
-	private FlexibleSearchService flexibleSearchService;
 	private static final Logger LOG = Logger.getLogger(OrderRefundCreditedEmailContext.class);
 
 	@Override
@@ -59,25 +54,19 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 				LOG.debug("Refund Entries transactionId :" + entryModel.getOrderLineId());
 				final RefundEntryModel refundEntry = new RefundEntryModel();
 				refundEntry.setOrderEntry(entryModel);
-				if (!CollectionUtils.isEmpty(flexibleSearchService.getModelsByExample(refundEntry)))
-				{
 					try
 					{
-						final List<RefundEntryModel> refundList = flexibleSearchService.getModelsByExample(refundEntry);
 						totalAmountValue += entryModel.getNetAmountAfterAllDisc().doubleValue();
-						refundEntryModel.addAll(refundList);
-						LOG.debug("refundEntryModel Size" + refundEntryModel.size());
 					}
 					catch (final Exception e)
 					{
 						LOG.error("Exception occurred during refund email notification: " + e);
 					}
-				}
 			}
-
+			put(TOTAL, String.valueOf(totalAmountValue));
+   try {
 		LOG.debug("Amount refunded ======" + totalAmountValue);
 		put(REFUND_ENTRY, refundEntryModel);
-		put(TOTAL, String.valueOf(totalAmountValue));
 		if (address != null)
 		{
 			if (address.getFirstname() != null)
@@ -91,6 +80,9 @@ public class OrderRefundCreditedEmailContext extends AbstractEmailContext<OrderP
 		}
 		put(ORDERCODE, orderProcessModel.getOrder().getCode());
 		put(EMAIL, customer.getOriginalUid());
+   }catch (Exception e) {
+   	LOG.debug("Exception occurred while setting details in context");
+   }
 	}
 
 

@@ -53,7 +53,6 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
-import de.hybris.platform.util.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -110,7 +109,6 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -248,9 +246,6 @@ public class ProductPageController extends AbstractPageController
 
 	@Autowired
 	private UserService userService;
-
-	@Resource(name = "pincodeService")
-	private PincodeService pincodeService;
 
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
@@ -796,15 +791,14 @@ public class ProductPageController extends AbstractPageController
 			if (pin.matches(regex))
 			{
 				LOG.debug("productCode:" + productCode + "pinCode:" + pin);
-				final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 				final LocationDTO dto = new LocationDTO();
 				Location myLocation = null;
 				if (null != pinCodeModelObj)
 				{
 					try
 					{
-						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
-						LOG.debug("configurableRadius is:" + configurableRadius);
+						
 						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
 						myLocation = new LocationDtoWrapper(dto);
@@ -814,8 +808,7 @@ public class ProductPageController extends AbstractPageController
 						response = pinCodeFacade.getResonseForPinCode(
 								productCode,
 								pin,
-								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS(),
-										Double.parseDouble(configurableRadius)));
+								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 
 						return response;
 					}

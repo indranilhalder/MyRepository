@@ -43,7 +43,7 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-import de.hybris.platform.util.Config;
+
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -73,6 +73,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -126,6 +127,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
+
+	@Autowired
+	private MplConfigService mplConfigService;
 
 	/*
 	 * @Desc fetching cartdata with selected ussid
@@ -528,19 +532,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws EtailNonBusinessExceptions
 	{
 		List<PinCodeResponseData> pinCodeResponseData = null;
-		String configurableRadius = null;
+		
 		final List<PincodeServiceData> pincodeServiceReqDataList = new ArrayList<PincodeServiceData>();
 
 		final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 		final LocationDTO dto = new LocationDTO();
 		Location myLocation = null;
-
+		double configurableRadius = 0;
 		if (null != pinCodeModelObj)
 		{
 			try
 			{
-				configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
-				LOG.debug("configurableRadius is:" + configurableRadius);
+				final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+				configurableRadius = Double.parseDouble(configRadius);
+				LOG.debug("**********configrableRadius:" + configurableRadius);
 				dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 				dto.setLatitude(pinCodeModelObj.getLatitude().toString());
 				myLocation = new LocationDtoWrapper(dto);
@@ -662,9 +667,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						pincodeServiceData.setPrice(Double.valueOf(entryData.getBasePrice().getValue().doubleValue()));
 					}
 					pincodeServiceData.setDeliveryModes(sellerData.getDeliveryModes());
-					
-					final List<Location> storeList = pincodeService.getSortedLocationsNearby(myLocation.getGPS(),
-							Double.parseDouble(configurableRadius), sellerData.getSellerID());
+
+					final List<Location> storeList = pincodeService.getSortedLocationsNearby(myLocation.getGPS(), configurableRadius,
+							sellerData.getSellerID());
 
 					LOG.debug("StoreList size is :" + storeList.size());
 

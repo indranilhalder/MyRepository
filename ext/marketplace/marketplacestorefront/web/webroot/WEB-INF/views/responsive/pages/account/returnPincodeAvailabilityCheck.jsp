@@ -281,7 +281,14 @@
 							<div class="row">
 									<div class="col-md-4"></div>
 									
-										<input type="submit" id="savebtn" value="Continue" class="btn btn-info"	style="border: none; width: 100px;" />
+									<c:choose>
+										<c:when test="${returnLogisticsCheck eq false}">
+											<input type="submit" id="savebtnDisabled" value="Continue" class="btn btn-info"	style="border: none; width: 100px;" disabled />
+										</c:when>
+										<c:otherwise>
+											<input type="submit" id="savebtn" value="Continue" class="btn btn-info"	style="border: none; width: 100px;" />
+										</c:otherwise>
+									</c:choose>	
 									
 									<div class="col-md-1"></div>
 									<c:choose>
