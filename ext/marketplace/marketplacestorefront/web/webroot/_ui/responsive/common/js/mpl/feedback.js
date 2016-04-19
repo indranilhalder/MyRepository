@@ -454,17 +454,17 @@ $(document).ready(function(){
 			 
 			 if($('body').hasClass('template-pages-layout-micrositePage1')){
 	
-				 /*$(this).find('header').first().addClass('compact');
+				 $(this).find('header').first().addClass('compact');
+				 $(this).find('header').first().find('.compact-toggle').click(function(){
+					 $(this).parents('header').toggleClass('compact');
+					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
+				 });   
+				 
+				/* $(this).find('header').find('.compact-toggle').toggleClass('open');
 				 $(this).find('header').first().find('.compact-toggle').click(function(){
 					 $(this).parents('header').toggleClass('compact');
 					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
 				 });*/
-				 
-				 $(this).find('header').find('.compact-toggle').toggleClass('open');
-				 $(this).find('header').first().find('.compact-toggle').click(function(){
-					 $(this).parents('header').toggleClass('compact');
-					 $(this).parents('header').find('.compact-toggle').toggleClass('open');
-				 });
 			 }
 	/*---END of Micro site brand header toggle functionality ---*/
 			 

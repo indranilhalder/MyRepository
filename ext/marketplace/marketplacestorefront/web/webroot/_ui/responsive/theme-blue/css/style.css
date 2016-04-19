@@ -19101,12 +19101,12 @@ text-transform:lowercase;
 
 
 header.compact {
-	margin-top: -37px;
+	margin-top: 37px;
 	margin-bottom: 4px
 }
 
 header.compact .banner {
-	top: -20px
+	top: -32px
 }
 
 header.compact .content .marketplace>a {
