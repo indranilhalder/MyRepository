@@ -1983,19 +1983,25 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return responseList;
 	}
 
-
+	/**
+	 * @desc Method used to invoke pincode serviceability check as part of OMS fallback
+	 * @param pincode
+	 * @param pincodeServiceDataList
+	 * @return PinCodeDeliveryModeListResponse
+	 *
+	 */
 	@Override
-	public PinCodeDeliveryModeListResponse callPincodeServiceabilityCommerce(final String pin,
+	public PinCodeDeliveryModeListResponse callPincodeServiceabilityCommerce(final String pincode,
 			final List<PincodeServiceData> pincodeServiceDataList)
 	{
 		LOG.info("*********************** Commerce Pincode Serviceability *************");
 		final List<PinCodeDeliveryModeResponse> pinCodeDeliveryModeResponseList = new ArrayList<PinCodeDeliveryModeResponse>();
 		final PinCodeDeliveryModeListResponse responsefromOMS = new PinCodeDeliveryModeListResponse();
 		final List<PincodeServiceabilityDataModel> fallbackPincodeList = mplPincodeServiceDao.getPincodeServicableDataAtCommerce(
-				pin, pincodeServiceDataList);
-		LOG.info("*********************** Data Presentin  fallback table  :" + CollectionUtils.isEmpty(fallbackPincodeList));
+				pincode, pincodeServiceDataList);
+		LOG.info("*********************** Data Present in  fallback table  :" + CollectionUtils.isEmpty(fallbackPincodeList));
 
-		responsefromOMS.setPincode(pin);
+		responsefromOMS.setPincode(pincode);
 
 		// Stock level data preparation for inventory
 
@@ -2014,6 +2020,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 		// Stock level data preparation for inventory
 
+		// Fetching config value from base store
 		final Long codUpperLimit = getBaseStoreService().getCurrentBaseStore().getCodUpperLimit();
 		final Long codLowerLimit = getBaseStoreService().getCurrentBaseStore().getCodLowerLimit();
 		final Long prepaidUpperLimit = getBaseStoreService().getCurrentBaseStore().getPrepaidUpperLimit();
@@ -2050,19 +2057,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				isPincodeServiceable = (!isDataPresentInFallback || (!isPrepaidEligible && !isCodEligible)) ? MarketplacecclientservicesConstants.N
 						: isPincodeServiceable;
 
-				final DeliveryModeResOMSWsDto deliveryModeResOMSWsDto = new DeliveryModeResOMSWsDto();
-				deliveryModeResOMSWsDto.setType(getDeliveryGlobalCode(deliveryModeData.getCode()));
-				deliveryModeResOMSWsDto.setInventory(String.valueOf(stockCount));
-				deliveryModeResOMSWsDto.setIsPincodeServiceable(isPincodeServiceable);
-				deliveryModeResOMSWsDto.setIsCOD((isCodEligible) ? MarketplacecclientservicesConstants.Y
+				final DeliveryModeResOMSWsDto deliveryModeDto = new DeliveryModeResOMSWsDto();
+				deliveryModeDto.setType(getDeliveryGlobalCode(deliveryModeData.getCode()));
+				deliveryModeDto.setInventory(String.valueOf(stockCount));
+				deliveryModeDto.setIsPincodeServiceable(isPincodeServiceable);
+				deliveryModeDto.setIsCOD((isCodEligible) ? MarketplacecclientservicesConstants.Y
 						: MarketplacecclientservicesConstants.N);
-				deliveryModeResOMSWsDto.setIsCODLimitFailed((isCodLimitFailed) ? MarketplacecclientservicesConstants.Y
+				deliveryModeDto.setIsCODLimitFailed((isCodLimitFailed) ? MarketplacecclientservicesConstants.Y
 						: MarketplacecclientservicesConstants.N);
-				deliveryModeResOMSWsDto.setIsPrepaidEligible((isPrepaidEligible) ? MarketplacecclientservicesConstants.Y
+				deliveryModeDto.setIsPrepaidEligible((isPrepaidEligible) ? MarketplacecclientservicesConstants.Y
 						: MarketplacecclientservicesConstants.N);
-				deliveryModeResOMSWsDto.setDeliveryDate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new Date()));
+				deliveryModeDto.setDeliveryDate(new SimpleDateFormat(MarketplacecclientservicesConstants.DELIVERY_DATE_FORMATTER)
+						.format(new Date()));
 
-				deliveryModeResOMSWsDtoList.add(deliveryModeResOMSWsDto);
+				deliveryModeResOMSWsDtoList.add(deliveryModeDto);
 			}
 
 			pinCodeDeliveryModeResponse.setUSSID(pincodeServiceData.getUssid());
@@ -2080,8 +2088,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final JAXBContext jaxbContext = JAXBContext.newInstance(PinCodeDeliveryModeListResponse.class);
 			final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-			//Marshal the employees list in console
 			jaxbMarshaller.marshal(responsefromOMS, stringWriter);
 			LOG.info("************Commerce response xml*************************" + stringWriter.toString());
 		}
@@ -2133,7 +2139,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 	/**
-	 * @desc used to validate if data present in oms fallback table
+	 * @desc used to validate if data present in oms fallback table for seller id,delivery mode and fulfilment type
 	 * @param pincodeServiceData
 	 * @param fallbackPincodeList
 	 * @param deliveryMode
@@ -3270,8 +3276,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								.equalsIgnoreCase(e.getErrorCode())))
 				{
 					inventoryReservListResponse = callInventoryReservationCommerce(cartSoftReservationDatalist);
-					//final String output = inventoryReservListResponse.getEntity(String.class);
-					//LOG.debug("*********************** Inventory Reservation response xml :" + output);
 				}
 			}
 
@@ -3309,7 +3313,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return inventoryReservationStatus;
 	}
 
-	private InventoryReservListResponse callInventoryReservationCommerce(final List<CartSoftReservationData> cartdatalist)
+	private InventoryReservListResponse callInventoryReservationCommerce(final List<CartSoftReservationData> cartDataList)
 	{
 
 		LOG.info("*********************** Commerce Inventory Reservation *************");
@@ -3318,7 +3322,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		Map<String, Integer> availableStockMap = null;
 		final List<String> ussidList = new ArrayList<String>();
 
-		for (final CartSoftReservationData reserveObj : cartdatalist)
+		for (final CartSoftReservationData reserveObj : cartDataList)
 		{
 			ussidList.add(reserveObj.getUSSID());
 			reqUssidQuantityMap.put(reserveObj.getUSSID(), reserveObj.getQuantity());
@@ -3335,28 +3339,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final InventoryReservListResponse inventoryReservListResponse = new InventoryReservListResponse();
 		final List<InventoryReservResponse> inventoryReservResponseList = new ArrayList<InventoryReservResponse>();
 
-
-
 		for (final Map.Entry<String, Integer> entry : reqUssidQuantityMap.entrySet())
 		{
 			final InventoryReservResponse inventoryReservResponse = new InventoryReservResponse();
 			inventoryReservResponse.setUSSID(entry.getKey());
 
-			final Integer inventoryInComm = availableStockMap == null ? Integer.valueOf(0) : availableStockMap.get(entry.getKey());
+			final Integer inventoryInComm = (availableStockMap == null || availableStockMap.get(entry.getKey()) == null) ? Integer
+					.valueOf(0) : availableStockMap.get(entry.getKey());
 
-			if (null != inventoryInComm && entry.getValue().intValue() < inventoryInComm.intValue())
-			{
-				inventoryReservResponse.setReservationStatus("success");
-			}
-			else
-			{
-				inventoryReservResponse.setReservationStatus("failure");
-			}
+			final String inventoryReservationStatus = (null != inventoryInComm && entry.getValue().intValue() <= inventoryInComm
+					.intValue()) ? MarketplacecommerceservicesConstants.SUCCESS : MarketplacecommerceservicesConstants.FAILURE;
 
+			inventoryReservResponse.setReservationStatus(inventoryReservationStatus);
 			inventoryReservResponseList.add(inventoryReservResponse);
-
 		}
-
 		inventoryReservListResponse.setItem(inventoryReservResponseList);
 
 		try
