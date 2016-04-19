@@ -35,8 +35,8 @@
 			
 			</address>
 	</c:if>
-	<c:if test="${totalCount > 0}"><p>${totalCount}&nbsp;<spring:theme code="confirmation.message.items" /></p></c:if>
-	<%-- <c:if test="${totalCount<= 1}"><p>${totalCount}&nbsp;<spring:theme code="confirmation.message.item" /></p></c:if> --%>
+	<c:if test="${totalCount > 1}"><p>${totalCount}&nbsp;<spring:theme code="confirmation.message.items" /></p></c:if>
+    <c:if test="${totalCount == 1}"><p>${totalCount}&nbsp;<spring:theme code="confirmation.message.item" /></p></c:if> 
 <%-- 	<p>${totalCount} ITEMS SHIPPING TO THE ADDRESS</p> --%>
 
 </div>

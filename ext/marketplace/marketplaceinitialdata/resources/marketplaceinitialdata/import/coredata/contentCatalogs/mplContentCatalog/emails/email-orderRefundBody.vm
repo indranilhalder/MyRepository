@@ -85,9 +85,9 @@
     <tr>
       <td valign="middle" style="border-bottom:1px solid #b7b7b7;  border-left:1px solid #b7b7b7; padding:8px 4px;">$ctx.transactionId</td>
       <td valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.nameOfProduct</td>
-      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.amountrefunded <br />
+      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.numberTool.format("#0.00",$ctx.amountrefunded)<br />
       against product</td>
-      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.deliveryCharge<br />
+      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.numberTool.format("#0.00",$ctx.deliveryCharge)<br />
         against delivery, <br />
         if any</td>
       <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; border-right:1px solid #b7b7b7; padding:8px 4px;">Back to Source <br />
@@ -249,7 +249,7 @@
   <td align="left" valign="top">&nbsp;</td>
   <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
   <tr>
-  <td width="550" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:hello@tatacliq.com" style="color:#606060;">CLIQhelpers</a> (or dig in at our Friday night pizza party)). You can also shoot an email to <a href="mailto:hello@tatacliq.com" style="color:#606060;">hello@tatacliq.com</a>.</td>
+  <td width="550" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">CLIQhelpers</a> (or dig in at our Friday night pizza party)). You can also shoot an email to <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">${ctx.customerCareEmail}</a>.</td>
   </tr>
   </table></td>
   <td align="left" valign="top">&nbsp;</td>

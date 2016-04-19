@@ -335,7 +335,7 @@
 										<div id="paymentFormButton" class="pay">	
 						<!-- Terms & Conditions Link -->
 								<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-								<button type="button" class="make_payment button btn-block payment-button" onclick="submitForm()">			
+								<button type="button" class="make_payment button btn-block payment-button" onclick="submitForm()" id="paymentButtonId">			
 
 									<div id="submitPaymentFormCODButton">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />

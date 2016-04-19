@@ -74,7 +74,6 @@ import com.tisl.mpl.juspay.response.StoredCard;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
-import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -923,22 +922,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		savedCardData.setJuspayCardType(juspayCard.getCardType());
 		if (null != binModel)
 		{
-			if (null != binModel.getBank())
+			if (StringUtils.isNotEmpty(binModel.getBankName()))
 			{
-				final String bankName = binModel.getBank().getBankName();
-				if (StringUtils.isNotEmpty(bankName))
-				{
-					savedCardData.setCardIssuer(bankName);
-				}
+				savedCardData.setCardIssuer(binModel.getBankName());
 			}
-			if (StringUtils.isNotEmpty(binModel.getIssuingCountry()) && binModel.getIssuingCountry().equalsIgnoreCase("India"))
-			{
-				savedCardData.setIsDomestic(Boolean.TRUE);
-			}
-			else
-			{
-				savedCardData.setIsDomestic(Boolean.FALSE);
-			}
+
+			savedCardData.setIsDomestic((StringUtils.isNotEmpty(binModel.getIssuingCountry()) && binModel.getIssuingCountry()
+					.equalsIgnoreCase("India")) ? Boolean.TRUE : Boolean.FALSE);
 		}
 		else
 		{
@@ -953,7 +943,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 		else
 		{
-			savedCardData.setExpired(" ");
+			savedCardData.setExpired(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 		}
 		savedCardData.setFirstName(savedCard.getBillingAddress().getFirstname());
 		savedCardData.setLastName(savedCard.getBillingAddress().getLastname());
@@ -1106,22 +1096,12 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		savedCardData.setJuspayCardType(juspayCard.getCardType());
 		if (null != binModel)
 		{
-			if (null != binModel.getBank())
+			if (StringUtils.isNotEmpty(binModel.getBankName()))
 			{
-				final String bankName = binModel.getBank().getBankName();
-				if (StringUtils.isNotEmpty(bankName))
-				{
-					savedCardData.setCardIssuer(bankName);
-				}
+				savedCardData.setCardIssuer(binModel.getBankName());
 			}
-			if (StringUtils.isNotEmpty(binModel.getIssuingCountry()) && binModel.getIssuingCountry().equalsIgnoreCase("India"))
-			{
-				savedCardData.setIsDomestic(Boolean.TRUE);
-			}
-			else
-			{
-				savedCardData.setIsDomestic(Boolean.FALSE);
-			}
+			savedCardData.setIsDomestic((StringUtils.isNotEmpty(binModel.getIssuingCountry()) && binModel.getIssuingCountry()
+					.equalsIgnoreCase("India")) ? Boolean.TRUE : Boolean.FALSE);
 		}
 		else
 		{
@@ -1135,7 +1115,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		}
 		else
 		{
-			savedCardData.setExpired(" ");
+			savedCardData.setExpired(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 		}
 
 		return savedCardData;
@@ -1153,7 +1133,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 */
 	//TISPRD-361 method signature changes
 	@Override
-	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge) throws EtailNonBusinessExceptions
+	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge) throws EtailNonBusinessExceptions,
+			Exception
 	{
 		//getting the current user
 		final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
@@ -1329,8 +1310,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			{
 				final String bin = juspayCard.getCardIsin();
 				final BinModel binModel = getBinService().checkBin(bin);
-				if (null != binModel && null != binModel.getBank() && StringUtils.isNotEmpty(binModel.getBank().getBankName())
-						&& binModel.getBank().getBankName().equalsIgnoreCase(bankName))
+				if (null != binModel && StringUtils.isNotEmpty(binModel.getBankName())
+						&& binModel.getBankName().equalsIgnoreCase(bankName))
 				{
 					for (final SavedCardModel savedCard : savedCardList)
 					{
@@ -1412,11 +1393,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		try
 		{
 			//TISPRO-179
-			final BankModel bankModel = getMplPaymentService().getBankDetailsForBank(bankName);
+			//final BankModel bankModel = getMplPaymentService().getBankDetailsForBank(bankName);
 
-			if (bankModel != null)
+			if (StringUtils.isNotEmpty(bankName))
 			{
-				getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN, bankModel);
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN, bankName);
 				sessionStatus = Boolean.TRUE;
 			}
 
@@ -1424,6 +1405,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			LOG.debug("Inside setBankForSavedCard=====exiting loop=====" + (iterationTime - startTime));
 			LOG.debug("From session=====Bank:::::::"
 					+ getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN));
+
 			if (null == (getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION)))
 			{
 				final Map<String, Double> paymentInfo = getSessionService().getAttribute(

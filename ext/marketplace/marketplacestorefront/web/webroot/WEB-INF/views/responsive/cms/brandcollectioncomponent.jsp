@@ -8,7 +8,9 @@
 
 
 	<c:if test ="${component.uid eq 'ShopByBrandComponent' }">
-	<div class="toggle"><spring:theme code="navigation.brand.shopByBrand" /></div>
+	<div class="toggle"><span><spring:theme code="navigation.department.shopBy" /></span>
+	
+	<span><span><spring:theme code="navigation.brand.shopByBrand" /></span></div>
 	</c:if>
 	
 		

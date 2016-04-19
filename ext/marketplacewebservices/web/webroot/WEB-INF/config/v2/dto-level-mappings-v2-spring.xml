@@ -383,7 +383,7 @@
 				       orderCutoffTimeHD,orderCutoffTimeED,isReturnable,parkingAvailable,location,storeSize,footFall,normalRetailSalesOfStore,ownerShip,managerName,
 				       managerPhone,storeContactNumber,returnstoreID,returnAddress1,returnAddress2,returnCountry,returnState,returnCity,returnPin,active,email0,
 				       email1,email2,email3,email4,email5,email6,email7,email8,email9,phoneNo0,phoneNo1,phoneNo2,phoneNo3,phoneNo4,phoneNo5,phoneNo6,phoneNo7,
-				       phoneNo8,phoneNo9,error,errorCode,status"/>
+				       phoneNo8,phoneNo9,mplOpeningTime,mplClosingTime,error,errorCode,status"/>
 				<entry key="FULL"
 				       value="storeImages(FULL),geoPoint(FULL),address(FULL),openingHours(FULL),description,storeContent,name,mapIcon(FULL),
 				       formattedDistance,displayName,url,distanceKm,features,error,errorCode,status"/>

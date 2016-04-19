@@ -118,6 +118,38 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 			{
 				target.setLeastSizeProduct(this.<String> getValue(source, "leastSizeProduct"));
 			}
+			if (getValue(source, "displayPrice") != null)
+			{
+				final List<String> displayPrice = (List<String>) getValue(source, "displayPrice");
+				target.setDisplayPrice(displayPrice);
+			}
+			if (getValue(source, "displayUrl") != null)
+			{
+				final List<String> displayUrl = (List<String>) getValue(source, "displayUrl");
+				//	System.out.println("##########displayUrl" + displayUrl);
+				target.setDisplayUrl(displayUrl);
+			}
+			if (getValue(source, "displayStock") != null)
+			{
+				final List<String> displayStock = (List<String>) getValue(source, "displayStock");
+				//	System.out.println("##########displayStock" + displayStock);
+				target.setDisplayStock(displayStock);
+			}
+
+			if (getValue(source, "displayMrpPrice") != null)
+			{
+
+				final List<String> displayMrpPrice = (List<String>) getValue(source, "displayMrpPrice");
+				target.setDisplayMrp(displayMrpPrice);
+				//System.out.println("##########displayStock" + target.getDisplayMrp());
+			}
+			if (getValue(source, "displayPromotion") != null)
+			{
+				final List<String> displayPromotion = (List<String>) getValue(source, "displayPromotion");
+				System.out.println("##########displayPromotion" + displayPromotion);
+				target.setDisplayPromotion(displayPromotion);
+			}
+
 			if (getValue(source, "allPromotions") != null)
 			{
 

@@ -127,7 +127,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String STATUS_FAILURE = "failure";
 	public static final String STATUS_SUCESS = "sucess";
 
-
+	public static final String CONFIGURABLE_RADIUS = "configurable-radius";
 
 
 	private MarketplaceFacadesConstants()

@@ -606,7 +606,7 @@
 													Price:
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
-														<format:price priceData="${entry.totalPrice}"
+														<format:price priceData="${entry.amountAfterAllDisc}"
 															displayFreeForZero="true" />
 													</ycommerce:testId>
 												</p>
@@ -865,8 +865,8 @@
 										 <!-- For RTO handling -->
 											<c:forEach items="${shippingStatus}" var="productStatus"
 												varStatus="loop">
-												<c:if test="${productStatus.responseCode eq 'DELIVERED' or currentStatusMap[entry.orderLineId] eq 'ORDER_COLLECTED'}">
-										 	<c:set var="productDelivered" value="1"></c:set>
+												<c:if test="${(productStatus.responseCode eq 'DELIVERED') or (productStatus.responseCode eq 'ORDER_COLLECTED')}">
+										 	<c:set var="productDelivered" value="1"/>
 										  </c:if>
 										  </c:forEach>
 										<div class="deliveryTrack status"

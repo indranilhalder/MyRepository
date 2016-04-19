@@ -6,8 +6,10 @@ package com.tisl.mpl.facades.process.email.context;
 import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
 import de.hybris.platform.commerceservices.model.process.StoreFrontCustomerProcessModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SendInvoiceProcessModel;
@@ -28,6 +30,11 @@ public class SendInvoiceEmailContext extends CustomerEmailContext
 
 	//	private CustomerData customerData;
 
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 
 	@Override
@@ -81,6 +88,16 @@ public class SendInvoiceEmailContext extends CustomerEmailContext
 				}
 
 			}
+
+			final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+					"1800-208-8282");
+			put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+			final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail",
+					"hello@tatacliq.com");
+			put(CUSTOMER_CARE_EMAIL, customerCareEmail);
+
 		}
 	}
 

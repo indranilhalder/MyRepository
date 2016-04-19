@@ -235,10 +235,16 @@
 								text-align: center;
 							}
 							
-							.fa-times {
-								cursor: pointer;
-								color: #A9143C;
-							}
+							.changeDeliveryMethod {
+							    background: none !important;
+							    border: none !important;
+							    text-transform: capitalize !important;
+							    font-weight: 600 !important;
+							    text-align: left !important;
+							    font-size: 14px !important;
+							    letter-spacing: normal !important;
+							    color: #A9143C !important;
+    						}
 							
 							.pincodeValidation {
 								clear: both;
@@ -437,10 +443,6 @@
 				});
 			}
 			
-			$(".pickUpPersonAjax i").click(function(){
-				$(".pickUpPersonAjax").fadeOut(100);
-			});
-			
 			function submitPickupPersonDetailsOnLoad() {
 				if($("#pickupPersonName").val().length >= "1" && $("#pickupPersonMobile").val().length >= "1") {
 					submitPickupPersionDetails();
@@ -526,6 +528,106 @@
 			}
 		});
 	}
+	
+	function test(i, j) {
+		console.log(i+"@@"+j);
+		//alert("Hello");
+		var posData = $(".addPos"+i).text();
+		posData = posData.split('@');
+		openPopForAdddPosToCartEntry(posData[0], posData[1]);
+		
+		//Change color for Radio Button
+		
+		$(".removeColor"+i+" .radio_color").removeClass("colorChange");
+		$(".select_store").hide();
+		var name = $(".name"+i+""+j).text();
+		$(".radio_sel"+i+""+j).addClass("colorChange");
+		
+		
+		// Load Map for the selected Store
+		
+		console.log(posData[0]+" @@ "+posData[1]);
+		var iconURLPrefix = '${request.contextPath}/_ui/responsive/theme-blue/images/storemarkericons/';
+	    
+	    iconURLPrefix = iconURLPrefix.replace("/mpl/en/","/");
+	    var icons = new Array();
+		for(var y=0;y<25;y++) {
+			k = parseInt(y)+1;
+    		icons[y] = iconURLPrefix + 'markergrey' + k +'.png'
+	    }
+		
+		//console.log(icons);
+    	//number = number.replace("address","");
+    	//number++;
+    	var myCounter = "1";
+    	var iconNumber = parseInt(j) + parseInt(myCounter);
+    	var url =  iconURLPrefix + 'marker' + parseInt(iconNumber) +'.png';
+    	icons[j] = url;	
+    	console.log(icons[j]);
+		var loc = $(".latlng"+i).text();
+		//console.log(loc);
+		loc = loc.split("@");
+		var length = loc.length;
+		
+		for(var k=0;k<length;k++){
+			loc[k] = loc[k].split(",");
+			for(var l=0;l<loc[k].length;l++) {
+			}
+		}
+	    var map = new google.maps.Map(document.getElementById('map'+i), {
+	      zoom: 10,
+	      center: new google.maps.LatLng(-37.92, 151.25),
+	      mapTypeId: google.maps.MapTypeId.ROADMAP,
+	      mapTypeControl: false,
+	      streetViewControl: false,
+	      panControl: false,
+	      zoomControlOptions: {
+	         position: google.maps.ControlPosition.LEFT_BOTTOM
+	      }
+	    });
+	
+	    var infowindow = new google.maps.InfoWindow({
+	      maxWidth: 160
+	    });
+
+	    var markers = new Array();
+	    
+	    var iconCounter = 0;
+	    
+	    // Add the markers and infowindows to the map
+	    for (var y = 0; y < length; y++) {  
+	      var marker = new google.maps.Marker({
+	        position: new google.maps.LatLng(loc[y][1], loc[y][2]),
+	        map: map,
+	        icon: icons[iconCounter]
+	      });
+
+	      markers.push(marker);
+
+	      console.log("Lat :"+loc[y][1]+", Lng :"+loc[y][2]);
+	      
+	      iconCounter++;
+	      // We only have a limited number of possible icon colors, so we may have to restart the counter
+	      if(iconCounter >= "25") {
+	      	iconCounter = 0;
+	      	
+	      }
+	    }
+
+	    function autoCenter() {
+	      //  Create a new viewpoint bound
+	      var bounds = new google.maps.LatLngBounds();
+	      //  Go through each...
+	      for (var i = 0; i < markers.length; i++) {  
+					bounds.extend(markers[i].position);
+	      }
+	      //  Fit these bounds to the map
+	      map.fitBounds(bounds);
+	    }
+	    autoCenter();
+		
+		//openPopForAdddPosToCartEntry(ussid,name);
+	}
 </script>
 					
 					<ycommerce:testId code="checkoutStepTwo">
@@ -554,7 +656,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4"><a href="../choose" onclick="window.history.back(); return false;" style="color: #A9143C !important;"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></a></li>
+								<li class="delivery header4"><button style="font-size: 14px !important;" class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -635,7 +737,7 @@
 												<li>
 													<div>
 														<div class="thumb product-img">
-															<a href="${freebieProds.product.url}"><product:productPrimaryImage
+															<a href="${request.contextPath}/${freebieProds.product.url}"><product:productPrimaryImage
 																	product="${freebieProds.product}" format="thumbnail" /></a>
 														</div>
 														<div class="details product">
@@ -643,16 +745,16 @@
 																<a href="">${freebieProds.product.brand.brandname}</a>
 															</h3>
 															<ycommerce:testId code="cart_product_name">
-																<a href="${freebieProds.product.url}"><div
+																<a href="${request.contextPath}/${freebieProds.product.url}"><div
 																		class="name product-name">${freebieProds.product.name}</div></a>
 															</ycommerce:testId>
 															<c:if test="${not empty freebieProds.product.code}">
 															<div class="freebieId">Product ID: ${freebieProds.product.code}</div>
 															</c:if>
-															<c:if test="${not empty poses.product.size}">
+															<c:if test="${not empty freebieProds.product.size}">
 															<div class="freebieSize"><spring:theme code="text.size"/> ${freebieProds.product.size}</div>
 															</c:if>
-															<c:if test="${not empty poses.product.colour}">
+															<c:if test="${not empty freebieProds.product.colour}">
 															<div class="freebieColor"><spring:theme code="text.colour"/> ${freebieProds.product.colour}</div>
 															</c:if>
 															<c:if test="${not empty freebieProds.sellerName}">
@@ -710,7 +812,7 @@
 														<div class="colour"><spring:theme code="text.seller.name"/> ${poses.sellerName}</div>
 													</c:if>
 													<ycommerce:testId code="cart_product_quantity">
-														<c:if test="${not empty poses.product.colour}">
+														<c:if test="${not empty poses.quantity}">
 															<div class="quantity"><spring:theme code="text.qty"/> ${poses.quantity}</div>
 														</c:if>
 													</ycommerce:testId>
@@ -753,10 +855,10 @@
 																		${pos.address.postalCode}
 																	</c:if>
 																</span>
-																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: uppercase;" >PiQ up hrs</span>
+																<span class="radio_sel${status1.index}${status.index} radio_color" style="text-transform: none; display: inline-block;" >PiQ up hrs :</span>
 																
 																<c:if test="${not empty pos.mplOpeningTime && not empty pos.mplClosingTime}">
-																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
+																	<span class="pickup${status1.index}${status.index} radio_sel${status1.index}${status.index} radio_color" style=" display: inline-block; margin-left: 0px;">${pos.mplOpeningTime} - ${pos.mplClosingTime}</span>
 																	</c:if>
 																
 																<span class="collectionDays${status1.index}${status.index} collectionDays"><c:if test="${not empty pos.mplWorkingDays}">${pos.mplWorkingDays}</c:if></span>
@@ -836,7 +938,7 @@
 							
 							<li>
 													<ul class="mapWidth" id="map${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></ul>
-													<ul id="maphide${status1.index}" style="width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
+													<ul id="maphide${status1.index}" style="display: none; width: 300px; height: 200px; position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);padding: 10px; font-weight: 600">Unable to find Stores</ul>
 													<div class="change_pincode_block block${status1.index}">
 														<span class="change_txt txt${status1.index}">Change Pincode?</span>
 														<div class="input${status1.index} row" style="width: 111%">
@@ -976,7 +1078,26 @@
 										        	  $("#map${status1.index}").show();
 										        	  $("#maphide${status1.index}").hide();
 											          var changecordinates${status1.index} = " ";
+											          $(".removeColor${status1.index}").remove();
 											          for(var i=0;i<jsonObject${status1.index}.length;i++) {
+											        	  var count = parseInt(i) + 1;
+											        	  var hello = "${status1.index}";
+											        	  //var name = jsonObject${status1.index}[i]['name'];
+											        	  $(".delivered${status1.index}").append("<li style='width: 240px !important;' class='removeColor${status1.index} remove${status1.index}"+i+"'><input onclick='test("+hello+", "+i+")' class='radio_btn radio_btn${status1.index}' name='address${status1.index}' id='address${status1.index}"+i+"' value='address0' type='radio'><div class='pin bounce'><span class='text_in'>"+count+"</span></div></li>")
+											        	  $(".remove${status1.index}"+i).append("<label class='radio_sel${status1.index}"+i+" displayName${status1.index}"+i+" radio_color delivery-address' style='color: #ADA6A6;'></label>");
+											        	  $(".remove${status1.index}"+i).append("<label class='addPos"+i+"' style='display: none;'>${poses.ussId}@"+jsonObject${status1.index}[i]['name']+"</label>");
+											        	  $(".remove${status1.index}"+i).append("<label class='radio_sel${status1.index}"+i+" name${status1.index}"+i+" radio_color delivery-address' style='display:none; color: #ADA6A6;'></label>");
+											        	  var initial = 1;
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color address"+initial+"${status1.index}"+i+"'></span>");
+											        	  initial++;
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color address"+initial+"${status1.index}"+i+"'></span>");
+											        	  initial++;
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color address"+initial+"${status1.index}"+i+"'></span>");
+											        	  initial++;
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color address"+initial+"${status1.index}"+i+"'></span>");
+											        	  $(".remove${status1.index}"+i).append("<span class='radio_sel${status1.index}"+i+" radio_color' style='text-transform: capitalize; display: inline-block;'>PiQ up hrs : </span>");
+											        	  $(".remove${status1.index}"+i).append("<span class='pickup${status1.index}"+i+" radio_sel${status1.index}"+i+" radio_color' style='display: inline-block; margin-left: 0px;'></span>");
+											        	  $(".remove${status1.index}"+i).append("<span class='weeklyOff${status1.index}"+i+" radio_sel${status1.index}"+i+" radio_color' style='text-transform: capitalize;'></span>");
 											        	  if(jsonObject${status1.index}[i]['displayName'] != null) {
 											        	  	  $(".displayName${status1.index}"+i).text(jsonObject${status1.index}[i]['displayName']);
 											        	  } else {
@@ -1057,12 +1178,19 @@
 										        		$("#map${status1.index}").hide();
 										        		$("#maphide${status1.index}").show();
 										        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+										        		$("#changeValue${status1.index}").text(pinvalue${status1.index});
 										        	}
 				
 									           
 									          },
 									          error : function(xhr, data, error) {
 									        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
+									        	  	$(".pincodeServicable${status1.index}").show();
+									        		$(".delivered${status1.index}").hide();
+									        		$("#map${status1.index}").hide();
+									        		$("#maphide${status1.index}").show();
+									        		$(".pincodeServicable${status1.index}").text("This pincode is not servicable");
+									        		$("#changeValue${status1.index}").text(pinvalue${status1.index});
 												}
 									         });
 										
@@ -1076,6 +1204,15 @@
 							   
 							    
 						    function processMap${status1.index}() {	
+						    	var loc${status1.index} = $(".latlng${status1.index}").text();
+								loc${status1.index} = loc${status1.index}.split("@");
+								var length${status1.index} = loc${status1.index}.length;
+								
+								for(var i=0;i<length${status1.index};i++){
+									loc${status1.index}[i] = loc${status1.index}[i].split(",");
+									for(var j=0;j<loc${status1.index}[i].length;j++) {
+									}
+								}
 							    var map = new google.maps.Map(document.getElementById('map${status1.index}'), {
 							      zoom: 10,
 							      center: new google.maps.LatLng(-37.92, 151.25),
@@ -1125,15 +1262,6 @@
 							      }
 							      //  Fit these bounds to the map
 							      map.fitBounds(bounds);
-							      zoomChangeBoundsListener = 
-							    	    google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
-							    	    	if(length${status1.index} <= 2) {
-								    	    	if (this.getZoom()){
-								    	            this.setZoom(16);
-								    	        }
-							    	    	}
-							    	});
-						    	setTimeout(function(){google.maps.event.removeListener(zoomChangeBoundsListener)}, 2000);
 							    }
 							    autoCenter();
 							    
@@ -1151,9 +1279,7 @@
 			<spring:theme code="checkout.multi.cnc.select.products.validate.msg"/></span>
 			<div class="container" id='pickup'>
 				<div class="panel">
-					<div class="pickUpPersonAjax">
-	     			 		<i class='fa fa-times'></i>
-	   			 	</div>
+					<div class="pickUpPersonAjax"></div>
    			 	</div>
        			<div class="panel panel-default pickuppersonWidth" style="height: auto!important; width: 100%!important;">
      			 	<div class="panel panel-body" style="margin-top: 14px;">
@@ -1198,7 +1324,7 @@
 		<div class="continue_holder">
 			<c:choose>
 				<c:when test="${expCheckout gt 0}">
-					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/payment-method/add" type="button">
+					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
 						CONTINUE
 					</div>
@@ -1225,6 +1351,12 @@
 				var productUrlNew = $(".productUrlName").attr("href");
 				var latestProductUrl = ACC.config.encodedContextPath + productUrlNew;
 				$(".productUrlName").attr("href", latestProductUrl);
+				
+				$(".changeDeliveryMethod").click(function(e){
+					//var attr = $(this).attr();
+					e.preventDefault();
+					location.replace("${request.contextPath}/checkout/multi/delivery-method/changeDeliveryMode");
+				});
 					
 			});
 		</script>

@@ -62,6 +62,7 @@ import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
@@ -764,22 +765,28 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @return List<OrderModel>
 	 *
 	 */
-	private List<OrderModel> getSubOrders(final OrderModel orderModel)
+	private List<OrderModel> getSubOrders(final OrderModel orderModel) throws InvalidCartException //TISPRD-958
 	{
 		/*
 		 * The sellerEntryMap holds the seller id as the key and the corresponding order line entries for that seller id
 		 * as value
 		 */
-		final Map<String, SellerInformationModel> cachedSellerInfoMap = new HashMap<String, SellerInformationModel>();
-		final Map<String, List<AbstractOrderEntryModel>> sellerEntryMap = createSellerEntryMap(orderModel, cachedSellerInfoMap);
-
 		final List<OrderModel> subOrders = new ArrayList<OrderModel>();
-
-		for (final Map.Entry<String, List<AbstractOrderEntryModel>> sellerEntry : sellerEntryMap.entrySet())
+		try
 		{
-			subOrders.add(createSubOrders(orderModel, sellerEntry.getValue(), cachedSellerInfoMap));
-		}
+			final Map<String, SellerInformationModel> cachedSellerInfoMap = new HashMap<String, SellerInformationModel>();
+			final Map<String, List<AbstractOrderEntryModel>> sellerEntryMap = createSellerEntryMap(orderModel, cachedSellerInfoMap);
 
+			for (final Map.Entry<String, List<AbstractOrderEntryModel>> sellerEntry : sellerEntryMap.entrySet())
+			{
+				subOrders.add(createSubOrders(orderModel, sellerEntry.getValue(), cachedSellerInfoMap));
+			}
+		}
+		catch (final Exception ex) //TISPRD-958
+		{
+			LOG.error("Exception occured while getSubOrders ", ex);
+			throw new InvalidCartException(ex);
+		}
 		return subOrders;
 	}
 
@@ -835,7 +842,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 */
 	private OrderModel createSubOrders(final OrderModel orderModel,
 			final List<AbstractOrderEntryModel> abstractOrderEntryModelList,
-			final Map<String, SellerInformationModel> cachedSellerInfoMap)
+			final Map<String, SellerInformationModel> cachedSellerInfoMap) throws Exception //TISPRD-958
 	{
 		Double deliveryCharge = Double.valueOf(0.0);
 		Double prevDelCharge = Double.valueOf(0.0);
@@ -1001,25 +1008,23 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	 * @param abstractOrderEntryModel
 	 * @param quantity
 	 * @param clonedSubOrder
+	 * @param abstractOrderEntryModel
 	 * @param cartApportionValue
-	 * @param productApportionvalue
 	 * @param price
-	 * @param isbogo
 	 * @param bogoQualifying
 	 * @param deliveryCharge
 	 * @param cachedSellerInfoMap
 	 * @param bogoCODPrice
 	 * @param bogoCartApportion
 	 * @param prevDelCharge
-	 * @param couponApportionValue
-	 * @param bogoCouponApportion
+	 * @throws Exception
 	 */
 	private void createOrderLine(final AbstractOrderEntryModel abstractOrderEntryModel, final int quantity,
 			final OrderModel clonedSubOrder, final double cartApportionValue, final double productApportionvalue,
 			final double price, final boolean isbogo, @SuppressWarnings("unused") final double bogoQualifying,
 			final Double deliveryCharge, final Map<String, SellerInformationModel> cachedSellerInfoMap, final double bogoCODPrice,
 			final double bogoCartApportion, final Double prevDelCharge, final double couponApportionValue,
-			final double bogoCouponApportion)
+			final double bogoCouponApportion) throws Exception
 
 	{
 
@@ -1027,8 +1032,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		for (int qty = 0; qty < quantity; qty++)
 		{
 
-			final OrderEntryModel orderEntryModel = getOrderService().addNewEntry(clonedSubOrder,
-					abstractOrderEntryModel.getProduct(), 1, abstractOrderEntryModel.getUnit(), -1, false);
+			OrderEntryModel orderEntryModel = getOrderService().addNewEntry(clonedSubOrder, abstractOrderEntryModel.getProduct(), 1,
+					abstractOrderEntryModel.getUnit(), -1, false);
 			orderEntryModel.setBasePrice(abstractOrderEntryModel.getBasePrice());
 			final SellerInformationModel sellerDetails = cachedSellerInfoMap.get(abstractOrderEntryModel.getSelectedUSSID());
 			final String sellerID = sellerDetails.getSellerID();
@@ -1150,8 +1155,49 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						- productApportionvalue - bogoCouponApportion))));
 				orderEntryModel.setCurrDelCharge(deliveryCharge);
 			}
+
+			orderEntryModel = setAdditionalDetails(orderEntryModel);
+
 		}
 	}
+
+	/**
+	 * Set FullFillment Type and Return Window
+	 *
+	 * @param oModel
+	 * @return orderEntryModel
+	 */
+	private OrderEntryModel setAdditionalDetails(final OrderEntryModel oModel)
+	{
+		final OrderEntryModel orderEntryModel = oModel;
+		List<RichAttributeModel> richAttributeModelList = null;
+
+		if (StringUtils.isNotEmpty(oModel.getSelectedUSSID()))
+		{
+			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+					oModel.getSelectedUSSID());
+			if (null != sellerInfoModel && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
+			{
+				richAttributeModelList = new ArrayList<RichAttributeModel>(sellerInfoModel.getRichAttribute());
+				if (CollectionUtils.isNotEmpty(richAttributeModelList))
+				{
+					final RichAttributeModel model = richAttributeModelList.get(0);
+					if (StringUtils.isNotEmpty(model.getReturnWindow()))
+					{
+						orderEntryModel.setReturnWindow(model.getReturnWindow());
+					}
+
+					if (null != model.getDeliveryFulfillModes() && StringUtils.isNotEmpty(model.getDeliveryFulfillModes().getCode()))
+					{
+						orderEntryModel.setFulfillmentType(model.getDeliveryFulfillModes().getCode());
+					}
+				}
+			}
+		}
+		return orderEntryModel;
+	}
+
+
 
 	private String generateSubOrderCode()
 	{

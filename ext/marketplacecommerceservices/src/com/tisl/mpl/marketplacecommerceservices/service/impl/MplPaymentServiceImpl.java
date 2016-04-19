@@ -503,18 +503,21 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 *
 	 * @param paymentMode
 	 * @param cart
+	 * @throws EtailNonBusinessExceptions
+	 *            , Exception
 	 */
 	@Override
 	public void setPaymentTransactionForCOD(final Map<String, Double> paymentMode, final CartModel cart)
-			throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions, Exception
 	{
 		try
 		{
 			// TISPRD-361
 			Collection<PaymentTransactionModel> collection = cart.getPaymentTransactions();
 			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+			//if (null == collection || collection.isEmpty())
+			if (CollectionUtils.isEmpty(collection))
 
-			if (null == collection || collection.isEmpty())
 			{
 				collection = new ArrayList<PaymentTransactionModel>();
 			}
@@ -522,7 +525,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionList.addAll(collection);
 
 			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-			//final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+
 			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
 			final Date date = new Date();
 			final String codCode = getCodCodeGenerator().generate().toString();
@@ -554,6 +557,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setCreationtime(date);
 			paymentTransactionModel.setCurrency(cart.getCurrency());
 			paymentTransactionModel.setEntries(paymentTransactionEntryList);
+			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
 			paymentTransactionModel.setOrder(cart);
 			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
 			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
@@ -1143,11 +1147,13 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cartValue
 	 * @param totalCODCharge
 	 * @param entries
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
 	 *
 	 */
 	@Override
 	public void saveCODPaymentInfo(final String custName, final Double cartValue, final Double totalCODCharge,
-			final List<AbstractOrderEntryModel> entries, final CartModel cartModel)
+			final List<AbstractOrderEntryModel> entries, final CartModel cartModel) throws EtailNonBusinessExceptions, Exception
 	{
 		if (null != entries)
 		{
@@ -1213,7 +1219,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					catch (final ModelSavingException e)
 					{
 						LOG.error("Exception while saving abstract order entry model with " + e);
-						throw new ModelSavingException(e + " :Exception while saving abstract order entry model with");
+						throw new EtailNonBusinessExceptions(e, " :Exception while saving abstract order entry model with");
 					}
 				}
 
@@ -1234,7 +1240,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		catch (final ModelSavingException e)
 		{
 			LOG.error("Exception while saving cod payment info with " + e);
-			throw new ModelSavingException("Exception while saving cod payment info with", e);
+			throw new EtailNonBusinessExceptions(e, "Exception while saving cod payment info with");
 		}
 
 		//setting CODPaymentInfoModel in cartmodel
@@ -1248,10 +1254,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		catch (final ModelSavingException e)
 		{
 			LOG.error("Exception while saving cart with ", e);
-			throw new ModelSavingException("Exception while saving cart with", e);
+			throw new EtailNonBusinessExceptions(e, "Exception while saving cart with");
 		}
 	}
-
 
 	/**
 	 * This method is used set the saved card details in SavedCardModel
@@ -1551,17 +1556,17 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		VoucherDiscountData discData = new VoucherDiscountData();
 		calculatePromotion(cartModel, cartData);
 
-		final BankModel bankModel = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+		final String bankName = getSessionService().getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 		final String paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
 
-		if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && bankModel != null
-				&& bankModel.getBankName() != null)
+		if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase("EMI") && StringUtils.isNotEmpty(bankName))
+
 		{
 
-			LOG.debug(">> Apply promotion >> Inside EMI ");
-			final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(),
-					bankModel.getBankName());
+			LOG.debug(">> Apply promotion >> Inside EMI Bank Name : " + bankName);
+			final List<EMIBankModel> emiBankList = getMplPaymentDao().getEMIBanks(cartModel.getTotalPriceWithConv(), bankName);
+
 			if (CollectionUtils.isEmpty(emiBankList))
 			{
 				calculatePromotion(cartModel, cartData);
@@ -2870,6 +2875,4 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.mplVoucherService = mplVoucherService;
 	}
-
-
 }

@@ -11,6 +11,7 @@ import de.hybris.platform.commerceservices.model.process.StoreFrontCustomerProce
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -63,11 +64,17 @@ public class CustomerUpdateEmailContext extends AbstractEmailContext<StoreFrontC
 	private static final String IS_GENDER = "isGender";
 	private static final String IS_PWD = "isPwd";
 
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
 
 	private Converter<UserModel, CustomerData> customerConverter;
 	private CustomerData customerData;
 	@Autowired
 	private SessionService sessionService;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	@SuppressWarnings("unused")
 	@Override
@@ -248,9 +255,17 @@ public class CustomerUpdateEmailContext extends AbstractEmailContext<StoreFrontC
 
 				put(LINK_MYACCOUNT, storeFrontCustomerProcessModel.getCustomerUpdateProfileURL());
 				put(EMAIL, customerData.getDisplayUid());
-
 			}
 		}
+
+		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+				"1800-208-8282");
+		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
+		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
+
 		sessionService.removeAttribute("updatedDetailList");
 	}
 

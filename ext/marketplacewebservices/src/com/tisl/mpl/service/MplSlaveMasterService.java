@@ -34,4 +34,11 @@ public interface MplSlaveMasterService
 	 * @return returns POSModel for given pos.
 	 */
 	public PointOfServiceModel findPOSByName(final String posName);
+	
+	/**
+	 * Gets PointOfService model for a given slaveId.
+	 * @param slaveId
+	 * @return PointOfService model
+	 */
+	public PointOfServiceModel checkPOSForSlave(final String slaveId);
 }

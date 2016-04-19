@@ -57,10 +57,10 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 	/**
 	 * @Description : This method is for creating item type
-	 * @param : ctx
-	 * @param : type
-	 * @param : allAttributes
-	 * @return : item
+	 * @param ctx
+	 * @param type
+	 * @param allAttributes
+	 * @return item
 	 */
 	@Override
 	protected Item createItem(final SessionContext ctx, final ComposedType type, final ItemAttributeMap allAttributes)
@@ -77,8 +77,9 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 	/**
 	 * @Description : Buy Product A get Percentage or Amount Discount
-	 * @param : SessionContext paramSessionContext ,PromotionEvaluationContext paramPromotionEvaluationContext
-	 * @return : List<PromotionResult> promotionResults
+	 * @param paramSessionContext
+	 * @param paramPromotionEvaluationContext
+	 * @return promotionResults
 	 */
 	@Override
 	public List<PromotionResult> evaluate(final SessionContext paramSessionContext,
@@ -106,14 +107,12 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		{
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(paramSessionContext,
 					MarketplacecommerceservicesConstants.CHANNEL);
-			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel); // Verifying the Channel : Web/Web Mobile/ CockPit
-
-			//changes Start for omni cart fix @atmaram
+			//changes Start for omni cart fix
 			final AbstractOrder cart = paramPromotionEvaluationContext.getOrder();
 
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
 
-			//changes end for omni cart fix @atmaram
+			//changes end for omni cart fix
 
 
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
@@ -197,7 +196,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	}
 
 	/**
-	 * @Description : Promotion Evaluation Method
+	 * @Description Promotion Evaluation Method
 	 * @param paramSessionContext
 	 * @param paramPromotionEvaluationContext
 	 * @param validProductUssidMap
@@ -216,6 +215,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		int totalCount = 0;
 		try
 		{
+			noOfProducts = populateTotalProductCount(validProductUssidMap);
 			if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, paramSessionContext,
 					paramPromotionEvaluationContext, this, restrictionList)) // If exceeds set Category Amount and Restriction set Brand Value
 			{
@@ -245,7 +245,6 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 				final PromotionOrderView view = paramPromotionEvaluationContext.createView(paramSessionContext, this,
 						eligibleProductList);
-				//final PromotionOrderEntry viewEntry = view.peek(paramSessionContext);
 
 				final Map<String, Integer> tcMapForValidEntries = new HashMap<String, Integer>();
 				for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
@@ -320,10 +319,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 								Double.valueOf(percentageDiscount));
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.TOTALVALIDPRODUCTSPRICEVALUE,
 								Double.valueOf(totalPricevalue));
-						//						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidMap);
-						//						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductList);
-						//						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS,
-						//								productAssociatedItemsMap);
+
 						paramSessionContext
 								.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
 						paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.ISPERCENTAGEDISC,
@@ -397,9 +393,6 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L) // For Localization: To check for Excluded Products
 				{
-					//					final float certainty = remainingItemsFromTail != null ? (remainingItemsFromTail.isEmpty() ? 1.00F
-					//							: (float) remainingItemsFromTail.size() / eligibleQuantity.intValue()) : 0.00F;
-
 					final float certainty = (float) remainingItemsFromTail.size() / eligibleQuantity.intValue();
 
 					if (certainty < 1.0F && certainty > 0.0F)
@@ -412,7 +405,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 				}
 			}
-			else
+			else if (noOfProducts > 0)
 			{
 				//certainty check
 				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
@@ -432,9 +425,32 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		return promotionResults;
 	}
 
+
+	/**
+	 * Gets Total Count for Promotion Message
+	 *
+	 * @param validProductUssidMap
+	 * @return totalCount
+	 */
+	private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap)
+	{
+		int totalCount = 0;
+		if (MapUtils.isNotEmpty(validProductUssidMap))
+		{
+			for (final AbstractOrderEntry entry : validProductUssidMap.values())
+			{
+				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+			}
+		}
+
+		return totalCount;
+	}
+
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param : SessionContext paramSessionContext ,PromotionResult paramPromotionResult ,Locale paramLocale
+	 * @param ctx
+	 * @param promotionResult
+	 * @param locale
 	 * @return : String
 	 */
 	@Override

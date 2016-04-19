@@ -16,6 +16,7 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorservices.storefront.data.MetaElementData;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
+import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.impl.ProductBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
@@ -49,11 +50,9 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
-
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
-import de.hybris.platform.util.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -110,7 +109,6 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -240,6 +238,8 @@ public class ProductPageController extends AbstractPageController
 	@Resource(name = "sizeGuideFacade")
 	private SizeGuideFacade sizeGuideFacade;
 
+	//	@Autowired
+	//	private MplCheckoutFacade mplCheckoutFacade;
 
 	@Autowired
 	private SizeGuideHeaderComparator sizeGuideHeaderComparator;
@@ -247,11 +247,9 @@ public class ProductPageController extends AbstractPageController
 	@Autowired
 	private UserService userService;
 
-	@Resource(name = "pincodeService")
-	private PincodeService pincodeService;
-
 	@Resource(name = "pincodeServiceFacade")
 	private PincodeServiceFacade pincodeServiceFacade;
+
 
 	/**
 	 * @param buyBoxFacade
@@ -281,8 +279,11 @@ public class ProductPageController extends AbstractPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
+
+		String returnStatement = null;
 		try
 		{
+
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
@@ -290,55 +291,63 @@ public class ProductPageController extends AbstractPageController
 
 			if (StringUtils.isNotEmpty(redirection))
 			{
-				return redirection;
-			}
-			if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
-			{
-				model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+				returnStatement = redirection;
 			}
 
-			populateProductDetailForDisplay(productModel, model, request);
-			// for MSD
-			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
-			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
-			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
-			model.addAttribute(new ReviewForm());
-			//			final List<ProductReferenceData> productReferences = productFacade.getProductReferencesForCode(productCode,
-			//					Arrays.asList(ProductReferenceTypeEnum.SIMILAR, ProductReferenceTypeEnum.ACCESSORIES),
-			//					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE), null);
-			//			model.addAttribute(ModelAttributetConstants.PRODUCT_REFERENCES, productReferences);
-			model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
-			model.addAttribute(ModelAttributetConstants.SELECTED_SIZE, selectedSize);
-			model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
-			// for MSD
-			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
-			model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
-			model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+			else
+			{
+				if (null != sessionService.getAttribute(ModelAttributetConstants.PINCODE))
+				{
+					model.addAttribute(ModelAttributetConstants.PINCODE, sessionService.getAttribute(ModelAttributetConstants.PINCODE));
+
+				}
+
+				populateProductDetailForDisplay(productModel, model, request);
+				// for MSD
+				final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
+				final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
+				final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
+				model.addAttribute(new ReviewForm());
+				//			final List<ProductReferenceData> productReferences = productFacade.getProductReferencesForCode(productCode,
+				//					Arrays.asList(ProductReferenceTypeEnum.SIMILAR, ProductReferenceTypeEnum.ACCESSORIES),
+				//					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE), null);
+				//			model.addAttribute(ModelAttributetConstants.PRODUCT_REFERENCES, productReferences);
+				model.addAttribute(ModelAttributetConstants.PAGE_TYPE, PageType.PRODUCT.name());
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
+				model.addAttribute(ModelAttributetConstants.SELECTED_SIZE, selectedSize);
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY_TYPE, productModel.getProductCategoryType());
+				// for MSD
+				model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
+				model.addAttribute(ModelAttributetConstants.IS_MSD_ENABLED, isMSDEnabled);
+				model.addAttribute(ModelAttributetConstants.MSD_REST_URL, msdRESTURL);
+
+				returnStatement = getViewForPage(model);
+			}
 
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
-			//return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			returnStatement = frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
-			//frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+
+
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
-			//return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+
 		}
 
-		return getViewForPage(model);
+
+		return returnStatement;
 	}
 
 	/**
@@ -366,6 +375,7 @@ public class ProductPageController extends AbstractPageController
 					ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
 
 
+			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
 			populateProductData(productData, model);
 			sizeguideList = sizeGuideFacade.getProductSizeguide(productCode, productData.getRootCategory());
 
@@ -384,21 +394,35 @@ public class ProductPageController extends AbstractPageController
 				{
 					model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, null);
 				}
+				//TISPRO-208
+				if (CollectionUtils.isNotEmpty(breadcrumbList))
+				{
+					final String categoryString = breadcrumbList.size() > 1 ? breadcrumbList.get(1).getName() : "";
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, new StringBuilder().append(categoryString));
+
+				}
+				else
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+				}
 			}
 			else if (CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
-			}
 
-			if (CollectionUtils.isNotEmpty(productBreadcrumbBuilder.getBreadcrumbs(productModel)))
 
-			{
-				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
-						new StringBuilder().append(productBreadcrumbBuilder.getBreadcrumbs(productModel).get(1).getName()));
-			}
-			else
-			{
-				model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+				//TISPRO-208
+				if (CollectionUtils.isNotEmpty(breadcrumbList))
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT,
+							new StringBuilder().append(breadcrumbList.get(0).getName()));
+
+				}
+				else
+
+				{
+					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
+				}
 			}
 
 			if (null != sizeSelected)
@@ -441,7 +465,7 @@ public class ProductPageController extends AbstractPageController
 	 *
 	 * @param productCode
 	 * @param sellerId
-	 * @return
+	 * @return JSONObject
 	 * @throws JSONException
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
@@ -465,31 +489,185 @@ public class ProductPageController extends AbstractPageController
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxForSizeGuide(productCode, sellerId);
 			if (buyboxdata != null)
 			{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
 						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, null != buyboxdata.getSpecialPrice()
-						&& null != buyboxdata.getSpecialPrice().getFormattedValue()
+
+
+
+
+
+				&& null != buyboxdata.getSpecialPrice().getFormattedValue()
 						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
 						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
 
+
+
+
+
+
+
+
+
+
+
+
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE,
-						null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
-								&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
-								: ModelAttributetConstants.NOVALUE);
+
+
+
+
+				null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
+						&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
+						: ModelAttributetConstants.NOVALUE);
+
+
+
+
+
+
+
+
+
+
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
-						null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
-								&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
-								: ModelAttributetConstants.NOVALUE);
+
+
+
+
+				null != buyboxdata.getMrp() && null != buyboxdata.getMrp().getFormattedValue()
+						&& !buyboxdata.getMrp().getFormattedValue().isEmpty() ? buyboxdata.getMrp().getFormattedValue()
+
+
+
+
+
+
+
+
+
+
+
+				: ModelAttributetConstants.NOVALUE);
+
+
+
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+
+
+
+
+
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_NAME,
 						null != buyboxdata.getSellerName() ? buyboxdata.getSellerName() : ModelAttributetConstants.EMPTY);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU,
 						null != buyboxdata.getSellerArticleSKU() ? buyboxdata.getSellerArticleSKU() : ModelAttributetConstants.EMPTY);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			}
 			else
 			{
@@ -517,7 +695,7 @@ public class ProductPageController extends AbstractPageController
 	 *
 	 * @param sizeguideList
 	 * @param categoryType
-	 * @return
+	 * @return List<String>
 	 */
 	private List<String> getHeaderdata(final Map<String, List<SizeGuideData>> sizeguideList, final String categoryType)
 	{
@@ -613,15 +791,14 @@ public class ProductPageController extends AbstractPageController
 			if (pin.matches(regex))
 			{
 				LOG.debug("productCode:" + productCode + "pinCode:" + pin);
-				final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+				final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 				final LocationDTO dto = new LocationDTO();
 				Location myLocation = null;
 				if (null != pinCodeModelObj)
 				{
 					try
 					{
-						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius");
-						LOG.debug("configurableRadius is:" + configurableRadius);
+						
 						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
 						myLocation = new LocationDtoWrapper(dto);
@@ -631,8 +808,7 @@ public class ProductPageController extends AbstractPageController
 						response = pinCodeFacade.getResonseForPinCode(
 								productCode,
 								pin,
-								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS(),
-										Double.parseDouble(configurableRadius)));
+								pincodeServiceFacade.populatePinCodeServiceData(productCode, myLocation.getGPS()));
 
 						return response;
 					}
@@ -641,7 +817,12 @@ public class ProductPageController extends AbstractPageController
 						LOG.error("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
+
+
+
+
 			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -694,8 +875,10 @@ public class ProductPageController extends AbstractPageController
 			final Model model, @Valid final SellerInformationDetailsForm form, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
+		String returnStatement = null;
 		try
 		{
+
 			final ProductModel productModel = productService.getProductForCode(productCode);
 
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
@@ -767,26 +950,30 @@ public class ProductPageController extends AbstractPageController
 			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			returnStatement = getViewForPage(model);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+			//return frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+			returnStatement = frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
 		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 					MarketplacecommerceservicesConstants.E0000));
-			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
+			returnStatement = frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_PDP_ERROR_PAGE_NON_BUSINESS);
 
 		}
-		return getViewForPage(model);
+
+
+		return returnStatement;
 
 	}
 
@@ -825,6 +1012,7 @@ public class ProductPageController extends AbstractPageController
 		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 				ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+		String returnStatement = null;
 		try
 		{
 			populateProductData(productData, model);
@@ -868,21 +1056,24 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
 			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
 			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			//	ExceptionUtil.etailBusinessExceptionHandler(e, model);
 			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
-			return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 
-		return ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+
+
+		return returnStatement;
 	}
 
 	@Deprecated
@@ -891,7 +1082,9 @@ public class ProductPageController extends AbstractPageController
 	public String postReview(@PathVariable final String productCode, final ReviewForm form, final BindingResult result,
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
 			throws CMSItemNotFoundException
+
 	{
+		String returnStatement = null;
 		getReviewValidator().validate(form, result);
 
 		final ProductModel productModel = productService.getProductForCode(productCode);
@@ -903,18 +1096,25 @@ public class ProductPageController extends AbstractPageController
 			model.addAttribute("showReviewForm", Boolean.TRUE);
 			populateProductDetailForDisplay(productModel, model, request);
 			storeCmsPageInModel(model, getPageForProduct(productModel));
-			return getViewForPage(model);
+			returnStatement = getViewForPage(model);
+		}
+		else
+		{
+
+			final ReviewData review = new ReviewData();
+			review.setHeadline(XSSFilterUtil.filter(form.getHeadline()));
+			review.setComment(XSSFilterUtil.filter(form.getComment()));
+			review.setRating(form.getRating());
+			review.setAlias(XSSFilterUtil.filter(form.getAlias()));
+			productFacade.postReview(productCode, review);
+			GlobalMessages
+					.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
+			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
 		}
 
-		final ReviewData review = new ReviewData();
-		review.setHeadline(XSSFilterUtil.filter(form.getHeadline()));
-		review.setComment(XSSFilterUtil.filter(form.getComment()));
-		review.setRating(form.getRating());
-		review.setAlias(XSSFilterUtil.filter(form.getAlias()));
-		productFacade.postReview(productCode, review);
-		GlobalMessages.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
 
-		return REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
+
+		return returnStatement;
 	}
 
 	@Deprecated
@@ -975,6 +1175,7 @@ public class ProductPageController extends AbstractPageController
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
 			throws CMSItemNotFoundException
 	{
+		String returnStatement = null;
 		getReviewValidator().validate(form, result);
 
 		final ProductModel productModel = productService.getProductForCode(productCode);
@@ -984,18 +1185,25 @@ public class ProductPageController extends AbstractPageController
 			GlobalMessages.addErrorMessage(model, "review.general.error");
 			populateProductDetailForDisplay(productModel, model, request);
 			setUpReviewPage(model, productModel);
-			return ControllerConstants.Views.Pages.Product.WriteReview;
+			returnStatement = ControllerConstants.Views.Pages.Product.WriteReview;
 		}
+		else
+		{
 
-		final ReviewData review = new ReviewData();
-		review.setHeadline(XSSFilterUtil.filter(form.getHeadline()));
-		review.setComment(XSSFilterUtil.filter(form.getComment()));
-		review.setRating(form.getRating());
-		review.setAlias(XSSFilterUtil.filter(form.getAlias()));
-		productFacade.postReview(productCode, review);
-		GlobalMessages.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
+			final ReviewData review = new ReviewData();
+			review.setHeadline(XSSFilterUtil.filter(form.getHeadline()));
+			review.setComment(XSSFilterUtil.filter(form.getComment()));
+			review.setRating(form.getRating());
+			review.setAlias(XSSFilterUtil.filter(form.getAlias()));
+			productFacade.postReview(productCode, review);
+			GlobalMessages
+					.addFlashMessage(redirectAttrs, GlobalMessages.CONF_MESSAGES_HOLDER, "review.confirmation.thank.you.title");
+			returnStatement = REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
+		}
+		return returnStatement;
 
-		return REDIRECT_PREFIX + productModelUrlResolver.resolve(productModel);
+
+
 	}
 
 	@ExceptionHandler(UnknownIdentifierException.class)
@@ -1165,7 +1373,7 @@ public class ProductPageController extends AbstractPageController
 							  //electronics
 							else
 							{
-								if (properitsValue.toLowerCase().contains(configurableAttributData.getName().toLowerCase()))
+								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
 
 								{
 
@@ -1447,6 +1655,11 @@ public class ProductPageController extends AbstractPageController
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
 
 		return emiBankNames;
 	}
@@ -1497,6 +1710,7 @@ public class ProductPageController extends AbstractPageController
 	public boolean checkUser()
 	{
 		boolean flag = true;
+
 		try
 		{
 			final UserModel user = userService.getCurrentUser();
@@ -1510,16 +1724,139 @@ public class ProductPageController extends AbstractPageController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			return false;
+			flag = false;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			return false;
+			flag = false;
 		}
 
 		return flag;
 	}
+
+
+
+	/**
+	 * @param deliveryMode
+	 * @param ussid
+	 * @return deliveryModeData
+	 */
+	/*
+	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
+	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
+	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
+	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
+	 *
+	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
+	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
+	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
+	 * deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
+	 * deliveryModeData.setSellerArticleSKU(ussid); deliveryModeData.setDeliveryCost(priceData); return deliveryModeData;
+	 * }
+	 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * populating the request data to be send to oms
+	 *
+	 * @param productCode
+	 * @return requestData
+	 */
+	/*
+	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
+	 *
+
+
+	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
+
+	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
+
+
+	 * productService.getProductForCode(productCode); final ProductData productData =
+
+	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
+	 * ProductOption.PRICE));
+	 *
+
+	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
+
+	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
+
+	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
+
+	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
+
+	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
+
+
+	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
+
+	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
+
+	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
+
+	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
+
+	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
+
+	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
+
+	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
+
+	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
+
+	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
+
+	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
+
+	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
+
+
+
+	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
+
+
+	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
+
+
+
+	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
+
+	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
+
+
+
+
+
+	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
+	 *
+
+
+	 * catch (final Exception e) {
+	 *
+	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
+	 */
+
+
+
+
+
 
 
 	/**
@@ -1595,7 +1932,4 @@ public class ProductPageController extends AbstractPageController
 
 		return successful;
 	}
-
-
-
 }

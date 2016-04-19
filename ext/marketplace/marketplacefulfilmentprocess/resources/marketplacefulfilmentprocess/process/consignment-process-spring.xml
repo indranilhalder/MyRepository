@@ -59,9 +59,10 @@
 		<property name="process2WarehouseAdapter" ref="process2WarehouseAdapter"/>
 	</bean>
 
-<alias name="defaultOmsShipmentSyncAdapter" alias="omsShipmentSyncAdapter" />
-	<bean id="defaultOmsShipmentSyncAdapter"
-		class="com.tisl.mpl.integration.oms.adapter.CustomOmsShipmentSyncAdapter"
+<alias name="customOmsShipmentSyncAdapter" alias="omsShipmentSyncAdapter" />
+
+	<bean id="customOmsShipmentSyncAdapter"
+		class="com.tisl.mpl.integration.oms.adapter.CustomOmsShipmentSyncAdapter" parent="defaultOmsShipmentSyncAdapter"
 		scope="tenant">
 		<property name="consignmentStatusMappingStrategy" ref="consignmentStatusMappingStrategy" />
 		<property name="omsShipmentReverseConverter" ref="omsShipmentReverseConverter" />
@@ -78,6 +79,7 @@
 	<bean id="customOmsCancelAdapter" class="com.tisl.mpl.integration.oms.adapter.CustomOmsCancelAdapter" >
 		<property name="consignmentProcessNotifier" ref="consignmentProcessNotifier" />
 		<property name="timeService" ref="timeService" />
+
 	</bean>
 	
 	<bean id="customOmsCollectedAdapter" class="com.tisl.mpl.integration.oms.adapter.CustomOmsCollectedAdapter" />
@@ -138,6 +140,8 @@
 		<entry key="ORDCOLTD" value="ORDER_COLLECTED" />
 		<entry key="ORDUNCTD" value="ORDER_UNCOLLECTED"/>
 		<entry key="RETUIRTO" value="RETURNINITIATED_BY_RTO "/>					
+
+		<entry key="CNLREFND" value="ORDER_CANCELLED" />					
 	</util:map>
 	
 	<alias name="defaultOrderStatusMapping" alias="orderStatusMapping" />

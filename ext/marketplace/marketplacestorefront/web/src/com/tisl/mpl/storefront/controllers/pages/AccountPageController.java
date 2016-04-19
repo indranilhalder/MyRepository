@@ -1412,6 +1412,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		try
 		{
+			sessionService.setAttribute(ModelAttributetConstants.TRANSACTION_ID, transactionId);
 			final ReturnPincodeCheckForm returnPincodeCheckForm = new ReturnPincodeCheckForm();
 			final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 			final List<StateData> stateDataListNew = getFinalStateList(stateDataList);
@@ -1742,7 +1743,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 					.getAttribute(RETURN_Logistics_Availability);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
-				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
+				if(response.getTransactionId().trim().equalsIgnoreCase(transactionId.trim()))
+				{
+					model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
+				}
 				if (response.getIsReturnLogisticsAvailable().equalsIgnoreCase(ModelAttributetConstants.N_CAPS_VAL))
 				{
 					returnLogisticsCheck = false;

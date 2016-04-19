@@ -171,6 +171,7 @@
 		<property name="typeCode" value="PriceRow" />
 	</bean>
 
+    <!-- For Bulk Product Upload on HMC Configuration Screen -->
 	<bean id="productPromotionInterceptor" class="com.tisl.mpl.interceptor.ProductPromotionInterceptor">
 
 	</bean>
@@ -551,6 +552,7 @@
 	<alias name="sellerBasedPromotionService" alias="sellerBasedPromotionService" />
 	<bean id="sellerBasedPromotionService"
 		class="com.tisl.mpl.promotion.service.SellerBasedPromotionServiceImpl">
+		<property name="modelService" ref="modelService" />
 		<property name="sellerBasedPromotionDao" ref="sellerBasedPromotionDao" />
 	</bean>
 
@@ -1632,7 +1634,18 @@
 	</bean>
 	
 	<!-- Store Locator Beans end here -->
+	
+	<!-- UserGroupSaveInterceptor starts -->
+	<bean id="UserGroupSaveInterceptor" class="com.tisl.mpl.interceptor.UserGroupSaveInterceptor" />
 
+	<bean id="UserGroupSaveInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="UserGroupSaveInterceptor" />
+		<property name="typeCode" value="PrincipalGroup" />
+
+
+	</bean>
+	<!-- UserGroupSaveInterceptor ends -->	
 
 	</beans>
 

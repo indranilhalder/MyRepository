@@ -43,9 +43,9 @@
 
 <tr>
   <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We know that there's no feeling like getting that refund you really wanted.  <br />
-    So we're accepting your return request and refunding a  
-    total amount of $ctx.amountrefunded INR for your Order number: $ctx.orderCode</td>
+  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">
+    We're writing to inform you that the refund has been credited against uncollected item(s) from Tata Mall order ${ctx.orderCode}.Total amount of INR ${ctx.refundAomunt} is refunded
+    </td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>

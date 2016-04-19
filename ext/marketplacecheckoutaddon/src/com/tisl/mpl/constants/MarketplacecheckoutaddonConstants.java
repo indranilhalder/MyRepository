@@ -40,7 +40,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String SOPPAGEDATA = "silentOrderPageData";
 	public final static String PAYMENTFORMMPLURL = "paymentFormMplUrl";
 	public final static String PAYMENTVIEWURL = "/store/mpl/en/checkout/multi/payment-method/view";
-	public final static String LOGERROR = "Failed to build beginCreateSubscription request";
+	public final static String LOGERROR = "Failed to load Payment Page";
 	public final static String ERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.generalError";
 	public final static String PAYMENTTRANERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.PaymentTransactionError";
 	public final static String TRANERRORMSG = "checkout.multi.paymentMethod.addPaymentDetails.transactionError";
@@ -238,6 +238,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	public static final String PAYNOWCOUPONINVALID = "couponinvalid";
 	public static final String COUPONINVALID = "Applied coupon is not valid";
+	public static final String CHANGEDELIVERYMODE = "/changeDeliveryMode";
 
 	private MarketplacecheckoutaddonConstants()
 	{

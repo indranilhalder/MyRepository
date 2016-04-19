@@ -112,11 +112,15 @@ ACC.carousel = {
 			navigationText :[],
 			pagination:false,
 			items:4,
-			itemsDesktop : false, 
+		/*	itemsDesktop : false, 
 			itemsDesktopSmall : false, 
 			itemsTablet: false, 
-			itemsMobile : false
-		});
+			itemsMobile : true
+		*/itemsDesktop : [5000,4], 
+		itemsDesktopSmall : [1400,4], 
+		itemsTablet: [650,2], 
+		itemsMobile : [480,2],
+			});
 	},
 	myStyleCarousel: function(){
 		$(".mystyle-carousel").owlCarousel({
