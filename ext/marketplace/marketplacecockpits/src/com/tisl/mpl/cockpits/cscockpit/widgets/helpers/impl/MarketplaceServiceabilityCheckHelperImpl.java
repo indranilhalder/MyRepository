@@ -21,6 +21,7 @@ import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -63,15 +64,6 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	@Resource(name = "pinCodeDeliveryModeService")
 	private PinCodeDeliveryModeService pinCodeDeliveryModeService;
 
-	/** The mpl checkout facade. */
-	/*@Autowired
-	private MplCheckoutFacade mplCheckoutFacade;*/
-	
-	/*@Autowired
-	private MplSellerInformationService mplSellerInformationService;*/
-
-	
-	
 	/** The price data factory. */
 	@Autowired
 	private PriceDataFactory priceDataFactory;
@@ -80,11 +72,8 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	  private BuyBoxService buyBoxService;
 	@Autowired
 	  private BuyBoxFacade buyBoxFacade;
-	
-
-
-
-
+	@Resource(name = "mplCommerceCartService")
+	private MplCommerceCartService mplCommerceCartService;
 
 	public BuyBoxService getBuyBoxService() {
 		return buyBoxService;
@@ -187,7 +176,22 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		try
 		{
 			//fetching response   from oms  against the pincode
-			final PinCodeDeliveryModeListResponse response = pinCodeDeliveryModeService.prepPinCodeDeliveryModetoOMS(pin, reqData);
+			PinCodeDeliveryModeListResponse response = null;
+			try
+			{
+				response = pinCodeDeliveryModeService.prepPinCodeDeliveryModetoOMS(pin, reqData);
+			}
+			catch (final ClientEtailNonBusinessExceptions e)
+			{
+				LOG.error("::::::Exception in calling OMS Pincode service::CSCOCKPIT:::::::" + e.getErrorCode());
+				if (null != e.getErrorCode()
+						&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+								.equalsIgnoreCase(e.getErrorCode())))
+				{
+					response = getMplCommerceCartService().callPincodeServiceabilityCommerce(pin, reqData);
+				}
+			}
+			
 			if (null != response.getItem())
 			{
 				PinCodeResponseData responseData  =null;
@@ -251,18 +255,12 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 
 				}
 			}
-
 		}
-
 		catch (final ClientEtailNonBusinessExceptions ex)
 		{
-
 			LOG.error("*********OMS service is down");
-
 			responseList = null;
-
 		}
-
 		return responseList;
 	}
 
@@ -360,6 +358,29 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 		currency.setSymbol(priceData.getCurrencyIso());
 		final PriceData pData = priceDataFactory.create(PriceDataType.BUY, priceData.getValue(), currency);
 		return pData;
+	}
+
+
+
+
+
+	/**
+	 * @return the mplCommerceCartService
+	 */
+	public MplCommerceCartService getMplCommerceCartService() {
+		return mplCommerceCartService;
+	}
+
+
+
+
+
+	/**
+	 * @param mplCommerceCartService the mplCommerceCartService to set
+	 */
+	public void setMplCommerceCartService(
+			MplCommerceCartService mplCommerceCartService) {
+		this.mplCommerceCartService = mplCommerceCartService;
 	}
 
 	

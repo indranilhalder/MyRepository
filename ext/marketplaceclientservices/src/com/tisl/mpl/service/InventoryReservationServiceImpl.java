@@ -25,6 +25,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.wsdto.InventoryReservListRequest;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
@@ -139,6 +140,10 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			reqdata.setItem(reqlist);
 			response = reserveInventoryAtCheckout(reqdata);
 		}
+		catch (final ClientEtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
 		catch (final JAXBException e)
 		{
 			LOG.error(MarketplacecclientservicesConstants.JAXB_EXCEPTION);
@@ -213,60 +218,102 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 
 		if (StringUtils.isNotEmpty(realTimeCall) && realTimeCall.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
 		{
-			final Client client = Client.create();
-			WebResource webResource = null;
 
-			if (null != configurationService
-					&& null != configurationService.getConfiguration()
-					&& null != configurationService.getConfiguration().getString(
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL))
+			try
 			{
-				webResource = client.resource(UriBuilder
-						.fromUri(
-								configurationService.getConfiguration().getString(
-										MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL)).build());
-			}
-			final JAXBContext context = JAXBContext.newInstance(InventoryReservListRequest.class);
-			final Marshaller marshaller = context.createMarshaller(); //for pretty-print XML in JAXB
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			final StringWriter stringWriter = new StringWriter();
-			if (null != request)
-			{
-				marshaller.marshal(request, stringWriter);
-			}
-			final String xmlString = stringWriter.toString();
-			LOG.debug(xmlString);
-			ClientResponse response = null;
-			if (null != webResource && StringUtils.isNotEmpty(xmlString))
-			{
-				response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("X-tenantId", "single")
-						.entity(xmlString).post(ClientResponse.class);
-			}
-			if (null != response)
-			{
-				if (response.getStatus() == 200 && response.hasEntity())
+				final Client client = Client.create();
+
+				//Start : Code added for OMS fallback cases
+				final String connectionTimeout = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_CON_TIMEOUT, "5000").trim();
+				final String readTimeout = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT, "5000").trim();
+				final String httpErrorCode = configurationService.getConfiguration()
+						.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
+				client.setConnectTimeout(Integer.valueOf(connectionTimeout));
+				client.setReadTimeout(Integer.valueOf(readTimeout));
+				//End : Code added for OMS fallback cases
+
+
+				WebResource webResource = null;
+
+				if (null != configurationService
+						&& null != configurationService.getConfiguration()
+						&& null != configurationService.getConfiguration().getString(
+								MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL))
 				{
-					final String output = response.getEntity(String.class);
-					LOG.debug("*********************** Inventory Reservation response xml :" + output);
-					final JAXBContext jaxbContext = JAXBContext.newInstance(InventoryReservListResponse.class);
-					Unmarshaller unmarshaller = null;
-					if (null != jaxbContext)
+					webResource = client.resource(UriBuilder.fromUri(
+							configurationService.getConfiguration().getString(
+									MarketplacecclientservicesConstants.OMS_INVENTORY_RESERV_URL)).build());
+				}
+				final JAXBContext context = JAXBContext.newInstance(InventoryReservListRequest.class);
+				final Marshaller marshaller = context.createMarshaller(); //for pretty-print XML in JAXB
+				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+				final StringWriter stringWriter = new StringWriter();
+				if (null != request)
+				{
+					marshaller.marshal(request, stringWriter);
+				}
+				final String xmlString = stringWriter.toString();
+				LOG.debug(xmlString);
+				ClientResponse response = null;
+				if (null != webResource && StringUtils.isNotEmpty(xmlString))
+				{
+					response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("X-tenantId", "single")
+							.entity(xmlString).post(ClientResponse.class);
+				}
+				if (null != response)
+				{
+					if (httpErrorCode.contains(String.valueOf(response.getStatus())))
 					{
-						unmarshaller = jaxbContext.createUnmarshaller();
+						throw new ClientEtailNonBusinessExceptions("O0007");
 					}
-					final StringReader reader = new StringReader(output);
-					responsefromOMS = (InventoryReservListResponse) unmarshaller.unmarshal(reader);
+					else if (response.getStatus() == 200 && response.hasEntity())
+					{
+						final String output = response.getEntity(String.class);
+						LOG.debug("*********************** Inventory Reservation response xml :" + output);
+						final JAXBContext jaxbContext = JAXBContext.newInstance(InventoryReservListResponse.class);
+						Unmarshaller unmarshaller = null;
+						if (null != jaxbContext)
+						{
+							unmarshaller = jaxbContext.createUnmarshaller();
+						}
+						final StringReader reader = new StringReader(output);
+						responsefromOMS = (InventoryReservListResponse) unmarshaller.unmarshal(reader);
+					}
+					else
+					{
+						LOG.debug("***Error occured while getting response for inventory reservation with reservation :"
+								+ response.getStatus());
+					}
 				}
 				else
 				{
-					LOG.debug("***Error occured while getting response for inventory reservation with reservation :"
-							+ response.getStatus());
+					LOG.debug("***Error occured while connecting to OMS for inventory reservation ");
 				}
+
 			}
-			else
+			catch (final ClientEtailNonBusinessExceptions ex)
 			{
-				LOG.debug("***Error occured while connecting to OMS for inventory reservation ");
+				LOG.error("Http Error in calling OMS - " + ex.getMessage());
+				throw ex;
 			}
+			catch (final Exception ex)
+			{
+				LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
+
+				if (ex.getMessage().contains("connect timed out"))
+				{
+					throw new ClientEtailNonBusinessExceptions("O0003", ex);
+				}
+				if (ex.getMessage().contains("read timed out"))
+				{
+					throw new ClientEtailNonBusinessExceptions("O0004", ex);
+				}
+
+				throw new ClientEtailNonBusinessExceptions(ex);
+			}
+
 		}
 		else
 		{

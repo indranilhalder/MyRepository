@@ -182,6 +182,10 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				pincodeResfromOMS = sendPinCodeDeliveryModetoOMS(pincodeRequest);
 			}
 		}
+		catch (final ClientEtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
 		catch (final Exception e)
 		{
 			//pincodeResfromOMS = null;
@@ -236,22 +240,57 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 			}
 			else
 			{
-				final Client client = Client.create();
-				final WebResource webResource = client.resource(UriBuilder.fromUri(
-						configurationService.getConfiguration().getString(
-								MarketplacecclientservicesConstants.PIN_CODE_DELIVERY_MODE_OMS_URL)).build());
-				final JAXBContext context = JAXBContext.newInstance(PinCodeDeliveryModeListRequest.class);
+				ClientResponse response = null;
+				try
+				{
+					final Client client = Client.create();
 
-				final Marshaller m = context.createMarshaller(); //for pretty-print XML in JAXB
-				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-				final StringWriter sw = new StringWriter();
+					//Start : Code added for OMS fallback cases
+					final String connectionTimeout = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_CON_TIMEOUT, "5000").trim();
+					final String readTimeout = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.OMS_PINCODESERVICEABILITY_READ_TIMEOUT, "5000").trim();
+					final String httpErrorCode = configurationService.getConfiguration()
+							.getString(MarketplacecclientservicesConstants.OMS_HTTP_ERROR_CODE, "404,503").trim();
 
-				m.marshal(pincodeRequest, sw);
-				final String xmlString = sw.toString();
+					client.setConnectTimeout(Integer.valueOf(connectionTimeout));
+					client.setReadTimeout(Integer.valueOf(readTimeout));
+					//End : Code added for OMS fallback cases
 
-				LOG.info("*********************** Pincode serviceability request xml :" + xmlString);
-				final ClientResponse response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml")
-						.header("X-tenantId", "single").entity(xmlString).post(ClientResponse.class);
+
+					final WebResource webResource = client.resource(UriBuilder.fromUri(
+							configurationService.getConfiguration().getString(
+									MarketplacecclientservicesConstants.PIN_CODE_DELIVERY_MODE_OMS_URL)).build());
+					final JAXBContext context = JAXBContext.newInstance(PinCodeDeliveryModeListRequest.class);
+
+					final Marshaller m = context.createMarshaller(); //for pretty-print XML in JAXB
+					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+					final StringWriter sw = new StringWriter();
+
+					m.marshal(pincodeRequest, sw);
+					final String xmlString = sw.toString();
+
+					LOG.info("*********************** Pincode serviceability request xml :" + xmlString);
+					response = webResource.type(MediaType.APPLICATION_XML).accept("application/xml").header("X-tenantId", "single")
+							.entity(xmlString).post(ClientResponse.class);
+
+
+					LOG.info("*****Pincode serviceability response status code :" + response.getStatus());
+					if (httpErrorCode.contains(String.valueOf(response.getStatus())))
+					{
+						throw new ClientEtailNonBusinessExceptions("O0007");
+					}
+				}
+				catch (final ClientEtailNonBusinessExceptions ex)
+				{
+					LOG.error("Http Error in calling OMS - " + ex.getMessage());
+					throw ex;
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("Error in calling OMS - " + ex.getMessage());
+					throw ex;
+				}
 
 				final String output = response.getEntity(String.class);
 				LOG.info("*********************** Pincode serviceability response xml :" + output);
@@ -263,9 +302,24 @@ public class PinCodeDeliveryModeServiceImpl implements PinCodeDeliveryModeServic
 				responsefromOMS = (PinCodeDeliveryModeListResponse) unmarshaller.unmarshal(reader);
 			}
 		}
+		catch (final ClientEtailNonBusinessExceptions ex)
+		{
+			LOG.error("Http Error in calling OMS - " + ex.getMessage());
+			throw ex;
+		}
 		catch (final Exception ex)
 		{
 			LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
+
+			if (ex.getMessage().contains("connect timed out"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0001", ex);
+			}
+			if (ex.getMessage().contains("read timed out"))
+			{
+				throw new ClientEtailNonBusinessExceptions("O0002", ex);
+			}
+
 			throw new ClientEtailNonBusinessExceptions(ex);
 		}
 		return responsefromOMS;
