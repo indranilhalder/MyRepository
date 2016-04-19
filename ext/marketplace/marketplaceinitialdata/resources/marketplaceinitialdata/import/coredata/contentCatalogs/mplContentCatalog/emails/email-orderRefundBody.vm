@@ -76,8 +76,8 @@
                       <tr>
                         <td width="120" height="55" align="center" >$ctx.transactionId</td>
                         <td width="130" align="center">$ctx.nameOfProduct</td>
-                        <td width="50" align="center" >$ctx.amountrefunded against product</td>
-                        <td width="80" align="center">$ctx.deliveryCharge against delivery, if any</td>
+                        <td width="50" align="center" >$ctx.numberTool.format("#0.00",$ctx.amountrefunded) against product</td>
+                        <td width="80" align="center">$ctx.numberTool.format("#0.00",$ctx.deliveryCharge) against delivery, if any</td>
                         <td width="120" align="center" >Back to Source Mode</td>
                         
                       </tr>

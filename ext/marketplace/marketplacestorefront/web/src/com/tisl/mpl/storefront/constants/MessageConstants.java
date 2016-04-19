@@ -146,7 +146,7 @@ public final class MessageConstants
 	public static final String MINIMUM_GIFT_QUANTIY = "mpl.cart.giftQuantity.lineItem";
 	public static final String ERROR_QUANTITY_INVALID = "basket.error.quantity.invalid";
 
-	public static final String MY_MARKETPLACE = "My Marketplace";
+	public static final String MY_MARKETPLACE = "My Tata CLiQ";
 	public static final String INVITE_FRIENDS_MESSAGE_KEY = "account.invite.friends.default.message.text";
 	public static final String LOGIN_PAGE_TITLE = "Sign In or Register";
 	public static final String TEXT_ACCOUNT_PREFERENCE_SAVE_SUCCESS = "text.account.preference.save.success";
@@ -183,4 +183,5 @@ public final class MessageConstants
 	//reviews
 	public static final String TEXT_ACCOUNT_REVIEWS = "text.account.reviews";
 	public static final String PAZE_SIZE = "mpl.account.review.pazesize";
+
 }

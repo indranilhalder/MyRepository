@@ -17142,6 +17142,8 @@ body .compare>.wrapper {
     font-size: 14px;
     margin-bottom: 2px;
  }
+ .return-form .return-container .products .item .product-info .item-info{
+ line-height:1.2;}
 .return-form .return-container .products .item .product-info .item-details {
     display: none;
 }
@@ -19146,7 +19148,7 @@ header.brand-header .content .bottom {
 }
 
 header.brand-header .content .bottom .bag {
-	display: block;
+	display: none;
 	position: absolute;
 	right: 30px;
 	opacity: 0;
@@ -19481,6 +19483,7 @@ header.brand-header .content .bottom {
 }
 
 header.brand-header .content .bottom.active .bag {
+	display:block;
 	opacity: 1;
 	-webkit-transition: opacity 0.15s 0.15s;
 	-moz-transition: opacity 0.15s 0.15s;
@@ -23164,7 +23167,7 @@ div.complete-your-look h1 {
 }
 
 .brands-left h2 {
-	text-transform: uppercase;
+	text-transform: capitalize;
 	font-size: 14px;
 	font-weight: 700;
 	letter-spacing: 1px;
@@ -30838,6 +30841,10 @@ line-height: normal;
     width: 180px;
     left: -10px;
     z-index: 10;
+ }
+ .cod-link{
+ color:#a9143c;
+ text-decoration: underline;
  }
 /*--------------maincss-----------*/
 .row
