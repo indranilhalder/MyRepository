@@ -35,6 +35,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartCalculationStrategy
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
@@ -1677,19 +1678,34 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 										+ cartEntryModel.getSelectedUSSID());
 							}
 							PointOfServiceModel posModel = null;
-							for (final String ussid : cartEntryModel.getAssociatedItems())
+							for (final AbstractOrderEntryModel cEntry : cart.getEntries())
 							{
-								for (final AbstractOrderEntryModel cartHasFreebieEntryModel : cart.getEntries())
+								if (cartEntryModel.getAssociatedItems().size() == 1)
 								{
-									if (cartHasFreebieEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
+									if (cEntry.getSelectedUSSID().equalsIgnoreCase(cartEntryModel.getAssociatedItems().get(0)))
 									{
-										if (null != cartHasFreebieEntryModel.getDeliveryPointOfService())
+										if (null != cEntry.getDeliveryPointOfService())
 										{
 											if (LOG.isDebugEnabled())
 											{
-												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + ussid);
+												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + cartEntryModel.getAssociatedItems().get(0));
 											}
-											posModel = cartHasFreebieEntryModel.getDeliveryPointOfService();
+											posModel = cEntry.getDeliveryPointOfService();
+										}
+									}
+								}
+								else 
+								{
+									String parentUssId = findParentUssId(cartEntryModel, cart);
+									if (cEntry.getSelectedUSSID().equalsIgnoreCase(parentUssId))
+									{
+										if (null != cEntry.getDeliveryPointOfService())
+										{
+											if (LOG.isDebugEnabled())
+											{
+												LOG.debug("Populating deliveryPointOfService for freebie from parent, parent ussid " + parentUssId);
+											}
+											posModel = cEntry.getDeliveryPointOfService();
 										}
 									}
 								}
@@ -2128,6 +2144,104 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return redirectToOrderConfirmationPage(orderData);
 	}
 
+	/**
+	 * This methods find delivery mode for freebie if it has more than one parents.
+	 * @param entryModel
+	 * @param abstractOrderModel
+	 * @return delivery mode
+	 */
+	private String findParentUssId(final AbstractOrderEntryModel entryModel, final CartModel abstractOrderModel)
+	{
+		final Long ussIdA = getQuantity(entryModel.getAssociatedItems().get(0), abstractOrderModel);
+		final Long ussIdB = getQuantity(entryModel.getAssociatedItems().get(1), abstractOrderModel);
+		final String ussIdADelMod = getDeliverModeForABgetC(entryModel.getAssociatedItems().get(0), abstractOrderModel);
+		final String ussIdBDelMod = getDeliverModeForABgetC(entryModel.getAssociatedItems().get(1), abstractOrderModel);
+		String deliveryMode = null;
+		if (ussIdA.doubleValue() < ussIdB.doubleValue())
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(0);
+		}
+		else
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(1);
+		}
+		if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && 
+				ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(0);
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) &&
+				ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)) 
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(0);
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) &&
+				ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)) 
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(1);
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) &&
+				ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)) 
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(0);
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) &&
+				ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)) 
+		{
+			deliveryMode = entryModel.getAssociatedItems().get(1);
+		}
+		return deliveryMode;
+	}
+	
+	/**
+	 * Finds delivery mode for freebie.
+	 * @param ussid
+	 * @param abstractOrderModel
+	 * @return delivery mode
+	 */
+	private String getDeliverModeForABgetC(final String ussid, final CartModel abstractOrderModel)
+	{
+		// YTODO Auto-generated method stub
+		String deliveryMode = null;
+		for (final AbstractOrderEntryModel cartEntry : abstractOrderModel.getEntries())
+		{
+			if (cartEntry.getSelectedUSSID().equalsIgnoreCase(ussid) && !cartEntry.getGiveAway().booleanValue())
+			{
+				deliveryMode = cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
+			}
+
+		}
+
+		return deliveryMode;
+	}
+	
+	/**
+	 * @param ussid
+	 * @param abstractOrderModel
+	 * @return
+	 */
+	private Long getQuantity(final String ussid, final AbstractOrderModel abstractOrderModel)
+	{
+		// YTODO Auto-generated method stub
+		Long qty = null;
+		for (final AbstractOrderEntryModel cartEntry : abstractOrderModel.getEntries())
+		{
+			if (cartEntry.getSelectedUSSID().equalsIgnoreCase(ussid) && !cartEntry.getGiveAway().booleanValue())
+			{
+				qty = cartEntry.getQuantity();
+				cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
+			}
+
+		}
+
+		return qty;
+	}
+	
 	/**
 	 * To get the checkout step
 	 *

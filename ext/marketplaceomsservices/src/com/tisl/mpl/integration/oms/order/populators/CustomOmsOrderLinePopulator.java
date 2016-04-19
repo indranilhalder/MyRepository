@@ -204,10 +204,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 
 			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = source.getMplDeliveryMode();
+			String deliveryModeCode=null;
 			if (mplZoneDeliveryModeValueModel != null && mplZoneDeliveryModeValueModel.getDeliveryMode() != null
 					&& mplZoneDeliveryModeValueModel.getDeliveryMode().getCode() != null)
 			{
-				final String deliveryModeCode = mplZoneDeliveryModeValueModel.getDeliveryMode().getCode().toUpperCase();
+			    deliveryModeCode = mplZoneDeliveryModeValueModel.getDeliveryMode().getCode().toUpperCase();
 				target.setDeliveryType(MplCodeMasterUtility.getglobalCode(deliveryModeCode));
 			}
 			else
@@ -240,7 +241,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setLocationRoles(locationRoles);
 			target.setEstimatedDelivery(source.getOrder().getModifiedtime()); // need to be changed
 
-			if (source.getDeliveryPointOfService() != null)
+			if (deliveryModeCode != null && source.getDeliveryPointOfService() != null && 
+					MplCodeMasterUtility.getglobalCode(deliveryModeCode).equalsIgnoreCase(MarketplaceomsservicesConstants.CNC))
 			{
 				target.setStoreID(source.getDeliveryPointOfService().getSlaveId());
 			}

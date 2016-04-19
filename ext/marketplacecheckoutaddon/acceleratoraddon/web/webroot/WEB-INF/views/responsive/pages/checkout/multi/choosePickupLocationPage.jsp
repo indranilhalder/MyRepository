@@ -737,7 +737,7 @@
 												<li>
 													<div>
 														<div class="thumb product-img">
-															<a href="${freebieProds.product.url}"><product:productPrimaryImage
+															<a href="${request.contextPath}/${freebieProds.product.url}"><product:productPrimaryImage
 																	product="${freebieProds.product}" format="thumbnail" /></a>
 														</div>
 														<div class="details product">
@@ -745,7 +745,7 @@
 																<a href="">${freebieProds.product.brand.brandname}</a>
 															</h3>
 															<ycommerce:testId code="cart_product_name">
-																<a href="${freebieProds.product.url}"><div
+																<a href="${request.contextPath}/${freebieProds.product.url}"><div
 																		class="name product-name">${freebieProds.product.name}</div></a>
 															</ycommerce:testId>
 															<c:if test="${not empty freebieProds.product.code}">
@@ -1324,7 +1324,7 @@
 		<div class="continue_holder">
 			<c:choose>
 				<c:when test="${expCheckout gt 0}">
-					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/payment-method/add" type="button">
+					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
 						CONTINUE
 					</div>
@@ -1355,7 +1355,7 @@
 				$(".changeDeliveryMethod").click(function(e){
 					//var attr = $(this).attr();
 					e.preventDefault();
-					window.history.back();
+					location.replace("${request.contextPath}/checkout/multi/delivery-method/changeDeliveryMode");
 				});
 					
 			});
