@@ -19148,7 +19148,7 @@ header.brand-header .content .bottom {
 }
 
 header.brand-header .content .bottom .bag {
-	display: block;
+	display: none;
 	position: absolute;
 	right: 30px;
 	opacity: 0;
@@ -19483,6 +19483,7 @@ header.brand-header .content .bottom {
 }
 
 header.brand-header .content .bottom.active .bag {
+	display:block;
 	opacity: 1;
 	-webkit-transition: opacity 0.15s 0.15s;
 	-moz-transition: opacity 0.15s 0.15s;
