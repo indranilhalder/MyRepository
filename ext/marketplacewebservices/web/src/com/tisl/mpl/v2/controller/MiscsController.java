@@ -65,7 +65,6 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
-import de.hybris.platform.util.Config;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 
@@ -133,7 +132,6 @@ import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
-import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.ExtendedUserServiceImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -548,9 +546,6 @@ public class MiscsController extends BaseController
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
-
-	@Resource(name = "pincodeService")
-	private PincodeService pincodeService;
 
 	/*
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
@@ -1393,12 +1388,10 @@ public class MiscsController extends BaseController
 					 * data.setIsDeliveryDateRequired(MarketplacewebservicesConstants.NA); requestData.add(data); } }
 					 */
 					List<PinCodeResponseData> response = null;
-					final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pin);
+					final PincodeModel pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(pin);
 					if (null != pinCodeModelObj)
 					{
-						final String configurableRadius = Config.getParameter("marketplacestorefront.configure.radius") != null ? Config
-								.getParameter("marketplacestorefront.configure.radius") : "0";
-						LOG.debug("configurableRadius is:" + Double.parseDouble(configurableRadius));
+					
 						final LocationDTO dto = new LocationDTO();
 						dto.setLongitude(pinCodeModelObj.getLongitude().toString());
 						dto.setLatitude(pinCodeModelObj.getLatitude().toString());
@@ -1408,8 +1401,7 @@ public class MiscsController extends BaseController
 						response = pinCodeFacade.getResonseForPinCode(
 								productCodeStr,
 								pin,
-								pincodeServiceFacade.populatePinCodeServiceData(productCodeStr, myLocation.getGPS(),
-										Double.parseDouble(configurableRadius)));
+								pincodeServiceFacade.populatePinCodeServiceData(productCodeStr, myLocation.getGPS()));
 					}
 					if (null != response)
 					{

@@ -30,7 +30,6 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-import de.hybris.platform.util.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +43,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.dao.MplSlaveMasterDAO;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
@@ -65,7 +66,10 @@ public class StoresHelper extends AbstractHelper
 
 	@Autowired
 	private MplSlaveMasterDAO mplSlaveMasterDao;
-
+	
+	@Autowired
+	private MplConfigService mplConfigService;
+	
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
@@ -183,7 +187,8 @@ public class StoresHelper extends AbstractHelper
 		List<PointOfServiceData> posData = new ArrayList<PointOfServiceData>();
 		final ListOfPointOfServiceData listOfPosData = new ListOfPointOfServiceData();
 		final LocationDTO dto = new LocationDTO();
-		String radius = Config.getParameter("marketplacestorefront.configure.radius");
+		String radius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+		LOG.debug("configurableRadius is:" + radius);
 		if (null == radius)
 		{
 			radius = "0";

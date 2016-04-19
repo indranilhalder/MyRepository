@@ -38,9 +38,8 @@ public interface PincodeServiceFacade
 	 * @param productCode
 	 * @return requestData
 	 */
-	public List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps,
-			final Double configurableRadius);
-	
+	public List<PincodeServiceData> populatePinCodeServiceData(final String productCode, final GPS gps);
+
 	/**
 	 * Get all the PointOfService(stores) for given gps and radius.
 	 * @param gps

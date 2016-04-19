@@ -3114,6 +3114,25 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						{
 							deliveryMode = setParentforABgetC(cartSoftReservationData, entryModel, abstractOrderModel);
 							cartSoftReservationData.setIsAFreebie(MarketplacecommerceservicesConstants.Y);
+							if (null != deliveryMode)
+							{
+								if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+								{
+									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
+								}
+								else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+								{
+									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
+								}
+								else if (deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+								{
+									deliveryModeGlobalCode = MarketplacecommerceservicesConstants.CnC;
+								}
+								if (StringUtil.isNotEmpty(deliveryModeGlobalCode))
+								{
+									cartSoftReservationData.setDeliveryMode(deliveryModeGlobalCode);
+								}
+							}
 						}
 						else
 						{
@@ -3235,12 +3254,65 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(1));
 			deliveryMode = ussIdBDelMod;
 		}
-		if (ussIdA.doubleValue() == ussIdB.doubleValue() && ussIdADelMod.equalsIgnoreCase("home-delivery"))
+		if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
 		{
 			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(0));
 			deliveryMode = ussIdADelMod;
 		}
-		if (ussIdA.doubleValue() == ussIdB.doubleValue() && ussIdBDelMod.equalsIgnoreCase("home-delivery"))
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)))
+		{
+			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(0));
+			deliveryMode = ussIdADelMod;
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
+		{
+			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(0));
+			deliveryMode = ussIdADelMod;
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+		{
+			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(0));
+			deliveryMode = ussIdADelMod;
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+		{
+			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(1));
+			deliveryMode = ussIdBDelMod;
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+				&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+		{
+			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(0));
+			deliveryMode = ussIdADelMod;
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+				&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+		{
+			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(1));
+			deliveryMode = ussIdBDelMod;
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+				|| ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
+		{
+			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(0));
+			deliveryMode = ussIdADelMod;
+		}
+		else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+				&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+				|| ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)))
 		{
 			cartSoftReservationData.setParentUSSID(entryModel.getAssociatedItems().get(1));
 			deliveryMode = ussIdBDelMod;
@@ -3955,42 +4027,81 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1)).getDeliveryMode() != null
 				&& freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode() != null)
 		{
-			if ((freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode())
-					.equals((freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1)).getDeliveryMode().getCode())))
+			final Double ussIdA = freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(0)).doubleValue();
+			final Double ussIdB = freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(1)).doubleValue();
+			final String ussIdADelMod = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode();
+			final String ussIdBDelMod = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1)).getDeliveryMode().getCode();
+			if (ussIdA.doubleValue() < ussIdB.doubleValue())
 			{
 				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
-			}
-			else if (freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(0)).doubleValue() == freebieParentQtyMap.get(
-					cartEntryModel.getAssociatedItems().get(1)).doubleValue())
-			{
-				if (freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0)).getDeliveryMode().getCode()
-						.equalsIgnoreCase("home-delivery"))
-				{
-					mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
-				}
-				else
-				{
-					mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
-				}
-			}
-			else if (freebieParentQtyMap.get(cartEntryModel.getAssociatedItems().get(0)).doubleValue() > freebieParentQtyMap.get(
-					cartEntryModel.getAssociatedItems().get(1)).doubleValue())
-			{
-
-				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
-
 			}
 			else
 			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
+			}
+			if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
+					&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+			{
 				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
 			}
-
+			else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+					&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+			}
+			else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+					&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+			}
+			else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+					&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+			}
+			else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+					&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
+			}
+			else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+					&& ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+			}
+			else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+					&& ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
+			}
+			else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+					|| ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+			}
+			else if (ussIdA.doubleValue() == ussIdB.doubleValue()
+					&& (ussIdADelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+					|| ussIdBDelMod.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)))
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(1));
+			}
+			else 
+			{
+				mplDeliveryMode = freebieModelMap.get(cartEntryModel.getAssociatedItems().get(0));
+			}
 		}
 		else
 		{
 			LOG.debug("Unable to handle DeliveryMode as more than two Parent");
 		}
-
 
 		if (mplDeliveryMode != null)
 		{
