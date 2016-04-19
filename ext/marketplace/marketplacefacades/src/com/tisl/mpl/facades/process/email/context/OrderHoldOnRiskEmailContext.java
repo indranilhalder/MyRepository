@@ -24,10 +24,15 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 {
 
 	private static final String CUSTOMER_NAME = "customerName";
+	private static final String CUSTOMER = "Customer";
 	private static final String ORDER_REFERENCE_NUMBER = "orderReferenceNumber";
 	private static final String ORDER_DATE = "orderDate";
 	private static final String CUSTOMER_FIRST_PAGE = "customerFirstPage";
 	private static final String CONTACT_US_LINK = "contactUsLink";
+
+	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
+	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -42,7 +47,14 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 		put(CUSTOMER_FIRST_PAGE, customerFirstPage);
 		//final String contactUsLink = Localization.getLocalizedString("marketplace.contactus.link");
 		final String contactUsLink = configurationService.getConfiguration().getString("marketplace.contactus.link");
-		put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+		if (deliveryAddress != null)
+		{
+			put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		}
+		else
+		{
+			put(DISPLAY_NAME, CUSTOMER);
+		}
 		put(CONTACT_US_LINK, contactUsLink);
 		if (null != orderProcessModel.getOrder())
 		{
@@ -51,12 +63,29 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 			put(ORDER_DATE, order.getDate());
 			final CustomerModel customer = (CustomerModel) order.getUser();
 			put(EMAIL, customer.getOriginalUid());
-			put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER_NAME));
+			if (deliveryAddress != null)
+			{
+				put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+			}
+			else
+			{
+				put(CUSTOMER_NAME, CUSTOMER);
+			}
 			/*
 			 * if (null != customer.getFirstName()) { put(CUSTOMER_NAME, customer.getFirstName()); } else {
 			 * put(CUSTOMER_NAME, "Customer"); }
 			 */
+
 		}
+
+		final String customerCareNumber = configurationService.getConfiguration().getString("marketplace.sms.service.contactno",
+				"1800-208-8282");
+		put(CUSTOMER_CARE_NUMBER, customerCareNumber);
+
+
+		final String customerCareEmail = configurationService.getConfiguration().getString("cliq.care.mail", "hello@tatacliq.com");
+		put(CUSTOMER_CARE_EMAIL, customerCareEmail);
+
 	}
 
 	@Override
@@ -83,3 +112,4 @@ public class OrderHoldOnRiskEmailContext extends AbstractEmailContext<OrderProce
 
 
 }
+

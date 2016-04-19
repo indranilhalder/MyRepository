@@ -335,7 +335,7 @@
 										<div id="paymentFormButton" class="pay">	
 						<!-- Terms & Conditions Link -->
 								<p><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-								<button type="button" class="make_payment button btn-block payment-button" onclick="submitForm()">			
+								<button type="button" class="make_payment button btn-block payment-button" onclick="submitForm()" id="paymentButtonId">			
 
 									<div id="submitPaymentFormCODButton">	
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
@@ -618,7 +618,15 @@
 												</fieldset>
 		            							<div class="controls" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
+					                            <c:forEach var="cartItem" items="${cartData.entries}">
+					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+														 <c:set var="flag" value="true"/>
+													  </c:if>  
+										    	</c:forEach>
+										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
+					                           	</c:if>   	
 					                           		<fieldset>
 						                           		<div class="half">
 							                           		<label><spring:theme code="text.first.name"/></label>

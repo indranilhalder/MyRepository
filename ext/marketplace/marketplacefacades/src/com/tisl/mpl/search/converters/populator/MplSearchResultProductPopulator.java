@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -117,6 +118,38 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 			{
 				target.setLeastSizeProduct(this.<String> getValue(source, "leastSizeProduct"));
 			}
+			if (getValue(source, "displayPrice") != null)
+			{
+				final List<String> displayPrice = (List<String>) getValue(source, "displayPrice");
+				target.setDisplayPrice(displayPrice);
+			}
+			if (getValue(source, "displayUrl") != null)
+			{
+				final List<String> displayUrl = (List<String>) getValue(source, "displayUrl");
+				//	System.out.println("##########displayUrl" + displayUrl);
+				target.setDisplayUrl(displayUrl);
+			}
+			if (getValue(source, "displayStock") != null)
+			{
+				final List<String> displayStock = (List<String>) getValue(source, "displayStock");
+				//	System.out.println("##########displayStock" + displayStock);
+				target.setDisplayStock(displayStock);
+			}
+
+			if (getValue(source, "displayMrpPrice") != null)
+			{
+
+				final List<String> displayMrpPrice = (List<String>) getValue(source, "displayMrpPrice");
+				target.setDisplayMrp(displayMrpPrice);
+				//System.out.println("##########displayStock" + target.getDisplayMrp());
+			}
+			if (getValue(source, "displayPromotion") != null)
+			{
+				final List<String> displayPromotion = (List<String>) getValue(source, "displayPromotion");
+				System.out.println("##########displayPromotion" + displayPromotion);
+				target.setDisplayPromotion(displayPromotion);
+			}
+
 			if (getValue(source, "allPromotions") != null)
 			{
 
@@ -131,6 +164,30 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 				{
 
 					target.setIsOfferExisting(Boolean.TRUE);
+					/*
+					 * TISPRD-216 :: This change has been made to change the url for actual product which has variant not the
+					 * lowest size variant which may not have promotion
+					 */
+					final String url = this.<String> getValue(source, "url");
+					if (StringUtils.isEmpty(url))
+					{
+						// Resolve the URL and set it on the product data
+						target.setUrl(getProductDataUrlResolver().resolve(target));
+					}
+					else
+					{
+						target.setUrl(url);
+					}
+
+					//					String url = "";
+					//					try
+					//					{
+					//						url = getProductDataUrlResolver().resolve(target);
+					//					}
+					//					catch (final UnknownIdentifierException e)
+					//					{
+					//						target.setUrl(url);
+					//					}
 				}
 				/*
 				 * if( { target.setLeastSizeProduct(this.<String> getValue(source, "allPromotions")); }
@@ -138,7 +195,6 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 			}
 		}
 	}
-
 
 
 	@Override
@@ -152,8 +208,8 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 		final Double priceValue = this.<Double> getValue(source, "priceValue");
 		if (priceValue != null)
 		{
-			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue.doubleValue()),
-					getCommonI18NService().getCurrentCurrency());
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(priceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
 			target.setPrice(priceData);
 		}
 
@@ -186,20 +242,20 @@ public class MplSearchResultProductPopulator extends SearchResultVariantProductP
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 *
+	 * 
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 *
-	 *
+	 * 
+	 * 
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
-	 *
-	 *
+	 * 
+	 * 
 	 * } }
 	 */
 

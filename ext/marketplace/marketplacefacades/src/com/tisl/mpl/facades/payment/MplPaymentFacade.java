@@ -5,6 +5,9 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
@@ -37,7 +40,7 @@ public interface MplPaymentFacade
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	Map<String, Boolean> getPaymentModes(String store) throws EtailNonBusinessExceptions;
+	Map<String, Boolean> getPaymentModes(String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -148,7 +151,8 @@ public interface MplPaymentFacade
 	 * @param cartValue
 	 * @param totalCODCharge
 	 */
-	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge);
+	//TISPRD-361
+	void saveCODPaymentInfo(Double cartValue, Double totalCODCharge) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -248,8 +252,11 @@ public interface MplPaymentFacade
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws VoucherOperationException,
-			EtailNonBusinessExceptions;
+
+	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+
 
 
 	/**
@@ -259,5 +266,16 @@ public interface MplPaymentFacade
 	 */
 	Map<Date, SavedCardData> listStoredEMICards(CustomerModel customer, String bankName);
 
+	/*
+	 * @Description : saving bank name in session -- TISPRO-179
+	 *
+	 * @param bankName
+	 *
+	 * @return Boolean
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+
+	Boolean setBankForSavedCard(final String bankName) throws EtailNonBusinessExceptions;
 
 }

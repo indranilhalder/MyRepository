@@ -583,6 +583,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		List<String> productCategoryList = null;
 		List<Category> productCategoryData = null;
 		List<CategoryModel> superCategoryData = null;
+		final CatalogVersionModel oCatalogVersionModel = catalogData();
 		try
 		{
 			productCategoryData = (List<Category>) product.getAttribute(paramSessionContext,
@@ -595,7 +596,10 @@ public class DefaultPromotionManager extends PromotionsManager
 					if (null != category && null != category.getCode(paramSessionContext))
 					{
 						productCategoryList.add(category.getCode(paramSessionContext));
-						final CategoryModel oModel = categoryService.getCategoryForCode(category.getCode(paramSessionContext));
+						//final CategoryModel oModel = categoryService.getCategoryForCode(category.getCode(paramSessionContext));
+						//Commented to fix defect TISUATPII-1558 -- multiple category giving erroneous promotion result
+						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel,
+								category.getCode(paramSessionContext));
 						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
 						if (!superCategoryData.isEmpty())
 						{
@@ -1017,14 +1021,16 @@ public class DefaultPromotionManager extends PromotionsManager
 						{
 							if (seller.getSellerID().equalsIgnoreCase(sellerID))
 							{
-								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(seller.getSellerArticleSKU());
-								for (final StockLevelModel stockModel : stockData)
-								{
-									if (stockModel.getAvailable() > 0)
-									{
-										giftProductDetails.put(seller.getSellerArticleSKU(), product);
-									}
-								}
+								//TISSIT-1906---Stock check removal for freebie Items
+								giftProductDetails.put(seller.getSellerArticleSKU(), product);
+								//								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(seller.getSellerArticleSKU());
+								//								for (final StockLevelModel stockModel : stockData)
+								//								{
+								//									if (stockModel.getAvailable() > 0)
+								//									{
+								//										giftProductDetails.put(seller.getSellerArticleSKU(), product);
+								//									}
+								//								}
 							}
 						}
 					}
@@ -1838,7 +1844,7 @@ public class DefaultPromotionManager extends PromotionsManager
 				if (restriction instanceof PaymentModeSpecificPromotionRestriction)
 				{
 					String paymentMode = null;
-					Bank selectedBank = null;
+					String selectedBank = MarketplacecommerceservicesConstants.EMPTY;
 					if (null != ctx)
 					{
 						paymentMode = ctx.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
@@ -1855,7 +1861,7 @@ public class DefaultPromotionManager extends PromotionsManager
 								if (paymentType.getMode().equalsIgnoreCase(paymentMode))
 								{
 									final List<Bank> restrBanks = paymentModeRestriction.getBanks(ctx);
-									if (restrBanks != null && restrBanks.isEmpty())
+									if (CollectionUtils.isEmpty(restrBanks))
 									{
 										flag = true;
 										break;
@@ -1864,7 +1870,7 @@ public class DefaultPromotionManager extends PromotionsManager
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT)
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT) || paymentMode
 												.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
-											&& (selectedBank != null && restrBanks.contains(selectedBank)))
+											&& (StringUtils.isNotEmpty(selectedBank) && checkBankData(selectedBank, restrBanks)))
 									{
 										flag = true;
 										break;
@@ -1884,6 +1890,32 @@ public class DefaultPromotionManager extends PromotionsManager
 
 		}
 
+		return flag;
+	}
+
+	/**
+	 * @param selectedBank
+	 * @param restrBanks
+	 * @return boolean
+	 */
+	private boolean checkBankData(final String selectedBank, final List<Bank> restrBanks)
+	{
+		boolean flag = false;
+		try
+		{
+			for (final Bank bank : restrBanks)
+			{
+				if (null != bank.getAttribute("bankName") && bank.getAttribute("bankName").toString().equals(selectedBank))
+				{
+					flag = true;
+					break;
+				}
+			}
+		}
+		catch (JaloInvalidParameterException | JaloSecurityException e)
+		{
+			LOG.error(e.getMessage());
+		}
 		return flag;
 	}
 
@@ -2480,14 +2512,16 @@ public class DefaultPromotionManager extends PromotionsManager
 						{
 							if (sellerDetails.contains(seller.getSellerID()))
 							{
-								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(seller.getSellerArticleSKU());
-								for (final StockLevelModel stockModel : stockData)
-								{
-									if (stockModel.getAvailable() > 0)
-									{
-										giftProductDetails.put(seller.getSellerArticleSKU(), product);
-									}
-								}
+								//TISSIT-1906
+								giftProductDetails.put(seller.getSellerArticleSKU(), product);
+								//								final List<StockLevelModel> stockData = mplStockService.getStockLevelDetail(seller.getSellerArticleSKU());
+								//								for (final StockLevelModel stockModel : stockData)
+								//								{
+								//									if (stockModel.getAvailable() > 0)
+								//									{
+								//										giftProductDetails.put(seller.getSellerArticleSKU(), product);
+								//									}
+								//								}
 							}
 						}
 					}

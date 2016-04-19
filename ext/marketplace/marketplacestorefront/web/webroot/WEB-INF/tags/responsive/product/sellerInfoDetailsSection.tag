@@ -23,6 +23,9 @@
 						name="skuIdForED" value="" />
 					<input type="hidden" maxlength="10" size="1" id="skuIdForHD"
 						name="skuIdForHD" value="" />	
+					<!--  Added for click-and-collect for view seller -->
+					<input type="hidden" maxlength="10" size="1" id="skuIdForCNC"
+						name="skuIdForCNC" value="" />
 						<input type="hidden" maxlength="10" size="1" id="skuIdForCod"
 						name="skuIdForCod" value="" />	
 					<button type="submit" name="submit" id="submit"
@@ -36,7 +39,7 @@
 						</p>
 						<div id="otherSellerLinkId" style="display: none">
 							<span id="otherSellersId"></span>&nbsp;<span
-								class="other-sellers-info" style="color: #00cbe9;"><spring:theme
+								class="other-sellers-info" style="color: #a9143c;"><spring:theme
 									code="product.othersellersForNoStock"></spring:theme></span>&nbsp;
 						</div>
 					</button>
@@ -60,4 +63,5 @@
 						</tbody>
 
 					</table>
+
 					</div>

@@ -6,6 +6,9 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
+import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
+import de.hybris.platform.jalo.security.JaloSecurityException;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 
@@ -19,6 +22,7 @@ import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 
 
@@ -96,9 +100,11 @@ public interface MplPaymentService
 	 * @param cartValue
 	 * @param totalCODCharge
 	 * @param entries
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
 	 */
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
-			CartModel cartModel);
+			CartModel cartModel) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -119,9 +125,12 @@ public interface MplPaymentService
 	 *
 	 * @param paymentMode
 	 * @param cart
+	 * @throws EtailNonBusinessExceptions
+	 *            ,Exception
 	 *
 	 */
-	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart);
+	//TISPRD-361 method signature changes
+	void setPaymentTransactionForCOD(Map<String, Double> paymentMode, CartModel cart) throws EtailNonBusinessExceptions, Exception;
 
 
 	/**
@@ -158,9 +167,11 @@ public interface MplPaymentService
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
+	 * @throws EtailNonBusinessExceptions
 	 */
-	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws VoucherOperationException,
-			EtailNonBusinessExceptions;
+	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
+			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
+			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
 
 
 	/**
@@ -237,5 +248,16 @@ public interface MplPaymentService
 	 *
 	 */
 	JuspayEBSResponseModel getEntryInAuditByOrder(final String orderId);
+
+	/*
+	 * @description : fetching bank model for a bank name TISPRO-179\
+	 * 
+	 * @param : bankName
+	 * 
+	 * @return : BankModel
+	 * 
+	 * @throws EtailNonBusinessExceptions
+	 */
+	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 }

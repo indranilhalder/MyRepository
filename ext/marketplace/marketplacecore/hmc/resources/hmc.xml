@@ -437,14 +437,14 @@
 			<search mode="append">
 				<condition attribute="BinNo" />
 				<condition attribute="CardType" />
-				<condition attribute="Bank" />
+				<condition attribute="bankName" />
 			</search>
 			<result defaultview="list">
 				<listview>
 					<itemlayout mode="replace">
 						<attribute name="BinNo" width="300"></attribute>
 						<attribute name="CardType" width="300"></attribute>
-						<attribute name="Bank" width="300"></attribute>
+						<attribute name="bankName" width="300"></attribute>
 					</itemlayout>
 				</listview>
 				<editview mode="replace">
@@ -473,7 +473,7 @@
 							<attribute name="BinNo" />
 							<attribute name="CardType" />
 							<attribute name="isDomestic" />
-							<attribute name="Bank" />
+							<attribute name="bankName" />
 						</listlayout>
 					</section>
 				</tab>
@@ -764,6 +764,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -934,6 +936,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
 							<attribute name="secondCategories" labelwidth="100">
 								<referencecollectioneditor
 									autoperform="true" resortable="true" add="true" remove="true"
@@ -957,6 +961,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
                             <text name="text.productpromotion.minimumAmount" />
@@ -1021,6 +1027,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
 							<attribute name="secondCategories" labelwidth="100">
 								<referencecollectioneditor
 									autoperform="true" resortable="true" add="true" remove="true"
@@ -1043,7 +1051,10 @@
 										<attribute name="name" width="274" />
 									</itemlayout>
 								</referencecollectioneditor>
-							</attribute></listlayout>
+							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
+							</listlayout>
 							<listlayout>
                             <text name="text.productpromotion.minimumAmount" />
 							<attribute name="minimumAmount" />
@@ -1127,18 +1138,6 @@
 							</listlayout>
 					</section>
 				</tab>
-				<tab name="tab.promotion.media" mode="append">
-					<section name="section.promotion.media" mode="append">
-						<columnlayout>
-							<row>
-								<attribute name="productBanner" labelwidth="100">
-									<mediaeditor/>
-								</attribute>
-								<text name="text.productpromotion.productbanner" />
-							</row>
-						</columnlayout>
-					</section>
-				</tab>
 			</editor>
 		</organizer>
 	</type>
@@ -1148,8 +1147,7 @@
 		<organizer>
 			<editor mode="append">
 				<tab name="tab.promotion.properties" mode="append">
-					<section name="section.promotion.products">
-
+					<section name="section.promotion.products">							
 						<listlayout>
 							<text name="text.productpromotion.qualifyingproductscategories" />
 							<attribute name="products" labelwidth="100">
@@ -1185,6 +1183,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -1264,6 +1264,10 @@
 										</itemlayout>
 									</referencecollectioneditor>
 								</attribute>
+							</row>
+							<row>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</row>
 							<row>
 								<attribute name="qualifyingCount" labelwidth="100" />
@@ -1454,6 +1458,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -1799,6 +1805,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
 							<attribute name="secondCategories" labelwidth="100">
 								<referencecollectioneditor
 									autoperform="true" resortable="true" add="true" remove="true"
@@ -1822,6 +1830,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -1933,6 +1943,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							</listlayout>
 							<listlayout>
 							<text name="text.productpromotion.minimumAmount" />
@@ -2410,6 +2422,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							<attribute name="thresholdTotals" labelwidth="100">
 									<referencecollectioneditor editable="true"
 										externalcreate="false" resortable="false" remove="true"
@@ -2545,6 +2559,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							<text name="text.productpromotion.quantity" />
 							<attribute name="quantity" />
 							<text name="text.productpromotion.fulfilmenttype" />
@@ -2653,6 +2669,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.qualifyingsecondproductcodeslist" />
+							<attribute name="secondProductCodeList" />
 							<attribute name="secondCategories" labelwidth="100">
 								<referencecollectioneditor
 									autoperform="true" resortable="true" add="true" remove="true"
@@ -2674,6 +2692,8 @@
 									</itemlayout>
 								</referencecollectioneditor>
 							</attribute>
+							<text name="text.promotion.excludedproductcodeslist" />
+							<attribute name="excludedProductCodeList" />
 							<text name="text.productpromotion.fulfilmenttype" />							
 							<attribute name="tShip" />
 							<attribute name="sShip" />
@@ -3118,7 +3138,7 @@
 	         <essentials mode="replace">
 	            <listlayout>
 	               <text name="text.promotionvoucher.common" width="353"/>
-	               <attribute name="code" maxlength="3"/>
+	               <attribute name="code"/>
 	               <attribute name="name"/>
 	            </listlayout>
 	         </essentials>
@@ -3206,7 +3226,7 @@
 									</itemlayout>
 								</referencecollectioneditor>
 	                  </attribute>
-	                  <attribute name="positive">
+	                  <attribute name="positive" width="500">
 	                     <advancedbooleaneditor truename="productrestriction.positive.true"
 	                                            falsename="productrestriction.positive.false"/>
 	                  </attribute>
@@ -3217,6 +3237,151 @@
 	      </editor>
 	   </organizer>
 	</type>
+	
+	
+	<type name="UserRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.userrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="users">
+                           <referencecollectioneditor>
+                              <itemlayout>
+                                 <attribute name="uid" width="166"/>
+                                 <attribute name="displayname" width="166"/>
+                              </itemlayout>
+                           </referencecollectioneditor>
+                        </attribute>
+	                  <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="userrestriction.positive.true"
+	                                            falsename="userrestriction.positive.false"/>
+	                  </attribute>
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
+	
+	
+	<type name="ProductCategoryRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.productcategoryrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="categories"/>
+	                  <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="productcategoryrestriction.positive.true"
+	                                            falsename="productcategoryrestriction.positive.false"/>
+	                  </attribute>
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
  <!-- Voucher HMC Modification ends -->
 
+  <!--  Added the code for mplconfiguration -->
+
+<explorertree>
+		<group name="mpl"  description="group.mplConfig.description">
+			<typeref type="MplConfig"  description="mpl.config.table.description"/>
+		</group>
+	</explorertree>
+	
+	<type name="MplConfig" mode="append">
+  <organizer>
+   <search mode="append">
+    <condition attribute="id" />
+    <condition attribute="value" />
+   </search>
+   <result defaultview="list">
+    <listview>
+     <itemlayout mode="replace">
+      <attribute name="id" width="200"></attribute>
+      <attribute name="value" width="200"></attribute>
+     </itemlayout>
+    </listview>
+    <editview mode="replace">
+     <itemlayout>
+      <attribute name="id" width="200" />
+      <attribute name="value" width="200" />
+      <attribute name="description" width="200" />
+     </itemlayout>
+    </editview>
+    <treeview mode="replace">
+     <itemlayout>
+      <attribute name="id" width="200" />
+      <attribute name="value" width="200" />
+      <attribute name="description" width="200" />
+     </itemlayout>
+    </treeview>
+   </result>
+   <editor>
+    
+    <tab name="mplconfig.tab" position="0">
+      <section name="mplconfig.section">
+      <listlayout>
+       <attribute name="id"/>
+       <attribute name="value"/>
+       <attribute name="description"/>
+      </listlayout>
+     </section>
+    </tab>
+    
+   </editor>
+   
+  </organizer>
+ </type>
 </configuration>

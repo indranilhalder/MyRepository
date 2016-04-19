@@ -159,6 +159,16 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		parent="abstractEmailContext" scope="prototype">
 		<property name="orderConverter" ref="orderConverter" />
 	</bean>
+	
+	<!-- Added For PickUp Person And Order Refund Context  -->	
+	<bean id="orderCollectedByPersonNotificationEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.OrderCollectedByPersonNotificationEmailContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
+	<bean id="orderRefundCreditedEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.OrderRefundCreditedEmailContext"
+		parent="abstractEmailContext" scope="prototype">
+	</bean>
 
 	<bean id="deliverySentEmailContext"
 		class="com.tisl.mpl.facades.process.email.context.DeliverySentEmailContext"
@@ -1271,7 +1281,10 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	<bean id="sizeGuideComparator"
 	      class="com.tisl.mpl.facade.comparator.SizeGuideComparator">
-		<property name="pattern" value="[0-9]+(\.[0-9])*"/>
+		<!-- <property name="pattern" value="^[0-9]+$"/> -->
+		<!-- Changes for TISPRO-250 -->
+		<!-- <property name="pattern" value="[0-9]+(\.[0-9])*"/> -->
+		<property name="pattern" value="^[0-9]+(\.?([0-9])+)?$"/>
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1295,7 +1308,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	
 	<bean id="sizeGuideHeaderComparator"
 	      class="com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator">
-		<property name="pattern" value="^[0-9]+$"/>
+		<property name="pattern" value="^[0-9]+(\.?([0-9])+)?$"/>
+		<!-- Changes for TISPRO-250 -->
+		<!-- <property name="pattern" value="[0-9]+(\.[0-9])*"/> -->
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
 				<value>XXS</value>
@@ -1373,6 +1388,17 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	<!--<bean id="dynamicPriorityStatusHandler" class="com.tisl.mpl.tisl.facade.handler.DynamicPriorityStatusHandler"/>-->
 	
+	<!-- bean entry for pincodeServiceFacade -->
+	<bean id="pincodeServiceFacade"
+		class="com.tisl.mpl.pincode.facade.impl.PincodeServiceFacadeImpl">
+		<property name="pinCodeFacade" ref="pinCodeFacade" />
+		<property name="productService" ref="productService" />
+		<property name="pincodeService" ref="pincodeService" />
+		<property name="productFacade" ref="accProductFacade" />
+		<property name="mplCheckoutFacade" ref="mplCheckoutFacade" />
+		<property name="productDetailsHelper" ref="productDetailsHelper" />
+		<property name="mplCartFacade" ref="mplCartFacade" />
+	</bean>
 	
 	<!-- -Voucher converter -->
 	<!-- <alias name="defaultOrderHistoryConverter" alias="orderHistoryConverter"/> -->
@@ -1403,5 +1429,16 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 
 	<bean id="voucherTransactionPopulator"
 			class="com.tisl.mpl.facades.populators.MplVoucherTransactionHistoryPopulator">
+	</bean>
+	
+	<alias name="mplPointOfServicePopulator" alias="pointOfServicePopulator"/>
+	<bean id="mplPointOfServicePopulator" class="com.tisl.mpl.facade.store.populator.MplPointOfServicePopulator" parent="defaultPointOfServicePopulator"/>
+
+	<bean id="gigyaFacade"
+		class="com.tisl.mpl.facades.account.reviews.impl.GigyaFacadeImpl">
+	</bean>
+
+	<bean id="mplSellerInformationFacade"
+		class="com.tisl.mpl.sellerinfo.facades.impl.MplSellerInformationFacadeImpl">
 	</bean>
 </beans>

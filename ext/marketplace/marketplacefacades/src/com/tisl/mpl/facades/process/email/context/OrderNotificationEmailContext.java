@@ -18,19 +18,28 @@ import de.hybris.platform.acceleratorservices.process.email.context.AbstractEmai
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
+import org.apache.velocity.tools.generic.NumberTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.facades.account.address.AccountAddressFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
+import com.tisl.mpl.facades.product.data.StateData;
 
 
 /**
@@ -46,6 +55,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String TOTALPRICE = "totalPrice";
 	private static final String SHIPPINGCHARGE = "shippingCharge";
 	private static final String DELIVERYADDRESS = "deliveryAddress";
+	private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
 
@@ -57,6 +67,9 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String COMMA = ",";
 	private static final String CUSTOMER = "Customer";
 	private static final String SPACE = " ";
+	private static final String NUMBERTOOL = "numberTool";
+	@Autowired
+	private AccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
 
 
@@ -72,11 +85,15 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 
+
+
 		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
 				+ " convenienceCharges:" + convenienceCharges);
 
+
 		final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
-		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+
+
 		final String orderCode = orderProcessModel.getOrder().getCode();
 
 		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
@@ -92,55 +109,65 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(SHIPPINGCHARGE, shippingCharge);
 		//Setting first name and last name to NAMEOFPERSON
 		final StringBuilder name = new StringBuilder(150);
-		if (null != deliveryAddress.getFirstname())
-		{
-			name.append(deliveryAddress.getFirstname());
-		}
-		if (null != deliveryAddress.getLastname())
-		{
-			name.append(SPACE).append(deliveryAddress.getLastname());
-		}
-		put(NAMEOFPERSON, (name.length() > 0 ? name : CUSTOMER));
-		/* put(NAMEOFPERSON, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER)); */
-		put(CUSTOMER_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
+		final Set<PointOfServiceModel> storeAddrList = new HashSet<PointOfServiceModel>();
 		final StringBuilder deliveryAddr = new StringBuilder(150);
+		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
+		for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
+
+		{
+			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+			{
+				final PointOfServiceModel model = entryModel.getDeliveryPointOfService();
+				AddressModel address = model.getAddress();
+				for (final StateData state : stateDataList)
+				{
+					if (address.getState().equalsIgnoreCase(state.getCode()))
+					{
+						address.setState(state.getName());
+						model.setAddress(address);
+						break;
+					}
+				}
+				storeAddrList.add(model);
+				put(CNCSTOREADDRESS, storeAddrList);
+				put(CUSTOMER_NAME, CUSTOMER);
+			}
+		}
+
+		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
+		if (deliveryAddress != null)
+
+		{
+			if (null != deliveryAddress.getFirstname())
+			{
+				put(CUSTOMER_NAME, deliveryAddress.getFirstname());
+			}
+			if (null != deliveryAddress.getFirstname())
+			{
+				name.append(deliveryAddress.getFirstname());
+			}
+			if (null != deliveryAddress.getLastname())
+			{
+				name.append(SPACE).append(deliveryAddress.getLastname());
+			}
+			put(NAMEOFPERSON, (name.length() > 0 ? name : CUSTOMER));
+			put(MOBILENUMBER, (null != deliveryAddress.getPhone1() ? deliveryAddress.getPhone1() : deliveryAddress.getCellphone()));
+			put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
 
 
-
-		deliveryAddr.append(deliveryAddress.getStreetname()).append(COMMA).append(deliveryAddress.getStreetnumber()).append(COMMA)
-				.append(deliveryAddress.getAddressLine3()).append(COMMA).append(deliveryAddress.getTown()).append(COMMA)
-				.append(deliveryAddress.getDistrict()).append(COMMA).append(deliveryAddress.getPostalcode());
-
-
-
+			deliveryAddr.append(deliveryAddress.getStreetname()).append(COMMA).append(deliveryAddress.getStreetnumber())
+					.append(COMMA).append(deliveryAddress.getAddressLine3()).append(COMMA).append(deliveryAddress.getTown())
+					.append(COMMA).append(deliveryAddress.getDistrict()).append(COMMA).append(deliveryAddress.getPostalcode());
+			put(DELIVERYADDRESS, deliveryAddr);
+		}
 
 
-
-		put(DELIVERYADDRESS, deliveryAddr);
-
-		put(MOBILENUMBER, (null != deliveryAddress.getPhone1() ? deliveryAddress.getPhone1() : deliveryAddress.getCellphone()));
 		put(COD_CHARGES, orderProcessModel.getOrder().getConvenienceCharges());
 
 		final CustomerModel customer = (CustomerModel) orderProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
-		put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
-		//		if (null != customer.getDisplayName())
-		//		{
-		//			if (!customer.getDisplayName().equals(" "))
-		//			{
-		//				put(CUSTOMER_NAME, customer.getDisplayName());
-		//			}
-		//			else
-		//			{
-		//				put(CUSTOMER_NAME, "Customer");
-		//			}
-		//		}
-		//		else
-		//		{
-		//			put(CUSTOMER_NAME, "Customer");
-		//		}
-
 		put("math", new MathTool());
+		put(NUMBERTOOL, new NumberTool());
 
 	}
 
@@ -176,6 +203,22 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	protected LanguageModel getEmailLanguage(final OrderProcessModel orderProcessModel)
 	{
 		return orderProcessModel.getOrder().getLanguage();
+	}
+
+	/**
+	 * @return the accountAddressFacade
+	 */
+	public AccountAddressFacade getAccountAddressFacade()
+	{
+		return accountAddressFacade;
+	}
+
+	/**
+	 * @param accountAddressFacade the accountAddressFacade to set
+	 */
+	public void setAccountAddressFacade(AccountAddressFacade accountAddressFacade)
+	{
+		this.accountAddressFacade = accountAddressFacade;
 	}
 
 }

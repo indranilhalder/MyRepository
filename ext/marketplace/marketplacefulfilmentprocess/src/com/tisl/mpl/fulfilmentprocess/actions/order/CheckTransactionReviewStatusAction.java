@@ -207,6 +207,16 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		{
 			defaultPinCode = orderModel.getDeliveryAddress().getPostalcode();
 		}
+		else
+		{
+			/*
+			 * TISOMSII-86
+			 * 
+			 * This block will execute only incase of standalone CNC cart and OMS is not using pincode to deallocate cart
+			 * reservation. As pincode is mandatory in Inventory reservation adding dummy pincode for cart deallocation
+			 */
+			defaultPinCode = MarketplaceFulfilmentProcessConstants.PINCODE;
+		}
 
 		//returning OK for order status "PAYMENT_SUCCESSFUL"
 		if (orderStatus.equalsIgnoreCase(MarketplaceFulfilmentProcessConstants.PAYMENT_SUCCESSFUL))
@@ -398,6 +408,18 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 						{
 							if (subOrderEntryModel != null)
 							{
+								//TISPRO-216 Starts
+								double refundAmount = 0D;
+								double deliveryCost = 0D;
+								if (subOrderEntryModel.getCurrDelCharge() != null)
+								{
+									deliveryCost = subOrderEntryModel.getCurrDelCharge().doubleValue();
+								}
+
+								refundAmount = subOrderEntryModel.getNetAmountAfterAllDisc().doubleValue() + deliveryCost;
+								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
+								//TISPRO-216 Ends	
+
 								// Making RTM entry to be picked up by webhook job
 								final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
 										RefundTransactionMappingModel.class);
@@ -405,6 +427,7 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 								refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 								refundTransactionMappingModel.setCreationtime(new Date());
 								refundTransactionMappingModel.setRefundType(JuspayRefundType.CANCELLED_FOR_RISK);
+								refundTransactionMappingModel.setRefundAmount(new Double(refundAmount));//TISPRO-216 : Refund amount Set in RTM
 								getModelService().save(refundTransactionMappingModel);
 							}
 						}

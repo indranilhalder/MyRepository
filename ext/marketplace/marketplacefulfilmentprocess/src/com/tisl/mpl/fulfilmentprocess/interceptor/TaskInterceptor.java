@@ -30,25 +30,35 @@ public class TaskInterceptor implements RemoveInterceptor
 		if (model instanceof TaskModel)
 		{
 			final TaskModel task = (TaskModel) model;
+			final String lineSeparator = "line.separator";
 
 			if (task.getContext() instanceof OmsOrderSyncTaskContext)
 			{
 				final StringBuilder sb = new StringBuilder();
-				sb.append(System.getProperty("line.separator"));
+				sb.append(System.getProperty(lineSeparator));
 				sb.append("===============================================");
-				sb.append(System.getProperty("line.separator"));
-				sb.append("PK=" + task.getPk());
-				sb.append(",executionDate=" + task.getExecutionDate());
-				sb.append(",executionTimeMillis=" + task.getExecutionTimeMillis());
-				sb.append(",expirationDate=" + task.getExpirationDate());
-				sb.append(",failed=" + task.getFailed());
-				sb.append(",runningOnClusterNode=" + task.getRunningOnClusterNode());
-				sb.append(",nodeId=" + task.getNodeId());
-				sb.append(",retry=" + task.getRetry());
-				sb.append(",runnerBean=" + task.getRunnerBean());
-				sb.append(System.getProperty("line.separator"));
+				sb.append(System.getProperty(lineSeparator));
+				sb.append("PK=");
+                sb.append(task.getPk());
+				sb.append(",executionDate=");
+                sb.append(task.getExecutionDate());
+				sb.append(",executionTimeMillis=");
+                sb.append(task.getExecutionTimeMillis());
+				sb.append(",expirationDate=");
+				sb.append(task.getExpirationDate());
+				sb.append(",failed="); 
+				sb.append(task.getFailed());
+				sb.append(",runningOnClusterNode=") ;
+				sb.append(task.getRunningOnClusterNode());
+				sb.append(",nodeId=");
+                sb.append(task.getNodeId());
+				sb.append(",retry="); 
+				sb.append(task.getRetry());
+				sb.append(",runnerBean="); 
+				sb.append(task.getRunnerBean());
+				sb.append(System.getProperty(lineSeparator));
 				sb.append("===============================================");
-				sb.append(System.getProperty("line.separator"));
+				sb.append(System.getProperty(lineSeparator));
 
 				LOG.info(sb);
 			}

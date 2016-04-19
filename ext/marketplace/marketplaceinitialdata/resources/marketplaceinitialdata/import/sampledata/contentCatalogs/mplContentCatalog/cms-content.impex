@@ -277,6 +277,10 @@ INSERT_UPDATE SearchResultsListComponent;$contentCV[unique=true];uid[unique=true
 INSERT_UPDATE SearchResultsGridComponent;$contentCV[unique=true];uid[unique=true];name;actions(uid,$contentCV);&componentRef
 ;;SearchResultsGrid;Search Result Grid Component;ListAddToCartAction;SearchResultsGrid
 
+###Store Finder Link Component#
+#INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;linkName;url;category(code, $productCV);target(code)[default='sameWindow'];;
+#;;StoreFinderLink;Store Finder Link;Find a Store;/store-finder;;;;
+
 # ContentSlot 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
 ;;VariantSelectorSlot;VariantSelector
@@ -287,7 +291,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;HeaderLinksSlot;ContactInfo,HelpMeShopSearch
 #;;SearchBoxSlot;SearchBox
 #;;HomepageNavLinkSlot;HomepageNavLink
-;;MiniCartSlot;MiniCart,MyWishList,SignInFlyOut,TrackOrder 
+;;MiniCartSlot;MiniCart,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder 
 ;;SideContentSlot;MobileAppBanner
 ;;SiteLogoSlot;SiteLogoComponent
 ;;TopHeaderSlot;ResponsiveSiteLogoComponent

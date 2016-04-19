@@ -16,7 +16,6 @@ package com.tisl.mpl.storefront.controllers.pages;
 import de.hybris.platform.acceleratorfacades.flow.impl.SessionOverrideCheckoutFlowFacade;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
-import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCheckoutController;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
@@ -65,6 +64,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
@@ -74,6 +74,7 @@ import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 /**
@@ -95,12 +96,10 @@ public class CheckoutController extends AbstractCheckoutController
 	private static final String DISCOUNT_MSSG = " discount on purchase of Promoted Product";
 	private static final String CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL = "orderConfirmation";
 	private static final String CONTINUE_URL_KEY = "continueUrl";
-	private static final String NBZ_ERROR_CMS_PAGE = "nonBusinessErrorFound";
+	//private static final String NBZ_ERROR_CMS_PAGE = "nonBusinessErrorFound";
 	@Resource(name = "productFacade")
 	private ProductFacade productFacade;
 
-	//	@Resource(name = "orderFacade")
-	//	private OrderFacade orderFacade;
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
 	@Resource(name = "checkoutFacade")
@@ -111,8 +110,7 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Resource(name = "autoLoginStrategy")
 	private AutoLoginStrategy autoLoginStrategy;
-	@Resource(name = "simpleBreadcrumbBuilder")
-	private ResourceBreadcrumbBuilder resourceBreadcrumbBuilder;
+
 	@Autowired
 	private WishlistFacade wishlistFacade;
 
@@ -122,17 +120,8 @@ public class CheckoutController extends AbstractCheckoutController
 	@Autowired
 	private MplCheckoutFacade mplCheckoutFacade;
 
-	//	@Autowired
-	//	private SendSMSFacade sendSMSFacade;
-
-	//	@Autowired
-	//	private MplSNSMobilePushServiceImpl mplSNSMobilePushService;
-
 	@Autowired
 	private BaseStoreService baseStoreService;
-
-	//	@Autowired
-	//	private EventService eventService;
 
 	@Autowired
 	private CheckoutCustomerStrategy checkoutCustomerStrategy;
@@ -148,7 +137,6 @@ public class CheckoutController extends AbstractCheckoutController
 
 	@Autowired
 	private ModelService modelService;
-
 
 	/**
 	 * @return the modelService
@@ -258,23 +246,7 @@ public class CheckoutController extends AbstractCheckoutController
 				return getCheckoutRedirectUrl();
 			}
 		}
-
-		// Commented due to Marketplace facade
-		//		if (getCheckoutFlowFacade().hasValidCart())
-		//		{
-		//			if (validateCart(redirectModel))
-		//			{
-		//				return REDIRECT_PREFIX + "/cart";
-		//			}
-		//			else
-		//			{
-		//				checkoutFacade.prepareCartForCheckout();
-		//				return getCheckoutRedirectUrl();
-		//			}
-		//		}
-
 		LOG.debug("Missing, empty or unsupported cart");
-
 		// No session cart or empty session cart. Bounce back to the cart page.
 		return REDIRECT_PREFIX + "/cart";
 	}
@@ -297,14 +269,16 @@ public class CheckoutController extends AbstractCheckoutController
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			LOG.error(MessageConstants.EXCEPTION_IS + e.getMessage());
+			LOG.error(MessageConstants.EXCEPTION_IS, e);
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
 			return ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
 
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
-			LOG.error(MessageConstants.EXCEPTION_IS + e.getMessage());
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error(MessageConstants.EXCEPTION_IS, e);
 			frontEndErrorHelper.callNonBusinessError(model, e.getErrorMessage());
 			return ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
@@ -328,16 +302,9 @@ public class CheckoutController extends AbstractCheckoutController
 	 */
 	protected String getCheckoutRedirectUrl()
 	{
-		//		if (getUserFacade().isAnonymousUser())
-		//		{
-		//			return REDIRECT_PREFIX + "/login/checkout";
-		//		}
-
 		// Default to the multi-step checkout
 		return REDIRECT_PREFIX + "/checkout/multi";
 	}
-
-
 
 	protected String processRegisterGuestUserRequest(final GuestRegisterForm form, final BindingResult bindingResult,
 			final Model model, final HttpServletRequest request, final HttpServletResponse response,
@@ -365,61 +332,43 @@ public class CheckoutController extends AbstractCheckoutController
 			return REDIRECT_PREFIX + request.getHeader("Referer");
 		}
 
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.error(MessageConstants.EXCEPTION_IS, e);
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
+			return REDIRECT_PREFIX + request.getHeader("Referer");
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error(MessageConstants.EXCEPTION_IS, e);
+			frontEndErrorHelper.callNonBusinessError(model, e.getErrorMessage());
+			return REDIRECT_PREFIX + request.getHeader("Referer");
+		}
+
 		return REDIRECT_PREFIX + "/my-account";
 	}
 
-	private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException
-	{
-		storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
+	/*
+	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
+	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
+	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
+	 *
+	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
+	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
+	 * GlobalMessages.addErrorMessage(model, messageKey);
+	 *
+	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
+	 */
 
-		model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
-				resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
-		GlobalMessages.addErrorMessage(model, messageKey);
-
-		storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR);
-	}
-
-	//	private String urlForTrackEmailContext(final HttpServletRequest request) throws CMSItemNotFoundException
-	//	{
-	//		URL requestUrl;
-	//		final Model model = null;
-	//		String profileUpdateUrl = null;
-	//		try
-	//		{
-	//			requestUrl = new URL(request.getRequestURL().toString());
-	//			final String portString = requestUrl.getPort() == -1 ? "" : ":" + requestUrl.getPort();
-	//			//final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString + ""; Do not add empty strings
-	//			final String baseUrl = requestUrl.getProtocol() + "://" + requestUrl.getHost() + portString;
-	//			final String profileUpdatePath = request.getContextPath() + RequestMappingUrlConstants.LINK_MY_ACCOUNT
-	//					+ RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
-	//			profileUpdateUrl = baseUrl + profileUpdatePath;
-	//
-	//		}
-	//		catch (final MalformedURLException e)
-	//		{
-	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-	//					MarketplacecommerceservicesConstants.E0016));
-	//			callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_BUSINESS);
-	//			return ModelAttributetConstants.FAILURE;
-	//		}
-	//		return profileUpdateUrl;
-	//	}
-
-
-
-
-
+	@SuppressWarnings("boxing")
 	protected String processOrderCode(final String orderCode, final Model model, final HttpServletRequest request)
 			throws CMSItemNotFoundException
 	{
 
 		try
 		{
-			//final String trackorderurl = urlForTrackEmailContext(request);
-
-			//final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode); Commented for Delivery cost fix in order confirmation page
-
 			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 			final BaseStoreModel baseStoreModel = getBaseStoreService().getCurrentBaseStore();
 			final OrderModel orderModel = getCheckoutCustomerStrategy().isAnonymousCheckout() ? getCustomerAccountService()
@@ -462,7 +411,7 @@ public class CheckoutController extends AbstractCheckoutController
 					}
 					catch (final Exception e)
 					{
-						LOG.error("Exception during double parsing " + e.getMessage());
+						LOG.error("Exception during double parsing ", e);
 						totalDiscount = totalDiscount + 0;
 					}
 				}
@@ -474,9 +423,12 @@ public class CheckoutController extends AbstractCheckoutController
 
 			for (final OrderEntryData entry : orderEntryList)
 			{
-				if (entry != null)
+				if (entry != null && entry.getMplDeliveryMode() !=null)
 				{
-					totalItemCount += entry.getQuantity();
+					if (!entry.getMplDeliveryMode().getCode().equals(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+					{
+						totalItemCount += entry.getQuantity();
+					}
 				}
 			}
 			//saving IP of the Customer
@@ -488,7 +440,7 @@ public class CheckoutController extends AbstractCheckoutController
 			}
 			catch (final Exception e)
 			{
-				LOG.debug("Exception during IP save" + e.getMessage());
+				LOG.debug("Exception during IP save", e);
 			}
 			//End saving IP of the Customer
 
@@ -534,12 +486,6 @@ public class CheckoutController extends AbstractCheckoutController
 				uid = orderDetails.getUser().getUid();
 			}
 			model.addAttribute("email", uid);
-
-
-
-
-			//modelService.save(osn);
-
 			final String continueUrl = (String) getSessionService().getAttribute(WebConstants.CONTINUE_URL);
 			model.addAttribute(CONTINUE_URL_KEY, (continueUrl != null && !continueUrl.isEmpty()) ? continueUrl : ROOT);
 
@@ -547,55 +493,16 @@ public class CheckoutController extends AbstractCheckoutController
 			storeCmsPageInModel(model, cmsPage);
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(CHECKOUT_ORDER_CONFIRMATION_CMS_PAGE_LABEL));
 			model.addAttribute("metaRobots", "noindex,nofollow");
-			//sms changes for order place
-			/*
-			 * final String mobileNumber = orderDetails.getDeliveryAddress().getPhone(); final String firstName =
-			 * orderDetails.getDeliveryAddress().getFirstName(); final String orderReferenceNumber =
-			 * orderDetails.getCode(); final String trackingUrl = getConfigurationService().getConfiguration()
-			 * .getString(MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderReferenceNumber;
-			 *
-			 *
-
-
-			 * // Email ************* Order Placed final OrderProcessModel orderProcessModel = new OrderProcessModel();
-			 * orderProcessModel.setOrder(orderModel); orderProcessModel.setOrderTrackUrl(trackorderurl); final
-			 * OrderPlacedEvent orderplacedEvent = new OrderPlacedEvent(orderProcessModel); try {
-			 * eventService.publishEvent(orderplacedEvent); } catch (final Exception e1) { // YTODO // Auto-generated catch
-			 * block LOG.error("Exception during sending mail >> " + e1.getMessage()); }
-			 *
-
-			 * try { sendSMSFacade.sendSms(MarketplacecommerceservicesConstants.SMS_SENDER_ID,
-			 *
-
-			 * MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
-			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
-			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
-			 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, trackingUrl), mobileNumber);
-			 */
-			/*
-
-
-			 * try { //mplCheckoutFacade.triggerEmailAndSmsOnOrderConfirmation(orderModel, orderDetails, trackorderurl);
-			 * //mplCheckoutFacade.sendMobileNotifications(orderDetails);
-			 * 
-
-
-			 * } catch (final EtailNonBusinessExceptions ex) {
-
-			 * LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex.getMessage()); }
-			 */
-
-			// TODO: TIS-1178: Email & SMS ********* On Hold Due to Risks
 
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
-			LOG.error("Error while processing order code due to " + ex.getMessage());
-			throw ex;
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			LOG.error("Error while processing order code due to ", ex);
 		}
 		catch (final Exception ex)
 		{
-			LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex.getMessage());
+			LOG.error("EtailNonBusinessExceptions occured while sending sms ", ex);
 		}
 
 		return ControllerConstants.Views.Pages.Checkout.CheckoutConfirmationPage;
@@ -651,4 +558,3 @@ public class CheckoutController extends AbstractCheckoutController
 	}
 
 }
-

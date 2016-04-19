@@ -19,6 +19,7 @@ $(document).ready(function() {
         else  
         {  
         	$("#defaultPinCodeIds").css("color","red");
+        	$('#unsevisablePin').hide();
             $( "#errorId").show();
              
             return false;  
@@ -55,6 +56,7 @@ function isNumber(evt) {
 
 		<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit');"><spring:theme code="product.submit"/></button>
 		
+		<div id="unsevisablePin" style="display:none;color:red;padding-top: 38px;"><spring:theme code="pincode.unsevisable"/></div>
 		<p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
 		<p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 		
@@ -96,7 +98,7 @@ function isNumber(evt) {
 			<!-- TISBOX-879 -->
 			<li id="checkout-id" class="checkout-button">
 				<!-- TISEE-6257 -->
-				<a  id="checkout-enabled" style="line-height: 30px  !important;" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout');"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-enabled" style="line-height: 40px  !important;" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout');"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 			</li>
 
@@ -140,3 +142,4 @@ function isNumber(evt) {
             
           </ul>
           </div>
+		<a href="/store" class="continue-shopping"> Continue Shopping</a>

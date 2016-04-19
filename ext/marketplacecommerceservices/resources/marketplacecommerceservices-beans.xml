@@ -29,7 +29,8 @@
 	<property name="state" type="String"/>
 	<property name="line3" type="String"/>
 	<property name="locality" type="String"/>
-	
+	<property name="city" type="String"/>
+	<property name="landmark" type="String"/>
 	</bean>
 	
 	
@@ -261,6 +262,11 @@
 		<property name="emailId" type="String"/>
 		<property name="actionType" type="String"/>
 		<property name="ticketStatus" type="String"/>
+        <property name="alternateContactName" type="String"/>
+        <property name="alternatePhoneNo" type="String"/>
+        <property name="source" type="String"/>
+        <property name="ticketSubType" type="String"/>
+		<property name="addressInfo" type="com.tisl.mpl.data.ReturnAddressInfo"/>
 	</bean>
 	
 	<bean class="com.tisl.mpl.data.SendTicketLineItemData">
@@ -269,6 +275,21 @@
 		<property name="cancelReasonCode" type="String"/>
 	</bean>
 	
+	<!-- Return Item AddressInfo Data -->
+	<bean class="com.tisl.mpl.data.ReturnAddressInfo">
+		<property name="shippingFirstName" type="String"/>
+		<property name="shippingLastName" type="String"/>
+		<property name="phoneNo" type="String"></property>
+		<property name="address1" type="String"></property>
+		<property name="address2" type="String"></property>
+		<property name="address3" type="String"></property>
+		<property name="country" type="String"></property>
+		<property name="city" type="String"></property>
+		<property name="state" type="String"></property>
+		<property name="pincode" type="String"></property>
+		<property name="landmark" type="String"></property>
+	</bean>
+
 	<!-- OTP response Data-->
 	<bean class="com.tisl.mpl.data.OTPResponseData">
 		<property name="OTPValid" type="Boolean"/>
@@ -631,4 +652,3 @@
 	</bean>
 	
 </beans>
-

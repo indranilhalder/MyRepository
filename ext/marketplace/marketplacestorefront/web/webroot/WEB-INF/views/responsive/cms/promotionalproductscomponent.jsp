@@ -5,7 +5,8 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <c:choose>
 
 	<c:when test="${not empty productData}">
@@ -23,108 +24,170 @@
 					<c:forEach items="${productData}" var="product">
 						<c:url value="${product.url}" var="productUrl" />
 						<div class="item slide">
-							<a href="${productUrl}" class="product-tile">
-								<div class="image">
-									<c:if test="${product.isProductNew eq true}">
-										<div style="z-index: 1;" class="new">
-					<img class="brush-strokes-sprite sprite-New"
-					src="/store/_ui/responsive/common/images/transparent.png"><span>New</span>
-					</div> 
-									</c:if>
-									<product:productPrimaryImage product="${product}"
-										format="product" />
-									<c:if test="${product.isOnlineExclusive eq true}">
-										<div style="z-index: 1;" class="online-exclusive">
-											<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
+
+							<ycommerce:testId code="product_wholeProduct">
+								<div class="product-tile">
+									<div class="image">
+
+										<c:if test="${product.isProductNew eq true}">
+											<img class="new brush-strokes-sprite sprite-New"
+												style="z-index: 1; display: block;"
 												src="/store/_ui/responsive/common/images/transparent.png">
-											<span>online exclusive</span>
-										</div>
-									</c:if>
-								</div>
-								<div class="short-info">
-									<ul class="color-swatch">
-
-										<!-- changes for variant as a colour -->
-										<c:forEach items="${product.variantOptions}"
-											var="variantOption">
-											<li><c:if test="${not empty variantOption.defaultUrl}">
-													<c:url value="${variantOption.defaultUrl}" var="variantUrl" />
-													<a href="${variantUrl}"><c:forEach
-															items="${variantOption.colourCode}" var="color">
-															<c:choose>
-																<c:when test="${color=='multi'}">
-																	<img src="${commonResourcePath}/images/multi.jpg"
-																		height="36" width="36" title="${variantOption.colour}" />
-																</c:when>
-																<c:otherwise>
-																	<span
-																		style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-																		title="${variantOption.colour}"></span>
-																</c:otherwise>
-															</c:choose>
-
-															<%-- 	<span
-										style="background-color: ${color};border: 1px solid rgb(204, 211, 217);"
-										title="${variantOption.colour}"></span> --%>
-
-															<c:if test="${variantOption.code eq product.code}">
-																<c:set var="currentColor" value="${color}" />
-																<!--  set current selected color -->
-															</c:if>
-
-														</c:forEach> <!-- changes for variant as a colour --> </a>
-												</c:if></li>
-										</c:forEach>
-									</ul>
-
-									<p class="company">${product.brand.brandname}</p>
-									<h3 class="product-name">${product.name}</h3>
-									<div class="price">
-
-
-										<c:forEach items="${product.seller}" var="sellerData">
-
-											<%-- Seller:${sellerData.sellerID}${sellerData.sellername} Brand:${component.brandName } --%>
-											<c:if test="${sellerData.sellerID eq component.seller.id}">
-
-												<c:if test="${not empty sellerData.spPrice}">
-													<c:set var="specialPrice" value="${sellerData.spPrice}" />
-
-												</c:if>
-
-											</c:if>
-										</c:forEach>
-										<c:choose>
-											<c:when test="${not empty specialPrice}">
-												<p class="normal">
-													<format:fromPrice priceData="${product.productMRP}" />
-												</p>
-											</c:when>
-											<c:otherwise>
-												<p class="old">
-													<format:fromPrice priceData="${product.productMRP}" />
-												</p>
-											</c:otherwise>
-										</c:choose>
-										<%-- <c:if test="${not empty specialPrice}">
-											<p class="sale">
-												<format:fromPrice priceData="${sellerData.spPrice}" />
-											</p>
-										</c:if> --%>
-
-										<c:if test="${not empty product.productMOP}">
-											<p class="sale">
-												<format:fromPrice priceData="${product.productMOP}" />
-											</p>
 										</c:if>
+										<a class="thumb" href="${productUrl}" title="${product.name}">
+											 <product:productPrimaryImage
+												product="${product}" format="searchPage" />
+
+										</a>									
+
+										<c:if test="${product.isOnlineExclusive}">
+											<div style="z-index: 1;" class="online-exclusive">
+												<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
+													src="/store/_ui/responsive/common/images/transparent.png">
+												<span>online exclusive</span>
+											</div>
+										</c:if>
+
+										<c:if test="${product.stock.stockLevelStatus eq 'outOfStock'}">
+											<a class="stockLevelStatus" href="${productUrl}"
+												title="${product.name}"> <spring:theme
+													code="pickup.out.of.stock" text="Out Of Stock" />
+											</a>
+										</c:if>
+
+
+									</div>
+									<div class="details short-info">
+										<!-- Added for colour swatch -->
+
+										<ul class="color-swatch">
+
+											<c:choose>
+												<c:when test="${fn:length(product.swatchColor)>6}">
+													<c:forEach items="${product.swatchColor}" var="swatchColor"
+														begin="1" end="6">
+														<c:set var="swatchColorAry"
+															value="${fn:split(swatchColor, '_')}" />
+														<c:choose>
+															<c:when
+																test="${swatchColorAry[0]=='Multi' || swatchColorAry[0]=='multi'}">
+																<li><img class="multicolor-serp"
+																	src="${commonResourcePath}/images/multi.jpg"
+																	height="12" width="12" title="Multicolor" /></li>
+															</c:when>
+															<c:otherwise>
+																<c:set var="colorHexCode" value="#${swatchColorAry[1]}" />
+																<li><span
+																	style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
+																	title="${swatchColorAry[0]}"></span></li>
+															</c:otherwise>
+														</c:choose>
+													</c:forEach>
+													<li>+${fn:length(product.swatchColor)-6}&nbsp;more</li>
+												</c:when>
+												<c:otherwise>
+													<c:forEach items="${product.swatchColor}" var="swatchColor">
+														<c:set var="swatchColorAry"
+															value="${fn:split(swatchColor, '_')}" />
+														<c:choose>
+															<c:when
+																test="${swatchColorAry[0]=='Multi' || swatchColorAry[0]=='multi'}">
+																<li><img class="multicolor-serp"
+																	src="${commonResourcePath}/images/multi.jpg"
+																	height="12" width="12" title="Multicolor" /></li>
+															</c:when>
+															<c:otherwise>
+																<c:set var="colorHexCode" value="#${swatchColorAry[1]}" />
+																<li><span
+																	style="background-color: ${colorHexCode};border: 1px solid rgb(204, 211, 217);"
+																	title="${swatchColorAry[0]}"></span></li>
+															</c:otherwise>
+														</c:choose>
+													</c:forEach>
+												</c:otherwise>
+											</c:choose>
+
+										</ul>
+										<!-- Added for colour swatch -->
+
+										<div class="brand">${product.mobileBrandName}</div>
+
+										<ycommerce:testId code="product_productName">
+											<div>
+												<h3 class="product-name">
+													<a class="name" href="${productUrl}">${product.name}</a>
+
+												</h3>
+											</div>
+										</ycommerce:testId>
+
+
+
+										
+
+										<ycommerce:testId code="product_productPrice">
+											<c:if
+												test="${product.price.value > 0 && (product.productMRP.value > product.price.value)}">
+												<div class="price">
+													<p class="old">
+														<format:price priceData="${product.productMRP}" />
+													</p>
+													<p class="sale">
+														<format:price priceData="${product.price}" />
+													</p>
+												</div>
+											</c:if>
+											<c:if
+												test="${product.price.value <= 0 || (product.productMRP.value == product.price.value)}">
+												<div class="price">
+													<c:if test="${product.productMRP.value > 0}">
+														<format:price priceData="${product.productMRP}" />
+													</c:if>
+												</div>
+											</c:if>
+										</ycommerce:testId>
+										
+										<div class="productInfo">
+											<ul>
+												<!-- commented as part of defect fix - 3in1_box_178 -->
+												<%-- <li>Size : ${product.displaySize}</li> --%>
+												<c:if
+													test="${not empty product.productCategoryType && product.isVariant && product.productCategoryType eq 'Apparel'}">
+																
+													<li class="product-size-list"><span
+														class="product-size carousel-size">Size :
+															${fn:toUpperCase(product.displaySize)} </span></li>
+												</c:if>
+												<%-- <li>Color: ${product.swatchColor}</li> --%>
+												<c:if
+													test="${not empty product.productCategoryType && product.isVariant &&  product.productCategoryType eq 'Electronics'}">
+													<li>Capacity: ${product.capacity}</li>
+												</c:if>
+												
+											</ul>
+										</div>
+										<%-- </c:if> --%>
+
 									</div>
 
+
+									<c:set var="product" value="${product}" scope="request" />
+									<c:set var="addToCartText" value="${addToCartText}"
+										scope="request" />
+									<c:set var="addToCartUrl" value="${addToCartUrl}"
+										scope="request" />
+									<c:set var="isGrid" value="true" scope="request" />
+
+									<c:if test="${not empty product.averageRating}">
+										<product:productStars rating="${product.averageRating}" />
+									</c:if>
+									
+
 								</div>
-							</a>
-							<%-- <div id="quick">
-							<a href="${productUrl}/quickView" class="js-reference-item">Quick
-								View </a>
-						</div> --%>
+
+							</ycommerce:testId>
+							
+							
 						</div>
 
 					</c:forEach>
@@ -133,10 +196,12 @@
 			<c:url value="/Categories/c/MPH1" var="categoryUrl" />
 		</div>
 		<div>
-			<c:set var="sellerId" value="${component.seller.id}" />
-		      <c:url value="/o/${sellerId}/?offer=${offerId}"  var ="shopTheSaleUrl" />
+			<c:if test="${not empty offerLinkId}">
+		   	<c:set var="sellerId" value="${offerLinkId}" />
+			<c:url value="/o/${sellerId}/?offer=${offerId}" var="shopTheSaleUrl" />
 			<a href='${shopTheSaleUrl}' class='brandLanding-shopButton button'>SHOP
 				THE SALE</a>
+		   </c:if> 
 		</div>
 
 

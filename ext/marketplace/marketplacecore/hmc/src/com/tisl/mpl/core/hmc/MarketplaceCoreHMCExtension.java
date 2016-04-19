@@ -47,6 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -54,9 +55,11 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.jalo.BuyABFreePrecentageDiscount;
 import com.tisl.mpl.jalo.BuyAPercentageDiscount;
 import com.tisl.mpl.jalo.BuyAandBPrecentageDiscount;
 import com.tisl.mpl.jalo.BuyAandBgetC;
+import com.tisl.mpl.jalo.BuyXItemsofproductAgetproductBforfree;
 import com.tisl.mpl.jalo.CustomProductBOGOFPromotion;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.jalo.EtailSellerSpecificRestriction;
@@ -256,29 +259,6 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 
 
 
-
-	//	/**
-	//	 * Validate the Freebie Promotion for Seller Restriction
-	//	 *
-	//	 * @param itemType
-	//	 * @param initialValues
-	//	 * @return boolean
-	//	 */
-	//	private boolean validateFreebieData(final Map initialValues)
-	//	{
-	//		boolean flag = false;
-	//		List<AbstractPromotionRestrictionModel> restrictionList = new ArrayList<AbstractPromotionRestrictionModel>();
-	//		if (null != initialValues && null != initialValues.get("restrictions"))
-	//		{
-	//			restrictionList = (List<AbstractPromotionRestrictionModel>) initialValues.get("restrictions");
-	//			if (CollectionUtils.isNotEmpty(restrictionList))
-	//			{
-	//				flag = getDefaultPromotionsManager().sellerRestrExists(restrictionList);
-	//			}
-	//		}
-	//		return flag;
-	//	}
-
 	/**
 	 * @Description: The Method is invoked whenever a HMC modification is done
 	 * @param: item
@@ -321,6 +301,8 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 			if (null != item && ((item instanceof ProductPromotion) || (item instanceof OrderPromotion)))
 			{
 				getPromotionSendMailService().sendMail(item);
+
+				checkForMsgModify(item, currentValues, initialValues);
 			}
 
 			//Saving data into VoucherStatusNotificationModel while saving voucher
@@ -347,8 +329,29 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	}
 
 	/**
-	 * @Description: To populate data for Promotion Price Modification
+	 * Check for Message Modification
+	 *
+	 * @param item
+	 * @param currentValues
 	 * @param initialValues
+	 */
+	private void checkForMsgModify(final Item item, final Map currentValues, final Map initialValues)
+	{
+		if (MapUtils.isNotEmpty(currentValues) && currentValues.containsKey("messageFired"))
+		{
+			LOG.debug("***Fired Message Has been modified****");
+			if (item instanceof BuyXItemsofproductAgetproductBforfree || item instanceof BuyABFreePrecentageDiscount)
+			{
+				LOG.debug("***Modifying Promotion Fired Mesage ****");
+				getSellerBasedPromotionService().modifyFiredMessage(initialValues.get(MarketplaceCoreConstants.PROMOCODE).toString());
+			}
+		}
+
+	}
+
+	/**
+	 * @Description: To populate data for Promotion Price Modification
+	 * @param item
 	 * @return: void
 	 */
 	@SuppressWarnings("boxing")
@@ -451,7 +454,7 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					}
 
 				}
-				if ((null != categoryList && !categoryList.isEmpty()) && null != startDate && null != endDate && isEnabled
+				else if ((null != categoryList && !categoryList.isEmpty()) && null != startDate && null != endDate && isEnabled
 						&& quantity == 1)
 				{
 					LOG.debug("******** Special price check for product list in category:" + productList + " *** percentage discount:"
@@ -473,7 +476,15 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
 							+ " *** categoryList:" + categoryList);
 					getUpdatePromotionalPriceService().disablePromotionalPrice(productList, categoryList, isEnabled, priority,
-							brandList);
+							brandList, quantity);
+				}
+				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
+						&& quantity > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
+				{
+					LOG.debug("******** Special price check disabling promotion, productlist impacted:" + productList
+							+ " *** categoryList:" + categoryList);
+					getUpdatePromotionalPriceService().disablePromotionalPrice(productList, categoryList, isEnabled, priority,
+							brandList, quantity);
 				}
 			}
 		}

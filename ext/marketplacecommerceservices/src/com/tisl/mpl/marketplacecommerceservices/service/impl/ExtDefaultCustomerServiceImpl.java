@@ -8,6 +8,7 @@ import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParamete
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.commerceservices.customer.PasswordMismatchException;
 import de.hybris.platform.commerceservices.customer.impl.DefaultCustomerAccountService;
+import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.event.RegisterEvent;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -31,6 +32,7 @@ import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.marketplacecommerceservices.event.MplRegisterEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtDefaultCustomerService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPreferenceService;
 import com.tisl.mpl.service.MplCustomerWebService;
 
 
@@ -47,6 +49,10 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 	//Customer Create CRM
 	@Autowired
 	private MplCustomerWebService mplCustomerWebService;
+
+
+	@Autowired
+	private MplPreferenceService mplPreferenceService;
 
 	/**
 	 * @return the mplCustomerWebService
@@ -222,6 +228,9 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 				{
 					getUserService().setPassword(customerModel, password, getPasswordEncoding());
 				}
+				//Added for TISPRO-261 :
+				//Note : Customer when created from CS Cockpit will have REGISTERED as CustomerType
+				customerModel.setType(CustomerType.REGISTERED);
 				customerModel.setIsTemporaryPasswordChanged(Boolean.FALSE);
 				customerModel.setIsCustomerCreatedInCScockpit(Boolean.TRUE);
 
@@ -271,7 +280,6 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
 
 	/**
 	 * @description to register user
@@ -372,6 +380,8 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 		try
 		{
 			getModelService().save(customerModel);
+			//TISPRO-181-capturing mpl preference data to customer model during registration
+			mplPreferenceService.saveUserSpecificMplPrefDataInitially(customerModel);
 		}
 		catch (final ModelSavingException e)
 		{

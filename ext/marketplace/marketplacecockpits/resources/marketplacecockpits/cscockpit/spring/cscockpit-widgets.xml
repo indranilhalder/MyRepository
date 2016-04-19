@@ -203,7 +203,7 @@
 	<!-- ################################################################################################## -->
 
 
-	<!-- ######################### TIS-250##################################################### -->
+	<!-- ######################### TIS-250##################################################### 
 	<alias alias="csOrderDetailsWidgetRenderer" name="defaultCsOrderDetailsWidgetRenderer" />
 	<bean id="defaultCsOrderDetailsWidgetRenderer" parent="abstractWidgetRenderer"
 		class="de.hybris.platform.cscockpit.widgets.renderers.impl.OrderDetailsWidgetRenderer">
@@ -216,8 +216,32 @@
 				<property name="configurationCode" value="orderDetailsList" />
 			</bean>
 		</property>
-	</bean>
+	</bean>-->
 
+	<!-- ################################################################################################# -->
+	<!-- ######################################## Order Manual Sync ###################################### -->
+	
+	<alias alias="csOrderDetailsWidgetConfig" name="marketplaceCsOrderDetailsWidgetConfig"/>
+	<bean id="marketplaceCsOrderDetailsWidgetConfig" parent="csBaseWidgetConfig">
+		<property name="widgetTitle" value="cscockpit.widget.order.details"/>
+		<property name="widgetRenderer" ref="csOrderDetailsWidgetRenderer"/>
+		<property name="widgetController" ref="csAssociatedOrderController" />
+		<property name="widgetSclass" value="defaultWidgetFrame csOrderDetailsWidgetConfig"/>
+		<property name="widgetModel" ref="csOrderItemWidgetModel"/>
+		<property name="widgetAdapter" ref="csOrderDetailsWidgetAdapter"/>
+	</bean>
+	
+	<alias alias="csOrderDetailsWidgetRenderer" name="marketplaceCsOrderDetailsWidgetRenderer"/>
+	<bean id="marketplaceCsOrderDetailsWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceOrderDetailsWidgetRenderer">
+		<property name="detailRenderer">
+			<bean class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceOrderDetailsListRenderer" parent="abstractWidgetDetailRenderer">
+				<property name="enumerationService" ref="enumerationService"/>
+				<property name="customerModelLabelProvider" ref="customerModelLabelProvider"/>
+				<property name="configurationCode" value="orderDetailsList"/>
+			</bean>
+		</property>
+	</bean>
+	
 	<!-- ################################################################################################# -->
 	<!-- ######################################## TIS-240 ################################################ -->
 	<alias alias="csAssociatedOrderDetailItemsWidgetConfig" name="marketplaceAssociatedOrderItemsWidgetConfig" />
@@ -287,6 +311,10 @@
 	<alias alias="csOrderActionsWidgetRenderer" name="marketPlaceDefaultCsOrderActionsWidgetRenderer" />
 	<bean id="marketPlaceDefaultCsOrderActionsWidgetRenderer" parent="defaultCsOrderActionsWidgetRenderer"
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceOrderManagementActionsWidgetRenderer">
+		
+		<!-- added -->
+		<property name="callContextController" ref="csCallContextController"/>
+		<!--end  -->
 		<property name="popupWidgetHelper" ref="popupWidgetHelper" />
 	</bean>
 
@@ -624,5 +652,31 @@
 		class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketplaceCouponOrderWidgetRenderer">
 	</bean> 
 	
+<!--Alternate Conatct details for CNC -->
+<alias alias="csAlternateContactDetailsCreateWidgetConfig" name="defaultCsAlternateContactDetailsCreateWidgetConfig"/>
+	<bean id="defaultCsAlternateContactDetailsCreateWidgetConfig" parent="csBaseWidgetConfig">
+	
+		<property name="widgetTitle" value="cscockpit.widget.order.alternateContactDetails.create"/>
+		<property name="widgetRenderer" ref="csAlternateContactDetailsCreateWidgetRenderer"/>
+		<property name="widgetController" ref="csCustomerController"/>
+		<property name="widgetClass" value="de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget"/>
+		<property name="widgetSclass" value="defaultWidgetFrame csCustomerEditWidgetFrame"/>
+		<property name="widgetModel">
+			<bean class="de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel"/>
+		</property>
+
+	</bean>
+
+	<alias alias="csAlternateContactDetailsCreateWidgetRenderer" name="defaultcsAlternateContactDetailsCreateWidgetRenderer"/>
+	<bean id="defaultcsAlternateContactDetailsCreateWidgetRenderer" parent="abstractWidgetRenderer" class="com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl.MarketPlaceAlternateContactDetailsWidgetRenderer">
+		<!-- <property name="editorConfigurationCode" value="editCustomerDetails"/> -->
+		<property name="listConfigurationCode" value="cncEntryList" />
+		<property name="listConfigurationType" value="AbstractOrderEntry" />
+		<property name="commonI18NService" ref="commonI18NService" />
+		<property name="formatFactory" ref="formatFactory" />
+		<property name="sessionService" ref="sessionService" />
+		<property name="callContextController" ref="csCallContextController"/>
+		
+	</bean>
 	
 </beans>

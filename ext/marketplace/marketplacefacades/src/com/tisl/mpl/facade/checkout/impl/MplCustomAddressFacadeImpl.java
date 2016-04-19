@@ -22,9 +22,11 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -187,24 +189,26 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	public CartData getCheckoutCart()
 	{
 		final CartModel cartModel = getCart();
-		final CartData cartData = getMplExtendedCartConverter().convert(cartModel);
-
-		if (cartData != null)
+		CartData cartData = null;
+		if (null != cartModel)
 		{
-			cartData.setDeliveryAddress(getDeliveryAddress());
-			cartData.setPaymentInfo(getPaymentDetails());
+			cartData = getMplExtendedCartConverter().convert(cartModel);
 
-		}
+			if (cartData != null)
+			{
+				cartData.setDeliveryAddress(getDeliveryAddress());
+				cartData.setPaymentInfo(getPaymentDetails());
 
-		if (null != cartModel.getConvenienceCharges())
-		{
-			cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));
+			}
+			if (null != cartModel.getConvenienceCharges())
+			{
+				cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));
+			}
+			if (null != cartModel.getTotalPriceWithConv())
+			{
+				cartData.setTotalPriceWithConvCharge(createPrice(cartModel, cartModel.getTotalPriceWithConv()));
+			}
 		}
-		if (null != cartModel.getTotalPriceWithConv())
-		{
-			cartData.setTotalPriceWithConvCharge(createPrice(cartModel, cartModel.getTotalPriceWithConv()));
-		}
-
 		return cartData;
 	}
 
@@ -272,7 +276,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		List<AddressData> deliveryAddresses = null;
 		if (selectedAddressData != null)
 		{
-			deliveryAddresses = getSupportedDeliveryAddresses(true);
+			deliveryAddresses = new ArrayList<AddressData>(getSupportedDeliveryAddresses(true));
 
 			if (!isAddressOnList(deliveryAddresses, selectedAddressData))
 			{
@@ -500,9 +504,13 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	@Override
 	public boolean hasValidCart()
 	{
+		//final boolean validCart = false;
 		final CartData cartData = getCheckoutCart();
-		final boolean validCart = cartData.getEntries() != null && !cartData.getEntries().isEmpty();
-		return validCart;
+		/*
+		 * if (null != cartData) { validCart = cartData.getEntries() != null && !cartData.getEntries().isEmpty(); } return
+		 * validCart;
+		 */
+		return (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())) ? true : false;
 	}
 
 	@Override

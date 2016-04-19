@@ -43,14 +43,13 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.MplPaymentInfoData;
@@ -59,6 +58,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
@@ -92,6 +92,9 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Autowired
 	private PriceDataFactory priceDataFactory;
+	@Autowired
+	private BuyBoxService buyBoxService;
+
 
 	//Delimiter used in CSV file
 	private static final String COMMA_DELIMITER = ",";
@@ -159,9 +162,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 	/*
 	 * This method is used to convert the Order Model into Order Data
-
 	 * 
-
 	 * @param orderModel
 	 */
 	protected OrderData convertToData(final OrderModel orderModel)
@@ -174,17 +175,17 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		final List<OrderData> sellerOrderList = new ArrayList<OrderData>();
 		try
 		{
-			LOG.debug("-----------Order Model to Order Data" + orderModel.getCode());
+			LOG.info("-----------Order Model to Order Data" + orderModel.getCode());
 			final PriceData deliveryCost = createPrice(orderModel, orderModel.getDeliveryCost());
 			if (orderModel.getConvenienceCharges() != null)
 			{
 				convenienceCharge = createPrice(orderModel, orderModel.getConvenienceCharges());
-				LOG.debug("-----------Order Data ConvenienceCharges" + orderModel.getCode());
+				LOG.info("-----------Order Data ConvenienceCharges" + orderModel.getCode());
 			}
 			if (orderModel.getTotalPriceWithConv() != null)
 			{
 				totalPriceWithConvenienceCharge = createPrice(orderModel, orderModel.getTotalPriceWithConv());
-				LOG.debug("-----------Order Data total Price with Conv" + orderModel.getCode());
+				LOG.info("-----------Order Data total Price with Conv" + orderModel.getCode());
 			}
 			//skip the order if product is missing in the order entries
 			for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
@@ -206,7 +207,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			{
 				orderData.setTotalPriceWithConvCharge(totalPriceWithConvenienceCharge);
 			}
-			LOG.debug("-----------Order Model to Order Data Customer" + orderModel.getCode());
+			LOG.info("-----------Order Model to Order Data Customer" + orderModel.getCode());
 			if (orderModel.getUser() instanceof CustomerModel)
 			{
 				customer = (CustomerModel) orderModel.getUser();
@@ -266,7 +267,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("-----------Order Model to Order Data Exception" + orderModel.getCode());
+			LOG.info("-----------Order Model to Order Data Exception" + orderModel.getCode());
 			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 			return orderData;
 		}
@@ -381,7 +382,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				}
 				catch (final Exception e)
 				{
-					LOG.debug("-----------Order Data Conversion Exception and skipping----" + orderModel.getCode());
+					LOG.info("-----------Order Data Conversion Exception and skipping----" + orderModel.getCode());
 					//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 					continue;
 				}
@@ -404,7 +405,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 							}
 
 							data.setTransactionRefId(entry.getTransactionId());
-							LOG.debug("-----------Fetching consignment status----" + entry.getTransactionId());
+							LOG.info("-----------Fetching consignment status----" + entry.getTransactionId());
 							if (null != entry.getConsignment() && null != entry.getConsignment().getStatus())
 							{
 								consignmentStatus = entry.getConsignment().getStatus().getCode();
@@ -415,7 +416,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 							}
 							data.setOrderStatus(consignmentStatus);
 
-							LOG.debug("-----------Fetching Customer----" + subOrderDetail.getCode());
+							LOG.info("-----------Fetching Customer----" + subOrderDetail.getCode());
 							String name = MarketplacecommerceservicesConstants.EMPTY;
 							if (null != orderModel.getDeliveryAddress() && orderModel.getDeliveryAddress().getFirstname() != null)
 							{
@@ -459,13 +460,12 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 							{
 								data.setIpAdddress(configurationService.getConfiguration().getString(
 										MarketplacecommerceservicesConstants.SALES_DATA_REPORT_JOB_IP, ""));
-
 							}
 							//check delivery address and set
-							LOG.debug("-----------Order Delivery Address----" + subOrderDetail.getCode());
+							LOG.info("-----------Order Delivery Address----" + subOrderDetail.getCode());
 							setDeliveryAddress(subOrderDetail, data);
 
-							LOG.debug("-----------Fetching Order product----" + subOrderDetail.getCode());
+							LOG.info("-----------Fetching Order product----" + subOrderDetail.getCode());
 							product = entry.getProduct();
 							if (product != null && null != product.getCode())
 							{
@@ -481,22 +481,18 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								{
 									data.setListingId(product.getListingId());
 								}
-
-
 								try
 								{
-									LOG.debug("-----------Fetching Order product model----" + product.getCode());
+									LOG.info("-----------Fetching Order product model----" + product.getCode());
 									productModel = mplOrderService.findProductsByCode(product.getCode());
 									String primaryCategory = MarketplacecommerceservicesConstants.NA;
 									String secondaryCategory = MarketplacecommerceservicesConstants.NA;
 									if (productModel != null)
 									{
-										LOG.debug("----Product Category---" + product.getCode());
+										LOG.info("----Product Category---" + product.getCode());
 										final List<CategoryModel> productCategoryList = defaultPromotionManager
 												.getPrimarycategoryData(productModel);
 										if (null != productCategoryList && productCategoryList.size() > 0)
-
-
 										{
 											categoryList = new ArrayList<String>();
 											for (final CategoryModel category : productCategoryList)
@@ -508,8 +504,6 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 												}
 											}
 											if (categoryList.size() > 0)
-
-
 											{
 												Collections.sort(categoryList, new Comparator()
 												{
@@ -536,31 +530,31 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 												{
 													primaryCategory = categoryList.get(categoryList.size() - 2);
 													secondaryCategory = categoryList.get(categoryList.size() - 3);
-													LOG.debug("---Product Category list:" + categoryList.size());
+													LOG.info("---Product Category list:" + categoryList.size());
 												}
 											}
 
 										}
 										data.setItemCategory(primaryCategory);
 										data.setItemSubCategory(secondaryCategory);
-										LOG.debug("--Product Category set----" + product.getCode());
+										LOG.info("--Product Category set----" + product.getCode());
 									}
 								}
 								catch (final Exception e)
 								{
-									LOG.debug("-----------Order Product Exception----" + subOrderDetail.getCode());
+									LOG.info("-----------Order Product Exception----" + subOrderDetail.getCode());
 									continue;
 								}
 							}
 							else
 							{
-								LOG.debug("-----------Order Product Not found Exception----" + subOrderDetail.getCode());
+								LOG.info("-----------Order Product Not found Exception----" + subOrderDetail.getCode());
 								continue;
 							}
 							//data.setQuantity(entry.getQuantity().toString());
 							data.setQuantity("1");
 							//Setting all prices
-							setPrices(subOrderDetail, orderModel, data, entry, productModel);
+							setPrices(subOrderDetail, orderModel, data, entry);
 							//Checking payment type and then setting payment info
 							//TISUAT-4850 moved prices in this method
 							setPaymentInfo(subOrderDetail, orderModel, data);
@@ -574,19 +568,18 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								data.setDeliveryType(MarketplacecommerceservicesConstants.NA);
 							}
 
-							LOG.debug("-----------Order Entry seller" + entry.getTransactionId());
+							LOG.info("-----------Order Entry seller" + entry.getTransactionId());
 							setSellerInfo(entry, data);
-
 							dataList.add(data);
 						}
 					}
-					LOG.debug("-----------Order Data conversion finished----" + orderDetail.getCode());
+					LOG.info("-----------Order Data conversion finished----" + orderDetail.getCode());
 				}
 			}
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("-----------Order Sales Conversion Exception----" + orderModels.size());
+			LOG.info("-----------Order Sales Conversion Exception----" + orderModels.size());
 			//ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
 			return dataList;
 		}
@@ -621,9 +614,9 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				{
 					for (final RichAttributeModel richEntry : sellerInfoModel.getRichAttribute())
 					{
-						LOG.debug("-----Inside seller rich attribute model-----" + richEntry.getDeliveryFulfillModes());
+						LOG.info("-----Inside seller rich attribute model-----" + richEntry.getDeliveryFulfillModes());
 						fulfillmentType = richEntry.getDeliveryFulfillModes().toString().toUpperCase();
-						LOG.debug("-----Fulfilment mode set------");
+						LOG.info("-----Fulfilment mode set------");
 					}
 					reportDTO.setProductType(fulfillmentType);
 				}
@@ -632,7 +625,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		}
 		catch (final Exception e)
 		{
-			LOG.debug("-----Inside seller-----" + entry.getTransactionId());
+			LOG.info("-----Inside seller-----" + entry.getTransactionId());
 		}
 	}
 
@@ -654,37 +647,18 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 	/* Checking payment type and then setting payment info */
 	protected void setPaymentInfo(final OrderData orderDetail, final OrderModel orderModel, final SalesReportData reportDTO)
-
-
 	{
 		MplPaymentInfoData paymentInfo = null;
 		String auditId = MarketplacecommerceservicesConstants.NA;
 		String riskScore = MarketplacecommerceservicesConstants.NA;
 		String transactionRef = MarketplacecommerceservicesConstants.NA;
 		String transactionRefGateway = MarketplacecommerceservicesConstants.NA;
-
-
-
-
-
-
-
-
 		try
 		{
-			LOG.debug("-----------Payment set started---" + orderModel.getCode());
+			LOG.info("-----------Payment set started---" + orderModel.getCode());
 			if (orderDetail.getMplPaymentInfo() != null)
 			{
 				paymentInfo = orderDetail.getMplPaymentInfo();
-
-
-
-
-
-
-
-
-
 				if (null != paymentInfo.getPaymentOption())
 				{
 					reportDTO.setPaymentMethod(paymentInfo.getPaymentOption());
@@ -694,11 +668,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 						reportDTO.setBankName(paymentInfo.getCardCardType());
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
 					}
-
-
 					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
 					{
-
 						reportDTO.setBankName(paymentInfo.getCardCardType());
 						if (paymentInfo.getEmiInfo() != null)
 						{
@@ -706,85 +677,34 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 						}
 					}
 					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
-
 					{
 						reportDTO.setBankName(paymentInfo.getBank());
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-
 					}
 					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT))
-
 					{
 						reportDTO.setBankName(paymentInfo.getCardCardType());
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-
 					}
 					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
-
 					{
 						reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-
-
 					}
-
-
-
-
-
-
 
 					else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.WALLET))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 					{
-
 						reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
 						reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
-
 					}
-
 					//TODO
 					//Find the correct juspay orderid(auditid) model for sucess //AT TISPRO-133
 					if (!paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.COD))
-
 					{
-
-
 						for (final PaymentTransactionModel paymentTransaction : orderModel.getPaymentTransactions())
 						{
-
-
-
 							if (!auditId.equalsIgnoreCase(MarketplacecommerceservicesConstants.NA))
 							{
-
 								break;
 							}
 							for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
@@ -811,79 +731,23 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 								if (null != jusPay && null != jusPay.getEbsRiskLevel())
 								{
 									riskScore = jusPay.getEbsRiskLevel().getCode();
-									LOG.debug("-----------Payment Jusp Pay Risk");
+									LOG.info("-----------Payment Jusp Pay Risk");
 								}
 							}
 							catch (final Exception e)
-
-
-
 							{
-								LOG.debug("-----------JuspPay audit exception");
-
+								LOG.info("-----------JuspPay audit exception");
 							}
-
 						}
 					}
 				}
-
-
 				else
-
 				{
-
-
-
-
-
-
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.ORDER_PAYMENT_ERROR);
-
-
-
-
-
-
 				}
-
 				reportDTO.setTransactionRefNo(transactionRef);
 				reportDTO.setRiskScore(riskScore);
 				reportDTO.setTransactionRefNumber(transactionRefGateway);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			}
 			else
 			{
@@ -896,9 +760,19 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				//reportDTO.setTotalPrice(MarketplacecommerceservicesConstants.NA);
 			}
 		}
+		catch (final EtailBusinessExceptions e)
+		{
+			LOG.info("-----------Order Data Payment Exception" + orderDetail.getCode());
+			reportDTO.setPaymentMethod(MarketplacecommerceservicesConstants.NA);
+			reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
+			reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
+			reportDTO.setTransactionRefNo(MarketplacecommerceservicesConstants.NA);
+			reportDTO.setRiskScore(MarketplacecommerceservicesConstants.NA);
+			reportDTO.setTransactionRefNumber(MarketplacecommerceservicesConstants.NA);
+		}
 		catch (final Exception e)
 		{
-			LOG.debug("-----------Order Data Payment Exception" + orderDetail.getCode());
+			LOG.info("-----------Order Data Payment Exception" + orderDetail.getCode());
 			reportDTO.setPaymentMethod(MarketplacecommerceservicesConstants.NA);
 			reportDTO.setBankName(MarketplacecommerceservicesConstants.NA);
 			reportDTO.setTenure(MarketplacecommerceservicesConstants.NA);
@@ -908,22 +782,21 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		}
 	}
 
-
 	/* setting prices */
 	protected void setPrices(final OrderData orderDetail, final OrderModel orderModel, final SalesReportData reportDTO,
-			final OrderEntryData entry, final ProductModel product)
+			final OrderEntryData entry)
 	{
 		double totalPrice = 0d;
+		BuyBoxModel buyBox = null;
 		String mrp = MarketplacecommerceservicesConstants.NA;
 		String mop = MarketplacecommerceservicesConstants.NA;
 		String productPrice = MarketplacecommerceservicesConstants.NA;
 		//TISUAT-4850
-		LOG.debug("-----------Order Prices--" + orderModel.getCode());
+		LOG.info("-----------Order Prices--" + orderModel.getCode());
 		try
 		{
 			if (null != orderModel.getTotalPriceWithConv())
 			{
-
 				totalPrice = orderModel.getTotalPriceWithConv() == null ? 0.0d : orderModel.getTotalPriceWithConv().doubleValue();
 			}
 			else
@@ -937,17 +810,26 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			}
 			reportDTO.setTotalPrice(String.valueOf(totalPrice));
 			//change the MRP to product MRP TISEE-5153
-			if (null != product && null != product.getMrp())
-
+			if (null != entry.getSelectedUssid())
 			{
-				mrp = product.getMrp().toString();
-
+				try
+				{
+					buyBox = buyBoxService.getpriceForUssid(entry.getSelectedUssid());
+					if (null != buyBox && null != buyBox.getMrp())
+					{
+						mrp = buyBox.getMrp().toString();
+					}
+				}
+				catch (final Exception e)
+				{
+					LOG.info("-----------Order BuyBox Price Exception" + orderDetail.getCode());
+				}
 			}
 			reportDTO.setMrpPrice(mrp);
 
-			if (entry.getTotalSalePrice() != null)
+			if (entry.getBasePrice() != null)
 			{
-				mop = entry.getTotalSalePrice().getValue().toPlainString();
+				mop = entry.getBasePrice().getValue().toString();
 			}
 			reportDTO.setMopPrice(mop);
 			if (entry.getAmountAfterAllDisc() != null)
@@ -955,14 +837,10 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				productPrice = entry.getAmountAfterAllDisc().getValue().toPlainString();
 			}
 			reportDTO.setProductPrice(productPrice);
-
-
 		}
 		catch (final Exception e)
 		{
-
-			LOG.debug("-----------Order Data Prices Exception" + orderDetail.getCode());
-
+			LOG.info("-----------Order Data Prices Exception" + orderDetail.getCode());
 		}
 
 		//TODO Need to remove Hard code
@@ -971,9 +849,6 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		 * data.setTenure("NA"); data.setBankName("NA"); }
 		 */
 	}
-
-
-
 
 
 	/**
@@ -1094,8 +969,6 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			catch (final IOException e)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.FILE_WRITER_ERROR);
-
-
 			}
 		}
 
@@ -1193,4 +1066,3 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 
 
 }
-

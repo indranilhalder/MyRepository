@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.tisl.mpl.data.CouponHistoryData;
-import com.tisl.mpl.data.CouponHistoryStoreDTO;
 import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -136,10 +135,10 @@ public interface MplCouponFacade
 
 	/**
 	 * @param customer
-	 * @return CouponHistoryStoreDTO
+	 * @return Map<String, Double>
 	 * @throws VoucherOperationException
 	 */
-	CouponHistoryStoreDTO getCouponTransactions(CustomerModel customer) throws VoucherOperationException;
+	Map<String, Double> getInvalidatedCouponCountSaved(CustomerModel customer) throws VoucherOperationException;
 
 
 	/**

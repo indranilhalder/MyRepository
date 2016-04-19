@@ -13,6 +13,8 @@ import java.util.List;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 
 
@@ -48,9 +50,10 @@ public interface MplPaymentDao
 	 * whose upper limit is greater than/equal to cartValue and also whose lower limit is less than/equal to cartValue
 	 *
 	 * @param cartValue
+	 * @param emiBankName
 	 * @return List<EMIBankModel>
 	 */
-	List<EMIBankModel> getEMIBanks(Double cartValue);
+	List<EMIBankModel> getEMIBanks(Double cartValue, String emiBankName);
 
 
 	/**
@@ -140,5 +143,16 @@ public interface MplPaymentDao
 	 *
 	 */
 	CartModel getCart(String cartGuid);
+
+	/*
+	 * @description : fetching bank model for a bank name TISPRO-179\
+	 *
+	 * @param : bankName
+	 *
+	 * @return : BankModel
+	 *
+	 * @throws EtailNonBusinessExceptions
+	 */
+	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 }
