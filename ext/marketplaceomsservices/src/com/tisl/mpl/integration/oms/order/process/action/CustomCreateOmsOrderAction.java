@@ -39,11 +39,8 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 				.getAllCatalogVersions()));
 		OrderPlacementResult crmResult = null;
 		OrderPlacementResult omsResult = null;
-		//Test Condition - OMS Fallback
-		//		if (true)
-		//		{
-		//			return AbstractSimpleDecisionAction.Transition.NOK;
-		//		}
+
+
 		if (order.getCrmSubmitStatus() == null || !order.getCrmSubmitStatus().equals(MarketplaceomsservicesConstants.SUCCESS))
 		{
 			crmResult = CustomCreateOmsOrderAction.this.getOmsOrderService().createCrmOrder(order);
@@ -79,21 +76,32 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 		{
 			return AbstractSimpleDecisionAction.Transition.OK;
 		}
-		if (null != omsResult && null != omsResult.getResult()
-				&& (omsResult.getResult().equals(OrderPlacementResult.Status.FAILED))
-				&& (order.getExportedToOmsRetryCount().intValue() < CustomCreateOmsOrderAction.this.getMaxRetryCount()))
+
+
+		//Removed Retry Mechanism as failed order will be moved to JMS queue
+		/*
+		 * if (null != omsResult && null != omsResult.getResult() &&
+		 * (omsResult.getResult().equals(OrderPlacementResult.Status.FAILED)) &&
+		 * (order.getExportedToOmsRetryCount().intValue() < CustomCreateOmsOrderAction.this.getMaxRetryCount())) {
+		 * CustomCreateOmsOrderAction.LOG.warn(String.format(
+		 * "Failed to send order %s to OMS. Service unavailable. Call will be retried. Error:  %s", new Object[] {
+		 * order.getCode(), omsResult.getCause().getMessage() }));
+		 * order.setExportedToOmsRetryCount(Integer.valueOf(order.getExportedToOmsRetryCount().intValue() + 1));
+		 * getModelService().save(order); final RetryLaterException retryLaterException = new RetryLaterException(
+		 * "Error occurred during oms order submission of order : " + order.getCode(), omsResult.getCause());
+		 * retryLaterException.setRollBack(false);
+		 * retryLaterException.setDelay(CustomCreateOmsOrderAction.this.getRetryDelay()); throw retryLaterException; }
+		 */
+		if (null != omsResult && null != omsResult.getResult() && (omsResult.getResult().equals(OrderPlacementResult.Status.ERROR)))
 		{
 			CustomCreateOmsOrderAction.LOG.warn(String.format(
 					"Failed to send order %s to OMS. Service unavailable. Call will be retried. Error:  %s", new Object[]
 					{ order.getCode(), omsResult.getCause().getMessage() }));
-			order.setExportedToOmsRetryCount(Integer.valueOf(order.getExportedToOmsRetryCount().intValue() + 1));
+			order.setIsFallBack(Boolean.TRUE);
 			getModelService().save(order);
-			final RetryLaterException retryLaterException = new RetryLaterException(
-					"Error occurred during oms order submission of order : " + order.getCode(), omsResult.getCause());
-			retryLaterException.setRollBack(false);
-			retryLaterException.setDelay(CustomCreateOmsOrderAction.this.getRetryDelay());
-			throw retryLaterException;
+			return AbstractSimpleDecisionAction.Transition.NOK;
 		}
+
 		if ((crmResult.getResult().equals(OrderPlacementResult.Status.FAILED))
 				&& (order.getExportedToCrmRetryCount().intValue() < CustomCreateOmsOrderAction.this.getMaxRetryCount()))
 		{

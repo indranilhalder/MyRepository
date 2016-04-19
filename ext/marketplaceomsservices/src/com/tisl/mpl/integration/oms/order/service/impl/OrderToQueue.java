@@ -30,19 +30,16 @@ public class OrderToQueue
 
 	public void sendMessage(final Order order)
 	{
-
 		LOG.debug("**Sending Order***" + order.getOrderId());
 		jmsTemplate.send(new MessageCreator()
 		{
-
+			@Override
 			public Message createMessage(final Session session) throws JMSException
 			{
 				final ObjectMessage message = session.createObjectMessage();
 				message.setObject(order);
-				//	final TextMessage message = session.createTextMessage(order);
 				return message;
 			}
-
 		});
 
 	}

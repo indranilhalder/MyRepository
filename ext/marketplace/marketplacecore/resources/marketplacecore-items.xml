@@ -2127,12 +2127,18 @@
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 					</attribute>
-					<!-- End : Attribute added to store reuqest and response xml for audit 
-						purpose -->
+					<!-- End : Attribute added to store reuqest and response xml for audit	purpose -->
 						
-					
-						
-						
+					<!-- Start : New Attribute for identifying Fall Back Orders -->	
+					<attribute autocreate="true" qualifier="isFallBack"
+						type="java.lang.Boolean">
+						<persistence type="property" qualifier="isFallBack">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+					</attribute>
+					<!-- End : New Attribute for identifying Fall Back Orders -->
 				</attributes>
 			</itemtype>
 
