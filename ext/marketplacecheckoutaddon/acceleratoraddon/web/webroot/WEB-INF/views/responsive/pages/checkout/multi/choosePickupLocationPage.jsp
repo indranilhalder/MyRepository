@@ -737,7 +737,7 @@
 												<li>
 													<div>
 														<div class="thumb product-img">
-															<a href="${freebieProds.product.url}"><product:productPrimaryImage
+															<a href="${request.contextPath}/${freebieProds.product.url}"><product:productPrimaryImage
 																	product="${freebieProds.product}" format="thumbnail" /></a>
 														</div>
 														<div class="details product">
