@@ -746,7 +746,7 @@ public class CartPageController extends AbstractPageController
 						{
 							if (entryModel.getSizeSelected() == false)
 							{
-								productData.setSize("");
+								productData.setSize(""); 
 							}
 							productDataList.add(productData);
 							model.addAttribute("ProductDatas", productDataList);
