@@ -745,7 +745,7 @@
 																<a href="">${freebieProds.product.brand.brandname}</a>
 															</h3>
 															<ycommerce:testId code="cart_product_name">
-																<a href="${freebieProds.product.url}"><div
+																<a href="${request.contextPath}/${freebieProds.product.url}"><div
 																		class="name product-name">${freebieProds.product.name}</div></a>
 															</ycommerce:testId>
 															<c:if test="${not empty freebieProds.product.code}">
