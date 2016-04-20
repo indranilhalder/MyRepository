@@ -34,6 +34,7 @@ import com.hybris.oms.domain.order.UpdatedSinceList;
 import com.hybris.oms.domain.pickupinfo.PickupInfo;
 import com.hybris.oms.picupinfo.facade.PickupInfoFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.service.MplCustomerWebService;
@@ -193,6 +194,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		try
 		{
 			getOrdercreation().orderCreationDataToCRM(order);
+			LOG.info(" CRM order call for RMS verfication pending");
+			orderModel.setCrmSubmitStatus(MarketplaceomsservicesConstants.SUCCESS);
+			getModelService().save(order);
 			LOG.debug("After CRM order call for Ticket for order :" + order.getOrderId());
 		}
 		catch (final Exception ex)
@@ -210,9 +214,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 * 
+	 *
 	 * @param order
-	 * 
+	 *
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)
