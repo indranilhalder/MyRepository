@@ -65,7 +65,7 @@ public class MplBuyBoxUtility
 		{
 			price = buyBoxWinnerModel.getPrice();
 
-			if (buyBoxWinnerModel.getSpecialPrice().intValue() > 0)
+			if (null != buyBoxWinnerModel.getSpecialPrice() && buyBoxWinnerModel.getSpecialPrice().intValue() > 0)
 			{
 				price = buyBoxWinnerModel.getSpecialPrice();
 			}
@@ -192,11 +192,11 @@ public class MplBuyBoxUtility
 		{
 			for (final BuyBoxModel buyBox : buyBoxModelList)
 			{
-				if (buyBox.getSpecialPrice().doubleValue() > 0.0)
+				if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
 				{
 					priceValueMap.put(buyBox, buyBox.getSpecialPrice());
 				}
-				else if (buyBox.getPrice().doubleValue() > 0.0)
+				else if (null != buyBox.getSpecialPrice() && buyBox.getPrice().doubleValue() > 0.0)
 				{
 					priceValueMap.put(buyBox, buyBox.getPrice());
 				}
