@@ -430,7 +430,21 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				consignmentModel.setStatus(shipmentNewStatus);
 				LOG.info("Consignment Status::" + consignmentModel.getStatus());
 				saveAndNotifyConsignment(consignmentModel);
-				modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, consignmentModel.getCode()));
+				boolean createHistoryEntry = false;
+				for (final OrderHistoryEntryModel entry : orderModel.getHistoryEntries())
+				{
+					if (shipmentNewStatus.toString().equalsIgnoreCase(entry.getDescription())
+							&& consignmentModel.getCode().equalsIgnoreCase(entry.getLineId()))
+					{
+						createHistoryEntry = true;
+					}
+
+				}
+				if (!createHistoryEntry)
+				{
+
+					modelService.save(createHistoryLog(shipmentNewStatus.toString(), orderModel, consignmentModel.getCode()));
+				}
 				LOG.info("Order History entry created for" + orderModel.getCode() + "Line ID" + consignmentModel.getCode());
 
 				LOG.info("****************************************Order synced succesfully - Now sending notificatioon to customer *******************");
@@ -490,6 +504,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 
 	protected OrderHistoryEntryModel createHistoryLog(final String description, final OrderModel order, final String lineId)
 	{
+
 		final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
 		historyEntry.setTimestamp(getTimeService().getCurrentTime());
 		historyEntry.setOrder(order);
@@ -509,8 +524,23 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		consigmnetEntry.setConsignment(consignmentModel);
 		consigmnetEntry.setShippedQuantity(Long.valueOf("1"));
 		modelService.save(consigmnetEntry);
-		modelService
-				.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner, consignmentModel.getCode()));
+
+		boolean createHistoryEntry = false;
+		for (final OrderHistoryEntryModel entry : ((OrderModel) owner).getHistoryEntries())
+		{
+			if (consignmentModel.getStatus().toString().equalsIgnoreCase(entry.getDescription())
+					&& consignmentModel.getCode().equalsIgnoreCase(entry.getLineId()))
+			{
+				createHistoryEntry = true;
+			}
+
+		}
+		if (!createHistoryEntry)
+		{
+
+			modelService.save(createHistoryLog(consignmentModel.getStatus().toString(), (OrderModel) owner,
+					consignmentModel.getCode()));
+		}
 		getModelService().save(consignmentModel.getShippingAddress());
 		saveAndNotifyConsignment(consignmentModel);
 		return consignmentModel;

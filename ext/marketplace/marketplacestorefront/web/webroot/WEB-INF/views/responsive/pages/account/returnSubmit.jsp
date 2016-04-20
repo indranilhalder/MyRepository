@@ -31,7 +31,7 @@
 			<%-- <form class="return-form method" method="post"> --%>
 			<%-- ${suborder.code} --%>
 			<%-- <c:forEach items="${suborder.unconsignedEntries}" var="orderEntry"> --%>
-			<c:set var="orderEntry" value="${subOrderEntry}"/>
+			<c:set var="eachSubOrderEntry" value="${subOrderEntry}"/>
 			<form:form class="return-form method" action="../my-account/returnSuccess"
 					method="post" commandName="returnRequestForm">
 				<div class="return-container">
@@ -66,7 +66,7 @@
 												<span class="price">
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
-														<format:price priceData="${entryReturn.totalPrice}"
+														Price: <format:price priceData="${entryReturn.totalPrice}"
 															displayFreeForZero="true" />
 													</ycommerce:testId></span>
 												<c:forEach items="${entryReturn.product.seller}" var="seller">

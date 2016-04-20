@@ -28,26 +28,26 @@
 	<template:page pageTitle="${pageTitle}">
 		<c:url var="mainUrl" value="/my-account/marketplace-preference"></c:url>
 		<c:if test="${not empty result && result eq 'success'}">
-			<div class="alert alert-info">
+			<div class="alert alert-info alert-dismissible">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b>SUCCESS: </b></strong><spring:theme code="text.account.preference.save.success" text="Your preferences has been updated"/>
+	    		<spring:theme code="text.account.preference.save.success" text="Your preferences has been updated"/>
   			</div>
 		</c:if>
 		<c:if test="${not empty result && result eq 'unsubscribed'}">
-			<div class="alert alert-info">
+			<div class="alert alert-danger">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b></b></strong><spring:theme code="text.account.preference.save.unsubscribed" text="Aww snap, you're leaving. Is it something we said?"/>
+	    		<spring:theme code="text.account.preference.save.unsubscribed" text="Aww snap, you're leaving. Is it something we said?"/>
   			</div>
 		</c:if>
 		<c:if test="${not empty result && result eq 'failure'}">
 			<div class="alert alert-danger">
 				<a href="#nogo" onclick="changeUrl('${mainUrl}')" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	    		<strong><b>ERROR: </b></strong><spring:theme code="text.account.preference.save.failure" text="Your preferences has not been updated"/>
+	    		<spring:theme code="text.account.preference.save.failure" text="Your preferences has not been updated"/>
   			</div>
 		</c:if>
 		
 		<h1 class="account-header">
-			<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
+			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
 			<select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
@@ -63,6 +63,7 @@
           </optgroup>
       </select>
 		</h1>
+
 
 		<!----- Left Navigation Starts --------->
 		<div class="wrapper">
@@ -223,8 +224,7 @@
 						</fieldset>
 						<fieldset class="frequent">
 							<p>
-								<spring:theme code="text.marketplacePreferences.mailfrequency"
-									text="How often would you like to hear from us?" />
+								<spring:theme code="text.marketplacePreferences.mailfrequency" />
 							</p>
 							<div class="freq">
 								<c:forEach items="${frequencyList}" var="frequency" varStatus="status">
@@ -290,6 +290,7 @@
 		</div>
 	</template:page>
 </div>
+
 
 <%-- <script type="text/javascript" src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 <template:javaScriptVariables />

@@ -83,7 +83,6 @@ tr.d0 td {
 				code="productDetails_productNamePrice_label_${product.code}">
 				<h2 class="company">${product.brand.brandname} by <span id="sellerNameId"></span></h2>
 				<h3 class="product-name">${product.productTitle}</h3>
-				
 			</ycommerce:testId>
 
 			<ycommerce:testId
@@ -123,7 +122,8 @@ tr.d0 td {
 				</cms:pageSlot>
 
 			</div>
-
+			
+			
 			<span id="defaultWishId" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
 			<span id="wishlistSuccess" style="display:none"><spring:theme code="wishlist.success"/></span>
 			<span id="wishlistnotblank" style="display:none"><spring:theme code="wishlist.notblank"/></span>
@@ -172,10 +172,11 @@ tr.d0 td {
 	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
 	<c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
+	<c:set var="footwear"><spring:theme code='product.footwear'/></c:set>  <!-- Added for TISPRO-271 --> 
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 <c:choose>
-		<c:when test="${productCategoryType==clothing}">
+		<c:when test="${productCategoryType==clothing || productCategoryType== footwear}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>
 			<div class="trending"  id="ia_products"></div>
 		</c:when>

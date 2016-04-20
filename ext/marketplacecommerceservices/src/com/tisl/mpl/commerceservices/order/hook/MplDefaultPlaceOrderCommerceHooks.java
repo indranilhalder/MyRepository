@@ -48,6 +48,7 @@ import java.util.Set;
 import net.sourceforge.pmd.util.StringUtil;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,7 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplFraudModelService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
@@ -130,10 +132,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Autowired
 	private VoucherService voucherService;
 
+	@Autowired
+	private MplOrderService mplOrderService;
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -215,7 +219,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -229,7 +233,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -243,6 +247,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		orderModel.setType("Parent");
 		final List<OrderModel> orderList = getSubOrders(orderModel);
 
+		//TISPRO-249
+		setParentTransBuyABGetC(orderList);
 		//TISUTO-128
 		setFreebieParentTransactionId(orderList);
 		setBOGOParentTransactionId(orderList);
@@ -298,7 +304,105 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		}
 	}
 
+	/*
+	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
+	 * 
+	 * @param subOrderList
+	 * 
+	 * @throws Exception
+	 */
+	private void setParentTransBuyABGetC(final List<OrderModel> subOrderList) throws InvalidCartException
+	{
+		try
+		{
+			if (CollectionUtils.isNotEmpty(subOrderList))
+			{
+				final Map<String, List<String>> freebieParentMap = getBuyABGetcParentFreebieMap(subOrderList);
+				// Setting parent transaction id for child items
+				if (MapUtils.isNotEmpty(freebieParentMap))
+				{
+					for (final OrderModel subOrderModel : subOrderList)
+					{
+						for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+						{
+							if (subOrderEntryModel.getGiveAway().booleanValue()
+									&& mplOrderService.checkIfBuyABGetCApplied(subOrderEntryModel))
+							{
+								final StringBuffer parentTransactionIdBuffer = new StringBuffer(100);
+								for (final String ussId : subOrderEntryModel.getAssociatedItems())
+								{
+									if (subOrderEntryModel.getParentTransactionID() == null && ussId != null
+											&& freebieParentMap.get(ussId) != null)
+									{
+										parentTransactionIdBuffer.append(freebieParentMap.get(ussId).get(0));
+										parentTransactionIdBuffer.append(',');
+									}
+									freebieParentMap.get(ussId).remove(0);
+								}
+								if (parentTransactionIdBuffer.length() > 0)
+								{
+									String parentTransactionId = parentTransactionIdBuffer.toString();
+									parentTransactionId = parentTransactionId.substring(0, parentTransactionId.lastIndexOf(','));
 
+									LOG.debug(" Buy A Get B Ussid : " + subOrderEntryModel.getSelectedUSSID() + "| Transaction Id "
+											+ subOrderEntryModel.getTransactionID() + " | parentTransactionId " + parentTransactionId);
+
+									subOrderEntryModel.setBuyABGetcParentTransactionId(parentTransactionId);
+									getModelService().save(subOrderEntryModel);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(" error occured while setting parent transaction id for Buy A B Get C ", e);
+			throw new InvalidCartException(e);
+		}
+	}
+
+	/*
+	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
+	 * 
+	 * @param subOrderList
+	 * 
+	 * @throws Exception
+	 */
+
+	private Map<String, List<String>> getBuyABGetcParentFreebieMap(final List<OrderModel> subOrderList) throws Exception
+	{
+		final Map<String, List<String>> freebieParentMap = new HashMap<String, List<String>>();
+		for (final OrderModel subOrderModel : subOrderList)
+		{
+			for (final AbstractOrderEntryModel subOrderEntryModel : subOrderModel.getEntries())
+			{
+				if (!subOrderEntryModel.getGiveAway().booleanValue() && !subOrderEntryModel.getIsBOGOapplied().booleanValue()
+						&& mplOrderService.checkIfBuyABGetCApplied(subOrderEntryModel)
+						&& StringUtils.isNotEmpty(subOrderEntryModel.getSelectedUSSID()))
+				{
+					final String selectedUssid = subOrderEntryModel.getSelectedUSSID();
+					if (freebieParentMap.get(selectedUssid) == null)
+					{
+						final List<String> tempList = new ArrayList<String>();
+						tempList.add(subOrderEntryModel.getTransactionID());
+						freebieParentMap.put(selectedUssid, tempList);
+					}
+					else
+					{
+						freebieParentMap.get(selectedUssid).add(subOrderEntryModel.getTransactionID());
+					}
+				}
+				else
+				{
+					LOG.debug((StringUtils.isEmpty(subOrderEntryModel.getSelectedUSSID()) ? "Ussid  null or empty for entry number"
+							+ subOrderEntryModel.getEntryNumber() : ""));
+				}
+			}
+		}
+		return freebieParentMap;
+	}
 
 	/**
 	 * @description this private method is implemented for the purpose of setting the suborder order corresponding to
@@ -625,9 +729,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
+	 * 
 	 * @param orderList
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private void setFreebieParentTransactionId(final List<OrderModel> subOrderList) throws EtailNonBusinessExceptions

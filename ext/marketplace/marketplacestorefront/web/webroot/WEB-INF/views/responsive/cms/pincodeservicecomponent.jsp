@@ -23,15 +23,15 @@
 		</div></li>
 		 
 		<span>
-		<span id="emptyPin" style="display:none;color:red"><spring:theme code="product.empty.pincode"/></span>
-		<span id="wrongPin" style="display:none;color:red"><spring:theme code="pincode.invalid"/></span>
-		<span id="unsevisablePin" style="display:none;color:red"><spring:theme code="pincode.unsevisable"/></span>
-		<span id="unableprocessPin" style="display:none;color:red"><spring:theme code="pincode.unableprocess"/></span>
+		<span id="emptyPin" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
+		<span id="wrongPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
+		<span id="unsevisablePin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
+		<span id="unableprocessPin" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
 		</span>
 	   <c:forEach var="entry" items="${deliveryModeMap}">
 		<%-- Key: <c:out value="${entry.key}"/> --%>
 		<c:if test="${entry.key eq 'home-delivery'}">
-		<li><a  id="home" class="HomeDelivery home" style="display: none"> <span><spring:theme code="text.home.delivery"/></span> 
+		<li class="hdclass"><a  id="home" class="HomeDelivery home" style="display: none"> <span><spring:theme code="text.home.delivery"/></span> 
 		 <c:forEach var="homeEntry" items="${entry.value}">
 			 <c:if test="${homeEntry.key eq 'startForHome'}">
 			 <input type="hidden" value="${homeEntry.value}" id="homeStartId"/>
@@ -47,7 +47,7 @@
 			</li>
 		  </c:if>
 		  <c:if test="${entry.key eq 'express-delivery'}">
-			<li><a id="express" class="ExpressDelivery express" style="display: none"> <span><spring:theme code="text.express.shipping"/></span> 
+			<li class="edclass"><a id="express" class="ExpressDelivery express" style="display: none"> <span><spring:theme code="text.express.shipping"/></span> 
 			 <c:forEach var="expressEntry" items="${entry.value}">
 			 <c:if test="${expressEntry.key eq 'startForExpress'}">
 			 <input type="hidden" value="${expressEntry.value}" id="expressStartId"/>

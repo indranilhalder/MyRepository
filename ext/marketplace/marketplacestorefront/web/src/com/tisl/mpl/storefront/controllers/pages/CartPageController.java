@@ -14,6 +14,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+
 import de.hybris.platform.acceleratorfacades.flow.impl.SessionOverrideCheckoutFlowFacade;
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
@@ -202,11 +203,12 @@ public class CartPageController extends AbstractPageController
 			{
 				final CartModel serviceCart = getCartService().getSessionCart();
 
+				setExpressCheckout(serviceCart);
 
 				if (!serviceCart.getChannel().equals(SalesApplication.WEB))
 				{
 					serviceCart.setChannel(SalesApplication.WEB);
-					getModelService().save(serviceCart);
+					modelService.save(serviceCart);
 				}
 
 
@@ -306,6 +308,20 @@ public class CartPageController extends AbstractPageController
 			returnPage = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
 		}
 		return returnPage;
+	}
+
+	/**
+	 * @param serviceCart
+	 */
+	private void setExpressCheckout(final CartModel serviceCart)
+	{
+		serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE);
+		if (serviceCart.getDeliveryAddress() != null)
+		{
+			serviceCart.setDeliveryAddress(null);
+			modelService.save(serviceCart);
+		}
+
 	}
 
 	/**
@@ -545,6 +561,7 @@ public class CartPageController extends AbstractPageController
 				if (checkoutPci != null && StringUtils.isNotBlank(checkoutPci.getCode()))
 				{
 
+					//SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
 					SessionOverrideCheckoutFlowFacade.setSessionOverrideSubscriptionPciOption(checkoutPci);
 				}
 				// Redirect to the start of the checkout flow to begin the checkout process
@@ -867,6 +884,10 @@ public class CartPageController extends AbstractPageController
 						}
 						if (flag)
 						{
+							if (entryModel.getSizeSelected() == false)
+							{
+								productData.setSize("");
+							}
 							productDataList.add(productData);
 							model.addAttribute("ProductDatas", productDataList);
 						}
@@ -883,42 +904,8 @@ public class CartPageController extends AbstractPageController
 				{
 					model.addAttribute("giftYourselfDeliveryModeDataMap", null);
 				}
-
-
-
-
-
-
-
-
-
-
 				/* TISEE-435 : New Code Added section ends */
 			}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			//TIS-404
 			final String payNowInventoryCheck = getSessionService().getAttribute(

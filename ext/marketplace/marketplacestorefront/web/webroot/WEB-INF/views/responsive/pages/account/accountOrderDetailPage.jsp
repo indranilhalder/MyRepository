@@ -28,9 +28,10 @@
 
 
 <template:page pageTitle="${pageTitle}">
-	<div class="account">
+	<div class="account" id="anchorHead">
 		<h1 class="account-header">
-			<spring:theme code="text.account.headerTitle" text="My Marketplace" />
+			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
+			
 			<%--  <select class="menu-select">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value="Overview" data-href="account-overview.php"><spring:theme code="header.flyout.overview" /></option>
@@ -154,7 +155,7 @@
 							</ul>
 
 
-							<div class="totals">
+							<div class="totals" id="anchor">
 								<h3>Total:</h3>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
@@ -308,7 +309,7 @@
 
 
 
-						<li class="item delivered first">
+						<li class="item delivered first" id="shipping-track-order">
 							<div class="item-header">
 								<c:set var="entryCount" value="0"></c:set>
 								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
@@ -432,11 +433,12 @@
 											<c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 												<a
-													href="${request.contextPath}/my-account/order/returnReplace?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+													href="${request.contextPath}/my-account/order/returnReplace?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
 											</c:if>
+											<!-- changes for TISSTRT-1173 -->
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
 													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
@@ -527,6 +529,8 @@
 																		<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
 																	</c:forEach>
 																</form:select>
+																<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;"><spring:theme
+																					code="text.cancel.requestDropdown.selected.error" text="Do let us know why you would like to cancel this item."/></div>
 															</div>
 															<c:set var="ussidClass" value="${orderEntrySellerSKU}"></c:set>
 															<!-- <c:forEach items="${entry.associatedItems}" var="associatedUssid">
@@ -976,7 +980,8 @@
 																					</span>
 																				</p>
 																				<p>
-																					<span>View less</span>
+																					<span class="view-more-consignment" orderlineid="${entry.orderLineId}"
+																						index="${loop.index}" ordercode="${subOrder.code}">View less</span>
 																				</p>
 																		  </div>
 																		  <div id="shippingStatusRecord${entry.orderLineId}_${loop.index}" class="view-more-consignment-data"></div>
@@ -1174,24 +1179,17 @@ $(function(){
 			$(this).next().find('li.progress').find(".cancellation.message").css("left",cancel_message_div_position);
 		}
 	});
-	$(".tracking-information").each(function(){
-		if($(this).find("ul li").length <=1) {
-			 //$(this).find("#track-more-info").hide(); 
-
-			/* $(this).find("#track-more-info").hide(); */
-
-		}
-		else {
-			//$(this).find("ul li").css("display","none");
-			$(".view-more-consignment-data").hide();
-			$(this).find("#track-more-info p").click(function(){
-				$(this).parent().siblings(".view-more-consignment-data").slideToggle();
+/* 	$(".tracking-information").each(function(){
+		
+		//$(".view-more-consignment-data").hide();
+		$(this).find("#track-more-info p.active").click(function(){
+			alert();
+			$(this).parent().siblings(".view-more-consignment-data").slideToggle();
 				$(this).toggleClass("active");
 				$(this).siblings().toggleClass("active");
 				//$(this).parents("#tracking-order").toggleClass("track-order-height");
 			});
-		}
- 	});
+ 	}); */
 	
 });
 
@@ -1239,12 +1237,16 @@ $(function() {
 		});
 				
 		$(".view-more-consignment").each(function () {
-			
+			$(this).parents('.tracking-information').find(".view-more-consignment-data").hide();
 			$(this).click(function() {
 			   	var orderLineId = $(this).attr("orderlineid");
 				var orderCode =$(this).attr("ordercode");
 				var index = $(this).attr("index");
 				checkAWBstatus(orderLineId,orderCode,"shippingStatusRecord" + orderLineId+"_"+index,"N");
+				$(this).parent().toggleClass("active");
+				$(this).parent().siblings().toggleClass("active");
+				$(this).parents(".trackOrdermessage_00cbe9.shipping.tracking-information").toggleClass("active_viewMore");
+				$(this).parents(".trackOrdermessage_00cbe9.shipping.tracking-information").prev().find('.dot-arrow').toggleClass("active_arrow");
 			});
 		});
 		

@@ -25,7 +25,7 @@
 		<c:choose>
 			<c:when test="${showDeliveryAddress and not empty deliveryAddress}">
 			<h2>Delivery Details</h2>
-				<p><spring:theme code="checkout.pickup.items.to.be.shipped" text="Shipping Address"/></p>
+				<p><spring:theme code="checkout.pickup.items.to.be.shipped"/></p>
 				<address>
 					${fn:escapeXml(deliveryAddress.title)}${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}
 					<br>

@@ -10,7 +10,8 @@
 <div class="right">
 	<div class="newsletter">
 			<h3><spring:theme code="text.newsletter.signup"/></h3>
-			<input type="text" name="email"  id="mailtext"  placeholder="Enter your email" />
+			<spring:theme code="text.newsletter.placeholder" var="newsletterPlaceholder" />
+			<input type="text" name="email"  id="mailtext"  placeholder="${newsletterPlaceholder}" />
 			<button id ="submit" type="submit" onclick="return emailvalidate();"><spring:theme code="footer.submit"/></button>
 			<div>&emsp;</div>
 			<div id="error_message" style="display:block;font-size:12px;"></div>
@@ -26,6 +27,7 @@
 			</c:forEach>
 		</div>
 	</div>
+	
 
 
 <!-- This is used for app download images in footer -->
@@ -78,7 +80,7 @@
 		if (mail == "") {
 
 			$("#error_message").css({"display":"block"});
-            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
+            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
 			return false;
 
 		} else {
@@ -88,7 +90,7 @@
 			 {
 
 				$("#error_message").css({"display":"block"});
-	            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
+	            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
 	            return false;
 			}
 
@@ -102,19 +104,19 @@
 					if (data == "fail") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='red'>You are already subscribed to NewsLetter!</font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>You are already subscribed to NewsLetter!</font>";
 						return false;
 
 					} else if (data == "success") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#a9143c'>Yay! We can't wait to be pen-pals with you.</font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Yay! We can't wait to be pen-pals with you.</font>";
 						return true;
 					}
 					
 					else if(data == "mailFormatError"){
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='red'>Please enter a valid email ID</font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#ff1c47'>Please enter a valid email ID</font>";
 						return false;
 					}
 				},

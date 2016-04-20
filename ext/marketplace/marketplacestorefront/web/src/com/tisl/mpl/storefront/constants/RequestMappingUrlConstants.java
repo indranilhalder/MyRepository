@@ -132,4 +132,6 @@ public final class RequestMappingUrlConstants
 
 	public static final String HELP_ME_SHOP_SEARCH = "/helpmeshop";
 
+	public static final String TRANSIENTCARTAJAX = "/cart/showTransientCart";
+
 }

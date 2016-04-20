@@ -850,12 +850,25 @@ public class ProductPageController extends AbstractPageController
 		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
 				ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
-		String returnStatement = null;
+		//String returnStatement = null;
 		try
 		{
 			populateProductData(productData, model);
 			displayConfigurableAttribute(productData, model);
 			getRequestContextData(request).setProduct(productModel);
+
+			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
+			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
+			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
+			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
+			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
+			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
+			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
+			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
+			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
+			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
+			model.addAttribute(SELECTED_SIZE, selectedSize);
+
 			final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
 			buyBoxFacade.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU());
 			model.addAttribute(ModelAttributetConstants.BUYBOX_USSID, buyboxdata.getSellerArticleSKU());
@@ -883,34 +896,23 @@ public class ProductPageController extends AbstractPageController
 					buyboxdata.getSellerArticleSKU()).getNewProduct()));
 			model.addAttribute(FULLFILMENT_TYPE, buyBoxFacade
 					.getRichAttributeDetails(productModel, buyboxdata.getSellerArticleSKU()).getFulfillment());
-			model.addAttribute(SELECTED_SIZE, selectedSize);
-			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
-			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
-			model.addAttribute(ModelAttributetConstants.EMI_CUTTOFFAMOUNT, emiCuttOffAmount);
-			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
-			model.addAttribute(IMG_COUNT, Integer.valueOf(productDetailsHelper.getCountForGalleryImages()));
-			final String googleClientid = configurationService.getConfiguration().getString("google.data-clientid");
-			final String facebookAppid = configurationService.getConfiguration().getString("facebook.app_id");
-			model.addAttribute(PRODUCT_SIZE_TYPE, productDetailsHelper.getSizeType(productModel));
-			model.addAttribute(ModelAttributetConstants.GOOGLECLIENTID, googleClientid);
-			model.addAttribute(ModelAttributetConstants.FACEBOOKAPPID, facebookAppid);
-			returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
+
+
+			//returnStatement = ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
-			//	ExceptionUtil.etailBusinessExceptionHandler(e, model);
-			frontEndErrorHelper.callBusinessError(model, e.getErrorMessage());
-			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailBusinessErrorPage;
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			model.addAttribute(ModelAttributetConstants.ERROR, ModelAttributetConstants.TRUE);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-			frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
-			returnStatement = ControllerConstants.Views.Pages.Error.CustomEtailNonBusinessErrorPage;
+			model.addAttribute(ModelAttributetConstants.ERROR, ModelAttributetConstants.TRUE);
 		}
 
 
-		return returnStatement;
+		return ControllerConstants.Views.Fragments.Product.QuickViewPopup;
 	}
 
 	@Deprecated

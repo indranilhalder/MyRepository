@@ -679,6 +679,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String E0015 = "E0015";
 	public static final String E0016 = "E0016";
 	public static final String E0018 = "E0018";
+	public static final String E0021 = "E0021";
 	//System/Non Business constants
 
 	//pdp error constants
@@ -1389,7 +1390,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
 
+	public static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
+
 
 	public static final String TYPE = "type";
 

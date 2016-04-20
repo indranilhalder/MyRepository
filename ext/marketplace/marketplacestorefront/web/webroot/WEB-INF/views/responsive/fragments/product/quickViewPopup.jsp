@@ -813,13 +813,23 @@ display:none;
 			<span id="addToCartFormnoInventory" style="display: none" class="no_inventory"><p class="inventory">
 			<font color="#ff1c47"><spring:theme code="Product.outofinventory" /></font>
 			</p></span>			
-					<button id="addToCartButton" type="${buttonType}"
-						class="btn-block js-add-to-cart">
-						<spring:theme code="basket.add.to.basket" />
-					</button>
-				
-			</c:otherwise>
-		</c:choose>
+					 <c:choose>
+										<c:when test="${error eq 'true'}">
+											<span id="dListedErrorMsg" class="dlist_message" style="color: #FE2E2E;float: right;padding-bottom: 5px;"> <spring:theme
+													code="pdp.delisted.message" />
+											</span>
+											<button id="addToCartButton-wrong" type="button" class="btn-block" disable="true" style="display: block;"><spring:theme code="basket.add.to.basket" /></button>
+										</c:when>
+										<c:otherwise>
+											<button id="addToCartButton" type="${buttonType}"
+												class="btn-block js-add-to-cart">
+												<spring:theme code="basket.add.to.basket" />
+											</button>
+										</c:otherwise>
+									</c:choose>
+
+								</c:otherwise>
+							</c:choose>
 		
 	<%-- 	<c:choose>
 		<c:when test="${selectedSize!=null || product.rootCategory=='Electronics'}">
@@ -1041,7 +1051,7 @@ display:none;
 				</button>
 				<span id="email_quick" style="display:none"></span>
 				<span id="emailError_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailError"/></span>
-				<span id="emailSuccess_quick" style="display:none;color:#00CBE9"><spring:theme code="email.emailSuccess"/></span>
+				<span id="emailSuccess_quick" style="display:none;color:#60A119"><spring:theme code="email.emailSuccess"/></span>
 				<span id="emailUnSuccess_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailUnSuccess"/></span>
 				<span id="emailEmpty_quick" style="display:none;color:#ff1c47"><spring:theme code="email.emailEmpty"/></span>
 				<span id="validateemail_quick" style="display:none;color:#ff1c47"><spring:theme code="email.validate"/></span>

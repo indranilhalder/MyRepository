@@ -26,7 +26,7 @@
   			</div>
 		</c:if>
 <div class="account">
-  <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Marketplace" />
+  <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
   <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
@@ -43,8 +43,7 @@
       </select>
 </h1>
 
-<div class="wrapper">
-		
+<div class="wrapper">		
 		
 	<!----- Left Navigation Starts --------->
 			<%-- <div class="left-nav">
@@ -341,7 +340,7 @@
 						<form:form action="update-nickName" method="post" commandName="mplCustomerProfileForm">
 						<fieldset>
 							<div class="full">
-								<label><spring:theme text="Nick Name" /></label>
+								<%-- <label><spring:theme text="Nick Name" /></label> --%>
 										<form:input path="nickName" id="profilenickName"
 										onkeyup="kpressnn()"	 maxlength="40" />
 								<div class="errorMessage"><div id="errnn"></div></div>

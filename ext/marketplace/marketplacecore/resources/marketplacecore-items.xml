@@ -2123,6 +2123,10 @@
 					</attribute>
 					<!-- End : Attribute added to store reuqest and response xml for audit 
 						purpose -->
+
+
+
+
 				</attributes>
 			</itemtype>
 
@@ -2668,6 +2672,17 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
+					<attribute qualifier="ischeckedMyRewards"
+						autocreate="true" type="java.lang.Boolean" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in login page -->
 					<!-- Push notification save device key web service ends -->
 				</attributes>
 				<indexes>
@@ -5251,6 +5266,14 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- Start TISPRO-249 -->
+					<attribute qualifier="buyABGetcParentTransactionId" type="java.lang.String">
+						<description>Parent Transaction id mapping used for Buy A B Get C promotion - Multiple Parent Scenario</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="false" search="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- End TISPRO-249 -->
 				</attributes>
 			</itemtype>
 
@@ -5467,6 +5490,15 @@
 						<description>The sales application for which the order was placed.</description>
 						<persistence type="property" />
 						<defaultvalue>em().getEnumerationValue("SalesApplication","Web")</defaultvalue>
+					</attribute>
+					
+						<attribute autocreate="true" qualifier="isExpressCheckoutSelected"
+						type="java.lang.Boolean">
+						<persistence type="property" qualifier="isExpressCheckoutSelected">
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
 					</attribute>
 				</attributes>
 			</itemtype>

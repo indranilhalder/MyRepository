@@ -21,9 +21,11 @@ $(document).ready(function(){
 				}
 				});
 		//}
+
 		//isAjaxCalled = true;
 		
 	});*/
+
 	//ajax spring login authentication
 
 	/*$("#triggerLoginAjax").on('click touch',function(){
@@ -62,6 +64,7 @@ $(document).ready(function(){
 		//var urlFormed="https://"+hostURL+"/store/mpl/en/j_spring_security_check";
 		//console.log("urlFormed"+urlFormed);
 
+
 	$.ajax({
 	url:"/store/mpl/en/j_spring_security_check",
 	type:"POST",
@@ -83,6 +86,7 @@ $(document).ready(function(){
 	//alert(data); 
 	}
 	}); 
+
 	}
 	});
 	$(document).keypress(function(event){
@@ -94,6 +98,7 @@ $(document).ready(function(){
 			}
 		}
 	});*/
+
 	
 	$(".header-myAccountSignOut").click(function(){
 		window.localStorage.removeItem("eventFired");
@@ -113,8 +118,13 @@ $(document).ready(function(){
 				utag.link({ "event_type" : "Login", "link_name" : "Login" });
 
 			}			
+
+
 			//fireTealiumEvent();
 			
+
+
 		}  
 	}
+
 });

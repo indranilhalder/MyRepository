@@ -161,13 +161,13 @@ ACC.product = {
 		});
 				
 		$(document).on('click','#addToCartFormId .js-add-to-cart',function(event){
-			ACC.product.sendAddToBag("addToCartFormId");
+			ACC.product.sendAddToBag("addToCartFormId",false);
 			event.preventDefault();
 			return false;
 		});
 		
 		$(document).on('click','.serp_add_to_cart_form .js-add-to-cart',function(event){
-			ACC.product.sendAddToBag($(this).closest('form').attr("id"));
+			ACC.product.sendAddToBag($(this).closest('form').attr("id"),false);
 			event.preventDefault();
 			return false;
 		});
@@ -198,6 +198,7 @@ ACC.product = {
 },
 
 sendAddToBagWl: function(formId){
+	
 	var dataString=$('#'+formId).serialize();	
 	$.ajax({
 		url : ACC.config.encodedContextPath + "/cart/add",
@@ -210,11 +211,11 @@ sendAddToBagWl: function(formId){
 		success : function(data) {
 			if(data.indexOf("cnt:") >= 0){
 				$("#"+formId+"Title").html("");
-				$("#"+formId+"Title").html("<font color='#00CBE9'>"+$('#addtobagwl').text()+"</font>");
-				$("#"+formId+"Title").show().fadeOut(6000);
-				
+				//$("#"+formId+"Title").html("<font color='#00CBE9'>"+$('#addtobagwl').text()+"</font>");
+				//$("#"+formId+"Title").show().fadeOut(6000);
 				var formId_splitdata = [];
 				formId_splitdata = formId.split("_");
+				ACC.product.showTransientCart(formId_splitdata[2]);
 				ACC.product.addToBagFromWl(formId_splitdata[2],true);
 				//$("#"+formId+"Title").show().fadeOut(7000);
 				//ACC.product.displayAddToCart(data,formId,false);				
@@ -316,117 +317,158 @@ addToBagFromWl: function(ussid, addedToCart) {
 },
 
 
-	sendAddToBag: function(formId){
-		var input_name="qty";
-		var stock_id="stock";
-		var dataString=$('#'+formId).serialize();	
-		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
-		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
-		 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
-		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
-		 /*if(parseInt(stock)<parseInt(quantity)){
-			    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
-			    $("#"+formId+"noInventory").show().fadeOut(6000);
-	   			 return false;
-	       	 }*/
-		
-		if( $("#variant,#sizevariant option:selected").val()=="#")
-	   	  {
-		    $("#"+formId+"Title").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-		    $("#"+formId+"Title").show();
-	   		
-	   	 return false;
-	   	  }	 
-		  
+sendAddToBag : function(formId, isBuyNow) {
+	var input_name = "qty";
+	var stock_id = "stock";
+	var dataString = $('#' + formId).serialize();
+	var quantity = $("#" + formId + " :input[name='" + input_name + "']")
+			.val();
+	var stock = $("#" + formId + " :input[name='" + stock_id + "']").val();
+	var quantity = $("#" + formId + " :input[name='" + input_name + "']")
+			.val();
+	var stock = $("#" + formId + " :input[name='" + stock_id + "']").val();
+	var isSuccess = false;
+	var ussid=$('#ussid').val();
+	/*
+	 * if(parseInt(stock)<parseInt(quantity)){
+	 * $("#"+formId+"noInventory").html("<font color='#ff1c47'>" +
+	 * $('#inventory').text() + "</font>");
+	 * $("#"+formId+"noInventory").show().fadeOut(6000); return false; }
+	 */
+
+	if ($("#variant,#sizevariant option:selected").val() == "#") {
+		$("#" + formId + "Title").html(
+				"<font color='#ff1c47'>" + $('#selectSizeId').text()
+						+ "</font>");
+		$("#" + formId + "Title").show();
+		return false;
+	} else {
 		$.ajax({
-			url : ACC.config.encodedContextPath + "/cart/add",
-			data : dataString,
-			type : "POST",
-			cache : false,
-			beforeSend: function(){
-		        $('#ajax-loader').show();
-		    },
-			success : function(data) {
-				if(data.indexOf("cnt:") >= 0){
-				$("#"+formId+"TitleSuccess").html("");
-				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+					url : ACC.config.encodedContextPath + "/cart/add",
+					data : dataString,
+					type : "POST",
+					cache : false,
+					beforeSend : function() {
+						$('#ajax-loader').show();
+					},
+					success : function(data) {
+						if (data.indexOf("cnt:") >= 0) {
+							(isBuyNow == true) ? isSuccess = true
+									: isSuccess = false;
+							
+							
+							//$("#" + formId + "TitleSuccess").html("");
+							//$("#" + formId + "TitleSuccess").html("<font color='#00CBE9'>"+ $('#addtobag').text()+ "</font>");
+							//$("#" + formId + "TitleSuccess").show().fadeOut(5000);
+							//$("#" + formId + "Title.sellerAddToBagTitle").show().fadeOut(5000);
+							//$("#" + formId + " " + ".addToCartSerpTitle").show().fadeOut(5000);
+							if(!isBuyNow){
+								ACC.product.showTransientCart(ussid);
+								ACC.product.scrollForTransientCart();
+							}
+							
+							// ACC.product.displayAddToCart(data,formId,false);
+							$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+						} else if (data == "reachedMaxLimit") {
+							$("#" + formId + "Title").html("");
+							$("#" + formId + "Title").html(
+									"<br/><font color='#ff1c47'>"
+											+ $('#bagtofull').html()
+											+ "</font>");
+							$("#" + formId + "Title").show().fadeOut(5000);
+						} else if (data == "crossedMaxLimit") {
+							$("#" + formId + "Title").html("");
+							$("#" + formId + "Title").html(
+									"<font color='#ff1c47'>"
+											+ $('#bagfull').text()
+											+ "</font>");
+							$("#" + formId + "Title").show().fadeOut(5000);
+						} else if (data == "outofinventory") {
+							$("#" + formId + "noInventory")
+									.html(
+											"<font color='#ff1c47'>"
+													+ $(
+															'#addToCartFormnoInventory')
+															.text()
+													+ "</font>");
+							$("#" + formId + "noInventory").show().fadeOut(
+									6000);
+							return false;
+						} else if (data == "willexceedeinventory") {
+							$("#" + formId + "excedeInventory")
+									.html(
+											"<font color='#ff1c47'>"
+													+ $(
+															'#addToCartFormexcedeInventory')
+															.text()
+													+ "</font>");
+							$("#" + formId + "excedeInventory").show()
+									.fadeOut(6000);
+							return false;
+						} else {
+							$("#" + formId + "Title").html("");
+							$("#" + formId + "Title").html(
+									"<br/><font color='#ff1c47'>"
+											+ $('#addtobagerror').text()
+											+ "</font>");
+							$("#" + formId + "Title").show().fadeOut(5000);
+						}
 
-				$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+						// For MSD
+						var isMSDEnabled = $("input[name=isMSDEnabled]")
+								.val();
+						if (isMSDEnabled === 'true') {
+							// console.log(isMSDEnabled);
+							var isApparelExist = $(
+									"input[name=isApparelExist]").val();
+							// console.log(isApparelExist);
+							var salesHierarchyCategoryMSD = $(
+									"input[name=salesHierarchyCategoryMSD]")
+									.val();
+							// console.log(salesHierarchyCategoryMSD);
+							var rootCategoryMSD = $(
+									"input[name=rootCategoryMSD]").val();
+							// console.log(rootCategoryMSD);
+							var productCodeMSD = $(
+									"input[name=productCodeMSD]").val();
+							// console.log(productCodeMSD);
+							var priceformad = $("input[id=price-for-mad]")
+									.val();
+							// console.log(priceformad);
 
-				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
-				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+							if (typeof isMSDEnabled === 'undefined') {
+								isMSDEnabled = false;
+							}
 
-				//ACC.product.displayAddToCart(data,formId,false);
-				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
-				}
-				else if(data=="reachedMaxLimit") {
-					$("#"+formId+"Title").html("");
-					$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#bagtofull').html()+"</font>");
-					$("#"+formId+"Title").show().fadeOut(5000);
-				}
-				else if(data=="crossedMaxLimit"){
-					$("#"+formId+"Title").html("");
-					$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
-					$("#"+formId+"Title").show().fadeOut(5000);
-				}
-				else if(data=="outofinventory"){
-					 $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
-					 $("#"+formId+"noInventory").show().fadeOut(6000);
-			   	     return false;
-				}
-				else if(data=="willexceedeinventory"){
-					 $("#"+formId+"excedeInventory").html("<font color='#ff1c47'>" + $('#addToCartFormexcedeInventory').text() + "</font>");
-					 $("#"+formId+"excedeInventory").show().fadeOut(6000);
-			   		 return false;
-				}
-				else{
-					$("#"+formId+"Title").html("");
-					$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#addtobagerror').text()+"</font>");
-					$("#"+formId+"Title").show().fadeOut(5000);
-				}
-			
-				//For MSD
-				var isMSDEnabled =  $("input[name=isMSDEnabled]").val();								
-				if(isMSDEnabled === 'true')
-				{
-				//console.log(isMSDEnabled);
-				var isApparelExist  = $("input[name=isApparelExist]").val();
-				//console.log(isApparelExist);				
-				var salesHierarchyCategoryMSD =  $("input[name=salesHierarchyCategoryMSD]").val();
-				//console.log(salesHierarchyCategoryMSD);
-				var rootCategoryMSD  = $("input[name=rootCategoryMSD]").val();
-				//console.log(rootCategoryMSD);				
-				var productCodeMSD =  $("input[name=productCodeMSD]").val();
-				//console.log(productCodeMSD);				
-				var priceformad =  $("input[id=price-for-mad]").val();
-				//console.log(priceformad);				
-				
-				if(typeof isMSDEnabled === 'undefined')
-				{
-					isMSDEnabled = false;						
-				}
-				
-				if(typeof isApparelExist === 'undefined')
-				{
-					isApparelExist = false;						
-				}	
-				
-				if(Boolean(isMSDEnabled) && Boolean(isApparelExist) && (rootCategoryMSD === 'Clothing'))
-					{					
-					ACC.track.trackAddToCartForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad,"INR");
-					}	
-				}
-				//End MSD
-				
-			},
-			complete: function(){
-		        $('#ajax-loader').hide();
-		    },
-			error : function(resp) {
-			//	alert("Add to Bag unsuccessful");
-			}
-		});
-	},
+							if (typeof isApparelExist === 'undefined') {
+								isApparelExist = false;
+							}
+
+							if (Boolean(isMSDEnabled)
+									&& Boolean(isApparelExist)
+									&& (rootCategoryMSD === 'Clothing')) {
+								ACC.track.trackAddToCartForMAD(
+										productCodeMSD,
+										salesHierarchyCategoryMSD,
+										priceformad, "INR");
+							}
+						}
+						// End MSD
+						if (isSuccess == true) {
+							var cartUrl = ACC.config.encodedContextPath
+									+ "/cart";
+							location.href = cartUrl;
+						}
+					},
+					complete : function() {
+						$('#ajax-loader').hide();
+					},
+					error : function(resp) {
+						// alert("Add to Bag unsuccessful");
+					}
+				});
+	}
+},
 	sendAddToBagQuick: function(formId){
 		 var input_name="qty";
 		  var stock_id="stock";
@@ -435,6 +477,7 @@ addToBagFromWl: function(ussid, addedToCart) {
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		 var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		 var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
+		 var ussid=$('#ussid_quick').val();
 		 /*if(parseInt(stock)<parseInt(quantity)){
 			    $("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#inventory').text() + "</font>");
 			    $("#"+formId+"noInventory").show().fadeOut(6000);
@@ -451,14 +494,15 @@ addToBagFromWl: function(ussid, addedToCart) {
 		    },
 			success : function(data) {
 				if(data.indexOf("cnt:") >= 0){
-				$("#"+formId+"TitleSuccess").html("");
-				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+				//$("#"+formId+"TitleSuccess").html("");
+				//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
 
-				$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+				//$("#"+formId+"TitleSuccess").show().fadeOut(5000);
 
-				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
-				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
-
+				//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
+				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+				ACC.product.showTransientCart(ussid);
+				ACC.product.scrollForTransientCart();
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
@@ -538,12 +582,13 @@ addToBagFromWl: function(ussid, addedToCart) {
 		
 		var input_name="qty";
 		var stock_id="stock";
+		var ussid="ussid";
 		var dataString=$('#'+formId).serialize();	
 		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
 		var quantity = $("#"+formId+" :input[name='" + input_name +"']").val(); 
 		var stock = $("#"+formId+" :input[name='" +  stock_id +"']").val(); 
-
+		var ussid = $("#"+formId+" :input[name='" +  ussid +"']").val(); 
 		//alert("dataString: "+dataString+" quantity: "+quantity+" stock: "+stock);
 		$.ajax({
 			url : ACC.config.encodedContextPath + "/cart/add",
@@ -557,16 +602,19 @@ addToBagFromWl: function(ussid, addedToCart) {
 				//alert("data: "+data);
 				if(data.indexOf("cnt:") >= 0){
 					//alert("addtobag");
-				$("#"+formId+"TitleSuccess").html("");
-				$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
+				//$("#"+formId+"TitleSuccess").html("");
+				//$("#"+formId+"TitleSuccess").html("<font color='#00CBE9'>"+$('#addtobag').text()+"</font>");
 
-				$("#"+formId+"TitleSuccess").show().fadeOut(5000);
+				//$("#"+formId+"TitleSuccess").show().fadeOut(5000);
 
-				$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
-				$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+				//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
+				//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
 
 				//alert("data form id: "+$("#"+formId+" "+".addToCartSerpTitle"));
+				ACC.product.showTransientCart(ussid);
+				ACC.product.scrollForTransientCart();
 				
+					
 				//ACC.product.displayAddToCart(data,formId,false);
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 				}
@@ -806,5 +854,63 @@ addToBagFromWl: function(ussid, addedToCart) {
 			}
 		});
 	});
+	},
+	showTransientCart: function (ussid)
+	{
+		var dataString="ussid="+ussid;
+		//AJAX CALL
+		$
+		.ajax({
+			type : "GET",
+			dataType : "json",
+			url : ACC.config.encodedContextPath
+					+ "/cart/showTransientCart",
+			data:dataString,
+			success : function(response) {
+				$('.mini-transient-bag').remove();
+				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
+				
+				if(typeof response.offer!=='undefined'){
+					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
+				}
+				
+				transientCartHtml+="</div></li></ul><li class='view-bag-li'><a href='"+ACC.config.encodedContextPath+"/cart' class='go-to-bag mini-cart-checkout-button'>View Bag</a></li></ul></div>";
+				$('.transient-mini-bag').append(transientCartHtml);
+				
+				if ($("header .content .bottom").hasClass("active")){
+					$("header .content .right>ul>li.transient-mini-bag .mini-transient-bag").css({
+						"position": "fixed",
+						"top": "80px",
+						"right": "0px"
+					});
+		}
+				
+				setTimeout(function(){
+					$('.mini-transient-bag').fadeOut(2000);
+				},2000);
+				setTimeout(function(){
+					$('.mini-transient-bag').remove();
+				},4000);
+				
+			},
+			error : function() {
+				console.log("Error while getting transient cart");
+				
+			}
+		});
+
+//END AJAX
+		
+	},
+	
+	scrollForTransientCart: function ()
+	{
+		if($(window).width() > 773) {
+			$("#cboxClose").click();
+			$('body.modal-open').css('overflow-y','hidden');
+			$(".modal").modal('hide');
+			$('body').css('overflow-y','auto');
+		} 
+		
 	}
 };

@@ -42,17 +42,25 @@
 
 				</a>
 
-		
-
-				<c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
-					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
-						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
-				<%-- 	<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}"> --%>
+            <c:if
+					test="${!product.isOnlineExclusive && product.isOfferExisting}">
+					<div style="z-index: 2;" class="on-sale">
 						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
 							src="/store/_ui/responsive/common/images/transparent.png">
 						<span>On Sale</span>
 					</div>
-		         </c:if>
+
+				</c:if> 
+		
+				<%-- <c:if test="${!product.isOnlineExclusive && product.isOfferExisting}">
+					<div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}">
+						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
+					<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">
+						<img class="brush-strokes-sprite sprite-Vector_Smart_Object"
+							src="/store/_ui/responsive/common/images/transparent.png">
+						<span>On Sale</span>
+					</div>
+		         </c:if> --%>
 
 
 				<c:if test="${product.isOnlineExclusive}">
@@ -293,7 +301,7 @@
 					<ul>
 						<!-- commented as part of defect fix - 3in1_box_178 -->
 						<%-- <li>Size : ${product.displaySize}</li> --%>
-						<!-- TISSTRT - 985::Size of footwear products are not displayed in SERP page-->
+						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
 							                          || product.productCategoryType eq 'Footwear') }">
