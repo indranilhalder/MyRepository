@@ -43,6 +43,9 @@
 		<!-- Matching filters -->
 		<ref bean="cartMatchingFilter" />
 		<ref bean="guestRoleFilterV2" />
+		
+		<!-- ETag filter -->
+		<ref bean="improvedShallowEtagHeaderFilter" />
 	</util:list>
 
 	<alias alias="exceptionTranslationFilter" name="defaultExceptionTranslationFilter" />
@@ -98,6 +101,8 @@
 		<property name="calculationService" ref="calculationService" />
 		<property name="cartService" ref="cartService" />
 	</bean>
+	
+	<bean id="improvedShallowEtagHeaderFilter" class="com.tisl.mpl.filter.ImprovedShallowEtagHeaderFilter"/>
 
 	<util:set id="baseFilterResourceExceptionsV2">
 		<value>logoutsuccessful</value>
