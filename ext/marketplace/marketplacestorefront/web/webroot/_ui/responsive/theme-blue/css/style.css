@@ -21,13 +21,22 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 	height: 100%;
 } 
 
-body.template-pages-layout-errorPageTemplate{
-	    background: url('../images/404-page-bg.jpg') no-repeat center center fixed;
+body.template-pages-layout-errorPageTemplate .mainContent-wrapper{
+	/* 	    background: url('../images/404-page-bg.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; */
+    height:auto;
+    background-image: url('../images/bg_404.png');
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    height:auto;
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
 
 body.page-notFound{
@@ -76,113 +85,114 @@ table {
 td, th {
 	padding: 0;
 }
-@font-face {
+
+/*  @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-Bold.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-Bold.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-Bold.woff') format('woff'), url('./fonts/AvenirNext-Bold.ttf') format('truetype'), url('./fonts/AvenirNext-Bold.svg#92550229aad14ffa2dc273e49410d17e') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: normal;
   font-weight: 700; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-BoldItalic.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-BoldItalic.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-BoldItalic.woff') format('woff'), url('./fonts/AvenirNext-BoldItalic.ttf') format('truetype'), url('./fonts/AvenirNext-BoldItalic.svg#37d1c918f1386169785990a7f13da774') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: italic;
   font-weight: 700; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-DemiBold.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-DemiBold.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-DemiBold.woff') format('woff'), url('./fonts/AvenirNext-DemiBold.ttf') format('truetype'), url('./fonts/AvenirNext-DemiBold.svg#a7885c27eda45e60a2a49ed9bc9ba53c') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: normal;
   font-weight: 600; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-DemiBoldItalic.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-DemiBoldItalic.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-DemiBoldItalic.woff') format('woff'), url('./fonts/AvenirNext-DemiBoldItalic.ttf') format('truetype'), url('./fonts/AvenirNext-DemiBoldItalic.svg#1f6d7daee9481c3ab7e242ff4957e63d') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: italic;
   font-weight: 600; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-Heavy.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-Heavy.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-Heavy.woff') format('woff'), url('./fonts/AvenirNext-Heavy.ttf') format('truetype'), url('./fonts/AvenirNext-Heavy.svg#2ed99a83bb26357490cd9dffcc988cd9') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: normal;
   font-weight: 800; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-HeavyItalic.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-HeavyItalic.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-HeavyItalic.woff') format('woff'), url('./fonts/AvenirNext-HeavyItalic.ttf') format('truetype'), url('./fonts/AvenirNext-HeavyItalic.svg#c8e14e571e03ae9818392bb83389a5c2') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: italic;
   font-weight: 800; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-Italic.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-Italic.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-Italic.woff') format('woff'), url('./fonts/AvenirNext-Italic.ttf') format('truetype'), url('./fonts/AvenirNext-Italic.svg#9646683e4f7c6362eab861da78d029ce') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: italic;
   font-weight: 400; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-Medium.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-Medium.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-Medium.woff') format('woff'), url('./fonts/AvenirNext-Medium.ttf') format('truetype'), url('./fonts/AvenirNext-Medium.svg#5ff54762f5b331a06e3ae1fbf17e8ff4') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: normal;
   font-weight: 500; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-MediumItalic.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-MediumItalic.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-MediumItalic.woff') format('woff'), url('./fonts/AvenirNext-MediumItalic.ttf') format('truetype'), url('./fonts/AvenirNext-MediumItalic.svg#27a52c4521329b4d986ada803dbc48eb') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: italic;
   font-weight: 500; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-Regular.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-Regular.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-Regular.woff') format('woff'), url('./fonts/AvenirNext-Regular.ttf') format('truetype'), url('./fonts/AvenirNext-Regular.svg#fe299bf9c71888f1da7b2c2d74973b56') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: normal;
   font-weight: 400; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-UltraLight.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-UltraLight.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-UltraLight.woff') format('woff'), url('./fonts/AvenirNext-UltraLight.ttf') format('truetype'), url('./fonts/AvenirNext-UltraLight.svg#bdda6bf0cbb2275362361ca24e93166f') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: normal;
   font-weight: 200; }
 
 @font-face {
   font-family: 'Avenir Next';
   src: url('./fonts/AvenirNext-UltraLightItalic.eot');
-  /* IE9 Compat Modes */
+  IE9 Compat Modes
   src: url('./fonts/AvenirNext-UltraLightItalic.eot?#iefix') format('embedded-opentype'), url('./fonts/AvenirNext-UltraLightItalic.woff') format('woff'), url('./fonts/AvenirNext-UltraLightItalic.ttf') format('truetype'), url('./fonts/AvenirNext-UltraLightItalic.svg#cccd3f07bc6a274e898dea9dabe4d7ca') format('svg');
-  /* Legacy iOS */
+  Legacy iOS
   font-style: italic;
-  font-weight: 200; }
+  font-weight: 200; } */
 
 @font-face {
   font-family: 'LP Bambus';
@@ -236,6 +246,20 @@ local('MaterialIcons-Regular'),
 url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2'),
 url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff) format('woff'),
 url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.ttf) format('truetype');
+}
+
+
+@font-face {
+    font-family: 'montserrat';
+    src: url('./fonts/montserrat-regular-webfont.eot');
+    src: url('./fonts/montserrat-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('./fonts/montserrat-regular-webfont.woff2') format('woff2'),
+         url('./fonts/montserrat-regular-webfont.woff') format('woff'),
+         url('./fonts/montserrat-regular-webfont.ttf') format('truetype'),
+         url('./fonts/montserrat-regular-webfont.svg#montserratregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
 }
 .glyphicon {
 	position: relative;
@@ -328,7 +352,7 @@ url(https://fonts.gstatic.com/s/materialicons/v11/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdE
   width: 100%; }
 
 body {
-  font-family: "Avenir Next";
+  font-family: "Montserrat";
   font-size: 12px; }
 
 a.button, button, select {
@@ -346,7 +370,7 @@ a.button, button, select {
   border: 2px solid #000;
   padding: 13px 18px;
   cursor: pointer;
-  font-family: "Avenir Next", "Courier New";
+  font-family: "Montserrat", "Courier New";
   -webkit-transition: background 0.3s;
   -moz-transition: background 0.3s;
   transition: background 0.3s; }
@@ -365,7 +389,7 @@ a.button, button, select {
   border: 2px solid #000;
   padding: 13px 18px;
   cursor: text;
-  font-family: "Avenir Next", "Courier New";
+  font-family: "Montserrat", "Courier New";
   -webkit-transition: background 0.3s;
   -moz-transition: background 0.3s;
   transition: background 0.3s;}
@@ -378,7 +402,7 @@ a.button, button {
   font-weight: bold;
   line-height: 24px;
   text-align: center;
-  font-family: "Avenir Next";
+  font-family: "Montserrat";
   letter-spacing: 1px;
   vertical-align: middle;
   text-transform: uppercase;
@@ -756,7 +780,7 @@ input:focus {
 .breadcrumbs {
     margin: 25px 0;
     padding-left: 30px;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 500;
     clear: both;
     display: inline-block;
@@ -942,10 +966,7 @@ h2 {
         font-size: 18px;
         line-height: 60px;
         max-width: 780px; }
-        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-		 header .banner .content form {
-        max-width: 770px; }
-		}
+
         header .banner .content form span {
           display: inline-block;
           margin: 0 5px; }
@@ -1208,7 +1229,7 @@ h2 {
           position: absolute;
           left: 0;
           top: 100%;
-          width: 220px;
+          width: 256px;
           padding: 0 25px;
           line-height: 25px;
           -webkit-transition: max-height 0.3s, z-index 0s 0.3s;
@@ -1232,9 +1253,9 @@ h2 {
               letter-spacing: 1px; } }
                header .content .right > ul > li.bag .mini-bag .item .product .product-name a{
                font-weight:600;}
-                 @media (min-width:791px) and (max-width: 885px) {		
+                 @media (min-width:791px) and (max-width: 855px) {		
         header .content .right>ul>li.wishlist .wishlist-info {		
-            max-width: 210px		
+            max-width: 216px		
         }		
     }
      @media (min-width:791px) {
@@ -1250,7 +1271,7 @@ h2 {
           display: block;
           position: absolute;
           left: 0;
-          width: 300px;
+          width: 366px;
           background: #fafafa;
           z-index: 0;
           max-height: 0;
@@ -1347,7 +1368,7 @@ h2 {
               text-decoration:none; } }
                @media (min-width:791px) and (max-width: 855px) {		
 			        header .content .right>ul>li.sign-in .sign-in-info {		
-			            max-width: 268px		
+			            max-width: 289px		
 			        }
 			        .signin-flyout > li a {
 			        width:218px;}
@@ -1551,7 +1572,6 @@ h2 {
               width: calc(100% - 368px);
            }
         header .content nav > ul > li > .toggle {
-         /*  font-size: 14px; */
           font-weight: 500;
           font-size: 11.5px;
           line-height: 20px;
@@ -1560,7 +1580,8 @@ h2 {
     	  letter-spacing: 0.6px;
           -webkit-transition: color 0.3s;
           -moz-transition: color 0.3s;
-          transition: color 0.3s; }
+          transition: color 0.3s;
+		  white-space: nowrap;}
           header .content nav > ul > li > .toggle:after {
             font-family: 'FontAwesome';
             -webkit-font-smoothing: antialiased;
@@ -2705,7 +2726,7 @@ h2 {
       display: table; }
       header > .content .bottom .marketplace span {
         text-transform: none;
-        font-family: "Avenir Next";}
+        font-family: "Montserrat";}
         header > .content .bottom .marketplace > a span {
         font-family: "LP Bambus";
         font-style: italic;
@@ -2792,7 +2813,7 @@ h2 {
         opacity: 0;
         position: absolute;
         right: 0;
-        top: 0;
+		bottom: 0;
         -webkit-transition: opacity 0.15s;
         -moz-transition: opacity 0.15s;
         transition: opacity 0.15s;
@@ -3363,6 +3384,9 @@ h2 {
 	line-height: 24px; */
 	vertical-align: middle;
 }
+.hero .major-promos a:hover {
+color:inherit;}
+
 
 @media ( max-width : 790px) {
 	.hero .major-promos a {
@@ -3896,7 +3920,7 @@ h2 {
   background-color:#fff;}
   .brands h1, .virtues h1 {
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     padding: 30px 0; }
   .brands ul, .virtues ul {
     display: inline-block;
@@ -4115,7 +4139,7 @@ h2 {
 
 .feature-categories h1,.feature-categories h3 {
 	text-align: center;
-	font-size: 24px;
+	font-size: 28px;
 	padding: 30px 0;
 }
 
@@ -4179,7 +4203,7 @@ h2 {
 	display: block;
 	text-transform: uppercase;
 	text-align: center;
-	font-size: 10px;
+	font-size: 14px;
 	letter-spacing: .5px;
 	font-weight: 600;
 }
@@ -4279,7 +4303,7 @@ h2 {
 
 .feature-collections h1 {
 	text-align: center;
-	font-size: 24px;
+	font-size: 28px;
 	    padding: 50px 0 50px;
 	font-weight: 500;
 }
@@ -4590,7 +4614,7 @@ text-transform: uppercase;
 		padding:0px;
 		padding-top: 10px;
 		text-align: left;
-		font-family: "Avenir Next", "Courier New";
+		font-family: "Montserrat", "Courier New";
 		font-style: normal;
 	}
 	
@@ -4612,7 +4636,7 @@ text-transform: uppercase;
 		color: #fff;
 		float: none;
 		width: 100%;
-		font-family: "Avenir Next";
+		font-family: "Montserrat";
 		font-style: normal;
 		text-transform: uppercase;
 		padding: 0;
@@ -4801,7 +4825,7 @@ text-transform: uppercase;
       text-align: center; }
       .shop-sale h1 span:first-child {
         top: 50%;
-        font-size: 24px;
+        font-size: 28px;
         text-transform: uppercase;
         letter-spacing: 2px;
         width: 100%; }
@@ -6407,7 +6431,7 @@ text-transform: uppercase;
           right: 0;
           width: 70%;
           min-width: 145px;
-          font-size: 11px; }
+          font-size: 14px; }
           .cart.wrapper .product-block li.item ul .item-edit-details li {
             display: inline-block;
           }
@@ -6603,8 +6627,7 @@ text-transform: uppercase;
             padding-left: 10px;
             line-height:17px; }
             .cart.wrapper .product-block li.item > ul > li:first-child div.product p, .confirmation .product-block li.item > ul > li:first-child div.product p {
-              margin-top: 10px;
-              font-size: 11px; }
+               font-size: 12px; }
               .cart.wrapper .product-block li.item > ul > li:first-child div.product p.company, .confirmation .product-block li.item > ul > li:first-child div.product p.company {
                 margin-top: 0px; }
               .cart.wrapper .product-block li.item > ul > li:first-child div.product p.item-info > span, .confirmation .product-block li.item > ul > li:first-child div.product p.item-info > span {
@@ -6850,16 +6873,16 @@ text-transform: uppercase;
         margin: 0; }
         .cart.wrapper .wishlist-banner h2, .confirmation .wishlist-banner h2 {
           text-align: left;
-          font-size: 10px;
-          font-weight: 600; }
+          font-size: 16px;
+          font-weight: 500; }
         .cart.wrapper .wishlist-banner span, .confirmation .wishlist-banner span {
           display: inline;
           float: right;
-          font-size: 10px;
+          font-size: 16px;
           font-weight: 300;
           line-height: 13px;
           letter-spacing: 1.2px;
-          margin-top: 0;
+          margin-top: 1px;
           vertical-align: bottom; } }
   .cart.wrapper .wishlist li.item ul .item-edit-details .button, .confirmation .wishlist li.item ul .item-edit-details .button {
     padding: 0 15px !important;
@@ -7745,7 +7768,7 @@ text-transform: uppercase;}
 	padding: 0px 18px;
 	height: 50px;
 	line-height: 50px;
-	font-family: 'Avenir Next';
+	font-family: 'Montserrat';
 	border-width:2px;
 	background: #EDEDED;
 }
@@ -8184,7 +8207,7 @@ div.wishlist-content .pagination {
 
 .social a {
 	display: inline-block;
-	font-family: 'Avenir Next';
+	font-family: 'Montserrat';
 }
 
 .social a:after {
@@ -8416,7 +8439,7 @@ div.wishlist-content .pagination {
 
   @media(min-width:791px) {
 	   .body-Content {
- 	 	padding-bottom:445px; 
+ 	 	padding-bottom:472px; 
 	 }
 	  body.page-productDetails .body-Content {
 	 	padding-bottom:0px !important;
@@ -8466,7 +8489,7 @@ footer>ul>li h3 {
 	line-height: 50px;
 	vertical-align: middle;
 	padding: 0 10px;
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
 	font-weight: 600;
 	letter-spacing: 1px;
 	margin-top: 0;
@@ -8503,7 +8526,7 @@ footer>ul>li h3:after {
 }
 
 footer>ul>li ul li {
-	line-height: 40px;
+	line-height: 50px;
 	vertical-align: middle;
 	height: 0; 
 	font-size: 13px;
@@ -8632,7 +8655,7 @@ footer .banner {
 		}
 	}
 	footer>ul>li ul li {
-		height: 40px;
+		height: 50px;
 	}
 	footer .banner {
 		float: left;
@@ -8744,7 +8767,7 @@ footer .banner {
           font-size: 28px;
           } }
         /* .top.checkout-top .content ul li span {
-      font-family: "Avenir Next","Courier New";
+      font-family: "Montserrat","Courier New";
           font-style: normal;
           font-size: 22px;
           float:left;
@@ -8768,7 +8791,7 @@ footer .banner {
          height: 40px;
           width: 40px;
           display: block;
-          font-family: "Avenir Next","Courier New";
+          font-family: "Montserrat","Courier New";
           font-size: 24px;
           margin: 10px 0 5px;
          } */
@@ -10324,8 +10347,7 @@ body .account .right-account .order-history .pagination li{
   .short-info {
     position: relative;
     margin-top:15px;
-    display:table;
-    width:100%; }
+     width:100%; }
     .short-info::after {
       clear: both;
       content: "";
@@ -10388,7 +10410,8 @@ body .account .right-account .order-history .pagination li{
      .short-info .color-swatch {
       display: block;
       float: right;
-        margin-top: 5px; }
+		max-width:50%;
+       line-height: 19px; }
       .short-info .color-swatch::after {
         clear: both;
         content: "";
@@ -10404,7 +10427,7 @@ body .account .right-account .order-history .pagination li{
           height: 25px; }
     .short-info .company,  .short-info .price {
       font-size: 12px;
-      font-family: "Avenir Next";
+      font-family: "Montserrat";
       line-height: 2;
       float:left;
       font-weight: 500;
@@ -10437,7 +10460,7 @@ body .account .right-account .order-history .pagination li{
           color: #000; }
      .short-info .product-name {
       font-size: 16px;
-      font-family: "Avenir Next";
+      font-family: "Montserrat";
       font-weight: 600;
       text-align: left;
       line-height: 1;
@@ -10910,7 +10933,7 @@ body .account .right-account .order-history .pagination li{
 }
 .product-info .product-detail .price {
     font-size: 16px;
-    font-family: "Avenir Next", "Courier New";
+    font-family: "Montserrat", "Courier New";
     line-height: 2
 }
 .product-info .product-detail .price .normal,
@@ -11921,9 +11944,9 @@ body .account .right-account .order-history .pagination li{
 }
 .reviews .header h2 {
     text-align: center;
-    font-size: 26px;
+    font-size: 28px;
     padding: 40px 0 20px;
-    font-weight: 400
+    font-weight: 500
 }
 .reviews .header p {
     text-align: center;
@@ -12807,7 +12830,7 @@ div.pdp .reviews .toolbar select.white {
       .modal .content > .close:before {
         content: "\00d7";
         color: #a9143c;
-        font-family: "Avenir Next";
+        font-family: "Montserrat";
         font-size: 24px;
         font-weight: 500;
         -webkit-transition: font-weight 0.15s;
@@ -13010,7 +13033,7 @@ div.pdp .reviews .toolbar select.white {
     content: "Loading";
     font-size: 10px;
     color: #A9143C;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     letter-spacing: 0px;
     text-transform: uppercase;
     -webkit-animation: pulse 1s infinite;
@@ -13345,7 +13368,7 @@ div.pdp .reviews .toolbar select.white {
 
 .customer-service {
 	border-bottom: 1px solid #fafafa;
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
 	position:relative;
 }
 
@@ -13689,12 +13712,13 @@ div.get-in-touch ul li:after,
 div.get-in-touch ul li:after,
 .rewards div.customer-service ul li:after,
 .contact-us-header ul li:after {
-    color: #fff;
+
+    color: #000;
     font-size: 28px;
     padding-left: 30px;
     padding-top: 8px;
 }
-.no-results ul li.chat:before,
+/* .no-results ul li.chat:before,
 div.get-in-touch ul li.chat:before,
 .rewards div.customer-service ul li.chat:before,
 .contact-us-header ul li.chat:before {
@@ -13710,7 +13734,8 @@ div.get-in-touch ul li.chat:before,
     transform: scale(0.75);
     top: -10px;
     left: -20px;
-}
+
+} */
 .no-results ul li.chat:after,
 div.get-in-touch ul li.chat:after,
 .rewards div.customer-service ul li.chat:after,
@@ -13721,7 +13746,7 @@ div.get-in-touch ul li.chat:after,
     font-weight: 100;
     content: "\e601";
 }
-.no-results ul li.call:before,
+/* .no-results ul li.call:before,
 div.get-in-touch ul li.call:before,
 .rewards div.customer-service ul li.call:before,
 .contact-us-header ul li.call:before {
@@ -13737,7 +13762,8 @@ div.get-in-touch ul li.call:before,
     transform: scale(0.75);
     top: -10px;
     left: -15px;
-}
+
+} */
 .no-results ul li.call:after,
 div.get-in-touch ul li.call:after,
 .rewards div.customer-service ul li.call:after,
@@ -13866,6 +13892,9 @@ div.get-in-touch ul li.call:after,
   		margin-left: 20px;
 		margin-bottom: 20px;
 	}
+	.contact-us-header ul li img{
+	margin-top:8px;}
+
 }
 
 .contact-us-header ul:after, .contact-us-header ul li:after  {
@@ -14045,10 +14074,10 @@ body.get-in-touch .shop-promos {
     border: 2px solid #A9143C;
     background-color: #A9143C;
     color: #fff;
-    height: 30px;
+    height: 40px;
     padding: 0 45px;
     text-transform: none;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 12px;
     -webkit-transition: color 0.3s, background 0.3s;
     -moz-transition: color 0.3s, background 0.3s;
@@ -14230,7 +14259,7 @@ body.get-in-touch .shop-promos {
     }
     .customer-care-tabs>.tabs .customer-care-tab>ul>li.second .captcha {
    		position: absolute;
-   		bottom: 100px;
+   		bottom: 120px;
 	}
 }
 
@@ -14454,6 +14483,18 @@ body.get-in-touch .shop-promos {
     .customer-care-tabs {
         padding: 0;
     }
+.customer-care-boxes {
+    display: block;
+    padding: 0 10px;
+    width: 100%;
+    margin-top: 10px;
+    border-spacing: initial;
+    word-break: break-word;
+}
+.customer-care-boxes ul {
+    width: 100%;
+    margin-left:0px;
+  }
 }
 .faq-tabs .nav-wrapper,
 .customer-care-tabs .nav-wrapper {
@@ -14474,7 +14515,7 @@ body.get-in-touch .shop-promos {
     vertical-align: middle;
     text-align: center;
     width: 33.33%;
-    font-family: "Avenir Next", "Courier New";
+    font-family: "Montserrat", "Courier New";
     font-size: 20px;
     font-weight: 500;
     cursor: pointer;
@@ -14633,7 +14674,7 @@ body.about-us .breadcrumbs {
   .copy-block p {
     line-height: 20px;
     margin-bottom: 20px;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     font-size: 14px; }
     .copy-block p a {
       color: #A9143C;
@@ -14714,7 +14755,6 @@ body.about-us .breadcrumbs {
   padding-bottom: 40px; }
 
 ul.social-connect {
-  background: #fff;
   padding-top:15px;
    }
   ul.social-connect > li {
@@ -14730,7 +14770,7 @@ ul.social-connect {
       border: 3px solid #ffb30c;
       text-transform: uppercase;
       display: block;
-      margin: 0px;
+      margin: 0px auto;
       line-height: 16px;
       position: relative;
     padding: 12px 0 12px 50px; }
@@ -14849,21 +14889,20 @@ body .account .left-nav h1 {
     margin-bottom: 30px
 }
 body .account .left-nav h3 {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin: 15px 0;
-    margin-top: -12px;
-    font-weight: bold;
-}
+    margin: 32px 0;
+    margin-top: -18px;
+    }
 body .account .left-nav ul {
    padding-bottom: 5px;
 }
 body .account .left-nav ul li {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
-    margin: 15px 0;
+    margin: 24px 0;
 }
 body .account .left-nav ul li a.active {
     color: #A9143C;
@@ -14877,7 +14916,7 @@ body .account .left-nav ul li a.active {
 body .account .right-account h1
 {
   margin-bottom: 20px;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 500;
   letter-spacing: .5px;
 }
@@ -15046,7 +15085,7 @@ body#account-invite .right-account>div.social-invites .social .links a{
 }
 body .account .right-account>div>h1 {
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 500;
     letter-spacing: .5px;
 }
@@ -15073,6 +15112,7 @@ body .account .right-account button {
     letter-spacing: 1px;
     min-width: 225px;
     font-weight: 500;
+	clear: both;
 }
 body .account .right-account button.blue {
     background-color: #A9143C;
@@ -15231,11 +15271,11 @@ body .account .right-account>ul.menu>li>div a:hover:after {
     transition: border 0.15s;
 }
     body .account .right-account>ul.menu>li>div h3 {
-        font-size: 12px;
+        font-size: 14px;
         margin-bottom: 10px;
     }
     body .account .right-account>ul.menu>li>div p {
-        margin: 0 auto 10px;
+        margin: 0 auto 20px;
         line-height: 1.2;
         font-size: 12px;
     }
@@ -15246,8 +15286,8 @@ body .account .right-account>ul.menu>li>div a:hover:after {
 }
 body .account .right-account form label {
     display: block;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
     margin-bottom: 5px;
 }
 
@@ -15257,9 +15297,6 @@ body .account .right-account form label {
     }
 }
 @media (max-width: 370px) {
-    body .account .right-account form label {
-        font-size: 10px;
-    }
     body .account .right-account form.new-card input[type="radio"]+label:before, body .account .right-account div.new-address input[type="radio"]+label:before{
     margin-right:25px !important;}
 }
@@ -15268,6 +15305,7 @@ body .account .right-account form input {
     height: 32px;
     line-height: 26px;
     width:70%;
+	font-size: 14px;
 }
 body .account .right-account form input:hover {
     border-color: #AB8791;
@@ -15363,8 +15401,8 @@ body .account .right-account form .select select {
     min-width: 50px;
     margin-right: 10px;
     margin-bottom: 10px;
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 500;
     color:#000;
 }
 body .account .right-account form .select select:hover {
@@ -15413,7 +15451,7 @@ body .account .right-account .info p,
 body .account .right-account .password p,
 body .account .right-account .nickname p,
 body .account .right-account .picture p {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 500
 }
 @media (max-width: 650px) {
@@ -15450,7 +15488,7 @@ body .account .right-account .info.card-list h1 {
 body .account .right-account .info.card-list h1 span {
     margin: 10px 0 5px;
     display: block;
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0
 }
 body .account .right-account ul.saved-cards {
@@ -15505,11 +15543,11 @@ body .account .right-account ul.saved-cards>li:last-child {
 }
 body .account .right-account ul.saved-cards>li address {
     line-height: 1.5;
-    font-size: 10px
+    font-size: 12px
 }
 body .account .right-account ul.saved-cards>li a {
     text-decoration: underline;
-    font-size: 10px
+    font-size: 12px
 }
 body .account .right-account ul.saved-cards>li a.delete,
 body .account .right-account ul.saved-cards>li a.view-details,
@@ -15564,7 +15602,7 @@ body .account .right-account ul.saved-cards>li img {
     max-width: 50px;
 }
 body .account .right-account ul.saved-cards>li p {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.5;
     padding-left:80px;
 }
@@ -15575,7 +15613,7 @@ body .account .right-account ul.saved-cards>li .paymentItem h3 {
 	padding-left:80px;
 }
 body .account .right-account ul.saved-cards>li h3{
-	  font-size: 10px;
+	  font-size: 14px;
     line-height: 1.5;}
 body .account .right-account ul.saved-cards>li h3 {
     font-weight: bold;
@@ -16162,8 +16200,8 @@ body .account .right-account .order-history .product-block li.header>ul {
 }
 body .account .right-account .order-history .product-block li.header>ul>li {
     width: 20%;
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500;
     line-height: 30px;
     text-align: center;
    border-bottom: 1px solid #dfd1d5;
@@ -16190,18 +16228,26 @@ body .account .right-account .order-history .product-block li.header>ul>li span 
     z-index: 1;
     border-right: 1px solid #fff;
     border-left: 1px solid #fff
+	 font-weight: 500;
+    font-size: 16px;
+}
+body .account .right-account .order-history .product-block li.header>ul>li span.priceFormat{
+	font-size:12px;
 }
 body .account .right-account .order-history .product-block li.header>ul>li span:after {
     content: '';
     height: 30px;
     border-right: 1px solid #DFD1D5;
     position: absolute;
-    right: -1px
+    right: -1px;
+	top: 0px;
+    z-index: 1;
 }
+
 body .account .right-account .order-history .product-block li.header>ul>li:first-child span {
     border-left-color: #dfd1d5;
 }
-@media (max-width: 970px) {
+/* @media (max-width: 970px) {
     body .account .right-account .order-history .product-block li.header>ul>li {
         font-size: 8px
     }
@@ -16213,7 +16259,8 @@ body .account .right-account .order-history .product-block li.header>ul>li:first
     body .account .right-account .order-history .product-block li.header>ul>li span {
         font-size: 8px
     }
-}
+
+} */
 body .account .right-account .order-history .product-block li.header>ul>li:nth-of-type(4) {
     border-right: none
 }
@@ -16255,11 +16302,7 @@ body .account .right-account .order-history .product-block li.header>ul>li:last-
     }
     body .account .right-account .order-history .product-block li.header>ul>li:first-child {
         width: 50%;
-        font-size: 10px;
         border-right: none
-    }
-    body .account .right-account .order-history .product-block li.header>ul>li:first-child span {
-        font-size: 10px
     }
     body .account .right-account .order-history .product-block li.header>ul>li.links {
         width: 50%
@@ -16271,10 +16314,13 @@ body .account .right-account .order-history .product-block li.header>ul>li:last-
     body .account .right-account .order-history .product-block li.header>ul>li.links a:first-of-type {
         line-height: 30px
     }
+body .account .right-account .order-history.order-details li.header>ul>li {
+		border:none;
+	}
 }
 body .account .right-account .order-history .product-block > li.item {
     padding: 20px;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 400;
     position: relative;
     border:1px solid rgb(237,243,243);
@@ -16399,7 +16445,7 @@ body .account .right-account .order-history.order-details li.header div {
     background: #fff;
     min-height: 120px;
     line-height: 1.5;
-    font-size: 10px
+    font-size: 12px
 }
 body .account .right-account .order-history.order-details li.header div::after {
     clear: both;
@@ -16416,11 +16462,14 @@ body .account .right-account .order-history.order-details li.header div.delivery
     padding-right: 10px
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address address{
-	    font-size: 10px;
+	    font-size: 12px;
 }
 body .account .right-account .order-history.order-details li.header div h3,
 body .account .right-account .order-history.order-details li.header div .grand-total {
     font-weight: 600
+}
+body .account .right-account .order-history.order-details li.header div h3{
+	 font-size: 14px;
 }
 @media (max-width: 650px) {
     body .account .right-account .order-history.order-details li.header>ul {
@@ -16459,13 +16508,12 @@ body .account .right-account .order-history.order-details li.header div .grand-t
         background-color: transparent;
         display: inline;
         border: none;
-        font-weight: 700
-    }
+        }
     body .account .right-account .order-history.order-details li.header div {
         width: 100%;
         padding-left: 10px;
         text-align: left;
-        min-height: 92px
+        min-height: 0px
     }
 }
 body .account .right-account .order-history.order-details li.item {
@@ -16495,7 +16543,7 @@ body .account .right-account .order-history.order-details li.item .item-header h
     width: 100%;
     background-color: #dfd1d5;
     padding: 10px 20px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500
 }
 body .account .right-account .order-history.order-details li.item .item-header p {
@@ -16505,7 +16553,7 @@ body .account .right-account .order-history.order-details li.item .item-header p
     margin-bottom: -20px
 }
 body .account .right-account .order-history.order-details li.item .item-header address {
-    font-size: 10px;
+    font-size: 12px;
     padding: 20px;
     line-height: 1.5
 }
@@ -16564,7 +16612,12 @@ body .account .right-account .order-history.order-details li.item .status {
         float: left;
         padding: 0 20px 85px
     }
-    
+    body .account .right-account .order-history.order-details li.item .status .message {
+    padding: 5px 10px !important;
+    }
+    body .account .right-account .order-history.order-details li.item .item-fulfillment{
+    margin-top: 30px;
+}
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li {
     width: 20%;
@@ -17354,7 +17407,7 @@ font-weight:normal;
  .signin-flyout > li		
 {		
 	padding-left:25px;		
-	padding-right:0px;		
+	padding-right:25px;		
 } 		
 	
 .header-signInButton:hover,.header-signInButton:focus,.header-signInButton:active		
@@ -17509,7 +17562,7 @@ header.brand-header .select-view .select-list li {
 		display:none;
 		padding: 10px; 
 		 color:black;		
-  		font-family:"Avenir Next";		
+  		font-family:"Montserrat";		
   		font-size:12px;		
  		 border:1px solid rgb(219, 234, 250);
 		}
@@ -17518,7 +17571,7 @@ header.brand-header .select-view .select-list li {
   bottom: 0;
   right: 0;
   color: #fff;
-  background-color: #961437;
+  background-color: #a91e3e;
   position: fixed;
   height: 35px;
   width: 126px;
@@ -17981,7 +18034,7 @@ address,.deliver-type,.shipping p{
 }
 
 .view-wishlist{
-	font-family: 'Avenir Next';
+	font-family: 'Montserrat';
 	font-size: 14px;
 	text-transform: initial !important;
 	text-align:left;
@@ -18016,8 +18069,8 @@ body .account .right-account form .select .half_span select
 {
 	  width: 20%;
   margin-right: 10px;
-  font-size: 10px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 500;
   float:left;
   color:#000;
 }
@@ -18030,7 +18083,7 @@ body .account .right-account form .select.gender select
 	width:50%;
 }
 .remove-btn{
-	font-family: 'Avenir Next';
+	font-family: 'Montserrat';
 	font-size: 12px;
 	text-decoration:underline;
 	text-transform: capitalize;
@@ -18093,7 +18146,7 @@ header .content .bottom .search .select-list select
 
 .sign-in wrapper .tabs li input
 {
-	font-family: 'Avenir Next';
+	font-family: 'Montserrat';
 	font-weight:normal;
 }
 
@@ -18135,7 +18188,7 @@ header .content .bottom .search .select-list select
     background-color: #A9143C;
     color: #fff;
     font-size: 12px;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     text-align: center;
    margin-left: 39px;
     font-weight: 600;
@@ -18160,7 +18213,7 @@ header .content .bottom .search .select-list select
   vertical-align: middle;
   text-transform: uppercase;
   text-align: center;
-  font-family: "Avenir Next";
+  font-family: "Montserrat";
   display: block;
   -webkit-transition: background 0.3s;
   -moz-transition: background 0.3s;
@@ -18569,7 +18622,7 @@ width:100%;
 }
 
 .electronics-brand .brands h1{
-	font-size:24px;
+	font-size:28px;
 	font-weight:500;
 }
 .electronics-brand .container > div:nth-child(4){
@@ -18874,7 +18927,7 @@ height: 0;
 .remove_filter:after{				
    content: "\00d7";
   color: #000;
-  font-family: "Avenir Next", "Courier New";
+  font-family: "Montserrat", "Courier New";
   font-size: 20px;
   font-weight: 500;
   top: 2px;
@@ -20306,7 +20359,7 @@ color: #ff829a;
           } */
      header .content  .bottom.active .search form
      {
-     	margin-right:0px;
+     	margin-right:5px;
      }
       header .content  .bottom.active nav > ul > li:first-child > ul
           {
@@ -20403,7 +20456,7 @@ display: inline-block;
 }
 .product-tile .short-info .product-name {
   font-size: 16px;
-  font-family: "Avenir Next", "Courier New";
+  font-family: "Montserrat", "Courier New";
   line-height: 1;
   padding-bottom: 2px;
   float: left;
@@ -20414,12 +20467,15 @@ display: inline-block;
  }
 .product-tile .short-info .company, .product-tile .short-info .price {
   font-size: 12px;
-  font-family: "Avenir Next", "Courier New";
-  line-height: 2;
+  font-family: "Montserrat", "Courier New";
+  line-height: normal;
   float: left;
   font-weight: 500;
   width:100%;
   text-align:left;
+}
+.product-tile .short-info .price{
+	font-size: 14px;
 }
 .product-tile .short-info .name {
   font-weight: 600;
@@ -20515,7 +20571,6 @@ display: inline-block;
 }
 .product-tile .short-info .color-swatch {
   float: right;
-  margin-top: 5px;
 }
 .product-tile .short-info .color-swatch img,.listing-leftmenu .Colour li.filter-Colour img{
 	border: 1px solid rgb(204, 211, 217);
@@ -20574,7 +20629,11 @@ body.page-shoe .feature-collections ul.collections li.chef.sub h3 span a{
   font-weight: 500;
   margin-left:5px;
   background-position-x: 60px;
-}}
+}
+.listing.wrapper .search-result h2{
+	margin-bottom:15px;
+}
+}
 .pagination .prev:before {
         content: "";
         display: inline-block;
@@ -21958,7 +22017,7 @@ body .account.preferences input[type=checkbox]:checked + label ,body .account.pr
   vertical-align: middle;
   text-transform: uppercase;
   text-align: center;
-  font-family: "Avenir Next";
+  font-family: "Montserrat";
   display: block;
   -webkit-transition: background 0.3s;
   -moz-transition: background 0.3s;
@@ -22447,7 +22506,7 @@ body .account .new-address form div#checkBox label
   font-weight:normal;
 }
 .forgot-password-container .actions .button, .click2chat-container .actions button, .click2call-container .actions button, .manage-wishlist-container .actions button, .create-new-wishlist-popup-container .create_wishlist#CreateNewWishlist , .return-requestInvoice .cancellation-request-block .actions button{
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   background-color: #A9143C;
   border: 2px solid #A9143C;
@@ -22463,7 +22522,7 @@ body .account .new-address form div#checkBox label
   border-left-color: #A9143C;
   border-left-style: solid;
   border-left-width: 2px;
-  height: 30px;
+  height: 40px;
   padding: 0 20px;
   color: #fff;
   -webkit-transition: color 0.3s,background 0.3s;
@@ -22517,8 +22576,8 @@ body .right-account .order-history .cancellation-request-block {
 }
 body .right-account .order-history .cancellation-request-block h2 {
     background: #f0f4f5;
-    line-height: 60px;
-    padding: 0 10px;
+    line-height: 30px;
+    padding: 15px 10px;
     font-size: 28px;
     font-weight: 500;
     text-align:left;
@@ -22560,7 +22619,6 @@ body .right-account .order-history .cancellation-request-block .return-form .ret
         font-weight: 600
     }
     body .right-account .order-history .cancellation-request-block .return-form .return-container .questions select {
-        height: 50px;
         font-size: 16px;
         font-weight: 500
     }
@@ -22577,7 +22635,6 @@ body .right-account .order-history .cancellation-request-block .return-form .but
     }
     body .right-account .order-history .cancellation-request-block .return-form .buttons button {
         width: 100%;
-        height: 50px;
         max-width: 420px
     }
    body .right-account .order-history .cancellation-request-block .return-form .buttons .close {
@@ -22700,7 +22757,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
       #colorbox #cboxClose:before {
         content: "\00d7";
         color: #a9143c;
-        font-family: "Avenir Next";
+        font-family: "Montserrat";
         font-size: 24px;
         font-weight: 500;
         margin-right:20px;
@@ -22841,7 +22898,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 
 .account-emptyOrderMessage
 {
-	font-family:"Avenir Next";
+	font-family:"Montserrat";
 	font-size:20px;
 	font-weight:500;
 	text-align:center;
@@ -22984,7 +23041,7 @@ font-weight:600;
 }
 .ia_price{
 	font-size: 12px;
-    font-family: "Avenir Next", "Courier New";
+    font-family: "Montserrat", "Courier New";
     line-height: 2;
     float: left;
     font-weight: 500;
@@ -23075,7 +23132,7 @@ div.complete-your-look h1 {
     font-weight: 500
 }
 .trending h1 span {
-    font-size: 24px;
+    font-size: 28px;
     line-height: 45px;
     vertical-align: middle;
     float: left;
@@ -24098,7 +24155,7 @@ span.brand-subdesc {
 
 .hero .major-promos span.bannercontent-headerdescription
 {
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
 	font-style: normal;
 	font-weight: 400;
 	line-height:22px;
@@ -24109,7 +24166,7 @@ span.brand-subdesc {
 }
 .hero .major-promos  span:first-child+span.banner-contentDescription
 {
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
 	font-style: normal;
 	font-weight: 400;
 	line-height:22px;
@@ -24164,7 +24221,7 @@ span.brand-subdesc {
     vertical-align: middle;
     text-transform: uppercase;
     text-align: center;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     display: block;
     margin-top: 5px;
     border: 1px solid #a9143c;
@@ -24198,6 +24255,7 @@ span.brand-subdesc {
  border:1px solid #DFD1D5;
     margin-top:16px;
    	height:30px;
+	 line-height: 1.5;
    	font-size: 18px;
     font-weight: 500;
     min-width:30%;}
@@ -24216,7 +24274,7 @@ span.brand-subdesc {
 	position:static;
 	left:0px;
 	right:0px;
-	font-family: 'Avenir Next';
+	font-family: 'Montserrat';
 	font-size:24px;
 	font-weight: 500;
 	color:#000;
@@ -24632,12 +24690,12 @@ body.page-productDetails header .content .right .forgot-password {
 	height:auto;
 }
 .mpl-addressPopup.modal .addressItem {
-	font-family:"Avenir Next";
+	font-family:"Montserrat";
 	padding:20px;
 	text-align:left;
 }
 body .account .right-account .mpl-addressPopup.modal .account-addressBooktitle {
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
     font-weight: 500;
     font-size: 16px;
     padding-bottom:10px;
@@ -24708,7 +24766,7 @@ div.other-sellers .manage-wishlist tbody tr td, div.other-sellers .emi-table tbo
      .marketplaces .close:before {
         content: "\00d7";
         color: #000;
-        font-family: "Avenir Next";
+        font-family: "Montserrat";
         font-size: 24px;
         font-weight: 500;
         -webkit-transition: font-weight 0.15s;
@@ -25126,14 +25184,17 @@ width:100% !important;}
 	max-height:300px;
 	overflow-y:auto;
 }
-.product-tile .details.short-info .brand{
+.product-tile .details.short-info .brand, ,.product-tile .short-info .company{
 	margin-bottom: 15px;
 	font-size:14px;
 	min-height:10px;
-	display: table-header-group;
 	text-align:left;
-	
+	float: left;
+    width: 50%;
 }
+body .account .right-account .my-reviews .product-tile .short-info .company{
+	 width: 100%;
+	 font-size:12px;}
 header .banner.active span.toggle.mobile::before,header .banner.active span.toggle.mobile::after {
 	opacity:0;
 	margin-top:-20px;
@@ -25235,6 +25296,11 @@ div.variantFormContainer{
 	}
 	body .account .right-account .account-profileEmail {
 		width:100% !important;
+		padding-right:2px !important;
+	}
+	body .account .right-account form .full.phone input {
+    width: -webkit-calc(100% - 62px);
+    width: calc(100% - 62px);
 	}
 	#up {
 	display:none;
@@ -25242,7 +25308,7 @@ div.variantFormContainer{
 	.nav-orderHistory {
 		display:block;
 		font-weight:600;
-		font-family:"Avenir Next";
+		font-family:"Montserrat";
 		font-size:12px;
 		margin-bottom:20px;
 	}
@@ -25260,10 +25326,7 @@ div.variantFormContainer{
 	    margin-right: 5px;
 	    margin-top:1px;
 	}
-	body .account .right-account .order-history.order-details li.header>ul>li {
-		border:none;
-	}
-	
+
 }
 @media (max-width: 400px){
 	.header .banner .content form{
@@ -25286,7 +25349,7 @@ div.variantFormContainer{
 	.nav-orderHistory {
 	display:block;
 	    font-weight: 600;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     font-size: 12px;
     margin-bottom: 20px;
 	position:relative;
@@ -25590,7 +25653,7 @@ padding:0;
     vertical-align: middle;
     text-transform: uppercase;
     text-align: center;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     display: block;
     -webkit-transition: background 0.3s;
     -moz-transition: background 0.3s;
@@ -25882,7 +25945,7 @@ body .account .right-account .order-history.order-details li.item .actions a:vis
  .cancellation-request-block button.close:before {		
   	    content: "\00d7";		
     color: #000;		
-    font-family: "Avenir Next";		
+    font-family: "Montserrat";		
     font-size: 24px;		
     font-weight: 500;		
   }
@@ -25912,7 +25975,7 @@ padding-left: 0px;}
 	font-weight:500;
 	font-size:14px;
 	margin-top: 8px;
-	width:27%;}
+	width:28%;}
 	.toggle-filterSerp:after{
 	content: "\f00d";
     font-family: 'FontAwesome';
@@ -25981,7 +26044,7 @@ padding-left: 0px;}
     .sort-refine-bar.wrapped-form.sort.mobile{
     position: absolute;
     top:1px;
-    left:27%;
+    left:32%;
     }
    .lookbook_wrapper .sort-refine-bar.wrapped-form.sort.mobile{
     left:20px;
@@ -26223,7 +26286,7 @@ color:#A9143C;
     border-color: #A9143C !important;
     color:#fff;
     height:30px !important;
-
+	min-width: 110px;
 }
 
 a.cvvHelp#cvvHelp + div.popover{
@@ -26364,7 +26427,7 @@ line-height:19px;
     width: 75%;
 	}
 	#addToCartButton {
-	height:40px;
+	height:42px;
 	}
 	.cart.wrapper .left-block .payments.tab-view .nav li.active span,.cart.wrapper .left-block .payments.tab-view .nav > li{
 	display:block;
@@ -26971,6 +27034,9 @@ max-width:100%;
 		width:23%;
 	}
 }
+body .account .right-account .order-history.order-details .product-block li.item .details p{
+	font-size:12px;
+}
 body .account .right-account .order-history.order-details li.item .status .message p {
 	font-size:12px;
 	font-weight:600;
@@ -27434,6 +27500,7 @@ div.other-sellers .other-sellers-table tbody tr td>div.sellerAddToBagTitle:after
 	display: block;
 	width: 100%;
 	color:#ff2c43;
+	line-height: 16px;
 }
 .off-bag span:last-child {
 	color:#000;
@@ -27521,12 +27588,16 @@ body .account .right-account .updatePassword-wrapper{
 #track-more-info p {
 	display:none;
 }
+
 #track-more-info p.active {
 	display:inline;
 	font-weight: bold;
     letter-spacing: 0.5px;
     font-size:10px;
 }
+@media (max-width:790px){
+#track-more-info p{
+position:static;}}
 #track-more-info p span {
 	text-decoration:underline;
 }
@@ -27650,13 +27721,6 @@ content: "";
 .offer-tooltip-wrapper span.offer-popover{
 	width:120%;
 }
-.priceFormat{
-	font-family:DejaVu Sans;
-	font-size:98%;
-	background:transparent !important;
-	display:inline !important;
-	border:none;
-	}
 	.priceFormat:before,.priceFormat:after{
 	content:"";
 	display:none;
@@ -27757,7 +27821,7 @@ padding-right: 10px;
     vertical-align: middle;
     text-transform: uppercase;
     text-align: center;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     display: block;
     margin-top:5px;
     border:0px;
@@ -27846,6 +27910,7 @@ body.page-reviews .right-account .reviews .navigation p {
 .feature-collections ul.collections li.chef.sub h3 {
     width: 100%;
     max-width: 100%;
+	  word-break: break-word;
 } 
 header>.content .top .toggle span {
 		width: calc(100% - 30px);
@@ -27949,6 +28014,7 @@ body .account .account-header select.menu-select optgroup option{
 	}
 	.cart.wrapper .product-block li.item ul .item-edit-details li{
 	vertical-align: top;
+	margin: 0 2px 0 2px !important;
 }
 	.cart.wrapper .product-block li.item ul .item-edit-details{
 	white-space: normal;
@@ -27956,8 +28022,8 @@ body .account .account-header select.menu-select optgroup option{
 	.cart.wrapper .product-block li.item > ul.desktop > li.delivery{
 	    position: absolute;
     width: 60%;
-    left: 34%;
-    top: 53%;
+    left: 32%;
+    top: 55%;
     font-size: 10px;
 	}
 	.cart.wrapper .product-block li.item > ul.desktop > li.price{
@@ -27994,6 +28060,12 @@ body .account .account-header select.menu-select optgroup option{
     font-weight: bold;
     max-width:200px;
 }
+.product-block.wishlist form#addToCartForm{
+	position: absolute;
+    width: 100%;
+    bottom: -37%;
+    margin-left: -3px;
+}
 .cart.wrapper .product-block li.item ul form#addToCartForm .item-edit-details li:first-child{
 	width:80%;
 }
@@ -28017,7 +28089,7 @@ body .account .account-header select.menu-select optgroup option{
 	border: 1px solid #DFD1D5;
     margin-bottom: 10px;
     padding: 10px;
-    font-family: Avenir Next;
+    font-family: Montserrat;
     font-size: 12px;
 }
 .review-list .close-info{
@@ -28397,7 +28469,7 @@ body .account .right-account.rewards>div.customer-service h2, body .account .rig
 }
 
 body .account .right-account.rewards>div.customer-service h2 {
-	font-family: "Avenir Next", "Courier New";
+	font-family: "Montserrat", "Courier New";
 }
 
 body .account .right-account.rewards>div.customer-service p {
@@ -29126,11 +29198,11 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
 @media(min-width:791px) and (max-width:1300px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
-    	left: 210px;
+    	left: 110px;
 	}
 	header.compact .content .marketplace.compact + .right > ul > li.store-locator-header{
 	    position: absolute;
-    	left: 120px;
+    	left: 10px;
 	}
 	/* header.compact .content .marketplace.compact a img{
 	width:180px;
@@ -29316,7 +29388,7 @@ min-width: 150px;
 }
 
 .feature-categories.footwear h1{
-	font-size:24px;
+	font-size:28px;
 	padding: 40px 0;
 }
 
@@ -29404,7 +29476,7 @@ body .account .right-account .order-history .bottom .pagination.mobile{
 }
 @media(max-width:650px){
 .feature-collections ul.collections li.chef h3 span {
-		font-family: "Avenir Next", "Courier New";
+		font-family: "Montserrat", "Courier New";
 		font-style: normal;
 		font-size: 14px;
 	}
@@ -29631,7 +29703,7 @@ footer>ul>li>.toggle>img{
     background: transparent;
     border: 1px solid #4a4a4a;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     width: 300px;
     text-decoration: none;
     margin: 0px auto;
@@ -29680,7 +29752,7 @@ footer .footer-text {
     line-height: 17px;
     text-align: justify;
     font-size: 12px;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     color:#333;
 }
 /* @media(min-width:791px){
@@ -29788,9 +29860,9 @@ width:100%;
     line-height:40px;
     width: 150px;
     text-transform: uppercase;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
     margin:0px auto;
     display: block;
 }
@@ -29799,8 +29871,8 @@ width:100%;
 }
 .home-brands-you-love-wrapper h1{
 	text-align: center;
-    font-size: 30px;
-    font-weight: 600;
+    font-size: 28px;
+    font-weight: 500;
 }
 
 .home-brands-you-love-carousel-brands.active img{
@@ -29873,7 +29945,7 @@ margin: 10px 0px;
 }
 #bestPicks .short-info span , #bestPicks .short-info p{
     /* font-size: 12px;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     color:#333;
      font-weight: 500; 
     text-align: center;*/
@@ -29895,7 +29967,7 @@ font-family:DejaVu Sans;
 
 #bestPicks .short-info a {
     /* font-size: 12px;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
      font-weight: 600; 
     text-align: center;*/
     line-height: 1;
@@ -29905,7 +29977,7 @@ font-family:DejaVu Sans;
 }
 #bestPicks .short-info a span,#bestPicks .short-info a p {
     /* font-size: 12px;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     color:inherit;
      font-weight: 600; 
     text-align: center;*/
@@ -29916,7 +29988,7 @@ font-family:DejaVu Sans;
 }
 #bestPicks .short-info span a,#bestPicks .short-info p a {
     /* font-size: 12px;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     font-weight: 600;
     text-align: center; */
     line-height: 1;
@@ -29929,14 +30001,14 @@ font-family:DejaVu Sans;
     border: 1px solid #bbb;
     color: #333;
     font-size: 12px;
-    font-family: "Avenir Next";
-    font-weight: 600;
+    font-family: "Montserrat";
+    font-weight: 500;
 	    margin: 15px auto;
     text-transform: uppercase;
     display: block;
     width: 200px;
     text-align: center;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
 }
 /*best picks end*/
 div#promobannerhomepage{
@@ -29966,8 +30038,11 @@ height:80px;
     text-align: center;
     padding: 30px 0;
     font-weight: 500;
-    font-size: 24px;
+	font-size: 28px;
     word-break: break-word;
+   }
+.showcase .desc-section h1 {
+    font-size: 24px;
 }
 .showcase-switch> div{
 width:33.33%;
@@ -30044,7 +30119,7 @@ a.button.trending-button {
     color: #333;
     border: 1px solid #4a4a4a;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
 	width: 80%;
     display: block;
@@ -30067,7 +30142,7 @@ a.button.maroon {
     line-height: 1;
     padding-top:14px;
     letter-spacing: 1px;
-    font-weight: bold;
+    font-weight: 500;
     text-transform: uppercase;
 }
 @media(max-width:995px) and (min-width:651px){
@@ -30099,7 +30174,7 @@ padding: 15px 0;
 }
 #newAndExclusive h1{
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     padding: 40px 0;
     font-weight: 500;
 }
@@ -30165,7 +30240,7 @@ color:#000;
 }
 .qued h1 {
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     padding: 40px 0;
     font-weight: 500;
 	}
@@ -30181,7 +30256,7 @@ color:#000;
     
 }
 .qued-content h5 {
-    font-size: 17px;
+    font-size: 20px;
     line-height: 20px;
     text-align: left;
 	    margin: 0px;
@@ -30243,7 +30318,7 @@ a.button, button {
     line-height: 24px;
     text-align: center;
 	 padding: 13px 18px;
-    font-family: "Avenir Next";
+    font-family: "Montserrat";
     letter-spacing: 1px;
     vertical-align: middle;
     text-transform: uppercase;
@@ -30418,8 +30493,12 @@ body.page-productDetails .gig-media-caption a,body.page-reviews .gig-media-capti
 }  
 
 #loginDivsiginflyout > table > tbody > tr > td table td:first-child{
-	width: 10% !important;
+	width: 20% !important;
 } 
+@media (max-width: 855px) and (min-width: 791px){
+#loginDivsiginflyout > table > tbody > tr > td table td:first-child{
+	width: 7% !important;
+} }
 #commentsDiv {
     width: 80% !important;
     clear: both;
@@ -30492,13 +30571,14 @@ header:not(.compact) .content .marketplace.compact{
     font-size:12px;}
     header .banner .content form select#reasonOrEvent{
     padding-left:5px;
-    width:65%;}
+    width:50%;}
     header .banner .content form span{
     font-size:14px;
     margin:0 3px;}
     #typeOfProduct{
     width:65%;
-    font-size:12px !important;}
+    font-size:12px !important;
+	  line-height: 2;}
     header .banner .content form button{
     width: 60%;
     margin-left: 20%;
@@ -32130,7 +32210,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 }
 .dropdown {
 	position: relative;
-	font-family: 'Avenir Next';
+	font-family: 'Montserrat';
 	font-size:12px;
 	font-weight:500;
 	cursor:pointer;
@@ -32145,9 +32225,13 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 	font-size: 14px;
 	text-align: left;
 	background-color: #fafafa;
-	width:280px;
+	width:337px;
 	padding:0 20px;
 }
+@media (max-width: 855px) and (min-width: 791px){
+.dropdown-menu {
+    width: 277px;
+}}
 .loggedIn-flyout li a
 {
 	background:none !important;
@@ -36118,7 +36202,7 @@ ul li a:hover .dropdown-menu {
 
 
 .mini-bag .item .price{
-	line-height: 50px !important;
+	line-height: 39px !important;
 }
 
 .mobile-product li .product .price{
@@ -36192,14 +36276,14 @@ border: 2px solid #000 !important;
 }
 
 .Emi-tableTitle {
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
 	font-size: 16px;
 	font-weight: 500;
 
 }
 
 .Emi-subTitle {
-	font-family: "Avenir Next";
+	font-family: "Montserrat";
 	display: block;
 	font-size:12px;
 	margin-top:10px;
@@ -36256,10 +36340,12 @@ border: 2px solid #000 !important;
 .addToCartButtonIdMSD, .addToCartButtonIdMSD:before {
     content: "\e605";
     display: block;
-    font-size:22px;
+    font-size:17px;
 }
 div.MSDQuickView, div.MSDQuickView:before {
-	font-size:22px;
+	font-size:17px;
+	font-weight:100;
+	color:#a9143c;
 }
 @media (min-width: 651px){
 .spacer {
@@ -36339,7 +36425,7 @@ span.sizesAvailableMSD {
 }
 .global-alerts 
 {
-	  font-family: 'Avenir Next";
+	  font-family: 'Montserrat";
 	  font-size:14px;
 	   opacity: 1;
 }
@@ -36623,8 +36709,7 @@ input#otpMobileNUMField:focus {
 }
 #juspayconnErrorDiv span {
 	margin: 0px 15px;
-    line-height: 48px;
-}
+   }
 #sendOTPButton {
 	position: relative;
 }
@@ -37556,6 +37641,34 @@ font-size:14px;}
 .cart.wrapper .left-block .payments.tab-view .tabs .product-block li.header {
     height: auto;
 }
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 
+     	 header .banner .content form {
+        max-width: 770px; }
+      .priceFormat{
+	font-family:DejaVu Sans;
+	font-size:98%;
+	background:transparent !important;
+	display:inline !important;
+	border:none;
+	}
+	}
+span.priceFormat{
+	background:none !important;
+}
+.gig-comments-container .gig-comments-count{
+	font-size:14px;
+}
+.page-productDetails .trending:nth-child(odd) {
+    background-color: #edeef0;
+}
+@media(max-width:340px){
+.newsletter button{
+	font-size:11px;
+}}
+.simple-banner-component img{
+max-width:100%;
+}
+
 /* SAP Code Start */
 .pickup_Edit{
 	display: none;
@@ -37592,6 +37705,8 @@ font-size:14px;}
     border-bottom-color: #000000;
 }
 
+
+
 /* -------------------------------- 
 
 
@@ -37608,6 +37723,8 @@ Modules - reusable parts of our design
   white-space: nowrap;
 }
 
+
+
 /* -------------------------------- 
 
 
@@ -37619,9 +37736,14 @@ Main components
 .cd-popup-trigger {
   
 }
+
+
 @media only screen and (min-width: 1170px) {
   
 }
+
+
+
 
 /* -------------------------------- 
 
@@ -37650,6 +37772,7 @@ xpopup
   -moz-transition: opacity 0.3s 0s, visibility 0s 0s;
   transition: opacity 0.3s 0s, visibility 0s 0s;
 }
+
 
 .cd-popup-container {
   position: relative;
