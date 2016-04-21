@@ -4,15 +4,23 @@
 package com.tisl.mpl.facade.product.impl;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.SizeGuideModel;
@@ -50,7 +58,10 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	@Resource(name = "sizeGuideComparator")
 	private SizeGuideComparator sizeGuideComparator;
-
+	@Resource(name = "productService")
+	private ProductService productService;
+	@Resource(name = "accProductFacade")
+	private ProductFacade productFacade;
 
 	/**
 	 * @description It is used for fetching all distinct Size Guides of an online product
@@ -132,10 +143,29 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 		try
 		{
-			final Map<String, List<SizeGuideData>> sizeGuideDatas = getProductSizeguide(productCode, "x");
+			ProductModel productModel = null;
+			ProductData productData = null;
+			if (StringUtils.isNotEmpty(productCode))
+			{
+				productModel = productService.getProductForCode(productCode);
+			}
+			if (null != productModel)
+			{
+				productData = productFacade.getProductForOptions(productModel,
+						Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+								ProductOption.CATEGORIES, ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL,
+								ProductOption.CLASSIFICATION));
+			}
+
+			Map<String, List<SizeGuideData>> sizeGuideDatas = null;
+			/* TISMOBQ-42 */
+			if (StringUtils.isNotEmpty(productCode) && null != productData && StringUtils.isNotEmpty(productData.getRootCategory()))
+			{
+				sizeGuideDatas = getProductSizeguide(productCode, productData.getRootCategory());
+			}
 
 			/* Converting the SizeGuide Model to SizeGuide Web service Data transaction */
-			if (sizeGuideDatas != null)
+			if (null != sizeGuideDatas)
 			{
 				sizeGuideDataList = new ArrayList<SizeGuideWsData>();
 				for (final String dimension : sizeGuideDatas.keySet())

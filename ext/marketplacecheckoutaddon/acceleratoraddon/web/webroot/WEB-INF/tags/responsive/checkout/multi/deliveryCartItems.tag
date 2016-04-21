@@ -1,3 +1,4 @@
+
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true" %>
 <%@ attribute name="cartData" required="true" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ attribute name="showDeliveryAddress" required="true" type="java.lang.Boolean" %>
@@ -12,12 +13,23 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
-
+<style>
+	.cart.wrapper .right-block .block.bottom.order-details, .confirmation .right-block .block.bottom.order-details span {
+		padding-left: 10px;
+	}
+	.rightBlockSubHeading {
+		font-weight: 600;
+	}
+	.cart.wrapper .right-block .block.bottom.order-details > ul li.items-shipped-count {
+		margin-left: 0px !important;
+	}
+</style>
 <c:set var="hasShippedItems" value="${cartData.deliveryItemsQuantity > 0}" />
 <c:set var="deliveryAddress" value="${cartData.deliveryAddress}"/>
 
 <c:if test="${not hasShippedItems}">
-	<spring:theme code="checkout.pickup.no.delivery.required"/>
+	<%-- <spring:theme code="checkout.pickup.no.delivery.required"/> --%>
+	<span class="rightBlockSubHeading">Collect In-Store</span>
 </c:if>
 
 <c:if test="${hasShippedItems}">
@@ -25,7 +37,7 @@
 		<c:choose>
 			<c:when test="${showDeliveryAddress and not empty deliveryAddress}">
 			<h2>Delivery Details</h2>
-				<p><spring:theme code="checkout.pickup.items.to.be.shipped"/></p>
+				<p><spring:theme code="checkout.pickup.items.to.be.shipped" text="Shipping Address"/></p>
 				<address>
 					${fn:escapeXml(deliveryAddress.title)}${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}
 					<br>
@@ -84,8 +96,14 @@
 <li class="items-shipped-count">
 <c:if test="${ not empty cartData.totalUnitCount }">
 <%-- 	${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress"/> --%>
-		<c:if test="${cartData.totalUnitCount > 1}">${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.items" /></c:if>
-	<c:if test="${cartData.totalUnitCount <= 1}">${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.item" /></c:if>
+		<c:if test="${not hasShippedItems}">
+			<c:if test="${cartData.totalUnitCount > 0}">${cartData.totalUnitCount}&nbsp;<%-- <spring:theme code="basket.page.totalQtyForAddress.items" /> --%> ITEMS PICKUP FROM BELOW STORE</c:if>
+			<%-- <c:if test="${cartData.totalUnitCount <= 1}">${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.item" /></c:if> --%>
+		</c:if>
+		<c:if test="${hasShippedItems}">
+			<c:if test="${cartData.totalUnitCount > 0}">${cartData.deliveryItemsQuantity}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.items" /></c:if>
+		<%-- 	<c:if test="${cartData.totalUnitCount <= 1}">${cartData.totalUnitCount}&nbsp;<spring:theme code="basket.page.totalQtyForAddress.item" /></c:if> --%>
+		</c:if>
 </c:if>
 </li>
 <c:forEach items="${cartData.entries}" var="entry">

@@ -79,25 +79,30 @@ if(typeof(arrayrating)!= "undefined"){
 			
 			if(updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "")		
 			{		
-			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment Title cannot be left blank.</p>");		
+				$(".errorUpdateReview"+indexElement).html($("#comment_title_empty").text());		
 			    isValidated=false;		
 			}else if(updatedReviewHeading.length > 250){
-				$(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater than 250 charecters.</p>");		
+				$(".errorUpdateReview"+indexElement).html($("#comment_title_length").text());	
 			    isValidated=false;
 			}
 			if(updatedCommentTitle == undefined || updatedCommentTitle.replace(/\s/g, '')  == "")		
 			{		
-			    $(".errorUpdateReview"+indexElement).html("<p>Please enter comments.Comment text cannot be left blank.</p>");		
+				$(".errorUpdateReview"+indexElement).html($("#comment_text_empty").text());	
 			    isValidated=false;		
 			}else if(updatedCommentTitle.length > 5000){
-				$(".errorUpdateReview"+indexElement).html("<p>Review text cannot be greater than 5000 charecters.</p>");		
+				$(".errorUpdateReview"+indexElement).html($("#comment_text_length").text());		
 			    isValidated=false;	
 			}
 			
+			if((updatedReviewHeading == undefined ||updatedReviewHeading.replace(/\s/g, '')  == "") && (updatedCommentTitle == undefined || updatedCommentTitle.replace(/\s/g, '')  == ""))		
+			{		
+			    $(".errorUpdateReview"+indexElement).html($("#comment_text_title_empty").text());		
+			    isValidated=false;		
+			}
 			//TISSTRT-290 fix
 			if((updatedReviewHeading.length > 250) && (updatedCommentTitle.length > 5000))		
 			{		
-			    $(".errorUpdateReview"+indexElement).html("<p>Review title cannot be greater that 250 characters<br/>Review text cannot be greater than 5000 charecters.</p>");		
+				 $(".errorUpdateReview"+indexElement).html($("#comment_text_title_length").text());		
 			    isValidated=false;		
 			}
 			var x = updatedReviewHeading.length;
@@ -369,8 +374,8 @@ if(typeof(arrayrating)!= "undefined"){
 			
 		    function reviewPopUpDisplay(rootCategory , productCode , productTitle,productBrand,id){
 		    	
-		    	$(".popUpProductTitle").text(productTitle);
-		    	$(".popUpProductBrand").text(productBrand);
+		    	$(".popUpProductTitle").text(decodeURI(productTitle));
+		    	$(".popUpProductBrand").text(decodeURI(productBrand));
 		    	var x = $("#new-review-link"+productCode).siblings().find(".picZoomer-pic").attr("src");
 		    	
 		    	if(typeof(x) == "undefined" || x == ""){

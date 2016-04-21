@@ -76,7 +76,7 @@ INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];des
 
 ;HOME-DELIVERY;HD;
 ;EXPRESS-DELIVERY;ED;
-;CLICK-COLLECT;CC;
+;CLICK-AND-COLLECT;CNC;
 ;AIR;AIR;
 ;SURFACE-GROUND;SUR;
 ;BILLING-ADDRESS;BA;
@@ -144,6 +144,5 @@ INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];des
 INSERT_UPDATE SearchRestriction;code[unique=true];query;principal(UID);restrictedType(code);active;generate[default=FALSE]
 #;CancelReason_Restriction;({code} NOT IN ('OutOfStock','LateDelivery','Warehouse', 'CustomerRequest','Other','NA'));employeegroup;CancelReason;true;
 #;RefundReason_Restriction;({code} NOT IN ('PriceMatch','LostInTransit','ManufacturingFault', 'WrongDescription','MissedLinkDeal','MispickWrongItemDelivered','MispickItemMissing','SiteError','GoodWill'));employeegroup;RefundReason;true;
-;CancelReason_Restriction;({code} NOT IN ('OutOfStock','LateDelivery','Warehouse','CustomerRequest','Other','NA','04','02','01','05','03','Booked a duplicate order','Estimated shipping time is taking too long','Do not want the product - change of mind','Found the product cheaper on another website','Product specifications are incorrect','Lower price at other place','I changed my mind','I found a better deal on another website	','I placed my order twice by mistake','The product specifications are wrong','Partner seller request','My delivery is taking too long','Security risk with the Order','Canâ€™t meet the committed delivery time','Order lost in transit','Inventory not available / Quality Fails','Due to unavoidable logistical issues'));employeegroup;CancelReason;true;
+;CancelReason_Restriction;({code} NOT IN ('OutOfStock','LateDelivery','Warehouse','CustomerRequest','Other','NA','04','02','01','05','03','Booked a duplicate order','Estimated shipping time is taking too long','Do not want the product - change of mind','Found the product cheaper on another website','Product specifications are incorrect','Lower price at other place','I changed my mind','I found a better deal on another website	','I placed my order twice by mistake','The product specifications are wrong','Partner seller request','My delivery is taking too long','Security risk with the Order','Can’t meet the committed delivery time','Order lost in transit','Inventory not available / Quality Fails','Due to unavoidable logistical issues'));employeegroup;CancelReason;true;
 ;RefundReason_Restriction;({code} NOT IN ('DamagedInTransit','PriceMatch','LostInTransit','ManufacturingFault','WrongDescription','MissedLinkDeal','MispickWrongItemDelivered','MispickItemMissing','SiteError','GoodWill','Faulty Product','Does not fit (Too Small / Too Large)','Missing part of the product','Received wrong item','Looks different to image on site (Doesn''t like it)','Product arrived Damaged','Quality unsatisfactory','Missed agreed delivery date (Arrived too late)','Lower price at other place'));employeegroup;RefundReason;true;
-

@@ -272,7 +272,6 @@ public class GigyaServiceImpl implements GigyaService
 					loginUserInfo.put("email", emailId);
 					loginUserInfo.put("lastName", lastName);
 				}
-
 				//Defining the request
 				final GSRequest request = new GSRequest(getApikey(), getSecretkey(), gigyaMethod);
 				if (proxyEnabledStatus.equalsIgnoreCase(TRUE_STATUS))
@@ -280,29 +279,23 @@ public class GigyaServiceImpl implements GigyaService
 					setProxy();
 					request.setProxy(proxy);
 				}
-
 				// Adding parameters
 				request.setParam(MarketplacecclientservicesConstants.PARAM_SITEUID, customerModel.getUid());
 				request.setParam(MarketplacecclientservicesConstants.PARAM_ISNEWUSER, isNewUser);
 				request.setParam(MarketplacecclientservicesConstants.PARAM_USERINFO, userAction);
 				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
 				request.setAPIDomain(getDomain());
-
 				if (loginUserInfo.toString() != null)
 				{
 					request.setParam("userInfo", loginUserInfo.toString());
 				}
-
 				// Step 3 - Sending the request
 				LOG.debug(MarketplacecclientservicesConstants.WAIT_RESPONSE);
 				final GSResponse response = request.send();
-
 				// Step 4 - handling the request's response.
-
 				if (response != null)
 				{
 					if (response.getErrorCode() == 0)
-
 					{
 						LOG.debug(response.getResponseText());
 						final GSObject responsedata = response.getData();
@@ -591,8 +584,6 @@ public class GigyaServiceImpl implements GigyaService
 		}
 
 	}
-
-
 
 
 	/*

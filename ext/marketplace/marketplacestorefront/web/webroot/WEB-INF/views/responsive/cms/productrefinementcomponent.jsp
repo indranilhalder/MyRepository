@@ -28,7 +28,9 @@ $(document).ready(function(){
 <ul id="product-facet " class="product-facet js-product-facet listing-leftmenu">
 
 		<div class="facet-name js-facet-name">
+				<c:if test="${empty hideDepartments}">
 				<h4 class="false tree-dept"><spring:theme code="search.nav.facetTitle" arguments="department"/></h4>
+				</c:if>
 		</div>
 		<c:choose>
 		<c:when test="${isCategoryPage}">

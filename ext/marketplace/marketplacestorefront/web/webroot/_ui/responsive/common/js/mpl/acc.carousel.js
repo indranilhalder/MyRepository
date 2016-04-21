@@ -3,6 +3,7 @@ ACC.carousel = {
 	_autoload: [
 	     "myFun",
 	     "shopByLookCarousel",
+	     "offersCarousel",
 	     "categoryCarousel",
 	     "myStyleCarousel",
 	     "heroProductCarousel",
@@ -103,6 +104,23 @@ ACC.carousel = {
 			itemsTablet: false, 
 			itemsMobile : false
 		});
+	},
+	offersCarousel: function(){
+		$(".offersCarousel").owlCarousel({
+			navigation:true,
+			rewindNav: false,
+			navigationText :[],
+			pagination:false,
+			items:4,
+		/*	itemsDesktop : false, 
+			itemsDesktopSmall : false, 
+			itemsTablet: false, 
+			itemsMobile : true
+		*/itemsDesktop : [5000,4], 
+		itemsDesktopSmall : [1400,4], 
+		itemsTablet: [650,2], 
+		itemsMobile : [480,2],
+			});
 	},
 	myStyleCarousel: function(){
 		$(".mystyle-carousel").owlCarousel({

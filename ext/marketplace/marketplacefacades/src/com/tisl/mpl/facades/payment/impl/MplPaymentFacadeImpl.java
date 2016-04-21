@@ -4,6 +4,7 @@
 package com.tisl.mpl.facades.payment.impl;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -58,6 +59,7 @@ import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.PaymentService;
@@ -110,6 +112,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 
+	@Resource(name = "mplCustomAddressFacade")
+	private MplCustomAddressFacade mplCustomAddressFacade;
+
 	private static final Logger LOG = Logger.getLogger(MplPaymentFacadeImpl.class);
 
 	/**
@@ -122,7 +127,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	 *
 	 */
 	@Override
-	public Map<String, Boolean> getPaymentModes(final String store) throws EtailNonBusinessExceptions
+	public Map<String, Boolean> getPaymentModes(final String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions
 	{
 
 		//Declare variable
@@ -133,13 +138,48 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			//Get payment modes
 			final List<PaymentTypeModel> paymentTypes = getMplPaymentService().getPaymentModes(store);
 
+			boolean flag = false;
+			CartData cartData=null;
+			if (isMobile)
+			{
+				LOG.debug("Mobile payment modes cart Id................" + cartDataMobile.getCode());
+				cartData = cartDataMobile;
+			}
+			else
+			{
+				cartData = getMplCustomAddressFacade().getCheckoutCart();
+			}
+			
+			
+			for (final OrderEntryData entry : cartData.getEntries())
+			{
+
+				if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getCode() != null)
+				{
+					if (entry.getMplDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+					{
+						LOG.info("Any product Content CnC Then break loop and change flag value");
+						flag = true;
+						break;
+					}
+				}
+			}
+
 			if (CollectionUtils.isNotEmpty(paymentTypes))
 			{
 				//looping through the mode to get payment Types
 				for (final PaymentTypeModel mode : paymentTypes)
 				{
 					//retrieving the data
-					data.put(mode.getMode(), mode.getIsAvailable());
+					if (flag && mode.getMode().equalsIgnoreCase(MarketplaceFacadesConstants.PAYMENT_METHOS_COD))
+					{
+						LOG.debug("Ignoring to add COD payment for CNC Product ");
+					}
+					else
+					{
+						LOG.info("****Print all Payment type ");
+						data.put(mode.getMode(), mode.getIsAvailable());
+					}
 				}
 			}
 			else
@@ -1312,6 +1352,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		return savedCardDataMap;
 	}
 
+
 	/**
 	 * @return MplPromoPriceData
 	 * @throws CalculationException
@@ -1328,6 +1369,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions
+
 	{
 		return getMplPaymentService().applyPromotions(cartData, cart);
 	}
@@ -1590,6 +1632,27 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void setSendSMSFacade(final SendSMSFacade sendSMSFacade)
 	{
 		this.sendSMSFacade = sendSMSFacade;
+	}
+
+
+
+	/**
+	 * @return the mplCustomAddressFacade
+	 */
+	public MplCustomAddressFacade getMplCustomAddressFacade()
+	{
+		return mplCustomAddressFacade;
+	}
+
+
+
+	/**
+	 * @param mplCustomAddressFacade
+	 *           the mplCustomAddressFacade to set
+	 */
+	public void setMplCustomAddressFacade(final MplCustomAddressFacade mplCustomAddressFacade)
+	{
+		this.mplCustomAddressFacade = mplCustomAddressFacade;
 	}
 
 }

@@ -333,7 +333,28 @@ public class SalesOrderXMLUtility
 					{
 						xmlToFico = false;
 					}
-
+					//deliveryMode
+					if (null != entry.getMplDeliveryMode() && xmlToFico)
+					{
+						LOG.debug("DeliveryMode Setting into childOrderDataforXml");
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT))
+						{
+							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.CnC);
+						}
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+						{
+							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.HD);
+						}
+						if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+						{
+							xmlData.setDeliveryMode(MarketplacecommerceservicesConstants.ED);
+						}
+						LOG.info("DeliveryMode For FICO  >>>>>>>> " + entry.getMplDeliveryMode().getDeliveryMode().getCode());
+					}
+					else
+					{
+						xmlToFico = false;
+					}
 					if (null != (entry.getOrderLineId()) || null != (entry.getTransactionID()) && xmlToFico)
 					{
 						xmlData.setTransactionId((entry.getOrderLineId() != null) ? entry.getOrderLineId() : entry.getTransactionID());

@@ -163,6 +163,7 @@ import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.myfavbrandcategory.MplMyFavBrandCategoryFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
+import com.tisl.mpl.facades.MplCouponWebFacade;
 import com.tisl.mpl.facades.MplPaymentWebFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.account.cancelreturn.CancelReturnFacade;
@@ -200,6 +201,7 @@ import com.tisl.mpl.user.data.AddressDataList;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.validation.data.AddressValidationData;
 import com.tisl.mpl.webservice.businessvalidator.DefaultCommonAsciiValidator;
+import com.tisl.mpl.wsdto.CommonCouponsDTO;
 import com.tisl.mpl.wsdto.EMIBankListWsDTO;
 import com.tisl.mpl.wsdto.EMIBankWsDTO;
 import com.tisl.mpl.wsdto.EMITermRateDataForMobile;
@@ -379,7 +381,10 @@ public class UsersController extends BaseCommerceController
 	private ProductDetailsHelper productDetailsHelper;
 
 	@Autowired
+	private MplCouponWebFacade mplCouponWebFacade;
+	@Autowired
 	private GigyaFacade gigyaFacade;
+
 	//@Autowired
 	//private MplPaymentFacadeImpl mplPaymentFacadeImpl;
 	//	@Autowired Critical Sonar fixes Unused private Field
@@ -511,6 +516,7 @@ public class UsersController extends BaseCommerceController
 			{
 				result.setSessionToken(gigyaWsDTO.getSessionToken());
 			}
+			//Return result
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3081,9 +3087,14 @@ public class UsersController extends BaseCommerceController
 								//Set product image(thumbnail) url
 								for (final ImageData img : productData1.getImages())
 								{
+									/*
+									 * if (null != img && StringUtils.isNotEmpty(img.getFormat()) //&&
+									 * img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar
+									 * fix && img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									 */
 									if (null != img && StringUtils.isNotEmpty(img.getFormat())
-									//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-											&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.SEARCHPAGE) Sonar fix
+											&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 									{
 										wldpDTO.setImageURL(img.getUrl());
 									}
@@ -3795,11 +3806,9 @@ public class UsersController extends BaseCommerceController
 					{
 						updateCustomerDetailDto.setDateOfBirth(customerToSave.getDateOfBirth());
 					}
-
 					// NOTIFY GIGYA OF THE USER PROFILE CHANGES
 					final String gigyaServiceSwitch = configurationService.getConfiguration().getString(
 							MarketplacewebservicesConstants.USE_GIGYA);
-
 					if (gigyaServiceSwitch != null && !gigyaServiceSwitch.equalsIgnoreCase(MarketplacewebservicesConstants.NO))
 					{
 						final String gigyaMethod = configurationService.getConfiguration().getString(
@@ -4874,6 +4883,7 @@ public class UsersController extends BaseCommerceController
 
 
 			List<NotificationData> notificationMessagelist = new ArrayList<NotificationData>();
+			String orderDetailStatus = null;
 
 			if (null != emailId)
 			{
@@ -4888,7 +4898,14 @@ public class UsersController extends BaseCommerceController
 					for (final NotificationData notifyData : notificationMessagelist)
 					{
 						orderNotificationDto = new MplOrderNotificationWsDto();
-						orderNotificationDto.setOrderID(notifyData.getOrderNumber());
+						if (notifyData.getOrderNumber() != null)
+						{
+							orderNotificationDto.setOrderID(notifyData.getOrderNumber());
+						}
+						if (notifyData.getCouponCode() != null)//coupon
+						{
+							orderNotificationDto.setCouponCode(notifyData.getCouponCode());
+						}
 						trackModel = orderStatusCodeMap.get(notifyData.getNotificationOrderStatus());
 						if (trackModel != null)
 						{
@@ -4901,17 +4918,44 @@ public class UsersController extends BaseCommerceController
 						if (notifyData.getNotificationCustomerStatus() != null
 								&& notifyData.getNotificationCustomerStatus().contains("@"))
 						{
-							final String orderDetailStatus = notifyData.getNotificationCustomerStatus().replace("@",
-									notifyData.getOrderNumber());
-							orderNotificationDto.setOrderDetailStatus(orderDetailStatus);
+							/*
+							 * final String orderDetailStatus = notifyData.getNotificationCustomerStatus().replace("@",
+							 * notifyData.getOrderNumber()); orderNotificationDto.setOrderDetailStatus(orderDetailStatus);
+							 */
+							/* Coupon code */
+							if (notifyData.getCouponCode() != null)//coupon
+							{
+								orderDetailStatus = notifyData.getNotificationCustomerStatus().replace("@", notifyData.getCouponCode());
+								orderNotificationDto.setDisplayCouponMessage(orderDetailStatus);
+							}
+							if (notifyData.getOrderNumber() != null)
+							{
+								orderDetailStatus = notifyData.getNotificationCustomerStatus().replace("@", notifyData.getOrderNumber());
+								orderNotificationDto.setOrderDetailStatus(orderDetailStatus);
+							}
+
 						}
 						else
 						{
-							orderNotificationDto.setOrderDetailStatus(notifyData.getNotificationOrderStatus());
+							if (notifyData.getOrderNumber() != null)
+							{
+								orderNotificationDto.setOrderDetailStatus(notifyData.getNotificationOrderStatus());
+							}
+							if (notifyData.getCouponCode() != null)//coupon
+							{
+								orderNotificationDto.setActualCouponMessage(notifyData.getNotificationOrderStatus());
+							}
 						}
 						orderNotificationDto.setReadStatus(notifyData.getNotificationRead());
 						orderNotificationDto.setConsignmentId(notifyData.getTransactionID());
-						orderNotificationDto.setActualOrderDetailStatus(notifyData.getNotificationCustomerStatus());
+						if (notifyData.getOrderNumber() != null)
+						{
+							orderNotificationDto.setActualOrderDetailStatus(notifyData.getNotificationCustomerStatus());
+						}
+						if (notifyData.getCouponCode() != null)//coupon
+						{
+							orderNotificationDto.setActualCouponMessage(notifyData.getNotificationCustomerStatus());
+						}
 
 						final Date date = new Date();
 						final Date orderCreationDate = notifyData.getNotificationCreationDate();
@@ -4921,15 +4965,33 @@ public class UsersController extends BaseCommerceController
 						final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 						orderNotificationDto.setNotificationCreationTime(timeFormat.format(orderCreationDate));
 
-						if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) != 1)
+						if (notifyData.getOrderNumber() != null)
 						{
-							orderNotificationDto.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-									+ " Days");
+
+							if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) != 1)
+							{
+								orderNotificationDto.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+										+ " Days");
+							}
+							else
+							{
+								orderNotificationDto.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+										+ " Day");
+							}
 						}
-						else
+						if (notifyData.getCouponCode() != null)// coupon
 						{
-							orderNotificationDto.setOrderNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
-									+ " Day");
+
+							if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) != 1)
+							{
+								orderNotificationDto.setCouponNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+										+ " Days");
+							}
+							else
+							{
+								orderNotificationDto.setCouponNotificationPassDate(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+										+ " Day");
+							}
 						}
 						mplOrderNotificationWsDtos.add(orderNotificationDto);
 					}
@@ -6471,6 +6533,65 @@ public class UsersController extends BaseCommerceController
 		}
 		return profileUpdateUrl;
 	}
+
+	/**
+	 * @Description : For getting the details of all the Coupons available for the User
+	 * @param emailId
+	 * @param currentPage
+	 * @param pageSize
+	 * @param usedCoupon
+	 * @param sortCode
+	 * @return CommonCouponsDTO
+	 * @throws RequestParameterException
+	 * @throws WebserviceValidationException
+	 * @throws MalformedURLException
+	 */
+
+	@Secured(
+	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
+	@RequestMapping(value = "/{emailId}/getCoupons", method = RequestMethod.GET, produces = APPLICATION_TYPE)
+	@ResponseBody
+	public CommonCouponsDTO getCoupons(@PathVariable final String emailId, @RequestParam final int currentPage,
+	/* @RequestParam final int pageSize, */@RequestParam final String usedCoupon,
+			@RequestParam(value = MarketplacewebservicesConstants.SORT, required = false) final String sortCode)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
+	{
+		CommonCouponsDTO couponDto = new CommonCouponsDTO();
+		try
+		{
+			//couponDto = mplCouponWebFacade.getCoupons(currentPage, pageSize, emailId, usedCoupon, sortCode);
+			couponDto = mplCouponWebFacade.getCoupons(currentPage, emailId, usedCoupon, sortCode);
+			couponDto.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			if (null != e.getErrorMessage())
+			{
+				couponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				couponDto.setErrorCode(e.getErrorCode());
+			}
+			couponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			if (null != e.getErrorMessage())
+			{
+				couponDto.setError(e.getErrorMessage());
+			}
+			if (null != e.getErrorCode())
+			{
+				couponDto.setErrorCode(e.getErrorCode());
+			}
+			couponDto.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return couponDto;
+	}
+
 
 	/**
 	 * @description method is called to generate update profileURL mobile service

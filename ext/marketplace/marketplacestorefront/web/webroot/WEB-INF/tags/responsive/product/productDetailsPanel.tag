@@ -172,7 +172,8 @@ tr.d0 td {
 	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
 	<c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
-	<c:set var="footwear"><spring:theme code='product.footwear'/></c:set>  <!-- Added for TISPRO-271 --> 
+	<!-- TISPRO-271 Changes -->
+	<c:set var="footwear"><spring:theme code='product.footwear'/></c:set>
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 <c:choose>
