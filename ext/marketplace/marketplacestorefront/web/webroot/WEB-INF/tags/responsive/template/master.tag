@@ -32,10 +32,14 @@
 	<!-- Tag for Google Webmaster Tool Verification -->
 	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
 	
+	
 	<c:set var="host" value="${header.host}"/>
 	<c:set var="pageURL" value="${pageContext.request.requestURL}"/>
 	<c:set var="protocolString" value="${fn:split(pageURL, '://')}"/>
 	<c:set var="baseURL" value="${protocolString[0]}://${host}"/>
+	
+	<!-- Canonical Tag -->
+	<link rel="canonical" href="${baseURL}${requestScope['javax.servlet.forward.request_uri']}" />
 	
 	<c:forEach items="${metatags}" var="metatagItem">
 		<c:if test="${metatagItem.name eq 'title'}">
