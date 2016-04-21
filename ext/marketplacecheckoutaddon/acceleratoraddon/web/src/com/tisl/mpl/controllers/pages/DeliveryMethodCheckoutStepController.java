@@ -94,13 +94,13 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
-import com.tisl.mpl.core.mplconfig.service.MplConfigService;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.MplSlaveMasterFacade;
 import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -205,9 +205,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 	
-	
 	@Autowired
-	private MplConfigService mplConfigService;
+	private MplConfigFacade mplConfigFacade;
 	
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
 
@@ -565,7 +564,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 							pinCodeModelObj = pincodeServiceFacade.getLatAndLongForPincode(defaultPincode);
 						}
 						//read radius from local properties file which is configurable.
-						final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+						final String configRadius = mplConfigFacade.getCongigValue(MarketplacecheckoutaddonConstants.CONFIGURABLE_RADIUS);
 						configurableRadius = Double.parseDouble(configRadius);
 						LOG.debug("**********configrableRadius:" + configurableRadius);
 						//this dto holds latitude and longitude
@@ -950,24 +949,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					if (cartEntryModel != null)
 					{
 						//save collection days at cart entry level
-						String collDays = "";
-						if (sellerInfoModel != null)
-						{
-							final SellerMasterModel sellerMaster = sellerInfoModel.getSellerMaster();
-							if (sellerMaster != null)
-							{
-								collDays = sellerMaster.getCollectionDays();
-							}
-						}
+						
 						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussId))
 						{
-							if (StringUtils.isNotEmpty(collDays))
+							String collectionDays=mplSellerInformationFacade.getSellerColloctionDays(sellerInfoModel.getSellerID());
+							
+							if (StringUtils.isNotBlank(collectionDays))
 							{
-								cartEntryModel.setCollectionDays(Integer.valueOf(collDays));
-							}
-							else
-							{
-								cartEntryModel.setCollectionDays(Integer.valueOf(0));
+							cartEntryModel.setCollectionDays(Integer.valueOf(collectionDays));
 							}
 							cartEntryModel.setDeliveryPointOfService(posModel);
 							modelService.save(cartEntryModel);
