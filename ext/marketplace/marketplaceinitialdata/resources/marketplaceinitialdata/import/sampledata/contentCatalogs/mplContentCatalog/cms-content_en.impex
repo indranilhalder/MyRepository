@@ -48,7 +48,8 @@ UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$
 ;;PaymentLink;"Payment"
 ;;helpservicesLink;"Help & Services"
 ;;StoreLocatorLink;"Store Locator" 
-
+;;MyTataRewardsLink;"My Tata Rewards"
+;;TncMyTataRewardsLink;"Tnc My Tata Rewards"
 
 # Lightbox Banner for Mini Cart (banner is not localizable so we must create a separate banner per language)
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];&imageRef;folder(qualifier)[default='images'];altText
@@ -289,6 +290,70 @@ turpis. Nunc placerat augue turpis.</p>
   </li>
 </ul>"
 
+
+;;MyTataRewardsComponent;" <div class='copy-block'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris egestas posuere arcu eu volutpat. Phasellus magna dolor, facilisis ut
+sollicitudin eu, viverra eu magna. Sed fermentum, nisi sed rhoncus feugiat, metus magna dapibus dolor, accumsan egestas elit erat quis
+mauris. Nunc rhoncus, urna a pellentesque viverra, dui lorem dignissim quam, id eleifend purus eros ut nunc. Suspendisse tempus efficitur
+lorem, ut consequat nibh mattis malesuada. Praesent et turpis euismod, commodo metus eget, placerat nulla. Nullam non nunc at est
+ultrices maximus. Aenean maximus dolor eu lorem tincidunt luctus.</p>
+<p>Nunc interdum erat nec fermentum consequat. Nam condimentum justo ac finibus eleifend. Aliquam mi purus, pretium ac diam eu, tempus
+lobortis ante. Nullam iaculis consequat risus quis cursus. In sit amet hendrerit purus. Fusce condimentum elit efficitur, auctor nulla non,
+ultricies augue. Maecenas finibus dapibus augue et hendrerit. ` sit amet enim at lacus lacinia porttitor. Etiam vel commodo dui, ut convallis
+turpis. Nunc placerat augue turpis.</p>
+<p>More about us at <a href ='http://www.tata.co.in'>www.tata.co.in</a></p></div>"
+
+
+;;ContactAddress; "<ul class='contact-us'>
+  <li>
+    <h2>Contact Us</h2>
+  </li>
+  <li>
+    <p>Tata Sons</p>
+    <p>Bombay House</p>
+    <p>24, Homi Mody Street</p>
+    <p>Mumbai 400 001</p>
+    <p>India</p>
+  </li>
+  <li>
+    <p>Phone: +91 (22) 66665 8282</p>
+  </li>
+  <li>
+    <a href=''>Media Enquires</a>
+    <a href=''>Press Releases</a>
+  </li>
+</ul>"
+
+;;TncMyTataRewardsComponent;" <div class='copy-block'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris egestas posuere arcu eu volutpat. Phasellus magna dolor, facilisis ut
+sollicitudin eu, viverra eu magna. Sed fermentum, nisi sed rhoncus feugiat, metus magna dapibus dolor, accumsan egestas elit erat quis
+mauris. Nunc rhoncus, urna a pellentesque viverra, dui lorem dignissim quam, id eleifend purus eros ut nunc. Suspendisse tempus efficitur
+lorem, ut consequat nibh mattis malesuada. Praesent et turpis euismod, commodo metus eget, placerat nulla. Nullam non nunc at est
+ultrices maximus. Aenean maximus dolor eu lorem tincidunt luctus.</p>
+<p>Nunc interdum erat nec fermentum consequat. Nam condimentum justo ac finibus eleifend. Aliquam mi purus, pretium ac diam eu, tempus
+lobortis ante. Nullam iaculis consequat risus quis cursus. In sit amet hendrerit purus. Fusce condimentum elit efficitur, auctor nulla non,
+ultricies augue. Maecenas finibus dapibus augue et hendrerit. ` sit amet enim at lacus lacinia porttitor. Etiam vel commodo dui, ut convallis
+turpis. Nunc placerat augue turpis.</p>
+<p>More about us at <a href ='http://www.tata.co.in'>www.tata.co.in</a></p></div>"
+
+
+;;ContactAddress; "<ul class='contact-us'>
+  <li>
+    <h2>Contact Us</h2>
+  </li>
+  <li>
+    <p>Tata Sons</p>
+    <p>Bombay House</p>
+    <p>24, Homi Mody Street</p>
+    <p>Mumbai 400 001</p>
+    <p>India</p>
+  </li>
+  <li>
+    <p>Phone: +91 (22) 66665 8282</p>
+  </li>
+  <li>
+    <a href=''>Media Enquires</a>
+    <a href=''>Press Releases</a>
+  </li>
+</ul>"
 
 ;;TataBusinessEthicsComponent;"TATA BUSINESS ETHICS
 Lorem ipsum dolor sit amet, consectetur
@@ -631,3 +696,28 @@ UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
  ;;nonBusinessErrorFound;"Tata MarketPlace"
  ;;businessErrorFound;"Tata MarketPlace"
  ;;notFound;"Tata MarketPlace"
+ 
+ #### for new 404 page
+ 
+ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/404_Graphic_M.png;404_Graphic_M.png;$siteResource/images/theme/404_Graphic_M.png;;
+ 
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;ErrorPageImageComponent;/images/theme/404_Graphic_M.png;
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;ErrorParagraphComponent404;"<div class='top'>
+<p class='title_captn'>Oops! Something went wrong here..</p>
+<p>We can't find the page you are looking for. Please checkout our help center or head back to homepage.</p>
+</div>
+<div class='middle'>
+<ul>
+    <li><a href='#' onclick='history.go(-1);return false;'>Return to previous page</a></li>
+    <li><a href='/store/'>Tata Cliq Homepage</a></li>
+    <li><a href='/store/mpl/en/contact'>Help center</a></li>
+</ul>
+</div>
+<div class='bottom'>
+<p>Have a question? Please feel free to reach us at 1800 201 301 (available 24/7)</p>
+</div>"
+

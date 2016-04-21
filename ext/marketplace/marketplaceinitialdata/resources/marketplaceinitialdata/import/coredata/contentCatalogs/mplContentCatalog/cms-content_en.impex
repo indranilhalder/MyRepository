@@ -78,6 +78,12 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
  ;mpl_Email_PDP_Subject;"PDP Email Subject";$emailResource/email-PDPSubject.vm
  ###########PDP Email
  ;mpl_Email_PDP_Body;"Send Invoice Email Body";$emailResource/email-PDPBody.vm
+ #PickUp Person Order Collected
+;mpl_Email_Order_CollectedByPerson_Subject;"Order Collected From Store Email Subject";$emailResource/email-orderCollectedByPersonSubject.vm
+;mpl_Email_Order_CollectedByPerson_Body;"Order Collected From Store Email Body";$emailResource/email-orderCollectedByPersonBody.vm
+## Order Refund credit
+ ;mpl_Email_Order_RefundCredited_Subject;"Order Collected From Store Email Subject";$emailResource/email-orderRefundCreditedSubject.vm
+ ;mpl_Email_Order_RefundCredited_Body;"Order Collected From Store Email Body";$emailResource/email-orderRefundCreditedBody.vm
 
 
 # Email Pages
@@ -104,6 +110,12 @@ UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];
  ;;ShippingConfirmationEmail;"customerservices@tataunistore.in";"Customer Services Team"
 
  ;;OrderDeliveryEmail;"customerservices@tataunistore.in";"Customer Services Team"
+ ####PickUPPerson
+;;orderCollectedByPersonEmail;"customerservices@tataunistore.in";"Customer Services Team"
+### OrderRefund Email
+;;orderRefundCreditedEmail;"customerservices@tataunistore.in";"Customer Services Team"
+
+
  
  ###### Tata Etail-Promotion Creation Mail #########
   ###########PDP Email

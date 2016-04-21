@@ -62,40 +62,12 @@ public class CustomNotificationCouponPopulator<SOURCE extends VoucherStatusNotif
 	@Override
 	public void populate(final SOURCE VoucherStatusNotificationModel, final TARGET notificationData) throws ConversionException
 	{
-
 		if (null != VoucherStatusNotificationModel)
 		{
-
-			//			List<ProductModel> productsCoupon = new ArrayList<ProductModel>();
-			//			//List<CategoryModel> categoryBasedCoupon = new ArrayList<CategoryModel>();
-			//			productsCoupon = VoucherStatusNotificationModel.getProductAssociated();
-			//			//categoryBasedCoupon = VoucherStatusNotificationModel.getCategoryAssociated();
-			//
-			//			String productUrl = "";
-			//			if (null != productsCoupon)
-			//			{
-			//				for (final ProductModel p : productsCoupon)
-			//				{
-			//					productUrl = getProductModelUrlResolver().resolve(p);
-			//					notificationData.setProductUrl(productUrl);
-			//
-			//				}
-			//			}
-			//			if (!VoucherStatusNotificationModel.getCategoryAssociated().isEmpty())
-			//			{
-			//
-			//				productUrl = "/v/" + (VoucherStatusNotificationModel.getVoucherIdentifier());
-			//				notificationData.setProductUrl(productUrl);
-			//
-			//
-			//			}
-
 			notificationData.setCouponCode(VoucherStatusNotificationModel.getVoucherCode());
 			notificationData.setNotificationRead(VoucherStatusNotificationModel.getIsRead());
 			notificationData.setNotificationCreationDate(VoucherStatusNotificationModel.getVoucherStartDate());
 			notificationData.setNotificationCustomerStatus(VoucherStatusNotificationModel.getCustomerStatus());
-
-
 		}
 
 	}

@@ -43,7 +43,6 @@ import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.OrderDetailsOrderItemsWidgetRenderer;
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
-import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
@@ -177,7 +176,8 @@ public class MarketPlaceReturnRequestWidgetRenderer extends
 						ConsignmentStatus status = returnEntry.getOrderEntry()
 								.getConsignmentEntries().iterator().next()
 								.getConsignment().getStatus();
-						if (status.equals(ConsignmentStatus.QC_FAILED)) {
+						//TISOMSII-174 added additional check for RETURN_CANCELLED status R2.1  QC_FAILED status skipped for SP automation
+						if (status.equals(ConsignmentStatus.QC_FAILED) || status.equals(ConsignmentStatus.RETURN_CANCELLED)) {
 
 							List<ColumnGroupConfiguration> columnConfigurations = (List<ColumnGroupConfiguration>) getMasterColumns();
 							if (CollectionUtils
@@ -209,7 +209,8 @@ public class MarketPlaceReturnRequestWidgetRenderer extends
 						ConsignmentStatus status = returnEntry.getOrderEntry()
 								.getConsignmentEntries().iterator().next()
 								.getConsignment().getStatus();
-						if (status.equals(ConsignmentStatus.QC_FAILED)) {
+						//TISOMSII-174 added additional check for RETURN_CANCELLED status R2.1  QC_FAILED status skipped for SP automation 
+						if (status.equals(ConsignmentStatus.QC_FAILED) || status.equals(ConsignmentStatus.RETURN_CANCELLED)) {
 							resultFlag = true;
 							Listitem tableRow = new Listitem();
 							tableRow.setSclass("invoiceTableRow");

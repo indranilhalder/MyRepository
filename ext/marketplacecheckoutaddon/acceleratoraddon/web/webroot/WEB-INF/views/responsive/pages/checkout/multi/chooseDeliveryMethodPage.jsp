@@ -1,3 +1,4 @@
+
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
@@ -73,7 +74,7 @@
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 				
-				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
+				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/check" method="post" commandName="deliveryMethodForm">
 				<!-- TISCR-305 starts -->
 				<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 				<!-- TISCR-305 ends -->
@@ -149,7 +150,7 @@
 											<c:set var='countWork'  value='1' />
 											<c:set var='countHome'  value='1' />
 											<!-- TISCR-305 starts -->
-											<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryMethod.continue"  text="Next"/></button>
+											<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button>
 											<!-- TISCR-305 ends -->
 						<div class="checkout-indent left-block address-form">
 						
@@ -170,6 +171,7 @@
 								
 										<form id="selectAddressForm" action="${request.contextPath}/checkout/multi/delivery-method/select-address" method="get">
 											<c:set var='countWork'  value='1' />
+
 											<c:set var='countHome'  value='1' /> --%>
 											
 											
@@ -228,11 +230,14 @@
 												</c:forEach>
 													
 											</div>
-											<button id="deliveryAddressSubmit" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryMethod.continue"  text="Next"/></button>
+											<button id="deliveryAddressSubmit" type="submit" class="button checkout-next" ><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></button>
+
+
 										
-						</div>
+						
 						</form>
 									</c:if>
+					</div>
 					</div>
 				</ycommerce:testId>
 			</jsp:body>

@@ -51,8 +51,58 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 	private ProductService productService;
 	@Autowired
 	private MplPromotionHelper mplPromotionHelper;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	@Autowired
 	private ConfigurationService configurationService;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -71,9 +121,13 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 		}
 	}
 
+
+
 	/**
 	 * Add Multiple Products Details Before Promotion Model Save
 	 *
+	 * 
+	 * 
 	 * @param arg1
 	 * @param object
 	 * @throws InterceptorException
@@ -84,20 +138,30 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 
 		LOG.debug("Inside ProductPromotionInterceptor");
 
+
 		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(configurationService
 				.getConfiguration().getString("cronjob.promotion.catelog"),
 				configurationService.getConfiguration().getString("cronjob.promotion.catalogVersionName"));
 
+
+
+
+
+
 		final String data = configurationService.getConfiguration().getString("promotion.bulkupload.products.realTime",
 				MarketplacecommerceservicesConstants.TRUE);
+
 
 		if (StringUtils.equalsIgnoreCase(data, MarketplacecommerceservicesConstants.TRUE))
 		{
 			if (object instanceof ProductPromotionModel)
 			{
+
+
 				//@Description :To check if an Enabled Promotions exists with the Product and same priority
 				final ProductPromotionModel promotion = (ProductPromotionModel) object;
 				populatePromotionGroup(promotion);
+
 
 				if (StringUtils.isNotEmpty(promotion.getProductCodeList()))
 				{
@@ -109,6 +173,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 
 
 					if (null != catalogVersionModel)
+
+
 					{
 						while (newProductCodeTokens.hasMoreTokens())
 						{
@@ -124,6 +190,7 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 							finalProductList.addAll(existingProductList);
 						}
 						finalProductList.addAll(newProductModelList);
+
 						productModelSet.addAll(finalProductList);
 						finalProductList.clear();
 						finalProductList.addAll(productModelSet);
@@ -131,9 +198,25 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 						promotion.setProductCodeList(MarketplacecommerceservicesConstants.EMPTY);
 					}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 				}
 
+
+
 				if (StringUtils.isNotEmpty(promotion.getExcludedProductCodeList()))
+
 				{
 
 					final String excludedProductCodes = promotion.getExcludedProductCodeList();
@@ -143,18 +226,23 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 							MarketplacecommerceservicesConstants.PROMO_PRODUCT_UPLOAD_SEPARATOR);
 
 					if (null != catalogVersionModel)
+
+
 					{
 						while (newExclProductCodeTokens.hasMoreTokens())
 						{
 
 							newExclProductModelList.add(productService.getProductForCode(catalogVersionModel, newExclProductCodeTokens
-									.nextToken().trim()));
+
+
+							.nextToken().trim()));
 						}
 						final Collection<ProductModel> existingExcludedProductList = promotion.getExcludedProducts();
 
 						final List<ProductModel> finalExcludedProductList = new ArrayList<ProductModel>();
 						final Set<ProductModel> excludedProductModelSet = new HashSet<ProductModel>();
 						if (null != existingExcludedProductList && !existingExcludedProductList.isEmpty())
+
 						{
 							finalExcludedProductList.addAll(existingExcludedProductList);
 						}
@@ -165,9 +253,25 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 						promotion.setExcludedProducts(finalExcludedProductList);
 						promotion.setExcludedProductCodeList(MarketplacecommerceservicesConstants.EMPTY);
 					}
+
+
+
+
+
+
 				}
 
+
+
+
+
+
 			}
+
+
+
+
+
 
 
 			// Check for second qualifying products for BuyAandBPrecentageDiscount type promotion
@@ -184,6 +288,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 							MarketplacecommerceservicesConstants.PROMO_PRODUCT_UPLOAD_SEPARATOR);
 
 					if (null != catalogVersionModel)
+
+
 					{
 						while (newSecondProductCodeTokens.hasMoreTokens())
 						{
@@ -199,6 +305,7 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 							finalSecondProductList.addAll(existingSecondProductList);
 						}
 						finalSecondProductList.addAll(newSecondProductModelList);
+
 						productModelSet.addAll(finalSecondProductList);
 						finalSecondProductList.clear();
 						finalSecondProductList.addAll(productModelSet);
@@ -206,9 +313,28 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 						promotion.setSecondProductCodeList(MarketplacecommerceservicesConstants.EMPTY);
 					}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 				}
+
 			}
+
 			else if (object instanceof BuyAandBgetCModel)
+
+
+
+
 			{
 				final BuyAandBgetCModel promotion = (BuyAandBgetCModel) object;
 				populatePromotionGroup(promotion);
@@ -221,6 +347,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 							MarketplacecommerceservicesConstants.PROMO_PRODUCT_UPLOAD_SEPARATOR);
 
 					if (null != catalogVersionModel)
+
+
 					{
 						while (newSecondProductCodeTokens.hasMoreTokens())
 						{
@@ -236,6 +364,7 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 							finalSecondProductList.addAll(existingSecondProductList);
 						}
 						finalSecondProductList.addAll(newSecondProductModelList);
+
 						productModelSet.addAll(finalSecondProductList);
 						finalSecondProductList.clear();
 						finalSecondProductList.addAll(productModelSet);
@@ -243,9 +372,28 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 						promotion.setSecondProductCodeList(MarketplacecommerceservicesConstants.EMPTY);
 					}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 				}
+
 			}
+
 			else if (object instanceof BuyAandBGetPrecentageDiscountCashbackModel)
+
+
+
+
 			{
 				final BuyAandBGetPrecentageDiscountCashbackModel promotion = (BuyAandBGetPrecentageDiscountCashbackModel) object;
 				populatePromotionGroup(promotion);
@@ -258,6 +406,8 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 							MarketplacecommerceservicesConstants.PROMO_PRODUCT_UPLOAD_SEPARATOR);
 
 					if (null != catalogVersionModel)
+
+
 					{
 						while (newSecondProductCodeTokens.hasMoreTokens())
 						{
@@ -273,6 +423,7 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 							finalSecondProductList.addAll(existingSecondProductList);
 						}
 						finalSecondProductList.addAll(newSecondProductModelList);
+
 						productModelSet.addAll(finalSecondProductList);
 						finalSecondProductList.clear();
 						finalSecondProductList.addAll(productModelSet);
@@ -280,19 +431,53 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 						promotion.setSecondProductCodeList(MarketplacecommerceservicesConstants.EMPTY);
 					}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 				}
+
 			}
+
 			else if (object instanceof BuyAandBGetPromotionOnShippingChargesModel)
+
+
+
+
 			{
+
+
+
+
+
+
 				final BuyAandBGetPromotionOnShippingChargesModel promotion = (BuyAandBGetPromotionOnShippingChargesModel) object;
 				populatePromotionGroup(promotion);
 				if (StringUtils.isNotEmpty(promotion.getSecondProductCodeList()))
 				{
+
+
 					final String productCodes = promotion.getSecondProductCodeList();
 					final List<ProductModel> newSecondProductModelList = new ArrayList<ProductModel>();
 
+
+
+
+
 					final StringTokenizer newSecondProductCodeTokens = new StringTokenizer(productCodes,
 							MarketplacecommerceservicesConstants.PROMO_PRODUCT_UPLOAD_SEPARATOR);
+
+
+
 
 					if (null != catalogVersionModel)
 					{
@@ -316,7 +501,14 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 						promotion.setSecondProducts(finalSecondProductList);
 						promotion.setSecondProductCodeList(MarketplacecommerceservicesConstants.EMPTY);
 					}
+
+
+
+
+
+
 				}
+
 			}
 		}
 		else if (!StringUtils.equalsIgnoreCase(data, MarketplacecommerceservicesConstants.TRUE)

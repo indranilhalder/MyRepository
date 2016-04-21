@@ -19,6 +19,9 @@ function navigateToPage(queryString,textString)
 <c:if test="${facetData.code ne 'deptType'}">
 <c:if test="${facetData.code ne 'sellerId'}">
 <c:if test="${facetData.code ne 'allMobilePromotions'}">
+<!--  fixed for TISSTRT-615-Fixed -->
+<c:if test="${facetData.code ne 'vouchers'}">
+<!-- End  fixed for TISSTRT-615-Fixed -->
 
 <c:if test="${not empty facetData.values && facetData.code == 'inStockFlag'}">
 
@@ -54,7 +57,8 @@ function navigateToPage(queryString,textString)
 		<form class="brandSearchForm" action="#" id="brandNoFormSubmit">
 		
 		<button></button>
-				<input class="brandSearchTxt" type="text" placeholder="Enter your brand">
+		        <spring:theme code="text.brandSearch.placeholder" var="brandSearchPlaceholder" />
+				<input class="brandSearchTxt" type="text" placeholder="${brandSearchPlaceholder}">
 			</form>
 			
 		<input type="checkbox" id="brandSelectAll" data-url="">
@@ -347,6 +351,7 @@ function navigateToPage(queryString,textString)
 		
 	</li> </c:if> 
 			</ycommerce:testId>
+			</c:if>
 			</c:if>
 			</c:if>
 			</c:if>

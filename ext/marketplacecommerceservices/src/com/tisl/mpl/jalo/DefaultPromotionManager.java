@@ -583,6 +583,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		List<String> productCategoryList = null;
 		List<Category> productCategoryData = null;
 		List<CategoryModel> superCategoryData = null;
+		final CatalogVersionModel oCatalogVersionModel = catalogData();
 		try
 		{
 			productCategoryData = (List<Category>) product.getAttribute(paramSessionContext,
@@ -595,7 +596,10 @@ public class DefaultPromotionManager extends PromotionsManager
 					if (null != category && null != category.getCode(paramSessionContext))
 					{
 						productCategoryList.add(category.getCode(paramSessionContext));
-						final CategoryModel oModel = categoryService.getCategoryForCode(category.getCode(paramSessionContext));
+						//final CategoryModel oModel = categoryService.getCategoryForCode(category.getCode(paramSessionContext));
+						//Commented to fix defect TISUATPII-1558 -- multiple category giving erroneous promotion result
+						final CategoryModel oModel = categoryService.getCategoryForCode(oCatalogVersionModel,
+								category.getCode(paramSessionContext));
 						superCategoryData = new ArrayList<CategoryModel>(categoryService.getAllSupercategoriesForCategory(oModel));
 						if (!superCategoryData.isEmpty())
 						{

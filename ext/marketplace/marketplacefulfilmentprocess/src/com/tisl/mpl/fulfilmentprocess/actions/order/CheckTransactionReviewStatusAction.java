@@ -207,6 +207,16 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		{
 			defaultPinCode = orderModel.getDeliveryAddress().getPostalcode();
 		}
+		else
+		{
+			/*
+			 * TISOMSII-86
+			 * 
+			 * This block will execute only incase of standalone CNC cart and OMS is not using pincode to deallocate cart
+			 * reservation. As pincode is mandatory in Inventory reservation adding dummy pincode for cart deallocation
+			 */
+			defaultPinCode = MarketplaceFulfilmentProcessConstants.PINCODE;
+		}
 
 		//returning OK for order status "PAYMENT_SUCCESSFUL"
 		if (orderStatus.equalsIgnoreCase(MarketplaceFulfilmentProcessConstants.PAYMENT_SUCCESSFUL))

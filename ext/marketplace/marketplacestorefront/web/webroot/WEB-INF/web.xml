@@ -193,19 +193,21 @@
 
 	<!-- Session -->
 
+
 	<session-config>
-		<!-- Session timeout of 30 minutes -->
-		
+
+	<!-- Session timeout of 30 minutes -->
 		<!-- <cookie-config>
 			<name>SID</name>
-		</cookie-config> -->
-		
+
+		</cookie-config>  -->
+	   	
 	   	<cookie-config>
 			<secure>true</secure>
 			<http-only>true</http-only>
 		</cookie-config>
        <session-timeout>30</session-timeout>
-	</session-config>
+	</session-config> 
 
 
 	<!-- JSP Configuration -->

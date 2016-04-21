@@ -19,7 +19,6 @@
 	<title>
 		${not empty pageTitle ? pageTitle : not empty cmsPage.title ? cmsPage.title : 'Tata'}
 	</title>
-	
 	<%-- Meta Content --%>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,7 +27,10 @@
 	
 	<%-- Additional meta tags --%>
 	<htmlmeta:meta items="${metatags}"/>
-
+	
+	<!-- Tag for Google Webmaster Tool Verification -->
+	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />
+	
 	<%-- Favourite Icon --%>
 	<spring:theme code="img.favIcon" text="/" var="favIconPath"/>
     <link rel="shortcut icon" type="image/x-icon" media="all" href="${originalContextPath}${favIconPath}" />

@@ -33,7 +33,7 @@
 
 <template:page pageTitle="${pageTitle}">
 <div class="account">
-  <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Marketplace" />
+  <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
   <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
@@ -342,7 +342,7 @@
 				<!-- Add address Fields -->
 				<!-- <div><a name="editaddress">&emsp;</a></div> -->
 				<div class="new-address" id="editaddress">
-					<h2 class="account-only" id="headerAdd"><spring:theme code="text.addressBook.newaddress" text="Add a New Address" /></h2>
+					<h2 class="account-only" id="headerAdd"><spring:theme code="text.addressBook.newaddress" text="Add New Address" /></h2>
 					<h2 class="account-only" id="headerEdit"><spring:theme code="text.addressBook.editaddress" text="Edit Address" /></h2>
 					<ul class="product-block addresses new-form">
 						<li class="item"><form:form action="addNewAddress"
@@ -362,8 +362,7 @@
 											</label>
 										 <div class="errorMessage">
 											<div id="errtype"></div>
-										</div> 
-								
+										</div> 					
 
 								<fieldset>
 

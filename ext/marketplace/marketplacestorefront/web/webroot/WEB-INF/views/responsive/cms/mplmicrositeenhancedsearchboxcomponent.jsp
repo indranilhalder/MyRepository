@@ -24,31 +24,43 @@
 			});
 		
 			
-		$("#micrositesearchButton").click(function(event) {
-				if($("#js-site-micrositesearch-input").val().trim()=="") {			
-					event.preventDefault();
-					return false;
-				}
-				
-				else{
-					var actionText = ACC.config.contextPath;
-					var dropdownValue = $("#micrositeSearchCategory").val();
-					var dropdownName = $("#micrositeSearchCategory").find('option:selected').text();
-					
-					if (dropdownValue.startsWith("category-")) {
-						actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("category-",""));
-					}
-					if (dropdownValue.startsWith("brand-")) {
-						actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("brand-",""));
+			 //Added For TISPRO-264
+			$("#micrositesearchButton").click(function(event) {
+					if($("#js-site-micrositesearch-input").val().trim()=="") {			
+						event.preventDefault();
+						return false;
 					}
 					
-				}
-				
-				/* $("#search_form_microsite :input").prop("disabled", true); */
-				$('#search_form_microsite').attr('action',actionText);
-			 
-		});
-		
+					else{					
+						
+						var actionText = ACC.config.contextPath;
+						var dropdownValue = $("#micrositeSearchCategory").val();
+						var dropdownName = $("#micrositeSearchCategory").find('option:selected').text();
+					 
+						if (!String.prototype.startsWith) {
+							  String.prototype.startsWith = function(searchString, position) {
+							    position = position || 0;							    
+							    return this.indexOf(searchString, position) === position;
+							  };
+						}
+						 //Added For TISPRO-264
+						else if(dropdownValue=="all"){							
+								actionText = (actionText + '/mpl/en/search/');								
+							}
+						
+						else if (dropdownValue.startsWith("category-")) {
+							actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("category-",""));
+						}
+						else if (dropdownValue.startsWith("brand-")) {
+							actionText = (actionText + '/Categories/' + dropdownName + '/c/' + dropdownValue.replace("brand-",""));
+						}
+						
+					}
+					
+					/* $("#search_form_microsite :input").prop("disabled", true); */
+					$('#search_form_microsite').attr('action',actionText);
+				 
+			});		
 		/*------------Start of SNS auto complete for microsite page----------*/
 		
 		var style_microsite = null ;
@@ -90,7 +102,7 @@
 
 	<form id="search_form_microsite" name="search_form_microsite" method="get" action="${searchUrl}">
 
-	 <button id="micrositesearchButton"></button>
+	 <button id="micrositesearchButton"></button>  <!-- Added for TISPRO-264 -->
 				
 		<input type="hidden" name="mSellerID" 
 				value="${mSellerID}" /> 
