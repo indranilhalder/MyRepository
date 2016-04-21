@@ -21,6 +21,13 @@
 
 <!-- <table class="orderListTable"> -->
 
+<c:set var="bogoGiveaway" value="false" />
+<c:forEach items="${orderGroup.entries}" var="entry">
+	<c:if 
+	test="${ entry.isBOGOapplied || entry.giveAway}">
+	<c:set var="bogoGiveaway" value="true" />	
+	</c:if>
+</c:forEach> 
 
 <c:forEach items="${orderGroup.entries}" var="entry">
 	<c:url value="${entry.product.url}" var="productUrl" />
@@ -64,8 +71,15 @@
 								var="promotion">
 								<c:forEach items="${promotion.consumedEntries}"
 									var="consumedEntry">
+										
+									<c:if 
+										test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+										<c:set var="displayed" value="true" />
+										<li><span>${promotion.description}</span></li>
+									</c:if>
+								
 									<c:if
-										test="${not displayed && not entry.isBOGOapplied && entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+										test="${not displayed &&  not bogoGiveaway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
 										<c:set var="displayed" value="true" />
 										<li><span>${promotion.description}</span></li>
 									</c:if>
