@@ -1520,5 +1520,8 @@
 		<bean id="mplConfigDao" class="com.tisl.mpl.core.mplconfig.dao.impl.MplConfigDaoImpl" >
 	</bean>
 	<!-- ============== configure beans for mplConfig ============== -->
+	
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_omsFallback-spring.xml" />
 
 </beans>
