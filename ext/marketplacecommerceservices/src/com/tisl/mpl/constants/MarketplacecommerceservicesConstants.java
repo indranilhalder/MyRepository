@@ -387,6 +387,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMAIL_NOT_FOUND = "user.email.not_found";
 	public static final String WISHLIST_NO = "Wishlist";
 	public static final String THUMBNAIL = "thumbnail";
+	public static final String SEARCHPAGE = "searchPage";
 	public static final String WISHLIST_EXISTS_MSG = "Wishlist name already exists.";
 
 
@@ -1504,3 +1505,4 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
+
