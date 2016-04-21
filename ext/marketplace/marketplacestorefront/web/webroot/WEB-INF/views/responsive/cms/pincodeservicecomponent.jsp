@@ -60,6 +60,24 @@
 			<span id="expressDate"><%-- <c:out value="${entry.value}" /> --%></span>
 			</a></li>	
 		</c:if> 
+		
+		<c:if test="${entry.key eq 'click-and-collect'}">
+		
+		<li id="collectli"><a  id="collect" class="collect" style="display: none" ><span><spring:theme code="text.clickandcollect.shipping"/></span><span>Buy online, collect in-store</span>
+		
+		 <c:forEach var="clickEntry" items="${entry.value}">
+	
+			 <c:if test="${clickEntry.key eq 'startForClick'}">
+			 <input type="hidden" value="${clickEntry.value}" id="clickStartId"/>
+			 </c:if>
+			 
+			  <c:if test="${clickEntry.key eq 'endForClick'}">
+			  <input type="hidden" value="${clickEntry.value}" id="clickEndId"/>
+		     </c:if>
+		    </c:forEach>
+		    <span id="clickDate"><%-- <c:out value="${entry.value}" /> --%></span>
+		    </a></li>
+		</c:if> 
 	</c:forEach>
 	
 	<!-- <li><a href="#" class="collect"><span>Click and

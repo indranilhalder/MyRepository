@@ -517,6 +517,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
 			//if (null == collection || collection.isEmpty())
 			if (CollectionUtils.isEmpty(collection))
+
 			{
 				collection = new ArrayList<PaymentTransactionModel>();
 			}
@@ -528,6 +529,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
 			final Date date = new Date();
 			final String codCode = getCodCodeGenerator().generate().toString();
+
 			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
 					.create(PaymentTransactionEntryModel.class);
 			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
@@ -549,7 +551,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			{
 				paymentTransactionModel.setInfo(cart.getPaymentInfo());
 			}
+
 			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+
 			paymentTransactionModel.setCreationtime(date);
 			paymentTransactionModel.setCurrency(cart.getCurrency());
 			paymentTransactionModel.setEntries(paymentTransactionEntryList);
@@ -557,6 +561,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			paymentTransactionModel.setOrder(cart);
 			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
 			//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+
 			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
 					&& paymentTransactionEntryList.get(0).getTransactionStatus()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
@@ -569,7 +574,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			getModelService().save(paymentTransactionModel);
 			paymentTransactionList.add(paymentTransactionModel);
-
 			cart.setPaymentTransactions(paymentTransactionList);
 			getModelService().save(cart);
 		}
@@ -584,6 +588,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			throw new EtailNonBusinessExceptions(ex);
 		}
 	}
+
 
 	/**
 	 * This private method is used to set the values in DebitCardPaymentInfoModel after getting successful response from
@@ -1171,7 +1176,6 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 			LOG.debug("Total cart price is>>>>>>>>>" + totalPrice);
 
-
 			//amtTobeDeductedAtlineItemLevel is a variable to check total apportioned COD charge is equal to total convenience charge
 
 			for (final AbstractOrderEntryModel entry : entries)
@@ -1189,13 +1193,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 						entryTotals = entry.getTotalPrice().doubleValue();
 					}
-					entryTotals -= (null != entry.getFreeCount() ? entry.getFreeCount().intValue() : 0);
+					entryTotals -= (null == entry.getFreeCount() ? 0 : 0.01 * entry.getFreeCount().intValue());
 					final double quantity = (entry.getQualifyingCount().intValue() > 0) ? entry.getQualifyingCount().doubleValue()
 							: entry.getQuantity().doubleValue();
 
 					LOG.debug("Entry totals is>>>>>" + entryTotals + "<<<<<<&& quantity is>>>>>" + quantity);
-
-
 
 					//calculating ratio of convenience charge for cart entry
 					final Double codChargePercent = Double.valueOf(entryTotals / totalPrice);
@@ -1209,6 +1211,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 					}
 					LOG.debug("Entry level Conv charge is>>>>>>>" + appCODChargeForEachItem);
 					entry.setConvenienceChargeApportion(Double.valueOf(appCODChargeForEachItem));
+
 					try
 					{
 						getModelService().save(entry);
@@ -1515,6 +1518,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	 * @param cartData
 	 * @param cartModel
 	 * @return MplPromoPriceData
+	 * 
 	 * @throws JaloPriceFactoryException
 	 * @throws JaloSecurityException
 	 * @throws CalculationException
@@ -1534,16 +1538,19 @@ public class MplPaymentServiceImpl implements MplPaymentService
 		//Reset Voucher Apportion
 		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
 		{
-			LOG.debug(">> 1 : Checking voucher related promotion >> ");
-			for (final AbstractOrderEntryModel entry : getMplVoucherService().getOrderEntryModelFromVouEntries(
-					(VoucherModel) cartModel.getDiscounts().get(0), cartModel))
-			{
-				entry.setCouponCode(MarketplacecommerceservicesConstants.EMPTY);
-				entry.setCouponValue(Double.valueOf(0.00D));
-				getModelService().save(entry);
-			}
-		}
+			final List<AbstractOrderEntryModel> entryList = getMplVoucherService().getOrderEntryModelFromVouEntries(
+					(VoucherModel) cartModel.getDiscounts().get(0), cartModel); //Since only 1 voucher is applied to the cart and
+			//before promotion calculation only 1 discount will be present
 
+			for (final AbstractOrderEntryModel entry : entryList)
+
+			{
+				entry.setCouponCode("");
+				entry.setCouponValue(Double.valueOf(0.00D));
+				//getModelService().save(entry);
+			}
+			getModelService().saveAll(entryList);
+		}
 
 		final MplPromoPriceData promoPriceData = new MplPromoPriceData();
 		VoucherDiscountData discData = new VoucherDiscountData();
@@ -1568,7 +1575,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			}
 		}
 
-		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts()))
+		//Checking if the cart has coupon already applied
+		if (CollectionUtils.isNotEmpty(cartModel.getDiscounts())
+				&& cartModel.getDiscounts().get(0) instanceof PromotionVoucherModel)
 		{
 			LOG.debug(">> 2 : Checking voucher related promotion >> ");
 			final PromotionVoucherModel voucher = (PromotionVoucherModel) cartModel.getDiscounts().get(0);
@@ -1580,15 +1589,16 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			getMplCommerceCartService().setTotalWithConvCharge(cartModel, cartData);
 
 		}
-		getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
-
+		//Removing the session if the session is not empty
+		if (null != getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION))
+		{
+			getSessionService().removeAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
+		}
 		final List<MplPromotionData> responseDataList = getAppliedPromotionDetails(cartModel, cartData);
-
 		if (CollectionUtils.isNotEmpty(responseDataList))
 		{
 			promoPriceData.setMplPromo(responseDataList);
 		}
-
 		promoPriceData.setTotalDiscount(calculateTotalDiscount(cartModel));
 		//Populating Currency and Total Price Details
 		if (null != cartModel.getCurrency() && StringUtils.isNotEmpty(cartModel.getCurrency().getSymbol()) && null != cartData)
@@ -1671,9 +1681,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			responseData = getDiscountUtility().populateNonPromoData(cartData);
 			responseDataList.add(responseData);
 		}
-
 		return responseDataList;
 	}
+
+
 
 	/**
 	 * This method calculates the promotional values
@@ -1737,9 +1748,14 @@ public class MplPaymentServiceImpl implements MplPaymentService
 				}
 			}
 
-			discount = BigDecimal.valueOf(
-					(totalPrice + cart.getDeliveryCost().doubleValue() + cart.getConvenienceCharges().doubleValue())).subtract(
-					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));
+			discount = (BigDecimal.valueOf(cart.getDeliveryCost().doubleValue())).add(BigDecimal.valueOf(totalPrice))
+					.add(BigDecimal.valueOf(cart.getConvenienceCharges().doubleValue()))
+					.subtract(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()))
+					.subtract(BigDecimal.valueOf(voucherDiscount));
+
+			//			discount = BigDecimal.valueOf(
+			//					(totalPrice + cart.getDeliveryCost().doubleValue() + cart.getConvenienceCharges().doubleValue())).subtract(
+			//					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));					BigDecimal.valueOf((cart.getTotalPriceWithConv().doubleValue() + voucherDiscount)));
 		}
 
 		return getDiscountUtility().createPrice(cart, Double.valueOf(discount != null ? discount.doubleValue() : 0.0));
@@ -1778,6 +1794,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		boolean flag = false;
 		if (null != promo && null != promo.getPromotion() && CollectionUtils.isNotEmpty(promo.getPromotion().getRestrictions()))
+
 		{
 			for (final AbstractPromotionRestrictionModel restriction : promo.getPromotion().getRestrictions())
 			{
@@ -2461,17 +2478,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	@Override
 	public CustomerModel getCustomer(final String uid)
 	{
-		final CustomerModel customer = getMplPaymentDao().getCustomer(uid);
-		//		if (null != customer)
-		//		{
-		//			return customer;
-		//		}
-		//		else
-		//		{
-		//			return null;
-		//		}						SONAR Fix
-
-		return customer;
+		return getMplPaymentDao().getCustomer(uid);
 	}
 
 
@@ -2868,7 +2875,4 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		this.mplVoucherService = mplVoucherService;
 	}
-
-
-
 }

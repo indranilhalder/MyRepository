@@ -14,6 +14,7 @@ import com.tisl.mpl.wsdto.GigyaWsDTO;
  */
 public interface GigyaFacade
 {
+
 	public void notifyGigya(final String siteUid, final String gigyaUid, final String fName, final String lName,
 			final String eMail, String gigyaMethod);
 

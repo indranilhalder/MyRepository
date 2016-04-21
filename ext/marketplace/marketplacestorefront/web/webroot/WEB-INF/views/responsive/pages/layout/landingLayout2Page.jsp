@@ -43,5 +43,8 @@
 	<!-- For Infinite Analytics End -->
 	<div id="showcase" class="showcase feature-collections"></div>
 	
-
+    <!-- Store Locator  -->
+	 <cms:pageSlot position="Section7" var="feature" element="div">
+		<cms:component component="${feature}" />
+     </cms:pageSlot>
 </template:page>

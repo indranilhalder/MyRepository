@@ -50,6 +50,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 	private static final String SEQUENCE_NUMBER = "SequenceNumber";
 	private static final String SEQUENCE_NUMBER_STAYQUED = "SeqNumForStayQued";
 	private static final String TITLE = "title";
+	private static final String ICID = "icid";
 
 	private static final Logger LOG = Logger.getLogger(HomepageComponentServiceImpl.class);
 
@@ -125,6 +126,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 								LOG.info("No URL for this item");
 							}
 							bestPickItemJson.put("url", linkUrl);
+							bestPickItemJson.put(ICID, bestPickItem.getPk().getLongValueAsString());
 							subComponentJsonArray.add(bestPickItemJson);
 
 						}
@@ -181,6 +183,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 					{
 						final JSONObject categoryJSON = getCategoryJSON(category);
 						categoryJSON.put("mediaURL", getCategoryMediaUrl(category));
+						categoryJSON.put(ICID, productYouCareCarouselComponent.getPk().getLongValueAsString());
 						subComponentJsonArray.add(categoryJSON);
 					}
 				}
@@ -222,6 +225,7 @@ public class HomepageComponentServiceImpl implements HomepageComponentService
 							}
 
 							categoryJSON.put("mediaURL", mediaUrl);
+							categoryJSON.put(ICID, imageCategoryComponent.getPk().getLongValueAsString());
 							subComponentJsonArray.add(categoryJSON);
 						}
 

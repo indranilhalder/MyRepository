@@ -10,10 +10,10 @@
 
 <style>
 .out_of_stock {
-	color: #ff1c47;
+	color: #FE2E2E;
 }
 .dlist_message {
-	color: #ff1c47;
+	color: #FE2E2E;
 }
 .addToCartTitle{
 	display:none;
@@ -138,3 +138,5 @@ $(document).ready(function(){
 <span id="addtobagerror" style="display:none"><spring:theme code="product.error"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
+
+

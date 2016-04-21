@@ -11,15 +11,17 @@ import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerPriorityReportService;
 import com.tisl.mpl.model.MplSellerPriorityJobModel;
+import com.tisl.mpl.util.ExceptionUtil;
 
 
 
 /**
  * @author TCS
- * @description Cron Job to get the Report for any new enrty and changes in Seller Priority Model
+ * @description Cron Job to get the Report for any new entry and changes in Seller Priority Model
  *
  */
 public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPriorityJobModel>
@@ -54,10 +56,17 @@ public class SellerPriorityReportJob extends AbstractJobPerformable<MplSellerPri
 			}
 
 		}
-
-		catch (final Exception e)
+		catch (final EtailBusinessExceptions exception)
 		{
-			LOG.error(MarketplacecommerceservicesConstants.ERROR_MSG_SELLERPRIORITY_IN_SAVEDVALUES);
+			LOG.error(exception.getMessage());
+			ExceptionUtil.etailBusinessExceptionHandler(exception, null);
+			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
+		}
+		catch (final EtailNonBusinessExceptions exception)
+		{
+			LOG.error(exception.getMessage());
+			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
+			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
 
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);

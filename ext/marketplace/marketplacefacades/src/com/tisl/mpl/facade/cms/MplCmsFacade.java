@@ -6,11 +6,13 @@ package com.tisl.mpl.facade.cms;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.tisl.mpl.facades.cms.data.CollectionPageData;
 import com.tisl.mpl.facades.cms.data.HeroProductData;
-import com.tisl.mpl.facades.cms.data.HomePageData;
+import com.tisl.mpl.facades.cms.data.MplPageData;
 import com.tisl.mpl.facades.cms.data.PageData;
 
 
@@ -29,7 +31,8 @@ public interface MplCmsFacade
 	 */
 	PageData getCategoryLandingPageForMobile(String categoryCode) throws CMSItemNotFoundException, NullPointerException;
 
-	HomePageData getHomePageForMobile();
+	MplPageData getHomePageForMobile();
+
 
 	PageData populateCategoryLandingPageForMobile(ContentPageModel contentPage, String categoryCode);
 
@@ -43,8 +46,8 @@ public interface MplCmsFacade
 	 * @throws CMSItemNotFoundException
 	 * @throws NullPointerException
 	 */
-	CollectionPageData populateCollectionPage(String categoryCode, HttpServletRequest request)
-			throws CMSItemNotFoundException, NullPointerException;
+	CollectionPageData populateCollectionPage(String categoryCode, HttpServletRequest request) throws CMSItemNotFoundException,
+			NullPointerException;
 
 	String getCategoryNameForCode(String categoryId);
 
@@ -59,4 +62,10 @@ public interface MplCmsFacade
 	PageData getSellerLandingPageForMobile(String sellerId) throws CMSItemNotFoundException, NullPointerException;
 
 	PageData populateOfferPageType(String offerId, String PageType);
+
+	/**
+	 * @param homePageUid
+	 * @return
+	 */
+	List<MplPageData> getPageInformationForPageId(String homePageUid);
 }

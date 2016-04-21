@@ -77,4 +77,10 @@ public interface ExtendedUserDao
 	 */
 	public CustomerModel findCustomerModelByUID(final String uid);
 
+	/**
+	 * @param uid
+	 * @return
+	 */
+	UserModel getUserByUid(String uid);
+
 }
