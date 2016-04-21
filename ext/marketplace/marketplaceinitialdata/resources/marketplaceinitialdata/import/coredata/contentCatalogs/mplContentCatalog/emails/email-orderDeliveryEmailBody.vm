@@ -23,9 +23,9 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName},</font>
                   <br>
                   <br>
-				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#AA133D;">Your order <strong>$ctx.orderCode, </strong>placed on <strong>$ctx.orderDate</strong>has arrived at <strong>${ctx.deliveryAddress}.</strong></font>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4b;">Your order <strong>$ctx.orderCode, </strong>placed on <strong>$ctx.orderDate</strong> has arrived at <strong>${ctx.deliveryAddress}.</strong></font>
 				  <br><br>
-                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">If you're wondering what we're talking about, <a href="#" style="color:#AA133D"><strong>click here.</strong></a><br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;">If you're wondering what we're talking about, <a href="#" style="color:#AA133D"><strong>click here.</strong></a><br>
                   <br>
                   </font></td>
             <td width="13">&nbsp;</td>
@@ -37,9 +37,9 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
 	 <tr>
         <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="20" height="35" bgcolor="#f5f5f5">&nbsp;</td>
+            <td width="20" height="35">&nbsp;</td>
             <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
-            <td width="123" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">${ctx.pOrderCode}</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;width:calc(100% - 225px);">${ctx.pOrderCode}</td>
             <td>&nbsp;</td>
           </tr>
         </table>
@@ -50,9 +50,9 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
 	  <tr>
         <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="20" height="35" bgcolor="#f5f5f5">&nbsp;</td>
+            <td width="20" height="35">&nbsp;</td>
             <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;width:125px;">Order number:</td>
-            <td width="123" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">${ctx.orderCode}</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;width:calc(100% - 225px);">${ctx.orderCode}</td>
             <td>&nbsp;</td>
           </tr>
         </table>
@@ -115,7 +115,7 @@ ${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
                 <td>&nbsp;</td>
               </tr>
 			  <tr>
-                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">We hope you're happy with your order. If not,  <a href="mailto:www.tataCliQ.com" style="color:#AA133D"><strong>click here.</strong></a>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;font-weight:bold;">We hope you're happy with your order. If not,  <a href="mailto:www.tataCliQ.com" style="color:#AA133D"><strong>click here.</strong></a>
  </span></td>
               </tr>
 			  <tr>

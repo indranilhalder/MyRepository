@@ -693,9 +693,9 @@ condition and in the fastest time possible. <!DOCTYPE html>
 
 # Content Pages
 UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
- ;;nonBusinessErrorFound;"Tata MarketPlace"
- ;;businessErrorFound;"Tata MarketPlace"
- ;;notFound;"Tata MarketPlace"
+ ;;nonBusinessErrorFound;
+ ;;businessErrorFound;
+ ;;notFound;
  
  #### for new 404 page
  
@@ -720,3 +720,4 @@ UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[la
 <div class='bottom'>
 <p>Have a question? Please feel free to reach us at 1800 201 301 (available 24/7)</p>
 </div>"
+

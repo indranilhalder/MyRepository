@@ -134,4 +134,7 @@ public interface ExtendedUserService extends UserService
 	 */
 	public boolean isUserRegisteredViaSocial(String userId);
 
+
+	UserModel getUserByUid(final String userId);
+
 }

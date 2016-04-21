@@ -65,7 +65,8 @@
 
 
 	<!-- For Infinite Analytics Start -->
-	<!-- <div class="trending" id="ia_products_new"></div> -->
+<!-- 	<TISPRO-271 CHANGES> -->
+ <div class="trending" id="ia_products_new"></div> 
 	<!-- For Infinite Analytics End -->
 	<!-- For Infinite Analytics Start -->
 	<!--Added For Issue TISPRO 271 -->

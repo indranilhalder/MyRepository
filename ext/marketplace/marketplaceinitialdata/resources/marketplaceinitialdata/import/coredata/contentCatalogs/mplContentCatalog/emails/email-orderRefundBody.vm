@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
 <title>TATA - CLiQ</title>
 </head>
@@ -12,7 +13,7 @@
       </tr>
  
       <tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="13">&nbsp;</td>
             <td>
@@ -22,9 +23,9 @@
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey  $ctx.customerName ,</font>
                   <br>
                   <br>
-				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#AA133D;">We know that there's no feeling like getting that refund you really wanted. So we're accepting your return request and refunding a total amount of <strong>$ctx.amount</strong> refunded INR too!</font>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We know that there's no feeling like getting that refund you really wanted. So we're accepting your return request and refunding a total amount of <strong>$ctx.amountrefunded</strong> refunded INR too!</font>
 				  <br><br>
-                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">Here's more about the refund:<br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;">Here's more about the refund:<br>
                   <br>
                   </font></td>
             <td width="13">&nbsp;</td>
@@ -34,11 +35,11 @@
      
 	 
 	 <tr>
-        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="20" height="35" bgcolor="#f5f5f5">&nbsp;</td>
-            <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
-            <td width="123" align="center" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;">${ctx.pOrderCode}</td>
+            <td width="20" height="27">&nbsp;</td>
+            <td width="120" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#aa133d; font-weight:bold;">Order number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#4a4a4a; font-weight:bold; padding-right: 50px;width:calc(100% - 140px);">${ctx.orderReferenceNumber}</td>
             <td>&nbsp;</td>
           </tr>
         </table>
@@ -46,7 +47,7 @@
 		</td>
       </tr>
       <tr>
-        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellpadding="0">
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td width="13">&nbsp;</td>
             <td><table width="572" border="0" cellspacing="0" cellpadding="0">
@@ -69,25 +70,19 @@
                       </tr>
                     </table></td>
                   </tr>
-				   #set ($srNo=1)
-					  #foreach($entry in ${ctx.childEntries})
-                  <tr>
+				<tr>
                     <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
                       <tr>
                         <td width="120" height="55" align="center" >$ctx.transactionId</td>
                         <td width="130" align="center">$ctx.nameOfProduct</td>
-                        <td width="50" align="center" >$ctx.amountrefunded against product</td>
-                        <td width="80" align="center">$ctx.deliveryCharge against delivery, if any</td>
+                        <td width="50" align="center" >$ctx.numberTool.format("#0.00",$ctx.amountrefunded) against product</td>
+                        <td width="80" align="center">$ctx.numberTool.format("#0.00",$ctx.deliveryCharge) against delivery, if any</td>
                         <td width="120" align="center" >Back to Source Mode</td>
                         
                       </tr>
                     </table></td>
                   </tr>
-				   #set ($srNo=$srNo+1)
-					  #end
-                 
-                  
-                </table>
+				 </table>
 				<br>
 				</td>
               </tr>
@@ -151,7 +146,7 @@
         </table></td>
       </tr>
       <tr>
-        <td bgcolor="#fbfbfb">&nbsp;</td>
+        <td>&nbsp;</td>
       </tr>
     </table></td>
   </tr>

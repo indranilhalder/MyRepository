@@ -123,7 +123,11 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String CART_EXPRESS_DELIVERY = "Express Delivery ".intern();
 	public static final String CART_CLICK_COLLECT = "Click And Collect".intern();
 	public static final int PRIORITY_INCREMENT = 1000;
+	public static final String CLICK_AND_COLLECT = "click-and-collect";
+	public static final String STATUS_FAILURE = "failure";
+	public static final String STATUS_SUCESS = "sucess";
 
+	public static final String CONFIGURABLE_RADIUS = "configurable-radius";
 
 
 	private MarketplaceFacadesConstants()

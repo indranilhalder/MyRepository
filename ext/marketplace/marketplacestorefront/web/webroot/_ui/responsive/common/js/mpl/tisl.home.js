@@ -465,7 +465,7 @@ function getBestPicksAjaxCall(){
 							
 							if(v.url){
 								renderHtml += "<a href='"
-									+ v.url
+									+ v.url+"?icid="+v.icid
 									+ "' class='item'>";
 							}
 							
@@ -486,6 +486,7 @@ function getBestPicksAjaxCall(){
 						
 				});
 			renderHtml += "</div> <a href='/store/o/viewAllOffers' class='view-cliq-offers'> Cliq for More </a>";	
+
 			$("#bestPicks").html(renderHtml);
 			// console.log()
 		},
@@ -549,7 +550,7 @@ function getProductsYouCareAjaxCall(){
 						var URL = ACC.config.encodedContextPath+"/Categories/"+v.categoryName+"/c/"+v.categoryCode;
 						//for url
 						renderHtml += "<a href='"
-							+ URL
+							+ URL+"?icid="+v.icid
 							+ "' class='item'>";
 						//for image
 						renderHtml += "<div class='home-product-you-care-carousel-img'> <img src='"
@@ -859,7 +860,7 @@ function getShowcaseContentAjaxCall(id) {
 					if (typeof response.bannerImageUrl !=="undefined") {
 						defaultHtml +="<div class='desc-section'>";
 						if(typeof response.bannerUrl !=="undefined"){
-							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"'>";
+							defaultHtml +="<a href='"+ACC.config.encodedContextPath+response.bannerUrl+"?icid="+response.icid+"'>";
 						}
 						defaultHtml += "<img src='"+ response.bannerImageUrl
 						+ "'></img>";	

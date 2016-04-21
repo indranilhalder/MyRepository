@@ -57,6 +57,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	@Autowired
 	private ConfigurationService configurationService;
 
+
 	public ModelService getModelService()
 	{
 		return modelService;
@@ -71,7 +72,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.promotion.service.UpdatePromotionalPriceService#updatePromotionalPrice(java.util.Collection,
 	 * java.util.Collection, java.lang.Double, java.util.Date, java.util.Date, boolean)
 	 */

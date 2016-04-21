@@ -26,36 +26,50 @@
 			<jsp:body>
 				<script>
     				$(document).ready(function(){
-      					if($("#CreditCard").val()=="true")
-    					{
-    						displayCreditCardForm();
-    						$("#viewPaymentCredit").parent("li").addClass("active");
-    						$(".checkout-paymentmethod").css("display","block");
-    					}
-    					else if($("#DebitCard").val()=="true")
-    					{
-    						displayDebitCardForm();
-    						$("#viewPaymentDebit").parent("li").addClass("active");
-    						$(".checkout-paymentmethod").css("display","block");
-    					}
-    					else if($("#EMI").val()=="true")
-    					{
-    						displayEMIForm();
-    						$("#viewPaymentEMI").parent("li").addClass("active");
-    						$(".checkout-paymentmethod").css("display","block");
-    					}
-    					else if($("#Netbanking").val()=="true")
-    					{
-    						displayNetbankingForm();
-    						$("#viewPaymentNetbanking").parent("li").addClass("active");
-    						$(".checkout-paymentmethod").css("display","block");
-    					}
-    					else if($("#COD").val()=="true")
+    					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
+    					var updateItHereLink=window.location.href;
+    					
+    					if(updateItHereLink.indexOf("updateItHereLink")>=0)
     					{
     						displayCODForm();
     						$("#viewPaymentCOD").parent("li").addClass("active");
     						$(".checkout-paymentmethod").css("display","block");
-    					}		
+    						document.getElementById("otpMobileNUMField").focus();    						
+    					}
+    					else
+    					{
+    						if($("#CreditCard").val()=="true")
+        					{
+        						displayCreditCardForm();
+        						$("#viewPaymentCredit").parent("li").addClass("active");
+        						$(".checkout-paymentmethod").css("display","block");
+        					}
+        					else if($("#DebitCard").val()=="true")
+        					{
+        						displayDebitCardForm();
+        						$("#viewPaymentDebit").parent("li").addClass("active");
+        						$(".checkout-paymentmethod").css("display","block");
+        					}
+        					else if($("#EMI").val()=="true")
+        					{
+        						displayEMIForm();
+        						$("#viewPaymentEMI").parent("li").addClass("active");
+        						$(".checkout-paymentmethod").css("display","block");
+        					}
+        					else if($("#Netbanking").val()=="true")
+        					{
+        						displayNetbankingForm();
+        						$("#viewPaymentNetbanking").parent("li").addClass("active");
+        						$(".checkout-paymentmethod").css("display","block");
+        					}
+        					else if($("#COD").val()=="true")
+        					{
+        						displayCODForm();
+        						$("#viewPaymentCOD").parent("li").addClass("active");
+        						$(".checkout-paymentmethod").css("display","block");
+        					}	
+    					}
+      						
     				});
 				</script>
 				
@@ -282,7 +296,7 @@
 												<input type="text" id="mobilePrefix" name="mobilePrefix" value="+91" disabled="disabled" /><input type="text" id="otpMobileNUMField" name="otpNUM" value="${cellNo}" maxlength="10"/>
 												<div id="mobileNoError" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage"/></div>
 												<p style="color:#333;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage"/>
-												<a href="${request.contextPath}/checkout/multi/payment-method/add"><spring:theme code="checkout.multi.paymentMethod.cod.updateItHereLink"/></a></p>
+												&nbsp;<a href="${request.contextPath}/checkout/multi/payment-method/add?Id=updateItHereLink" class="cod-link"><spring:theme code="checkout.multi.paymentMethod.cod.updateItHereLink"/></a></p>
 											
 											<div id="sendOTPButton">
 													
@@ -627,7 +641,15 @@
 												</fieldset>
 		            							<div class="controls" id="billingAddress">
 					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
+					                            <c:forEach var="cartItem" items="${cartData.entries}">
+					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
+													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
+														 <c:set var="flag" value="true"/>
+													  </c:if>  
+										    	</c:forEach>
+										    	<c:if test="${flag eq true}">
 					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
+					                           	</c:if>   	
 					                           		<fieldset>
 						                           		<div class="half">
 							                           		<label><spring:theme code="text.first.name"/></label>

@@ -20,6 +20,7 @@
 		<requires-extension name="marketplacefacades"/>
 		<requires-extension name="marketplaceBinDb"/>
 		<requires-extension name="marketplaceJuspayServices"/>
+		<requires-extension name="marketplacecoupon"/>	
 		
 	<requires-extension name="marketplacecommerceservices"/>	
 		<coremodule generated="true" manager="de.hybris.platform.jalo.extension.GenericManager" packageroot="com.tisl.mpl"/>

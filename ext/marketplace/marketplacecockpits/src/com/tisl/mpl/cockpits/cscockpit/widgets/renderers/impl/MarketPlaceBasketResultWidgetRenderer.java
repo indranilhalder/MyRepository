@@ -601,6 +601,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			List<PinCodeResponseData> pinCodeResponses = ((MarketplaceSearchCommandController) widget
 					.getWidgetController()).getResponseForPinCode(product,
 					String.valueOf(pincode), isDeliveryDateRequired, ussid);
+			boolean isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
 			if(CollectionUtils.isNotEmpty(pinCodeResponses)) {
 				LOG.info("pinCodeResponse:" + pinCodeResponses.size());
 
@@ -613,7 +614,12 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 				} else {
 					LOG.info("Serviceability check failed for product:"+product.getCode());
 				}
-			} else {
+			}
+			else if (!isPinCodeServicable) { 
+				LOG.info("Serviceability check failed for product:"+product.getCode());
+				popupMessage(widget,NOT_SERVICE_ABLE);
+			}
+			else {
 				popupMessage(widget,NO_RESPONSE_FROM_SERVER);
 			}
 		}catch(EtailNonBusinessExceptions ex) {

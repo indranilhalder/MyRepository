@@ -21,11 +21,14 @@
 			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName} ,</font>
                   <br>
                   <br>
-                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">Our folks here noticed that your order <strong>${ctx.orderReferenceNumber}</strong>,
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Our folks here noticed that your order <strong>${ctx.orderReferenceNumber}</strong>,
 placed on <strong>${ctx.orderDate}</strong> has just a few details we're not completely sure about.<br>
                   <br>
                   </font>
-				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#AA133D;">For any clarifications, please feel free to	<a href="${ctx.contactUsLink}" style="color:#AA133D"><strong>contact us.</strong></a><br>
+				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Now we absolutely cannot have that, so we've placed your order on hold while we check it out. You might get a call from one of our CLIQhelpers to sort this out soon.<br>
+                  <br>
+                  </font>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;">For any clarifications, please feel free to	<a href="${ctx.contactUsLink}" style="color:#AA133D"><strong>contact us.</strong></a><br>
                   <br>
                   </font>
 				  </td>

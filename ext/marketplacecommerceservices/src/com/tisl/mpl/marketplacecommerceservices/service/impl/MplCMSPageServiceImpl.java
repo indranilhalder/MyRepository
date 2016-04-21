@@ -106,10 +106,10 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getHomePageForMobile()
 	 */
 	@Override
-	public ContentPageModel getHomePageForMobile()
+	public ContentPageModel getHomePageForMobile(final String pageUid)
 	{
 		// YTODO Auto-generated method stub
-		return mplCmsPageDao.getHomePageForMobile(CMSChannel.MOBILE);
+		return mplCmsPageDao.getHomePageForMobile(CMSChannel.MOBILE, pageUid);
 
 	}
 
