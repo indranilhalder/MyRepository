@@ -40,7 +40,7 @@ text-decoration: none !important;
 
 <td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="92" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#606060;"><table width="390" border="0" cellspacing="0" cellpadding="0">
+    <td width="92" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:20px; color:#606060;"><table width="390" border="0" cellspacing="0" cellpadding="0">
       <tr>
         
         <td width="352" align="left" valign="top" style="color:#000;font-weight:bold"><span><font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey <span>${ctx.title} ${ctx.displayName}</span>,</font></span></td>
@@ -53,13 +53,13 @@ text-decoration: none !important;
 						</tr>
 
   <tr>
-    <td colspan="3" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">So glad we get to do that, now that you've signed up for TataCLiQ. Our XXXHelpers told us you wanted an account with us. So here it is.  </td>
+    <td colspan="3" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">So glad we get to do that, now that you've signed up for TataCLiQ. Our XXXHelpers told us you wanted an account with us. So here it is.  </td>
   </tr>
   <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">&nbsp;</td>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">&nbsp;</td>
   </tr>
   <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">But first, introductions are in order. Here are your details:</td>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">But first, introductions are in order. Here are your details:</td>
   </tr>
 </table></td>
 <td align="left" valign="top">&nbsp;</td>
@@ -73,11 +73,11 @@ text-decoration: none !important;
   
   <td align="left" valign="top"><table class="emailPass" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;padding-left: 0px">Email ID for login:  </td>
-      <td  align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;padding-right: 10px; "> <span><span>${ctx.customerId}</span></span></td>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;padding-left: 0px">Email ID for login:  </td>
+      <td  align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;padding-right: 10px; "> <span><span>${ctx.customerId}</span></span></td>
 	  #if ($ctx.customerCreatedInCscockpit) 
-      <td align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold">Temporary password:</td>
-      <td align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;" >${ctx.customerPassword}</td>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold">Temporary password:</td>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;" >${ctx.customerPassword}</td>
 	#end
       </tr>
     <tr>
@@ -92,7 +92,7 @@ text-decoration: none !important;
 </tr>
 <tr>
  
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">You will be prompted to change your password when you log in for the first time.</td>
+  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">You will be prompted to change your password when you log in for the first time.</td>
 
 </tr>
 <tr>
@@ -106,8 +106,8 @@ text-decoration: none !important;
   <td align="left" valign="top"><table width="560" border="0" cellspacing="0" cellpadding="0">
     <tr bgcolor="#f5f5f5">
       <td width="11" height="35" align="left" valign="top" >&nbsp;</td>
-      <td width="244" align="left" valign="middle"  style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#AA133D;">Here's what will make shopping</td>
-      <td width="139" align="left" valign="middle"  style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#000;">together fun:</td>
+      <td width="244" align="left" valign="middle"  style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#AA133D;">Here's what will make shopping</td>
+      <td width="139" align="left" valign="middle"  style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#202020;">together fun:</td>
       <td width="20" align="left" valign="top" > </td>
       <td width="113" align="left" valign="top">&nbsp;</td>
     </tr>
@@ -121,7 +121,7 @@ text-decoration: none !important;
 
 <tr>
  
-  <td align="left" valign="top"><table width="569" border="0" cellspacing="0" cellpadding="0" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">
+  <td align="left" valign="top"><table width="569" border="0" cellspacing="0" cellpadding="0" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">
     <tr>
       <td width="104" align="center" valign="top">${ctx.cmsSlotContents.handpick}</td>
 	  <td width="43" rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgOne}</td>
@@ -178,11 +178,11 @@ text-decoration: none !important;
   <td align="left" valign="top"><table width="570" border="0" cellspacing="0" cellpadding="0">
     <tr>
      
-      <td width="446"  rowspan="2" align="left" valign="top" ><table width="554" border="0" cellspacing="0" cellpadding="0" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
+      <td width="446"  rowspan="2" align="left" valign="top" ><table width="554" border="0" cellspacing="0" cellpadding="0" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
         
         <tr>
         
-          <td width="400" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#000;line-height:22px;">If you're worried about what your friends will think of what you want to buy, don't be. Add it to your wish list, share it with them and get their feedback right away.</td>
+          <td width="400" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#000;line-height:22px;">If you're worried about what your friends will think of what you want to buy, don't be. Add it to your wish list, share it with them and get their feedback right away.</td>
         </tr>
        
         
@@ -197,7 +197,7 @@ text-decoration: none !important;
 
 	<tr>
 					 
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
@@ -222,7 +222,7 @@ text-decoration: none !important;
   <td align="left" valign="top"><table width="564" border="0" cellspacing="0" cellpadding="0">
 <tr>
 				
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
 						  </tr>
@@ -242,7 +242,7 @@ text-decoration: none !important;
 
 <tr>
 					
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&copy; 2016 Tata CLiQ | All Rights Reserved</td>
 						  <td width="240" align="left" valign="top">&nbsp;</td>
@@ -257,7 +257,7 @@ text-decoration: none !important;
 							</table></td>
 						  </tr>
 						<tr>
-						  <td align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
+						  <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
 						  <td align="left" valign="top">&nbsp;</td>
 						  <td align="left" valign="top">&nbsp;</td>
 						  </tr>

@@ -43,13 +43,13 @@
 						<tr>
 						
 							
-							<td width="486" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#000;"><font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey,</font></td>
+							<td width="486" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:20px; color:#000;"><font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey,</font></td>
 						</tr>
 						<tr>
 							<td height="10" colspan="2" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
 						</tr>
 						  <tr>
-							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">You know what they say - when you know, you know. And now I can't picture life without this <strong>${ctx.productName} </strong>that I found on TataCliQ.com. Quite the catch, right?</td>
+							<td colspan="2" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">You know what they say - when you know, you know. And now I can't picture life without this <strong>${ctx.productName} </strong>that I found on TataCliQ.com. Quite the catch, right?</td>
 						  </tr>
 						</table></td>
 						<td align="left" valign="top">&nbsp;</td>
@@ -62,7 +62,7 @@
 						
 						<tr>
 
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;"><table width="290" border="0" cellspacing="0" cellpadding="0">
+<td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;"><table width="290" border="0" cellspacing="0" cellpadding="0">
 <tbody><tr style="font-weight:bold;">
 <td width="510" align="left" valign="top" style="font-size:15px; color:#AA133D; ">Can't wait for you to check it out </td>
 <td width="71" align="left" valign="top" style="color:#AA133D;font-size:14px; font-weight:bold;"><a href="${ctx.productUrl}" style="color:#AA133D;font-size:14px; font-weight:bold;">here</a></td>
@@ -85,7 +85,7 @@
 						
 
 						  <tr>
-							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">See you soon,</td>
+							<td colspan="2" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">See you soon,</td>
 						  </tr>
 						</table></td>
 						<td align="left" valign="top">&nbsp;</td>
@@ -97,6 +97,7 @@
 							<td height="18" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
 						</tr>
 						
+						
 						<tr>
 					
 						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
@@ -105,20 +106,7 @@
 						
 
 						  <tr>
-							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;text-decoration:none;pointer-events:none;">${ctx.username}</td>
-						  </tr>
-						</table></td>
-						<td align="left" valign="top">&nbsp;</td>
-						</tr>
-						<tr>
-					
-						<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
-						
-							
-						
-
-						  <tr>
-							<td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;text-decoration:none;pointer-events:none;"><span><span>${ctx.customerEmail}</span></span></td>
+							<td colspan="2" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;text-decoration:none;pointer-events:none;"><span><span>${ctx.customerEmail}</span></span></td>
 						  </tr>
 						</table></td>
 						<td align="left" valign="top">&nbsp;</td>
@@ -142,7 +130,7 @@
 				
 				<tr>
 					 
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
                 <td height="60" align="left" valign="top">${ctx.cmsSlotContents.pdp_tips}</td>
               </tr>
@@ -155,7 +143,7 @@
 					</tr>
 					<tr>
 					 
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 
 						  <td rowspan="2" align="left" valign="top" color="#000" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">
@@ -178,7 +166,7 @@
 					
 					<tr>
 					 
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
                 <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
@@ -192,7 +180,7 @@
 					
 					<tr>
 					  
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; padding-left:13px;  color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; padding-left:13px;  color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
 						  </tr>
@@ -209,7 +197,7 @@
 					</tr>
 					<tr>
 					  
-					  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; padding-left:13px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; padding-left:13px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 						 <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&copy;  2016 Tata CLiQ | All Rights Reserved</td>
 						  <td width="240" align="left" valign="top">&nbsp;</td>
@@ -228,7 +216,7 @@
 					  <td align="left" valign="top">&nbsp;</td>
 					</tr>
 					<tr>
-						  <td align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
+						  <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
 						  <td align="left" valign="top">&nbsp;</td>
 						  <td align="left" valign="top">&nbsp;</td>
 						  </tr>
