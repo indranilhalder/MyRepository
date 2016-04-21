@@ -165,8 +165,8 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 #Added this line
 UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
 ;;TMPHomepageStayQuedComponent1;stayQuedBanner4.PNG;"<h5>How to dress</h5><h2>Casual</h2><h3>Yet Formal</h3><p>Read our tips on how to dress. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam congue ante ac venenatis faucibus. Donec eu orci sit amet purus consectetur scelerisque non id mi. Maecenas congue dictum nunc non eleifend. </p>";"Read Article"; 
-;;TMPHomepageStayQuedComponent2;stayQued1.jpg;"<h5>How to rock</h5><h2>denim</h2><h3>on denim</h3><p>Letâ€™s just say it â€“ these are dark, unpredictable times and thereâ€™s not much to hold on to. Thankfully, when it comes to sartorial issues, denim is our only hope.</p>";"Read Article";
-;;TMPHomepageStayQuedComponent3;stayQued2.jpg;"<h5>Denim</h5><h2>Duo</h2><h3>Men</h3><p>Donâ€™t be surprised if this fabric is all youâ€™re seeing everywhere. Like the sands through the hourglass, so are the days of denim upcycling. </p>";"Read Article";
+;;TMPHomepageStayQuedComponent2;stayQued1.jpg;"<h5>How to rock</h5><h2>denim</h2><h3>on denim</h3><p>Let’s just say it – these are dark, unpredictable times and there’s not much to hold on to. Thankfully, when it comes to sartorial issues, denim is our only hope.</p>";"Read Article";
+;;TMPHomepageStayQuedComponent3;stayQued2.jpg;"<h5>Denim</h5><h2>Duo</h2><h3>Men</h3><p>Don’t be surprised if this fabric is all you’re seeing everywhere. Like the sands through the hourglass, so are the days of denim upcycling. </p>";"Read Article";
 
 #### StayQued Ends#########
 UPDATE MplCategoryCarouselComponent;$contentCV[unique=true];uid[unique=true];title[lang=$lang]

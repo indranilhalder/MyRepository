@@ -9,29 +9,34 @@
  * Information and shall use it only in accordance with the terms of the
  * license agreement you entered into with hybris.
  *
- *  
+ *
  */
 package com.tisl.mpl.v2.controller;
 
 
+import de.hybris.platform.commercefacades.dto.storeats.StoreLocationResponseDataWsDTO;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.storefinder.data.StoreFinderSearchPageData;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControl;
 import de.hybris.platform.commercewebservicescommons.cache.CacheControlDirective;
+import de.hybris.platform.commercewebservicescommons.dto.store.ListOfPointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.store.StoreFinderSearchPageWsDTO;
 import de.hybris.platform.commercewebservicescommons.errors.exceptions.RequestParameterException;
-import com.tisl.mpl.v2.helper.StoresHelper;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.tisl.mpl.v2.helper.StoresHelper;
+
 
 
 /**
@@ -41,6 +46,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @CacheControl(directive = CacheControlDirective.PUBLIC, maxAge = 1800)
 public class StoresController extends BaseController
 {
+	private final static Logger LOG = Logger.getLogger(StoresController.class);
+
 	private static final String DEFAULT_SEARCH_RADIUS_METRES = "100000.0";
 	private static final String DEFAULT_ACCURACY = "0.0";
 	@Resource(name = "storesHelper")
@@ -113,11 +120,57 @@ public class StoresController extends BaseController
 	 * @queryparam fields Response configuration (list of fields, which should be returned in response)
 	 * @return Store details
 	 */
+	@RequestMapping(value = "/{baseSiteId}/allStores/{pincode}", method = RequestMethod.GET)
+	@ResponseBody
+	public ListOfPointOfServiceWsDTO getAllStoreForPincode(@PathVariable final String pincode,
+			@RequestParam(required = false) final String latitude, @RequestParam(required = false) final String longitude,
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from getAllStoreForPincode method");
+		}
+		return storesHelper.getAllStoresForPincode(latitude, longitude, pincode, fields);
+	}
+
+	/**
+	 * Returns store based on slaveId name.
+	 *
+	 * @queryparam fields Response configuration (list of fields, which should be returned in response)
+	 * @return Store details
+	 */
 	@RequestMapping(value = "/{baseSiteId}/stores/{storeId}", method = RequestMethod.GET)
 	@ResponseBody
 	public PointOfServiceWsDTO locationDetails(@PathVariable final String storeId,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from locationDetails method");
+		}
 		return storesHelper.locationDetails(storeId, fields);
 	}
+
+	/**
+	 * Returns StoreAtsResponse with ussid and list of Ats.
+	 *
+	 * @queryparam pincode
+	 * @queryparam ussid
+	 * @queryparam fields Response configuration (list of fields, which should be returned in response)
+	 * @return Store details
+	 */
+	@RequestMapping(value = "/{baseSiteId}/users/{userId}/storesAts", method = RequestMethod.GET)
+	@ResponseBody
+	public StoreLocationResponseDataWsDTO storesAtCart(@RequestParam(value = "pincode") final String pincode,
+			@RequestParam(value = "ussId") final String ussId,
+			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from storesAtCart method");
+		}
+		return storesHelper.storesAtCart(pincode, ussId, fields);
+	}
+
+
 }

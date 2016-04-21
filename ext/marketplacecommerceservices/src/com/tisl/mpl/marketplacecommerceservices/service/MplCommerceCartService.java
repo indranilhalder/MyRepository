@@ -29,6 +29,8 @@ import java.util.Map;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.data.StoreLocationRequestData;
+import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
@@ -50,7 +52,7 @@ public interface MplCommerceCartService
 	 * @throws CommerceCartModificationException
 	 */
 
-	public abstract CommerceCartModification addToCartWithUSSID(CommerceCartParameter paramCommerceCartParameter)
+	CommerceCartModification addToCartWithUSSID(CommerceCartParameter paramCommerceCartParameter)
 			throws CommerceCartModificationException;
 
 	/**
@@ -419,4 +421,12 @@ public interface MplCommerceCartService
 	 */
 	PinCodeDeliveryModeListResponse callPincodeServiceabilityCommerce(final String pincode,
 			final List<PincodeServiceData> pincodeServiceDataList);
+
+	/* @param storeLocationRequestDataList
+	 * @return
+	 */
+	List<StoreLocationResponseData> getStoreLocationsforCnC(
+			List<StoreLocationRequestData> storeLocationRequestDataList);
+
+
 }

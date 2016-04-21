@@ -5,6 +5,7 @@ package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,6 +54,7 @@ import de.hybris.platform.cscockpit.widgets.controllers.OrderController;
 import de.hybris.platform.cscockpit.widgets.models.impl.OrderItemWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.OrderDetailsOrderItemsWidgetRenderer;
 import de.hybris.platform.cscockpit.widgets.renderers.utils.PopupWidgetHelper;
+import de.hybris.platform.orderhistory.model.OrderHistoryEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReturnEntryModel;
@@ -125,7 +127,8 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 											if (status
 													.equals(ConsignmentStatus.QC_FAILED)
 													|| status
-															.equals(ConsignmentStatus.RETURN_CLOSED)) {
+															.equals(ConsignmentStatus.RETURN_CLOSED) || status
+															.equals(ConsignmentStatus.RETURN_CANCELLED)) {
 												Vbox orderParentVbox = new Vbox();
 												// orderParentVbox.setSclass("manualRefundVbox");
 												createOrderDataTable(
@@ -189,6 +192,13 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 																					.setStatus(ConsignmentStatus.REFUND_INITIATED);
 																			modelService
 																					.save(consignment);
+																			final OrderHistoryEntryModel historyEntry = modelService.create(OrderHistoryEntryModel.class);
+																			historyEntry.setTimestamp(Calendar.getInstance().getTime());
+																			historyEntry.setOrder(orderEntry.getOrder());
+																			historyEntry.setLineId(consignment.getCode());
+																			historyEntry.setDescription(ConsignmentStatus.REFUND_INITIATED.toString());
+																			modelService
+																			.save(historyEntry);
 																		}
 																	}
 																	String result = ((MarketPlaceOrderController) widget
@@ -338,7 +348,8 @@ public class MarketplaceMakeManualRefundWidgetRenderer extends
 										if (status
 												.equals(ConsignmentStatus.QC_FAILED)
 												|| status
-														.equals(ConsignmentStatus.RETURN_CLOSED)) {
+														.equals(ConsignmentStatus.RETURN_CLOSED) ||  status
+														.equals(ConsignmentStatus.RETURN_CANCELLED)) {
 											Listitem tableRow = new Listitem();
 											// tableRow.setSclass("manualPaymentTableRow");
 											createDataRow(

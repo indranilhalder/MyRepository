@@ -200,7 +200,6 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				cartData.setPaymentInfo(getPaymentDetails());
 
 			}
-
 			if (null != cartModel.getConvenienceCharges())
 			{
 				cartData.setConvenienceChargeForCOD(createPrice(cartModel, cartModel.getConvenienceCharges()));

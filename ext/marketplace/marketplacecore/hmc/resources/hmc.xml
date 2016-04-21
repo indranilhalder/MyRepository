@@ -1141,7 +1141,7 @@
 			</editor>
 		</organizer>
 	</type>
-	
+
 	<!-- Tata Etail For Buy A get y Free -->
 	<type name="BuyXItemsofproductAgetproductBforfree" mode="append">
 		<organizer>
@@ -3138,7 +3138,7 @@
 	         <essentials mode="replace">
 	            <listlayout>
 	               <text name="text.promotionvoucher.common" width="353"/>
-	               <attribute name="code" maxlength="3"/>
+	               <attribute name="code"/>
 	               <attribute name="name"/>
 	            </listlayout>
 	         </essentials>
@@ -3183,6 +3183,150 @@
 	               </listlayout>
 	            </section>
 	         </tab>                  
+	      </editor>
+	   </organizer>
+	</type>
+	
+	
+	<type name="ProductRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="products"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="products" width="150"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="products"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.productrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="products">
+								<referencecollectioneditor create="false" add="true" remove="true">
+									<itemlayout>
+										<attribute name="code" width="92"/>
+										<attribute name="name" width="85"/>										
+									</itemlayout>
+								</referencecollectioneditor>
+	                  </attribute>
+	                  <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="productrestriction.positive.true"
+	                                            falsename="productrestriction.positive.false"/>
+	                  </attribute>
+	                  <attribute name="productCodeList"/>
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
+	
+	
+	<type name="UserRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="users" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.userrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="users">
+                           <referencecollectioneditor>
+                              <itemlayout>
+                                 <attribute name="uid" width="166"/>
+                                 <attribute name="displayname" width="166"/>
+                              </itemlayout>
+                           </referencecollectioneditor>
+                        </attribute>
+	                  <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="userrestriction.positive.true"
+	                                            falsename="userrestriction.positive.false"/>
+	                  </attribute>
+	               </listlayout>
+	            </section>
+	         </tab>
+	      </editor>
+	   </organizer>
+	</type>
+	
+	
+	<type name="ProductCategoryRestriction" mode="append">
+	   <organizer>
+	      <result>
+	         <listview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </listview>
+	         <editview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </editview>
+	         <treeview>
+	            <itemlayout>
+	               <attribute name="categories" width="200"/>
+	            </itemlayout>
+	         </treeview>
+	      </result>
+	      <editor>
+	         <essentials mode="replace">
+	            <listlayout>
+	               <text name="text.productcategoryrestriction.common" width="353"/>
+	               <attribute name="voucher"/>
+	               <attribute name="description"/>
+	            </listlayout>
+	         </essentials>
+	         <tab name="properties">
+	            <section name="section.restrictions" mode="replace" position="0">
+	               <listlayout>
+	                  <attribute name="categories"/>
+	                  <attribute name="positive" width="500">
+	                     <advancedbooleaneditor truename="productcategoryrestriction.positive.true"
+	                                            falsename="productcategoryrestriction.positive.false"/>
+	                  </attribute>
+	               </listlayout>
+	            </section>
+	         </tab>
 	      </editor>
 	   </organizer>
 	</type>
@@ -3274,4 +3418,56 @@
 	</type>
  
 
+  <!--  Added the code for mplconfiguration -->
+
+<explorertree>
+		<group name="mpl"  description="group.mplConfig.description">
+			<typeref type="MplConfig"  description="mpl.config.table.description"/>
+		</group>
+	</explorertree>
+	
+	<type name="MplConfig" mode="append">
+  <organizer>
+   <search mode="append">
+    <condition attribute="id" />
+    <condition attribute="value" />
+   </search>
+   <result defaultview="list">
+    <listview>
+     <itemlayout mode="replace">
+      <attribute name="id" width="200"></attribute>
+      <attribute name="value" width="200"></attribute>
+     </itemlayout>
+    </listview>
+    <editview mode="replace">
+     <itemlayout>
+      <attribute name="id" width="200" />
+      <attribute name="value" width="200" />
+      <attribute name="description" width="200" />
+     </itemlayout>
+    </editview>
+    <treeview mode="replace">
+     <itemlayout>
+      <attribute name="id" width="200" />
+      <attribute name="value" width="200" />
+      <attribute name="description" width="200" />
+     </itemlayout>
+    </treeview>
+   </result>
+   <editor>
+    
+    <tab name="mplconfig.tab" position="0">
+      <section name="mplconfig.section">
+      <listlayout>
+       <attribute name="id"/>
+       <attribute name="value"/>
+       <attribute name="description"/>
+      </listlayout>
+     </section>
+    </tab>
+    
+   </editor>
+   
+  </organizer>
+ </type>
 </configuration>

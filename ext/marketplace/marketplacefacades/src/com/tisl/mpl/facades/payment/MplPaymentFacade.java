@@ -40,7 +40,7 @@ public interface MplPaymentFacade
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	Map<String, Boolean> getPaymentModes(String store) throws EtailNonBusinessExceptions;
+	Map<String, Boolean> getPaymentModes(String store,final boolean isMobile, final CartData cartDataMobile) throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -247,17 +247,16 @@ public interface MplPaymentFacade
 
 	/**
 	 * @return MplPromoPriceData
-	 * @throws CalculationException
-	 * @throws JaloPriceFactoryException
-	 * @throws JaloSecurityException
 	 * @throws VoucherOperationException
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 * @throws ModelSavingException
 	 */
+
 	MplPromoPriceData applyPromotions(final CartData cartData, final CartModel cart) throws ModelSavingException,
 			NumberFormatException, JaloInvalidParameterException, VoucherOperationException, CalculationException,
 			JaloSecurityException, JaloPriceFactoryException, EtailNonBusinessExceptions;
+
 
 
 	/**

@@ -51,6 +51,10 @@
 							<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference my-review-carousel" id="my-review-carousel">
 							
 								<c:forEach items="${productDataModifyMap}" var="product">
+								<script type="text/javascript">
+								 var productTitle = "${product.value.productTitle}";
+								 var brandName = "${product.value.brand.brandname}";
+								</script>
 								<div class="slide item" id="no-image-link${product.value.code}"><a
 									class="product-tile" href='<c:url value="${product.value.url}"></c:url>'>
 										<div class="image">
@@ -62,9 +66,11 @@
 											<h3 class="product-name">${product.value.productTitle}</h3>
 											
 										</div>
-								</a> <a id="new-review-link${product.value.code}" class="account-only new-review" data-toggle="modal" data-target="#reviewPluginContainer" 
+								</a> 
+								
+								<a id="new-review-link${product.value.code}" class="account-only new-review" data-toggle="modal" data-target="#reviewPluginContainer" 
 										data-product = "${product.value.code}" data-category = "${product.value.rootCategory}"
-										onclick="reviewPopUpDisplay('${product.value.rootCategory}','${product.value.code}','${product.value.productTitle}','${product.value.brand.brandname}',this.id)"
+										onclick='reviewPopUpDisplay("${product.value.rootCategory}","${product.value.code}",encodeURI(productTitle),encodeURI(brandName),this.id)'
 										><spring:theme code="myaccount.review.reviewProduct"/></a>
 								</div>
 								</c:forEach>
@@ -498,6 +504,15 @@
 				height="100%" frameborder="0" allowfullscreen></iframe>
 		</div>
 	</div> -->
+	
+	<div style="display: none;">
+	<p id="comment_title_empty"><spring:theme code="myaccount.review.commentTitleValidationMsg"></spring:theme></p>
+	<p id="comment_title_length"><spring:theme code="myaccount.review.commentTitle.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_empty"><spring:theme code="myaccount.review.commentTextValidationMsg"></spring:theme></p>
+	<p id="comment_text_length"><spring:theme code="myaccount.review.commentText.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_title_length"><spring:theme code="myaccount.review.commentTextTitle.length.ValidationMsg"></spring:theme></p>
+	<p id="comment_text_title_empty"><spring:theme code="myaccount.review.commentTextTitleValidationMsg"></spring:theme></p>
+	</div>
 </template:page>
 <script>
 //$("#videoReviewFrame")[0].src += "&autoplay=0";
@@ -535,6 +550,7 @@ $(".prev a").click(function(){
 		window.location.href="?page="+pageNo;
 		}
 });	
-		
+
+
 </script>
 

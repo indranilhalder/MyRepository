@@ -9,8 +9,9 @@ import de.hybris.platform.cronjob.model.CronJobModel;
 import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.coupon.service.CampaignVoucherDataService;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -24,10 +25,9 @@ import com.tisl.mpl.util.ExceptionUtil;
  */
 public class CampaignVoucherJob extends AbstractJobPerformable<CronJobModel>
 {
-	@SuppressWarnings("unused")
 	private final static Logger LOG = Logger.getLogger(CampaignVoucherJob.class.getName());
 
-	@Autowired
+	@Resource(name = "campaignVoucherDataService")
 	private CampaignVoucherDataService campaignVoucherDataService;
 
 	/**
@@ -66,7 +66,7 @@ public class CampaignVoucherJob extends AbstractJobPerformable<CronJobModel>
 	{
 		LOG.debug("Generating the .CSV for Campaign Team ");
 
-		campaignVoucherDataService.generateCSV();
+		getCampaignVoucherDataService().generateCSV();
 
 		LOG.debug("CampaignVoucherCronJob : CronJob Ends");
 	}

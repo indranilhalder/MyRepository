@@ -47,7 +47,7 @@
 		</c:if>
 		
 		<h1 class="account-header">
-			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
+			<spring:theme code="text.account.headerTitle" text="My MarketPlace" />
 			<select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
@@ -63,7 +63,6 @@
           </optgroup>
       </select>
 		</h1>
-
 
 		<!----- Left Navigation Starts --------->
 		<div class="wrapper">
@@ -224,7 +223,8 @@
 						</fieldset>
 						<fieldset class="frequent">
 							<p>
-								<spring:theme code="text.marketplacePreferences.mailfrequency" />
+								<spring:theme code="text.marketplacePreferences.mailfrequency"
+									text="How often would you like to hear from us?" />
 							</p>
 							<div class="freq">
 								<c:forEach items="${frequencyList}" var="frequency" varStatus="status">
@@ -290,7 +290,6 @@
 		</div>
 	</template:page>
 </div>
-
 
 <%-- <script type="text/javascript" src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 <template:javaScriptVariables />

@@ -26,15 +26,19 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hybris.commons.client.RestCallException;
 import com.hybris.oms.api.order.OrderFacade;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
 import com.sun.jersey.api.client.ClientHandlerException;
+import com.hybris.oms.domain.pickupinfo.PickupInfo;
+import com.hybris.oms.picupinfo.facade.PickupInfoFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.service.MplSendOrderFromCommerceToCRM;
 
@@ -50,10 +54,11 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	private OndemandHystrixCommandFactory ondemandHystrixCommandFactory;
 	private MplSendOrderFromCommerceToCRM ordercreation;
 	private MplCustomerWebService mplCustomerWebService;
-
-
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+	@Autowired
+	private PickupInfoFacade pickupInfoRestClient;
+
 
 	@Override
 	public OrderPlacementResult createCrmOrder(final OrderModel orderModel)
@@ -362,6 +367,35 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		this.ordercreation = ordercreation;
 	}
 
+	//Update PickUpDetails OMS Call
+	public void upDatePickUpDetails(final OrderModel orderModel)
+	{
+		final PickupInfo pickInfo = new PickupInfo();
+		if (null != orderModel.getCode())
+		{
+			pickInfo.setOrderId(orderModel.getCode());
+		}
+		if (null != orderModel.getPickupPersonName())
+		{
+			pickInfo.setPickupPerson(orderModel.getPickupPersonName());
+		}
+		if (null != orderModel.getPickupPersonMobile())
+		{
+			pickInfo.setAlternateContactNumber(orderModel.getPickupPersonMobile());
+		}
+		try
+		{
+			LOG.info("OMS PickUpDetails Upadet Call");
+			//orderRestClient.createOrder(pickInfo);
+			pickupInfoRestClient.updatePickupInfo(pickInfo);
+		}
+		catch (final Exception e)
+		{
+
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
 	/**
 	 * @return the mplCustomerWebService
 	 */
@@ -378,7 +412,6 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	{
 		this.mplCustomerWebService = mplCustomerWebService;
 	}
-
 	/**
 	 * @return the configurationService
 	 */
@@ -395,4 +428,5 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	{
 		this.configurationService = configurationService;
 	}
+
 }

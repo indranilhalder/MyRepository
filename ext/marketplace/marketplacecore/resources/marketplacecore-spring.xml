@@ -15,34 +15,51 @@
 	<context:annotation-config />
 
 	<!-- Spring Integration -->
+	
+	
+	<!-- Added For Pincode -->
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
+	
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-common-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_import-spring.xml" />
+		
+		
 
 
-	<!-- TISPRD-207 Changes Start -->
-	<import
+		<!-- TISPRD-207 Changes Start-->
+		<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_delist-spring.xml" />
-	<!-- TISPRD-207 Changes End -->
-	<!-- <import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_classification-spring.xml" 
-		/> -->
+		<!-- TISPRD-207 Changes End-->
+	<!-- <import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_classification-spring.xml" /> -->
+
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_price-spring.xml" />
-	<!-- <import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" 
-		/> -->
+	<!-- <import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" /> -->
+
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_stock-spring.xml" />
-	<!-- <import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_seller-spring.xml" 
-		/> <import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_media-spring.xml" 
-		/> -->
+	<!-- <import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_seller-spring.xml" />
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_media-spring.xml" /> -->
+
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_bin-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_ratingReview-spring.xml" />
+		
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_manualRefund-spring.xml"/>
+	
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_userGroup-spring.xml"/>
+		
 
-	<import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_manualRefund-spring.xml" />
+
+
+
 	<!-- SystemSetup for the MarketplaceCore -->
 	<bean id="acceleratorCoreSystemSetup" class="com.tisl.mpl.core.setup.CoreSystemSetup"
 		parent="abstractCoreSystemSetup" />
@@ -163,18 +180,21 @@
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplCapacityValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.CapacityValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplCapacityFacetValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.CapacityFacetValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="electronicsCategoryCodeValueProvider" parent="abstractCategoryCodeValueProvider">
 		<property name="categorySource" ref="electronicsCategorySource" />
@@ -227,8 +247,9 @@
 	<bean id="image252Wx374HValueProvider" parent="abstractImageValueProvider">
 		<property name="mediaFormat" value="252Wx374H" />
 	</bean>
+	
 
-	<bean id="image254Wx362HValueProvider" parent="abstractImageValueProvider">
+		<bean id="image254Wx362HValueProvider" parent="abstractImageValueProvider">
 		<property name="mediaFormat" value="254Wx362H" />
 	</bean>
 	<!-- Value Provider to display Serach Page Image - Start -->
@@ -338,8 +359,8 @@
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
-	<bean id="orderConfirmationRiskEventListener"
-		class="com.tisl.mpl.core.event.OrderConfirmationRiskEventListener"
+
+	<bean id="orderConfirmationRiskEventListener" class="com.tisl.mpl.core.event.OrderConfirmationRiskEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
@@ -395,18 +416,53 @@
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
 	<!-- Shipping Confirmation Email -->
-	<bean id="shippingConfirmationEventListener"
-		class="com.tisl.mpl.core.event.ShippingConfirmationEventListener"
+
+	<bean id="shippingConfirmationEventListener" class="com.tisl.mpl.core.event.ShippingConfirmationEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
-
+	
 	<bean id="orderDeliveryEventListener" class="com.tisl.mpl.core.event.OrderDeliveryEventListener"
 		parent="abstractSiteEventListener">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
+	
+	
+	
+	<!-- Added For Order Collected From Store Conformation Mail -->
+
+	<bean id="orderCollectedByPersonEventListener"
+		class="com.tisl.mpl.core.event.OrderCollectedByPersonEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	<bean id="orderRefundCreditedEventListener"
+		class="com.tisl.mpl.core.event.OrderRefundCreditedEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	<bean id="sendNotificationEventListener"
@@ -415,13 +471,15 @@
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 		<property name="configurationService" ref="configurationService" />
-	</bean>
+	</bean> 
 
-	<bean id="sendOrderToCRMEventListner"
-		class=" com.tisl.mpl.marketplaceomsservices.event.SendOrderToCRMEventListner"
+
+
+	<bean id="sendOrderToCRMEventListner" class=" com.tisl.mpl.marketplaceomsservices.event.SendOrderToCRMEventListner"
 		parent="abstractSiteEventListener">
-		<property name="orderConverter" ref="omsOrderConverter" />
-	</bean>
+ 		<property name="orderConverter" ref="omsOrderConverter" />
+	</bean> 
+	
 
 	<!-- Process resources definition -->
 
@@ -508,8 +566,9 @@
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderConfirmationRiskEmailProcess.xml" />
 	</bean>
+	
 
-	<!-- Shipping Confirmation Email and sms -->
+	<!-- Shipping Confirmation Email and sms-->
 	<bean id="shippingConfirmationEmailProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
@@ -520,30 +579,45 @@
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/shippingConfirmationSmsProcess.xml" />
 	</bean>
-	<!-- Order Delivery Email and sms -->
+	<!-- Order Delivery Email and sms-->
 	<bean id="orderDeliveryEmailProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderDeliveryEmailProcess.xml" />
 	</bean>
+	
 
 	<bean id="orderDeliverySmsProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderDeliverySmsProcess.xml" />
 	</bean>
-	<!-- Order Undelivered sms -->
+	<!-- Order Undelivered sms-->
 	<bean id="orderUndeliveredSmsProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderUndeliveredSmsProcess.xml" />
 	</bean>
-	<!-- Out For Delivery sms -->
+	<!-- Out For Delivery sms-->
 	<bean id="outForDeliverySmsProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/outForDeliverySmsProcess.xml" />
 	</bean>
+
+	<!-- Added For Order Collected Order From Store -->
+	<bean id="orderCollectedByPersonEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/orderCollectedByPersonEmailProcess.xml" />
+	</bean>
+	<bean id="orderRefundCreditedEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+	
+		value="classpath:/marketplacecore/processes/orderRefundCreditedEmailProcess.xml" />
+	</bean>
+
 	<!-- Actions -->
 	<bean id="abstractAction" class="de.hybris.platform.processengine.action.AbstractAction"
 		abstract="true">
@@ -564,6 +638,7 @@
 	<bean id="generateCustomerRegistrationEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="CustomerRegistrationEmailTemplate" />
 	</bean>
+	
 
 	<bean id="generateCustomerRegistrationInCsEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="CustomerRegistrationInCsEmailTemplate" />
@@ -603,29 +678,41 @@
 		<property name="frontendTemplateName" value="NotPickedUpConsignmentCanceledEmailTemplate" />
 	</bean>
 	<bean id="generateSubmitRequestEmail" parent="abstractGenerateEmailAction">
-		<property name="frontendTemplateName" value="SubmitRequestEmailTemplate" />
-	</bean>
+  <property name="frontendTemplateName" value="SubmitRequestEmailTemplate" /> 
+  </bean>
+	
 
 	<bean id="generateOrderPlacedFeedbackEmail" parent="abstractGenerateEmailAction">
-		<property name="frontendTemplateName" value="OrderPlacedFeedbackEmailTemplate" />
-	</bean>
+  <property name="frontendTemplateName" value="OrderPlacedFeedbackEmailTemplate" /> 
+  </bean>
+  
 
-	<bean id="generateOrderOnHoldEmail" parent="abstractGenerateEmailAction">
-		<property name="frontendTemplateName" value="OrderOnHoldEmailTemplate" />
-	</bean>
-	<bean id="generateOrderRejectRiskEmail" parent="abstractGenerateEmailAction">
-		<property name="frontendTemplateName" value="OrderRejectRiskEmailTemplate" />
-	</bean>
-	<bean id="generateOrderConfirmationRiskEmail" parent="abstractGenerateEmailAction">
+  <bean id="generateOrderOnHoldEmail" parent="abstractGenerateEmailAction">
+  	<property name="frontendTemplateName" value="OrderOnHoldEmailTemplate" /> 
+  </bean>
+  <bean id="generateOrderRejectRiskEmail" parent="abstractGenerateEmailAction">
+  	<property name="frontendTemplateName" value="OrderRejectRiskEmailTemplate" /> 
+  </bean>
+  <bean id="generateOrderConfirmationRiskEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="OrderConfirmationRiskEmailTemplate" />
 	</bean>
-	<!-- Shipping Confirmation Email -->
-	<bean id="generateShippingConfirmationEmail" parent="abstractGenerateEmailAction">
+    <!-- Shipping Confirmation Email -->
+  	<bean id="generateShippingConfirmationEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="ShippingConfirmationEmailTemplate" />
 	</bean>
+	
+	 <bean id="generateOrderDeliveryEmail" parent="abstractGenerateEmailAction">
+  	<property name="frontendTemplateName" value="OrderDeliveryEmailTemplate" /> 
+  </bean>
+	
+	<!-- Added For Order Collected From Store -->
+	<bean id="generateOrderCollectedByPersonEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderCollectedByPersonEmailTemplate" />
+	</bean>
 
-	<bean id="generateOrderDeliveryEmail" parent="abstractGenerateEmailAction">
-		<property name="frontendTemplateName" value="OrderDeliveryEmailTemplate" />
+
+	<bean id="generateOrderRefundCreditedEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="OrderRefundCreditedEmailTemplate" />
 	</bean>
 
 	<bean id="removeSentEmail"
@@ -719,6 +806,7 @@
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
+	
 
 	<bean id="mplProductUrlValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplProductUrlValueProvider"
@@ -727,10 +815,11 @@
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="i18nService" ref="i18nService" />
 		<property name="commonI18NService" ref="commonI18NService" />
-		<property name="productService" ref="productService" />
+		<property name="productService" ref="productService"/>
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
-		<property name="cmsSiteService" ref="cmsSiteService" />
+		<property name="cmsSiteService" ref="cmsSiteService"/>
 	</bean>
+	
 
 	<bean id="mplPriceValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPriceValueProvider"
@@ -749,17 +838,19 @@
 		<property name="priceService" ref="priceService" />
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
+	
 
-	<bean id="mplDepartmentHierarchyValueProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDepartmentHierarchyValueProvider"
+
+	<bean id="mplDepartmentHierarchyValueProvider" class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDepartmentHierarchyValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="categoryService" ref="categoryService" />
 		<property name="categorySource" ref="allCategoriesSource" />
 	</bean>
+	
 
-	<bean id="mplDepartmentsValueProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDepartmentsValueProvider"
+
+	<bean id="mplDepartmentsValueProvider" class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDepartmentsValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="categoryService" ref="categoryService" />
@@ -794,36 +885,46 @@
 		<property name="i18nService" ref="i18nService" />
 		<property name="commonI18NService" ref="commonI18NService" />
 	</bean>
+	
+		<bean id="mplCompareProductValueProvider"
+                class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplCompareProductValueProvider"
+                parent="abstractPropertyFieldValueProvider">
+                <property name="fieldNameProvider" ref="solrFieldNameProvider" />
+        </bean>
 
-	<bean id="mplCompareProductValueProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplCompareProductValueProvider"
+ 			
+	<bean id="mplSwatchSizeValueProvider"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplSizeValueProvider"
+
 		parent="abstractPropertyFieldValueProvider">
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
-
-
-	
 
 	<bean id="mplClassificationPropertyValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplClassificationPropertyValueProvider"
 		parent="classificationPropertyValueProvider" />
+		
 
 	<bean id="mplClassificationPropertyCodeValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplClassificationPropertyCodeValueProvider"
-		parent="classificationPropertyValueProvider">
+		parent="classificationPropertyValueProvider" >
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplClassificationColourCodeValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplClassificationColourCodeValueProvider"
-		parent="classificationPropertyValueProvider">
+		parent="classificationPropertyValueProvider" >
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
+	
 
 	<bean id="mplAgeBandDisplayNameProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplAgeBandDisplayNameProvider">
 	</bean>
+	
 
 	<bean id="mplOccasionDisplayNameProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplOccasionDisplayNameProvider">
@@ -846,7 +947,11 @@
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplOffersExistingValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+		<property name="promotionsService" ref="promotionsService"/>
+		<property name="timeService" ref="timeService" />
 	</bean>
+	
+	
 
 
 	<bean id="mplAverageRatingFacetValueProvider"
@@ -854,6 +959,8 @@
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
+	
 
 
 	<bean id="mplIsVariantValueProvider"
@@ -861,51 +968,60 @@
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplIsProductNewValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplIsNewProductValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplOnlineExclusiveValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplOnlineExclusiveValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplOccasionIDValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplShopByCollectionValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplDeliveryModeValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDeliveryModeValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplPromotionFacetDisplayNameProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPromotionFacetDisplayNameProvider">
-		<property name="promotionsDao" ref="promotionsDao" />
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPromotionFacetDisplayNameProvider">
+		<property name="promotionsDao" ref="promotionsDao"/>
 	</bean>
+	
 
 	<bean id="mplInStockFacetDisplayNameProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplInStockFacetDisplayNameProvider">
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplInStockFacetDisplayNameProvider">
 	</bean>
+	
 
 	<bean id="mplPromotedProductValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPromotedProductValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<bean id="mplPromotedProductPriorityValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPromotedProductPriorityValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 	</bean>
+	
 
 	<!-- Added for Reviews and Ratings - End -->
 
@@ -920,6 +1036,7 @@
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="buyBoxService" ref="buyBoxService" />
 	</bean>
+	
 
 	<!-- Search Feed Back Cron Job Start -->
 	<bean id="sendFeedBackJob"
@@ -971,6 +1088,7 @@
 		<property name="start" value="1000000000" />
 		<property name="numeric" value="true" />
 	</bean>
+	
 
 	<bean id="orderReturnCancelTransIdGenerator"
 		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
@@ -1059,66 +1177,87 @@
 		parent="abstractYSolrService"> <property name="solrIndexedTypeCodeResolver" 
 		ref="solrIndexedTypeCodeResolver" /> </bean> -->
 
-	<!-- moved to commerce services <alias alias="returnService" name="mplDefaultReturnService"/> 
-		<bean id="mplDefaultReturnService" class="com.tisl.mpl.core.services.impl.MPLDefaultReturnService" 
-		parent="defaultReturnService" scope="tenant"> <property name="generator" 
-		ref="defaultRMAGenerator"/> <property name="refundService" ref="refundService"/> 
-		<property name="modificationHandler" ref="orderReturnRecordsHandler"/> <property 
-		name="returnableChecks"> <list> <ref bean="defaultChecksExistingReturnEntry"/> 
-		<ref bean="mplConsignmentBasedReturnableCheck"/> </list> </property> <property 
-		name="replacementOrderDao" ref="replacementOrderDao"/> <property name="returnRequestDao" 
-		ref="returnRequestDao"/> </bean> <bean id="mplConsignmentBasedReturnableCheck" 
-		class="com.tisl.mpl.core.strategies.impl.MPLDefaultConsignmentBasedReturnableCheck" 
-		parent="abstractBusinessService" scope="tenant"> </bean> -->
+<!-- 	moved to commerce services <alias alias="returnService" name="mplDefaultReturnService"/>
+	<bean id="mplDefaultReturnService" class="com.tisl.mpl.core.services.impl.MPLDefaultReturnService"
+	      parent="defaultReturnService" scope="tenant">
+		<property name="generator" ref="defaultRMAGenerator"/>
+		<property name="refundService" ref="refundService"/>
+		<property name="modificationHandler" ref="orderReturnRecordsHandler"/>
+		<property name="returnableChecks">
+			<list>
+				<ref bean="defaultChecksExistingReturnEntry"/>
+				<ref bean="mplConsignmentBasedReturnableCheck"/>
+			</list>
+		</property>	
+		<property name="replacementOrderDao" ref="replacementOrderDao"/>
+		<property name="returnRequestDao" ref="returnRequestDao"/>
+	</bean>
 
-	<alias name="defaultMplCategorySource" alias="abstractMplCategorySource" />
+
+
+	<bean id="mplConsignmentBasedReturnableCheck"
+		class="com.tisl.mpl.core.strategies.impl.MPLDefaultConsignmentBasedReturnableCheck"
+		parent="abstractBusinessService" scope="tenant">
+	</bean>	 -->
+	
+		<alias name="defaultMplCategorySource" alias="abstractMplCategorySource" />
 	<bean id="defaultMplCategorySource" abstract="true"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.DefaultBrandCategorySource">
 		<property name="modelService" ref="modelService" />
 		<property name="categoriesQualifier" value="supercategories" />
 		<property name="includeClassificationClasses" value="false" />
 		<property name="categoryService" ref="categoryService" />
-	</bean>
+	</bean> 
+	
 
 	<bean id="mplBrandCategorySource" parent="abstractMplCategorySource">
 		<property name="rootCategory" value="MBH1" />
 		<!-- 'brands' is the root of the brands hierarchy -->
 	</bean>
+	
 
 	<bean id="mplBrandCategoryCodeValueProvider" parent="abstractCategoryCodeValueProvider">
 		<property name="categorySource" ref="mplBrandCategorySource" />
 	</bean>
+	
 
 	<bean id="mplCategorySourceForCategoryFacet" parent="abstractMplCategorySource">
 		<property name="rootCategory" value="MSH1" />
 		<!-- 'brands' is the root of the brands hierarchy -->
 	</bean>
+	
 
 	<bean id="mplCategoryCodeValueProviderForCategoryFacet" parent="abstractCategoryCodeValueProvider">
 		<property name="categorySource" ref="mplCategorySourceForCategoryFacet" />
 	</bean>
+	
 
 	<bean id="mplBrandCategoryNameValueProvider" parent="abstractCategoryNameValueProvider">
 		<property name="categorySource" ref="mplBrandCategorySource" />
 	</bean>
+	
 
 	<bean id="mplCategoryNameValueProvider" parent="abstractCategoryNameValueProvider">
 		<property name="categorySource" ref="mplCategorySource" />
 	</bean>
+	
 
 	<bean id="mplCategorySource" parent="abstractCategorySource">
 		<property name="rootCategory" value="MSH1" />
 	</bean>
+	
 
 	<bean id="mplCategoryBrandSource" parent="abstractMplCategorySource">
 		<property name="rootCategory" value="MSH1,MBH1,SSH1" />
 	</bean>
+	
 
 	<bean id="mplCategoryCodeValueProvider" parent="abstractCategoryCodeValueProvider">
 		<property name="categorySource" ref="mplCategoryBrandSource" />
 	</bean>
+	
 
-	<!-- Tata Etail-Promotion Creation Mail -->
+	<!-- Tata Etail-Promotion Creation Mail-->
 	<bean id="generatePromotionCreationMail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="PromotionCreationMailTemplate" />
 	</bean>
@@ -1127,61 +1266,73 @@
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/promotionCreationMailProcess.xml" />
 	</bean>
-	<!-- PDP Email -->
+		<!-- PDP Email -->
 	<bean id="PDPEmailProcessProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/PDPEmailProcess.xml" />
 	</bean>
+	
 
 	<bean id="generatePDPEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="PDPEmailTemplate" />
 	</bean>
+	
 
-	<!-- For Payment -->
-	<bean id="juspayWebHookJob" class="com.tisl.mpl.core.payment.cronjob.JuspayWebHookJob"
-		autowire="byName">
+	<!-- For Payment  -->
+	<bean id="juspayWebHookJob"
+		class="com.tisl.mpl.core.payment.cronjob.JuspayWebHookJob"
+		autowire="byName" >
 	</bean>
+	
 
-	<bean id="juspayEBSJob" class="com.tisl.mpl.core.payment.cronjob.JuspayEBSJob"
+	<bean id="juspayEBSJob"
+		class="com.tisl.mpl.core.payment.cronjob.JuspayEBSJob"
 		autowire="byName" />
-	<!-- For Payment -->
+	<!-- For Payment  -->
+	
+		
 
 
 	<alias name="defaultSolrAutoSuggestService" alias="solrAutoSuggestService" />
-	<bean id="defaultSolrAutoSuggestService"
-		class="com.tisl.mpl.core.suggestion.MplDefaultSolrAutoSuggestService"
+
+	<bean id="defaultSolrAutoSuggestService" class="com.tisl.mpl.core.suggestion.MplDefaultSolrAutoSuggestService"
 		parent="abstractYSolrService">
 		<property name="solrIndexedTypeCodeResolver" ref="solrIndexedTypeCodeResolver" />
 	</bean>
+	
+	
 
 
 	<alias name="defaultCommerceSolrAutocompleteService" alias="commerceAutocompleteService" />
-	<bean id="defaultCommerceSolrAutocompleteService"
-		class="com.tisl.mpl.core.suggestion.MplSolrProductSearchAutocompleteService">
+
+	<bean id="defaultCommerceSolrAutocompleteService" class="com.tisl.mpl.core.suggestion.MplSolrProductSearchAutocompleteService">
 		<property name="facetSearchConfigService" ref="facetSearchConfigService" />
 		<property name="commonI18NService" ref="commonI18NService" />
 		<property name="solrAutoSuggestService" ref="solrAutoSuggestService" />
 		<property name="solrIndexedTypeCodeResolver" ref="solrIndexedTypeCodeResolver" />
 		<property name="solrFacetSearchConfigSelectionStrategy" ref="solrFacetSearchConfigSelectionStrategy" />
 	</bean>
+	
+	
 
 
 	<bean id="mplPromotionCodeValueProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPromotionCodeValueProvider"
-		parent="abstractPropertyFieldValueProvider">
-		<property name="promotionsService" ref="promotionsService" />
-		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPromotionCodeValueProvider"
+	      parent="abstractPropertyFieldValueProvider" >
+		<property name="promotionsService" ref="promotionsService"/>
+		<property name="fieldNameProvider" ref="solrFieldNameProvider"/>
 		<property name="timeService" ref="timeService" />
 	</bean>
+	
 
 	<bean id="mplMobilePromotionCodeValueProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMobilePromotionCodeValueProvider"
-		parent="abstractPropertyFieldValueProvider">
-		<property name="promotionsService" ref="promotionsService" />
-		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMobilePromotionCodeValueProvider"
+	      parent="abstractPropertyFieldValueProvider" >
+		<property name="promotionsService" ref="promotionsService"/>
+		<property name="fieldNameProvider" ref="solrFieldNameProvider"/>
 	</bean>
-	<!-- High Risk Alert to Payment Team -->
+<!-- High Risk Alert to Payment Team -->
 	<bean id="notifyPaymentGroupProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
@@ -1190,8 +1341,9 @@
 	<bean id="generateNotifyPaymentGroupEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="HighRiskNotificationEmailTemplate" />
 	</bean>
+	
 
-	<!-- Alert to Payment Team to take action on Held order -->
+	<!-- Alert to Payment Team to take action on Held order-->
 	<bean id="takeActionOnHeldOrderProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
 		<property name="resource"
@@ -1200,10 +1352,11 @@
 	<bean id="generateTakeActionOnHeldOrderEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="TakeActionOnHeldOrderEmailTemplate" />
 	</bean>
+	
 
-	<bean id="emailAndSmsNotification"
+	<bean id="emailAndSmsNotification" 
 		class="com.tisl.mpl.marketplaceomsservices.daos.impl.DefaultEmailAndSmsNotification">
-	</bean>
+	</bean> 
 
 	<!-- SMS Notification -->
 	<bean id="sendSMS"
@@ -1211,24 +1364,29 @@
 		scope="tenant" parent="abstractAction">
 		<property name="sendSMSService" ref="sendSMSService" />
 	</bean>
+	
 
 	<bean id="removeSentSMS"
 		class="marketplaceclientservices.process.sms.actions.RemoveSentSMSAction"
 		parent="abstractAction">
 	</bean>
+	
+	
 
 
-	<bean id="defaultTopValuesProvider"
+	  <bean id="defaultTopValuesProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.DefaultMplBrandTopValuesProvider" />
+		
 
 	<alias alias="mediaService" name="defaultCustomMediaService" />
 	<bean id="defaultCustomMediaService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultCustomMediaService"
 		parent="defaultMediaService">
 	</bean>
+	
 
-	<bean id="core.passwordEncoderFactory"
-		class="de.hybris.platform.persistence.security.PasswordEncoderFactoryImpl">
+
+	<bean id="core.passwordEncoderFactory" class="de.hybris.platform.persistence.security.PasswordEncoderFactoryImpl">
 		<property name="encoders">
 			<map>
 				<entry>
@@ -1244,23 +1402,29 @@
 					<ref bean="core.saltedMD5PasswordEncoder" />
 				</entry>
 				<entry>
-					<key>
-						<value>sha256</value>
-					</key>
-					<ref bean="core.saltedSHA256PasswordEncoder" />
-				</entry>
+                     <key>
+
+                          <value>sha256</value>
+                     </key>
+
+                     <ref bean="core.saltedSHA256PasswordEncoder" />
+                </entry>
+
 			</map>
 		</property>
 	</bean>
+	
 
-	<bean id="core.saltedSHA256PasswordEncoder"
-		class="de.hybris.platform.persistence.security.SaltedPasswordEncoder">
+
+	<bean id="core.saltedSHA256PasswordEncoder" class="de.hybris.platform.persistence.security.SaltedPasswordEncoder">
 		<property name="salt" value="${core.password.sha256.salt}" />
 		<property name="algorithmn" value="SHA-256" />
 	</bean>
+	
 
-	<bean id="lucenesearch.manager" class="com.tisl.mpl.lucene.manager.MplLuceneManager"
-		init-method="init" destroy-method="destroy" scope="tenant" />
+	<bean id="lucenesearch.manager" class="com.tisl.mpl.lucene.manager.MplLuceneManager" init-method="init" destroy-method="destroy" scope="tenant"/>
+	
+
 
 	<bean id="mplNewTitleValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplKeywordNameValueProvider"
@@ -1268,38 +1432,38 @@
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="classificationService" ref="classificationService" />
 	</bean>
-	<!-- pdp seller priority cron job -->
-	<bean id="updateSellerPriorityCronJob" parent="abstractJobPerformable"
-		class="com.tisl.mpl.core.cronjob.priority.UpdateSellerPriorityCronJob"
-		autowire="byName">
-	</bean>
+	 <!--  pdp seller priority cron job -->
 
-	<bean id="mplCouponListingDao" class="com.tisl.mpl.core.coupon.dao.MplCouponListingDaoImpl">
-	</bean>
+    <bean id="updateSellerPriorityCronJob" parent="abstractJobPerformable" class="com.tisl.mpl.core.cronjob.priority.UpdateSellerPriorityCronJob" autowire="byName">
+    </bean>
+    
+     <bean id="mplCouponListingDao" class="com.tisl.mpl.core.coupon.dao.MplCouponListingDaoImpl">
 
-	<bean id="mplVoucherCodeValueProvider"
+	</bean>
+	   
+
+
+
+
+	 <bean id="mplVoucherCodeValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplCouponValueProvider"
 		parent="abstractPropertyFieldValueProvider">
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="voucherModelService" ref="voucherModelService" />
 		<property name="mplCouponListingDao" ref="mplCouponListingDao" />
 		<property name="voucherRestrictionService" ref="voucherRestrictionService" />
+		
 
 	</bean>
-	<!-- pdp seller priority cron job ends -->
+	   <!--  pdp seller priority cron job ends -->
+	   
 
-	<!-- Tata Cliq : For Campaign Team -->
-	<bean id="campaignPromoDataJob" class="com.tisl.mpl.core.campaign.jobs.CampaignPromoDataJob"
-		autowire="byName">
-	</bean>
+	   <!-- Tata Cliq : For Campaign Team   -->
+   	<bean id="campaignPromoDataJob" class="com.tisl.mpl.core.campaign.jobs.CampaignPromoDataJob"
+   		autowire="byName" >
+   	</bean>
+   	
 	<!-- TISPRO_166 changes start -->
-	<bean id="mplSwatchSizeValueProvider"
-		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplSizeValueProvider"
-		parent="abstractPropertyFieldValueProvider">
-		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
-		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
-	</bean>
-
 	<bean id="mplProductMrpValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDisplayMrpValueProvider"
 		parent="abstractPropertyFieldValueProvider">
@@ -1307,6 +1471,7 @@
 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
 		<property name="priceDataFactory" ref="priceDataFactory" />
 	</bean>
+
 	<bean id="mplSwatchPriceValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplDisplayPriceValueProvider"
 		parent="abstractPropertyFieldValueProvider">
@@ -1337,15 +1502,23 @@
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 	<!-- TISPRO_166 changes end -->
+
+   	<!-- ============== configure beans for mplConfig ============== -->
+	<alias name="mplConfigService" alias="mplConfigService" /> 
+		<bean id="mplConfigService" class="com.tisl.mpl.core.mplconfig.service.impl.MplConfigServiceImpl">
+	</bean>
 	
-	<import
-		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
+	<import resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_pincode-spring.xml" />
 		
     <!-- For COM Fallback Mechanism when OMS is down-->
 	<bean id="mplPincodeDataJob" class="com.tisl.mpl.core.pincode.jobs.MplPincodeDataJob"
 		autowire="byName">
 		<property name="mplPincodeService" ref="mplPincodeService" />
 	</bean>
-    
-	
+
+	<alias name="mplConfigDao" alias="mplConfigDao" />
+		<bean id="mplConfigDao" class="com.tisl.mpl.core.mplconfig.dao.impl.MplConfigDaoImpl" >
+	</bean>
+	<!-- ============== configure beans for mplConfig ============== -->
+
 </beans>

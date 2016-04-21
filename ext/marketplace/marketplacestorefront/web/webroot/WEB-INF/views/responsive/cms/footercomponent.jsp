@@ -10,7 +10,7 @@
 <div class="right">
 	<div class="newsletter">
 			<h3><spring:theme code="text.newsletter.signup"/></h3>
-			<spring:theme code="text.newsletter.placeholder" var="newsletterPlaceholder" />
+			<spring:theme code="text.newsletter.placeholder" text="Enter your email to Sign up for our newsletter" var="newsletterPlaceholder" />
 			<input type="text" name="email"  id="mailtext"  placeholder="${newsletterPlaceholder}" />
 			<button id ="submit" type="submit" onclick="return emailvalidate();"><spring:theme code="footer.submit"/></button>
 			<div>&emsp;</div>
@@ -152,4 +152,3 @@
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-

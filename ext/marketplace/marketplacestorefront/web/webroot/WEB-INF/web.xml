@@ -193,13 +193,25 @@
 
 	<!-- Session -->
 
-	 <session-config>
-		Session timeout of 30 minutes
-		
-		<cookie-config>
+
+	<session-config>
+
+	<!-- Session timeout of 30 minutes -->
+		<!-- <cookie-config>
 			<name>SID</name>
+<<<<<<< HEAD
 		</cookie-config>
 	   <session-timeout>30</session-timeout>
+=======
+
+		</cookie-config>  -->
+	   	
+	   	<cookie-config>
+			<secure>true</secure>
+			<http-only>true</http-only>
+		</cookie-config>
+       <session-timeout>30</session-timeout>
+>>>>>>> refs/remotes/origin/666220_COM_OMS_FALLBACK_INT
 	</session-config> 
 
 
