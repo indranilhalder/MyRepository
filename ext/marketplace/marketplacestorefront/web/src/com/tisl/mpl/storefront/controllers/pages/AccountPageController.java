@@ -93,7 +93,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,7 +143,6 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.data.AddressTypeData;
 import com.tisl.mpl.data.CouponHistoryData;
-
 import com.tisl.mpl.data.EditWishlistNameData;
 import com.tisl.mpl.data.ExistingWishlistData;
 import com.tisl.mpl.data.FriendsInviteData;
@@ -1455,7 +1453,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_SUBMIT, method = RequestMethod.POST)
 	public String returnPincodeAvailability(final ReturnPincodeCheckForm returnAddress, final Model model,
-			final HttpServletRequest request) throws CMSItemNotFoundException,Exception
+			final HttpServletRequest request) throws CMSItemNotFoundException, Exception
 	{
 		final String errorMsg = returnItemFormValidator.returnValidate(returnAddress);
 		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -1648,7 +1646,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			storeContentPageTitleInModel(model, MessageConstants.RETURN_REQUEST);
 			return ControllerConstants.Views.Pages.Account.AccountReturnReqPage;
 		}
-		
+
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
@@ -1755,10 +1753,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			boolean returnLogisticsCheck = true;
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = (List<ReturnLogisticsResponseData>) session
 
-					.getAttribute(RETURN_Logistics_Availability);
+			.getAttribute(RETURN_Logistics_Availability);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
-				if(response.getTransactionId().trim().equalsIgnoreCase(transactionId.trim()))
+				if (response.getTransactionId().trim().equalsIgnoreCase(transactionId.trim()))
 				{
 					model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
 				}
@@ -1794,9 +1792,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		catch (final Exception e)
 		{
- 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
- 					MarketplacecommerceservicesConstants.E0000));
- 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
 
@@ -1832,7 +1830,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String transactionId = returnRequestForm.getTransactionId();
 
 			final ReturnItemAddressData returnAddrData = (ReturnItemAddressData) session.getAttribute(RETURN_ADDRESS);
-			final String pinCode=returnAddrData.getPincode();
+			final String pinCode = returnAddrData.getPincode();
 			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 			for (final OrderEntryData entry : subOrderEntries)
 			{
@@ -1895,8 +1893,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
-					.checkReturnLogistics(subOrderDetails,pinCode);
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
+					subOrderDetails, pinCode);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
@@ -6560,6 +6558,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 		try
 		{
+			final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
 			final BaseStoreModel currentBaseStore = baseStoreService.getCurrentBaseStore();
 			final PageableData pagedData = new PageableData();
 			pagedData.setCurrentPage(0);

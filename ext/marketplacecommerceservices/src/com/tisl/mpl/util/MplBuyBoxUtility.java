@@ -188,21 +188,10 @@ public class MplBuyBoxUtility
 			final Map<BuyBoxModel, Double> priceValueMap)
 	{
 
-		for (final BuyBoxModel buyBox : buyBoxModelList)
 		if (buyBoxModelList != null)
 		{
-			if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
 			for (final BuyBoxModel buyBox : buyBoxModelList)
 			{
-				priceValueMap.put(buyBox, buyBox.getSpecialPrice());
-			}
-			else if (null != buyBox.getPrice() && buyBox.getPrice().doubleValue() > 0.0)
-			{
-				priceValueMap.put(buyBox, buyBox.getPrice());
-			}
-			else
-			{
-				priceValueMap.put(buyBox, buyBox.getMrp());
 				if (null != buyBox.getSpecialPrice() && buyBox.getSpecialPrice().doubleValue() > 0.0)
 				{
 					priceValueMap.put(buyBox, buyBox.getSpecialPrice());
