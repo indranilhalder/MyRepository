@@ -149,9 +149,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;NavigationBar;;;navigation
 ;MiddleContent;;CMSParagraphComponent
 ;BottomContent;;;wide
-#;SideContent;;;narrow
-#### for new 404 page
-;SideContent;;CMSImageComponent;;
+;SideContent;;MplBigPromoBannerComponent;narrow
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;BreadcrumbComponent
