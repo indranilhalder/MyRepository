@@ -4333,7 +4333,7 @@ color:inherit;}
 	overflow: hidden;
 }
 .feature-collections ul.collections li.chef.sub {
-	background: #fafafa;
+	background: #edeef0;
 }
 
 .feature-collections ul.collections li::after {
@@ -17541,7 +17541,7 @@ header.brand-header .select-view .select-list li {
 @media ( min-width: 320px) and (max-width: 550px) {
 	#up {
 	  color: #fff;
-	  background-color: #A9143C;
+	  background-color: #A91E3E;
 	  float: left;
 	  left: 0px;
 	  position: fixed;
@@ -28518,7 +28518,7 @@ body .account .right-account.rewards>div.customer-service.steps ul .step span
 body .account .right-account.rewards>div.customer-service.steps ul .step span:before
 	{
 	content: "";
-	background-image: url(../images/brush-strokes.png);
+	/* background-image: url(../images/brush-strokes.png); */
 	background-repeat: no-repeat;
 	display: block;
 	width: 111px;
