@@ -37669,6 +37669,28 @@ span.priceFormat{
 max-width:100%;
 }
 
+.hbpagination {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+}
+
+.hbpagination .hb-page{
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 100%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 3px;
+}
+
+.hbpagination .hb-page.active{
+    background: rgba(255,255,255,0.6);
+    border: none;
+}
+
 /* SAP Code Start */
 .pickup_Edit{
 	display: none;
