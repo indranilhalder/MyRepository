@@ -59,7 +59,8 @@ $(document).ready(function() {
 		<input type="hidden" id="helpMeShopSearchCatId" value="${searchCategory}">  
 		<div class="brands"  id="ia_brands_hot_searches"></div>
 		<div class="feature-categories"  id="ia_categories_hot_searches"></div>
-		<div class="trending"  id="ia_products"></div>
+			<!--TISPRO-279 CHANGES  -->
+		<div class="trending"  id="ia_products_search"></div>
 	<!-- For Infinite Analytics End -->
 		
 			<%-- <a class="btn btn-default button  js-shopping-button" href="${homePageUrl}">
