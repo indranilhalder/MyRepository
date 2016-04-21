@@ -31,6 +31,7 @@ import com.hybris.commons.client.RestCallException;
 import com.hybris.oms.api.order.OrderFacade;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.UpdatedSinceList;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
@@ -138,10 +139,18 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 				result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, ex);
 			}
 		}
+		catch (final ClientHandlerException cex)
+		{
+			LOG.error("ClientHandlerException occured while creating order", cex);
+			result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, cex);
+		}
 		catch (final Exception ex)
 		{
 			LOG.error("CreateOmsOrder >> Exception occured while placing order due to ", ex);
-			if (ex.getMessage().contains("connect timed out") || ex.getMessage().contains("Read timed out"))
+
+			if (ex.getMessage().contains("connect timed out") || ex.getMessage().contains("Read timed out")
+					|| ex.getMessage().contains("Connection refused")
+					|| "503_FOQProcessingException".equalsIgnoreCase(ex.getMessage()))
 			{
 				/// send order to queue
 				result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, ex);

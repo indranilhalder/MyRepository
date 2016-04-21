@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
@@ -293,6 +294,11 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				}
 
 			}
+			catch (final ClientHandlerException cex)
+			{
+				LOG.error("ClientHandlerException " + MarketplacecclientservicesConstants.EXCEPTION_IS, cex);
+				throw new ClientEtailNonBusinessExceptions("O0003", cex);
+			}
 			catch (final ClientEtailNonBusinessExceptions ex)
 			{
 				LOG.error("Http Error in calling OMS - " + ex.getMessage());
@@ -302,7 +308,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 			{
 				LOG.error(MarketplacecclientservicesConstants.EXCEPTION_IS, ex);
 
-				if (ex.getMessage().contains("connect timed out"))
+				if (ex.getMessage().contains("connect timed out") || ex.getMessage().contains("Connection refused"))
 				{
 					throw new ClientEtailNonBusinessExceptions("O0003", ex);
 				}
