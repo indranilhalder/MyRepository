@@ -3821,7 +3821,7 @@ color:inherit;}
 }
 
 .shop-promos .promos li span {
-	font-size: 20px;
+	font-size: 18px;
 	margin-bottom: 12px;
 	font-weight: 500;
 	text-transform: uppercase;
@@ -4210,17 +4210,17 @@ color:inherit;}
 
 .feature-categories ul.categories a.shop_link:after, .feature-categories .item.slide a.shop_link:after
 	{
-	 font-family: 'FontAwesome';
+	font-family: 'FontAwesome';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    content: "\f105";
-    font-size: 17px;
+    content: "\f0da";
+    font-size: 14px;
     vertical-align: middle;
     padding-left: 5px;
     font-weight: lighter;
     border: none;
     position: relative;
-    top: -2px;
+    top: -1px;
 }
 
 .feature-categories ul.categories a.shop_link:hover:after,
@@ -17647,7 +17647,7 @@ ul.helpmeshop-list{
 	cursor:default;
 }
 @media(min-width:791px){
-	ul#ui-id-1,ul#ui-id-2,ul.helpmeshop-list
+	ul.helpmeshop-list
 {
 	max-height: 500px;
     overflow: auto;
@@ -18901,7 +18901,8 @@ height: 0;
 }		
 #pageSizeOptions1{		
 	width:auto !important;	
-	 max-width:200px;		
+	 max-width:200px;
+	 padding: 0 30px 0 5px;		
 }		
 	.view select{		
 	margin-top:0px;		
@@ -29548,7 +29549,7 @@ position: absolute;
 .shop-promos {
     padding: 0;}
 .shop-promos .promos li span{
-color:#7e7e7e;
+color:#ACACAC;
 position:relative;
 
   }
@@ -29566,7 +29567,7 @@ position:relative;
 }
 .shop-promos .promos li:nth-last-of-type(1) {
     border-right: none;
-	border-bottom:1px solid #ccc;
+	border-bottom:1px solid #ACACAC;
 }
 @media (min-width: 651px){
 	.shop-promos .promos{
@@ -29596,16 +29597,23 @@ position:relative;
 .shop-promos {
     padding: 10px;
 }
-.shop-promos .promos li:nth-last-of-type(1) {
-    border-bottom: none;
+.shop-promos .promos li:first-of-type {
+    border-top: 1px solid #ACACAC;
 }
 	.shop-promos .promos li span{
-	    padding-left: 100px;
 	    margin-top: 5px;
+	    padding-left: 0px !important;
+    	display: inline-block !important;
+    	letter-spacing: 1.1px;
 }
 .shop-promos .promos li{
-border-bottom: 1px solid #ccc;
-padding:15px;}
+	border-bottom: 1px solid #ACACAC;
+    padding: 8px;
+    height: 65px;
+    text-align: center;}
+    .shop-promos .promos li > a{
+    display: inline-block;
+    }
 .shop-promos .promos li img{
 	position:static;
 	transform:none;
@@ -29613,12 +29621,15 @@ padding:15px;}
 	moz-transform: none;
     -ms-transform: none;
     -o-transform:	none;
-    float:left;
+    display: inline-block;
+    height: 28px;
+    margin-top: -7px;
 }
 .shop-promos .promos li span:after{
-      font-size: 30px;
+      font-size: 32px;
       color: inherit;
       top:3px;
+      padding-left: 10px;
  }
 }
 
@@ -38406,4 +38417,3 @@ Samsung Galaxy S5 -----------
   background-color : transparent;
 }
 /*Store Finder and Home store locator css end here*/
-
