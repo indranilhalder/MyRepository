@@ -84,13 +84,13 @@
 						
 						<tr>
   
-  <td align="left" valign="top"><table width="560" border="0" cellspacing="0" cellpadding="0">
+  <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="0">
     <tbody><tr bgcolor="#f5f5f5">
-      <td width="1" height="35" align="left" valign="top">&nbsp;</td>
-      <td width="215" align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">You'll be missing out on a lot </td>
-     <td width="139" align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold;">if you don't:</td>
-      <td width="20" align="left" valign="top"> </td>
-      <td width="113" align="left" valign="top">&nbsp;</td>
+      <td height="35" align="left" valign="top">&nbsp;</td>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">You'll be missing out on a lot&nbsp;&nbsp;<span style="color:#4a4a4a;">if you don't:</span></td>
+     
+      <td align="left" valign="top"> </td>
+      <td align="left" valign="top">&nbsp;</td>
     </tr>
   </tbody></table></td>
   <td align="left" valign="top">&nbsp;</td>
