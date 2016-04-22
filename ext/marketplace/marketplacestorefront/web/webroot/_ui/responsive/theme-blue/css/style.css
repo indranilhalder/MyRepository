@@ -2716,7 +2716,8 @@ h2 {
       float: left;
       margin-bottom: 5px; }
       header > .content .bottom .brand-logo img {
-        max-height: 40px; }
+        max-height: 40px;
+        margin-top: 10px; }
     header > .content .bottom .bag {
       display: none;
       position: absolute;
@@ -16534,7 +16535,8 @@ body .account .right-account .order-history.order-details li.item:not(.in-store)
     display: block
 }
 body .account .right-account .order-history.order-details li.item .order {
-    position: relative
+    position: relative;
+    margin-top: 0px !important;
 }
 body .account .right-account .order-history.order-details li.item .order::after {
     clear: both;
@@ -29132,11 +29134,11 @@ body.page-coupons .pagination li.active span,body.page-coupons .pagination li.ac
 @media(min-width:791px) and (max-width:1300px){
 	header.compact .content .marketplace.compact + .right > ul > li.track.trackOrder{
 	    position: absolute;
-    	left: 210px;
+    	left: 110px;
 	}
 	header.compact .content .marketplace.compact + .right > ul > li.store-locator-header{
 	    position: absolute;
-    	left: 120px;
+    	left: 10px;
 	}
 	/* header.compact .content .marketplace.compact a img{
 	width:180px;

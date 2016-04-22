@@ -163,7 +163,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			final ConsignmentStatus shipmentNewStatus)
 	{
 		String mobileNumber;
-	    String firstName;
+		String firstName;
 
 		LOG.info("*************Inside sendNotification *******************");
 		final String orderNumber = (StringUtils.isEmpty(shipment.getOrderId())) ? MarketplacecommerceservicesConstants.EMPTY
@@ -369,8 +369,8 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))); if (null !=
 	 * orderNumber && !orderNumber.isEmpty()) { pushData.setOrderId(orderNumber); }
 	 * mplSNSMobilePushService.setUpNotification(customer.getOriginalUid(), pushData);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
 	 */
 
@@ -1040,6 +1040,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			for (final ConsignmentEntryModel consignment : consignmentEntries)
 			{
 				final ConsignmentModel consignModel = consignment.getConsignment();
+				LOG.info(">>>>>>>>>>>>>>>>Tracking Id>>>>>>>>>>>>>>>>>" + consignModel.getCode() + " " + consignModel.getTrackingID());
 				if (StringUtils.isEmpty(consignModel.getTrackingID()))
 				{
 					LOG.debug(">>>>>>>>>>>>>consignment.getOrderEntry().getTransactionID()<<<<<<<<<<<<<:::::"
