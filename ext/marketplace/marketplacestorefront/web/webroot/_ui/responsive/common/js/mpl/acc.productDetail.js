@@ -1171,16 +1171,20 @@ function fetchPrice() {
 					$("#sellerSelId").val(sellerID);
 					
 					if (allStockZero == 'Y' && data['othersSellersCount']>0) {
+						if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
 						$("#buyNowButton").hide();
+						}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
 					}
-					else if (allStockZero == 'Y' && data['othersSellersCount']==0) {
-						$("#addToCartButton").hide();
-						$("#buyNowButton").hide();
-						$("#outOfStockId").show();
+					else if (allStockZero == 'Y' && data['othersSellersCount']==0){
+						if($("#variant,#sizevariant option:selected").val()!="#"){	//TISPRD-1173
+							$("#addToCartButton").hide();
+							$("#buyNowButton").hide();
+							$("#outOfStockId").show();
+						}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").hide();
 					}
