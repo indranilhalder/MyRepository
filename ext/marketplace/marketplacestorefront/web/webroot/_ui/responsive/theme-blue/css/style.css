@@ -16535,7 +16535,8 @@ body .account .right-account .order-history.order-details li.item:not(.in-store)
     display: block
 }
 body .account .right-account .order-history.order-details li.item .order {
-    position: relative
+    position: relative;
+    margin-top: 0px !important;
 }
 body .account .right-account .order-history.order-details li.item .order::after {
     clear: both;
