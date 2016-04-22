@@ -2716,7 +2716,8 @@ h2 {
       float: left;
       margin-bottom: 5px; }
       header > .content .bottom .brand-logo img {
-        max-height: 40px; }
+        max-height: 40px;
+        margin-top: 10px; }
     header > .content .bottom .bag {
       display: none;
       position: absolute;
