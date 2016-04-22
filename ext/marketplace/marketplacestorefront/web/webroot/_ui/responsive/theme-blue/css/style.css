@@ -6533,7 +6533,8 @@ text-transform: uppercase;
           .cart.wrapper .product-block li.item > ul > li.delivery, .confirmation .product-block li.item > ul > li.delivery {
             width: 20%; }
             .cart.wrapper .product-block li.item > ul > li.delivery ul, .confirmation .product-block li.item > ul > li.delivery ul {
-              margin-bottom: 60%; } 
+              margin-bottom: 60%;
+              line-height: 16px; } 
             .cart.wrapper .product-block li.item > ul > li.delivery ul span, .confirmation .product-block li.item > ul > li.delivery ul span {
               line-height:16px; } }
         .cart.wrapper .product-block li.item > ul > li.delivery li, .confirmation .product-block li.item > ul > li.delivery li {
@@ -13575,7 +13576,7 @@ div.get-in-touch h2,
 .rewards div.customer-service h2,
 .contact-us-header h2 {
     font-family: "LP Bambus";
-    font-size: 42px;
+    font-size: 28px;
     margin-bottom: 40px;
 }
 
@@ -15543,7 +15544,7 @@ body .account .right-account ul.saved-cards>li:last-child {
 }
 body .account .right-account ul.saved-cards>li address {
     line-height: 1.5;
-    font-size: 12px
+    font-size: 14px
 }
 body .account .right-account ul.saved-cards>li a {
     text-decoration: underline;
@@ -15750,7 +15751,8 @@ body .account .right-account form.new-card .half.account-only select,
 body .account .right-account form.new-card .half.no-display select,
 body .account .right-account div.new-address .half.account-only select,
 body .account .right-account div.new-address .half.no-display select {
-    width: 100%
+    width: 100%;
+    font-size:14px;
 }
 body .account .right-account form.new-card .half.cvv,
 body .account .right-account div.new-address .half.cvv {
