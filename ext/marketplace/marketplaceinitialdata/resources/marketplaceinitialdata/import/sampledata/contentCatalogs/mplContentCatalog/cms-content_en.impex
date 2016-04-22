@@ -693,9 +693,9 @@ condition and in the fastest time possible. <!DOCTYPE html>
 
 # Content Pages
 UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
- ;;nonBusinessErrorFound;"Tata MarketPlace"
- ;;businessErrorFound;"Tata MarketPlace"
- ;;notFound;"Tata MarketPlace"
+ ;;nonBusinessErrorFound;
+ ;;businessErrorFound;
+ ;;notFound;
  
  #### for new 404 page
  
