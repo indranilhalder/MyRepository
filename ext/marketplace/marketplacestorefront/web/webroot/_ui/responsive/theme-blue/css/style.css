@@ -697,8 +697,8 @@ input:focus {
     .select-view .select-list ul {
       max-height: 0;
       overflow: hidden;
-      width: -webkit-calc(150% - -4px);
-      width: calc(150% - -4px);
+      width: calc(100% - -2px);
+      width: -webkit-calc(100% - -2px);
       margin: 1px -1px -1px;
       border-right: 1px solid transparent;
       border-left: 1px solid transparent;
@@ -30939,6 +30939,59 @@ line-height: normal;
  color:#a9143c;
  text-decoration: underline;
  }
+ 
+ /*404 error page css starts*/
+ body.template-pages-layout-errorPageTemplate .hero .major-promos{
+     left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    text-align: center;
+ }
+ body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-header-italic{
+        font-size: 102px;
+    color: #fff;
+    font-weight:bold;
+ }
+ body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:first-child{
+        text-transform: uppercase;
+    color: #fff;
+    font-size: 20.31px;
+    padding: 20px 0px;
+ }
+ body.template-pages-layout-errorPageTemplate .hero .major-promos span.major-promo-description p:last-child{
+    font-size: 18.5px;
+    padding: 10px 0px;
+    width: 30%;
+    margin: auto;
+    line-height: 22px;
+    color: #333;
+ }
+ body.template-pages-layout-errorPageTemplate .hero .major-promos a.button{
+    width: 240px;
+    opacity: .9;
+    font-weight: bold;
+    font-size: 12px !important;
+    margin-top: 50px;
+    margin-bottom: 50px;
+        padding: 17px 0px;
+    color: #fff;
+ }
+
+  body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent{
+ 	    border: 1px solid #ccc;
+    padding-bottom: 20px !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    margin-top: 25px;
+ }
+  body.template-pages-layout-errorPageTemplate .accountnavigationcollectioncomponent h1{
+ 	padding: 20px;
+    font-size: 24px;
+    color: #333;
+    font-weight: 500;
+ }
+
+ /*404 error page css ends*/ 
 /*--------------maincss-----------*/
 .row
 {
