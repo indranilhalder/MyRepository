@@ -207,10 +207,10 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * This method helps in Logging the User in the Gigya Side and Registers New User
-	 *
+	 * 
 	 * @param CustomerModel customerModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @return List<String> cookieData
 	 */
 	@Override
@@ -343,7 +343,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#RatingLogoutHelper(de.hybris.platform.core.model.user.CustomerModel)
 	 */
 	@Override
@@ -420,7 +420,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#validateSignature(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -548,7 +548,7 @@ public class GigyaServiceImpl implements GigyaService
 				}
 				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
 				request.setAPIDomain(getDomain());
-				request.setParam("userInfo", loginUserInfo);
+				request.setParam("userInfo at the time of mobile login", loginUserInfo);
 
 				// Step 3 - SENDING THE REQUEST
 				final GSResponse response = request.send();
@@ -588,7 +588,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#gigyaLoginHelperforMobile(de.hybris.platform.core.model.user.CustomerModel,
 	 * boolean)
 	 */
@@ -662,7 +662,7 @@ public class GigyaServiceImpl implements GigyaService
 				request.setAPIDomain(getDomain());
 				if (loginUserInfo.toString() != null)
 				{
-					request.setParam("userInfo", loginUserInfo.toString());
+					request.setParam("userInfo mobile login via Web", loginUserInfo.toString());
 				}
 				// Step 3 - Sending the request
 				LOG.debug(MarketplacecclientservicesConstants.WAIT_RESPONSE);
@@ -716,7 +716,7 @@ public class GigyaServiceImpl implements GigyaService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.GigyaService#notifyGigyaforMobile(java.lang.String, java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -815,7 +815,7 @@ public class GigyaServiceImpl implements GigyaService
 				}
 				request.setUseHTTPS(MarketplacecclientservicesConstants.PARAM_USEHTTPS);
 				request.setAPIDomain(getDomain());
-				request.setParam("userInfo", loginUserInfo);
+				request.setParam("userInfo at mobile registration", loginUserInfo);
 				//	request.setParam(MarketplacecclientservicesConstants.TARGETENV, MarketplacecclientservicesConstants.MOBILE);
 				// Step 3 - SENDING THE REQUEST
 				final GSResponse response = request.send();
