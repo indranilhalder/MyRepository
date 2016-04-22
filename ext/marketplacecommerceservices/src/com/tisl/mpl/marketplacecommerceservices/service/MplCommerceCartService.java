@@ -34,7 +34,9 @@ import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.StateModel;
+import com.tisl.mpl.mplcommerceservices.service.data.CartSoftReservationData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.PinCodeDeliveryModeListResponse;
 import com.tisl.mpl.wsdto.ReservationListWsDTO;
 
@@ -422,11 +424,18 @@ public interface MplCommerceCartService
 	PinCodeDeliveryModeListResponse callPincodeServiceabilityCommerce(final String pincode,
 			final List<PincodeServiceData> pincodeServiceDataList);
 
-	/* @param storeLocationRequestDataList
+	/*
+	 * @param storeLocationRequestDataList
+	 *
 	 * @return
 	 */
-	List<StoreLocationResponseData> getStoreLocationsforCnC(
-			List<StoreLocationRequestData> storeLocationRequestDataList);
+	List<StoreLocationResponseData> getStoreLocationsforCnC(List<StoreLocationRequestData> storeLocationRequestDataList);
 
+	/**
+	 * @Desc Used as part of oms fallback for inventory soft reservation
+	 * @param cartDataList
+	 * @return InventoryReservListResponse
+	 */
+	InventoryReservListResponse callInventoryReservationCommerce(final List<CartSoftReservationData> cartDataList);
 
 }
