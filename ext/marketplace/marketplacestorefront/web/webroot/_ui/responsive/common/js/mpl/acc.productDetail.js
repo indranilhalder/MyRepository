@@ -165,13 +165,12 @@
 		
 		// Sise Guide Select Color
 		   
-		$(document).on("click", 'a[data-target=#popUpModal] ',
+		$(document).on("click", '.colorBox',
 			function() {
-			   var target = $(this).attr("href");
+			  var target = $(this).attr('data-producturl');
 			   console.log(target);
-			   var productcode= $(this).attr("data-productcode");
+			  var productcode= $(this).attr('data-productcode');
 			   console.log(productcode);
-		 	   //$("#popUpModal").modal('hide');
 			   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 					  $(this).removeData('bs.modal');
 					});
