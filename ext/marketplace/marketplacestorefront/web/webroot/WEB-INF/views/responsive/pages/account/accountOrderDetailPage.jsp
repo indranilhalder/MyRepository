@@ -374,7 +374,7 @@
 								</c:forEach>
 									
 								<c:if test="${flag}">
-								<li class="item delivered first">
+								<li class="item delivered first" id="shipping-track-order">
 						    	<div class="item-header">
 								<c:if test="${entryCount > 1}">
 
