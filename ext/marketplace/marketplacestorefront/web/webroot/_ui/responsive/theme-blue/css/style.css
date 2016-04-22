@@ -19404,6 +19404,7 @@ header.brand-header .content .bottom nav>ul>li>ul {
 @media ( max-width :790px) {
 	header.brand-header .content .bottom nav>ul>li>ul {
 		top: 55px;
+		left:0;
 	}
 }
 
@@ -37573,6 +37574,7 @@ select#micrositeSearchCategory, select#searchCategory{
 	background-image: url('../images/select-arrow.png');
     background-position: 95% 51%;
 }
+
 /* SAP Code Start */
 .pickup_Edit{
 	display: none;
