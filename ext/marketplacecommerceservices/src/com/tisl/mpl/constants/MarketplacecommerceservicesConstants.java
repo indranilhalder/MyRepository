@@ -1,4 +1,5 @@
 /*
+
  *
  * Copyright (c) 2000-2013 hybris AG
  * All rights reserved.
@@ -386,6 +387,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMAIL_NOT_FOUND = "user.email.not_found";
 	public static final String WISHLIST_NO = "Wishlist";
 	public static final String THUMBNAIL = "thumbnail";
+	public static final String SEARCHPAGE = "searchPage";
 	public static final String WISHLIST_EXISTS_MSG = "Wishlist name already exists.";
 
 
@@ -1489,7 +1491,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String PROMO_PRODUCT_UPLOAD_SEPARATOR = ",".intern();
 
+	public static final String MISSING_IMAGE_URL = "/store/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+
 	public static final String BIN_DATA_UPLOAD_VERSION = "mpl.payment.bin.uploadversion".intern();
+
 
 	public static final String TYPE = "type";
 
@@ -1500,3 +1505,4 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// implement here constants used by this extension
 }
+

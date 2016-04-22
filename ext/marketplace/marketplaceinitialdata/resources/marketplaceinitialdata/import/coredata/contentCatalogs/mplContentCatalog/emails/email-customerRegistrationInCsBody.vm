@@ -6,118 +6,131 @@
 <title>Registration Through Call Center</title>
 <style>
  img.spacer-img {
- 	opacity:0;
+ 	opacity: 0;
+ }
+ .emailPass td{
+ padding: 25px 0px 0px 3px;
+ padding-top:0px;
+ }
+ tr > td > span > span > a{
+ pointer-events: none !important;
+color: #4a4a4a !important;
+text-decoration: none !important;
+ }
+ tr > td > span > font > span > a{
+ pointer-events: none !important;
+color: #4a4a4a !important;
+text-decoration: none !important;
  }
 </style>
 	</head>
 	<body style="margin:0;">
-<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #cccccc">
+<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #cccccc;display:inherit">
 <tr>
-<td width="600" align="left" valign="top">${ctx.cmsSlotContents.SiteLogo} </td>
+<td width="600" align="left" valign="top">${ctx.cmsSlotContents.SiteLogo}</td>
 </tr>
 <tr>
-<td align="left" valign="top"><table width="600" border="0" cellspacing="0" cellpadding="0">
+<td align="left" valign="top" style="display:inherit;">
+<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;">Looks Like We're Going To Be</h2>
+<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:4px">Friends For A Long, Long Time</h2>
+
+<table width="600" border="0" cellspacing="0" cellpadding="0" style="padding-left:13px;margin-top:12px">
+
 <tr>
-<td width="15" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="15" height="1" /></td>
-<td width="570" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="30" /></td>
-<td width="15" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="15" height="1" /></td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
+
 <td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="92" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#ed0c6e;"><table width="390" border="0" cellspacing="0" cellpadding="0">
+    <td width="92" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:20px; color:#606060;"><table width="390" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="38" align="left" valign="top">Hey</td>
-        <td width="352" align="left" valign="top">${ctx.title} ${ctx.displayName},</td>
+        
+        <td width="352" align="left" valign="top" style="color:#000;font-weight:bold"><span><font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey <span>${ctx.title} ${ctx.displayName}</span>,</font></span></td>
       </tr>
     </table></td>
   </tr>
+ <tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							
+						</tr>
+
   <tr>
-    <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="21" /></td>
+    <td colspan="3" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">So glad we get to do that, now that you've signed up for TataCLiQ. Our XXXHelpers told us you wanted an account with us. So here it is.  </td>
   </tr>
   <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">So glad we get to do that, now that you've signed up for TataXXX. Our XXXHelpers told us you wanted an account with us. So here it is.  </td>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">&nbsp;</td>
   </tr>
   <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;">But first, introductions are in order. Here are your details:</td>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">But first, introductions are in order. Here are your details:</td>
   </tr>
 </table></td>
 <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="44" /></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							
+						</tr>
+
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="362" border="0" cellspacing="0" cellpadding="0">
+  
+  <td align="left" valign="top"><table class="emailPass" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td width="165" align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ed0c6e;">Email ID for login:  </td>
-      <td width="197" align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060; border-bottom:solid 1px #ed0c6e"> ${ctx.customerId}</td>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;padding-left: 0px">Email ID for login:  </td>
+      <td  align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;padding-right: 10px; "> <span><span>${ctx.customerId}</span></span></td>
+	  #if ($ctx.customerCreatedInCscockpit) 
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold">Temporary password:</td>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;" >${ctx.customerPassword}</td>
+	#end
       </tr>
     <tr>
-      <td align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ed0c6e;"><img src="images/spacer.jpg" class="spacer-img" width="1" height="25" /></td>
-      <td align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">&nbsp;</td>
-    </tr>
-    <tr>
-	#if ($ctx.customerCreatedInCscockpit) 
-      <td align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ed0c6e;">Temporary password:</td>
-      <td align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060; border-bottom:solid 1px #ed0c6e">${ctx.customerPassword}</td>
-	#end
-	 </tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
+    
   </table></td>
-  <td align="left" valign="top">&nbsp;</td>
+ 
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="23" /></td>
-  <td align="left" valign="top">&nbsp;</td>
+ 
+  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">You will be prompted to change your password when you log in for the first time.</td>
+
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">You will be prompted to change your password when you log in for the first time.</td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
+							
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							
+						</tr>
+
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="44" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top" bgcolor="#00B6BD">&nbsp;</td>
+ 
   <td align="left" valign="top"><table width="560" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="11" height="35" align="left" valign="top" bgcolor="#00B6BD">&nbsp;</td>
-      <td width="260" align="left" valign="middle" bgcolor="#00B6BD" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">Here's what will make shopping </td>
-      <td width="17" align="left" valign="top" bgcolor="#FAA61A">${ctx.cmsSlotContents.slotBeforeTogetherFun} </td>
-      <td width="139" align="left" valign="middle" bgcolor="#FAA61A" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">together fun:</td>
-      <td width="20" align="left" valign="top" bgcolor="#FFFFFF">${ctx.cmsSlotContents.togetherFun} </td>
+    <tr bgcolor="#f5f5f5">
+      <td width="11" height="35" align="left" valign="top" >&nbsp;</td>
+      <td width="244" align="left" valign="middle"  style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#AA133D;">Here's what will make shopping</td>
+      <td width="139" align="left" valign="middle"  style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#202020;">together fun:</td>
+      <td width="20" align="left" valign="top" > </td>
       <td width="113" align="left" valign="top">&nbsp;</td>
     </tr>
   </table></td>
-  <td align="left" valign="top">&nbsp;</td>
+  
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="22" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
+							
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="569" border="0" cellspacing="0" cellpadding="0" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">
+ 
+  <td align="left" valign="top"><table width="569" border="0" cellspacing="0" cellpadding="0" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">
     <tr>
       <td width="104" align="center" valign="top">${ctx.cmsSlotContents.handpick}</td>
-      <td width="49" rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgOne} </td>
-      <td width="98" align="center" valign="top">${ctx.cmsSlotContents.brand} </td>
-      <td width="43" rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgTwo} </td>
-      <td width="113" align="center" valign="top">${ctx.cmsSlotContents.exp} </td>
-      <td width="37" rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgThree} </td>
-      <td width="125" align="center" valign="top">${ctx.cmsSlotContents.fast}</td>
+	  <td width="43" rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgOne}</td>
+      <td width="49" align="center" valign="top">${ctx.cmsSlotContents.brand}</td>
+	  <td width="43" rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgTwo} </td>
+      <td width="98" align="center" valign="top">${ctx.cmsSlotContents.exp}</td>
+	  <td width="43" rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgThree} </td>
+      <td width="43" align="center" valign="bottom">${ctx.cmsSlotContents.fast}</td>
+      
     </tr>
     <tr>
       <td align="center" valign="top" >Handpicked<br />
@@ -130,157 +143,127 @@
         delivery</td>
     </tr>
   </table></td>
-  <td align="left" valign="top">&nbsp;</td>
+  
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="53" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
+  
   <td align="left" valign="top"><table width="570" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td width="32"  align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;">${ctx.cmsSlotContents.tipImage}</td>
-      <td   align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;">Here's a tip: </td>
-    </tr>
-    <tr>
-      <td colspan="2" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><img src="images/spacer.jpg" class="spacer-img" width="1" height="15" /></td>
-    </tr>
-  </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
   <td align="left" valign="top">&nbsp;</td>
   <td align="left" valign="top"><table width="570" border="0" cellspacing="0" cellpadding="0">
+   <tbody><tr>
+                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
+              </tr>
+   
+  </tbody></table></td>
+  <td align="left" valign="top">&nbsp;</td>
+</tr>
     <tr>
-      <td width="33" height="53" align="left" valign="top" bgcolor="#ed0c6e">&nbsp;</td>
-      <td width="466"  rowspan="2" align="left" valign="top" bgcolor="#ED0C6E"><table width="442" border="0" cellspacing="0" cellpadding="0" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
-        <tr>
-          <td colspan="2" align="left" valign="top">&nbsp;</td>
-        </tr>
-        <tr>
-          <td width="14" align="left" valign="top">&nbsp;</td>
-          <td width="428" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">If you're worried about what your friends will think  </td>
-        </tr>
-        <tr>
-          <td align="left" valign="top">&nbsp;</td>
-          <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">of what you want to buy, don't be. Add it to your wish list, </td>
-        </tr>
-        <tr>
-          <td align="left" valign="top">&nbsp;</td>
-          <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">share it with them and get their feedback right away.</td>
-        </tr>
-      </table></td>
-      <td width="71" rowspan="2" align="right" valign="top">${ctx.cmsSlotContents.tipContentImage}</td>
-    </tr>
-    <tr>
-      <td height="38" align="left" valign="top">&nbsp;</td>
-    </tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
   </table></td>
-  <td align="left" valign="top">&nbsp;</td>
+ 
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="60" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="center" valign="top" bgcolor="#00B5BC"><table width="550" border="0" cellspacing="0" cellpadding="0">
+  
+  <td align="left" valign="top"><table width="570" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td width="283" height="184" align="left" valign="top" bgcolor="#00B5BC">${ctx.cmsSlotContents.shoppingGenieImage}</td>
-      <td width="267" align="left" valign="middle" bgcolor="#00B5BC"><table width="267" border="0" cellspacing="0" cellpadding="0" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
+     
+      <td width="446"  rowspan="2" align="left" valign="top" ><table width="554" border="0" cellspacing="0" cellpadding="0" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
+        
         <tr>
-          <td width="14"  align="left" valign="top">&nbsp;</td>
-          <td width="253" align="left" valign="top">&nbsp;</td>
+        
+          <td width="400" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#000;line-height:22px;">If you're worried about what your friends will think of what you want to buy, don't be. Add it to your wish list, share it with them and get their feedback right away.</td>
         </tr>
-        <tr>
-          <td align="left" valign="top">&nbsp;</td>
-          <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">Your shopping genie</td>
-        </tr>
-        <tr>
-          <td align="left" valign="top">&nbsp;</td>
-          <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">is right there on your </td>
-        </tr>
-        <tr>
-          <td align="left" valign="top">&nbsp;</td>
-          <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">smartphone.</td>
-        </tr>
-        <tr>
-          <td height="15" colspan="2" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="19" /></td>
-        </tr>
-        <tr>
-          <td height="38" align="left" valign="top">&nbsp;</td>
-          <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;"><strong><a href="#" style="color:#ffffff;">Download our app now!</a></strong></td>
-        </tr>
+       
+        
       </table></td>
+      <td width="71" rowspan="2" align="right" valign="top">&nbsp;</td>
     </tr>
+    
   </table></td>
-  <td align="left" valign="top">&nbsp;</td>
+ 
 </tr>
+
+
+	<tr>
+					 
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+              </tr>
+						<tr>
+						  <td>${ctx.cmsSlotContents.smileyimg}</td></td>
+						  </tr>
+						</table></td>
+					
+					</tr>
+
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="42" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
+ 
   <td align="left" valign="top"><table width="569" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="32" align="left" valign="middle">${ctx.cmsSlotContents.smileyimg}</td>
-      <td width="190" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#00b6bd;"><strong>Happy shopping!</strong></td>
-      <td width="101" align="left" valign="middle">&nbsp;</td>
-      <td width="138" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#00b6bd;"><strong>Your friends at</strong></td>
-      <td width="121" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#606060;"><strong>TataCliQ.com</strong></td>
-    </tr>
+    
   </table></td>
-  <td align="left" valign="top">&nbsp;</td>
+  
 </tr>
+
+
 <tr>
-  <td colspan="3" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="36" /></td>
-  </tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/img3.jpg" width="550" height="1" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
+  
   <td align="left" valign="top"><table width="564" border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="564" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">CLIQhelpers</a> (or join our weekly bowling tournament). You can also shoot an email to <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">${ctx.customerCareEmail}</a>.</td>
-</tr>
+				
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+						  </tr>
+						  <tr>
+               
+              </tr>
+						</table></td>
+					
+					</tr>
 </table></td>
-  <td align="left" valign="top">&nbsp;</td>
+ 
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="25" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
+							<td height="15" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							
+						</tr>
+
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="300" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&copy 2015 TataCliQ | All Rights Reserved</td>
-      <td width="241" align="left" valign="top">&nbsp;</td>
-      <td width="121" align="left" valign="top"><table width="70" border="0" cellspacing="0" cellpadding="0" align="right">
-        <tr>
-          <td width="8" align="left" valign="middle"><a href="https://www.facebook.com"  style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
-          <td width="8" align="left" valign="middle"><a href="https://plus.google.com"  style="border:none;">${ctx.cmsSlotContents.gplus}</a></td>
-        
-        </tr>
-      </table></td>
-    </tr>
-    <tr>
-      <td align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
-      <td align="left" valign="top">&nbsp;</td>
-      <td align="left" valign="top">&nbsp;</td>
-    </tr>
-  </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
+					
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+						 <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&copy; 2016 Tata CLiQ | All Rights Reserved</td>
+						  <td width="240" align="left" valign="top">&nbsp;</td>
+						  <td width="121" align="left" valign="top"><table width="70" border="0" cellspacing="0" cellpadding="0" align="right">
+							<tr>
+							  <td width="8" align="left" valign="middle"><a href="https://www.facebook.com"  style="border:none;">${ctx.cmsSlotContents.fb}</td>
+							  <td width="8" align="left" valign="middle"><a href="https://plus.google.com" style="border:none;">${ctx.cmsSlotContents.tweet}</td>
+							   <td width="8" align="left" valign="middle"><a href="https://plus.google.com" style="border:none;">${ctx.cmsSlotContents.youtube}</td>
+							   <td width="8" align="left" valign="middle"><a href="https://plus.google.com" style="border:none;">${ctx.cmsSlotContents.insta}</td>
+							  
+							  </tr>
+							</table></td>
+						  </tr>
+						<tr>
+						  <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
+						  <td align="left" valign="top">&nbsp;</td>
+						  <td align="left" valign="top">&nbsp;</td>
+						  </tr>
+						</table></td>
+					
+					</tr>
 </table></td>
 </tr>
 </table>

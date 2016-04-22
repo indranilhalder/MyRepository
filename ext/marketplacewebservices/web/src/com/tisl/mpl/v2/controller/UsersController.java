@@ -3087,9 +3087,14 @@ public class UsersController extends BaseCommerceController
 								//Set product image(thumbnail) url
 								for (final ImageData img : productData1.getImages())
 								{
+									/*
+									 * if (null != img && StringUtils.isNotEmpty(img.getFormat()) //&&
+									 * img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar
+									 * fix && img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									 */
 									if (null != img && StringUtils.isNotEmpty(img.getFormat())
-									//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
-											&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.THUMBNAIL))
+									//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.SEARCHPAGE) Sonar fix
+											&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.SEARCHPAGE))
 									{
 										wldpDTO.setImageURL(img.getUrl());
 									}

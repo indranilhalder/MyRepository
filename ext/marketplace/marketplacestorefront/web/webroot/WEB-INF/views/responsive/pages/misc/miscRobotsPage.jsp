@@ -16,6 +16,7 @@ Disallow: <c:url value="/*iaclick=*"/>
 Disallow: <c:url value="/*searchCategory=*"/>
 Disallow: <c:url value="/*searchcategory=*"/>
 Disallow: <c:url value="/*pageSize=*"/>
+Disallow: <c:url value="/*pagesize=*"/>
 Disallow: <c:url value="/*selectedSize=*"/>
 Disallow: <c:url value="/*selectedsize=*"/>
 Disallow: <c:url value="/*/quickView"/>

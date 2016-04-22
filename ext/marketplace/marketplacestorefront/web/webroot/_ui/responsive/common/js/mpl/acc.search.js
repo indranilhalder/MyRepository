@@ -91,8 +91,11 @@
 		
 	}
 	//change serp product details based on filters
-function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel){
-	console.log("in search js..."+product+mrpPriceValue);
+function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,productUrl,productPrice,mrpPriceValue,stockLevel,productPromotion){
+	if(mrpPriceValue!="" && productPrice!=""){
+	console.log("in search js...for product"+product+"mrpPriceJSon"+mrpPriceValue+"price json"+productPrice);	
+	console.log("original prices for "+product+$("#price_"+product).text()+$("#priceEqual_"+product).text());
+	}
 	if(categoryTypeValue=='Apparel'||categoryTypeValue=='Footwear'){
 	if(serpSizeList!=''){
 	var sizeMatched = checkSizeCount(list, serpSizeList);
@@ -105,6 +108,7 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 	var minPriceSize = "";
 	var minPriceValue = "";
 	for (k = 0; k < prcArr.length; k++) {
+		if(prcArr[k]!=""){
 		var x = JSON.parse(prcArr[k]);
 		var priceArrayList = [];
 		if (sizeMatched != "") {
@@ -127,7 +131,9 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 			}
 		}
 	}
+	}
 	if (sizeMatched == "") {
+		if(priceValueList!=""||priceValueList!=[]){
 		priceValueList.sort(function(a, b) {
 			return a - b
 		});
@@ -135,24 +141,29 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 		minPriceSize = findSizeBasedOnMinPrice(
 				minPriceValue, prcArr);
 	}
-
-	 console.log("nminPrice" + minPriceValue + "minsize"
+	}
+	
+	 console.log("nminPrice for product" +product+"price"+minPriceValue + "minsize"
 			+ minPriceSize); 
-	//updating product minimum price
-     $("#price_"+product).html("");
+	if(minPriceValue!=undefined){ 
+    $("#price_"+product).html("");
 	$("#price_"+product).html("&#8377;"+minPriceValue);  
+	}
 	//set product mrp
 	updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product);
 	//update product stock
 	updateProductStock(stockLevel,sizeMatched, serpSizeList,minPriceSize,product);
 	//updtae sale price
-	//findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
+	if(productPromotion!=""){
+	findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
+	}
 	//updating product url
 	var url1 = productUrl.replace("[[", "");
 	var url2 = url1.replace("]]", "");
 	var arr = new Array();
 	arr = url2.split(',');
 	for (i = 0; i < arr.length; i++) {
+		if(arr[i]!=""){
 		var x = JSON.parse(arr[i]);
 		if (sizeMatched != "") {
 			if (x[sizeMatched] != undefined) {
@@ -198,6 +209,7 @@ function modifySERPDetailsByFilters(serpSizeList,product,categoryTypeValue,list,
 				}
 			}
 		}
+	}//
 	}
 	}
 }
@@ -227,12 +239,12 @@ function findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product
 				break;		
 			}		
 			else {		
-				alert("UUUU");		
+				//alert("UUUU");		
 				continue;		
 			}		
 		}		
 		else {		
-			alert("2.....")		
+			//alert("2.....")		
 			 $("#on-sale_"+ product).show();//showing on_sale tag		
 			break;		
 	}		
@@ -282,6 +294,7 @@ function updateProductStock(sizeStockLevel,sizeMatched, serpSizeList,minPriceSiz
 //update product minimum price and mrp
 function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,minPriceValue,product) {
 //  var mrpPriceValue = '${product.displayMrp}';
+	if(mrpPriceValue!=""){
 	console.log("###"+mrpPriceValue);
     var productCode='${product.code}';
 	var mrpPrice1 = mrpPriceValue.replace("[[", "");
@@ -289,6 +302,7 @@ function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,m
 	var mrpPriceArray = new Array();
 	mrpPriceArray = mrpPrice2.split(',');
 	for (i = 0; i < mrpPriceArray.length; i++) {
+		if(mrpPriceArray[i]!=""){
 		var mrpPriceData = JSON.parse(mrpPriceArray[i]);
 		if (sizeMatched != "") {
 			if (mrpPriceData[sizeMatched] != undefined) {
@@ -315,7 +329,7 @@ function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,m
 							$("#priceEqual_"+product).html("&#8377;"+minPriceValue);
 						}else if(mrpPriceData[minPriceSize]>minPriceValue){
 							$("#mrpprice_"+product).html("");
-							$("#mrpprice_"+product).html("&#8377;"+(mrpPriceData[sizeMatched])); 
+							$("#mrpprice_"+product).html("&#8377;"+(mrpPriceData[minPriceSize])); 
 							$("#price_"+product).html("");
 							$("#price_"+product).html("&#8377;"+minPriceValue);
 						}
@@ -323,6 +337,8 @@ function updateProductMrp(mrpPriceValue,sizeMatched, serpSizeList,minPriceSize,m
 				}
 			}
 		}
+	}
+	}
 	}
 }
 

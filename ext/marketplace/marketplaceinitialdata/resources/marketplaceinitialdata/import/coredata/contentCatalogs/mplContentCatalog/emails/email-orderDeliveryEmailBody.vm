@@ -1,317 +1,168 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Order Delivery</title>
-<style>
- 		img.spacer-img {
- 			opacity:0;
- 			}
-		</style> 
+<title>TATA - CLiQ</title>
 </head>
 
-<body style="margin:0;">
-<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #cccccc">
-<tr>
-	<td width="600" align="left" valign="top">${ctx.cmsSlotContents.SiteLogo}</td>
-</tr>
-<tr>
-<td align="left" valign="top"><table width="600" border="0" cellspacing="0" cellpadding="0">
-<tr>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td width="25" align="left" valign="top">&nbsp;</td>
-  <td width="550" align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="42" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#ed0c6e;">Hey </td>
-      <td width="494" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#ed0c6e;">${ctx.customerName},</td>
+<body>
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;" >
+  <tr>
+    <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" valign="top" bgcolor="#ffffff">
+${ctx.cmsSlotContents.OrderConfirmSiteLogo}</td>
       </tr>
-    <tr>
-      <td colspan="2" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="12" /></td>
-      </tr>
-    <tr>
-      <td colspan="2" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;"><table width="470" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td width="73" height="22" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Your order </td>
-          <td width="125" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">$ctx.orderCode, </td>
-          <td width="67" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">placed on </td>
-          <td width="210" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">$ctx.orderDate</td>
-          </tr>
-        <tr>
-          <td colspan="4" align="left" valign="top"><table width="454" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td width="94" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">has arrived at</td>
-              <td width="360" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">${ctx.deliveryAddress}.</td>
-              </tr>
-            </table></td>
+ 
+      <tr>
+        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="13">&nbsp;</td>
+            <td>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:0px">Let's Do This Again Soon</h2>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">Really Soon</h2>
+			<br>
+			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.customerName},</font>
+                  <br>
+                  <br>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4b;">Your order <strong>$ctx.orderCode, </strong>placed on <strong>$ctx.orderDate</strong> has arrived at <strong>${ctx.deliveryAddress}.</strong></font>
+				  <br><br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;">If you're wondering what we're talking about, <a href="#" style="color:#AA133D"><strong>click here.</strong></a><br>
+                  <br>
+                  </font></td>
+            <td width="13">&nbsp;</td>
           </tr>
         </table></td>
       </tr>
-    </table></td>
-  <td width="25" align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="20" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="20" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="20" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="451" border="0" cellspacing="0" cellpadding="0" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;">
-    <tr>
-      <td width="298" align="left" valign="top">If you're wondering what we're talking about, </td>
-      <td width="153" align="left" valign="top"><a href="#" style="color:#00b6bd"><strong>click here.</strong></a></td>
+     
+	 
+	 <tr>
+        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="20" height="35">&nbsp;</td>
+            <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;">Order reference number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;width:calc(100% - 225px);">${ctx.pOrderCode}</td>
+            <td>&nbsp;</td>
+          </tr>
+        </table>
+		<br>
+		</td>
       </tr>
-    </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="20" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top" bgcolor="#F9A61A">&nbsp;</td>
-  <td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="213" height="35" align="left" valign="middle" bgcolor="#F9A61A" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">Order reference number:</td>
-      <td width="17" align="left" valign="top" bgcolor="#00b6bd">${ctx.cmsSlotContents.OrderReferenceNumberOne}</td>
-      <td width="232" align="left" valign="middle" bgcolor="#00b6bd" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">${ctx.pOrderCode}</td>
-      <td width="16" align="left" valign="top" bgcolor="#00B6BD">${ctx.cmsSlotContents.OrderReferenceNumberTwo}</td>
-      <td width="72" align="left" valign="top">&nbsp;</td>
+	  
+	  <tr>
+        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="20" height="35">&nbsp;</td>
+            <td width="205" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#aa133d; font-weight:bold;width:125px;">Order number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:17px; color:#4a4a4a; font-weight:bold; padding-right: 50px;width:calc(100% - 225px);">${ctx.orderCode}</td>
+            <td>&nbsp;</td>
+          </tr>
+        </table>
+		<br>
+		</td>
       </tr>
-    </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="8" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="8" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="8" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td height="30" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:15px; color:#000000;">Order number: ${ctx.orderCode}</td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="8" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="8" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="8" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top">
-  <table width="550" border="0" cellspacing="0" cellpadding="5"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#676767;word-break: break-word;">
-    <tr>
-      <td width="20%" height="58" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #b7b7b7;"><strong>Transaction ID</strong></td>
-      <td align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF;"><strong>Product</strong></td>
-      <td width="8%" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF;"><strong>Qty</strong></td>
-      <td width="12%" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF;"><strong>Price</strong></td>
-      <td width="20%" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF;"><strong>Shipping charges
-        (if any)</strong></td>
-      <td width="18%" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF; border-right:1px solid #b7b7b7;"><strong>COD charges<br />(if any)</strong></td>
-      </tr>
-	  #set ($srNo=1)
-	  #foreach($entry in ${ctx.childEntries})
-    <tr>
-      <td valign="top" style="border-bottom:1px solid #b7b7b7;  border-left:1px solid #b7b7b7; padding:14px 4px;">$entry.orderLineId</td>
-      <td valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$entry.product.name</td>
-      <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$entry.quantity</td>
-      <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
-      <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; padding:14px 4px;">$ctx.numberTool.format("#0.00", $entry.currDelCharge)</td>
-      <td align="center" valign="top" style="border-bottom:1px solid #b7b7b7; border-right:1px solid #b7b7b7; padding:14px 4px;">$ctx.numberTool.format("#0.00", $entry.convenienceChargeApportion)</td>
-    </tr>
-    #set ($srNo=$srNo+1)
-	#end
-    </table>
-   </td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td height="10" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-<td height="10" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-<td height="10" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="451" border="0" cellspacing="0" cellpadding="0" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;">
-<tr>
-<td width="297" align="left" valign="top">We hope you're happy with your order. If not, </td>
-<td width="154" align="left" valign="top"><a href="mailto:www.tataCliQ.com" style="color:#00b6bd"><strong>click here.</strong></a></td>
-</tr>
-</table></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td height="10" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-<td height="10" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-<td height="10" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="32" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;">${ctx.cmsSlotContents.Tip}</td>
-<td width="513" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;">Here's a tip: </td>
-</tr>
-<tr>
-<td height="20" colspan="2" align="left" valign="middle" style="line-height:0; font-size:0">&nbsp;</td>
-</tr>
-</table></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table  border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="53" height="53" align="left" valign="top" bgcolor="#faa61a">&nbsp;</td>
-<td width="361" rowspan="2" align="left" valign="top" bgcolor="#faa61a"><table width="365" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td height="15" colspan="2" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="15" /></td>
-  </tr>
-  <tr>
-    <td width="11" align="left" valign="top">&nbsp;</td>
-    <td width="354" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ffffff;">Quote your <strong>order reference number</strong> to get</td>
-  </tr>
-  <tr>
-    <td align="left" valign="top">&nbsp;</td>
-    <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ffffff;">information about all the items you've ordered this</td>
-  </tr>
-  <tr>
-    <td align="left" valign="top">&nbsp;</td>
-    <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ffffff;">time. If you want to know more about the items</td>
-  </tr>
-  <tr>
-    <td align="left" valign="top">&nbsp;</td>
-    <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ffffff;">you've bought from a seller, quote the<strong> order number</strong>.</td>
-  </tr>
-  <tr>
-    <td align="left" valign="top">&nbsp;</td>
-    <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ffffff;">And if you're looking for information about an</td>
-  </tr>
-  <tr>
-    <td align="left" valign="top">&nbsp;</td>
-    <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ffffff;">individual product, quote its <strong>transaction ID</strong>. </td>
-  </tr>
-  <tr>
-    <td  colspan="2" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="1" /></td>
-  </tr>
-</table></td>
-<td width="136" rowspan="2" align="left" valign="bottom" style="border-collapse:collapse; height:179px;">${ctx.cmsSlotContents.Description}</td>
-</tr>
-<tr>
-<td height="75" align="left" valign="top">&nbsp;</td>
-</tr>
-</table></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td height="30" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-<td height="30" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-<td height="30" align="left" valign="top" style="line-height:0; font-size:0">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="46" height="184" align="left" valign="top" bgcolor="#00B5BC">${ctx.cmsSlotContents.DeliveryConfirmationBannerTwo}</td>
-<td width="45" align="left" valign="top" bgcolor="#00B5BC"><table width="267" border="0" cellspacing="0" cellpadding="0" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
-<tr>
-<td width="14" height="63" align="left" valign="top">&nbsp;</td>
-<td width="253" align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top">Tell us all about what you </td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top"> just bought! </td>
-</tr>
-<tr>
-<td height="26" align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top">Come on, share a selfie with us.</td>
-</tr>
-<tr>
-<td height="38" align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top"><strong><a href="#" style="color:#ffffff;">Download our app now!</a></strong></td>
-</tr>
-</table></td>
-</tr>
-</table></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><img src="images/spacer.jpg" class="spacer-img" width="1" height="42" /></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="30" align="left" valign="middle">${ctx.cmsSlotContents.smileyimg}</td>
-<td width="190" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#00b6bd;"><strong>Happy shopping!</strong></td>
-<td width="90" align="left" valign="middle">&nbsp;</td>
-<td width="135" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#00b6bd;"><strong>Your friends at</strong></td>
-<td width="118" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#606060;"><strong>TataCliQ.com</strong></td>
-</tr>
-</table></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><img src="images/spacer.jpg" class="spacer-img" width="1" height="36" /></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;border-top:1px solid #ccc;"></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="550" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">CLIQhelpers</a> (or perform at our mid-week karaoke night). You can also shoot an email to <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">${ctx.customerCareEmail}</a>.</td>
-</tr>
-</table></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><img src="images/spacer.jpg" class="spacer-img" width="1" height="25" /></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="300" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&copy; 2015 TataCliQ | All Rights Reserved</td>
-    <td width="241" align="left" valign="top">&nbsp;</td>
-    <td width="121" align="left" valign="top"><table width="70" border="0" cellspacing="0" cellpadding="0" align="right">
+	  
       <tr>
-       
-        <td width="8" align="left" valign="middle"><a href="https://www.facebook.com"  style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
-        <td width="8" align="left" valign="middle"><a href="https://plus.google.com"  style="border:none;">${ctx.cmsSlotContents.gplus}</a></td>
-       
+        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="13">&nbsp;</td>
+            <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="10"></td>
+                  </tr>
+                  <tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
+                      <tr>
+                        <td width="120" height="55" align="center">Transaction <br>
+                          ID</td>
+                        <td width="130" align="center">Product</td>
+                        <td width="80" align="center">Qty</td>
+                        <td width="120" align="center">Price<br></td>
+						  <td width="120" align="center">Shipping charges<br>
+                          (if any) </td>
+						   <td width="120" align="center">COD Charges<br>
+                          (if any) </td>
+                       
+                      </tr>
+                    </table></td>
+                  </tr>
+					  #set ($srNo=1)
+					  #foreach($entry in ${ctx.childEntries})
+                  <tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
+                      <tr style="word-break:break-word;">
+                        <td width="120" height="55" align="center" >$entry.orderLineId</td>
+                        <td width="130" align="center">$entry.product.name</td>
+                        <td width="50" align="center" >$entry.quantity</td>
+                        <td width="80" align="center">$entry.netAmountAfterAllDisc</td>
+                        <td width="120" align="center" >$entry.currDelCharge</td>
+						<td width="120" align="center" >$ctx.math.roundTo(2, $entry.convenienceChargeApportion)</td>
+                        
+                      </tr>
+                    </table></td>
+                  </tr>
+				   #set ($srNo=$srNo+1)
+					  #end
+                 
+                  
+                </table>
+				<br>
+				</td>
+              </tr>
+              
+             
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+			  <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;font-weight:bold;">We hope you're happy with your order. If not,  <a href="mailto:www.tataCliQ.com" style="color:#AA133D"><strong>click here.</strong></a>
+ </span></td>
+              </tr>
+			  <tr>
+                <td>&nbsp;</td>
+              </tr>
+			  
+			 
+              <tr>
+                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
+              </tr>
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Quote your <strong>order reference number</strong> to get information about all the items you've ordered this time. If you want to know more about the items you've bought from a seller, quote the <strong>order number.</strong> And if you're looking for information about an individual product, quote its <strong>transaction ID.</strong></span></td>
+              </tr>
+              <tr>
+                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+              </tr>
+              <tr>
+                <td>${ctx.cmsSlotContents.smileyimg}</td>
+              </tr>
+              <tr>
+                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
+                    <td>&nbsp;</td>
+                    <td width="27" align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
+                    <td width="27" align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
+                    <td width="27" align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                    <td width="27" align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              </table></td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td bgcolor="#fbfbfb">&nbsp;</td>
       </tr>
     </table></td>
   </tr>
-  <tr>
-    <td align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
-    <td align="left" valign="top">&nbsp;</td>
-    <td align="left" valign="top">&nbsp;</td>
-  </tr>
-</table></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-</table></td>
-</tr>
 </table>
 </body>
 </html>

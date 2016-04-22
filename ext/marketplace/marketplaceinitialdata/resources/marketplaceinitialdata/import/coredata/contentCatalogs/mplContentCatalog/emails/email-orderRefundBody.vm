@@ -1,288 +1,155 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Refund Initiated</title>
-<style>
- img.spacer-img {
- 	opacity:0;
- }
-</style>
+<title>TATA - CLiQ</title>
 </head>
 
-<body style="margin:0;">
-<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #cccccc">
-<tr>
-<td width="600" align="left" valign="top">${ctx.cmsSlotContents.SiteLogo}</td>
-</tr>
-<tr>
-<td align="left" valign="top"><table width="600" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="25" align="left" valign="top"><img src="images/sp acer.jpg" class="spacer-img" width="25" height="1" /></td>
-<td width="550" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="30" /></td>
-<td width="25" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="25" height="1" /></td>
-</tr>
-<tr>
-  <td height="26" align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
+<body>
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style=" border:1px solid #000;" >
   <tr>
-  <td  align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-<tr>
-  <td width="42"  align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#ed0c6e;">Hey </td>
-  <td width="497"  align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#ed0c6e;"> $ctx.customerName ,</td>
-</tr>
-<tr>
-  <td height="10" colspan="2" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-  </table></td>
-  </tr>
-  </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We know that there's no feeling like getting that refund you really wanted.  <br />
-    So we're accepting your return request and refunding a  
-    total amount of $ctx.amountrefunded INR too!</td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td height="12" colspan="3" align="left" valign="top" style="padding:0; margin:0">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;">
-    Here's more about the refund:</td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#606060;">
-  <table width="550" border="0" cellspacing="0" cellpadding="5"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#676767;word-break:break-word;">
-    <tr>
-      <td colspan="5" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:15px; color:#000000; padding-left:0">Order number: $ctx.orderCode</td>
+    <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" valign="top" bgcolor="#ffffff">${ctx.cmsSlotContents.SiteLogo}</td>
       </tr>
-    <tr>
-      <td height="8" colspan="5" align="left" valign="top" style="font-size:0; line-height:0; padding:0">&nbsp;</td>
-      </tr>
-    <tr>
-      <td width="20%" height="48" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #b7b7b7;"><strong>Transaction ID</strong></td>
-      <td align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF;"><strong>Product</strong></td>
-      <td width="20%" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF;">Amount refunded<br />
-        against product</td>
-      <td width="20%" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF;">Amount refunded<br />
-        against delivery</td>
-      <td width="18%" align="center" bgcolor="#00b6bd" style="color:#FFF; border-left:1px solid #FFF;">Refund <br />
-        Mode</td>
-      </tr>
-    <tr>
-      <td valign="middle" style="border-bottom:1px solid #b7b7b7;  border-left:1px solid #b7b7b7; padding:8px 4px;">$ctx.transactionId</td>
-      <td valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.nameOfProduct</td>
-      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.numberTool.format("#0.00",$ctx.amountrefunded)<br />
-      against product</td>
-      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; padding:8px 4px;">$ctx.numberTool.format("#0.00",$ctx.deliveryCharge)<br />
-        against delivery, <br />
-        if any</td>
-      <td align="center" valign="middle" style="border-bottom:1px solid #b7b7b7; border-right:1px solid #b7b7b7; padding:8px 4px;">Back to Source <br />
-        Mode</td>
-      </tr>
-    
-    
-    </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">In the case of prepaid orders, you can expect the money to be credited back to the source of payment in 3-4 days. However, this will depend on the issuing bank and instrument used.</td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">For COD orders, we'll get in touch with you soon.</td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;"><table width="405" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="246" align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;">For further clarifications, feel free to </td>
-      <td width="188" align="left" valign="top"><a href="${ctx.contactUsLink}" style="color:#00b6bd"><strong>contact us.</strong></a></td>
-      </tr>
-    </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="15" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="32" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;">${ctx.cmsSlotContents.Tip}</td>
-    <td width="518" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;">Here's a tip: </td>
-  </tr>
-  <tr>
-    <td height="15" colspan="2" align="left" valign="middle"  style="font-size:0; line-height:0;">&nbsp;</td>
-  </tr>
-  </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-  <td width="19" height="53" align="left" valign="top" bgcolor="#ed0c6e">&nbsp;</td>
-  <td width="380" rowspan="2" align="left" valign="top" bgcolor="#ED0C6E"><table width="361" border="0" cellspacing="0" cellpadding="0" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
-  <tr>
-  <td colspan="2" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="10" /></td>
-  </tr>
-  <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">The best way to get over a failed love affair? </td>
-  </tr>
-  <tr>
-  <td width="22" align="left" valign="top">&nbsp;</td>
-  <td width="339" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">A tub of ice cream and binge shopping! </td>
-  </tr>
-  <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">There's nothing a click can't fix at TataCliQ.</td>
-  </tr>
-  </table></td>
-  <td width="151" rowspan="2" align="left" valign="top" style="border-collapse:collapse; height:92px;">${ctx.cmsSlotContents.Description}</td>
-  </tr>
-  <tr>
-  <td height="23" align="left" valign="top">&nbsp;</td>
-  </tr>
-  </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="29" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="29" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="29" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#f9a61a;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td height="184" align="right" valign="top" bgcolor="#f9a61a"><table width="99" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td width="38" height="184" align="left" valign="top" bgcolor="#F9A61A"><table width="203" border="0" cellspacing="0" cellpadding="0" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
-            <tr>
-              <td width="10" height="41" align="left" valign="top">&nbsp;</td>
-              <td width="193" align="left" valign="top">&nbsp;</td>
-              </tr>
-            <tr>
-              <td align="left" valign="top">&nbsp;</td>
-              <td align="left" valign="top">Don't give up on your </td>
-              </tr>
-            <tr>
-              <td height="26" align="left" valign="top">&nbsp;</td>
-              <td align="left" valign="top">wish list just yet.</td>
-              </tr>
-            <tr>
-              <td height="38" align="left" valign="top">&nbsp;</td>
-              <td align="left" valign="top"><strong><a href="#" style="color:#ffffff;">Download our app now!</a></strong></td>
-              </tr>
-            </table></td>
-          <td width="343" height="184" align="right" valign="bottom" bgcolor="#F9A61A">${ctx.cmsSlotContents.RefundBanner}</td>
+ 
+      <tr>
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="13">&nbsp;</td>
+            <td>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:0px">We Like To Put</h2>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">The 'Fun' In 'Refund'</h2>
+			<br>
+			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey  $ctx.customerName ,</font>
+                  <br>
+                  <br>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We know that there's no feeling like getting that refund you really wanted. So we're accepting your return request and refunding a total amount of <strong>$ctx.amountrefunded</strong> refunded INR too!</font>
+				  <br><br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;">Here's more about the refund:<br>
+                  <br>
+                  </font></td>
+            <td width="13">&nbsp;</td>
           </tr>
         </table></td>
       </tr>
-    </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="25" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="25" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="25" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="32" align="left" valign="middle">${ctx.cmsSlotContents.smileyimg}</td>
-      <td width="190" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#00b6bd;"><strong>Happy shopping!</strong></td>
-      <td width="86" align="left" valign="middle">&nbsp;</td>
-      <td width="137" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#00b6bd;"><strong>Your friends at</strong></td>
-      <td width="118" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#606060;"><strong>TataCliQ.com</strong></td>
+     
+	 
+	 <tr>
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="20" height="27">&nbsp;</td>
+            <td width="120" align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#aa133d; font-weight:bold;">Order number:</td>
+            <td align="left" bgcolor="#f5f5f5" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:15px; color:#4a4a4a; font-weight:bold; padding-right: 50px;width:calc(100% - 140px);">${ctx.orderReferenceNumber}</td>
+            <td>&nbsp;</td>
+          </tr>
+        </table>
+		<br>
+		</td>
+      </tr>
+      <tr>
+        <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="13">&nbsp;</td>
+            <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="10"></td>
+                  </tr>
+                  <tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#aa133d; font-weight:bold;">
+                      <tr>
+                        <td width="120" height="55" align="center">Transaction <br>
+                          ID</td>
+                        <td width="130" align="center">Product</td>
+                        <td width="80" align="center">Amount refunded<br>against product</td>
+                        <td width="120" align="center">Amount refunded<br>against delivery<br></td>
+						  <td width="120" align="center">Refund<br>
+                          Mode </td>
+                       
+                      </tr>
+                    </table></td>
+                  </tr>
+				<tr>
+                    <td style="border-bottom:solid 1px #f4f4f4;"><table width="572" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#424242;">
+                      <tr>
+                        <td width="120" height="55" align="center" >$ctx.transactionId</td>
+                        <td width="130" align="center">$ctx.nameOfProduct</td>
+                        <td width="50" align="center" >$ctx.numberTool.format("#0.00",$ctx.amountrefunded) against product</td>
+                        <td width="80" align="center">$ctx.numberTool.format("#0.00",$ctx.deliveryCharge) against delivery, if any</td>
+                        <td width="120" align="center" >Back to Source Mode</td>
+                        
+                      </tr>
+                    </table></td>
+                  </tr>
+				 </table>
+				<br>
+				</td>
+              </tr>
+              
+             
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+			  <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">In the case of prepaid orders, you can expect the money to be credited back to the source of payment in 3-4 days. However, this will depend on the issuing bank and instrument used.	 
+ </span></td>
+              </tr>
+			  <tr>
+                <td>&nbsp;</td>
+              </tr>
+			  <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">For COD orders, we'll get in touch with you soon.	</span></td>
+              </tr>
+			  <tr>
+                <td>&nbsp;</td>
+              </tr>
+			  <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D; padding:5px 0;font-weight:bold;">For further clarifications, feel free to <a href="${ctx.contactUsLink}" style="color:#AA133D"><strong>contact us.</strong></a>	</span></td>
+              </tr>
+			  <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
+              </tr>
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">The best way to get over a failed love affair? A tub of ice cream and binge shopping!There's nothing a click can't fix at TataCliQ.</span></td>
+              </tr>
+              <tr>
+                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+              </tr>
+              <tr>
+                <td>${ctx.cmsSlotContents.smileyimg}</td>
+              </tr>
+              <tr>
+                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
+                    <td>&nbsp;</td>
+                    <td width="27" align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
+                    <td width="27" align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
+                    <td width="27" align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                    <td width="27" align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              </table></td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
       </tr>
     </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td height="14" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="14" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="14" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td height="14" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-  <td height="14" align="left" valign="top" style="font-size:0; line-height:0;"><hr style="border:0px;border-top:1px solid #ccc;"></td>
-  <td height="14" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-  <td width="550" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">CLIQhelpers</a> (or dig in at our Friday night pizza party)). You can also shoot an email to <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">${ctx.customerCareEmail}</a>.</td>
   </tr>
-  </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><img src="images/spacer.jpg" class="spacer-img" width="1" height="25" /></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="300" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&copy; 2015 TataCliQ | All Rights Reserved</td>
-<td width="241" align="left" valign="top">&nbsp;</td>
-<td width="121" align="left" valign="top"><table width="70" border="0" cellspacing="0" cellpadding="0" align="right">
-<tr>
-<td width="8" align="left" valign="middle"><a href="https://plus.google.com"  style="border:none;">${ctx.cmsSlotContents.fb}</td>
-<td width="8" align="left" valign="middle"><a href="https://www.facebook.com"  style="border:none;">${ctx.cmsSlotContents.gplus}</a></td>
-</tr>
-</table></td>
-</tr>
-<tr>
-<td align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-</table></td>
-<td align="left" valign="top">&nbsp;</td>
-</tr>
-</table></td>
-</tr>
 </table>
 </body>
 </html>
-

@@ -108,7 +108,7 @@
 	
 	<form id="search_form" name="search_form" method="get" action="${searchUrl}">
 		<span> <ycommerce:testId code="header_search_button">
-				<button id='searchButton'></button>
+				<button id='searchButton' tabindex="2"></button>
 			</ycommerce:testId>
 		</span>
 		<!-- search category List -->
@@ -171,7 +171,7 @@
 		<spring:theme code="search.placeholder" var="searchPlaceholder" />
 
 		<ycommerce:testId code="header_search_input">
-			<input type="text" id="js-site-search-input"
+			<input type="text" id="js-site-search-input" tabindex="1"
 				class="form-control js-site-search-input" name="text" value=""
 				maxlength="250" placeholder="${searchPlaceholder}"
 				data-options='{"autocompleteUrl" : "${autocompleteUrl}","minCharactersBeforeRequest" : "${component.minCharactersBeforeRequest}","waitTimeBeforeRequest" : "${component.waitTimeBeforeRequest}","displayProductImages" : ${component.displayProductImages}}'>

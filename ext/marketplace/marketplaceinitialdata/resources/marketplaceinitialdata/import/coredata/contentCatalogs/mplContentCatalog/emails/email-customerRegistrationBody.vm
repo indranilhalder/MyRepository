@@ -1,115 +1,123 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-<title>Registration</title>
+<title>Registration Through Call Center</title>
 <style>
  img.spacer-img {
  	opacity:0;
  }
+ .emailPass td{
+ padding: 25px 0px 0px 3px;
+ }
+ tr > td > span > span > a{
+ pointer-events:none;
+ color: #4a4a4a !important;
+    text-decoration: none !important;
+ }
 </style>
-</head>
-<body style="margin:0;">
-<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="border:solid 1px #cccccc">
+	</head>
+	<body style="margin:0;">
+<table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="display: block; border:solid 1px #cccccc;table-layout:fixed">
+
 <tr>
-<td width="617" align="left" valign="top">${ctx.cmsSlotContents.SiteLogo}</td>
+<td width="600" align="left" valign="top">${ctx.cmsSlotContents.SiteLogo}</td>
 </tr>
 <tr>
-<td align="left" valign="top"><table width="600" border="0" cellspacing="0" cellpadding="0">
+<td align="left" valign="top" style="display:inherit;">
+<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;">Looks Like We're Going To Be</h2>
+<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 12px;margin-top:4px">Friends For A Long, Long Time</h2>
+<table width="600" border="0" cellspacing="0" cellpadding="0" style="padding-left:13px;">
+					
+
 <tr>
-<td width="25" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="15" height="1" /></td>
-<td width="569" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="30" /></td>
-<td width="25" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="15" height="1" /></td>
-</tr>
-<tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top"><table width="98%" border="0" cellspacing="0" cellpadding="0">
+
+<td align="left" valign="top"><table width="550" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="92%" align="left" valign="top" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:20px; color:#ed0c6e;"><table width="50%" border="0" cellspacing="0" cellpadding="0">
+    <td width="92" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:20px; color:#606060;"><table width="390" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="44" align="left" valign="top">Hey,</td>
-        <td width="146" align="left" valign="top">&nbsp;</td>
+        <td width="38" align="left" valign="top" style="color:#000;font-weight:bold;"><font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey,</font></td>
+        <td width="352" align="left" valign="top" style="color:#000;font-weight:bold"></td>
       </tr>
     </table></td>
   </tr>
+ <tr>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
   <tr>
-    <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="21" /></td>
+    <td align="left" colspan="3" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Welcome! We're going to get you exclusive brands and handpicked collections because we like to see you super happy. </td>
   </tr>
   <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">Welcome! We're going to get you exclusive brands and handpicked collections because we like to see you super happy. </td>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:5px; color:#606060;">&nbsp;</td>
   </tr>
   <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#00b6bd;">But first, introductions are in order. Here are your details.</td>
+    <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">But first, introductions are in order. Here are your details:</td>
   </tr>
 </table></td>
 <td align="left" valign="top">&nbsp;</td>
 </tr>
+
 <tr>
-<td align="left" valign="top">&nbsp;</td>
-<td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="33" /></td>
-<td align="left" valign="top">&nbsp;</td>
+
+  <td align="left" valign="top"><table class="emailPass" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#AA133D;font-weight:bold;padding-left: 0px;padding-top:12px">Email ID for login:  </td>
+      <td  align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; font-weight:bold;padding-right: 10px;padding-top:12px "> <span><span>
+ ${ctx.customerId}</span></span></td>
+
+      </tr>
+    
+   
+  </table></td>
+  <td align="left" valign="top">&nbsp;</td>
+</tr>
+
+ <tr>
+	<td>&nbsp;</td>
+	</tr>
+
+<tr>
+
+  <td align="center" valign="top"><table border="0" cellspacing="0" cellpadding="0">
+    <tbody><tr>
+      
+      <td align="center" valign="middle" bgcolor="#AA133D" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;padding:6px 21px;border-radius:20px;">Let's go shopping!</td>
+     
+    </tr>
+  </tbody></table></td>
+  <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="499" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="80" align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ed0c6e;">Username: </td>
-      <td width="154" align="center" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060; border-bottom:solid 1px #ed0c6e">${ctx.customerId}</td>
-      <td width="23" align="left" valign="middle">&nbsp;</td>
-      <td width="77" align="left" valign="middle" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#ed0c6e;">&nbsp;</td>
-      <td width="165" align="center" valign="middle"  style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060; border-bottom:solid 0px #ed0c6e">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+
+<tr>
+
+  <td align="left" valign="top"><table width="560" border="0" cellspacing="0" cellpadding="0">
+    <tr bgcolor="#f5f5f5">
+      <td width="11" height="35" align="left" valign="top" >&nbsp;</td>
+      <td width="240" align="left" valign="middle"  style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#AA133D;">Here's why this is going to be </td>
+    
+      <td align="left" valign="middle"  style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#000;">a fantastic friendship:</td>
+    
     </tr>
   </table></td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="33" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="center" valign="top"><table width="37%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="8%" align="left" valign="top">${ctx.cmsSlotContents.letsgoshopping1}</td>
-      <td width="81%" align="center" valign="middle" bgcolor="#EE0C6E" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">Let's go shopping!</td>
-      <td width="11%" align="left" valign="top">${ctx.cmsSlotContents.letsgoshopping2}</td>
-    </tr>
-  </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="33" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top" bgcolor="#00B6BD">&nbsp;</td>
-  <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td width="3%" height="35" align="left" valign="top" bgcolor="#00B6BD">&nbsp;</td>
-      <td width="43%" align="right" valign="middle" bgcolor="#00B6BD" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">Here's why this is going to be </td>
-      <td width="3%" align="left" valign="top" bgcolor="#FAA61A">${ctx.cmsSlotContents.fantastic1}</td>
-      <td width="43%" align="left" valign="middle" bgcolor="#FAA61A" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#ffffff;">a fantastic friendship:</td>
-      <td width="3%" align="left" valign="top" bgcolor="#FAA61A">${ctx.cmsSlotContents.fantastic2}</td>
-      <td width="5%" align="left" valign="top">&nbsp;</td>
-    </tr>
-  </table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="22" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="569" border="0" cellspacing="0" cellpadding="0" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">
-    <tr>
+ 
+  <td align="left" valign="top"><table width="569" border="0" cellspacing="0" cellpadding="0" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:12px; color:#000000;">
+     <tr>
       <td width="104" align="center" valign="top">${ctx.cmsSlotContents.handpick}</td>
       <td width="49" rowspan="2" align="center" valign="bottom">${ctx.cmsSlotContents.slashImgOne}</td>
       <td width="98" align="center" valign="top">${ctx.cmsSlotContents.brand}</td>
@@ -132,76 +140,111 @@
   <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
 <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="center" valign="top" bgcolor="#00B5BC">${ctx.cmsSlotContents.RegBanner2}</td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="42" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+ 
+  <td align="left" valign="top"><table width="570" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td width="5%" align="left" valign="middle">${ctx.cmsSlotContents.smileyimg}</td>
-      <td width="26%" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#00b6bd;"><strong>Happy shopping!</strong></td>
-      <td width="23%" align="left" valign="middle">&nbsp;</td>
-      <td width="25%" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#00b6bd;"><strong>Your friends at</strong></td>
-      <td width="10%" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:18px; color:#606060;"><strong>TataCliQ.com</strong></td>
-    </tr>
+                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.Tip}</td>
+              </tr>
+    
   </table></td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
 <tr>
-  <td colspan="3" align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="36" /></td>
-  </tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top" style="border-top:1px solid #ccc;"></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="95%" align="left" valign="top"  style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">This email can't receive replies. Get in touch with us by contacting our <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">CLIQhelpers</a> (or dig in at our Friday night pizza party). You can also shoot an email to <a href="mailto:${ctx.customerCareEmail}" style="color:#606060;">${ctx.customerCareEmail}</a>.</td>
-</tr>
-</table></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><img src="images/spacer.jpg" class="spacer-img" width="1" height="25" /></td>
-  <td align="left" valign="top">&nbsp;</td>
-</tr>
-<tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+ 
+  <td align="left" valign="top"><table width="570" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td width="49%" align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&copy; 2015 TataCliQ | All Rights Reserved</td>
-      <td width="31%" align="left" valign="top">&nbsp;</td>
-      <td width="20%" align="left" valign="top"><table width="70" border="0" cellspacing="0" cellpadding="0" align="right">
+    
+      <td width="446"  rowspan="2" align="left" valign="top" ><table width="554" border="0" cellspacing="0" cellpadding="0" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff;">
+        
         <tr>
-          <td width="8%" align="left" valign="middle"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
-          <td width="8%" align="left" valign="middle"><a href="https://plus.google.com" style="border:none;">${ctx.cmsSlotContents.gplus}</a></td>        
+        
+          <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">If you're worried about what your friends will think of what you want to buy, don't be. Add it to your wish list, share it with them and get their feedback right away.</span></td>
         </tr>
+       
+        
       </table></td>
+      <td width="71" rowspan="2" align="right" valign="top">&nbsp;</td>
     </tr>
-    <tr>
-      <td align="left" valign="middle" style="font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
-      <td align="left" valign="top">&nbsp;</td>
-      <td align="left" valign="top">&nbsp;</td>
-    </tr>
+    
   </table></td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
+
+
+	<tr>
+					 
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+              </tr>
+						<tr>
+						   <td>${ctx.cmsSlotContents.smileyimg}</td></td>
+						  </tr>
+						</table></td>
+					  <td align="left" valign="top">&nbsp;</td>
+					</tr>
+
+<tr>
+  <td align="left" valign="top">&nbsp;</td>
+  <td align="left" valign="top"><table width="569" border="0" cellspacing="0" cellpadding="0">
+    
+  </table></td>
+  
+</tr>
+
+
+<tr>
+ 
+  <td align="left" valign="top" style="padding-left:13px"><table width="564" border="0" cellspacing="0" cellpadding="0">
+<tr>
+					  
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e"><table width="550" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:support@tataCliQ.com">support@tataCliQ.com</a></p></td>
+						  </tr>
+						  <tr>
+               
+              </tr>
+						</table></td>
+					  <td align="left" valign="top">&nbsp;</td>
+					</tr>
+</table></td>
+ 
+</tr>
+<tr>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+							<td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
+						</tr>
+<tr>
+					
+					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table width="550" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+						 <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&copy; 2016 Tata CLiQ | All Rights Reserved</td>
+						  <td width="240" align="left" valign="top">&nbsp;</td>
+						  <td width="121" align="left" valign="top"><table width="70" border="0" cellspacing="0" cellpadding="0" align="right">
+							<tr>
+							  <td width="8" align="left" valign="middle"><a href="https://www.facebook.com"  style="border:none;">${ctx.cmsSlotContents.fb}</td>
+							  <td width="8" align="left" valign="middle"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</td>
+							   <td width="8" align="left" valign="middle"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</td>
+							   <td width="8" align="left" valign="middle"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</td>
+							  
+							  </tr>
+							</table></td>
+						  </tr>
+						<tr>
+						  <td align="left" valign="middle" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
+						  <td align="left" valign="top">&nbsp;</td>
+						  <td align="left" valign="top">&nbsp;</td>
+						  </tr>
+						</table></td>
+					  <td align="left" valign="top">&nbsp;</td>
+					</tr>
 </table></td>
 </tr>
 </table>

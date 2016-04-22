@@ -1418,11 +1418,14 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="priceDataFactory" ref="priceDataFactory"/> -->
 	</bean>
 		<!-- Voucher History converter -->	
+
 	<bean id="voucherTransactionConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.data.CouponHistoryData"/>
+
 		<property name="populators">
 			<list>
 				<ref bean="voucherTransactionPopulator"/>
+
 			</list>
 		</property>
 	</bean>
@@ -1440,5 +1443,21 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 
 	<bean id="mplSellerInformationFacade"
 		class="com.tisl.mpl.sellerinfo.facades.impl.MplSellerInformationFacadeImpl">
+	</bean>
+	<!-- Base Option Data Converter Overloading -->
+	<alias name="mplBaseOptionDataConverter" alias="baseOptionDataConverter" />
+	<bean id="mplBaseOptionDataConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="de.hybris.platform.commercefacades.product.data.BaseOptionData" />
+		<property name="populators">
+			<list>
+				<ref bean="mplBaseOptionDataPopulator" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="mplBaseOptionDataPopulator"
+		class="com.tisl.mpl.facades.populators.MplBaseOptionDataPopulator"
+		parent="baseOptionDataPopulator">
 	</bean>
 </beans>
