@@ -145,7 +145,7 @@ public class MplProductStockValueProvider extends AbstractPropertyFieldValueProv
 				//fieldValues.addAll(createFieldValue(displaySizes, indexedProperty));
 				fieldValues.addAll(createFieldValue(sizeStockJsonArray.toString(), indexedProperty));
 			}
-			System.out.println("##########stock value" + fieldValues);
+		//	System.out.println("##########stock value" + fieldValues);
 			//return the field values
 			return fieldValues;
 

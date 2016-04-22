@@ -38,6 +38,8 @@ import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 
+
+
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
@@ -94,17 +96,22 @@ import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
 
+
+
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
+
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
+
 
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.RichAttributeData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+
 
 import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
@@ -517,8 +524,38 @@ public class ProductPageController extends AbstractPageController
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.AVAILABLESTOCK,
 						null != buyboxdata.getAvailable() ? buyboxdata.getAvailable() : ModelAttributetConstants.NOVALUE);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -557,9 +594,17 @@ public class ProductPageController extends AbstractPageController
 
 
 
+
+
 				&& null != buyboxdata.getSpecialPrice().getFormattedValue()
 						&& !buyboxdata.getSpecialPrice().getFormattedValue().isEmpty() ? buyboxdata.getSpecialPrice()
 						.getFormattedValue() : ModelAttributetConstants.NOVALUE);
+
+
+
+
+
+
 
 
 
@@ -578,6 +623,7 @@ public class ProductPageController extends AbstractPageController
 
 
 
+
 				null != buyboxdata.getPrice() && null != buyboxdata.getPrice().getFormattedValue()
 						&& !buyboxdata.getPrice().getFormattedValue().isEmpty() ? buyboxdata.getPrice().getFormattedValue()
 						: ModelAttributetConstants.NOVALUE);
@@ -592,7 +638,13 @@ public class ProductPageController extends AbstractPageController
 
 
 
+
+
+
+
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.MRP,
+
 
 
 
@@ -610,12 +662,20 @@ public class ProductPageController extends AbstractPageController
 
 
 
+
+
+
+
+
 				: ModelAttributetConstants.NOVALUE);
 
 
 
 
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
+
+
 
 
 
@@ -639,8 +699,28 @@ public class ProductPageController extends AbstractPageController
 
 
 
+
+
+
+
+
+
+
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ARTICLE_SKU,
 						null != buyboxdata.getSellerArticleSKU() ? buyboxdata.getSellerArticleSKU() : ModelAttributetConstants.EMPTY);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -817,6 +897,7 @@ public class ProductPageController extends AbstractPageController
 						LOG.error("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
+
 
 
 
@@ -1744,6 +1825,7 @@ public class ProductPageController extends AbstractPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
+
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
@@ -1755,6 +1837,14 @@ public class ProductPageController extends AbstractPageController
 	 * deliveryModeData.setSellerArticleSKU(ussid); deliveryModeData.setDeliveryCost(priceData); return deliveryModeData;
 	 * }
 	 */
+
+
+
+
+
+
+
+
 
 
 
@@ -1859,6 +1949,73 @@ public class ProductPageController extends AbstractPageController
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * This method is responsible for fetching winning seller USSID, price and other seller count It will be invoked by
 	 * PDP Ajax call and it will return JSON response
@@ -1933,3 +2090,8 @@ public class ProductPageController extends AbstractPageController
 		return successful;
 	}
 }
+
+
+
+
+

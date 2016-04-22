@@ -330,6 +330,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	private FrontEndErrorHelper frontEndErrorHelper;
 	@Resource(name = "orderModelService")
 	private OrderModelService orderModelService;
+
 	//Return Form Validation
 	@Resource(name = "returnItemFormValidator")
 	private ReturnItemFormValidator returnItemFormValidator;
@@ -1175,24 +1176,25 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
 
 			/* getting all voucher in a list */
-
 			final int pageSize = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.PAZE_SIZE_VOUCHER, "12").trim());
 			final int page = pageVoucher;
 
 			final PageableData pageableData = createPageableData(page, pageSize, sortCode, showMode);
+
 			final SearchPageData<VoucherDisplayData> searchPageDataVoucher = mplCouponFacade.getAllClosedCoupons(customer,
 					pageableData);
+
 			populateModelForCoupon(model, searchPageDataVoucher, showMode);
 
 			final int pageSizeVoucherHistory = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.PAZE_SIZE_COUPONS, "20").trim());
 
+
 			/* Coupon history and saved sum count calculation */
 			final PageableData pageableDataVoucherHistory = createPageableData(pageHistory, pageSizeVoucherHistory, sortCode,
 					showMode);
 			final Map<String, Double> countSavedSumMap = mplCouponFacade.getInvalidatedCouponCountSaved(customer);
-
 
 			final SearchPageData<CouponHistoryData> searchPageDataVoucherHistoryFinal = mplCouponFacade
 					.getVoucherHistoryTransactions(customer, pageableDataVoucherHistory);
@@ -1208,8 +1210,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			if (null != countSavedSumMap)
 			{
+
 				for (final Map.Entry<String, Double> iterator : countSavedSumMap.entrySet())
 				{
+
 					Double value = 0.0d;
 					if (null != iterator.getValue())
 					{
@@ -1251,6 +1255,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
+
 
 
 	/*
@@ -1448,7 +1453,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER_RETURN_PINCODE_SUBMIT, method = RequestMethod.POST)
 	public String returnPincodeAvailability(final ReturnPincodeCheckForm returnAddress, final Model model,
-			final HttpServletRequest request) throws CMSItemNotFoundException,Exception
+			final HttpServletRequest request) throws CMSItemNotFoundException, Exception
 	{
 		final String errorMsg = returnItemFormValidator.returnValidate(returnAddress);
 		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
@@ -1641,7 +1646,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			storeContentPageTitleInModel(model, MessageConstants.RETURN_REQUEST);
 			return ControllerConstants.Views.Pages.Account.AccountReturnReqPage;
 		}
-		
+
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
@@ -1747,10 +1752,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			//start
 			boolean returnLogisticsCheck = true;
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = (List<ReturnLogisticsResponseData>) session
-					.getAttribute(RETURN_Logistics_Availability);
+
+			.getAttribute(RETURN_Logistics_Availability);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
-				if(response.getTransactionId().trim().equalsIgnoreCase(transactionId.trim()))
+				if (response.getTransactionId().trim().equalsIgnoreCase(transactionId.trim()))
 				{
 					model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
 				}
@@ -1786,9 +1792,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 		catch (final Exception e)
 		{
- 			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
- 					MarketplacecommerceservicesConstants.E0000));
- 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
 	}
 
@@ -1824,7 +1830,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final String transactionId = returnRequestForm.getTransactionId();
 
 			final ReturnItemAddressData returnAddrData = (ReturnItemAddressData) session.getAttribute(RETURN_ADDRESS);
-			final String pinCode=returnAddrData.getPincode();
+			final String pinCode = returnAddrData.getPincode();
 			final List<OrderEntryData> subOrderEntries = subOrderDetails.getEntries();
 			for (final OrderEntryData entry : subOrderEntries)
 			{
@@ -1887,8 +1893,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade
-					.checkReturnLogistics(subOrderDetails,pinCode);
+			final List<ReturnLogisticsResponseData> returnLogisticsRespList = cancelReturnFacade.checkReturnLogistics(
+					subOrderDetails, pinCode);
 			for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 			{
 				model.addAttribute(ModelAttributetConstants.RETURNLOGMSG, response.getResponseMessage());
@@ -2134,9 +2140,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 				}
 			}
 
-
-
-
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 
 			if (!(StringUtils.isEmpty(orderCode)) && !(StringUtils.isBlank(orderCode)) && !(StringUtils.isEmpty(transactionId))
@@ -2252,6 +2255,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			mplCustomerProfileData.setDisplayUid(customerData.getDisplayUid());
 
 			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade.getCustomerProfileDetail(customerData
+
 
 			.getDisplayUid());
 
@@ -6537,6 +6541,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 * @throws Exception
 	 */
 
+
 	@RequestMapping(value = RequestMappingUrlConstants.REVIEWS, method = RequestMethod.GET)
 	@RequireHardLogIn
 	public String review(
@@ -6547,8 +6552,10 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final int orderCarousalsize = getSiteConfigService().getInt(MessageConstants.ORDER_CAROUSEL_SIZE, 10);
 		final Map<String, ProductData> productDataMap = new LinkedHashMap<String, ProductData>();
 		final Map<String, ProductData> productDataModifyMap = new LinkedHashMap<String, ProductData>();
+
 		ProductData productData = null;
 		List<GigyaProductReviewWsDTO> commentsWithProductDataModified = new ArrayList<GigyaProductReviewWsDTO>();
+
 		try
 		{
 			final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
@@ -6565,12 +6572,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 				for (final OrderModel order : sortedLatestorders.getResults())
 				{
+
 					for (final AbstractOrderEntryModel entry : order.getEntries())
 					{
+
 						final ProductModel productmodel = entry.getProduct();
 						final ProductData productForOptionData = productFacade.getProductForOptions(productmodel, PRODUCT_OPTIONS);
 						if (productForOptionData != null)
 						{
+
 							productData = productForOptionData;
 						}
 						productDataMap.put(productData.getCode(), productData);
@@ -6582,7 +6592,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 			{
 
 				for (final Map.Entry<String, ProductData> productEntry : productDataMap.entrySet())
+
 				{
+
 					final ProductData productDataValue = productEntry.getValue();
 					final boolean isCommented = gigyaCommentService.getReviewsByCategoryProductId(productDataValue.getRootCategory(),
 							productDataValue.getCode(), customerModel.getUid());
@@ -6599,6 +6611,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			final List<GigyaProductReviewWsDTO> commentsWithProductData = gigyaCommentService
 					.getReviewsByUID(customerModel.getUid());
+
 
 			/* TISSTRT-119 fix */
 			commentsWithProductDataModified = mplReviewrFacade.getReviewedProductPrice(commentsWithProductData);
@@ -6619,7 +6632,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 			/* pagination logic */
 
 			reviewPagination(commentsWithProductDataModified, pageSize, page, model);
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -6640,6 +6652,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 				accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_REVIEWS));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+
+
+
 
 		model.addAttribute(ModelAttributetConstants.PURCHASED_PRODUCT, productDataModifyMap);
 		return getViewForPage(model);
@@ -6669,11 +6684,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final Model model) throws Exception
 	{
 
+
+
+
 		final CustomerModel customerModel = (CustomerModel) userService.getCurrentUser();
 		final Map<String, String> jsonMap = new HashMap<String, String>();
 
 		try
 		{
+
 			/**
 			 * Edit review service call
 			 */
@@ -6695,6 +6714,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					return jsonMap;
 				}
 			}
+
 
 			/**
 			 * delete review service call

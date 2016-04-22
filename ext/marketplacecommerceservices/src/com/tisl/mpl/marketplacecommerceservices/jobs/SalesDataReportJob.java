@@ -28,6 +28,7 @@ import de.hybris.platform.servicelayer.cronjob.AbstractJobPerformable;
 import de.hybris.platform.servicelayer.cronjob.CronJobService;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -51,7 +52,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseModel;
-import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.data.MplPaymentInfoData;
 import com.tisl.mpl.data.SalesReportData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -94,6 +94,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 	private PriceDataFactory priceDataFactory;
 	@Autowired
 	private BuyBoxService buyBoxService;
+	@Autowired
+	private ModelService modelService;
 
 
 	//Delimiter used in CSV file
@@ -119,7 +121,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			//getting all the Orders details based on type
 			if (getSalesType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SALES_REPORT_INCREMENTAL))
 			{
-				lastendTime = reportModel.getEndTime();
+				lastendTime = reportModel.getStartDate();
 				//fetch cronjob last run time from where it will fetch the next order list
 				if (lastendTime != null)
 				{
@@ -143,6 +145,11 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 			{
 				///Convert order data and write into CSV
 				writeItemsToCSV(convertForSales(orderModels));
+				if (getSalesType().equalsIgnoreCase(MarketplacecommerceservicesConstants.SALES_REPORT_INCREMENTAL))
+				{
+					reportModel.setStartDate(new Date());
+					modelService.save(reportModel);
+				}
 			}
 
 		}
@@ -360,7 +367,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 		final List<SalesReportData> dataList = new ArrayList<SalesReportData>();
 		MarketplaceDeliveryModeData mplDeliveryMode = null;
 		String consignmentStatus = MarketplacecommerceservicesConstants.NA;
-		List<String> categoryList = new ArrayList<String>();
+		List<CategoryModel> categoryList = new ArrayList<CategoryModel>();
 		OrderData orderDetail = null;
 		ProductModel productModel = null;
 		String orderDate = MarketplacecommerceservicesConstants.EMPTY, orderTime = MarketplacecommerceservicesConstants.EMPTY;
@@ -494,28 +501,31 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 												.getPrimarycategoryData(productModel);
 										if (null != productCategoryList && productCategoryList.size() > 0)
 										{
-											categoryList = new ArrayList<String>();
+											categoryList = new ArrayList<CategoryModel>();
+
 											for (final CategoryModel category : productCategoryList)
 											{
 												if (category != null && !(category instanceof ClassificationClassModel)
 														&& null != category.getName())
 												{
-													categoryList.add(category.getName());
+													categoryList.add(category);
+													LOG.info("--- Category :" + category.getCode());
+
 												}
 											}
 											if (categoryList.size() > 0)
 											{
-												Collections.sort(categoryList, new Comparator()
+												Collections.sort(categoryList, new Comparator<CategoryModel>()
 												{
-
+													@SuppressWarnings("unused")
 													@Override
-													public int compare(final Object o1, final Object o2)
+													public int compare(final CategoryModel o1, final CategoryModel o2)
 													{
-														if (o1.toString().length() < o2.toString().length())
+														if (o1.getCode().length() < o2.getCode().length())
 														{
 															return 1;
 														}
-														else if (o1.toString().length() > o2.toString().length())
+														else if (o1.getCode().length() > o2.getCode().length())
 														{
 															return -1;
 														}
@@ -528,8 +538,8 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 												});
 												if (categoryList.size() > 3)
 												{
-													primaryCategory = categoryList.get(categoryList.size() - 2);
-													secondaryCategory = categoryList.get(categoryList.size() - 3);
+													primaryCategory = categoryList.get(categoryList.size() - 2).getName();
+													secondaryCategory = categoryList.get(categoryList.size() - 3).getName();
 													LOG.info("---Product Category list:" + categoryList.size());
 												}
 											}
@@ -569,7 +579,7 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 							}
 
 							LOG.info("-----------Order Entry seller" + entry.getTransactionId());
-							setSellerInfo(entry, data);
+							setSellerInfo(entry, orderModel, data);
 							dataList.add(data);
 						}
 					}
@@ -587,11 +597,11 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 	}
 
 	/* Setting Seller Information */
-	protected void setSellerInfo(final OrderEntryData entry, final SalesReportData reportDTO)
+	protected void setSellerInfo(final OrderEntryData entry, final OrderModel orderModel, final SalesReportData reportDTO)
 	{
 		//Freebie and non-freebie seller detail population
 		SellerInformationModel sellerInfoModel = null;
-		String fulfillmentType = MarketplacecommerceservicesConstants.EMPTY;
+		String fulfillmentType = MarketplacecommerceservicesConstants.NA;
 		try
 		{
 			if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
@@ -610,16 +620,25 @@ public class SalesDataReportJob extends AbstractJobPerformable<SalesReportCreati
 				{
 					reportDTO.setSellerName(sellerInfoModel.getSellerName());
 				}
-				if (sellerInfoModel.getRichAttribute().size() > 0)
+				/*
+				 * if (sellerInfoModel.getRichAttribute().size() > 0) { for (final RichAttributeModel richEntry :
+				 * sellerInfoModel.getRichAttribute()) { LOG.info("-----Inside seller rich attribute model-----" +
+				 * richEntry.getDeliveryFulfillModes()); fulfillmentType =
+				 * richEntry.getDeliveryFulfillModes().toString().toUpperCase(); LOG.info("-----Fulfilment mode set------");
+				 * } reportDTO.setProductType(fulfillmentType); }
+				 */
+				for (final OrderModel sellerOrder : orderModel.getChildOrders())
 				{
-					for (final RichAttributeModel richEntry : sellerInfoModel.getRichAttribute())
+					for (final AbstractOrderEntryModel orderEntry : sellerOrder.getEntries())
 					{
-						LOG.info("-----Inside seller rich attribute model-----" + richEntry.getDeliveryFulfillModes());
-						fulfillmentType = richEntry.getDeliveryFulfillModes().toString().toUpperCase();
-						LOG.info("-----Fulfilment mode set------");
+						if (null != orderEntry && orderEntry.getTransactionID() == entry.getTransactionId()
+								&& null != orderEntry.getFulfillmentType())
+						{
+							fulfillmentType = orderEntry.getFulfillmentType().toUpperCase();
+						}
 					}
-					reportDTO.setProductType(fulfillmentType);
 				}
+				reportDTO.setProductType(fulfillmentType);
 
 			}
 		}

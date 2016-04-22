@@ -33,7 +33,7 @@
 			<header:micrositeHeader hideHeaderLinks="${hideHeaderLinks}" />
 
 
-			
+			<div class="mainContent-wrapper"> 
 			
 			<a id="skip-to-content"></a>
 		
@@ -41,10 +41,10 @@
 				<common:globalMessages />
 				<jsp:doBody />
 			</div>
-
+			</div>
 			<footer:footer />
 		</main>
-
+		  
 	</jsp:body>
 
 </template:master>

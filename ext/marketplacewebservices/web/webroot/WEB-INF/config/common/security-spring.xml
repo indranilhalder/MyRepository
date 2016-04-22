@@ -161,7 +161,7 @@
 				redirect-uri="http://localhost:9001/rest/oauth2_callback" />
 				<oauth:client client-id="gauravj@dewsolutions.in" resource-ids="hybris" scope="basic"
 				authorized-grant-types="authorization_code,refresh_token,password,client_credentials" authorities="ROLE_CLIENT" secret="secret"
-				redirect-uri="http://localhost:9001/rest/oauth2_callback" />
+				redirect-uri="http://tmppprd.tataunistore.com/rest/oauth2_callback" /> 
 		</oauth:client-details-service>
 
 		<security:global-method-security pre-post-annotations="enabled" proxy-target-class="true"
