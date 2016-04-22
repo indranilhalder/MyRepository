@@ -47,8 +47,8 @@ public class MplDefaultIndexedPropertyPopulator extends DefaultIndexedPropertyPo
 
 				target.setClassificationAttributeAssignments(source.getClassificationAttributeAssignments());
 
-		}
+			}
 
+		}
 	}
 }
-
