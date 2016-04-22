@@ -173,6 +173,7 @@ import com.tisl.mpl.facades.account.reviews.impl.DefaultMplReviewFacade;
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.MplPreferenceData;
 import com.tisl.mpl.facades.data.MplPreferencePopulationData;
+import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.DayData;
