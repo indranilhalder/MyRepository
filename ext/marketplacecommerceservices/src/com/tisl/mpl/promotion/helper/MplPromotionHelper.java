@@ -13,6 +13,8 @@ import de.hybris.platform.jalo.order.AbstractOrderEntry;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.security.JaloSecurityException;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
+import de.hybris.platform.promotions.model.AbstractPromotionModel;
+import de.hybris.platform.promotions.model.OrderPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.model.ModelService;
 
@@ -21,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -449,8 +452,8 @@ public class MplPromotionHelper
 			}
 			else
 			{
-				promoGrpModel = getBulkPromotionCreationDao()
-						.fetchPromotionGroup(MarketplacecommerceservicesConstants.PROMOTION_GROUP_DEFAULT);
+				promoGrpModel = getBulkPromotionCreationDao().fetchPromotionGroup(
+						MarketplacecommerceservicesConstants.PROMOTION_GROUP_DEFAULT);
 			}
 		}
 		return promoGrpModel;
@@ -515,6 +518,32 @@ public class MplPromotionHelper
 		return flag;
 	}
 
+
+
+	/**
+	 * @param promotion
+	 * @return flag
+	 */
+	public String checkCartPromoPriority(final OrderPromotionModel promotion)
+	{
+		String promoCode = MarketplacecommerceservicesConstants.EMPTY;
+		final List<AbstractPromotionModel> promoDetailsList = getSellerBasedPromotionService().getPromoDetails();
+		if (CollectionUtils.isNotEmpty(promoDetailsList))
+		{
+			for (final AbstractPromotionModel promo : promoDetailsList)
+			{
+				if (promo instanceof OrderPromotionModel && promotion.getPriority().intValue() == promo.getPriority().intValue()
+						&& !StringUtils.equals(promotion.getCode(), promo.getCode()))
+				{
+					promoCode = promo.getCode();
+					break;
+				}
+			}
+		}
+		return promoCode;
+	}
+
+
 	protected SellerBasedPromotionService getSellerBasedPromotionService()
 	{
 		return Registry.getApplicationContext().getBean("sellerBasedPromotionService", SellerBasedPromotionService.class);
@@ -525,4 +554,6 @@ public class MplPromotionHelper
 	{
 		return Registry.getApplicationContext().getBean("bulkPromotionCreationDao", BulkPromotionCreationDao.class);
 	}
+
+
 }
